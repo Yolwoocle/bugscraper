@@ -3,6 +3,7 @@ local Class = require "class"
 local Actor = Class:inherit()
 
 function Actor:init_actor(x, y, w, h, spr)
+	self.is_actor = true
 	self.x = x or 0
 	self.y = y or 0
 	self.w = w or 32
@@ -75,7 +76,7 @@ function Actor:update_actor(dt)
 	self.is_grounded = false
 	self.wall_col = nil
 	for _,col in pairs(cols) do
-		self:on_collision(col)
+		self:on_collision(col, col.other)
 		self:react_to_collision(col)
 	end
 
@@ -131,7 +132,14 @@ function Actor:react_to_collision(col)
 	end
 end
 
-function Actor:on_collision(col)
+function Actor:do_knockback(q, source)
+	--if not source then    return    end
+	local ang = atan2(source.y-self.y, source.x-self.x)
+	self.vx = self.vx - cos(ang)*q
+	self.vy = self.vy - sin(ang)*q
+end
+
+function Actor:on_collision(col, other)
 	-- Implement on_collision
 end
 

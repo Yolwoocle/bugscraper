@@ -325,6 +325,14 @@ function print_outline(col_in, col_out, text, x, y, r)
 	print_color(col_in, text, x, y)
 end
 
+function print_label(text, x, y, col_txt, col_label)
+	col_txt, col_label = COL_WHITE or col_txt, {0,0,0,0.5} or col_label 
+	local w = get_text_width(text)
+	local h = get_text_height(text)
+	rect_color(col_label, "fill", x, y, w, h)
+	print_color(col_txt, text, x, y)
+end
+
 function exec_color(col, func, ...)
 	col = col or {1,1,1,1}
 	love.graphics.setColor(col)

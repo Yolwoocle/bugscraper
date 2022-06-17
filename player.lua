@@ -112,6 +112,7 @@ function Player:draw()
 	gfx.draw(images.heart, self.mid_x-7 -2, y)
 	print_outline(COL_WHITE, COL_DARK_BLUE, concat(self.life), self.mid_x, y-4)
 	if game.debug_mode then
+		print_outline(COL_WHITE, COL_DARK_BLUE, string.format("x,y: %d / %d",self.x,self.y), self.x+16, y-4)
 	end
 end
 
@@ -349,7 +350,16 @@ function Player:mine(dt)
 	end
 end
 
-function Player:damage(n)
+function Player:on_collision(col, other)
+	if other.is_enemy then 
+		self:do_damage(other.damage, other)
+	end
+end
+
+function Player:do_damage(n, source)
+	self:do_knockback(source.knockback, source)
+	--source:do_knockback(source.knockback*0.75, self)
+
 	self.life = self.life - n
 	self.life = clamp(self.life, 0, self.max_life)
 
@@ -366,7 +376,7 @@ end
 function Player:on_hit_bullet(bul, col)
 	if bul.player == self then   return   end
 
-	self:damage(bul.damage)
+	self:do_damage(bul.damage)
 	self.vx = self.vx + sign(bul.vx) * bul.knockback
 end
 

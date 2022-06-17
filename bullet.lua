@@ -9,6 +9,7 @@ function Bullet:init(gun, player, x, y, w, h, vx, vy)
 	self:init_actor(x, y, w, h)
 	self.gun = gun
 	self.player = player
+	self.is_enemy = player.is_enemy
 	self.is_bullet = true
 
 	self.sprite = images.snowball
@@ -26,7 +27,7 @@ function Bullet:init(gun, player, x, y, w, h, vx, vy)
 	self.life = 5
 
 	self.damage = 2
-	self.knockback = 100
+	self.knockback = 500
 end
 
 function Bullet:update(dt)
@@ -49,7 +50,7 @@ function Bullet:on_collision(col)
 		self:remove()
 	end
 	
-	if col.other.on_hit_bullet then
+	if col.other.on_hit_bullet and col.other.is_enemy ~= self.is_enemy then
 		col.other:on_hit_bullet(self, col)
 		self:remove()
 	end

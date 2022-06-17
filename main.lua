@@ -125,15 +125,3 @@ function print(...)
 		table.remove(msg_log, 1)
 	end
 end
-
-function draw_log()
-	-- log
-	local h = gfx.getFont():getHeight()
-	for i=1, min(#msg_log, 10) do
-		local imsg = i
-		local msg = msg_log[imsg]
-		local w = get_text_width(msg)
-		rect_color({0,0,0,0.5}, "fill", 0, i*h, w, h)
-		print_color(COL_WHITE, msg, 0, i*h)
-	end
-end

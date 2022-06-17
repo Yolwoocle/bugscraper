@@ -27,6 +27,8 @@ images.heart = load_image("heart.png")
 
 images.ant = load_image("ant.png")
 images.caterpillar = load_image("caterpillar.png")
+images.bee = load_image("bee.png")
 images.duck = load_image("duck1.png")
+images.larva = load_image("larva.png")
 
 return images

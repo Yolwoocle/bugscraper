@@ -5,7 +5,7 @@ require "constants"
 local Collision = Class:inherit()
 
 function Collision:init()
-	self.world = bump.newWorld(BLOCK_WIDTH)
+	self.world = bump.newWorld(BLOCK_WIDTH*4)
 end
 
 function Collision:add(o, x, y, w, h)
