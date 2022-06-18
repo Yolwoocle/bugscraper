@@ -17,18 +17,26 @@ function load_image_table(name, n, w, h)
 	return t
 end
 
+local img_names = {
+	"magnet",
+	"grass",
+	"dirt",
+	"snowball",
+
+	"heart",
+
+	"ant",
+	"caterpillar",
+	"bee",
+	"duck",
+	"larva",
+	"metal",
+	"chain",
+	"bg_plate",
+	"bullet",
+	"cabin_bg"
+}
+
 local images = {}
-images.magnet = load_image("magnet.png")
-images.grass = load_image("grass.png")
-images.dirt = load_image("dirt.png")
-images.snowball = load_image("snowball.png")
-
-images.heart = load_image("heart.png")
-
-images.ant = load_image("ant.png")
-images.caterpillar = load_image("caterpillar.png")
-images.bee = load_image("bee.png")
-images.duck = load_image("duck1.png")
-images.larva = load_image("larva.png")
-
+for i=1,#img_names do   images[img_names[i]] = load_image(img_names[i]..".png")   end
 return images

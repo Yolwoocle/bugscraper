@@ -21,7 +21,7 @@ function Enemies:init()
 		self:init_enemy(x,y, images.bee)
 		self.life = 10
 		self.color = rgb(0,50,190)
-		self.speed_y = self.speed * 0.5
+		self.speed_y = 0--self.speed * 0.5
 
 		self.speed = 10
 		self.gravity = 0

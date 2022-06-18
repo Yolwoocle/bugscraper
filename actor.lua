@@ -31,7 +31,7 @@ function Actor:init_actor(x, y, w, h, spr)
 	self.is_walled = false
 
 	self.wall_col = nil
-	
+
 	self.is_removed = false
 	collision:add(self, self.x, self.y, self.w, self.h)
 
@@ -57,6 +57,7 @@ function Actor:do_gravity(dt)
 end
 
 function Actor:update_actor(dt)
+	if self.is_removed then   return   end
 	self:do_gravity(dt)
 
 	-- apply friction
@@ -101,7 +102,12 @@ function Actor:draw()
 	error("draw not implemented")
 end
 function Actor:draw_actor(fx, fy)
+	if self.is_removed then   return   end
+	
 	-- f == flip
+	if fx == true then   fx = -1 end
+	if fy == true then   fy = -1 end
+
 	fx = (fx or 1)*self.sx
 	fy = (fy or 1)*self.sy
 
@@ -132,9 +138,10 @@ function Actor:react_to_collision(col)
 	end
 end
 
-function Actor:do_knockback(q, source)
+function Actor:do_knockback(q, source, ox, oy)
+	ox, oy = ox or 0, oy or 0
 	--if not source then    return    end
-	local ang = atan2(source.y-self.y, source.x-self.x)
+	local ang = atan2(source.y-self.y + oy, source.x-self.x + ox)
 	self.vx = self.vx - cos(ang)*q
 	self.vy = self.vy - sin(ang)*q
 end
@@ -157,6 +164,12 @@ function Actor:remove()
 		self.is_removed = true
 		collision:remove(self)
 	end
+end
+
+function Actor:move_to(goal_x,goal_y)
+	local actual_x, actual_y, cols, len = collision:move(self, goal_x, goal_y)
+	self.x = actual_x
+	self.y = actual_y
 end
 
 return Actor

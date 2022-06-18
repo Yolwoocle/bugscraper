@@ -5,7 +5,7 @@ local Bullet = require "bullet"
 local Gun = Class:inherit()
 
 function Gun:init_gun()
-	self.bul_w = 8
+	self.bul_w = 17
 	self.bul_h = 8
 
 	self.ammo = 1000
@@ -23,11 +23,11 @@ function Gun:draw()
 	--
 end
 
-function Gun:shoot(dt, player, x, y, dx, dy)
+function Gun:shoot(dt, player, x, y, vx, vy)
 	if self.ammo > 0 and self.cooldown_timer <= 0 then
-		local x = floor(x - self.bul_w/2)
-		local y = floor(y - self.bul_h/2)
-		self:fire_bullet(dt, player, x, y, self.bul_w, self.bul_h, dx, dy)
+		local x = floor(x)
+		local y = floor(y)
+		self:fire_bullet(dt, player, x, y, self.bul_w, self.bul_h, vx, vy)
 	end
 end	
 

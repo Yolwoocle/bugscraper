@@ -6,6 +6,7 @@ local Bullet = require "bullet"
 local TileMap = require "tilemap"
 local WorldGenerator = require "worldgenerator"
 local Inventory = require "inventory"
+local ParticleSystem = require "particles"
 
 local images = require "images"
 require "util"
@@ -16,13 +17,22 @@ local Game = Class:inherit()
 function Game:init()
 	-- Global singletons
 	collision = Collision:new()
+	particles = ParticleSystem:new()
 
+	-- Players
 	self.number_of_player = 2
-	self.is_enemy = false
 
+	-- Map & world gen
+	self.shaft_w, self.shaft_h = 26,14
 	self.map = TileMap:new(30, 17)
 	self.world_generator = WorldGenerator:new(self.map)
 	self.world_generator:generate(10203)
+	self.world_generator:make_box(self.shaft_w, self.shaft_h)
+
+	-- Level info
+	self.floor = 0 --Floor n°
+	self.floor_progress = 0 --How far the cabin is to the next floor, 0-1
+	self.elevator_speed = 1/10
 
 	-- Bounding box
 	local map_w = self.map.width * BW
@@ -35,6 +45,7 @@ function Game:init()
 	}
 	for i,box in pairs(self.boxes) do   collision:add(box)   end
 	
+	-- Actors
 	self.actor_limit = 30
 	self.actors = {}
 	self:init_players()
@@ -47,10 +58,33 @@ function Game:init()
 	self.msg_log = {}
 
 	self.test_t = 0
+
+	self.test_bgstuff = {}
+	for i=1,20 do
+		local o = {}
+		o.x = love.math.random(0, CANVAS_WIDTH)
+		o.w = love.math.random(2, 12)
+		o.h = love.math.random(8, 64)
+		o.y = -o.h - love.math.random(0, CANVAS_HEIGHT)
+		table.insert(self.test_bgstuff, o)
+	end
 end
 
 function Game:update(dt)
+	for i,o in pairs(self.test_bgstuff) do
+		o.y = o.y + dt*400
+		if o.y > CANVAS_HEIGHT then
+			o.x = love.math.random(0, CANVAS_WIDTH)
+			o.w = love.math.random(2, 12)
+			o.h = love.math.random(8, 64)
+			o.y = -o.h- love.math.random(0, CANVAS_HEIGHT)
+		end
+	end
+
 	self.map:update(dt)
+	particles:update(dt)
+
+	self:progress_elevator(dt)
 
 	for k,actor in pairs(self.actors) do
 		actor.debug_timer = 0
@@ -73,10 +107,7 @@ function Game:update(dt)
 	--- azdazedad teststet test SPAWN ACT5OR
 	self.test_t = self.test_t-dt
 	if self.test_t < 0 then
-		self.test_t = 3
-		local x,y = love.math.random(0,CANVAS_WIDTH),CANVAS_HEIGHT-16*8
-		self:new_actor(random_sample{Enemies.Bee, Enemies.Larva}:new(x,y))
-		print("TEST", x,y)
+
 	end
 
 	if love.keyboard.isDown("r") then   
@@ -91,13 +122,29 @@ end
 
 function Game:draw()
 	-- Sky
-	gfx.clear(COL_SKY)
+	gfx.clear(COL_DARK_BLUE)
+	particles:draw()
 
+	for i,o in pairs(self.test_bgstuff) do
+		rect_color(COL_DARK_GRAY, "fill", o.x, o.y, o.w, o.h)
+	end
+
+	-- Map & Actor
 	self.map:draw()
+	--TODO: fuze it into map or remove map, only have coll boxes & no map
+	local bw = BLOCK_WIDTH
+	gfx.draw(images.cabin_bg, self.world_generator.box_ax*bw, self.world_generator.box_ay*bw)
 	for k,actor in pairs(self.actors) do
 		actor:draw()
 	end
 
+	-- UI
+	print_centered_outline(COL_WHITE, COL_DARK_BLUE, concat("FLOOR ",self.floor), CANVAS_WIDTH/2, 8)
+	local w = 64
+	rect_color(COL_MID_GRAY, "fill", floor((CANVAS_WIDTH-w)/2),    16, w, 8)
+	rect_color(COL_WHITE,    "fill", floor((CANVAS_WIDTH-w)/2) +1, 17, (w-2)*self.floor_progress, 6)
+
+	-- Debug
 	if self.debug_mode then
 		self:draw_debug()
 	end
@@ -106,7 +153,10 @@ function Game:draw()
 end
 
 function Game:new_actor(actor)
-	if #self.actors > self.actor_limit then   return   end
+	if #self.actors >= self.actor_limit then   
+		actor:remove()
+		return
+	end
 	table.insert(self.actors, actor)
 end
 
@@ -130,6 +180,7 @@ function Game:draw_debug()
 	local txts = {
 		love.timer.getFPS(),
 		concat("n° of actors: ", #self.actors, " / ", self.actor_limit),
+		concat("n° collision items: ", --[[collision.world:countItems()]]0)
 	}
 	for i=1, #txts do  print_label(txts[i], 0, 16*i) end 
 	
@@ -184,6 +235,27 @@ function Game:init_players()
 		local player = Player:new(i, mx*16 + i*16, my*16, sprs[i], control_schemes[i])
 		self.players[i] = player
 		self:new_actor(player)
+	end
+end
+
+function Game:progress_elevator(dt)
+	self.floor_progress = self.floor_progress + self.elevator_speed * dt
+	if self.floor_progress > 1 then
+		self.floor = self.floor + 1
+		self.floor_progress = self.floor_progress - 1
+		self:new_wave()
+	end
+end
+
+function Game:new_wave()
+	-- Spawn a bunch of enemies
+	local bw = BLOCK_WIDTH
+	local wg = self.world_generator
+	local n = 10 + self.floor
+	for i=1, n do
+		local x,y = love.math.random(wg.box_ax*bw, wg.box_bx*bw), love.math.random(wg.box_ay*bw, wg.box_by*bw)
+		local enem = random_sample{Enemies.Bee, Enemies.Larva}
+		self:new_actor(enem:new(x,y))
 	end
 end
 

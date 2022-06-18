@@ -78,14 +78,24 @@ function draw_centered_text(text, rect_x, rect_y, rect_w, rect_h, rot, sx, sy, f
 	love.graphics.setFont(deffont)
 end
 
-function print_centered(text, x, y, rot, sx, sy)
+function print_centered(text, x, y, rot, sx, sy, ...)
 	rot = rot or 0
 	sx = sx or 1
 	sy = sy or sx
 	local font   = love.graphics.getFont()
 	local text_w = font:getWidth(text)
 	local text_h = font:getHeight(text)
-	love.graphics.print(text, x-text_w/2, y-text_h/2, rot, sx, sy)
+	love.graphics.print(text, x-text_w/2, y-text_h/2, rot, sx, sy, ...)
+end
+
+function print_centered_outline(col_in, col_out, text, x, y, rot, sx, sy, ...)
+	rot = rot or 0
+	sx = sx or 1
+	sy = sy or sx
+	local font   = love.graphics.getFont()
+	local text_w = font:getWidth(text)
+	local text_h = font:getHeight(text)
+	print_outline(col_in, col_out, text, x-text_w/2, y-text_h/2, rot, sx, sy, ...)
 end
 
 function get_text_width(text, font)

@@ -25,7 +25,7 @@ function WorldGenerator:generate(seed)
 	map:reset()
 
 	-- Box around map 
-	self:make_floor()
+	--self:make_box()
 	--[[
 
 	-- Generate cave
@@ -46,17 +46,35 @@ function WorldGenerator:generate(seed)
 	--]]
 end
 
-function WorldGenerator:make_box()
+function WorldGenerator:make_box(w, h)
 	local map = self.map
-	
-	for ix=0, map.width-1 do
-		map:set_tile(ix, 0, 1)
-		map:set_tile(ix, map.height-1, 1)
+	local ox = 0
+	local oy = 1
+
+	local ax, ay = floor((map.width - w)/2) + ox, floor((map.height - h)/2) + oy
+	local bx, by = ax+w-1, ay+h-1
+	self.box_ax, self.box_ay, self.box_bx, self.box_by = ax,ay,bx,by
+
+	for ix=ax, bx do
+		map:set_tile(ix, ay, 1)
+		map:set_tile(ix, by, 1)
+	end
+	for iy=ay, by do
+		map:set_tile(ax, iy, 1)
+		map:set_tile(bx, iy, 1)
 	end
 
-	for iy=1, map.height-2 do
-		map:set_tile(0, iy, 1)
-		map:set_tile(map.width-1, iy, 1)
+	-- interior
+	for ix=ax+1, bx-1 do
+		for iy=ay+1, by-1 do
+			map:set_tile(ix, iy, 5)
+		end
+	end
+
+	-- chains
+	for iy =0,ay-1 do
+		map:set_tile(4, iy, 4)
+		map:set_tile(map.width-1-4, iy, 4)
 	end
 end
 

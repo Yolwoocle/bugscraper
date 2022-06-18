@@ -16,7 +16,7 @@ function Enemy:init_enemy(x,y, img, w,h)
 	self.speed = 20
 
 	self.damage = 2
-	self.knockback = 0
+	self.knockback = 1200
 end
 
 function Enemy:update_enemy(dt)

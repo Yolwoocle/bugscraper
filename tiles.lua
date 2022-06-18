@@ -27,22 +27,49 @@ function Tiles:init()
 	self.tiles[1] = make_tile(function(self, x, y, w)
 		self:init_tile(x, y, w)
 		self.id = 1
+		self.name = "metal"
+		self.sprite = images.metal
+		
+		self.is_solid = true
+	end)
+
+	-- Grass
+	self.tiles[2] = make_tile(function(self, x, y, w)
+		self:init_tile(x, y, w)
+		self.id = 2
 		self.name = "grass"
 		self.sprite = images.grass
 		
 		self.is_solid = true
-		self.mine_time = .5
 	end)
 
 	-- Dirt
-	self.tiles[2] = make_tile(function(self, x, y, w)
+	self.tiles[3] = make_tile(function(self, x, y, w)
 		self:init_tile(x, y, w)
-		self.id = 2
+		self.id = 3
 
 		self.name = "dirt"
 		self.sprite = images.dirt
 		self.is_solid = true
-		self.mine_time = .5
+	end)
+
+	-- Chain
+	self.tiles[4] = make_tile(function(self, x, y, w)
+		self:init_tile(x, y, w)
+		self.id = 4
+
+		self.name = "chain"
+		self.sprite = images.chain
+		self.is_solid = false
+	end)
+
+	self.tiles[5] = make_tile(function(self, x, y, w)
+		self:init_tile(x, y, w)
+		self.id = 5
+		
+		self.name = "bg_plate"
+		self.sprite = images.bg_plate
+		self.is_solid = false
 	end)
 end
 

@@ -6,13 +6,11 @@ local Bullet = Actor:inherit()
 
 function Bullet:init(gun, player, x, y, w, h, vx, vy)
 	local x, y = x-w/2, y-h/2
-	self:init_actor(x, y, w, h)
+	self:init_actor(x, y, w, h, images.bullet)
 	self.gun = gun
 	self.player = player
 	self.is_enemy = player.is_enemy
 	self.is_bullet = true
-
-	self.sprite = images.snowball
 
 	self.friction_x = 1
 	self.friction_y = 1
@@ -40,6 +38,7 @@ function Bullet:update(dt)
 end
 
 function Bullet:draw()
+	self:draw_actor(self.vx < 0)
 	gfx.draw(self.sprite, self.x, self.y)
 end
 

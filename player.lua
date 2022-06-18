@@ -14,15 +14,19 @@ function Player:init(n, x, y, spr, controls)
 	y = y or 0
 	spr = spr or images.ant
 	self:init_actor(x, y, 10, 10, spr)
-
-	self.squash = 1
-
+	
+	-- Life
 	self.max_life = 20
 	self.life = self.max_life
-
+	
+	-- Meta
 	self.n = n
+	self.is_enemy = false
 	self.controls = controls
 	self:init_last_input_state()
+	
+	-- Animation
+	self.squash = 1
 
 	self.mid_x = self.x + floor(self.w / 2)
 	self.mid_y = self.y + floor(self.h / 2)
@@ -40,7 +44,7 @@ function Player:init(n, x, y, spr, controls)
 	-- Wall sliding & jumping
 	self.is_walled = false
 	self.wall_jump_kick_speed = 300
-	self.wall_slide_speed = 50
+	self.wall_slide_speed = 30
 	self.is_wall_sliding = false
 
 	self.wall_jump_margin = 8
@@ -67,10 +71,9 @@ function Player:init(n, x, y, spr, controls)
 	self.mine_timer = 0
 	self.cu_target = nil
 
-	-- Snowballs 
-	self.is_snowballing = false
-	self.snowball_size = 0
-	self.snowball_speed = 500
+	-- Invicibility
+	self.iframes = 0
+	self.max_iframes = 3
 
 	-- Debug 
 	self.dt = 1
@@ -87,6 +90,7 @@ function Player:update(dt)
 	self:update_actor(dt)
 	self.mid_x = self.x + floor(self.w/2)
 	self.mid_y = self.y + floor(self.h/2)
+	self.iframes = max(0, self.iframes - dt)
 	
 	-- Gun
 	self.gun:update(dt)
@@ -100,7 +104,13 @@ function Player:update(dt)
 end
 
 function Player:draw()
+	if self.iframes > 0 then    
+		-- Red for invincibility
+		local v = 1 - (self.iframes / self.max_iframes)
+		gfx.setColor({1,v,v})   
+	end
 	self:draw_actor(self.move_dir_x)
+	gfx.setColor(COL_WHITE)
 
 	-- Cursor
 	if self.cu_target then
@@ -255,7 +265,7 @@ end
 function Player:shoot(dt)
 	if self:button_down("fire") then
 		self.is_shooting = true
-		self.gun:shoot(dt, self, self.mid_x, self.mid_y, self.move_dir_x, 0)
+		self.gun:shoot(dt, self, self.mid_x + self.move_dir_x*18, self.mid_y, self.move_dir_x, 0)
 	else
 		self.is_shooting = false
 	end
@@ -357,11 +367,15 @@ function Player:on_collision(col, other)
 end
 
 function Player:do_damage(n, source)
-	self:do_knockback(source.knockback, source)
+	if self.iframes > 0 then    return    end
+
+	self:do_knockback(source.knockback, source)--, 0, source.h/2)
 	--source:do_knockback(source.knockback*0.75, self)
 
 	self.life = self.life - n
 	self.life = clamp(self.life, 0, self.max_life)
+
+	self.iframes = self.max_iframes
 
 	if self.life <= 0 then
 		self:die()
