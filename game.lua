@@ -20,7 +20,7 @@ function Game:init()
 	particles = ParticleSystem:new()
 
 	-- Players
-	self.number_of_player = 2
+	self.number_of_player = 1
 
 	-- Map & world gen
 	self.shaft_w, self.shaft_h = 26,14
@@ -46,7 +46,8 @@ function Game:init()
 	for i,box in pairs(self.boxes) do   collision:add(box)   end
 	
 	-- Actors
-	self.actor_limit = 30
+	self.actor_limit = 100
+	self.enemy_count = 0
 	self.actors = {}
 	self:init_players()
 	self:new_actor(Enemies.Bug:new(64,64))
@@ -59,19 +60,23 @@ function Game:init()
 
 	self.test_t = 0
 
-	self.test_bgstuff = {}
+	self.bg_particles = {}
 	for i=1,20 do
 		local o = {}
 		o.x = love.math.random(0, CANVAS_WIDTH)
 		o.w = love.math.random(2, 12)
 		o.h = love.math.random(8, 64)
 		o.y = -o.h - love.math.random(0, CANVAS_HEIGHT)
-		table.insert(self.test_bgstuff, o)
+		table.insert(self.bg_particles, o)
 	end
 end
 
 function Game:update(dt)
-	for i,o in pairs(self.test_bgstuff) do
+	self.map:update(dt)
+	
+	-- Particles
+	particles:update(dt)
+	for i,o in pairs(self.bg_particles) do
 		o.y = o.y + dt*400
 		if o.y > CANVAS_HEIGHT then
 			o.x = love.math.random(0, CANVAS_WIDTH)
@@ -81,15 +86,13 @@ function Game:update(dt)
 		end
 	end
 
-	self.map:update(dt)
-	particles:update(dt)
-
 	self:progress_elevator(dt)
 
+	-- Debug TESTTESTTEST
 	for k,actor in pairs(self.actors) do
 		actor.debug_timer = 0
 	end
-
+	-- Update actors
 	for k,actor in pairs(self.actors) do
 		if not actor.debug_timer then    actor.debug_timer = 0    end
 		actor.debug_timer = actor.debug_timer + 1
@@ -102,12 +105,6 @@ function Game:update(dt)
 		if actor.is_removed then
 			table.remove(self.actors, i)
 		end
-	end
-
-	--- azdazedad teststet test SPAWN ACT5OR
-	self.test_t = self.test_t-dt
-	if self.test_t < 0 then
-
 	end
 
 	if love.keyboard.isDown("r") then   
@@ -125,7 +122,7 @@ function Game:draw()
 	gfx.clear(COL_DARK_BLUE)
 	particles:draw()
 
-	for i,o in pairs(self.test_bgstuff) do
+	for i,o in pairs(self.bg_particles) do
 		rect_color(COL_DARK_GRAY, "fill", o.x, o.y, o.w, o.h)
 	end
 
@@ -202,12 +199,12 @@ function Game:init_players()
 	local control_schemes = {
 		[1] = {
 			type = "keyboard",
-			left = {"a"},
-			right = {"d"},
-			up = {"w"},
-			down = {"s"},
-			jump = {"c"},
-			fire = {"v"},
+			left = {"a", "left"},
+			right = {"d", "right"},
+			up = {"w", "up"},
+			down = {"s", "down"},
+			jump = {"z", "c", "b"},
+			fire = {"x", "v", "n"},
 		},
 		[2] = {
 			type = "keyboard",
@@ -239,6 +236,8 @@ function Game:init_players()
 end
 
 function Game:progress_elevator(dt)
+
+	-- If progress is maxed, go to next floor
 	self.floor_progress = self.floor_progress + self.elevator_speed * dt
 	if self.floor_progress > 1 then
 		self.floor = self.floor + 1
@@ -253,7 +252,8 @@ function Game:new_wave()
 	local wg = self.world_generator
 	local n = 10 + self.floor
 	for i=1, n do
-		local x,y = love.math.random(wg.box_ax*bw, wg.box_bx*bw), love.math.random(wg.box_ay*bw, wg.box_by*bw)
+		local x = love.math.random((wg.box_ax+1)*bw, (wg.box_bx-1)*bw)
+		local y = love.math.random((wg.box_ay+1)*bw, (wg.box_by-1)*bw)
 		local enem = random_sample{Enemies.Bee, Enemies.Larva}
 		self:new_actor(enem:new(x,y))
 	end

@@ -35,6 +35,7 @@ function Enemies:init()
 		self:init_enemy(x,y, images.larva, 7, 7)
 
 		self.life = 5
+		self.speed = 5
 	end
 end
 

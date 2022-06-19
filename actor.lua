@@ -18,6 +18,8 @@ function Actor:init_actor(x, y, w, h, spr)
 	self.vx = 0
 	self.vy = 0
 
+	self.rot = 0
+
 	self.default_gravity = 20
 	self.gravity = self.default_gravity
 	self.gravity_cap = 400
@@ -104,9 +106,10 @@ end
 function Actor:draw_actor(fx, fy)
 	if self.is_removed then   return   end
 	
-	-- f == flip
-	if fx == true then   fx = -1 end
-	if fy == true then   fy = -1 end
+	-- f : flip
+	-- fix this, this is dumb
+	if fx == true then   fx = -1   elseif fx == false then   fx = 1 end
+	if fy == true then   fy = -1   elseif fy == false then   fy = 1 end
 
 	fx = (fx or 1)*self.sx
 	fy = (fy or 1)*self.sy
@@ -117,7 +120,7 @@ function Actor:draw_actor(fx, fy)
 	local x = self.x + spr_w2 - self.spr_ox
 	local y = self.y + spr_h2 - self.spr_oy
 	if self.sprite then
-		gfx.draw(self.sprite, x, y, 0, fx, fy, spr_w2, spr_h2)
+		gfx.draw(self.sprite, x, y, self.rot, fx, fy, spr_w2, spr_h2)
 	end
 end
 

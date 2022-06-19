@@ -30,7 +30,8 @@ function Player:init(n, x, y, spr, controls)
 
 	self.mid_x = self.x + floor(self.w / 2)
 	self.mid_y = self.y + floor(self.h / 2)
-	self.move_dir_x = 1
+	self.dir_x = 1
+	self.dir_y = 0
 	
 	-- Speed 
 	self.speed = 50
@@ -88,6 +89,7 @@ function Player:update(dt)
 	self:do_jumping(dt)
 	self:do_gravity(dt)
 	self:update_actor(dt)
+	self:do_aiming(dt)
 	self.mid_x = self.x + floor(self.w/2)
 	self.mid_y = self.y + floor(self.h/2)
 	self.iframes = max(0, self.iframes - dt)
@@ -109,7 +111,7 @@ function Player:draw()
 		local v = 1 - (self.iframes / self.max_iframes)
 		gfx.setColor({1,v,v})   
 	end
-	self:draw_actor(self.move_dir_x)
+	self:draw_actor(self.dir_x)
 	gfx.setColor(COL_WHITE)
 
 	-- Cursor
@@ -133,7 +135,7 @@ function Player:move(dt)
 	if self:button_down('right') then   dir.x = dir.x + 1   end
 
 	if dir.x ~= 0 then
-		self.move_dir_x = dir.x
+		self.dir_x = dir.x
 
 		-- If not shooting, update shooting direction
 		if not self.is_shooting then
@@ -172,7 +174,7 @@ function Player:do_wall_sliding(dt)
 
 	-- Orient player opposite if wall sliding
 	if self.is_wall_sliding then
-		self.move_dir_x = self.wall_col.normal.x
+		self.dir_x = self.wall_col.normal.x
 		self.shoot_dir_x = self.wall_col.normal.x
 	end
 end
@@ -182,7 +184,7 @@ function Player:do_jumping(dt)
 
 	-- This buffer is so that you still jump even if you're a few frames behind
 	self.buffer_jump_timer = self.buffer_jump_timer - 1
-	if self:button_pressed("up") then
+	if self:button_pressed("jump") then
 		self.buffer_jump_timer = 12
 	end
 
@@ -203,7 +205,7 @@ function Player:do_jumping(dt)
 			-- Conditions for a wall jump ("wall kick")
 			local left_jump  = (wall_normal.x == 1) and self:button_down("right")
 			local right_jump = (wall_normal.x == -1) and self:button_down("left")
-
+			
 			-- Conditions for a wall jump used for climbing, while sliding ("wall climb")
 			local wall_climb = self.is_wall_sliding
 
@@ -265,7 +267,12 @@ end
 function Player:shoot(dt)
 	if self:button_down("fire") then
 		self.is_shooting = true
-		self.gun:shoot(dt, self, self.mid_x + self.move_dir_x*18, self.mid_y, self.move_dir_x, 0)
+
+		local dx = self.dir_x
+		local aim_horizontal = (self:button_down"left" or self:button_down"right")
+		-- Allow aiming upwards 
+		if abs(self.dir_y)>0 and not aim_horizontal then    dx = 0    end
+		self.gun:shoot(dt, self, self.mid_x, self.mid_y, dx, self.dir_y)
 	else
 		self.is_shooting = false
 	end
@@ -324,7 +331,7 @@ function Player:update_cursor(dt)
 		if btn_down then  dy = 1     end
 	else
 		-- By default, target sideways
-		dx = self.move_dir_x
+		dx = self.dir_x
 	end
 
 	-- Update target position
@@ -405,6 +412,12 @@ function Player:on_grounded()
 	self.squash = 2
 end
 
+function Player:do_aiming(dt)
+	self.dir_y = 0
+	if self:button_down("up") then      self.dir_y = -1    end
+	if self:button_down("down") then    self.dir_y = 1     end
+end
+
 function Player:do_snowballing()
 	local moving = self:button_down("left") or self:button_down("right")
 	if self.is_grounded and self:button_down("down") and moving then
@@ -412,7 +425,7 @@ function Player:do_snowballing()
 	end
 
 	if self:button_down("fire") then
-		local spd = self.snowball_speed * self.move_dir_x
+		local spd = self.snowball_speed * self.dir_x
 		game:new_actor(Bullet:new(self, self.mid_x, self.mid_y, 10, 10, spd, -self.snowball_speed))
 	end
 end

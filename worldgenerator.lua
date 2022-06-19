@@ -65,14 +65,14 @@ function WorldGenerator:make_box(w, h)
 	end
 
 	-- interior
-	for ix=ax+1, bx-1 do
-		for iy=ay+1, by-1 do
-			map:set_tile(ix, iy, 5)
-		end
-	end
+	-- for ix=ax+1, bx-1 do
+	-- 	for iy=ay+1, by-1 do
+	-- 		map:set_tile(ix, iy, 5)
+	-- 	end
+	-- end
 
 	-- chains
-	for iy =0,ay-1 do
+	for iy = 0,ay-1 do
 		map:set_tile(4, iy, 4)
 		map:set_tile(map.width-1-4, iy, 4)
 	end

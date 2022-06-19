@@ -1,0 +1,15 @@
+{
+	"Lua.diagnostics.globals": [
+		"load_image_table",
+		"collision",
+		"particles",
+		"love",
+		"line_color",
+		"noise",
+		"print_outline",
+		"print_label"
+	],
+	"Lua.diagnostics.disable": [
+		"lowercase-global"
+	]
+}
