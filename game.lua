@@ -236,6 +236,8 @@ function Game:init_players()
 end
 
 function Game:progress_elevator(dt)
+	-- Elevator speed depends on number of enemies
+	self.elevator_speed = 1/max(1, self.enemy_count)
 
 	-- If progress is maxed, go to next floor
 	self.floor_progress = self.floor_progress + self.elevator_speed * dt
@@ -251,6 +253,7 @@ function Game:new_wave()
 	local bw = BLOCK_WIDTH
 	local wg = self.world_generator
 	local n = 10 + self.floor
+	self.cur_wave_max_enemy_count = n
 	for i=1, n do
 		local x = love.math.random((wg.box_ax+1)*bw, (wg.box_bx-1)*bw)
 		local y = love.math.random((wg.box_ay+1)*bw, (wg.box_by-1)*bw)

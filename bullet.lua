@@ -31,6 +31,8 @@ end
 function Bullet:update(dt)
 	self:update_actor(dt)
 
+	self.rot = atan2(self.vy, self.vx)
+
 	self.life = self.life - dt
 	if self.life < 0 then
 		self:remove()
