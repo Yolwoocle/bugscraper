@@ -19,12 +19,13 @@ function Enemies:init()
 	
 	self.Bee.init = function(self, x, y)
 		self:init_enemy(x,y, images.bee)
+		self.is_flying = true
 		self.life = 10
-		self.color = rgb(0,50,190)
-		self.speed_y = 0--self.speed * 0.5
-
+		--self.speed_y = 0--self.speed * 0.5
+		
 		self.speed = 10
 		self.gravity = 0
+		self.friction_y = self.friction_x
 	end
 
 	-------------

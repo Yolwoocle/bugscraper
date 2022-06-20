@@ -7,6 +7,7 @@ local TileMap = require "tilemap"
 local WorldGenerator = require "worldgenerator"
 local Inventory = require "inventory"
 local ParticleSystem = require "particles"
+local AudioManager = require "audio"
 
 local images = require "images"
 require "util"
@@ -18,6 +19,10 @@ function Game:init()
 	-- Global singletons
 	collision = Collision:new()
 	particles = ParticleSystem:new()
+	audio = AudioManager:new()
+
+	-- Audio
+	self.sound_on = true
 
 	-- Players
 	self.number_of_player = 1
@@ -32,7 +37,9 @@ function Game:init()
 	-- Level info
 	self.floor = 0 --Floor n°
 	self.floor_progress = 0 --How far the cabin is to the next floor, 0-1
-	self.elevator_speed = 1/10
+	self.elevator_speed = 1
+	self.max_elev_speed = 1/2
+	self.cur_wave_max_enemy = 1
 
 	-- Bounding box
 	local map_w = self.map.width * BW
@@ -106,15 +113,6 @@ function Game:update(dt)
 			table.remove(self.actors, i)
 		end
 	end
-
-	if love.keyboard.isDown("r") then   
-		self.world_generator.seed = self.world_generator.seed - 0.05
-		self.world_generator:generate(self.map)
-	end
-	if love.keyboard.isDown("t") then   
-		self.world_generator.seed = self.world_generator.seed + 0.05
-		self.world_generator:generate(self.map)
-	end
 end
 
 function Game:draw()
@@ -126,11 +124,19 @@ function Game:draw()
 		rect_color(COL_DARK_GRAY, "fill", o.x, o.y, o.w, o.h)
 	end
 
-	-- Map & Actor
+	-- Map
 	self.map:draw()
 	--TODO: fuze it into map or remove map, only have coll boxes & no map
+	-- Background
 	local bw = BLOCK_WIDTH
-	gfx.draw(images.cabin_bg, self.world_generator.box_ax*bw, self.world_generator.box_ay*bw)
+	local x,y = self.world_generator.box_ax*bw, self.world_generator.box_ay*bw
+	gfx.draw(images.cabin_bg, x, y)
+	gfx.draw(images.cabin_bg_amboccl, x, y)
+	gfx.setFont(FONT_7SEG)
+	print_color(COL_RED, string.sub("00000"..tostring(self.floor),-3,-1), 198+16*2, 97+16*2)
+	gfx.setFont(FONT_REGULAR)
+	
+	-- Draw actors
 	for k,actor in pairs(self.actors) do
 		actor:draw()
 	end
@@ -153,6 +159,9 @@ function Game:new_actor(actor)
 	if #self.actors >= self.actor_limit then   
 		actor:remove()
 		return
+	end
+	if actor.is_enemy then 
+		self.enemy_count = self.enemy_count + 1
 	end
 	table.insert(self.actors, actor)
 end
@@ -177,12 +186,22 @@ function Game:draw_debug()
 	local txts = {
 		love.timer.getFPS(),
 		concat("n° of actors: ", #self.actors, " / ", self.actor_limit),
-		concat("n° collision items: ", --[[collision.world:countItems()]]0)
+		concat("n° collision items: ", collision.world:countItems()),
+		" ",
+		concat("cur_wave_max_enemy: ", self.cur_wave_max_enemy),
+		concat("enemy_count: ", self.enemy_count),
+		"-",
 	}
 	for i=1, #txts do  print_label(txts[i], 0, 16*i) end 
 	
 	self.world_generator:draw()
 	draw_log()
+end
+
+function Game:on_kill(actor)
+	if actor.is_enemy then
+		self.enemy_count = self.enemy_count - 1
+	end
 end
 
 function draw_log()
@@ -236,14 +255,13 @@ function Game:init_players()
 end
 
 function Game:progress_elevator(dt)
-	-- Elevator speed depends on number of enemies
-	self.elevator_speed = 1/max(1, self.enemy_count)
+	-- Only switch to next floor until elevator arrived
+	local do_progress = (self.enemy_count == 0)
 
-	-- If progress is maxed, go to next floor
-	self.floor_progress = self.floor_progress + self.elevator_speed * dt
-	if self.floor_progress > 1 then
+	-- Go to next floor
+	if do_progress then
+		self.floor_progress = self.floor_progress + self.elevator_speed * dt
 		self.floor = self.floor + 1
-		self.floor_progress = self.floor_progress - 1
 		self:new_wave()
 	end
 end
@@ -253,7 +271,10 @@ function Game:new_wave()
 	local bw = BLOCK_WIDTH
 	local wg = self.world_generator
 	local n = 10 + self.floor
-	self.cur_wave_max_enemy_count = n
+
+	self.cur_wave_max_enemy = n
+	--self.enemy_count = n
+
 	for i=1, n do
 		local x = love.math.random((wg.box_ax+1)*bw, (wg.box_bx-1)*bw)
 		local y = love.math.random((wg.box_ay+1)*bw, (wg.box_by-1)*bw)

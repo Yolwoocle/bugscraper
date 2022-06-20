@@ -1,6 +1,7 @@
 require "util"
 local Class = require "class"
 local Bullet = require "bullet"
+local sounds = require "sounds"
 
 local Gun = Class:inherit()
 
@@ -13,6 +14,9 @@ function Gun:init_gun()
 
 	self.cooldown = 0.3
 	self.cooldown_timer = 0
+
+	self.sfx = sounds.shot3
+	self.sfx_pitch_var = 1.15
 end
 
 function Gun:update(dt)
@@ -33,6 +37,7 @@ function Gun:shoot(dt, player, x, y, vx, vy)
 	if self.ammo > 0 and self.cooldown_timer <= 0 then
 		local x = floor(x)
 		local y = floor(y)
+		audio:play_var(self.sfx, 0.2, 1.4)
 		self:fire_bullet(dt, player, x, y, self.bul_w, self.bul_h, vx, vy)
 	end
 end	

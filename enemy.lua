@@ -58,18 +58,16 @@ end
 function Enemy:draw()
 	self:draw_actor()
 
-	--gfx.draw(images.heart, self.x-7 -2+16, self.y-16)
-	--print_outline(COL_WHITE, COL_DARK_BLUE, self.life, self.x+16, self.y-16-2)
+	if game.debug_mode then
+		gfx.draw(images.heart, self.x-7 -2+16, self.y-16)
+		print_outline(COL_WHITE, COL_DARK_BLUE, self.life, self.x+16, self.y-16-2)
+	end
 end
 
 function Enemy:on_collision(col)
 	if col.other.is_solid and col.normal.y == 0 then
 		self.vx = -self.vx
 	end
-end
-
-function Enemy:on_hit_bullet(bullet, col)
-	self:do_damage(bullet.damage)
 end
 
 function Enemy:do_damage(n)
@@ -80,6 +78,9 @@ function Enemy:do_damage(n)
 end
 
 function Enemy:kill()
+	if self.is_removed then print('killed while destroyed') end
+
+	game:on_kill(self)
 	self:remove()
 end
 

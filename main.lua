@@ -33,8 +33,9 @@ function love.load(arg)
 	love.window.setTitle("Cool game")
 
 	-- Load fonts
-	local font_regular = gfx.newFont("fonts/HopeGold.ttf", 16)
-	gfx.setFont(font_regular)
+	FONT_REGULAR = gfx.newFont("fonts/HopeGold.ttf", 16)
+	gfx.setFont(FONT_REGULAR)
+	FONT_7SEG = love.graphics.newImageFont("fonts/7seg_font.png", " 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 	
 	game = Game:new()
 end

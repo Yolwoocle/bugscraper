@@ -1,6 +1,13 @@
 -- This file is for functions, classes that are unused but I figure
 -- I might have an use for later on. 
 
+-- Elevator speed depends on number of enemies
+-- In Game:progress_elevator
+local enemies_killed = max(self.cur_wave_max_enemy - self.enemy_count, 0)
+local ratio_killed = clamp(enemies_killed / self.cur_wave_max_enemy, 0, 1)
+local speed = self.max_elev_speed * ratio_killed
+self.elevator_speed = speed
+
 -- Terraria-like world generation
 for ix=0, map_w-1 do
 	-- Big hill general shape

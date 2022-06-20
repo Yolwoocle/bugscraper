@@ -3,6 +3,7 @@ local Actor = require "actor"
 local Guns = require "guns"
 local Bullet = require "bullet"
 local images = require "images"
+local sounds = require "sounds"
 require "util"
 require "constants"
 
@@ -242,11 +243,13 @@ function Player:get_nearby_wall()
 end
 
 function Player:jump(dt)
+	audio:play_random_pitch(sounds.jump, 1.15)
 	self.vy = -self.jump_speed
 	self.squash = 1/4
 end
 
 function Player:wall_jump(normal)
+	audio:play_random_pitch(sounds.jump, 1.15)
 	self.vx = normal.x * self.wall_jump_kick_speed
 	self.vy = -self.jump_speed
 end
@@ -391,7 +394,6 @@ end
 
 function Player:die()
 	self.life = 0
-	print("oh no i died")
 end
 
 function Player:on_hit_bullet(bul, col)

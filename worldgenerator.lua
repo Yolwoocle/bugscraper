@@ -53,7 +53,7 @@ function WorldGenerator:make_box(w, h)
 
 	local ax, ay = floor((map.width - w)/2) + ox, floor((map.height - h)/2) + oy
 	local bx, by = ax+w-1, ay+h-1
-	self.box_ax, self.box_ay, self.box_bx, self.box_by = ax,ay,bx,by
+	self.box_ax, self.box_ay, self.box_bx, self.box_by = ax, ay, bx, by
 
 	for ix=ax, bx do
 		map:set_tile(ix, ay, 1)

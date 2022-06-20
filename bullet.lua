@@ -40,8 +40,8 @@ function Bullet:update(dt)
 end
 
 function Bullet:draw()
-	self:draw_actor(self.vx < 0)
-	gfx.draw(self.sprite, self.x, self.y)
+	self:draw_actor()
+	--gfx.draw(self.sprite, self.x, self.y)
 end
 
 function Bullet:on_collision(col)

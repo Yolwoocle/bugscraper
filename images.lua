@@ -34,7 +34,8 @@ local img_names = {
 	"chain",
 	"bg_plate",
 	"bullet",
-	"cabin_bg"
+	"cabin_bg",
+	"cabin_bg_amboccl",
 }
 
 local images = {}
