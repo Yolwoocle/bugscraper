@@ -18,6 +18,8 @@ local sfxnames = {
 	"shot1", "shot1.wav",
 	"shot2", "shot2.wav",
 	"shot3", "shot3.wav",
+	"hurt",  "hurt.wav",
+	"land",  "land.wav",
 }
 
 for i=1, #sfxnames, 2 do    sounds[sfxnames[i]] = new_source(sfxnames[i+1], "static")    end

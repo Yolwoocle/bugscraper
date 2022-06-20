@@ -133,7 +133,7 @@ function Game:draw()
 	gfx.draw(images.cabin_bg, x, y)
 	gfx.draw(images.cabin_bg_amboccl, x, y)
 	gfx.setFont(FONT_7SEG)
-	print_color(COL_RED, string.sub("00000"..tostring(self.floor),-3,-1), 198+16*2, 97+16*2)
+	print_color(COL_WHITE, string.sub("00000"..tostring(self.floor),-3,-1), 198+16*2, 97+16*2)
 	gfx.setFont(FONT_REGULAR)
 	
 	-- Draw actors

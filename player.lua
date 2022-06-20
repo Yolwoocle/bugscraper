@@ -243,13 +243,13 @@ function Player:get_nearby_wall()
 end
 
 function Player:jump(dt)
-	audio:play_random_pitch(sounds.jump, 1.15)
+	audio:play_var(sounds.jump, 0, 1.2)
 	self.vy = -self.jump_speed
 	self.squash = 1/4
 end
 
 function Player:wall_jump(normal)
-	audio:play_random_pitch(sounds.jump, 1.15)
+	audio:play_var(sounds.jump, 0, 1.2)
 	self.vx = normal.x * self.wall_jump_kick_speed
 	self.vy = -self.jump_speed
 end
@@ -379,6 +379,7 @@ end
 function Player:do_damage(n, source)
 	if self.iframes > 0 then    return    end
 
+	audio:play("hurt")
 	self:do_knockback(source.knockback, source)--, 0, source.h/2)
 	--source:do_knockback(source.knockback*0.75, self)
 
@@ -411,6 +412,7 @@ function Player:update_visuals()
 end
 
 function Player:on_grounded()
+	audio:play("land")
 	self.squash = 2
 end
 
