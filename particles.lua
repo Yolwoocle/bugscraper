@@ -10,7 +10,7 @@ function Particle:init(x,y,r,col, vx,vy,vr, life)
 
 	self.col = col or COL_WHITE
 	self.r = r
-	self.vr = vr or 2
+	self.vr = vr or 20
 	
 	self.max_life = life or 5
 	self.life = self.max_life
@@ -63,13 +63,19 @@ function ParticleSystem:clear()
 	self.particles = {}
 end
 
-function ParticleSystem:smoke(x, y, col, spw_rad, size, sizevar)
-	for i=1,10 do
+function ParticleSystem:smoke(x, y, number, col, spw_rad, size, sizevar)
+	number = number or 10
+	col = col or COL_WHITE
+	spw_rad = spw_rad or 8
+	size = size or 4
+	sizevar = sizevar or 2
+
+	for i=1,number do
 		local ang = love.math.random() * pi2
 		local dist = love.math.random() * spw_rad
 		local dx, dy = cos(ang)*dist, sin(ang)*dist
 		local dsize = random_neighbor(sizevar)
-		self:add_particle(x+dx, y+dy, size+dsize, col, 0, 0, vr, life)
+		self:add_particle(x+dx, y+dy, size+dsize, col, 0, 0, _vr, _life)
 	end
 end
 

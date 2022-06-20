@@ -1,6 +1,62 @@
 -- This file is for functions, classes that are unused but I figure
 -- I might have an use for later on. 
 
+-- Player mine and cursor
+function Player:update_cursor(dt)
+	local old_cu_x = self.cu_x
+	local old_cu_y = self.cu_y
+
+	local tx = floor(self.mid_x / BLOCK_WIDTH) 
+	local ty = floor(self.mid_y / BLOCK_WIDTH) 
+	local dx, dy = 0, 0
+
+	-- Target up and down 
+	local btn_up = self:button_down("up")
+	local btn_down = self:button_down("down")
+	if btn_up or btn_down then
+		dx = 0
+		if btn_up then    dy = -1    end
+		if btn_down then  dy = 1     end
+	else
+		-- By default, target sideways
+		dx = self.dir_x
+	end
+
+	-- Update target position
+	self.cu_x = tx + dx
+	self.cu_y = ty + dy
+
+	-- Update target tile
+	local target_tile = game.map:get_tile(self.cu_x, self.cu_y)
+	self.cu_target = nil
+	if target_tile and target_tile.is_solid then
+		self.cu_target = target_tile
+	end
+	
+	-- If changed cursor pos, reset cursor
+	if (old_cu_x ~= self.cu_x) or (old_cu_y ~= self.cu_y) then
+		self.mine_timer = 0
+	end
+end
+
+function Player:mine(dt)
+	if not self.cu_target then   return    end
+	
+	if self:button_down("fire") then
+		self.mine_timer = self.mine_timer + dt
+
+		if self.mine_timer > self.cu_target.mine_time then
+			local drop = self.cu_target.drop
+			game.map:set_tile(self.cu_x, self.cu_y, 0)
+			--game.inventory:add_item(drop)
+		end
+	else
+		self.mine_timer = 0
+	end
+end
+
+------------------------------------
+
 -- Elevator speed depends on number of enemies
 -- In Game:progress_elevator
 local enemies_killed = max(self.cur_wave_max_enemy - self.enemy_count, 0)

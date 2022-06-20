@@ -10,17 +10,23 @@ function Enemy:init_enemy(x,y, img, w,h)
 	self:init_actor(x, y, w, h, img or images.duck)
 	self.is_enemy = true
 	self.is_flying = false
+	self.is_active = true
+	self.follow_player = true
 
 	self.life = 10
 	self.color = COL_BLUE
 	self.speed = 20
+	self.speed_x = self.speed
+	self.speed_y = 0
 
 	self.damage = 2
 	self.knockback = 1200
 end
 
 function Enemy:update_enemy(dt)
+	if not self.is_active then    return    end
 	self:update_actor(dt)
+
 	self:follow_nearest_player(dt)
 	if self.life <= 0 then
 		self:remove()
@@ -44,19 +50,22 @@ function Enemy:get_nearest_player()
 end
 
 function Enemy:follow_nearest_player(dt)
+	if not self.follow_player then    return    end
+
 	-- Find closest player
 	local nearest_player = self:get_nearest_player()
 	if not nearest_player then    return    end
 	
 	self.speed_x = self.speed_x or self.speed
-	self.speed_y = self.speed_y or self.speed
+	if self.is_flying then    self.speed_y = self.speed_y or self.speed 
+	else                      self.speed_y = self.speed_y or 0    end 
 
 	self.vx = self.vx + sign0(nearest_player.x - self.x) * self.speed_x
 	self.vy = self.vy + sign0(nearest_player.y - self.y) * self.speed_y
 end
 
 function Enemy:draw()
-	self:draw_actor()
+	self:draw_actor(self.vx < 0)
 
 	if game.debug_mode then
 		gfx.draw(images.heart, self.x-7 -2+16, self.y-16)
@@ -65,8 +74,14 @@ function Enemy:draw()
 end
 
 function Enemy:on_collision(col)
+	-- If hit wall, reverse x vel (why is this here?????)
 	if col.other.is_solid and col.normal.y == 0 then
 		self.vx = -self.vx
+	end
+
+	if col.other.is_enemy then
+		self:do_knockback(10, col.other)
+		col.other:do_knockback(10, self)
 	end
 end
 

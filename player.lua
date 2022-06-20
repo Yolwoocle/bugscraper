@@ -74,8 +74,11 @@ function Player:init(n, x, y, spr, controls)
 	self.cu_target = nil
 
 	-- Invicibility
+	self.is_invincible = false
 	self.iframes = 0
 	self.max_iframes = 3
+	self.iframe_blink_freq = 0.1
+	self.iframe_blink_timer = 0
 
 	-- Debug 
 	self.dt = 1
@@ -93,7 +96,7 @@ function Player:update(dt)
 	self:do_aiming(dt)
 	self.mid_x = self.x + floor(self.w/2)
 	self.mid_y = self.y + floor(self.h/2)
-	self.iframes = max(0, self.iframes - dt)
+	self:do_invincibility(dt)
 	
 	-- Gun
 	self.gun:update(dt)
@@ -107,12 +110,9 @@ function Player:update(dt)
 end
 
 function Player:draw()
-	if self.iframes > 0 then    
-		-- Red for invincibility
-		local v = 1 - (self.iframes / self.max_iframes)
-		gfx.setColor({1,v,v})   
+	if not self.is_invincible or self.iframe_blink_timer > self.iframe_blink_freq/2 then
+		self:draw_actor(self.dir_x)
 	end
-	self:draw_actor(self.dir_x)
 	gfx.setColor(COL_WHITE)
 
 	-- Cursor
@@ -147,6 +147,16 @@ function Player:move(dt)
 	-- Apply velocity 
 	self.vx = self.vx + dir.x * self.speed
 	self.vy = self.vy + dir.y * self.speed
+end
+
+function Player:do_invincibility(dt)
+	self.iframes = max(0, self.iframes - dt)
+
+	self.is_invincible = false
+	if self.iframes > 0 then
+		self.is_invincible = true
+		self.iframe_blink_timer = (self.iframe_blink_timer + dt) % self.iframe_blink_freq
+	end
 end
 
 function Player:do_wall_sliding(dt)
@@ -243,15 +253,19 @@ function Player:get_nearby_wall()
 end
 
 function Player:jump(dt)
-	audio:play_var(sounds.jump, 0, 1.2)
 	self.vy = -self.jump_speed
+	
+	particles:smoke(self.mid_x, self.y+self.h)
+	audio:play_var(sounds.jump, 0, 1.2)
 	self.squash = 1/4
 end
 
 function Player:wall_jump(normal)
-	audio:play_var(sounds.jump, 0, 1.2)
 	self.vx = normal.x * self.wall_jump_kick_speed
 	self.vy = -self.jump_speed
+	
+	audio:play_var(sounds.jump, 0, 1.2)
+	self.squash = 1/4
 end
 
 function Player:on_jump()
@@ -275,7 +289,14 @@ function Player:shoot(dt)
 		local aim_horizontal = (self:button_down"left" or self:button_down"right")
 		-- Allow aiming upwards 
 		if abs(self.dir_y)>0 and not aim_horizontal then    dx = 0    end
+
 		self.gun:shoot(dt, self, self.mid_x, self.mid_y, dx, self.dir_y)
+
+		-- If shooting downwards, then go up
+		if self:button_down"down" then
+			self.vy = self.vy - 100
+			self.vy = self.vy * self.friction_x
+		end
 	else
 		self.is_shooting = false
 	end
@@ -314,59 +335,6 @@ end
 function Player:update_button_state()
 	for btn, v in pairs(self.last_input_state) do
 		self.last_input_state[btn] = self:button_down(btn)
-	end
-end
- 
-function Player:update_cursor(dt)
-	local old_cu_x = self.cu_x
-	local old_cu_y = self.cu_y
-
-	local tx = floor(self.mid_x / BLOCK_WIDTH) 
-	local ty = floor(self.mid_y / BLOCK_WIDTH) 
-	local dx, dy = 0, 0
-
-	-- Target up and down 
-	local btn_up = self:button_down("up")
-	local btn_down = self:button_down("down")
-	if btn_up or btn_down then
-		dx = 0
-		if btn_up then    dy = -1    end
-		if btn_down then  dy = 1     end
-	else
-		-- By default, target sideways
-		dx = self.dir_x
-	end
-
-	-- Update target position
-	self.cu_x = tx + dx
-	self.cu_y = ty + dy
-
-	-- Update target tile
-	local target_tile = game.map:get_tile(self.cu_x, self.cu_y)
-	self.cu_target = nil
-	if target_tile and target_tile.is_solid then
-		self.cu_target = target_tile
-	end
-	
-	-- If changed cursor pos, reset cursor
-	if (old_cu_x ~= self.cu_x) or (old_cu_y ~= self.cu_y) then
-		self.mine_timer = 0
-	end
-end
-
-function Player:mine(dt)
-	if not self.cu_target then   return    end
-	
-	if self:button_down("fire") then
-		self.mine_timer = self.mine_timer + dt
-
-		if self.mine_timer > self.cu_target.mine_time then
-			local drop = self.cu_target.drop
-			game.map:set_tile(self.cu_x, self.cu_y, 0)
-			--game.inventory:add_item(drop)
-		end
-	else
-		self.mine_timer = 0
 	end
 end
 
@@ -412,8 +380,10 @@ function Player:update_visuals()
 end
 
 function Player:on_grounded()
+	-- On land
 	audio:play("land")
 	self.squash = 2
+	particles:smoke(self.mid_x, self.y+self.h, 10, COL_WHITE, 8, 4, 2)
 end
 
 function Player:do_aiming(dt)

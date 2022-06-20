@@ -48,6 +48,9 @@ function Collision.filter(item, other)
 	-- By default, do not react to collisions
 	local type = "cross"
 
+	if not other.is_active then
+		type = "cross"
+	end
 	if other.is_solid then
 		type = "slide"
 	end

@@ -22,7 +22,7 @@ function Game:init()
 	audio = AudioManager:new()
 
 	-- Audio
-	self.sound_on = true
+	self.sound_on = false
 
 	-- Players
 	self.number_of_player = 1
@@ -36,10 +36,15 @@ function Game:init()
 
 	-- Level info
 	self.floor = 0 --Floor n°
-	self.floor_progress = 0 --How far the cabin is to the next floor, 0-1
+	self.floor_progress = 3.5 --How far the cabin is to the next floor
 	self.elevator_speed = 1
-	self.max_elev_speed = 1/2
+	-- self.max_elev_speed = 1/2
 	self.cur_wave_max_enemy = 1
+	
+	-- Background
+	self.door_offset = 0
+	self.draw_enemies_in_bg = false
+	self.door_animation = false
 
 	-- Bounding box
 	local map_w = self.map.width * BW
@@ -95,10 +100,6 @@ function Game:update(dt)
 
 	self:progress_elevator(dt)
 
-	-- Debug TESTTESTTEST
-	for k,actor in pairs(self.actors) do
-		actor.debug_timer = 0
-	end
 	-- Update actors
 	for k,actor in pairs(self.actors) do
 		if not actor.debug_timer then    actor.debug_timer = 0    end
@@ -118,7 +119,6 @@ end
 function Game:draw()
 	-- Sky
 	gfx.clear(COL_DARK_BLUE)
-	particles:draw()
 
 	for i,o in pairs(self.bg_particles) do
 		rect_color(COL_DARK_GRAY, "fill", o.x, o.y, o.w, o.h)
@@ -129,23 +129,32 @@ function Game:draw()
 	--TODO: fuze it into map or remove map, only have coll boxes & no map
 	-- Background
 	local bw = BLOCK_WIDTH
-	local x,y = self.world_generator.box_ax*bw, self.world_generator.box_ay*bw
-	gfx.draw(images.cabin_bg, x, y)
-	gfx.draw(images.cabin_bg_amboccl, x, y)
-	gfx.setFont(FONT_7SEG)
-	print_color(COL_WHITE, string.sub("00000"..tostring(self.floor),-3,-1), 198+16*2, 97+16*2)
-	gfx.setFont(FONT_REGULAR)
+	self.cabin_x, self.cabin_y = self.world_generator.box_ax*bw, self.world_generator.box_ay*bw
+	self.door_ax, self.door_ay = self.cabin_x+154, self.cabin_x+122
+	self.door_bx, self.door_by = self.cabin_y+261, self.cabin_y+207
+
+	-- If doing door animation, draw buffered enemies
+	if self.door_animation then
+		for i,e in pairs(self.door_animation_enemy_buffer) do 
+			e:draw()
+		end
+	end
+	self:draw_background(self.cabin_x, self.cabin_y)
 	
 	-- Draw actors
 	for k,actor in pairs(self.actors) do
 		actor:draw()
 	end
+	particles:draw()
+
+	-- Walls
+	gfx.draw(images.cabin_walls, self.cabin_x, self.cabin_y)
 
 	-- UI
-	print_centered_outline(COL_WHITE, COL_DARK_BLUE, concat("FLOOR ",self.floor), CANVAS_WIDTH/2, 8)
-	local w = 64
-	rect_color(COL_MID_GRAY, "fill", floor((CANVAS_WIDTH-w)/2),    16, w, 8)
-	rect_color(COL_WHITE,    "fill", floor((CANVAS_WIDTH-w)/2) +1, 17, (w-2)*self.floor_progress, 6)
+	-- print_centered_outline(COL_WHITE, COL_DARK_BLUE, concat("FLOOR ",self.floor), CANVAS_WIDTH/2, 8)
+	-- local w = 64
+	-- rect_color(COL_MID_GRAY, "fill", floor((CANVAS_WIDTH-w)/2),    16, w, 8)
+	-- rect_color(COL_WHITE,    "fill", floor((CANVAS_WIDTH-w)/2) +1, 17, (w-2)*self.floor_progress, 6)
 
 	-- Debug
 	if self.debug_mode then
@@ -194,6 +203,8 @@ function Game:draw_debug()
 	}
 	for i=1, #txts do  print_label(txts[i], 0, 16*i) end 
 	
+	rect_color(COL_RED, "line", self.door_ax, self.door_ay, self.door_bx-self.door_ax, self.door_by-self.door_ay)
+
 	self.world_generator:draw()
 	draw_log()
 end
@@ -255,32 +266,100 @@ function Game:init_players()
 end
 
 function Game:progress_elevator(dt)
-	-- Only switch to next floor until elevator arrived
-	local do_progress = (self.enemy_count == 0)
+	-- Only switch to next floor until all enemies killed
+	if not self.door_animation and self.enemy_count == 0 then
+		self.door_animation = true
+		self:new_wave_buffer_enemies()
+	end
 
-	-- Go to next floor
-	if do_progress then
-		self.floor_progress = self.floor_progress + self.elevator_speed * dt
+	-- Do the door opening animation
+	if self.door_animation then
+		self.door_animation = true
+
+		self.floor_progress = self.floor_progress - dt
+		self.draw_enemies_in_bg = true
+		
+		self:update_door_anim()
+	end
+	
+	-- Go to next floor once animation is finished
+	if self.floor_progress <= 0 then
+		self.floor_progress = 3.5
 		self.floor = self.floor + 1
-		self:new_wave()
+		
+		self.door_animation = false
+		self.draw_enemies_in_bg = false
+		self.door_offset = 0
 	end
 end
 
-function Game:new_wave()
+function Game:update_door_anim()
+	-- 3-2: open doors / 2-1: idle / 1-0: close doors
+	if self.floor_progress < 1 then
+		-- Close doors
+		self.door_offset = lerp(self.door_offset, 0, 0.1)
+		self:activate_enemy_buffer()
+
+	elseif self.floor_progress < 2 then
+		-- Keep door open
+		self.door_offset = 54
+
+	elseif self.floor_progress < 3 then
+		-- Open door
+		self.door_offset = lerp(self.door_offset, 54, 0.1)
+
+	else
+		-- Door closed
+		self.door_offset = 0
+	end
+end
+
+function Game:new_wave_buffer_enemies()
 	-- Spawn a bunch of enemies
 	local bw = BLOCK_WIDTH
 	local wg = self.world_generator
-	local n = 10 + self.floor
+	local n = 5 + self.floor
 
 	self.cur_wave_max_enemy = n
-	--self.enemy_count = n
-
+	self.door_animation_enemy_buffer = {}
 	for i=1, n do
-		local x = love.math.random((wg.box_ax+1)*bw, (wg.box_bx-1)*bw)
-		local y = love.math.random((wg.box_ay+1)*bw, (wg.box_by-1)*bw)
-		local enem = random_sample{Enemies.Bee, Enemies.Larva}
-		self:new_actor(enem:new(x,y))
+		-- local x = love.math.random((wg.box_ax+1)*bw, (wg.box_bx-1)*bw)
+		-- local y = love.math.random((wg.box_ay+1)*bw, (wg.box_by-1)*bw)
+		local x = love.math.random(self.door_ax, self.door_bx)
+		local y = love.math.random(self.door_ay, self.door_by)
+		local enem = random_sample{Enemies.Fly, Enemies.Larva, Enemies.Grasshopper}
+		
+		local e = enem:new(x,y)
+		-- Prevent collisions with floor
+		if e.y+e.h > self.door_by then   e.y = self.door_by - e.h    end
+		collision:remove(e)
+		table.insert(self.door_animation_enemy_buffer, e)
 	end
+end
+
+function Game:activate_enemy_buffer()
+	for k, e in pairs(self.door_animation_enemy_buffer) do
+		e:add_collision()
+		self:new_actor(e)
+	end
+	self.door_animation_enemy_buffer = {}
+end
+
+function Game:draw_background(cabin_x, cabin_y) 
+	local bw = BLOCK_WIDTH
+
+	-- Doors
+	gfx.draw(images.cabin_door_left,  cabin_x + 154 - self.door_offset, cabin_y + 122)
+	gfx.draw(images.cabin_door_right, cabin_x + 208 + self.door_offset, cabin_y + 122)
+
+	-- Cabin background
+	gfx.draw(images.cabin_bg, cabin_x, cabin_y)
+	gfx.draw(images.cabin_bg_amboccl, cabin_x, cabin_y)
+	
+	-- Level counter
+	gfx.setFont(FONT_7SEG)
+	print_color(COL_WHITE, string.sub("00000"..tostring(self.floor),-3,-1), 198+16*2, 97+16*2)
+	gfx.setFont(FONT_REGULAR)
 end
 
 function Game:keypressed(key, scancode, isrepeat)

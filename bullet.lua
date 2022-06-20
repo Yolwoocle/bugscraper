@@ -48,15 +48,20 @@ function Bullet:on_collision(col)
 	if col.other == self.player then    return   end
 	
 	if not self.is_removed and col.other.is_solid then
-		self:remove()
+		self:kill()
 	end
 	
 	if col.other.on_hit_bullet and col.other.is_enemy ~= self.is_enemy then
 		col.other:on_hit_bullet(self, col)
-		self:remove()
+		self:kill()
 	end
 	
 	self:after_collision(col)
+end
+
+function Bullet:kill()
+	particles:smoke(self.x + self.w/2, self.y + self.h/2)
+	self:remove()
 end
 
 function Bullet:after_collision(col)

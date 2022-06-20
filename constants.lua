@@ -12,7 +12,7 @@ COL_CYAN = {0, 1, 1, 1}
 COL_BLUE = {0, 0, 1, 1}
 COL_MAGENTA = {1, 0, 1, 1}
 
-COL_RED = rgb(228,59, 68)
+COL_LIGHT_RED = rgb(228,59, 68)
 COL_SKY = rgb(104, 174, 212) 
 COL_DARK_BROWN = rgb(63, 40, 50)
 COL_DARK_BLUE = rgb(24, 20, 37)

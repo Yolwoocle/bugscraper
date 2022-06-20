@@ -30,12 +30,19 @@ local img_names = {
 	"bee",
 	"duck",
 	"larva",
+	"fly",
+	"grasshopper",
+	
+	"bullet",
+
 	"metal",
 	"chain",
 	"bg_plate",
-	"bullet",
 	"cabin_bg",
 	"cabin_bg_amboccl",
+	"cabin_walls",
+	"cabin_door_left", "cabin_door_right",
+	
 }
 
 local images = {}

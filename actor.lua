@@ -2,8 +2,12 @@ local Class = require "class"
 
 local Actor = Class:inherit()
 
-function Actor:init_actor(x, y, w, h, spr)
+function Actor:init_actor(x, y, w, h, spr, args)
+	if not args then   args = {}   end
+	if args.add_collision == nil then   args.add_collision = true   end
+
 	self.is_actor = true
+	self.is_active = true
 	self.x = x or 0
 	self.y = y or 0
 	self.w = w or 32
@@ -35,9 +39,10 @@ function Actor:init_actor(x, y, w, h, spr)
 	self.wall_col = nil
 
 	self.is_removed = false
-	collision:add(self, self.x, self.y, self.w, self.h)
-
+	self:add_collision()
+	
 	-- Visuals
+	self.draw_shadow = true
 	if spr then
 		self.sprite = spr 
 		self.spr_w = self.sprite:getWidth()
@@ -49,6 +54,10 @@ end
 
 function Actor:update()
 	error("update not implemented")
+end
+
+function Actor:add_collision()
+	collision:add(self, self.x, self.y, self.w, self.h)
 end
 
 function Actor:do_gravity(dt)
@@ -103,6 +112,7 @@ end
 function Actor:draw()
 	error("draw not implemented")
 end
+
 function Actor:draw_actor(fx, fy)
 	if self.is_removed then   return   end
 	
@@ -120,6 +130,15 @@ function Actor:draw_actor(fx, fy)
 	local x = self.x + spr_w2 - self.spr_ox
 	local y = self.y + spr_h2 - self.spr_oy
 	if self.sprite then
+		-- Shadow
+		if self.draw_shadow then
+			local o = ((self.x / CANVAS_WIDTH)-.5) * 6
+			love.graphics.setColor(0, 0, 0, 0.5)
+			love.graphics.draw(self.sprite, x+o, y+3, 0, fx, fy, spr_w2, spr_h2)
+		end
+
+		-- Draw
+		love.graphics.setColor(1, 1, 1, 1)
 		gfx.draw(self.sprite, x, y, self.rot, fx, fy, spr_w2, spr_h2)
 	end
 end
