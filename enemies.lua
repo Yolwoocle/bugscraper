@@ -71,7 +71,6 @@ function Enemies:init()
 	end
 
 	function self.Grasshopper:on_grounded()
-		print(random_range(0,3000), "Grasshopper on_grounded")
 		self.vy = -self.jump_speed
 	end
 end

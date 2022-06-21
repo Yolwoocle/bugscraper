@@ -37,7 +37,6 @@ function Game:init()
 	-- Level info
 	self.floor = 0 --Floor n°
 	self.floor_progress = 3.5 --How far the cabin is to the next floor
-	self.elevator_speed = 1
 	-- self.max_elev_speed = 1/2
 	self.cur_wave_max_enemy = 1
 	
@@ -45,6 +44,7 @@ function Game:init()
 	self.door_offset = 0
 	self.draw_enemies_in_bg = false
 	self.door_animation = false
+	self.elevator_speed = 400
 
 	-- Bounding box
 	local map_w = self.map.width * BW
@@ -88,8 +88,9 @@ function Game:update(dt)
 	
 	-- Particles
 	particles:update(dt)
+		-- Background lines
 	for i,o in pairs(self.bg_particles) do
-		o.y = o.y + dt*400
+		o.y = o.y + dt*self.elevator_speed
 		if o.y > CANVAS_HEIGHT then
 			o.x = love.math.random(0, CANVAS_WIDTH)
 			o.w = love.math.random(2, 12)
@@ -126,8 +127,9 @@ function Game:draw()
 
 	-- Map
 	self.map:draw()
-	--TODO: fuze it into map or remove map, only have coll boxes & no map
+	
 	-- Background
+	--TODO: fuze it into map or remove map, only have coll boxes & no map
 	local bw = BLOCK_WIDTH
 	self.cabin_x, self.cabin_y = self.world_generator.box_ax*bw, self.world_generator.box_ay*bw
 	self.door_ax, self.door_ay = self.cabin_x+154, self.cabin_x+122
@@ -164,22 +166,11 @@ function Game:draw()
 	gfx.print(concat("FPS: ",love.timer.getFPS()), 0, 0)
 end
 
-function Game:new_actor(actor)
-	if #self.actors >= self.actor_limit then   
-		actor:remove()
-		return
-	end
-	if actor.is_enemy then 
-		self.enemy_count = self.enemy_count + 1
-	end
-	table.insert(self.actors, actor)
-end
-
 function Game:draw_debug()
 	local items, len = collision.world:getItems()
 	for i,it in pairs(items) do
 		local x,y,w,h = collision.world:getRect(it)
-		rect_color({0,1,0},"line", x, y, w, h)
+		rect_color({0,1,0,.2},"line", x, y, w, h)
 	end
 	
 	local ii = 1
@@ -203,10 +194,19 @@ function Game:draw_debug()
 	}
 	for i=1, #txts do  print_label(txts[i], 0, 16*i) end 
 	
-	rect_color(COL_RED, "line", self.door_ax, self.door_ay, self.door_bx-self.door_ax, self.door_by-self.door_ay)
-
 	self.world_generator:draw()
 	draw_log()
+end
+
+function Game:new_actor(actor)
+	if #self.actors >= self.actor_limit then   
+		actor:remove()
+		return
+	end
+	if actor.is_enemy then 
+		self.enemy_count = self.enemy_count + 1
+	end
+	table.insert(self.actors, actor)
 end
 
 function Game:on_kill(actor)

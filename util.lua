@@ -151,6 +151,12 @@ function bool_to_int(b)
 	return 0
 end
 
+function bool_to_dir(b)
+	if type(b) ~= "boolean" then   return b   end
+	if b then    return 1    end
+	return -1
+end
+
 function clamp(val, lower, upper)
 	assert(val and lower and upper, "One of the clamp values is not defined")
 	if lower > upper then lower, upper = upper, lower end -- swap if boundaries supplied the wrong way
@@ -228,7 +234,6 @@ end
 function random_neighbor(n)
 	return love.math.random()*2*n - n
 end
-
 
 function random_range(a,b)
 	return love.math.random()*(b-a) + a
@@ -416,8 +421,13 @@ function shortest_angle_dist(a, b)
 end
 
 function lerp_angle(a, b, t)
-	a = a % (math.pi*2)
-	return a + shortest_angle_dist(a, b)*t
+	local epsilon = 0.01
+	if abs(b - a) > epsilon then
+		a = a % (math.pi*2)
+		return a + shortest_angle_dist(a, b)*t
+	else
+		return b
+	end
 end
 
 function get_left_vec(x, y)

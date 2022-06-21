@@ -6,8 +6,11 @@ local sounds = require "sounds"
 local Gun = Class:inherit()
 
 function Gun:init_gun()
-	self.bul_w = 8
-	self.bul_h = 8
+	self.x, self.y = 0, 0
+	self.rot = 0
+
+	self.bul_w = 12
+	self.bul_h = 12
 
 	self.ammo = 1000
 	self.bullet_speed = 500
@@ -23,8 +26,12 @@ function Gun:update(dt)
 	self.cooldown_timer = max(self.cooldown_timer - dt, 0)
 end
 
-function Gun:draw()
-	--
+function Gun:draw(flip_x, flip_y, rot)
+	local ox, oy = floor(self.sprite:getWidth()/2), floor(self.sprite:getHeight()/2)
+	flip_x, flip_y = bool_to_dir(flip_x), bool_to_dir(flip_y)
+
+	gfx.draw(self.sprite, self.x, self.y, self.rot, flip_x, flip_y, ox, oy)
+	-- love.graphics.draw(drawable,x,y,r,sx,sy,ox,oy)
 end
 
 function Gun:shoot(dt, player, x, y, vx, vy)

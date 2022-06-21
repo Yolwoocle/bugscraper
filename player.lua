@@ -14,7 +14,7 @@ function Player:init(n, x, y, spr, controls)
 	x = x or 0
 	y = y or 0
 	spr = spr or images.ant
-	self:init_actor(x, y, 10, 10, spr)
+	self:init_actor(x, y, 14, 14, spr)
 	
 	-- Life
 	self.max_life = 20
@@ -66,7 +66,9 @@ function Player:init(n, x, y, spr, controls)
 	self.gun = Guns.Machinegun:new()
 	self.is_shooting = false
 	self.shoot_dir_x = 1
-	
+	self.shoot_dir_y = 0
+	self.shoot_ang = 0
+
 	-- Cursor
 	self.cu_x = 0
 	self.cu_y = 0
@@ -101,6 +103,7 @@ function Player:update(dt)
 	-- Gun
 	self.gun:update(dt)
 	self:shoot(dt)
+	self:update_gun_pos(dt)
 
 	--self:do_snowballing()
 	self:update_button_state()
@@ -110,6 +113,10 @@ function Player:update(dt)
 end
 
 function Player:draw()
+	-- Draw gun
+	self.gun:draw(1, self.dir_x)
+	
+	-- Draw self
 	if not self.is_invincible or self.iframe_blink_timer > self.iframe_blink_freq/2 then
 		self:draw_actor(self.dir_x)
 	end
@@ -125,7 +132,9 @@ function Player:draw()
 	gfx.draw(images.heart, self.mid_x-7 -2, y)
 	print_outline(COL_WHITE, COL_DARK_BLUE, concat(self.life), self.mid_x, y-4)
 	if game.debug_mode then
-		print_outline(COL_WHITE, COL_DARK_BLUE, string.format("x,y: %d / %d",self.x,self.y), self.x+16, y-4)
+		print_outline(COL_WHITE, COL_DARK_BLUE, string.format("x,y: %d / %d",self.x,self.y), self.x+16, y-8*1)
+		print_outline(COL_WHITE, COL_DARK_BLUE, string.format("dir: %d / %d",self.dir_x,self.dir_y), self.x+16, y-8*2)
+		print_outline(COL_WHITE, COL_DARK_BLUE, string.format("shoot_dir: %d / %d",self.shoot_dir_x,self.shoot_dir_y), self.x+16, y-8*3)
 	end
 end
 
@@ -140,7 +149,8 @@ function Player:move(dt)
 
 		-- If not shooting, update shooting direction
 		if not self.is_shooting then
-			self.shoot_dir_x = dir.x
+			-- self.shoot_dir_x = dir.x
+			-- self.shoot_dir
 		end
 	end
 
@@ -282,24 +292,42 @@ function Player:on_leaving_collision()
 end
 
 function Player:shoot(dt)
+	-- Update aiming direction
+	local dx, dy = self.dir_x, self.dir_y
+	local aim_horizontal = (self:button_down"left" or self:button_down"right")
+	-- Allow aiming upwards 
+	if self.dir_y ~= 0 and not aim_horizontal then    dx = 0    end
+
+	-- Update shoot dir
+	self.shoot_ang = atan2(dy, dx)
+	self.shoot_dir_x = cos(self.shoot_ang)
+	self.shoot_dir_y = sin(self.shoot_ang)
+
 	if self:button_down("fire") then
 		self.is_shooting = true
 
-		local dx = self.dir_x
-		local aim_horizontal = (self:button_down"left" or self:button_down"right")
-		-- Allow aiming upwards 
-		if abs(self.dir_y)>0 and not aim_horizontal then    dx = 0    end
+		local ox = dx * self.gun.bul_w
+		local oy = dy * self.gun.bul_h
+		self.gun:shoot(dt, self, self.mid_x + ox, self.y + oy, dx, dy)
 
-		self.gun:shoot(dt, self, self.mid_x, self.mid_y, dx, self.dir_y)
-
-		-- If shooting downwards, then go up
-		if self:button_down"down" then
+		-- If shooting downwards, then go up like a jetpack
+		if self:button_down("down") then
 			self.vy = self.vy - 100
 			self.vy = self.vy * self.friction_x
 		end
 	else
 		self.is_shooting = false
 	end
+end
+
+function Player:update_gun_pos(dt)
+	local tar_x = self.mid_x + self.shoot_dir_x*self.gun.sprite:getWidth()
+	local tar_y =     self.y + self.shoot_dir_y*self.gun.sprite:getHeight()
+	local ang = self.shoot_ang
+	
+	self.gun.x = lerp(self.gun.x, tar_x, 0.5)
+	self.gun.y = lerp(self.gun.y, tar_y, 0.5)
+	self.gun.rot = lerp_angle(self.gun.rot, ang, 0.3)
 end
 
 function Player:button_down(btn)

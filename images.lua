@@ -35,6 +35,8 @@ local img_names = {
 	
 	"bullet",
 
+	"gun_machinegun",
+
 	"metal",
 	"chain",
 	"bg_plate",
