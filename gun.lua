@@ -13,10 +13,13 @@ function Gun:init_gun()
 	self.bul_h = 12
 
 	self.ammo = 1000
-	self.bullet_speed = 500
+	self.bullet_speed = 400
 
 	self.cooldown = 0.3
 	self.cooldown_timer = 0
+
+	self.bullet_number = 1
+	self.bullet_spread = 0.2
 
 	self.sfx = sounds.shot3
 	self.sfx_pitch_var = 1.15
@@ -45,7 +48,21 @@ function Gun:shoot(dt, player, x, y, vx, vy)
 		local x = floor(x)
 		local y = floor(y)
 		audio:play_var(self.sfx, 0.2, 1.4)
-		self:fire_bullet(dt, player, x, y, self.bul_w, self.bul_h, vx, vy)
+
+		local ang = atan2(vy, vx)
+		if self.bullet_number == 1 then		
+			self:fire_bullet(dt, player, x, y, self.bul_w, self.bul_h, vx, vy)
+		else
+			-- FIXME: This is not evenly spaced out
+			local step = (self.bullet_spread*2) / (self.bullet_number-1)
+			local epsilon = 0.001
+			for i = 0, self.bullet_number-1 do
+				local a = ang-self.bullet_spread + i*step
+				local vx = cos(a)
+				local vy = sin(a)
+				self:fire_bullet(dt, player, x, y, self.bul_w, self.bul_h, vx, vy)
+			end
+		end
 	end
 end	
 

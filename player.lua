@@ -64,7 +64,7 @@ function Player:init(n, x, y, spr, controls)
 	self.hand_oy = 14
 
 	-- Shooting & guns (keep it or ditch for family friendliness?)
-	self.gun = Guns.Machinegun:new()
+	self.gun = Guns.Triple:new() --Guns.Machinegun:new()
 	self.is_shooting = false
 	self.shoot_dir_x = 1
 	self.shoot_dir_y = 0
