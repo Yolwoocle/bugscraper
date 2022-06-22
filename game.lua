@@ -44,7 +44,9 @@ function Game:init()
 	self.door_offset = 0
 	self.draw_enemies_in_bg = false
 	self.door_animation = false
-	self.elevator_speed = 400
+	self.def_elevator_speed = 400
+	self.elevator_speed = self.def_elevator_speed
+	self.has_switched_to_next_floor = false
 
 	-- Bounding box
 	local map_w = self.map.width * BW
@@ -73,12 +75,15 @@ function Game:init()
 	self.test_t = 0
 
 	self.bg_particles = {}
-	for i=1,20 do
+	for i=1,40 do
 		local o = {}
 		o.x = love.math.random(0, CANVAS_WIDTH)
 		o.w = love.math.random(2, 12)
 		o.h = love.math.random(8, 64)
 		o.y = -o.h - love.math.random(0, CANVAS_HEIGHT)
+
+		o.oy = 0
+		o.oh = 1
 		table.insert(self.bg_particles, o)
 	end
 end
@@ -97,6 +102,10 @@ function Game:update(dt)
 			o.h = love.math.random(8, 64)
 			o.y = -o.h- love.math.random(0, CANVAS_HEIGHT)
 		end
+
+		-- Size corresponds to elevator speed
+		o.oh = max(o.w/o.h, self.elevator_speed / self.def_elevator_speed)
+		o.oy = .5 * o.h * o.oh
 	end
 
 	self:progress_elevator(dt)
@@ -122,7 +131,7 @@ function Game:draw()
 	gfx.clear(COL_DARK_BLUE)
 
 	for i,o in pairs(self.bg_particles) do
-		rect_color(COL_DARK_GRAY, "fill", o.x, o.y, o.w, o.h)
+		rect_color(COL_DARK_GRAY, "fill", o.x, o.y + o.oy, o.w, o.h * o.oh)
 	end
 
 	-- Map
@@ -170,7 +179,7 @@ function Game:draw_debug()
 	local items, len = collision.world:getItems()
 	for i,it in pairs(items) do
 		local x,y,w,h = collision.world:getRect(it)
-		rect_color({0,1,0,.2},"line", x, y, w, h)
+		rect_color({0,1,0,.7},"line", x, y, w, h)
 	end
 	
 	local ii = 1
@@ -182,17 +191,14 @@ function Game:draw_debug()
 		end
 	end
 	
-	-- Print FPS
+	-- Print debug info
+	local txt_h = get_text_height(" ")
 	local txts = {
-		love.timer.getFPS(),
+		concat("FPS: ",love.timer.getFPS()),
 		concat("n° of actors: ", #self.actors, " / ", self.actor_limit),
 		concat("n° collision items: ", collision.world:countItems()),
-		" ",
-		concat("cur_wave_max_enemy: ", self.cur_wave_max_enemy),
-		concat("enemy_count: ", self.enemy_count),
-		"-",
 	}
-	for i=1, #txts do  print_label(txts[i], 0, 16*i) end 
+	for i=1, #txts do  print_label(txts[i], 0, txt_h*i) end 
 	
 	self.world_generator:draw()
 	draw_log()
@@ -265,27 +271,29 @@ function Game:init_players()
 	end
 end
 
+
+------------------------------------
+--- [[[[[[[[ BACKGROUND ]]]]]]]] ---
+------------------------------------
+-- TODO: Should we move this to a separate class?
+
 function Game:progress_elevator(dt)
 	-- Only switch to next floor until all enemies killed
 	if not self.door_animation and self.enemy_count == 0 then
 		self.door_animation = true
+		self.has_switched_to_next_floor = false
 		self:new_wave_buffer_enemies()
 	end
 
 	-- Do the door opening animation
 	if self.door_animation then
-		self.door_animation = true
-
 		self.floor_progress = self.floor_progress - dt
-		self.draw_enemies_in_bg = true
-		
 		self:update_door_anim()
 	end
 	
 	-- Go to next floor once animation is finished
 	if self.floor_progress <= 0 then
-		self.floor_progress = 3.5
-		self.floor = self.floor + 1
+		self.floor_progress = 5.5
 		
 		self.door_animation = false
 		self.draw_enemies_in_bg = false
@@ -294,23 +302,33 @@ function Game:progress_elevator(dt)
 end
 
 function Game:update_door_anim()
-	-- 3-2: open doors / 2-1: idle / 1-0: close doors
-	if self.floor_progress < 1 then
-		-- Close doors
+	-- 4-3: open doors / 3-2: idle / 2-1: close doors
+	if self.floor_progress > 4 then
+		-- Door is closed at first...
+		self.door_offset = 0
+	elseif self.floor_progress > 3 then
+		-- ...Open door...
+		self.door_offset = lerp(self.door_offset, 54, 0.1)
+	elseif self.floor_progress > 2 then
+		-- ...Keep door open...
+		self.door_offset = 54
+	elseif self.floor_progress > 1 then
+		-- ...Close doors
 		self.door_offset = lerp(self.door_offset, 0, 0.1)
 		self:activate_enemy_buffer()
+	end
 
-	elseif self.floor_progress < 2 then
-		-- Keep door open
-		self.door_offset = 54
+	-- Elevator speed
+	if 5 > self.floor_progress and self.floor_progress > 3 then
+		self.elevator_speed = max(0, self.elevator_speed - 18)
+	elseif self.floor_progress < 1 then
+		self.elevator_speed = min(self.elevator_speed + 10, self.def_elevator_speed)
+	end
 
-	elseif self.floor_progress < 3 then
-		-- Open door
-		self.door_offset = lerp(self.door_offset, 54, 0.1)
-
-	else
-		-- Door closed
-		self.door_offset = 0
+	-- Switch to next floor if just opened doors
+	if self.floor_progress < 4.2 and not self.has_switched_to_next_floor then
+		self.floor = self.floor + 1
+		self.has_switched_to_next_floor = true
 	end
 end
 
@@ -327,7 +345,8 @@ function Game:new_wave_buffer_enemies()
 		-- local y = love.math.random((wg.box_ay+1)*bw, (wg.box_by-1)*bw)
 		local x = love.math.random(self.door_ax, self.door_bx)
 		local y = love.math.random(self.door_ay, self.door_by)
-		local enem = random_sample{Enemies.Fly, Enemies.Larva, Enemies.Grasshopper}
+		local enem = random_sample{Enemies.Fly, Enemies.Larva, Enemies.Grasshopper,
+		Enemies.Slug, Enemies.SnailShelled}
 		
 		local e = enem:new(x,y)
 		-- Prevent collisions with floor

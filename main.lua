@@ -88,6 +88,10 @@ function love.keypressed(key, scancode, isrepeat)
 	elseif key == "f11" then
 		--is_fullscreen = not is_fullscreen
 		love.window.setFullscreen(is_fullscreen)
+
+	elseif key == "m" then
+		game.sound_on = not game.sound_on
+
 	end
 
 	if game.keypressed then  game:keypressed(key, scancode, isrepeat)  end

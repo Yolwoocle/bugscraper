@@ -8,6 +8,7 @@ local Enemy = Actor:inherit()
 function Enemy:init_enemy(x,y, img, w,h)
 	w,h = w or 12, h or 12
 	self:init_actor(x, y, w, h, img or images.duck)
+	self.name = "enemy"
 	self.is_enemy = true
 	self.is_flying = false
 	self.is_active = true
@@ -24,10 +25,10 @@ function Enemy:init_enemy(x,y, img, w,h)
 end
 
 function Enemy:update_enemy(dt)
-	if not self.is_active then    return    end
+	-- if not self.is_active then    return    end
 	self:update_actor(dt)
-
 	self:follow_nearest_player(dt)
+
 	if self.life <= 0 then
 		self:remove()
 	end
@@ -64,13 +65,17 @@ function Enemy:follow_nearest_player(dt)
 	self.vy = self.vy + sign0(nearest_player.y - self.y) * self.speed_y
 end
 
-function Enemy:draw()
+function Enemy:draw_enemy()
 	self:draw_actor(self.vx < 0)
 
 	if game.debug_mode then
 		gfx.draw(images.heart, self.x-7 -2+16, self.y-16)
 		print_outline(COL_WHITE, COL_DARK_BLUE, self.life, self.x+16, self.y-16-2)
 	end
+end
+
+function Enemy:draw()
+	self:draw_enemy()
 end
 
 function Enemy:on_collision(col)
@@ -93,10 +98,15 @@ function Enemy:do_damage(n)
 end
 
 function Enemy:kill()
-	if self.is_removed then print('killed while destroyed') end
+	if self.is_removed then print(concat(self.name, "(", self, ") was killed while destroyed")) end
 
+	self:on_death()
 	game:on_kill(self)
 	self:remove()
+end
+
+function Enemy:on_death()
+	
 end
 
 function Enemy:on_hit_bullet(bul, col)

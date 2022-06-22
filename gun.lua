@@ -30,7 +30,7 @@ function Gun:draw(flip_x, flip_y, rot)
 	local ox, oy = floor(self.sprite:getWidth()/2), floor(self.sprite:getHeight()/2)
 	flip_x, flip_y = bool_to_dir(flip_x), bool_to_dir(flip_y)
 
-	gfx.draw(self.sprite, self.x, self.y, self.rot, flip_x, flip_y, ox, oy)
+	gfx.draw(self.sprite, floor(self.x), floor(self.y), self.rot, flip_x, flip_y, ox, oy)
 	-- love.graphics.draw(drawable,x,y,r,sx,sy,ox,oy)
 end
 

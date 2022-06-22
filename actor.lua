@@ -130,6 +130,7 @@ function Actor:draw_actor(fx, fy)
 	local x = self.x + spr_w2 - self.spr_ox
 	local y = self.y + spr_h2 - self.spr_oy
 	if self.sprite then
+		local old_col = {gfx.getColor()}
 		-- Shadow
 		if self.draw_shadow then
 			local o = ((self.x / CANVAS_WIDTH)-.5) * 6
@@ -138,7 +139,7 @@ function Actor:draw_actor(fx, fy)
 		end
 
 		-- Draw
-		love.graphics.setColor(1, 1, 1, 1)
+		love.graphics.setColor(old_col)
 		gfx.draw(self.sprite, x, y, self.rot, fx, fy, spr_w2, spr_h2)
 	end
 end

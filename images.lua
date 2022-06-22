@@ -32,6 +32,9 @@ local img_names = {
 	"larva",
 	"fly",
 	"grasshopper",
+	"snail_shell",
+	"snail_open",
+	"slug",
 	
 	"bullet",
 

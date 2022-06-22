@@ -61,6 +61,7 @@ function Player:init(n, x, y, spr, controls)
 	-- Visuals
 	self.color = ({COL_RED, COL_GREEN, COL_CYAN, COL_YELLOW})[self.n]
 	self.color = self.color or COL_RED
+	self.hand_oy = 14
 
 	-- Shooting & guns (keep it or ditch for family friendliness?)
 	self.gun = Guns.Machinegun:new()
@@ -113,13 +114,19 @@ function Player:update(dt)
 end
 
 function Player:draw()
+	
+	if self.is_invincible then
+		local v = 1 - (self.iframes / self.max_iframes)
+		local a = 1
+		if self.iframe_blink_timer < self.iframe_blink_freq/2 then
+			a = 0.5
+		end
+		gfx.setColor(1, v, v, a)
+	end
 	-- Draw gun
 	self.gun:draw(1, self.dir_x)
-	
 	-- Draw self
-	if not self.is_invincible or self.iframe_blink_timer > self.iframe_blink_freq/2 then
-		self:draw_actor(self.dir_x)
-	end
+	self:draw_actor(self.dir_x)
 	gfx.setColor(COL_WHITE)
 
 	-- Cursor
@@ -321,8 +328,12 @@ function Player:shoot(dt)
 end
 
 function Player:update_gun_pos(dt)
-	local tar_x = self.mid_x + self.shoot_dir_x*self.gun.sprite:getWidth()
-	local tar_y =     self.y + self.shoot_dir_y*self.gun.sprite:getHeight()
+	local gw = self.gun.sprite:getWidth()
+	local gh = self.gun.sprite:getHeight()
+	local top_y = self.y + self.h - self.sprite:getHeight()
+
+	local tar_x = self.mid_x + self.shoot_dir_x * (self.sprite:getWidth()/2-3 + gw/2)
+	local tar_y = top_y + self.hand_oy - gh/2 + self.shoot_dir_y * gh
 	local ang = self.shoot_ang
 	
 	self.gun.x = lerp(self.gun.x, tar_x, 0.5)
