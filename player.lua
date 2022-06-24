@@ -17,7 +17,7 @@ function Player:init(n, x, y, spr, controls)
 	self:init_actor(x, y, 14, 14, spr)
 	
 	-- Life
-	self.max_life = 20
+	self.max_life = 4
 	self.life = self.max_life
 	
 	-- Meta
@@ -133,15 +133,19 @@ function Player:draw()
 	if self.cu_target then
 		rect_color(COL_WHITE, "line", self.cu_x*BW, self.cu_y*BW, BLOCK_WIDTH, BLOCK_WIDTH)
 	end
+end
+
+function Player:draw_hud()
+	-- Life
+	-- TODO: abstract this into a function as we might need it for other stuff
+	local ui_y = self.y - self.sprite:getHeight()-2
+	draw_icon_bar(self.mid_x, ui_y, self.life, self.max_life, images.heart, images.heart_empty)
+	-- print_outline(COL_WHITE, COL_DARK_BLUE, concat(self.life), self.mid_x, ui_y-4)
 	
-	-- Text
-	local y = self.y-self.sprite:getHeight()-2
-	gfx.draw(images.heart, self.mid_x-7 -2, y)
-	print_outline(COL_WHITE, COL_DARK_BLUE, concat(self.life), self.mid_x, y-4)
 	if game.debug_mode then
-		print_outline(COL_WHITE, COL_DARK_BLUE, string.format("x,y: %d / %d",self.x,self.y), self.x+16, y-8*1)
-		print_outline(COL_WHITE, COL_DARK_BLUE, string.format("dir: %d / %d",self.dir_x,self.dir_y), self.x+16, y-8*2)
-		print_outline(COL_WHITE, COL_DARK_BLUE, string.format("shoot_dir: %d / %d",self.shoot_dir_x,self.shoot_dir_y), self.x+16, y-8*3)
+		print_outline(COL_WHITE, COL_DARK_BLUE, string.format("x,y: %d / %d",self.x,self.y), self.x+16, ui_y-8*1)
+		print_outline(COL_WHITE, COL_DARK_BLUE, string.format("dir: %d / %d",self.dir_x,self.dir_y), self.x+16, ui_y-8*2)
+		print_outline(COL_WHITE, COL_DARK_BLUE, string.format("shoot_dir: %d / %d",self.shoot_dir_x,self.shoot_dir_y), self.x+16, ui_y-8*3)
 	end
 end
 
@@ -301,7 +305,7 @@ end
 function Player:shoot(dt)
 	-- Update aiming direction
 	local dx, dy = self.dir_x, self.dir_y
-	local aim_horizontal = (self:button_down"left" or self:button_down"right")
+	local aim_horizontal = (self:button_down("left") or self:button_down("right"))
 	-- Allow aiming upwards 
 	if self.dir_y ~= 0 and not aim_horizontal then    dx = 0    end
 
@@ -319,7 +323,7 @@ function Player:shoot(dt)
 
 		-- If shooting downwards, then go up like a jetpack
 		if self:button_down("down") then
-			self.vy = self.vy - 100
+			self.vy = self.vy - self.gun.jetpack_force
 			self.vy = self.vy * self.friction_x
 		end
 	else

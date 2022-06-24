@@ -60,7 +60,7 @@ function Enemies:init()
 		self.friction = 1
 		self.friction_x = 1
 		self.friction_y = 1
-		self.walk_dir_x = 1
+		self.walk_dir_x = random_sample{-1, 1}
 
 		local v = 0.5
 		self.gravity = self.gravity * v
@@ -114,7 +114,7 @@ function Enemies:init()
 		self.friction_y = self.friction_x 
 
 		self.pong_speed = 40
-		self.dir = pi/4--(pi/4 * love.math.random(1,4)) % pi2
+		self.dir = (pi/4 + pi/2 * love.math.random(0,3)) % pi2
 		self.pong_vx = cos(self.dir) * self.pong_speed
 		self.pong_vy = sin(self.dir) * self.pong_speed
 

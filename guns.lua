@@ -26,6 +26,16 @@ function Guns:init()
 		self.cooldown = 0.1
 		self.bullet_number = 3
 	end
+
+	--------
+
+	self.Burst = Gun:inherit()
+
+	function self.Burst:init()
+		self:init_gun()
+		self.sprite = images.gun_machinegun
+		
+	end
 end
 
 return Guns:new()

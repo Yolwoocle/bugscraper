@@ -9,19 +9,26 @@ function Gun:init_gun()
 	self.x, self.y = 0, 0
 	self.rot = 0
 
+	-- Bullet
 	self.bul_w = 12
 	self.bul_h = 12
-
-	self.ammo = 1000
+	
 	self.bullet_speed = 400
+	self.bullet_number = 1
+	self.bullet_spread = 0.2
+	
+	-- Ammo
+	self.ammo = 1000
 
+	-- Firing
 	self.cooldown = 0.3
 	self.cooldown_timer = 0
 
-	self.bullet_number = 1
-	self.bullet_spread = 0.2
+	-- Jetpack
+	self.jetpack_force = 70
 
-	self.sfx = sounds.shot3
+	-- Sounds
+	self.sfx = sounds.shot
 	self.sfx_pitch_var = 1.15
 end
 

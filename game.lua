@@ -160,6 +160,12 @@ function Game:draw()
 
 	-- Walls
 	gfx.draw(images.cabin_walls, self.cabin_x, self.cabin_y)
+	
+	-- Draw actors UI
+	-- Draw actors
+	for k,actor in pairs(self.actors) do
+		if actor.draw_hud then     actor:draw_hud()    end
+	end
 
 	-- UI
 	-- print_centered_outline(COL_WHITE, COL_DARK_BLUE, concat("FLOOR ",self.floor), CANVAS_WIDTH/2, 8)
@@ -349,6 +355,9 @@ function Game:new_wave_buffer_enemies()
 		Enemies.Slug, Enemies.SnailShelled}
 		
 		local e = enem:new(x,y)
+		-- Center enemy
+		e.x = e.x - e.w/2
+		e.y = e.y - e.h/2
 		-- Prevent collisions with floor
 		if e.y+e.h > self.door_by then   e.y = self.door_by - e.h    end
 		collision:remove(e)

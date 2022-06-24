@@ -24,6 +24,8 @@ local img_names = {
 	"snowball",
 
 	"heart",
+	"heart_half",
+	"heart_empty",
 
 	"ant",
 	"caterpillar",
