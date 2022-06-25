@@ -64,7 +64,7 @@ function Player:init(n, x, y, spr, controls)
 	self.hand_oy = 14
 
 	-- Shooting & guns (keep it or ditch for family friendliness?)
-	self.gun = Guns.Triple:new() --Guns.Machinegun:new()
+	self:new_gun(Guns.Burst:new())
 	self.is_shooting = false
 	self.shoot_dir_x = 1
 	self.shoot_dir_y = 0
@@ -302,7 +302,7 @@ function Player:on_leaving_collision()
 	self.coyote_time = self.default_coyote_time
 end
 
-function Player:shoot(dt)
+function Player:shoot(dt, is_burst)
 	-- Update aiming direction
 	local dx, dy = self.dir_x, self.dir_y
 	local aim_horizontal = (self:button_down("left") or self:button_down("right"))
@@ -314,12 +314,12 @@ function Player:shoot(dt)
 	self.shoot_dir_x = cos(self.shoot_ang)
 	self.shoot_dir_y = sin(self.shoot_ang)
 
-	if self:button_down("fire") then
+	if self:button_down("fire") or is_burst then
 		self.is_shooting = true
 
 		local ox = dx * self.gun.bul_w
 		local oy = dy * self.gun.bul_h
-		self.gun:shoot(dt, self, self.mid_x + ox, self.y + oy, dx, dy)
+		self.gun:shoot(dt, self, self.mid_x + ox, self.y + oy, dx, dy, is_burst)
 
 		-- If shooting downwards, then go up like a jetpack
 		if self:button_down("down") then
@@ -445,6 +445,11 @@ function Player:do_snowballing()
 		local spd = self.snowball_speed * self.dir_x
 		game:new_actor(Bullet:new(self, self.mid_x, self.mid_y, 10, 10, spd, -self.snowball_speed))
 	end
+end
+
+function Player:new_gun(gun)
+	self.gun = gun
+	self.gun.user = self
 end
 
 return Player

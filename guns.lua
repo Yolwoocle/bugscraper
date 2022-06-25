@@ -33,8 +33,11 @@ function Guns:init()
 
 	function self.Burst:init()
 		self:init_gun()
-		self.sprite = images.gun_machinegun
+		self.sprite = images.bee
 		
+		self.is_burst = true
+		self.burst_count = 5
+		self.burst_delay = 0.1
 	end
 end
 

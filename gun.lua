@@ -2,12 +2,16 @@ require "util"
 local Class = require "class"
 local Bullet = require "bullet"
 local sounds = require "sounds"
+local images = require "images"
 
 local Gun = Class:inherit()
 
 function Gun:init_gun()
+	self.sprite = images.gun_machinegun
 	self.x, self.y = 0, 0
 	self.rot = 0
+
+	self.user = nil -- The actor using the gun
 
 	-- Bullet
 	self.bul_w = 12
@@ -20,9 +24,17 @@ function Gun:init_gun()
 	-- Ammo
 	self.ammo = 1000
 
-	-- Firing
+	-- Cooldown
 	self.cooldown = 0.3
 	self.cooldown_timer = 0
+
+	-- Burst
+	self.is_burst = false
+	self.burst_count = 1
+	self.burst_delay = 0
+
+	self.burst_counter = 0
+	self.burst_delay_timer = 0
 
 	-- Jetpack
 	self.jetpack_force = 70
@@ -33,7 +45,26 @@ function Gun:init_gun()
 end
 
 function Gun:update(dt)
+	self.dt = dt
 	self.cooldown_timer = max(self.cooldown_timer - dt, 0)
+
+	-- Burst
+	self.burst_delay_timer = max(0, self.burst_delay_timer - dt)
+
+	if self.is_burst and   self.burst_counter > 0 then
+		local limit = 5 
+		--TODO REMOVE THIS WHEN I WAKE UP PLS
+		-- NO WHILE LOOPS
+		-- also the max is dumb
+		while limit > 0 and self.burst_delay_timer < 0 do 
+			self.burst_delay_timer = self.burst_delay_timer + self.burst_delay
+			self.burst_counter = self.burst_counter - 1
+
+			-- Force shoot
+			self.user:shoot(dt, true)
+			limit = limit - 1
+		end
+	end
 end
 
 function Gun:draw(flip_x, flip_y, rot)
@@ -42,33 +73,51 @@ function Gun:draw(flip_x, flip_y, rot)
 
 	gfx.draw(self.sprite, floor(self.x), floor(self.y), self.rot, flip_x, flip_y, ox, oy)
 	-- love.graphics.draw(drawable,x,y,r,sx,sy,ox,oy)
+
+	gfx.setColor(COL_WHITE)
+	gfx.print(concat("dt: ", self.dt), self.x, self.y - 16*6)
+	gfx.print(concat("burst_count: ", self.burst_count), self.x, self.y - 16*5)
+	gfx.print(concat("burst_delay: ", self.burst_delay), self.x, self.y - 16*4)
+	gfx.print(concat("burst_counter: ", self.burst_counter), self.x, self.y - 16*3)
+	gfx.print(concat("burst_delay_timer: ", self.burst_delay_timer), self.x, self.y - 16*2)
 end
 
-function Gun:shoot(dt, player, x, y, vx, vy)
+function Gun:shoot(dt, player, x, y, vx, vy, is_burst)
 	vx = vx or 0
 	vy = vy or 0
-	-- normalize 
+	-- Normalize direction vector
 	local d = dist(vx, vy)
 	vx = vx/d
 	vy = vy/d
-	if self.ammo > 0 and self.cooldown_timer <= 0 then
-		local x = floor(x)
-		local y = floor(y)
-		audio:play_var(self.sfx, 0.2, 1.4)
 
-		local ang = atan2(vy, vx)
-		if self.bullet_number == 1 then		
+	-- If first fire, reset burst timer
+	if not is_burst and self.is_burst then
+		self.burst_counter = self.burst_count
+	end
+
+	-- TODO: add some sort of error message
+	if self.ammo < 0 then    return    end
+	-- If first shot but cooldown too big, escape
+	if not is_burst and self.cooldown_timer > 0 then    return    end
+
+	audio:play_var(self.sfx, 0.2, 1.4)
+	-- 
+	local x = floor(x)
+	local y = floor(y)
+	local ang = atan2(vy, vx)
+
+	if self.bullet_number == 1 then		
+		-- If only fire 1 bullet 
+		self:fire_bullet(dt, player, x, y, self.bul_w, self.bul_h, vx, vy)
+	else
+		-- If fire multiple bullets
+		local step = (self.bullet_spread*2) / (self.bullet_number-1)
+		for i = 0, self.bullet_number-1 do
+			-- Compute fire angle
+			local a = ang-self.bullet_spread + i*step
+			local vx = cos(a)
+			local vy = sin(a)
 			self:fire_bullet(dt, player, x, y, self.bul_w, self.bul_h, vx, vy)
-		else
-			-- FIXME: This is not evenly spaced out
-			local step = (self.bullet_spread*2) / (self.bullet_number-1)
-			local epsilon = 0.001
-			for i = 0, self.bullet_number-1 do
-				local a = ang-self.bullet_spread + i*step
-				local vx = cos(a)
-				local vy = sin(a)
-				self:fire_bullet(dt, player, x, y, self.bul_w, self.bul_h, vx, vy)
-			end
 		end
 	end
 end	
