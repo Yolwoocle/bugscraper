@@ -81,6 +81,7 @@ function Game:init()
 		o.w = love.math.random(2, 12)
 		o.h = love.math.random(8, 64)
 		o.y = -o.h - love.math.random(0, CANVAS_HEIGHT)
+		o.col = random_sample{COL_DARK_GRAY, COL_MID_GRAY, }
 
 		o.oy = 0
 		o.oh = 1
@@ -101,6 +102,7 @@ function Game:update(dt)
 			o.w = love.math.random(2, 12)
 			o.h = love.math.random(8, 64)
 			o.y = -o.h- love.math.random(0, CANVAS_HEIGHT)
+			o.col = random_sample{COL_DARK_GRAY, COL_MID_GRAY, --[[COL_DARK_RED, COL_MID_DARK_GREEN, COL_DARK_BLUE, COL_DARK_PURPLE]]}
 		end
 
 		-- Size corresponds to elevator speed
@@ -128,10 +130,10 @@ end
 
 function Game:draw()
 	-- Sky
-	gfx.clear(COL_DARK_BLUE)
+	gfx.clear(COL_BLACK_BLUE)
 
 	for i,o in pairs(self.bg_particles) do
-		rect_color(COL_DARK_GRAY, "fill", o.x, o.y + o.oy, o.w, o.h * o.oh)
+		rect_color(o.col, "fill", o.x, o.y + o.oy, o.w, o.h * o.oh)
 	end
 
 	-- Map

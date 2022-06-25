@@ -474,7 +474,7 @@ function draw_icon_bar(x, y, val, max_val, img_full, img_empty, margin)
 	margin = margin or 0
 	local iy = floor(y)
 	local img_w = img_full:getWidth() + margin
-	local full_w = (max_val-1) * img_w + margin
+	local full_w = max_val * img_w + margin
 	local x1 = x - full_w *.5
 	for i=0, max_val-1 do
 		local img = (i < val) and img_full or img_empty

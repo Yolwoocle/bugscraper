@@ -64,7 +64,7 @@ function Player:init(n, x, y, spr, controls)
 	self.hand_oy = 14
 
 	-- Shooting & guns (keep it or ditch for family friendliness?)
-	self:new_gun(Guns.Burst:new())
+	self:new_gun(Guns.Machinegun:new())
 	self.is_shooting = false
 	self.shoot_dir_x = 1
 	self.shoot_dir_y = 0
@@ -138,10 +138,30 @@ end
 function Player:draw_hud()
 	-- Life
 	-- TODO: abstract this into a function as we might need it for other stuff
-	local ui_y = self.y - self.sprite:getHeight()-2
+	local ui_y = floor(self.y - self.sprite:getHeight()-2)
 	draw_icon_bar(self.mid_x, ui_y, self.life, self.max_life, images.heart, images.heart_empty)
-	-- print_outline(COL_WHITE, COL_DARK_BLUE, concat(self.life), self.mid_x, ui_y-4)
-	
+	-- Ammo
+	-- aaaaaaaaaa this is so dumb why is ui so stupid 
+	local bar_w = 30
+	local x = floor(self.mid_x - bar_w/2)
+	local ammo_y = ui_y + 8
+	local ammo_w = images.ammo:getWidth()
+	gfx.draw(images.ammo, x, ammo_y)
+
+	local o = 2
+	bar_w = bar_w - ammo_w - o
+	x = x + ammo_w + o
+	-- This is brainless code that will fall apart later
+	rect_color(COL_BLACK_BLUE, "fill", x-1, ammo_y, bar_w, ammo_w)
+	local prog_w = (bar_w-2) * (self.gun.ammo/self.gun.max_ammo)
+	rect_color(COL_MID_BLUE, "fill", x, ammo_y+1, prog_w, ammo_w-2)
+	rect_color(COL_DARK_BLUE, "fill", x, ammo_y+ammo_w-2, prog_w, 1)
+	gfx.setFont(FONT_MINI)
+	print_color(COL_WHITE, concat(self.gun.ammo), x+1, ammo_y-2)
+	gfx.setFont(FONT_REGULAR)
+
+	-- rect_color(COL_GREEN, "fill", self.mid_x, self.y-32, 1, 60)
+
 	if game.debug_mode then
 		print_outline(COL_WHITE, COL_DARK_BLUE, string.format("x,y: %d / %d",self.x,self.y), self.x+16, ui_y-8*1)
 		print_outline(COL_WHITE, COL_DARK_BLUE, string.format("dir: %d / %d",self.dir_x,self.dir_y), self.x+16, ui_y-8*2)

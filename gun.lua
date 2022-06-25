@@ -22,7 +22,8 @@ function Gun:init_gun()
 	self.bullet_spread = 0.2
 	
 	-- Ammo
-	self.ammo = 1000
+	self.max_ammo = 1000
+	self.ammo = math.huge
 
 	-- Cooldown
 	self.cooldown = 0.3
@@ -47,6 +48,7 @@ end
 function Gun:update(dt)
 	self.dt = dt
 	self.cooldown_timer = max(self.cooldown_timer - dt, 0)
+	self.ammo = clamp(self.ammo, 0, self.max_ammo)
 
 	-- Burst
 	self.burst_delay_timer = max(0, self.burst_delay_timer - dt)
@@ -74,12 +76,12 @@ function Gun:draw(flip_x, flip_y, rot)
 	gfx.draw(self.sprite, floor(self.x), floor(self.y), self.rot, flip_x, flip_y, ox, oy)
 	-- love.graphics.draw(drawable,x,y,r,sx,sy,ox,oy)
 
-	gfx.setColor(COL_WHITE)
-	gfx.print(concat("dt: ", self.dt), self.x, self.y - 16*6)
-	gfx.print(concat("burst_count: ", self.burst_count), self.x, self.y - 16*5)
-	gfx.print(concat("burst_delay: ", self.burst_delay), self.x, self.y - 16*4)
-	gfx.print(concat("burst_counter: ", self.burst_counter), self.x, self.y - 16*3)
-	gfx.print(concat("burst_delay_timer: ", self.burst_delay_timer), self.x, self.y - 16*2)
+	-- gfx.setColor(COL_WHITE)
+	-- gfx.print(concat("dt: ", self.dt), self.x, self.y - 16*6)
+	-- gfx.print(concat("burst_count: ", self.burst_count), self.x, self.y - 16*5)
+	-- gfx.print(concat("burst_delay: ", self.burst_delay), self.x, self.y - 16*4)
+	-- gfx.print(concat("burst_counter: ", self.burst_counter), self.x, self.y - 16*3)
+	-- gfx.print(concat("burst_delay_timer: ", self.burst_delay_timer), self.x, self.y - 16*2)
 end
 
 function Gun:shoot(dt, player, x, y, vx, vy, is_burst)
@@ -100,8 +102,10 @@ function Gun:shoot(dt, player, x, y, vx, vy, is_burst)
 	-- If first shot but cooldown too big, escape
 	if not is_burst and self.cooldown_timer > 0 then    return    end
 
+	-- Now, FIRE!!
 	audio:play_var(self.sfx, 0.2, 1.4)
-	-- 
+	self.ammo = self.ammo - 1
+
 	local x = floor(x)
 	local y = floor(y)
 	local ang = atan2(vy, vx)

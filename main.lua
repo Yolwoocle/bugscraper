@@ -30,13 +30,14 @@ function love.load(arg)
 
 	canvas = gfx.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
 
-	love.window.setTitle("Cool game")
+	love.window.setTitle("Elevator game")
 
 	-- Load fonts
 	FONT_REGULAR = gfx.newFont("fonts/HopeGold.ttf", 16)
+	FONT_7SEG = gfx.newImageFont("fonts/7seg_font.png", " 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+	FONT_MINI = gfx.newFont("fonts/Kenney Mini.ttf", 8)
 	gfx.setFont(FONT_REGULAR)
-	FONT_7SEG = love.graphics.newImageFont("fonts/7seg_font.png", " 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
-	
+
 	game = Game:new()
 end
 
