@@ -1,9 +1,10 @@
 local Class = require "class"
 local Actor = require "actor"
-local Guns = require "guns"
+local Guns = require "stats.guns"
 local Bullet = require "bullet"
 local images = require "images"
 local sounds = require "sounds"
+local ui = require "ui"
 require "util"
 require "constants"
 
@@ -15,6 +16,8 @@ function Player:init(n, x, y, spr, controls)
 	y = y or 0
 	spr = spr or images.ant
 	self:init_actor(x, y, 14, 14, spr)
+	self.is_player = true
+	self.is_being = true
 	
 	-- Life
 	self.max_life = 4
@@ -38,10 +41,11 @@ function Player:init(n, x, y, spr, controls)
 	self.speed = 50
 
 	-- Jump
-	self.jump_speed = 450
+	self.jump_speed = 480--450
 	self.buffer_jump_timer = 0
 	self.coyote_time = 0
 	self.default_coyote_time = 6
+	self.stomp_jump_speed = 500
 
 	-- Wall sliding & jumping
 	self.is_walled = false
@@ -137,28 +141,16 @@ end
 
 function Player:draw_hud()
 	-- Life
-	-- TODO: abstract this into a function as we might need it for other stuff
 	local ui_y = floor(self.y - self.sprite:getHeight()-2)
-	draw_icon_bar(self.mid_x, ui_y, self.life, self.max_life, images.heart, images.heart_empty)
-	-- Ammo
-	-- aaaaaaaaaa this is so dumb why is ui so stupid 
-	local bar_w = 30
+	ui:draw_icon_bar(self.mid_x, ui_y, self.life, self.max_life, images.heart, images.heart_empty)
+	-- Ammo bar
+	local bar_w = 32
 	local x = floor(self.mid_x - bar_w/2)
-	local ammo_y = ui_y + 8
+	local y = ui_y + 8
 	local ammo_w = images.ammo:getWidth()
-	gfx.draw(images.ammo, x, ammo_y)
-
-	local o = 2
-	bar_w = bar_w - ammo_w - o
-	x = x + ammo_w + o
-	-- This is brainless code that will fall apart later
-	rect_color(COL_BLACK_BLUE, "fill", x-1, ammo_y, bar_w, ammo_w)
-	local prog_w = (bar_w-2) * (self.gun.ammo/self.gun.max_ammo)
-	rect_color(COL_MID_BLUE, "fill", x, ammo_y+1, prog_w, ammo_w-2)
-	rect_color(COL_DARK_BLUE, "fill", x, ammo_y+ammo_w-2, prog_w, 1)
-	gfx.setFont(FONT_MINI)
-	print_color(COL_WHITE, concat(self.gun.ammo), x+1, ammo_y-2)
-	gfx.setFont(FONT_REGULAR)
+	gfx.draw(images.ammo, x, y)
+	ui:draw_progress_bar(x+ammo_w+2, y, bar_w-ammo_w-2, ammo_w, self.gun.ammo, self.gun.max_ammo, 
+						COL_MID_BLUE, COL_BLACK_BLUE, COL_DARK_BLUE, self.gun.ammo)
 
 	-- rect_color(COL_GREEN, "fill", self.mid_x, self.y-32, 1, 60)
 
@@ -402,13 +394,16 @@ function Player:update_button_state()
 end
 
 function Player:on_collision(col, other)
-	if other.is_enemy then 
-		self:do_damage(other.damage, other)
-	end
+	
+end
+
+function Player:on_stomp(enemy)
+	self.vy = -self.stomp_jump_speed
 end
 
 function Player:do_damage(n, source)
 	if self.iframes > 0 then    return    end
+	if n <= 0 then    return    end
 
 	audio:play("hurt")
 	self:do_knockback(source.knockback, source)--, 0, source.h/2)

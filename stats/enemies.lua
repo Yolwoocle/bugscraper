@@ -77,7 +77,7 @@ function Enemies:init()
 		self:draw_enemy()
 	end
 
-	function self.Grasshopper:on_collision(col, other)
+	function self.Grasshopper:after_collision(col, other)
 		if other.is_solid then
 			if col.normal.y == 0 then
 				self.walk_dir_x = col.normal.x
@@ -95,7 +95,9 @@ function Enemies:init()
 
 	function self.Slug:init(x, y) 
 		self:init_enemy(x, y, images.slug, 14, 9)
+		self.name = "slug"
 		self.follow_player = true
+		self.harmless_frames = 5
 	end
 
 	
@@ -105,6 +107,7 @@ function Enemies:init()
 
 	function self.SnailShelled:init(x, y)
 		self:init_enemy(x,y, images.snail_shell, 16, 16)
+		self.name = "snail_shelled"
 		self.is_flying = true
 		self.follow_player = false
 
@@ -129,7 +132,7 @@ function Enemies:init()
 		self.vy = self.vy + (self.pong_vy or 0)
 	end
 
-	function self.SnailShelled:on_collision(col, other)
+	function self.SnailShelled:after_collision(col, other)
 		-- Pong-like bounce
 		if col.other.is_solid or col.other.name == "" then
 			particles:smoke(col.touch.x, col.touch.y)

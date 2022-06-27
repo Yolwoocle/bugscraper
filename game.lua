@@ -1,7 +1,7 @@
 local Class = require "class"
 local Collision = require "collision"
 local Player = require "player"
-local Enemies = require "enemies"
+local Enemies = require "stats.enemies"
 local Bullet = require "bullet"
 local TileMap = require "tilemap"
 local WorldGenerator = require "worldgenerator"
@@ -76,16 +76,7 @@ function Game:init()
 
 	self.bg_particles = {}
 	for i=1,40 do
-		local o = {}
-		o.x = love.math.random(0, CANVAS_WIDTH)
-		o.w = love.math.random(2, 12)
-		o.h = love.math.random(8, 64)
-		o.y = -o.h - love.math.random(0, CANVAS_HEIGHT)
-		o.col = random_sample{COL_DARK_GRAY, COL_MID_GRAY, }
-
-		o.oy = 0
-		o.oh = 1
-		table.insert(self.bg_particles, o)
+		table.insert(self.bg_particles, self:new_bg_particle())
 	end
 end
 
@@ -284,6 +275,19 @@ end
 --- [[[[[[[[ BACKGROUND ]]]]]]]] ---
 ------------------------------------
 -- TODO: Should we move this to a separate class?
+
+function Game:new_bg_particle()
+	local o = {}
+	o.x = love.math.random(0, CANVAS_WIDTH)
+	o.w = love.math.random(2, 12)
+	o.h = love.math.random(8, 64)
+	o.y = -o.h - love.math.random(0, CANVAS_HEIGHT)
+	o.col = random_sample{COL_DARK_GRAY, COL_MID_GRAY}
+
+	o.oy = 0
+	o.oh = 1
+	return o
+end
 
 function Game:progress_elevator(dt)
 	-- Only switch to next floor until all enemies killed

@@ -11,7 +11,7 @@ function Guns:init()
 	function self.Machinegun:init()
 		self:init_gun()
 		self.sprite = images.gun_machinegun
-		self.ammo = 1000
+		self.max_ammo = 1000
 		self.cooldown = 0.1
 	end
 
@@ -22,7 +22,7 @@ function Guns:init()
 	function self.Triple:init()
 		self:init_gun()
 		self.sprite = images.gun_triple
-		self.ammo = 1000
+		self.max_ammo = 1000
 		self.cooldown = 0.1
 		self.bullet_number = 3
 	end

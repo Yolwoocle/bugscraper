@@ -9,16 +9,21 @@ function Enemy:init_enemy(x,y, img, w,h)
 	w,h = w or 12, h or 12
 	self:init_actor(x, y, w, h, img or images.duck)
 	self.name = "enemy"
+	self.is_being = true -- "Being" means players, enemies, etc, but not bullets, etc
 	self.is_enemy = true
 	self.is_flying = false
 	self.is_active = true
 	self.follow_player = true
+
+	self.harmless_frames = 0
 
 	self.life = 10
 	self.color = COL_BLUE
 	self.speed = 20
 	self.speed_x = self.speed
 	self.speed_y = 0
+
+	self.is_stompable = true
 
 	self.damage = 1
 	self.knockback = 1200
@@ -28,6 +33,7 @@ function Enemy:update_enemy(dt)
 	-- if not self.is_active then    return    end
 	self:update_actor(dt)
 	self:follow_nearest_player(dt)
+	self.harmless_frames = max(self.harmless_frames - dt, 0)
 
 	if self.life <= 0 then
 		self:remove()
@@ -78,17 +84,45 @@ function Enemy:draw()
 	self:draw_enemy()
 end
 
-function Enemy:on_collision(col)
+function Enemy:on_collision(col, other)
+	if self.name == "grasshopper" then print("grasshopper on_coll")  end
 	-- If hit wall, reverse x vel (why is this here?????)
 	if col.other.is_solid and col.normal.y == 0 then
 		self.vx = -self.vx
 	end
 
-	if col.other.is_enemy then
+	-- Player
+	if col.other.is_player then
+		local player = col.other
+		
+		-- Begin stomped
+		local epsilon = 0.01
+		if player.vy > epsilon and self.is_stompable then
+			if self.name == "grasshopper" then print("grasshopper stomp")  end
+			player.vy = 0
+			player:on_stomp(self)
+			self:kill()
+		
+		else
+			-- Damage player
+			if self.harmless_frames <= 0 then	
+				if self.name == "grasshopper" then print("grasshopper damage")  end
+				player:do_damage(self.damage, self)
+			end
+		end
+
+	end
+	
+	-- Being collider push force
+	if col.other.is_being then
 		self:do_knockback(10, col.other)
 		col.other:do_knockback(10, self)
 	end
+
+	self:after_collision(col, col.other)
 end
+
+function Enemy:after_collision(col, other)  end
 
 function Enemy:do_damage(n)
 	self.life = self.life - n
