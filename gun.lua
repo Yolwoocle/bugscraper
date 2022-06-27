@@ -1,7 +1,7 @@
 require "util"
 local Class = require "class"
 local Bullet = require "bullet"
-local sounds = require "sounds"
+local sounds = require "stats.sounds"
 local images = require "images"
 
 local Gun = Class:inherit()
@@ -41,7 +41,7 @@ function Gun:init_gun()
 	self.jetpack_force = 70
 
 	-- Sounds
-	self.sfx = sounds.shot
+	self.sfx = sounds.shot3
 	self.sfx_pitch_var = 1.15
 end
 

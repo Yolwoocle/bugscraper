@@ -8,6 +8,7 @@ local WorldGenerator = require "worldgenerator"
 local Inventory = require "inventory"
 local ParticleSystem = require "particles"
 local AudioManager = require "audio"
+local waves = require "stats.waves"
 
 local images = require "images"
 require "util"
@@ -348,19 +349,21 @@ function Game:new_wave_buffer_enemies()
 	-- Spawn a bunch of enemies
 	local bw = BLOCK_WIDTH
 	local wg = self.world_generator
-	local n = 5 + self.floor
-
+	
 	self.cur_wave_max_enemy = n
 	self.door_animation_enemy_buffer = {}
+
+	local wave = waves[clamp(self.floor, 1, #waves)]
+	local n = love.math.random(wave.min, wave.max)
 	for i=1, n do
 		-- local x = love.math.random((wg.box_ax+1)*bw, (wg.box_bx-1)*bw)
 		-- local y = love.math.random((wg.box_ay+1)*bw, (wg.box_by-1)*bw)
 		local x = love.math.random(self.door_ax, self.door_bx)
 		local y = love.math.random(self.door_ay, self.door_by)
-		local enem = random_sample{Enemies.Fly, Enemies.Larva, Enemies.Grasshopper,
-		Enemies.Slug, Enemies.SnailShelled}
 		
+		local enem = random_weighted(wave.enemies)
 		local e = enem:new(x,y)
+		
 		-- Center enemy
 		e.x = e.x - e.w/2
 		e.y = e.y - e.h/2

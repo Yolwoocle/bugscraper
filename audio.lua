@@ -1,7 +1,7 @@
 require "util"
 local Class = require "class"
 local images = require "images"
-local sounds = require "sounds"
+local sounds = require "stats.sounds"
 
 local AudioManager = Class:inherit()
 
