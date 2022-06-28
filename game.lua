@@ -272,9 +272,10 @@ function Game:init_players()
 end
 
 
-------------------------------------
---- [[[[[[[[ BACKGROUND ]]]]]]]] ---
-------------------------------------
+-----------------------------------------------------
+--- [[[[[[[[ BACKGROUND & LEVEL PROGRESS ]]]]]]]] ---
+-----------------------------------------------------
+
 -- TODO: Should we move this to a separate class?
 
 function Game:new_bg_particle()
