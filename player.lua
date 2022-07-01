@@ -68,7 +68,15 @@ function Player:init(n, x, y, spr, controls)
 	self.hand_oy = 14
 
 	-- Shooting & guns (keep it or ditch for family friendliness?)
-	self:new_gun(Guns.Machinegun:new())
+	self:equip_gun(Guns.Machinegun:new())
+	self.guns = {
+		Guns.Machinegun:new(self),
+		Guns.Triple:new(self),
+		Guns.Burst:new(self),
+		Guns.Shotgun:new(self),
+	}
+	self.gun_number = 1
+
 	self.is_shooting = false
 	self.shoot_dir_x = 1
 	self.shoot_dir_y = 0
@@ -106,6 +114,11 @@ function Player:update(dt)
 	self:do_invincibility(dt)
 	
 	-- Gun
+	if self:button_pressed("switchgun") then
+		self.gun_number = mod_plus_1((self.gun_number + 1), #self.guns)
+		self:equip_gun(self.guns[self.gun_number])
+	end
+
 	self.gun:update(dt)
 	self:shoot(dt)
 	self:update_gun_pos(dt)
@@ -132,11 +145,20 @@ function Player:draw()
 	-- Draw self
 	self:draw_actor(self.dir_x)
 	gfx.setColor(COL_WHITE)
+	gfx.print(self.gun.name, self.x, self.y - 12)
+	gfx.print(self.gun.cooldown, self.x, self.y - 64)
+	gfx.print(self.gun.cooldown_timer, self.x, self.y - 64-16)
+	gfx.print(self.gun.burst_counter, self.x, self.y - 64-32)
 
 	-- Cursor
 	if self.cu_target then
 		rect_color(COL_WHITE, "line", self.cu_x*BW, self.cu_y*BW, BLOCK_WIDTH, BLOCK_WIDTH)
 	end
+
+	-- local norm = dist(self.vx, self.vy)
+	-- local vx = -self.vx/1
+	-- local vy = -self.vy/1
+	-- line_color(COL_RED, self.mid_x, self.mid_y, self.mid_x + vx*32, self.mid_y + vy*32)
 end
 
 function Player:draw_hud()
@@ -315,6 +337,7 @@ function Player:on_leaving_collision()
 end
 
 function Player:shoot(dt, is_burst)
+	if is_burst == nil then     is_burst = false    end
 	-- Update aiming direction
 	local dx, dy = self.dir_x, self.dir_y
 	local aim_horizontal = (self:button_down("left") or self:button_down("right"))
@@ -331,10 +354,10 @@ function Player:shoot(dt, is_burst)
 
 		local ox = dx * self.gun.bul_w
 		local oy = dy * self.gun.bul_h
-		self.gun:shoot(dt, self, self.mid_x + ox, self.y + oy, dx, dy, is_burst)
+		local success = self.gun:shoot(dt, self, self.mid_x + ox, self.y + oy, dx, dy, is_burst)
 
 		-- If shooting downwards, then go up like a jetpack
-		if self:button_down("down") then
+		if self:button_down("down") and success then
 			self.vy = self.vy - self.gun.jetpack_force
 			self.vy = self.vy * self.friction_x
 		end
@@ -354,6 +377,12 @@ function Player:update_gun_pos(dt)
 	
 	self.gun.x = lerp(self.gun.x, tar_x, 0.5)
 	self.gun.y = lerp(self.gun.y, tar_y, 0.5)
+
+--[[	local rot_offset = ang - atan2(-self.vy, -self.vx)
+	local d = dist(self.vx, self.vy)
+	rot_offset = rot_offset * 0.2
+	if abs(d) < 0.01 then    rot_offset = 0    end
+--]]
 	self.gun.rot = lerp_angle(self.gun.rot, ang, 0.3)
 end
 
@@ -462,7 +491,7 @@ function Player:do_snowballing()
 	end
 end
 
-function Player:new_gun(gun)
+function Player:equip_gun(gun)
 	self.gun = gun
 	self.gun.user = self
 end

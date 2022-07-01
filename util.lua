@@ -17,10 +17,40 @@ pi = math.pi
 pi2 = 2*math.pi
 inf = math.huge
 
+function mod_plus_1(val, mod)
+	-- i hate lua
+	return ((val-1) % mod)+1
+end
+
+function normalize_vect(x, y)
+	if x==0 and y==0 then  return 0,0  end
+	local a = math.atan2(y, x)
+	return math.cos(a), math.sin(a)
+end
+
+function color(hex)
+	if not hex then  return white  end
+	if type(hex) ~= "number" then  return white  end
+
+	local b = hex % 256;  hex = (hex - b) / 256
+	local g = hex % 256;  hex = (hex - b) / 256
+	local r = hex % 256
+	return {r/255, g/255, b/255}
+end
+
 function round(num, num_dec)
 	-- http://lua-users.org/wiki/SimpleRound
 	local mult = 10^(num_dec or 0)
 	return math.floor(num * mult + 0.5) / mult
+end
+
+
+function round_if_near_zero(val, thr)
+	thr = thr or 0.1
+	if math.abs(val) < thr then
+		return 0
+	end
+	return thr
 end
 
 function copy_table(tab)
@@ -29,6 +59,22 @@ function copy_table(tab)
 		newtab[k] = v
 	end
 	return newtab
+end
+
+function is_in_table(tab, val)
+	for _,v in pairs(tab) do
+		if val == v then
+			return true
+		end
+	end
+	return false
+end
+
+function append_table(tab1,tab2)
+	for i,v in pairs(tab2) do
+		table.insert(tab1,v)
+	end
+	return tab1
 end
 
 function table.clone(orig)
@@ -43,6 +89,19 @@ function table.clone(orig)
         copy = orig
     end
     return copy
+end
+
+function shuffle_table(t, rng)
+	--Fisher–Yates shuffle: https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
+	for i=#t, 1, -1 do
+		local j 
+		if rng then
+			j = rng:random(i)
+		else
+			j = love.math.random(i)
+		end
+		t[j], t[i] = t[i], t[j]
+	end
 end
 
 
@@ -62,6 +121,44 @@ function rgb(r,g,b)
 	return {r/255, g/255, b/255, 1}
 end
 
+function draw_centered(spr, x, y, r, sx, sy, ox, oy, color)
+	local w = spr:getWidth() or 0
+	local h = spr:getHeight() or 0
+	local col = color or {1,1,1}
+	if spr == nil then spr = spr_missing end 
+
+	if (camera.x-w < x) and (x < camera.x+window_w+w) 
+	and (camera.y-h < y) and (y < camera.y+window_h+h) then
+		x = floor(x)
+		y = floor(y)
+		r = r or 0
+		sx = sx or PIXEL_SCALE
+		sy = sy or sx
+		ox = ox or 0
+		oy = oy or 0
+
+		ox = floor(ox + spr:getWidth()/2)
+		oy = floor(oy + spr:getHeight()/2)
+		love.graphics.setColor(col)
+		love.graphics.draw(spr, x, y, r, sx, sy, ox, oy)
+		love.graphics.setColor(1,1,1)
+	end
+end
+
+function draw_centered_outline(spr, x, y, r, sx, sy, thiccness, color)
+
+	draw_centered(spr, x, y, r, sx, sy, thiccness ,0, color)
+	draw_centered(spr, x, y, r, sx, sy, -thiccness,0, color)
+	draw_centered(spr, x, y, r, sx, sy, 0, thiccness, color)
+	draw_centered(spr, x, y, r, sx, sy, 0,-thiccness, color)
+
+	draw_centered(spr, x, y, r, sx, sy, thiccness ,thiccness , color)
+	draw_centered(spr, x, y, r, sx, sy,-thiccness ,thiccness , color)
+	draw_centered(spr, x, y, r, sx, sy, thiccness ,-thiccness, color)
+	draw_centered(spr, x, y, r, sx, sy,-thiccness ,-thiccness, color)
+
+end
+
 function draw_centered_text(text, rect_x, rect_y, rect_w, rect_h, rot, sx, sy, font)
 	rot = rot or 0
 	sx = sx or 1
@@ -76,6 +173,15 @@ function draw_centered_text(text, rect_x, rect_y, rect_w, rect_h, rot, sx, sy, f
 	love.graphics.setFont(font)
 	love.graphics.print(text, x, y, rot, sx, sy, math.floor(text_w/2), math.floor(text_h/2))
 	love.graphics.setFont(deffont)
+end
+
+function draw_stretched_spr(x1,y1,x2,y2,spr,scale)
+	-- Draws a sprite from (x1, y1) to (x2, y2)
+	xmidd = x2-x1
+	ymidd = y2-y1
+	local rota = math.atan2(ymidd,xmidd)
+	local dist = dist(x1,y1,x2,y2)
+	love.graphics.draw(spr, x1,y1 , rota-pi/2 , scale , dist , spr:getWidth()/2)
 end
 
 function print_centered(text, x, y, rot, sx, sy, ...)
@@ -120,7 +226,7 @@ function concat(...)
 	for _,v in pairs(args) do
 		local seg = tostring(v)
 		if v == nil then  seg = "nil"  end
-		if type(v) == table then   seg = table_to_str   end
+		if type(v) == table then   seg = table_to_str(v)   end
 		s = s..seg
 	end
 	return s
@@ -211,8 +317,49 @@ function split_str(inputstr, sep)
 end
 
 function table_to_str(tab)
-	return "{"..concatsep(tab, ", ").."}"
+	if type(tab) ~= "table" then
+		return tostring(tab)
+	end
+	
+	local s = ""
+	for k,v in pairs(tab) do
+		if type(k) == "number" then
+			s = s..table_to_str(v)..", "
+		else
+			s = s..tostr(k).." = "..table_to_str(v)..", "
+		end
+	end
+	s = string.sub(s, 1, #s-2)
+	s = "{"..s.."}"
+	return s
 end
+
+function print_table(tab)
+	print(table_to_str(tab))
+end
+
+function table_2d(w,h,val)
+	local t = {}
+	for i=1,h do
+		t[i] = {}
+		for j=1,w do
+			t[i][j] = val
+		end
+	end
+	return t
+end
+
+function table_2d_0(w,h,val)
+	local t = {}
+	for i=0,h-1 do
+		t[i] = {}
+		for j=0,w-1 do
+			t[i][j] = val
+		end
+	end
+	return t
+end
+
 
 function draw_rank_medal(rank, defcol, x, y)
 	--- Circle
@@ -263,6 +410,14 @@ function random_weighted(li, rng)
 		rnd = rnd - li[i][2]
 	end
 	assert("Random_weighted out of range // Something has gone wrong and you definitely can't code!")
+end
+
+function random_polar(rad)
+	local rnd_ang = love.math.random() * pi2
+	local rnd_rad = love.math.random() * rad
+	local x = math.cos(rnd_ang) * rnd_rad
+	local y = math.sin(rnd_ang) * rnd_rad
+	return x, y
 end
 
 --[[

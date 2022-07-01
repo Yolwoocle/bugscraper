@@ -50,7 +50,7 @@ end
 
 function love.update(dt)
 	t = t + dt
-	local cap = 50
+	local cap = 4
 	local i = 0
 	while t > fdt and cap > 0 do
 		t = t - fdt

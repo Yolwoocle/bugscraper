@@ -101,17 +101,4 @@ waves[9] = {
 	},
 }
 
-
-waves[10] = {
-	min = 100,
-	max = 100,
-	enemies = {
-		{E.Larva, 4},
-		{E.Fly, 3},
-		{E.SnailShelled, 3},
-		{E.Slug, 2},
-		{E.Grasshopper, 1},
-	},
-}
-
 return waves

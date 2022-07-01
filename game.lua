@@ -241,6 +241,7 @@ function Game:init_players()
 			down = {"s", "down"},
 			jump = {"z", "c", "b"},
 			fire = {"x", "v", "n"},
+			switchgun = {"s"}, --test
 		},
 		[2] = {
 			type = "keyboard",
@@ -366,8 +367,8 @@ function Game:new_wave_buffer_enemies()
 		local e = enem:new(x,y)
 		
 		-- Center enemy
-		e.x = e.x - e.w/2
-		e.y = e.y - e.h/2
+		e.x = floor(e.x - e.w/2)
+		e.y = floor(e.y - e.h/2)
 		-- Prevent collisions with floor
 		if e.y+e.h > self.door_by then   e.y = self.door_by - e.h    end
 		collision:remove(e)

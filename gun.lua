@@ -6,12 +6,12 @@ local images = require "images"
 
 local Gun = Class:inherit()
 
-function Gun:init_gun()
+function Gun:init_gun(user)
 	self.sprite = images.gun_machinegun
 	self.x, self.y = 0, 0
 	self.rot = 0
 
-	self.user = nil -- The actor using the gun
+	self.user = user -- The actor using the gun
 
 	-- Bullet
 	self.bul_w = 12
@@ -38,7 +38,7 @@ function Gun:init_gun()
 	self.burst_delay_timer = 0
 
 	-- Jetpack
-	self.jetpack_force = 70
+	self.jetpack_force = 340
 
 	-- Sounds
 	self.sfx = sounds.shot3
@@ -53,19 +53,12 @@ function Gun:update(dt)
 	-- Burst
 	self.burst_delay_timer = max(0, self.burst_delay_timer - dt)
 
-	if self.is_burst and   self.burst_counter > 0 then
-		local limit = 5 
-		--TODO REMOVE THIS WHEN I WAKE UP PLS
-		-- NO WHILE LOOPS
-		-- also the max is dumb
-		while limit > 0 and self.burst_delay_timer < 0 do 
-			self.burst_delay_timer = self.burst_delay_timer + self.burst_delay
-			self.burst_counter = self.burst_counter - 1
+	if self.is_burst and   self.burst_counter > 0 and self.burst_delay_timer <= 0 then
+		self.burst_delay_timer = self.burst_delay_timer + self.burst_delay
+		self.burst_counter = self.burst_counter - 1
 
-			-- Force shoot
-			self.user:shoot(dt, true)
-			limit = limit - 1
-		end
+		-- Force shoot
+		self.user:shoot(dt, true)
 	end
 end
 
@@ -91,26 +84,28 @@ function Gun:shoot(dt, player, x, y, vx, vy, is_burst)
 	local d = dist(vx, vy)
 	vx = vx/d
 	vy = vy/d
+	local is_first_fire = not is_burst
 
-	-- If first fire, reset burst timer
-	if not is_burst and self.is_burst then
+	-- If first fire, reset burst timer & cooldown
+	if is_first_fire and self.is_burst then
 		self.burst_counter = self.burst_count
 	end
 
-	-- TODO: add some sort of error message
-	if self.ammo < 0 then    return    end
+	-- Sanity checks
+	if self.ammo < 0 then      return false     end
 	-- If first shot but cooldown too big, escape
-	if not is_burst and self.cooldown_timer > 0 then    return    end
-
+	if is_first_fire and self.cooldown_timer > 0 then    return false    end
+	
 	-- Now, FIRE!!
 	audio:play_var(self.sfx, 0.2, 1.4)
-	self.ammo = self.ammo - 1
+	if is_first_fire then    self.cooldown_timer = self.cooldown    end
+	self.ammo = self.ammo - self.bullet_number
 
 	local x = floor(x)
 	local y = floor(y)
 	local ang = atan2(vy, vx)
 
-	if self.bullet_number == 1 then		
+	if self.bullet_number == 1 then
 		-- If only fire 1 bullet 
 		self:fire_bullet(dt, player, x, y, self.bul_w, self.bul_h, vx, vy)
 	else
@@ -124,14 +119,14 @@ function Gun:shoot(dt, player, x, y, vx, vy, is_burst)
 			self:fire_bullet(dt, player, x, y, self.bul_w, self.bul_h, vx, vy)
 		end
 	end
+
+	return true
 end	
 
 function Gun:fire_bullet(dt, player, x, y, bul_w, bul_h, vx, vy)
 	local spd_x = vx * self.bullet_speed 
 	local spd_y = vy * self.bullet_speed 
 	game:new_actor(Bullet:new(self, player, x, y, bul_w, bul_h, spd_x, spd_y))
-	
-	self.cooldown_timer = self.cooldown
 end
 
 return Gun
