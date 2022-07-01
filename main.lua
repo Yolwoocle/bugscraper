@@ -58,6 +58,8 @@ function love.update(dt)
 		cap = cap - 1
 		i=i+1
 	end
+	-- if t > 0 then    t = 0    end
+	if game then   game.frame_repeat = i end
 end
 
 function love.draw()

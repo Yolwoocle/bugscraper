@@ -20,7 +20,13 @@ function Gun:init_gun(user)
 	self.bullet_speed = 400
 	self.bullet_number = 1
 	self.bullet_spread = 0.2
-	
+	self.bullet_friction = 1
+	self.random_angle_offset = 0.1
+	self.random_speed_offset = 40
+	self.random_friction_offset = 0
+
+	self.speed_floor = 3 -- min speed before it despawns
+
 	-- Ammo
 	self.max_ammo = 1000
 	self.ammo = math.huge
@@ -77,13 +83,13 @@ function Gun:draw(flip_x, flip_y, rot)
 	-- gfx.print(concat("burst_delay_timer: ", self.burst_delay_timer), self.x, self.y - 16*2)
 end
 
-function Gun:shoot(dt, player, x, y, vx, vy, is_burst)
-	vx = vx or 0
-	vy = vy or 0
+function Gun:shoot(dt, player, x, y, dx, dy, is_burst)
+	dx = dx or 0
+	dy = dy or 0
 	-- Normalize direction vector
-	local d = dist(vx, vy)
-	vx = vx/d
-	vy = vy/d
+	local d = dist(dx, dy)
+	dx = dx/d
+	dy = dy/d
 	local is_first_fire = not is_burst
 
 	-- If first fire, reset burst timer & cooldown
@@ -103,29 +109,35 @@ function Gun:shoot(dt, player, x, y, vx, vy, is_burst)
 
 	local x = floor(x)
 	local y = floor(y)
-	local ang = atan2(vy, vx)
+	local ang = atan2(dy, dx)
 
 	if self.bullet_number == 1 then
 		-- If only fire 1 bullet 
-		self:fire_bullet(dt, player, x, y, self.bul_w, self.bul_h, vx, vy)
+		local ang = ang + random_neighbor(self.random_angle_offset)
+		dx, dy = cos(ang), sin(ang)
+		particles:flash(x, y)
+		self:fire_bullet(dt, player, x, y, self.bul_w, self.bul_h, dx, dy)
 	else
 		-- If fire multiple bullets
 		local step = (self.bullet_spread*2) / (self.bullet_number-1)
 		for i = 0, self.bullet_number-1 do
 			-- Compute fire angle
-			local a = ang-self.bullet_spread + i*step
-			local vx = cos(a)
-			local vy = sin(a)
-			self:fire_bullet(dt, player, x, y, self.bul_w, self.bul_h, vx, vy)
+			local rand_o = random_neighbor(self.random_angle_offset)
+			local a = ang-self.bullet_spread + i*step + rand_o
+			local dx = cos(a)
+			local dy = sin(a)
+			particles:flash(x, y)
+			self:fire_bullet(dt, player, x, y, self.bul_w, self.bul_h, dx, dy)
 		end
 	end
 
 	return true
 end	
 
-function Gun:fire_bullet(dt, player, x, y, bul_w, bul_h, vx, vy)
-	local spd_x = vx * self.bullet_speed 
-	local spd_y = vy * self.bullet_speed 
+function Gun:fire_bullet(dt, player, x, y, bul_w, bul_h, dx, dy)
+	local spd = self.bullet_speed + random_neighbor(self.random_speed_offset)
+	local spd_x = dx * spd
+	local spd_y = dy * spd 
 	game:new_actor(Bullet:new(self, player, x, y, bul_w, bul_h, spd_x, spd_y))
 end
 

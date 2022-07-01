@@ -76,9 +76,14 @@ function Game:init()
 	self.test_t = 0
 
 	self.bg_particles = {}
-	for i=1,40 do
+	for i=1,60 do
 		table.insert(self.bg_particles, self:new_bg_particle())
 	end
+
+	-- Logo
+	self.logo_y = 15
+	self.logo_vy = 0
+	self.move_logo = false
 end
 
 function Game:update(dt)
@@ -88,7 +93,7 @@ function Game:update(dt)
 	particles:update(dt)
 		-- Background lines
 	for i,o in pairs(self.bg_particles) do
-		o.y = o.y + dt*self.elevator_speed
+		o.y = o.y + dt*self.elevator_speed*o.spd
 		if o.y > CANVAS_HEIGHT then
 			o.x = love.math.random(0, CANVAS_WIDTH)
 			o.w = love.math.random(2, 12)
@@ -117,6 +122,12 @@ function Game:update(dt)
 		if actor.is_removed then
 			table.remove(self.actors, i)
 		end
+	end
+
+	-- Logo
+	if self.move_logo then
+		self.logo_vy = self.logo_vy - dt
+		self.logo_y = self.logo_y + self.logo_vy
 	end
 end
 
@@ -167,12 +178,14 @@ function Game:draw()
 	-- rect_color(COL_MID_GRAY, "fill", floor((CANVAS_WIDTH-w)/2),    16, w, 8)
 	-- rect_color(COL_WHITE,    "fill", floor((CANVAS_WIDTH-w)/2) +1, 17, (w-2)*self.floor_progress, 6)
 
+	love.graphics.draw(images.logo, (CANVAS_WIDTH - images.logo:getWidth())/2, self.logo_y)
+
 	-- Debug
 	if self.debug_mode then
 		self:draw_debug()
 	end
 
-	gfx.print(concat("FPS: ",love.timer.getFPS()), 0, 0)
+	gfx.print(concat("FPS: ",love.timer.getFPS(), " / frmRpeat: ",self.frame_repeat), 0, 0)
 end
 
 function Game:draw_debug()
@@ -286,6 +299,7 @@ function Game:new_bg_particle()
 	o.h = love.math.random(8, 64)
 	o.y = -o.h - love.math.random(0, CANVAS_HEIGHT)
 	o.col = random_sample{COL_DARK_GRAY, COL_MID_GRAY}
+	o.spd = random_range(0.5, 1.5)
 
 	o.oy = 0
 	o.oh = 1
@@ -297,13 +311,13 @@ function Game:progress_elevator(dt)
 	if not self.door_animation and self.enemy_count == 0 then
 		self.door_animation = true
 		self.has_switched_to_next_floor = false
-		self:new_wave_buffer_enemies()
+		self:new_wave_buffer_enemies(dt)
 	end
 
 	-- Do the door opening animation
 	if self.door_animation then
 		self.floor_progress = self.floor_progress - dt
-		self:update_door_anim()
+		self:update_door_anim(dt)
 	end
 	
 	-- Go to next floor once animation is finished
@@ -316,7 +330,7 @@ function Game:progress_elevator(dt)
 	end
 end
 
-function Game:update_door_anim()
+function Game:update_door_anim(dt)
 	-- 4-3: open doors / 3-2: idle / 2-1: close doors
 	if self.floor_progress > 4 then
 		-- Door is closed at first...
@@ -330,7 +344,7 @@ function Game:update_door_anim()
 	elseif self.floor_progress > 1 then
 		-- ...Close doors
 		self.door_offset = lerp(self.door_offset, 0, 0.1)
-		self:activate_enemy_buffer()
+		self:activate_enemy_buffer(dt)
 	end
 
 	-- Elevator speed
@@ -344,7 +358,12 @@ function Game:update_door_anim()
 	if self.floor_progress < 4.2 and not self.has_switched_to_next_floor then
 		self.floor = self.floor + 1
 		self.has_switched_to_next_floor = true
+		self:next_floor(dt)
 	end
+end
+
+function Game:next_floor(dt)
+	self.move_logo = true
 end
 
 function Game:new_wave_buffer_enemies()

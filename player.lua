@@ -145,15 +145,10 @@ function Player:draw()
 	-- Draw self
 	self:draw_actor(self.dir_x)
 	gfx.setColor(COL_WHITE)
-	gfx.print(self.gun.name, self.x, self.y - 12)
-	gfx.print(self.gun.cooldown, self.x, self.y - 64)
-	gfx.print(self.gun.cooldown_timer, self.x, self.y - 64-16)
-	gfx.print(self.gun.burst_counter, self.x, self.y - 64-32)
-
-	-- Cursor
-	if self.cu_target then
-		rect_color(COL_WHITE, "line", self.cu_x*BW, self.cu_y*BW, BLOCK_WIDTH, BLOCK_WIDTH)
-	end
+	-- gfx.print(self.gun.name, self.x, self.y - 12)
+	-- gfx.print(self.gun.cooldown, self.x, self.y - 64)
+	-- gfx.print(self.gun.cooldown_timer, self.x, self.y - 64-16)
+	-- gfx.print(self.gun.burst_counter, self.x, self.y - 64-32)
 
 	-- local norm = dist(self.vx, self.vy)
 	-- local vx = -self.vx/1
@@ -212,6 +207,10 @@ function Player:do_invincibility(dt)
 		self.is_invincible = true
 		self.iframe_blink_timer = (self.iframe_blink_timer + dt) % self.iframe_blink_freq
 	end
+end
+
+function Player:set_invincibility(n)
+	self.iframes = n
 end
 
 function Player:do_wall_sliding(dt)
@@ -428,6 +427,7 @@ end
 
 function Player:on_stomp(enemy)
 	self.vy = -self.stomp_jump_speed
+	self:set_invincibility(0.2)
 end
 
 function Player:do_damage(n, source)

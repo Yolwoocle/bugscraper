@@ -63,6 +63,10 @@ function ParticleSystem:clear()
 	self.particles = {}
 end
 
+function ParticleSystem:smoke_big(x, y)
+	self:smoke(x, y, 15, COL_WHITE, 16, 8, 4)
+end
+
 function ParticleSystem:smoke(x, y, number, col, spw_rad, size, sizevar)
 	number = number or 10
 	col = col or COL_WHITE
@@ -77,6 +81,13 @@ function ParticleSystem:smoke(x, y, number, col, spw_rad, size, sizevar)
 		local dsize = random_neighbor(sizevar)
 		self:add_particle(x+dx, y+dy, size+dsize, col, 0, 0, _vr, _life)
 	end
+end
+
+function ParticleSystem:flash(x, y)
+	-- x,y,r,col, vx,vy,vr, life
+	local r = 8 + random_neighbor(2)
+	-- self:add_particle(x, y, r, COL_LIGHT_YELLOW, 0, 0, 220, _life)
+	self:add_particle(x, y, r, COL_WHITE, 0, 0, 220, _life)
 end
 
 return ParticleSystem

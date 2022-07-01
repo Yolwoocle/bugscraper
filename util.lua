@@ -23,10 +23,13 @@ function mod_plus_1(val, mod)
 end
 
 function normalize_vect(x, y)
-	if x==0 and y==0 then  return 0,0  end
-	local a = math.atan2(y, x)
-	return math.cos(a), math.sin(a)
+	if x==0 and y==0 then  return 1,0  end
+	local d = sqrt(x*x + y*y)
+	return x/d, y/d
+	-- local a = math.atan2(y, x)
+	-- return math.cos(a), math.sin(a)
 end
+normalise_vect = normalize_vect
 
 function color(hex)
 	if not hex then  return white  end

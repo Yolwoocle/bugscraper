@@ -53,7 +53,8 @@ local img_names = {
 	"cabin_bg_amboccl",
 	"cabin_walls",
 	"cabin_door_left", "cabin_door_right",
-	
+
+	"logo",
 }
 
 local images = {}

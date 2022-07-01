@@ -12,15 +12,17 @@ function Bullet:init(gun, player, x, y, w, h, vx, vy)
 	self.is_enemy = player.is_enemy
 	self.is_bullet = true
 
-	self.friction_x = 1
-	self.friction_y = 1
+	self.friction = gun.bullet_friction - random_range(0, gun.random_friction_offset)
+	self.friction_x = self.friction
+	self.friction_y = self.friction
 	self.gravity = 0
 
-	self.speed = 300
-	self.dir = dir
+	self.speed = 1--300
+	self.dir = 0
 	
 	self.vx = vx or 0
 	self.vy = vy or 0
+	self.speed_floor = gun.speed_floor
 
 	self.life = 5
 
@@ -37,6 +39,11 @@ function Bullet:update(dt)
 	if self.life < 0 then
 		self:remove()
 	end
+
+	local v_sq = distsqr(self.vx, self.vy)
+	if v_sq <= self.speed_floor then
+		self:kill()
+	end 
 end
 
 function Bullet:draw()

@@ -137,6 +137,7 @@ function Enemy:kill()
 	self:on_death()
 	game:on_kill(self)
 	self:remove()
+	particles:smoke(self.mid_x, self.mid_y)
 end
 
 function Enemy:on_death()
