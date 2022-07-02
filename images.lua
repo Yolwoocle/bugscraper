@@ -28,16 +28,17 @@ local img_names = {
 	"heart_empty",
 	"ammo",
 
-	"ant",
-	"caterpillar",
+	"ant1",
+	"ant2",
 	"bee",
+	"caterpillar",
 	"duck",
-	"larva",
 	"fly",
 	"grasshopper",
-	"snail_shell",
-	"snail_open",
+	"larva",
 	"slug",
+	"snail_open",
+	"snail_shell",
 	
 	"bullet",
 

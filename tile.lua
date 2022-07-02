@@ -17,7 +17,7 @@ function Tile:init_tile(x, y, w, spr)
 	self.w = w
 	self.h = w
 	self.is_solid = false
-	self.sprite = spr
+	self.spr = spr
 end
 
 function Tile:update(dt)
@@ -25,8 +25,8 @@ function Tile:update(dt)
 end
 
 function Tile:draw()
-	if self.sprite then
-		gfx.draw(self.sprite, self.x, self.y)
+	if self.spr then
+		gfx.draw(self.spr, self.x, self.y)
 	end
 end
 

@@ -28,7 +28,7 @@ end
 
 function Drop:draw()
 	self:draw_actor()
-	--gfx.draw(self.sprite, self.x, self.y)
+	--gfx.draw(self.spr, self.x, self.y)
 end
 
 function Drop:on_collision(col, other)

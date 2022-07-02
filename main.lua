@@ -38,6 +38,8 @@ function love.load(arg)
 	FONT_MINI = gfx.newFont("fonts/Kenney Mini.ttf", 8)
 	gfx.setFont(FONT_REGULAR)
 
+	frame = 0
+
 	game = Game:new()
 end
 
@@ -58,8 +60,10 @@ function love.update(dt)
 		cap = cap - 1
 		i=i+1
 	end
+
 	-- if t > 0 then    t = 0    end
 	if game then   game.frame_repeat = i end
+	frame = frame + 1
 end
 
 function love.draw()

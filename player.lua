@@ -14,7 +14,7 @@ function Player:init(n, x, y, spr, controls)
 	n = n or 1
 	x = x or 0
 	y = y or 0
-	spr = spr or images.ant
+	spr = spr or images.ant1
 	self:init_actor(x, y, 14, 14, spr)
 	self.is_player = true
 	self.is_being = true
@@ -30,7 +30,15 @@ function Player:init(n, x, y, spr, controls)
 	self:init_last_input_state()
 	
 	-- Animation
+	self.spr_idle = images.ant1
+	self.spr_jump = images.ant2
+	self.spr = self.spr_idle
+	self.is_walking = false
 	self.squash = 1
+	self.jump_squash = 1
+	self.walkbounce_oy = 0
+	self.walkbounce_t = 0
+	self.walkbounce_squash = 0
 
 	self.mid_x = self.x + floor(self.w / 2)
 	self.mid_y = self.y + floor(self.h / 2)
@@ -112,6 +120,7 @@ function Player:update(dt)
 	self.mid_x = self.x + floor(self.w/2)
 	self.mid_y = self.y + floor(self.h/2)
 	self:do_invincibility(dt)
+	self:animate_walk(dt)
 	
 	-- Gun
 	if self:button_pressed("switchgun") then
@@ -131,6 +140,7 @@ function Player:update(dt)
 end
 
 function Player:draw()
+	if self.is_removed then   return   end
 	
 	if self.is_invincible then
 		local v = 1 - (self.iframes / self.max_iframes)
@@ -140,25 +150,26 @@ function Player:draw()
 		end
 		gfx.setColor(1, v, v, a)
 	end
+
 	-- Draw gun
 	self.gun:draw(1, self.dir_x)
+
 	-- Draw self
-	self:draw_actor(self.dir_x)
+	self:draw_player()
+
 	gfx.setColor(COL_WHITE)
 	-- gfx.print(self.gun.name, self.x, self.y - 12)
-	-- gfx.print(self.gun.cooldown, self.x, self.y - 64)
+	gfx.print(concat(self.vx, " / ", self.vy), self.x, self.y - 64)
+	gfx.print(concat(self.is_walking), self.x, self.y - 64-16)
+	gfx.print(concat("jump_squash ", self.jump_squash), 0, 64+16*2)
+	gfx.print(concat("walkbounce", self.walkbounce_squash), 0, 64+16*3)
 	-- gfx.print(self.gun.cooldown_timer, self.x, self.y - 64-16)
 	-- gfx.print(self.gun.burst_counter, self.x, self.y - 64-32)
-
-	-- local norm = dist(self.vx, self.vy)
-	-- local vx = -self.vx/1
-	-- local vy = -self.vy/1
-	-- line_color(COL_RED, self.mid_x, self.mid_y, self.mid_x + vx*32, self.mid_y + vy*32)
 end
 
 function Player:draw_hud()
 	-- Life
-	local ui_y = floor(self.y - self.sprite:getHeight()-2)
+	local ui_y = floor(self.y - self.spr:getHeight()-2)
 	ui:draw_icon_bar(self.mid_x, ui_y, self.life, self.max_life, images.heart, images.heart_empty)
 	-- Ammo bar
 	local bar_w = 32
@@ -175,6 +186,24 @@ function Player:draw_hud()
 		print_outline(COL_WHITE, COL_DARK_BLUE, string.format("x,y: %d / %d",self.x,self.y), self.x+16, ui_y-8*1)
 		print_outline(COL_WHITE, COL_DARK_BLUE, string.format("dir: %d / %d",self.dir_x,self.dir_y), self.x+16, ui_y-8*2)
 		print_outline(COL_WHITE, COL_DARK_BLUE, string.format("shoot_dir: %d / %d",self.shoot_dir_x,self.shoot_dir_y), self.x+16, ui_y-8*3)
+	end
+end
+
+function Player:draw_player()
+	local fx = self.dir_x * self.sx
+	local fy = 				self.sy
+	
+	local spr_w2 = floor(self.spr:getWidth() / 2)
+	local spr_h2 = floor(self.spr:getHeight() / 2)
+
+	local x = self.x + spr_w2 - self.spr_ox
+	local y = self.y + spr_h2 - self.spr_oy - self.walkbounce_oy
+	if self.spr then
+		local old_col = {gfx.getColor()}
+
+		-- Draw
+		love.graphics.setColor(old_col)
+		gfx.draw(self.spr, x, y, self.rot, fx, fy, spr_w2, spr_h2)
 	end
 end
 
@@ -311,7 +340,7 @@ function Player:jump(dt)
 	
 	particles:smoke(self.mid_x, self.y+self.h)
 	audio:play_var(sounds.jump, 0, 1.2)
-	self.squash = 1/4
+	self.jump_squash = 1/4
 end
 
 function Player:wall_jump(normal)
@@ -319,7 +348,7 @@ function Player:wall_jump(normal)
 	self.vy = -self.jump_speed
 	
 	audio:play_var(sounds.jump, 0, 1.2)
-	self.squash = 1/4
+	self.jump_squash = 1/4
 end
 
 function Player:on_jump()
@@ -366,11 +395,11 @@ function Player:shoot(dt, is_burst)
 end
 
 function Player:update_gun_pos(dt)
-	local gw = self.gun.sprite:getWidth()
-	local gh = self.gun.sprite:getHeight()
-	local top_y = self.y + self.h - self.sprite:getHeight()
+	local gw = self.gun.spr:getWidth()
+	local gh = self.gun.spr:getHeight()
+	local top_y = self.y + self.h - self.spr:getHeight()
 
-	local tar_x = self.mid_x + self.shoot_dir_x * (self.sprite:getWidth()/2-3 + gw/2)
+	local tar_x = self.mid_x + self.shoot_dir_x * (self.spr:getWidth()/2-3 + gw/2)
 	local tar_y = top_y + self.hand_oy - gh/2 + self.shoot_dir_y * gh
 	local ang = self.shoot_ang
 	
@@ -388,7 +417,7 @@ end
 function Player:button_down(btn)
 	-- TODO: move this to some input.lua or something
 	local keys = self.controls[btn]
-	if not keys then   return   end
+	if not keys then   error(concat("Attempt to access button '",concat(btn),"'"))   end
 
 	for i, k in pairs(keys) do
 		if love.keyboard.isScancodeDown(k) then
@@ -460,7 +489,9 @@ function Player:on_hit_bullet(bul, col)
 end
 
 function Player:update_visuals()
-	self.squash = lerp(self.squash, 1, 0.3)
+	self.jump_squash       = lerp(self.jump_squash,       1, 0.2)
+	self.walkbounce_squash = lerp(self.walkbounce_squash, 1, 0.2)
+	self.squash = self.jump_squash * self.walkbounce_squash
 
 	self.sx = self.squash
 	self.sy = 1/self.squash
@@ -469,7 +500,7 @@ end
 function Player:on_grounded()
 	-- On land
 	audio:play("land")
-	self.squash = 2
+	self.jump_squash = 2
 	particles:smoke(self.mid_x, self.y+self.h, 10, COL_WHITE, 8, 4, 2)
 end
 
@@ -494,6 +525,47 @@ end
 function Player:equip_gun(gun)
 	self.gun = gun
 	self.gun.user = self
+end
+
+function Player:animate_walk(dt)
+	-- Ridiculously overengineered bounce + squash & stretch while walking
+	-- Holy shit this is so complicated
+	
+	local t_speed = 15
+	local bounce_height = 5
+	local squash_amount = 0.17
+	
+	self.walkbounce_t = self.walkbounce_t + dt * t_speed
+
+	self.is_walking = self.is_grounded and abs(self.vx) > 50
+	if self.is_walking then
+		self.walkbounce_t = self.walkbounce_t % pi
+	end
+
+	if self.walkbounce_t < pi + 0.001 then
+		self.is_doing_walksquash = true
+
+		--- Compute bounce height
+		local sin_a = sin(self.walkbounce_t)
+		self.walkbounce_y = abs(sin_a) * bounce_height
+		self.walkbounce_oy = self.walkbounce_y
+		
+		--- Bounce squash
+		--cos is the derivative, aka rate of change of sin
+		local speed_t = math.cos(self.walkbounce_t)
+		self.walkbounce_squash = speed_t*squash_amount + 1
+
+		--- Jump sprite
+		self.spr = self.spr_idle
+		if self.is_walking and self.walkbounce_y > 4 then
+			self.spr = self.spr_jump
+		end
+	else
+		-- If not walking and close enough to ground, reset
+		self.walkbounce_squash = 1
+		self.walkbounce_oy = 0
+		self.walkbounce_t = pi
+	end
 end
 
 return Player

@@ -20,7 +20,7 @@ function Tiles:init()
 		self.id = 0
 		
 		self.name = "air"
-		self.sprite = nil
+		self.spr = nil
 	end)
 
 	-- Grass
@@ -28,7 +28,7 @@ function Tiles:init()
 		self:init_tile(x, y, w)
 		self.id = 1
 		self.name = "metal"
-		self.sprite = images.metal
+		self.spr = images.metal
 		
 		self.is_solid = true
 	end)
@@ -38,7 +38,7 @@ function Tiles:init()
 		self:init_tile(x, y, w)
 		self.id = 2
 		self.name = "grass"
-		self.sprite = images.grass
+		self.spr = images.grass
 		
 		self.is_solid = true
 	end)
@@ -49,7 +49,7 @@ function Tiles:init()
 		self.id = 3
 
 		self.name = "dirt"
-		self.sprite = images.dirt
+		self.spr = images.dirt
 		self.is_solid = true
 	end)
 
@@ -59,7 +59,7 @@ function Tiles:init()
 		self.id = 4
 
 		self.name = "chain"
-		self.sprite = images.chain
+		self.spr = images.chain
 		self.is_solid = false
 	end)
 
@@ -68,7 +68,7 @@ function Tiles:init()
 		self.id = 5
 		
 		self.name = "bg_plate"
-		self.sprite = images.bg_plate
+		self.spr = images.bg_plate
 		self.is_solid = false
 	end)
 end

@@ -44,9 +44,9 @@ function Actor:init_actor(x, y, w, h, spr, args)
 	-- Visuals
 	self.draw_shadow = true
 	if spr then
-		self.sprite = spr 
-		self.spr_w = self.sprite:getWidth()
-		self.spr_h = self.sprite:getHeight()
+		self.spr = spr
+		self.spr_w = self.spr:getWidth()
+		self.spr_h = self.spr:getHeight()
 		self.spr_ox = floor((self.spr_w - self.w) / 2)
 		self.spr_oy = self.spr_h - self.h 
 	end
@@ -124,23 +124,23 @@ function Actor:draw_actor(fx, fy)
 	fx = (fx or 1)*self.sx
 	fy = (fy or 1)*self.sy
 
-	local spr_w2 = floor(self.sprite:getWidth() / 2)
-	local spr_h2 = floor(self.sprite:getHeight() / 2)
+	local spr_w2 = floor(self.spr:getWidth() / 2)
+	local spr_h2 = floor(self.spr:getHeight() / 2)
 
 	local x = self.x + spr_w2 - self.spr_ox
 	local y = self.y + spr_h2 - self.spr_oy
-	if self.sprite then
+	if self.spr then
 		local old_col = {gfx.getColor()}
 		-- Shadow
 		if self.draw_shadow then
 			local o = ((self.x / CANVAS_WIDTH)-.5) * 6
 			love.graphics.setColor(0, 0, 0, 0.5)
-			love.graphics.draw(self.sprite, x+o, y+3, 0, fx, fy, spr_w2, spr_h2)
+			love.graphics.draw(self.spr, x+o, y+3, 0, fx, fy, spr_w2, spr_h2)
 		end
 
 		-- Draw
 		love.graphics.setColor(old_col)
-		gfx.draw(self.sprite, x, y, self.rot, fx, fy, spr_w2, spr_h2)
+		gfx.draw(self.spr, x, y, self.rot, fx, fy, spr_w2, spr_h2)
 	end
 end
 

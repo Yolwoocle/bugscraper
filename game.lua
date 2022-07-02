@@ -185,7 +185,7 @@ function Game:draw()
 		self:draw_debug()
 	end
 
-	gfx.print(concat("FPS: ",love.timer.getFPS(), " / frmRpeat: ",self.frame_repeat), 0, 0)
+	gfx.print(concat("FPS: ",love.timer.getFPS(), " / frmRpeat: ",self.frame_repeat, " / frame: ",frame), 0, 0)
 end
 
 function Game:draw_debug()

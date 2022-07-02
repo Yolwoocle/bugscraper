@@ -7,7 +7,7 @@ local images = require "images"
 local Gun = Class:inherit()
 
 function Gun:init_gun(user)
-	self.sprite = images.gun_machinegun
+	self.spr = images.gun_machinegun
 	self.x, self.y = 0, 0
 	self.rot = 0
 
@@ -69,10 +69,10 @@ function Gun:update(dt)
 end
 
 function Gun:draw(flip_x, flip_y, rot)
-	local ox, oy = floor(self.sprite:getWidth()/2), floor(self.sprite:getHeight()/2)
+	local ox, oy = floor(self.spr:getWidth()/2), floor(self.spr:getHeight()/2)
 	flip_x, flip_y = bool_to_dir(flip_x), bool_to_dir(flip_y)
 
-	gfx.draw(self.sprite, floor(self.x), floor(self.y), self.rot, flip_x, flip_y, ox, oy)
+	gfx.draw(self.spr, floor(self.x), floor(self.y), self.rot, flip_x, flip_y, ox, oy)
 	-- love.graphics.draw(drawable,x,y,r,sx,sy,ox,oy)
 
 	-- gfx.setColor(COL_WHITE)
