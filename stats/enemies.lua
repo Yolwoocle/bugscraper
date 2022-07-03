@@ -24,7 +24,7 @@ function Enemies:init()
 		self:init_enemy(x,y, images.lever_off)
 		self.name = "lever"
 		self.follow_player = false
-		self.huge = 10000000
+		self.huge = 20
 		self.activ_thresh = 10
 		self.knockback = 0
 
