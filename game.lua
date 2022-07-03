@@ -26,7 +26,8 @@ function Game:init()
 	self.sound_on = false
 
 	-- Players
-	self.number_of_player = 1
+	self.max_number_of_players = 4 
+	self.number_of_players = 1
 
 	-- Map & world gen
 	self.shaft_w, self.shaft_h = 26,14
@@ -46,17 +47,29 @@ function Game:init()
 	self.draw_enemies_in_bg = false
 	self.door_animation = false
 	self.def_elevator_speed = 400
-	self.elevator_speed = self.def_elevator_speed
+	self.elevator_speed = 0
 	self.has_switched_to_next_floor = false
+	self.game_started = false
+
+	self.bg_particles = {}
+	for i=1,60 do
+		table.insert(self.bg_particles, self:new_bg_particle())
+	end
 
 	-- Bounding box
 	local map_w = self.map.width * BW
 	local map_h = self.map.height * BW
+	local box_ax = self.world_generator.box_ax
+	local box_ay = self.world_generator.box_ay
+	local box_bx = self.world_generator.box_bx
+	local box_by = self.world_generator.box_by
+	-- Don't try to understand all you have to know is that it puts collision 
+	-- boxes around the elevator shaft
 	self.boxes = {
-		{name="box_up",     is_solid = true, x = -BW, y = -BW,      w=map_w + 2*BW, h=BW},
-		{name="box_down", is_solid = true, x = -BW, y = map_h, w=map_w + 2*BW, h=BW},
-		{name="box_left", is_solid = true, x = -BW,  y = -BW, w=BW, h=map_h + 2*BW},
-		{name="box_right", is_solid = true, x = map_w, y = -BW, w=BW, h=map_h + 2*BW},
+		{name="box_up",     is_solid = true, x = -BW, y = -BW,  w=map_w + 2*BW,     h=BW + box_ay*BW},
+		{name="box_down", is_solid = true, x = -BW, y = (box_by+1)*BW,  w=map_w + 2*BW,     h=BW*box_ay},
+		{name="box_left", is_solid = true, x = -BW,  y = -BW,   w=BW + box_ax * BW, h=map_h + 2*BW},
+		{name="box_right", is_solid = true, x = BW*(box_bx+1), y = -BW, w=BW*box_ax, h=map_h + 2*BW},
 	}
 	for i,box in pairs(self.boxes) do   collision:add(box)   end
 	
@@ -65,20 +78,21 @@ function Game:init()
 	self.enemy_count = 0
 	self.actors = {}
 	self:init_players()
-	self:new_actor(Enemies.Bug:new(64,64))
+
+	-- Start lever
+	local y = (self.world_generator.box_by - 3) * BLOCK_WIDTH
+	self:new_actor(Enemies.Lever:new(CANVAS_WIDTH/2, y))
 
 	self.inventory = Inventory:new()
+
+	-- Screenshake
+	self.screenshake = 0
 
 	-- Debugging
 	self.debug_mode = false
 	self.msg_log = {}
 
 	self.test_t = 0
-
-	self.bg_particles = {}
-	for i=1,60 do
-		table.insert(self.bg_particles, self:new_bg_particle())
-	end
 
 	-- Logo
 	self.logo_y = 15
@@ -185,23 +199,16 @@ function Game:draw()
 		self:draw_debug()
 	end
 
-	gfx.print(concat("FPS: ",love.timer.getFPS(), " / frmRpeat: ",self.frame_repeat, " / frame: ",frame), 0, 0)
 end
 
 function Game:draw_debug()
+	gfx.print(concat("FPS: ",love.timer.getFPS(), " / frmRpeat: ",self.frame_repeat, " / frame: ",frame), 0, 0)
+	
 	local items, len = collision.world:getItems()
 	for i,it in pairs(items) do
 		local x,y,w,h = collision.world:getRect(it)
-		rect_color({0,1,0,.7},"line", x, y, w, h)
-	end
-	
-	local ii = 1
-	for i, it in pairs(items) do
-		local x,y,w,h = collision.world:getRect(it)
-		if it.is_actor then
-			ii = ii + 1
-			print_color(COL_WHITE, ii, x, y)
-		end
+		rect_color({0,1,0,.3},"fill", x, y, w, h)
+		rect_color({0,1,0,.5},"line", x, y, w, h)
 	end
 	
 	-- Print debug info
@@ -211,7 +218,7 @@ function Game:draw_debug()
 		concat("n° of actors: ", #self.actors, " / ", self.actor_limit),
 		concat("n° collision items: ", collision.world:countItems()),
 	}
-	for i=1, #txts do  print_label(txts[i], 0, txt_h*i) end 
+	for i=1, #txts do  print_label(txts[i], 0, txt_h*i) end
 	
 	self.world_generator:draw()
 	draw_log()
@@ -239,7 +246,7 @@ function draw_log()
 	local x2 = floor(CANVAS_WIDTH/2)
 	local h = gfx.getFont():getHeight()
 	print_label("--- LOG ---", x2, 0)
-	for i=1, min(#msg_log, 10) do
+	for i=1, min(#msg_log, max_msg_log) do
 		print_label(msg_log[i], x2, i*h)
 	end
 end
@@ -275,10 +282,10 @@ function Game:init_players()
 	self.players = {}
 
 	-- Spawn at middle
-	local mx = floor((self.map.width - self.number_of_player) / 2)
+	local mx = floor((self.map.width / self.max_number_of_players))
 	local my = floor(self.map.height / 2)
 
-	for i=1, self.number_of_player do
+	for i=1, self.number_of_players do
 		local player = Player:new(i, mx*16 + i*16, my*16, sprs[i], control_schemes[i])
 		self.players[i] = player
 		self:new_actor(player)

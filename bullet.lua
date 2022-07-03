@@ -27,7 +27,7 @@ function Bullet:init(gun, player, x, y, w, h, vx, vy)
 	self.life = 5
 
 	self.damage = 2
-	self.knockback = 500
+	self.knockback = gun.knockback or 500
 end
 
 function Bullet:update(dt)

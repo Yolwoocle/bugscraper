@@ -197,6 +197,19 @@ function print_centered(text, x, y, rot, sx, sy, ...)
 	love.graphics.print(text, x-text_w/2, y-text_h/2, rot, sx, sy, ...)
 end
 
+-- Thanks to steVeRoll: https://www.reddit.com/r/love2d/comments/h84gwo/how_to_make_a_colored_sprite_white/
+local white_shader = love.graphics.newShader[[
+	vec4 effect(vec4 color, Image texture, vec2 textureCoords, vec2 screenCoords){
+		return vec4(1, 1, 1, Texel(texture, textureCoords).a) * color;
+	}
+]]
+function draw_white(drawable, x, y, r, sx, sy, ox, oy, kx, ky)
+	-- drawable, x, y, r, sx, sy, ox, oy, kx, ky
+	love.graphics.setShader(white_shader)
+	love.graphics.draw(drawable, x, y, r, sx, sy, ox, oy, kx, ky)
+	love.graphics.setShader()
+end
+
 function print_centered_outline(col_in, col_out, text, x, y, rot, sx, sy, ...)
 	rot = rot or 0
 	sx = sx or 1
@@ -408,11 +421,11 @@ function random_weighted(li, rng)
 	
 	for i=1, #li do
 		if rnd < li[i][2] then
-			return li[i][1]
+			return li[i][1], li[i]
 		end
 		rnd = rnd - li[i][2]
 	end
-	assert("Random_weighted out of range // Something has gone wrong and you definitely can't code!")
+	assert("Random_weighted out of range // Something has gone wrong and your code definitely sucks!")
 end
 
 function random_polar(rad)

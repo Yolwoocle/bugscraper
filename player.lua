@@ -39,6 +39,8 @@ function Player:init(n, x, y, spr, controls)
 	self.walkbounce_oy = 0
 	self.walkbounce_t = 0
 	self.walkbounce_squash = 0
+	
+	self.walk_timer = 0
 
 	self.mid_x = self.x + floor(self.w / 2)
 	self.mid_y = self.y + floor(self.h / 2)
@@ -46,7 +48,7 @@ function Player:init(n, x, y, spr, controls)
 	self.dir_y = 0
 	
 	-- Speed 
-	self.speed = 50
+	self.speed = 50 --This is acceleration not speed but I'm too lazy to change now
 
 	-- Jump
 	self.jump_speed = 480--450
@@ -73,7 +75,6 @@ function Player:init(n, x, y, spr, controls)
 	-- Visuals
 	self.color = ({COL_RED, COL_GREEN, COL_CYAN, COL_YELLOW})[self.n]
 	self.color = self.color or COL_RED
-	self.hand_oy = 14
 
 	-- Shooting & guns (keep it or ditch for family friendliness?)
 	self:equip_gun(Guns.Machinegun:new())
@@ -82,6 +83,7 @@ function Player:init(n, x, y, spr, controls)
 		Guns.Triple:new(self),
 		Guns.Burst:new(self),
 		Guns.Shotgun:new(self),
+		Guns.Minigun:new(self),
 	}
 	self.gun_number = 1
 
@@ -89,6 +91,9 @@ function Player:init(n, x, y, spr, controls)
 	self.shoot_dir_x = 1
 	self.shoot_dir_y = 0
 	self.shoot_ang = 0
+
+	-- Loot & drops
+	self.min_loot_dist = BLOCK_WIDTH*5
 
 	-- Cursor
 	self.cu_x = 0
@@ -119,8 +124,11 @@ function Player:update(dt)
 	self:do_aiming(dt)
 	self.mid_x = self.x + floor(self.w/2)
 	self.mid_y = self.y + floor(self.h/2)
+	self.is_walking = self.is_grounded and abs(self.vx) > 50
 	self:do_invincibility(dt)
 	self:animate_walk(dt)
+	self:update_sprite(dt)
+	self:do_particles(dt)
 	
 	-- Gun
 	if self:button_pressed("switchgun") then
@@ -129,7 +137,7 @@ function Player:update(dt)
 	end
 
 	self.gun:update(dt)
-	self:shoot(dt)
+	self:shoot(dt, false)
 	self:update_gun_pos(dt)
 
 	--self:do_snowballing()
@@ -158,18 +166,11 @@ function Player:draw()
 	self:draw_player()
 
 	gfx.setColor(COL_WHITE)
-	-- gfx.print(self.gun.name, self.x, self.y - 12)
-	gfx.print(concat(self.vx, " / ", self.vy), self.x, self.y - 64)
-	gfx.print(concat(self.is_walking), self.x, self.y - 64-16)
-	gfx.print(concat("jump_squash ", self.jump_squash), 0, 64+16*2)
-	gfx.print(concat("walkbounce", self.walkbounce_squash), 0, 64+16*3)
-	-- gfx.print(self.gun.cooldown_timer, self.x, self.y - 64-16)
-	-- gfx.print(self.gun.burst_counter, self.x, self.y - 64-32)
 end
 
 function Player:draw_hud()
 	-- Life
-	local ui_y = floor(self.y - self.spr:getHeight()-2)
+	local ui_y = floor(self.y - self.spr:getHeight() - 6)
 	ui:draw_icon_bar(self.mid_x, ui_y, self.life, self.max_life, images.heart, images.heart_empty)
 	-- Ammo bar
 	local bar_w = 32
@@ -201,9 +202,26 @@ function Player:draw_player()
 	if self.spr then
 		local old_col = {gfx.getColor()}
 
+		if self.draw_shadow then
+			local o = ((self.x / CANVAS_WIDTH)-.5) * 6
+			love.graphics.setColor(0, 0, 0, 0.5)
+			love.graphics.draw(self.spr, x+o, y+3, 0, fx, fy, spr_w2, spr_h2)
+		end
+		
 		-- Draw
 		love.graphics.setColor(old_col)
 		gfx.draw(self.spr, x, y, self.rot, fx, fy, spr_w2, spr_h2)
+	end
+end
+
+function Player:heal(val)
+	local overflow = self.max_life - (self.life + val)
+	if overflow >= 0 then
+		self.life = self.life + val
+		return true
+	else
+		self.life = self.max_life
+		return false, -overflow
 	end
 end
 
@@ -377,13 +395,15 @@ function Player:shoot(dt, is_burst)
 	self.shoot_dir_x = cos(self.shoot_ang)
 	self.shoot_dir_y = sin(self.shoot_ang)
 
-	if self:button_down("fire") or is_burst then
+	local btn_auto = (self.gun.is_auto and self:button_down("fire"))
+	local btn_manu = (not self.gun.is_auto and self:button_pressed("fire"))
+	if btn_auto or btn_manu or is_burst then
 		self.is_shooting = true
 
 		local ox = dx * self.gun.bul_w
 		local oy = dy * self.gun.bul_h
 		local success = self.gun:shoot(dt, self, self.mid_x + ox, self.y + oy, dx, dy, is_burst)
-
+		
 		-- If shooting downwards, then go up like a jetpack
 		if self:button_down("down") and success then
 			self.vy = self.vy - self.gun.jetpack_force
@@ -395,12 +415,21 @@ function Player:shoot(dt, is_burst)
 end
 
 function Player:update_gun_pos(dt)
-	local gw = self.gun.spr:getWidth()
-	local gh = self.gun.spr:getHeight()
+	-- Why do I keep overcomplicating these things
+	-- TODO: move to Gun?
+	-- Gun is drawn at its center
+	local gunw = self.gun.spr:getWidth()
+	local gunh = self.gun.spr:getHeight()
 	local top_y = self.y + self.h - self.spr:getHeight()
+	local hand_oy = 15
 
-	local tar_x = self.mid_x + self.shoot_dir_x * (self.spr:getWidth()/2-3 + gw/2)
-	local tar_y = top_y + self.hand_oy - gh/2 + self.shoot_dir_y * gh
+	-- x pos is player sprite width minus a bit, plus gun width 
+	local w = (self.spr:getWidth()/2-5 + gunw/2)
+	
+	local hand_y = top_y + hand_oy - self.walkbounce_oy
+
+	local tar_x = self.mid_x + self.shoot_dir_x * w
+	local tar_y = hand_y - gunh/2 + self.shoot_dir_y * gunh
 	local ang = self.shoot_ang
 	
 	self.gun.x = lerp(self.gun.x, tar_x, 0.5)
@@ -537,7 +566,6 @@ function Player:animate_walk(dt)
 	
 	self.walkbounce_t = self.walkbounce_t + dt * t_speed
 
-	self.is_walking = self.is_grounded and abs(self.vx) > 50
 	if self.is_walking then
 		self.walkbounce_t = self.walkbounce_t % pi
 	end
@@ -566,6 +594,23 @@ function Player:animate_walk(dt)
 		self.walkbounce_oy = 0
 		self.walkbounce_t = pi
 	end
+end
+
+function Player:update_sprite(dt)
+	if not self.is_grounded then
+		self.spr = self.spr_jump
+	end
+end
+
+function Player:do_particles(dt)
+	local flr_y = self.y + self.h
+	if self.is_walking then
+		self.walk_timer = self.walk_timer + 1
+		if self.walk_timer % 10 == 0 then
+			particles:dust(self.mid_x, flr_y)
+		end
+	end
+
 end
 
 return Player

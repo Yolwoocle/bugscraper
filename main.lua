@@ -52,7 +52,7 @@ end
 
 function love.update(dt)
 	t = t + dt
-	local cap = 4
+	local cap = 1 --If theres lag spike, repeat up to how many frames?
 	local i = 0
 	while t > fdt and cap > 0 do
 		t = t - fdt
@@ -126,6 +126,7 @@ function love.textinput(text)
 	if game.textinput then  game:textinput(text)  end
 end
 
+max_msg_log = 20
 old_print = print
 msg_log = {}
 function print(...)
@@ -133,7 +134,7 @@ function print(...)
 	
 	table.insert(msg_log, concatsep({...}, " "))
 
-	if #msg_log > 10 then
+	if #msg_log > max_msg_log then
 		table.remove(msg_log, 1)
 	end
 end

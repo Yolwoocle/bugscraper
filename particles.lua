@@ -83,6 +83,17 @@ function ParticleSystem:smoke(x, y, number, col, spw_rad, size, sizevar)
 	end
 end
 
+function ParticleSystem:dust(x, y, col, size, rnd_pos, sizevar)
+	col = col or COL_WHITE
+	rnd_pos = rnd_pos or 3
+	size = size or 4
+	sizevar = sizevar or 2
+
+	local dx, dy = random_neighbor(rnd_pos), random_neighbor(rnd_pos)
+	local dsize = random_neighbor(sizevar)
+	self:add_particle(x+dx, y+dy, size+dsize, col, 0, 0, _vr, _life)
+end
+
 function ParticleSystem:flash(x, y)
 	-- x,y,r,col, vx,vy,vr, life
 	local r = 8 + random_neighbor(2)

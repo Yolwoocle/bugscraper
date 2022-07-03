@@ -36,6 +36,8 @@ local img_names = {
 	"fly",
 	"grasshopper",
 	"larva",
+	"larva1",
+	"larva2",
 	"slug",
 	"snail_open",
 	"snail_shell",
@@ -46,6 +48,7 @@ local img_names = {
 	"gun_triple",
 	"gun_burst",
 	"gun_shotgun",
+	"gun_minigun",
 
 	"metal",
 	"chain",
@@ -56,6 +59,14 @@ local img_names = {
 	"cabin_door_left", "cabin_door_right",
 
 	"logo",
+
+	"loot_ammo",
+	"loot_ammo_big",
+	"loot_life",
+	"loot_life_big",
+
+	"lever_on",
+	"lever_off",
 }
 
 local images = {}

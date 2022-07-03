@@ -11,9 +11,14 @@ function Guns:init()
 	function self.Machinegun:init(user)
 		self:init_gun(user)
 		self.name = "machinegun"
+		
+		self.damage = 1
+		self.is_auto = true
 		self.spr = images.gun_machinegun
-		self.max_ammo = 1000
+		self.max_ammo = 200
+
 		self.cooldown = 0.1
+		self.jetpack_force = 340
 	end
 
 	-------
@@ -23,11 +28,17 @@ function Guns:init()
 	function self.Triple:init(user)
 		self:init_gun(user)
 		self.name = "triple"
+
+		self.max_ammo = 200
+
+		self.damage = 1
+		self.is_auto = true
 		self.spr = images.gun_triple
 		self.max_ammo = 1000
-		self.cooldown = 0.1
+		self.cooldown = 0.2
 		self.bullet_number = 3
 		self.random_angle_offset = 0
+		self.jetpack_force = self.default_jetpack_force * 2
 	end
 
 	--------
@@ -40,10 +51,15 @@ function Guns:init()
 		self.spr = images.gun_burst
 		self.bullet_spread = 0.2
 		
+		self.max_ammo = 300
+
+		self.is_auto = false
 		self.is_burst = true
+
+		self.damage = 1
+		self.cooldown = 0.4
 		self.burst_count = 5
 		self.burst_delay = 0.05
-		self.cooldown = 1
 	end
 
 	----------------
@@ -55,6 +71,11 @@ function Guns:init()
 		self.name = "shotgun"
 		self.spr = images.gun_shotgun
 		
+		self.max_ammo = 40
+
+		self.is_auto = false
+
+		self.damage = 0.5
 		self.cooldown = 0.4
 		self.bullet_speed = 800 --def: 400
 		self.bullet_number = 12
@@ -65,8 +86,27 @@ function Guns:init()
 
 		self.speed_floor = 200
 
-		self.jetpack_force = 700 --def: 340
-	end	
+		self.jetpack_force = 1200 --def: 340
+	end
+
+	--------
+
+	self.Minigun = Gun:inherit()
+
+	function self.Minigun:init(user)
+		self:init_gun(user)
+		self.name = "machinegun"
+		
+		self.max_ammo = 150
+
+		self.random_angle_offset = 0.5
+		self.damage = 0.1
+		self.is_auto = true
+		self.spr = images.gun_minigun
+
+		self.cooldown = 0.03
+		self.jetpack_force = 200
+	end
 end
 
 return Guns:new()

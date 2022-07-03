@@ -1,6 +1,8 @@
 require "util"
 local Class = require "class"
 local Enemy = require "enemy"
+local Loot = require "loot"
+
 local images = require "images"
 
 local Enemies = Class:inherit()
@@ -12,6 +14,34 @@ function Enemies:init()
 		self.name = "bug"
 		self.life = 10
 		self.color = rgb(0,50,190)
+	end
+
+	-----
+	
+	self.Lever = Enemy:inherit()
+	function self.Lever:init(x, y)
+		-- We can reuse this for other stuff
+		self:init_enemy(x,y, images.lever_off)
+		self.name = "lever"
+		self.follow_player = false
+		self.huge = 10000000
+		self.activ_thresh = 10
+		self.knockback = 0
+
+		self.is_stompable = false
+		self.is_pushable = false
+		self.is_knockbackable = false
+
+		self.life = self.huge
+		self.damage = 0
+	end
+
+	function self.Lever:update(dt)
+		self:update_enemy(dt)
+
+		if self.life < self.huge - self.activ_thresh then
+			self.spr = images.lever_on
+		end
 	end
 
 	-----------------
@@ -38,11 +68,27 @@ function Enemies:init()
 	self.Larva = Enemy:inherit()
 	
 	function self.Larva:init(x, y)
-		self:init_enemy(x,y, images.larva, 11, 11)
+		self:init_enemy(x,y, images.larva1, 11, 11)
 		self.name = "larva"
+		self.follow_player = false
 
-		self.life = 5
-		self.speed = 5
+		self.friction_x = 1
+		self.life = random_range(3, 7)
+		self.speed = 40
+		self.walk_dir_x = random_sample{-1, 1}
+	end
+
+	function self.Larva:update(dt)
+		self:update_enemy(dt)
+		self.vx = self.speed * self.walk_dir_x
+	end
+
+	function self.Larva:after_collision(col, other)
+		if other.is_solid then
+			if col.normal.y == 0 then
+				self.walk_dir_x = col.normal.x
+			end
+		end
 	end
 
 	-------------
@@ -62,8 +108,7 @@ function Enemies:init()
 		self.friction_y = 1
 		self.walk_dir_x = random_sample{-1, 1}
 
-		local v = 0.5
-		self.gravity = self.gravity * v
+		self.gravity = self.gravity * 0.5
 
 		self.jump_speed = 300
 	end

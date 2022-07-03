@@ -27,7 +27,9 @@ function Actor:init_actor(x, y, w, h, spr, args)
 	self.default_gravity = 20
 	self.gravity = self.default_gravity
 	self.gravity_cap = 400
-	self.friction_x = 0.8 -- This assumes that the game is running at 60FPS
+	
+	self.default_friction = 0.8
+	self.friction_x = self.default_friction -- !!!!! This assumes that the game is running at 60FPS
 	self.friction_y = 1 -- By default we don't apply friction to the Y axis for gravity
 
 	self.speed_cap = 10000
@@ -35,6 +37,8 @@ function Actor:init_actor(x, y, w, h, spr, args)
 
 	self.is_grounded = false
 	self.is_walled = false
+
+	self.is_knockbackable = true
 
 	self.wall_col = nil
 
@@ -113,7 +117,7 @@ function Actor:draw()
 	error("draw not implemented")
 end
 
-function Actor:draw_actor(fx, fy)
+function Actor:draw_actor(fx, fy, custom_draw)
 	if self.is_removed then   return   end
 	
 	-- f : flip
@@ -140,7 +144,10 @@ function Actor:draw_actor(fx, fy)
 
 		-- Draw
 		love.graphics.setColor(old_col)
-		gfx.draw(self.spr, x, y, self.rot, fx, fy, spr_w2, spr_h2)
+
+		local drw_func = gfx.draw
+		if custom_draw then    drw_func = custom_draw    end
+		drw_func(self.spr, x, y, self.rot, fx, fy, spr_w2, spr_h2)
 	end
 end
 
@@ -161,7 +168,24 @@ function Actor:react_to_collision(col)
 	end
 end
 
+function Actor:set_flying(bool)
+	if bool then
+		self.is_flying = true
+		self.friction_x = 1
+		self.friction_y = 1
+		self.gravity = 0
+	else
+		self.is_flying = false
+		self.friction_x = self.default_friction
+		self.friction_y = 1
+		self.gravity = self.default_gravity
+		
+	end
+end
+
 function Actor:do_knockback(q, source, ox, oy)
+	if not self.is_knockbackable then    return    end
+
 	ox, oy = ox or 0, oy or 0
 	--if not source then    return    end
 	local ang = atan2(source.y-self.y + oy, source.x-self.x + ox)
