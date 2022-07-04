@@ -67,6 +67,14 @@ local img_names = {
 
 	"lever_on",
 	"lever_off",
+
+	"big_red_button_crack0",
+	"big_red_button_crack1",
+	"big_red_button_crack2",
+	"big_red_button_crack3",
+	"big_red_button",
+
+	"ptc_glass_shard",
 }
 
 local images = {}

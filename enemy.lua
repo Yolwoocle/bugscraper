@@ -22,7 +22,8 @@ function Enemy:init_enemy(x,y, img, w,h)
 
 	self.harmless_frames = 0
 
-	self.life = 10
+	self.max_life = 10
+	self.life = self.max_life
 	self.color = COL_BLUE
 	self.speed = 20
 	self.speed_x = self.speed
@@ -114,12 +115,12 @@ function Enemy:on_collision(col, other)
 	if col.other.is_player then
 		local player = col.other
 		
-		-- Begin stomped
+		-- Being stomped
 		local epsilon = 0.01
 		if player.vy > epsilon and self.is_stompable then
-			if self.name == "grasshopper" then print("grasshopper stomp")  end
 			player.vy = 0
 			player:on_stomp(self)
+			self:on_stomped(player)
 			self:kill()
 		
 		else
@@ -143,16 +144,25 @@ end
 
 function Enemy:after_collision(col, other)  end
 
-function Enemy:do_damage(n)
+function Enemy:do_damage(n, damager)
 	self.damaged_flash_timer = self.damaged_flash_max
-
+	
 	self.life = self.life - n
+	self:on_damage(n, self.life + n)
 	if self.life <= 0 then
-		self:kill()
+		self:kill(damager)
 	end
 end
 
-function Enemy:kill()
+function Enemy:on_damage()
+
+end
+
+function Enemy:on_stomped(damager)
+
+end
+
+function Enemy:kill(damager)
 	if self.is_removed then print(concat(self.name, "(", self, ") was killed while destroyed")) end
 	
 	particles:smoke(self.mid_x, self.mid_y)
@@ -161,7 +171,7 @@ function Enemy:kill()
 	self:remove()
 	
 	self:drop_loot()
-	self:on_death()
+	self:on_death(damager)
 end
 
 function Enemy:drop_loot()
@@ -183,7 +193,7 @@ function Enemy:on_death()
 end
 
 function Enemy:on_hit_bullet(bul, col)
-	self:do_damage(bul.damage)
+	self:do_damage(bul.damage, bul)
 	
 	if self.is_knockbackable then
 		local ang = atan2(bul.vy, bul.vx)

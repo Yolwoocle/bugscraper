@@ -63,7 +63,7 @@ function Loot:find_close_player(dt)
 
 	if not near_ply then    return false, "No nearest player"    end
 
-	if min_dist < near_ply.min_loot_dist then
+	if true then -- min_dist < near_ply.min_loot_dist then
 		self.target_player = near_ply
 		self.vx = self.vx * 0.1
 		self.vy = self.vy * 0.1

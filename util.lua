@@ -616,3 +616,11 @@ function get_orthogonal(x, y, dir)
 		return get_right_vec(x,y)
 	end
 end
+
+function create_actor_centered(actor, x, y, ...)
+	local a = actor:new(x, y, ...)
+	local nx = a.x - a.w/2
+	local ny = a.y - a.h
+	a:set_pos(nx, ny)
+	return a
+end

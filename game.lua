@@ -53,7 +53,10 @@ function Game:init()
 
 	self.bg_particles = {}
 	for i=1,60 do
-		table.insert(self.bg_particles, self:new_bg_particle())
+		local p = self:new_bg_particle()
+		p.x = random_range(0, CANVAS_WIDTH)
+		p.y = random_range(0, CANVAS_HEIGHT)
+		table.insert(self.bg_particles, p)
 	end
 
 	-- Bounding box
@@ -80,13 +83,19 @@ function Game:init()
 	self:init_players()
 
 	-- Start lever
-	local y = (self.world_generator.box_by - 3) * BLOCK_WIDTH
-	self:new_actor(Enemies.Lever:new(CANVAS_WIDTH/2, y))
+	local nx = CANVAS_WIDTH/2
+	local ny = self.world_generator.box_by * BLOCK_WIDTH
+	local l = create_actor_centered(Enemies.ButtonGlass, nx, ny)
+	self:new_actor(l)
 
 	self.inventory = Inventory:new()
 
-	-- Screenshake
-	self.screenshake = 0
+	-- Camera & screenshake
+	self.cam_x = 0
+	self.cam_y = 0
+	self.cam_ox, self.cam_oy = 0, 0
+	self.screenshake_q = 0
+	self.screenshake_speed = 20
 
 	-- Debugging
 	self.debug_mode = false
@@ -143,11 +152,16 @@ function Game:update(dt)
 		self.logo_vy = self.logo_vy - dt
 		self.logo_y = self.logo_y + self.logo_vy
 	end
+
+	-- Screenshake
+	self.screenshake_q = max(0, self.screenshake_q - self.screenshake_speed * dt)
+	self.cam_ox, self.cam_oy = random_neighbor(self.screenshake_q), random_neighbor(self.screenshake_q)
 end
 
 function Game:draw()
 	-- Sky
 	gfx.clear(COL_BLACK_BLUE)
+	gfx.translate(-self.cam_x + self.cam_ox, -self.cam_y + self.cam_oy)
 
 	for i,o in pairs(self.bg_particles) do
 		rect_color(o.col, "fill", o.x, o.y + o.oy, o.w, o.h * o.oh)
@@ -172,9 +186,15 @@ function Game:draw()
 	self:draw_background(self.cabin_x, self.cabin_y)
 	
 	-- Draw actors
-	for k,actor in pairs(self.actors) do
-		actor:draw()
+	for _,actor in pairs(self.actors) do
+		if not actor.is_player then
+			actor:draw()
+		end
 	end
+	for _,p in pairs(self.players) do
+		p:draw()
+	end
+
 	particles:draw()
 
 	-- Walls
@@ -441,6 +461,10 @@ function Game:keyreleased(key, scancode)
 	for i, ply in pairs(self.players) do
 		--ply:keyreleased(key, scancode)
 	end
+end
+
+function Game:screenshake(q)
+	self.screenshake_q = self.screenshake_q + q
 end
 
 return Game

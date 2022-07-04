@@ -28,9 +28,11 @@ function Collision:remove(o)
 end
 
 function Collision:update(o,x,y,w,h)
-	if not x then
-		x, y, w, h = o.x, o.y, o.w, o.h
-	end
+	-- Move to pos without changing position
+	x = x or o.x
+	y = y or o.y
+	w = w or o.w
+	h = h or o.h
 	self.world:update(o,x,y,w,h)
 end
 

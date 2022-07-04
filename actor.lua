@@ -219,4 +219,10 @@ function Actor:move_to(goal_x,goal_y)
 	self.y = actual_y
 end
 
+function Actor:set_pos(x, y)
+	self.x = x
+	self.y = y
+	collision:update(self, x, y)
+end
+
 return Actor

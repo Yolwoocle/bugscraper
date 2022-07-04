@@ -513,7 +513,7 @@ end
 function Player:on_hit_bullet(bul, col)
 	if bul.player == self then   return   end
 
-	self:do_damage(bul.damage)
+	self:do_damage(bul.damage, bul)
 	self.vx = self.vx + sign(bul.vx) * bul.knockback
 end
 
