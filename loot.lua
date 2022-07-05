@@ -10,6 +10,7 @@ function Loot:init_loot(spr, x, y, w, h, val, vx, vy)
 	self.is_loot = true
 
 	self.speed = 300
+	self.life = 30
 	
 	self.friction_x = 1
 	self.vx = vx or 0
@@ -30,16 +31,32 @@ function Loot:init_loot(spr, x, y, w, h, val, vx, vy)
 
 	self.ghost_time = random_range(0.4, 0.8)
 	self.ghost_timer = self.ghost_time
+
+	local actual_x, actual_y, cols, len = collision:check(self, self.x, self.y)
+	local is_coll = false
+	for _,c in pairs(cols) do
+		if c.is_solid then
+			is_coll = true
+		end
+	end
+	if is_coll then
+		self:set_pos(CANVAS_WIDTH/2, CANVAS_HEIGHT/2)
+	end
 end
 
 function Loot:update(dt)
 	self:update_actor(dt)
 
+	self.life = self.life - dt
 	self.ghost_timer = self.ghost_timer - dt
 	if self.target_player then
 		self:attract_to_player(dt)
 	else
 		self:find_close_player(dt)
+	end
+
+	if self.life < 0 then
+		self:remove()
 	end
 end
 
@@ -108,7 +125,7 @@ end
 Loot.Ammo = Loot:inherit()
 
 function Loot.Ammo:init(x, y, val, vx, vy)
-	self:init_loot(images.loot_ammo, x, y, 13, 13, val, vx, vy)
+	self:init_loot(images.loot_ammo, x, y, 2, 2, val, vx, vy)
 	self.loot_type = "ammo"
 	self.value = val
 end
@@ -132,7 +149,7 @@ end
 Loot.Life = Loot:inherit()
 
 function Loot.Life:init(x, y, val, vx, vy)
-	self:init_loot(images.loot_life, x, y, 13, 13, val, vx, vy)
+	self:init_loot(images.loot_life, x, y, 2, 2, val, vx, vy)
 	self.loot_type = "life"
 	self.value = val
 end

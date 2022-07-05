@@ -46,6 +46,16 @@ function Collision:move(o, goal_x, goal_y, filter)
 	return actual_x, actual_y, cols, len
 end 
 
+function Collision:check(o, goal_x, goal_y, filter)
+	-- Attempts to move object `o` and returns data about the collision
+	filter = filter or self.filter
+	goal_x = goal_x
+	goal_y = goal_y
+
+	local actual_x, actual_y, cols, len = self.world:check(o, goal_x, goal_y, filter)
+	return actual_x, actual_y, cols, len
+end 
+
 function Collision.filter(item, other)
 	-- By default, do not react to collisions
 	local type = "cross"

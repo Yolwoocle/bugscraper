@@ -86,6 +86,7 @@ function Game:init()
 	local nx = CANVAS_WIDTH/2
 	local ny = self.world_generator.box_by * BLOCK_WIDTH
 	local l = create_actor_centered(Enemies.ButtonGlass, nx, ny)
+	
 	self:new_actor(l)
 
 	self.inventory = Inventory:new()
@@ -152,6 +153,11 @@ function Game:update(dt)
 		self.logo_vy = self.logo_vy - dt
 		self.logo_y = self.logo_y + self.logo_vy
 	end
+
+	if love.keyboard.isDown("j") then self.cam_x = self.cam_x - 1 end
+	if love.keyboard.isDown("l") then self.cam_x = self.cam_x + 1 end
+	if love.keyboard.isDown("i") then self.cam_y = self.cam_y - 1 end
+	if love.keyboard.isDown("k") then self.cam_y = self.cam_y + 1 end
 
 	-- Screenshake
 	self.screenshake_q = max(0, self.screenshake_q - self.screenshake_speed * dt)
