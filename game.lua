@@ -8,6 +8,8 @@ local WorldGenerator = require "worldgenerator"
 local Inventory = require "inventory"
 local ParticleSystem = require "particles"
 local AudioManager = require "audio"
+local MenuManager = require "menu"
+
 local waves = require "stats.waves"
 
 local images = require "images"
@@ -21,7 +23,10 @@ function Game:init()
 	collision = Collision:new()
 	particles = ParticleSystem:new()
 	audio = AudioManager:new()
-
+	
+	-- Menu
+	self.menu = MenuManager:new()
+	
 	-- Audio
 	self.sound_on = false
 
@@ -111,6 +116,20 @@ function Game:init()
 end
 
 function Game:update(dt)
+	-- Menus
+	self.menu:update(dt)
+
+	if not self.menu.cur_menu then
+		self:update_main_game(dt)
+	end
+
+	-- Update button states
+	for _, player in pairs(self.players) do
+		player:update_button_state()
+	end
+end
+
+function Game:update_main_game(dt)
 	self.map:update(dt)
 	
 	-- Particles
@@ -183,6 +202,9 @@ function Game:draw()
 	self.door_ax, self.door_ay = self.cabin_x+154, self.cabin_x+122
 	self.door_bx, self.door_by = self.cabin_y+261, self.cabin_y+207
 
+	
+	-- Door background
+	rect_color(COL_BLACK_BLUE, "fill", self.door_ax, self.door_ay, self.door_bx - self.door_ax, self.door_by - self.door_ay)
 	-- If doing door animation, draw buffered enemies
 	if self.door_animation then
 		for i,e in pairs(self.door_animation_enemy_buffer) do 
@@ -225,6 +247,9 @@ function Game:draw()
 		self:draw_debug()
 	end
 
+	if self.menu.cur_menu then
+		self.menu:draw()
+	end
 end
 
 function Game:draw_debug()
@@ -278,6 +303,7 @@ function draw_log()
 end
 
 function Game:init_players()
+	-- TODO: move this to a general function (?)
 	local control_schemes = {
 		[1] = {
 			type = "keyboard",
@@ -286,8 +312,9 @@ function Game:init_players()
 			up = {"w", "up"},
 			down = {"s", "down"},
 			jump = {"z", "c", "b"},
-			fire = {"x", "v", "n"},
+			shoot = {"x", "v", "n"},
 			switchgun = {"s"}, --test
+			pause = {"escape"},
 		},
 		[2] = {
 			type = "keyboard",
@@ -296,7 +323,8 @@ function Game:init_players()
 			up = {"up"},
 			down = {"down"},
 			jump = {"."},
-			fire = {","},
+			shoot = {","},
+			pause = {"escape"},
 		}
 	}
 
@@ -453,6 +481,8 @@ function Game:draw_background(cabin_x, cabin_y)
 	gfx.setFont(FONT_REGULAR)
 end
 
+
+
 function Game:keypressed(key, scancode, isrepeat)
 	if key == "f3" then
 		self.debug_mode = not self.debug_mode
@@ -463,14 +493,38 @@ function Game:keypressed(key, scancode, isrepeat)
 	end
 end
 
-function Game:keyreleased(key, scancode)
-	for i, ply in pairs(self.players) do
-		--ply:keyreleased(key, scancode)
-	end
-end
+-- function Game:keyreleased(key, scancode)
+-- 	for i, ply in pairs(self.players) do
+-- 		--ply:keyreleased(key, scancode)
+-- 	end
+-- end
 
 function Game:screenshake(q)
 	self.screenshake_q = self.screenshake_q + q
+end
+
+function Game:button_down(btn)
+	--[[
+		Returns if ANY player is holding `btn`
+	]]
+	for _, player in pairs(self.players) do
+		if player:button_down(btn) then
+			return true, player
+		end
+	end
+	return false
+end
+
+function Game:button_pressed(btn)
+	--[[
+		Returns if ANY player is pressing `btn`
+	]]
+	for _, player in pairs(self.players) do
+		if player:button_pressed(btn) then
+			return true, player
+		end
+	end
+	return false
 end
 
 return Game

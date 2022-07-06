@@ -20,6 +20,8 @@ COL_DARK_RED = rgb(158, 40, 53)
 COL_LIGHT_RED = rgb(228,59, 68)
 
 COL_LIGHT_YELLOW = color(0xfee761)
+COL_YELLOW_ORANGE = color(0xfeae34)
+COL_ORANGE = color(0xf77622)
 
 COL_DARK_BROWN = rgb(63, 40, 50)
 

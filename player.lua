@@ -62,6 +62,7 @@ function Player:init(n, x, y, spr, controls)
 	self.wall_jump_kick_speed = 300
 	self.wall_slide_speed = 30
 	self.is_wall_sliding = false
+	self.wall_slide_particle_timer = 0
 
 	self.wall_jump_margin = 8
 	self.wall_collision_box = { --Move this to a seperate class if needed
@@ -141,7 +142,8 @@ function Player:update(dt)
 	self:update_gun_pos(dt)
 
 	--self:do_snowballing()
-	self:update_button_state()
+
+	-- self:update_button_state() --> moved to Game
 
 	--Visuals
 	self:update_visuals()
@@ -276,18 +278,24 @@ function Player:do_wall_sliding(dt)
 		self.is_walled = is_walled
 	end
 
+	
 	-- Perform wall sliding
 	if self.is_wall_sliding then
-		self.gravity = 0
-		self.vy = self.wall_slide_speed
-	else
-		self.gravity = self.default_gravity
-	end
-
-	-- Orient player opposite if wall sliding
-	if self.is_wall_sliding then
+		-- Orient player opposite if wall sliding
 		self.dir_x = self.wall_col.normal.x
 		self.shoot_dir_x = self.wall_col.normal.x
+	
+		-- Slow down descent
+		self.gravity = 0
+		self.vy = self.wall_slide_speed
+
+		-- Particles
+		self.wall_slide_particle_timer = self.wall_slide_particle_timer + 1
+		if self.wall_slide_particle_timer % 5 == 0 then
+			particles:dust(self.mid_x + (self.w/2) * -self.dir_x, self.y)
+		end
+	else
+		self.gravity = self.default_gravity
 	end
 end
 
@@ -395,8 +403,8 @@ function Player:shoot(dt, is_burst)
 	self.shoot_dir_x = cos(self.shoot_ang)
 	self.shoot_dir_y = sin(self.shoot_ang)
 
-	local btn_auto = (self.gun.is_auto and self:button_down("fire"))
-	local btn_manu = (not self.gun.is_auto and self:button_pressed("fire"))
+	local btn_auto = (self.gun.is_auto and self:button_down("shoot"))
+	local btn_manu = (not self.gun.is_auto and self:button_pressed("shoot"))
 	if btn_auto or btn_manu or is_burst then
 		self.is_shooting = true
 
@@ -530,6 +538,7 @@ function Player:on_grounded()
 	-- On land
 	audio:play("land")
 	self.jump_squash = 2
+	self.spr = self.spr_idle
 	particles:smoke(self.mid_x, self.y+self.h, 10, COL_WHITE, 8, 4, 2)
 end
 
@@ -545,7 +554,7 @@ function Player:do_snowballing()
 		self.snowball_size = self.snowball_size + 0.1
 	end
 
-	if self:button_down("fire") then
+	if self:button_down("shoot") then
 		local spd = self.snowball_speed * self.dir_x
 		game:new_actor(Bullet:new(self, self.mid_x, self.mid_y, 10, 10, spd, -self.snowball_speed))
 	end

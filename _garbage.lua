@@ -42,7 +42,7 @@ end
 function Player:mine(dt)
 	if not self.cu_target then   return    end
 	
-	if self:button_down("fire") then
+	if self:button_down("shoot") then
 		self.mine_timer = self.mine_timer + dt
 
 		if self.mine_timer > self.cu_target.mine_time then

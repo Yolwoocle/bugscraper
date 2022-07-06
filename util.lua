@@ -124,28 +124,32 @@ function rgb(r,g,b)
 	return {r/255, g/255, b/255, 1}
 end
 
-function draw_centered(spr, x, y, r, sx, sy, ox, oy, color)
-	local w = spr:getWidth() or 0
-	local h = spr:getHeight() or 0
-	local col = color or {1,1,1}
-	if spr == nil then spr = spr_missing end 
+-- function draw_centered(spr, x, y, r, sx, sy, ox, oy, color)
+-- 	local w = spr:getWidth() or 0
+-- 	local h = spr:getHeight() or 0
+-- 	local col = color or {1,1,1}
+-- 	if spr == nil then spr = spr_missing end 
 
-	if (camera.x-w < x) and (x < camera.x+window_w+w) 
-	and (camera.y-h < y) and (y < camera.y+window_h+h) then
-		x = floor(x)
-		y = floor(y)
-		r = r or 0
-		sx = sx or PIXEL_SCALE
-		sy = sy or sx
-		ox = ox or 0
-		oy = oy or 0
+-- 	if (camera.x-w < x) and (x < camera.x+window_w+w) 
+-- 	and (camera.y-h < y) and (y < camera.y+window_h+h) then
+-- 		x = floor(x)
+-- 		y = floor(y)
+-- 		r = r or 0
+-- 		sx = sx or PIXEL_SCALE
+-- 		sy = sy or sx
+-- 		ox = ox or 0
+-- 		oy = oy or 0
 
-		ox = floor(ox + spr:getWidth()/2)
-		oy = floor(oy + spr:getHeight()/2)
-		love.graphics.setColor(col)
-		love.graphics.draw(spr, x, y, r, sx, sy, ox, oy)
-		love.graphics.setColor(1,1,1)
-	end
+-- 		ox = floor(ox + spr:getWidth()/2)
+-- 		oy = floor(oy + spr:getHeight()/2)
+-- 		love.graphics.setColor(col)
+-- 		love.graphics.draw(spr, x, y, r, sx, sy, ox, oy)
+-- 		love.graphics.setColor(1,1,1)
+-- 	end
+-- end
+
+function rect_color_centered(col, mode, x, y, w, h)
+	rect_color(col, mode, x - w/2, y - h/2, w, h)
 end
 
 function draw_centered_outline(spr, x, y, r, sx, sy, thiccness, color)
@@ -210,17 +214,18 @@ function draw_white(drawable, x, y, r, sx, sy, ox, oy, kx, ky)
 	love.graphics.setShader()
 end
 
-function print_centered_outline(col_in, col_out, text, x, y, rot, sx, sy, ...)
+function print_centered_outline(col_in, col_out, text, x, y, thick, rot, sx, sy, ...)
 	rot = rot or 0
 	sx = sx or 1
 	sy = sy or sx
 	local font   = love.graphics.getFont()
 	local text_w = font:getWidth(text)
 	local text_h = font:getHeight(text)
-	print_outline(col_in, col_out, text, x-text_w/2, y-text_h/2, rot, sx, sy, ...)
+	print_outline(col_in, col_out, text, x-text_w/2, y-text_h/2, thick, rot, sx, sy, ...)
 end
 
 function get_text_width(text, font)
+	local text = text or ' '
 	local font = font or love.graphics.getFont()
 	return font:getWidth(text)
 end
@@ -527,6 +532,12 @@ function exec_color(col, func, ...)
 end
 
 function rect_color(col, mode, x, y, w, h, ...)
+	assert(col, "color not defined")
+	assert(mode, "rect mode not defined ('line' or 'fill')")
+	assert(x, "rect x not defined")
+	assert(y, "rect y not defined")
+	assert(w, "rect width not defined")
+	assert(h, "rect height not defined")
 	col = col or {1,1,1,1}
 	love.graphics.setColor(col)
 	love.graphics.rectangle(mode, floor(x)+0.5, floor(y)+0.5, floor(w), floor(h), ...)
