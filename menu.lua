@@ -22,6 +22,7 @@ end
 
 local TextMenuItem = MenuItem:inherit()
 
+-- Split into SelectableMenuItem ? Am I becoming a Java dev now?
 function TextMenuItem:init(i, x, y, text, on_click)
 	self:init_menuitem(i, x, y)
 
@@ -56,6 +57,13 @@ function TextMenuItem:draw()
 		print_centered(self.text, self.x, self.y + self.oy)
 	end
 	gfx.setColor(1,1,1,1)
+end
+
+function TextMenuItem:set_selected(val)
+	self.is_selected = val
+	if val then
+		self.oy = -4
+	end
 end
 
 --------
@@ -118,11 +126,7 @@ function MenuManager:init()
 	self.menus.options = Menu:new({
 		{"OPTIONS"},
 		{""},
-		{"RESUME", function() game.menu:unpause() end},
-		{"RETRY", function() end},
-		{"OPTIONS", func_set_menu('options')},
-		{"CREDITS", func_set_menu('credits')},
-		{"EXIT",    func_set_menu('title')},
+		{"SOUND: [ON/OFF (todo dynamic text you lazy dumbass)]", function() game:toggle_sound() end},
 		{""}
 	}, {0, 0, 0, 0.85})
 
@@ -214,10 +218,10 @@ function MenuManager:incr_selection(n)
 	end
 	
 	-- Update new selection
-	self.sel_item.is_selected = false
+	self.sel_item:set_selected(false)
 	self.sel_n = sel
 	self.sel_item = self.cur_menu.items[self.sel_n]
-	self.sel_item.is_selected = true
+	self.sel_item:set_selected(true)
 	return true
 end
 

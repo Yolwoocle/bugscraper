@@ -527,4 +527,9 @@ function Game:button_pressed(btn)
 	return false
 end
 
+function Game:toggle_sound()
+	-- TODO: move from bool to a number (0-1), customisable in settings
+	self.sound_on = not self.sound_on
+end	
+
 return Game
