@@ -52,7 +52,7 @@ function Gun:init_gun(user)
 	self.jetpack_force = self.default_jetpack_force
 
 	-- Sounds
-	self.sfx = sounds.shot3
+	self.sfx = sounds.shot1
 	self.sfx_pitch_var = 1.15
 end
 

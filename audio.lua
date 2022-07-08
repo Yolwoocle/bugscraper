@@ -22,8 +22,8 @@ function AudioManager:play(snd, volume, pitch)
 	
 	if game.sound_on and snd then
 		local source = snd:clone()
-		source:setVolume(volume)
-		source:setPitch(pitch)
+		source:setVolume(volume * source:getVolume())
+		source:setPitch(pitch   * source:getPitch())
 		source:play()
 	end
 end

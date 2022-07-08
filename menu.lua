@@ -1,6 +1,7 @@
 require "util"
 local Class = require "class"
 local images = require "images"
+local sounds = require "stats.sounds"
 
 -- Help. If you are the poor sod sent to modify the code within 
 -- this, be warned: it's a fucking mess.
@@ -98,6 +99,7 @@ function TextMenuItem:set_selected(val, diff)
 end
 
 function TextMenuItem:after_click()
+	audio:play(sounds.menu_select)
 	self.oy = -4
 end
 
@@ -184,6 +186,10 @@ end
 function SliderMenuItem:after_click(diff)
 	diff = diff or 1
 	self.ox = sign(diff) * 4
+
+	-- TODO: rising pitch or decreasing pitch
+	-- + sound preview for music & sfx
+	audio:play(sounds.menu_select)
 end
 
 --------
@@ -280,6 +286,7 @@ function MenuManager:init(game)
 
 		{ SliderMenuItem, "VOLUME", function(self, diff)
 			self:next_value(diff)
+			self.value_text = concat(floor(100 * self.value/20), "%")
 			game:set_volume(self.value/20)
 		end, range_table(0,20), 21},
 
@@ -420,6 +427,9 @@ function MenuManager:incr_selection(n)
 	self.sel_n = sel
 	self.sel_item = self.cur_menu.items[self.sel_n]
 	self.sel_item:set_selected(true, n)
+	
+	audio:play(sounds.menu_hover)
+
 	return true
 end
 

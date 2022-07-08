@@ -20,8 +20,14 @@ local sfxnames = {
 	"shot3", "shot3.wav",
 	"hurt",  "hurt.wav",
 	"land",  "land.wav",
+	"item_collect", "item_collect.wav",
+	"menu_hover", "menu_hover.wav",
+	"menu_select", "menu_select.wav",
 }
 
 for i=1, #sfxnames, 2 do    sounds[sfxnames[i]] = new_source(sfxnames[i+1], "static")    end
+
+sounds.shot1:setVolume(0.5)
+sounds.shot2:setPitch(0.8)
 
 return sounds

@@ -23,6 +23,8 @@ COL_LIGHT_YELLOW = color(0xfee761)
 COL_YELLOW_ORANGE = color(0xfeae34)
 COL_ORANGE = color(0xf77622)
 
+COL_LIGHT_BROWN = color(0xb86f50)
+COL_MID_BROWN = color(0x743f39)
 COL_DARK_BROWN = rgb(63, 40, 50)
 
 COL_MID_DARK_GREEN = rgb(38, 92, 66)

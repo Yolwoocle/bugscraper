@@ -26,7 +26,7 @@ function Game:init()
 	
 	-- Audio
 	self.volume = 1
-	self.sound_on = false
+	self.sound_on = true
 
 	self:new_game()
 

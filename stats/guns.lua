@@ -2,6 +2,7 @@ require "util"
 local Class = require "class"
 local Gun = require "gun"
 local images = require "images"
+local sounds = require "stats.sounds"
 
 local Guns = Class:inherit()
 
@@ -12,6 +13,7 @@ function Guns:init()
 		self:init_gun(user)
 		self.name = "machinegun"
 		
+		self.sfx = sounds.shot1
 		self.damage = 1
 		self.is_auto = true
 		self.spr = images.gun_machinegun
@@ -70,6 +72,7 @@ function Guns:init()
 		self:init_gun(user)
 		self.name = "shotgun"
 		self.spr = images.gun_shotgun
+		self.sfx = sounds.shot2
 		
 		self.max_ammo = 40
 
