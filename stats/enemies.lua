@@ -269,7 +269,32 @@ function Enemies:init()
 
 	local Slug = self.Slug
 	function self.SnailShelled:on_death()
+		particles:image(self.mid_x, self.mid_y, 30, images.snail_shell_fragment, 13, nil, 0, 10)
 		game:new_actor(Slug:new(self.x, self.y))
+	end
+
+	------- 
+
+	self.DummyTarget = Enemy:inherit()
+	
+	function self.DummyTarget:init(x, y)
+		self:init_enemy(x,y, images.dummy_target, 15, 26)
+		self.name = "dummy_target"
+		self.follow_player = false
+
+		self.life = 20
+		self.damage = 0
+		self.self_knockback_mult = 0.1
+
+		self.knockback = 0
+		
+		self.is_pushable = false
+		self.is_knockbackable = false
+		self.loot = {}
+	end
+
+	function self.DummyTarget:update(dt)
+		self:update_enemy(dt)
 	end
 end
 

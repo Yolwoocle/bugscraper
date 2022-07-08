@@ -1,7 +1,6 @@
 require "util"
 local Class = require "class"
 local Bullet = require "bullet"
-local Loot = require "loot"
 local sounds = require "stats.sounds"
 local images = require "images"
 

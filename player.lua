@@ -76,23 +76,6 @@ function Player:init(n, x, y, spr, controls)
 	-- Visuals
 	self.color = ({COL_RED, COL_GREEN, COL_CYAN, COL_YELLOW})[self.n]
 	self.color = self.color or COL_RED
-
-	-- Shooting & guns (keep it or ditch for family friendliness?)
-	self:equip_gun(Guns.Machinegun:new())
-	self.guns = {
-		Guns.Machinegun:new(self),
-		Guns.Triple:new(self),
-		Guns.Burst:new(self),
-		Guns.Shotgun:new(self),
-		Guns.Minigun:new(self),
-	}
-	self.gun_number = 1
-
-	self.is_shooting = false
-	self.shoot_dir_x = 1
-	self.shoot_dir_y = 0
-	self.shoot_ang = 0
-
 	-- Loot & drops
 	self.min_loot_dist = BLOCK_WIDTH*5
 
@@ -108,6 +91,22 @@ function Player:init(n, x, y, spr, controls)
 	self.max_iframes = 3
 	self.iframe_blink_freq = 0.1
 	self.iframe_blink_timer = 0
+
+	-- Shooting & guns (keep it or ditch for family friendliness?)	
+	self.is_shooting = false
+	self.shoot_dir_x = 1
+	self.shoot_dir_y = 0
+	self.shoot_ang = 0
+	
+	self:equip_gun(Guns.Machinegun:new())
+	self.guns = {
+		Guns.Machinegun:new(self),
+		Guns.Triple:new(self),
+		Guns.Burst:new(self),
+		Guns.Shotgun:new(self),
+		Guns.Minigun:new(self),
+	}
+	self.gun_number = 1
 
 	-- Debug 
 	self.dt = 1
@@ -130,6 +129,10 @@ function Player:update(dt)
 	self:animate_walk(dt)
 	self:update_sprite(dt)
 	self:do_particles(dt)
+
+	if self.life <= 0 then
+		self:on_death()
+	end
 	
 	-- Gun
 	if self:button_pressed("switchgun") then
@@ -291,7 +294,7 @@ function Player:do_wall_sliding(dt)
 
 		-- Particles
 		self.wall_slide_particle_timer = self.wall_slide_particle_timer + 1
-		if self.wall_slide_particle_timer % 5 == 0 then
+		if self.wall_slide_particle_timer % 1 == 0 then
 			particles:dust(self.mid_x + (self.w/2) * -self.dir_x, self.y)
 		end
 	else
@@ -390,6 +393,10 @@ function Player:on_leaving_collision()
 	self.coyote_time = self.default_coyote_time
 end
 
+function Player:on_death()
+	game:on_kill(self)
+end
+
 function Player:shoot(dt, is_burst)
 	if is_burst == nil then     is_burst = false    end
 	-- Update aiming direction
@@ -422,10 +429,12 @@ function Player:shoot(dt, is_burst)
 	end
 end
 
-function Player:update_gun_pos(dt)
+function Player:update_gun_pos(dt, lerpval)
 	-- Why do I keep overcomplicating these things
 	-- TODO: move to Gun?
 	-- Gun is drawn at its center
+	lerpval = lerpval or 0.5
+	 
 	local gunw = self.gun.spr:getWidth()
 	local gunh = self.gun.spr:getHeight()
 	local top_y = self.y + self.h - self.spr:getHeight()
@@ -440,8 +449,8 @@ function Player:update_gun_pos(dt)
 	local tar_y = hand_y - gunh/2 + self.shoot_dir_y * gunh
 	local ang = self.shoot_ang
 	
-	self.gun.x = lerp(self.gun.x, tar_x, 0.5)
-	self.gun.y = lerp(self.gun.y, tar_y, 0.5)
+	self.gun.x = lerp(self.gun.x, tar_x, lerpval)
+	self.gun.y = lerp(self.gun.y, tar_y, lerpval)
 
 --[[	local rot_offset = ang - atan2(-self.vy, -self.vx)
 	local d = dist(self.vx, self.vy)
@@ -563,6 +572,8 @@ end
 function Player:equip_gun(gun)
 	self.gun = gun
 	self.gun.user = self
+
+	self:update_gun_pos(1)
 end
 
 function Player:animate_walk(dt)

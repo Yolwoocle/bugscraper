@@ -1,6 +1,7 @@
 local Class = require "class"
 local Actor = require "actor"
 local images = require "images"
+local Guns = require "stats.guns"
 
 local Loot = Actor:inherit()
 
@@ -28,6 +29,8 @@ function Loot:init_loot(spr, x, y, w, h, val, vx, vy)
 	self.value = val
 
 	self.target_player = nil
+	self.min_attract_dist = math.huge
+	self.is_attracted = true
 
 	self.ghost_time = random_range(0.4, 0.8)
 	self.ghost_timer = self.ghost_time
@@ -80,7 +83,7 @@ function Loot:find_close_player(dt)
 
 	if not near_ply then    return false, "No nearest player"    end
 
-	if true then -- min_dist < near_ply.min_loot_dist then
+	if min_dist < self.min_attract_dist then
 		self.target_player = near_ply
 		self.vx = self.vx * 0.1
 		self.vy = self.vy * 0.1
@@ -91,6 +94,8 @@ function Loot:find_close_player(dt)
 end
 
 function Loot:attract_to_player(dt)
+	if not self.is_attracted then    return   end
+	
 	local diff_x = (self.target_player.mid_x - self.mid_x)
 	local diff_y = (self.target_player.mid_y - self.mid_y)
 	diff_x, diff_y = normalize_vect(diff_x, diff_y)
@@ -166,6 +171,27 @@ function Loot.Life:on_collect(player)
 	-- else
 	-- 	self.quantity = overflow
 	-- end
+end
+
+-------
+
+Loot.Gun = Loot:inherit()
+
+function Loot.Gun:init(x, y, val, vx, vy)
+	local gun = Guns:get_random_gun()
+	self.gun = gun
+	
+	self:init_loot(gun.spr, x, y, 2, 2, val, vx, vy)
+	self.min_attract_dist = 16
+	
+	self.friction_x = self.default_friction
+	
+	self.loot_type = "gun"
+end
+
+function Loot.Gun:on_collect(player)
+	player:equip_gun(self.gun)
+	self:remove()
 end
 
 return Loot

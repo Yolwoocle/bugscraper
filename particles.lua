@@ -110,7 +110,6 @@ end
 
 function ParticleSystem:smoke(x, y, number, col, spw_rad, size, sizevar)
 	number = number or 10
-	col = col or COL_WHITE
 	spw_rad = spw_rad or 8
 	size = size or 4
 	sizevar = sizevar or 2
@@ -120,18 +119,23 @@ function ParticleSystem:smoke(x, y, number, col, spw_rad, size, sizevar)
 		local dist = love.math.random() * spw_rad
 		local dx, dy = cos(ang)*dist, sin(ang)*dist
 		local dsize = random_neighbor(sizevar)
+		
+		local v = random_range(0.6, 1)
+		local col = col or {v,v,v,1}
 		self:add_particle(CircleParticle:new(x+dx, y+dy, size+dsize, col, 0, 0, _vr, _life))
 	end
 end
 
 function ParticleSystem:dust(x, y, col, size, rnd_pos, sizevar)
-	col = col or COL_WHITE
 	rnd_pos = rnd_pos or 3
 	size = size or 4
 	sizevar = sizevar or 2
 
 	local dx, dy = random_neighbor(rnd_pos), random_neighbor(rnd_pos)
 	local dsize = random_neighbor(sizevar)
+
+	local v = random_range(0.6, 1)
+	local col = col or {v,v,v,1}
 	self:add_particle(CircleParticle:new(x+dx, y+dy, size+dsize, col, 0, 0, _vr, _life))
 end
 
@@ -142,7 +146,7 @@ function ParticleSystem:flash(x, y)
 	self:add_particle(CircleParticle:new(x, y, r, COL_WHITE, 0, 0, 220, _life))
 end
 
-function ParticleSystem:image(x, y, number, spr, spw_rad, life)
+function ParticleSystem:image(x, y, number, spr, spw_rad, life, vs, g)
 	number = number or 10
 	spw_rad = spw_rad or 8
 	life = life or 1
@@ -158,10 +162,10 @@ function ParticleSystem:image(x, y, number, spr, spw_rad, life)
 		local rot = random_neighbor(pi)
 		local vx = random_neighbor(100)
 		local vy = -random_range(40, 80)
-		local vs = random_range(1, 0.5)
+		local vs = vs or random_range(1, 0.5)
 		local vr = random_neighbor(1)
 		local life = life + random_neighbor(0.5)
-		local g = 3
+		local g = g or 3
 		self:add_particle(ImageParticle:new(spr, x+dx, y+dy, 1, rot, vx,vy,vs,vr, life, g))
 	end
 end

@@ -2,6 +2,9 @@ require "util"
 local Class = require "class"
 local images = require "images"
 
+-- Help. If you are the poor sod sent to modify the code within 
+-- this, be warned: it's a fucking mess.
+
 local MenuItem = Class:inherit()
 function MenuItem:init_menuitem(i, x, y)
 	self.i = i
@@ -23,26 +26,54 @@ end
 local TextMenuItem = MenuItem:inherit()
 
 -- Split into SelectableMenuItem ? Am I becoming a Java dev now?
-function TextMenuItem:init(i, x, y, text, on_click)
+-- THIS IS A MESS, *HELP*
+-- AAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+-- Should do:
+-- MenuItem
+-- -> TextMenuItem
+-- -> SelectableMenuItem
+--   -> ToggleMenuItem
+--   -> SliderMenuItem
+function TextMenuItem:init(i, x, y, text, on_click, default_val)
 	self:init_menuitem(i, x, y)
 
 	self.oy = 0
 	self.text = text or ""
-	
+	self.label_text = self.text
+	self.value_text = ""
+
+	self.value = nil
+	self.type = "text"
+
 	if on_click and type(on_click) == "function" then
 		self.on_click = on_click
 		self.is_selectable = true
 	else
 		self.is_selectable = false
 	end
+
+	-- -- Custom update value function
+	-- if custom_update_value then
+	-- 	self.update_value = custom_update_value
+	-- end
+
+	if default_val ~= nil then
+		self:update_value(default_val)
+	end
 end
 
 function TextMenuItem:update(dt)
 	self.oy = lerp(self.oy, 0, 0.3)
+
+	if type(self.value) ~= "nil" then
+		self.text = concat(self.label_text, ": ", self.value_text)
+	else
+		self.text = self.label_text
+	end
 end
 
 function TextMenuItem:draw()
-	gfx.setColor(1,1,1,1)
+	gfx.setColor(1, 1, 1, 1)
 	local th = get_text_height(self.text)
 	if self.is_selected then
 		-- rect_color_centered(COL_LIGHT_YELLOW, "fill", self.x, self.y+th*0.4, get_text_width(self.text)+8, th/4)
@@ -52,45 +83,141 @@ function TextMenuItem:draw()
 	else
 		if not self.is_selectable then
 			local v = 0.5
-			gfx.setColor(v,v,v,1)
+			gfx.setColor(v, v, v, 1)
 		end
 		print_centered(self.text, self.x, self.y + self.oy)
 	end
-	gfx.setColor(1,1,1,1)
+	gfx.setColor(1, 1, 1, 1)
 end
 
-function TextMenuItem:set_selected(val)
+function TextMenuItem:set_selected(val, diff)
 	self.is_selected = val
 	if val then
-		self.oy = -4
+		self.oy = sign(diff or 1) * 4
 	end
+end
+
+function TextMenuItem:after_click()
+	self.oy = -4
+end
+
+function TextMenuItem:update_value(val)
+	self.value = val
+
+	self.value_text = tostring(val)
+	if type(val) == "boolean" then
+		self.value_text = val and "ON" or "OFF"
+	end
+end
+
+--------
+
+local SliderMenuItem = MenuItem:inherit()
+
+function SliderMenuItem:init(i, x, y, text, on_click, values, def_index)
+	self:init_menuitem(i, x, y)
+
+	self.ox = 0
+	self.oy = 0
+	self.text = text or ""
+	self.label_text = self.text
+	self.value_text = ""
+
+	self.values = values
+	self.value_index = def_index
+	self.value = values[def_index]
+	self.value_text = tostring(self.value)
+
+	self.on_click = on_click
+	self.is_selectable = true
+end
+
+function SliderMenuItem:update(dt)
+	self.ox = lerp(self.ox, 0, 0.3)
+	self.oy = lerp(self.oy, 0, 0.3)
+
+	if type(self.value) ~= "nil" then
+		self.text = concat(self.label_text, ": < ", self.value_text, " >")
+	else
+		self.text = self.label_text
+	end
+
+	if game:button_pressed("left") and self.is_selected then
+		self:on_click(-1)
+		self:after_click(-1)
+	end
+	if game:button_pressed("right") and self.is_selected then
+		self:on_click(1)
+		self:after_click(1)
+	end
+end
+
+function SliderMenuItem:draw()
+	gfx.setColor(1, 1, 1, 1)
+	local th = get_text_height(self.text)
+	if self.is_selected then
+		print_centered_outline(COL_WHITE, COL_ORANGE, self.text, self.x + self.ox, self.y + self.oy)
+	else
+		if not self.is_selectable then
+			local v = 0.5
+			gfx.setColor(v, v, v, 1)
+		end
+		print_centered(self.text, self.x, self.y + self.oy)
+	end
+	gfx.setColor(1, 1, 1, 1)
+end
+
+function SliderMenuItem:set_selected(val, diff)
+	self.is_selected = val
+	if val then
+		self.oy = sign(diff or 1) * 4
+	end
+end
+
+function SliderMenuItem:next_value(diff)
+	diff = diff or 1
+	self.value_index = mod_plus_1(self.value_index + diff, #self.values)
+	self.value = self.values[self.value_index]
+	self.value_text = tostring(self.value)
+end
+
+function SliderMenuItem:after_click(diff)
+	diff = diff or 1
+	self.ox = sign(diff) * 4
 end
 
 --------
 
 local Menu = Class:inherit()
 
-function Menu:init(items, bg_color)
+function Menu:init(game, items, bg_color)
 	self.items = {}
+	self.is_menu = true
 
 	local th = get_text_height()
 	local h = (#items - 1) * th
-	local start_y = CANVAS_HEIGHT/2 - h/2
-	for i,parms in pairs(items) do
-		self.items[i] = TextMenuItem:new(i, CANVAS_WIDTH/2, start_y + i*th, unpack(parms))
+	local start_y = CANVAS_HEIGHT / 2 - h / 2
+	for i, parms in pairs(items) do
+		local parm1 = parms[1]
+		if type(parm1) == "string" then
+			self.items[i] = TextMenuItem:new(i, CANVAS_WIDTH / 2, start_y + (i - 1) * th, unpack(parms))
+		else
+			local class = table.remove(parms, 1)
+			self.items[i] = class:new(i, CANVAS_WIDTH / 2, start_y + (i - 1) * th, unpack(parms))
+		end
 	end
 
-	self.bg_color = bg_color or {1,1,1, 0}
+	self.bg_color = bg_color or { 1, 1, 1, 0 }
 end
 
 function Menu:update(dt)
-	for i,item in pairs(self.items) do
+	for i, item in pairs(self.items) do
 		item:update(dt)
 	end
 end
 
 function Menu:draw()
-	for i,item in pairs(self.items) do
+	for i, item in pairs(self.items) do
 		item:draw()
 	end
 end
@@ -107,34 +234,97 @@ end
 
 local MenuManager = Class:inherit()
 
-function MenuManager:init()
+function MenuManager:init(game)
+	self.game = game
 	self.menus = {}
-	local callback_set_menu = function(e) return end
-	self.menus.pause = Menu:new({
-		-- {"<<<<<<<<< PAUSED >>>>>>>>>"},
-		{"********** PAUSED **********"},
-		{""},
-		{"RESUME", function() game.menu:unpause() end},
-		{"RETRY", function() end},
-		{"OPTIONS", func_set_menu('options')},
-		{"CREDITS", func_set_menu('credits')},
-		{"EXIT",    func_set_menu('title')},
-		{""},
-		{""},
-	}, {0, 0, 0, 0.85})
 
-	self.menus.options = Menu:new({
-		{"OPTIONS"},
-		{""},
-		{"SOUND: [ON/OFF (todo dynamic text you lazy dumbass)]", function() game:toggle_sound() end},
-		{""}
-	}, {0, 0, 0, 0.85})
+	-----------------------------------------------------
+	------ [[[[[[[[[[[[[[[[ MENUS ]]]]]]]]]]]]]]]] ------
+	-----------------------------------------------------
+
+	-- FIXME: This is messy, eamble multiple types of menuitems
+	-- This is so goddamn overengineered and needlessly complicated
+	self.menus.title = Menu:new(game, {
+		{ ">>>> ELEVATOR DITCH (logo here) <<<<" },
+		-- {"********** PAUSED **********"},
+		{ "" },
+		{ "PLAY", function() game:new_game() end },
+		{ "OPTIONS", func_set_menu('options') },
+		{ "QUIT", quit_game },
+		{ "" },
+		{ "" },
+	}, { 0, 0, 0, 0.85 })
+	
+	self.menus.pause = Menu:new(game, {
+		{ "<<<<<<<<< PAUSED >>>>>>>>>" },
+		-- {"********** PAUSED **********"},
+		{ "" },
+		{ "RESUME", function() game.menu:unpause() end },
+		{ "RETRY", function() game:new_game() end },
+		{ "OPTIONS", func_set_menu('options') },
+		{ "CREDITS", func_set_menu('credits') },
+		{ "BACK TO TITLE SCREEN", func_set_menu('title') },
+		{ "QUIT", quit_game },
+		{ "" },
+		{ "" },
+	}, { 0, 0, 0, 0.85 })
+
+	self.menus.options = Menu:new(game, {
+		{ "< BACK", function() game.menu:back() end },
+		{ "<<<<<<<<< OPTIONS >>>>>>>>>" },
+		{ "" },
+		{ "SOUND", function(self, option)
+			game:toggle_sound()
+			self:update_value(game.sound_on)
+		end, game.sound_on },
+
+		{ SliderMenuItem, "VOLUME", function(self, diff)
+			self:next_value(diff)
+			game:set_volume(self.value/20)
+		end, range_table(0,20), 21},
+
+		-- {"MUSIC: [ON/OFF]", function(self)
+		-- 	game:toggle_sound()
+		-- end},
+		{ "FULLSCREEN", function(self)
+			toggle_fullscreen()
+			self:update_value(is_fullscreen)
+		end, is_fullscreen },
+
+		{ SliderMenuItem, "PIXEL SCALE", function(self, diff)
+			diff = diff or 1
+			self:next_value(diff)
+
+			local scale = self.value
+			if self.value == "auto" then        scale = nil    end
+			if self.value == "max whole" then   scale = -1     end
+			update_screen(scale)
+		end, { "auto", "max whole", 1, 2, 3, 4}, 1
+		},
+
+		{ "" }
+	}, { 0, 0, 0, 0.85 })
+
+	self.menus.game_over = Menu:new(game, {
+		{ "" },
+		{"********** GAME OVER! **********"},
+		{ "" },
+		{ "Kills: 12345" },
+		{ "Time: 12:34:56" },
+		{ "" },
+		{ "RETRY", function() game:new_game() end },
+		{ "BACK TO MAIN MENU", func_set_menu("title") },
+		{ "" },
+		{ "" },
+	}, { 0, 0, 0, 0.85 })
 
 	self.cur_menu = nil
 	self.is_paused = false
 
 	self.sel_n = 1
 	self.sel_item = nil
+
+	self.last_menu = "title"
 end
 
 function MenuManager:update(dt)
@@ -142,19 +332,20 @@ function MenuManager:update(dt)
 		self.cur_menu:update(dt)
 
 		-- Navigate up and down
-		if game:button_pressed("up") then      self:incr_selection(-1)    end
-		if game:button_pressed("down") then    self:incr_selection(1)     end
+		if game:button_pressed("up") then self:incr_selection(-1) end
+		if game:button_pressed("down") then self:incr_selection(1) end
 
 		-- Update current selection
 		self.sel_n = mod_plus_1(self.sel_n, #self.cur_menu.items)
 		self.sel_item = self.cur_menu.items[self.sel_n]
 		self.sel_item.is_selected = true
-		
+
 		-- On pressed
 		local btn = game:button_pressed("jump")
 		local btn_back = game:button_pressed("shoot")
 		if btn and self.sel_item and self.sel_item.on_click then
 			self.sel_item:on_click()
+			self.sel_item:after_click()
 		end
 	end
 
@@ -172,13 +363,20 @@ function MenuManager:draw()
 end
 
 function MenuManager:set_menu(menu)
+	self.last_menu = self.cur_menu
+
 	if type(menu) == "nil" then
 		self.cur_menu = nil
 		return
 	end
-
+	
 	local m = self.menus[menu]
-	if not m then    return false, "menu '"..menu.."' does not exist"    end
+
+	if type(menu) ~= "string" and menu.is_menu then
+		m = menu		
+	end
+
+	if not m then return false, "menu '" .. menu .. "' does not exist" end
 	self.cur_menu = m
 
 	-- Update selection to first selectable
@@ -207,21 +405,21 @@ function MenuManager:toggle_pause()
 end
 
 function MenuManager:incr_selection(n)
-	if not self.cur_menu then    return false, "no current menu"   end
-	
+	if not self.cur_menu then return false, "no current menu" end
+
 	-- Increment selection until valid item
 	local sel, found = self:find_selectable_from(self.sel_n, n)
 
 	if not found then
 		self.sel_n = self.sel_n + n
-		return false, concat("no selectable item found; selection set to n + (",n,") (",self.sel_n,")")
+		return false, concat("no selectable item found; selection set to n + (", n, ") (", self.sel_n, ")")
 	end
-	
+
 	-- Update new selection
-	self.sel_item:set_selected(false)
+	self.sel_item:set_selected(false, n)
 	self.sel_n = sel
 	self.sel_item = self.cur_menu.items[self.sel_n]
-	self.sel_item:set_selected(true)
+	self.sel_item:set_selected(true, n)
 	return true
 end
 
@@ -230,12 +428,12 @@ function MenuManager:find_selectable_from(n, diff)
 
 	local len = #self.cur_menu.items
 	local sel = n
-	
+
 	local limit = len
 	local found = false
 	while not found and limit > 0 do
 		sel = mod_plus_1(sel + diff, len)
-		if self.cur_menu.items[sel].is_selectable then     found = true    end
+		if self.cur_menu.items[sel].is_selectable then found = true end
 		limit = limit - 1
 	end
 
@@ -243,11 +441,19 @@ function MenuManager:find_selectable_from(n, diff)
 end
 
 function MenuManager:set_selection(n)
-	self.cur_menu.items[self.sel_n]:set_selected(false)
+	if self.sel_item then self.sel_item:set_selected(false) end
+	if not self.cur_menu then return false end
 
 	self.sel_n = n
 	self.sel_item = self.cur_menu.items[self.sel_n]
+	if not self.sel_item then return false end
 	self.sel_item:set_selected(true)
+
+	return true
+end
+
+function MenuManager:back()
+	self:set_menu(self.last_menu)
 end
 
 return MenuManager

@@ -109,4 +109,21 @@ function Guns:init()
 	end
 end
 
-return Guns:new()
+local guns_instance = Guns:new()
+
+----------------
+-- Random Gun --
+----------------
+
+local all_guns = {}
+for k, gun in pairs(guns_instance) do
+	table.insert(all_guns, gun)
+end
+
+function Guns:get_random_gun(user)
+	local gun = random_sample(all_guns)
+	return gun:new(user)
+end
+
+
+return guns_instance

@@ -24,15 +24,22 @@ function Game:init()
 	particles = ParticleSystem:new()
 	audio = AudioManager:new()
 	
-	-- Menu
-	self.menu = MenuManager:new()
-	
 	-- Audio
+	self.volume = 1
 	self.sound_on = false
+
+	self:new_game()
+
+	-- Menu Manager
+	self.menu = MenuManager:new(self)
+end
+
+function Game:new_game(number_of_players)
+	number_of_players = number_of_players or 1
 
 	-- Players
 	self.max_number_of_players = 4 
-	self.number_of_players = 1
+	self.number_of_players = number_of_players
 
 	-- Map & world gen
 	self.shaft_w, self.shaft_h = 26,14
@@ -90,8 +97,8 @@ function Game:init()
 	-- Start lever
 	local nx = CANVAS_WIDTH/2
 	local ny = self.world_generator.box_by * BLOCK_WIDTH
-	local l = create_actor_centered(Enemies.ButtonGlass, nx, ny)
-	
+	-- local l = create_actor_centered(Enemies.ButtonGlass, nx, ny)
+	local l = create_actor_centered(Enemies.DummyTarget, floor(nx), floor(ny))
 	self:new_actor(l)
 
 	self.inventory = Inventory:new()
@@ -113,6 +120,10 @@ function Game:init()
 	self.logo_y = 15
 	self.logo_vy = 0
 	self.move_logo = false
+	
+	if self.menu then
+		self.menu:set_menu()
+	end
 end
 
 function Game:update(dt)
@@ -289,6 +300,10 @@ end
 function Game:on_kill(actor)
 	if actor.is_enemy then
 		self.enemy_count = self.enemy_count - 1
+	end
+
+	if actor.is_player then
+		self.menu:set_menu("game_over")
 	end
 end
 
@@ -530,6 +545,11 @@ end
 function Game:toggle_sound()
 	-- TODO: move from bool to a number (0-1), customisable in settings
 	self.sound_on = not self.sound_on
-end	
+end
+
+function Game:set_volume(n)
+	self.volume = n
+	love.audio.setVolume( self.volume )
+end
 
 return Game

@@ -30,9 +30,10 @@ function Enemy:init_enemy(x,y, img, w,h)
 	self.speed_y = 0
 
 	self.loot = {
-		{nil, 1},
-		{Loot.Ammo, 100, loot_type="ammo", value=20},
-		{Loot.Life, 100, loot_type="ammo", value=1},
+		{nil, 100},
+		{Loot.Ammo, 15, loot_type="ammo", value=20},
+		{Loot.Life, 10, loot_type="life", value=1},
+		{Loot.Gun, 3, loot_type="gun"},
 	}
 
 	self.is_stompable = true
@@ -41,6 +42,7 @@ function Enemy:init_enemy(x,y, img, w,h)
 
 	self.damage = 1
 	self.knockback = 1200
+	self.self_knockback_mult = 1 -- Basically weight (?)
 
 	self.damaged_flash_timer = 0
 	self.damaged_flash_max = 0.07
@@ -106,8 +108,8 @@ function Enemy:draw()
 end
 
 function Enemy:on_collision(col, other)
-	-- If hit wall, reverse x vel (why is this here?????)
-	if col.other.is_solid and col.normal.y == 0 then
+	-- If hit wall, reverse x vel (why is this here?????) TODO: wtf
+	if col.other.is_solid and col.normal.y == 0 then 
 		self.vx = -self.vx
 	end
 
@@ -181,9 +183,10 @@ function Enemy:drop_loot()
 	local instance
 	local vx = random_neighbor(300)
 	local vy = random_range(-200, -500)
-	if parms.loot_type == "ammo" then
+	local loot_type = parms.loot_type
+	if loot_type == "ammo" or loot_type == "life" or loot_type == "gun" then
 		instance = loot:new(self.mid_x, self.mid_y, parms.value, vx, vy)
-	end
+	end 
 
 	game:new_actor(instance)
 end
@@ -196,9 +199,10 @@ function Enemy:on_hit_bullet(bul, col)
 	self:do_damage(bul.damage, bul)
 	
 	if self.is_knockbackable then
-		local ang = atan2(bul.vy, bul.vx)
-		self.vx = self.vx + cos(ang) * bul.knockback
-		self.vy = self.vy + sin(ang) * bul.knockback
+		self:do_knockback(bul.knockback * self.self_knockback_mult, bul)
+		-- local ang = atan2(bul.vy, bul.vx)
+		-- self.vx = self.vx + cos(ang) * bul.knockback
+		-- self.vy = self.vy + sin(ang) * bul.knockback
 	end
 end
 

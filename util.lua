@@ -630,8 +630,20 @@ end
 
 function create_actor_centered(actor, x, y, ...)
 	local a = actor:new(x, y, ...)
-	local nx = a.x - a.w/2
-	local ny = a.y - a.h
+	local nx = floor(a.x - a.w/2)
+	local ny = floor(a.y - a.h)
 	a:set_pos(nx, ny)
 	return a
+end
+
+function not_nil(x)
+	return x ~= nil
+end	
+
+function range_table(a, b)
+	local t = {}
+	for i=a, b do
+		table.insert(t, i)
+	end
+	return t
 end

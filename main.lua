@@ -2,31 +2,44 @@ local Class = require "class"
 local Game = require "game"
 require "util"
 
-game = nil 
-is_fullscreen = false
+game = nil
 
-function love.load(arg)
-	love.window.setMode(0, 0, {
-		fullscreen = true, 
-		resizable = true, 
-		vsync = true, 
-		minwidth = 400, 
-		minheight = 300,
-	})	
-	gfx.setDefaultFilter("nearest", "nearest")
-	
-	SCREEN_WIDTH, SCREEN_HEIGHT = gfx.getDimensions()
+function update_screen(scale)
+	-- When scale is (-1), it will find the maximum whole number
+
+	WINDOW_WIDTH, WINDOW_HEIGHT = gfx.getDimensions()
 	CANVAS_WIDTH = 480
 	CANVAS_HEIGHT = 270
 
-	WINDOW_WIDTH = CANVAS_WIDTH * 3
-	WINDOW_HEIGHT = CANVAS_WIDTH * 3
-
-	screen_sx = SCREEN_WIDTH / CANVAS_WIDTH or SCREEN_WIDTH
-	screen_sy = SCREEN_HEIGHT / CANVAS_HEIGHT or SCREEN_HEIGHT
+	screen_sx = WINDOW_WIDTH / CANVAS_WIDTH
+	screen_sy = WINDOW_HEIGHT / CANVAS_HEIGHT
 	CANVAS_SCALE = min(screen_sx, screen_sy)
-	CANVAS_OX = max(0, (SCREEN_WIDTH  - CANVAS_WIDTH  * CANVAS_SCALE)/2)
-	CANVAS_OY = max(0, (SCREEN_HEIGHT - CANVAS_HEIGHT * CANVAS_SCALE)/2)
+
+	if scale then
+		if scale == -1 then
+			CANVAS_SCALE = floor(CANVAS_SCALE)
+		else
+			CANVAS_SCALE = scale
+		end
+	end
+
+	CANVAS_OX = max(0, (WINDOW_WIDTH  - CANVAS_WIDTH  * CANVAS_SCALE)/2)
+	CANVAS_OY = max(0, (WINDOW_HEIGHT - CANVAS_HEIGHT * CANVAS_SCALE)/2)
+end
+
+function love.load(arg)
+	is_fullscreen = true
+	love.window.setMode(0, 0, {
+		fullscreen = is_fullscreen,
+		resizable = true,
+		vsync = true,
+		minwidth = 400,
+		minheight = 300,
+	})
+	SCREEN_WIDTH, SCREEN_HEIGHT = gfx.getDimensions()
+	gfx.setDefaultFilter("nearest", "nearest")
+	
+	update_screen()
 
 	canvas = gfx.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
 
@@ -93,8 +106,7 @@ function love.keypressed(key, scancode, isrepeat)
 		end
 	
 	elseif key == "f11" then
-		--is_fullscreen = not is_fullscreen
-		love.window.setFullscreen(is_fullscreen)
+		toggle_fullscreen()
 
 	elseif key == "m" then
 		game.sound_on = not game.sound_on
@@ -102,6 +114,16 @@ function love.keypressed(key, scancode, isrepeat)
 	end
 
 	if game.keypressed then  game:keypressed(key, scancode, isrepeat)  end
+end
+
+function toggle_fullscreen()
+	-- local success = love.graphics.toggleFullscreen( )
+	is_fullscreen = not is_fullscreen
+	love.window.setFullscreen(is_fullscreen)
+end
+
+function set_pixel_scale(scale)
+	update_screen(scale)
 end
 
 function love.keyreleased(key, scancode)
@@ -117,9 +139,8 @@ end
 --end
 
 function love.resize(w, h)
-	WINDOW_WIDTH = w
-	WINDOW_HEIGHT = h
 	if game.resize then   game:resize(w,h)   end
+	update_screen()
 end
 
 function love.textinput(text)
@@ -137,4 +158,8 @@ function print(...)
 	if #msg_log > max_msg_log then
 		table.remove(msg_log, 1)
 	end
+end
+
+function quit_game()
+	love.event.quit()
 end

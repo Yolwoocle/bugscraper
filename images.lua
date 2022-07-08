@@ -75,6 +75,9 @@ local img_names = {
 	"big_red_button",
 
 	"ptc_glass_shard",
+	"snail_shell_fragment",
+
+	"dummy_target",
 }
 
 local images = {}
