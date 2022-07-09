@@ -78,6 +78,8 @@ local img_names = {
 	"snail_shell_fragment",
 
 	"dummy_target",
+
+	"controls",
 }
 
 local images = {}

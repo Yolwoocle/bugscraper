@@ -35,9 +35,13 @@ local TextMenuItem = MenuItem:inherit()
 -- -> SelectableMenuItem
 --   -> ToggleMenuItem
 --   -> SliderMenuItem
-function TextMenuItem:init(i, x, y, text, on_click, default_val)
+function TextMenuItem:init(i, x, y, text, on_click, update_value)
+	self:init_textitem(i, x, y, text, on_click, update_value)
+end
+function TextMenuItem:init_textitem(i, x, y, text, on_click, update_value)
 	self:init_menuitem(i, x, y)
 
+	self.ox = 0
 	self.oy = 0
 	self.text = text or ""
 	self.label_text = self.text
@@ -58,12 +62,20 @@ function TextMenuItem:init(i, x, y, text, on_click, default_val)
 	-- 	self.update_value = custom_update_value
 	-- end
 
-	if default_val ~= nil then
-		self:update_value(default_val)
-	end
+	self.update_value = update_value or function() end
+
+	-- if default_val ~= nil then
+	-- 	self:update_value(default_val)
+	-- end
 end
 
 function TextMenuItem:update(dt)
+	self:update_textitem(dt)
+end
+function TextMenuItem:update_textitem(dt)
+	self:update_value()
+
+	self.ox = lerp(self.ox, 0, 0.3)
 	self.oy = lerp(self.oy, 0, 0.3)
 
 	if type(self.value) ~= "nil" then
@@ -74,12 +86,15 @@ function TextMenuItem:update(dt)
 end
 
 function TextMenuItem:draw()
+	self:draw_textitem()
+end
+function TextMenuItem:draw_textitem()
 	gfx.setColor(1, 1, 1, 1)
 	local th = get_text_height(self.text)
 	if self.is_selected then
 		-- rect_color_centered(COL_LIGHT_YELLOW, "fill", self.x, self.y+th*0.4, get_text_width(self.text)+8, th/4)
 		-- rect_color_centered(COL_WHITE, "fill", self.x, self.y, get_text_width(self.text)+32, th)
-		print_centered_outline(COL_WHITE, COL_ORANGE, self.text, self.x, self.y + self.oy)
+		print_centered_outline(COL_WHITE, COL_ORANGE, self.text, self.x + self.ox, self.y + self.oy)
 		-- print_centered(self.text, self.x, self.y)
 	else
 		if not self.is_selectable then
@@ -103,21 +118,12 @@ function TextMenuItem:after_click()
 	self.oy = -4
 end
 
-function TextMenuItem:update_value(val)
-	self.value = val
-
-	self.value_text = tostring(val)
-	if type(val) == "boolean" then
-		self.value_text = val and "ON" or "OFF"
-	end
-end
-
 --------
 
-local SliderMenuItem = MenuItem:inherit()
+local SliderMenuItem = TextMenuItem:inherit()
 
-function SliderMenuItem:init(i, x, y, text, on_click, values, def_index)
-	self:init_menuitem(i, x, y)
+function SliderMenuItem:init(i, x, y, text, on_click, values, update_value)
+	self:init_textitem(i, x, y)
 
 	self.ox = 0
 	self.oy = 0
@@ -126,17 +132,21 @@ function SliderMenuItem:init(i, x, y, text, on_click, values, def_index)
 	self.value_text = ""
 
 	self.values = values
-	self.value_index = def_index
-	self.value = values[def_index]
+	self.value_index = 1
+	self.value = values[1]
 	self.value_text = tostring(self.value)
 
 	self.on_click = on_click
 	self.is_selectable = true
+
+	self.update_value = update_value
 end
 
 function SliderMenuItem:update(dt)
 	self.ox = lerp(self.ox, 0, 0.3)
 	self.oy = lerp(self.oy, 0, 0.3)
+	
+	self:update_value()
 
 	if type(self.value) ~= "nil" then
 		self.text = concat(self.label_text, ": < ", self.value_text, " >")
@@ -152,21 +162,6 @@ function SliderMenuItem:update(dt)
 		self:on_click(1)
 		self:after_click(1)
 	end
-end
-
-function SliderMenuItem:draw()
-	gfx.setColor(1, 1, 1, 1)
-	local th = get_text_height(self.text)
-	if self.is_selected then
-		print_centered_outline(COL_WHITE, COL_ORANGE, self.text, self.x + self.ox, self.y + self.oy)
-	else
-		if not self.is_selectable then
-			local v = 0.5
-			gfx.setColor(v, v, v, 1)
-		end
-		print_centered(self.text, self.x, self.y + self.oy)
-	end
-	gfx.setColor(1, 1, 1, 1)
 end
 
 function SliderMenuItem:set_selected(val, diff)
@@ -190,6 +185,23 @@ function SliderMenuItem:after_click(diff)
 	-- TODO: rising pitch or decreasing pitch
 	-- + sound preview for music & sfx
 	audio:play(sounds.menu_select)
+end
+
+
+--------
+
+local StatsMenuItem = TextMenuItem:inherit()
+
+function StatsMenuItem:init(i, x, y, text, get_value)
+	self:init_textitem(i, x, y, text)
+	self.get_value = get_value
+	self.value = nil
+end
+
+function StatsMenuItem:update(dt)
+	self:update_textitem(dt)
+	self.value = self:get_value()
+	self.value_text = tostring(self.value)
 end
 
 --------
@@ -281,43 +293,55 @@ function MenuManager:init(game)
 		{ "" },
 		{ "SOUND", function(self, option)
 			game:toggle_sound()
-			self:update_value(game.sound_on)
-		end, game.sound_on },
+		end, 
+		function(self)
+			self.value = game.sound_on
+			self.value_text = game.sound_on and "ON" or "OFF"
+		end},
 
 		{ SliderMenuItem, "VOLUME", function(self, diff)
 			self:next_value(diff)
-			self.value_text = concat(floor(100 * self.value/20), "%")
 			game:set_volume(self.value/20)
-		end, range_table(0,20), 21},
+		end, range_table(0,20),
+		function(self)
+			self.value = game.volume
+			self.value_text = concat(floor(100 * self.value), "%")
+		end},
 
 		-- {"MUSIC: [ON/OFF]", function(self)
 		-- 	game:toggle_sound()
 		-- end},
 		{ "FULLSCREEN", function(self)
 			toggle_fullscreen()
-			self:update_value(is_fullscreen)
-		end, is_fullscreen },
+		end,
+		function(self)
+			self.value = is_fullscreen
+			self.value_text = is_fullscreen and "ON" or "OFF"
+		end},
 
 		{ SliderMenuItem, "PIXEL SCALE", function(self, diff)
 			diff = diff or 1
 			self:next_value(diff)
 
 			local scale = self.value
-			if self.value == "auto" then        scale = nil    end
-			if self.value == "max whole" then   scale = -1     end
+			pixel_scale = scale
 			update_screen(scale)
-		end, { "auto", "max whole", 1, 2, 3, 4}, 1
-		},
+		end, { "auto", "max whole", 1, 2, 3, 4}, function(self)
+			self.value = pixel_scale
+			self.value_text = tostring(pixel_scale)
+		end},
 
 		{ "" }
 	}, { 0, 0, 0, 0.85 })
 
 	self.menus.game_over = Menu:new(game, {
-		{ "" },
 		{"********** GAME OVER! **********"},
 		{ "" },
-		{ "Kills: 12345" },
-		{ "Time: 12:34:56" },
+		{ StatsMenuItem, "Kills", function(self) return game.stats.kills end },
+		{ StatsMenuItem, "Time",  function(self)
+			return time_to_string(game.stats.time)
+		end },
+		{ StatsMenuItem, "Floor", function(self) return game.stats.floor end },
 		{ "" },
 		{ "RETRY", function() game:new_game() end },
 		{ "BACK TO MAIN MENU", func_set_menu("title") },

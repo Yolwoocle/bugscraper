@@ -23,6 +23,9 @@ function Player:init(n, x, y, spr, controls)
 	self.max_life = 4
 	self.life = self.max_life
 	
+	-- Death
+	self.is_dead = false
+	
 	-- Meta
 	self.n = n
 	self.is_enemy = false
@@ -131,7 +134,7 @@ function Player:update(dt)
 	self:do_particles(dt)
 
 	if self.life <= 0 then
-		self:on_death()
+		self:kill()
 	end
 	
 	-- Gun
@@ -393,8 +396,13 @@ function Player:on_leaving_collision()
 	self.coyote_time = self.default_coyote_time
 end
 
-function Player:on_death()
+function Player:kill()
+	self.is_dead = true
 	game:on_kill(self)
+	self:on_death()
+end
+
+function Player:on_death()
 end
 
 function Player:shoot(dt, is_burst)

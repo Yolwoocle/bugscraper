@@ -218,7 +218,6 @@ function Enemies:init()
 		self:init_enemy(x, y, images.slug, 14, 9)
 		self.name = "slug"
 		self.follow_player = true
-		self.harmless_frames = 5
 	end
 
 	

@@ -84,6 +84,18 @@ local waves = {
 	},
 },
 
+{
+	min = 12,
+	max = 16,
+	enemies = {
+		{E.Larva, 4},
+		{E.Fly, 3},
+		{E.SnailShelled, 3},
+		{E.Slug, 2},
+		{E.Grasshopper, 1},
+	},
+},
+
 }
 
 return waves

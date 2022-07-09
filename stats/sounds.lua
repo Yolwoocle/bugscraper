@@ -23,6 +23,7 @@ local sfxnames = {
 	"item_collect", "item_collect.wav",
 	"menu_hover", "menu_hover.wav",
 	"menu_select", "menu_select.wav",
+	"kill_enemy", "kill_enemy.wav"
 }
 
 for i=1, #sfxnames, 2 do    sounds[sfxnames[i]] = new_source(sfxnames[i+1], "static")    end

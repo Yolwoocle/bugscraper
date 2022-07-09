@@ -6,7 +6,10 @@ game = nil
 
 function update_screen(scale)
 	-- When scale is (-1), it will find the maximum whole number
-
+	if scale == "auto" then   scale = nil    end
+	if scale == "max whole" then   scale = -1    end
+	if type(scale) ~= "number" then    scale = nil    end
+ 
 	WINDOW_WIDTH, WINDOW_HEIGHT = gfx.getDimensions()
 	CANVAS_WIDTH = 480
 	CANVAS_HEIGHT = 270
@@ -28,7 +31,10 @@ function update_screen(scale)
 end
 
 function love.load(arg)
+	-- GLOBALS
 	is_fullscreen = true
+	pixel_scale = "auto"
+
 	love.window.setMode(0, 0, {
 		fullscreen = is_fullscreen,
 		resizable = true,
@@ -110,7 +116,10 @@ function love.keypressed(key, scancode, isrepeat)
 
 	elseif key == "m" then
 		game.sound_on = not game.sound_on
-
+		
+	elseif key == "g" then
+		game.players[1]:kill()
+	
 	end
 
 	if game.keypressed then  game:keypressed(key, scancode, isrepeat)  end

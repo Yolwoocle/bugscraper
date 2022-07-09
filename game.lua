@@ -124,6 +124,14 @@ function Game:new_game(number_of_players)
 	if self.menu then
 		self.menu:set_menu()
 	end
+
+	self.stats = {
+		floor = 0,
+		kills = 0,
+		time = 0,
+	}
+
+	self.time = 0
 end
 
 function Game:update(dt)
@@ -141,8 +149,10 @@ function Game:update(dt)
 end
 
 function Game:update_main_game(dt)
-	self.map:update(dt)
+	self.time = self.time + dt
 	
+	self.map:update(dt)
+
 	-- Particles
 	particles:update(dt)
 		-- Background lines
@@ -251,7 +261,8 @@ function Game:draw()
 	-- rect_color(COL_MID_GRAY, "fill", floor((CANVAS_WIDTH-w)/2),    16, w, 8)
 	-- rect_color(COL_WHITE,    "fill", floor((CANVAS_WIDTH-w)/2) +1, 17, (w-2)*self.floor_progress, 6)
 
-	love.graphics.draw(images.logo, (CANVAS_WIDTH - images.logo:getWidth())/2, self.logo_y)
+	love.graphics.draw(images.logo, floor((CANVAS_WIDTH - images.logo:getWidth())/2), self.logo_y)
+	love.graphics.draw(images.controls, floor((CANVAS_WIDTH - images.controls:getWidth())/2), floor(self.logo_y) + images.logo:getHeight()+6)
 
 	-- Debug
 	if self.debug_mode then
@@ -261,6 +272,14 @@ function Game:draw()
 	if self.menu.cur_menu then
 		self.menu:draw()
 	end
+
+	--'Memory used (in kB): ' .. collectgarbage('count')
+
+	local t = "EARLY VERSION - NOT FINAL!"
+	gfx.print(t, CANVAS_WIDTH-get_text_width(t), 0)
+	local t = os.date('%a %d/%b/%Y')
+	print_color({.7,.7,.7}, t, CANVAS_WIDTH-get_text_width(t), 12)
+
 end
 
 function Game:draw_debug()
@@ -300,11 +319,18 @@ end
 function Game:on_kill(actor)
 	if actor.is_enemy then
 		self.enemy_count = self.enemy_count - 1
+		self.stats.kills = self.stats.kills + 1
 	end
 
 	if actor.is_player then
-		self.menu:set_menu("game_over")
+		self:on_game_over()
 	end
+end
+
+function Game:on_game_over()
+	self.menu:set_menu("game_over")
+	self.stats.time = self.time
+	self.stats.floor = self.floor
 end
 
 function draw_log()

@@ -168,6 +168,7 @@ function Enemy:kill(damager)
 	if self.is_removed then print(concat(self.name, "(", self, ") was killed while destroyed")) end
 	
 	particles:smoke(self.mid_x, self.mid_y)
+	audio:play("kill_enemy")
 	
 	game:on_kill(self)
 	self:remove()

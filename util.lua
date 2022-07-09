@@ -647,3 +647,22 @@ function range_table(a, b)
 	end
 	return t
 end
+
+
+function time_to_string(time)
+	local secs = round(time%60, 1)
+	local mins = floor(time/60) % 60
+	local hours = floor(time/3600)
+	
+	if secs == floor(secs) then
+		secs = tostring(secs)..".0"	
+	end
+	local ss = utf8.sub( "00"..tostring(secs), -4, -1 )
+	local mm = utf8.sub( "00"..tostring(mins), -2, -1 )
+	local hh = utf8.sub( "00"..tostring(hours), -max(#tostring(hours), 2), -1 )
+	
+	if hours > 0 then 
+		return concat(hh,":",mm,":",ss)
+	end
+	return concat(mm,":",ss)
+end
