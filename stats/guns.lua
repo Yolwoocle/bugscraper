@@ -110,6 +110,27 @@ function Guns:init()
 		self.cooldown = 0.03
 		self.jetpack_force = 200
 	end
+
+	-----
+
+	self.MushroomAntGun = Gun:inherit()
+
+	function self.MushroomAntGun:init(user)
+		self:init_gun(user)
+		self.name = "mushroom_ant_gun"
+		self.is_lootable = false
+		
+		self.sfx = sounds.shot2
+		self.damage = 1
+		self.is_auto = true
+		self.spr = images.empty
+		self.bullet_spr = images.mushroom
+		self.max_ammo = math.huge
+		self.bullet_speed = 100
+
+		self.cooldown = 0
+		self.jetpack_force = 340
+	end
 end
 
 local guns_instance = Guns:new()
@@ -120,7 +141,9 @@ local guns_instance = Guns:new()
 
 local all_guns = {}
 for k, gun in pairs(guns_instance) do
-	table.insert(all_guns, gun)
+	if gun.is_lootable then
+		table.insert(all_guns, gun)
+	end
 end
 
 function Guns:get_random_gun(user)

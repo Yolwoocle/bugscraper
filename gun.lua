@@ -11,6 +11,7 @@ function Gun:init_gun(user)
 	self.x, self.y = 0, 0
 	self.rot = 0
 
+	self.is_lootable = true
 	self.user = user -- The actor using the gun
 
 	self.is_auto = true

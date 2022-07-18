@@ -3,6 +3,7 @@ local Class = require "class"
 local Actor = require "actor"
 local Loot = require "loot"
 local images = require "images"
+local sounds = require "stats.sounds"
 
 local Enemy = Actor:inherit()
 
@@ -32,7 +33,7 @@ function Enemy:init_enemy(x,y, img, w,h)
 	self.loot = {
 		{nil, 100},
 		{Loot.Ammo, 15, loot_type="ammo", value=20},
-		{Loot.Life, 10, loot_type="life", value=1},
+		{Loot.Life, 5, loot_type="life", value=1},
 		{Loot.Gun, 3, loot_type="gun"},
 	}
 
@@ -97,7 +98,6 @@ function Enemy:draw_enemy()
 	self:draw_actor(self.vx < 0, _, f)
 
 	if game.debug_mode then
-
 		gfx.draw(images.heart, self.x-7 -2+16, self.y-16)
 		print_outline(COL_WHITE, COL_DARK_BLUE, self.life, self.x+16, self.y-16-2)
 	end
@@ -149,6 +149,7 @@ function Enemy:after_collision(col, other)  end
 function Enemy:do_damage(n, damager)
 	self.damaged_flash_timer = self.damaged_flash_max
 	
+	audio:play(sounds.menu_hover)
 	self.life = self.life - n
 	self:on_damage(n, self.life + n)
 	if self.life <= 0 then

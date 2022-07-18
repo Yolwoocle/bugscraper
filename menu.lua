@@ -344,7 +344,7 @@ function MenuManager:init(game)
 		{ StatsMenuItem, "Floor", function(self) return game.stats.floor end },
 		{ "" },
 		{ "RETRY", function() game:new_game() end },
-		{ "BACK TO MAIN MENU", func_set_menu("title") },
+		{ "BACK TO TITLE SCREEN", func_set_menu("title") },
 		{ "" },
 		{ "" },
 	}, { 0, 0, 0, 0.85 })
@@ -414,12 +414,20 @@ function MenuManager:set_menu(menu)
 	local sel, found = self:find_selectable_from(1, 1)
 	self:set_selection(sel)
 
+	-- Reset game screenshake
+	if game then
+		game.cam_x = 0
+		game.cam_y = 0
+	end
+
 	return true
 end
 
 function MenuManager:pause()
-	self.is_paused = true
-	self:set_menu("pause")
+	if self.cur_menu == nil then
+		self.is_paused = true
+		self:set_menu("pause")
+	end
 end
 
 function MenuManager:unpause()

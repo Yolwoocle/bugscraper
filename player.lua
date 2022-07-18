@@ -612,9 +612,13 @@ function Player:animate_walk(dt)
 		self.walkbounce_squash = speed_t*squash_amount + 1
 
 		--- Jump sprite
+		local old_spr = self.spr
 		self.spr = self.spr_idle
 		if self.is_walking and self.walkbounce_y > 4 then
 			self.spr = self.spr_jump
+			if old_spr == self.spr_idle then
+				audio:play_var("land", 0.5, 1.1)
+			end
 		end
 	else
 		-- If not walking and close enough to ground, reset
