@@ -139,7 +139,8 @@ function Actor:draw_actor(fx, fy, custom_draw)
 		if self.draw_shadow then
 			local o = ((self.x / CANVAS_WIDTH)-.5) * 6
 			love.graphics.setColor(0, 0, 0, 0.5)
-			love.graphics.draw(self.spr, floor(x+o), floor(y+3), 0, fx, fy, spr_w2, spr_h2)
+			-- (self.spr, floor(x+o), floor(y+3), 0, fx, fy, spr_w2, spr_h2)
+			love.graphics.draw(self.spr, floor(x+o), floor(y+o), self.rot, fx, fy, spr_w2, spr_h2)
 		end
 
 		-- Draw

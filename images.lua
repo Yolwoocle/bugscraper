@@ -18,6 +18,8 @@ function load_image_table(name, n, w, h)
 end
 
 local img_names = {
+	"empty",
+	
 	"magnet",
 	"grass",
 	"dirt",
@@ -80,6 +82,9 @@ local img_names = {
 	"dummy_target",
 
 	"controls",
+
+	"mushroom_ant",
+	"mushroom",
 }
 
 local images = {}

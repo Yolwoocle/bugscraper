@@ -666,3 +666,20 @@ function time_to_string(time)
 	end
 	return concat(mm,":",ss)
 end
+
+
+function get_left_vec(x, y)
+	return y, -x
+end
+
+function get_right_vec(x, y)
+	return -y, x
+end
+
+function get_orthogonal(x, y, dir)
+	if dir < 0 then
+		return get_left_vec(x,y)
+	else
+		return get_right_vec(x,y)
+	end
+end

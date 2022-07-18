@@ -35,6 +35,10 @@ function Game:init()
 end
 
 function Game:new_game(number_of_players)
+	-- Reset global systems
+	collision = Collision:new()
+	particles = ParticleSystem:new()
+
 	number_of_players = number_of_players or 1
 
 	-- Players
@@ -194,10 +198,12 @@ function Game:update_main_game(dt)
 		self.logo_y = self.logo_y + self.logo_vy
 	end
 
-	if love.keyboard.isDown("j") then self.cam_x = self.cam_x - 1 end
-	if love.keyboard.isDown("l") then self.cam_x = self.cam_x + 1 end
-	if love.keyboard.isDown("i") then self.cam_y = self.cam_y - 1 end
-	if love.keyboard.isDown("k") then self.cam_y = self.cam_y + 1 end
+	if love.keyboard.isScancodeDown("a") then self.cam_x = self.cam_x - 1 end
+	if love.keyboard.isScancodeDown("d") then self.cam_x = self.cam_x + 1 end
+	if love.keyboard.isScancodeDown("w") then self.cam_y = self.cam_y - 1 end
+	if love.keyboard.isScancodeDown("s") then self.cam_y = self.cam_y + 1 end
+
+	if love.keyboard.isDown("h") then self.screenshake_q = 0 end
 
 	-- Screenshake
 	self.screenshake_q = max(0, self.screenshake_q - self.screenshake_speed * dt)
@@ -354,7 +360,7 @@ function Game:init_players()
 			down = {"s", "down"},
 			jump = {"z", "c", "b"},
 			shoot = {"x", "v", "n"},
-			switchgun = {"s"}, --test
+			switchgun = {"g"}, --test
 			pause = {"escape"},
 		},
 		[2] = {
