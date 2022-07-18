@@ -178,20 +178,17 @@ function Game:update_main_game(dt)
 	self:progress_elevator(dt)
 
 	-- Update actors
-	for k,actor in pairs(self.actors) do
-		if not actor.debug_timer then    actor.debug_timer = 0    end
-		actor.debug_timer = actor.debug_timer + 1
-		actor:update(dt)
-	end
-
-	-- Delete actors
 	for i = #self.actors, 1, -1 do
 		local actor = self.actors[i]
+
+		actor:update(dt)
+	
 		if actor.is_removed then
 			table.remove(self.actors, i)
 		end
 	end
 
+	
 	-- Logo
 	if self.move_logo then
 		self.logo_vy = self.logo_vy - dt

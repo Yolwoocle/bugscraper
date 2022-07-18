@@ -21,6 +21,9 @@ function Enemy:init_enemy(x,y, img, w,h)
 	self.is_active = true
 	self.follow_player = true
 
+	self.destroy_bullet_on_impact = true
+	self.is_bouncy_to_bullets = false
+
 	self.harmless_frames = 0
 
 	self.max_life = 10

@@ -60,7 +60,15 @@ function Bullet:on_collision(col)
 	
 	if col.other.on_hit_bullet and col.other.is_enemy ~= self.is_enemy then
 		col.other:on_hit_bullet(self, col)
-		self:kill()
+		if col.other.destroy_bullet_on_impact then
+			self:kill()
+		end
+
+		if col.other.is_bouncy_to_bullets then
+			-- TODO: actual bounce that makes sense in the laws of physics (angle mirror)
+			self.vx = -self.vx
+			self.vy = -self.vy
+		end
 	end
 	
 	self:after_collision(col)

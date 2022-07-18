@@ -147,7 +147,7 @@ for k, gun in pairs(guns_instance) do
 end
 
 function Guns:get_random_gun(user)
-	local gun = random_sample(all_guns)
+	local gun = random_sample(all_guns) or Guns.Machinegun
 	return gun:new(user)
 end
 
