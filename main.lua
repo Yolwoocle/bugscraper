@@ -33,6 +33,7 @@ end
 function love.load(arg)
 	-- GLOBALS
 	is_fullscreen = true
+	is_vsync = true
 	pixel_scale = "auto"
 
 	love.window.setMode(0, 0, {
@@ -71,7 +72,7 @@ end
 
 function love.update(dt)
 	t = t + dt
-	local cap = 1 --If theres lag spike, repeat up to how many frames?
+	local cap = 2 --If theres lag spike, repeat up to how many frames?
 	local i = 0
 	while t > fdt and cap > 0 do
 		t = t - fdt
@@ -171,4 +172,9 @@ end
 
 function quit_game()
 	love.event.quit()
+end
+
+function toggle_vsync()
+	is_vsync = not is_vsync
+	love.window.setVSync(is_vsync)
 end

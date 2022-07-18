@@ -288,8 +288,8 @@ function MenuManager:init(game)
 	}, { 0, 0, 0, 0.85 })
 
 	self.menus.options = Menu:new(game, {
-		{ "< BACK", function() game.menu:back() end },
 		{ "<<<<<<<<< OPTIONS >>>>>>>>>" },
+		{ "< BACK", function() game.menu:back() end },
 		{ "" },
 		{ "SOUND", function(self, option)
 			game:toggle_sound()
@@ -307,6 +307,8 @@ function MenuManager:init(game)
 			self.value = game.volume
 			self.value_text = concat(floor(100 * self.value), "%")
 		end},
+
+		{""},
 
 		-- {"MUSIC: [ON/OFF]", function(self)
 		-- 	game:toggle_sound()
@@ -329,6 +331,14 @@ function MenuManager:init(game)
 		end, { "auto", "max whole", 1, 2, 3, 4}, function(self)
 			self.value = pixel_scale
 			self.value_text = tostring(pixel_scale)
+		end},
+
+		{ "VSYNC", function(self)
+			toggle_vsync()
+		end,
+		function(self)
+			self.value = is_vsync
+			self.value_text = is_vsync and "ON" or "OFF"
 		end},
 
 		{ "" }
