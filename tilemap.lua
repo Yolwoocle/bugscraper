@@ -1,5 +1,5 @@
 local Class = require "class"
-local Tiles = require "stats.tiles"
+local Tiles = require "data.tiles"
 local images = require
 
 local TileMap = Class:inherit()

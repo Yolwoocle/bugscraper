@@ -3,7 +3,7 @@ local Class = require "class"
 local Actor = require "actor"
 local Loot = require "loot"
 local images = require "images"
-local sounds = require "stats.sounds"
+local sounds = require "data.sounds"
 
 local Enemy = Actor:inherit()
 
@@ -23,6 +23,7 @@ function Enemy:init_enemy(x,y, img, w,h)
 
 	self.destroy_bullet_on_impact = true
 	self.is_bouncy_to_bullets = false
+	self.is_immune_to_bullets = false
 
 	self.harmless_frames = 0
 
@@ -37,7 +38,7 @@ function Enemy:init_enemy(x,y, img, w,h)
 		{nil, 100},
 		{Loot.Ammo, 15, loot_type="ammo", value=20},
 		{Loot.Life, 5, loot_type="life", value=1},
-		{Loot.Gun, 3, loot_type="gun"},
+		{Loot.Gun, 3+100000, loot_type="gun"},
 	}
 
 	self.is_stompable = true
@@ -201,6 +202,7 @@ function Enemy:on_death()
 end
 
 function Enemy:on_hit_bullet(bul, col)
+	if self.is_immune_to_bullets then    return    end
 	self:do_damage(bul.damage, bul)
 	
 	if self.is_knockbackable then

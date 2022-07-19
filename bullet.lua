@@ -9,7 +9,7 @@ function Bullet:init(gun, player, x, y, w, h, vx, vy)
 	self:init_actor(x, y, w, h, gun.bullet_spr or images.bullet)
 	self.gun = gun
 	self.player = player
-	self.is_enemy = player.is_enemy
+	self.is_enemy_bul = player.is_enemy
 	self.is_bullet = true
 
 	self.friction = gun.bullet_friction - random_range(0, gun.random_friction_offset)
@@ -58,7 +58,7 @@ function Bullet:on_collision(col)
 		self:kill()
 	end
 	
-	if col.other.on_hit_bullet and col.other.is_enemy ~= self.is_enemy then
+	if col.other.on_hit_bullet and col.other.is_enemy ~= self.is_enemy_bul then
 		col.other:on_hit_bullet(self, col)
 		if col.other.destroy_bullet_on_impact then
 			self:kill()
@@ -66,8 +66,21 @@ function Bullet:on_collision(col)
 
 		if col.other.is_bouncy_to_bullets then
 			-- TODO: actual bounce that makes sense in the laws of physics (angle mirror)
-			self.vx = -self.vx
-			self.vy = -self.vy
+			local bounce_x = (self.mid_x - col.other.mid_x)
+			local bounce_y = (self.mid_y - col.other.mid_y)
+			local bounce_a = atan2(bounce_y, bounce_x)
+
+			local vel_r = dist(self.vx, self.vy)
+			local vel_a = atan2(-self.vy, -self.vx)
+
+			local new_a = bounce_a + vel_a
+			local new_vx, new_vy = cos(new_a) * vel_r, sin(new_a) * vel_r 
+
+			local spd_slow = 0.8
+			-- self.friction_x = spd_slow
+			-- self.friction_y = spd_slow
+			self.vx = new_vx * spd_slow
+			self.vy = new_vy * spd_slow
 		end
 	end
 	

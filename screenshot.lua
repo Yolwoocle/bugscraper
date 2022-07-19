@@ -40,7 +40,12 @@ end
 function capture_clip_frame()
 	if curgif and gif_timer > 0.1 then
 		-- Save a frame to our gif.
-		love.graphics.captureScreenshot(function(screenshot) curgif:frame(screenshot) end)
+		-- love.graphics.captureScreenshot(function(screenshot) curgif:frame(screenshot) end)
+
+		local buffer_canvas = love.graphics.newCanvas(CANVAS_WIDTH * screenshot_scale, CANVAS_HEIGHT * screenshot_scale)
+		local imgdata = buffer_canvas:newImageData()
+		curgif:frame(imgdata)
+		
 		gif_timer = gif_timer - 0.1
 
 		-- Show a little recording icon in the upper right hand corner. This will

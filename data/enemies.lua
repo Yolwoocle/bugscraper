@@ -3,7 +3,7 @@ local Class = require "class"
 local Enemy = require "enemy"
 local Loot = require "loot"
 local Bullet = require "bullet"
-local Guns = require "stats.guns"
+local Guns = require "data.guns"
 
 local images = require "images"
 
@@ -133,7 +133,29 @@ function Enemies:init()
 		self.life = 10
 		--self.speed_y = 0--self.speed * 0.5
 		
-		self.speed = 10
+		self.speed = random_range(7,13) --10
+		self.speed_x = self.speed
+		self.speed_y = self.speed
+
+		self.gravity = 0
+		self.friction_y = self.friction_x
+	end
+
+	-------------
+
+		
+	self.SpikedFly = Enemy:inherit()
+	
+	function self.SpikedFly:init(x, y)
+		self:init_enemy(x,y, images.spiked_fly, 15,15)
+		self.name = "fly"
+		self.is_flying = true
+		self.life = 15
+
+		self.is_stompable = false
+		--self.speed_y = 0--self.speed * 0.5
+		
+		self.speed = random_range(14,20)
 		self.speed_x = self.speed
 		self.speed_y = self.speed
 
@@ -149,9 +171,9 @@ function Enemies:init()
 		self:init_enemy(x,y, images.larva1, 11, 11)
 		self.name = "larva"
 		self.follow_player = false
-
-		self.friction_x = 1
+		
 		self.life = random_range(3, 7)
+		self.friction_x = 1
 		self.speed = 40
 		self.walk_dir_x = random_sample{-1, 1}
 	end
@@ -176,7 +198,7 @@ function Enemies:init()
 	function self.Grasshopper:init(x, y)
 		self:init_enemy(x,y, images.grasshopper, 12, 12)
 		self.name = "grasshopper"
-		self.life = 10
+		self.life = 7
 		self.follow_player = false
 		
 		self.speed = 100
@@ -237,6 +259,7 @@ function Enemies:init()
 
 		self.destroy_bullet_on_impact = false
 		self.is_bouncy_to_bullets = true
+		self.is_immune_to_bullets = true
 
 		self.rot_speed = 3
 
@@ -325,7 +348,7 @@ function Enemies:init()
 		self.walk_speed = 70
 
 		self.flip = 1
-		self.gun = Guns.MushroomAntGun:new(self)
+		self.gun = Guns.unlootable.MushroomAntGun:new(self)
 
 		self.rot = 0
 		self.target_rot = 0

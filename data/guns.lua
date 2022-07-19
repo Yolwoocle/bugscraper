@@ -2,7 +2,7 @@ require "util"
 local Class = require "class"
 local Gun = require "gun"
 local images = require "images"
-local sounds = require "stats.sounds"
+local sounds = require "data.sounds"
 
 local Guns = Class:inherit()
 
@@ -113,9 +113,31 @@ function Guns:init()
 
 	-----
 
-	self.MushroomAntGun = Gun:inherit()
+	self.MushroomCannon = Gun:inherit()
 
-	function self.MushroomAntGun:init(user)
+	function self.MushroomCannon:init(user)
+		self:init_gun(user)
+		self.name = "mushroom_cannon"
+		
+		self.sfx = sounds.shot2
+		self.damage = 3
+		self.is_auto = true
+		self.spr = images.gun_mushroom_cannon
+		self.bullet_spr = images.mushroom_yellow
+		self.max_ammo = 100
+		self.bullet_speed = 300
+
+		self.cooldown = 0.1
+		self.jetpack_force = 340
+	end
+
+	-----
+
+	self.unlootable = {}
+
+	self.unlootable.MushroomAntGun = Gun:inherit()
+
+	function self.unlootable.MushroomAntGun:init(user)
 		self:init_gun(user)
 		self.name = "mushroom_ant_gun"
 		self.is_lootable = false
@@ -141,13 +163,13 @@ local guns_instance = Guns:new()
 
 local all_guns = {}
 for k, gun in pairs(guns_instance) do
-	if gun.is_lootable then
+	if k ~= "unlootable" then
 		table.insert(all_guns, gun)
 	end
 end
 
 function Guns:get_random_gun(user)
-	local gun = random_sample(all_guns) or Guns.Machinegun
+	local gun = random_sample(all_guns) or self.Machinegun
 	return gun:new(user)
 end
 

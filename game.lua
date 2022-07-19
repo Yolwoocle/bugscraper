@@ -1,7 +1,7 @@
 local Class = require "class"
 local Collision = require "collision"
 local Player = require "player"
-local Enemies = require "stats.enemies"
+local Enemies = require "data.enemies"
 local Bullet = require "bullet"
 local TileMap = require "tilemap"
 local WorldGenerator = require "worldgenerator"
@@ -10,7 +10,7 @@ local ParticleSystem = require "particles"
 local AudioManager = require "audio"
 local MenuManager = require "menu"
 
-local waves = require "stats.waves"
+local waves = require "data.waves"
 
 local images = require "images"
 require "util"
@@ -479,7 +479,9 @@ function Game:new_wave_buffer_enemies()
 	self.cur_wave_max_enemy = n
 	self.door_animation_enemy_buffer = {}
 
-	local wave = waves[clamp(self.floor, 1, #waves)]
+	print(self.floor, clamp(self.floor, 1, #waves))
+	local wave_n = clamp(self.floor+1, 1, #waves)
+	local wave = waves[wave_n] -- Minus 1 because the floor indicator changes before enemies are spawned
 	local n = love.math.random(wave.min, wave.max)
 	for i=1, n do
 		-- local x = love.math.random((wg.box_ax+1)*bw, (wg.box_bx-1)*bw)

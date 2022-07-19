@@ -1,7 +1,7 @@
 require "util"
 local Class = require "class"
 local images = require "images"
-local sounds = require "stats.sounds"
+local sounds = require "data.sounds"
 
 -- Help. If you are the poor sod sent to modify the code within 
 -- this, be warned: it's a fucking mess.
@@ -202,6 +202,15 @@ function StatsMenuItem:update(dt)
 	self:update_textitem(dt)
 	self.value = self:get_value()
 	self.value_text = tostring(self.value)
+end
+
+--------
+
+local CustomDrawMenuItem = MenuItem:inherit()
+
+function CustomDrawMenuItem:init(i, x, y, custom_draw)
+	self:init_menuitem(i, x, y)
+	self.draw = custom_draw
 end
 
 --------

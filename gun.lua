@@ -1,7 +1,7 @@
 require "util"
 local Class = require "class"
 local Bullet = require "bullet"
-local sounds = require "stats.sounds"
+local sounds = require "data.sounds"
 local images = require "images"
 
 local Gun = Class:inherit()
@@ -93,7 +93,7 @@ function Gun:shoot(dt, player, x, y, dx, dy, is_burst)
 	local is_first_fire = not is_burst
 
 	-- Sanity checks
-	if self.ammo < 0 then      return false     end
+	if self.ammo <= 0 then      return false     end
 
 	-- If first shot but cooldown too big, escape
 	if is_first_fire and self.cooldown_timer > 0 then    return false    end

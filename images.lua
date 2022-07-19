@@ -43,6 +43,7 @@ local img_names = {
 	"slug",
 	"snail_open",
 	"snail_shell",
+	"spiked_fly",
 	
 	"bullet",
 
@@ -51,6 +52,7 @@ local img_names = {
 	"gun_burst",
 	"gun_shotgun",
 	"gun_minigun",
+	"gun_mushroom_cannon",
 
 	"metal",
 	"chain",
@@ -85,6 +87,8 @@ local img_names = {
 
 	"mushroom_ant",
 	"mushroom",
+	"mushroom_yellow",
+	"mushroom_spike",
 }
 
 local images = {}

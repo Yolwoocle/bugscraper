@@ -1,9 +1,9 @@
 local Class = require "class"
 local Actor = require "actor"
-local Guns = require "stats.guns"
+local Guns = require "data.guns"
 local Bullet = require "bullet"
 local images = require "images"
-local sounds = require "stats.sounds"
+local sounds = require "data.sounds"
 local ui = require "ui"
 require "util"
 require "constants"
@@ -137,6 +137,10 @@ function Player:update(dt)
 		self:kill()
 	end
 	
+	if love.keyboard.isDown("m") then
+		self:equip_gun(Guns.MushroomCannon:new())
+	end
+
 	-- Gun
 	if self:button_pressed("switchgun") then
 		self.gun_number = mod_plus_1((self.gun_number + 1), #self.guns)

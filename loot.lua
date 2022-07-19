@@ -1,8 +1,8 @@
 local Class = require "class"
 local Actor = require "actor"
 local images = require "images"
-local Guns = require "stats.guns"
-local sounds = require "stats.sounds"
+local Guns = require "data.guns"
+local sounds = require "data.sounds"
 
 local Loot = Actor:inherit()
 
@@ -180,7 +180,7 @@ function Loot.Life:on_collect(player)
 	-- end
 end
 
--------
+-- [[[[[[[[[[]]]]]]]]]]
 
 Loot.Gun = Loot:inherit()
 

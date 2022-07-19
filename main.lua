@@ -123,7 +123,7 @@ function love.keypressed(key, scancode, isrepeat)
 	
 	elseif key == "b" then
 		if not game then return end
-		local Enemies = require "stats.enemies"
+		local Enemies = require "data.enemies"
 		local nx = CANVAS_WIDTH/2
 		local ny = game.world_generator.box_by * BLOCK_WIDTH
 		local l = create_actor_centered(Enemies.ButtonGlass, nx, ny)
