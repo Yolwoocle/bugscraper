@@ -4,6 +4,7 @@ local Enemy = require "enemy"
 local Loot = require "loot"
 local Bullet = require "bullet"
 local Guns = require "data.guns"
+local sounds = require "data.sounds"
 
 local images = require "data.images"
 
@@ -212,6 +213,9 @@ function Enemies:init()
 		self.is_pushable = false
 		self.is_knockbackable = false
 		self.loot = {}
+
+		self.sound_damage = {sounds.cloth1, sounds.cloth2, sounds.cloth3}
+		self.sound_death = sounds.cloth_drop
 	end
 
 	function self.DummyTarget:update(dt)
@@ -355,6 +359,7 @@ function Enemies:init()
 		self.do_stomp_animation = false
 		self.is_pushable = false
 		self.is_knockbackable = false
+		self.play_sfx = false
 		self.loot = {}
 
 		self.damage = 0
@@ -372,6 +377,7 @@ function Enemies:init()
 	function self.Button:on_stomped(damager)
 		game:screenshake(10)
 		game:on_red_button_pressed()
+		audio:play("button_press")
 		
 		-- TODO: smoke particles
 		local b = create_actor_centered(ButtonPressed, CANVAS_WIDTH/2, game.world_generator.box_rby)
@@ -388,7 +394,7 @@ function Enemies:init()
 		self.name = "button_glass"
 		self.follow_player = false
 
-		self.max_life = 200
+		self.max_life = 70
 		self.life = self.max_life
 		self.activ_thresh = 40
 		self.break_range = self.life - self.activ_thresh 
@@ -405,6 +411,8 @@ function Enemies:init()
 
 		self.break_state = 3
 		self.loot = {}
+
+		self.play_sfx = false
 	end
 
 	function self.ButtonGlass:update(dt)
@@ -420,6 +428,11 @@ function Enemies:init()
 		local old_state = self.break_state
 		local part = self.max_life / k
 		local new_state = floor(self.life / part)
+
+		local sndname = "impactglass_light_00"..random_str(1,4)
+		local sfx = sounds[ sndname ]
+		local pitch = random_range(1/1.1, 1.1) - .5*self.life/self.max_life
+		audio:play(sfx, random_range(1-0.2, 1), pitch)
 		
 		if old_state ~= new_state then
 			self.break_state = new_state
@@ -429,6 +442,7 @@ function Enemies:init()
 			self.spr = spr
 			game:screenshake(10)
 			particles:image(self.mid_x, self.mid_y, 100, images.ptc_glass_shard, self.h)
+			audio:play_pitch("glass_fracture", lerp(0.5, 1, self.life/self.max_life))
 		end
 
 		if game.screenshake_q < 5 then
@@ -438,6 +452,7 @@ function Enemies:init()
 
 	local Button = self.Button
 	function self.ButtonGlass:on_death()
+		audio:play("glass_break")
 		game:screenshake(20)
 		particles:image(self.mid_x, self.mid_y, 300, images.ptc_glass_shard, self.h)
 

@@ -17,6 +17,9 @@ function AudioManager:play(snd, volume, pitch)
 	if type(snd) == "string" then
 		snd = sounds[snd]
 	end
+	if type(snd) == "table" then
+		snd = random_sample(snd)
+	end
 	volume = volume or 1
 	pitch = pitch or 1
 	
@@ -31,8 +34,11 @@ end
 function AudioManager:play_pitch(snd, pitch)
 	if not snd then      return   end
 	if pitch <= 0 then   return   end
-	snd:setPitch(pitch)
-	self:play(snd)
+
+	local sfx = sounds[snd]
+	if not sfx then   return   end
+	sfx:setPitch(pitch)
+	self:play(sfx)
 	--snd:setPitch(1)
 end
 

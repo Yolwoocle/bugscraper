@@ -59,6 +59,11 @@ function Loot:update(dt)
 		self:find_close_player(dt)
 	end
 
+	-- if outside bounds
+	if self.x <= 0 or self.x > CANVAS_WIDTH or self.y <= 0 or self.y > CANVAS_HEIGHT then
+		self:set_pos(CANVAS_WIDTH/2, CANVAS_HEIGHT/2)
+	end
+
 	if self.life < 0 then
 		self:remove()
 	end

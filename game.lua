@@ -185,6 +185,8 @@ function Game:new_game(number_of_players)
 	-- Logo
 	self.logo_y = 15
 	self.logo_vy = 0
+	self.logo_a = 0
+	self.logo_cols = {COL_LIGHT_YELLOW, COL_LIGHT_BLUE, COL_LIGHT_RED}
 	self.move_logo = false
 	
 	if self.menu then
@@ -238,6 +240,7 @@ function Game:update_main_game(dt)
 
 	
 	-- Logo
+	self.logo_a = self.logo_a + dt*3
 	if self.move_logo then
 		self.logo_vy = self.logo_vy - dt
 		self.logo_y = self.logo_y + self.logo_vy
@@ -313,8 +316,20 @@ function Game:draw()
 	-- rect_color(COL_MID_GRAY, "fill", floor((CANVAS_WIDTH-w)/2),    16, w, 8)
 	-- rect_color(COL_WHITE,    "fill", floor((CANVAS_WIDTH-w)/2) +1, 17, (w-2)*self.floor_progress, 6)
 
-	love.graphics.draw(images.logo, floor((CANVAS_WIDTH - images.logo:getWidth())/2), self.logo_y)
-	love.graphics.draw(images.controls, floor((CANVAS_WIDTH - images.controls:getWidth())/2), floor(self.logo_y) + images.logo:getHeight()+6)
+	for i=1, #self.logo_cols + 1 do
+		local ox, oy = cos(self.logo_a + i*.4)*8, sin(self.logo_a + i*.4)*8
+		local logo_x = floor((CANVAS_WIDTH - images.logo_noshad:getWidth())/2)
+		
+		local col = self.logo_cols[i]
+		local spr = images.logo_shad
+		if col == nil then
+			col = COL_WHITE
+			spr = images.logo_noshad
+		end
+		gfx.setColor(col)
+		gfx.draw(spr, logo_x + ox, self.logo_y + oy)
+	end
+	gfx.draw(images.controls, floor((CANVAS_WIDTH - images.controls:getWidth())/2), floor(self.logo_y) + images.logo:getHeight()+6)
 
 	-- Debug
 	if self.debug_mode then

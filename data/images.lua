@@ -63,6 +63,8 @@ local img_names = {
 	"cabin_door_left", "cabin_door_right",
 
 	"logo",
+	"logo_noshad",
+	"logo_shad",
 
 	"loot_ammo",
 	"loot_ammo_big",

@@ -56,6 +56,10 @@ function Enemy:init_enemy(x,y, img, w,h)
 
 	self.squash = 1
 	self.squash_target = 1
+	
+	self.play_sfx = true
+	self.sound_damage = sounds.menu_hover
+	self.sound_death = sounds.kill_enemy
 end
 
 function Enemy:update_enemy(dt)
@@ -161,7 +165,7 @@ function Enemy:after_collision(col, other)  end
 function Enemy:do_damage(n, damager)
 	self.damaged_flash_timer = self.damaged_flash_max
 	
-	audio:play(sounds.menu_hover)
+	if self.play_sfx then   audio:play(self.sound_damage)   end
 	self.life = self.life - n
 	self:on_damage(n, self.life + n)
 	if self.life <= 0 then
@@ -181,8 +185,10 @@ function Enemy:kill(damager)
 	if self.is_removed then print(concat(self.name, "(", self, ") was killed while destroyed")) end
 	
 	particles:smoke(self.mid_x, self.mid_y)
-	audio:play("kill_enemy")
-	
+	if self.play_sfx then 
+		audio:play(self.sound_death)
+	end
+
 	game:on_kill(self)
 	self:remove()
 	

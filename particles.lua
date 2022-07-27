@@ -16,7 +16,7 @@ function Particle:init_particle(x,y,s,r, vx,vy,vs,vr, life, g, is_solid)
 
 	self.gravity = g or 0
 	self.is_solid = is_solid or false
-	self.bounces = 3
+	self.bounces = 2
 	self.bounce_force = 100
 
 	self.max_life = life or 5
@@ -37,7 +37,7 @@ function Particle:update_particle(dt)
 		local items, len = collision.world:queryPoint(self.x, self.y, function(item) return item.is_solid end)
 		if len > 0 then
 			self.bounces = self.bounces - 1
-			self.vy = -self.bounce_force
+			self.vy = -self.bounce_force - random_neighbor(40)
 		end
 	end
 

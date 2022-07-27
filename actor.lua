@@ -141,7 +141,7 @@ function Actor:draw_actor(fx, fy, custom_draw)
 			love.graphics.setColor(0, 0, 0, 0.5)
 			-- (self.spr, floor(x+o), floor(y+3), 0, fx, fy, spr_w2, spr_h2)
 
-			love.graphics.draw(self.spr, floor(x+o), floor(y+o), self.rot, fx, fy, spr_w2, spr_h2)
+			love.graphics.draw(self.spr, floor(x+o), floor(y+3), self.rot, fx, fy, spr_w2, spr_h2)
 		end
 		
 		-- Draw

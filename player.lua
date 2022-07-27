@@ -105,12 +105,12 @@ function Player:init(n, x, y, spr, controls)
 	-- FOR DEBUGGING
 	self.guns = {
 		Guns.Machinegun:new(self),
+		Guns.unlootable.DebugGun:new(self),
 		Guns.Triple:new(self),
 		Guns.Burst:new(self),
 		Guns.Shotgun:new(self),
 		Guns.Minigun:new(self),
 		Guns.MushroomCannon:new(self),
-		Guns.unlootable.DebugGun:new(self),
 	}
 	self.gun_number = 1
 
