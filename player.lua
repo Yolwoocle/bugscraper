@@ -2,7 +2,7 @@ local Class = require "class"
 local Actor = require "actor"
 local Guns = require "data.guns"
 local Bullet = require "bullet"
-local images = require "images"
+local images = require "data.images"
 local sounds = require "data.sounds"
 local ui = require "ui"
 require "util"
@@ -102,12 +102,15 @@ function Player:init(n, x, y, spr, controls)
 	self.shoot_ang = 0
 	
 	self:equip_gun(Guns.Machinegun:new())
+	-- FOR DEBUGGING
 	self.guns = {
 		Guns.Machinegun:new(self),
 		Guns.Triple:new(self),
 		Guns.Burst:new(self),
 		Guns.Shotgun:new(self),
 		Guns.Minigun:new(self),
+		Guns.MushroomCannon:new(self),
+		Guns.unlootable.DebugGun:new(self),
 	}
 	self.gun_number = 1
 
@@ -522,8 +525,12 @@ function Player:do_damage(n, source)
 	if n <= 0 then    return    end
 
 	audio:play("hurt")
-	self:do_knockback(source.knockback, source)--, 0, source.h/2)
+	-- self:do_knockback(source.knockback, source)--, 0, source.h/2)
 	--source:do_knockback(source.knockback*0.75, self)
+	if self.is_knockbackable then
+		self.vx = self.vx + sign(self.mid_x - source.mid_x)*source.knockback
+		self.vy = self.vy - 50
+	end
 
 	self.life = self.life - n
 	self.life = clamp(self.life, 0, self.max_life)
@@ -590,8 +597,8 @@ end
 
 function Player:animate_walk(dt)
 	-- Ridiculously overengineered bounce + squash & stretch while walking
-	-- Holy shit this is so complicated
-	
+	local old_bounce = self.walkbounce_oy
+
 	local t_speed = 15
 	local bounce_height = 5
 	local squash_amount = 0.17
@@ -611,7 +618,7 @@ function Player:animate_walk(dt)
 		self.walkbounce_oy = self.walkbounce_y
 		
 		--- Bounce squash
-		--cos is the derivative, aka rate of change of sin
+		--cos is the derivative, aka rate of change ("speed") of sin
 		local speed_t = math.cos(self.walkbounce_t)
 		self.walkbounce_squash = speed_t*squash_amount + 1
 
@@ -620,15 +627,19 @@ function Player:animate_walk(dt)
 		self.spr = self.spr_idle
 		if self.is_walking and self.walkbounce_y > 4 then
 			self.spr = self.spr_jump
-			if old_spr == self.spr_idle then
-				audio:play_var("land", 0.5, 1.1)
-			end
 		end
 	else
 		-- If not walking and close enough to ground, reset
 		self.walkbounce_squash = 1
 		self.walkbounce_oy = 0
 		self.walkbounce_t = pi
+	end
+
+	-- Walk SFX
+	if self.walkbounce_y < 1 and old_bounce > 1 then
+		local s = "footstep0"..tostring(love.math.random(0,9))
+		print("sound", s)
+		audio:play(s, 0.5, 1.1)
 	end
 end
 

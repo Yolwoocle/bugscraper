@@ -64,6 +64,16 @@ function copy_table(tab)
 	return newtab
 end
 
+function duplicate_table(tab, n)
+	local ntab = {}
+	-- assert(type(n) == "number", "duplicate_table argument 'n' must be a number, not "..type(n))
+
+	for i=1, n do
+		table.insert(ntab, tab)
+	end
+	return ntab
+end	
+
 function is_in_table(tab, val)
 	for _,v in pairs(tab) do
 		if val == v then
@@ -409,6 +419,10 @@ end
 
 function random_sample(t)
 	return t[love.math.random(1,#t)]
+end
+
+function random_str(a, b)
+	return tostring(love.math.random(a,b))
 end
 
 function random_weighted(li, rng)

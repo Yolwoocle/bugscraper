@@ -1,6 +1,6 @@
 local Class = require "class"
 local Actor = require "actor"
-local images = require "images"
+local images = require "data.images"
 
 local Bullet = Actor:inherit()
 
@@ -26,7 +26,7 @@ function Bullet:init(gun, player, x, y, w, h, vx, vy)
 
 	self.life = 5
 
-	self.damage = 2
+	self.damage = gun.damage
 	self.knockback = gun.knockback or 500
 end
 
@@ -76,7 +76,7 @@ function Bullet:on_collision(col)
 			local new_a = bounce_a + vel_a
 			local new_vx, new_vy = cos(new_a) * vel_r, sin(new_a) * vel_r 
 
-			local spd_slow = 0.8
+			local spd_slow = 1
 			-- self.friction_x = spd_slow
 			-- self.friction_y = spd_slow
 			self.vx = new_vx * spd_slow

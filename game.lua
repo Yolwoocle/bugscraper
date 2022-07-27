@@ -9,10 +9,11 @@ local Inventory = require "inventory"
 local ParticleSystem = require "particles"
 local AudioManager = require "audio"
 local MenuManager = require "menu"
+local OptionsManager = require "options"
 
 local waves = require "data.waves"
 
-local images = require "images"
+local images = require "data.images"
 require "util"
 require "constants"
 
@@ -20,18 +21,78 @@ local Game = Class:inherit()
 
 function Game:init()
 	-- Global singletons
+	options = OptionsManager:new(self)
 	collision = Collision:new()
 	particles = ParticleSystem:new()
 	audio = AudioManager:new()
 	
-	-- Audio
-	self.volume = 1
-	self.sound_on = true
+	-- Global Options ==> Moved to OptionsManager
+	-- is_fullscreen = options:get("is_fullscreen")
+	-- is_vsync = options:get("is_vsync")
+	-- pixel_scale = options:get("pixel_scale")
 
+	CANVAS_WIDTH = 480
+	CANVAS_HEIGHT = 270
+
+	-- Init window
+	love.window.setMode(0, 0, {
+		fullscreen = options:get"is_fullscreen",
+		resizable = true,
+		vsync = options:get"is_vsync",
+		minwidth = CANVAS_WIDTH,
+		minheight = CANVAS_HEIGHT,
+	})
+	SCREEN_WIDTH, SCREEN_HEIGHT = gfx.getDimensions()
+	love.window.setTitle("Elevator game")
+	love.window.setIcon(love.image.newImageData("icon.png"))
+	gfx.setDefaultFilter("nearest", "nearest")
+	
+	self:update_screen()
+
+	canvas = gfx.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
+
+	-- Load fonts
+	FONT_REGULAR = gfx.newFont("fonts/HopeGold.ttf", 16)
+	FONT_7SEG = gfx.newImageFont("fonts/7seg_font.png", " 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+	FONT_MINI = gfx.newFont("fonts/Kenney Mini.ttf", 8)
+	gfx.setFont(FONT_REGULAR)
+	
+	-- Audio ===> Moved to OptionsManager
+	-- self.volume = options:get("volume")
+	-- self.sound_on = options:get("sound_on")
+	
 	self:new_game()
-
+	
 	-- Menu Manager
 	self.menu = MenuManager:new(self)
+end
+
+
+function Game:update_screen(scale)
+	-- When scale is (-1), it will find the maximum whole number
+	if scale == "auto" then   scale = nil    end
+	if scale == "max whole" then   scale = -1    end
+	if type(scale) ~= "number" then    scale = nil    end
+ 
+	CANVAS_WIDTH = 480
+	CANVAS_HEIGHT = 270
+
+	WINDOW_WIDTH, WINDOW_HEIGHT = gfx.getDimensions()
+
+	screen_sx = WINDOW_WIDTH / CANVAS_WIDTH
+	screen_sy = WINDOW_HEIGHT / CANVAS_HEIGHT
+	CANVAS_SCALE = min(screen_sx, screen_sy)
+
+	if scale then
+		if scale == -1 then
+			CANVAS_SCALE = floor(CANVAS_SCALE)
+		else
+			CANVAS_SCALE = scale
+		end
+	end
+
+	CANVAS_OX = max(0, (WINDOW_WIDTH  - CANVAS_WIDTH  * CANVAS_SCALE)/2)
+	CANVAS_OY = max(0, (WINDOW_HEIGHT - CANVAS_HEIGHT * CANVAS_SCALE)/2)
 end
 
 function Game:new_game(number_of_players)
@@ -66,6 +127,7 @@ function Game:new_game(number_of_players)
 	self.elevator_speed = 0
 	self.has_switched_to_next_floor = false
 	self.game_started = false
+	self.is_reversing_elevator = false
 
 	self.bg_particles = {}
 	for i=1,60 do
@@ -159,21 +221,7 @@ function Game:update_main_game(dt)
 
 	-- Particles
 	particles:update(dt)
-		-- Background lines
-	for i,o in pairs(self.bg_particles) do
-		o.y = o.y + dt*self.elevator_speed*o.spd
-		if o.y > CANVAS_HEIGHT then
-			o.x = love.math.random(0, CANVAS_WIDTH)
-			o.w = love.math.random(2, 12)
-			o.h = love.math.random(8, 64)
-			o.y = -o.h- love.math.random(0, CANVAS_HEIGHT)
-			o.col = random_sample{COL_DARK_GRAY, COL_MID_GRAY, --[[COL_DARK_RED, COL_MID_DARK_GREEN, COL_DARK_BLUE, COL_DARK_PURPLE]]}
-		end
-
-		-- Size corresponds to elevator speed
-		o.oh = max(o.w/o.h, self.elevator_speed / self.def_elevator_speed)
-		o.oy = .5 * o.h * o.oh
-	end
+	self:update_bg_particles(dt)
 
 	self:progress_elevator(dt)
 
@@ -195,10 +243,11 @@ function Game:update_main_game(dt)
 		self.logo_y = self.logo_y + self.logo_vy
 	end
 
-	if love.keyboard.isScancodeDown("a") then self.cam_x = self.cam_x - 1 end
-	if love.keyboard.isScancodeDown("d") then self.cam_x = self.cam_x + 1 end
-	if love.keyboard.isScancodeDown("w") then self.cam_y = self.cam_y - 1 end
-	if love.keyboard.isScancodeDown("s") then self.cam_y = self.cam_y + 1 end
+	local q = 4
+	if love.keyboard.isScancodeDown("a") then self.cam_x = self.cam_x - q end
+	if love.keyboard.isScancodeDown("d") then self.cam_x = self.cam_x + q end
+	if love.keyboard.isScancodeDown("w") then self.cam_y = self.cam_y - q end
+	if love.keyboard.isScancodeDown("s") then self.cam_y = self.cam_y + q end
 
 	if love.keyboard.isDown("h") then self.screenshake_q = 0 end
 
@@ -300,9 +349,11 @@ function Game:draw_debug()
 	local txts = {
 		concat("FPS: ",love.timer.getFPS()),
 		concat("n° of actors: ", #self.actors, " / ", self.actor_limit),
+		concat("n° of enemies: ", self.enemy_count),
 		concat("n° collision items: ", collision.world:countItems()),
+		concat("elevator speed: ", self.elevator_speed),
 	}
-	for i=1, #txts do  print_label(txts[i], 0, txt_h*i) end
+	for i=1, #txts do  print_label(txts[i], self.cam_x, self.cam_y+txt_h*i) end
 	
 	self.world_generator:draw()
 	draw_log()
@@ -313,14 +364,14 @@ function Game:new_actor(actor)
 		actor:remove()
 		return
 	end
-	if actor.is_enemy then 
+	if actor.counts_as_enemy then 
 		self.enemy_count = self.enemy_count + 1
 	end
 	table.insert(self.actors, actor)
 end
 
 function Game:on_kill(actor)
-	if actor.is_enemy then
+	if actor.counts_as_enemy then
 		self.enemy_count = self.enemy_count - 1
 		self.stats.kills = self.stats.kills + 1
 	end
@@ -334,6 +385,10 @@ function Game:on_game_over()
 	self.menu:set_menu("game_over")
 	self.stats.time = self.time
 	self.stats.floor = self.floor
+end
+
+function Game:do_win()
+
 end
 
 function draw_log()
@@ -357,7 +412,7 @@ function Game:init_players()
 			down = {"s", "down"},
 			jump = {"z", "c", "b"},
 			shoot = {"x", "v", "n"},
-			switchgun = {"g"}, --test
+			switchgun = {"t"}, --test
 			pause = {"escape"},
 		},
 		[2] = {
@@ -395,23 +450,64 @@ end
 --- [[[[[[[[ BACKGROUND & LEVEL PROGRESS ]]]]]]]] ---
 -----------------------------------------------------
 
--- TODO: Should we move this to a separate class?
+-- TODO: Should we move this to a separate 'Elevator'/'Level' class?
+---> Yes, but that would require effort
 
 function Game:new_bg_particle()
 	local o = {}
 	o.x = love.math.random(0, CANVAS_WIDTH)
 	o.w = love.math.random(2, 12)
 	o.h = love.math.random(8, 64)
-	o.y = -o.h - love.math.random(0, CANVAS_HEIGHT)
+	
+	if self.elevator_speed >= 0 then
+		o.y = -o.h - love.math.random(0, CANVAS_HEIGHT)
+	else
+		o.y = CANVAS_HEIGHT + o.h + love.math.random(0, CANVAS_HEIGHT)
+	end
+
 	o.col = random_sample{COL_DARK_GRAY, COL_MID_GRAY}
 	o.spd = random_range(0.5, 1.5)
 
 	o.oy = 0
 	o.oh = 1
+
+	o.t = 0
 	return o
 end
 
+function Game:update_bg_particles(dt)
+	-- Background lines
+	for i,o in pairs(self.bg_particles) do
+		o.y = o.y + dt*self.elevator_speed*o.spd
+		
+		local del_cond = (self.elevator_speed>=0 and o.y > CANVAS_HEIGHT) or (self.elevator_speed<0 and o.y < -CANVAS_HEIGHT) 
+		if del_cond then
+			-- WHY DOES THIS NOT. WORK. I'm going crazy
+			print("y at: CANVAS_HEIGHT * ", (o.y)/CANVAS_HEIGHT)
+			local p = self:new_bg_particle()
+			-- o = p
+			o.x = p.x
+			o.y = p.y
+			o.w = p.w
+			o.h = p.h
+			o.col = p.col
+			o.spd = p.spd
+			o.oy = p.oy
+			o.oh = p.oh
+		end
+
+		-- Size corresponds to elevator speed
+		o.oh = max(o.w/o.h, self.elevator_speed / self.def_elevator_speed)
+		o.oy = .5 * o.h * o.oh
+	end
+end	
+
 function Game:progress_elevator(dt)
+	if self.is_reversing_elevator then
+		self:do_reverse_elevator(dt)
+		return
+	end
+
 	-- Only switch to next floor until all enemies killed
 	if not self.door_animation and self.enemy_count == 0 then
 		self.door_animation = true
@@ -454,8 +550,11 @@ function Game:update_door_anim(dt)
 
 	-- Elevator speed
 	if 5 > self.floor_progress and self.floor_progress > 3 then
+		-- Slow down
 		self.elevator_speed = max(0, self.elevator_speed - 18)
+	
 	elseif self.floor_progress < 1 then
+		-- Speed up	
 		self.elevator_speed = min(self.elevator_speed + 10, self.def_elevator_speed)
 	end
 
@@ -479,7 +578,7 @@ function Game:new_wave_buffer_enemies()
 	self.cur_wave_max_enemy = n
 	self.door_animation_enemy_buffer = {}
 
-	print(self.floor, clamp(self.floor, 1, #waves))
+	-- print(self.floor, clamp(self.floor, 1, #waves))
 	local wave_n = clamp(self.floor+1, 1, #waves)
 	local wave = waves[wave_n] -- Minus 1 because the floor indicator changes before enemies are spawned
 	local n = love.math.random(wave.min, wave.max)
@@ -492,9 +591,15 @@ function Game:new_wave_buffer_enemies()
 		local enem = random_weighted(wave.enemies)
 		local e = enem:new(x,y)
 		
+		if e.name == "button_glass" then
+			e.x = CANVAS_WIDTH/2
+			e.y = game.world_generator.box_by * BLOCK_WIDTH
+		end
+
 		-- Center enemy
 		e.x = floor(e.x - e.w/2)
 		e.y = floor(e.y - e.h/2)
+
 		-- Prevent collisions with floor
 		if e.y+e.h > self.door_by then   e.y = self.door_by - e.h    end
 		collision:remove(e)
@@ -527,7 +632,17 @@ function Game:draw_background(cabin_x, cabin_y)
 	gfx.setFont(FONT_REGULAR)
 end
 
+function Game:on_red_button_pressed()
+	self.is_reversing_elevator = true
+end
 
+function Game:do_reverse_elevator(dt)
+	self.elevator_speed = self.elevator_speed - dt*40
+end
+
+-----------------------------------------------------
+-----------------------------------------------------
+-----------------------------------------------------
 
 function Game:keypressed(key, scancode, isrepeat)
 	if key == "f3" then
@@ -573,14 +688,17 @@ function Game:button_pressed(btn)
 	return false
 end
 
-function Game:toggle_sound()
-	-- TODO: move from bool to a number (0-1), customisable in settings
-	self.sound_on = not self.sound_on
-end
+-- Moved to OptionsManager
+-- function Game:toggle_sound()
+-- 	-- TODO: move from bool to a number (0-1), customisable in settings
+-- 	self.sound_on = not self.sound_on
+-- 	if options then    options:update_options_file()    end
+-- end
 
-function Game:set_volume(n)
-	self.volume = n
-	love.audio.setVolume( self.volume )
-end
+-- function Game:set_volume(n)
+-- 	self.volume = n
+-- 	love.audio.setVolume( self.volume )
+-- 	if options then    options:update_options_file()    end
+-- end
 
 return Game

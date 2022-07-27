@@ -4,60 +4,7 @@ require "util"
 
 game = nil
 
-function update_screen(scale)
-	-- When scale is (-1), it will find the maximum whole number
-	if scale == "auto" then   scale = nil    end
-	if scale == "max whole" then   scale = -1    end
-	if type(scale) ~= "number" then    scale = nil    end
- 
-	WINDOW_WIDTH, WINDOW_HEIGHT = gfx.getDimensions()
-	CANVAS_WIDTH = 480
-	CANVAS_HEIGHT = 270
-
-	screen_sx = WINDOW_WIDTH / CANVAS_WIDTH
-	screen_sy = WINDOW_HEIGHT / CANVAS_HEIGHT
-	CANVAS_SCALE = min(screen_sx, screen_sy)
-
-	if scale then
-		if scale == -1 then
-			CANVAS_SCALE = floor(CANVAS_SCALE)
-		else
-			CANVAS_SCALE = scale
-		end
-	end
-
-	CANVAS_OX = max(0, (WINDOW_WIDTH  - CANVAS_WIDTH  * CANVAS_SCALE)/2)
-	CANVAS_OY = max(0, (WINDOW_HEIGHT - CANVAS_HEIGHT * CANVAS_SCALE)/2)
-end
-
 function love.load(arg)
-	-- GLOBALS
-	is_fullscreen = true
-	is_vsync = true
-	pixel_scale = "auto"
-
-	love.window.setMode(0, 0, {
-		fullscreen = is_fullscreen,
-		resizable = true,
-		vsync = true,
-		minwidth = 400,
-		minheight = 300,
-	})
-	SCREEN_WIDTH, SCREEN_HEIGHT = gfx.getDimensions()
-	gfx.setDefaultFilter("nearest", "nearest")
-	
-	update_screen()
-
-	canvas = gfx.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
-
-	love.window.setTitle("Elevator game")
-
-	-- Load fonts
-	FONT_REGULAR = gfx.newFont("fonts/HopeGold.ttf", 16)
-	FONT_7SEG = gfx.newImageFont("fonts/7seg_font.png", " 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
-	FONT_MINI = gfx.newFont("fonts/Kenney Mini.ttf", 8)
-	gfx.setFont(FONT_REGULAR)
-
 	frame = 0
 
 	game = Game:new()
@@ -113,13 +60,22 @@ function love.keypressed(key, scancode, isrepeat)
 		end
 	
 	elseif key == "f11" then
-		toggle_fullscreen()
+		if options then   options:toggle_fullscreen()    end
 
 	elseif key == "m" then
-		game.sound_on = not game.sound_on
+		options:toggle_sound()
 		
 	elseif key == "g" then
 		game.players[1]:kill()
+
+	elseif key == "e" then
+		if not game then return end
+		for i,e in pairs(game.actors) do
+			if e.is_enemy then
+				e:kill()
+			end
+		end
+		game.floor = 40
 	
 	elseif key == "b" then
 		if not game then return end
@@ -142,16 +98,6 @@ function love.keypressed(key, scancode, isrepeat)
 	if game.keypressed then  game:keypressed(key, scancode, isrepeat)  end
 end
 
-function toggle_fullscreen()
-	-- local success = love.graphics.toggleFullscreen( )
-	is_fullscreen = not is_fullscreen
-	love.window.setFullscreen(is_fullscreen)
-end
-
-function set_pixel_scale(scale)
-	update_screen(scale)
-end
-
 function love.keyreleased(key, scancode)
 	if game.keyreleased then  game:keyreleased(key, scancode)  end
 end
@@ -165,8 +111,9 @@ end
 --end
 
 function love.resize(w, h)
+	if not game then     return     end
 	if game.resize then   game:resize(w,h)   end
-	update_screen()
+	game:update_screen()
 end
 
 function love.textinput(text)
@@ -187,10 +134,7 @@ function print(...)
 end
 
 function quit_game()
+	print("Quitting game")
+	if options then    options:update_options_file()    end
 	love.event.quit()
-end
-
-function toggle_vsync()
-	is_vsync = not is_vsync
-	love.window.setVSync(is_vsync)
 end

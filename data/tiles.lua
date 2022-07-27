@@ -1,7 +1,7 @@
 require "util"
 local Class = require "class"
 local Tile = require "tile"
-local images = require "images"
+local images = require "data.images"
 
 local Tiles = Class:inherit()
 

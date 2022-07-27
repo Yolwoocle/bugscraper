@@ -1,6 +1,6 @@
 local Class = require "class"
 local Actor = require "actor"
-local images = require "images"
+local images = require "data.images"
 local Guns = require "data.guns"
 local sounds = require "data.sounds"
 

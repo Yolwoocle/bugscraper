@@ -5,125 +5,13 @@ local Loot = require "loot"
 local Bullet = require "bullet"
 local Guns = require "data.guns"
 
-local images = require "images"
+local images = require "data.images"
 
 local Enemies = Class:inherit()
 
 function Enemies:init()
-	self.Bug = Enemy:inherit()
-	function self.Bug:init(x, y)
-		self:init_enemy(x,y)
-		self.name = "bug"
-		self.life = 10
-		self.color = rgb(0,50,190)
-	end
+	------------------------------------------------------------
 
-	----------------
-
-	self.Button = Enemy:inherit()
-	function self.Button:init(x, y)
-		-- We can reuse this for other stuff
-		self:init_enemy(x,y, images.big_red_button, 34, 40)
-		self.name = "button"
-		self.follow_player = false
-
-		self.max_life = 9999
-		self.life = self.max_life
-		
-		self.knockback = 0
-		self.is_solid = false
-		self.is_stompable = true
-		self.is_pushable = false
-		self.is_knockbackable = false
-		self.loot = {}
-
-		self.damage = 0
-	end
-
-	function self.Button:update(dt)
-		self:update_enemy(dt)
-	end
-	
-	function self.Button:draw()
-		self:draw_enemy()
-
-		gfx.print(concat(self.x, " ", self.y), 128, 128)
-	end
-
-	function self.Button:on_stomped(damager)
-		game:screenshake(10)
-	end
-
-	-----------------
-	
-	self.ButtonGlass = Enemy:inherit()
-
-	function self.ButtonGlass:init(x, y)
-		-- We can reuse this for other stuff
-		self:init_enemy(x,y, images.big_red_button_crack3, 58, 45)
-		self.name = "button_glass"
-		self.follow_player = false
-
-		self.max_life = 200
-		self.life = self.max_life
-		self.activ_thresh = 40
-		self.break_range = self.life - self.activ_thresh 
-		self.knockback = 0
-
-		self.is_solid = true
-		self.is_stompable = false
-		self.is_pushable = false
-		self.is_knockbackable = false
-
-		self.damage = 0
-		self.screenshake = 0
-		self.max_screenshake = 4
-
-		self.break_state = 3
-		self.loot = {}
-	end
-
-	function self.ButtonGlass:update(dt)
-		self:update_enemy(dt)
-
-		if self.life < self.activ_thresh then
-			--self.spr = images.big_red_button
-		end
-	end
-	
-	function self.ButtonGlass:on_damage(n, old_life)
-		local k = 4
-		local old_state = self.break_state
-		local part = self.max_life / k
-		local new_state = floor(self.life / part)
-		
-		if old_state ~= new_state then
-			self.break_state = new_state
-			local spr = images["big_red_button_crack"..tostring(self.break_state)]
-			spr = spr or images.big_red_button_crack3
-
-			self.spr = spr
-			game:screenshake(10)
-			particles:image(self.mid_x, self.mid_y, 100, images.ptc_glass_shard, self.h)
-		end
-
-		if game.screenshake_q < 5 then
-			game:screenshake(2)
-		end 
-	end
-
-	local Button = self.Button
-	function self.ButtonGlass:on_death()
-		game:screenshake(20)
-		particles:image(self.mid_x, self.mid_y, 300, images.ptc_glass_shard, self.h)
-
-		local b = create_actor_centered(Button, CANVAS_WIDTH/2, game.world_generator.box_rby)
-		game:new_actor(b)
-	end
-	
-
-	-----------------
-	
 	self.Fly = Enemy:inherit()
 	
 	function self.Fly:init(x, y)
@@ -207,6 +95,7 @@ function Enemies:init()
 		self.friction_x = 1
 		self.friction_y = 1
 		self.walk_dir_x = random_sample{-1, 1}
+		self.is_knockbackable = true
 
 		self.gravity = self.gravity * 0.5
 
@@ -256,6 +145,7 @@ function Enemies:init()
 		self.name = "snail_shelled"
 		self.is_flying = true
 		self.follow_player = false
+		self.do_stomp_animation = false
 
 		self.destroy_bullet_on_impact = false
 		self.is_bouncy_to_bullets = true
@@ -313,7 +203,7 @@ function Enemies:init()
 		self.name = "dummy_target"
 		self.follow_player = false
 
-		self.life = 20
+		self.life = 7
 		self.damage = 0
 		self.self_knockback_mult = 0.1
 
@@ -326,6 +216,11 @@ function Enemies:init()
 
 	function self.DummyTarget:update(dt)
 		self:update_enemy(dt)
+	end
+
+	function self.DummyTarget:on_death()
+		particles:image(self.mid_x, self.mid_y, 20, {images.dummy_target_ptc1, images.dummy_target_ptc2}, self.w, nil, nil, 0.5)
+		--number, spr, spw_rad, life, vs, g
 	end
 
 	------- 
@@ -346,6 +241,7 @@ function Enemies:init()
 		self.up_vect = {x=0, y=-1}
 		self.walk_dir = random_sample{-1, 1}
 		self.walk_speed = 70
+		self.is_knockbackable = false
 
 		self.flip = 1
 		self.gun = Guns.unlootable.MushroomAntGun:new(self)
@@ -353,8 +249,8 @@ function Enemies:init()
 		self.rot = 0
 		self.target_rot = 0
 
-		self.shoot_timer = 1
-		self.shoot_cooldown_range = {0.5, 1.2}
+		self.shoot_cooldown_range = {2, 3}
+		self.shoot_timer = random_range(unpack(self.shoot_cooldown_range))
 	end
 	
 	function self.MushroomAnt:update(dt)
@@ -401,6 +297,154 @@ function Enemies:init()
 		self.friction_x = 1
 		self.friction_y = 1
 	end
+
+	-----------------------
+	-----------------------
+	-----------------------
+
+	self.Bug = Enemy:inherit()
+	function self.Bug:init(x, y)
+		self:init_enemy(x,y)
+		self.name = "bug"
+		self.life = 10
+		self.color = rgb(0,50,190)
+	end
+
+	----------------
+
+	self.ButtonPressed = Enemy:inherit()
+	function self.ButtonPressed:init(x, y)
+		self:init_enemy(x,y, images.big_red_button_pressed, 34, 40)
+		self.name = "button_pressed"
+		self.follow_player = false
+
+		self.max_life = 999999
+		self.life = self.max_life
+		
+		self.knockback = 0
+		self.is_solid = false
+		self.is_stompable = false
+		self.is_pushable = false
+		self.is_knockbackable = false
+		self.loot = {}
+
+		self.squash = 2
+
+		self.damage = 0
+	end
+
+	function self.ButtonPressed:update(dt)
+		self:update_enemy(dt)
+	end
+
+	----------------
+
+	self.Button = Enemy:inherit()
+	function self.Button:init(x, y)
+		-- We can reuse this for other stuff
+		self:init_enemy(x,y, images.big_red_button, 34, 40)
+		self.name = "button"
+		self.follow_player = false
+
+		self.max_life = 9999
+		self.life = self.max_life
+		
+		self.knockback = 0
+		self.is_solid = false
+		self.is_stompable = true
+		self.do_stomp_animation = false
+		self.is_pushable = false
+		self.is_knockbackable = false
+		self.loot = {}
+
+		self.damage = 0
+	end
+
+	function self.Button:update(dt)
+		self:update_enemy(dt)
+	end
+	
+	function self.Button:draw()
+		self:draw_enemy()
+	end
+
+	local ButtonPressed = self.ButtonPressed
+	function self.Button:on_stomped(damager)
+		game:screenshake(10)
+		game:on_red_button_pressed()
+		
+		-- TODO: smoke particles
+		local b = create_actor_centered(ButtonPressed, CANVAS_WIDTH/2, game.world_generator.box_rby)
+		game:new_actor(b)
+	end
+
+	-----------------
+	
+	self.ButtonGlass = Enemy:inherit()
+
+	function self.ButtonGlass:init(x, y)
+		-- We can reuse this for other stuff
+		self:init_enemy(x,y, images.big_red_button_crack3, 58, 45)
+		self.name = "button_glass"
+		self.follow_player = false
+
+		self.max_life = 200
+		self.life = self.max_life
+		self.activ_thresh = 40
+		self.break_range = self.life - self.activ_thresh 
+		self.knockback = 0
+
+		self.is_solid = true
+		self.is_stompable = false
+		self.is_pushable = false
+		self.is_knockbackable = false
+
+		self.damage = 0
+		self.screenshake = 0
+		self.max_screenshake = 4
+
+		self.break_state = 3
+		self.loot = {}
+	end
+
+	function self.ButtonGlass:update(dt)
+		self:update_enemy(dt)
+
+		if self.life < self.activ_thresh then
+			--self.spr = images.big_red_button
+		end
+	end
+	
+	function self.ButtonGlass:on_damage(n, old_life)
+		local k = 4
+		local old_state = self.break_state
+		local part = self.max_life / k
+		local new_state = floor(self.life / part)
+		
+		if old_state ~= new_state then
+			self.break_state = new_state
+			local spr = images["big_red_button_crack"..tostring(self.break_state)]
+			spr = spr or images.big_red_button_crack3
+
+			self.spr = spr
+			game:screenshake(10)
+			particles:image(self.mid_x, self.mid_y, 100, images.ptc_glass_shard, self.h)
+		end
+
+		if game.screenshake_q < 5 then
+			game:screenshake(2)
+		end 
+	end
+
+	local Button = self.Button
+	function self.ButtonGlass:on_death()
+		game:screenshake(20)
+		particles:image(self.mid_x, self.mid_y, 300, images.ptc_glass_shard, self.h)
+
+		local b = create_actor_centered(Button, CANVAS_WIDTH/2, game.world_generator.box_rby)
+		game:new_actor(b)
+	end
+	
 end
 
 return Enemies:new()

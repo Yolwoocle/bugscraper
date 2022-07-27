@@ -2,7 +2,7 @@ require "util"
 local Class = require "class"
 local Bullet = require "bullet"
 local sounds = require "data.sounds"
-local images = require "images"
+local images = require "data.images"
 
 local Gun = Class:inherit()
 
@@ -31,6 +31,9 @@ function Gun:init_gun(user)
 	self.knockback = 500
 
 	self.speed_floor = 3 -- min speed before it despawns
+
+	--
+	self.damage = 2
 
 	-- Ammo
 	self.max_ammo = 200
@@ -108,9 +111,10 @@ function Gun:shoot(dt, player, x, y, dx, dy, is_burst)
 	if is_first_fire then    self.cooldown_timer = self.cooldown    end
 	self.ammo = self.ammo - self.bullet_number
 
-	local x = floor(x)
-	local y = floor(y)
 	local ang = atan2(dy, dx)
+	local gunw = max(0, self.spr:getWidth() - 8)
+	local x = floor(x + cos(ang) * gunw)
+	local y = floor(y + sin(ang) * gunw)
 
 	-- Update Burst timer
 	if self.is_burst then

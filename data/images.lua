@@ -77,6 +77,7 @@ local img_names = {
 	"big_red_button_crack2",
 	"big_red_button_crack3",
 	"big_red_button",
+	"big_red_button_pressed",
 
 	"ptc_glass_shard",
 	"snail_shell_fragment",
@@ -89,6 +90,9 @@ local img_names = {
 	"mushroom",
 	"mushroom_yellow",
 	"mushroom_spike",
+
+	"dummy_target_ptc1",
+	"dummy_target_ptc2",
 }
 
 local images = {}

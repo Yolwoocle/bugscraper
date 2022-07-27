@@ -140,14 +140,17 @@ function Actor:draw_actor(fx, fy, custom_draw)
 			local o = ((self.x / CANVAS_WIDTH)-.5) * 6
 			love.graphics.setColor(0, 0, 0, 0.5)
 			-- (self.spr, floor(x+o), floor(y+3), 0, fx, fy, spr_w2, spr_h2)
+
 			love.graphics.draw(self.spr, floor(x+o), floor(y+o), self.rot, fx, fy, spr_w2, spr_h2)
 		end
-
+		
 		-- Draw
 		love.graphics.setColor(old_col)
-
+		
 		local drw_func = gfx.draw
 		if custom_draw then    drw_func = custom_draw    end
+		self.spr_x = floor(x)
+		self.spr_y = floor(y)
 		drw_func(self.spr, x, y, self.rot, fx, fy, spr_w2, spr_h2)
 	end
 end

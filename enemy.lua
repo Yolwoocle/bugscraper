@@ -2,7 +2,7 @@ require "util"
 local Class = require "class"
 local Actor = require "actor"
 local Loot = require "loot"
-local images = require "images"
+local images = require "data.images"
 local sounds = require "data.sounds"
 
 local Enemy = Actor:inherit()
@@ -15,6 +15,7 @@ function Enemy:init_enemy(x,y, img, w,h)
 	w,h = w or 12, h or 12
 	self:init_actor(x, y, w, h, img or images.duck)
 	self.name = "enemy"
+	self.counts_as_enemy = true -- don't count in the enemy counter
 	self.is_being = true 
 	self.is_enemy = true
 	self.is_flying = false
@@ -38,10 +39,11 @@ function Enemy:init_enemy(x,y, img, w,h)
 		{nil, 100},
 		{Loot.Ammo, 15, loot_type="ammo", value=20},
 		{Loot.Life, 5, loot_type="life", value=1},
-		{Loot.Gun, 3+100000, loot_type="gun"},
+		{Loot.Gun, 3, loot_type="gun"},
 	}
 
 	self.is_stompable = true
+	self.do_stomp_animation = true
 	self.is_pushable = true
 	self.is_knockbackable = true -- Multiplicator when knockback is applied to
 
@@ -51,6 +53,9 @@ function Enemy:init_enemy(x,y, img, w,h)
 
 	self.damaged_flash_timer = 0
 	self.damaged_flash_max = 0.07
+
+	self.squash = 1
+	self.squash_target = 1
 end
 
 function Enemy:update_enemy(dt)
@@ -126,6 +131,9 @@ function Enemy:on_collision(col, other)
 		if player.vy > epsilon and self.is_stompable then
 			player.vy = 0
 			player:on_stomp(self)
+			if self.do_stomp_animation then
+				particles:stomped_enemy(self.spr_x, self.spr_y, self.spr)
+			end
 			self:on_stomped(player)
 			self:kill()
 		

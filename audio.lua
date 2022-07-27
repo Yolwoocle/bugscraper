@@ -1,6 +1,6 @@
 require "util"
 local Class = require "class"
-local images = require "images"
+local images = require "data.images"
 local sounds = require "data.sounds"
 
 local AudioManager = Class:inherit()
@@ -20,7 +20,7 @@ function AudioManager:play(snd, volume, pitch)
 	volume = volume or 1
 	pitch = pitch or 1
 	
-	if game.sound_on and snd then
+	if options:get("sound_on") and snd then
 		local source = snd:clone()
 		source:setVolume(volume * source:getVolume())
 		source:setPitch(pitch   * source:getPitch())

@@ -1,7 +1,7 @@
 require "util"
 local Class = require "class"
 local Gun = require "gun"
-local images = require "images"
+local images = require "data.images"
 local E = require "data.enemies"
 
 local waves = {
@@ -133,7 +133,7 @@ local waves = {
 	},
 },
 
-{
+unpack(duplicate_table({
 	-- ALL BUT HARDER
 	min = 12,
 	max = 16,
@@ -146,7 +146,16 @@ local waves = {
 		{E.Grasshopper, 1},
 		{E.MushroomAnt, 1},
 	},
-},
+}, 5)),
+
+-- Last wave
+{
+	min = 1,
+	max = 1,
+	enemies = {
+		{E.ButtonGlass, 1}
+	}
+}
 
 }
 

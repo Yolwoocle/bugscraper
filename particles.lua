@@ -1,10 +1,10 @@
 require "util"
 local Class = require "class"
-local images = require "images"
+local images = require "data.images"
 
 local Particle = Class:inherit()
 
-function Particle:init_particle(x,y,s,r, vx,vy,vs,vr, life, g)
+function Particle:init_particle(x,y,s,r, vx,vy,vs,vr, life, g, is_solid)
 	self.x, self.y = x, y
 	self.vx, self.vy = vx or 0, vy or 0
 
@@ -15,6 +15,9 @@ function Particle:init_particle(x,y,s,r, vx,vy,vs,vr, life, g)
 	self.vr = vr or 0
 
 	self.gravity = g or 0
+	self.is_solid = is_solid or false
+	self.bounces = 3
+	self.bounce_force = 100
 
 	self.max_life = life or 5
 	self.life = self.max_life
@@ -29,6 +32,14 @@ function Particle:update_particle(dt)
 
 	self.vy = self.vy + self.gravity
 	self.life = self.life - dt
+
+	if self.is_solid then
+		local items, len = collision.world:queryPoint(self.x, self.y, function(item) return item.is_solid end)
+		if len > 0 then
+			self.bounces = self.bounces - 1
+			self.vy = -self.bounce_force
+		end
+	end
 
 	if self.s <= 0 or self.life <= 0 then
 		self.is_removed = true
@@ -60,17 +71,54 @@ end
 
 local ImageParticle = Particle:inherit()
 
-function ImageParticle:init(spr, x,y,s,r, vx,vy,vs,vr, life, g)
-	self:init_particle(x,y,s,r, vx,vy,vs,vr, life, g)
+function ImageParticle:init(spr, x,y,s,r, vx,vy,vs,vr, life, g, is_solid)
+	self:init_particle(x,y,s,r, vx,vy,vs,vr, life, g, is_solid)
 	self.spr = spr
-
+	
 	self.spr_w = self.spr:getWidth()
 	self.spr_h = self.spr:getWidth()
 	self.spr_ox = self.spr_w / 2
 	self.spr_oy = self.spr_h / 2
+	
+	self.is_solid = is_solid
 end
 function ImageParticle:draw()
 	love.graphics.draw(self.spr, self.x, self.y, self.r, self.s, self.s, self.spr_ox, self.spr_oy)
+end
+
+------------------------------------------------------------
+
+local StompedEnemyParticle = Particle:inherit()
+
+function StompedEnemyParticle:init(x,y,spr)
+	--                 x,y,s,r, vx,vy,vs,vr, life, g, is_solid
+	self:init_particle(x,y,1,0, 0,0,0,0,     2, 0, false)
+	self.spr = spr
+	
+	self.spr_w = self.spr:getWidth()
+	self.spr_h = self.spr:getHeight()
+	self.spr_ox = self.spr_w / 2
+	self.spr_oy = self.spr_h / 2
+
+	self.sx = 1
+	self.sy = 1
+	self.squash = 1
+	self.squash_target = 2
+end
+function StompedEnemyParticle:update(dt)
+	self:update_particle(dt)
+	self.squash = lerp(self.squash, self.squash_target, 0.2)
+
+	self.sx = self.squash
+	self.sy = (1/self.squash) * 0.5
+
+	if abs(self.squash_target - self.squash) <= 0.01 then
+		self.is_removed = true
+	end
+end
+function StompedEnemyParticle:draw()
+	local oy = self.spr_h*.5 - self.spr_h*.5*self.sy
+	love.graphics.draw(self.spr, self.x, self.y + oy, self.r, self.sx, self.sy, self.spr_ox, self.spr_oy)
 end
 
 ------------------------------------------------------------
@@ -165,9 +213,20 @@ function ParticleSystem:image(x, y, number, spr, spw_rad, life, vs, g)
 		local vs = vs or random_range(1, 0.5)
 		local vr = random_neighbor(1)
 		local life = life + random_neighbor(0.5)
-		local g = g or 3
-		self:add_particle(ImageParticle:new(spr, x+dx, y+dy, 1, rot, vx,vy,vs,vr, life, g))
+		local g = (g or 1) * 3
+
+		local sprite = spr
+		if type(spr) == "table" then
+			sprite = random_sample(spr)
+		end
+		self:add_particle(ImageParticle:new(sprite , x+dx, y+dy, 1, rot, vx,vy,vs,vr, life, g, true))
 	end
 end
+
+function ParticleSystem:stomped_enemy(x, y, spr)
+	self:add_particle(StompedEnemyParticle:new(x, y, spr))
+end
+
+
 
 return ParticleSystem

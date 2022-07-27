@@ -1,10 +1,10 @@
 require "util"
 local Class = require "class"
-local images = require "images"
+local images = require "data.images"
 local sounds = require "data.sounds"
 
 -- Help. If you are the poor sod sent to modify the code within 
--- this, be warned: it's a fucking mess.
+-- this, be warned: it's a mess.
 
 local MenuItem = Class:inherit()
 function MenuItem:init_menuitem(i, x, y)
@@ -114,6 +114,7 @@ function TextMenuItem:set_selected(val, diff)
 end
 
 function TextMenuItem:after_click()
+	options:update_options_file()
 	audio:play(sounds.menu_select)
 	self.oy = -4
 end
@@ -180,7 +181,8 @@ end
 
 function SliderMenuItem:after_click(diff)
 	diff = diff or 1
-	self.ox = sign(diff) * 4
+	self.ox = sign(diff) * 6
+	options:update_options_file()
 
 	-- TODO: rising pitch or decreasing pitch
 	-- + sound preview for music & sfx
@@ -301,19 +303,20 @@ function MenuManager:init(game)
 		{ "< BACK", function() game.menu:back() end },
 		{ "" },
 		{ "SOUND", function(self, option)
-			game:toggle_sound()
+			options:toggle_sound()
 		end, 
 		function(self)
-			self.value = game.sound_on
-			self.value_text = game.sound_on and "ON" or "OFF"
+			self.value = options:get("sound_on")
+			self.value_text = options:get("sound_on") and "ON" or "OFF"
 		end},
 
 		{ SliderMenuItem, "VOLUME", function(self, diff)
 			self:next_value(diff)
-			game:set_volume(self.value/20)
+			options:set_volume(self.value/20)
+			audio:play(sounds.menu_select)
 		end, range_table(0,20),
 		function(self)
-			self.value = game.volume
+			self.value = options:get("volume")
 			self.value_text = concat(floor(100 * self.value), "%")
 		end},
 
@@ -323,11 +326,11 @@ function MenuManager:init(game)
 		-- 	game:toggle_sound()
 		-- end},
 		{ "FULLSCREEN", function(self)
-			toggle_fullscreen()
+			options:toggle_fullscreen()
 		end,
 		function(self)
-			self.value = is_fullscreen
-			self.value_text = is_fullscreen and "ON" or "OFF"
+			self.value = options:get("is_fullscreen")
+			self.value_text = options:get("is_fullscreen") and "ON" or "OFF"
 		end},
 
 		{ SliderMenuItem, "PIXEL SCALE", function(self, diff)
@@ -335,19 +338,19 @@ function MenuManager:init(game)
 			self:next_value(diff)
 
 			local scale = self.value
-			pixel_scale = scale
-			update_screen(scale)
+			
+			options:set_pixel_scale(scale)
 		end, { "auto", "max whole", 1, 2, 3, 4}, function(self)
-			self.value = pixel_scale
-			self.value_text = tostring(pixel_scale)
+			self.value = options:get("pixel_scale")
+			self.value_text = tostring(options:get("pixel_scale"))
 		end},
 
 		{ "VSYNC", function(self)
-			toggle_vsync()
+			options:toggle_vsync()
 		end,
 		function(self)
-			self.value = is_vsync
-			self.value_text = is_vsync and "ON" or "OFF"
+			self.value = options:get("is_vsync")
+			self.value_text = options:get("is_vsync") and "ON" or "OFF"
 		end},
 
 		{ "" }

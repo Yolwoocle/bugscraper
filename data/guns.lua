@@ -1,7 +1,7 @@
 require "util"
 local Class = require "class"
 local Gun = require "gun"
-local images = require "images"
+local images = require "data.images"
 local sounds = require "data.sounds"
 
 local Guns = Class:inherit()
@@ -82,6 +82,9 @@ function Guns:init()
 		self.cooldown = 0.4
 		self.bullet_speed = 800 --def: 400
 		self.bullet_number = 12
+
+		self.max_ammo = self.bullet_number * 35
+
 		self.bullet_spread = 0
 		self.bullet_friction = 0.95
 		self.random_angle_offset = 0.3
@@ -151,6 +154,23 @@ function Guns:init()
 		self.bullet_speed = 100
 
 		self.cooldown = 0
+		self.jetpack_force = 340
+	end
+
+	------
+	self.unlootable.DebugGun = Gun:inherit()
+
+	function self.unlootable.DebugGun:init(user)
+		self:init_gun(user)
+		self.name = "debug_gun"
+		
+		self.sfx = sounds.shot1
+		self.damage = 200
+		self.is_auto = true
+		self.spr = images.metal
+		self.max_ammo = math.huge
+
+		self.cooldown = 0.1
 		self.jetpack_force = 340
 	end
 end

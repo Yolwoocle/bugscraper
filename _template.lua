@@ -1,6 +1,6 @@
 require "util"
 local Class = require "class"
-local images = require "images"
+local images = require "data.images"
 
 local Player = Class:inherit()
 
