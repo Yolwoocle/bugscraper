@@ -1,2 +1,2 @@
-# Game A Week 2
-Some sort of elevator game
+# Bugscraper
+Rise to the last floor in a pest infected tower.
