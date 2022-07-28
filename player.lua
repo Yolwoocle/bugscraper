@@ -42,7 +42,9 @@ function Player:init(n, x, y, spr, controls)
 	self.walkbounce_oy = 0
 	self.walkbounce_t = 0
 	self.walkbounce_squash = 0
-	
+	self.bounce_vy = 0
+	self.old_bounce_vy = 0
+
 	self.walk_timer = 0
 
 	self.mid_x = self.x + floor(self.w / 2)
@@ -433,7 +435,7 @@ function Player:shoot(dt, is_burst)
 		local ox = dx * self.gun.bul_w
 		local oy = dy * self.gun.bul_h
 		local success = self.gun:shoot(dt, self, self.mid_x + ox, self.y + oy, dx, dy, is_burst)
-		
+
 		-- If shooting downwards, then go up like a jetpack
 		if self:button_down("down") and success then
 			self.vy = self.vy - self.gun.jetpack_force
@@ -635,11 +637,15 @@ function Player:animate_walk(dt)
 		self.walkbounce_t = pi
 	end
 
+	self.old_bounce_vy = self.bounce_vy
+	self.bounce_vy = old_bounce - self.walkbounce_y
+	print(round(self.old_bounce_vy, 2), round(self.bounce_vy, 2))
+
 	-- Walk SFX
-	if self.walkbounce_y < 1 and old_bounce > 1 then
-		local s = "footstep0"..tostring(love.math.random(0,9))
+	if sign(self.old_bounce_vy) == 1 and sign(self.bounce_vy) == -1 then
+		local s = "metalfootstep_0"..tostring(love.math.random(0,4))
 		print("sound", s)
-		audio:play(s, 0.5, 1.1)
+		audio:play_var(s, 0.3, 1.1, {pitch=0.5, volume=0.5})
 	end
 end
 

@@ -292,7 +292,7 @@ function MenuManager:init(game)
 		{ "RETRY", function() game:new_game() end },
 		{ "OPTIONS", func_set_menu('options') },
 		{ "CREDITS", func_set_menu('credits') },
-		{ "BACK TO TITLE SCREEN", func_set_menu('title') },
+		-- { "BACK TO TITLE SCREEN", func_set_menu('title') },
 		{ "QUIT", quit_game },
 		{ "" },
 		{ "" },
@@ -366,7 +366,8 @@ function MenuManager:init(game)
 		{ StatsMenuItem, "Floor", function(self) return game.stats.floor end },
 		{ "" },
 		{ "RETRY", function() game:new_game() end },
-		{ "BACK TO TITLE SCREEN", func_set_menu("title") },
+		{ "QUIT", quit_game },
+		-- { "BACK TO TITLE SCREEN", func_set_menu("title") },
 		{ "" },
 		{ "" },
 	}, { 0, 0, 0, 0.85 })

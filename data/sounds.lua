@@ -37,6 +37,12 @@ local sfxnames = {
 	"footstep08", "footstep08.wav",
 	"footstep09", "footstep09.wav",
 
+	"metalfootstep_00", "footstep/metalfootstep_000.ogg", -- CC0 https://kenney.nl/
+	"metalfootstep_01", "footstep/metalfootstep_001.ogg",
+	"metalfootstep_02", "footstep/metalfootstep_002.ogg",
+	"metalfootstep_03", "footstep/metalfootstep_003.ogg",
+	"metalfootstep_04", "footstep/metalfootstep_004.ogg",
+
 	"impactglass_heavy_000", "impactglass_heavy_000.ogg", -- CC0 https://kenney.nl/
 	"impactglass_heavy_001", "impactglass_heavy_001.ogg",
 	"impactglass_heavy_002", "impactglass_heavy_002.ogg",

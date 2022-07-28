@@ -49,10 +49,12 @@ function AudioManager:play_random_pitch(snd, var)
 end
 
 
-function AudioManager:play_var(snd, vol_var, pitch_var)
+function AudioManager:play_var(snd, vol_var, pitch_var, parms)
+	parms = parms or {}
 	var = var or 0.2
-	local volume = random_range(1-vol_var, 1)
-	local pitch = random_range(1/pitch_var, pitch_var)
+	local def_vol = parms.volume or 1
+	local volume = random_range(def_vol-vol_var, def_vol)
+	local pitch = random_range(1/pitch_var, pitch_var) * (parms.pitch or 1)
 	self:play(snd, volume, pitch)
 end
 

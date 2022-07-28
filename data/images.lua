@@ -95,6 +95,8 @@ local img_names = {
 
 	"dummy_target_ptc1",
 	"dummy_target_ptc2",
+
+	"ptc_bullet_casing",
 }
 
 local images = {}

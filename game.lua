@@ -498,7 +498,7 @@ function Game:update_bg_particles(dt)
 		local del_cond = (self.elevator_speed>=0 and o.y > CANVAS_HEIGHT) or (self.elevator_speed<0 and o.y < -CANVAS_HEIGHT) 
 		if del_cond then
 			-- WHY DOES THIS NOT. WORK. I'm going crazy
-			print("y at: CANVAS_HEIGHT * ", (o.y)/CANVAS_HEIGHT)
+			-- print("y at: CANVAS_HEIGHT * ", (o.y)/CANVAS_HEIGHT)
 			local p = self:new_bg_particle()
 			-- o = p
 			o.x = p.x

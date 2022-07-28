@@ -194,7 +194,7 @@ function ParticleSystem:flash(x, y)
 	self:add_particle(CircleParticle:new(x, y, r, COL_WHITE, 0, 0, 220, _life))
 end
 
-function ParticleSystem:image(x, y, number, spr, spw_rad, life, vs, g)
+function ParticleSystem:image(x, y, number, spr, spw_rad, life, vs, g, parms)
 	number = number or 10
 	spw_rad = spw_rad or 8
 	life = life or 1
@@ -214,6 +214,9 @@ function ParticleSystem:image(x, y, number, spr, spw_rad, life, vs, g)
 		local vr = random_neighbor(1)
 		local life = life + random_neighbor(0.5)
 		local g = (g or 1) * 3
+
+		if parms and parms.vx1 and parms.vx2 then   vx = random_range(parms.vx1, parms.vx2)   end
+		if parms and parms.vy1 and parms.vy2 then   vy = random_range(parms.vy1, parms.vy2)   end
 
 		local sprite = spr
 		if type(spr) == "table" then

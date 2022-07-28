@@ -107,7 +107,16 @@ function Gun:shoot(dt, player, x, y, dx, dy, is_burst)
 	end
 	
 	-- Now, FIRE!!
+	-- SFX & Particles
 	audio:play_var(self.sfx, 0.2, 1.4)
+	particles:image(x , y, 1, images.ptc_bullet_casing, 4, nil, nil, nil, {
+		vx1 = -dx * 40,
+		vx2 = -dx * 100,
+
+		vy1 = -40,
+		vy2 = -80,
+	})
+
 	if is_first_fire then    self.cooldown_timer = self.cooldown    end
 	self.ammo = self.ammo - self.bullet_number
 
