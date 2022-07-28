@@ -165,7 +165,7 @@ function Enemy:after_collision(col, other)  end
 function Enemy:do_damage(n, damager)
 	self.damaged_flash_timer = self.damaged_flash_max
 	
-	if self.play_sfx then   audio:play(self.sound_damage)   end
+	if self.play_sfx then   audio:play_var(self.sound_damage, 0.3, 1.1)   end
 	self.life = self.life - n
 	self:on_damage(n, self.life + n)
 	if self.life <= 0 then
@@ -186,7 +186,7 @@ function Enemy:kill(damager)
 	
 	particles:smoke(self.mid_x, self.mid_y)
 	if self.play_sfx then 
-		audio:play(self.sound_death)
+		audio:play_var(self.sound_death, 0.3, 1.1)
 	end
 
 	game:on_kill(self)

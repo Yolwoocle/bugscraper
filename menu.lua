@@ -259,6 +259,12 @@ function func_set_menu(menu)
 	end
 end
 
+function func_url(url)
+	return function()
+		love.system.openURL(url)
+	end
+end
+
 -----------
 
 local MenuManager = Class:inherit()
@@ -291,7 +297,7 @@ function MenuManager:init(game)
 		{ "RESUME", function() game.menu:unpause() end },
 		{ "RETRY", function() game:new_game() end },
 		{ "OPTIONS", func_set_menu('options') },
-		{ "CREDITS", func_set_menu('credits') },
+		{ "CREDITS", func_set_menu('credits1') },
 		-- { "BACK TO TITLE SCREEN", func_set_menu('title') },
 		{ "QUIT", quit_game },
 		{ "" },
@@ -370,6 +376,45 @@ function MenuManager:init(game)
 		-- { "BACK TO TITLE SCREEN", func_set_menu("title") },
 		{ "" },
 		{ "" },
+	}, { 0, 0, 0, 0.85 })
+
+	self.menus.credits1 = Menu:new(game, {
+		{"<<<<<<<<< CREDITS >>>>>>>>>"},
+		{ "< BACK", function() game.menu:back() end },
+		{ "" },
+		{ "<<< Design, programming & sound design >>>"},
+		{ "Léo Bernard (Yolwoocle)", func_url("https://twitter.com/yolwoocle_")},
+		{ "" },
+		{ "<<<<< Assets Used >>>>>"},
+		{ "Kenney assets, including sound effects - https://kenney.nl/", func_url("https://kenney.nl/")},
+		{ ""},
+		{ "<< freesound.org sounds >>"},
+		{ "'jf Glass Breaking.wav' by cmusounddesign / CC BY 3.0", func_url("https://freesound.org/people/cmusounddesign/sounds/85168/")},
+		{ "'Glass Break' by avrahamy / CC0", func_url("https://freesound.org/people/avrahamy/sounds/141563/")},
+		{ "'Glass shard tinkle texture' by el-bee / CC BY 4.0", func_url("https://freesound.org/people/el-bee/sounds/636238/")},
+		{ "'Bad Beep (Incorrect)' by RICHERlandTV / CC BY 3.0", func_url("https://freesound.org/people/RICHERlandTV/sounds/216090/")},
+		{ "'[Keyboard press]' by MattRuthSound / CC BY 3.0", func_url("https://freesound.org/people/MattRuthSound/sounds/561661/")},
+		{ "'Paper Throw Into Air(fuller) 2' by RossBell / CC0", func_url("https://freesound.org/people/RossBell/sounds/389442/")},
+		{ ""},
+		{ "[ NEXT PAGE ]", function(self)
+			game.menu:set_menu("credits2")
+		end},
+	}, { 0, 0, 0, 0.85 })
+	
+	self.menus.credits2 = Menu:new(game, {
+		{"<<<<<<<<< CREDITS >>>>>>>>>"},
+		{ "< BACK", function() game.menu:back() end },
+		{ "" },
+		{ "'Slime' by Lukeo135 / CC0", func_url("https://freesound.org/people/Lukeo135/sounds/530617/")},
+		{ ""},
+		{ "<< CC Licenses >>"},
+		{ "CC0", func_url("https://creativecommons.org/publicdomain/zero/1.0/")},
+		{ "CC BY 3.0", func_url("https://creativecommons.org/licenses/by/3.0/")},
+		{ "CC BY 4.0", func_url("https://creativecommons.org/licenses/by/4.0/")},
+		{ ""},
+		{ "[ NEXT PAGE ]", function(self, diff)
+			game.menu:set_menu("credits2")
+		end},
 	}, { 0, 0, 0, 0.85 })
 
 	self.cur_menu = nil

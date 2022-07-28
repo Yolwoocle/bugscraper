@@ -69,7 +69,12 @@ local sfxnames = {
 	"cloth1", "cloth1.wav", -- CC0 Kenney
 	"cloth2", "cloth2.wav",
 	"cloth3", "cloth3.wav",
-	"cloth_drop", "cloth_drop.wav" -- CC0 Kenney + CC0 https://freesound.org/people/RossBell/sounds/389442/
+	"cloth_drop", "cloth_drop.wav", -- CC0 Kenney + CC0 https://freesound.org/people/RossBell/sounds/389442/
+
+	"larva_damage1", "larva_damage1.wav",
+	"larva_damage2", "larva_damage2.wav",
+	"larva_damage3", "larva_damage3.wav",
+	"larva_death", "larva_death.wav",
 }
 
 for i=1, #sfxnames, 2 do    sounds[sfxnames[i]] = new_source(sfxnames[i+1], "static")    end
