@@ -17,7 +17,7 @@ function Guns:init()
 		self.damage = 1
 		self.is_auto = true
 		self.spr = images.gun_machinegun
-		self.max_ammo = 25
+		self.max_ammo = 200
 
 		self.cooldown = 0.1
 		self.jetpack_force = 440

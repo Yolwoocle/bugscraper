@@ -15,6 +15,7 @@ COL_MAGENTA = {1, 0, 1, 1}
 -- Reference is EDG32 palette
 COL_DARK_GRAY = rgb(38, 43, 68) --[[]] COL_DARK_GREY = COL_DARK_GRAY
 COL_MID_GRAY = rgb(58, 68, 102)
+COL_LIGHT_GRAY = color(0xc0cbdc)
 
 COL_DARK_RED = rgb(158, 40, 53)
 COL_LIGHT_RED = rgb(228,59, 68)

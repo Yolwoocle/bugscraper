@@ -36,8 +36,11 @@ function Gun:init_gun(user)
 	self.damage = 2
 
 	-- Ammo
-	self.max_ammo = 200
-	self.ammo = math.huge
+	self.max_ammo = 100
+	self.ammo = self.max_ammo
+	self.is_reloading = false
+	self.reload_timer = 0
+	self.max_reload_timer = 1
 
 	-- Cooldown
 	self.cooldown = 0.3
@@ -63,6 +66,11 @@ end
 function Gun:update(dt)
 	self.dt = dt
 	self.cooldown_timer = max(self.cooldown_timer - dt, 0)
+	self.reload_timer = max(self.reload_timer - dt, 0)
+	if self.reload_timer <= 0 and self.is_reloading then
+		self.is_reloading = false
+		self.ammo = self.max_ammo
+	end
 	self.ammo = clamp(self.ammo, 0, self.max_ammo)
 
 	-- Burst
@@ -96,10 +104,17 @@ function Gun:shoot(dt, player, x, y, dx, dy, is_burst)
 	local is_first_fire = not is_burst
 
 	-- Sanity checks
-	if self.ammo <= 0 then      return false     end
+	-- + reloading
+	if self.ammo <= 0 then
+		if not self.is_reloading then
+			self:reload()
+		end
+		return false
+	end
 
 	-- If first shot but cooldown too big, escape
 	if is_first_fire and self.cooldown_timer > 0 then    return false    end
+	if is_first_fire and self.reload_timer > 0 then    return false    end
 
 	-- If first fire, reset burst timer & cooldown
 	if is_first_fire and self.is_burst then
@@ -152,6 +167,11 @@ function Gun:shoot(dt, player, x, y, dx, dy, is_burst)
 
 	return true
 end	
+
+function Gun:reload()
+	self.is_reloading = true
+	self.reload_timer = self.max_reload_timer
+end
 
 function Gun:fire_bullet(dt, player, x, y, bul_w, bul_h, dx, dy)
 	local spd = self.bullet_speed + random_neighbor(self.random_speed_offset)

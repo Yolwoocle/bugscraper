@@ -6,7 +6,7 @@ local E = require "data.enemies"
 
 local waves = {
 
-{
+{ -- 1
 	min = 4,
 	max = 6,
 	enemies = {
@@ -15,7 +15,7 @@ local waves = {
 	},
 },
 
-{
+{ -- 2
 	-- Slug intro
 	min = 6,
 	max = 8,
@@ -27,7 +27,7 @@ local waves = {
 },
 
 
-{
+{ -- 3
 	-- Grasshopper intro
 	min = 4,
 	max = 6,
@@ -38,7 +38,7 @@ local waves = {
 },
 
 
-{
+{ -- 4
 	-- 
 	min = 6,
 	max = 8,
@@ -51,7 +51,7 @@ local waves = {
 },
 
 
-{
+{ -- 5
 	-- Shelled Snail intro
 	min = 4,
 	max = 6,
@@ -62,7 +62,7 @@ local waves = {
 },
 
 
-{
+{ -- 6
 	-- Spiked Fly intro
 	min = 6,
 	max = 8,
@@ -75,7 +75,7 @@ local waves = {
 	},
 },
 
-{
+{ -- 7
 	min = 7,
 	max = 9,
 	enemies = {
@@ -84,7 +84,7 @@ local waves = {
 	},
 },
 
-{
+{ -- 8
 	-- ALL
 	min = 10,
 	max = 14,
@@ -98,7 +98,7 @@ local waves = {
 	},
 },
 
-{
+{ -- 9
 	-- Mushroom Ant intro
 	min = 3,
 	max = 4,
@@ -108,7 +108,7 @@ local waves = {
 },
 
 
-{
+{ -- 10
 	min = 6,
 	max = 8,
 	enemies = {
@@ -118,7 +118,7 @@ local waves = {
 	},
 },
 
-{
+{ -- 11
 	-- ALL
 	min = 10,
 	max = 14,
@@ -135,6 +135,7 @@ local waves = {
 
 unpack(duplicate_table({
 	-- ALL BUT HARDER
+	-- 12, 13, 14, 15
 	min = 12,
 	max = 16,
 	enemies = {
@@ -146,7 +147,7 @@ unpack(duplicate_table({
 		{E.Grasshopper, 1},
 		{E.MushroomAnt, 1},
 	},
-}, 5)),
+}, 4)),
 
 -- Last wave
 {

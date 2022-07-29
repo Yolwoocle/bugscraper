@@ -116,6 +116,10 @@ function Player:init(n, x, y, spr, controls)
 	}
 	self.gun_number = 1
 
+	-- UI
+	self.ui_x = self.x
+	self.ui_y = self.y
+
 	-- Debug 
 	self.dt = 1
 end
@@ -160,6 +164,9 @@ function Player:update(dt)
 
 	-- self:update_button_state() --> moved to Game
 
+	self.ui_x = lerp(self.ui_x, self.mid_x, 0.4)
+	self.ui_y = lerp(self.ui_y, self.y, 0.4)
+
 	--Visuals
 	self:update_visuals()
 end
@@ -187,17 +194,31 @@ end
 
 function Player:draw_hud()
 	-- Life
-	local ui_y = floor(self.y - self.spr:getHeight() - 6)
-	ui:draw_icon_bar(self.mid_x, ui_y, self.life, self.max_life, images.heart, images.heart_empty)
+	-- local ui_y = floor(self.y - self.spr:getHeight() - 6)
+	-- ui:draw_icon_bar(self.mid_x, ui_y, self.life, self.max_life, images.heart, images.heart_empty)
+	local ui_y = floor(self.ui_y - self.spr:getHeight() - 6)
+	ui:draw_icon_bar(self.ui_x, ui_y, self.life, self.max_life, images.heart, images.heart_empty)
 	-- Ammo bar
 	local bar_w = 32
-	local x = floor(self.mid_x - bar_w/2)
+	local x = floor(self.ui_x - bar_w/2)
 	local y = ui_y + 8
 	local ammo_w = images.ammo:getWidth()
 	gfx.draw(images.ammo, x, y)
-	ui:draw_progress_bar(x+ammo_w+2, y, bar_w-ammo_w-2, ammo_w, self.gun.ammo, self.gun.max_ammo, 
-						COL_MID_BLUE, COL_BLACK_BLUE, COL_DARK_BLUE, self.gun.ammo)
+	
+	local text = self.gun.ammo
+	local col_shad = COL_DARK_BLUE
+	local col_fill = COL_MID_BLUE
+	local val, maxval = self.gun.ammo, self.gun.max_ammo
+	if self.gun.is_reloading then
+		text = ""
+		col_fill = COL_WHITE
+		col_shad = COL_LIGHT_GRAY
+		val, maxval = self.gun.max_reload_timer - self.gun.reload_timer, self.gun.max_reload_timer
+	end
+	ui:draw_progress_bar(x+ammo_w+2, y, bar_w-ammo_w-2, ammo_w, val, maxval, 
+						col_fill, COL_BLACK_BLUE, col_shad, text)
 
+	-- x, y, w, h, val, max_val, col_fill, col_out, col_fill_shadow, text, text_col, font
 	-- rect_color(COL_GREEN, "fill", self.mid_x, self.y-32, 1, 60)
 
 	if game.debug_mode then
