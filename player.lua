@@ -164,8 +164,8 @@ function Player:update(dt)
 
 	-- self:update_button_state() --> moved to Game
 
-	self.ui_x = lerp(self.ui_x, self.mid_x, 0.4)
-	self.ui_y = lerp(self.ui_y, self.y, 0.4)
+	self.ui_x = lerp(self.ui_x, self.mid_x, 0.2)
+	self.ui_y = lerp(self.ui_y, self.y, 0.2)
 
 	--Visuals
 	self:update_visuals()
@@ -587,7 +587,9 @@ end
 
 function Player:on_grounded()
 	-- On land
-	audio:play("land")
+	local s = "metalfootstep_0"..tostring(love.math.random(0,4))
+	audio:play_var(s, 0.3, 1, {pitch=0.5, volume=0.5})
+
 	self.jump_squash = 2
 	self.spr = self.spr_idle
 	particles:smoke(self.mid_x, self.y+self.h, 10, COL_WHITE, 8, 4, 2)
@@ -660,13 +662,11 @@ function Player:animate_walk(dt)
 
 	self.old_bounce_vy = self.bounce_vy
 	self.bounce_vy = old_bounce - self.walkbounce_y
-	print(round(self.old_bounce_vy, 2), round(self.bounce_vy, 2))
-
+	
 	-- Walk SFX
 	if sign(self.old_bounce_vy) == 1 and sign(self.bounce_vy) == -1 then
 		local s = "metalfootstep_0"..tostring(love.math.random(0,4))
-		print("sound", s)
-		audio:play_var(s, 0.3, 1.1, {pitch=0.5, volume=0.5})
+		audio:play_var(s, 0.3, 1.1, {pitch=0.4, volume=0.5})
 	end
 end
 

@@ -43,7 +43,7 @@ function Game:init()
 		minheight = CANVAS_HEIGHT,
 	})
 	SCREEN_WIDTH, SCREEN_HEIGHT = gfx.getDimensions()
-	love.window.setTitle("Elevator game")
+	love.window.setTitle("Bugscraper")
 	love.window.setIcon(love.image.newImageData("icon.png"))
 	gfx.setDefaultFilter("nearest", "nearest")
 	
@@ -247,12 +247,10 @@ function Game:update_main_game(dt)
 	end
 
 	local q = 4
-	if love.keyboard.isScancodeDown("a") then self.cam_x = self.cam_x - q end
-	if love.keyboard.isScancodeDown("d") then self.cam_x = self.cam_x + q end
-	if love.keyboard.isScancodeDown("w") then self.cam_y = self.cam_y - q end
-	if love.keyboard.isScancodeDown("s") then self.cam_y = self.cam_y + q end
-
-	if love.keyboard.isDown("h") then self.screenshake_q = 0 end
+	-- if love.keyboard.isScancodeDown("a") then self.cam_x = self.cam_x - q end
+	-- if love.keyboard.isScancodeDown("d") then self.cam_x = self.cam_x + q end
+	-- if love.keyboard.isScancodeDown("w") then self.cam_y = self.cam_y - q end
+	-- if love.keyboard.isScancodeDown("s") then self.cam_y = self.cam_y + q end
 
 	-- Screenshake
 	self.screenshake_q = max(0, self.screenshake_q - self.screenshake_speed * dt)

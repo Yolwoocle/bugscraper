@@ -106,7 +106,7 @@ function Guns:init()
 		self.max_ammo = 150
 
 		self.random_angle_offset = 0.5
-		self.damage = 0.1
+		self.damage = 0.3
 		self.is_auto = true
 		self.spr = images.gun_minigun
 

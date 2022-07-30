@@ -179,6 +179,10 @@ function Enemies:init()
 	function self.SnailShelled:after_collision(col, other)
 		-- Pong-like bounce
 		if col.other.is_solid or col.other.name == "" then
+			local s = "metalfootstep_0"..tostring(love.math.random(0,4))
+			print("sound", s)
+			audio:play_var(s, 0.3, 1.1, {pitch=0.8, volume=0.5})
+
 			particles:smoke(col.touch.x, col.touch.y)
 
 			if col.normal.x ~= 0 then    self.pong_vx = sign(col.normal.x) * abs(self.pong_vx)    end

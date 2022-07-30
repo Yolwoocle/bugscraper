@@ -67,11 +67,9 @@ local waves = {
 	min = 6,
 	max = 8,
 	enemies = {
-		{E.Larva, 3},
-		{E.Fly, 3},
 		{E.SnailShelled, 3},
 		{E.Slug, 2},
-		{E.SpikedFly, 20},
+		{E.SpikedFly, 5},
 	},
 },
 
@@ -86,12 +84,11 @@ local waves = {
 
 { -- 8
 	-- ALL
-	min = 10,
-	max = 14,
+	min = 8,
+	max = 10,
 	enemies = {
 		{E.Larva, 4},
 		{E.Fly, 3},
-		{E.SnailShelled, 3},
 		{E.Slug, 2},
 		{E.Grasshopper, 1},
 		{E.SpikedFly, 1},

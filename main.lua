@@ -62,36 +62,36 @@ function love.keypressed(key, scancode, isrepeat)
 	elseif key == "f11" then
 		if options then   options:toggle_fullscreen()    end
 
-	elseif key == "m" then
-		options:toggle_sound()
+	-- elseif key == "m" then
+	-- 	options:toggle_sound()
 		
-	elseif key == "g" then
-		game.players[1]:kill()
+	-- elseif key == "g" then
+	-- 	game.players[1]:kill()
 
-	elseif key == "e" then
-		if not game then return end
-		for i,e in pairs(game.actors) do
-			if e.is_enemy then
-				e:kill()
-			end
-		end
-		game.floor = 40
+	-- elseif key == "e" then
+	-- 	if not game then return end
+	-- 	for i,e in pairs(game.actors) do
+	-- 		if e.is_enemy then
+	-- 			e:kill()
+	-- 		end
+	-- 	end
+	-- 	game.floor = 40
 	
-	elseif key == "b" then
-		if not game then return end
-		local Enemies = require "data.enemies"
-		local nx = CANVAS_WIDTH/2
-		local ny = game.world_generator.box_by * BLOCK_WIDTH
-		local l = create_actor_centered(Enemies.ButtonGlass, nx, ny)
-		game:new_actor(l)
+	-- elseif key == "b" then
+	-- 	if not game then return end
+	-- 	local Enemies = require "data.enemies"
+	-- 	local nx = CANVAS_WIDTH/2
+	-- 	local ny = game.world_generator.box_by * BLOCK_WIDTH
+	-- 	local l = create_actor_centered(Enemies.ButtonGlass, nx, ny)
+	-- 	game:new_actor(l)
 
-	elseif key == "k" then
-		if not game then return end
-		for i,e in pairs(game.actors) do
-			if e.is_enemy then
-				e:kill()
-			end
-		end
+	-- elseif key == "k" then
+	-- 	if not game then return end
+	-- 	for i,e in pairs(game.actors) do
+	-- 		if e.is_enemy then
+	-- 			e:kill()
+	-- 		end
+	-- 	end
 
 	end
 
