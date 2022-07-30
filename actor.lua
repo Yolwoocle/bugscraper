@@ -19,6 +19,9 @@ function Actor:init_actor(x, y, w, h, spr, args)
 	self.sx = 1
 	self.sy = 1
 
+	self.dx = 0
+	self.dy = 0
+
 	self.vx = 0
 	self.vy = 0
 
@@ -54,6 +57,9 @@ function Actor:init_actor(x, y, w, h, spr, args)
 		self.spr_ox = floor((self.spr_w - self.w) / 2)
 		self.spr_oy = self.spr_h - self.h 
 	end
+
+	self.spr_x = 0
+	self.spr_y = 0
 end
 
 function Actor:update()
@@ -111,6 +117,15 @@ function Actor:update_actor(dt)
 
 	self.mid_x = self.x + self.w/2
 	self.mid_y = self.y + self.h/2
+
+	-- Sprite
+	local spr_w2 = floor(self.spr:getWidth() / 2)
+	local spr_h2 = floor(self.spr:getHeight() / 2)
+
+	local x = self.x + spr_w2 - self.spr_ox
+	local y = self.y + spr_h2 - self.spr_oy
+	self.spr_x = floor(x)
+	self.spr_y = floor(y)
 end
 
 function Actor:draw()
@@ -131,8 +146,7 @@ function Actor:draw_actor(fx, fy, custom_draw)
 	local spr_w2 = floor(self.spr:getWidth() / 2)
 	local spr_h2 = floor(self.spr:getHeight() / 2)
 
-	local x = self.x + spr_w2 - self.spr_ox
-	local y = self.y + spr_h2 - self.spr_oy
+	local x, y = self.spr_x, self.spr_y
 	if self.spr then
 		local old_col = {gfx.getColor()}
 		-- Shadow
@@ -149,8 +163,6 @@ function Actor:draw_actor(fx, fy, custom_draw)
 		
 		local drw_func = gfx.draw
 		if custom_draw then    drw_func = custom_draw    end
-		self.spr_x = floor(x)
-		self.spr_y = floor(y)
 		drw_func(self.spr, x, y, self.rot, fx, fy, spr_w2, spr_h2)
 	end
 end

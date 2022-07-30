@@ -25,6 +25,10 @@ local sfxnames = {
 	"menu_select", "menu_select.wav",
 	"kill_enemy", "kill_enemy.wav",
 	"wall_slide", "wall_slide.wav",
+	"game_over_1", "game_over_1.wav",
+	"game_over_2", "game_over_2.wav",
+
+	"explosion", "explosion.wav",
 
 	"footstep00", "footstep00.wav", -- CC0 https://kenney.nl/
 	"footstep01", "footstep01.wav",

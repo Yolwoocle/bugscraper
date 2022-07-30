@@ -55,7 +55,7 @@ function AudioManager:play_var(snd, vol_var, pitch_var, parms)
 	local def_vol = parms.volume or 1
 	local volume = random_range(def_vol-vol_var, def_vol)
 	local pitch = random_range(1/pitch_var, pitch_var) * (parms.pitch or 1)
-	print("vp",volume, pitch)
+	print("vp", volume, pitch)
 	self:play(snd, volume, pitch)
 end
 

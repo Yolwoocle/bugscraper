@@ -123,6 +123,51 @@ end
 
 ------------------------------------------------------------
 
+local DeadPlayerParticle = Particle:inherit()
+
+function DeadPlayerParticle:init(x,y,spr,dir_x)
+	--                 x,y,s,r, vx,vy,vs,vr, life, g, is_solid
+	self:init_particle(x,y,1,0, 0,0,0,0,     10, 0, false)
+	self.spr = spr
+	
+	self.dir_x = dir_x
+	
+	self.spr_w = self.spr:getWidth()
+	self.spr_h = self.spr:getHeight()
+	self.spr_ox = self.spr_w / 2
+	self.spr_oy = self.spr_h / 2
+
+	self.oy = 0
+
+	self.sx = 1
+	self.sy = 1
+
+	self.r = 0
+
+	self.cols = {color(0xf6757a), color(0xb55088), color(0xe43b44), color(0x3a4466), color(0x262b44)}
+
+	particles:splash(self.x, self.y - self.oy, 40, self.cols)
+end
+function DeadPlayerParticle:update(dt)
+	self:update_particle(dt)
+
+	local goal_r = 5*sign(self.dir_x)*pi2
+	self.r = lerp(self.r, goal_r, 0.06)
+	self.oy = lerp(self.oy, 40, 0.05)
+
+	if abs(self.r - goal_r) < 0.1 then
+		game:screenshake(10)
+		audio:play("explosion")
+		particles:splash(self.x, self.y - self.oy, 40, {COL_LIGHT_YELLOW, COL_ORANGE, COL_LIGHT_RED, COL_WHITE})
+		self.is_removed = true
+	end
+end
+function DeadPlayerParticle:draw()
+	love.graphics.draw(self.spr, self.x, self.y - self.oy, self.r, self.sx, self.sy, self.spr_ox, self.spr_oy)
+end
+
+------------------------------------------------------------
+
 local ParticleSystem = Class:inherit()
 
 function ParticleSystem:init(x,y)
@@ -187,6 +232,35 @@ function ParticleSystem:dust(x, y, col, size, rnd_pos, sizevar)
 	self:add_particle(CircleParticle:new(x+dx, y+dy, size+dsize, col, 0, 0, _vr, _life))
 end
 
+
+function ParticleSystem:splash(x, y, number, col, spw_rad, size, sizevar)
+	number = number or 10
+	spw_rad = spw_rad or 8
+	size = size or 4
+	sizevar = sizevar or 2
+
+	for i=1,number do
+		local ang = love.math.random() * pi2
+		local dist = love.math.random() * spw_rad
+		local dx, dy = cos(ang)*dist, sin(ang)*dist
+		local dsize = random_neighbor(sizevar)
+		
+		local v = random_range(0.6, 1)
+		local c = col or {v,v,v,1}
+		if type(col) == "table" then
+			c = random_sample(col)
+		end
+
+		local vx = random_neighbor(50)
+		local vy = random_range(-200, 0)
+		local vy = random_neighbor(50)
+		local vs = random_range(6,12)
+
+		self:add_particle(CircleParticle:new(x+dx, y+dy, size+dsize, c, vx, vy, vs, _life, 0))
+	end
+end
+
+
 function ParticleSystem:flash(x, y)
 	-- x,y,r,col, vx,vy,vr, life
 	local r = 8 + random_neighbor(2)
@@ -228,6 +302,10 @@ end
 
 function ParticleSystem:stomped_enemy(x, y, spr)
 	self:add_particle(StompedEnemyParticle:new(x, y, spr))
+end
+
+function ParticleSystem:dead_player(x, y, spr, dir_x)
+	self:add_particle(DeadPlayerParticle:new(x, y, spr, dir_x))
 end
 
 

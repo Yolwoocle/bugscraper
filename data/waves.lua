@@ -147,7 +147,7 @@ unpack(duplicate_table({
 }, 4)),
 
 -- Last wave
-{
+{ -- 16
 	min = 1,
 	max = 1,
 	enemies = {

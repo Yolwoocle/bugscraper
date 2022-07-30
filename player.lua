@@ -116,6 +116,12 @@ function Player:init(n, x, y, spr, controls)
 	}
 	self.gun_number = 1
 
+	self.is_dead = false
+	self.gameoveranim_a = 0
+	self.gameoveranim_y = 0
+	self.timer_before_death = 0
+	self.max_timer_before_death = 3.3
+
 	-- UI
 	self.ui_x = self.x
 	self.ui_y = self.y
@@ -126,6 +132,10 @@ end
 
 function Player:update(dt)
 	self.dt = dt
+	if self.is_dead then
+		self:do_death_anim(dt)
+		return
+	end
 
 	-- Movement
 	self:move(dt)
@@ -173,6 +183,7 @@ end
 
 function Player:draw()
 	if self.is_removed then   return   end
+	if self.is_dead then    return    end
 	
 	if self.is_invincible then
 		local v = 1 - (self.iframes / self.max_iframes)
@@ -193,6 +204,8 @@ function Player:draw()
 end
 
 function Player:draw_hud()
+	if self.is_removed or self.is_dead then    return    end
+
 	-- Life
 	-- local ui_y = floor(self.y - self.spr:getHeight() - 6)
 	-- ui:draw_icon_bar(self.mid_x, ui_y, self.life, self.max_life, images.heart, images.heart_empty)
@@ -428,11 +441,27 @@ end
 
 function Player:kill()
 	self.is_dead = true
-	game:on_kill(self)
+	game:screenshake(10)
+	particles:dead_player(self.spr_x, self.spr_y, self.spr, self.dir_x)
 	self:on_death()
+	game:on_kill(self)
+	
+	self.timer_before_death = self.max_timer_before_death
+	audio:play("game_over_1")
 end
 
 function Player:on_death()
+	
+end
+
+function Player:do_death_anim(dt)	
+	if not self.is_dead then   return   end
+	self.timer_before_death = self.timer_before_death - dt
+	
+	if self.timer_before_death <= 0 then
+		game:on_game_over()
+		audio:play("game_over_2")
+	end
 end
 
 function Player:shoot(dt, is_burst)

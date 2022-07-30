@@ -200,6 +200,13 @@ function Game:new_game(number_of_players)
 	}
 
 	self.time = 0
+
+	-- Cabin stats
+	--TODO: fuze it into map or remove map, only have coll boxes & no map
+	local bw = BLOCK_WIDTH
+	self.cabin_x, self.cabin_y = self.world_generator.box_ax*bw, self.world_generator.box_ay*bw
+	self.door_ax, self.door_ay = self.cabin_x+154, self.cabin_x+122
+	self.door_bx, self.door_by = self.cabin_y+261, self.cabin_y+207
 end
 
 function Game:update(dt)
@@ -270,12 +277,6 @@ function Game:draw()
 	self.map:draw()
 	
 	-- Background
-	--TODO: fuze it into map or remove map, only have coll boxes & no map
-	local bw = BLOCK_WIDTH
-	self.cabin_x, self.cabin_y = self.world_generator.box_ax*bw, self.world_generator.box_ay*bw
-	self.door_ax, self.door_ay = self.cabin_x+154, self.cabin_x+122
-	self.door_bx, self.door_by = self.cabin_y+261, self.cabin_y+207
-
 	
 	-- Door background
 	rect_color(COL_BLACK_BLUE, "fill", self.door_ax, self.door_ay, self.door_bx - self.door_ax, self.door_by - self.door_ay)
@@ -390,14 +391,14 @@ function Game:on_kill(actor)
 	end
 
 	if actor.is_player then
-		self:on_game_over()
+		-- Save stats
+		self.stats.time = self.time
+		self.stats.floor = self.floor
 	end
 end
 
 function Game:on_game_over()
 	self.menu:set_menu("game_over")
-	self.stats.time = self.time
-	self.stats.floor = self.floor
 end
 
 function Game:do_win()

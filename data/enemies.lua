@@ -39,7 +39,7 @@ function Enemies:init()
 		self:init_enemy(x,y, images.spiked_fly, 15,15)
 		self.name = "fly"
 		self.is_flying = true
-		self.life = 15
+		self.life = 8
 
 		self.is_stompable = false
 		--self.speed_y = 0--self.speed * 0.5
@@ -57,11 +57,11 @@ function Enemies:init()
 	self.Larva = Enemy:inherit()
 	
 	function self.Larva:init(x, y)
-		self:init_enemy(x,y, images.larva1, 11, 11)
+		self:init_enemy(x,y, images.larva1, 17, 5)
 		self.name = "larva"
 		self.follow_player = false
 		
-		self.life = random_range(3, 7)
+		self.life = random_range(3, 5)
 		self.friction_x = 1
 		self.speed = 40
 		self.walk_dir_x = random_sample{-1, 1}
@@ -454,7 +454,7 @@ function Enemies:init()
 
 		if game.screenshake_q < 5 then
 			game:screenshake(2)
-		end 
+		end
 	end
 
 	local Button = self.Button
