@@ -19,7 +19,7 @@ end
 
 function love.update(dt)
 	t = t + dt
-	local cap = 2 --If theres lag spike, repeat up to how many frames?
+	local cap = 1 --If theres lag spike, repeat up to how many frames?
 	local i = 0
 	while t > fdt and cap > 0 do
 		t = t - fdt

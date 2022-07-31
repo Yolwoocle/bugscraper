@@ -66,7 +66,7 @@ function Enemies:init()
 		self.speed = 40
 		self.walk_dir_x = random_sample{-1, 1}
 
-		-- self.sound_damage = {sounds.larva_damage1, sounds.larva_damage2, sounds.larva_damage3}
+		self.sound_damage = {sounds.larva_damage1, sounds.larva_damage2, sounds.larva_damage3}
 		-- self.sound_death = sounds.larva_death
 	end
 

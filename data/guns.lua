@@ -15,9 +15,10 @@ function Guns:init()
 		
 		self.sfx = sounds.shot1
 		self.damage = 2
+		self.max_ammo = 25
+		self.max_reload_timer = 1.5
 		self.is_auto = true
 		self.spr = images.gun_machinegun
-		self.max_ammo = 25
 
 		self.cooldown = 0.1
 		self.jetpack_force = 440
@@ -31,12 +32,11 @@ function Guns:init()
 		self:init_gun(user)
 		self.name = "triple"
 
-		self.max_ammo = 200
+		self.max_ammo = 15
 
-		self.damage = 1
+		self.damage = 2
 		self.is_auto = true
 		self.spr = images.gun_triple
-		self.max_ammo = 1000
 		self.cooldown = 0.2
 		self.bullet_number = 3
 		self.random_angle_offset = 0
@@ -53,15 +53,15 @@ function Guns:init()
 		self.spr = images.gun_burst
 		self.bullet_spread = 0.2
 		
-		self.max_ammo = 300
-
 		self.is_auto = false
 		self.is_burst = true
-
+		
 		self.damage = 1
 		self.cooldown = 0.4
 		self.burst_count = 5
 		self.burst_delay = 0.05
+		
+		self.max_ammo = self.burst_count * 6
 	end
 
 	----------------
@@ -73,17 +73,16 @@ function Guns:init()
 		self.name = "shotgun"
 		self.spr = images.gun_shotgun
 		self.sfx = sounds.shot2
-		
-		self.max_ammo = 40
 
 		self.is_auto = false
 
-		self.damage = 0.5
+		self.damage = 1
 		self.cooldown = 0.4
 		self.bullet_speed = 800 --def: 400
 		self.bullet_number = 12
 
-		self.max_ammo = self.bullet_number * 35
+		self.max_ammo = 7
+		self.max_reload_timer = 2
 
 		self.bullet_spread = 0
 		self.bullet_friction = 0.95
@@ -104,6 +103,7 @@ function Guns:init()
 		self.name = "machinegun"
 		
 		self.max_ammo = 150
+		self.max_reload_timer = 1.5
 
 		self.random_angle_offset = 0.5
 		self.damage = 0.3
@@ -127,11 +127,14 @@ function Guns:init()
 		self.is_auto = true
 		self.spr = images.gun_mushroom_cannon
 		self.bullet_spr = images.mushroom_yellow
-		self.max_ammo = 100
 		self.bullet_speed = 300
+		self.bul_w = 14
+		self.bul_h = 14
 
-		self.cooldown = 0.1
-		self.jetpack_force = 340
+		self.max_ammo = 100
+
+		self.cooldown = 0.2
+		self.jetpack_force = 540
 	end
 
 	-----
@@ -150,7 +153,7 @@ function Guns:init()
 		self.is_auto = true
 		self.spr = images.empty
 		self.bullet_spr = images.mushroom
-		self.max_ammo = math.huge
+		self.max_ammo = 20
 		self.bullet_speed = 100
 
 		self.cooldown = 0

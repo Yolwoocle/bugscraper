@@ -37,7 +37,7 @@ function Gun:init_gun(user)
 
 	-- Ammo
 	self.max_ammo = 100
-	self.ammo = self.max_ammo
+	self.ammo = math.huge
 	self.is_reloading = false
 	self.reload_timer = 0
 	self.max_reload_timer = 1
@@ -133,7 +133,8 @@ function Gun:shoot(dt, player, x, y, dx, dy, is_burst)
 	})
 
 	if is_first_fire then    self.cooldown_timer = self.cooldown    end
-	self.ammo = self.ammo - self.bullet_number
+	self.ammo = self.ammo - 1
+	-- self.ammo = self.ammo - self.bullet_number
 
 	local ang = atan2(dy, dx)
 	local gunw = max(0, self.spr:getWidth() - 8)

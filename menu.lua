@@ -385,6 +385,11 @@ function MenuManager:init(game)
 		{ "<<< Design, programming & sound design >>>"},
 		{ "Léo Bernard (Yolwoocle)", func_url("https://twitter.com/yolwoocle_")},
 		{ "" },
+		{ "<<< Special Thanks >>>"},
+		{ "Gouspourd", function() end},
+		{ "hades140701", function() end },
+		{ ""},
+		
 		{ "<<<<< Assets Used >>>>>"},
 		{ "Kenney assets, including sound effects - https://kenney.nl/", func_url("https://kenney.nl/")},
 		{ ""},
@@ -393,8 +398,6 @@ function MenuManager:init(game)
 		{ "'Glass Break' by avrahamy / CC0", func_url("https://freesound.org/people/avrahamy/sounds/141563/")},
 		{ "'Glass shard tinkle texture' by el-bee / CC BY 4.0", func_url("https://freesound.org/people/el-bee/sounds/636238/")},
 		{ "'Bad Beep (Incorrect)' by RICHERlandTV / CC BY 3.0", func_url("https://freesound.org/people/RICHERlandTV/sounds/216090/")},
-		{ "'[Keyboard press]' by MattRuthSound / CC BY 3.0", func_url("https://freesound.org/people/MattRuthSound/sounds/561661/")},
-		{ "'Paper Throw Into Air(fuller) 2' by RossBell / CC0", func_url("https://freesound.org/people/RossBell/sounds/389442/")},
 		{ ""},
 		{ "[ NEXT PAGE ]", function(self)
 			game.menu:set_menu("credits2")
@@ -405,6 +408,8 @@ function MenuManager:init(game)
 		{"<<<<<<<<< CREDITS >>>>>>>>>"},
 		{ "< BACK", function() game.menu:back() end },
 		{ "" },
+		{ "'[Keyboard press]' by MattRuthSound / CC BY 3.0", func_url("https://freesound.org/people/MattRuthSound/sounds/561661/")},
+		{ "'Paper Throw Into Air(fuller) 2' by RossBell / CC0", func_url("https://freesound.org/people/RossBell/sounds/389442/")},
 		{ "'Slime' by Lukeo135 / CC0", func_url("https://freesound.org/people/Lukeo135/sounds/530617/")},
 		{ ""},
 		{ "<< CC Licenses >>"},

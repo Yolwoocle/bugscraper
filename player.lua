@@ -568,7 +568,11 @@ function Player:on_collision(col, other)
 end
 
 function Player:on_stomp(enemy)
-	self.vy = -self.stomp_jump_speed
+	local spd = -self.stomp_jump_speed
+	if self:button_down("jump") or self.buffer_jump_timer > 0 then
+		spd = spd * 1.3
+	end
+	self.vy = spd
 	self:set_invincibility(0.2)
 end
 

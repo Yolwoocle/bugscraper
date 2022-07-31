@@ -282,7 +282,7 @@ function Game:draw()
 	rect_color(COL_BLACK_BLUE, "fill", self.door_ax, self.door_ay, self.door_bx - self.door_ax, self.door_by - self.door_ay)
 	-- If doing door animation, draw buffered enemies
 	if self.door_animation then
-		for i,e in pairs(self.door_animation_enemy_buffer) do 
+		for i,e in pairs(self.door_animation_enemy_buffer) do
 			e:draw()
 		end
 	end
@@ -599,9 +599,9 @@ function Game:new_wave_buffer_enemies()
 	for i=1, n do
 		-- local x = love.math.random((wg.box_ax+1)*bw, (wg.box_bx-1)*bw)
 		-- local y = love.math.random((wg.box_ay+1)*bw, (wg.box_by-1)*bw)
-		local x = love.math.random(self.door_ax, self.door_bx)
-		local y = love.math.random(self.door_ay, self.door_by)
-		
+		local x = love.math.random(self.door_ax + 16, self.door_bx - 16)
+		local y = love.math.random(self.door_ay + 16, self.door_by - 16)
+
 		local enem = random_weighted(wave.enemies)
 		local e = enem:new(x,y)
 		
@@ -613,11 +613,13 @@ function Game:new_wave_buffer_enemies()
 		-- Center enemy
 		e.x = floor(e.x - e.w/2)
 		e.y = floor(e.y - e.h/2)
-
+		
 		-- Prevent collisions with floor
 		if e.y+e.h > self.door_by then   e.y = self.door_by - e.h    end
 		collision:remove(e)
 		table.insert(self.door_animation_enemy_buffer, e)
+		
+				print(e.x, e.y)
 	end
 end
 

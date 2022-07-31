@@ -36,8 +36,8 @@ function Enemy:init_enemy(x,y, img, w,h)
 	self.speed_y = 0
 
 	self.loot = {
-		{nil, 100},
-		{Loot.Ammo, 15, loot_type="ammo", value=20},
+		{nil, 90},
+		{Loot.Ammo, 0, loot_type="ammo", value=20},
 		{Loot.Life, 5, loot_type="life", value=1},
 		{Loot.Gun, 3, loot_type="gun"},
 	}
@@ -220,10 +220,10 @@ function Enemy:on_hit_bullet(bul, col)
 	self:do_damage(bul.damage, bul)
 	
 	if self.is_knockbackable then
-		self:do_knockback(bul.knockback * self.self_knockback_mult, bul)
-		-- local ang = atan2(bul.vy, bul.vx)
-		-- self.vx = self.vx + cos(ang) * bul.knockback
-		-- self.vy = self.vy + sin(ang) * bul.knockback
+		-- self:do_knockback(bul.knockback * self.self_knockback_mult, bul)
+		local ang = atan2(bul.vy, bul.vx)
+		self.vx = self.vx + cos(ang) * bul.knockback
+		self.vy = self.vy + sin(ang) * bul.knockback
 	end
 end
 

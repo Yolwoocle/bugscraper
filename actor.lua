@@ -60,6 +60,8 @@ function Actor:init_actor(x, y, w, h, spr, args)
 
 	self.spr_x = 0
 	self.spr_y = 0
+
+	self:update_sprite_position()
 end
 
 function Actor:update()
@@ -118,6 +120,10 @@ function Actor:update_actor(dt)
 	self.mid_x = self.x + self.w/2
 	self.mid_y = self.y + self.h/2
 
+	self:update_sprite_position()
+end
+
+function Actor:update_sprite_position()
 	-- Sprite
 	local spr_w2 = floor(self.spr:getWidth() / 2)
 	local spr_h2 = floor(self.spr:getHeight() / 2)

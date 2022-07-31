@@ -38,17 +38,14 @@ function OptionsManager:load_options()
 		local line = contents[i]
 		local tab = split_str(line, ":")
 		local key, value = tab[1], tab[2]
-		print("file(key, val):", key, value)
 
 		if self.options[key] then
 			local typ = type(self.options[key])
-			print("type(self.options[key])", type(self.options[key]))
 			local val
 			if typ == "string" then   val = value    end
 			if typ == "number" then   val = tonumber(value)   end
 			if typ == "boolean" then   val = strtobool(value)   end
 			if typ == "table" then   val = split_str(value, ",")   end
-			print(val, type(val))
 
 			self.options[key] = val
 		else
