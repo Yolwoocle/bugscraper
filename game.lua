@@ -60,11 +60,15 @@ function Game:init()
 	-- Audio ===> Moved to OptionsManager
 	-- self.volume = options:get("volume")
 	-- self.sound_on = options:get("sound_on")
+
+	options:set_volume(options:get("volume"))
 	
 	self:new_game()
 	
 	-- Menu Manager
 	self.menu = MenuManager:new(self)
+
+	love.mouse.setVisible(options:get("mouse_visible"))
 end
 
 
@@ -147,10 +151,10 @@ function Game:new_game(number_of_players)
 	-- Don't try to understand all you have to know is that it puts collision 
 	-- boxes around the elevator shaft
 	self.boxes = {
-		{name="box_up",     is_solid = true, x = -BW, y = -BW,  w=map_w + 2*BW,     h=BW + box_ay*BW},
-		{name="box_down", is_solid = true, x = -BW, y = (box_by+1)*BW,  w=map_w + 2*BW,     h=BW*box_ay},
-		{name="box_left", is_solid = true, x = -BW,  y = -BW,   w=BW + box_ax * BW, h=map_h + 2*BW},
-		{name="box_right", is_solid = true, x = BW*(box_bx+1), y = -BW, w=BW*box_ax, h=map_h + 2*BW},
+		{name="box_up",     is_solid = false, x = -BW, y = -BW,  w=map_w + 2*BW,     h=BW + box_ay*BW},
+		{name="box_down", is_solid = false, x = -BW, y = (box_by+1)*BW,  w=map_w + 2*BW,     h=BW*box_ay},
+		{name="box_left", is_solid = false, x = -BW,  y = -BW,   w=BW + box_ax * BW, h=map_h + 2*BW},
+		{name="box_right", is_solid = false, x = BW*(box_bx+1), y = -BW, w=BW*box_ax, h=map_h + 2*BW},
 	}
 	for i,box in pairs(self.boxes) do   collision:add(box)   end
 	
@@ -178,6 +182,7 @@ function Game:new_game(number_of_players)
 
 	-- Debugging
 	self.debug_mode = false
+	self.colview_mode = false
 	self.msg_log = {}
 
 	self.test_t = 0
@@ -207,9 +212,19 @@ function Game:new_game(number_of_players)
 	self.cabin_x, self.cabin_y = self.world_generator.box_ax*bw, self.world_generator.box_ay*bw
 	self.door_ax, self.door_ay = self.cabin_x+154, self.cabin_x+122
 	self.door_bx, self.door_by = self.cabin_y+261, self.cabin_y+207
+
+	self.frames_to_skip = 0
+
+	self.draw_shadows = false
 end
 
+local n = 0
 function Game:update(dt)
+	self.frames_to_skip = max(0, self.frames_to_skip - 1)
+	if self.frames_to_skip > 0 then
+		return
+	end
+
 	-- Menus
 	self.menu:update(dt)
 
@@ -224,8 +239,10 @@ function Game:update(dt)
 end
 
 function Game:update_main_game(dt)
-	self.time = self.time + dt
-	
+	if self.game_started then
+		self.time = self.time + dt
+	end
+
 	self.map:update(dt)
 
 	-- Particles
@@ -288,6 +305,14 @@ function Game:draw()
 	end
 	self:draw_background(self.cabin_x, self.cabin_y)
 	
+	local old_canvas
+	local objs_canvas
+	if self.draw_shadows then
+		old_canvas = love.graphics.getCanvas()
+		objs_canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
+		love.graphics.setCanvas(objs_canvas)
+	end
+
 	-- Draw actors
 	for _,actor in pairs(self.actors) do
 		if not actor.is_player then
@@ -297,8 +322,17 @@ function Game:draw()
 	for _,p in pairs(self.players) do
 		p:draw()
 	end
-
+	
 	particles:draw()
+	
+	if self.draw_shadows then
+		love.graphics.setCanvas(old_canvas)
+		
+		love.graphics.setColor(0,0,0, 0.5)
+		love.graphics.draw(objs_canvas, 0, 3)
+		love.graphics.setColor(1,1,1, 1)
+		love.graphics.draw(objs_canvas, 0, 0)
+	end
 
 	-- Walls
 	gfx.draw(images.cabin_walls, self.cabin_x, self.cabin_y)
@@ -330,9 +364,34 @@ function Game:draw()
 	end
 	gfx.draw(images.controls, floor((CANVAS_WIDTH - images.controls:getWidth())/2), floor(self.logo_y) + images.logo:getHeight()+6)
 
+	-- Timer
+	if options:get("timer_on") then
+		gfx.print(time_to_string(self.time), 2, 2)
+	end
+
 	-- Debug
+	if self.colview_mode then
+		self:draw_colview()
+	end
 	if self.debug_mode then
 		self:draw_debug()
+	end
+	if self.inputview_mode then
+		local txts = {}
+		local p = self.players[1]
+		for k,v in pairs(p.controls) do
+			if type(v) == "table" then
+				table.insert(txts, concat(k, "/ down:[", p:button_down(k), "] prsd:[", p:button_pressed(k),"] old:[", p.last_input_state[k], "]"))
+			end
+		end
+		for i=1, #txts do  print_label(txts[i], self.cam_x, 80+self.cam_y+get_text_height("")*i) end
+	
+		local txts = {}
+		local p = self.players[1]
+		for k,v in pairs(p.last_input_state) do
+			table.insert(txts, concat(k," ",v))
+		end
+		for i=1, #txts do  print_label(txts[i], self.cam_x+CANVAS_WIDTH/2+30, self.cam_y+get_text_height("")*i) end
 	end
 
 	if self.menu.cur_menu then
@@ -348,15 +407,17 @@ function Game:draw()
 
 end
 
-function Game:draw_debug()
-	gfx.print(concat("FPS: ",love.timer.getFPS(), " / frmRpeat: ",self.frame_repeat, " / frame: ",frame), 0, 0)
-	
+function Game:draw_colview()
 	local items, len = collision.world:getItems()
 	for i,it in pairs(items) do
 		local x,y,w,h = collision.world:getRect(it)
-		rect_color({0,1,0,.3},"fill", x, y, w, h)
+		rect_color({0,1,0,.2},"fill", x, y, w, h)
 		rect_color({0,1,0,.5},"line", x, y, w, h)
 	end
+end
+
+function Game:draw_debug()
+	gfx.print(concat("FPS: ",love.timer.getFPS(), " / frmRpeat: ",self.frame_repeat, " / frame: ",frame), 0, 0)
 	
 	-- Print debug info
 	local txt_h = get_text_height(" ")
@@ -366,7 +427,10 @@ function Game:draw_debug()
 		concat("n° of enemies: ", self.enemy_count),
 		concat("n° collision items: ", collision.world:countItems()),
 		concat("elevator speed: ", self.elevator_speed),
+		concat("frames_to_skip: ", self.frames_to_skip),
+		"",
 	}
+
 	for i=1, #txts do  print_label(txts[i], self.cam_x, self.cam_y+txt_h*i) end
 	
 	self.world_generator:draw()
@@ -388,6 +452,10 @@ function Game:on_kill(actor)
 	if actor.counts_as_enemy then
 		self.enemy_count = self.enemy_count - 1
 		self.stats.kills = self.stats.kills + 1
+
+		if actor.name == "dummy_target" then
+			self.game_started = true
+		end
 	end
 
 	if actor.is_player then
@@ -417,30 +485,6 @@ end
 
 function Game:init_players()
 	-- TODO: move this to a general function (?)
-	local control_schemes = {
-		[1] = {
-			type = "keyboard",
-			left = {"a", "left"},
-			right = {"d", "right"},
-			up = {"w", "up"},
-			down = {"s", "down"},
-			jump = {"z", "c", "b"},
-			shoot = {"x", "v", "n"},
-			switchgun = {"t"}, --test
-			pause = {"escape"},
-		},
-		[2] = {
-			type = "keyboard",
-			left = {"left"},
-			right = {"right"},
-			up = {"up"},
-			down = {"down"},
-			jump = {"."},
-			shoot = {","},
-			pause = {"escape"},
-		}
-	}
-
 	local sprs = {
 		images.ant,
 		images.caterpillar
@@ -453,7 +497,7 @@ function Game:init_players()
 	local my = floor(self.map.height / 2)
 
 	for i=1, self.number_of_players do
-		local player = Player:new(i, mx*16 + i*16, my*16, sprs[i], control_schemes[i])
+		local player = Player:new(i, mx*16 + i*16, my*16, sprs[i], options:get_controls(i))
 		self.players[i] = player
 		self:new_actor(player)
 	end
@@ -618,8 +662,6 @@ function Game:new_wave_buffer_enemies()
 		if e.y+e.h > self.door_by then   e.y = self.door_by - e.h    end
 		collision:remove(e)
 		table.insert(self.door_animation_enemy_buffer, e)
-		
-				print(e.x, e.y)
 	end
 end
 
@@ -663,6 +705,14 @@ end
 function Game:keypressed(key, scancode, isrepeat)
 	if key == "f3" then
 		self.debug_mode = not self.debug_mode
+	elseif key == "f2" then
+		self.colview_mode = not self.colview_mode
+	elseif key == "f1" then
+		self.inputview_mode = not self.inputview_mode
+	end
+
+	if self.menu then
+		self.menu:keypressed(key, scancode, isrepeat)
 	end
 
 	for i, ply in pairs(self.players) do
@@ -677,7 +727,12 @@ end
 -- end
 
 function Game:screenshake(q)
+	if not options:get('screenshake_on') then  return   end  
 	self.screenshake_q = self.screenshake_q + q
+end
+
+function Game:frameskip(q)
+	self.frames_to_skip = min(60, self.frames_to_skip + q + 1)
 end
 
 function Game:button_down(btn)

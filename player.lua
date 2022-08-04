@@ -18,6 +18,7 @@ function Player:init(n, x, y, spr, controls)
 	self:init_actor(x, y, 14, 14, spr)
 	self.is_player = true
 	self.is_being = true
+	self.name = concat("player", n)
 	
 	-- Life
 	self.max_life = 4
@@ -56,11 +57,18 @@ function Player:init(n, x, y, spr, controls)
 	self.speed = 50 --This is acceleration not speed but I'm too lazy to change now
 
 	-- Jump
-	self.jump_speed = 480--450
+	self.jump_speed = 450--450
 	self.buffer_jump_timer = 0
 	self.coyote_time = 0
 	self.default_coyote_time = 6
 	self.stomp_jump_speed = 500
+
+	-- Air time
+	self.air_time = 0
+	self.jump_air_time = 0.3
+	self.air_jump_force = 22
+
+	self.frames_since_land = 0
 
 	-- Wall sliding & jumping
 	self.is_walled = false
@@ -156,15 +164,21 @@ function Player:update(dt)
 		self:kill()
 	end
 	
+	if self.is_grounded then
+		self.frames_since_land = self.frames_since_land + 1
+	else
+		self.frames_since_land = 0
+	end
+
 	if love.keyboard.isDown("m") then
 		self:equip_gun(Guns.MushroomCannon:new())
 	end
 
-	-- Gun
-	if self:button_pressed("switchgun") then
-		self.gun_number = mod_plus_1((self.gun_number + 1), #self.guns)
-		self:equip_gun(self.guns[self.gun_number])
-	end
+	-- -- Gun
+	-- if self:button_pressed("switchgun") then
+	-- 	self.gun_number = mod_plus_1((self.gun_number + 1), #self.guns)
+	-- 	self:equip_gun(self.guns[self.gun_number])
+	-- end
 
 	self.gun:update(dt)
 	self:shoot(dt, false)
@@ -235,10 +249,8 @@ function Player:draw_hud()
 	-- rect_color(COL_GREEN, "fill", self.mid_x, self.y-32, 1, 60)
 
 	if game.debug_mode then
-		print_outline(COL_WHITE, COL_DARK_BLUE, string.format("x,y: %d / %d",self.x,self.y), self.x+16, ui_y-8*1)
-		print_outline(COL_WHITE, COL_DARK_BLUE, string.format("dir: %d / %d",self.dir_x,self.dir_y), self.x+16, ui_y-8*2)
-		print_outline(COL_WHITE, COL_DARK_BLUE, string.format("shoot_dir: %d / %d",self.shoot_dir_x,self.shoot_dir_y), self.x+16, ui_y-8*3)
 	end
+
 end
 
 function Player:draw_player()
@@ -253,11 +265,11 @@ function Player:draw_player()
 	if self.spr then
 		local old_col = {gfx.getColor()}
 
-		if self.draw_shadow then
-			local o = ((self.x / CANVAS_WIDTH)-.5) * 6
-			love.graphics.setColor(0, 0, 0, 0.5)
-			love.graphics.draw(self.spr, x+o, y+3, 0, fx, fy, spr_w2, spr_h2)
-		end
+		-- if self.draw_shadow then
+		-- 	local o = ((self.x / CANVAS_WIDTH)-.5) * 6
+		-- 	love.graphics.setColor(0, 0, 0, 0.5)
+		-- 	love.graphics.draw(self.spr, x+o, y+3, 0, fx, fy, spr_w2, spr_h2)
+		-- end
 		
 		-- Draw
 		love.graphics.setColor(old_col)
@@ -349,12 +361,19 @@ function Player:do_wall_sliding(dt)
 end
 
 function Player:do_jumping(dt)
-	local do_jump = false
-
 	-- This buffer is so that you still jump even if you're a few frames behind
 	self.buffer_jump_timer = self.buffer_jump_timer - 1
 	if self:button_pressed("jump") then
 		self.buffer_jump_timer = 12
+	end
+
+	-- Update air time 
+	self.air_time = self.air_time + dt
+	if self.is_grounded then self.air_time = 0 end
+	if self.air_time < self.jump_air_time and not self.is_grounded then
+		if self:button_down("jump") then
+			self.vy = self.vy - self.air_jump_force
+		end
 	end
 
 	-- Coyote time
@@ -454,7 +473,7 @@ function Player:on_death()
 	
 end
 
-function Player:do_death_anim(dt)	
+function Player:do_death_anim(dt)
 	if not self.is_dead then   return   end
 	self.timer_before_death = self.timer_before_death - dt
 	
@@ -485,6 +504,10 @@ function Player:shoot(dt, is_burst)
 		local ox = dx * self.gun.bul_w
 		local oy = dy * self.gun.bul_h
 		local success = self.gun:shoot(dt, self, self.mid_x + ox, self.y + oy, dx, dy, is_burst)
+
+		if success and dx ~= 0 then
+			self.vx = self.vx - self.dir_x * self.gun.recoil_force
+		end
 
 		-- If shooting downwards, then go up like a jetpack
 		if self:button_down("down") and success then
@@ -558,9 +581,28 @@ function Player:button_pressed(btn)
 end
 
 function Player:update_button_state()
-	for btn, v in pairs(self.last_input_state) do
-		self.last_input_state[btn] = self:button_down(btn)
+	for btn, v in pairs(self.controls) do
+		if type(v) == "table" then
+			self.last_input_state[btn] = self:button_down(btn)
+		end
 	end
+end
+
+function Player:set_controls(button, value)
+	if not value then
+		local controls = button
+		self.controls = controls
+		return
+	end
+
+	if not self.controls[button] then
+		print(concat("Tried to set btn '", button,"'"))
+		return
+	end
+	if type(value) ~= "table" then
+		print(concat("Val '",value,"' for p:set_controls not table"))
+	end
+	self.controls[button] = value
 end
 
 function Player:on_collision(col, other)
@@ -577,10 +619,11 @@ function Player:on_stomp(enemy)
 end
 
 function Player:do_damage(n, source)
-	if self.iframes > 0 then    return    end
+	if self.iframes > 0 then   print("iframes") return    end
 	if n <= 0 then    return    end
 
 	audio:play("hurt")
+	game:screenshake(5)
 	-- self:do_knockback(source.knockback, source)--, 0, source.h/2)
 	--source:do_knockback(source.knockback*0.75, self)
 	if self.is_knockbackable then
@@ -626,6 +669,8 @@ function Player:on_grounded()
 	self.jump_squash = 2
 	self.spr = self.spr_idle
 	particles:smoke(self.mid_x, self.y+self.h, 10, COL_WHITE, 8, 4, 2)
+
+	self.air_time = 0
 end
 
 function Player:do_aiming(dt)
@@ -717,7 +762,6 @@ function Player:do_particles(dt)
 			particles:dust(self.mid_x, flr_y)
 		end
 	end
-
 end
 
 return Player

@@ -154,18 +154,18 @@ function Actor:draw_actor(fx, fy, custom_draw)
 
 	local x, y = self.spr_x, self.spr_y
 	if self.spr then
-		local old_col = {gfx.getColor()}
+		-- local old_col = {gfx.getColor()}
 		-- Shadow
-		if self.draw_shadow then
-			local o = ((self.x / CANVAS_WIDTH)-.5) * 6
-			love.graphics.setColor(0, 0, 0, 0.5)
-			-- (self.spr, floor(x+o), floor(y+3), 0, fx, fy, spr_w2, spr_h2)
+		-- if self.draw_shadow then
+		-- 	local o = ((self.x / CANVAS_WIDTH)-.5) * 6
+		-- 	love.graphics.setColor(0, 0, 0, 0.5)
+		-- 	-- (self.spr, floor(x+o), floor(y+3), 0, fx, fy, spr_w2, spr_h2)
 
-			love.graphics.draw(self.spr, floor(x+o), floor(y+3), self.rot, fx, fy, spr_w2, spr_h2)
-		end
+		-- 	love.graphics.draw(self.spr, floor(x+o), floor(y+3), self.rot, fx, fy, spr_w2, spr_h2)
+		-- end
 		
 		-- Draw
-		love.graphics.setColor(old_col)
+		-- love.graphics.setColor(old_col)
 		
 		local drw_func = gfx.draw
 		if custom_draw then    drw_func = custom_draw    end

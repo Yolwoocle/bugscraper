@@ -120,21 +120,47 @@ function love.textinput(text)
 	if game.textinput then  game:textinput(text)  end
 end
 
+function love.focus(f)
+	if f then
+	else
+		if options:get("pause_on_unfocus") and game.menu then
+			game.menu:pause()
+		end
+	end
+end
+
+-- function love.textinput( text )
+-- 	if not game then return end
+
+-- 	game:textinput(text)
+-- end
+
+print_log_file = love.filesystem.newFile("consolelog.txt")
+print_log_file:open("w")
+print_log_file:write("")
+print_log_file:close()
+
 max_msg_log = 20
 old_print = print
 msg_log = {}
 function print(...)
+	print_log_file:open("a")
+
 	old_print(...)
 	
-	table.insert(msg_log, concatsep({...}, " "))
-
+	local text = concatsep({...}, " ")
+	table.insert(msg_log, text)
+	print_log_file:write(text)
+	
 	if #msg_log > max_msg_log then
 		table.remove(msg_log, 1)
 	end
+
+	print_log_file:close()
 end
 
 function quit_game()
 	print("Quitting game")
-	if options then    options:update_options_file()    end
+	if options then   options:on_quit()   end
 	love.event.quit()
 end

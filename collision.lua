@@ -5,7 +5,7 @@ require "constants"
 local Collision = Class:inherit()
 
 function Collision:init()
-	self.world = bump.newWorld(BLOCK_WIDTH*4)
+	self.world = bump.newWorld(BLOCK_WIDTH*2)
 end
 
 function Collision:add(o, x, y, w, h)
@@ -36,11 +36,26 @@ function Collision:update(o,x,y,w,h)
 	self.world:update(o,x,y,w,h)
 end
 
+local maxd = 0
 function Collision:move(o, goal_x, goal_y, filter)
 	-- Attempts to move object `o` and returns data about the collision
 	filter = filter or self.filter
 	goal_x = goal_x
 	goal_y = goal_y
+	
+	local d = dist(o.x, o.y, goal_x, goal_y)
+	if maxd < d then
+		maxd = d
+		-- print("maxd ", d)
+	end
+	local cap = 10000
+	if d > cap then
+		print("/!\\ Collision object '", o.name,"'' moved ", d, " units, larger than cap of ", cap)
+		local move_x, move_y = goal_x - o.x, goal_y - o.y
+		local norm_x, norm_y = move_x / d, move_y / d
+		goal_x = o.x + norm_x * cap
+		goal_y = o.y + norm_y * cap
+	end
 
 	local actual_x, actual_y, cols, len = self.world:move(o, goal_x, goal_y, filter)
 	return actual_x, actual_y, cols, len

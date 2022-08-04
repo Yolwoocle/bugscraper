@@ -37,7 +37,7 @@ function Enemy:init_enemy(x,y, img, w,h)
 
 	self.loot = {
 		{nil, 90},
-		{Loot.Ammo, 0, loot_type="ammo", value=20},
+		-- {Loot.Ammo, 0, loot_type="ammo", value=20},
 		{Loot.Life, 5, loot_type="life", value=1},
 		{Loot.Gun, 3, loot_type="gun"},
 	}
@@ -132,7 +132,10 @@ function Enemy:on_collision(col, other)
 		
 		-- Being stomped
 		local epsilon = 0.01
-		if player.vy > epsilon and self.is_stompable then
+	
+		-- if player.vy > epsilon and self.is_stompable then
+		local recently_landed = 0 < player.frames_since_land and player.frames_since_land <= 10
+		if (player.vy > 0.0001 or recently_landed) and self.is_stompable then
 			player.vy = 0
 			player:on_stomp(self)
 			if self.do_stomp_animation then
@@ -140,11 +143,11 @@ function Enemy:on_collision(col, other)
 			end
 			self:on_stomped(player)
 			self:kill()
-		
+
+			
 		else
 			-- Damage player
-			if self.harmless_frames <= 0 then	
-				if self.name == "grasshopper" then print("grasshopper damage")  end
+			if self.harmless_frames <= 0 then
 				player:do_damage(self.damage, self)
 			end
 		end
@@ -168,6 +171,7 @@ function Enemy:do_damage(n, damager)
 	if self.play_sfx then   audio:play_var(self.sound_damage, 0.3, 1.1)   end
 	self.life = self.life - n
 	self:on_damage(n, self.life + n)
+
 	if self.life <= 0 then
 		self:kill(damager)
 	end
@@ -182,8 +186,9 @@ function Enemy:on_stomped(damager)
 end
 
 function Enemy:kill(damager)
-	if self.is_removed then print(concat(self.name, "(", self, ") was killed while destroyed")) end
+	if self.is_removed then print(concat("/!\\:", self.name, "(", self, ") was killed while destroyed")) end
 	
+	game:frameskip(1)
 	particles:smoke(self.mid_x, self.mid_y)
 	if self.play_sfx then 
 		audio:play_var(self.sound_death, 0.3, 1.1)

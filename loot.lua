@@ -12,7 +12,15 @@ function Loot:init_loot(spr, x, y, w, h, val, vx, vy)
 	self.is_loot = true
 
 	self.speed = 300
-	self.life = 30
+	self.max_life = 10
+	self.life = self.max_life
+
+	self.max_blink_timer = 0.1
+	self.blink_timer = self.max_blink_timer
+	self.blink_is_shown = true
+
+	self.is_collectable = false
+	self.uncollectable_timer = 0.7
 	
 	self.friction_x = 1
 	self.vx = vx or 0
@@ -51,12 +59,33 @@ end
 function Loot:update(dt)
 	self:update_actor(dt)
 
+	-- uncollectable timer 
+	self.uncollectable_timer = max(self.uncollectable_timer - dt, 0)
+	self.is_collectable = self.uncollectable_timer <= 0
+
 	self.life = self.life - dt
 	self.ghost_timer = self.ghost_timer - dt
-	if self.target_player then
-		self:attract_to_player(dt)
-	else
-		self:find_close_player(dt)
+	if self.is_collectable then
+		if self.target_player then
+			self:attract_to_player(dt)
+		else
+			self:find_close_player(dt)
+		end
+	end
+
+	-- blink timer 
+	if self.life < self.max_life * 0.5 then
+		self.blink_timer = self.blink_timer - dt
+
+		
+		if self.blink_timer < 0 then
+			local val = self.max_blink_timer
+			if self.life < self.max_life * 0.25 then
+				val = self.max_blink_timer * .5
+			end
+			self.blink_timer = val
+			self.blink_is_shown = not self.blink_is_shown
+		end
 	end
 
 	-- if outside bounds
@@ -65,12 +94,17 @@ function Loot:update(dt)
 	end
 
 	if self.life < 0 then
+		particles:smoke(self.mid_x, self.mid_y)
 		self:remove()
 	end
 end
 
 function Loot:draw()
+	if not self.blink_is_shown then
+		gfx.setColor(1,1,1, 0.2)
+	end
 	self:draw_actor()
+	gfx.setColor(1,1,1, 1)
 	--gfx.draw(self.spr, self.x, self.y)
 end
 

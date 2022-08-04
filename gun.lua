@@ -20,7 +20,7 @@ function Gun:init_gun(user)
 	self.bul_w = 12
 	self.bul_h = 12
 	
-	self.bullet_speed = 400
+	self.bullet_speed = 600
 	self.bullet_number = 1
 	self.bullet_spread = 0.2
 	self.bullet_friction = 1
@@ -64,6 +64,8 @@ function Gun:init_gun(user)
 end
 
 function Gun:update(dt)
+	if not self.recoil_force then self.recoil_force = self.default_jetpack_force*0.25 end
+
 	self.dt = dt
 	self.cooldown_timer = max(self.cooldown_timer - dt, 0)
 	self.reload_timer = max(self.reload_timer - dt, 0)

@@ -14,7 +14,7 @@ function Guns:init()
 		self.name = "machinegun"
 		
 		self.sfx = sounds.shot1
-		self.damage = 2
+		self.damage = 1.5
 		self.max_ammo = 25
 		self.max_reload_timer = 1.5
 		self.is_auto = true
@@ -34,7 +34,7 @@ function Guns:init()
 
 		self.max_ammo = 15
 
-		self.damage = 2
+		self.damage = 1
 		self.is_auto = true
 		self.spr = images.gun_triple
 		self.cooldown = 0.2
@@ -105,8 +105,8 @@ function Guns:init()
 		self.max_ammo = 150
 		self.max_reload_timer = 1.5
 
-		self.random_angle_offset = 0.5
-		self.damage = 0.3
+		self.random_angle_offset = 0.7
+		self.damage = 1
 		self.is_auto = true
 		self.spr = images.gun_minigun
 
@@ -134,7 +134,7 @@ function Guns:init()
 		self.max_ammo = 100
 
 		self.cooldown = 0.2
-		self.jetpack_force = 540
+		self.jetpack_force = 640
 	end
 
 	-----

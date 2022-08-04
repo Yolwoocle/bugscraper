@@ -39,7 +39,7 @@ function Enemies:init()
 		self:init_enemy(x,y, images.spiked_fly, 15,15)
 		self.name = "fly"
 		self.is_flying = true
-		self.life = 8
+		self.life = 12
 
 		self.is_stompable = false
 		--self.speed_y = 0--self.speed * 0.5
@@ -57,7 +57,7 @@ function Enemies:init()
 	self.Larva = Enemy:inherit()
 	
 	function self.Larva:init(x, y)
-		self:init_enemy(x,y, images.larva1, 17, 5)
+		self:init_enemy(x,y, images.larva1, 14, 4)
 		self.name = "larva"
 		self.follow_player = false
 		

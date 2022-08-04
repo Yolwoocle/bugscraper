@@ -4,6 +4,8 @@ local Gun = require "gun"
 local images = require "data.images"
 local E = require "data.enemies"
 
+print(table_to_str)
+
 local waves = {
 
 { -- 1
@@ -130,9 +132,10 @@ local waves = {
 	},
 },
 
-unpack(duplicate_table({
+-- unpack(duplicate_table({
 	-- ALL BUT HARDER
 	-- 12, 13, 14, 15
+{
 	min = 12,
 	max = 16,
 	enemies = {
@@ -144,7 +147,47 @@ unpack(duplicate_table({
 		{E.Grasshopper, 1},
 		{E.MushroomAnt, 1},
 	},
-}, 4)),
+},
+{
+	min = 12,
+	max = 16,
+	enemies = {
+		{E.Larva, 4},
+		{E.Fly, 3},
+		{E.SpikedFly, 3},
+		{E.SnailShelled, 3},
+		{E.Slug, 2},
+		{E.Grasshopper, 1},
+		{E.MushroomAnt, 1},
+	},
+},
+{
+	min = 12,
+	max = 16,
+	enemies = {
+		{E.Larva, 4},
+		{E.Fly, 3},
+		{E.SpikedFly, 3},
+		{E.SnailShelled, 3},
+		{E.Slug, 2},
+		{E.Grasshopper, 1},
+		{E.MushroomAnt, 1},
+	},
+},
+{
+	min = 12,
+	max = 16,
+	enemies = {
+		{E.Larva, 4},
+		{E.Fly, 3},
+		{E.SpikedFly, 3},
+		{E.SnailShelled, 3},
+		{E.Slug, 2},
+		{E.Grasshopper, 1},
+		{E.MushroomAnt, 1},
+	},
+},
+-- }, 4)),
 
 -- Last wave
 { -- 16

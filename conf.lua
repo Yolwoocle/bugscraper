@@ -1,3 +1,3 @@
 function love.conf(t)
-    t.identity = "Elevator Game"
+    t.identity = "bugscraper"
 end

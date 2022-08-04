@@ -208,6 +208,72 @@ end
 
 --------
 
+local ControlsMenuItem = TextMenuItem:inherit()
+
+function ControlsMenuItem:init(i, x, y, button_name, button_id)
+	self:init_textitem(i, x, y, button_name)
+	self.button_name = button_name
+	self.button_id = button_id
+	self.controls = options:get_controls(1, button_id)
+	
+	self.key = nil
+	self.scancode = nil
+	
+	self.is_waiting_for_input = false
+	self.is_selectable = true
+end
+
+function ControlsMenuItem:update(dt)
+	self:update_textitem(dt)
+	
+	local controls = options:get_controls(1, self.button_id)
+	local controlskey = {}
+	for i=1, #controls do
+		table.insert(controlskey, love.keyboard.getKeyFromScancode(controls[i]))
+	end
+	local txt = string.upper(concatsep(controlskey, "/"))
+
+	self.text = concat(table_to_str(self.button_name), ": [", txt, "]")
+	if self.is_waiting_for_input then
+		self.text = "[PRESS A KEY]"
+	end
+end
+
+function ControlsMenuItem:after_click()
+	-- Go in standby mode
+	options:update_options_file()
+	audio:play(sounds.menu_select)
+	self.oy = -4
+	
+	self.is_waiting_for_input = true
+	self.is_selectable = false
+end
+
+function ControlsMenuItem:keypressed(key, scancode, isrepeat)
+	if scancode == "escape" then
+		self.is_waiting_for_input = false
+		self.is_selectable = true
+	end
+	
+	-- Apply new key control
+	if self.is_waiting_for_input then
+		self.is_waiting_for_input = false
+		self.is_selectable = true
+		
+		local is_valid = options:check_if_key_in_use(scancode)
+		if not is_valid then return end
+
+		self.value = scancode
+
+		self.key = key
+		self.scancode = scancode
+		options:set_button_bind(1, self.button_id, scancode)
+		-- self.value_text = key
+	end
+end
+
+--------
+
 local CustomDrawMenuItem = MenuItem:inherit()
 
 function CustomDrawMenuItem:init(i, x, y, custom_draw)
@@ -306,8 +372,11 @@ function MenuManager:init(game)
 
 	self.menus.options = Menu:new(game, {
 		{ "<<<<<<<<< OPTIONS >>>>>>>>>" },
-		{ "< BACK", function() game.menu:back() end },
+		{ "< BACK", func_set_menu("pause")},--function() game.menu:back() end },
 		{ "" },
+		{ "CONTROLS...", func_set_menu("controls")},
+		{ ""},
+		{ "<<< Audio >>>" },
 		{ "SOUND", function(self, option)
 			options:toggle_sound()
 		end, 
@@ -317,20 +386,25 @@ function MenuManager:init(game)
 		end},
 
 		{ SliderMenuItem, "VOLUME", function(self, diff)
-			self:next_value(diff)
+			self.value = (self.value + diff)
+			if self.value < 0 then self.value = 20 end
+			if self.value > 20 then self.value = 0 end
+			
 			options:set_volume(self.value/20)
 			audio:play(sounds.menu_select)
 		end, range_table(0,20),
 		function(self)
-			self.value = options:get("volume")
-			self.value_text = concat(floor(100 * self.value), "%")
-		end},
+			self.value = options:get("volume") * 20
+			self.value_text = concat(floor(100 * self.value / 20), "%")
 
+			self.is_selectable = options:get("sound_on")
+		end},
 		{""},
 
 		-- {"MUSIC: [ON/OFF]", function(self)
 		-- 	game:toggle_sound()
 		-- end},
+		{ "<<< Visuals >>>"},
 		{ "FULLSCREEN", function(self)
 			options:toggle_fullscreen()
 		end,
@@ -358,8 +432,61 @@ function MenuManager:init(game)
 			self.value = options:get("is_vsync")
 			self.value_text = options:get("is_vsync") and "ON" or "OFF"
 		end},
+		{ ""},
+		{ "<<< Game >>>"},
+		{ "TIMER", function(self)
+			options:toggle_timer()
+		end,
+		function(self)
+			self.value = options:get("timer_on")
+			self.value_text = options:get("timer_on") and "ON" or "OFF"
+		end},
+
+		{ "SHOW MOUSE CURSOR", function(self)
+			options:toggle_mouse_visible()
+			love.mouse.setVisible(options:get("mouse_visible"))
+		end,
+		function(self)
+			self.value = options:get("mouse_visible")
+			self.value_text = options:get("mouse_visible") and "ON" or "OFF"
+		end},
+		
+		{ "PAUSE ON LOST FOCUS", function(self)
+			options:toggle_pause_on_unfocus()
+			love.mouse.setVisible(options:get("pause_on_unfocus"))
+		end,
+		function(self)
+			self.value = options:get("pause_on_unfocus")
+			self.value_text = options:get("pause_on_unfocus") and "ON" or "OFF"
+		end},
+		
+		{ "SCREENSHAKE", function(self)
+			options:toggle_screenshake()
+			love.mouse.setVisible(options:get("screenshake_on"))
+		end,
+		function(self)
+			self.value = options:get("screenshake_on")
+			self.value_text = options:get("screenshake_on") and "ON" or "OFF"
+		end},
 
 		{ "" }
+	}, { 0, 0, 0, 0.85 })
+
+	self.menus.controls = Menu:new(game, {
+		{ "<<<<<<<<< CONTROLS >>>>>>>>>" },
+		{ "< BACK", func_set_menu("options") },
+		{ "" },
+		{ "RESET CONTROLS", function() options:reset_controls() end },
+		{ "" },
+		{ ControlsMenuItem, "LEFT", "left" },
+		{ ControlsMenuItem, "RIGHT", "right" },
+		{ ControlsMenuItem, "UP", "up" },
+		{ ControlsMenuItem, "DOWN", "down" },
+		{ ControlsMenuItem, "JUMP", "jump" },
+		{ ControlsMenuItem, "SHOOT", "shoot" },
+		{ "PAUSE: [ESCAPE]"},
+		{ "SELECT: [ENTER]"},
+
 	}, { 0, 0, 0, 0.85 })
 
 	self.menus.game_over = Menu:new(game, {
@@ -380,25 +507,24 @@ function MenuManager:init(game)
 
 	self.menus.credits1 = Menu:new(game, {
 		{"<<<<<<<<< CREDITS >>>>>>>>>"},
-		{ "< BACK", function() game.menu:back() end },
+		{ "< BACK", func_set_menu("pause") },
 		{ "" },
-		{ "<<< Design, programming & sound design >>>"},
+		{ "<<< Design, programming & art >>>"},
 		{ "Léo Bernard (Yolwoocle)", func_url("https://twitter.com/yolwoocle_")},
 		{ "" },
 		{ "<<< Special Thanks >>>"},
 		{ "Gouspourd", function() end},
+		{ "SmellyFishstiks", func_url("https://www.lexaloffle.com/bbs/?uid=42184") },
+		{ "LÖVE Engine", func_url("https://love2d.org/") },
+		{ ""},
+		{ "<<< Playtesting >>>"},
 		{ "hades140701", function() end },
+		{ "SmellyFishstiks", func_url("https://www.lexaloffle.com/bbs/?uid=42184") },
+		-- { "rbts", function() end },
+		-- { "Immow", function() end },
+		-- { "Kingtut 101", function() end },
 		{ ""},
 		
-		{ "<<<<< Assets Used >>>>>"},
-		{ "Kenney assets, including sound effects - https://kenney.nl/", func_url("https://kenney.nl/")},
-		{ ""},
-		{ "<< freesound.org sounds >>"},
-		{ "'jf Glass Breaking.wav' by cmusounddesign / CC BY 3.0", func_url("https://freesound.org/people/cmusounddesign/sounds/85168/")},
-		{ "'Glass Break' by avrahamy / CC0", func_url("https://freesound.org/people/avrahamy/sounds/141563/")},
-		{ "'Glass shard tinkle texture' by el-bee / CC BY 4.0", func_url("https://freesound.org/people/el-bee/sounds/636238/")},
-		{ "'Bad Beep (Incorrect)' by RICHERlandTV / CC BY 3.0", func_url("https://freesound.org/people/RICHERlandTV/sounds/216090/")},
-		{ ""},
 		{ "[ NEXT PAGE ]", function(self)
 			game.menu:set_menu("credits2")
 		end},
@@ -406,19 +532,40 @@ function MenuManager:init(game)
 	
 	self.menus.credits2 = Menu:new(game, {
 		{"<<<<<<<<< CREDITS >>>>>>>>>"},
-		{ "< BACK", function() game.menu:back() end },
+		{ "< BACK", func_set_menu("pause") },
+		{ "" },
+		
+		{ "<<<<< Assets Used >>>>>"},
+		{ "Kenney assets, including sound effects and fonts / CC0", func_url("https://kenney.nl/")},
+		{ "'Hope Gold' font by somepx / CSL", func_url("https://somepx.itch.io/")},
+		{ ""},
+		{ "<< freesound.org sounds >>"},
+		{ "'jf Glass Breaking.wav' by cmusounddesign / CC BY 3.0", func_url("https://freesound.org/people/cmusounddesign/sounds/85168/")},
+		{ "'Glass Break' by avrahamy / CC0", func_url("https://freesound.org/people/avrahamy/sounds/141563/")},
+		{ "'Glass shard tinkle texture' by el-bee / CC BY 4.0", func_url("https://freesound.org/people/el-bee/sounds/636238/")},
+		{ "'Bad Beep (Incorrect)' by RICHERlandTV / CC BY 3.0", func_url("https://freesound.org/people/RICHERlandTV/sounds/216090/")},
+		{ ""},
+		{ "[ NEXT PAGE ]", function(self, diff)
+			game.menu:set_menu("credits3")
+		end},
+	}, { 0, 0, 0, 0.85 })
+	
+	self.menus.credits3 = Menu:new(game, {
+		{"<<<<<<<<< CREDITS >>>>>>>>>"},
+		{ "< BACK", func_set_menu("pause") },
 		{ "" },
 		{ "'[Keyboard press]' by MattRuthSound / CC BY 3.0", func_url("https://freesound.org/people/MattRuthSound/sounds/561661/")},
 		{ "'Paper Throw Into Air(fuller) 2' by RossBell / CC0", func_url("https://freesound.org/people/RossBell/sounds/389442/")},
 		{ "'Slime' by Lukeo135 / CC0", func_url("https://freesound.org/people/Lukeo135/sounds/530617/")},
 		{ ""},
-		{ "<< CC Licenses >>"},
+		{ "<< Asset Licenses >>"},
 		{ "CC0", func_url("https://creativecommons.org/publicdomain/zero/1.0/")},
 		{ "CC BY 3.0", func_url("https://creativecommons.org/licenses/by/3.0/")},
 		{ "CC BY 4.0", func_url("https://creativecommons.org/licenses/by/4.0/")},
+		{ "Common Sense License (CSL)", func_url("http://www.palmentieri.it/somepx/license.txt")},
 		{ ""},
 		{ "[ NEXT PAGE ]", function(self, diff)
-			game.menu:set_menu("credits2")
+			game.menu:set_menu("credits3")
 		end},
 	}, { 0, 0, 0, 0.85 })
 
@@ -445,8 +592,7 @@ function MenuManager:update(dt)
 		self.sel_item.is_selected = true
 
 		-- On pressed
-		local btn = game:button_pressed("jump")
-		local btn_back = game:button_pressed("shoot")
+		local btn = game:button_pressed("shoot") or game:button_pressed("jump") or game:button_pressed("select")
 		if btn and self.sel_item and self.sel_item.on_click then
 			self.sel_item:on_click()
 			self.sel_item:after_click()
@@ -569,6 +715,12 @@ end
 
 function MenuManager:back()
 	self:set_menu(self.last_menu)
+end
+
+function MenuManager:keypressed(key, scancode, isrepeat)
+	if not self.sel_item then return end
+	if not self.sel_item.keypressed then return end
+	self.sel_item:keypressed(key, scancode, isrepeat)
 end
 
 return MenuManager

@@ -56,12 +56,28 @@ function round_if_near_zero(val, thr)
 	return thr
 end
 
-function copy_table(tab)
-	local newtab = {}
-	for k,v in pairs(tab) do
-		newtab[k] = v
-	end
-	return newtab
+-- function copy_table(tab)
+-- 	local newtab = {}
+-- 	for k,v in pairs(tab) do
+-- 		newtab[k] = v
+-- 	end
+-- 	return newtab
+-- end
+
+function copy_table(orig)
+	-- http://lua-users.org/wiki/CopyTable
+    local orig_type = type(orig)
+    local copy
+    if orig_type == 'table' then
+        copy = {}
+        for orig_key, orig_value in next, orig, nil do
+            copy[copy_table(orig_key)] = copy_table(orig_value)
+        end
+        setmetatable(copy, copy_table(getmetatable(orig)))
+    else -- number, string, boolean, etc
+        copy = orig
+    end
+    return copy
 end
 
 function duplicate_table(tab, n)
