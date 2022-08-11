@@ -30,6 +30,7 @@ function Actor:init_actor(x, y, w, h, spr, args)
 	self.default_gravity = 20
 	self.gravity = self.default_gravity
 	self.gravity_cap = 400
+	self.gravity_mult = 1
 	
 	self.default_friction = 0.8
 	self.friction_x = self.default_friction -- !!!!! This assumes that the game is running at 60FPS
@@ -73,8 +74,8 @@ function Actor:add_collision()
 end
 
 function Actor:do_gravity(dt)
-	self.vy = self.vy + self.gravity
-	if self.gravity > 0 then
+	self.vy = self.vy + self.gravity * self.gravity_mult
+	if self.gravity * self.gravity_mult > 0 then
 		self.vy = min(self.vy, self.gravity_cap)
 	end	
 end

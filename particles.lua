@@ -233,6 +233,22 @@ function ParticleSystem:dust(x, y, col, size, rnd_pos, sizevar)
 end
 
 
+function ParticleSystem:fire(x, y, size, sizevar, velvar)
+	rnd_pos = rnd_pos or 3
+	size = size or 4
+	sizevar = sizevar or 2
+
+	local dx, dy = random_neighbor(rnd_pos), random_neighbor(rnd_pos)
+	local dsize = random_neighbor(sizevar)
+
+	local col = {1, random_range(0, 1),0.2,1}
+
+	velvar = velvar or 5
+	local vy = random_range(-2 - velvar, -2)
+	self:add_particle(CircleParticle:new(x+dx, y+dy, size+dsize, col, 0, vy, _vr, _life))
+end
+
+
 function ParticleSystem:splash(x, y, number, col, spw_rad, size, sizevar)
 	number = number or 10
 	spw_rad = spw_rad or 8

@@ -509,10 +509,18 @@ function Player:shoot(dt, is_burst)
 			self.vx = self.vx - self.dir_x * self.gun.recoil_force
 		end
 
-		-- If shooting downwards, then go up like a jetpack
-		if self:button_down("down") and success then
-			self.vy = self.vy - self.gun.jetpack_force
-			self.vy = self.vy * self.friction_x
+		if self.is_flying then
+			-- (When elevator is going down)
+			if success then
+				self.vx = (self.vx - dx*self.gun.jetpack_force) * self.friction_x
+				self.vy = (self.vy - dy*self.gun.jetpack_force) * self.friction_x
+			end
+		else
+			-- (Normal behaviour) If shooting downwards, then go up like a jetpack
+			if self:button_down("down") and success then
+				self.vy = self.vy - self.gun.jetpack_force
+				self.vy = self.vy * self.friction_x
+			end
 		end
 	else
 		self.is_shooting = false

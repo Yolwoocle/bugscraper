@@ -129,10 +129,15 @@ function Game:new_game(number_of_players)
 	self.door_animation = false
 	self.def_elevator_speed = 400
 	self.elevator_speed = 0
+	self.elevator_speed_overflow = 0
 	self.has_switched_to_next_floor = false
 	self.game_started = false
 	self.is_reversing_elevator = false
+	self.is_exploding_elevator = false
+	self.downwards_elev_progress = 0
 
+	self.def_bg_col = COL_BLACK_BLUE
+	self.bg_col = self.def_bg_col
 	self.bg_particles = {}
 	for i=1,60 do
 		local p = self:new_bg_particle()
@@ -210,6 +215,8 @@ function Game:new_game(number_of_players)
 	--TODO: fuze it into map or remove map, only have coll boxes & no map
 	local bw = BLOCK_WIDTH
 	self.cabin_x, self.cabin_y = self.world_generator.box_ax*bw, self.world_generator.box_ay*bw
+	self.cabin_ax, self.cabin_ay = self.world_generator.box_ax*bw, self.world_generator.box_ay*bw
+	self.cabin_bx, self.cabin_by = self.world_generator.box_bx*bw, self.world_generator.box_by*bw
 	self.door_ax, self.door_ay = self.cabin_x+154, self.cabin_x+122
 	self.door_bx, self.door_by = self.cabin_y+261, self.cabin_y+207
 
@@ -283,7 +290,7 @@ end
 
 function Game:draw()
 	-- Sky
-	gfx.clear(COL_BLACK_BLUE)
+	gfx.clear(self.bg_col)
 	gfx.translate(-self.cam_x + self.cam_ox, -self.cam_y + self.cam_oy)
 
 	for i,o in pairs(self.bg_particles) do
@@ -503,7 +510,6 @@ function Game:init_players()
 	end
 end
 
-
 -----------------------------------------------------
 --- [[[[[[[[ BACKGROUND & LEVEL PROGRESS ]]]]]]]] ---
 -----------------------------------------------------
@@ -524,6 +530,9 @@ function Game:new_bg_particle()
 	end
 
 	o.col = random_sample{COL_DARK_GRAY, COL_MID_GRAY}
+	if self.bg_particle_col then
+		o.col = random_sample(self.bg_particle_col)
+	end
 	o.spd = random_range(0.5, 1.5)
 
 	o.oy = 0
@@ -555,12 +564,17 @@ function Game:update_bg_particles(dt)
 		end
 
 		-- Size corresponds to elevator speed
-		o.oh = max(o.w/o.h, self.elevator_speed / self.def_elevator_speed)
+		o.oh = max(o.w/o.h, abs(self.elevator_speed) / self.def_elevator_speed)
 		o.oy = .5 * o.h * o.oh
 	end
 end	
 
 function Game:progress_elevator(dt)
+	-- this is stupid, should've used game.state or smthg
+	if self.is_exploding_elevator then
+		self:do_exploding_elevator(dt)
+		return
+	end
 	if self.is_reversing_elevator then
 		self:do_reverse_elevator(dt)
 		return
@@ -695,7 +709,78 @@ function Game:on_red_button_pressed()
 end
 
 function Game:do_reverse_elevator(dt)
-	self.elevator_speed = self.elevator_speed - dt*40
+	local speed_cap = -1000
+	self.elevator_speed = max(self.elevator_speed - dt*100, speed_cap)
+	if self.elevator_speed == speed_cap then
+		self.elevator_speed_overflow = self.elevator_speed_overflow + dt
+	end
+
+	-- exploding bits
+	if self.elevator_speed_overflow > 2 then
+		self.is_reversing_elevator = false
+		self.is_exploding_elevator = true -- I SHOULDVE MADE A STATE SYSTEM BUT FUCK LOGIC
+		self:on_exploding_elevator(dt)
+	end
+
+	-- Screenshake
+	local spdratio = self.elevator_speed / self.def_elevator_speed
+	game.screenshake_q = 3 * abs(spdratio)
+
+	self.downwards_elev_progress = self.downwards_elev_progress - self.elevator_speed
+	if self.downwards_elev_progress > 100 then
+		self.downwards_elev_progress = self.downwards_elev_progress - 100
+		self.floor = self.floor - 1
+		if self.floor <= 0 then
+			self.do_random_elevator_digits = true
+		end
+
+		if self.do_random_elevator_digits then
+			self.floor = random_range(0,999)
+		end
+	end
+
+	-- Downwards elevator
+	if self.elevator_speed < 0 then
+		for _,p in pairs(self.actors) do
+			p.friction_y = p.friction_x
+			if p.is_player then  p.is_flying = true end
+
+			p.gravity_mult = max(0, 1 - abs(self.elevator_speed / speed_cap))
+			p.vy = p.vy - 4
+		end
+
+		-- fire particles
+		local q = max(0, (abs(self.elevator_speed) - 200)*0.04)
+		for i=1, q do
+			local x,y = random_range(self.cabin_ax, self.cabin_bx),random_range(self.cabin_ay, self.cabin_by)
+			local size = max(4, abs(self.elevator_speed)*0.01)
+			local velvar = max(5, abs(self.elevator_speed))
+			particles:fire(x,y,size, nil, velvar)
+		end
+
+		-- bg color shift to red
+		local p = self.elevator_speed / speed_cap
+		local r = lerp(self.def_bg_col[1], 0xf7/255, p)
+		local g = lerp(self.def_bg_col[2], 0x76/255, p)
+		local b = lerp(self.def_bg_col[3], 0x22/255, p)
+		self.bg_col = {r,g,b,1}
+		self.bg_particle_col = { {r-0.1, g-0.1, b-0.1, 1},{r-0.2, g-0.2, b-0.2, 1} }
+	end
+end
+
+function Game:on_exploding_elevator(dt)
+	self.elevator_speed = 0
+	self.bg_col = COL_ORANGE
+	self:screenshake(200)
+	
+	for i=1, 200 do
+		local x,y = random_range(self.cabin_ax, self.cabin_bx),random_range(self.cabin_ay, self.cabin_by)
+		particles:splash(x,y, 5, nil, nil, 10, 4)
+	end
+end
+
+function Game:do_exploding_elevator(dt)
+
 end
 
 -----------------------------------------------------

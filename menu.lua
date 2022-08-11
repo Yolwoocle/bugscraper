@@ -231,7 +231,7 @@ function ControlsMenuItem:update(dt)
 	for i=1, #controls do
 		table.insert(controlskey, love.keyboard.getKeyFromScancode(controls[i]))
 	end
-	local txt = string.upper(concatsep(controlskey, "/"))
+	local txt = string.upper(concatsep(controlskey, " / "))
 
 	self.text = concat(table_to_str(self.button_name), ": [", txt, "]")
 	if self.is_waiting_for_input then
@@ -239,26 +239,29 @@ function ControlsMenuItem:update(dt)
 	end
 end
 
-function ControlsMenuItem:after_click()
+function ControlsMenuItem:on_click()
+	if self.is_waiting_for_input then return end
+	if not self.is_selectable then return end
+
 	-- Go in standby mode
 	options:update_options_file()
 	audio:play(sounds.menu_select)
 	self.oy = -4
 	
 	self.is_waiting_for_input = true
-	self.is_selectable = false
+	-- self.is_selectable = false
 end
 
 function ControlsMenuItem:keypressed(key, scancode, isrepeat)
 	if scancode == "escape" then
 		self.is_waiting_for_input = false
-		self.is_selectable = true
+		-- self.is_selectable = true
 	end
 	
 	-- Apply new key control
 	if self.is_waiting_for_input then
 		self.is_waiting_for_input = false
-		self.is_selectable = true
+		-- self.is_selectable = true
 		
 		local is_valid = options:check_if_key_in_use(scancode)
 		if not is_valid then return end
@@ -506,7 +509,7 @@ function MenuManager:init(game)
 	}, { 0, 0, 0, 0.85 })
 
 	self.menus.credits1 = Menu:new(game, {
-		{"<<<<<<<<< CREDITS >>>>>>>>>"},
+		{"<<<<<<<<< CREDITS (1/3) >>>>>>>>>"},
 		{ "< BACK", func_set_menu("pause") },
 		{ "" },
 		{ "<<< Design, programming & art >>>"},
@@ -531,7 +534,7 @@ function MenuManager:init(game)
 	}, { 0, 0, 0, 0.85 })
 	
 	self.menus.credits2 = Menu:new(game, {
-		{"<<<<<<<<< CREDITS >>>>>>>>>"},
+		{"<<<<<<<<< CREDITS (2/3) >>>>>>>>>"},
 		{ "< BACK", func_set_menu("pause") },
 		{ "" },
 		
@@ -551,7 +554,7 @@ function MenuManager:init(game)
 	}, { 0, 0, 0, 0.85 })
 	
 	self.menus.credits3 = Menu:new(game, {
-		{"<<<<<<<<< CREDITS >>>>>>>>>"},
+		{"<<<<<<<<< CREDITS (3/3) >>>>>>>>>"},
 		{ "< BACK", func_set_menu("pause") },
 		{ "" },
 		{ "'[Keyboard press]' by MattRuthSound / CC BY 3.0", func_url("https://freesound.org/people/MattRuthSound/sounds/561661/")},
@@ -564,12 +567,13 @@ function MenuManager:init(game)
 		{ "CC BY 4.0", func_url("https://creativecommons.org/licenses/by/4.0/")},
 		{ "Common Sense License (CSL)", func_url("http://www.palmentieri.it/somepx/license.txt")},
 		{ ""},
-		{ "[ NEXT PAGE ]", function(self, diff)
-			game.menu:set_menu("credits3")
-		end},
+		-- { "[ NEXT PAGE ]", function(self, diff)
+		-- 	game.menu:set_menu("credits3")
+		-- end},
 	}, { 0, 0, 0, 0.85 })
 
 	self.cur_menu = nil
+	self.cur_menu_name = ""
 	self.is_paused = false
 
 	self.sel_n = 1
@@ -600,7 +604,8 @@ function MenuManager:update(dt)
 	end
 
 	local btn_pressed, player = game:button_pressed("pause")
-	if btn_pressed then
+
+	if btn_pressed and self.cur_menu_name ~= "controls" then
 		self:toggle_pause()
 	end
 end
@@ -615,7 +620,8 @@ end
 function MenuManager:set_menu(menu)
 	self.last_menu = self.cur_menu
 
-	if type(menu) == "nil" then
+	-- nil menu
+	if menu == nil then
 		self.cur_menu = nil
 		return
 	end
@@ -623,11 +629,12 @@ function MenuManager:set_menu(menu)
 	local m = self.menus[menu]
 
 	if type(menu) ~= "string" and menu.is_menu then
-		m = menu		
+		m = menu
 	end
 
 	if not m then return false, "menu '" .. menu .. "' does not exist" end
 	self.cur_menu = m
+	self.cur_menu_name = menu
 
 	-- Update selection to first selectable
 	local sel, found = self:find_selectable_from(1, 1)

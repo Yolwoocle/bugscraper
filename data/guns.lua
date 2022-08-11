@@ -14,7 +14,7 @@ function Guns:init()
 		self.name = "machinegun"
 		
 		self.sfx = sounds.shot1
-		self.damage = 1.5
+		self.damage = 10000.5
 		self.max_ammo = 25
 		self.max_reload_timer = 1.5
 		self.is_auto = true
@@ -131,7 +131,7 @@ function Guns:init()
 		self.bul_w = 14
 		self.bul_h = 14
 
-		self.max_ammo = 100
+		self.max_ammo = 20
 
 		self.cooldown = 0.2
 		self.jetpack_force = 640

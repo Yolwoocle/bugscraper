@@ -261,12 +261,21 @@ function OptionsManager:set_button_bind(n, btn, scancodes)
 	self.control_schemes[n][btn] = scancodes
 	local player = game.players[n]
 	if player == nil then  print("set_btn_bind: player",n,"doesn't exist") return end
+
+	-- D-pad controls will always be assigned to L/R/U/D
+	if is_in_table({"left", "right", "up", "down"}, btn) then
+		table.insert(scancodes, btn)
+	end
+
 	player:set_controls(btn, scancodes)
 
 	self:update_controls_file()
 end
 
 function OptionsManager:check_if_key_in_use(scancode)
+	if true then
+		return true
+	end
 	for i=1, #self.control_schemes do
 		for k,v in pairs(self.control_schemes[i]) do
 			if type(v) == "table" then

@@ -144,7 +144,6 @@ function Enemy:on_collision(col, other)
 			self:on_stomped(player)
 			self:kill()
 
-			
 		else
 			-- Damage player
 			if self.harmless_frames <= 0 then

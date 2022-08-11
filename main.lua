@@ -68,14 +68,14 @@ function love.keypressed(key, scancode, isrepeat)
 	-- elseif key == "g" then
 	-- 	game.players[1]:kill()
 
-	-- elseif key == "e" then
-	-- 	if not game then return end
-	-- 	for i,e in pairs(game.actors) do
-	-- 		if e.is_enemy then
-	-- 			e:kill()
-	-- 		end
-	-- 	end
-	-- 	game.floor = 40
+	elseif key == "e" then
+		if not game then return end
+		for i,e in pairs(game.actors) do
+			if e.is_enemy then
+				e:kill()
+			end
+		end
+		game.floor = 998
 	
 	-- elseif key == "b" then
 	-- 	if not game then return end
