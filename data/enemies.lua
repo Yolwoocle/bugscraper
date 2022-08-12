@@ -397,6 +397,10 @@ function Enemies:init()
 
 	function self.ButtonGlass:init(x, y)
 		-- We can reuse this for other stuff
+		x,y = CANVAS_WIDTH/2, game.world_generator.box_by * BLOCK_WIDTH 
+		y = game.door_by - 45
+		x = floor(x - 58/2)
+		-- y = floor(y - 45/2)
 		self:init_enemy(x,y, images.big_red_button_crack3, 58, 45)
 		self.name = "button_glass"
 		self.follow_player = false
@@ -404,7 +408,7 @@ function Enemies:init()
 		self.max_life = 70
 		self.life = self.max_life
 		self.activ_thresh = 40
-		self.break_range = self.life - self.activ_thresh 
+		self.break_range = self.life - self.activ_thresh
 		self.knockback = 0
 
 		self.is_solid = true
@@ -460,7 +464,7 @@ function Enemies:init()
 	local Button = self.Button
 	function self.ButtonGlass:on_death()
 		audio:play("glass_break")
-		game:screenshake(20)
+		game:screenshake(15)
 		particles:image(self.mid_x, self.mid_y, 300, images.ptc_glass_shard, self.h)
 
 		local b = create_actor_centered(Button, CANVAS_WIDTH/2, game.world_generator.box_rby)

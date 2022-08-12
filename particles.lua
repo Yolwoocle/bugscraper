@@ -233,7 +233,7 @@ function ParticleSystem:dust(x, y, col, size, rnd_pos, sizevar)
 end
 
 
-function ParticleSystem:fire(x, y, size, sizevar, velvar)
+function ParticleSystem:fire(x, y, size, sizevar, velvar, vely)
 	rnd_pos = rnd_pos or 3
 	size = size or 4
 	sizevar = sizevar or 2
@@ -241,10 +241,14 @@ function ParticleSystem:fire(x, y, size, sizevar, velvar)
 	local dx, dy = random_neighbor(rnd_pos), random_neighbor(rnd_pos)
 	local dsize = random_neighbor(sizevar)
 
-	local col = {1, random_range(0, 1),0.2,1}
+	local col_fire = {1, random_range(0, 1),0.2,1}
+	local v = random_range(0.6, 1)
+	local col_smoke = {v,v,v,1}
+	local col = random_sample{col_fire, col_smoke}
 
 	velvar = velvar or 5
-	local vy = random_range(-2 - velvar, -2)
+	vely = vely or -2
+	local vy = random_range(vely - velvar, vely)
 	self:add_particle(CircleParticle:new(x+dx, y+dy, size+dsize, col, 0, vy, _vr, _life))
 end
 

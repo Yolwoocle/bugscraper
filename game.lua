@@ -10,6 +10,7 @@ local ParticleSystem = require "particles"
 local AudioManager = require "audio"
 local MenuManager = require "menu"
 local OptionsManager = require "options"
+local utf8 = require "utf8"
 
 local waves = require "data.waves"
 
@@ -55,6 +56,7 @@ function Game:init()
 	FONT_REGULAR = gfx.newFont("fonts/HopeGold.ttf", 16)
 	FONT_7SEG = gfx.newImageFont("fonts/7seg_font.png", " 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 	FONT_MINI = gfx.newFont("fonts/Kenney Mini.ttf", 8)
+	FONT_PAINT = gfx.newFont("fonts/NicoPaint-Regular.ttf", 16)
 	gfx.setFont(FONT_REGULAR)
 	
 	-- Audio ===> Moved to OptionsManager
@@ -106,6 +108,8 @@ function Game:new_game(number_of_players)
 
 	number_of_players = number_of_players or 1
 
+	self.t = 0
+
 	-- Players
 	self.max_number_of_players = 4 
 	self.number_of_players = number_of_players
@@ -136,6 +140,7 @@ function Game:new_game(number_of_players)
 	self.is_exploding_elevator = false
 	self.downwards_elev_progress = 0
 
+	self.show_bg_particles = true
 	self.def_bg_col = COL_BLACK_BLUE
 	self.bg_col = self.def_bg_col
 	self.bg_particles = {}
@@ -181,6 +186,7 @@ function Game:new_game(number_of_players)
 	-- Camera & screenshake
 	self.cam_x = 0
 	self.cam_y = 0
+	self.cam_realx, self.cam_realy = 0, 0
 	self.cam_ox, self.cam_oy = 0, 0
 	self.screenshake_q = 0
 	self.screenshake_speed = 20
@@ -208,7 +214,7 @@ function Game:new_game(number_of_players)
 		kills = 0,
 		time = 0,
 	}
-
+	self.kills = 0
 	self.time = 0
 
 	-- Cabin stats
@@ -219,6 +225,12 @@ function Game:new_game(number_of_players)
 	self.cabin_bx, self.cabin_by = self.world_generator.box_bx*bw, self.world_generator.box_by*bw
 	self.door_ax, self.door_ay = self.cabin_x+154, self.cabin_x+122
 	self.door_bx, self.door_by = self.cabin_y+261, self.cabin_y+207
+
+	self.flash_alpha = 0
+	self.show_cabin = true
+	self.show_rubble = false
+
+	self.is_on_win_screen = false
 
 	self.frames_to_skip = 0
 
@@ -249,6 +261,13 @@ function Game:update_main_game(dt)
 	if self.game_started then
 		self.time = self.time + dt
 	end
+	self.t = self.t + dt
+
+	-- Screenshake
+	self.screenshake_q = max(0, self.screenshake_q - self.screenshake_speed * dt)
+	self.cam_ox, self.cam_oy = random_neighbor(self.screenshake_q), random_neighbor(self.screenshake_q)
+	if not options:get("screenshake_on") then self.cam_ox, self.cam_oy = 0,0 end
+	self.cam_realx, self.cam_realy = self.cam_x + self.cam_ox, self.cam_y + self.cam_oy
 
 	self.map:update(dt)
 
@@ -269,6 +288,8 @@ function Game:update_main_game(dt)
 		end
 	end
 
+	-- Flash 
+	self.flash_alpha = max(self.flash_alpha - dt, 0)
 	
 	-- Logo
 	self.logo_a = self.logo_a + dt*3
@@ -282,19 +303,22 @@ function Game:update_main_game(dt)
 	-- if love.keyboard.isScancodeDown("d") then self.cam_x = self.cam_x + q end
 	-- if love.keyboard.isScancodeDown("w") then self.cam_y = self.cam_y - q end
 	-- if love.keyboard.isScancodeDown("s") then self.cam_y = self.cam_y + q end
-
-	-- Screenshake
-	self.screenshake_q = max(0, self.screenshake_q - self.screenshake_speed * dt)
-	self.cam_ox, self.cam_oy = random_neighbor(self.screenshake_q), random_neighbor(self.screenshake_q)
 end
 
 function Game:draw()
 	-- Sky
 	gfx.clear(self.bg_col)
-	gfx.translate(-self.cam_x + self.cam_ox, -self.cam_y + self.cam_oy)
+	gfx.translate(-(self.cam_x + self.cam_ox), -(self.cam_y + self.cam_oy))
 
-	for i,o in pairs(self.bg_particles) do
-		rect_color(o.col, "fill", o.x, o.y + o.oy, o.w, o.h * o.oh)
+	-- Draw bg particles
+	if self.show_bg_particles then
+		for i,o in pairs(self.bg_particles) do
+			local y = o.y + o.oy
+			local mult = 1 - clamp(abs(self.elevator_speed / 100), 0, 1)
+			local sin_oy = mult * sin(self.t + o.rnd_pi) * o.oh * o.h 
+			
+			rect_color(o.col, "fill", o.x, o.y + o.oy + sin_oy, o.w, o.h * o.oh)
+		end
 	end
 
 	-- Map
@@ -303,15 +327,17 @@ function Game:draw()
 	-- Background
 	
 	-- Door background
-	rect_color(COL_BLACK_BLUE, "fill", self.door_ax, self.door_ay, self.door_bx - self.door_ax, self.door_by - self.door_ay)
-	-- If doing door animation, draw buffered enemies
-	if self.door_animation then
-		for i,e in pairs(self.door_animation_enemy_buffer) do
-			e:draw()
+	if self.show_cabin then
+		rect_color(COL_BLACK_BLUE, "fill", self.door_ax, self.door_ay, self.door_bx - self.door_ax, self.door_by - self.door_ay)
+		-- If doing door animation, draw buffered enemies
+		if self.door_animation then
+			for i,e in pairs(self.door_animation_enemy_buffer) do
+				e:draw()
+			end
 		end
+		self:draw_background(self.cabin_x, self.cabin_y)
 	end
-	self:draw_background(self.cabin_x, self.cabin_y)
-	
+
 	local old_canvas
 	local objs_canvas
 	if self.draw_shadows then
@@ -329,8 +355,12 @@ function Game:draw()
 	for _,p in pairs(self.players) do
 		p:draw()
 	end
-	
+
 	particles:draw()
+	
+	if self.show_rubble then
+		self:draw_rubble(self.cabin_x, self.cabin_y)
+	end
 	
 	if self.draw_shadows then
 		love.graphics.setCanvas(old_canvas)
@@ -342,8 +372,10 @@ function Game:draw()
 	end
 
 	-- Walls
-	gfx.draw(images.cabin_walls, self.cabin_x, self.cabin_y)
-	
+	if self.show_cabin then
+		gfx.draw(images.cabin_walls, self.cabin_x, self.cabin_y)
+	end
+
 	-- Draw actors UI
 	-- Draw actors
 	for k,actor in pairs(self.actors) do
@@ -356,6 +388,7 @@ function Game:draw()
 	-- rect_color(COL_MID_GRAY, "fill", floor((CANVAS_WIDTH-w)/2),    16, w, 8)
 	-- rect_color(COL_WHITE,    "fill", floor((CANVAS_WIDTH-w)/2) +1, 17, (w-2)*self.floor_progress, 6)
 
+	-- Logo
 	for i=1, #self.logo_cols + 1 do
 		local ox, oy = cos(self.logo_a + i*.4)*8, sin(self.logo_a + i*.4)*8
 		local logo_x = floor((CANVAS_WIDTH - images.logo_noshad:getWidth())/2)
@@ -370,6 +403,59 @@ function Game:draw()
 		gfx.draw(spr, logo_x + ox, self.logo_y + oy)
 	end
 	gfx.draw(images.controls, floor((CANVAS_WIDTH - images.controls:getWidth())/2), floor(self.logo_y) + images.logo:getHeight()+6)
+
+	-- "CONGRATS" at the end
+	-- PINNNNNN
+	if self.is_on_win_screen then
+		local old_font = gfx.getFont()
+		gfx.setFont(FONT_PAINT)
+
+		local text = "CONGRATULATIONS! "
+		local w = get_text_width(text, FONT_PAINT)
+		local text_x1 = floor((CANVAS_WIDTH - w)/2)
+
+		for i=1, #self.logo_cols + 1 do
+			local text_x = text_x1
+			for i_chr=1, #text do
+				local chr = utf8.sub(text, i_chr, i_chr)
+				local t = self.t + i_chr*0.04
+				local ox, oy = cos(t*4 + i*.2)*8, sin(t*4 + i*.2)*8
+				
+				local col = self.logo_cols[i]
+				if col == nil then
+					col = COL_WHITE
+				end
+				gfx.setColor(col)
+				gfx.print(chr, text_x + ox, 40 + oy)
+
+				text_x = text_x + get_text_width(chr) + 1
+			end
+		end
+
+		gfx.setFont(old_font)
+		
+		-- Win stats
+		local iy = 0
+		local ta = {}
+		for k,v in pairs(self.stats) do
+			table.insert(ta, concat(k,": ",v))
+		end
+		table.insert(ta, "PRESS [ESCAPE]")
+
+		for k,v in pairs(ta) do
+			local t = self.t + iy*0.2
+			local ox, oy = cos(t*4)*5, sin(t*4)*5
+			local mx = CANVAS_WIDTH / 2
+
+			print_centered_outline(COL_WHITE, COL_BLACK_BLUE, v, mx+ox, 80+iy*14 +oy)
+			iy = iy + 1
+		end
+	end
+
+	-- Flash
+	if self.flash_alpha then
+		rect_color({1,1,1,self.flash_alpha}, "fill", self.cam_realx, self.cam_realy, CANVAS_WIDTH, CANVAS_HEIGHT)
+	end
 
 	-- Timer
 	if options:get("timer_on") then
@@ -401,16 +487,17 @@ function Game:draw()
 		for i=1, #txts do  print_label(txts[i], self.cam_x+CANVAS_WIDTH/2+30, self.cam_y+get_text_height("")*i) end
 	end
 
+	-- Menus
 	if self.menu.cur_menu then
 		self.menu:draw()
 	end
 
 	--'Memory used (in kB): ' .. collectgarbage('count')
 
-	local t = "EARLY VERSION - NOT FINAL!"
-	gfx.print(t, CANVAS_WIDTH-get_text_width(t), 0)
-	local t = os.date('%a %d/%b/%Y')
-	print_color({.7,.7,.7}, t, CANVAS_WIDTH-get_text_width(t), 12)
+	-- local t = "EARLY VERSION - NOT FINAL!"
+	-- gfx.print(t, CANVAS_WIDTH-get_text_width(t), 0)
+	-- local t = os.date('%a %d/%b/%Y')
+	-- print_color({.7,.7,.7}, t, CANVAS_WIDTH-get_text_width(t), 12)
 
 end
 
@@ -458,7 +545,7 @@ end
 function Game:on_kill(actor)
 	if actor.counts_as_enemy then
 		self.enemy_count = self.enemy_count - 1
-		self.stats.kills = self.stats.kills + 1
+		self.kills = self.kills + 1
 
 		if actor.name == "dummy_target" then
 			self.game_started = true
@@ -467,9 +554,14 @@ function Game:on_kill(actor)
 
 	if actor.is_player then
 		-- Save stats
-		self.stats.time = self.time
-		self.stats.floor = self.floor
+		self:save_stats()
 	end
+end
+
+function Game:save_stats()
+	self.stats.time = self.time
+	self.stats.floor = self.floor
+	self.stats.kills = self.kills
 end
 
 function Game:on_game_over()
@@ -539,6 +631,7 @@ function Game:new_bg_particle()
 	o.oh = 1
 
 	o.t = 0
+	o.rnd_pi = random_neighbor(math.pi)
 	return o
 end
 
@@ -549,10 +642,10 @@ function Game:update_bg_particles(dt)
 		
 		local del_cond = (self.elevator_speed>=0 and o.y > CANVAS_HEIGHT) or (self.elevator_speed<0 and o.y < -CANVAS_HEIGHT) 
 		if del_cond then
-			-- WHY DOES THIS NOT. WORK. I'm going crazy
 			-- print("y at: CANVAS_HEIGHT * ", (o.y)/CANVAS_HEIGHT)
 			local p = self:new_bg_particle()
 			-- o = p
+			-- ^^^^^ WHY DOES THIS NOT. WORK. I'm going crazy
 			o.x = p.x
 			o.y = p.y
 			o.w = p.w
@@ -561,6 +654,7 @@ function Game:update_bg_particles(dt)
 			o.spd = p.spd
 			o.oy = p.oy
 			o.oh = p.oh
+			o.rnd_pi = p.rnd_pi
 		end
 
 		-- Size corresponds to elevator speed
@@ -662,15 +756,12 @@ function Game:new_wave_buffer_enemies()
 
 		local enem = random_weighted(wave.enemies)
 		local e = enem:new(x,y)
-		
-		if e.name == "button_glass" then
-			e.x = CANVAS_WIDTH/2
-			e.y = game.world_generator.box_by * BLOCK_WIDTH
-		end
 
 		-- Center enemy
-		e.x = floor(e.x - e.w/2)
-		e.y = floor(e.y - e.h/2)
+		if enem ~= Enemies.ButtonGlass then
+			e.x = floor(e.x - e.w/2)
+			e.y = floor(e.y - e.h/2)
+		end
 		
 		-- Prevent collisions with floor
 		if e.y+e.h > self.door_by then   e.y = self.door_by - e.h    end
@@ -687,7 +778,7 @@ function Game:activate_enemy_buffer()
 	self.door_animation_enemy_buffer = {}
 end
 
-function Game:draw_background(cabin_x, cabin_y) 
+function Game:draw_background(cabin_x, cabin_y)
 	local bw = BLOCK_WIDTH
 
 	-- Doors
@@ -702,6 +793,10 @@ function Game:draw_background(cabin_x, cabin_y)
 	gfx.setFont(FONT_7SEG)
 	print_color(COL_WHITE, string.sub("00000"..tostring(self.floor),-3,-1), 198+16*2, 97+16*2)
 	gfx.setFont(FONT_REGULAR)
+end
+
+function Game:draw_rubble(x,y)
+	gfx.draw(images.cabin_rubble, x, (16-5)*BW)
 end
 
 function Game:on_red_button_pressed()
@@ -720,11 +815,12 @@ function Game:do_reverse_elevator(dt)
 		self.is_reversing_elevator = false
 		self.is_exploding_elevator = true -- I SHOULDVE MADE A STATE SYSTEM BUT FUCK LOGIC
 		self:on_exploding_elevator(dt)
+		return
 	end
 
 	-- Screenshake
 	local spdratio = self.elevator_speed / self.def_elevator_speed
-	game.screenshake_q = 3 * abs(spdratio)
+	game.screenshake_q = 2 * abs(spdratio)
 
 	self.downwards_elev_progress = self.downwards_elev_progress - self.elevator_speed
 	if self.downwards_elev_progress > 100 then
@@ -764,23 +860,83 @@ function Game:do_reverse_elevator(dt)
 		local g = lerp(self.def_bg_col[2], 0x76/255, p)
 		local b = lerp(self.def_bg_col[3], 0x22/255, p)
 		self.bg_col = {r,g,b,1}
-		self.bg_particle_col = { {r-0.1, g-0.1, b-0.1, 1},{r-0.2, g-0.2, b-0.2, 1} }
+		self.bg_particle_col = { {r+0.1, g+0.1, b+0.1, 1},{r+0.2, g+0.2, b+0.2, 1} }
 	end
 end
 
 function Game:on_exploding_elevator(dt)
 	self.elevator_speed = 0
-	self.bg_col = COL_ORANGE
-	self:screenshake(200)
+	self.bg_col = COL_BLACK_BLUE
+	self.bg_particle_col = nil--{ {r+0.1, g+0.1, b+0.1, 1},{r+0.2, g+0.2, b+0.2, 1} }
+	self.flash_alpha = 2
+	self:screenshake(40)
+	self.show_rubble = true
+	self.show_cabin = false
+	for _,p in pairs(self.bg_particles) do
+		p.col = random_sample{COL_DARK_GRAY, COL_MID_GRAY}
+	end
 	
+	-- YOU WIN
+	self.is_on_win_screen = true
+
+	-- init map coll
+	local map = self.map
+	map:reset()
+	local lens = {
+		0,29,
+		5,26,
+		7,23,
+		10,22,
+		16,17
+	}
+	--bounds
+	for ix=0,map.width do
+		map:set_tile(ix,0, 2)
+	end
+	for iy=0,map.height do
+		map:set_tile(0,iy, 2)
+		map:set_tile(map.width-1,iy, 2)
+	end
+	-- map collision
+	local mx = map.width/2
+	local i=1
+	for iy=map.height-1, map.height-1-#lens, -1 do
+		local x1, x2 = lens[i], lens[i+1]
+		if x1~= nil and x2~= nil then
+			local til = 2
+			if i==1 then til=1 end
+
+			for ix=x1,x2 do
+				map:set_tile(ix, iy, til)
+			end
+		end
+		i=i+2
+	end
+
+	----smoke
 	for i=1, 200 do
 		local x,y = random_range(self.cabin_ax, self.cabin_bx),random_range(self.cabin_ay, self.cabin_by)
 		particles:splash(x,y, 5, nil, nil, 10, 4)
 	end
+
+	--reset player gravity
+	for _,p in pairs(self.actors) do
+		p.friction_y = 1
+		if p.is_player then  p.is_flying = false end
+
+		p.gravity_mult = 1--max(0, 1 - abs(self.elevator_speed / speed_cap))
+		if p.name == "button_pressed" then
+			p:kill()
+		end
+	end
 end
 
 function Game:do_exploding_elevator(dt)
-
+	local x,y = random_range(self.cabin_ax, self.cabin_bx), 16*BW
+	local mw = CANVAS_WIDTH/2
+	y = 16*BW-8 - max(0, lerp(BW*4-8, -16, abs(mw-x)/mw))
+	local size = random_range(4, 8)
+	particles:fire(x,y,size, nil, 80, -5)
 end
 
 -----------------------------------------------------

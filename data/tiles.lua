@@ -23,7 +23,7 @@ function Tiles:init()
 		self.spr = nil
 	end)
 
-	-- Grass
+	-- Metal
 	self.tiles[1] = make_tile(function(self, x, y, w)
 		self:init_tile(x, y, w)
 		self.id = 1
@@ -33,25 +33,36 @@ function Tiles:init()
 		self.is_solid = true
 	end)
 
-	-- Grass
+	-- Rubble
 	self.tiles[2] = make_tile(function(self, x, y, w)
 		self:init_tile(x, y, w)
 		self.id = 2
-		self.name = "grass"
-		self.spr = images.grass
+		self.name = "rubble"
+		self.spr = images.empty
 		
 		self.is_solid = true
+		self.is_not_slidable = true
 	end)
 
-	-- Dirt
-	self.tiles[3] = make_tile(function(self, x, y, w)
-		self:init_tile(x, y, w)
-		self.id = 3
+	-- -- Grass
+	-- self.tiles[2] = make_tile(function(self, x, y, w)
+	-- 	self:init_tile(x, y, w)
+	-- 	self.id = 2
+	-- 	self.name = "grass"
+	-- 	self.spr = images.grass
+		
+	-- 	self.is_solid = true
+	-- end)
 
-		self.name = "dirt"
-		self.spr = images.dirt
-		self.is_solid = true
-	end)
+	-- -- Dirt
+	-- self.tiles[3] = make_tile(function(self, x, y, w)
+	-- 	self:init_tile(x, y, w)
+	-- 	self.id = 3
+
+	-- 	self.name = "dirt"
+	-- 	self.spr = images.dirt
+	-- 	self.is_solid = true
+	-- end)
 
 	-- Chain
 	self.tiles[4] = make_tile(function(self, x, y, w)
@@ -63,14 +74,14 @@ function Tiles:init()
 		self.is_solid = false
 	end)
 
-	self.tiles[5] = make_tile(function(self, x, y, w)
-		self:init_tile(x, y, w)
-		self.id = 5
+	-- self.tiles[5] = make_tile(function(self, x, y, w)
+	-- 	self:init_tile(x, y, w)
+	-- 	self.id = 5
 		
-		self.name = "bg_plate"
-		self.spr = images.bg_plate
-		self.is_solid = false
-	end)
+	-- 	self.name = "bg_plate"
+	-- 	self.spr = images.bg_plate
+	-- 	self.is_solid = false
+	-- end)
 end
 
 function Tiles:new_tile(n, x, y, w, ...)

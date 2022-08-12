@@ -32,6 +32,7 @@ local img_names = {
 
 	"ant1",
 	"ant2",
+	"ant_dead",
 	"bee",
 	"caterpillar",
 	"duck",
@@ -61,6 +62,7 @@ local img_names = {
 	"cabin_bg_amboccl",
 	"cabin_walls",
 	"cabin_door_left", "cabin_door_right",
+	"cabin_rubble",
 
 	"logo",
 	"logo_noshad",

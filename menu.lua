@@ -572,6 +572,23 @@ function MenuManager:init(game)
 		-- end},
 	}, { 0, 0, 0, 0.85 })
 
+	self.menus.win = Menu:new(game, {
+		{ "<<<<<<<<< CONTRATULATIONS! >>>>>>>>>" },
+		-- {"********** PAUSED **********"},
+		{ "" },
+		{ StatsMenuItem, "Kills", function(self) return game.stats.kills end },
+		{ StatsMenuItem, "Time",  function(self)
+			return time_to_string(game.stats.time)
+		end },
+		{ StatsMenuItem, "Floor", function(self) return game.stats.floor end },
+		{ ""},
+		{ "NEW GAME", function() game:new_game() end },
+		{ "CREDITS", func_set_menu('credits1') },
+		{ "QUIT", quit_game },
+		{ "" },
+	}, { 0, 0, 0, 0.95 })
+
+
 	self.cur_menu = nil
 	self.cur_menu_name = ""
 	self.is_paused = false
@@ -612,7 +629,7 @@ end
 
 function MenuManager:draw()
 	if self.cur_menu.bg_color then
-		rect_color(self.cur_menu.bg_color, "fill", game.cam_x or 0, game.cam_y or 0, CANVAS_WIDTH, CANVAS_HEIGHT)
+		rect_color(self.cur_menu.bg_color, "fill", game.cam_realx or 0, game.cam_realy or 0, CANVAS_WIDTH, CANVAS_HEIGHT)
 	end
 	self.cur_menu:draw()
 end
@@ -650,6 +667,12 @@ function MenuManager:set_menu(menu)
 end
 
 function MenuManager:pause()
+	-- Retry if game ended
+	if game.is_on_win_screen then
+		self:set_menu("win")
+		return
+	end
+
 	if self.cur_menu == nil then
 		self.is_paused = true
 		self:set_menu("pause")

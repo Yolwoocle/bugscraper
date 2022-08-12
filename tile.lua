@@ -18,6 +18,7 @@ function Tile:init_tile(x, y, w, spr)
 	self.h = w
 	self.is_solid = false
 	self.spr = spr
+	self.is_not_slidable = false
 end
 
 function Tile:update(dt)

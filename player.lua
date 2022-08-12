@@ -36,6 +36,7 @@ function Player:init(n, x, y, spr, controls)
 	-- Animation
 	self.spr_idle = images.ant1
 	self.spr_jump = images.ant2
+	self.spr_dead = images.ant_dead
 	self.spr = self.spr_idle
 	self.is_walking = false
 	self.squash = 1
@@ -334,7 +335,8 @@ function Player:do_wall_sliding(dt)
 		local holding_left = self:button_down('left') and col_normal.x == 1
 		local holding_right = self:button_down('right') and col_normal.x == -1
 		
-		local is_wall_sliding = is_walled and is_falling and (holding_left or holding_right)
+		local is_wall_sliding = is_walled and is_falling and (holding_left or holding_right) 
+			and not self.wall_col.other.is_not_slidable
 		self.is_wall_sliding = is_wall_sliding
 		self.is_walled = is_walled
 	end
@@ -461,7 +463,7 @@ end
 function Player:kill()
 	self.is_dead = true
 	game:screenshake(10)
-	particles:dead_player(self.spr_x, self.spr_y, self.spr, self.dir_x)
+	particles:dead_player(self.spr_x, self.spr_y, self.spr_dead, self.dir_x)
 	self:on_death()
 	game:on_kill(self)
 	

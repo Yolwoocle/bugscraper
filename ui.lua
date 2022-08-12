@@ -42,6 +42,10 @@ function UI:draw_icon_bar(x, y, val, max_val, img_full, img_empty, margin)
 end
 
 function UI:draw_progress_bar(x, y, w, h, val, max_val, col_fill, col_out, col_fill_shadow, text, text_col, font)
+	x = floor(x)
+	y = floor(y)
+	w = floor(w)
+	h = floor(h)
 	rect_color(col_out, "fill", x, y, w, h)
 
 	local prog_w = (w-2) * (val/max_val)

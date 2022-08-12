@@ -76,7 +76,8 @@ function love.keypressed(key, scancode, isrepeat)
 			end
 		end
 		game.floor = 998
-	
+		-- game:on_red_button_pressed()
+
 	-- elseif key == "b" then
 	-- 	if not game then return end
 	-- 	local Enemies = require "data.enemies"
