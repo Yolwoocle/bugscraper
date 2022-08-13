@@ -516,7 +516,7 @@ function MenuManager:init(game)
 		{ "Léo Bernard (Yolwoocle)", func_url("https://twitter.com/yolwoocle_")},
 		{ "" },
 		{ "<<< Special Thanks >>>"},
-		{ "Gouspourd", function() end},
+		{ "Gouspourd", func_url("https://gouspourd.itch.io/")},
 		{ "SmellyFishstiks", func_url("https://www.lexaloffle.com/bbs/?uid=42184") },
 		{ "LÖVE Engine", func_url("https://love2d.org/") },
 		{ ""},
