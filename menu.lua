@@ -523,9 +523,9 @@ function MenuManager:init(game)
 		{ "<<< Playtesting >>>"},
 		{ "hades140701", function() end },
 		{ "SmellyFishstiks", func_url("https://www.lexaloffle.com/bbs/?uid=42184") },
-		-- { "rbts", function() end },
-		-- { "Immow", function() end },
-		-- { "Kingtut 101", function() end },
+		{ "rbts", function() end },
+		{ "Immow", function() end },
+		{ "Kingtut 101", function() end },
 		{ ""},
 		
 		{ "[ NEXT PAGE ]", function(self)
@@ -541,6 +541,7 @@ function MenuManager:init(game)
 		{ "<<<<< Assets Used >>>>>"},
 		{ "Kenney assets, including sound effects and fonts / CC0", func_url("https://kenney.nl/")},
 		{ "'Hope Gold' font by somepx / CSL", func_url("https://somepx.itch.io/")},
+		{ "'NicoPaint' font by amhuo", func_url("https://emhuo.itch.io/")},
 		{ ""},
 		{ "<< freesound.org sounds >>"},
 		{ "'jf Glass Breaking.wav' by cmusounddesign / CC BY 3.0", func_url("https://freesound.org/people/cmusounddesign/sounds/85168/")},
