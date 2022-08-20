@@ -235,7 +235,7 @@ function ControlsMenuItem:update(dt)
 
 	self.text = concat(table_to_str(self.button_name), ": [", txt, "]")
 	if self.is_waiting_for_input then
-		self.text = "[PRESS A KEY]"
+		self.text = concat(self.button_name, ": [PRESS A KEY]")
 	end
 end
 
@@ -523,14 +523,12 @@ function MenuManager:init(game)
 		{ "<<< Playtesting >>>"},
 		{ "hades140701", function() end },
 		{ "SmellyFishstiks", func_url("https://www.lexaloffle.com/bbs/?uid=42184") },
-		{ "rbts", function() end },
-		{ "Immow", function() end },
-		{ "Kingtut 101", function() end },
+		-- { "rbts", function() end },
+		-- { "Immow", function() end },
+		-- { "Kingtut 101", function() end },
 		{ ""},
 		
-		{ "[ NEXT PAGE ]", function(self)
-			game.menu:set_menu("credits2")
-		end},
+		{ "[ NEXT PAGE >>]", func_set_menu("credits2")},
 	}, { 0, 0, 0, 0.85 })
 	
 	self.menus.credits2 = Menu:new(game, {
@@ -549,9 +547,8 @@ function MenuManager:init(game)
 		{ "'Glass shard tinkle texture' by el-bee / CC BY 4.0", func_url("https://freesound.org/people/el-bee/sounds/636238/")},
 		{ "'Bad Beep (Incorrect)' by RICHERlandTV / CC BY 3.0", func_url("https://freesound.org/people/RICHERlandTV/sounds/216090/")},
 		{ ""},
-		{ "[ NEXT PAGE ]", function(self, diff)
-			game.menu:set_menu("credits3")
-		end},
+		{ "[<< PREV PAGE ]", func_set_menu("credits1")},
+		{ "[ NEXT PAGE >>]", func_set_menu("credits3")},
 	}, { 0, 0, 0, 0.85 })
 	
 	self.menus.credits3 = Menu:new(game, {
@@ -568,13 +565,11 @@ function MenuManager:init(game)
 		{ "CC BY 4.0", func_url("https://creativecommons.org/licenses/by/4.0/")},
 		{ "Common Sense License (CSL)", func_url("http://www.palmentieri.it/somepx/license.txt")},
 		{ ""},
-		-- { "[ NEXT PAGE ]", function(self, diff)
-		-- 	game.menu:set_menu("credits3")
-		-- end},
+		{ "[<< PREV PAGE ]", func_set_menu("credits2")}
 	}, { 0, 0, 0, 0.85 })
 
 	self.menus.win = Menu:new(game, {
-		{ "<<<<<<<<< CONTRATULATIONS! >>>>>>>>>" },
+		{ "<<<<<<<<< CONGRATULATIONS! >>>>>>>>>" },
 		-- {"********** PAUSED **********"},
 		{ "" },
 		{ StatsMenuItem, "Kills", function(self) return game.stats.kills end },
@@ -584,7 +579,7 @@ function MenuManager:init(game)
 		{ StatsMenuItem, "Floor", function(self) return game.stats.floor end },
 		{ ""},
 		{ "NEW GAME", function() game:new_game() end },
-		{ "CREDITS", func_set_menu('credits1') },
+		-- { "CREDITS", func_set_menu('credits1') },
 		{ "QUIT", quit_game },
 		{ "" },
 	}, { 0, 0, 0, 0.95 })
@@ -616,8 +611,10 @@ function MenuManager:update(dt)
 		-- On pressed
 		local btn = game:button_pressed("shoot") or game:button_pressed("jump") or game:button_pressed("select")
 		if btn and self.sel_item and self.sel_item.on_click then
-			self.sel_item:on_click()
-			self.sel_item:after_click()
+			if not self.sel_item.is_waiting_for_input then
+				self.sel_item:on_click()
+				self.sel_item:after_click()
+			end
 		end
 	end
 
