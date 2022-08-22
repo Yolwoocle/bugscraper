@@ -576,6 +576,7 @@ function MenuManager:init(game)
 		{ "'Paper Throw Into Air(fuller) 2' by RossBell / CC0", func_url("https://freesound.org/people/RossBell/sounds/389442/")},
 		{ "'Slime' by Lukeo135 / CC0", func_url("https://freesound.org/people/Lukeo135/sounds/530617/")},
 		{ "'brushes_on_snare' by Heigh-hoo / CC0", func_url("https://freesound.org/people/Heigh-hoo/sounds/20297/")},
+		{ "'01 Elevator UP' by soundslikewillem / CC BY 4.0", func_url("https://freesound.org/people/soundslikewillem/sounds/340747/")},
 		{ ""},
 		{ "<< Asset Licenses >>"},
 		{ "CC0", func_url("https://creativecommons.org/publicdomain/zero/1.0/")},
