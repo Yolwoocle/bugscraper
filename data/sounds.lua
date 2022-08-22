@@ -21,14 +21,20 @@ local sfxnames = {
 	"hurt",  "hurt.wav",
 	"land",  "land.wav",
 	"item_collect", "item_collect.wav",
-	"menu_hover", "menu_hover.wav",
-	"menu_select", "menu_select.wav",
+
+	"menu_hover_old", "menu_hover.wav",
+	"menu_hover",     "menu_hover_5.ogg",
+	"menu_select_old", "menu_select.wav",
+	"menu_select",     "menu_select_2.ogg",
+
 	"kill_enemy", "kill_enemy.wav",
 	"wall_slide", "wall_slide.wav",
 	"game_over_1", "game_over_1.wav",
 	"game_over_2", "game_over_2.wav",
 
 	"explosion", "explosion.wav",
+
+	"sliding_wall_metal", "sliding_wall_metal.wav",
 
 	"footstep00", "footstep00.wav", -- CC0 https://kenney.nl/
 	"footstep01", "footstep01.wav",
@@ -79,6 +85,8 @@ local sfxnames = {
 	"larva_damage2", "larva_damage2.wav",
 	"larva_damage3", "larva_damage3.wav",
 	"larva_death", "larva_death.wav",
+
+	"elevator_bg", "elevator_bg.wav"
 }
 
 for i=1, #sfxnames, 2 do    sounds[sfxnames[i]] = new_source(sfxnames[i+1], "static")    end
@@ -86,8 +94,17 @@ for i=1, #sfxnames, 2 do    sounds[sfxnames[i]] = new_source(sfxnames[i+1], "sta
 sounds.shot1:setVolume(0.5)
 sounds.shot2:setPitch(0.8)
 
+sounds.menu_hover:setPitch(1.23)
+sounds.menu_hover:setVolume(0.5)
+sounds.menu_select:setPitch(0.7)
+
+sounds.sliding_wall_metal:setLooping(true)
+sounds.elevator_bg:setLooping(true)
+
 for i=0,9 do
 	sounds["footstep0"..tostring(i)]:setVolume(0.2)
 end
+
+sounds.music1 = new_source("music/music1.mp3", "stream", {looping = true})
 
 return sounds

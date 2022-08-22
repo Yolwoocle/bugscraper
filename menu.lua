@@ -186,7 +186,7 @@ function SliderMenuItem:after_click(diff)
 
 	-- TODO: rising pitch or decreasing pitch
 	-- + sound preview for music & sfx
-	audio:play(sounds.menu_select)
+	-- audio:play(sounds.menu_select)
 end
 
 
@@ -377,8 +377,8 @@ function MenuManager:init(game)
 		{ "<<<<<<<<< OPTIONS >>>>>>>>>" },
 		{ "< BACK", func_set_menu("pause")},--function() game.menu:back() end },
 		{ "" },
-		{ "CONTROLS...", func_set_menu("controls")},
-		{ ""},
+		-- { "CONTROLS...", func_set_menu("controls")},
+		-- { ""},
 		{ "<<< Audio >>>" },
 		{ "SOUND", function(self, option)
 			options:toggle_sound()
@@ -389,15 +389,31 @@ function MenuManager:init(game)
 		end},
 
 		{ SliderMenuItem, "VOLUME", function(self, diff)
+			diff = diff or 1
 			self.value = (self.value + diff)
 			if self.value < 0 then self.value = 20 end
 			if self.value > 20 then self.value = 0 end
 			
 			options:set_volume(self.value/20)
-			audio:play(sounds.menu_select)
+			audio:play(sounds.menu_select, nil, 0.8+(self.value/20)*0.4)
 		end, range_table(0,20),
 		function(self)
 			self.value = options:get("volume") * 20
+			self.value_text = concat(floor(100 * self.value / 20), "%")
+
+			self.is_selectable = options:get("sound_on")
+		end},
+		{ SliderMenuItem, "MUSIC VOLUME", function(self, diff)
+			diff = diff or 1
+			self.value = (self.value + diff)
+			if self.value < 0 then self.value = 20 end
+			if self.value > 20 then self.value = 0 end
+			
+			options:set_music_volume(self.value/20)
+			audio:play(sounds.menu_select, (self.value/20), 0.8+(self.value/20)*0.4)
+		end, range_table(0,20),
+		function(self)
+			self.value = options:get("music_volume") * 20
 			self.value_text = concat(floor(100 * self.value / 20), "%")
 
 			self.is_selectable = options:get("sound_on")
@@ -422,6 +438,7 @@ function MenuManager:init(game)
 
 			local scale = self.value
 			
+			audio:play(sounds.menu_select)
 			options:set_pixel_scale(scale)
 		end, { "auto", "max whole", 1, 2, 3, 4}, function(self)
 			self.value = options:get("pixel_scale")
@@ -558,6 +575,7 @@ function MenuManager:init(game)
 		{ "'[Keyboard press]' by MattRuthSound / CC BY 3.0", func_url("https://freesound.org/people/MattRuthSound/sounds/561661/")},
 		{ "'Paper Throw Into Air(fuller) 2' by RossBell / CC0", func_url("https://freesound.org/people/RossBell/sounds/389442/")},
 		{ "'Slime' by Lukeo135 / CC0", func_url("https://freesound.org/people/Lukeo135/sounds/530617/")},
+		{ "'brushes_on_snare' by Heigh-hoo / CC0", func_url("https://freesound.org/people/Heigh-hoo/sounds/20297/")},
 		{ ""},
 		{ "<< Asset Licenses >>"},
 		{ "CC0", func_url("https://creativecommons.org/publicdomain/zero/1.0/")},
@@ -638,6 +656,7 @@ function MenuManager:set_menu(menu)
 	-- nil menu
 	if menu == nil then
 		self.cur_menu = nil
+		game:on_unmenu()
 		return
 	end
 	
@@ -661,6 +680,7 @@ function MenuManager:set_menu(menu)
 		game.cam_y = 0
 	end
 
+	game:on_menu()
 	return true
 end
 
@@ -680,6 +700,7 @@ end
 function MenuManager:unpause()
 	self.is_paused = false
 	self:set_menu()
+	game:on_unmenu()
 end
 
 function MenuManager:toggle_pause()
@@ -707,7 +728,7 @@ function MenuManager:incr_selection(n)
 	self.sel_item = self.cur_menu.items[self.sel_n]
 	self.sel_item:set_selected(true, n)
 	
-	audio:play(sounds.menu_hover)
+	audio:play_var(sounds.menu_hover, 0.2, 1)
 
 	return true
 end

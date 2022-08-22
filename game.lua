@@ -13,8 +13,9 @@ local OptionsManager = require "options"
 local utf8 = require "utf8"
 
 local waves = require "data.waves"
-
+local sounds = require "data.sounds"
 local images = require "data.images"
+
 require "util"
 require "constants"
 
@@ -71,6 +72,8 @@ function Game:init()
 	self.menu = MenuManager:new(self)
 
 	love.mouse.setVisible(options:get("mouse_visible"))
+
+	self.music_source = sounds.music1
 end
 
 
@@ -235,6 +238,16 @@ function Game:new_game(number_of_players)
 	self.frames_to_skip = 0
 
 	self.draw_shadows = false
+	
+	-- Music
+	-- TODO: a "ambient sfx" system
+	self.music_source = sounds.music1
+	self.sfx_elevator_bg = sounds.elevator_bg
+	self.music_source:play()
+	self.sfx_elevator_bg:play()
+	self:set_music_volume(options:get("music_volume"))
+
+	options:update_sound_on()
 end
 
 local n = 0
@@ -438,7 +451,9 @@ function Game:draw()
 		local iy = 0
 		local ta = {}
 		for k,v in pairs(self.stats) do
-			table.insert(ta, concat(k,": ",v))
+			local val = v
+			if k == "time" then val = time_to_string(v) end
+			table.insert(ta, concat(k,": ",val))
 		end
 		table.insert(ta, "PRESS [ESCAPE]")
 
@@ -529,6 +544,18 @@ function Game:draw_debug()
 	
 	self.world_generator:draw()
 	draw_log()
+end
+
+function Game:on_menu()
+	self.music_source:pause()
+	self.sfx_elevator_bg:pause()
+end
+function Game:on_unmenu()
+	self.music_source:play()
+	self.sfx_elevator_bg:play()
+end
+function Game:set_music_volume(vol)
+	self.music_source:setVolume(vol)
 end
 
 function Game:new_actor(actor)

@@ -48,7 +48,6 @@ function AudioManager:play_random_pitch(snd, var)
 	self:play_pitch(snd, pitch)
 end
 
-
 function AudioManager:play_var(snd, vol_var, pitch_var, parms)
 	parms = parms or {}
 	var = var or 0.2

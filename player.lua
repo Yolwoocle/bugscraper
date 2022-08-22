@@ -135,6 +135,12 @@ function Player:init(n, x, y, spr, controls)
 	self.ui_x = self.x
 	self.ui_y = self.y
 
+	-- SFX
+	self.sfx_wall_slide = sounds.sliding_wall_metal
+	self.sfx_wall_slide:play()
+	self.sfx_wall_slide_volume = 0
+	self.sfx_wall_slide_max_volume = 0.6
+
 	-- Debug 
 	self.dt = 1
 end
@@ -328,6 +334,10 @@ function Player:do_wall_sliding(dt)
 	-- Check if wall sliding
 	self.is_wall_sliding = false
 	self.is_walled = false
+
+	self.sfx_wall_slide_volume = lerp(self.sfx_wall_slide_volume, 0, 0.3)
+	self.sfx_wall_slide:setVolume(self.sfx_wall_slide_volume)
+
 	if self.wall_col then
 		local col_normal = self.wall_col.normal
 		local is_walled = (col_normal.y == 0)
@@ -357,6 +367,10 @@ function Player:do_wall_sliding(dt)
 		if self.wall_slide_particle_timer % 1 == 0 then
 			particles:dust(self.mid_x + (self.w/2) * -self.dir_x, self.y)
 		end
+
+		-- SFX
+		self.sfx_wall_slide_volume = lerp(self.sfx_wall_slide_volume, self.sfx_wall_slide_max_volume, 0.3)
+		self.sfx_wall_slide:setVolume(self.sfx_wall_slide_volume)
 	else
 		self.gravity = self.default_gravity
 	end

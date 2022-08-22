@@ -9,6 +9,7 @@ function OptionsManager:init(game)
 	self.game = game
 	self.options = {
 		volume = 1,
+		music_volume = 1,
 		sound_on = true,
 
 		is_vsync = true,
@@ -210,13 +211,28 @@ end
 function OptionsManager:toggle_sound()
 	-- TODO: move from bool to a number (0-1), customisable in settings
 	self:toggle("sound_on")
+	self:update_sound_on()
 
 	self:update_options_file()
+end
+
+function OptionsManager:update_sound_on()
+	if self:get("sound_on") then
+		self:set_volume(self:get("volume"))
+	else
+		love.audio.setVolume(0)
+	end
 end
 
 function OptionsManager:set_volume(n)
 	self:set("volume", n)
 	love.audio.setVolume( self:get("volume") )
+
+	self:update_options_file()
+end
+function OptionsManager:set_music_volume(n)
+	self:set("music_volume", n)
+	game:set_music_volume( self:get("music_volume") )
 
 	self:update_options_file()
 end
