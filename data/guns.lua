@@ -38,6 +38,8 @@ function Guns:init()
 		self.damage = 1
 		self.is_auto = true
 		self.spr = images.gun_triple
+		self.sfx = sounds.gunshot_shotgun:clone()
+		self.sfx:setPitch(1.2)
 		self.cooldown = 0.2
 		self.bullet_number = 3
 		self.random_angle_offset = 0
@@ -78,7 +80,6 @@ function Guns:init()
 		self.name = "shotgun"
 		self.spr = images.gun_shotgun
 		self.sfx = sounds.gunshot_shotgun
-
 		self.is_auto = false
 
 		self.damage = 1
@@ -116,6 +117,7 @@ function Guns:init()
 		self.damage = 1
 		self.is_auto = true
 		self.spr = images.gun_minigun
+		self.sfx = sounds.gunshot_machinegun
 
 		self.cooldown = 0.03
 		self.jetpack_force = 200

@@ -118,8 +118,8 @@ sounds.sliding_wall_metal:setLooping(true)
 sounds.sliding_wall_metal:setVolume(0.1)
 sounds.elevator_bg:setVolume(0.5)
 sounds.elevator_bg:setLooping(true)
-sounds.elev_door_open:setVolume(0.6)
-sounds.elev_door_close:setVolume(0.6)
+sounds.elev_door_open:setVolume(0.3)
+sounds.elev_door_close:setVolume(0.3)
 
 sounds.elev_burning:setLooping(true)
 

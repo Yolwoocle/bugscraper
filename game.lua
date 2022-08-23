@@ -268,6 +268,7 @@ local n = 0
 function Game:update(dt)
 	self.frames_to_skip = max(0, self.frames_to_skip - 1)
 	if self.frames_to_skip > 0 then
+		print("Skipped a frame")
 		return
 	end
 

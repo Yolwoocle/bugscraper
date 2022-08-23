@@ -183,7 +183,7 @@ function Player:update(dt)
 	end
 
 	-- Gun switchgun
-	if self:button_pressed("down") then
+	if self:button_pressed("select") then
 		self.gun_number = mod_plus_1((self.gun_number + 1), #self.guns)
 		self:equip_gun(self.guns[self.gun_number])
 	end
@@ -620,6 +620,10 @@ function Player:update_button_state()
 	for btn, v in pairs(self.controls) do
 		if type(v) == "table" then
 			self.last_input_state[btn] = self:button_down(btn)
+		else
+			if btn ~= "type" then
+				print(concat("update_button_state not a table:", btn, ", ", table_to_str(v)))
+			end
 		end
 	end
 end
