@@ -7,6 +7,7 @@ local OptionsManager = Class:inherit()
 
 function OptionsManager:init(game)
 	self.game = game
+	self.is_first_time = false
 	self.options = {
 		volume = 1,
 		music_volume = 1,
@@ -19,6 +20,7 @@ function OptionsManager:init(game)
 		mouse_visible = false,
 		pause_on_unfocus = true,
 		screenshake_on = true,
+		disable_background_noise = false,
 	}
 
 	self.default_control_schemes = {
@@ -56,6 +58,7 @@ function OptionsManager:load_options()
 	local options_file_exists = love.filesystem.getInfo("options.txt")
 	if not options_file_exists then
 		print("options.txt does not exist, so creating it")
+		self.is_first_time = true
 		self:update_options_file()
 		return
 	end
@@ -257,6 +260,11 @@ end
 
 function OptionsManager:toggle_screenshake()
 	self:toggle("screenshake_on")
+
+	self:update_options_file()
+end
+function OptionsManager:toggle_background_noise()
+	self:toggle("disable_background_noise")
 
 	self:update_options_file()
 end

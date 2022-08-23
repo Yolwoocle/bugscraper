@@ -113,6 +113,7 @@ function Player:init(n, x, y, spr, controls)
 	self.shoot_ang = 0
 	
 	self:equip_gun(Guns.Machinegun:new())
+	-- self:equip_gun(Guns.Minigun:new())
 	-- FOR DEBUGGING
 	self.guns = {
 		Guns.Machinegun:new(self),
@@ -139,7 +140,7 @@ function Player:init(n, x, y, spr, controls)
 	self.sfx_wall_slide = sounds.sliding_wall_metal
 	self.sfx_wall_slide:play()
 	self.sfx_wall_slide_volume = 0
-	self.sfx_wall_slide_max_volume = 0.6
+	self.sfx_wall_slide_max_volume = 0.1
 
 	-- Debug 
 	self.dt = 1
@@ -181,8 +182,8 @@ function Player:update(dt)
 		self:equip_gun(Guns.MushroomCannon:new())
 	end
 
-	-- -- Gun
-	-- if self:button_pressed("switchgun") then
+	-- Gun
+	-- if self:button_pressed("jump") then
 	-- 	self.gun_number = mod_plus_1((self.gun_number + 1), #self.guns)
 	-- 	self:equip_gun(self.guns[self.gun_number])
 	-- end
@@ -195,8 +196,8 @@ function Player:update(dt)
 
 	-- self:update_button_state() --> moved to Game
 
-	self.ui_x = lerp(self.ui_x, self.mid_x, 0.2)
-	self.ui_y = lerp(self.ui_y, self.y, 0.2)
+	self.ui_x = lerp(self.ui_x, game.cam_x + floor(self.mid_x), 0.2)
+	self.ui_y = lerp(self.ui_y, game.cam_y + floor(self.y), 0.2)
 
 	--Visuals
 	self:update_visuals()
@@ -230,12 +231,13 @@ function Player:draw_hud()
 	-- Life
 	-- local ui_y = floor(self.y - self.spr:getHeight() - 6)
 	-- ui:draw_icon_bar(self.mid_x, ui_y, self.life, self.max_life, images.heart, images.heart_empty)
-	local ui_y = floor(self.ui_y - self.spr:getHeight() - 6)
-	ui:draw_icon_bar(self.ui_x, ui_y, self.life, self.max_life, images.heart, images.heart_empty)
+	local ui_x = floor(self.ui_x)
+	local ui_y = floor(self.ui_y) - self.spr:getHeight() - 6
+	ui:draw_icon_bar(ui_x, ui_y, self.life, self.max_life, images.heart, images.heart_empty)
 	-- Ammo bar
 	local bar_w = 32
-	local x = floor(self.ui_x - bar_w/2)
-	local y = ui_y + 8
+	local x = floor(ui_x) - floor(bar_w/2)
+	local y = floor(ui_y) + 8
 	local ammo_w = images.ammo:getWidth()
 	gfx.draw(images.ammo, x, y)
 	
@@ -521,8 +523,11 @@ function Player:shoot(dt, is_burst)
 		local oy = dy * self.gun.bul_h
 		local success = self.gun:shoot(dt, self, self.mid_x + ox, self.y + oy, dx, dy, is_burst)
 
-		if success and dx ~= 0 then
-			self.vx = self.vx - self.dir_x * self.gun.recoil_force
+		if success then
+			game:screenshake(self.gun.screenshake)
+			if dx ~= 0 then
+				self.vx = self.vx - self.dir_x * self.gun.recoil_force
+			end
 		end
 
 		if self.is_flying then

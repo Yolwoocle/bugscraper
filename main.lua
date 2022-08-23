@@ -151,7 +151,7 @@ function print(...)
 	
 	local text = concatsep({...}, " ")
 	table.insert(msg_log, text)
-	print_log_file:write(text)
+	print_log_file:write(concat(os.date("%c", os.time())," | ",text,"\n"))
 	
 	if #msg_log > max_msg_log then
 		table.remove(msg_log, 1)

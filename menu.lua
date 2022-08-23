@@ -387,7 +387,6 @@ function MenuManager:init(game)
 			self.value = options:get("sound_on")
 			self.value_text = options:get("sound_on") and "ON" or "OFF"
 		end},
-
 		{ SliderMenuItem, "VOLUME", function(self, diff)
 			diff = diff or 1
 			self.value = (self.value + diff)
@@ -417,6 +416,13 @@ function MenuManager:init(game)
 			self.value_text = concat(floor(100 * self.value / 20), "%")
 
 			self.is_selectable = options:get("sound_on")
+		end},
+		{ "DISABLE BACKGROUND SOUNDS", function(self, option)
+			options:toggle_background_noise()
+		end, 
+		function(self)
+			self.value = options:get("disable_background_noise")
+			self.value_text = options:get("disable_background_noise") and "ON" or "OFF"
 		end},
 		{""},
 

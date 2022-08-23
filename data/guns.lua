@@ -22,6 +22,7 @@ function Guns:init()
 
 		self.cooldown = 0.1
 		self.jetpack_force = 440
+		self.screenshake = 2
 	end
 
 	-------
@@ -41,6 +42,8 @@ function Guns:init()
 		self.bullet_number = 3
 		self.random_angle_offset = 0
 		self.jetpack_force = self.default_jetpack_force * 2
+
+		self.screenshake = 2
 	end
 
 	--------
@@ -62,6 +65,8 @@ function Guns:init()
 		self.burst_delay = 0.05
 		
 		self.max_ammo = self.burst_count * 6
+
+		self.screenshake = 1.5
 	end
 
 	----------------
@@ -92,6 +97,8 @@ function Guns:init()
 		self.speed_floor = 200
 
 		self.jetpack_force = 1200 --def: 340
+
+		self.screenshake = 4
 	end
 
 	--------
@@ -105,13 +112,15 @@ function Guns:init()
 		self.max_ammo = 150
 		self.max_reload_timer = 1.5
 
-		self.random_angle_offset = 0.7
+		self.random_angle_offset = 0.5
 		self.damage = 1
 		self.is_auto = true
 		self.spr = images.gun_minigun
 
 		self.cooldown = 0.03
 		self.jetpack_force = 200
+
+		self.screenshake = 0.6
 	end
 
 	-----
@@ -135,6 +144,8 @@ function Guns:init()
 
 		self.cooldown = 0.2
 		self.jetpack_force = 640
+
+		self.screenshake = 2
 	end
 
 	-----

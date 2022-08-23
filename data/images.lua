@@ -89,6 +89,7 @@ local img_names = {
 	"dummy_target",
 
 	"controls",
+	"controls_jetpack",
 
 	"mushroom_ant",
 	"mushroom",

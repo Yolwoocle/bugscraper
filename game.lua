@@ -74,6 +74,7 @@ function Game:init()
 	love.mouse.setVisible(options:get("mouse_visible"))
 
 	self.music_source = sounds.music1
+	self.is_first_time = options.is_first_time
 end
 
 
@@ -135,6 +136,7 @@ function Game:new_game(number_of_players)
 	self.draw_enemies_in_bg = false
 	self.door_animation = false
 	self.def_elevator_speed = 400
+	self.elevator_speed_cap = -1000
 	self.elevator_speed = 0
 	self.elevator_speed_overflow = 0
 	self.has_switched_to_next_floor = false
@@ -207,6 +209,8 @@ function Game:new_game(number_of_players)
 	self.logo_a = 0
 	self.logo_cols = {COL_LIGHT_YELLOW, COL_LIGHT_BLUE, COL_LIGHT_RED}
 	self.move_logo = false
+	self.jetpack_tutorial_y = -30
+	self.move_jetpack_tutorial = false
 	
 	if self.menu then
 		self.menu:set_menu()
@@ -243,6 +247,8 @@ function Game:new_game(number_of_players)
 	-- TODO: a "ambient sfx" system
 	self.music_source = sounds.music1
 	self.sfx_elevator_bg = sounds.elevator_bg
+	self.sfx_elevator_bg_volume     = self.sfx_elevator_bg:getVolume()
+	self.sfx_elevator_bg_def_volume = self.sfx_elevator_bg:getVolume()
 	self.music_source:play()
 	self.sfx_elevator_bg:play()
 	self:set_music_volume(options:get("music_volume"))
@@ -276,9 +282,20 @@ function Game:update_main_game(dt)
 	end
 	self.t = self.t + dt
 
+	if options:get("disable_background_noise") then
+		self.sfx_elevator_bg:setVolume(0)
+	else
+		self.sfx_elevator_bg:setVolume(self.sfx_elevator_bg_def_volume)
+	end 
+
 	-- Screenshake
-	self.screenshake_q = max(0, self.screenshake_q - self.screenshake_speed * dt)
-	self.cam_ox, self.cam_oy = random_neighbor(self.screenshake_q), random_neighbor(self.screenshake_q)
+	-- self.screenshake_q = max(0, self.screenshake_q - self.screenshake_speed * dt)
+	self.screenshake_q = lerp(self.screenshake_q, 0, 0.2)
+
+	local q = self.screenshake_q
+	if self.screenshake_q < 1 then    q = 0    end 
+	self.cam_ox, self.cam_oy = random_neighbor(q), random_neighbor(q)
+	
 	if not options:get("screenshake_on") then self.cam_ox, self.cam_oy = 0,0 end
 	self.cam_realx, self.cam_realy = self.cam_x + self.cam_ox, self.cam_y + self.cam_oy
 
@@ -309,6 +326,11 @@ function Game:update_main_game(dt)
 	if self.move_logo then
 		self.logo_vy = self.logo_vy - dt
 		self.logo_y = self.logo_y + self.logo_vy
+	end
+	if self.move_jetpack_tutorial then
+		self.jetpack_tutorial_y = lerp(self.jetpack_tutorial_y, 70, 0.1)
+	else
+		self.jetpack_tutorial_y = lerp(self.jetpack_tutorial_y, -30, 0.1)
 	end
 
 	local q = 4
@@ -416,6 +438,7 @@ function Game:draw()
 		gfx.draw(spr, logo_x + ox, self.logo_y + oy)
 	end
 	gfx.draw(images.controls, floor((CANVAS_WIDTH - images.controls:getWidth())/2), floor(self.logo_y) + images.logo:getHeight()+6)
+	gfx.draw(images.controls_jetpack, floor((CANVAS_WIDTH - images.controls_jetpack:getWidth())/2), floor(self.jetpack_tutorial_y))
 
 	-- "CONGRATS" at the end
 	-- PINNNNNN
@@ -537,6 +560,7 @@ function Game:draw_debug()
 		concat("n° collision items: ", collision.world:countItems()),
 		concat("elevator speed: ", self.elevator_speed),
 		concat("frames_to_skip: ", self.frames_to_skip),
+		concat("self.sfx_elevator_bg_volume", self.sfx_elevator_bg_volume),
 		"",
 	}
 
@@ -549,6 +573,9 @@ end
 function Game:on_menu()
 	self.music_source:pause()
 	self.sfx_elevator_bg:pause()
+	for k,p in pairs(self.players) do
+		p.sfx_wall_slide:setVolume(0)
+	end
 end
 function Game:on_unmenu()
 	self.music_source:play()
@@ -691,6 +718,17 @@ function Game:update_bg_particles(dt)
 end	
 
 function Game:progress_elevator(dt)
+	-- Set bg elevator noise and this should be its own function or some lame dumb shit
+	-- There are 2 types of devs: those who make a ElevatorBGNoise class and those who
+	-- ship games 
+	local r = abs(self.elevator_speed/self.elevator_speed_cap)
+	self.sfx_elevator_bg_volume = lerp(self.sfx_elevator_bg_volume,
+		clamp(r, 0, self.sfx_elevator_bg_def_volume), 0.1)
+	self.sfx_elevator_bg:setVolume(self.sfx_elevator_bg_volume)
+	if options:get("disable_background_noise") then
+		self.sfx_elevator_bg:setVolume(0)
+	end
+
 	-- this is stupid, should've used game.state or smthg
 	if self.is_exploding_elevator then
 		self:do_exploding_elevator(dt)
@@ -772,9 +810,12 @@ function Game:new_wave_buffer_enemies()
 	self.door_animation_enemy_buffer = {}
 
 	-- print(self.floor, clamp(self.floor, 1, #waves))
-	local wave_n = clamp(self.floor+1, 1, #waves)
-	local wave = waves[wave_n] -- Minus 1 because the floor indicator changes before enemies are spawned
+	local wave_n = clamp(self.floor+1, 1, #waves) -- floor+1 because the floor indicator changes before enemies are spawned
+	local wave = waves[wave_n]
 	local n = love.math.random(wave.min, wave.max)
+
+	-- On wave 5, summon jetpack tutorial
+	self.move_jetpack_tutorial = (self.is_first_time and wave_n == 5)
 	for i=1, n do
 		-- local x = love.math.random((wg.box_ax+1)*bw, (wg.box_bx-1)*bw)
 		-- local y = love.math.random((wg.box_ay+1)*bw, (wg.box_by-1)*bw)
@@ -831,7 +872,7 @@ function Game:on_red_button_pressed()
 end
 
 function Game:do_reverse_elevator(dt)
-	local speed_cap = -1000
+	self.elevator_speed_cap = -1000
 	self.elevator_speed = max(self.elevator_speed - dt*100, speed_cap)
 	if self.elevator_speed == speed_cap then
 		self.elevator_speed_overflow = self.elevator_speed_overflow + dt

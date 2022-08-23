@@ -91,7 +91,7 @@ local sfxnames = {
 
 for i=1, #sfxnames, 2 do    sounds[sfxnames[i]] = new_source(sfxnames[i+1], "static")    end
 
-sounds.shot1:setVolume(0.5)
+sounds.shot1:setVolume(0.9)
 sounds.shot2:setPitch(0.8)
 
 sounds.menu_hover:setPitch(1.23)
@@ -99,6 +99,8 @@ sounds.menu_hover:setVolume(0.5)
 sounds.menu_select:setPitch(0.7)
 
 sounds.sliding_wall_metal:setLooping(true)
+sounds.sliding_wall_metal:setVolume(0.1)
+sounds.elevator_bg:setVolume(0.5)
 sounds.elevator_bg:setLooping(true)
 
 for i=0,9 do

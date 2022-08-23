@@ -10,12 +10,12 @@ function Gun:init_gun(user)
 	self.spr = images.gun_machinegun
 	self.x, self.y = 0, 0
 	self.rot = 0
-
+	
 	self.is_lootable = true
 	self.user = user -- The actor using the gun
-
+	
 	self.is_auto = true
-
+	
 	-- Bullet
 	self.bul_w = 12
 	self.bul_h = 12
@@ -27,45 +27,47 @@ function Gun:init_gun(user)
 	self.random_angle_offset = 0.1
 	self.random_speed_offset = 40
 	self.random_friction_offset = 0
-
+	
 	self.knockback = 500
-
+	
 	self.speed_floor = 3 -- min speed before it despawns
-
+	
 	--
 	self.damage = 2
-
+	
 	-- Ammo
 	self.max_ammo = 100
 	self.ammo = math.huge
 	self.is_reloading = false
 	self.reload_timer = 0
 	self.max_reload_timer = 1
-
+	
 	-- Cooldown
 	self.cooldown = 0.3
 	self.cooldown_timer = 0
-
+	
 	-- Burst
 	self.is_burst = false
 	self.burst_count = 1
 	self.burst_delay = 0
-
+	
 	self.burst_counter = 0
 	self.burst_delay_timer = 0
-
+	
 	-- Jetpack
 	self.default_jetpack_force = 340
 	self.jetpack_force = self.default_jetpack_force
-
+	
 	-- Sounds
 	self.sfx = sounds.shot1
 	self.sfx_pitch_var = 1.15
+	
+	self.screenshake = 0
 end
 
 function Gun:update(dt)
 	if not self.recoil_force then self.recoil_force = self.default_jetpack_force*0.25 end
-
+	
 	self.dt = dt
 	self.cooldown_timer = max(self.cooldown_timer - dt, 0)
 	self.reload_timer = max(self.reload_timer - dt, 0)
