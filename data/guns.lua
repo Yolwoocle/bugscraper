@@ -13,7 +13,7 @@ function Guns:init()
 		self:init_gun(user)
 		self.name = "machinegun"
 		
-		self.sfx = sounds.shot1
+		self.sfx = sounds.gunshot_machinegun
 		self.damage = 1.5
 		self.max_ammo = 25
 		self.max_reload_timer = 1.5
@@ -77,7 +77,7 @@ function Guns:init()
 		self:init_gun(user)
 		self.name = "shotgun"
 		self.spr = images.gun_shotgun
-		self.sfx = sounds.shot2
+		self.sfx = sounds.gunshot_shotgun
 
 		self.is_auto = false
 

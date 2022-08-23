@@ -15,9 +15,13 @@ local sounds = {}
 --music_level_1 = new_source("music/level_1.mp3", "stream", {looping = true})
 local sfxnames = {
 	"jump", "jump1.wav",
-	"shot1", "shot1.wav",
+	"shot1", "shot1.wav", -- these are pico 8 sfx from birds with guns
 	"shot2", "shot2.wav",
 	"shot3", "shot3.wav",
+	"gunshot1", "gunshot1.wav",
+	"gunshot_machinegun", "gunshot_machinegun.wav",
+	"gunshot_shotgun", "gunshot_shotgun.wav",
+
 	"hurt",  "hurt.wav",
 	"land",  "land.wav",
 	"item_collect", "item_collect.wav",
@@ -89,7 +93,16 @@ local sfxnames = {
 	"elevator_bg", "elevator_bg.wav",
 	"elev_door_open", "elev_door_open.wav",
 	"elev_door_close", "elev_door_close.wav",
-	"elev_burning", "elev_burning.wav"
+	"elev_burning", "elev_burning.wav",
+
+	"gravel_footstep_1", "gravel_footstep_1.wav",
+	"gravel_footstep_2", "gravel_footstep_2.wav",
+	"gravel_footstep_3", "gravel_footstep_3.wav",
+	"gravel_footstep_4", "gravel_footstep_4.wav",
+	"gravel_footstep_5", "gravel_footstep_5.wav",
+	"gravel_footstep_6", "gravel_footstep_6.wav",
+
+	"elev_crash", "elev_crash.wav",
 }
 
 for i=1, #sfxnames, 2 do    sounds[sfxnames[i]] = new_source(sfxnames[i+1], "static")    end
@@ -105,8 +118,8 @@ sounds.sliding_wall_metal:setLooping(true)
 sounds.sliding_wall_metal:setVolume(0.1)
 sounds.elevator_bg:setVolume(0.5)
 sounds.elevator_bg:setLooping(true)
-sounds.elev_door_open:setVolume(0.8)
-sounds.elev_door_close:setVolume(0.8)
+sounds.elev_door_open:setVolume(0.6)
+sounds.elev_door_close:setVolume(0.6)
 
 sounds.elev_burning:setLooping(true)
 

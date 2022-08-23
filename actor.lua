@@ -62,6 +62,11 @@ function Actor:init_actor(x, y, w, h, spr, args)
 	self.spr_x = 0
 	self.spr_y = 0
 
+	self.anim_frame_len = 0.2
+	self.anim_t = random_range(0, self.anim_frame_len)
+	self.anim_frames = nil
+	self.anim_cur_frame = 1
+
 	self:update_sprite_position()
 end
 
@@ -120,6 +125,16 @@ function Actor:update_actor(dt)
 
 	self.mid_x = self.x + self.w/2
 	self.mid_y = self.y + self.h/2
+
+	-- animation
+	if self.anim_frames ~= nil then
+		self.anim_t = self.anim_t + dt
+		if self.anim_t >= self.anim_frame_len then
+			self.anim_t = self.anim_t - self.anim_frame_len
+			self.anim_cur_frame = mod_plus_1((self.anim_cur_frame + 1), #self.anim_frames)
+		end
+		self.spr = self.anim_frames[self.anim_cur_frame]
+	end
 
 	self:update_sprite_position()
 end
@@ -187,6 +202,7 @@ function Actor:react_to_collision(col)
 		-- is grounded
 		if col.normal.y == -1 then
 			self.is_grounded = true
+			self.grounded_col = col
 		end
 	end
 end

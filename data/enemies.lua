@@ -16,7 +16,7 @@ function Enemies:init()
 	self.Fly = Enemy:inherit()
 	
 	function self.Fly:init(x, y)
-		self:init_enemy(x,y, images.fly)
+		self:init_enemy(x,y, images.fly1)
 		self.name = "fly"
 		self.is_flying = true
 		self.life = 10
@@ -28,6 +28,13 @@ function Enemies:init()
 
 		self.gravity = 0
 		self.friction_y = self.friction_x
+
+		self.anim_frame_len = 0.05
+		self.anim_frames = {images.fly1, images.fly2}
+	end
+
+	function self.Fly:update(dt)
+		self:update_enemy(dt)
 	end
 
 	-------------
@@ -68,6 +75,8 @@ function Enemies:init()
 
 		self.sound_damage = {sounds.larva_damage1, sounds.larva_damage2, sounds.larva_damage3}
 		-- self.sound_death = sounds.larva_death
+		self.anim_frame_len = 0.2
+		self.anim_frames = {images.larva1, images.larva2}
 	end
 
 	function self.Larva:update(dt)
@@ -132,11 +141,14 @@ function Enemies:init()
 	self.Slug = Enemy:inherit()
 
 	function self.Slug:init(x, y) 
-		self:init_enemy(x, y, images.slug, 14, 9)
+		self:init_enemy(x, y, images.slug1, 14, 9)
 		self.name = "slug"
 		self.follow_player = true
 
 		self.gravity = self.default_gravity * 0.5
+
+		self.anim_frame_len = 0.4
+		self.anim_frames = {images.slug1, images.slug2}
 	end
 
 	

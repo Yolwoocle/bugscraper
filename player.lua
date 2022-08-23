@@ -88,7 +88,7 @@ function Player:init(n, x, y, spr, controls)
 	collision:add(self.wall_collision_box)
 
 	-- Visuals
-	self.color = ({COL_RED, COL_GREEN, COL_CYAN, COL_YELLOW})[self.n]
+	self.color = ({COL_RED, COL_GREEN, COL_DARK_RED, COL_YELLOW})[self.n]
 	self.color = self.color or COL_RED
 	-- Loot & drops
 	self.min_loot_dist = BLOCK_WIDTH*5
@@ -183,7 +183,7 @@ function Player:update(dt)
 	end
 
 	-- Gun switchgun
-	if self:button_pressed("jump") then
+	if self:button_pressed("down") then
 		self.gun_number = mod_plus_1((self.gun_number + 1), #self.guns)
 		self:equip_gun(self.guns[self.gun_number])
 	end
@@ -525,7 +525,9 @@ function Player:shoot(dt, is_burst)
 
 		if success then
 			-- screenshake
-			game:screenshake(self.gun.screenshake)
+			if game.screenshake_q <= self.gun.screenshake * 3 then
+				game:screenshake(self.gun.screenshake)
+			end 
 			-- if self.gun.screenshake >= 1 then
 			-- else
 			-- 	if love.math.random() <= self.gun.screenshake then game:screenshake(1) end
@@ -698,6 +700,9 @@ end
 function Player:on_grounded()
 	-- On land
 	local s = "metalfootstep_0"..tostring(love.math.random(0,4))
+	if self.grounded_col and self.grounded_col.other.name == "rubble" then
+		s = "gravel_footstep_"..tostring(love.math.random(1,6))
+	end
 	audio:play_var(s, 0.3, 1, {pitch=0.5, volume=0.5})
 
 	self.jump_squash = 2
@@ -778,6 +783,9 @@ function Player:animate_walk(dt)
 	-- Walk SFX
 	if sign(self.old_bounce_vy) == 1 and sign(self.bounce_vy) == -1 then
 		local s = "metalfootstep_0"..tostring(love.math.random(0,4))
+		if self.grounded_col and self.grounded_col.other.name == "rubble" then
+			s = "gravel_footstep_"..tostring(love.math.random(1,6))
+		end
 		audio:play_var(s, 0.3, 1.1, {pitch=0.4, volume=0.5})
 	end
 end

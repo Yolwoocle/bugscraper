@@ -146,9 +146,10 @@ function Game:new_game(number_of_players)
 	self.is_exploding_elevator = false
 	self.downwards_elev_progress = 0
 	
-	self.elev_height = 0
-	self.elev_max_height = 10000
-	self.bg_colors = {COL_BLACK_BLUE, COL_DARK_GREEN, COL_LIGHT_RED, COL_LIGHT_BLUE}
+	self.bg_color_progress = 0
+	self.bg_color_index = 1
+	self.bg_colors = {COL_BLACK_BLUE, COL_DARK_GREEN, COL_DARK_RED, COL_LIGHT_BLUE}
+	self.bg_col = COL_BLACK_BLUE
 
 	self.game_started = false
 
@@ -289,16 +290,12 @@ function Game:update_main_game(dt)
 	end
 	self.t = self.t + dt
 
-	-- bg 
-	self.elev_height = self.elev_height + self.elevator_speed*0.1
-	local progress_index = #self.bg_colors * (self.elev_height / self.elev_max_height)
-	local color_index = floor(progress_index) + 1
-
-	local target_col = self.bg_colors[clamp(color_index, 1, #self.bg_colors)]
-	local i_prev = clamp(color_index-1, 1, #self.bg_colors)
-	local progress = progress_index % 1
-	self.bg_col = lerp_color(self.bg_colors[i_prev], target_col, progress)
-	self.debug1 = color_index
+	-- bg  pinnn
+	self.bg_color_progress = self.bg_color_progress + dt
+	local i_prev = clamp(self.bg_color_index-1, 1, #self.bg_colors)
+	local i_target = clamp(self.bg_color_index, 1, #self.bg_colors)
+	local prog = clamp(self.bg_color_progress, 0, 1)
+	self.bg_col = lerp_color(self.bg_colors[i_prev], self.bg_colors[i_target], prog)
 
 	-- Screenshake
 	self.screenshake_q = max(0, self.screenshake_q - self.screenshake_speed * dt)
@@ -833,6 +830,12 @@ function Game:new_wave_buffer_enemies()
 	local wave = waves[wave_n]
 	local n = love.math.random(wave.min, wave.max)
 
+	-- BG color changes
+	if wave_n == floor((self.bg_color_index) * (#waves / #self.bg_colors)) then
+		self.bg_color_index = self.bg_color_index + 1
+		self.bg_color_progress = 0
+	end
+
 	-- On wave 5, summon jetpack tutorial
 	-- self.move_jetpack_tutorial = (self.is_first_time and wave_n == 5)
 	self.move_jetpack_tutorial = (wave_n == 5)
@@ -970,6 +973,9 @@ function Game:on_exploding_elevator(dt)
 		p.col = random_sample{COL_DARK_GRAY, COL_MID_GRAY}
 	end
 	
+	-- Crash sfx
+	audio:play(sounds.elev_crash)
+
 	-- YOU WIN
 	self.is_on_win_screen = true
 
