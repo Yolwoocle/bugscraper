@@ -182,11 +182,11 @@ function Player:update(dt)
 		self:equip_gun(Guns.MushroomCannon:new())
 	end
 
-	-- Gun
-	-- if self:button_pressed("jump") then
-	-- 	self.gun_number = mod_plus_1((self.gun_number + 1), #self.guns)
-	-- 	self:equip_gun(self.guns[self.gun_number])
-	-- end
+	-- Gun switchgun
+	if self:button_pressed("jump") then
+		self.gun_number = mod_plus_1((self.gun_number + 1), #self.guns)
+		self:equip_gun(self.guns[self.gun_number])
+	end
 
 	self.gun:update(dt)
 	self:shoot(dt, false)
@@ -524,7 +524,12 @@ function Player:shoot(dt, is_burst)
 		local success = self.gun:shoot(dt, self, self.mid_x + ox, self.y + oy, dx, dy, is_burst)
 
 		if success then
+			-- screenshake
 			game:screenshake(self.gun.screenshake)
+			-- if self.gun.screenshake >= 1 then
+			-- else
+			-- 	if love.math.random() <= self.gun.screenshake then game:screenshake(1) end
+			-- end
 			if dx ~= 0 then
 				self.vx = self.vx - self.dir_x * self.gun.recoil_force
 			end

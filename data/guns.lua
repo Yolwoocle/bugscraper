@@ -59,7 +59,7 @@ function Guns:init()
 		self.is_auto = false
 		self.is_burst = true
 		
-		self.damage = 1
+		self.damage = 1.5
 		self.cooldown = 0.4
 		self.burst_count = 5
 		self.burst_delay = 0.05
@@ -120,7 +120,7 @@ function Guns:init()
 		self.cooldown = 0.03
 		self.jetpack_force = 200
 
-		self.screenshake = 0.6
+		self.screenshake = 0.7
 	end
 
 	-----

@@ -133,17 +133,24 @@ function Game:new_game(number_of_players)
 	
 	-- Background
 	self.door_offset = 0
-	self.draw_enemies_in_bg = false
 	self.door_animation = false
+	
+	self.draw_enemies_in_bg = false
+	
 	self.def_elevator_speed = 400
 	self.elevator_speed_cap = -1000
 	self.elevator_speed = 0
 	self.elevator_speed_overflow = 0
 	self.has_switched_to_next_floor = false
-	self.game_started = false
 	self.is_reversing_elevator = false
 	self.is_exploding_elevator = false
 	self.downwards_elev_progress = 0
+	
+	self.elev_height = 0
+	self.elev_max_height = 10000
+	self.bg_colors = {COL_BLACK_BLUE, COL_DARK_GREEN, COL_LIGHT_RED, COL_LIGHT_BLUE}
+
+	self.game_started = false
 
 	self.show_bg_particles = true
 	self.def_bg_col = COL_BLACK_BLUE
@@ -282,19 +289,28 @@ function Game:update_main_game(dt)
 	end
 	self.t = self.t + dt
 
-	if options:get("disable_background_noise") then
-		self.sfx_elevator_bg:setVolume(0)
-	else
-		self.sfx_elevator_bg:setVolume(self.sfx_elevator_bg_def_volume)
-	end 
+	-- bg 
+	self.elev_height = self.elev_height + self.elevator_speed*0.1
+	local progress_index = #self.bg_colors * (self.elev_height / self.elev_max_height)
+	local color_index = floor(progress_index) + 1
+
+	local target_col = self.bg_colors[clamp(color_index, 1, #self.bg_colors)]
+	local i_prev = clamp(color_index-1, 1, #self.bg_colors)
+	local progress = progress_index % 1
+	self.bg_col = lerp_color(self.bg_colors[i_prev], target_col, progress)
+	self.debug1 = color_index
 
 	-- Screenshake
-	-- self.screenshake_q = max(0, self.screenshake_q - self.screenshake_speed * dt)
-	self.screenshake_q = lerp(self.screenshake_q, 0, 0.2)
+	self.screenshake_q = max(0, self.screenshake_q - self.screenshake_speed * dt)
+	-- self.screenshake_q = lerp(self.screenshake_q, 0, 0.2)
 
+	-- if self.screenshake_q < 1 then    q = 0    end
 	local q = self.screenshake_q
-	if self.screenshake_q < 1 then    q = 0    end 
-	self.cam_ox, self.cam_oy = random_neighbor(q), random_neighbor(q)
+	local ox, oy = random_neighbor(q), random_neighbor(q)
+	if abs(ox) >= 0.2 then   ox = sign(ox) * max(abs(ox), 1)   end
+	if abs(oy) >= 0.2 then   oy = sign(oy) * max(abs(oy), 1)   end
+	self.cam_ox = ox
+	self.cam_oy = oy
 	
 	if not options:get("screenshake_on") then self.cam_ox, self.cam_oy = 0,0 end
 	self.cam_realx, self.cam_realy = self.cam_x + self.cam_ox, self.cam_y + self.cam_oy
@@ -561,6 +577,7 @@ function Game:draw_debug()
 		concat("elevator speed: ", self.elevator_speed),
 		concat("frames_to_skip: ", self.frames_to_skip),
 		concat("self.sfx_elevator_bg_volume", self.sfx_elevator_bg_volume),
+		concat("debug1", self.debug1),
 		"",
 	}
 
@@ -770,12 +787,14 @@ function Game:update_door_anim(dt)
 	elseif self.floor_progress > 3 then
 		-- ...Open door...
 		self.door_offset = lerp(self.door_offset, 54, 0.1)
+		sounds.elev_door_open:play()
 	elseif self.floor_progress > 2 then
 		-- ...Keep door open...
 		self.door_offset = 54
 	elseif self.floor_progress > 1 then
 		-- ...Close doors
 		self.door_offset = lerp(self.door_offset, 0, 0.1)
+		sounds.elev_door_close:play()
 		self:activate_enemy_buffer(dt)
 	end
 
@@ -815,7 +834,8 @@ function Game:new_wave_buffer_enemies()
 	local n = love.math.random(wave.min, wave.max)
 
 	-- On wave 5, summon jetpack tutorial
-	self.move_jetpack_tutorial = (self.is_first_time and wave_n == 5)
+	-- self.move_jetpack_tutorial = (self.is_first_time and wave_n == 5)
+	self.move_jetpack_tutorial = (wave_n == 5)
 	for i=1, n do
 		-- local x = love.math.random((wg.box_ax+1)*bw, (wg.box_bx-1)*bw)
 		-- local y = love.math.random((wg.box_ay+1)*bw, (wg.box_by-1)*bw)
@@ -873,6 +893,8 @@ end
 
 function Game:do_reverse_elevator(dt)
 	self.elevator_speed_cap = -1000
+	local speed_cap = self.elevator_speed_cap
+
 	self.elevator_speed = max(self.elevator_speed - dt*100, speed_cap)
 	if self.elevator_speed == speed_cap then
 		self.elevator_speed_overflow = self.elevator_speed_overflow + dt
@@ -883,8 +905,12 @@ function Game:do_reverse_elevator(dt)
 		self.is_reversing_elevator = false
 		self.is_exploding_elevator = true -- I SHOULDVE MADE A STATE SYSTEM BUT FUCK LOGIC
 		self:on_exploding_elevator(dt)
+		sounds.elev_burning:stop()
 		return
 	end
+
+	sounds.elev_burning:play()
+	sounds.elev_burning:setVolume(abs(self.elevator_speed/speed_cap))
 
 	-- Screenshake
 	local spdratio = self.elevator_speed / self.def_elevator_speed

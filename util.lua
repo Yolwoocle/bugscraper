@@ -1,6 +1,7 @@
 local utf8 = require "utf8"
 
 abs = math.abs
+exp = math.exp
 max = math.max
 min = math.min
 floor = math.floor
@@ -148,6 +149,11 @@ end
 
 function rgb(r,g,b)
 	return {r/255, g/255, b/255, 1}
+end
+
+function ternary(cond, t, f)
+	if cond then return t end
+	return f
 end
 
 -- function draw_centered(spr, x, y, r, sx, sy, ox, oy, color)
@@ -620,6 +626,16 @@ end
 
 function lerp(a,b,t) 
 	return a * (1-t) + b * t 
+end
+
+function lerp_color(a,b,t)
+	local c = {
+		lerp(a[1], b[1], t),
+		lerp(a[2], b[2], t),
+		lerp(a[3], b[3], t),
+		lerp(a[4] or 1, b[4] or 1, t),
+	}
+	return c
 end
 
 function wrap_to_pi(a)

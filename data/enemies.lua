@@ -325,6 +325,9 @@ function Enemies:init()
 
 	self.ButtonPressed = Enemy:inherit()
 	function self.ButtonPressed:init(x, y)
+		-- x,y = CANVAS_WIDTH/2, game.world_generator.box_by * BLOCK_WIDTH 
+		-- x = floor(x - 34/2)
+		y = game.door_by - 40
 		self:init_enemy(x,y, images.big_red_button_pressed, 34, 40)
 		self.name = "button_pressed"
 		self.follow_player = false
@@ -339,6 +342,8 @@ function Enemies:init()
 		self.is_knockbackable = false
 		self.loot = {}
 
+		self.gravity = 0
+		self.gravity_y = 0
 		self.squash = 2
 
 		self.damage = 0
@@ -346,6 +351,9 @@ function Enemies:init()
 
 	function self.ButtonPressed:update(dt)
 		self:update_enemy(dt)
+		-- self.squash = lerp(self.squash, 1, 0.2)
+		-- self.sx = self.squash
+		-- self.sy = 1/self.squash
 	end
 
 	----------------
@@ -387,7 +395,8 @@ function Enemies:init()
 		audio:play("button_press")
 		
 		-- TODO: smoke particles
-		local b = create_actor_centered(ButtonPressed, CANVAS_WIDTH/2, game.world_generator.box_rby)
+		-- local b = ButtonPressed:new(CANVAS_WIDTH/2, game.world_generator.box_rby)
+		local b = ButtonPressed:new(self.x, self.y)
 		game:new_actor(b)
 	end
 

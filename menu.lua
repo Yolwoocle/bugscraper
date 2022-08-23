@@ -583,6 +583,8 @@ function MenuManager:init(game)
 		{ "'Slime' by Lukeo135 / CC0", func_url("https://freesound.org/people/Lukeo135/sounds/530617/")},
 		{ "'brushes_on_snare' by Heigh-hoo / CC0", func_url("https://freesound.org/people/Heigh-hoo/sounds/20297/")},
 		{ "'01 Elevator UP' by soundslikewillem / CC BY 4.0", func_url("https://freesound.org/people/soundslikewillem/sounds/340747/")},
+		{ "'indsustrial_elevator_door_open' by joedeshon / CC BY 4.0", func_url("https://freesound.org/people/joedeshon/sounds/368737/")},
+		{ "'indsustrial_elevator_door_clsoe' by joedeshon / CC BY 4.0", func_url("https://freesound.org/people/joedeshon/sounds/368738/")},
 		{ ""},
 		{ "<< Asset Licenses >>"},
 		{ "CC0", func_url("https://creativecommons.org/publicdomain/zero/1.0/")},

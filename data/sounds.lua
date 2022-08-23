@@ -86,7 +86,10 @@ local sfxnames = {
 	"larva_damage3", "larva_damage3.wav",
 	"larva_death", "larva_death.wav",
 
-	"elevator_bg", "elevator_bg.wav"
+	"elevator_bg", "elevator_bg.wav",
+	"elev_door_open", "elev_door_open.wav",
+	"elev_door_close", "elev_door_close.wav",
+	"elev_burning", "elev_burning.wav"
 }
 
 for i=1, #sfxnames, 2 do    sounds[sfxnames[i]] = new_source(sfxnames[i+1], "static")    end
@@ -102,6 +105,10 @@ sounds.sliding_wall_metal:setLooping(true)
 sounds.sliding_wall_metal:setVolume(0.1)
 sounds.elevator_bg:setVolume(0.5)
 sounds.elevator_bg:setLooping(true)
+sounds.elev_door_open:setVolume(0.8)
+sounds.elev_door_close:setVolume(0.8)
+
+sounds.elev_burning:setLooping(true)
 
 for i=0,9 do
 	sounds["footstep0"..tostring(i)]:setVolume(0.2)
