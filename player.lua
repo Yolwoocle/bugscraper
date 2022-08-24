@@ -183,10 +183,10 @@ function Player:update(dt)
 	end
 
 	-- Gun switchgun
-	if self:button_pressed("select") then
-		self.gun_number = mod_plus_1((self.gun_number + 1), #self.guns)
-		self:equip_gun(self.guns[self.gun_number])
-	end
+	-- if self:button_pressed("select") then
+	-- 	self.gun_number = mod_plus_1((self.gun_number + 1), #self.guns)
+	-- 	self:equip_gun(self.guns[self.gun_number])
+	-- end
 
 	self.gun:update(dt)
 	self:shoot(dt, false)

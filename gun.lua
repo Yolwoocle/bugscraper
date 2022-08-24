@@ -173,7 +173,9 @@ function Gun:shoot(dt, player, x, y, dx, dy, is_burst)
 	self:on_shoot()
 
 	return true
-end	
+end
+function Gun:on_shoot()
+end
 
 function Gun:reload()
 	self.is_reloading = true

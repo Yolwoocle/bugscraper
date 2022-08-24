@@ -33,7 +33,7 @@ function OptionsManager:init(game)
 			jump = {"z", "c", "b"},
 			shoot = {"x", "v", "n"},
 			select = {"return"},
-			pause = {"escape"},
+			pause = {"escape", "p"},
 		},
 		[2] = {
 			type = "keyboard",
@@ -44,7 +44,7 @@ function OptionsManager:init(game)
 			jump = {"."},
 			shoot = {","},
 			select = {"return"},
-			pause = {"escape"},
+			pause = {"escape", "p"},
 		}
 	}
 
@@ -55,6 +55,10 @@ function OptionsManager:init(game)
 end
 
 function OptionsManager:load_options()
+	if love.filesystem.getInfo == nil then
+		print("/!\\ WARNING: love.filesystem.getInfo doesn't exist. Either running on web or LÖVE version is incorrect. Loading options.txt aborted, so custom options will not be loaded.")
+		return
+	end
 	local options_file_exists = love.filesystem.getInfo("options.txt")
 	if not options_file_exists then
 		print("options.txt does not exist, so creating it")
@@ -92,6 +96,10 @@ function OptionsManager:load_options()
 end
 
 function OptionsManager:load_controls()
+	if love.filesystem.getInfo == nil then
+		print("/!\\ WARNING: love.filesystem.getInfo doesn't exist. Either running on web or LÖVE version is incorrect. Loading controls for players aborted, so custom keybinds will not be loaded.")
+		return
+	end
 	for n=1, #self.control_schemes do
 		local filename = concat("controls_p",n,".txt")
 

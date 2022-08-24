@@ -107,8 +107,8 @@ local sfxnames = {
 	"elev_crash", "elev_crash.wav",
 	"elev_siren", "elev_siren.wav",
 	"mushroom_ant_pop", "mushroom_ant_pop.wav",
-	
-	"snail_shell_crack", "snail_shell_crack.wav"
+
+	"snail_shell_crack", "snail_shell_crack.wav",
 }
 
 for i=1, #sfxnames, 2 do    sounds[sfxnames[i]] = new_source(sfxnames[i+1], "static")    end
