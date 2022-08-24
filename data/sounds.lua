@@ -90,6 +90,8 @@ local sfxnames = {
 	"larva_damage3", "larva_damage3.wav",
 	"larva_death", "larva_death.wav",
 
+	"fly_buzz", "fly_buzz.wav",
+
 	"elevator_bg", "elevator_bg.wav",
 	"elev_door_open", "elev_door_open.wav",
 	"elev_door_close", "elev_door_close.wav",
@@ -103,6 +105,10 @@ local sfxnames = {
 	"gravel_footstep_6", "gravel_footstep_6.wav",
 
 	"elev_crash", "elev_crash.wav",
+	"elev_siren", "elev_siren.wav",
+	"mushroom_ant_pop", "mushroom_ant_pop.wav",
+	
+	"snail_shell_crack", "snail_shell_crack.wav"
 }
 
 for i=1, #sfxnames, 2 do    sounds[sfxnames[i]] = new_source(sfxnames[i+1], "static")    end
@@ -122,6 +128,8 @@ sounds.elev_door_open:setVolume(0.3)
 sounds.elev_door_close:setVolume(0.3)
 
 sounds.elev_burning:setLooping(true)
+
+sounds.fly_buzz:setLooping(true)
 
 for i=0,9 do
 	sounds["footstep0"..tostring(i)]:setVolume(0.2)

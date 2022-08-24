@@ -532,8 +532,9 @@ function MenuManager:init(game)
 	}, { 0, 0, 0, 0.85 })
 
 	self.menus.credits1 = Menu:new(game, {
-		{"<<<<<<<<< CREDITS (1/3) >>>>>>>>>"},
-		{ "< BACK", func_set_menu("pause") },
+		{"<<<<<<<<< CREDITS (1/4) >>>>>>>>>"},
+		{ "[ NEXT PAGE >>]", func_set_menu("credits2")},
+		{ "< BACK TO PAUSE MENU", func_set_menu("pause") },
 		{ "" },
 		{ "<<< Design, programming & art >>>"},
 		{ "Léo Bernard (Yolwoocle)", func_url("https://twitter.com/yolwoocle_")},
@@ -549,14 +550,13 @@ function MenuManager:init(game)
 		-- { "rbts", function() end },
 		-- { "Immow", function() end },
 		-- { "Kingtut 101", function() end },
-		{ ""},
-		
-		{ "[ NEXT PAGE >>]", func_set_menu("credits2")},
 	}, { 0, 0, 0, 0.85 })
 	
 	self.menus.credits2 = Menu:new(game, {
-		{"<<<<<<<<< CREDITS (2/3) >>>>>>>>>"},
-		{ "< BACK", func_set_menu("pause") },
+		{"<<<<<<<<< CREDITS (2/4) >>>>>>>>>"},
+		{ "[ NEXT PAGE >>]", func_set_menu("credits3")},
+		{ "[<< PREV PAGE ]", func_set_menu("credits1")},
+		{ "< BACK TO PAUSE MENU", func_set_menu("pause") },
 		{ "" },
 		
 		{ "<<<<< Assets Used >>>>>"},
@@ -569,14 +569,13 @@ function MenuManager:init(game)
 		{ "'Glass Break' by avrahamy / CC0", func_url("https://freesound.org/people/avrahamy/sounds/141563/")},
 		{ "'Glass shard tinkle texture' by el-bee / CC BY 4.0", func_url("https://freesound.org/people/el-bee/sounds/636238/")},
 		{ "'Bad Beep (Incorrect)' by RICHERlandTV / CC BY 3.0", func_url("https://freesound.org/people/RICHERlandTV/sounds/216090/")},
-		{ ""},
-		{ "[<< PREV PAGE ]", func_set_menu("credits1")},
-		{ "[ NEXT PAGE >>]", func_set_menu("credits3")},
 	}, { 0, 0, 0, 0.85 })
 	
 	self.menus.credits3 = Menu:new(game, {
-		{"<<<<<<<<< CREDITS (3/3) >>>>>>>>>"},
-		{ "< BACK", func_set_menu("pause") },
+		{"<<<<<<<<< CREDITS (3/4) >>>>>>>>>"},
+		{ "[ NEXT PAGE >>]", func_set_menu("credits4")},
+		{ "[<< PREV PAGE ]", func_set_menu("credits2")},
+		{ "< BACK TO PAUSE MENU", func_set_menu("pause")},
 		{ "" },
 		{ "'[Keyboard press]' by MattRuthSound / CC BY 3.0", func_url("https://freesound.org/people/MattRuthSound/sounds/561661/")},
 		{ "'Paper Throw Into Air(fuller) 2' by RossBell / CC0", func_url("https://freesound.org/people/RossBell/sounds/389442/")},
@@ -589,14 +588,26 @@ function MenuManager:init(game)
 		{ "'THE CRASH' by sandyrb / CC BY 4.0", func_url("https://freesound.org/people/sandyrb/sounds/95078/")},
 		{ "'Door slam - Gun shot' by coolguy244e / CC BY 4.0", func_url("https://freesound.org/people/coolguy244e/sounds/266915/")},
 		-- { "'' by  / CC BY 4.0", func_url("")},
+	}, { 0, 0, 0, 0.85 })
+
+	self.menus.credits4 = Menu:new(game, {
+		{"<<<<<<<<< CREDITS (4/4) >>>>>>>>>"},
+		{ "< BACK TO PAUSE MENU", func_set_menu("pause")},
+		{ "[<< PREV PAGE ]", func_set_menu("credits2")},
+		{ "" },
+		{ "'bee fly' by soundmary / CC BY 4.0", func_url("https://freesound.org/people/soundmary/sounds/194932/")},
+		{ "'Pop, Low, A (H1)' by InspectorJ / CC BY 4.0", func_url("https://freesound.org/people/InspectorJ/sounds/411639/")},
+		{ "'Crack 1' by JustInvoke / CC BY 3.0", func_url("https://freesound.org/people/JustInvoke/sounds/446118/")},
+		{ "'Emergency Siren' by onderwish / CC0", func_url("https://freesound.org/people/onderwish/sounds/470504/")},
+		{ "'Wood burning in the stove' by smand / CC0", func_url("https://freesound.org/people/smand/sounds/521118/")},
+		{ "'Bike falling down an escalator' by dundass / CC BY 3.0", func_url("https://freesound.org/people/dundass/sounds/509831/")},
+		-- { "'xxx' by xxx / CC BY 4.0", func_url("xxx")},
 		{ ""},
 		{ "<< Asset Licenses >>"},
 		{ "CC0", func_url("https://creativecommons.org/publicdomain/zero/1.0/")},
 		{ "CC BY 3.0", func_url("https://creativecommons.org/licenses/by/3.0/")},
 		{ "CC BY 4.0", func_url("https://creativecommons.org/licenses/by/4.0/")},
 		{ "Common Sense License (CSL)", func_url("http://www.palmentieri.it/somepx/license.txt")},
-		{ ""},
-		{ "[<< PREV PAGE ]", func_set_menu("credits2")}
 	}, { 0, 0, 0, 0.85 })
 
 	self.menus.win = Menu:new(game, {

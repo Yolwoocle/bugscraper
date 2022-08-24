@@ -113,6 +113,7 @@ function Game:new_game(number_of_players)
 	number_of_players = number_of_players or 1
 
 	self.t = 0
+	self.frame = 0
 
 	-- Players
 	self.max_number_of_players = 4 
@@ -157,6 +158,13 @@ function Game:new_game(number_of_players)
 	self.def_bg_col = COL_BLACK_BLUE
 	self.bg_col = self.def_bg_col
 	self.bg_particles = {}
+	self.bg_particle_col = {COL_DARK_GRAY, COL_MID_GRAY}
+	self.bg_particle_colors = {
+		{COL_DARK_GRAY, COL_MID_GRAY},
+		{COL_MID_DARK_GREEN, color(0x3e8948)},
+		{COL_LIGHT_RED, color(0xf6757a)}, --l red + light pink
+		{COL_MID_BLUE, COL_WHITE},
+	}
 	for i=1,60 do
 		local p = self:new_bg_particle()
 		p.x = random_range(0, CANVAS_WIDTH)
@@ -248,6 +256,7 @@ function Game:new_game(number_of_players)
 	self.is_on_win_screen = false
 
 	self.frames_to_skip = 0
+	self.slow_mo_rate = 0
 
 	self.draw_shadows = false
 	
@@ -266,9 +275,12 @@ end
 
 local n = 0
 function Game:update(dt)
+	self.frame = self.frame + 1	
+
 	self.frames_to_skip = max(0, self.frames_to_skip - 1)
-	if self.frames_to_skip > 0 then
-		print("Skipped a frame")
+	local do_frameskip = self.slow_mo_rate ~= 0 and self.frame%self.slow_mo_rate ~= 0
+	if self.frames_to_skip > 0 or do_frameskip then
+		self:apply_screenshake(dt)
 		return
 	end
 
@@ -291,24 +303,17 @@ function Game:update_main_game(dt)
 	end
 	self.t = self.t + dt
 
-	-- bg  pinnn
-	self.bg_color_progress = self.bg_color_progress + dt
-	local i_prev = clamp(self.bg_color_index-1, 1, #self.bg_colors)
-	local i_target = clamp(self.bg_color_index, 1, #self.bg_colors)
-	local prog = clamp(self.bg_color_progress, 0, 1)
-	self.bg_col = lerp_color(self.bg_colors[i_prev], self.bg_colors[i_target], prog)
+	-- BG color gradient
+	if not self.is_on_win_screen then
+		self.bg_color_progress = self.bg_color_progress + dt*0.1
+		local i_prev = clamp(self.bg_color_index-1, 1, #self.bg_colors)
+		local i_target = clamp(self.bg_color_index, 1, #self.bg_colors)
+		local prog = clamp(self.bg_color_progress, 0, 1)
+		self.bg_col = lerp_color(self.bg_colors[i_prev], self.bg_colors[i_target], prog)
+		self.bg_particle_col = self.bg_particle_colors[i_target]
+	end	
 
-	-- Screenshake
-	self.screenshake_q = max(0, self.screenshake_q - self.screenshake_speed * dt)
-	-- self.screenshake_q = lerp(self.screenshake_q, 0, 0.2)
-
-	-- if self.screenshake_q < 1 then    q = 0    end
-	local q = self.screenshake_q
-	local ox, oy = random_neighbor(q), random_neighbor(q)
-	if abs(ox) >= 0.2 then   ox = sign(ox) * max(abs(ox), 1)   end
-	if abs(oy) >= 0.2 then   oy = sign(oy) * max(abs(oy), 1)   end
-	self.cam_ox = ox
-	self.cam_oy = oy
+	self:apply_screenshake(dt)
 	
 	if not options:get("screenshake_on") then self.cam_ox, self.cam_oy = 0,0 end
 	self.cam_realx, self.cam_realy = self.cam_x + self.cam_ox, self.cam_y + self.cam_oy
@@ -586,15 +591,33 @@ function Game:draw_debug()
 end
 
 function Game:on_menu()
+	self:pause_repeating_sounds()
+	love.audio.stop()
+end
+function Game:pause_repeating_sounds()
+	-- THIS is SO stupid. We should have a system that stores all sounds instead
+	-- of doing this manually.
 	self.music_source:pause()
 	self.sfx_elevator_bg:pause()
 	for k,p in pairs(self.players) do
 		p.sfx_wall_slide:setVolume(0)
 	end
+	for k,a in pairs(self.actors) do
+		if a.pause_repeating_sounds then
+			a:pause_repeating_sounds()
+		end
+	end
 end
+
 function Game:on_unmenu()
 	self.music_source:play()
 	self.sfx_elevator_bg:play()
+	
+	for k,a in pairs(self.actors) do
+		if a.play_repeating_sounds then
+			a:play_repeating_sounds()
+		end
+	end
 end
 function Game:set_music_volume(vol)
 	self.music_source:setVolume(vol)
@@ -623,6 +646,7 @@ function Game:on_kill(actor)
 
 	if actor.is_player then
 		-- Save stats
+		self:pause_repeating_sounds()
 		self:save_stats()
 	end
 end
@@ -669,6 +693,19 @@ function Game:init_players()
 		self.players[i] = player
 		self:new_actor(player)
 	end
+end
+
+function Game:apply_screenshake(dt)
+	-- Screenshake
+	self.screenshake_q = max(0, self.screenshake_q - self.screenshake_speed * dt)
+	-- self.screenshake_q = lerp(self.screenshake_q, 0, 0.2)
+
+	local q = self.screenshake_q
+	local ox, oy = random_neighbor(q), random_neighbor(q)
+	if abs(ox) >= 0.2 then   ox = sign(ox) * max(abs(ox), 1)   end -- Using an epsilon of 0.2 to avoid
+	if abs(oy) >= 0.2 then   oy = sign(oy) * max(abs(oy), 1)   end -- jittery effects on UI elmts
+	self.cam_ox = ox
+	self.cam_oy = oy
 end
 
 -----------------------------------------------------
@@ -910,11 +947,14 @@ function Game:do_reverse_elevator(dt)
 		self.is_exploding_elevator = true -- I SHOULDVE MADE A STATE SYSTEM BUT FUCK LOGIC
 		self:on_exploding_elevator(dt)
 		sounds.elev_burning:stop()
+		sounds.elev_siren:stop()
 		return
 	end
 
 	sounds.elev_burning:play()
+	sounds.elev_siren:play()
 	sounds.elev_burning:setVolume(abs(self.elevator_speed/speed_cap))
+	sounds.elev_siren:setVolume(abs(self.elevator_speed/speed_cap))
 
 	-- Screenshake
 	local spdratio = self.elevator_speed / self.def_elevator_speed
@@ -944,7 +984,7 @@ function Game:do_reverse_elevator(dt)
 		end
 
 		-- fire particles
-		local q = max(0, (abs(self.elevator_speed) - 200)*0.04)
+		local q = max(0, (abs(self.elevator_speed) - 200)*0.01)
 		for i=1, q do
 			local x,y = random_range(self.cabin_ax, self.cabin_bx),random_range(self.cabin_ay, self.cabin_by)
 			local size = max(4, abs(self.elevator_speed)*0.01)
@@ -954,10 +994,12 @@ function Game:do_reverse_elevator(dt)
 
 		-- bg color shift to red
 		local p = self.elevator_speed / speed_cap
-		local r = lerp(self.def_bg_col[1], 0xf7/255, p)
-		local g = lerp(self.def_bg_col[2], 0x76/255, p)
-		local b = lerp(self.def_bg_col[3], 0x22/255, p)
-		self.bg_col = {r,g,b,1}
+		self.debug1 = p
+		self.bg_col = lerp_color(self.bg_colors[#self.bg_colors], color(0xff7722), p)
+		-- self.bg_particle_col = self.bg_particle_colors[#self.bg_particle_colors]
+		local r = self.bg_col[1]
+		local g = self.bg_col[2]
+		local b = self.bg_col[3]
 		self.bg_particle_col = { {r+0.1, g+0.1, b+0.1, 1},{r+0.2, g+0.2, b+0.2, 1} }
 	end
 end
@@ -1075,6 +1117,13 @@ end
 
 function Game:frameskip(q)
 	self.frames_to_skip = min(60, self.frames_to_skip + q + 1)
+end
+
+function Game:slow_mo(q)
+	self.slow_mo_rate = q
+end
+function Game:reset_slow_mo(q)
+	self.slow_mo_rate = 0
 end
 
 function Game:button_down(btn)

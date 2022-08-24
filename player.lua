@@ -322,7 +322,7 @@ function Player:do_invincibility(dt)
 	self.iframes = max(0, self.iframes - dt)
 
 	self.is_invincible = false
-	if self.iframes > 0 then
+	if self.iframes > 0 and game.frames_to_skip <= 0 then
 		self.is_invincible = true
 		self.iframe_blink_timer = (self.iframe_blink_timer + dt) % self.iframe_blink_freq
 	end
@@ -478,8 +478,11 @@ end
 
 function Player:kill()
 	self.is_dead = true
+	
 	game:screenshake(10)
 	particles:dead_player(self.spr_x, self.spr_y, self.spr_dead, self.dir_x)
+	game:frameskip(30)
+
 	self:on_death()
 	game:on_kill(self)
 	
@@ -662,6 +665,7 @@ function Player:do_damage(n, source)
 	if self.iframes > 0 then   print("iframes") return    end
 	if n <= 0 then    return    end
 
+	game:frameskip(5)
 	audio:play("hurt")
 	game:screenshake(5)
 	-- self:do_knockback(source.knockback, source)--, 0, source.h/2)

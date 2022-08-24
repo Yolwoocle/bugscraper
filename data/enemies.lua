@@ -31,10 +31,34 @@ function Enemies:init()
 
 		self.anim_frame_len = 0.05
 		self.anim_frames = {images.fly1, images.fly2}
-	end
 
+		self.buzz_source = sounds.fly_buzz:clone()
+		self.buzz_source:seek(random_range(0, self.buzz_source:getDuration()))
+		self.buzz_is_started = false
+	end
+	
 	function self.Fly:update(dt)
 		self:update_enemy(dt)
+
+		if not self.buzz_is_started then  self.buzz_source:play() self.buzz_is_started = true end
+		local spd = dist(0, 0, self.vx, self.vy)
+		if spd >= 0.001 then
+			self.buzz_source:setVolume(1)
+		else
+			self.buzz_source:setVolume(0)
+		end
+		-- audio:set_source_position_relative_to_object(self.buzz_source, self)
+	end
+	
+	function self.Fly:pause_repeating_sounds()
+		self.buzz_source:setVolume(0)
+	end
+	function self.Fly:play_repeating_sounds()
+		self.buzz_source:setVolume(1)
+	end
+
+	function self.Fly:on_death()
+		self.buzz_source:stop()
 	end
 
 	-------------
@@ -178,6 +202,7 @@ function Enemies:init()
 		self.pong_vy = sin(self.dir) * self.pong_speed
 
 		self.spr_oy = floor((self.spr_h - self.h) / 2)
+		self.sound_death = sounds.snail_shell_crack
 	end
 
 	function self.SnailShelled:update(dt)
@@ -255,7 +280,7 @@ function Enemies:init()
 	function self.MushroomAnt:init(x, y) 
 		-- this hitbox is too big, but it works for walls
 		-- self:init_enemy(x, y, images.mushroom_ant, 20, 20)
-		self:init_enemy(x, y, images.mushroom_ant, 20, 20)
+		self:init_enemy(x, y, images.mushroom_ant1, 20, 20)
 		self.name = "mushroom_ant"
 		self.follow_player = false
 
@@ -274,6 +299,9 @@ function Enemies:init()
 
 		self.shoot_cooldown_range = {2, 3}
 		self.shoot_timer = random_range(unpack(self.shoot_cooldown_range))
+
+		self.anim_frames = {images.mushroom_ant1, images.mushroom_ant2}
+		self.anim_frame_len = 0.3
 	end
 	
 	function self.MushroomAnt:update(dt)

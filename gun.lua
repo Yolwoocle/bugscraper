@@ -170,6 +170,8 @@ function Gun:shoot(dt, player, x, y, dx, dy, is_burst)
 		end
 	end
 
+	self:on_shoot()
+
 	return true
 end	
 

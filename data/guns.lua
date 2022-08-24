@@ -117,7 +117,8 @@ function Guns:init()
 		self.damage = 1
 		self.is_auto = true
 		self.spr = images.gun_minigun
-		self.sfx = sounds.gunshot_machinegun
+		self.sfx = sounds.gunshot_machinegun:clone()
+		self.sfx:setVolume(0.6)
 
 		self.cooldown = 0.03
 		self.jetpack_force = 200
@@ -161,13 +162,14 @@ function Guns:init()
 		self.name = "mushroom_ant_gun"
 		self.is_lootable = false
 		
-		self.sfx = sounds.shot2
+		self.sfx = sounds.mushroom_ant_pop
 		self.damage = 1
 		self.is_auto = true
 		self.spr = images.empty
 		self.bullet_spr = images.mushroom
 		self.max_ammo = 20
 		self.bullet_speed = 100
+		self.random_angle_offset = 0.5
 
 		self.cooldown = 0
 		self.jetpack_force = 340
@@ -185,9 +187,13 @@ function Guns:init()
 		self.is_auto = true
 		self.spr = images.metal
 		self.max_ammo = math.huge
-
-		self.cooldown = 0.1
-		self.jetpack_force = 340
+		
+		self.cooldown = 0
+		self.jetpack_force = 400
+		self.recoil_force = 0
+	end
+	function self.unlootable.DebugGun:on_shoot(user)
+		game.players[1].life = game.players[1].life + 1
 	end
 end
 

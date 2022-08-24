@@ -14,6 +14,14 @@ local waves = {
 	enemies = {
 		{E.Larva, 1},
 		{E.Fly, 1},
+
+		-- {E.Larva, 4},
+		-- {E.Fly, 3},
+		-- {E.SpikedFly, 3},
+		-- {E.SnailShelled, 3},
+		-- {E.Slug, 2},
+		-- {E.Grasshopper, 1},
+		-- {E.MushroomAnt, 10},
 	},
 },
 
