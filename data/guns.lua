@@ -13,7 +13,7 @@ function Guns:init()
 		self:init_gun(user)
 		self.name = "machinegun"
 		
-		self.sfx = sounds.gunshot_machinegun
+		self.sfx = sounds.mushroom_ant_pop
 		self.damage = 1.5
 		self.max_ammo = 25
 		self.max_reload_timer = 1.5
@@ -56,6 +56,7 @@ function Guns:init()
 		self:init_gun(user)
 		self.name = "burst"
 		self.spr = images.gun_burst
+		self.sfx = sounds.gunshot_machinegun
 		self.bullet_spread = 0.2
 		
 		self.is_auto = false

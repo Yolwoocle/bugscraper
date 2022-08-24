@@ -592,7 +592,6 @@ end
 
 function Game:on_menu()
 	self:pause_repeating_sounds()
-	love.audio.stop()
 end
 function Game:pause_repeating_sounds()
 	-- THIS is SO stupid. We should have a system that stores all sounds instead
