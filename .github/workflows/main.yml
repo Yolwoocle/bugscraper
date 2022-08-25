@@ -22,7 +22,7 @@ jobs:
           git add --all
           git config --global user.name 'Yolwoocle'
           git config --global user.email 'yolwoocle@users.noreply.github.com'
-          git commit -am "Automated report"
+          git commit -m "Automated report"
           git push
       - name: Create Release
         id: create_release
