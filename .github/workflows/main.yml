@@ -8,6 +8,8 @@ jobs:
         run: |
           ls ${{ github.workspace }}
       - run: echo "🍏 This job's status is ${{ job.status }}."
+      - name: Check out repository code
+        uses: actions/checkout@v3
       - run: pip3 install makelove
       - run: makelove appimage
       - run: cd ./bugscraper-export/appimage
