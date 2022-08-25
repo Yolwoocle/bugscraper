@@ -97,8 +97,8 @@ function Enemies:init()
 		self.speed = 40
 		self.walk_dir_x = random_sample{-1, 1}
 
-		self.sound_damage = {"larva_damage1", "larva_damage2", "larva_damage3"}
-		self.sound_death = "larva_death"
+		-- self.sound_damage = {"larva_damage1", "larva_damage2", "larva_damage3"}
+		-- self.sound_death = "larva_death"
 		self.anim_frame_len = 0.2
 		self.anim_frames = {images.larva1, images.larva2}
 	end

@@ -58,8 +58,8 @@ function Enemy:init_enemy(x,y, img, w,h)
 	self.squash_target = 1
 	
 	self.play_sfx = true
-	self.sound_damage = "menu_hover"
-	self.sound_death = "kill_enemy"
+	self.sound_damage = "enemy_damage"
+	self.sound_death = "enemy_death_2"
 end
 
 function Enemy:update_enemy(dt)
