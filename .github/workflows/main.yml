@@ -1,4 +1,4 @@
-name: GitHub Actions Demo
+name: Compile to Linux using makelove
 on: [push]
 jobs:
   Explore-GitHub-Actions:
@@ -16,9 +16,7 @@ jobs:
           ls ${{ github.workspace }}
       - run: echo "🍏 This job's status is ${{ job.status }}."
       - run: pip3 install makelove
-      - run: makelove --init
-      - run: bugscraper
-      - run: bugscraper-export
+      - run: "makelove --init\nbugscraper\nbugscraper-export"
       - run: makelove appimage
       - run: cd ${{ github.workspace }}/bugscraper-export/appimage
       - run: ls
