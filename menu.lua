@@ -373,6 +373,7 @@ function MenuManager:init(game)
 		{ "" },
 	}, { 0, 0, 0, 0.85 })
 	if OPERATING_SYSTEM == "Web" then
+		-- Disable quitting on web
 		self.menus.pause.items[7].is_selectable = false
 	end
 
