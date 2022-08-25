@@ -43,9 +43,9 @@ function Game:init()
 
 	if OPERATING_SYSTEM == "Web" then
 		USE_CANVAS_RESIZING = false
-		PIXEL_SCALE = 2
+		CANVAS_SCALE = 2
 		-- Init window
-		love.window.setMode(CANVAS_WIDTH*PIXEL_SCALE, CANVAS_HEIGHT*PIXEL_SCALE, {
+		love.window.setMode(CANVAS_WIDTH*CANVAS_SCALE, CANVAS_HEIGHT*CANVAS_SCALE, {
 			fullscreen = false,
 			resizable = false,
 			vsync = options:get"is_vsync",
@@ -300,7 +300,21 @@ end
 
 local n = 0
 function Game:update(dt)
-	print(love.audio.getActiveSourceCount())
+	--debug pinnn
+	local a = love.audio.getActiveSourceCount()
+	local n = 0
+	local len = 0
+	for i,s in pairs(sounds) do
+		len = len + 1
+		for i,t in ipairs(s) do
+			if t:isPlaying() then
+				n=n+1
+			end
+		end
+	end
+	print("love,count",a, n)
+	-- print("len", len)
+
 	self.frame = self.frame + 1
 
 	self.frames_to_skip = max(0, self.frames_to_skip - 1)
@@ -387,7 +401,7 @@ end
 
 function Game:draw()
 	if OPERATING_SYSTEM == "Web" then
-		gfx.scale(2, 2)
+		gfx.scale(CANVAS_SCALE, CANVAS_SCALE)
 		gfx.translate(0, 0)
 		gfx.clear(0,0,0)
 		
