@@ -16,7 +16,6 @@ jobs:
           ls ${{ github.workspace }}
       - run: echo "🍏 This job's status is ${{ job.status }}."
       - run: pip3 install makelove
-      - run: "makelove --init\nbugscraper\nbugscraper-export"
       - run: makelove appimage
       - run: cd ${{ github.workspace }}/bugscraper-export/appimage
       - run: ls
