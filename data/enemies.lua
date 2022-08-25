@@ -32,7 +32,7 @@ function Enemies:init()
 		self.anim_frame_len = 0.05
 		self.anim_frames = {images.fly1, images.fly2}
 
-		self.buzz_source = sounds.fly_buzz:clone()
+		self.buzz_source = sounds.fly_buzz[1]:clone()
 		self.buzz_source:seek(random_range(0, self.buzz_source:getDuration()))
 		self.buzz_is_started = false
 	end
@@ -97,8 +97,8 @@ function Enemies:init()
 		self.speed = 40
 		self.walk_dir_x = random_sample{-1, 1}
 
-		self.sound_damage = {sounds.larva_damage1, sounds.larva_damage2, sounds.larva_damage3}
-		-- self.sound_death = sounds.larva_death
+		self.sound_damage = {"larva_damage1", "larva_damage2", "larva_damage3"}
+		self.sound_death = "larva_death"
 		self.anim_frame_len = 0.2
 		self.anim_frames = {images.larva1, images.larva2}
 	end
@@ -202,7 +202,7 @@ function Enemies:init()
 		self.pong_vy = sin(self.dir) * self.pong_speed
 
 		self.spr_oy = floor((self.spr_h - self.h) / 2)
-		self.sound_death = sounds.snail_shell_crack
+		self.sound_death = "snail_shell_crack"
 	end
 
 	function self.SnailShelled:update(dt)
@@ -258,8 +258,8 @@ function Enemies:init()
 		self.is_knockbackable = false
 		self.loot = {}
 
-		self.sound_damage = {sounds.cloth1, sounds.cloth2, sounds.cloth3}
-		self.sound_death = sounds.cloth_drop
+		self.sound_damage = {"cloth1", "cloth2", "cloth3"}
+		self.sound_death = "cloth_drop"
 	end
 
 	function self.DummyTarget:update(dt)
@@ -490,9 +490,8 @@ function Enemies:init()
 		local new_state = floor(self.life / part)
 
 		local sndname = "impactglass_light_00"..random_str(1,4)
-		local sfx = sounds[ sndname ]
 		local pitch = random_range(1/1.1, 1.1) - .5*self.life/self.max_life
-		audio:play(sfx, random_range(1-0.2, 1), pitch)
+		audio:play(sndname, random_range(1-0.2, 1), pitch)
 		
 		if old_state ~= new_state then
 			self.break_state = new_state
@@ -502,7 +501,7 @@ function Enemies:init()
 			self.spr = spr
 			game:screenshake(10)
 			particles:image(self.mid_x, self.mid_y, 100, images.ptc_glass_shard, self.h)
-			audio:play_pitch("glass_fracture", lerp(0.5, 1, self.life/self.max_life))
+			audio:play("glass_fracture", nil, lerp(0.5, 1, self.life/self.max_life))
 		end
 
 		if game.screenshake_q < 5 then

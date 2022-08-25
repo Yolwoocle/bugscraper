@@ -115,7 +115,7 @@ end
 
 function TextMenuItem:after_click()
 	options:update_options_file()
-	audio:play(sounds.menu_select)
+	audio:play("menu_select")
 	self.oy = -4
 end
 
@@ -186,7 +186,7 @@ function SliderMenuItem:after_click(diff)
 
 	-- TODO: rising pitch or decreasing pitch
 	-- + sound preview for music & sfx
-	-- audio:play(sounds.menu_select)
+	-- audio:play("menu_select)
 end
 
 
@@ -245,7 +245,7 @@ function ControlsMenuItem:on_click()
 
 	-- Go in standby mode
 	options:update_options_file()
-	audio:play(sounds.menu_select)
+	audio:play("menu_select")
 	self.oy = -4
 	
 	self.is_waiting_for_input = true
@@ -398,7 +398,7 @@ function MenuManager:init(game)
 			if self.value > 20 then self.value = 0 end
 			
 			options:set_volume(self.value/20)
-			audio:play(sounds.menu_select, nil, 0.8+(self.value/20)*0.4)
+			audio:play("menu_select", nil, 0.8+(self.value/20)*0.4)
 		end, range_table(0,20),
 		function(self)
 			self.value = options:get("volume") * 20
@@ -413,7 +413,7 @@ function MenuManager:init(game)
 			if self.value > 20 then self.value = 0 end
 			
 			options:set_music_volume(self.value/20)
-			audio:play(sounds.menu_select, (self.value/20), 0.8+(self.value/20)*0.4)
+			audio:play("menu_select", (self.value/20), 0.8+(self.value/20)*0.4)
 		end, range_table(0,20),
 		function(self)
 			self.value = options:get("music_volume") * 20
@@ -448,7 +448,7 @@ function MenuManager:init(game)
 
 			local scale = self.value
 			
-			audio:play(sounds.menu_select)
+			audio:play("menu_select")
 			options:set_pixel_scale(scale)
 		end, { "auto", "max whole", 1, 2, 3, 4}, function(self)
 			self.value = options:get("pixel_scale")
@@ -673,7 +673,7 @@ end
 
 function MenuManager:draw()
 	if self.cur_menu.bg_color then
-		rect_color(self.cur_menu.bg_color, "fill", game.cam_realx or 0, game.cam_realy or 0, CANVAS_WIDTH, CANVAS_HEIGHT)
+		rect_color(self.cur_menu.bg_color, "fill", game.cam_realx-1 or -1, game.cam_realy or -1, CANVAS_WIDTH+2, CANVAS_HEIGHT+2)
 	end
 	self.cur_menu:draw()
 end
@@ -756,7 +756,7 @@ function MenuManager:incr_selection(n)
 	self.sel_item = self.cur_menu.items[self.sel_n]
 	self.sel_item:set_selected(true, n)
 	
-	audio:play_var(sounds.menu_hover, 0.2, 1)
+	audio:play_var("menu_hover", 0.2, 1)
 
 	return true
 end

@@ -95,7 +95,7 @@ function Game:init()
 
 	love.mouse.setVisible(options:get("mouse_visible"))
 
-	self.music_source = sounds.music1
+	self.music_source = sounds.music1[1]
 	self.is_first_time = options.is_first_time
 end
 
@@ -284,8 +284,8 @@ function Game:new_game(number_of_players)
 	
 	-- Music
 	-- TODO: a "ambient sfx" system
-	self.music_source    = sounds.music1
-	self.sfx_elevator_bg = sounds.elevator_bg
+	self.music_source    = sounds.music1[1]
+	self.sfx_elevator_bg = sounds.elevator_bg[1]
 	self.sfx_elevator_bg_volume     = self.sfx_elevator_bg:getVolume()
 	self.sfx_elevator_bg_def_volume = self.sfx_elevator_bg:getVolume()
 	self.music_source:setVolume(0)
@@ -299,8 +299,8 @@ end
 
 local n = 0
 function Game:update(dt)
-	self.frame = self.frame + 1
 	print(love.audio.getActiveSourceCount())
+	self.frame = self.frame + 1
 
 	self.frames_to_skip = max(0, self.frames_to_skip - 1)
 	local do_frameskip = self.slow_mo_rate ~= 0 and self.frame%self.slow_mo_rate ~= 0
@@ -868,14 +868,14 @@ function Game:update_door_anim(dt)
 	elseif self.floor_progress > 3 then
 		-- ...Open door...
 		self.door_offset = lerp(self.door_offset, 54, 0.1)
-		sounds.elev_door_open:play()
+		sounds.elev_door_open[1]:play()
 	elseif self.floor_progress > 2 then
 		-- ...Keep door open...
 		self.door_offset = 54
 	elseif self.floor_progress > 1 then
 		-- ...Close doors
 		self.door_offset = lerp(self.door_offset, 0, 0.1)
-		sounds.elev_door_close:play()
+		sounds.elev_door_close[1]:play()
 		self:activate_enemy_buffer(dt)
 	end
 
@@ -992,15 +992,15 @@ function Game:do_reverse_elevator(dt)
 		self.is_reversing_elevator = false
 		self.is_exploding_elevator = true -- I SHOULDVE MADE A STATE SYSTEM BUT FUCK LOGIC
 		self:on_exploding_elevator(dt)
-		sounds.elev_burning:stop()
-		sounds.elev_siren:stop()
+		sounds.elev_burning[1]:stop()
+		sounds.elev_siren[1]:stop()
 		return
 	end
 
-	sounds.elev_burning:play()
-	sounds.elev_siren:play()
-	sounds.elev_burning:setVolume(abs(self.elevator_speed/speed_cap))
-	sounds.elev_siren:setVolume(abs(self.elevator_speed/speed_cap))
+	sounds.elev_burning[1]:play()
+	sounds.elev_siren[1]:play()
+	sounds.elev_burning[1]:setVolume(abs(self.elevator_speed/speed_cap))
+	sounds.elev_siren[1]:setVolume(abs(self.elevator_speed/speed_cap))
 
 	-- Screenshake
 	local spdratio = self.elevator_speed / self.def_elevator_speed
@@ -1063,7 +1063,7 @@ function Game:on_exploding_elevator(dt)
 	end
 	
 	-- Crash sfx
-	audio:play(sounds.elev_crash)
+	audio:play("elev_crash")
 
 	-- YOU WIN
 	self.is_on_win_screen = true

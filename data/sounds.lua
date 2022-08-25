@@ -137,4 +137,30 @@ end
 
 sounds.music1 = new_source("music/music1.mp3", "stream", {looping = true})
 
+-- Static sounds are sounds that are played without the use of the audio:play function
+-- local static_sfx_names = {
+-- 	"music1",
+-- 	"elevator_bg",
+-- 	"elev_door_open",
+-- 	"elev_door_close",
+-- 	"elev_burning",
+-- 	"elev_siren",
+-- 	"sliding_wall_metal",
+-- 	"fly_buzz"
+-- }
+-- local static_sounds = {}
+-- for _,v in pairs(static_sfx_names) do
+-- 	table.insert(static_sounds, sounds[v])
+-- end
+
+-- All sources are tables to support multiple sounds playing at once without using Source:clone()
+for k, snd in pairs(sounds) do
+	sounds[k] = {
+		snd,
+		pitch = snd:getPitch(),
+		volume = snd:getVolume(),
+		is_looping = snd:isLooping(),
+	}
+end
+
 return sounds

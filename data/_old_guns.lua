@@ -13,7 +13,7 @@ function Guns:init()
 		self:init_gun(user)
 		self.name = "machinegun"
 		
-		self.sfx = sounds.shot1
+		self.sfx = "shot1"
 		self.damage = 1
 		self.is_auto = true
 		self.spr = images.gun_machinegun
@@ -72,7 +72,7 @@ function Guns:init()
 		self:init_gun(user)
 		self.name = "shotgun"
 		self.spr = images.gun_shotgun
-		self.sfx = sounds.shot2
+		self.sfx = "shot2"
 		
 		self.max_ammo = 40
 
@@ -122,7 +122,7 @@ function Guns:init()
 		self:init_gun(user)
 		self.name = "mushroom_cannon"
 		
-		self.sfx = sounds.shot2
+		self.sfx = "shot2"
 		self.damage = 3
 		self.is_auto = true
 		self.spr = images.gun_mushroom_cannon
@@ -145,7 +145,7 @@ function Guns:init()
 		self.name = "mushroom_ant_gun"
 		self.is_lootable = false
 		
-		self.sfx = sounds.shot2
+		self.sfx = "shot2"
 		self.damage = 1
 		self.is_auto = true
 		self.spr = images.empty
@@ -164,7 +164,7 @@ function Guns:init()
 		self:init_gun(user)
 		self.name = "debug_gun"
 		
-		self.sfx = sounds.shot1
+		self.sfx = "shot1"
 		self.damage = 200
 		self.is_auto = true
 		self.spr = images.metal

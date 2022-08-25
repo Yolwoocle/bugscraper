@@ -137,7 +137,7 @@ function Player:init(n, x, y, spr, controls)
 	self.ui_y = self.y
 
 	-- SFX
-	self.sfx_wall_slide = sounds.sliding_wall_metal
+	self.sfx_wall_slide = sounds.sliding_wall_metal[1]
 	self.sfx_wall_slide:play()
 	self.sfx_wall_slide_volume = 0
 	self.sfx_wall_slide_max_volume = 0.1
@@ -179,10 +179,10 @@ function Player:update(dt)
 	end
 
 	-- Gun switchgun
-	-- if self:button_pressed("select") then
-	-- 	self.gun_number = mod_plus_1((self.gun_number + 1), #self.guns)
-	-- 	self:equip_gun(self.guns[self.gun_number])
-	-- end
+	if self:button_pressed("select") then
+		self.gun_number = mod_plus_1((self.gun_number + 1), #self.guns)
+		self:equip_gun(self.guns[self.gun_number])
+	end
 
 	self.gun:update(dt)
 	self:shoot(dt, false)
@@ -447,7 +447,7 @@ function Player:jump(dt)
 	self.vy = -self.jump_speed
 	
 	particles:smoke(self.mid_x, self.y+self.h)
-	audio:play_var(sounds.jump, 0, 1.2)
+	audio:play_var("jump", 0, 1.2)
 	self.jump_squash = 1/4
 end
 
@@ -455,7 +455,7 @@ function Player:wall_jump(normal)
 	self.vx = normal.x * self.wall_jump_kick_speed
 	self.vy = -self.jump_speed
 	
-	audio:play_var(sounds.jump, 0, 1.2)
+	audio:play_var("jump", 0, 1.2)
 	self.jump_squash = 1/4
 end
 

@@ -13,23 +13,35 @@ function AudioManager:update()
 end
 
 function AudioManager:play(snd, volume, pitch, object)
-	-- Formalise inputs
-	if type(snd) == "string" then
-		snd = sounds[snd]
-	end
-	if type(snd) == "table" then
-		snd = random_sample(snd)
-	end
-	volume = volume or 1
-	pitch = pitch or 1
+    -- Formalize inputs
+    local sndname = snd
+    if type(snd) == "table" then
+        sndname = random_sample(snd)
+    end
+    volume = volume or 1
+    pitch = pitch or 1
+    
+    if not options:get("sound_on") then  return  end
+    if sounds[sndname] == nil then   return   end
+
+    local snd_table = sounds[sndname]
 	
-	if options:get("sound_on") and snd then
-		local source = snd:clone()
-		source:setVolume(volume * source:getVolume())
-		source:setPitch(pitch   * source:getPitch())
-		if object then self:set_source_position_relative_to_object(source, object) end
-		source:play()
+	for i, s in ipairs(snd_table) do
+		if not s:isPlaying() then
+			local source = s
+			source:setVolume(volume * snd_table.volume)
+			source:setPitch(pitch   * snd_table.pitch)
+			source:play()
+
+			return
+		end
 	end
+
+	local new_source = snd_table[1]:clone()
+	table.insert(snd_table, new_source)
+	new_source:setVolume(volume * snd_table.volume)
+	new_source:setPitch(pitch   * snd_table.pitch)
+	new_source:play()
 end
 
 function AudioManager:play_pitch(snd, pitch, object)

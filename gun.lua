@@ -59,8 +59,9 @@ function Gun:init_gun(user)
 	self.jetpack_force = self.default_jetpack_force
 	
 	-- Sounds
-	self.sfx = sounds.shot1
+	self.sfx = "shot1"
 	self.sfx_pitch_var = 1.15
+	self.sfx_pitch = 1
 	
 	self.screenshake = 0
 end
@@ -127,7 +128,7 @@ function Gun:shoot(dt, player, x, y, dx, dy, is_burst)
 	
 	-- Now, FIRE!!
 	-- SFX & Particles
-	audio:play_var(self.sfx, 0.2, 1.2)
+	audio:play_var(self.sfx, 0.2, 1.2, {pitch=self.sfx_pitch})
 	particles:image(x , y, 1, images.ptc_bullet_casing, 4, nil, nil, nil, {
 		vx1 = -dx * 40,
 		vx2 = -dx * 100,

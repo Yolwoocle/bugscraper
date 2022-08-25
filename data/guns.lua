@@ -13,7 +13,7 @@ function Guns:init()
 		self:init_gun(user)
 		self.name = "machinegun"
 		
-		self.sfx = sounds.mushroom_ant_pop
+		self.sfx = "mushroom_ant_pop"
 		self.damage = 1.5
 		self.max_ammo = 25
 		self.max_reload_timer = 1.5
@@ -38,8 +38,8 @@ function Guns:init()
 		self.damage = 1
 		self.is_auto = true
 		self.spr = images.gun_triple
-		self.sfx = sounds.gunshot_shotgun:clone()
-		self.sfx:setPitch(1.2)
+		self.sfx = "mushroom_ant_pop"
+		self.sfx_pitch = 1.2
 		self.cooldown = 0.2
 		self.bullet_number = 3
 		self.random_angle_offset = 0
@@ -56,7 +56,7 @@ function Guns:init()
 		self:init_gun(user)
 		self.name = "burst"
 		self.spr = images.gun_burst
-		self.sfx = sounds.gunshot_machinegun
+		self.sfx = "gunshot_machinegun"
 		self.bullet_spread = 0.2
 		
 		self.is_auto = false
@@ -80,7 +80,7 @@ function Guns:init()
 		self:init_gun(user)
 		self.name = "shotgun"
 		self.spr = images.gun_shotgun
-		self.sfx = sounds.gunshot_shotgun
+		self.sfx = "gunshot_shotgun"
 		self.is_auto = false
 
 		self.damage = 1
@@ -118,8 +118,8 @@ function Guns:init()
 		self.damage = 1
 		self.is_auto = true
 		self.spr = images.gun_minigun
-		self.sfx = sounds.mushroom_ant_pop:clone()
-		self.sfx:setVolume(0.6)
+		self.sfx = "mushroom_ant_pop"
+		self.sfx_pitch = 0.6
 
 		self.cooldown = 0.03
 		self.jetpack_force = 200
@@ -135,7 +135,7 @@ function Guns:init()
 		self:init_gun(user)
 		self.name = "mushroom_cannon"
 		
-		self.sfx = sounds.shot2
+		self.sfx = "shot2"
 		self.damage = 3
 		self.is_auto = true
 		self.spr = images.gun_mushroom_cannon
@@ -163,7 +163,7 @@ function Guns:init()
 		self.name = "mushroom_ant_gun"
 		self.is_lootable = false
 		
-		self.sfx = sounds.mushroom_ant_pop
+		self.sfx = "mushroom_ant_pop"
 		self.damage = 1
 		self.is_auto = true
 		self.spr = images.empty
@@ -183,7 +183,7 @@ function Guns:init()
 		self:init_gun(user)
 		self.name = "debug_gun"
 		
-		self.sfx = sounds.shot1
+		self.sfx = "shot1"
 		self.damage = 200
 		self.is_auto = true
 		self.spr = images.metal
