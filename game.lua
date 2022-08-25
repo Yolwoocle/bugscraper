@@ -36,19 +36,41 @@ function Game:init()
 	CANVAS_WIDTH = 480
 	CANVAS_HEIGHT = 270
 
-	-- Init window
-	love.window.setMode(0, 0, {
-		fullscreen = options:get"is_fullscreen",
-		resizable = true,
-		vsync = options:get"is_vsync",
-		minwidth = CANVAS_WIDTH,
-		minheight = CANVAS_HEIGHT,
-	})
-	SCREEN_WIDTH, SCREEN_HEIGHT = gfx.getDimensions()
-	love.window.setTitle("Bugscraper")
-	love.window.setIcon(love.image.newImageData("icon.png"))
-	gfx.setDefaultFilter("nearest", "nearest")
+	OPERATING_SYSTEM = "Web" --love.system.getOS()
+	USE_CANVAS_RESIZING = true
+	SCREEN_WIDTH, SCREEN_HEIGHT = 0, 0
+
+	if OPERATING_SYSTEM == "Web" then
+		USE_CANVAS_RESIZING = false
+		PIXEL_SCALE = 2
+		-- Init window
+		love.window.setMode(CANVAS_WIDTH*PIXEL_SCALE, CANVAS_HEIGHT*PIXEL_SCALE, {
+			fullscreen = false,
+			resizable = false,
+			vsync = options:get"is_vsync",
+			minwidth = CANVAS_WIDTH,
+			minheight = CANVAS_HEIGHT,
+		})
+		SCREEN_WIDTH, SCREEN_HEIGHT = gfx.getDimensions()
+		love.window.setTitle("Bugscraper")
+		love.window.setIcon(love.image.newImageData("icon.png"))
+		gfx.setDefaultFilter("nearest", "nearest")
+	else
+		-- Init window
+		love.window.setMode(0, 0, {
+			fullscreen = options:get"is_fullscreen",
+			resizable = true,
+			vsync = options:get"is_vsync",
+			minwidth = CANVAS_WIDTH,
+			minheight = CANVAS_HEIGHT,
+		})
+		SCREEN_WIDTH, SCREEN_HEIGHT = gfx.getDimensions()
+		love.window.setTitle("Bugscraper")
+		love.window.setIcon(love.image.newImageData("icon.png"))
+		gfx.setDefaultFilter("nearest", "nearest")
 	
+	end
+
 	self:update_screen()
 
 	canvas = gfx.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
@@ -262,11 +284,13 @@ function Game:new_game(number_of_players)
 	
 	-- Music
 	-- TODO: a "ambient sfx" system
-	self.music_source = sounds.music1
+	self.music_source    = sounds.music1
 	self.sfx_elevator_bg = sounds.elevator_bg
 	self.sfx_elevator_bg_volume     = self.sfx_elevator_bg:getVolume()
 	self.sfx_elevator_bg_def_volume = self.sfx_elevator_bg:getVolume()
+	self.music_source:setVolume(0)
 	self.music_source:play()
+	self.sfx_elevator_bg:setVolume(0)
 	self.sfx_elevator_bg:play()
 	self:set_music_volume(options:get("music_volume"))
 
@@ -360,6 +384,28 @@ function Game:update_main_game(dt)
 end
 
 function Game:draw()
+	if OPERATING_SYSTEM == "Web" then
+		gfx.scale(2, 2)
+		gfx.translate(0, 0)
+		gfx.clear(0,0,0)
+		
+		game:draw_game()
+	else
+		-- Using a canvas for that sweet, resizable pixel art
+		gfx.setCanvas(canvas)
+		gfx.clear(0,0,0)
+		gfx.translate(0, 0)
+		
+		game:draw_game()
+		
+		gfx.setCanvas()
+		gfx.origin()
+		gfx.scale(1, 1)
+		gfx.draw(canvas, CANVAS_OX, CANVAS_OY, 0, CANVAS_SCALE, CANVAS_SCALE)
+	end
+end
+
+function Game:draw_game()
 	-- Sky
 	gfx.clear(self.bg_col)
 	gfx.translate(-(self.cam_x + self.cam_ox), -(self.cam_y + self.cam_oy))
@@ -382,7 +428,7 @@ function Game:draw()
 	
 	-- Door background
 	if self.show_cabin then
-		rect_color(COL_BLACK_BLUE, "fill", self.door_ax, self.door_ay, self.door_bx - self.door_ax, self.door_by - self.door_ay)
+		rect_color(self.bg_col, "fill", self.door_ax, self.door_ay, self.door_bx - self.door_ax+1, self.door_by - self.door_ay+1)
 		-- If doing door animation, draw buffered enemies
 		if self.door_animation then
 			for i,e in pairs(self.door_animation_enemy_buffer) do
@@ -685,7 +731,7 @@ function Game:init_players()
 
 	-- Spawn at middle
 	local mx = floor((self.map.width / self.max_number_of_players))
-	local my = floor(self.map.height / 2)
+	local my = floor(self.map.height - 3)
 
 	for i=1, self.number_of_players do
 		local player = Player:new(i, mx*16 + i*16, my*16, sprs[i], options:get_controls(i))

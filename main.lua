@@ -34,18 +34,7 @@ function love.update(dt)
 end
 
 function love.draw()
-	gfx.setCanvas(canvas)
-    gfx.clear(0,0,0)
-    gfx.translate(0, 0)
-
 	game:draw()
-	
-    -- Canvas for that sweet pixel art
-    gfx.setCanvas()
-    gfx.origin()
-    gfx.scale(1, 1)
-    gfx.draw(canvas, CANVAS_OX, CANVAS_OY, 0, CANVAS_SCALE, CANVAS_SCALE)
-
 end
 
 function love.keypressed(key, scancode, isrepeat)
@@ -68,14 +57,14 @@ function love.keypressed(key, scancode, isrepeat)
 	-- elseif key == "g" then
 	-- 	game.players[1]:kill()
 
-	elseif key == "e" then
-		if not game then return end
-		for i,e in pairs(game.actors) do
-			if e.is_enemy then
-				e:kill()
-			end
-		end
-		game.floor = 998
+	-- elseif key == "e" then
+	-- 	if not game then return end
+	-- 	for i,e in pairs(game.actors) do
+	-- 		if e.is_enemy then
+	-- 			e:kill()
+	-- 		end
+	-- 	end
+	-- 	game.floor = 998
 		-- game:on_red_button_pressed()
 
 	-- elseif key == "b" then

@@ -118,7 +118,7 @@ function Guns:init()
 		self.damage = 1
 		self.is_auto = true
 		self.spr = images.gun_minigun
-		self.sfx = sounds.gunshot_machinegun:clone()
+		self.sfx = sounds.mushroom_ant_pop:clone()
 		self.sfx:setVolume(0.6)
 
 		self.cooldown = 0.03

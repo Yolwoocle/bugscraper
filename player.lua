@@ -178,10 +178,6 @@ function Player:update(dt)
 		self.frames_since_land = 0
 	end
 
-	if love.keyboard.isDown("m") then
-		self:equip_gun(Guns.MushroomCannon:new())
-	end
-
 	-- Gun switchgun
 	-- if self:button_pressed("select") then
 	-- 	self.gun_number = mod_plus_1((self.gun_number + 1), #self.guns)

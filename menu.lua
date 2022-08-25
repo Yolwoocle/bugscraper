@@ -372,6 +372,9 @@ function MenuManager:init(game)
 		{ "" },
 		{ "" },
 	}, { 0, 0, 0, 0.85 })
+	if OPERATING_SYSTEM == "Web" then
+		self.menus.pause.items[7].is_selectable = false
+	end
 
 	self.menus.options = Menu:new(game, {
 		{ "<<<<<<<<< OPTIONS >>>>>>>>>" },
@@ -449,6 +452,8 @@ function MenuManager:init(game)
 		end, { "auto", "max whole", 1, 2, 3, 4}, function(self)
 			self.value = options:get("pixel_scale")
 			self.value_text = tostring(options:get("pixel_scale"))
+
+			if OPERATING_SYSTEM == "Web" then  self.is_selectable = false  end
 		end},
 
 		{ "VSYNC", function(self)
@@ -494,8 +499,6 @@ function MenuManager:init(game)
 			self.value = options:get("screenshake_on")
 			self.value_text = options:get("screenshake_on") and "ON" or "OFF"
 		end},
-
-		{ "" }
 	}, { 0, 0, 0, 0.85 })
 
 	self.menus.controls = Menu:new(game, {
