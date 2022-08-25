@@ -55,12 +55,16 @@ function Bullet:on_collision(col)
 	if col.other == self.player then    return   end
 	
 	if not self.is_removed and col.other.is_solid then
+		local s = "metalfootstep_0"..tostring(love.math.random(0,4))
+		audio:play_var(s, 0.3, 1, {pitch=0.7, volume=0.5})
 		self:kill()
 	end
 	
 	if col.other.on_hit_bullet and col.other.is_enemy ~= self.is_enemy_bul then
 		col.other:on_hit_bullet(self, col)
 		if col.other.destroy_bullet_on_impact then
+			local s = "metalfootstep_0"..tostring(love.math.random(0,4))
+			audio:play_var(s, 0.3, 1, {pitch=0.7, volume=0.5})
 			self:kill()
 		end
 

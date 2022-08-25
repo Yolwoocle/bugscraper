@@ -519,7 +519,7 @@ function MenuManager:init(game)
 
 	}, { 0, 0, 0, 0.85 })
 
-	self.menus.game_over = Menu:new(game, {
+	local items = {
 		{"********** GAME OVER! **********"},
 		{ "" },
 		{ StatsMenuItem, "Kills", function(self) return game.stats.kills end },
@@ -533,7 +533,11 @@ function MenuManager:init(game)
 		-- { "BACK TO TITLE SCREEN", func_set_menu("title") },
 		{ "" },
 		{ "" },
-	}, { 0, 0, 0, 0.85 })
+	}
+	if OPERATING_SYSTEM == "Web" or true then
+		table.remove(items, 8)
+	end
+	self.menus.game_over = Menu:new(game, items, { 0, 0, 0, 0.85 })
 
 	self.menus.credits1 = Menu:new(game, {
 		{"<<<<<<<<< CREDITS (1/4) >>>>>>>>>"},
@@ -545,8 +549,9 @@ function MenuManager:init(game)
 		{ "" },
 		{ "<<< Special Thanks >>>"},
 		{ "Gouspourd", func_url("https://gouspourd.itch.io/")},
+		{ "Louie Chapman", func_url("https://louiechapm.itch.io/") },
 		{ "SmellyFishstiks", func_url("https://www.lexaloffle.com/bbs/?uid=42184") },
-		{ "LÖVE Engine", func_url("https://love2d.org/") },
+		{ "Made using LÖVE Engine", func_url("https://love2d.org/") },
 		{ ""},
 		{ "<<< Playtesting >>>"},
 		{ "hades140701", function() end },
@@ -605,6 +610,7 @@ function MenuManager:init(game)
 		{ "'Emergency Siren' by onderwish / CC0", func_url("https://freesound.org/people/onderwish/sounds/470504/")},
 		{ "'Wood burning in the stove' by smand / CC0", func_url("https://freesound.org/people/smand/sounds/521118/")},
 		{ "'Bike falling down an escalator' by dundass / CC BY 3.0", func_url("https://freesound.org/people/dundass/sounds/509831/")},
+		-- { "'Bike falling down an escalator' by dundass / CC BY 3.0", func_url("https://freesound.org/people/InspectorJ/sounds/484344/")},
 		-- { "'xxx' by xxx / CC BY 4.0", func_url("xxx")},
 		{ ""},
 		{ "<< Asset Licenses >>"},
@@ -614,7 +620,7 @@ function MenuManager:init(game)
 		{ "Common Sense License (CSL)", func_url("http://www.palmentieri.it/somepx/license.txt")},
 	}, { 0, 0, 0, 0.85 })
 
-	self.menus.win = Menu:new(game, {
+	local items = {
 		{ "<<<<<<<<< CONGRATULATIONS! >>>>>>>>>" },
 		-- {"********** PAUSED **********"},
 		{ "" },
@@ -628,8 +634,11 @@ function MenuManager:init(game)
 		-- { "CREDITS", func_set_menu('credits1') },
 		{ "QUIT", quit_game },
 		{ "" },
-	}, { 0, 0, 0, 0.95 })
-
+	}
+	if OPERATING_SYSTEM == "Web" or true then
+		table.remove(items, 6)
+	end
+	self.menus.win = Menu:new(game, items, { 0, 0, 0, 0.95 })
 
 	self.cur_menu = nil
 	self.cur_menu_name = ""

@@ -39,7 +39,7 @@ function Guns:init()
 		self.is_auto = true
 		self.spr = images.gun_triple
 		self.sfx = "mushroom_ant_pop"
-		self.sfx_pitch = 1.2
+		self.sfx_pitch = 0.9
 		self.cooldown = 0.2
 		self.bullet_number = 3
 		self.random_angle_offset = 0
@@ -56,7 +56,8 @@ function Guns:init()
 		self:init_gun(user)
 		self.name = "burst"
 		self.spr = images.gun_burst
-		self.sfx = "gunshot_machinegun"
+		self.sfx = "mushroom_ant_pop"
+		self.sfx_pitch = 1.1
 		self.bullet_spread = 0.2
 		
 		self.is_auto = false
@@ -80,7 +81,8 @@ function Guns:init()
 		self:init_gun(user)
 		self.name = "shotgun"
 		self.spr = images.gun_shotgun
-		self.sfx = "gunshot_shotgun"
+		self.sfx = "mushroom_ant_pop"
+		self.sfx_pitch = 0.6
 		self.is_auto = false
 
 		self.damage = 1
@@ -119,7 +121,7 @@ function Guns:init()
 		self.is_auto = true
 		self.spr = images.gun_minigun
 		self.sfx = "mushroom_ant_pop"
-		self.sfx_pitch = 0.6
+		self.sfx_pitch = 1.2
 
 		self.cooldown = 0.03
 		self.jetpack_force = 200
@@ -135,7 +137,8 @@ function Guns:init()
 		self:init_gun(user)
 		self.name = "mushroom_cannon"
 		
-		self.sfx = "shot2"
+		self.sfx = "mushroom_ant_pop"
+		self.sfx_pitch = 0.7
 		self.damage = 3
 		self.is_auto = true
 		self.spr = images.gun_mushroom_cannon

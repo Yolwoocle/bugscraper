@@ -37,8 +37,8 @@ function Game:init()
 	CANVAS_WIDTH = 480
 	CANVAS_HEIGHT = 270
 
-	OPERATING_SYSTEM = "Web"
-	-- OPERATING_SYSTEM = love.system.getOS()
+	-- OPERATING_SYSTEM = "Web"
+	OPERATING_SYSTEM = love.system.getOS()
 	USE_CANVAS_RESIZING = true
 	SCREEN_WIDTH, SCREEN_HEIGHT = 0, 0
 
@@ -97,7 +97,6 @@ function Game:init()
 
 	love.mouse.setVisible(options:get("mouse_visible"))
 
-	self.music_source = sounds.music1[1]
 	self.is_first_time = options.is_first_time
 end
 
@@ -286,15 +285,15 @@ function Game:new_game(number_of_players)
 	
 	-- Music
 	-- TODO: a "ambient sfx" system
-	self.music_source    = sounds.music1[1]
+	self.music_source    = sounds.music_galaxy_trip[1]
 	self.sfx_elevator_bg = sounds.elevator_bg[1]
 	self.sfx_elevator_bg_volume     = self.sfx_elevator_bg:getVolume()
 	self.sfx_elevator_bg_def_volume = self.sfx_elevator_bg:getVolume()
-	self.music_source:setVolume(options:get("music_volume"))
-	self.music_source:play()
+	-- self.music_source:setVolume(options:get("music_volume"))
 	self.sfx_elevator_bg:setVolume(0)
 	self.sfx_elevator_bg:play()
 	self:set_music_volume(options:get("music_volume"))
+	self.time_before_music = math.huge
 
 	options:update_sound_on()
 end
@@ -343,6 +342,13 @@ function Game:update_main_game(dt)
 		self.time = self.time + dt
 	end
 	self.t = self.t + dt
+
+	-- Music
+	self.time_before_music = self.time_before_music - dt
+	if self.time_before_music <= 0 and not self.game_started then
+		self.music_source:play()
+		self.game_started = true	
+	end
 
 	-- BG color gradient
 	if not self.is_on_win_screen then
@@ -672,7 +678,9 @@ function Game:pause_repeating_sounds()
 end
 
 function Game:on_unmenu()
-	self.music_source:play()
+	if self.game_started then
+		self.music_source:play()
+	end
 	self.sfx_elevator_bg:play()
 	
 	for k,a in pairs(self.actors) do
@@ -682,7 +690,7 @@ function Game:on_unmenu()
 	end
 end
 function Game:set_music_volume(vol)
-	self.music_source:setVolume(vol)
+	self.music_source:setVolume(vol*0.7)
 end
 
 function Game:new_actor(actor)
@@ -702,12 +710,14 @@ function Game:on_kill(actor)
 		self.kills = self.kills + 1
 
 		if actor.name == "dummy_target" then
-			self.game_started = true
+			-- self.game_started = true
+			self.time_before_music = 0.7
 		end
 	end
-
+	
 	if actor.is_player then
 		-- Save stats
+		self.music_source:pause()
 		self:pause_repeating_sounds()
 		self:save_stats()
 	end

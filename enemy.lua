@@ -59,7 +59,7 @@ function Enemy:init_enemy(x,y, img, w,h)
 	
 	self.play_sfx = true
 	self.sound_damage = "enemy_damage"
-	self.sound_death = "enemy_death_2"
+	self.sound_death = "enemy_death_1"
 end
 
 function Enemy:update_enemy(dt)
