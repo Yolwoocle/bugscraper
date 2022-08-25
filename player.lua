@@ -658,6 +658,7 @@ function Player:on_stomp(enemy)
 end
 
 function Player:do_damage(n, source)
+	if self.iframes > 0 then    return    end
 	if n <= 0 then    return    end
 
 	game:frameskip(5)

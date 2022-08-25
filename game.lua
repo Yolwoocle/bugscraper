@@ -37,7 +37,8 @@ function Game:init()
 	CANVAS_WIDTH = 480
 	CANVAS_HEIGHT = 270
 
-	OPERATING_SYSTEM = "Web" --love.system.getOS()
+	OPERATING_SYSTEM = "Web"
+	-- OPERATING_SYSTEM = love.system.getOS()
 	USE_CANVAS_RESIZING = true
 	SCREEN_WIDTH, SCREEN_HEIGHT = 0, 0
 
@@ -47,7 +48,7 @@ function Game:init()
 		-- Init window
 		love.window.setMode(CANVAS_WIDTH*CANVAS_SCALE, CANVAS_HEIGHT*CANVAS_SCALE, {
 			fullscreen = false,
-			resizable = false,
+			resizable = true,
 			vsync = options:get"is_vsync",
 			minwidth = CANVAS_WIDTH,
 			minheight = CANVAS_HEIGHT,
@@ -289,7 +290,7 @@ function Game:new_game(number_of_players)
 	self.sfx_elevator_bg = sounds.elevator_bg[1]
 	self.sfx_elevator_bg_volume     = self.sfx_elevator_bg:getVolume()
 	self.sfx_elevator_bg_def_volume = self.sfx_elevator_bg:getVolume()
-	self.music_source:setVolume(0)
+	self.music_source:setVolume(options:get("music_volume"))
 	self.music_source:play()
 	self.sfx_elevator_bg:setVolume(0)
 	self.sfx_elevator_bg:play()
