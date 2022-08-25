@@ -22,6 +22,7 @@ require "constants"
 local Game = Class:inherit()
 
 function Game:init()
+	print("TEST HELLO")
 	-- Global singletons
 	options = OptionsManager:new(self)
 	collision = Collision:new()
