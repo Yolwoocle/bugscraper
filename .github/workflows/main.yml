@@ -21,7 +21,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git remote set-url --push origin https://yolwoocle:$GITHUB_TOKEN@github.com/your/repo
+          git remote set-url --push origin https://yolwoocle:$GITHUB_TOKEN@github.com/Yolwoocle/bugscraper
           git add --all
           git config --global user.name 'Yolwoocle'
           git config --global user.email 'yolwoocle@users.noreply.github.com'
