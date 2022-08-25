@@ -138,7 +138,7 @@ for i=0,9 do
 	sounds["footstep0"..tostring(i)]:setVolume(0.2)
 end
 
-sounds.music_galaxy_trip = new_source("music/music_galaxy_trip.mp3", "stream", {looping = true})
+sounds.music_galaxy_trip = new_source("music/music_galaxy_trip.mp3", "static", {looping = true})
 
 -- Static sounds are sounds that are played without the use of the audio:play function
 -- local static_sfx_names = {
