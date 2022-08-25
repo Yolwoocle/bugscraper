@@ -299,7 +299,8 @@ end
 
 local n = 0
 function Game:update(dt)
-	self.frame = self.frame + 1	
+	self.frame = self.frame + 1
+	print(love.audio.getActiveSourceCount())
 
 	self.frames_to_skip = max(0, self.frames_to_skip - 1)
 	local do_frameskip = self.slow_mo_rate ~= 0 and self.frame%self.slow_mo_rate ~= 0

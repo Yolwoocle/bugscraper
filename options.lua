@@ -18,7 +18,7 @@ function OptionsManager:init(game)
 		pixel_scale = "auto",
 		timer_on = false,
 		mouse_visible = false,
-		pause_on_unfocus = true,
+		pause_on_unfocus = ternary(love.system.getOS()=="Web", false, true),
 		screenshake_on = true,
 		disable_background_noise = false,
 	}
