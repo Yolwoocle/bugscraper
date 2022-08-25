@@ -1,8 +1,0 @@
-name = "bugscraper"
-default_targets = ["win32", "win64"]
-build_directory = "bugscraper-export"
-
-love_files = [
-    "::git-ls-tree::",
-    "-*/.*",
-]
