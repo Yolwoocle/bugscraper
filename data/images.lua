@@ -61,6 +61,7 @@ local img_names = {
 	"chain",
 	"bg_plate",
 	"cabin_bg",
+	"cabin_bg_2",
 	"cabin_bg_amboccl",
 	"cabin_walls",
 	"cabin_door_left", "cabin_door_right",
@@ -103,6 +104,12 @@ local img_names = {
 	"dummy_target_ptc2",
 
 	"ptc_bullet_casing",
+
+	"btnfrag_1",
+	"btnfrag_2",
+	"btnfrag_3",
+	"btnfrag_4",
+	"btnfrag_5",
 }
 
 local images = {}

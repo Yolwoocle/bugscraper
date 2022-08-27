@@ -36,7 +36,6 @@ local waves = {
 	},
 },
 
-
 { -- 3
 	-- Grasshopper intro
 	min = 4,
@@ -78,17 +77,18 @@ local waves = {
 	max = 8,
 	enemies = {
 		{E.SnailShelled, 3},
+		{E.Grasshopper, 2},
 		{E.Slug, 2},
-		{E.SpikedFly, 5},
 	},
 },
 
 { -- 7
-	min = 7,
-	max = 9,
+	min = 3,
+	max = 5,
 	enemies = {
-		{E.Fly, 2},
-		{E.Grasshopper, 1},
+		{E.Fly, 1},
+		{E.Larva, 1},
+		{E.SpikedFly, 2},
 	},
 },
 
@@ -127,14 +127,14 @@ local waves = {
 
 { -- 11
 	-- ALL
-	min = 10,
-	max = 14,
+	min = 6,
+	max = 8,
 	enemies = {
 		{E.Larva, 4},
 		{E.Fly, 3},
-		{E.SpikedFly, 3},
 		{E.SnailShelled, 3},
 		{E.Slug, 2},
+		{E.SpikedFly, 1},
 		{E.Grasshopper, 1},
 		{E.MushroomAnt, 1},
 	},
@@ -144,53 +144,50 @@ local waves = {
 	-- ALL BUT HARDER
 	-- 12, 13, 14, 15
 {
-	min = 12,
-	max = 16,
+	min = 8,
+	max = 10,
 	enemies = {
 		{E.Larva, 4},
 		{E.Fly, 3},
-		{E.SpikedFly, 3},
 		{E.SnailShelled, 3},
 		{E.Slug, 2},
+		{E.SpikedFly, 1},
 		{E.Grasshopper, 1},
 		{E.MushroomAnt, 1},
 	},
-},
-{
-	min = 12,
-	max = 16,
+},{
+	min = 10,
+	max = 12,
 	enemies = {
 		{E.Larva, 4},
 		{E.Fly, 3},
-		{E.SpikedFly, 3},
 		{E.SnailShelled, 3},
 		{E.Slug, 2},
+		{E.SpikedFly, 1},
 		{E.Grasshopper, 1},
 		{E.MushroomAnt, 1},
 	},
-},
-{
-	min = 12,
-	max = 16,
+},{
+	min = 10,
+	max = 12,
 	enemies = {
 		{E.Larva, 4},
 		{E.Fly, 3},
-		{E.SpikedFly, 3},
 		{E.SnailShelled, 3},
 		{E.Slug, 2},
+		{E.SpikedFly, 1},
 		{E.Grasshopper, 1},
 		{E.MushroomAnt, 1},
 	},
-},
-{
+},{
 	min = 12,
 	max = 16,
 	enemies = {
 		{E.Larva, 4},
 		{E.Fly, 3},
-		{E.SpikedFly, 3},
 		{E.SnailShelled, 3},
 		{E.Slug, 2},
+		{E.SpikedFly, 1},
 		{E.Grasshopper, 1},
 		{E.MushroomAnt, 1},
 	},

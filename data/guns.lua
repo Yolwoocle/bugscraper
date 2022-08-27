@@ -12,6 +12,7 @@ function Guns:init()
 	function self.Machinegun:init(user)
 		self:init_gun(user)
 		self.name = "machinegun"
+		self.display_name = "machinegun"
 		
 		self.sfx = "mushroom_ant_pop"
 		self.damage = 1.5
@@ -32,13 +33,14 @@ function Guns:init()
 	function self.Triple:init(user)
 		self:init_gun(user)
 		self.name = "triple"
+		self.display_name = "triple"
 
 		self.max_ammo = 15
 
-		self.damage = 1
+		self.damage = 1.5
 		self.is_auto = true
 		self.spr = images.gun_triple
-		self.sfx = "mushroom_ant_pop"
+		self.sfx = "triple_pop"
 		self.sfx_pitch = 0.9
 		self.cooldown = 0.2
 		self.bullet_number = 3
@@ -55,6 +57,7 @@ function Guns:init()
 	function self.Burst:init(user)
 		self:init_gun(user)
 		self.name = "burst"
+		self.display_name = "burst"
 		self.spr = images.gun_burst
 		self.sfx = "mushroom_ant_pop"
 		self.sfx_pitch = 1.1
@@ -80,6 +83,7 @@ function Guns:init()
 	function self.Shotgun:init(user)
 		self:init_gun(user)
 		self.name = "shotgun"
+		self.display_name = "shotgun"
 		self.spr = images.gun_shotgun
 		self.sfx = "mushroom_ant_pop"
 		self.sfx_pitch = 0.6
@@ -112,6 +116,7 @@ function Guns:init()
 	function self.Minigun:init(user)
 		self:init_gun(user)
 		self.name = "machinegun"
+		self.display_name = "machinegun"
 		
 		self.max_ammo = 150
 		self.max_reload_timer = 1.5
@@ -136,10 +141,11 @@ function Guns:init()
 	function self.MushroomCannon:init(user)
 		self:init_gun(user)
 		self.name = "mushroom_cannon"
+		self.display_name = "mushroom cannon"
 		
 		self.sfx = "mushroom_ant_pop"
 		self.sfx_pitch = 0.7
-		self.damage = 3
+		self.damage = 4
 		self.is_auto = true
 		self.spr = images.gun_mushroom_cannon
 		self.bullet_spr = images.mushroom_yellow

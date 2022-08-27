@@ -36,9 +36,9 @@ function Enemy:init_enemy(x,y, img, w,h)
 	self.speed_y = 0
 
 	self.loot = {
-		{nil, 90},
+		{nil, 80},
 		-- {Loot.Ammo, 0, loot_type="ammo", value=20},
-		{Loot.Life, 5, loot_type="life", value=1},
+		{Loot.Life, 30000, loot_type="life", value=1},
 		{Loot.Gun, 3, loot_type="gun"},
 	}
 
@@ -142,7 +142,7 @@ function Enemy:on_collision(col, other)
 				particles:stomped_enemy(self.spr_x, self.spr_y, self.spr)
 			end
 			self:on_stomped(player)
-			self:kill()
+			self:kill(player, "stomped")
 
 		else
 			-- Damage player
@@ -184,9 +184,10 @@ function Enemy:on_stomped(damager)
 
 end
 
-function Enemy:kill(damager)
+function Enemy:kill(damager, reason)
 	if self.is_removed then print(concat("/!\\:", self.name, "(", self, ") was killed while destroyed")) end
-	
+	self.death_reason = reason or ""
+
 	game:frameskip(1)
 	particles:smoke(self.mid_x, self.mid_y)
 	if self.play_sfx then 
@@ -197,7 +198,7 @@ function Enemy:kill(damager)
 	self:remove()
 	
 	self:drop_loot()
-	self:on_death(damager)
+	self:on_death(damager, reason)
 end
 
 function Enemy:drop_loot()

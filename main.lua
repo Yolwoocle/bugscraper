@@ -12,9 +12,14 @@ end
 
 t = 0
 fdt = 1/60 -- fixed frame delta time
+frm = 0
 local function fixed_update()
 	--update that happens at the fixed fdt interval
+	frm = frm + 1
 	game:update(fdt)
+	-- if frm % 2 == 0 and CAPTURING_GIF then
+	-- 	love.graphics.captureScreenshot("gif"..tostring(gif_n).."_"..tostring(floor(frm/2))..".png")
+	-- end
 end
 
 function love.update(dt)
@@ -37,6 +42,8 @@ function love.draw()
 	game:draw()
 end
 
+CAPTURING_GIF = false
+gif_n = 0
 function love.keypressed(key, scancode, isrepeat)
 	if key == "f5" then
 		if love.keyboard.isDown("lshift") then
@@ -47,7 +54,12 @@ function love.keypressed(key, scancode, isrepeat)
 		if love.keyboard.isDown("lshift") then
 			love.event.quit()
 		end
-	
+	-- elseif key == "f7" then
+	-- 	love.graphics.captureScreenshot(os.time() .. ".png")
+	-- elseif key == "f8" then
+	-- 	CAPTURING_GIF = not CAPTURING_GIF
+	-- 	gif_n = gif_n + 1
+
 	elseif key == "f11" then
 		if options then   options:toggle_fullscreen()    end
 

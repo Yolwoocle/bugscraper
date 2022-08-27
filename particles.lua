@@ -1,6 +1,7 @@
 require "util"
 local Class = require "class"
 local images = require "data.images"
+local utf8 = require "utf8"
 
 local Particle = Class:inherit()
 
@@ -88,6 +89,37 @@ end
 
 ------------------------------------------------------------
 
+local TextParticle = Particle:inherit()
+
+function TextParticle:init(x,y,str,spawn_delay)
+	self:init_particle(x,y,s,r, vx,vy,vs,vr, life, g, is_solid)
+	self.str = str
+
+	self.vy = -5
+	self.spawn_delay = spawn_delay
+end
+function TextParticle:update(dt)
+	if self.spawn_delay > 0 then
+		self.spawn_delay = self.spawn_delay - dt
+		return
+	end
+	self.vy = self.vy * 0.9
+	self.y = self.y + self.vy
+	
+	if abs(self.vy) <= 0.001 then
+		self.is_removed = true
+	end
+end
+function TextParticle:draw()
+	if self.spawn_delay > 0 then
+		return
+	end
+	print_outline(COL_WHITE, COL_BLACK_BLUE, self.str, self.x, self.y)
+end
+
+
+------------------------------------------------------------
+
 local StompedEnemyParticle = Particle:inherit()
 
 function StompedEnemyParticle:init(x,y,spr)
@@ -114,6 +146,7 @@ function StompedEnemyParticle:update(dt)
 
 	if abs(self.squash_target - self.squash) <= 0.01 then
 		self.is_removed = true
+		particles:smoke(self.x, self.y)
 	end
 end
 function StompedEnemyParticle:draw()
@@ -281,6 +314,21 @@ function ParticleSystem:splash(x, y, number, col, spw_rad, size, sizevar)
 end
 
 
+function ParticleSystem:glow_dust(x, y, size, sizevar)
+	size = size or 4
+	sizevar = sizevar or 2
+
+	local ang = love.math.random() * pi2
+	local spd = random_neighbor(50)
+	local vx = cos(ang) * spd
+	local vy = sin(ang) * spd
+	local vs = random_range(6,12)
+	local dsize = random_neighbor(sizevar)
+
+	self:add_particle(CircleParticle:new(x, y, size+dsize, COL_WHITE, vx, vy, vs, _life, 0))
+end
+
+
 function ParticleSystem:flash(x, y)
 	-- x,y,r,col, vx,vy,vr, life
 	local r = 8 + random_neighbor(2)
@@ -327,6 +375,21 @@ end
 function ParticleSystem:dead_player(x, y, spr, dir_x)
 	self:add_particle(DeadPlayerParticle:new(x, y, spr, dir_x))
 end
+
+function ParticleSystem:letter(x, y, str, spawn_delay)
+	self:add_particle(TextParticle:new(x, y, str, spawn_delay))
+end
+
+function ParticleSystem:word(x, y, str)
+	local x = x - get_text_width(str)/2
+	for i=1, #str do
+		local letter = utf8.sub(str, i,i)
+		particles:letter(x, y, letter, i*0.05)
+		x = x + get_text_width(letter)
+	end
+end
+
+ParticleSystem.text = ParticleSystem.word
 
 
 

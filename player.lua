@@ -113,7 +113,7 @@ function Player:init(n, x, y, spr, controls)
 	self.shoot_ang = 0
 	
 	self:equip_gun(Guns.Machinegun:new())
-	-- self:equip_gun(Guns.Minigun:new())
+	-- self:equip_gun(Guns.unlootable.DebugGun:new())
 	-- FOR DEBUGGING
 	self.guns = {
 		Guns.Machinegun:new(self),
@@ -153,6 +153,15 @@ function Player:update(dt)
 		return
 	end
 
+	if self:button_pressed("up") then
+		game.floor = 16
+		for i,e in pairs(game.actors) do
+			if e.is_enemy then
+				e:kill()
+			end
+		end
+	end
+
 	-- Movement
 	self:move(dt)
 	self:do_wall_sliding(dt)
@@ -179,10 +188,10 @@ function Player:update(dt)
 	end
 
 	-- Gun switchgun
-	-- if self:button_pressed("select") then
-	-- 	self.gun_number = mod_plus_1((self.gun_number + 1), #self.guns)
-	-- 	self:equip_gun(self.guns[self.gun_number])
-	-- end
+	if self:button_pressed("up") then
+		self.gun_number = mod_plus_1((self.gun_number + 1), #self.guns)
+		self:equip_gun(self.guns[self.gun_number])
+	end
 
 	self.gun:update(dt)
 	self:shoot(dt, false)
@@ -661,7 +670,7 @@ function Player:do_damage(n, source)
 	if self.iframes > 0 then    return    end
 	if n <= 0 then    return    end
 
-	game:frameskip(5)
+	game:frameskip(8)
 	audio:play("hurt")
 	game:screenshake(5)
 	-- self:do_knockback(source.knockback, source)--, 0, source.h/2)

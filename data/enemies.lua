@@ -70,14 +70,14 @@ function Enemies:init()
 		self:init_enemy(x,y, images.spiked_fly, 15,15)
 		self.name = "fly"
 		self.is_flying = true
-		self.life = 12
+		self.life = 5
 
 		self.is_stompable = false
 		--self.speed_y = 0--self.speed * 0.5
 		
-		self.speed = random_range(14,20)
+		self.speed = random_range(7,13)
 		self.speed_x = self.speed
-		self.speed_y = self.speed
+		self.speed_y = self.speed*0.5
 
 		self.gravity = 0
 		self.friction_y = self.friction_x
@@ -88,11 +88,11 @@ function Enemies:init()
 	self.Larva = Enemy:inherit()
 	
 	function self.Larva:init(x, y)
-		self:init_enemy(x,y, images.larva1, 14, 4)
+		self:init_enemy(x,y, images.larva1, 14, 6)
 		self.name = "larva"
 		self.follow_player = false
 		
-		self.life = random_range(3, 5)
+		self.life = random_range(2, 3)
 		self.friction_x = 1
 		self.speed = 40
 		self.walk_dir_x = random_sample{-1, 1}
@@ -198,6 +198,7 @@ function Enemies:init()
 
 		self.pong_speed = 40
 		self.dir = (pi/4 + pi/2 * love.math.random(0,3)) % pi2
+		-- self.dir = love.math.random() * pi2
 		self.pong_vx = cos(self.dir) * self.pong_speed
 		self.pong_vy = sin(self.dir) * self.pong_speed
 
@@ -404,7 +405,7 @@ function Enemies:init()
 		self.name = "button"
 		self.follow_player = false
 
-		self.max_life = 9999
+		self.max_life = 50
 		self.life = self.max_life
 		
 		self.knockback = 0
@@ -437,6 +438,23 @@ function Enemies:init()
 		-- local b = ButtonPressed:new(CANVAS_WIDTH/2, game.world_generator.box_rby)
 		local b = ButtonPressed:new(self.x, self.y)
 		game:new_actor(b)
+	end
+
+	function self.Button:on_death(damager, reason)
+		if reason ~= "stomped" then
+			game:screenshake(15)
+			audio:play("glass_fracture", nil, 0.2)
+			game:enable_endless_mode()
+			-- particles:image(self.mid_x, self.mid_y, 100, images.ptc_glass_shard, self.h)
+			particles:image(self.mid_x, self.mid_y, 300, {
+				images.btnfrag_1,
+				images.btnfrag_2,
+				images.btnfrag_3,
+				images.btnfrag_4,
+				images.btnfrag_5,
+			}, self.h, 6, 0.05, 0, parms)
+			particles:word(self.mid_x, self.mid_y, "ENDLESS MODE!")
+		end
 	end
 
 	-----------------
@@ -500,7 +518,8 @@ function Enemies:init()
 			self.spr = spr
 			game:screenshake(10)
 			particles:image(self.mid_x, self.mid_y, 100, images.ptc_glass_shard, self.h)
-			audio:play("glass_fracture", nil, lerp(0.5, 1, self.life/self.max_life))
+			local pitch = max(0.1, lerp(0.5, 1, self.life/self.max_life))
+			audio:play("glass_fracture", nil, pitch)
 		end
 
 		if game.screenshake_q < 5 then

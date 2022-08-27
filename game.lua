@@ -56,7 +56,6 @@ function Game:init()
 		SCREEN_WIDTH, SCREEN_HEIGHT = gfx.getDimensions()
 		love.window.setTitle("Bugscraper")
 		love.window.setIcon(love.image.newImageData("icon.png"))
-		gfx.setDefaultFilter("nearest", "nearest")
 	else
 		-- Init window
 		love.window.setMode(0, 0, {
@@ -69,9 +68,11 @@ function Game:init()
 		SCREEN_WIDTH, SCREEN_HEIGHT = gfx.getDimensions()
 		love.window.setTitle("Bugscraper")
 		love.window.setIcon(love.image.newImageData("icon.png"))
-		gfx.setDefaultFilter("nearest", "nearest")
-	
+		
 	end
+	gfx.setDefaultFilter("nearest", "nearest")
+	love.graphics.setLineStyle("rough")
+
 
 	self:update_screen()
 
@@ -151,6 +152,8 @@ function Game:new_game(number_of_players)
 
 	-- Level info
 	self.floor = 0 --Floor n°
+	self.end_floor = 16
+	self.max_floor = 16
 	self.floor_progress = 3.5 --How far the cabin is to the next floor
 	-- self.max_elev_speed = 1/2
 	self.cur_wave_max_enemy = 1
@@ -172,21 +175,38 @@ function Game:new_game(number_of_players)
 	
 	self.bg_color_progress = 0
 	self.bg_color_index = 1
-	self.bg_colors = {COL_BLACK_BLUE, COL_DARK_GREEN, COL_DARK_RED, COL_LIGHT_BLUE}
 	self.bg_col = COL_BLACK_BLUE
-
+	
 	self.game_started = false
-
+	
 	self.show_bg_particles = true
 	self.def_bg_col = COL_BLACK_BLUE
 	self.bg_col = self.def_bg_col
 	self.bg_particles = {}
 	self.bg_particle_col = {COL_DARK_GRAY, COL_MID_GRAY}
+	self.bg_colors = {
+		COL_BLACK_BLUE,
+		COL_DARK_GREEN,
+		COL_DARK_RED,
+		COL_LIGHT_BLUE,
+		COL_WHITE,
+		color(0xb55088), -- purple
+		COL_BLACK_BLUE,
+		color(0xfee761), -- lyellow
+		color(0x743f39), -- mid brown
+		color(0xe8b796) --beige
+	}
 	self.bg_particle_colors = {
 		{COL_DARK_GRAY, COL_MID_GRAY},
 		{COL_MID_DARK_GREEN, color(0x3e8948)},
 		{COL_LIGHT_RED, color(0xf6757a)}, --l red + light pink
 		{COL_MID_BLUE, COL_WHITE},
+		{color(0xc0cbdc), color(0x8b9bb4)}, --gray & dgray
+		{color(0x68386c), color(0x9e2835)}, --dpurple & dred
+		{COL_LIGHT_RED, COL_ORANGE, COL_LIGHT_YELLOW, color(0x63c74d), COL_LIGHT_BLUE, color(0xb55088)}, --rainbow
+		{color(0xfeae34), COL_WHITE}, --orange & white
+		{color(0x3f2832), COL_BLACK_BLUE}, --orange & white
+		{color(0xe4a672), color(0xb86f50)} --midbeige & dbeige (~brown ish)
 	}
 	for i=1,60 do
 		local p = self:new_bg_particle()
@@ -276,6 +296,8 @@ function Game:new_game(number_of_players)
 	self.show_cabin = true
 	self.show_rubble = false
 
+	self.clock_ang = pi
+
 	self.is_on_win_screen = false
 
 	self.frames_to_skip = 0
@@ -295,26 +317,13 @@ function Game:new_game(number_of_players)
 	self:set_music_volume(options:get("music_volume"))
 	self.time_before_music = math.huge
 
+	self.endless_mode = false
+
 	options:update_sound_on()
 end
 
 local n = 0
 function Game:update(dt)
-	--debug pinnn
-	local a = love.audio.getActiveSourceCount()
-	local n = 0
-	local len = 0
-	for i,s in pairs(sounds) do
-		len = len + 1
-		for i,t in ipairs(s) do
-			if t:isPlaying() then
-				n=n+1
-			end
-		end
-	end
-	print("love,count",a, n)
-	-- print("len", len)
-
 	self.frame = self.frame + 1
 
 	self.frames_to_skip = max(0, self.frames_to_skip - 1)
@@ -526,7 +535,8 @@ function Game:draw_game()
 		gfx.draw(spr, logo_x + ox, self.logo_y + oy)
 	end
 	gfx.draw(images.controls, floor((CANVAS_WIDTH - images.controls:getWidth())/2), floor(self.logo_y) + images.logo:getHeight()+6)
-	gfx.draw(images.controls_jetpack, floor((CANVAS_WIDTH - images.controls_jetpack:getWidth())/2), floor(self.jetpack_tutorial_y))
+	local ox, oy = cos(self.t*3)*4, sin(self.t*3)*4
+	gfx.draw(images.controls_jetpack, ox + floor((CANVAS_WIDTH - images.controls_jetpack:getWidth())/2), oy + floor(self.jetpack_tutorial_y))
 
 	-- "CONGRATS" at the end
 	-- PINNNNNN
@@ -564,6 +574,7 @@ function Game:draw_game()
 		for k,v in pairs(self.stats) do
 			local val = v
 			if k == "time" then val = time_to_string(v) end
+			if k == "floor" then val = concat(v, " / 16") end
 			table.insert(ta, concat(k,": ",val))
 		end
 		table.insert(ta, "PRESS [ESCAPE]")
@@ -676,6 +687,9 @@ function Game:pause_repeating_sounds()
 		end
 	end
 end
+function Game:on_button_glass_spawn()
+	self.music_source:pause()
+end
 
 function Game:on_unmenu()
 	if self.game_started then
@@ -778,6 +792,10 @@ function Game:apply_screenshake(dt)
 	if abs(oy) >= 0.2 then   oy = sign(oy) * max(abs(oy), 1)   end -- jittery effects on UI elmts
 	self.cam_ox = ox
 	self.cam_oy = oy
+end
+
+function Game:enable_endless_mode()
+	self.endless_mode = true
 end
 
 -----------------------------------------------------
@@ -919,12 +937,16 @@ function Game:update_door_anim(dt)
 	if self.floor_progress < 4.2 and not self.has_switched_to_next_floor then
 		self.floor = self.floor + 1
 		self.has_switched_to_next_floor = true
-		self:next_floor(dt)
+		self:next_floor(dt, self.floor, self.floor-1)
 	end
 end
 
-function Game:next_floor(dt)
+function Game:next_floor(dt, new_floor, old_floor)
 	self.move_logo = true
+	if old_floor ~= 0 then
+		local pitch = 0.8 + 0.4* clamp(self.floor/self.max_floor, 0, 1)
+		audio:play("elev_ding", 0.8, pitch)
+	end
 end
 
 function Game:new_wave_buffer_enemies()
@@ -935,14 +957,35 @@ function Game:new_wave_buffer_enemies()
 	self.cur_wave_max_enemy = n
 	self.door_animation_enemy_buffer = {}
 
-	-- print(self.floor, clamp(self.floor, 1, #waves))
+	-- Select a wave
 	local wave_n = clamp(self.floor+1, 1, #waves) -- floor+1 because the floor indicator changes before enemies are spawned
 	local wave = waves[wave_n]
+	if self.endless_mode then
+		-- Wave on endless mode
+		local min = random_range(3,8)
+		local max = min + random_range(0,8)
+		wave = {
+			min = min,
+			max = max,
+			enemies = {
+				{Enemies.Larva, random_range(1,6)},
+				{Enemies.Fly, random_range(1,6)},
+				{Enemies.SnailShelled, random_range(1,6)},
+				{Enemies.Slug, random_range(1,6)},
+				{Enemies.SpikedFly, random_range(1,3)},
+				{Enemies.Grasshopper, random_range(1,3)},
+				{Enemies.MushroomAnt, random_range(1,3)},
+			},
+		}
+	end
 	local n = love.math.random(wave.min, wave.max)
 
 	-- BG color changes
-	if wave_n == floor((self.bg_color_index) * (#waves / #self.bg_colors)) then
-		self.bg_color_index = self.bg_color_index + 1
+	-- if wave_n == floor((self.bg_color_index) * (#waves / 4)) then
+	local real_wave_n = max(1, self.floor + 1)
+	if wave_n % 4 == 0 then
+		-- self.bg_color_index = self.bg_color_index + 1
+		self.bg_color_index = mod_plus_1( floor(real_wave_n / 4) + 1, #self.bg_colors)
 		self.bg_color_progress = 0
 	end
 
@@ -957,6 +1000,11 @@ function Game:new_wave_buffer_enemies()
 
 		local enem = random_weighted(wave.enemies)
 		local e = enem:new(x,y)
+
+		-- If button is summoned, last wave happened
+		if e.name == "button_glass" then
+			self:on_button_glass_spawn()
+		end
 
 		-- Center enemy
 		if enem ~= Enemies.ButtonGlass then
@@ -987,8 +1035,13 @@ function Game:draw_background(cabin_x, cabin_y)
 	gfx.draw(images.cabin_door_right, cabin_x + 208 + self.door_offset, cabin_y + 122)
 
 	-- Cabin background
-	gfx.draw(images.cabin_bg, cabin_x, cabin_y)
+	gfx.draw(images.cabin_bg_2, cabin_x, cabin_y)
 	gfx.draw(images.cabin_bg_amboccl, cabin_x, cabin_y)
+	-- Level counter clock thing
+	local x1, y1 = cabin_x + 207.5, cabin_y + 89
+	self.clock_ang = lerp(self.clock_ang, pi + clamp(self.floor / self.end_floor, 0, 1) * pi, 0.1)
+	local a = self.clock_ang
+	gfx.line(x1, y1, x1 + cos(a)*11, y1 + sin(a)*11)
 	
 	-- Level counter
 	gfx.setFont(FONT_7SEG)

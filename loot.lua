@@ -3,6 +3,8 @@ local Actor = require "actor"
 local images = require "data.images"
 local Guns = require "data.guns"
 local sounds = require "data.sounds"
+require "util"
+local utf8 = require "utf8"
 
 local Loot = Actor:inherit()
 
@@ -56,7 +58,7 @@ function Loot:init_loot(spr, x, y, w, h, val, vx, vy)
 	end
 end
 
-function Loot:update(dt)
+function Loot:update_loot(dt)
 	self:update_actor(dt)
 
 	-- uncollectable timer 
@@ -97,6 +99,9 @@ function Loot:update(dt)
 		particles:smoke(self.mid_x, self.mid_y)
 		self:remove()
 	end
+end
+function Loot:update(dt)
+	self:update_loot(dt)
 end
 
 function Loot:draw()
@@ -207,6 +212,8 @@ function Loot.Life:on_collect(player)
 	particles:smoke(self.mid_x, self.mid_y, nil, COL_LIGHT_RED)
 	audio:play("item_collect")
 
+	particles:word(self.mid_x, self.mid_y, concat("+",self.value," LIFE"))
+
 	if not success then
 		--TODO
 	end
@@ -233,6 +240,10 @@ function Loot.Gun:init(x, y, val, vx, vy)
 	self.friction_x = self.default_friction
 	
 	self.loot_type = "gun"
+	self.t = 0
+
+	self.sprite_ox = 0
+	self.sprite_oy = 0
 end
 
 function Loot.Gun:on_collect(player)
@@ -240,8 +251,40 @@ function Loot.Gun:on_collect(player)
 	
 	particles:smoke(self.mid_x, self.mid_y, nil, COL_LIGHT_BROWN)
 	audio:play("item_collect")
-	
+
+	particles:word(self.mid_x, self.mid_y, string.upper(self.gun.display_name or self.gun.name))
+
 	self:remove()
+end
+
+function Loot.Gun:update(dt)
+	self:update_loot(dt)
+
+	self.t = self.t + dt
+
+	-- self.spr_ox = cos(self.t) * 6
+	self.sprite_oy = -6 - sin(self.t * 4) * 4
+	self.rot = sin(self.t * 4 + 0.4) * 0.1
+end
+
+function Loot.Gun:draw(fx, fy, custom_draw)
+	if not self.blink_is_shown then
+		gfx.setColor(1,1,1, 0.2)
+	end
+	--gfx.draw(self.spr, self.x, self.y)
+
+	if self.is_removed then   return   end
+
+	local spr_w2 = floor(self.spr:getWidth() / 2)
+	local spr_h2 = floor(self.spr:getHeight() / 2)
+
+	local x, y = self.spr_x, self.spr_y
+	if self.spr then
+	
+		gfx.draw(self.spr, x + self.sprite_ox, y + self.sprite_oy, self.rot, fx, fy, spr_w2, spr_h2)
+	end
+	
+	gfx.setColor(1,1,1, 1)
 end
 
 return Loot

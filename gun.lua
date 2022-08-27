@@ -111,9 +111,6 @@ function Gun:shoot(dt, player, x, y, dx, dy, is_burst)
 	-- Sanity checks
 	-- + reloading
 	if self.ammo <= 0 then
-		if not self.is_reloading then
-			self:reload()
-		end
 		return false
 	end
 
@@ -172,6 +169,11 @@ function Gun:shoot(dt, player, x, y, dx, dy, is_burst)
 	end
 
 	self:on_shoot()
+
+	-- Reload if ammo is 0
+	if self.ammo == 0 and not self.is_reloading then
+		self:reload()
+	end
 
 	return true
 end

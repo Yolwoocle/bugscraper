@@ -526,7 +526,7 @@ function MenuManager:init(game)
 		{ StatsMenuItem, "Time",  function(self)
 			return time_to_string(game.stats.time)
 		end },
-		{ StatsMenuItem, "Floor", function(self) return game.stats.floor end },
+		{ StatsMenuItem, "Floor", function(self) return concat(game.stats.floor, " / 16") end },
 		{ "" },
 		{ "RETRY", function() game:new_game() end },
 		{ "QUIT", quit_game },
