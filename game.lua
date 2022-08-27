@@ -361,9 +361,13 @@ function Game:update_main_game(dt)
 
 	-- BG color gradient
 	if not self.is_on_win_screen then
-		self.bg_color_progress = self.bg_color_progress + dt*0.1
-		local i_prev = clamp(self.bg_color_index-1, 1, #self.bg_colors)
-		local i_target = clamp(self.bg_color_index, 1, #self.bg_colors)
+		self.bg_color_progress = self.bg_color_progress + dt*0.2
+		local i_prev = mod_plus_1(self.bg_color_index-1, #self.bg_colors)
+		if self.floor <= 1 then
+			i_prev = 1
+		end
+
+		local i_target = mod_plus_1(self.bg_color_index, #self.bg_colors)
 		local prog = clamp(self.bg_color_progress, 0, 1)
 		self.bg_col = lerp_color(self.bg_colors[i_prev], self.bg_colors[i_target], prog)
 		self.bg_particle_col = self.bg_particle_colors[i_target]
@@ -660,7 +664,10 @@ function Game:draw_debug()
 		concat("elevator speed: ", self.elevator_speed),
 		concat("frames_to_skip: ", self.frames_to_skip),
 		concat("self.sfx_elevator_bg_volume", self.sfx_elevator_bg_volume),
-		concat("debug1", self.debug1),
+		concat("debug1 ", self.debug1),
+		concat("real_wave_n ", self.debug2),
+		concat("bg_color_index ", self.debug3),
+		concat("bg_color_progress ", self.bg_color_progress),
 		"",
 	}
 
@@ -796,6 +803,7 @@ end
 
 function Game:enable_endless_mode()
 	self.endless_mode = true
+	self.music_source:play()
 end
 
 -----------------------------------------------------
@@ -983,6 +991,8 @@ function Game:new_wave_buffer_enemies()
 	-- BG color changes
 	-- if wave_n == floor((self.bg_color_index) * (#waves / 4)) then
 	local real_wave_n = max(1, self.floor + 1)
+	self.debug2 = real_wave_n
+	self.debug3 = self.bg_color_index
 	if wave_n % 4 == 0 then
 		-- self.bg_color_index = self.bg_color_index + 1
 		self.bg_color_index = mod_plus_1( floor(real_wave_n / 4) + 1, #self.bg_colors)
@@ -1119,7 +1129,6 @@ function Game:do_reverse_elevator(dt)
 
 		-- bg color shift to red
 		local p = self.elevator_speed / speed_cap
-		self.debug1 = p
 		self.bg_col = lerp_color(self.bg_colors[#self.bg_colors], color(0xff7722), p)
 		-- self.bg_particle_col = self.bg_particle_colors[#self.bg_particle_colors]
 		local r = self.bg_col[1]
