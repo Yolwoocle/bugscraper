@@ -38,7 +38,7 @@ function Enemy:init_enemy(x,y, img, w,h)
 	self.loot = {
 		{nil, 80},
 		-- {Loot.Ammo, 0, loot_type="ammo", value=20},
-		{Loot.Life, 30000, loot_type="life", value=1},
+		{Loot.Life, 3, loot_type="life", value=1},
 		{Loot.Gun, 3, loot_type="gun"},
 	}
 
@@ -134,7 +134,7 @@ function Enemy:on_collision(col, other)
 		local epsilon = 0.01
 	
 		-- if player.vy > epsilon and self.is_stompable then
-		local recently_landed = 0 < player.frames_since_land and player.frames_since_land <= 10
+		local recently_landed = 0 < player.frames_since_land and player.frames_since_land <= 7
 		if (player.vy > 0.0001 or recently_landed) and self.is_stompable then
 			player.vy = 0
 			player:on_stomp(self)

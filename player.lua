@@ -154,12 +154,15 @@ function Player:update(dt)
 	end
 
 	if self:button_pressed("up") then
-		game.floor = 16
+		-- game.floor = 16
 		for i,e in pairs(game.actors) do
 			if e.is_enemy then
 				e:kill()
 			end
 		end
+	end
+	if self:button_pressed("select") then
+		game.floor = game.floor + 1
 	end
 
 	-- Movement
@@ -188,10 +191,10 @@ function Player:update(dt)
 	end
 
 	-- Gun switchgun
-	if self:button_pressed("up") then
-		self.gun_number = mod_plus_1((self.gun_number + 1), #self.guns)
-		self:equip_gun(self.guns[self.gun_number])
-	end
+	-- if self:button_pressed("up") then
+	-- 	self.gun_number = mod_plus_1((self.gun_number + 1), #self.guns)
+	-- 	self:equip_gun(self.guns[self.gun_number])
+	-- end
 
 	self.gun:update(dt)
 	self:shoot(dt, false)
