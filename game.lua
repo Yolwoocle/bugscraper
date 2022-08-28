@@ -303,7 +303,7 @@ function Game:new_game(number_of_players)
 	self.frames_to_skip = 0
 	self.slow_mo_rate = 0
 
-	self.draw_shadows = false
+	self.draw_shadows = true
 	
 	-- Music
 	-- TODO: a "ambient sfx" system
@@ -993,7 +993,7 @@ function Game:new_wave_buffer_enemies()
 	local real_wave_n = max(1, self.floor + 1)
 	self.debug2 = real_wave_n
 	self.debug3 = self.bg_color_index
-	if wave_n % 4 == 0 then
+	if real_wave_n % 4 == 0 then
 		-- self.bg_color_index = self.bg_color_index + 1
 		self.bg_color_index = mod_plus_1( floor(real_wave_n / 4) + 1, #self.bg_colors)
 		self.bg_color_progress = 0
