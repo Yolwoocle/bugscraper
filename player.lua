@@ -153,16 +153,19 @@ function Player:update(dt)
 		return
 	end
 
-	if self:button_pressed("up") then
-		-- game.floor = 16
-		for i,e in pairs(game.actors) do
-			if e.is_enemy then
-				e:kill()
-			end
-		end
-	end
+	-- if self:button_pressed("up") then
+	-- 	-- game.floor = 16
+	-- 	for i,e in pairs(game.actors) do
+	-- 		if e.is_enemy then
+	-- 			e:kill()
+	-- 		end
+	-- 	end
+	-- end
+	-- if self:button_pressed("select") then
+	-- 	game.floor = game.floor + 1
+	-- end
 	if self:button_pressed("select") then
-		game.floor = game.floor + 1
+		leaderboard:submit()
 	end
 
 	-- Movement

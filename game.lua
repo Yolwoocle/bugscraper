@@ -10,6 +10,7 @@ local ParticleSystem = require "particles"
 local AudioManager = require "audio"
 local MenuManager = require "menu"
 local OptionsManager = require "options"
+local LeaderboardManager = require "leaderboard"
 local utf8 = require "utf8"
 
 local waves = require "data.waves"
@@ -22,12 +23,12 @@ require "constants"
 local Game = Class:inherit()
 
 function Game:init()
-	print("TEST HELLO")
 	-- Global singletons
 	options = OptionsManager:new(self)
 	collision = Collision:new()
 	particles = ParticleSystem:new()
 	audio = AudioManager:new()
+	leaderboard = LeaderboardManager:new()
 	
 	-- Global Options ==> Moved to OptionsManager
 	-- is_fullscreen = options:get("is_fullscreen")
