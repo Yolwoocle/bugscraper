@@ -41,8 +41,8 @@ function OptionsManager:init(game)
 			right = {"right"},
 			up = {"up"},
 			down = {"down"},
-			jump = {"."},
-			shoot = {","},
+			jump = {"l", ","},
+			shoot = {"k", "m"},
 			select = {"return"},
 			pause = {"escape", "p"},
 		}

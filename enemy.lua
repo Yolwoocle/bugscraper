@@ -60,6 +60,9 @@ function Enemy:init_enemy(x,y, img, w,h)
 	self.play_sfx = true
 	self.sound_damage = "enemy_damage"
 	self.sound_death = "enemy_death_1"
+	self.sound_stomp = "enemy_death_1"
+	-- self.sound_stomp = {"enemy_stomp_2", "enemy_stomp_3"}
+	--{"crush_bug_1", "crush_bug_2", "crush_bug_3", "crush_bug_4"}
 end
 
 function Enemy:update_enemy(dt)
@@ -190,8 +193,12 @@ function Enemy:kill(damager, reason)
 
 	game:frameskip(1)
 	particles:smoke(self.mid_x, self.mid_y)
-	if self.play_sfx then 
-		audio:play_var(self.sound_death, 0.3, 1.1)
+	if self.play_sfx then
+		if reason == "stomped" then
+			audio:play_var(self.sound_stomp, 0.3, 1.1)
+		else
+			audio:play_var(self.sound_death, 0.3, 1.1)
+		end
 	end
 
 	game:on_kill(self)

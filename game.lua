@@ -73,7 +73,6 @@ function Game:init()
 	gfx.setDefaultFilter("nearest", "nearest")
 	love.graphics.setLineStyle("rough")
 
-
 	self:update_screen()
 
 	canvas = gfx.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
@@ -172,6 +171,8 @@ function Game:new_game(number_of_players)
 	self.is_reversing_elevator = false
 	self.is_exploding_elevator = false
 	self.downwards_elev_progress = 0
+	self.elev_x, self.elev_y = 0, 0
+	self.elev_vx, self.elev_vy = 0, 0
 	
 	self.bg_color_progress = 0
 	self.bg_color_index = 1
@@ -279,9 +280,11 @@ function Game:new_game(number_of_players)
 		floor = 0,
 		kills = 0,
 		time = 0,
+		max_combo = 0,
 	}
 	self.kills = 0
 	self.time = 0
+	self.max_combo = 0 
 
 	-- Cabin stats
 	--TODO: fuze it into map or remove map, only have coll boxes & no map
@@ -371,7 +374,11 @@ function Game:update_main_game(dt)
 		local prog = clamp(self.bg_color_progress, 0, 1)
 		self.bg_col = lerp_color(self.bg_colors[i_prev], self.bg_colors[i_target], prog)
 		self.bg_particle_col = self.bg_particle_colors[i_target]
-	end	
+	end
+	
+	-- Elevator swing 
+	-- self.elev_x = cos(self.t) * 4
+	-- self.elev_y = 4 + sin(self.t) * 4
 
 	self:apply_screenshake(dt)
 	
@@ -441,10 +448,13 @@ function Game:draw()
 	end
 end
 
+testx = 0
+testy = 0
 function Game:draw_game()
 	-- Sky
 	gfx.clear(self.bg_col)
-	gfx.translate(-(self.cam_x + self.cam_ox), -(self.cam_y + self.cam_oy))
+	local real_camx, real_camy = (self.cam_x + self.cam_ox), (self.cam_y + self.cam_oy)
+	gfx.translate(-real_camx, -real_camy)
 
 	-- Draw bg particles
 	if self.show_bg_particles then
@@ -456,6 +466,8 @@ function Game:draw_game()
 			rect_color(o.col, "fill", o.x, o.y + o.oy + sin_oy, o.w, o.h * o.oh)
 		end
 	end
+
+	love.graphics.translate(-(real_camx + self.elev_x), -(real_camy + self.elev_y))
 
 	-- Map
 	self.map:draw()
@@ -513,6 +525,7 @@ function Game:draw_game()
 	end
 
 	-- Draw actors UI
+	particles:draw_front()
 	-- Draw actors
 	for k,actor in pairs(self.actors) do
 		if actor.draw_hud then     actor:draw_hud()    end
@@ -523,6 +536,8 @@ function Game:draw_game()
 	-- local w = 64
 	-- rect_color(COL_MID_GRAY, "fill", floor((CANVAS_WIDTH-w)/2),    16, w, 8)
 	-- rect_color(COL_WHITE,    "fill", floor((CANVAS_WIDTH-w)/2) +1, 17, (w-2)*self.floor_progress, 6)
+
+	love.graphics.translate(-real_camx, -real_camy)
 
 	-- Logo
 	for i=1, #self.logo_cols + 1 do
@@ -577,8 +592,10 @@ function Game:draw_game()
 		local ta = {}
 		for k,v in pairs(self.stats) do
 			local val = v
+			local key = k
 			if k == "time" then val = time_to_string(v) end
 			if k == "floor" then val = concat(v, " / 16") end
+			if k == "max_combo" then key = "max combo" end
 			table.insert(ta, concat(k,": ",val))
 		end
 		table.insert(ta, "PRESS [ESCAPE]")
@@ -748,6 +765,7 @@ function Game:save_stats()
 	self.stats.time = self.time
 	self.stats.floor = self.floor
 	self.stats.kills = self.kills
+	self.stats.max_combo = self.max_combo
 end
 
 function Game:on_game_over()
@@ -952,7 +970,7 @@ end
 function Game:next_floor(dt, new_floor, old_floor)
 	self.move_logo = true
 	if old_floor ~= 0 then
-		local pitch = 0.8 + 0.4* clamp(self.floor/self.max_floor, 0, 1)
+		local pitch = 0.8 + 0.5 * clamp(self.floor/self.max_floor, 0, 3)
 		audio:play("elev_ding", 0.8, pitch)
 	end
 end
@@ -978,11 +996,12 @@ function Game:new_wave_buffer_enemies()
 			enemies = {
 				{Enemies.Larva, random_range(1,6)},
 				{Enemies.Fly, random_range(1,6)},
-				{Enemies.SnailShelled, random_range(1,6)},
 				{Enemies.Slug, random_range(1,6)},
-				{Enemies.SpikedFly, random_range(1,3)},
-				{Enemies.Grasshopper, random_range(1,3)},
-				{Enemies.MushroomAnt, random_range(1,3)},
+				{Enemies.SnailShelled, random_range(1,4)},
+				{Enemies.SpikedFly, random_range(1,4)},
+				{Enemies.Grasshopper, random_range(1,4)},
+				{Enemies.MushroomAnt, random_range(1,4)},
+				{Enemies.Spider, random_range(1,4)},
 			},
 		}
 	end

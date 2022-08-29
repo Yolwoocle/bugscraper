@@ -12,7 +12,7 @@ function Guns:init()
 	function self.Machinegun:init(user)
 		self:init_gun(user)
 		self.name = "machinegun"
-		self.display_name = "machinegun"
+		self.display_name = "pea gun"
 		
 		self.sfx = "mushroom_ant_pop"
 		self.damage = 1.5
@@ -20,6 +20,9 @@ function Guns:init()
 		self.max_reload_timer = 1.5
 		self.is_auto = true
 		self.spr = images.gun_machinegun
+		self.bullet_spr = images.bullet_pea
+		self.bul_w = 10
+		self.bul_h = 10
 
 		self.cooldown = 0.1
 		self.jetpack_force = 440
@@ -33,7 +36,7 @@ function Guns:init()
 	function self.Triple:init(user)
 		self:init_gun(user)
 		self.name = "triple"
-		self.display_name = "triple"
+		self.display_name = "triple pepper"
 
 		self.max_ammo = 15
 
@@ -47,6 +50,8 @@ function Guns:init()
 		self.random_angle_offset = 0
 		self.jetpack_force = self.default_jetpack_force * 2
 
+		self.bullet_spr = images.bullet_red
+
 		self.screenshake = 2
 	end
 
@@ -57,7 +62,7 @@ function Guns:init()
 	function self.Burst:init(user)
 		self:init_gun(user)
 		self.name = "burst"
-		self.display_name = "burst"
+		self.display_name = "pollen burst"
 		self.spr = images.gun_burst
 		self.sfx = "mushroom_ant_pop"
 		self.sfx_pitch = 1.1
@@ -83,7 +88,7 @@ function Guns:init()
 	function self.Shotgun:init(user)
 		self:init_gun(user)
 		self.name = "shotgun"
-		self.display_name = "shotgun"
+		self.display_name = "raspberry shotgun"
 		self.spr = images.gun_shotgun
 		self.sfx = "mushroom_ant_pop"
 		self.sfx_pitch = 0.6
@@ -115,8 +120,8 @@ function Guns:init()
 
 	function self.Minigun:init(user)
 		self:init_gun(user)
-		self.name = "machinegun"
-		self.display_name = "machinegun"
+		self.name = "minigun"
+		self.display_name = "seed minigun"
 		
 		self.max_ammo = 150
 		self.max_reload_timer = 1.5
@@ -131,7 +136,46 @@ function Guns:init()
 		self.cooldown = 0.03
 		self.jetpack_force = 200
 
+		self.bullet_spr = images.bullet_pea
+		self.bul_w = 10
+		self.bul_h = 10
+
 		self.screenshake = 0.7
+	end
+
+	-----
+
+	self.Ring = Gun:inherit()
+
+	function self.Ring:init(user)
+		self:init_gun(user)
+		self.name = "ring"
+		self.display_name = "big berry"
+		
+		self.max_ammo = 8
+		self.max_reload_timer = 2
+		self.bullet_number = 24
+		self.bullet_spread = pi2
+		self.bullet_friction = 0.9
+		self.random_angle_offset = 0
+
+		self.random_angle_offset = 0
+		self.damage = 2
+		self.is_auto = true
+		self.spr = images.gun_ring
+		self.sfx = {"gunshot_ring_1", "gunshot_ring_2", "gunshot_ring_3"}
+		self.sfx2 = "pop_ring"
+		self.sfx_volume = 1
+		self.sfx_pitch = 1.4
+		
+		self.cooldown = 0.5
+		self.jetpack_force = 1000
+		
+		self.bullet_spr = images.bullet_ring
+		self.bul_w = 10
+		self.bul_h = 10
+
+		self.screenshake = 4
 	end
 
 	-----
@@ -222,7 +266,17 @@ end
 
 function Guns:get_random_gun(user)
 	local gun = random_sample(all_guns) or self.Machinegun
-	return gun:new(user)
+	local inst = gun:new(user)
+	
+	if game.floor <= 5 then
+		local limit = 10
+		while limit > 0 and inst.name == "ring" do
+			inst = random_sample(all_guns):new(user)
+			limit = limit - 1
+		end
+	end
+
+	return inst
 end
 
 

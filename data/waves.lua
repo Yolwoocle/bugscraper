@@ -61,24 +61,24 @@ local waves = {
 
 
 { -- 5
-	-- Shelled Snail intro
+	-- Spider intro
 	min = 4,
 	max = 6,
 	enemies = {
-		{E.Slug, 2},
-		{E.SnailShelled, 4},
+		{E.Larva, 2},
+		{E.Spider, 4},
 	},
 },
 
 
 { -- 6
-	-- Spiked Fly intro
+	-- 
 	min = 6,
 	max = 8,
 	enemies = {
-		{E.SnailShelled, 3},
-		{E.Grasshopper, 2},
+		{E.Larva, 3},
 		{E.Slug, 2},
+		{E.Spider, 4},
 	},
 },
 
@@ -86,26 +86,36 @@ local waves = {
 	min = 3,
 	max = 5,
 	enemies = {
+		-- Shelled Snail intro
+		{E.SnailShelled, 3},
 		{E.Fly, 1},
-		{E.Larva, 1},
-		{E.SpikedFly, 2},
 	},
 },
 
 { -- 8
-	-- ALL
-	min = 8,
-	max = 10,
+	min = 6,
+	max = 8,
 	enemies = {
+		-- 
+		{E.Fly, 4},
 		{E.Larva, 4},
-		{E.Fly, 3},
-		{E.Slug, 2},
-		{E.Grasshopper, 1},
-		{E.SpikedFly, 1},
+		{E.SnailShelled, 3},
+		{E.Spider, 3},
 	},
 },
 
 { -- 9
+	-- SpikedFly intro
+	min = 5,
+	max = 7,
+	enemies = {
+		{E.Larva, 1},
+		{E.Fly, 2},
+		{E.SpikedFly, 4},
+	},
+},
+
+{ -- 10
 	-- Mushroom Ant intro
 	min = 3,
 	max = 4,
@@ -115,17 +125,18 @@ local waves = {
 },
 
 
-{ -- 10
+{ -- 11
 	min = 6,
 	max = 8,
 	enemies = {
 		{E.MushroomAnt, 3},
 		{E.Fly, 1},
 		{E.SpikedFly, 1},
+		{E.Spider, 2²},
 	},
 },
 
-{ -- 11
+{ -- 12
 	-- ALL
 	min = 6,
 	max = 8,
@@ -137,12 +148,13 @@ local waves = {
 		{E.SpikedFly, 1},
 		{E.Grasshopper, 1},
 		{E.MushroomAnt, 1},
+		{E.Spider, 1},
 	},
 },
 
 -- unpack(duplicate_table({
 	-- ALL BUT HARDER
-	-- 12, 13, 14, 15
+	-- 13, 14, 15
 {
 	min = 8,
 	max = 10,
@@ -154,6 +166,7 @@ local waves = {
 		{E.SpikedFly, 1},
 		{E.Grasshopper, 1},
 		{E.MushroomAnt, 1},
+		{E.Spider, 1},
 	},
 },{
 	min = 10,
@@ -166,18 +179,7 @@ local waves = {
 		{E.SpikedFly, 1},
 		{E.Grasshopper, 1},
 		{E.MushroomAnt, 1},
-	},
-},{
-	min = 10,
-	max = 12,
-	enemies = {
-		{E.Larva, 4},
-		{E.Fly, 3},
-		{E.SnailShelled, 3},
-		{E.Slug, 2},
-		{E.SpikedFly, 1},
-		{E.Grasshopper, 1},
-		{E.MushroomAnt, 1},
+		{E.Spider, 1},
 	},
 },{
 	min = 12,
@@ -190,6 +192,7 @@ local waves = {
 		{E.SpikedFly, 1},
 		{E.Grasshopper, 1},
 		{E.MushroomAnt, 1},
+		{E.Spider, 1},
 	},
 },
 -- }, 4)),

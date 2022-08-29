@@ -1,6 +1,21 @@
 -- This file is for functions, classes that are unused but I figure
 -- I might have an use for later on. 
 
+--
+
+	-- Elevator swing  >> in Game:update_main_game
+	if love.math.random(0,10) == 0 then
+		self.elev_vx = random_neighbor(50)
+		self.elev_vy = random_range(0, 50)
+	end
+	self.elev_vx = self.elev_vx * 0.9
+	self.elev_vy = self.elev_vy * 0.9
+	self.elev_x = self.elev_x + self.elev_vx*dt
+	self.elev_y = self.elev_y + self.elev_vy*dt
+	self.elev_x = self.elev_x * 0.9
+	self.elev_y = self.elev_y * 0.9
+
+
 -- Player mine and cursor
 function Player:update_cursor(dt)
 	local old_cu_x = self.cu_x

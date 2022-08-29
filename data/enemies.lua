@@ -101,11 +101,23 @@ function Enemies:init()
 		-- self.sound_death = "larva_death"
 		self.anim_frame_len = 0.2
 		self.anim_frames = {images.larva1, images.larva2}
+		self.audio_delay = love.math.random(0.3, 1)
 	end
 
 	function self.Larva:update(dt)
 		self:update_enemy(dt)
 		self.vx = self.speed * self.walk_dir_x
+		
+		-- self.audio_delay = self.audio_delay - dt
+		-- if self.audio_delay <= 0 then
+		-- 	self.audio_delay = love.math.random(0.3, 1.5)
+		-- 	audio:play({
+		-- 		"larva_damage1",
+		-- 		"larva_damage2",
+		-- 		"larva_damage3",
+		-- 		"larva_death"
+		-- 	})
+		-- end
 	end
 
 	function self.Larva:after_collision(col, other)
@@ -158,6 +170,7 @@ function Enemies:init()
 
 	function self.Grasshopper:on_grounded()
 		self.vy = -self.jump_speed
+		audio:play_var("jump_short", 0.2, 1.2, {pitch=0.4})
 	end
 
 	--------
@@ -204,6 +217,7 @@ function Enemies:init()
 
 		self.spr_oy = floor((self.spr_h - self.h) / 2)
 		self.sound_death = "snail_shell_crack"
+		self.sound_stomp = "snail_shell_crack"
 	end
 
 	function self.SnailShelled:update(dt)
@@ -260,6 +274,7 @@ function Enemies:init()
 
 		self.sound_damage = {"cloth1", "cloth2", "cloth3"}
 		self.sound_death = "cloth_drop"
+		self.sound_stomp = "cloth_drop"
 	end
 
 	function self.DummyTarget:update(dt)
@@ -349,6 +364,82 @@ function Enemies:init()
 		self.friction_y = 1
 	end
 
+	--------
+
+	self.Spider = Enemy:inherit()
+
+	function self.Spider:init(x, y) 
+		self:init_enemy(x, y, images.spider1, 21, 15)
+		self.name = "spider"
+		self.follow_player = false
+
+		self.gravity = -self.default_gravity
+
+		self.anim_frame_len = 0.4
+		self.anim_frames = {images.spider1, images.spider2}
+
+		self.time_before_flip = 0
+		self.move_dir_x = random_sample{-1, 1}
+		self.speed = 5
+
+		self.is_on_ceiling = false
+		self.ceiling_y = 0
+		self.string_len = 0
+		self.max_string_len = random_range(100, 150)
+		self.string_grow_dir = 1
+		self.string_growth_speed = random_range(30,55)
+
+		self.dt = 0
+	end
+
+	function self.Spider:update(dt)
+		self:update_enemy(dt)
+		self.dt = dt
+
+		self.time_before_flip = self.time_before_flip - dt
+		if self.time_before_flip <= 0 or random_range(0,1) <= 0.01 then
+			self.time_before_flip = random_range(0.5, 2)
+			
+			self.move_dir_x = -self.move_dir_x
+		end
+		
+		self.vx = self.vx + self.move_dir_x * self.speed
+	
+		if self.is_on_ceiling then
+			self.vy = self.string_grow_dir * self.string_growth_speed
+			
+			self.string_len = self.y - self.ceiling_y
+			if self.string_len > self.max_string_len then
+				self.string_grow_dir = -1
+			end
+			if self.string_len <= 60 then
+				self.string_grow_dir = 1
+			end
+		end
+	end
+
+	function self.Spider:draw()
+		self:draw_enemy()
+		if self.is_on_ceiling then
+			line_color(COL_WHITE, self.mid_x, self.y, self.mid_x - self.vx*self.dt*3, self.ceiling_y)
+		end
+	end
+
+	function self.Spider:after_collision(col, other)
+		if other.is_solid then
+			if col.normal.x == 0 and col.normal.y == 1 then
+				self.is_on_ceiling = true
+				self.gravity = 0
+				self.gravity_y = 0
+				self.ceiling_y = self.y
+			end
+			if col.normal.y == 0 then
+				self.time_before_flip = random_range(0.5, 2)
+				self.walk_dir_x = col.normal.x
+			end
+		end
+	end
+
 	-----------------------
 	-----------------------
 	-----------------------
@@ -405,7 +496,7 @@ function Enemies:init()
 		self.name = "button"
 		self.follow_player = false
 
-		self.max_life = 50
+		self.max_life = 20
 		self.life = self.max_life
 		
 		self.knockback = 0
@@ -471,7 +562,7 @@ function Enemies:init()
 		self.name = "button_glass"
 		self.follow_player = false
 
-		self.max_life = 70
+		self.max_life = 50
 		self.life = self.max_life
 		self.activ_thresh = 40
 		self.break_range = self.life - self.activ_thresh

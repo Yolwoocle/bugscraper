@@ -527,6 +527,7 @@ function MenuManager:init(game)
 			return time_to_string(game.stats.time)
 		end },
 		{ StatsMenuItem, "Floor", function(self) return concat(game.stats.floor, " / 16") end },
+		{ StatsMenuItem, "Max combo", function(self) return concat(game.stats.max_combo) end },
 		{ "" },
 		{ "RETRY", function() game:new_game() end },
 		{ "QUIT", quit_game },
@@ -613,7 +614,8 @@ function MenuManager:init(game)
 		{ "'Emergency Siren' by onderwish / CC0", func_url("https://freesound.org/people/onderwish/sounds/470504/")},
 		{ "'Wood burning in the stove' by smand / CC0", func_url("https://freesound.org/people/smand/sounds/521118/")},
 		{ "'Bike falling down an escalator' by dundass / CC BY 3.0", func_url("https://freesound.org/people/dundass/sounds/509831/")},
-		-- { "'Bike falling down an escalator' by dundass / CC BY 3.0", func_url("https://freesound.org/people/InspectorJ/sounds/484344/")},
+		{ "'squishing and squeezing a wet sponge in a bowl' by breadparticles / CC0", func_url("https://freesound.org/people/breadparticles/sounds/575332/#comments")},
+		{ "'Insect Bug Smash & Crush' by EminYILDIRIM / CC BY 4.0", func_url("https://freesound.org/people/EminYILDIRIM/sounds/570767/")},
 		-- { "'xxx' by xxx / CC BY 4.0", func_url("xxx")},
 		{ ""},
 		{ "<< Asset Licenses >>"},

@@ -212,7 +212,7 @@ function Loot.Life:on_collect(player)
 	particles:smoke(self.mid_x, self.mid_y, nil, COL_LIGHT_RED)
 	audio:play("item_collect")
 
-	particles:word(self.mid_x, self.mid_y, concat("+",self.value," LIFE"))
+	particles:word(self.mid_x, self.mid_y, concat("+",self.value))
 
 	if not success then
 		--TODO
@@ -252,7 +252,7 @@ function Loot.Gun:on_collect(player)
 	particles:smoke(self.mid_x, self.mid_y, nil, COL_LIGHT_BROWN)
 	audio:play("item_collect")
 
-	particles:word(self.mid_x, self.mid_y, string.upper(self.gun.display_name or self.gun.name))
+	particles:word(self.mid_x, self.mid_y, string.upper(self.gun.display_name or self.gun.name), COL_LIGHT_YELLOW)
 
 	self:remove()
 end

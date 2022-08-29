@@ -21,7 +21,11 @@ local sfxnames = {
 	"gunshot1", "gunshot1.wav",
 	"gunshot_machinegun", "gunshot_machinegun.wav",
 	"gunshot_shotgun", "gunshot_shotgun.wav",
-
+	"gunshot_ring_1", "gunshot_ring_1.wav",
+	"gunshot_ring_2", "gunshot_ring_2.wav",
+	"gunshot_ring_3", "gunshot_ring_3.wav",
+	"pop_ring", "pop_ring.wav",
+	
 	"hurt",  "hurt.wav",
 	"land",  "land.wav",
 	"item_collect", "item_collect.wav",
@@ -111,9 +115,18 @@ local sfxnames = {
 	"enemy_damage", "enemy_damage.wav",
 	"enemy_death_1", "enemy_death_1.wav",
 	"enemy_death_2", "enemy_death_2.wav",
+	"enemy_stomp_2", "enemy_stomp_2.wav",
+	"enemy_stomp_3", "enemy_stomp_3.wav",
 	
 	"snail_shell_crack", "snail_shell_crack.wav",
 	"triple_pop", "triple_pop.wav",
+
+	"crush_bug_1", "crush_bug_1.wav",
+	"crush_bug_2", "crush_bug_2.wav",
+	"crush_bug_3", "crush_bug_3.wav",
+	"crush_bug_4", "crush_bug_4.wav",
+
+	"jump_short", "jump_short.wav"
 }
 
 for i=1, #sfxnames, 2 do    sounds[sfxnames[i]] = new_source(sfxnames[i+1], "static")    end

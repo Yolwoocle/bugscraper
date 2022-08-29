@@ -19,7 +19,8 @@ function Player:init(n, x, y, spr, controls)
 	self.is_player = true
 	self.is_being = true
 	self.name = concat("player", n)
-	
+	self.player_type = "ant"
+
 	-- Life
 	self.max_life = 4
 	self.life = self.max_life
@@ -135,12 +136,17 @@ function Player:init(n, x, y, spr, controls)
 	-- UI
 	self.ui_x = self.x
 	self.ui_y = self.y
+	self.ui_col_gradient = 0
 
 	-- SFX
 	self.sfx_wall_slide = sounds.sliding_wall_metal[1]
 	self.sfx_wall_slide:play()
 	self.sfx_wall_slide_volume = 0
 	self.sfx_wall_slide_max_volume = 0.1
+
+	-- Combo
+	self.combo = 0
+	self.max_combo = 0
 
 	-- Debug 
 	self.dt = 1
@@ -153,16 +159,19 @@ function Player:update(dt)
 		return
 	end
 
-	if self:button_pressed("up") then
-		-- game.floor = 16
-		for i,e in pairs(game.actors) do
-			if e.is_enemy then
-				e:kill()
-			end
-		end
-	end
+	-- if self:button_pressed("up") then
+	-- 	-- game.floor = 16
+	-- 	for i,e in pairs(game.actors) do
+	-- 		if e.is_enemy then
+	-- 			e:kill()
+	-- 		end
+	-- 	end
+	-- end
+	-- if self:button_pressed("select") then
+	-- 	game.floor = game.floor + 1
+	-- end
 	if self:button_pressed("select") then
-		game.floor = game.floor + 1
+		self:flip_player_type()
 	end
 
 	-- Movement
@@ -188,6 +197,19 @@ function Player:update(dt)
 		self.frames_since_land = self.frames_since_land + 1
 	else
 		self.frames_since_land = 0
+	end
+
+	-- Stop combo if landed for more than a few frames
+	if self.frames_since_land > 3 then
+		if self.combo > self.max_combo then
+			game.max_combo = self.combo
+			self.max_combo = self.combo
+		end
+		
+		if self.combo >= 4 then
+			particles:word(self.mid_x, self.mid_y, concat("COMBO ", self.combo, "!"), COL_LIGHT_BLUE)
+		end
+		self.combo = 0
 	end
 
 	-- Gun switchgun
@@ -259,6 +281,14 @@ function Player:draw_hud()
 		col_shad = COL_LIGHT_GRAY
 		val, maxval = self.gun.max_reload_timer - self.gun.reload_timer, self.gun.max_reload_timer
 	end
+
+	-- /!\ Doing calculations like these in draw is a BAD idea! Too bad!
+	self.ui_col_gradient = self.ui_col_gradient * 0.9
+	if self.ui_col_gradient >= 0 then
+		col_fill = lerp_color(col_fill, COL_WHITE, self.ui_col_gradient)
+		col_shad = lerp_color(col_fill, COL_LIGHT_GRAY, self.ui_col_gradient)
+	end
+
 	ui:draw_progress_bar(x+ammo_w+2, y, bar_w-ammo_w-2, ammo_w, val, maxval, 
 						col_fill, COL_BLACK_BLUE, col_shad, text)
 
@@ -667,6 +697,15 @@ function Player:on_stomp(enemy)
 	end
 	self.vy = spd
 	self:set_invincibility(0.2)
+
+	self.combo = self.combo + 1
+	if self.combo >= 4 then
+		particles:word(self.mid_x, self.mid_y, tostring(self.combo), COL_LIGHT_BLUE)
+	end
+	
+	self.ui_col_gradient = 1
+	self.gun.ammo = self.gun.ammo + floor(self.gun.max_ammo*.25)
+	self.gun.reload_timer = 0
 end
 
 function Player:do_damage(n, source)
@@ -676,6 +715,7 @@ function Player:do_damage(n, source)
 	game:frameskip(8)
 	audio:play("hurt")
 	game:screenshake(5)
+	particles:word(self.mid_x, self.mid_y, concat("-",n))
 	-- self:do_knockback(source.knockback, source)--, 0, source.h/2)
 	--source:do_knockback(source.knockback*0.75, self)
 	if self.is_knockbackable then
@@ -819,6 +859,20 @@ function Player:do_particles(dt)
 		if self.walk_timer % 10 == 0 then
 			particles:dust(self.mid_x, flr_y)
 		end
+	end
+end
+
+function Player:flip_player_type()
+	if self.player_type == "ant" then
+		self.player_type = "caterpillar"
+		self.spr_idle = images.caterpillar_1
+		self.spr_jump = images.caterpillar_2
+		self.spr_dead = images.caterpillar_dead
+	else
+		self.player_type = "ant"
+		self.spr_idle = images.ant1
+		self.spr_jump = images.ant2
+		self.spr_dead = images.ant_dead
 	end
 end
 

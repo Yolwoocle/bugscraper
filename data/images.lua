@@ -20,7 +20,6 @@ end
 local img_names = {
 	"empty",
 	
-	"magnet",
 	"grass",
 	"dirt",
 	"snowball",
@@ -34,7 +33,9 @@ local img_names = {
 	"ant2",
 	"ant_dead",
 	"bee",
-	"caterpillar",
+	"caterpillar_1",
+	"caterpillar_2",
+	"caterpillar_dead",
 	"duck",
 	"fly1",
 	"fly2",
@@ -46,9 +47,15 @@ local img_names = {
 	"slug2",
 	"snail_open",
 	"snail_shell",
+	"spider1",
+	"spider2",
 	"spiked_fly",
 	
 	"bullet",
+	"bullet_pea",
+	"bullet_red",
+	"bullet_blue",
+	"bullet_ring",
 
 	"gun_machinegun",
 	"gun_triple",
@@ -56,6 +63,7 @@ local img_names = {
 	"gun_shotgun",
 	"gun_minigun",
 	"gun_mushroom_cannon",
+	"gun_ring",
 
 	"metal",
 	"chain",

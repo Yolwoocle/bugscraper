@@ -91,12 +91,16 @@ end
 
 local TextParticle = Particle:inherit()
 
-function TextParticle:init(x,y,str,spawn_delay)
+function TextParticle:init(x,y,str,spawn_delay,col)
 	self:init_particle(x,y,s,r, vx,vy,vs,vr, life, g, is_solid)
 	self.str = str
 
+	self.col_in = col
 	self.vy = -5
+	self.vy2 = 0
 	self.spawn_delay = spawn_delay
+	
+	self.is_front = true
 end
 function TextParticle:update(dt)
 	if self.spawn_delay > 0 then
@@ -106,6 +110,10 @@ function TextParticle:update(dt)
 	self.vy = self.vy * 0.9
 	self.y = self.y + self.vy
 	
+	if abs(self.vy) <= 0.005 then
+		self.vy2 = self.vy2 - dt*2
+		self.y = self.y + self.vy2
+	end
 	if abs(self.vy) <= 0.001 then
 		self.is_removed = true
 	end
@@ -114,7 +122,10 @@ function TextParticle:draw()
 	if self.spawn_delay > 0 then
 		return
 	end
-	print_outline(COL_WHITE, COL_BLACK_BLUE, self.str, self.x, self.y)
+
+	local col = COL_WHITE
+	if self.col_in then col = self.col_in end
+	print_outline(col, COL_BLACK_BLUE, self.str, self.x, self.y)
 end
 
 
@@ -218,7 +229,16 @@ end
 
 function ParticleSystem:draw()
 	for i,p in pairs(self.particles) do
-		p:draw()
+		if not p.is_front then
+			p:draw()
+		end
+	end
+end
+function ParticleSystem:draw_front()
+	for i,p in pairs(self.particles) do
+		if p.is_front then
+			p:draw()
+		end
 	end
 end
 
@@ -376,15 +396,15 @@ function ParticleSystem:dead_player(x, y, spr, dir_x)
 	self:add_particle(DeadPlayerParticle:new(x, y, spr, dir_x))
 end
 
-function ParticleSystem:letter(x, y, str, spawn_delay)
-	self:add_particle(TextParticle:new(x, y, str, spawn_delay))
+function ParticleSystem:letter(x, y, str, spawn_delay, col)
+	self:add_particle(TextParticle:new(x, y, str, spawn_delay, col))
 end
 
-function ParticleSystem:word(x, y, str)
+function ParticleSystem:word(x, y, str, col)
 	local x = x - get_text_width(str)/2
 	for i=1, #str do
 		local letter = utf8.sub(str, i,i)
-		particles:letter(x, y, letter, i*0.05)
+		particles:letter(x, y, letter, i*0.05, col)
 		x = x + get_text_width(letter)
 	end
 end
