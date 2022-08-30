@@ -496,7 +496,7 @@ function Enemies:init()
 		self.name = "button"
 		self.follow_player = false
 
-		self.max_life = 20
+		self.max_life = 40
 		self.life = self.max_life
 		
 		self.knockback = 0
@@ -562,7 +562,7 @@ function Enemies:init()
 		self.name = "button_glass"
 		self.follow_player = false
 
-		self.max_life = 50
+		self.max_life = 80
 		self.life = self.max_life
 		self.activ_thresh = 40
 		self.break_range = self.life - self.activ_thresh

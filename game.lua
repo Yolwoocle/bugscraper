@@ -1083,6 +1083,7 @@ function Game:draw_rubble(x,y)
 end
 
 function Game:on_red_button_pressed()
+	self:save_stats()
 	self.is_reversing_elevator = true
 end
 

@@ -284,7 +284,7 @@ function Player:draw_hud()
 
 	-- /!\ Doing calculations like these in draw is a BAD idea! Too bad!
 	self.ui_col_gradient = self.ui_col_gradient * 0.9
-	if self.ui_col_gradient >= 0 then
+	if self.ui_col_gradient >= 0.02 then
 		col_fill = lerp_color(col_fill, COL_WHITE, self.ui_col_gradient)
 		col_shad = lerp_color(col_fill, COL_LIGHT_GRAY, self.ui_col_gradient)
 	end

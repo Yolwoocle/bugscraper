@@ -535,8 +535,8 @@ function MenuManager:init(game)
 		{ "" },
 		{ "" },
 	}
-	if OPERATING_SYSTEM == "Web" or true then
-		table.remove(items, 8)
+	if OPERATING_SYSTEM == "Web" then
+		table.remove(items, 9)
 	end
 	self.menus.game_over = Menu:new(game, items, { 0, 0, 0, 0.85 })
 
@@ -559,7 +559,7 @@ function MenuManager:init(game)
 		{ ""},
 		{ "<<< Playtesting >>>"},
 		{ "hades140701", function() end },
-		{ "SmellyFishstiks", func_url("https://www.lexaloffle.com/bbs/?uid=42184") },
+		-- { "SmellyFishstiks", func_url("https://www.lexaloffle.com/bbs/?uid=42184") },
 		-- { "rbts", function() end },
 		-- { "Immow", function() end },
 		-- { "Kingtut 101", function() end },
@@ -641,7 +641,7 @@ function MenuManager:init(game)
 		{ "" },
 	}
 	if OPERATING_SYSTEM == "Web" or true then
-		table.remove(items, 6)
+		table.remove(items, 8)
 	end
 	self.menus.win = Menu:new(game, items, { 0, 0, 0, 0.95 })
 
