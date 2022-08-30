@@ -170,9 +170,6 @@ function Player:update(dt)
 	-- if self:button_pressed("select") then
 	-- 	game.floor = game.floor + 1
 	-- end
-	if self:button_pressed("select") then
-		self:flip_player_type()
-	end
 
 	-- Movement
 	self:move(dt)
@@ -229,7 +226,12 @@ function Player:update(dt)
 	self.ui_x = lerp(self.ui_x, game.cam_x + floor(self.mid_x), 0.2)
 	self.ui_y = lerp(self.ui_y, game.cam_y + floor(self.y), 0.2)
 
+	
 	--Visuals
+	if self:button_pressed("select") then
+		self:flip_player_type()
+		self.spr = self.spr_idle
+	end
 	self:update_visuals()
 end
 
