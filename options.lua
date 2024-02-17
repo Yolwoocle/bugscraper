@@ -16,7 +16,7 @@ function OptionsManager:init(game)
 		is_vsync = true,
 		is_fullscreen = true,
 		pixel_scale = "auto",
-		timer_on = false,
+		timer_on = true,
 		mouse_visible = false,
 		pause_on_unfocus = ternary(love.system.getOS()=="Web", false, true),
 		screenshake_on = true,
@@ -50,7 +50,8 @@ function OptionsManager:init(game)
 
 	self.control_schemes = copy_table(self.default_control_schemes)
 
-	self:load_options()
+	-- ARCADE: custom options should not be loaded, so options.txt is not read.
+	-- self:load_options()
 	self:load_controls()
 end
 

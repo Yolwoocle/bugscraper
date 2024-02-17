@@ -545,15 +545,33 @@ function Game:draw_game()
 		local logo_x = floor((CANVAS_WIDTH - images.logo_noshad:getWidth())/2)
 		
 		local col = self.logo_cols[i]
+		local is_front_layer = col == nil
+
 		local spr = images.logo_shad
-		if col == nil then
+		local arcade_outline_col = col
+		if is_front_layer then
 			col = COL_WHITE
 			spr = images.logo_noshad
+			arcade_outline_col = COL_BLACK_BLUE
 		end
 		gfx.setColor(col)
 		gfx.draw(spr, logo_x + ox, self.logo_y + oy)
+		-- ARCADE:
+		-- col_in, col_out, text, x, y, thick, rot, sx, sy,
+		local arcade_text = "ARCADE EDITION" 
+		local arcade_edition_ox = 13
+		local arcade_edition_oy = 28
+		local arcade_x = logo_x + ox + arcade_edition_ox
+		local arcade_y = self.logo_y + oy + arcade_edition_oy
+		if is_front_layer then
+			print_outline(COL_WHITE, COL_WHITE, arcade_text, arcade_x, arcade_y, 3)
+			print_outline(col, arcade_outline_col, arcade_text, arcade_x, arcade_y)
+		end
 	end
-	gfx.draw(images.controls, floor((CANVAS_WIDTH - images.controls:getWidth())/2), floor(self.logo_y) + images.logo:getHeight()+6)
+	
+	-- Draw controls
+	local tutorial_oy = 15
+	gfx.draw(images.controls, floor((CANVAS_WIDTH - images.controls:getWidth())/2), floor(self.logo_y) + images.logo:getHeight()+tutorial_oy)
 	local ox, oy = cos(self.t*3)*4, sin(self.t*3)*4
 	gfx.draw(images.controls_jetpack, ox + floor((CANVAS_WIDTH - images.controls_jetpack:getWidth())/2), oy + floor(self.jetpack_tutorial_y))
 

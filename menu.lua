@@ -330,8 +330,11 @@ end
 
 function func_url(url)
 	return function()
-		love.system.openURL(url)
+		print("Blocked attempt to open URL: arcade version.")
 	end
+	-- return function()
+	-- 	love.system.openURL(url)
+	-- end
 end
 
 -----------
@@ -365,10 +368,13 @@ function MenuManager:init(game)
 		{ "" },
 		{ "RESUME", function() game.menu:unpause() end },
 		{ "RETRY", function() game:new_game() end },
-		{ "OPTIONS", func_set_menu('options') },
+		-- >> ARCADE: removed most options to prevent players from 
+		-- messing with them.
+		-- { "OPTIONS", func_set_menu('options') },
 		{ "CREDITS", func_set_menu('credits1') },
 		-- { "BACK TO TITLE SCREEN", func_set_menu('title') },
-		{ "QUIT", quit_game },
+		-- { "QUIT", quit_game },
+
 		{ "" },
 		{ "" },
 	}, { 0, 0, 0, 0.85 })
@@ -381,6 +387,7 @@ function MenuManager:init(game)
 		{ "<<<<<<<<< OPTIONS >>>>>>>>>" },
 		{ "< BACK", func_set_menu("pause")},--function() game.menu:back() end },
 		{ "" },
+		
 		-- { "CONTROLS...", func_set_menu("controls")},
 		-- { ""},
 		{ "<<< Audio >>>" },
@@ -430,9 +437,9 @@ function MenuManager:init(game)
 		end},
 		{""},
 
-		-- {"MUSIC: [ON/OFF]", function(self)
-		-- 	game:toggle_sound()
-		-- end},
+		{"MUSIC: [ON/OFF]", function(self)
+			game:toggle_sound()
+		end},
 		{ "<<< Visuals >>>"},
 		{ "FULLSCREEN", function(self)
 			options:toggle_fullscreen()
@@ -530,7 +537,7 @@ function MenuManager:init(game)
 		{ StatsMenuItem, "Max combo", function(self) return concat(game.stats.max_combo) end },
 		{ "" },
 		{ "RETRY", function() game:new_game() end },
-		{ "QUIT", quit_game },
+		-- { "QUIT", quit_game },
 		-- { "BACK TO TITLE SCREEN", func_set_menu("title") },
 		{ "" },
 		{ "" },
@@ -637,12 +644,12 @@ function MenuManager:init(game)
 		{ ""},
 		{ "NEW GAME", function() game:new_game() end },
 		-- { "CREDITS", func_set_menu('credits1') },
-		{ "QUIT", quit_game },
+		-- { "QUIT", quit_game },
 		{ "" },
 	}
-	if OPERATING_SYSTEM == "Web" or true then
-		table.remove(items, 8)
-	end
+	-- if OPERATING_SYSTEM == "Web" or true then
+	-- 	table.remove(items, 8)
+	-- end
 	self.menus.win = Menu:new(game, items, { 0, 0, 0, 0.95 })
 
 	self.cur_menu = nil
