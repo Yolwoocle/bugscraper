@@ -166,3 +166,20 @@ function quit_game()
 	if options then   options:on_quit()   end
 	love.event.quit()
 end
+
+function write_stats()
+	local file = love.filesystem.newFile("stats.txt")
+	file:open("a")
+
+	file:write("kills "..game.stats.kills.."\n")
+	file:write("systime "..os.date("%d/%m_%H:%M:%S").."\n")
+	file:write("time "..game.stats.time.."\n")
+	file:write("floor "..game.stats.floor.."\n")
+	file:write("max_combo "..game.stats.max_combo.."\n")
+	file:write("***")
+end
+
+function quit_and_write_stats()
+	write_stats()
+	quit_game()
+end

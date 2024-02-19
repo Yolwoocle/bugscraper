@@ -361,21 +361,19 @@ function MenuManager:init(game)
 	
 	self.menus.pause = Menu:new(game, {
 		{ "<<<<<<<<< PAUSED >>>>>>>>>" },
-		-- {"********** PAUSED **********"},
 		{ "" },
 		{ "RESUME", function() game.menu:unpause() end },
 		{ "RETRY", function() game:new_game() end },
-		{ "OPTIONS", func_set_menu('options') },
+		-- { "OPTIONS", func_set_menu('options') },
 		{ "CREDITS", func_set_menu('credits1') },
-		-- { "BACK TO TITLE SCREEN", func_set_menu('title') },
-		{ "QUIT", quit_game },
+		{ "QUIT", quit_and_write_stats },
 		{ "" },
-		{ "" },
+		{ "Version Indie Game Lyon" },
 	}, { 0, 0, 0, 0.85 })
-	if OPERATING_SYSTEM == "Web" then
-		-- Disable quitting on web
-		self.menus.pause.items[7].is_selectable = false
-	end
+	-- if OPERATING_SYSTEM == "Web" then
+	-- 	-- Disable quitting on web
+	-- 	self.menus.pause.items[7].is_selectable = false
+	-- end
 
 	self.menus.options = Menu:new(game, {
 		{ "<<<<<<<<< OPTIONS >>>>>>>>>" },
@@ -529,15 +527,15 @@ function MenuManager:init(game)
 		{ StatsMenuItem, "Floor", function(self) return concat(game.stats.floor, " / 16") end },
 		{ StatsMenuItem, "Max combo", function(self) return concat(game.stats.max_combo) end },
 		{ "" },
-		{ "RETRY", function() game:new_game() end },
-		{ "QUIT", quit_game },
+		-- { "RETRY", function() game:new_game() end },
+		{ "QUIT", quit_and_write_stats },
 		-- { "BACK TO TITLE SCREEN", func_set_menu("title") },
 		{ "" },
 		{ "" },
 	}
-	if OPERATING_SYSTEM == "Web" then
-		table.remove(items, 9)
-	end
+	-- if OPERATING_SYSTEM == "Web" then
+	-- 	table.remove(items, 9)
+	-- end
 	self.menus.game_over = Menu:new(game, items, { 0, 0, 0, 0.85 })
 
 	self.menus.credits1 = Menu:new(game, {
@@ -627,7 +625,7 @@ function MenuManager:init(game)
 
 	local items = {
 		{ "<<<<<<<<< CONGRATULATIONS! >>>>>>>>>" },
-		-- {"********** PAUSED **********"},
+		{ "Psst! Allez demander votre récompense au dev ;)" },
 		{ "" },
 		{ StatsMenuItem, "Kills", function(self) return game.stats.kills end },
 		{ StatsMenuItem, "Time",  function(self)
@@ -635,14 +633,14 @@ function MenuManager:init(game)
 		end },
 		{ StatsMenuItem, "Floor", function(self) return game.stats.floor end },
 		{ ""},
-		{ "NEW GAME", function() game:new_game() end },
+		-- { "NEW GAME", function() game:new_game() end },
 		-- { "CREDITS", func_set_menu('credits1') },
-		{ "QUIT", quit_game },
+		{ "QUIT", quit_and_write_stats },
 		{ "" },
 	}
-	if OPERATING_SYSTEM == "Web" or true then
-		table.remove(items, 8)
-	end
+	-- if OPERATING_SYSTEM == "Web" or true then
+	-- 	table.remove(items, 8)
+	-- end
 	self.menus.win = Menu:new(game, items, { 0, 0, 0, 0.95 })
 
 	self.cur_menu = nil
