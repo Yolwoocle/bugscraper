@@ -176,7 +176,7 @@ function write_stats()
 	file:write("time "..game.stats.time.."\n")
 	file:write("floor "..game.stats.floor.."\n")
 	file:write("max_combo "..game.stats.max_combo.."\n")
-	file:write("***")
+	file:write("***\n")
 end
 
 function quit_and_write_stats()
