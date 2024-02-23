@@ -52,11 +52,7 @@ function Actor:init_actor(x, y, w, h, spr, args)
 	-- Visuals
 	self.draw_shadow = true
 	if spr then
-		self.spr = spr
-		self.spr_w = self.spr:getWidth()
-		self.spr_h = self.spr:getHeight()
-		self.spr_ox = floor((self.spr_w - self.w) / 2)
-		self.spr_oy = self.spr_h - self.h 
+		self:set_sprite(spr)
 	end
 
 	self.spr_x = 0
@@ -72,6 +68,14 @@ end
 
 function Actor:update()
 	error("update not implemented")
+end
+
+function Actor:set_sprite(spr)
+	self.spr = spr
+	self.spr_w = self.spr:getWidth()
+	self.spr_h = self.spr:getHeight()
+	self.spr_ox = floor((self.spr_w - self.w) / 2)
+	self.spr_oy = self.spr_h - self.h
 end
 
 function Actor:add_collision()

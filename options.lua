@@ -23,35 +23,123 @@ function OptionsManager:init(game)
 		disable_background_noise = false,
 	}
 
+	local add_keyboard_ui_buttons = function(scheme)
+		scheme.ui_left = {"a", "left"}
+		scheme.ui_right = {"d", "right"}
+		scheme.ui_up = {"w", "up"}
+		scheme.ui_down = {"s", "down"}
+	end
+
+	-- igl scotch
+	self.solo_keyboard_scheme = {
+		left = {"a", "left"},
+		right = {"d", "right"},
+		up = {"w", "up"},
+		down = {"s", "down"},
+		jump = {"z", "c", "b"},
+		shoot = {"x", "v", "n"},
+		select = {"return"},
+		pause = {"escape", "p"},
+		get_icon = function(n, joystick) 
+			local imgs = {
+				[1] = images.controls_solo_keyboard,
+				[2] = images.controls_p2_keyboard,
+			}
+			return imgs[n] or images.controls_p2_keyboard
+		end
+	}
+	add_keyboard_ui_buttons(self.solo_keyboard_scheme)
+
+	self.solo_ui_keyboard_scheme = {
+		left = {},
+		right = {},
+		up = {},
+		down = {},
+		jump = {},
+		shoot = {},
+		select = {"return", "x", "v", "n", "z", "c", "b"},
+		pause = {"escape", "p"},
+		get_icon = function(n, joystick) return images.controls_solo_keyboard end
+	}
+	add_keyboard_ui_buttons(self.solo_ui_keyboard_scheme)
+
+	self.p1_split_keyboard_scheme = {
+		left = {"a"},
+		right = {"d"},
+		up = {"w"},
+		down = {"s"},
+		jump = {"f", "c"},
+		shoot = {"g", "x"},
+		select = {"return"},
+		pause = {"escape", "p"},
+		get_icon = function(n, joystick) return images.controls_p1_split end
+	}
+	add_keyboard_ui_buttons(self.p1_split_keyboard_scheme)
+
+	self.p2_split_keyboard_scheme = {
+		left = {"left"},
+		right = {"right"},
+		up = {"up"},
+		down = {"down"},
+		jump = {"l", ","},
+		shoot = {"k", "m"},
+		select = {"return"},
+		pause = {"escape", "p"},
+		get_icon = function(n, joystick) return images.controls_p2_split end
+	}
+	add_keyboard_ui_buttons(self.p2_split_keyboard_scheme)
+
+	self.controller_scheme = {
+		left = {"stick_xneg", "dpleft"},
+		right = {"stick_xpos", "dpright"},
+		up = {"stick_yneg", "dpup"},
+		down = {"stick_ypos", "dpdown"},
+		ui_left = {"stick_xneg", "dpleft"},
+		ui_right = {"stick_xpos", "dpright"},
+		ui_up = {"stick_yneg", "dpup"},
+		ui_down = {"stick_ypos", "dpdown"},
+
+		jump = {"a", "b"},
+		shoot = {"x", "y"},
+		select = {"a"},
+		pause = {"start", "back"},
+		get_icon = function(n, joystick)
+			if joystick == nil then return images.controls_p1_stadia end
+
+			local imgs = {
+				[1] = {
+					P = images.controls_p1_ps,
+					G = images.controls_p1_stadia,
+				},
+				[2] = {
+					P = images.controls_p2_ps,
+					G = images.controls_p2_stadia,
+				},
+			}
+			local name = joystick:getName()
+			return imgs[n][name:sub(1, 1)] or images.controls_p1_stadia
+		end
+	}
+
 	self.default_control_schemes = {
+		["solo"] = {
+			keyboard = self.solo_keyboard_scheme,
+			controller = self.controller_scheme
+		},
 		[1] = {
-			type = "keyboard",
-			left = {"a", "left"},
-			right = {"d", "right"},
-			up = {"w", "up"},
-			down = {"s", "down"},
-			jump = {"z", "c", "b"},
-			shoot = {"x", "v", "n"},
-			select = {"return"},
-			pause = {"escape", "p"},
+			keyboard = self.p1_split_keyboard_scheme,
+			controller = self.controller_scheme
 		},
 		[2] = {
-			type = "keyboard",
-			left = {"left"},
-			right = {"right"},
-			up = {"up"},
-			down = {"down"},
-			jump = {"l", ","},
-			shoot = {"k", "m"},
-			select = {"return"},
-			pause = {"escape", "p"},
+			keyboard = self.solo_keyboard_scheme,
+			controller = self.controller_scheme
 		}
 	}
 
 	self.control_schemes = copy_table(self.default_control_schemes)
 
 	self:load_options()
-	self:load_controls()
+	-- self:load_controls()
 end
 
 function OptionsManager:load_options()
@@ -95,54 +183,63 @@ function OptionsManager:load_options()
 	end
 end
 
+function OptionsManager:load_controls_file(filename, current_controls)
+	-- Check if file exists
+	local file_exists = love.filesystem.getInfo(filename)
+	if not file_exists then
+		print(filename, "does not exist, so creating it")
+		self:update_controls_file()
+		return
+	end
+
+	local file = love.filesystem.newFile(filename)
+	file:open("r")
+
+	-- Read file contents
+	local text, size = file:read()
+	if not text then    print(concat("Error reading ",filename,": ",size))    end
+	local lines = split_str(text, "\n") -- Split lines
+
+	local control_scheme = {}
+
+	for iline = 1, #lines do
+		local line = lines[iline]
+		local tab = split_str(line, ":")
+		local key, value = tab[1], tab[2]
+
+		if current_controls[key] ~= nil then
+			local typ = type(current_controls[key])
+			local val
+			if typ == "string" then   val = value    end
+			if typ == "number" then   val = tonumber(value)   end
+			if typ == "boolean" then   val = strtobool(value)   end
+			if typ == "table" then   val = split_str(value, ",")   end
+
+			if value ~= nil then
+				control_scheme[key] = val
+			else
+				print(concat("Invalid reading of button ",key," (nil found) in ",filename))
+			end
+		else
+			print(concat("Error: option '",key,"' does not exist"))
+		end
+	end
+
+	file:close()
+
+	return control_scheme
+end
+
 function OptionsManager:load_controls()
 	if love.filesystem.getInfo == nil then
 		print("/!\\ WARNING: love.filesystem.getInfo doesn't exist. Either running on web or LÖVE version is incorrect. Loading controls for players aborted, so custom keybinds will not be loaded.")
 		return
 	end
+
+	self.control_schemes["solo"] = self:load_controls_file("controls_solo.txt", self.control_schemes["solo"])
 	for n=1, #self.control_schemes do
 		local filename = concat("controls_p",n,".txt")
-
-		-- Check if file exists
-		local file_exists = love.filesystem.getInfo(filename)
-		if not file_exists then
-			print(filename, "does not exist, so creating it")
-			self:update_controls_file()
-			break
-		end
-
-		local file = love.filesystem.newFile(filename)
-		file:open("r")
-
-		-- Read file contents
-		local text, size = file:read()
-		if not text then    print(concat("Error reading ",filename,": ",size))    end
-		local lines = split_str(text, "\n") -- Split lines
-	
-		for iline = 1, #lines do
-			local line = lines[iline]
-			local tab = split_str(line, ":")
-			local key, value = tab[1], tab[2]
-	
-			if self.control_schemes[n][key] ~= nil then
-				local typ = type(self.control_schemes[n][key])
-				local val
-				if typ == "string" then   val = value    end
-				if typ == "number" then   val = tonumber(value)   end
-				if typ == "boolean" then   val = strtobool(value)   end
-				if typ == "table" then   val = split_str(value, ",")   end
-
-				if value ~= nil then
-					self.control_schemes[n][key] = val
-				else
-					print(concat("Invalid reading of p",n," button ",key," (nil found)"))
-				end
-			else
-				print(concat("Error: option '",key,"' does not exist"))
-			end
-		end
-
-		file:close()
+		self.control_schemes[n] = self:load_controls_file(filename, self.control_schemes[n])
 	end
 end
 

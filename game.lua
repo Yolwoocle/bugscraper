@@ -21,7 +21,7 @@ require "constants"
 
 local Game = Class:inherit()
 
-function Game:init()
+function Game:init(args)
 	print("TEST HELLO")
 	-- Global singletons
 	options = OptionsManager:new(self)
@@ -90,7 +90,8 @@ function Game:init()
 
 	options:set_volume(options:get("volume"))
 	
-	self:new_game()
+	self.default_number_of_players = tonumber(args[1]) or 1
+	self:new_game(self.default_number_of_players)
 	
 	-- Menu Manager
 	self.menu = MenuManager:new(self)
@@ -170,6 +171,7 @@ function Game:new_game(number_of_players)
 	self.has_switched_to_next_floor = false
 	self.is_reversing_elevator = false
 	self.is_exploding_elevator = false
+	self.is_respawn_round = false
 	self.downwards_elev_progress = 0
 	self.elev_x, self.elev_y = 0, 0
 	self.elev_vx, self.elev_vy = 0, 0
@@ -237,7 +239,9 @@ function Game:new_game(number_of_players)
 	self.actor_limit = 100
 	self.enemy_count = 0
 	self.actors = {}
+	self:assign_controls()
 	self:init_players()
+	self.alive_players = self.number_of_players
 
 	-- Start lever
 	local nx = CANVAS_WIDTH/2
@@ -553,9 +557,41 @@ function Game:draw_game()
 		gfx.setColor(col)
 		gfx.draw(spr, logo_x + ox, self.logo_y + oy)
 	end
-	gfx.draw(images.controls, floor((CANVAS_WIDTH - images.controls:getWidth())/2), floor(self.logo_y) + images.logo:getHeight()+6)
+
+	-- igl scotch
 	local ox, oy = cos(self.t*3)*4, sin(self.t*3)*4
-	gfx.draw(images.controls_jetpack, ox + floor((CANVAS_WIDTH - images.controls_jetpack:getWidth())/2), oy + floor(self.jetpack_tutorial_y))
+	if self.number_of_players == 1 then
+		local img_controls = images.controls_solo_keyboard
+		local img_controls_jetpack = images.controls_jetpack
+		local controller = love.joystick.getJoysticks()[1]
+		if controller and controller:getName():sub(1,1) == "G" then
+			img_controls = images.controls_solo_controller_stadia
+		elseif controller and controller:getName():sub(1,1) == "P" then
+			img_controls = images.controls_solo_controller_ps
+		end
+		
+		gfx.draw(img_controls, floor((CANVAS_WIDTH - img_controls:getWidth())/2), floor(self.logo_y) + images.logo:getHeight()+6)
+		gfx.draw(img_controls_jetpack, ox + floor((CANVAS_WIDTH - img_controls_jetpack:getWidth())/2), oy + floor(self.jetpack_tutorial_y))
+	else
+		local img_controls = images.controls_2p_text
+		local get_img = function(player)
+			local controllers = love.joystick.getJoysticks()
+			return player.controls[player.control_mode].get_icon(player.n, controllers[player.n])
+		end
+
+		local img_controls_p1 = get_img(self.players[1])
+		local img_controls_p2 = get_img(self.players[2])
+		local img_controls_jetpack = images.controls_jetpack
+		
+		local x, y = floor((CANVAS_WIDTH - img_controls:getWidth())/2), floor(self.logo_y) + images.logo:getHeight()+6
+		gfx.draw(img_controls, x, y)
+		gfx.draw(img_controls_p1, x-50, y)
+		gfx.draw(img_controls_p2, x+50, y)
+		gfx.draw(img_controls_jetpack, ox + floor((CANVAS_WIDTH - img_controls_jetpack:getWidth())/2), oy + floor(self.jetpack_tutorial_y))
+		gfx.draw(img_controls_jetpack, ox + floor((CANVAS_WIDTH - img_controls_jetpack:getWidth())/2), oy + floor(self.jetpack_tutorial_y))
+	end
+	
+	ox, oy = cos(self.t*3)*4, sin(self.t*3)*4
 
 	-- "CONGRATS" at the end
 	-- PINNNNNN
@@ -755,9 +791,19 @@ function Game:on_kill(actor)
 	
 	if actor.is_player then
 		-- Save stats
-		self.music_source:pause()
-		self:pause_repeating_sounds()
-		self:save_stats()
+		self.alive_players = self.alive_players - 1
+		if self.alive_players <= 0 then
+			self.music_source:pause()
+			self:pause_repeating_sounds()
+			self:save_stats()
+		end
+	end
+end
+
+function Game:on_player_death_anim_end()
+	if self.alive_players <= 0 then
+		self:on_game_over()
+		audio:play("game_over_2")
 	end
 end
 
@@ -788,21 +834,127 @@ end
 
 function Game:init_players()
 	-- TODO: move this to a general function (?)
-	local sprs = {
-		images.ant,
-		images.caterpillar
-	}
-
 	self.players = {}
 
 	-- Spawn at middle
+	for i=1, self.number_of_players do
+		self:new_player(i)
+	end
+end
+
+function Game:new_player(i, x, y)
 	local mx = floor((self.map.width / self.max_number_of_players))
 	local my = floor(self.map.height - 3)
 
-	for i=1, self.number_of_players do
-		local player = Player:new(i, mx*16 + i*16, my*16, sprs[i], options:get_controls(i))
-		self.players[i] = player
-		self:new_actor(player)
+	x = x or (mx*16 + i*16)
+	y = y or (my*16)
+
+	local sprs = {
+		{
+			spr_idle = images.ant1,
+			spr_jump = images.ant2,
+			spr_dead = images.ant_dead,
+		},
+		{
+			spr_idle = images.caterpillar_1,
+			spr_jump = images.caterpillar_2,
+			spr_dead = images.caterpillar_dead,
+		},
+	}
+	
+	-- igl scotch
+	local controls = ternary(self.number_of_players == 1, options:get_controls("solo"), options:get_controls(i))
+
+	local player = Player:new(i, x, y, sprs[i], self.default_controls[i].controls, self.default_controls[i].control_mode)
+
+	self.players[i] = player
+	self:new_actor(player)
+
+	return player
+end
+
+function Game:assign_solo_controls()
+	local joysticks = love.joystick.getJoysticks()
+
+	if #joysticks == 0 then
+		self.default_controls[1].control_mode = "keyboard"
+		self.default_controls[1].controls = {
+			keyboard = options.solo_keyboard_scheme,
+			controller = options.controller_scheme
+		}
+	else
+		self.default_controls[1].control_mode = "controller"
+		self.default_controls[1].controls = {
+			keyboard = options.solo_keyboard_scheme,
+			controller = options.controller_scheme
+		}
+	end
+end
+
+function Game:assign_controls()
+	self.default_controls = {{}, {}}
+	if self.number_of_players == 1 then
+		self:assign_solo_controls()
+		return
+	end
+
+	local joysticks = love.joystick.getJoysticks()
+
+	if #joysticks == 0 then
+		self.default_controls[1].control_mode = "keyboard"
+		self.default_controls[1].controls = {
+			keyboard = options.p1_split_keyboard_scheme,
+			controller = options.controller_scheme
+		}
+		
+		self.default_controls[2].control_mode = "keyboard"
+		self.default_controls[2].controls = {
+			keyboard = options.p2_split_keyboard_scheme,
+			controller = options.controller_scheme
+		}
+	
+	elseif #joysticks == 1 then
+		self.default_controls[1].control_mode = "controller"
+		self.default_controls[1].controls = {
+			keyboard = options.solo_ui_keyboard_scheme,
+			controller = options.controller_scheme
+		}
+		
+		self.default_controls[2].control_mode = "keyboard"
+		self.default_controls[2].controls = {
+			keyboard = options.solo_keyboard_scheme,
+			controller = options.controller_scheme
+		}
+	
+	elseif #joysticks == 2 then
+		self.default_controls[1].control_mode = "controller"
+		self.default_controls[1].controls = {
+			keyboard = options.solo_ui_keyboard_scheme,
+			controller = options.controller_scheme
+		}
+		
+		self.default_controls[2].control_mode = "controller"
+		self.default_controls[2].controls = {
+			keyboard = options.solo_ui_keyboard_scheme,
+			controller = options.controller_scheme
+		}
+
+	end
+end
+
+function Game:joystickadded(joystick)
+	self:assign_controls()
+	for i = 1, self.number_of_players do
+		self.players[i].controls = self.default_controls[i].controls
+		self.players[i].control_mode = self.default_controls[i].control_mode
+	end
+end
+
+function Game:joystickremoved(joystick)
+	self:assign_controls()
+	for i = 1, self.number_of_players do
+		self.players[i].controls = self.default_controls[i].controls
+		self.players[i].control_mode = self.default_controls[i].control_mode
 	end
 end
 
@@ -810,8 +962,9 @@ function Game:apply_screenshake(dt)
 	-- Screenshake
 	self.screenshake_q = max(0, self.screenshake_q - self.screenshake_speed * dt)
 	-- self.screenshake_q = lerp(self.screenshake_q, 0, 0.2)
-
-	local q = self.screenshake_q
+	
+	local screenshale_multiplier = 0.3 -- IGL
+	local q = self.screenshake_q * screenshale_multiplier
 	local ox, oy = random_neighbor(q), random_neighbor(q)
 	if abs(ox) >= 0.2 then   ox = sign(ox) * max(abs(ox), 1)   end -- Using an epsilon of 0.2 to avoid
 	if abs(oy) >= 0.2 then   oy = sign(oy) * max(abs(oy), 1)   end -- jittery effects on UI elmts
@@ -960,7 +1113,7 @@ function Game:update_door_anim(dt)
 	end
 
 	-- Switch to next floor if just opened doors
-	if self.floor_progress < 4.2 and not self.has_switched_to_next_floor then
+	if self.floor_progress < 4.2 and not self.has_switched_to_next_floor and not self.is_respawn_round then
 		self.floor = self.floor + 1
 		self.has_switched_to_next_floor = true
 		self:next_floor(dt, self.floor, self.floor-1)
@@ -977,9 +1130,6 @@ end
 
 function Game:new_wave_buffer_enemies()
 	-- Spawn a bunch of enemies
-	local bw = BLOCK_WIDTH
-	local wg = self.world_generator
-	
 	self.cur_wave_max_enemy = n
 	self.door_animation_enemy_buffer = {}
 
@@ -1021,6 +1171,7 @@ function Game:new_wave_buffer_enemies()
 	-- On wave 5, summon jetpack tutorial
 	-- self.move_jetpack_tutorial = (self.is_first_time and wave_n == 5)
 	self.move_jetpack_tutorial = (wave_n == 5)
+	
 	for i=1, n do
 		-- local x = love.math.random((wg.box_ax+1)*bw, (wg.box_bx-1)*bw)
 		-- local y = love.math.random((wg.box_ay+1)*bw, (wg.box_by-1)*bw)
@@ -1045,6 +1196,26 @@ function Game:new_wave_buffer_enemies()
 		if e.y+e.h > self.door_by then   e.y = self.door_by - e.h    end
 		collision:remove(e)
 		table.insert(self.door_animation_enemy_buffer, e)
+	end
+
+	if self.alive_players < self.number_of_players then
+		self:buffer_dead_players()
+	end
+end
+
+function Game:buffer_dead_players()
+	-- Revive dead players
+	for i = 1, self.number_of_players do
+		if self.players[i] == nil or self.players[i].is_dead then
+			local cocoon = Enemies.CocoonPlayer:new((self.door_bx + self.door_ax)/2, self.door_by - 24)
+			cocoon.x = floor(cocoon.x - cocoon.w/2)
+			cocoon.y = floor(cocoon.y - cocoon.h/2)
+
+			cocoon:set_player_n(i)
+
+			collision:remove(cocoon)
+			table.insert(self.door_animation_enemy_buffer, cocoon)
+		end
 	end
 end
 

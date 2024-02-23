@@ -36,6 +36,7 @@ local img_names = {
 	"caterpillar_1",
 	"caterpillar_2",
 	"caterpillar_dead",
+	"cocoon",
 	"duck",
 	"fly1",
 	"fly2",
@@ -99,8 +100,23 @@ local img_names = {
 
 	"dummy_target",
 
-	"controls",
 	"controls_jetpack",
+
+	"controls_solo_keyboard",
+	"controls_solo_controller_stadia",
+	"controls_solo_controller_ps",
+
+	"controls_2p_text",
+
+	"controls_p1_split",
+	"controls_p1_stadia",
+	"controls_p1_ps",
+	
+	"controls_p2_keyboard",
+	"controls_p2_split",
+	"controls_p2_stadia",
+	"controls_p2_ps",
+
 
 	"mushroom_ant1",
 	"mushroom_ant2",

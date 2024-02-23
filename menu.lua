@@ -155,11 +155,11 @@ function SliderMenuItem:update(dt)
 		self.text = self.label_text
 	end
 
-	if game:button_pressed("left") and self.is_selected then
+	if game:button_pressed("ui_left") and self.is_selected then
 		self:on_click(-1)
 		self:after_click(-1)
 	end
-	if game:button_pressed("right") and self.is_selected then
+	if game:button_pressed("ui_right") and self.is_selected then
 		self:on_click(1)
 		self:after_click(1)
 	end
@@ -363,8 +363,8 @@ function MenuManager:init(game)
 		{ "<<<<<<<<< PAUSED >>>>>>>>>" },
 		{ "" },
 		{ "RESUME", function() game.menu:unpause() end },
-		{ "RETRY", function() game:new_game() end },
-		-- { "OPTIONS", func_set_menu('options') },
+		{ "RETRY", function() game:new_game(game.number_of_players) end },
+		{ "OPTIONS", func_set_menu('options') },
 		{ "CREDITS", func_set_menu('credits1') },
 		{ "QUIT", quit_and_write_stats },
 		{ "" },
@@ -658,8 +658,8 @@ function MenuManager:update(dt)
 		self.cur_menu:update(dt)
 
 		-- Navigate up and down
-		if game:button_pressed("up") then self:incr_selection(-1) end
-		if game:button_pressed("down") then self:incr_selection(1) end
+		if game:button_pressed("ui_up") then self:incr_selection(-1) end
+		if game:button_pressed("ui_down") then self:incr_selection(1) end
 
 		-- Update current selection
 		self.sel_n = mod_plus_1(self.sel_n, #self.cur_menu.items)
