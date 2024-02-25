@@ -262,7 +262,7 @@ function Enemies:init()
 		self.name = "dummy_target"
 		self.follow_player = false
 
-		self.life = 7
+		self.life = 12
 		self.damage = 0
 		self.self_knockback_mult = 0.1
 

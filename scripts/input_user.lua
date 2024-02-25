@@ -3,12 +3,48 @@ local Class = require "scripts.class"
 
 local InputUser = Class:inherit()
 
+local AXIS_DEADZONE = 0.2
+
+local axis_functions = {
+    leftstickxpos = function(joystick) return joystick:getAxis(1) > AXIS_DEADZONE end,
+    leftstickxneg = function(joystick) return joystick:getAxis(1) < -AXIS_DEADZONE end,
+    leftstickypos = function(joystick) return joystick:getAxis(2) > AXIS_DEADZONE end,
+    leftstickyneg = function(joystick) return joystick:getAxis(2) < -AXIS_DEADZONE end,
+
+    rightstickxpos = function(joystick) return joystick:getAxis(3) > AXIS_DEADZONE end,
+    rightstickxneg = function(joystick) return joystick:getAxis(3) < -AXIS_DEADZONE end,
+    rightstickypos = function(joystick) return joystick:getAxis(4) > AXIS_DEADZONE end,
+    rightstickyneg = function(joystick) return joystick:getAxis(4) < -AXIS_DEADZONE end,
+
+    lefttrigger  = function(joystick) return joystick:getAxis(5) > -1 + AXIS_DEADZONE end,
+    righttrigger = function(joystick) return joystick:getAxis(6) > -1 + AXIS_DEADZONE end,
+}
+
 function InputUser:init(n, input_map)
     self.n = n
-    self.input_map = input_map
+    self.input_map = self:process_input_map(input_map)
+    print_table(self.input_map)
     self:init_last_input_state()
 
     self.joystick = nil
+end
+
+function InputUser:process_input_map(input_map)
+    local new_map = {}
+    for action, keys in pairs(input_map) do
+        new_map[action] = {}
+        for _, keycode in pairs(keys) do
+            if keycode ~= nil and #keycode > 2 then
+                local prefix = keycode:sub(1, 1)
+                local keyname = keycode:sub(3, -1)
+                table.insert(new_map[action], {
+                    type = prefix,
+                    key_name = keyname
+                })
+            end
+        end
+    end
+    return new_map
 end
 
 function InputUser:init_last_input_state()
@@ -16,6 +52,7 @@ function InputUser:init_last_input_state()
 	for action, _ in pairs(self.input_map) do
 		if action ~= "type" then
 			self.last_input_state[action] = false
+            
 		end
 	end
 end
@@ -40,18 +77,17 @@ function InputUser:action_pressed(action)
 	return not last and now
 end
 
-function InputUser:is_keycode_down(keycode)
-    if #keycode <= 2 then
-        return false
-    end
-    local prefix = keycode:sub(1, 1)
-    local keyname = keycode:sub(3, -1)
-    if prefix == "k" then
-        return love.keyboard.isScancodeDown(keyname)
-    elseif prefix == "c" then
-        if self.joystick then
-            return self.joystick:isGamepadDown(keyname)
+function InputUser:is_keycode_down(key)
+    if key.type == "k" then
+        return love.keyboard.isScancodeDown(key.key_name)
+
+    elseif key.type == "c" and self.joystick then
+        local axis_func = axis_functions[key.key_name]
+        if axis_func ~= nil then
+            return axis_func(self.joystick)
         end
+        return self.joystick:isGamepadDown(key.key_name)
+        
     end
     return false
 end

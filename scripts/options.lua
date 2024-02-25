@@ -25,12 +25,12 @@ function OptionsManager:init(game)
 
 	self.control_presets = {
 		[1] = {
-			left =  {"k_a", "k_left",  "c_dpleft"},
-			right = {"k_d", "k_right", "c_dpright"},
-			up =    {"k_w", "k_p",     "c_dpup"},
-			down =  {"k_s", "k_down",  "c_dpdown"},
+			left =  {"k_a", "k_left",     "c_dpleft",  "c_leftstickxneg", "c_rightstickxneg"},
+			right = {"k_d", "k_right",    "c_dpright", "c_leftstickxpos", "c_rightstickxpos"},
+			up =    {"k_w", "k_up",       "c_dpup",    "c_leftstickyneg", "c_rightstickyneg"},
+			down =  {"k_s", "k_down",     "c_dpdown",  "c_leftstickypos", "c_rightstickypos"},
 			jump =  {"k_z", "k_c", "k_b", "c_a", "c_b"},
-			shoot = {"k_x", "k_v", "k_n", "c_x", "c_y"},
+			shoot = {"k_x", "k_v", "k_n", "c_x", "c_y", "c_righttrigger"},
 			pause = {"k_escape", "k_p",   "c_start"},
 
 			ui_select = {"k_return", "k_z", "k_c", "k_b", "k_x", "k_v", "k_n", "c_a"},
@@ -40,17 +40,6 @@ function OptionsManager:init(game)
 			ui_up =     {"k_w", "k_up",    "c_dpup"},
 			ui_down =   {"k_s", "k_down",  "c_dpdown"},
 		},
-		[2] = {
-			type = "k_keyboard",
-			left = {"k_left"},
-			right = {"k_right"},
-			up = {"k_up"},
-			down = {"k_down"},
-			jump = {"k_l", ","},
-			shoot = {"k_k", "k_m"},
-			select = {"k_return"},
-			pause = {"k_escape", "k_p"},
-		}
 	}
 
 	self.control_schemes = copy_table(self.control_presets)
