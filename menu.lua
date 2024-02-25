@@ -155,11 +155,11 @@ function SliderMenuItem:update(dt)
 		self.text = self.label_text
 	end
 
-	if game:button_pressed("left") and self.is_selected then
+	if game:button_pressed("ui_left") and self.is_selected then
 		self:on_click(-1)
 		self:after_click(-1)
 	end
-	if game:button_pressed("right") and self.is_selected then
+	if game:button_pressed("ui_right") and self.is_selected then
 		self:on_click(1)
 		self:after_click(1)
 	end
@@ -363,8 +363,8 @@ function MenuManager:init(game)
 		{ "<<<<<<<<< PAUSED >>>>>>>>>" },
 		{ "" },
 		{ "RESUME", function() game.menu:unpause() end },
-		{ "RETRY", function() game:new_game() end },
-		-- { "OPTIONS", func_set_menu('options') },
+		{ "RETRY", function() game:new_game(game.number_of_players) end },
+		{ "OPTIONS", func_set_menu('options') },
 		{ "CREDITS", func_set_menu('credits1') },
 		{ "QUIT", quit_and_write_stats },
 		{ "" },
@@ -432,13 +432,13 @@ function MenuManager:init(game)
 		-- 	game:toggle_sound()
 		-- end},
 		{ "<<< Visuals >>>"},
-		{ "FULLSCREEN", function(self)
-			options:toggle_fullscreen()
-		end,
-		function(self)
-			self.value = options:get("is_fullscreen")
-			self.value_text = options:get("is_fullscreen") and "ON" or "OFF"
-		end},
+		-- { "FULLSCREEN", function(self)
+		-- 	options:toggle_fullscreen()
+		-- end,
+		-- function(self)
+		-- 	self.value = options:get("is_fullscreen")
+		-- 	self.value_text = options:get("is_fullscreen") and "ON" or "OFF"
+		-- end},
 
 		{ SliderMenuItem, "PIXEL SCALE", function(self, diff)
 			diff = diff or 1
@@ -481,14 +481,14 @@ function MenuManager:init(game)
 			self.value_text = options:get("mouse_visible") and "ON" or "OFF"
 		end},
 		
-		{ "PAUSE ON LOST FOCUS", function(self)
-			options:toggle_pause_on_unfocus()
-			love.mouse.setVisible(options:get("pause_on_unfocus"))
-		end,
-		function(self)
-			self.value = options:get("pause_on_unfocus")
-			self.value_text = options:get("pause_on_unfocus") and "ON" or "OFF"
-		end},
+		-- { "PAUSE ON LOST FOCUS", function(self)
+		-- 	options:toggle_pause_on_unfocus()
+		-- 	love.mouse.setVisible(options:get("pause_on_unfocus"))
+		-- end,
+		-- function(self)
+		-- 	self.value = options:get("pause_on_unfocus")
+		-- 	self.value_text = options:get("pause_on_unfocus") and "ON" or "OFF"
+		-- end},
 		
 		{ "SCREENSHAKE", function(self)
 			options:toggle_screenshake()
@@ -498,6 +498,15 @@ function MenuManager:init(game)
 			self.value = options:get("screenshake_on")
 			self.value_text = options:get("screenshake_on") and "ON" or "OFF"
 		end},
+		
+		{ "CONTROLLER VIBRATION", function(self)
+			options:toggle_vibrations()
+		end,
+		function(self)
+			self.value = options:get("vibrations_on")
+			self.value_text = options:get("vibrations_on") and "ON" or "OFF"
+		end},
+
 	}, { 0, 0, 0, 0.85 })
 
 	self.menus.controls = Menu:new(game, {
@@ -658,8 +667,8 @@ function MenuManager:update(dt)
 		self.cur_menu:update(dt)
 
 		-- Navigate up and down
-		if game:button_pressed("up") then self:incr_selection(-1) end
-		if game:button_pressed("down") then self:incr_selection(1) end
+		if game:button_pressed("ui_up") then self:incr_selection(-1) end
+		if game:button_pressed("ui_down") then self:incr_selection(1) end
 
 		-- Update current selection
 		self.sel_n = mod_plus_1(self.sel_n, #self.cur_menu.items)

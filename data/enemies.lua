@@ -288,6 +288,53 @@ function Enemies:init()
 
 	------- 
 
+	self.CocoonPlayer = Enemy:inherit()
+	
+	function self.CocoonPlayer:init(x, y)
+		self:init_enemy(x,y, images.cocoon, 15, 26)
+		self.name = "cocoon_player"
+		self.follow_player = false
+
+		self.life = 1
+		self.damage = 0
+		self.self_knockback_mult = 0.1
+
+		self.knockback = 0
+		
+		self.is_pushable = false
+		self.is_knockbackable = false
+		self.loot = {}
+
+		self.sound_damage = {"cloth1", "cloth2", "cloth3"}
+		self.sound_death = "snail_shell_crack"
+		self.sound_stomp = "snail_shell_crack"
+
+		self.player_n = -1
+	end
+	
+	function self.CocoonPlayer:set_player_n(n)
+		self.player_n = n
+	
+		-- local sprs = {
+		-- 	images.ant1,
+		-- 	images.caterpillar_1
+		-- }
+
+		-- self:set_sprite(sprs[n] or images.ant1)
+	end
+
+	
+	function self.CocoonPlayer:on_death()
+		particles:image(self.mid_x, self.mid_y, 30, images.snail_shell_fragment, 13, nil, 0, 10)
+		local p = game:new_player(self.player_n, self.x, self.y)
+		
+		game.alive_players = game.alive_players + 1
+		
+		p:set_invincibility(3.0)
+	end
+
+	------- 
+
 	self.MushroomAnt = Enemy:inherit()
 
 	-- This ant will walk around corners, but this code will not work for "ledges".

@@ -83,12 +83,15 @@ end
 
 function Enemy:get_nearest_player()
 	local shortest_dist = math.huge
-	local nearest_player 
-	for _, ply in pairs(game.players) do
-		local dist = distsqr(self.x, self.y, ply.x, ply.y)
-		if dist < shortest_dist then
-			shortest_dist = dist
-			nearest_player = ply
+	local nearest_player = nil
+	for i = 1, game.number_of_players do
+		local ply = game.players[i]
+		if ply and not ply.is_dead then
+			local dist = distsqr(self.x, self.y, ply.x, ply.y)
+			if dist < shortest_dist then
+				shortest_dist = dist
+				nearest_player = ply
+			end
 		end
 	end
 	return nearest_player
@@ -102,8 +105,8 @@ function Enemy:follow_nearest_player(dt)
 	if not nearest_player then    return    end
 	
 	self.speed_x = self.speed_x or self.speed
-	if self.is_flying then    self.speed_y = self.speed_y or self.speed 
-	else                      self.speed_y = self.speed_y or 0    end 
+	if self.is_flying then    self.speed_y = self.speed_y or self.speed
+	else                      self.speed_y = self.speed_y or 0    end
 
 	self.vx = self.vx + sign0(nearest_player.x - self.x) * self.speed_x
 	self.vy = self.vy + sign0(nearest_player.y - self.y) * self.speed_y

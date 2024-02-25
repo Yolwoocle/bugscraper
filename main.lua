@@ -4,10 +4,10 @@ require "util"
 
 game = nil
 
-function love.load(arg)
+function love.load(args)
 	frame = 0
 
-	game = Game:new()
+	game = Game:new(args)
 end
 
 t = 0
@@ -108,6 +108,14 @@ function love.mousepressed(x, y, button, istouch, presses)
 	if game.mousepressed then   game:mousepressed(x, y, button)   end
 end
 
+function love.joystickadded( joystick )
+	if game.joystickadded then   game:joystickadded(joystick)   end
+end
+
+function love.joystickremoved( joystick )
+	if game.joystickremoved then   game:joystickremoved(joystick)   end
+end
+
 --function love.quit()
 --	game:quit()
 --end
@@ -176,6 +184,12 @@ function write_stats()
 	file:write("time "..game.stats.time.."\n")
 	file:write("floor "..game.stats.floor.."\n")
 	file:write("max_combo "..game.stats.max_combo.."\n")
+	file:write("n_players "..game.number_of_players.."\n")
+	file:write("p1_control_mode "..game.players[1].control_mode.."\n")
+	file:write("doesnt_have_multiplayer_nerf false\n")
+	if game.number_of_players == 2 then
+		file:write("p2_control_mode "..game.players[2].control_mode.."\n")
+	end
 	file:write("***\n")
 end
 

@@ -10,15 +10,30 @@ require "constants"
 
 local Player = Actor:inherit()
 
-function Player:init(n, x, y, spr, controls)
+function Player:init(n, x, y, sprites, controls, control_mode)
 	n = n or 1
 	x = x or 0
 	y = y or 0
-	spr = spr or images.ant1
-	self:init_actor(x, y, 14, 14, spr)
+	self:init_actor(x, y, 14, 14, images.ant1)
+
+	self.n = n
+	self.name = concat("player", n)
+
+	self.spr_idle = sprites.spr_idle
+	self.spr_jump = sprites.spr_jump
+	self.spr_dead = sprites.spr_dead
+
+	self.joystick = nil
+
+	self.controls = controls
+	self.control_mode = control_mode
+
+	self:reset_player()
+end
+
+function Player:reset_player()
 	self.is_player = true
 	self.is_being = true
-	self.name = concat("player", n)
 	self.player_type = "ant"
 
 	-- Life
@@ -27,17 +42,13 @@ function Player:init(n, x, y, spr, controls)
 	
 	-- Death
 	self.is_dead = false
-	
+	self.is_completely_dead = false -- igl scotch 
+
 	-- Meta
-	self.n = n
 	self.is_enemy = false
-	self.controls = controls
 	self:init_last_input_state()
 	
 	-- Animation
-	self.spr_idle = images.ant1
-	self.spr_jump = images.ant2
-	self.spr_dead = images.ant_dead
 	self.spr = self.spr_idle
 	self.is_walking = false
 	self.squash = 1
@@ -226,12 +237,7 @@ function Player:update(dt)
 	self.ui_x = lerp(self.ui_x, game.cam_x + floor(self.mid_x), 0.2)
 	self.ui_y = lerp(self.ui_y, game.cam_y + floor(self.y), 0.2)
 
-	
 	--Visuals
-	if self:button_pressed("select") then
-		self:flip_player_type()
-		self.spr = self.spr_idle
-	end
 	self:update_visuals()
 end
 
@@ -520,12 +526,13 @@ function Player:kill()
 	self.is_dead = true
 	
 	game:screenshake(10)
-	particles:dead_player(self.spr_x, self.spr_y, self.spr_dead, self.dir_x)
+	particles:dead_player(self.spr_x, self.spr_y, self.spr_dead, self.dir_x, self.n)
 	game:frameskip(30)
+	game:vibrate(self.n, 0.6, 0.4)
 
 	self:on_death()
 	game:on_kill(self)
-	
+
 	self.timer_before_death = self.max_timer_before_death
 	audio:play("game_over_1")
 end
@@ -538,9 +545,12 @@ function Player:do_death_anim(dt)
 	if not self.is_dead then   return   end
 	self.timer_before_death = self.timer_before_death - dt
 	
-	if self.timer_before_death <= 0 then
-		game:on_game_over()
-		audio:play("game_over_2")
+	if self.timer_before_death <= 0 and not self.is_completely_dead then
+		self.is_completely_dead = true
+		-- self.x = 999999
+		-- self.y = 999999
+		game:on_player_death_anim_end()
+		self:remove()
 	end
 end
 
@@ -631,22 +641,57 @@ end
 
 function Player:button_down(btn)
 	-- TODO: move this to some input.lua or something
-	local keys = self.controls[btn]
+	local control_scheme = self.controls[self.control_mode]
+	if not control_scheme then   error(concat("Attempt to access nil control scheme '",control_scheme,"', ",self.control_mode))   end
+	local keys = control_scheme[btn]
 	if not keys then   error(concat("Attempt to access button '",concat(btn),"'"))   end
 
-	for i, k in pairs(keys) do
-		if love.keyboard.isScancodeDown(k) then
-			return true
+	if self.control_mode == "keyboard" or self.n == 1 then
+		for i, k in pairs(self.controls.keyboard[btn]) do
+			if love.keyboard.isScancodeDown(k) then
+				return true
+			end
 		end
+	end
+
+	if self.control_mode == "controller" then
+		for i, k in pairs(keys) do
+			if self:is_joystick_button_active(k) then
+				return true
+			end
+		end
+		
 	end
 	return false
 end
 
+local JOYSTICK_DEADZONE = 0.2 --igl scotch
+function Player:is_joystick_button_active(button)
+	local joystick = love.joystick.getJoysticks()[self.n]
+	if joystick == nil then return false end
+
+	if button == "stick_xneg" then
+		return (joystick:getAxis(1) < -JOYSTICK_DEADZONE) or (joystick:getAxis(3) < -JOYSTICK_DEADZONE)
+	elseif button == "stick_xpos" then
+		return (joystick:getAxis(1) > JOYSTICK_DEADZONE) or (joystick:getAxis(3) > JOYSTICK_DEADZONE)
+	elseif button == "stick_yneg" then
+		return (joystick:getAxis(2) < -JOYSTICK_DEADZONE) or (joystick:getAxis(4) < -JOYSTICK_DEADZONE)
+	elseif button == "stick_ypos" then
+		return (joystick:getAxis(2) > JOYSTICK_DEADZONE) or (joystick:getAxis(4) > JOYSTICK_DEADZONE)
+	end
+
+	return joystick:isGamepadDown(button)
+end
+
 function Player:init_last_input_state()
 	self.last_input_state = {}
-	for btn, _ in pairs(self.controls) do
-		if btn ~= "type" then
-			self.last_input_state[btn] = false
+	
+	for control_type, control_scheme in pairs(self.controls) do
+		self.last_input_state[control_type] = {}
+		for btn, _ in pairs(control_scheme) do
+			if btn ~= "type" then
+				self.last_input_state[control_type][btn] = false
+			end
 		end
 	end
 end
@@ -660,12 +705,14 @@ function Player:button_pressed(btn)
 end
 
 function Player:update_button_state()
-	for btn, v in pairs(self.controls) do
-		if type(v) == "table" then
-			self.last_input_state[btn] = self:button_down(btn)
-		else
-			if btn ~= "type" then
-				print(concat("update_button_state not a table:", btn, ", ", table_to_str(v)))
+	for control_type, control_scheme in pairs(self.controls) do
+		for btn, v in pairs(control_scheme) do
+			if type(v) == "table" then
+				self.last_input_state[btn] = self:button_down(btn)
+			else
+				if btn ~= "type" then
+					-- print(concat("update_button_state not a table:", btn, ", ", table_to_str(v)))
+				end
 			end
 		end
 	end
@@ -717,6 +764,8 @@ function Player:do_damage(n, source)
 	game:frameskip(8)
 	audio:play("hurt")
 	game:screenshake(5)
+	game:vibrate(self.n, 0.45, 0.3)
+
 	particles:word(self.mid_x, self.mid_y, concat("-",n))
 	-- self:do_knockback(source.knockback, source)--, 0, source.h/2)
 	--source:do_knockback(source.knockback*0.75, self)
