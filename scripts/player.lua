@@ -1,12 +1,12 @@
-local Class = require "class"
-local Actor = require "actor"
+local Class = require "scripts.class"
+local Actor = require "scripts.actor"
 local Guns = require "data.guns"
-local Bullet = require "bullet"
+local Bullet = require "scripts.bullet"
 local images = require "data.images"
 local sounds = require "data.sounds"
-local ui = require "ui"
-require "util"
-require "constants"
+local ui = require "scripts.ui"
+require "scripts.util"
+require "scripts.constants"
 
 local Player = Actor:inherit()
 

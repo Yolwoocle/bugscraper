@@ -1,4 +1,4 @@
-require "util"
+require "scripts.util"
 
 local function new_source(path, type, args)
 	local source = love.audio.newSource("sfx/"..path, type)

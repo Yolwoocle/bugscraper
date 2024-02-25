@@ -1,8 +1,8 @@
-require "util"
-local Class = require "class"
-local Enemy = require "enemy"
-local Loot = require "loot"
-local Bullet = require "bullet"
+require "scripts.util"
+local Class = require "scripts.class"
+local Enemy = require "scripts.enemy"
+local Loot = require "scripts.loot"
+local Bullet = require "scripts.bullet"
 local Guns = require "data.guns"
 local sounds = require "data.sounds"
 

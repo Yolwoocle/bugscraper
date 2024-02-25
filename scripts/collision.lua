@@ -1,6 +1,6 @@
 local bump = require "lib.bump.bump"
-local Class = require "class"
-require "constants"
+local Class = require "scripts.class"
+require "scripts.constants"
 
 local Collision = Class:inherit()
 

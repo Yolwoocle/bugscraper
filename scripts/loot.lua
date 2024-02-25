@@ -1,9 +1,9 @@
-local Class = require "class"
-local Actor = require "actor"
+local Class = require "scripts.class"
+local Actor = require "scripts.actor"
 local images = require "data.images"
 local Guns = require "data.guns"
 local sounds = require "data.sounds"
-require "util"
+require "scripts.util"
 local utf8 = require "utf8"
 
 local Loot = Actor:inherit()

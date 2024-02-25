@@ -1,5 +1,5 @@
-require "util"
-local Class = require "class"
+require "scripts.util"
+local Class = require "scripts.class"
 
 local WorldGenerator = Class:inherit()
 

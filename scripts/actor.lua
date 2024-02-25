@@ -1,4 +1,4 @@
-local Class = require "class"
+local Class = require "scripts.class"
 
 local Actor = Class:inherit()
 

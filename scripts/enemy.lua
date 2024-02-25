@@ -1,7 +1,7 @@
-require "util"
-local Class = require "class"
-local Actor = require "actor"
-local Loot = require "loot"
+require "scripts.util"
+local Class = require "scripts.class"
+local Actor = require "scripts.actor"
+local Loot = require "scripts.loot"
 local images = require "data.images"
 local sounds = require "data.sounds"
 

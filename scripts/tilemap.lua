@@ -1,4 +1,4 @@
-local Class = require "class"
+local Class = require "scripts.class"
 local Tiles = require "data.tiles"
 local images = require
 

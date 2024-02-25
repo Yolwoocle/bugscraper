@@ -1,4 +1,4 @@
-require "util"
+require "scripts.util"
 
 BLOCK_WIDTH = 16
 BW = BLOCK_WIDTH

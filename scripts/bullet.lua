@@ -1,5 +1,5 @@
-local Class = require "class"
-local Actor = require "actor"
+local Class = require "scripts.class"
+local Actor = require "scripts.actor"
 local images = require "data.images"
 
 local Bullet = Actor:inherit()

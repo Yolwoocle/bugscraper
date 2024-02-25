@@ -1,5 +1,5 @@
-local Class = require "class"
-require "util"
+local Class = require "scripts.class"
+require "scripts.util"
 
 function load_image(name)
 	local im = love.graphics.newImage("images/"..name)

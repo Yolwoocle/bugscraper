@@ -1,6 +1,6 @@
-require "util"
-require "constants"
-local Class = require "class"
+require "scripts.util"
+require "scripts.constants"
+local Class = require "scripts.class"
 
 local Inventory = Class:inherit()
 

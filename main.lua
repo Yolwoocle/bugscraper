@@ -1,6 +1,6 @@
-local Class = require "class"
-local Game = require "game"
-require "util"
+local Class = require "scripts.class"
+local Game = require "scripts.game"
+require "scripts.util"
 
 game = nil
 
@@ -64,7 +64,7 @@ function love.keypressed(key, scancode, isrepeat)
 		if options then   options:toggle_fullscreen()    end
 
 	-- elseif key == "m" then
-	-- 	options:toggle_sound()
+	-- 	options:und()
 		
 	-- elseif key == "g" then
 	-- 	game.players[1]:kill()

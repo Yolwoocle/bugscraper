@@ -1,5 +1,5 @@
-require "util"
-local Class = require "class"
+require "scripts.util"
+local Class = require "scripts.class"
 local images = require "data.images"
 
 local Player = Class:inherit()

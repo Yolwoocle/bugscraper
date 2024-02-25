@@ -1,6 +1,6 @@
-require "util"
-local Class = require "class"
-local Gun = require "gun"
+require "scripts.util"
+local Class = require "scripts.class"
+local Gun = require "scripts.gun"
 local images = require "data.images"
 local sounds = require "data.sounds"
 

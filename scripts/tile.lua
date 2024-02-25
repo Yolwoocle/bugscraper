@@ -1,6 +1,6 @@
-local Class = require "class"
-local Actor = require "actor"
-require "util"
+local Class = require "scripts.class"
+local Actor = require "scripts.actor"
+require "scripts.util"
 
 local Tile = Class:inherit()
 

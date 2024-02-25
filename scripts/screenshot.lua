@@ -1,6 +1,6 @@
 require "scripts.utility"
 require "scripts.constants"
-local ffi = require "ffi"
+local ffi = require "scripts.ffi"
 
 function screenshot()
 	--These features are important as it provides an easy way 
