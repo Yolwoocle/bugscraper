@@ -326,12 +326,25 @@ function Game:new_game(number_of_players)
 
 	self.endless_mode = false
 
+	self.vibration_vals = {
+		[1] = {
+			vibration_val = 0,
+			vibration_timer = 0
+		},
+		[2] = {
+			vibration_val = 0,
+			vibration_timer = 0
+		}
+	}
+
 	options:update_sound_on()
 end
 
 local n = 0
 function Game:update(dt)
 	self.frame = self.frame + 1
+	
+	self:update_vibration(dt)
 
 	self.frames_to_skip = max(0, self.frames_to_skip - 1)
 	local do_frameskip = self.slow_mo_rate ~= 0 and self.frame%self.slow_mo_rate ~= 0
@@ -1128,7 +1141,7 @@ function Game:next_floor(dt, new_floor, old_floor)
 	end
 end
 
-function Game:new_wave_buffer_enemies()
+function Game:new_wave_buffer_enemies(dt)
 	-- Spawn a bunch of enemies
 	self.cur_wave_max_enemy = n
 	self.door_animation_enemy_buffer = {}
@@ -1172,7 +1185,9 @@ function Game:new_wave_buffer_enemies()
 	-- self.move_jetpack_tutorial = (self.is_first_time and wave_n == 5)
 	self.move_jetpack_tutorial = (wave_n == 5)
 	
-	for i=1, n do
+	local multiplier = 1.0
+	multiplier = ternary(self.number_of_players == 1, 1.0, 1.2) --igl
+	for i=1, n*multiplier do
 		-- local x = love.math.random((wg.box_ax+1)*bw, (wg.box_bx-1)*bw)
 		-- local y = love.math.random((wg.box_ay+1)*bw, (wg.box_by-1)*bw)
 		local x = love.math.random(self.door_ax + 16, self.door_bx - 16)
@@ -1405,6 +1420,29 @@ function Game:do_exploding_elevator(dt)
 	y = 16*BW-8 - max(0, lerp(BW*4-8, -16, abs(mw-x)/mw))
 	local size = random_range(4, 8)
 	particles:fire(x,y,size, nil, 80, -5)
+end
+
+function Game:vibrate(i, val, cooldown)
+	self.vibration_vals[i].vibration_val = val
+	self.vibration_vals[i].vibration_timer = cooldown
+end
+
+function Game:update_vibration(dt)
+	for i = 1, self.number_of_players do
+		local data = self.vibration_vals[i]
+
+		-- Vibration
+		data.vibration_timer = math.max(data.vibration_timer - dt, 0.0)
+		local controller = love.joystick.getJoysticks()[i]
+		if controller ~= nil and options:get('vibrations_on') then
+			local success = false
+			if data.vibration_timer > 0.0 then
+				success = controller:setVibration(data.vibration_val, data.vibration_val)
+			else
+				success = controller:setVibration(0, 0)
+			end
+		end
+	end
 end
 
 -----------------------------------------------------

@@ -21,6 +21,9 @@ function OptionsManager:init(game)
 		pause_on_unfocus = ternary(love.system.getOS()=="Web", false, true),
 		screenshake_on = true,
 		disable_background_noise = false,
+
+		vibrations_on = true,
+		multiplayer_enemy_multiplier = 1.2
 	}
 
 	local add_keyboard_ui_buttons = function(scheme)
@@ -365,6 +368,12 @@ end
 
 function OptionsManager:toggle_screenshake()
 	self:toggle("screenshake_on")
+
+	self:update_options_file()
+end
+
+function OptionsManager:toggle_vibrations()
+	self:toggle("vibrations_on")
 
 	self:update_options_file()
 end

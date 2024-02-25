@@ -169,7 +169,7 @@ end
 
 local DeadPlayerParticle = Particle:inherit()
 
-function DeadPlayerParticle:init(x,y,spr,dir_x)
+function DeadPlayerParticle:init(x,y,spr,dir_x,player_n)
 	--                 x,y,s,r, vx,vy,vs,vr, life, g, is_solid
 	self:init_particle(x,y,1,0, 0,0,0,0,     10, 0, false)
 	self.spr = spr
@@ -189,7 +189,8 @@ function DeadPlayerParticle:init(x,y,spr,dir_x)
 	self.r = 0
 
 	self.cols = {color(0xf6757a), color(0xb55088), color(0xe43b44), color(0x3a4466), color(0x262b44)}
-
+	
+	self.player_n = player_n
 	particles:splash(self.x, self.y - self.oy, 40, self.cols)
 end
 function DeadPlayerParticle:update(dt)
@@ -202,6 +203,7 @@ function DeadPlayerParticle:update(dt)
 	if abs(self.r - goal_r) < 0.1 then
 		game:screenshake(10)
 		audio:play("explosion")
+		game:vibrate(self.player_n, 0.5, 0.3)
 		particles:splash(self.x, self.y - self.oy, 40, {COL_LIGHT_YELLOW, COL_ORANGE, COL_LIGHT_RED, COL_WHITE})
 		self.is_removed = true
 	end
@@ -392,8 +394,8 @@ function ParticleSystem:stomped_enemy(x, y, spr)
 	self:add_particle(StompedEnemyParticle:new(x, y, spr))
 end
 
-function ParticleSystem:dead_player(x, y, spr, dir_x)
-	self:add_particle(DeadPlayerParticle:new(x, y, spr, dir_x))
+function ParticleSystem:dead_player(x, y, spr, dir_x, player_n)
+	self:add_particle(DeadPlayerParticle:new(x, y, spr, dir_x, player_n))
 end
 
 function ParticleSystem:letter(x, y, str, spawn_delay, col)

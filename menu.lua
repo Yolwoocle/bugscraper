@@ -432,13 +432,13 @@ function MenuManager:init(game)
 		-- 	game:toggle_sound()
 		-- end},
 		{ "<<< Visuals >>>"},
-		{ "FULLSCREEN", function(self)
-			options:toggle_fullscreen()
-		end,
-		function(self)
-			self.value = options:get("is_fullscreen")
-			self.value_text = options:get("is_fullscreen") and "ON" or "OFF"
-		end},
+		-- { "FULLSCREEN", function(self)
+		-- 	options:toggle_fullscreen()
+		-- end,
+		-- function(self)
+		-- 	self.value = options:get("is_fullscreen")
+		-- 	self.value_text = options:get("is_fullscreen") and "ON" or "OFF"
+		-- end},
 
 		{ SliderMenuItem, "PIXEL SCALE", function(self, diff)
 			diff = diff or 1
@@ -481,14 +481,14 @@ function MenuManager:init(game)
 			self.value_text = options:get("mouse_visible") and "ON" or "OFF"
 		end},
 		
-		{ "PAUSE ON LOST FOCUS", function(self)
-			options:toggle_pause_on_unfocus()
-			love.mouse.setVisible(options:get("pause_on_unfocus"))
-		end,
-		function(self)
-			self.value = options:get("pause_on_unfocus")
-			self.value_text = options:get("pause_on_unfocus") and "ON" or "OFF"
-		end},
+		-- { "PAUSE ON LOST FOCUS", function(self)
+		-- 	options:toggle_pause_on_unfocus()
+		-- 	love.mouse.setVisible(options:get("pause_on_unfocus"))
+		-- end,
+		-- function(self)
+		-- 	self.value = options:get("pause_on_unfocus")
+		-- 	self.value_text = options:get("pause_on_unfocus") and "ON" or "OFF"
+		-- end},
 		
 		{ "SCREENSHAKE", function(self)
 			options:toggle_screenshake()
@@ -498,6 +498,15 @@ function MenuManager:init(game)
 			self.value = options:get("screenshake_on")
 			self.value_text = options:get("screenshake_on") and "ON" or "OFF"
 		end},
+		
+		{ "CONTROLLER VIBRATION", function(self)
+			options:toggle_vibrations()
+		end,
+		function(self)
+			self.value = options:get("vibrations_on")
+			self.value_text = options:get("vibrations_on") and "ON" or "OFF"
+		end},
+
 	}, { 0, 0, 0, 0.85 })
 
 	self.menus.controls = Menu:new(game, {

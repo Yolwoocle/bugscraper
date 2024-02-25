@@ -186,6 +186,7 @@ function write_stats()
 	file:write("max_combo "..game.stats.max_combo.."\n")
 	file:write("n_players "..game.number_of_players.."\n")
 	file:write("p1_control_mode "..game.players[1].control_mode.."\n")
+	file:write("doesnt_have_multiplayer_nerf false\n")
 	if game.number_of_players == 2 then
 		file:write("p2_control_mode "..game.players[2].control_mode.."\n")
 	end

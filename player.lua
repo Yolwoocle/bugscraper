@@ -237,7 +237,6 @@ function Player:update(dt)
 	self.ui_x = lerp(self.ui_x, game.cam_x + floor(self.mid_x), 0.2)
 	self.ui_y = lerp(self.ui_y, game.cam_y + floor(self.y), 0.2)
 
-	
 	--Visuals
 	self:update_visuals()
 end
@@ -527,12 +526,13 @@ function Player:kill()
 	self.is_dead = true
 	
 	game:screenshake(10)
-	particles:dead_player(self.spr_x, self.spr_y, self.spr_dead, self.dir_x)
+	particles:dead_player(self.spr_x, self.spr_y, self.spr_dead, self.dir_x, self.n)
 	game:frameskip(30)
+	game:vibrate(self.n, 0.6, 0.4)
 
 	self:on_death()
 	game:on_kill(self)
-	
+
 	self.timer_before_death = self.max_timer_before_death
 	audio:play("game_over_1")
 end
@@ -764,6 +764,8 @@ function Player:do_damage(n, source)
 	game:frameskip(8)
 	audio:play("hurt")
 	game:screenshake(5)
+	game:vibrate(self.n, 0.45, 0.3)
+
 	particles:word(self.mid_x, self.mid_y, concat("-",n))
 	-- self:do_knockback(source.knockback, source)--, 0, source.h/2)
 	--source:do_knockback(source.knockback*0.75, self)
