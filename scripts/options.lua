@@ -23,32 +23,37 @@ function OptionsManager:init(game)
 		disable_background_noise = false,
 	}
 
-	self.default_control_schemes = {
+	self.control_presets = {
 		[1] = {
-			type = "keyboard",
-			left = {"a", "left"},
-			right = {"d", "right"},
-			up = {"w", "up"},
-			down = {"s", "down"},
-			jump = {"z", "c", "b"},
-			shoot = {"x", "v", "n"},
-			select = {"return"},
-			pause = {"escape", "p"},
+			left =  {"k_a", "k_left",  "c_dpleft"},
+			right = {"k_d", "k_right", "c_dpright"},
+			up =    {"k_w", "k_p",     "c_dpup"},
+			down =  {"k_s", "k_down",  "c_dpdown"},
+			jump =  {"k_z", "k_c", "k_b", "c_a", "c_b"},
+			shoot = {"k_x", "k_v", "k_n", "c_x", "c_y"},
+			pause = {"k_escape", "k_p",   "c_start"},
+
+			ui_select = {"k_return", "k_z", "k_c", "k_b", "k_x", "k_v", "k_n", "c_a"},
+			ui_back =   {"k_escape",       "c_b"},
+			ui_left =   {"k_a", "k_left",  "c_dpleft"},
+			ui_right =  {"k_d", "k_right", "c_dpright"},
+			ui_up =     {"k_w", "k_up",    "c_dpup"},
+			ui_down =   {"k_s", "k_down",  "c_dpdown"},
 		},
 		[2] = {
-			type = "keyboard",
-			left = {"left"},
-			right = {"right"},
-			up = {"up"},
-			down = {"down"},
-			jump = {"l", ","},
-			shoot = {"k", "m"},
-			select = {"return"},
-			pause = {"escape", "p"},
+			type = "k_keyboard",
+			left = {"k_left"},
+			right = {"k_right"},
+			up = {"k_up"},
+			down = {"k_down"},
+			jump = {"k_l", ","},
+			shoot = {"k_k", "k_m"},
+			select = {"k_return"},
+			pause = {"k_escape", "k_p"},
 		}
 	}
 
-	self.control_schemes = copy_table(self.default_control_schemes)
+	self.control_schemes = copy_table(self.control_presets)
 
 	self:load_options()
 	self:load_controls()
@@ -328,7 +333,7 @@ function OptionsManager:on_quit()
 end
 
 function OptionsManager:reset_controls()
-	self.control_schemes = copy_table(self.default_control_schemes)
+	self.control_schemes = copy_table(self.control_presets)
 	self:update_controls_file()
 end
 

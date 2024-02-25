@@ -10,6 +10,7 @@ local ParticleSystem = require "scripts.particles"
 local AudioManager = require "scripts.audio"
 local MenuManager = require "scripts.menu"
 local OptionsManager = require "scripts.options"
+local InputManager = require "scripts.input"
 local utf8 = require "utf8"
 
 local waves = require "data.waves"
@@ -25,6 +26,7 @@ function Game:init()
 	print("TEST HELLO")
 	-- Global singletons
 	options = OptionsManager:new(self)
+	Input = InputManager:new(self)
 	collision = Collision:new()
 	particles = ParticleSystem:new()
 	audio = AudioManager:new()
@@ -344,9 +346,7 @@ function Game:update(dt)
 	end
 
 	-- Update button states
-	for _, player in pairs(self.players) do
-		player:update_button_state()
-	end
+	Input:update(dt)
 end
 
 function Game:update_main_game(dt)
@@ -627,23 +627,6 @@ function Game:draw_game()
 	if self.debug_mode then
 		self:draw_debug()
 	end
-	if self.inputview_mode then
-		local txts = {}
-		local p = self.players[1]
-		for k,v in pairs(p.controls) do
-			if type(v) == "table" then
-				table.insert(txts, concat(k, "/ down:[", p:button_down(k), "] prsd:[", p:button_pressed(k),"] old:[", p.last_input_state[k], "]"))
-			end
-		end
-		for i=1, #txts do  print_label(txts[i], self.cam_x, 80+self.cam_y+get_text_height("")*i) end
-	
-		local txts = {}
-		local p = self.players[1]
-		for k,v in pairs(p.last_input_state) do
-			table.insert(txts, concat(k," ",v))
-		end
-		for i=1, #txts do  print_label(txts[i], self.cam_x+CANVAS_WIDTH/2+30, self.cam_y+get_text_height("")*i) end
-	end
 
 	-- Menus
 	if self.menu.cur_menu then
@@ -800,9 +783,10 @@ function Game:init_players()
 	local my = floor(self.map.height - 3)
 
 	for i=1, self.number_of_players do
-		local player = Player:new(i, mx*16 + i*16, my*16, sprs[i], options:get_controls(i))
+		local player = Player:new(i, mx*16 + i*16, my*16, sprs[i])
 		self.players[i] = player
 		self:new_actor(player)
+		Input:new_user(options.control_presets[1])
 	end
 end
 
@@ -1246,7 +1230,6 @@ function Game:keypressed(key, scancode, isrepeat)
 	elseif key == "f2" then
 		self.colview_mode = not self.colview_mode
 	elseif key == "f1" then
-		self.inputview_mode = not self.inputview_mode
 	end
 
 	if self.menu then
@@ -1258,6 +1241,14 @@ function Game:keypressed(key, scancode, isrepeat)
 	end
 end
 
+function Game:joystickadded(joystick)
+	Input:joystickadded(joystick)
+end
+
+function Game:joystickremoved(joystick)
+	Input:joystickremoved(joystick)
+end
+
 -- function Game:keyreleased(key, scancode)
 -- 	for i, ply in pairs(self.players) do
 -- 		--ply:keyreleased(key, scancode)
@@ -1265,7 +1256,7 @@ end
 -- end
 
 function Game:screenshake(q)
-	if not options:get('screenshake_on') then  return   end  
+	if not options:get('screenshake_on') then  return   end
 	self.screenshake_q = self.screenshake_q + q
 end
 
@@ -1276,32 +1267,9 @@ end
 function Game:slow_mo(q)
 	self.slow_mo_rate = q
 end
+
 function Game:reset_slow_mo(q)
 	self.slow_mo_rate = 0
-end
-
-function Game:button_down(btn)
-	--[[
-		Returns if ANY player is holding `btn`
-	]]
-	for _, player in pairs(self.players) do
-		if player:button_down(btn) then
-			return true, player
-		end
-	end
-	return false
-end
-
-function Game:button_pressed(btn)
-	--[[
-		Returns if ANY player is pressing `btn`
-	]]
-	for _, player in pairs(self.players) do
-		if player:button_pressed(btn) then
-			return true, player
-		end
-	end
-	return false
 end
 
 -- Moved to OptionsManager

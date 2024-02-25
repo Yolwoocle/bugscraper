@@ -10,7 +10,7 @@ require "scripts.constants"
 
 local Player = Actor:inherit()
 
-function Player:init(n, x, y, spr, controls)
+function Player:init(n, x, y, spr)
 	n = n or 1
 	x = x or 0
 	y = y or 0
@@ -31,8 +31,6 @@ function Player:init(n, x, y, spr, controls)
 	-- Meta
 	self.n = n
 	self.is_enemy = false
-	self.controls = controls
-	self:init_last_input_state()
 	
 	-- Animation
 	self.spr_idle = images.ant1
@@ -209,29 +207,15 @@ function Player:update(dt)
 		self.combo = 0
 	end
 
-	-- Gun switchgun
-	-- if self:button_pressed("up") then
-	-- 	self.gun_number = mod_plus_1((self.gun_number + 1), #self.guns)
-	-- 	self:equip_gun(self.guns[self.gun_number])
-	-- end
-
 	self.gun:update(dt)
 	self:shoot(dt, false)
 	self:update_gun_pos(dt)
-
-	--self:do_snowballing()
-
-	-- self:update_button_state() --> moved to Game
 
 	self.ui_x = lerp(self.ui_x, game.cam_x + floor(self.mid_x), 0.2)
 	self.ui_y = lerp(self.ui_y, game.cam_y + floor(self.y), 0.2)
 
 	
 	--Visuals
-	if self:button_pressed("select") then
-		self:flip_player_type()
-		self.spr = self.spr_idle
-	end
 	self:update_visuals()
 end
 
@@ -340,8 +324,8 @@ end
 function Player:move(dt)
 	-- compute movement dir
 	local dir = {x=0, y=0}
-	if self:button_down('left') then   dir.x = dir.x - 1   end
-	if self:button_down('right') then   dir.x = dir.x + 1   end
+	if Input:action_down('left') then   dir.x = dir.x - 1   end
+	if Input:action_down('right') then   dir.x = dir.x + 1   end
 
 	if dir.x ~= 0 then
 		self.dir_x = dir.x
@@ -384,8 +368,8 @@ function Player:do_wall_sliding(dt)
 		local col_normal = self.wall_col.normal
 		local is_walled = (col_normal.y == 0)
 		local is_falling = (self.vy > 0)
-		local holding_left = self:button_down('left') and col_normal.x == 1
-		local holding_right = self:button_down('right') and col_normal.x == -1
+		local holding_left = Input:action_down('left') and col_normal.x == 1
+		local holding_right = Input:action_down('right') and col_normal.x == -1
 		
 		local is_wall_sliding = is_walled and is_falling and (holding_left or holding_right) 
 			and not self.wall_col.other.is_not_slidable
@@ -421,7 +405,7 @@ end
 function Player:do_jumping(dt)
 	-- This buffer is so that you still jump even if you're a few frames behind
 	self.buffer_jump_timer = self.buffer_jump_timer - 1
-	if self:button_pressed("jump") then
+	if Input:action_pressed("jump") then
 		self.buffer_jump_timer = 12
 	end
 
@@ -429,7 +413,7 @@ function Player:do_jumping(dt)
 	self.air_time = self.air_time + dt
 	if self.is_grounded then self.air_time = 0 end
 	if self.air_time < self.jump_air_time and not self.is_grounded then
-		if self:button_down("jump") then
+		if Input:action_down("jump") then
 			self.vy = self.vy - self.air_jump_force
 		end
 	end
@@ -449,8 +433,8 @@ function Player:do_jumping(dt)
 
 		elseif wall_normal then
 			-- Conditions for a wall jump ("wall kick")
-			local left_jump  = (wall_normal.x == 1) and self:button_down("right")
-			local right_jump = (wall_normal.x == -1) and self:button_down("left")
+			local left_jump  = (wall_normal.x == 1) and Input:action_down(self.n, "right")
+			local right_jump = (wall_normal.x == -1) and Input:action_down(self.n, "left")
 			
 			-- Conditions for a wall jump used for climbing, while sliding ("wall climb")
 			local wall_climb = self.is_wall_sliding
@@ -548,7 +532,7 @@ function Player:shoot(dt, is_burst)
 	if is_burst == nil then     is_burst = false    end
 	-- Update aiming direction
 	local dx, dy = self.dir_x, self.dir_y
-	local aim_horizontal = (self:button_down("left") or self:button_down("right"))
+	local aim_horizontal = (Input:action_down(self.n, "left") or Input:action_down(self.n, "right"))
 	-- Allow aiming upwards 
 	if self.dir_y ~= 0 and not aim_horizontal then    dx = 0    end
 
@@ -557,8 +541,8 @@ function Player:shoot(dt, is_burst)
 	self.shoot_dir_x = cos(self.shoot_ang)
 	self.shoot_dir_y = sin(self.shoot_ang)
 
-	local btn_auto = (self.gun.is_auto and self:button_down("shoot"))
-	local btn_manu = (not self.gun.is_auto and self:button_pressed("shoot"))
+	local btn_auto = (self.gun.is_auto and Input:action_down(self.n, "shoot"))
+	local btn_manu = (not self.gun.is_auto and Input:action_pressed(self.n, "shoot"))
 	if btn_auto or btn_manu or is_burst then
 		self.is_shooting = true
 
@@ -588,7 +572,7 @@ function Player:shoot(dt, is_burst)
 			end
 		else
 			-- (Normal behaviour) If shooting downwards, then go up like a jetpack
-			if self:button_down("down") and success then
+			if Input:action_down(self.n, "down") and success then
 				self.vy = self.vy - self.gun.jetpack_force
 				self.vy = self.vy * self.friction_x
 			end
@@ -629,72 +613,13 @@ function Player:update_gun_pos(dt, lerpval)
 	self.gun.rot = lerp_angle(self.gun.rot, ang, 0.3)
 end
 
-function Player:button_down(btn)
-	-- TODO: move this to some input.lua or something
-	local keys = self.controls[btn]
-	if not keys then   error(concat("Attempt to access button '",concat(btn),"'"))   end
-
-	for i, k in pairs(keys) do
-		if love.keyboard.isScancodeDown(k) then
-			return true
-		end
-	end
-	return false
-end
-
-function Player:init_last_input_state()
-	self.last_input_state = {}
-	for btn, _ in pairs(self.controls) do
-		if btn ~= "type" then
-			self.last_input_state[btn] = false
-		end
-	end
-end
-
-function Player:button_pressed(btn)
-	-- This makes sure that the button state table assigns "true" to buttons
-	-- that have been just pressed 
-	local last = self.last_input_state[btn]
-	local now = self:button_down(btn)
-	return not last and now
-end
-
-function Player:update_button_state()
-	for btn, v in pairs(self.controls) do
-		if type(v) == "table" then
-			self.last_input_state[btn] = self:button_down(btn)
-		else
-			if btn ~= "type" then
-				print(concat("update_button_state not a table:", btn, ", ", table_to_str(v)))
-			end
-		end
-	end
-end
-
-function Player:set_controls(button, value)
-	if not value then
-		local controls = button
-		self.controls = controls
-		return
-	end
-
-	if not self.controls[button] then
-		print(concat("Tried to set btn '", button,"'"))
-		return
-	end
-	if type(value) ~= "table" then
-		print(concat("Val '",value,"' for p:set_controls not table"))
-	end
-	self.controls[button] = value
-end
-
 function Player:on_collision(col, other)
 	
 end
 
 function Player:on_stomp(enemy)
 	local spd = -self.stomp_jump_speed
-	if self:button_down("jump") or self.buffer_jump_timer > 0 then
+	if Input:action_down(self.n, "jump") or self.buffer_jump_timer > 0 then
 		spd = spd * 1.3
 	end
 	self.vy = spd
@@ -772,17 +697,17 @@ end
 
 function Player:do_aiming(dt)
 	self.dir_y = 0
-	if self:button_down("up") then      self.dir_y = -1    end
-	if self:button_down("down") then    self.dir_y = 1     end
+	if Input:action_down(self.n, "up") then      self.dir_y = -1    end
+	if Input:action_down(self.n, "down") then    self.dir_y = 1     end
 end
 
 function Player:do_snowballing()
-	local moving = self:button_down("left") or self:button_down("right")
-	if self.is_grounded and self:button_down("down") and moving then
+	local moving = Input:action_down(self.n, "left") or Input:action_down(self.n, "right")
+	if self.is_grounded and Input:action_down(self.n, "down") and moving then
 		self.snowball_size = self.snowball_size + 0.1
 	end
 
-	if self:button_down("shoot") then
+	if Input:action_down(self.n, "shoot") then
 		local spd = self.snowball_speed * self.dir_x
 		game:new_actor(Bullet:new(self, self.mid_x, self.mid_y, 10, 10, spd, -self.snowball_speed))
 	end

@@ -108,6 +108,14 @@ function love.mousepressed(x, y, button, istouch, presses)
 	if game.mousepressed then   game:mousepressed(x, y, button)   end
 end
 
+function love.joystickadded(joystick)
+	if game.joystickadded then   game:joystickadded(joystick)   end
+end
+
+function love.joystickremoved(joystick)
+	if game.joystickremoved then   game:joystickremoved(joystick)   end
+end
+
 --function love.quit()
 --	game:quit()
 --end
@@ -145,21 +153,21 @@ print_log_file:close()
 max_msg_log = 20
 old_print = print
 msg_log = {}
-function print(...)
-	print_log_file:open("a")
+-- function print(...)
+-- 	print_log_file:open("a")
 
-	old_print(...)
+-- 	old_print(...)
 	
-	local text = concatsep({...}, " ")
-	table.insert(msg_log, text)
-	print_log_file:write(concat(os.date("%c", os.time())," | ",text,"\n"))
+-- 	local text = concatsep({...}, " ")
+-- 	table.insert(msg_log, text)
+-- 	print_log_file:write(concat(os.date("%c", os.time())," | ",text,"\n"))
 	
-	if #msg_log > max_msg_log then
-		table.remove(msg_log, 1)
-	end
+-- 	if #msg_log > max_msg_log then
+-- 		table.remove(msg_log, 1)
+-- 	end
 
-	print_log_file:close()
-end
+-- 	print_log_file:close()
+-- end
 
 function quit_game()
 	print("Quitting game")

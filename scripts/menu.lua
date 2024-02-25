@@ -155,11 +155,11 @@ function SliderMenuItem:update(dt)
 		self.text = self.label_text
 	end
 
-	if game:button_pressed("left") and self.is_selected then
+	if Input:action_pressed("left") and self.is_selected then
 		self:on_click(-1)
 		self:after_click(-1)
 	end
-	if game:button_pressed("right") and self.is_selected then
+	if Input:action_pressed("right") and self.is_selected then
 		self:on_click(1)
 		self:after_click(1)
 	end
@@ -660,8 +660,8 @@ function MenuManager:update(dt)
 		self.cur_menu:update(dt)
 
 		-- Navigate up and down
-		if game:button_pressed("up") then self:incr_selection(-1) end
-		if game:button_pressed("down") then self:incr_selection(1) end
+		if Input:action_pressed("up") then self:incr_selection(-1) end
+		if Input:action_pressed("down") then self:incr_selection(1) end
 
 		-- Update current selection
 		self.sel_n = mod_plus_1(self.sel_n, #self.cur_menu.items)
@@ -669,7 +669,7 @@ function MenuManager:update(dt)
 		self.sel_item.is_selected = true
 
 		-- On pressed
-		local btn = game:button_pressed("shoot") or game:button_pressed("jump") or game:button_pressed("select")
+		local btn = Input:action_pressed("ui_select")
 		if btn and self.sel_item and self.sel_item.on_click then
 			if not self.sel_item.is_waiting_for_input then
 				self.sel_item:on_click()
@@ -678,7 +678,7 @@ function MenuManager:update(dt)
 		end
 	end
 
-	local btn_pressed, player = game:button_pressed("pause")
+	local btn_pressed, player = Input:action_pressed("pause")
 
 	if btn_pressed and self.cur_menu_name ~= "controls" then
 		self:toggle_pause()
