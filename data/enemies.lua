@@ -170,7 +170,7 @@ function Enemies:init()
 
 	function self.Grasshopper:on_grounded()
 		self.vy = -self.jump_speed
-		audio:play_var("jump_short", 0.2, 1.2, {pitch=0.4})
+		Audio:play_var("jump_short", 0.2, 1.2, {pitch=0.4})
 	end
 
 	--------
@@ -232,9 +232,9 @@ function Enemies:init()
 		-- Pong-like bounce
 		if col.other.is_solid or col.other.name == "" then
 			local s = "metalfootstep_0"..tostring(love.math.random(0,4))
-			audio:play_var(s, 0.3, 1.1, {pitch=0.8, volume=0.5})
+			Audio:play_var(s, 0.3, 1.1, {pitch=0.8, volume=0.5})
 
-			particles:smoke(col.touch.x, col.touch.y)
+			Particles:smoke(col.touch.x, col.touch.y)
 
 			if col.normal.x ~= 0 then    self.pong_vx = sign(col.normal.x) * abs(self.pong_vx)    end
 			if col.normal.y ~= 0 then    self.pong_vy = sign(col.normal.y) * abs(self.pong_vy)    end
@@ -247,7 +247,7 @@ function Enemies:init()
 
 	local Slug = self.Slug
 	function self.SnailShelled:on_death()
-		particles:image(self.mid_x, self.mid_y, 30, images.snail_shell_fragment, 13, nil, 0, 10)
+		Particles:image(self.mid_x, self.mid_y, 30, images.snail_shell_fragment, 13, nil, 0, 10)
 		local slug = Slug:new(self.x, self.y)
 		slug.vy = -200
 		game:new_actor(slug)
@@ -282,7 +282,7 @@ function Enemies:init()
 	end
 
 	function self.DummyTarget:on_death()
-		particles:image(self.mid_x, self.mid_y, 20, {images.dummy_target_ptc1, images.dummy_target_ptc2}, self.w, nil, nil, 0.5)
+		Particles:image(self.mid_x, self.mid_y, 20, {images.dummy_target_ptc1, images.dummy_target_ptc2}, self.w, nil, nil, 0.5)
 		--number, spr, spw_rad, life, vs, g
 	end
 
@@ -523,7 +523,7 @@ function Enemies:init()
 	function self.Button:on_stomped(damager)
 		game:screenshake(10)
 		game:on_red_button_pressed()
-		audio:play("button_press")
+		Audio:play("button_press")
 		
 		-- TODO: smoke particles
 		-- local b = ButtonPressed:new(CANVAS_WIDTH/2, game.world_generator.box_rby)
@@ -534,17 +534,17 @@ function Enemies:init()
 	function self.Button:on_death(damager, reason)
 		if reason ~= "stomped" then
 			game:screenshake(15)
-			audio:play("glass_fracture", nil, 0.2)
+			Audio:play("glass_fracture", nil, 0.2)
 			game:enable_endless_mode()
 			-- particles:image(self.mid_x, self.mid_y, 100, images.ptc_glass_shard, self.h)
-			particles:image(self.mid_x, self.mid_y, 300, {
+			Particles:image(self.mid_x, self.mid_y, 300, {
 				images.btnfrag_1,
 				images.btnfrag_2,
 				images.btnfrag_3,
 				images.btnfrag_4,
 				images.btnfrag_5,
 			}, self.h, 6, 0.05, 0, parms)
-			particles:word(self.mid_x, self.mid_y, "ENDLESS MODE!")
+			Particles:word(self.mid_x, self.mid_y, "ENDLESS MODE!")
 		end
 	end
 
@@ -599,7 +599,7 @@ function Enemies:init()
 
 		local sndname = "impactglass_light_00"..random_str(1,4)
 		local pitch = random_range(1/1.1, 1.1) - .5*self.life/self.max_life
-		audio:play(sndname, random_range(1-0.2, 1), pitch)
+		Audio:play(sndname, random_range(1-0.2, 1), pitch)
 		
 		if old_state ~= new_state then
 			self.break_state = new_state
@@ -608,9 +608,9 @@ function Enemies:init()
 
 			self.spr = spr
 			game:screenshake(10)
-			particles:image(self.mid_x, self.mid_y, 100, images.ptc_glass_shard, self.h)
+			Particles:image(self.mid_x, self.mid_y, 100, images.ptc_glass_shard, self.h)
 			local pitch = max(0.1, lerp(0.5, 1, self.life/self.max_life))
-			audio:play("glass_fracture", nil, pitch)
+			Audio:play("glass_fracture", nil, pitch)
 		end
 
 		if game.screenshake_q < 5 then
@@ -620,9 +620,9 @@ function Enemies:init()
 
 	local Button = self.Button
 	function self.ButtonGlass:on_death()
-		audio:play("glass_break")
+		Audio:play("glass_break")
 		game:screenshake(15)
-		particles:image(self.mid_x, self.mid_y, 300, images.ptc_glass_shard, self.h)
+		Particles:image(self.mid_x, self.mid_y, 300, images.ptc_glass_shard, self.h)
 
 		local b = create_actor_centered(Button, CANVAS_WIDTH/2, game.world_generator.box_rby)
 		game:new_actor(b)

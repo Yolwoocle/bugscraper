@@ -35,7 +35,7 @@ function Particle:update_particle(dt)
 	self.life = self.life - dt
 
 	if self.is_solid then
-		local items, len = collision.world:queryPoint(self.x, self.y, function(item) return item.is_solid end)
+		local items, len = Collision.world:queryPoint(self.x, self.y, function(item) return item.is_solid end)
 		if len > 0 then
 			self.bounces = self.bounces - 1
 			self.vy = -self.bounce_force - random_neighbor(40)
@@ -157,7 +157,7 @@ function StompedEnemyParticle:update(dt)
 
 	if abs(self.squash_target - self.squash) <= 0.01 then
 		self.is_removed = true
-		particles:smoke(self.x, self.y)
+		Particles:smoke(self.x, self.y)
 	end
 end
 function StompedEnemyParticle:draw()
@@ -190,7 +190,7 @@ function DeadPlayerParticle:init(x,y,spr,dir_x)
 
 	self.cols = {color(0xf6757a), color(0xb55088), color(0xe43b44), color(0x3a4466), color(0x262b44)}
 
-	particles:splash(self.x, self.y - self.oy, 40, self.cols)
+	Particles:splash(self.x, self.y - self.oy, 40, self.cols)
 end
 function DeadPlayerParticle:update(dt)
 	self:update_particle(dt)
@@ -201,8 +201,8 @@ function DeadPlayerParticle:update(dt)
 
 	if abs(self.r - goal_r) < 0.1 then
 		game:screenshake(10)
-		audio:play("explosion")
-		particles:splash(self.x, self.y - self.oy, 40, {COL_LIGHT_YELLOW, COL_ORANGE, COL_LIGHT_RED, COL_WHITE})
+		Audio:play("explosion")
+		Particles:splash(self.x, self.y - self.oy, 40, {COL_LIGHT_YELLOW, COL_ORANGE, COL_LIGHT_RED, COL_WHITE})
 		self.is_removed = true
 	end
 end
@@ -404,7 +404,7 @@ function ParticleSystem:word(x, y, str, col)
 	local x = x - get_text_width(str)/2
 	for i=1, #str do
 		local letter = utf8.sub(str, i,i)
-		particles:letter(x, y, letter, i*0.05, col)
+		Particles:letter(x, y, letter, i*0.05, col)
 		x = x + get_text_width(letter)
 	end
 end

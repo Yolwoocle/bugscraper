@@ -21,7 +21,7 @@ function AudioManager:play(snd, volume, pitch, object)
     volume = volume or 1
     pitch = pitch or 1
     
-    if not options:get("sound_on") then  return  end
+    if not Options:get("sound_on") then  return  end
     if sounds[sndname] == nil then   return   end
 
     local snd_table = sounds[sndname]

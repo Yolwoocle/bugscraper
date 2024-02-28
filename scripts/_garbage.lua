@@ -106,11 +106,11 @@ function Player:is_pressing_opposite_to_wall()
 	local null_filter = function()
 		return "cross"
 	end
-	collision:move(self.wall_collision_box, self.x, self.y, null_filter)
+	Collision:move(self.wall_collision_box, self.x, self.y, null_filter)
 	
 	-- Check for left wall
 	local nx = self.x - self.wall_jump_margin 
-	local x,y, cols, len = collision:move(self.wall_collision_box, nx, self.y, null_filter)
+	local x,y, cols, len = Collision:move(self.wall_collision_box, nx, self.y, null_filter)
 	for _,col in pairs(cols) do
 		if col.other.is_solid and col.normal.x == 1 and self:button_down("right") then
 			print("WOW", love.math.random(10,100))
@@ -120,7 +120,7 @@ function Player:is_pressing_opposite_to_wall()
 
 	-- Check for right wall
 	local nx = self.x + self.wall_jump_margin 
-	local x,y, cols, len = collision:move(self.wall_collision_box, nx, self.y, null_filter)
+	local x,y, cols, len = Collision:move(self.wall_collision_box, nx, self.y, null_filter)
 	for _,col in pairs(cols) do
 		if col.other.is_solid and col.normal.x == -1 and self:button_down("left")then
 			return true, -1

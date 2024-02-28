@@ -61,7 +61,7 @@ function love.keypressed(key, scancode, isrepeat)
 	-- 	gif_n = gif_n + 1
 
 	elseif key == "f11" then
-		if options then   options:toggle_fullscreen()    end
+		if Options then   Options:toggle_fullscreen()    end
 
 	-- elseif key == "m" then
 	-- 	options:und()
@@ -133,7 +133,7 @@ end
 function love.focus(f)
 	if f then
 	else
-		if options:get("pause_on_unfocus") and game.menu then
+		if Options:get("pause_on_unfocus") and game.menu then
 			game.menu:pause()
 		end
 	end
@@ -171,6 +171,6 @@ msg_log = {}
 
 function quit_game()
 	print("Quitting game")
-	if options then   options:on_quit()   end
+	if Options then   Options:on_quit()   end
 	love.event.quit()
 end

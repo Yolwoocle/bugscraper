@@ -29,22 +29,34 @@ function InputUser:init(n, input_map)
     self.joystick = nil
 end
 
-function InputUser:process_input_map(input_map)
+function InputUser:process_input_map(raw_input_map)
     local new_map = {}
-    for action, keys in pairs(input_map) do
+    for action, keys in pairs(raw_input_map) do
         new_map[action] = {}
         for _, keycode in pairs(keys) do
-            if keycode ~= nil and #keycode > 2 then
-                local prefix = keycode:sub(1, 1)
-                local keyname = keycode:sub(3, -1)
-                table.insert(new_map[action], {
-                    type = prefix,
-                    key_name = keyname
-                })
+            local button = self:keycode_to_button(keycode)
+            if button ~= nil then
+                table.insert(new_map[action], button)
             end
         end
     end
     return new_map
+end
+
+function InputUser:keycode_to_button(keycode)
+    if keycode ~= nil and #keycode > 2 then
+        local prefix = keycode:sub(1, 1)
+        local keyname = keycode:sub(3, -1)
+        return {
+            type = prefix,
+            key_name = keyname
+        }
+    end
+    return nil
+end
+
+function InputUser:set_action_buttons(action, buttons)
+    self.input_map[action] = buttons
 end
 
 function InputUser:init_last_input_state()

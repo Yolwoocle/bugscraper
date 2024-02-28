@@ -71,21 +71,38 @@ function InputManager:action_pressed_any_player(action)
     return false
 end
 
-function InputManager:set_controls(button, value)
-	if not value then
-		local controls = button
-		self.controls = controls
-		return
+function InputManager:get_user(n)
+    return self.users[n]
+end
+
+function InputManager:set_action_buttons(n, action, buttons)
+	if type(buttons) ~= table then
+		buttons = {buttons}
 	end
 
-	if not self.controls[button] then
-		print(concat("Tried to set btn '", button,"'"))
-		return
-	end
-	if type(value) ~= "table" then
-		print(concat("Val '",value,"' for set_controls is not a table"))
-	end
-	self.controls[button] = value
+    local user = self.users[n]
+    if user == nil then
+        print("set_action_buttons: player",n,"doesn't exist")
+        return
+    end
+
+    user:set_action_buttons(action, buttons)
+
+	Options:update_controls_file()
+end
+
+function InputManager:is_button_in_use(n, action, button)
+	local user = self.users[n]
+    assert(user ~= nil, concat("user ",n, " does not exist"))
+    
+    local assigned_buttons = user.input_map[action]
+    assert(user ~= nil, concat("action ",action, " has no assigned buttons"))
+    for _, assigned_button in ipairs(assigned_buttons) do
+        if assigned_button.type == button.type and assigned_button.key_name == button.key_name then
+            return true
+        end
+    end
+    return false
 end
 
 return InputManager

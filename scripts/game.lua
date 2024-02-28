@@ -1,5 +1,5 @@
 local Class = require "scripts.class"
-local Collision = require "scripts.collision"
+local CollisionManager = require "scripts.collision"
 local Player = require "scripts.player"
 local Enemies = require "data.enemies"
 local Bullet = require "scripts.bullet"
@@ -8,7 +8,7 @@ local WorldGenerator = require "scripts.worldgenerator"
 local Inventory = require "scripts.inventory"
 local ParticleSystem = require "scripts.particles"
 local AudioManager = require "scripts.audio"
-local MenuManager = require "scripts.menu"
+local MenuManager = require "scripts.menu.menu_manager"
 local OptionsManager = require "scripts.options"
 local InputManager = require "scripts.input"
 local utf8 = require "utf8"
@@ -25,11 +25,11 @@ local Game = Class:inherit()
 function Game:init()
 	print("TEST HELLO")
 	-- Global singletons
-	options = OptionsManager:new(self)
+	Options = OptionsManager:new(self)
 	Input = InputManager:new(self)
-	collision = Collision:new()
-	particles = ParticleSystem:new()
-	audio = AudioManager:new()
+	Collision = CollisionManager:new()
+	Particles = ParticleSystem:new()
+	Audio = AudioManager:new()
 	
 	-- Global Options ==> Moved to OptionsManager
 	-- is_fullscreen = options:get("is_fullscreen")
@@ -51,7 +51,7 @@ function Game:init()
 		love.window.setMode(CANVAS_WIDTH*CANVAS_SCALE, CANVAS_HEIGHT*CANVAS_SCALE, {
 			fullscreen = false,
 			resizable = true,
-			vsync = options:get"is_vsync",
+			vsync = Options:get"is_vsync",
 			minwidth = CANVAS_WIDTH,
 			minheight = CANVAS_HEIGHT,
 		})
@@ -61,9 +61,9 @@ function Game:init()
 	else
 		-- Init window
 		love.window.setMode(0, 0, {
-			fullscreen = options:get"is_fullscreen",
+			fullscreen = Options:get"is_fullscreen",
 			resizable = true,
-			vsync = options:get"is_vsync",
+			vsync = Options:get"is_vsync",
 			minwidth = CANVAS_WIDTH,
 			minheight = CANVAS_HEIGHT,
 		})
@@ -90,16 +90,16 @@ function Game:init()
 	-- self.volume = options:get("volume")
 	-- self.sound_on = options:get("sound_on")
 
-	options:set_volume(options:get("volume"))
+	Options:set_volume(Options:get("volume"))
 	
 	self:new_game()
 	
 	-- Menu Manager
 	self.menu = MenuManager:new(self)
 
-	love.mouse.setVisible(options:get("mouse_visible"))
+	love.mouse.setVisible(Options:get("mouse_visible"))
 
-	self.is_first_time = options.is_first_time
+	self.is_first_time = Options.is_first_time
 end
 
 
@@ -132,8 +132,8 @@ end
 
 function Game:new_game(number_of_players)
 	-- Reset global systems
-	collision = Collision:new()
-	particles = ParticleSystem:new()
+	Collision = CollisionManager:new()
+	Particles = ParticleSystem:new()
 
 	number_of_players = number_of_players or 1
 
@@ -233,7 +233,7 @@ function Game:new_game(number_of_players)
 		{name="box_left", is_solid = false, x = -BW,  y = -BW,   w=BW + box_ax * BW, h=map_h + 2*BW},
 		{name="box_right", is_solid = false, x = BW*(box_bx+1), y = -BW, w=BW*box_ax, h=map_h + 2*BW},
 	}
-	for i,box in pairs(self.boxes) do   collision:add(box)   end
+	for i,box in pairs(self.boxes) do   Collision:add(box)   end
 	
 	-- Actors
 	self.actor_limit = 100
@@ -319,12 +319,12 @@ function Game:new_game(number_of_players)
 	-- self.music_source:setVolume(options:get("music_volume"))
 	self.sfx_elevator_bg:setVolume(0)
 	self.sfx_elevator_bg:play()
-	self:set_music_volume(options:get("music_volume"))
+	self:set_music_volume(Options:get("music_volume"))
 	self.time_before_music = math.huge
 
 	self.endless_mode = false
 
-	options:update_sound_on()
+	Options:update_sound_on()
 end
 
 local n = 0
@@ -382,13 +382,13 @@ function Game:update_main_game(dt)
 
 	self:apply_screenshake(dt)
 	
-	if not options:get("screenshake_on") then self.cam_ox, self.cam_oy = 0,0 end
+	if not Options:get("screenshake_on") then self.cam_ox, self.cam_oy = 0,0 end
 	self.cam_realx, self.cam_realy = self.cam_x + self.cam_ox, self.cam_y + self.cam_oy
 
 	self.map:update(dt)
 
 	-- Particles
-	particles:update(dt)
+	Particles:update(dt)
 	self:update_bg_particles(dt)
 
 	self:progress_elevator(dt)
@@ -504,7 +504,7 @@ function Game:draw_game()
 		p:draw()
 	end
 
-	particles:draw()
+	Particles:draw()
 	
 	if self.show_rubble then
 		self:draw_rubble(self.cabin_x, self.cabin_y)
@@ -525,7 +525,7 @@ function Game:draw_game()
 	end
 
 	-- Draw actors UI
-	particles:draw_front()
+	Particles:draw_front()
 	-- Draw actors
 	for k,actor in pairs(self.actors) do
 		if actor.draw_hud then     actor:draw_hud()    end
@@ -616,7 +616,7 @@ function Game:draw_game()
 	end
 
 	-- Timer
-	if options:get("timer_on") then
+	if Options:get("timer_on") then
 		gfx.print(time_to_string(self.time), 2, 2)
 	end
 
@@ -643,9 +643,9 @@ function Game:draw_game()
 end
 
 function Game:draw_colview()
-	local items, len = collision.world:getItems()
+	local items, len = Collision.world:getItems()
 	for i,it in pairs(items) do
-		local x,y,w,h = collision.world:getRect(it)
+		local x,y,w,h = Collision.world:getRect(it)
 		rect_color({0,1,0,.2},"fill", x, y, w, h)
 		rect_color({0,1,0,.5},"line", x, y, w, h)
 	end
@@ -660,7 +660,7 @@ function Game:draw_debug()
 		concat("FPS: ",love.timer.getFPS()),
 		concat("n° of actors: ", #self.actors, " / ", self.actor_limit),
 		concat("n° of enemies: ", self.enemy_count),
-		concat("n° collision items: ", collision.world:countItems()),
+		concat("n° collision items: ", Collision.world:countItems()),
 		concat("elevator speed: ", self.elevator_speed),
 		concat("frames_to_skip: ", self.frames_to_skip),
 		concat("self.sfx_elevator_bg_volume", self.sfx_elevator_bg_volume),
@@ -786,7 +786,7 @@ function Game:init_players()
 		local player = Player:new(i, mx*16 + i*16, my*16, sprs[i])
 		self.players[i] = player
 		self:new_actor(player)
-		Input:new_user(options.control_presets[1])
+		Input:new_user(Options.control_presets[1])
 	end
 end
 
@@ -877,7 +877,7 @@ function Game:progress_elevator(dt)
 	self.sfx_elevator_bg_volume = lerp(self.sfx_elevator_bg_volume,
 		clamp(r, 0, self.sfx_elevator_bg_def_volume), 0.1)
 	self.sfx_elevator_bg:setVolume(self.sfx_elevator_bg_volume)
-	if options:get("disable_background_noise") then
+	if Options:get("disable_background_noise") then
 		self.sfx_elevator_bg:setVolume(0)
 	end
 
@@ -955,7 +955,7 @@ function Game:next_floor(dt, new_floor, old_floor)
 	self.move_logo = true
 	if old_floor ~= 0 then
 		local pitch = 0.8 + 0.5 * clamp(self.floor/self.max_floor, 0, 3)
-		audio:play("elev_ding", 0.8, pitch)
+		Audio:play("elev_ding", 0.8, pitch)
 	end
 end
 
@@ -1027,7 +1027,7 @@ function Game:new_wave_buffer_enemies()
 		
 		-- Prevent collisions with floor
 		if e.y+e.h > self.door_by then   e.y = self.door_by - e.h    end
-		collision:remove(e)
+		Collision:remove(e)
 		table.insert(self.door_animation_enemy_buffer, e)
 	end
 end
@@ -1128,7 +1128,7 @@ function Game:do_reverse_elevator(dt)
 			local x,y = random_range(self.cabin_ax, self.cabin_bx),random_range(self.cabin_ay, self.cabin_by)
 			local size = max(4, abs(self.elevator_speed)*0.01)
 			local velvar = max(5, abs(self.elevator_speed))
-			particles:fire(x,y,size, nil, velvar)
+			Particles:fire(x,y,size, nil, velvar)
 		end
 
 		-- bg color shift to red
@@ -1155,7 +1155,7 @@ function Game:on_exploding_elevator(dt)
 	end
 	
 	-- Crash sfx
-	audio:play("elev_crash")
+	Audio:play("elev_crash")
 
 	-- YOU WIN
 	self.is_on_win_screen = true
@@ -1197,7 +1197,7 @@ function Game:on_exploding_elevator(dt)
 	----smoke
 	for i=1, 200 do
 		local x,y = random_range(self.cabin_ax, self.cabin_bx),random_range(self.cabin_ay, self.cabin_by)
-		particles:splash(x,y, 5, nil, nil, 10, 4)
+		Particles:splash(x,y, 5, nil, nil, 10, 4)
 	end
 
 	--reset player gravity
@@ -1217,7 +1217,7 @@ function Game:do_exploding_elevator(dt)
 	local mw = CANVAS_WIDTH/2
 	y = 16*BW-8 - max(0, lerp(BW*4-8, -16, abs(mw-x)/mw))
 	local size = random_range(4, 8)
-	particles:fire(x,y,size, nil, 80, -5)
+	Particles:fire(x,y,size, nil, 80, -5)
 end
 
 -----------------------------------------------------
@@ -1256,7 +1256,7 @@ end
 -- end
 
 function Game:screenshake(q)
-	if not options:get('screenshake_on') then  return   end
+	if not Options:get('screenshake_on') then  return   end
 	self.screenshake_q = self.screenshake_q + q
 end
 

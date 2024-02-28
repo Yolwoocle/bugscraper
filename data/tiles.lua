@@ -90,7 +90,7 @@ function Tiles:new_tile(n, x, y, w, ...)
 
 	-- Init collision box
 	if tile.is_solid then
-		collision:add(tile, tile.x, tile.y, tile.w, tile.w)
+		Collision:add(tile, tile.x, tile.y, tile.w, tile.w)
 	end
 
 	return tile

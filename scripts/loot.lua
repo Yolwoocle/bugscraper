@@ -46,7 +46,7 @@ function Loot:init_loot(spr, x, y, w, h, val, vx, vy)
 	self.ghost_time = random_range(0.4, 0.8)
 	self.ghost_timer = self.ghost_time
 
-	local actual_x, actual_y, cols, len = collision:check(self, self.x, self.y)
+	local actual_x, actual_y, cols, len = Collision:check(self, self.x, self.y)
 	local is_coll = false
 	for _,c in pairs(cols) do
 		if c.is_solid then
@@ -96,7 +96,7 @@ function Loot:update_loot(dt)
 	end
 
 	if self.life < 0 then
-		particles:smoke(self.mid_x, self.mid_y)
+		Particles:smoke(self.mid_x, self.mid_y)
 		self:remove()
 	end
 end
@@ -181,8 +181,8 @@ function Loot.Ammo:init(x, y, val, vx, vy)
 end
 
 function Loot.Ammo:on_collect(player)
-	particles:smoke(self.mid_x, self.mid_y, nil, COL_LIGHT_BLUE)
-	audio:play("item_collect")
+	Particles:smoke(self.mid_x, self.mid_y, nil, COL_LIGHT_BLUE)
+	Audio:play("item_collect")
 	
 	local success, overflow = player.gun:add_ammo(self.value)
 	if not success then
@@ -209,10 +209,10 @@ end
 
 function Loot.Life:on_collect(player)
 	local success, overflow = player:heal(self.value)
-	particles:smoke(self.mid_x, self.mid_y, nil, COL_LIGHT_RED)
-	audio:play("item_collect")
+	Particles:smoke(self.mid_x, self.mid_y, nil, COL_LIGHT_RED)
+	Audio:play("item_collect")
 
-	particles:word(self.mid_x, self.mid_y, concat("+",self.value))
+	Particles:word(self.mid_x, self.mid_y, concat("+",self.value))
 
 	if not success then
 		--TODO
@@ -249,10 +249,10 @@ end
 function Loot.Gun:on_collect(player)
 	player:equip_gun(self.gun)
 	
-	particles:smoke(self.mid_x, self.mid_y, nil, COL_LIGHT_BROWN)
-	audio:play("item_collect")
+	Particles:smoke(self.mid_x, self.mid_y, nil, COL_LIGHT_BROWN)
+	Audio:play("item_collect")
 
-	particles:word(self.mid_x, self.mid_y, string.upper(self.gun.display_name or self.gun.name), COL_LIGHT_YELLOW)
+	Particles:word(self.mid_x, self.mid_y, string.upper(self.gun.display_name or self.gun.name), COL_LIGHT_YELLOW)
 
 	self:remove()
 end

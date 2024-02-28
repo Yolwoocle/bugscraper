@@ -618,14 +618,14 @@ function dist(...)
 	return sqrt(distsqr(...))
 end
 
-function cerp(a,b,t) 
+function cerp(a,b,t)
 	-- "constant" interpolation?
 	if abs(a-b) <= t then    return b    end
-	return a + sign0(b-a)*t 
+	return a + sign0(b-a)*t
 end
 
-function lerp(a,b,t) 
-	return a * (1-t) + b * t 
+function lerp(a,b,t)
+	return a + (b - a) * t
 end
 
 function lerp_color(a,b,t)

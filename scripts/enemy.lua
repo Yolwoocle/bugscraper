@@ -142,7 +142,7 @@ function Enemy:on_collision(col, other)
 			player.vy = 0
 			player:on_stomp(self)
 			if self.do_stomp_animation then
-				particles:stomped_enemy(self.spr_x, self.spr_y, self.spr)
+				Particles:stomped_enemy(self.spr_x, self.spr_y, self.spr)
 			end
 			self:on_stomped(player)
 			self:kill(player, "stomped")
@@ -170,7 +170,7 @@ function Enemy:after_collision(col, other)  end
 function Enemy:do_damage(n, damager)
 	self.damaged_flash_timer = self.damaged_flash_max
 	
-	if self.play_sfx then   audio:play_var(self.sound_damage, 0.3, 1.1)   end
+	if self.play_sfx then   Audio:play_var(self.sound_damage, 0.3, 1.1)   end
 	self.life = self.life - n
 	self:on_damage(n, self.life + n)
 
@@ -192,12 +192,12 @@ function Enemy:kill(damager, reason)
 	self.death_reason = reason or ""
 
 	game:frameskip(1)
-	particles:smoke(self.mid_x, self.mid_y)
+	Particles:smoke(self.mid_x, self.mid_y)
 	if self.play_sfx then
 		if reason == "stomped" then
-			audio:play_var(self.sound_stomp, 0.3, 1.1)
+			Audio:play_var(self.sound_stomp, 0.3, 1.1)
 		else
-			audio:play_var(self.sound_death, 0.3, 1.1)
+			Audio:play_var(self.sound_death, 0.3, 1.1)
 		end
 	end
 

@@ -70,9 +70,9 @@ function TileMap:set_collision(x,y, val)
 	if val == tile.is_solid then    return    end		
 
 	if val then
-		collision:add(tile, tile.x, tile.y, tile.w, tile.w)
+		Collision:add(tile, tile.x, tile.y, tile.w, tile.w)
 	else
-		collision:remove(tile)	
+		Collision:remove(tile)	
 	end
 end
 

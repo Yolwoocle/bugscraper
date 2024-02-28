@@ -125,11 +125,11 @@ function Gun:shoot(dt, player, x, y, dx, dy, is_burst)
 	
 	-- Now, FIRE!!
 	-- SFX & Particles
-	audio:play_var(self.sfx, 0.2, 1.2, {pitch=self.sfx_pitch})
+	Audio:play_var(self.sfx, 0.2, 1.2, {pitch=self.sfx_pitch})
 	if self.sfx2 then
-		audio:play_var(self.sfx2, 0.2, 1.2, {pitch=self.sfx_pitch})
+		Audio:play_var(self.sfx2, 0.2, 1.2, {pitch=self.sfx_pitch})
 	end
-	particles:image(x , y, 1, images.ptc_bullet_casing, 4, nil, nil, nil, {
+	Particles:image(x , y, 1, images.ptc_bullet_casing, 4, nil, nil, nil, {
 		vx1 = -dx * 40,
 		vx2 = -dx * 100,
 
@@ -155,7 +155,7 @@ function Gun:shoot(dt, player, x, y, dx, dy, is_burst)
 		-- If only fire 1 bullet 
 		local ang = ang + random_neighbor(self.random_angle_offset)
 		dx, dy = cos(ang), sin(ang)
-		particles:flash(x, y)
+		Particles:flash(x, y)
 		self:fire_bullet(dt, player, x, y, self.bul_w, self.bul_h, dx, dy)
 	else
 		-- If fire multiple bullets
@@ -166,7 +166,7 @@ function Gun:shoot(dt, player, x, y, dx, dy, is_burst)
 			local a = ang-self.bullet_spread + i*step + rand_o
 			local dx = cos(a)
 			local dy = sin(a)
-			particles:flash(x, y)
+			Particles:flash(x, y)
 			self:fire_bullet(dt, player, x, y, self.bul_w, self.bul_h, dx, dy)
 		end
 	end

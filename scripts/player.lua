@@ -84,7 +84,7 @@ function Player:init(n, x, y, spr)
 		w = self.w + self.wall_jump_margin*2,
 		h = self.h,
 	}
-	collision:add(self.wall_collision_box)
+	Collision:add(self.wall_collision_box)
 
 	-- Visuals
 	self.color = ({COL_RED, COL_GREEN, COL_DARK_RED, COL_YELLOW})[self.n]
@@ -202,7 +202,7 @@ function Player:update(dt)
 		end
 		
 		if self.combo >= 4 then
-			particles:word(self.mid_x, self.mid_y, concat("COMBO ", self.combo, "!"), COL_LIGHT_BLUE)
+			Particles:word(self.mid_x, self.mid_y, concat("COMBO ", self.combo, "!"), COL_LIGHT_BLUE)
 		end
 		self.combo = 0
 	end
@@ -391,7 +391,7 @@ function Player:do_wall_sliding(dt)
 		-- Particles
 		self.wall_slide_particle_timer = self.wall_slide_particle_timer + 1
 		if self.wall_slide_particle_timer % 1 == 0 then
-			particles:dust(self.mid_x + (self.w/2) * -self.dir_x, self.y)
+			Particles:dust(self.mid_x + (self.w/2) * -self.dir_x, self.y)
 		end
 
 		-- SFX
@@ -459,9 +459,9 @@ function Player:get_nearby_wall()
 	box.y = self.y - self.wall_jump_margin
 	box.w = self.w + self.wall_jump_margin*2
 	box.h = self.h + self.wall_jump_margin*2
-	collision:update(box)
+	Collision:update(box)
 	
-	local x,y, cols, len = collision:move(box, box.x, box.y, null_filter)
+	local x,y, cols, len = Collision:move(box, box.x, box.y, null_filter)
 	for _,col in pairs(cols) do
 		if col.other.is_solid and col.normal.y == 0 then 
 			return col.normal	
@@ -474,8 +474,8 @@ end
 function Player:jump(dt)
 	self.vy = -self.jump_speed
 	
-	particles:smoke(self.mid_x, self.y+self.h)
-	audio:play_var("jump", 0, 1.2)
+	Particles:smoke(self.mid_x, self.y+self.h)
+	Audio:play_var("jump", 0, 1.2)
 	self.jump_squash = 1/4
 end
 
@@ -483,7 +483,7 @@ function Player:wall_jump(normal)
 	self.vx = normal.x * self.wall_jump_kick_speed
 	self.vy = -self.jump_speed
 	
-	audio:play_var("jump", 0, 1.2)
+	Audio:play_var("jump", 0, 1.2)
 	self.jump_squash = 1/4
 end
 
@@ -504,14 +504,14 @@ function Player:kill()
 	self.is_dead = true
 	
 	game:screenshake(10)
-	particles:dead_player(self.spr_x, self.spr_y, self.spr_dead, self.dir_x)
+	Particles:dead_player(self.spr_x, self.spr_y, self.spr_dead, self.dir_x)
 	game:frameskip(30)
 
 	self:on_death()
 	game:on_kill(self)
 	
 	self.timer_before_death = self.max_timer_before_death
-	audio:play("game_over_1")
+	Audio:play("game_over_1")
 end
 
 function Player:on_death()
@@ -524,7 +524,7 @@ function Player:do_death_anim(dt)
 	
 	if self.timer_before_death <= 0 then
 		game:on_game_over()
-		audio:play("game_over_2")
+		Audio:play("game_over_2")
 	end
 end
 
@@ -627,7 +627,7 @@ function Player:on_stomp(enemy)
 
 	self.combo = self.combo + 1
 	if self.combo >= 4 then
-		particles:word(self.mid_x, self.mid_y, tostring(self.combo), COL_LIGHT_BLUE)
+		Particles:word(self.mid_x, self.mid_y, tostring(self.combo), COL_LIGHT_BLUE)
 	end
 	
 	self.ui_col_gradient = 1
@@ -640,9 +640,9 @@ function Player:do_damage(n, source)
 	if n <= 0 then    return    end
 
 	game:frameskip(8)
-	audio:play("hurt")
+	Audio:play("hurt")
 	game:screenshake(5)
-	particles:word(self.mid_x, self.mid_y, concat("-",n))
+	Particles:word(self.mid_x, self.mid_y, concat("-",n))
 	-- self:do_knockback(source.knockback, source)--, 0, source.h/2)
 	--source:do_knockback(source.knockback*0.75, self)
 	if self.is_knockbackable then
@@ -686,11 +686,11 @@ function Player:on_grounded()
 	if self.grounded_col and self.grounded_col.other.name == "rubble" then
 		s = "gravel_footstep_"..tostring(love.math.random(1,6))
 	end
-	audio:play_var(s, 0.3, 1, {pitch=0.5, volume=0.5})
+	Audio:play_var(s, 0.3, 1, {pitch=0.5, volume=0.5})
 
 	self.jump_squash = 2
 	self.spr = self.spr_idle
-	particles:smoke(self.mid_x, self.y+self.h, 10, COL_WHITE, 8, 4, 2)
+	Particles:smoke(self.mid_x, self.y+self.h, 10, COL_WHITE, 8, 4, 2)
 
 	self.air_time = 0
 end
@@ -769,7 +769,7 @@ function Player:animate_walk(dt)
 		if self.grounded_col and self.grounded_col.other.name == "rubble" then
 			s = "gravel_footstep_"..tostring(love.math.random(1,6))
 		end
-		audio:play_var(s, 0.3, 1.1, {pitch=0.4, volume=0.5})
+		Audio:play_var(s, 0.3, 1.1, {pitch=0.4, volume=0.5})
 	end
 end
 
@@ -784,7 +784,7 @@ function Player:do_particles(dt)
 	if self.is_walking then
 		self.walk_timer = self.walk_timer + 1
 		if self.walk_timer % 10 == 0 then
-			particles:dust(self.mid_x, flr_y)
+			Particles:dust(self.mid_x, flr_y)
 		end
 	end
 end

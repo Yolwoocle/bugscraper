@@ -2,13 +2,13 @@ local bump = require "lib.bump.bump"
 local Class = require "scripts.class"
 require "scripts.constants"
 
-local Collision = Class:inherit()
+local CollisionManager = Class:inherit()
 
-function Collision:init()
+function CollisionManager:init()
 	self.world = bump.newWorld(BLOCK_WIDTH*2)
 end
 
-function Collision:add(o, x, y, w, h)
+function CollisionManager:add(o, x, y, w, h)
 	if not x then
 		x, y, w, h = o.x, o.y, o.w, o.h
 	end
@@ -23,11 +23,11 @@ function Collision:add(self, o)
 end
 --]]
 
-function Collision:remove(o)
+function CollisionManager:remove(o)
 	self.world:remove(o)
 end
 
-function Collision:update(o,x,y,w,h)
+function CollisionManager:update(o,x,y,w,h)
 	-- Move to pos without changing position
 	x = x or o.x
 	y = y or o.y
@@ -37,7 +37,7 @@ function Collision:update(o,x,y,w,h)
 end
 
 local maxd = 0
-function Collision:move(o, goal_x, goal_y, filter)
+function CollisionManager:move(o, goal_x, goal_y, filter)
 	-- Attempts to move object `o` and returns data about the collision
 	filter = filter or self.filter
 	goal_x = goal_x
@@ -61,7 +61,7 @@ function Collision:move(o, goal_x, goal_y, filter)
 	return actual_x, actual_y, cols, len
 end 
 
-function Collision:check(o, goal_x, goal_y, filter)
+function CollisionManager:check(o, goal_x, goal_y, filter)
 	-- Attempts to move object `o` and returns data about the collision
 	filter = filter or self.filter
 	goal_x = goal_x
@@ -71,7 +71,7 @@ function Collision:check(o, goal_x, goal_y, filter)
 	return actual_x, actual_y, cols, len
 end 
 
-function Collision.filter(item, other)
+function CollisionManager.filter(item, other)
 	-- By default, do not react to collisions
 	local type = "cross"
 
@@ -85,4 +85,4 @@ function Collision.filter(item, other)
 	return type
 end
 
-return Collision
+return CollisionManager

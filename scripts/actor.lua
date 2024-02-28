@@ -75,7 +75,7 @@ function Actor:update()
 end
 
 function Actor:add_collision()
-	collision:add(self, self.x, self.y, self.w, self.h)
+	Collision:add(self, self.x, self.y, self.w, self.h)
 end
 
 function Actor:do_gravity(dt)
@@ -97,7 +97,7 @@ function Actor:update_actor(dt)
 	local goal_x = self.x + self.vx * dt
 	local goal_y = self.y + self.vy * dt
 
-	local actual_x, actual_y, cols, len = collision:move(self, goal_x, goal_y)
+	local actual_x, actual_y, cols, len = Collision:move(self, goal_x, goal_y)
 	self.x = actual_x
 	self.y = actual_y
 	
@@ -248,12 +248,12 @@ end
 function Actor:remove()
 	if not self.is_removed then
 		self.is_removed = true
-		collision:remove(self)
+		Collision:remove(self)
 	end
 end
 
 function Actor:move_to(goal_x,goal_y)
-	local actual_x, actual_y, cols, len = collision:move(self, goal_x, goal_y)
+	local actual_x, actual_y, cols, len = Collision:move(self, goal_x, goal_y)
 	self.x = actual_x
 	self.y = actual_y
 end
@@ -261,7 +261,7 @@ end
 function Actor:set_pos(x, y)
 	self.x = x
 	self.y = y
-	collision:update(self, x, y)
+	Collision:update(self, x, y)
 end
 
 return Actor

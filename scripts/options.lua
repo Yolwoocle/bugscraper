@@ -141,7 +141,7 @@ function OptionsManager:load_controls()
 end
 
 function OptionsManager:update_options_file()
-	print("Creating or updating options.txt file")
+	-- print("Creating or updating options.txt file")
 	local file = love.filesystem.newFile("options.txt")
 	file:open("w")
 	
@@ -192,7 +192,8 @@ end
 function OptionsManager:toggle_fullscreen()
 	-- local success = love.graphics.toggleFullscreen( )
 	self:toggle("is_fullscreen")
-	love.window.setFullscreen(self:get("is_fullscreen"))
+	local is_fullscreen = self:get("is_fullscreen")
+	love.window.setFullscreen(is_fullscreen)
 
 	self:update_options_file()
 end
@@ -269,51 +270,6 @@ function OptionsManager:toggle_background_noise()
 	self:toggle("disable_background_noise")
 
 	self:update_options_file()
-end
-
-function OptionsManager:get_controls(n, btn)
-	if not btn then
-		return self.control_schemes[n]
-	end
-	
-	return self.control_schemes[n][btn]
-end
-
-function OptionsManager:set_button_bind(n, btn, scancodes)
-	if type(scancodes) ~= table then
-		scancodes = {scancodes}
-	end
-	
-	self.control_schemes[n][btn] = scancodes
-	local player = game.players[n]
-	if player == nil then  print("set_btn_bind: player",n,"doesn't exist") return end
-
-	-- D-pad controls will always be assigned to L/R/U/D
-	if is_in_table({"left", "right", "up", "down"}, btn) then
-		table.insert(scancodes, btn)
-	end
-
-	player:set_controls(btn, scancodes)
-
-	self:update_controls_file()
-end
-
-function OptionsManager:check_if_key_in_use(scancode)
-	if true then
-		return true
-	end
-	for i=1, #self.control_schemes do
-		for k,v in pairs(self.control_schemes[i]) do
-			if type(v) == "table" then
-				for _,code in pairs(v) do
-					if code == scancode then
-						return true
-					end
-				end
-			end
-		end
-	end
-	return false
 end
 
 function OptionsManager:on_quit()

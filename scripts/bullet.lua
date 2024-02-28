@@ -56,7 +56,7 @@ function Bullet:on_collision(col)
 	
 	if not self.is_removed and col.other.is_solid then
 		local s = "metalfootstep_0"..tostring(love.math.random(0,4))
-		audio:play_var(s, 0.3, 1, {pitch=0.7, volume=0.5})
+		Audio:play_var(s, 0.3, 1, {pitch=0.7, volume=0.5})
 		self:kill()
 	end
 	
@@ -64,7 +64,7 @@ function Bullet:on_collision(col)
 		col.other:on_hit_bullet(self, col)
 		if col.other.destroy_bullet_on_impact then
 			local s = "metalfootstep_0"..tostring(love.math.random(0,4))
-			audio:play_var(s, 0.3, 1, {pitch=0.7, volume=0.5})
+			Audio:play_var(s, 0.3, 1, {pitch=0.7, volume=0.5})
 			self:kill()
 		end
 
@@ -92,7 +92,7 @@ function Bullet:on_collision(col)
 end
 
 function Bullet:kill()
-	particles:smoke(self.x + self.w/2, self.y + self.h/2)
+	Particles:smoke(self.x + self.w/2, self.y + self.h/2)
 	self:remove()
 end
 
