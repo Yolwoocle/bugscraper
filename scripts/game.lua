@@ -61,16 +61,15 @@ function Game:init()
 	else
 		-- Init window
 		love.window.setMode(0, 0, {
-			fullscreen = Options:get"is_fullscreen",
+			fullscreen = Options:get("is_fullscreen"),
 			resizable = true,
-			vsync = Options:get"is_vsync",
+			vsync = Options:get("is_vsync"),
 			minwidth = CANVAS_WIDTH,
 			minheight = CANVAS_HEIGHT,
 		})
 		SCREEN_WIDTH, SCREEN_HEIGHT = gfx.getDimensions()
 		love.window.setTitle("Bugscraper")
 		love.window.setIcon(love.image.newImageData("icon.png"))
-		
 	end
 	gfx.setDefaultFilter("nearest", "nearest")
 	love.graphics.setLineStyle("rough")
@@ -95,7 +94,7 @@ function Game:init()
 	self:new_game()
 	
 	-- Menu Manager
-	self.menu = MenuManager:new(self)
+	self.menu_manager = MenuManager:new(self)
 
 	love.mouse.setVisible(Options:get("mouse_visible"))
 
@@ -274,8 +273,8 @@ function Game:new_game(number_of_players)
 	self.jetpack_tutorial_y = -30
 	self.move_jetpack_tutorial = false
 	
-	if self.menu then
-		self.menu:set_menu()
+	if self.menu_manager then
+		self.menu_manager:set_menu()
 	end
 
 	self.stats = {
@@ -286,7 +285,7 @@ function Game:new_game(number_of_players)
 	}
 	self.kills = 0
 	self.time = 0
-	self.max_combo = 0 
+	self.max_combo = 0
 
 	-- Cabin stats
 	--TODO: fuze it into map or remove map, only have coll boxes & no map
@@ -308,8 +307,9 @@ function Game:new_game(number_of_players)
 	self.frames_to_skip = 0
 	self.slow_mo_rate = 0
 
-	self.draw_shadows = false
-	
+	self.draw_shadows = true
+	self.shadow_canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
+
 	-- Music
 	-- TODO: a "ambient sfx" system
 	self.music_source    = sounds.music_galaxy_trip[1]
@@ -338,15 +338,15 @@ function Game:update(dt)
 		return
 	end
 
+	Input:update(dt)
+	
 	-- Menus
-	self.menu:update(dt)
-
-	if not self.menu.cur_menu then
+	self.menu_manager:update(dt)
+	
+	if not self.menu_manager.cur_menu then
 		self:update_main_game(dt)
 	end
-
-	-- Update button states
-	Input:update(dt)
+	Input:update_last_input_state(dt)
 end
 
 function Game:update_main_game(dt)
@@ -359,7 +359,7 @@ function Game:update_main_game(dt)
 	self.time_before_music = self.time_before_music - dt
 	if self.time_before_music <= 0 and not self.game_started then
 		self.music_source:play()
-		self.game_started = true	
+		self.game_started = true
 	end
 
 	-- BG color gradient
@@ -487,11 +487,10 @@ function Game:draw_game()
 	end
 
 	local old_canvas
-	local objs_canvas
 	if self.draw_shadows then
 		old_canvas = love.graphics.getCanvas()
-		objs_canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
-		love.graphics.setCanvas(objs_canvas)
+		love.graphics.setCanvas(self.shadow_canvas)
+		love.graphics.clear()
 	end
 
 	-- Draw actors
@@ -514,9 +513,9 @@ function Game:draw_game()
 		love.graphics.setCanvas(old_canvas)
 		
 		love.graphics.setColor(0,0,0, 0.5)
-		love.graphics.draw(objs_canvas, 0, 3)
+		love.graphics.draw(self.shadow_canvas, 0, 3)
 		love.graphics.setColor(1,1,1, 1)
-		love.graphics.draw(objs_canvas, 0, 0)
+		love.graphics.draw(self.shadow_canvas, 0, 0)
 	end
 
 	-- Walls
@@ -558,56 +557,8 @@ function Game:draw_game()
 	gfx.draw(images.controls_jetpack, ox + floor((CANVAS_WIDTH - images.controls_jetpack:getWidth())/2), oy + floor(self.jetpack_tutorial_y))
 
 	-- "CONGRATS" at the end
-	-- PINNNNNN
 	if self.is_on_win_screen then
-		local old_font = gfx.getFont()
-		gfx.setFont(FONT_PAINT)
-
-		local text = "CONGRATULATIONS! "
-		local w = get_text_width(text, FONT_PAINT)
-		local text_x1 = floor((CANVAS_WIDTH - w)/2)
-
-		for i=1, #self.logo_cols + 1 do
-			local text_x = text_x1
-			for i_chr=1, #text do
-				local chr = utf8.sub(text, i_chr, i_chr)
-				local t = self.t + i_chr*0.04
-				local ox, oy = cos(t*4 + i*.2)*8, sin(t*4 + i*.2)*8
-				
-				local col = self.logo_cols[i]
-				if col == nil then
-					col = COL_WHITE
-				end
-				gfx.setColor(col)
-				gfx.print(chr, text_x + ox, 40 + oy)
-
-				text_x = text_x + get_text_width(chr) + 1
-			end
-		end
-
-		gfx.setFont(old_font)
-		
-		-- Win stats
-		local iy = 0
-		local ta = {}
-		for k,v in pairs(self.stats) do
-			local val = v
-			local key = k
-			if k == "time" then val = time_to_string(v) end
-			if k == "floor" then val = concat(v, " / 16") end
-			if k == "max_combo" then key = "max combo" end
-			table.insert(ta, concat(k,": ",val))
-		end
-		table.insert(ta, "PRESS [ESCAPE]")
-
-		for k,v in pairs(ta) do
-			local t = self.t + iy*0.2
-			local ox, oy = cos(t*4)*5, sin(t*4)*5
-			local mx = CANVAS_WIDTH / 2
-
-			print_centered_outline(COL_WHITE, COL_BLACK_BLUE, v, mx+ox, 80+iy*14 +oy)
-			iy = iy + 1
-		end
+		self:draw_win_screen()
 	end
 
 	-- Flash
@@ -629,8 +580,8 @@ function Game:draw_game()
 	end
 
 	-- Menus
-	if self.menu.cur_menu then
-		self.menu:draw()
+	if self.menu_manager.cur_menu then
+		self.menu_manager:draw()
 	end
 
 	--'Memory used (in kB): ' .. collectgarbage('count')
@@ -752,7 +703,7 @@ function Game:save_stats()
 end
 
 function Game:on_game_over()
-	self.menu:set_menu("game_over")
+	self.menu_manager:set_menu("game_over")
 end
 
 function Game:do_win()
@@ -786,7 +737,7 @@ function Game:init_players()
 		local player = Player:new(i, mx*16 + i*16, my*16, sprs[i])
 		self.players[i] = player
 		self:new_actor(player)
-		Input:new_user(Options.control_presets[1])
+		Input:new_user()
 	end
 end
 
@@ -795,7 +746,8 @@ function Game:apply_screenshake(dt)
 	self.screenshake_q = max(0, self.screenshake_q - self.screenshake_speed * dt)
 	-- self.screenshake_q = lerp(self.screenshake_q, 0, 0.2)
 
-	local q = self.screenshake_q
+	local multiplier = Options:get("screenshake")
+	local q = self.screenshake_q * multiplier
 	local ox, oy = random_neighbor(q), random_neighbor(q)
 	if abs(ox) >= 0.2 then   ox = sign(ox) * max(abs(ox), 1)   end -- Using an epsilon of 0.2 to avoid
 	if abs(oy) >= 0.2 then   oy = sign(oy) * max(abs(oy), 1)   end -- jittery effects on UI elmts
@@ -1062,6 +1014,57 @@ function Game:draw_background(cabin_x, cabin_y)
 	gfx.setFont(FONT_REGULAR)
 end
 
+function Game:draw_win_screen()
+	local old_font = gfx.getFont()
+	gfx.setFont(FONT_PAINT)
+
+	local text = "CONGRATULATIONS! "
+	local w = get_text_width(text, FONT_PAINT)
+	local text_x1 = floor((CANVAS_WIDTH - w)/2)
+
+	for i=1, #self.logo_cols + 1 do
+		local text_x = text_x1
+		for i_chr=1, #text do
+			local chr = utf8.sub(text, i_chr, i_chr)
+			local t = self.t + i_chr*0.04
+			local ox, oy = cos(t*4 + i*.2)*8, sin(t*4 + i*.2)*8
+			
+			local col = self.logo_cols[i]
+			if col == nil then
+				col = COL_WHITE
+			end
+			gfx.setColor(col)
+			gfx.print(chr, text_x + ox, 40 + oy)
+
+			text_x = text_x + get_text_width(chr) + 1
+		end
+	end
+
+	gfx.setFont(old_font)
+	
+	-- Win stats
+	local iy = 0
+	local ta = {}
+	for k,v in pairs(self.stats) do
+		local val = v
+		local key = k
+		if k == "time" then val = time_to_string(v) end
+		if k == "floor" then val = concat(v, " / 16") end
+		if k == "max_combo" then key = "max combo" end
+		table.insert(ta, concat(k,": ",val))
+	end
+	table.insert(ta, "PRESS [ESCAPE]")
+
+	for k,v in pairs(ta) do
+		local t = self.t + iy*0.2
+		local ox, oy = cos(t*4)*5, sin(t*4)*5
+		local mx = CANVAS_WIDTH / 2
+
+		print_centered_outline(COL_WHITE, COL_BLACK_BLUE, v, mx+ox, 80+iy*14 +oy)
+		iy = iy + 1
+	end
+end
+
 function Game:draw_rubble(x,y)
 	gfx.draw(images.cabin_rubble, x, (16-5)*BW)
 end
@@ -1232,8 +1235,8 @@ function Game:keypressed(key, scancode, isrepeat)
 	elseif key == "f1" then
 	end
 
-	if self.menu then
-		self.menu:keypressed(key, scancode, isrepeat)
+	if self.menu_manager then
+		self.menu_manager:keypressed(key, scancode, isrepeat)
 	end
 
 	for i, ply in pairs(self.players) do

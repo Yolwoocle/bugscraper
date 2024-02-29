@@ -5,7 +5,7 @@ local ControlsMenuItem = require "scripts.menu.menu_item_controls"
 
 local function func_set_menu(menu)
 	return function()
-		game.menu:set_menu(menu)
+		game.menu_manager:set_menu(menu)
 	end
 end
 
@@ -38,10 +38,10 @@ local function generate_menus()
     menus.pause = Menu:new(game, {
         { "<<<<<<<<< PAUSED >>>>>>>>>" },
         { "" },
-        { "RESUME", function() game.menu:unpause() end },
+        { "RESUME", function() game.menu_manager:unpause() end },
         { "RETRY", function() game:new_game() end },
         { "OPTIONS", func_set_menu('options') },
-        { "CREDITS", func_set_menu('credits1') },
+        { "CREDITS", func_set_menu('credits') },
         { "QUIT", quit_game },
     }, { 0, 0, 0, 0.85 })
     if OPERATING_SYSTEM == "Web" then
@@ -51,7 +51,7 @@ local function generate_menus()
 
     menus.options = Menu:new(game, {
         { "<<<<<<<<< OPTIONS >>>>>>>>>" },
-        { "< BACK", func_set_menu("pause")},--function() game.menu:back() end },
+        { "< BACK", func_set_menu("pause")},--function() game.menu_manager:back() end },
         { "" },
         { "<<< Controls >>>" },
         { "KEYBOARD BINDINGS", func_set_menu("controls")},
@@ -166,13 +166,26 @@ local function generate_menus()
             self.value_text = Options:get("pause_on_unfocus") and "ON" or "OFF"
         end},
         
-        { "SCREENSHAKE", function(self)
-            Options:toggle_screenshake()
-            love.mouse.setVisible(Options:get("screenshake_on"))
-        end,
+        -- { "SCREENSHAKE", function(self)
+        --     Options:toggle_screenshake()
+        --     love.mouse.setVisible(Options:get("screenshake_on"))
+        -- end,
+        -- function(self)
+        --     self.value = Options:get("screenshake_on")
+        --     self.value_text = Options:get("screenshake_on") and "ON" or "OFF"
+        -- end},
+        { SliderMenuItem, "SCREENSHAKE", function(self, diff)
+            diff = diff or 1
+            self.value = (self.value + diff)
+            if self.value < 0 then self.value = 20 end
+            if self.value > 20 then self.value = 0 end
+            
+            Options:set_screenshake(self.value/20)
+            Audio:play("menu_select", 1.0, 0.8+(self.value/20)*0.4)
+        end, range_table(0,20),
         function(self)
-            self.value = Options:get("screenshake_on")
-            self.value_text = Options:get("screenshake_on") and "ON" or "OFF"
+            self.value = Options:get("screenshake") * 20
+            self.value_text = concat(floor(100 * self.value / 20), "%")
         end},
     }, { 0, 0, 0, 0.85 })
 
@@ -180,16 +193,24 @@ local function generate_menus()
         { "<<<<<<<<< CONTROLS >>>>>>>>>" },
         { "< BACK", func_set_menu("options") },
         { "" },
-        { "RESET CONTROLS", function() Options:reset_controls() end },
+        { "RESET CONTROLS", function() Input:reset_controls(1) end },
         { "" },
-        { ControlsMenuItem, "left", 1 },
-        { ControlsMenuItem, "right", 1 },
-        { ControlsMenuItem, "up", 1 },
-        { ControlsMenuItem, "down", 1 },
-        { ControlsMenuItem, "jump", 1 },
-        { ControlsMenuItem, "shoot", 1 },
-        { "PAUSE: [ESCAPE]"},
-        { "SELECT: [ENTER]"},
+        { "<<< Gameplay >>>" },
+        { ControlsMenuItem, 1, "k", "left"},
+        { ControlsMenuItem, 1, "k", "right"},
+        { ControlsMenuItem, 1, "k", "up"},
+        { ControlsMenuItem, 1, "k", "down"},
+        { ControlsMenuItem, 1, "k", "jump"},
+        { ControlsMenuItem, 1, "k", "shoot"},
+        { ""},
+        { "<<< Interface >>>" },
+        { ControlsMenuItem, 1, "k", "ui_left"},
+        { ControlsMenuItem, 1, "k", "ui_right"},
+        { ControlsMenuItem, 1, "k", "ui_up"},
+        { ControlsMenuItem, 1, "k", "ui_down"},
+        { ControlsMenuItem, 1, "k", "ui_select"},
+        { ControlsMenuItem, 1, "k", "ui_back"},
+        { ControlsMenuItem, 1, "k", "pause"},
 
     }, { 0, 0, 0, 0.85 })
 
@@ -205,8 +226,6 @@ local function generate_menus()
         { "" },
         { "RETRY", function() game:new_game() end },
         { "QUIT", quit_game },
-        -- { "BACK TO TITLE SCREEN", func_set_menu("title") },
-        { "" },
         { "" },
     }
     if OPERATING_SYSTEM == "Web" then
@@ -214,7 +233,7 @@ local function generate_menus()
     end
     menus.game_over = Menu:new(game, items, { 0, 0, 0, 0.85 })
 
-    menus.credits1 = Menu:new(game, {
+    menus.credits = Menu:new(game, {
         {"<<<<<<<<< CREDITS (1/4) >>>>>>>>>"},
         { "< BACK", func_set_menu("pause") },
         { "" },
@@ -279,7 +298,7 @@ local function generate_menus()
         { StatsMenuItem, "Floor", function(self) return game.stats.floor end },
         { ""},
         { "NEW GAME", function() game:new_game() end },
-        -- { "CREDITS", func_set_menu('credits1') },
+        -- { "CREDITS", func_set_menu('credits') },
         { "QUIT", quit_game },
         { "" },
     }

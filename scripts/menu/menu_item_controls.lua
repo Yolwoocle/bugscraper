@@ -2,10 +2,11 @@ local TextMenuItem = require "scripts.menu.menu_item_text"
 
 local ControlsMenuItem = TextMenuItem:inherit()
 
-function ControlsMenuItem:init(i, x, y, action_name, player_n)
+function ControlsMenuItem:init(i, x, y, player_n, input_type, action_name)
 	self:init_textitem(i, x, y, action_name)
 
 	self.player_n = player_n
+	self.input_type = input_type
 	self.action_name = action_name
 	
 	self.key = nil
@@ -26,7 +27,9 @@ function ControlsMenuItem:update(dt)
 
 	local button_names = {}
 	for i, button in ipairs(buttons) do
-		table.insert(button_names, button.key_name)
+		if button.type == self.input_type then
+			table.insert(button_names, button.key_name)
+		end
 	end
 	local txt = string.upper(concatsep(button_names, " / "))
 
@@ -45,30 +48,30 @@ function ControlsMenuItem:on_click()
 	Audio:play("menu_select")
 	self.oy = -4
 	
+	Input:set_standby_mode(true)
 	self.is_waiting_for_input = true
-	-- self.is_selectable = false
 end
 
 function ControlsMenuItem:keypressed(key, scancode, isrepeat)
 	if scancode == "escape" then
 		self.is_waiting_for_input = false
-		-- self.is_selectable = true
+		Input:set_standby_mode(false)
 	end
 	
 	-- Apply new key control
 	if self.is_waiting_for_input then
 		self.is_waiting_for_input = false
-		-- self.is_selectable = true
+		Input:set_standby_mode(false)
 		
-		local is_valid = Input:check_if_key_in_use(scancode)
-		if not is_valid then return end
+		if Input:is_button_in_use(self.player_n, self.action_name, {type="k", key_name=scancode}) then
+			return
+		end
 
 		self.value = scancode
 
 		self.key = key
 		self.scancode = scancode
-		Input:set_button_bind(1, self.button_id, "k_"..scancode)
-		-- self.value_text = key
+		Input:set_action_buttons(self.player_n, self.action_name, {type="k", key_name=scancode})
 	end
 end
 

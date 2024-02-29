@@ -17,6 +17,7 @@ function MenuManager:init(game)
 	self.sel_n = 1
 	self.sel_item = nil
 
+	self.menu_stack = {}
 	self.last_menu = "title"
 end
 
@@ -52,10 +53,11 @@ function MenuManager:update(dt)
 		end
 	end
 
-	local btn_pressed, player = Input:action_pressed("pause")
-
-	if btn_pressed and self.cur_menu_name ~= "controls" then
-		self:toggle_pause()
+	
+	if Input:action_pressed("pause") and self.cur_menu == nil then
+		self:pause()
+	elseif Input:action_pressed("ui_back") then
+		self:back()
 	end
 end
 
@@ -66,14 +68,19 @@ function MenuManager:draw()
 	self.cur_menu:draw()
 end
 
-function MenuManager:set_menu(menu)
+function MenuManager:set_menu(menu, is_back)
 	self.last_menu = self.cur_menu
 
 	-- nil menu
 	if menu == nil then
 		self.cur_menu = nil
+		self.menu_stack = {}
 		game:on_unmenu()
 		return
+	else
+		if not is_back then
+			table.insert(self.menu_stack, self.cur_menu)
+		end
 	end
 
 	local m = self.menus[menu]
@@ -179,7 +186,15 @@ function MenuManager:set_selection(n)
 end
 
 function MenuManager:back()
-	self:set_menu(self.last_menu)
+	if #self.menu_stack == 0 then
+		self:unpause()
+		return
+	end
+
+	local menu = table.remove(self.menu_stack)
+	if menu then
+		self:set_menu(menu, true)
+	end
 end
 
 function MenuManager:keypressed(key, scancode, isrepeat)

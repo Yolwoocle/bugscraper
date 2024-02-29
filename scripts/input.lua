@@ -7,16 +7,29 @@ local InputManager = Class:inherit()
 function InputManager:init()
     self.users = {}
     self.joystick_to_user_map = {}
+
+	self.standby_mode = false
+	self.buffer_standby_mode = {active = false, value = false}
 end
 
 function InputManager:update(dt)
+end
+
+function InputManager:update_last_input_state(dt)
     for i, user in ipairs(self.users) do
-        user:update_input_state()
+        user:update_last_input_state()
+    end
+
+    if self.buffer_standby_mode.active then
+        self.standby_mode = self.buffer_standby_mode.value
+        self.buffer_standby_mode.active = false
     end
 end
 
-function InputManager:new_user(input_map)
-    table.insert(self.users, InputManagerUser:new(#self.users + 1, input_map))
+function InputManager:new_user()
+    local default_input_map = Options.control_presets[1]
+    local input_map = Options.control_presets[1]
+    table.insert(self.users, InputManagerUser:new(#self.users + 1, default_input_map, input_map))
 end
 
 function InputManager:joystickadded(joystick)
@@ -39,7 +52,10 @@ function InputManager:joystickremoved(joystick)
     input_user.joystick = joystick
 end
 
-function InputManager:action_down(n, action)
+function InputManager:action_down(n, action, bypass_standy)
+    if self.standby_mode and not bypass_standy then
+        return false
+    end
     if action == nil then
         return self:action_down_any_player(n)
     end
@@ -48,7 +64,10 @@ function InputManager:action_down(n, action)
     return user:action_down(action)
 end
 
-function InputManager:action_pressed(n, action)
+function InputManager:action_pressed(n, action, bypass_standy)
+    if self.standby_mode and not bypass_standy then
+        return false
+    end
     if action == nil then
         return self:action_pressed_any_player(n)
     end
@@ -57,14 +76,20 @@ function InputManager:action_pressed(n, action)
     return user:action_pressed(action)
 end
 
-function InputManager:action_down_any_player(action)
+function InputManager:action_down_any_player(action, bypass_standy)
+    if self.standby_mode and not bypass_standy then
+        return false
+    end
     for i, user in ipairs(self.users) do
         if user:action_down(action) then return true end
     end
     return false
 end
 
-function InputManager:action_pressed_any_player(action)
+function InputManager:action_pressed_any_player(action, bypass_standy)
+    if self.standby_mode and not bypass_standy then
+        return false
+    end
     for i, user in ipairs(self.users) do
         if user:action_pressed(action) then return true end
     end
@@ -91,6 +116,15 @@ function InputManager:set_action_buttons(n, action, buttons)
 	Options:update_controls_file()
 end
 
+function InputManager:reset_controls(n)
+	local user = self.users[n]
+    assert(user ~= nil, concat("user ",n, " does not exist"))
+
+    user:reset_controls()
+
+	Options:update_controls_file()
+end
+
 function InputManager:is_button_in_use(n, action, button)
 	local user = self.users[n]
     assert(user ~= nil, concat("user ",n, " does not exist"))
@@ -103,6 +137,12 @@ function InputManager:is_button_in_use(n, action, button)
         end
     end
     return false
+end
+
+function InputManager:set_standby_mode(enabled)
+    -- self.standby_mode = enabled
+    self.buffer_standby_mode.value = enabled
+    self.buffer_standby_mode.active = true
 end
 
 return InputManager

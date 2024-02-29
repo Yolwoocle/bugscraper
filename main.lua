@@ -24,7 +24,7 @@ end
 
 function love.update(dt)
 	t = t + dt
-	local cap = 1 --If theres lag spike, repeat up to how many frames?
+	local cap = 1 --If there's lag spike, repeat up to how many frames?
 	local i = 0
 	while t > fdt and cap > 0 do
 		t = t - fdt
@@ -33,7 +33,6 @@ function love.update(dt)
 		i=i+1
 	end
 
-	-- if t > 0 then    t = 0    end
 	if game then   game.frame_repeat = i end
 	frame = frame + 1
 end
@@ -133,8 +132,8 @@ end
 function love.focus(f)
 	if f then
 	else
-		if Options:get("pause_on_unfocus") and game.menu then
-			game.menu:pause()
+		if Options:get("pause_on_unfocus") and game.menu_manager then
+			game.menu_manager:pause()
 		end
 	end
 end

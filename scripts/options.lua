@@ -8,9 +8,10 @@ local OptionsManager = Class:inherit()
 function OptionsManager:init(game)
 	self.game = game
 	self.is_first_time = false
-	self.options = {
+	self.default_options = {
 		volume = 1,
 		music_volume = 1,
+		screenshake = 0.5,
 		sound_on = true,
 
 		is_vsync = true,
@@ -22,6 +23,7 @@ function OptionsManager:init(game)
 		screenshake_on = true,
 		disable_background_noise = false,
 	}
+	self.options = copy_table(self.default_options)
 
 	self.control_presets = {
 		[1] = {
@@ -34,7 +36,7 @@ function OptionsManager:init(game)
 			pause = {"k_escape", "k_p",   "c_start"},
 
 			ui_select = {"k_return", "k_z", "k_c", "k_b", "k_x", "k_v", "k_n", "c_a"},
-			ui_back =   {"k_escape",       "c_b"},
+			ui_back =   {"k_escape", "c_b"},
 			ui_left =   {"k_a", "k_left",  "c_dpleft"},
 			ui_right =  {"k_d", "k_right", "c_dpright"},
 			ui_up =     {"k_w", "k_up",    "c_dpup"},
@@ -187,30 +189,24 @@ function OptionsManager:toggle(name)
 	self:update_options_file()
 end
 
-
+-----------------------------------------------------
 
 function OptionsManager:toggle_fullscreen()
 	-- local success = love.graphics.toggleFullscreen( )
 	self:toggle("is_fullscreen")
 	local is_fullscreen = self:get("is_fullscreen")
 	love.window.setFullscreen(is_fullscreen)
-
-	self:update_options_file()
 end
 
 function OptionsManager:set_pixel_scale(scale)
 	if not game then  return  end
 	self:set("pixel_scale", scale)
 	game:update_screen(scale)
-
-	self:update_options_file()
 end
 
 function OptionsManager:toggle_vsync()
 	self:toggle("is_vsync")
 	love.window.setVSync(self:get("is_vsync"))
-
-	self:update_options_file()
 end
 
 
@@ -218,8 +214,6 @@ function OptionsManager:toggle_sound()
 	-- TODO: move from bool to a number (0-1), customisable in settings
 	self:toggle("sound_on")
 	self:update_sound_on()
-
-	self:update_options_file()
 end
 
 function OptionsManager:update_sound_on()
@@ -230,55 +224,42 @@ function OptionsManager:update_sound_on()
 	end
 end
 
+function OptionsManager:set_screenshake(n)
+	self:set("screenshake", n)
+end
+
 function OptionsManager:set_volume(n)
 	self:set("volume", n)
 	love.audio.setVolume( self:get("volume") )
-
-	self:update_options_file()
 end
+
 function OptionsManager:set_music_volume(n)
 	self:set("music_volume", n)
 	game:set_music_volume( self:get("music_volume") )
-
-	self:update_options_file()
 end
 
 function OptionsManager:toggle_timer()
 	self:toggle("timer_on")
-
-	self:update_options_file()
 end
 
 function OptionsManager:toggle_mouse_visible()
 	self:toggle("mouse_visible")
-
-	self:update_options_file()
 end
 
 function OptionsManager:toggle_pause_on_unfocus()
 	self:toggle("pause_on_unfocus")
-
-	self:update_options_file()
 end
 
 function OptionsManager:toggle_screenshake()
 	self:toggle("screenshake_on")
-
-	self:update_options_file()
 end
+
 function OptionsManager:toggle_background_noise()
 	self:toggle("disable_background_noise")
-
-	self:update_options_file()
 end
 
 function OptionsManager:on_quit()
 	self:update_options_file()
-	self:update_controls_file()
-end
-
-function OptionsManager:reset_controls()
-	self.control_schemes = copy_table(self.control_presets)
 	self:update_controls_file()
 end
 

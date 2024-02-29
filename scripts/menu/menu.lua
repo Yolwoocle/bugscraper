@@ -25,7 +25,6 @@ function Menu:init(game, items, bg_color)
 	self.padding = 50
 
 	self.is_scrollable = self.height > (CANVAS_HEIGHT - self.padding)
-
 	if self.is_scrollable then
 		self.def_y = -self.padding
 	else
@@ -37,7 +36,6 @@ function Menu:init(game, items, bg_color)
 end
 
 function Menu:update(dt)
-	print(self.is_scrollable)
 	if self.is_scrollable then
 		self.scroll_position = lerp(self.scroll_position, self.target_scroll_position, 0.3)
 	end

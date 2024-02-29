@@ -20,8 +20,9 @@ local axis_functions = {
     righttrigger = function(joystick) return joystick:getAxis(6) > -1 + AXIS_DEADZONE end,
 }
 
-function InputUser:init(n, input_map)
+function InputUser:init(n, default_input_map, input_map)
     self.n = n
+    self.default_input_map = self:process_input_map(default_input_map)
     self.input_map = self:process_input_map(input_map)
     print_table(self.input_map)
     self:init_last_input_state()
@@ -69,14 +70,10 @@ function InputUser:init_last_input_state()
 	end
 end
 
-function InputUser:update_input_state()
+function InputUser:update_last_input_state()
 	for action, v in pairs(self.input_map) do
 		if type(v) == "table" then
-			self.last_input_state[action] = Input:action_down(action)
-		else
-			if action ~= "type" then
-				print(concat("update_button_state not a table:", action, ", ", table_to_str(v)))
-			end
+			self.last_input_state[action] = Input:action_down(self.n, action, true)
 		end
 	end
 end
@@ -116,5 +113,8 @@ function InputUser:action_down(action)
 	return false
 end
 
+function InputUser:reset_controls()
+    self.input_map = copy_table(self.default_input_map)
+end
 
 return InputUser
