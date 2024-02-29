@@ -36,7 +36,7 @@ function OptionsManager:init(game)
 			pause = {"k_escape", "k_p",   "c_start"},
 
 			ui_select = {"k_return", "k_z", "k_c", "k_b", "k_x", "k_v", "k_n", "c_a"},
-			ui_back =   {"k_escape", "c_b"},
+			ui_back =   {"k_escape",       "c_b"},
 			ui_left =   {"k_a", "k_left",  "c_dpleft"},
 			ui_right =  {"k_d", "k_right", "c_dpright"},
 			ui_up =     {"k_w", "k_up",    "c_dpup"},
@@ -122,11 +122,11 @@ function OptionsManager:load_controls()
 	
 			if self.control_schemes[n][key] ~= nil then
 				local typ = type(self.control_schemes[n][key])
-				local val
-				if typ == "string" then   val = value    end
-				if typ == "number" then   val = tonumber(value)   end
-				if typ == "boolean" then   val = strtobool(value)   end
-				if typ == "table" then   val = split_str(value, ",")   end
+				local val = split_str(value, ",")
+				-- if typ == "string" then   val = value    end
+				-- if typ == "number" then   val = tonumber(value)   end
+				-- if typ == "boolean" then   val = strtobool(value)   end
+				-- if typ == "table" then   val =    end
 
 				if value ~= nil then
 					self.control_schemes[n][key] = val

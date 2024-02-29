@@ -24,7 +24,6 @@ function InputUser:init(n, default_input_map, input_map)
     self.n = n
     self.default_input_map = self:process_input_map(default_input_map)
     self.input_map = self:process_input_map(input_map)
-    print_table(self.input_map)
     self:init_last_input_state()
 
     self.joystick = nil

@@ -27,9 +27,11 @@ function InputManager:update_last_input_state(dt)
 end
 
 function InputManager:new_user()
-    local default_input_map = Options.control_presets[1]
-    local input_map = Options.control_presets[1]
-    table.insert(self.users, InputManagerUser:new(#self.users + 1, default_input_map, input_map))
+    local n = #self.users + 1
+
+    local default_input_map = Options.control_schemes[n]
+    local input_map = Options.control_schemes[n]
+    table.insert(self.users, InputManagerUser:new(n, default_input_map, input_map))
 end
 
 function InputManager:joystickadded(joystick)
