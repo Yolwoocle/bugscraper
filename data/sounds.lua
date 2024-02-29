@@ -153,7 +153,18 @@ for i=0,9 do
 	sounds["footstep0"..tostring(i)]:setVolume(0.2)
 end
 
-sounds.music_galaxy_trip = new_source("music/music_galaxy_trip.wav", "static", {looping = true})
+local music = new_source("music/music_galaxy_trip.wav", "stream", {looping = true})
+
+local custom_music_file_exists = love.filesystem.getInfo("custom_music.wav")
+if custom_music_file_exists ~= nil then
+	local music_file = love.filesystem.newFile("custom_music.wav")
+	local ok, err = music_file:open("r")
+	if ok then
+		music = love.audio.newSource(music_file, "stream")
+		music:setLooping(true)
+	end
+end
+sounds.music_galaxy_trip = music
 
 -- Static sounds are sounds that are played without the use of the audio:play function
 -- local static_sfx_names = {
