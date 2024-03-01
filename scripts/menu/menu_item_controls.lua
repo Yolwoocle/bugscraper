@@ -20,9 +20,9 @@ function ControlsMenuItem:update(dt)
 	self:update_textitem(dt)
 
 	self.text = concat(self.action_name, ": [ERROR]")
-	local user = Input:get_user(self.player_n)
-	if user == nil then return end
-	local buttons = user.input_map[self.action_name]
+	local input_map = Input:get_input_map(self.player_n)
+	if input_map == nil then return end
+	local buttons = input_map[self.action_name]
 	if buttons == nil then return end
 
 	local button_names = {}

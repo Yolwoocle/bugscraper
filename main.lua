@@ -171,5 +171,6 @@ msg_log = {}
 function quit_game()
 	print("Quitting game")
 	if Options then   Options:on_quit()   end
+	if Input then     Input:on_quit()   end
 	love.event.quit()
 end

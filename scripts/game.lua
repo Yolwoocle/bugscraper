@@ -25,8 +25,8 @@ local Game = Class:inherit()
 function Game:init()
 	print("TEST HELLO")
 	-- Global singletons
-	Options = OptionsManager:new(self)
 	Input = InputManager:new(self)
+	Options = OptionsManager:new(self)
 	Collision = CollisionManager:new()
 	Particles = ParticleSystem:new()
 	Audio = AudioManager:new()
@@ -308,7 +308,10 @@ function Game:new_game(number_of_players)
 	self.slow_mo_rate = 0
 
 	self.draw_shadows = true
+	self.shadow_ox = 1
+	self.shadow_oy = 3
 	self.shadow_canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
+	self.front_canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
 
 	-- Music
 	-- TODO: a "ambient sfx" system
@@ -508,12 +511,31 @@ function Game:draw_game()
 	if self.show_rubble then
 		self:draw_rubble(self.cabin_x, self.cabin_y)
 	end
-	
+
+
+	-- Buffering these so that we can draw their shadows but still draw then in front of everything
+	local draw_front_objects = function()
+		-- Draw actors UI
+		Particles:draw_front()
+		-- Draw actors
+		for k,actor in pairs(self.actors) do
+			if actor.draw_hud then     actor:draw_hud()    end
+		end
+	end
+
+	if self.draw_shadows then
+		love.graphics.setCanvas(self.front_canvas)
+		love.graphics.clear()
+		draw_front_objects()
+		love.graphics.setCanvas(self.shadow_canvas)
+	end
+
 	if self.draw_shadows then
 		love.graphics.setCanvas(old_canvas)
 		
 		love.graphics.setColor(0,0,0, 0.5)
-		love.graphics.draw(self.shadow_canvas, 0, 3)
+		love.graphics.draw(self.shadow_canvas, self.shadow_ox, self.shadow_oy)
+		love.graphics.draw(self.front_canvas,  self.shadow_ox, self.shadow_oy)
 		love.graphics.setColor(1,1,1, 1)
 		love.graphics.draw(self.shadow_canvas, 0, 0)
 	end
@@ -523,11 +545,10 @@ function Game:draw_game()
 		gfx.draw(images.cabin_walls, self.cabin_x, self.cabin_y)
 	end
 
-	-- Draw actors UI
-	Particles:draw_front()
-	-- Draw actors
-	for k,actor in pairs(self.actors) do
-		if actor.draw_hud then     actor:draw_hud()    end
+	if self.draw_shadows then
+		love.graphics.draw(self.front_canvas, 0, 0)
+	else
+		draw_front_objects()
 	end
 
 	-- UI

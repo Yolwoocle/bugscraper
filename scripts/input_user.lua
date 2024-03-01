@@ -22,55 +22,28 @@ local axis_functions = {
 
 function InputUser:init(n, default_input_map, input_map)
     self.n = n
-    self.default_input_map = self:process_input_map(default_input_map)
-    self.input_map = self:process_input_map(input_map)
+    -- self.default_input_map = self:process_input_map(default_input_map)
+    -- self.input_map = self:process_input_map(input_map)
     self:init_last_input_state()
 
     self.joystick = nil
 end
 
-function InputUser:process_input_map(raw_input_map)
-    local new_map = {}
-    for action, keys in pairs(raw_input_map) do
-        new_map[action] = {}
-        for _, keycode in pairs(keys) do
-            local button = self:keycode_to_button(keycode)
-            if button ~= nil then
-                table.insert(new_map[action], button)
-            end
-        end
-    end
-    return new_map
-end
-
-function InputUser:keycode_to_button(keycode)
-    if keycode ~= nil and #keycode > 2 then
-        local prefix = keycode:sub(1, 1)
-        local keyname = keycode:sub(3, -1)
-        return {
-            type = prefix,
-            key_name = keyname
-        }
-    end
-    return nil
-end
-
-function InputUser:set_action_buttons(action, buttons)
-    self.input_map[action] = buttons
+function InputUser:get_input_map()
+    return Input:get_input_map(self.n)
 end
 
 function InputUser:init_last_input_state()
 	self.last_input_state = {}
-	for action, _ in pairs(self.input_map) do
+	for action, _ in pairs(self:get_input_map()) do
 		if action ~= "type" then
 			self.last_input_state[action] = false
-            
 		end
 	end
 end
 
 function InputUser:update_last_input_state()
-	for action, v in pairs(self.input_map) do
+	for action, v in pairs(self:get_input_map()) do
 		if type(v) == "table" then
 			self.last_input_state[action] = Input:action_down(self.n, action, true)
 		end
@@ -101,7 +74,7 @@ function InputUser:is_keycode_down(key)
 end
 
 function InputUser:action_down(action)
-    local keys = self.input_map[action]
+    local keys = self:get_input_map()[action]
 	if not keys then   error(concat("Attempt to access button '",concat(action),"'"))   end
 
 	for k, key in pairs(keys) do
@@ -110,10 +83,6 @@ function InputUser:action_down(action)
 		end
 	end
 	return false
-end
-
-function InputUser:reset_controls()
-    self.input_map = copy_table(self.default_input_map)
 end
 
 return InputUser
