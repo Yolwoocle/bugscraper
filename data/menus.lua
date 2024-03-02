@@ -15,6 +15,8 @@ local function func_url(url)
 	end
 end
 
+local DEFAULT_MENU_BG_COLOR = {0, 0, 0, 0.85}
+
 -----------------------------------------------------
 ------ [[[[[[[[[[[[[[[[ MENUS ]]]]]]]]]]]]]]]] ------
 -----------------------------------------------------
@@ -33,7 +35,7 @@ local function generate_menus()
         { "QUIT", quit_game },
         { "" },
         { "" },
-    }, { 0, 0, 0, 0.85 })
+    }, DEFAULT_MENU_BG_COLOR)
 
     menus.pause = Menu:new(game, {
         { "<<<<<<<<< PAUSED >>>>>>>>>" },
@@ -43,7 +45,7 @@ local function generate_menus()
         { "OPTIONS", func_set_menu('options') },
         { "CREDITS", func_set_menu('credits') },
         { "QUIT", quit_game },
-    }, { 0, 0, 0, 0.85 })
+    }, DEFAULT_MENU_BG_COLOR)
     if OPERATING_SYSTEM == "Web" then
         -- Disable quitting on web
         menus.pause.items[7].is_selectable = false
@@ -51,19 +53,25 @@ local function generate_menus()
 
     menus.options = Menu:new(game, {
         { "<<<<<<<<< OPTIONS >>>>>>>>>" },
-        { "< BACK", func_set_menu("pause")},--function() game.menu_manager:back() end },
         { "" },
         { "<<< Controls >>>" },
-        { "KEYBOARD BINDINGS", func_set_menu("controls")},
-        { "CONTROLLER BINDINGS", func_set_menu("controls")},
+        { "KEYBOARD BINDINGS", func_set_menu("controls_keyboard")},
+        { "CONTROLLER BINDINGS", func_set_menu("controls_controller")},
         { ""},
         { "<<< Audio >>>" },
         { "SOUND", function(self, option)
             Options:toggle_sound()
-        end, 
+        end,
         function(self)
             self.value = Options:get("sound_on")
             self.value_text = Options:get("sound_on") and "ON" or "OFF"
+        end},
+        { "BACKGROUND SOUNDS", function(self, option)
+            Options:toggle_background_noise()
+        end,
+        function(self)
+            self.value = Options:get("disable_background_noise")
+            self.value_text = (not Options:get("disable_background_noise")) and "ON" or "OFF"
         end},
         { SliderMenuItem, "VOLUME", function(self, diff)
             diff = diff or 1
@@ -95,13 +103,6 @@ local function generate_menus()
 
             self.is_selectable = Options:get("sound_on")
         end},
-        { "DISABLE BACKGROUND SOUNDS", function(self, option)
-            Options:toggle_background_noise()
-        end,
-        function(self)
-            self.value = Options:get("disable_background_noise")
-            self.value_text = Options:get("disable_background_noise") and "ON" or "OFF"
-        end},
         {""},
 
         -- {"MUSIC: [ON/OFF]", function(self)
@@ -124,7 +125,7 @@ local function generate_menus()
             
             Audio:play("menu_select")
             Options:set_pixel_scale(scale)
-        end, { "auto", "max whole", 1, 2, 3, 4}, function(self)
+        end, { "auto", "max whole", 1, 2, 3, 4, 5, 6}, function(self)
             self.value = Options:get("pixel_scale")
             self.value_text = tostring(Options:get("pixel_scale"))
 
@@ -187,13 +188,12 @@ local function generate_menus()
             self.value = Options:get("screenshake") * 20
             self.value_text = concat(floor(100 * self.value / 20), "%")
         end},
-    }, { 0, 0, 0, 0.85 })
+    }, DEFAULT_MENU_BG_COLOR)
 
-    menus.controls = Menu:new(game, {
+    menus.controls_keyboard = Menu:new(game, {
         { "<<<<<<<<< CONTROLS >>>>>>>>>" },
-        { "< BACK", func_set_menu("options") },
         { "" },
-        { "RESET CONTROLS", function() Input:reset_controls(1) end },
+        { "RESET CONTROLS", function() Input:reset_controls(1, "k") end },
         { "" },
         { "<<< Gameplay >>>" },
         { ControlsMenuItem, 1, "k", "left"},
@@ -212,7 +212,31 @@ local function generate_menus()
         { ControlsMenuItem, 1, "k", "ui_back"},
         { ControlsMenuItem, 1, "k", "pause"},
 
-    }, { 0, 0, 0, 0.85 })
+    }, DEFAULT_MENU_BG_COLOR)
+
+    menus.controls_controller = Menu:new(game, {
+        { "<<<<<<<<< CONTROLS >>>>>>>>>" },
+        { "" },
+        { "RESET CONTROLS", function() Input:reset_controls(1) end },
+        { "" },
+        { "<<< Gameplay >>>" },
+        { ControlsMenuItem, 1, "c", "left"},
+        { ControlsMenuItem, 1, "c", "right"},
+        { ControlsMenuItem, 1, "c", "up"},
+        { ControlsMenuItem, 1, "c", "down"},
+        { ControlsMenuItem, 1, "c", "jump"},
+        { ControlsMenuItem, 1, "c", "shoot"},
+        { ""},
+        { "<<< Interface >>>" },
+        { ControlsMenuItem, 1, "c", "ui_left"},
+        { ControlsMenuItem, 1, "c", "ui_right"},
+        { ControlsMenuItem, 1, "c", "ui_up"},
+        { ControlsMenuItem, 1, "c", "ui_down"},
+        { ControlsMenuItem, 1, "c", "ui_select"},
+        { ControlsMenuItem, 1, "c", "ui_back"},
+        { ControlsMenuItem, 1, "c", "pause"},
+
+    }, DEFAULT_MENU_BG_COLOR)
 
     local items = {
         {"********** GAME OVER! **********"},
@@ -231,11 +255,10 @@ local function generate_menus()
     if OPERATING_SYSTEM == "Web" then
         table.remove(items, 9)
     end
-    menus.game_over = Menu:new(game, items, { 0, 0, 0, 0.85 })
+    menus.game_over = Menu:new(game, items, DEFAULT_MENU_BG_COLOR)
 
     menus.credits = Menu:new(game, {
         {"<<<<<<<<< CREDITS (1/4) >>>>>>>>>"},
-        { "< BACK", func_set_menu("pause") },
         { "" },
         { "<<< Design, programming & art >>>"},
         { "Léo Bernard (Yolwoocle)", func_url("https://twitter.com/yolwoocle_")},
@@ -286,7 +309,7 @@ local function generate_menus()
         { "CC BY 3.0", func_url("https://creativecommons.org/licenses/by/3.0/")},
         { "CC BY 4.0", func_url("https://creativecommons.org/licenses/by/4.0/")},
         { "Common Sense License (CSL)", func_url("http://www.palmentieri.it/somepx/license.txt")},
-    }, { 0, 0, 0, 0.85 })
+    }, DEFAULT_MENU_BG_COLOR)
 
     local items = {
         { "<<<<<<<<< CONGRATULATIONS! >>>>>>>>>" },

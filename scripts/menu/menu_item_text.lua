@@ -54,11 +54,11 @@ function TextMenuItem:update_textitem(dt)
 	self.ox = lerp(self.ox, 0, 0.3)
 	self.oy = lerp(self.oy, 0, 0.3)
 
-	if type(self.value) ~= "nil" then
-		self.text = concat(self.label_text, ": ", self.value_text)
-	else
-		self.text = self.label_text
-	end
+	self.text = self.label_text
+	-- if self.value == nil or #self.value_text == "0" then
+	-- else
+	-- 	self.text = concat(self.label_text, ": ", self.value_text)
+	-- end
 end
 
 function TextMenuItem:draw()
@@ -66,20 +66,57 @@ function TextMenuItem:draw()
 end
 function TextMenuItem:draw_textitem()
 	gfx.setColor(1, 1, 1, 1)
-	local th = get_text_height(self.text)
-	if self.is_selected then
-		-- rect_color_centered(COL_LIGHT_YELLOW, "fill", self.x, self.y+th*0.4, get_text_width(self.text)+8, th/4)
-		-- rect_color_centered(COL_WHITE, "fill", self.x, self.y, get_text_width(self.text)+32, th)
-		print_centered_outline(COL_WHITE, COL_ORANGE, self.text, self.x + self.ox, self.y + self.oy)
-		-- print_centered(self.text, self.x, self.y)
+	local text_height = get_text_height(self.text)
+
+	-- /!\ This is rlly sketchy
+	if type(self.value) == "nil" then
+		self:draw_withoutvalue()
 	else
-		if not self.is_selectable then
-			local v = 0.5
-			gfx.setColor(v, v, v, 1)
-		end
-		print_centered(self.text, self.x, self.y + self.oy)
+		self:draw_withvalue()
 	end
+	
 	gfx.setColor(1, 1, 1, 1)
+end
+
+function TextMenuItem:get_leftjustified_text_draw_function()
+	local draw_func = ternary(self.is_selected,
+		function(...) print_ycentered_outline(COL_WHITE, SELECTED_HIGHLIGHT_COLOR, ...) end,
+		function(...) print_ycentered(...) end
+	)
+
+	return draw_func
+end
+
+function TextMenuItem:draw_withoutvalue()
+	local draw_func = ternary(self.is_selected,
+		function(...) print_centered_outline(COL_WHITE, SELECTED_HIGHLIGHT_COLOR, ...) end,
+		function(...) print_centered(...) end
+	)
+
+	if not self.is_selectable then
+		local v = 0.5
+		gfx.setColor(v, v, v, 1)
+	end
+	draw_func(self.text, self.x, self.y + self.oy)
+end
+
+function TextMenuItem:draw_withvalue()
+	local draw_func = self:get_leftjustified_text_draw_function()
+
+	if not self.is_selectable then
+		local v = 0.5
+		gfx.setColor(v, v, v, 1)
+	end
+	draw_func(self.text, self.x - CANVAS_WIDTH*0.25, self.y + self.oy)
+
+	self:draw_value_text()
+end
+
+function TextMenuItem:draw_value_text()
+	local draw_func = self:get_leftjustified_text_draw_function()
+	local value_text_width = get_text_width(self.value_text)
+	
+	draw_func(self.value_text, self.x + CANVAS_WIDTH*0.25 - value_text_width + self.ox, self.y + self.oy)
 end
 
 function TextMenuItem:set_selected(val, diff)

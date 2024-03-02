@@ -1,4 +1,16 @@
-require "scripts.util"
+local function rgb(r,g,b)
+	return {r/255, g/255, b/255, 1}
+end
+
+local function color(hex)
+	if not hex then  return white  end
+	if type(hex) ~= "number" then  return white  end
+
+	local b = hex % 256;  hex = (hex - b) / 256
+	local g = hex % 256;  hex = (hex - b) / 256
+	local r = hex % 256
+	return {r/255, g/255, b/255}
+end
 
 BLOCK_WIDTH = 16
 BW = BLOCK_WIDTH
@@ -32,7 +44,7 @@ COL_LIGHT_YELLOW = color(0xfee761)
 COL_MID_DARK_GREEN = rgb(38, 92, 66)
 COL_DARK_GREEN = rgb(25, 60, 62)
 
-COL_SKY = rgb(104, 174, 212) 
+COL_SKY = rgb(104, 174, 212)
 
 COL_BLACK_BLUE = rgb(24, 20, 37)
 COL_DARK_BLUE = rgb(18, 78, 137)
@@ -40,3 +52,5 @@ COL_MID_BLUE = rgb(0, 149, 233)
 COL_LIGHT_BLUE = color(0x2ce8f5)
 
 COL_DARK_PURPLE = rgb(104, 56, 108)
+
+SELECTED_HIGHLIGHT_COLOR = COL_LIGHT_RED

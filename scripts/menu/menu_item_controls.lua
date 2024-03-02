@@ -1,4 +1,6 @@
+require "scripts.util"
 local TextMenuItem = require "scripts.menu.menu_item_text"
+local images = require "data.images"
 
 local ControlsMenuItem = TextMenuItem:inherit()
 
@@ -19,24 +21,52 @@ end
 function ControlsMenuItem:update(dt)
 	self:update_textitem(dt)
 
-	self.text = concat(self.action_name, ": [ERROR]")
-	local input_map = Input:get_input_map(self.player_n)
-	if input_map == nil then return end
-	local buttons = input_map[self.action_name]
-	if buttons == nil then return end
+	self.label_text = concat(self.action_name)
+	self.value_text = "[ERROR]"
 
-	local button_names = {}
-	for i, button in ipairs(buttons) do
+	self.label_text = self.action_name
+	self.value = self:get_buttons()
+	self.value_text = ""
+end
+
+function ControlsMenuItem:draw_value_text()
+	local right_bound = self.x + CANVAS_WIDTH*0.25 + self.ox
+
+	local x = right_bound
+	local y = self.y + self.oy
+	for i, button in pairs(self.value) do
 		if button.type == self.input_type then
-			table.insert(button_names, button.key_name)
+			x = self:draw_button_icon(button, x, y)
 		end
 	end
-	local txt = string.upper(concatsep(button_names, " / "))
+end
 
-	self.text = concat(self.action_name, ": [", txt, "]")
-	if self.is_waiting_for_input then
-		self.text = concat(self.action_name, ": [PRESS A KEY]")
+local BUTTON_ICON_MARGIN = 1
+
+function ControlsMenuItem:draw_button_icon(button, x, y)
+	local img = Input:get_button_icon(button)
+
+	if img ~= nil then
+		local icon_draw_func = ternary(self.is_selected,
+		function(_img, _x, _y) draw_with_selected_outline(_img, _x, _y) end,
+			function(_img, _x, _y) love.graphics.draw(_img, _x, _y) end
+		)
+
+		local width = img:getWidth()
+		local height = img:getHeight()
+		icon_draw_func(img, x - width, y - height/2)
+		return x - width - BUTTON_ICON_MARGIN
 	end
+	return x
+end
+
+function ControlsMenuItem:get_buttons()
+	local input_map = Input:get_input_map(self.player_n)
+	if input_map == nil then return {} end
+	local buttons = input_map[self.action_name]
+	if buttons == nil then return {} end
+
+	return buttons
 end
 
 function ControlsMenuItem:on_click()

@@ -29,16 +29,16 @@ function SliderMenuItem:update(dt)
 	self:update_value()
 
 	if type(self.value) ~= "nil" then
-		self.text = concat(self.label_text, ": < ", self.value_text, " >")
+		self.value_text = concat("< ", self.value_text, " >")
 	else
 		self.text = self.label_text
 	end
 
-	if Input:action_pressed("left") and self.is_selected then
+	if Input:action_pressed("ui_left") and self.is_selected then
 		self:on_click(-1)
 		self:after_click(-1)
 	end
-	if Input:action_pressed("right") and self.is_selected then
+	if Input:action_pressed("ui_right") and self.is_selected then
 		self:on_click(1)
 		self:after_click(1)
 	end

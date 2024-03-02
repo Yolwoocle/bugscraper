@@ -1,5 +1,8 @@
-local Class = require "scripts.class"
 require "scripts.util"
+local Class = require "scripts.class"
+local key_constant_to_image = require "data.buttons.images_buttons_keyboard"
+local controller_brands = require "data.buttons.controller_brands"
+local controller_buttons = require "data.buttons.controller_buttons"
 
 function load_image(name)
 	local im = love.graphics.newImage("images/"..name)
@@ -16,6 +19,10 @@ function load_image_table(name, n, w, h)
 	t.h = h
 	return t
 end
+
+-----------------------------------------------------
+
+local images = {}
 
 local img_names = {
 	"empty",
@@ -120,6 +127,19 @@ local img_names = {
 	"btnfrag_5",
 }
 
-local images = {}
 for i=1,#img_names do   images[img_names[i]] = load_image(img_names[i]..".png")   end
+
+for key_constant, button_image_name in pairs(key_constant_to_image) do
+	images[button_image_name] = load_image("buttons/keyboard/"..button_image_name..".png")
+end
+
+for _, brand in pairs(controller_brands) do
+	for button, __ in pairs(controller_buttons) do
+		local name = string.format("btn_c_%s_%s", brand, button)
+		local path = string.format("buttons/controller/%s/%s.png", brand, name)
+		images[name] = load_image(path)
+	end
+end
+images.btn_c_unknown = load_image("buttons/controller/btn_c_unknown.png")
+
 return images

@@ -13,6 +13,8 @@ local OptionsManager = require "scripts.options"
 local InputManager = require "scripts.input"
 local utf8 = require "utf8"
 
+local removeme_key_constant_to_image = require "data.buttons.images_buttons_keyboard"
+
 local waves = require "data.waves"
 local sounds = require "data.sounds"
 local images = require "data.images"
@@ -23,7 +25,6 @@ require "scripts.constants"
 local Game = Class:inherit()
 
 function Game:init()
-	print("TEST HELLO")
 	-- Global singletons
 	Input = InputManager:new(self)
 	Options = OptionsManager:new(self)
@@ -429,6 +430,27 @@ function Game:update_main_game(dt)
 	-- if love.keyboard.isScancodeDown("s") then self.cam_y = self.cam_y + q end
 end
 
+function Game:removeme_test()
+	local y = 0
+	for action, buttons in pairs(Input.control_presets[1]) do
+		print_outline(COL_WHITE, COL_DARK_BLUE, action, 8, y, 0)
+
+		local x = 80
+		for _, button in ipairs(buttons) do
+			if button.type == "k" then
+				local key_constant = love.keyboard.getKeyFromScancode(button.key_name)
+				local img = images[removeme_key_constant_to_image[key_constant]]
+				if img ~= nil then
+					love.graphics.draw(img, x, y)
+					x = x + img:getWidth()
+				end
+			end
+		end
+
+		y = y + 18
+	end
+end
+
 function Game:draw()
 	if OPERATING_SYSTEM == "Web" then
 		gfx.scale(CANVAS_SCALE, CANVAS_SCALE)
@@ -605,6 +627,9 @@ function Game:draw_game()
 		self.menu_manager:draw()
 	end
 
+	
+	-- self:removeme_test()
+
 	--'Memory used (in kB): ' .. collectgarbage('count')
 
 	-- local t = "EARLY VERSION - NOT FINAL!"
@@ -644,7 +669,7 @@ function Game:draw_debug()
 	}
 
 	for i=1, #txts do  print_label(txts[i], self.cam_x, self.cam_y+txt_h*i) end
-	
+
 	self.world_generator:draw()
 	draw_log()
 end

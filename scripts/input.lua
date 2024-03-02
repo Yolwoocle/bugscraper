@@ -1,6 +1,9 @@
 require "scripts.util"
 local Class = require "scripts.class"
 local InputUser = require "scripts.input_user"
+local images = require "data.images"
+local key_constant_to_image_name = require "data.buttons.images_buttons_keyboard"
+local controller_buttons = require "data.buttons.controller_buttons"
 
 local InputManager = Class:inherit()
 
@@ -17,12 +20,12 @@ function InputManager:init()
 			right = {"k_d", "k_right",    "c_dpright", "c_leftstickxpos", "c_rightstickxpos"},
 			up =    {"k_w", "k_up",       "c_dpup",    "c_leftstickyneg", "c_rightstickyneg"},
 			down =  {"k_s", "k_down",     "c_dpdown",  "c_leftstickypos", "c_rightstickypos"},
-			jump =  {"k_z", "k_c", "k_b", "c_a", "c_b"},
-			shoot = {"k_x", "k_v", "k_n", "c_x", "c_y", "c_righttrigger"},
+			jump =  {"k_c", "k_b", "c_a", "c_b"},
+			shoot = {"k_x", "k_v", "c_x", "c_y", "c_righttrigger"},
 			pause = {"k_escape", "k_p",   "c_start"},
 
-			ui_select = {"k_return", "k_z", "k_c", "k_b", "k_x", "k_v", "k_n", "c_a"},
-			ui_back =   {"k_escape",       "c_b"},
+			ui_select = {"k_c", "k_b", "k_return",   "c_a"},
+			ui_back =   {"k_x", "k_escape", "k_backspace",  "c_b"},
 			ui_left =   {"k_a", "k_left",  "c_dpleft"},
 			ui_right =  {"k_d", "k_right", "c_dpright"},
 			ui_up =     {"k_w", "k_up",    "c_dpup"},
@@ -145,11 +148,11 @@ function InputManager:set_action_buttons(n, action, buttons)
 	self:update_controls_file(n)
 end
 
-function InputManager:reset_controls(n)
+function InputManager:reset_controls(n, mode)
 	local user = self.users[n]
     assert(user ~= nil, concat("user ",n, " does not exist"))
 
-    self.control_schemes = copy_table(self.control_presets[n])
+    self.control_schemes[n] = copy_table(self.control_presets[n])
 
 	self:update_controls_file(n)
 end
@@ -174,8 +177,50 @@ function InputManager:set_standby_mode(enabled)
     self.buffer_standby_mode.active = true
 end
 
+function InputManager:generate_unknown_key_icon(icon, text)
+    local old_canvas = love.graphics.getCanvas()
+
+    local text_w = get_text_width(text.."[]")
+    local open_bracket_w = get_text_width("[")
+    local new_canvas = love.graphics.newCanvas(icon:getWidth() + text_w + 3, icon:getHeight() + 2)
+    love.graphics.setCanvas(new_canvas)
+
+    love.graphics.print("[", 1, 1)
+    love.graphics.draw(icon, open_bracket_w + 1, 1)
+    love.graphics.print(text.."]", open_bracket_w + icon:getWidth() + 1, 1)
+
+    love.graphics.setCanvas(old_canvas)
+    return new_canvas
+end
+
+function InputManager:get_button_icon(button)
+    local img = nil
+    if button.type == "k" then
+		local key_constant = love.keyboard.getKeyFromScancode(button.key_name)
+        local image_name = key_constant_to_image_name[key_constant]
+		if image_name ~= nil then
+            img = images[image_name]
+        end
+
+        if img == nil or img == images.btn_k_unknown then
+            return self:generate_unknown_key_icon(images.btn_k_unknown, button.key_name)
+        end
+
+    elseif button.type == "c" then
+        local brand = "xbox"
+        local image_name = string.format("btn_c_%s_%s", brand, button.key_name)
+        img = images[image_name]
+
+        if img == nil then
+            return self:generate_unknown_key_icon(images.btn_c_unknown, button.key_name)
+        end
+
+	end
+    return img
+end
+
 -----------------------------------------------------
-------------------- Reading files -------------------
+------------------| Reading files |------------------
 -----------------------------------------------------
 
 function InputManager:keycode_to_button(keycode)
@@ -210,7 +255,6 @@ function InputManager:load_controls()
 		return
 	end
 
-    print("IM GONNA LOAD CONTROLS ")
 	for n=1, #self.control_schemes do
 		local filename = concat("controls_p",n,".txt")
 
@@ -225,7 +269,7 @@ function InputManager:load_controls()
 		local file = love.filesystem.newFile(filename)
 		file:open("r")
 
-        local new_controls = copy_table(self.control_presets)
+        local new_controls = copy_table(self.control_presets[n])
         -- process_input_map
 
 		-- Read file contents
@@ -237,11 +281,10 @@ function InputManager:load_controls()
 			local line = lines[iline]
 			local tab = split_str(line, ":")
 			local action_name, keycodes = tab[1], tab[2]
-            local keycode_table = split_str(keycodes, ",")
+            local keycode_table = split_str(keycodes, " ")
 
             new_controls[action_name] = {}
             for _, keycode in pairs(keycode_table) do
-                print(concat("reading for p",n," action '",action_name,"'' keycode '",keycode,"'"))
                 local button = self:keycode_to_button(keycode)
                 if button ~= nil then
                     table.insert(new_controls[action_name], button)
@@ -274,15 +317,13 @@ function InputManager:update_controls_file(player_n)
     local controlsfile = love.filesystem.newFile(filename)
     print(concat("Creating or updating ", filename, " file"))
     controlsfile:open("w")
-    
+
     for action_name, buttons in pairs(self.control_schemes[player_n]) do
         local keycodes = self:buttons_to_keycodes(buttons)
-        local keycodes_string = concatsep(keycodes,",")
-        print("keycodes_string ", table_to_str(keycodes_string))
-        
+        local keycodes_string = concatsep(keycodes," ")
+
         controlsfile:write(concat(action_name, ":", keycodes_string, "\n"))
     end
-    print(concat(">>> Finished or updating ", filename, " file"))
 
     controlsfile:close()
 end

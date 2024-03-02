@@ -1,4 +1,6 @@
 local utf8 = require "utf8"
+require "scripts.constants"
+local shaders = require "scripts.shaders"
 
 abs = math.abs
 exp = math.exp
@@ -184,17 +186,22 @@ function rect_color_centered(col, mode, x, y, w, h)
 	rect_color(col, mode, x - w/2, y - h/2, w, h)
 end
 
-function draw_centered_outline(spr, x, y, r, sx, sy, thiccness, color)
+function draw_with_selected_outline(spr, x, y, r, sx, sy)
+	love.graphics.setShader(shaders.draw_in_highlight_color)
+	local offset = 1
 
-	draw_centered(spr, x, y, r, sx, sy, thiccness ,0, color)
-	draw_centered(spr, x, y, r, sx, sy, -thiccness,0, color)
-	draw_centered(spr, x, y, r, sx, sy, 0, thiccness, color)
-	draw_centered(spr, x, y, r, sx, sy, 0,-thiccness, color)
+	love.graphics.draw(spr, x, y, r, sx, sy, offset , 0)
+	love.graphics.draw(spr, x, y, r, sx, sy, -offset, 0)
+	love.graphics.draw(spr, x, y, r, sx, sy, 0,       offset)
+	love.graphics.draw(spr, x, y, r, sx, sy, 0,      -offset)
 
-	draw_centered(spr, x, y, r, sx, sy, thiccness ,thiccness , color)
-	draw_centered(spr, x, y, r, sx, sy,-thiccness ,thiccness , color)
-	draw_centered(spr, x, y, r, sx, sy, thiccness ,-thiccness, color)
-	draw_centered(spr, x, y, r, sx, sy,-thiccness ,-thiccness, color)
+	love.graphics.draw(spr, x, y, r, sx, sy, offset , offset)
+	love.graphics.draw(spr, x, y, r, sx, sy,-offset , offset)
+	love.graphics.draw(spr, x, y, r, sx, sy, offset ,-offset)
+	love.graphics.draw(spr, x, y, r, sx, sy,-offset ,-offset)
+	
+	love.graphics.setShader()
+	love.graphics.draw(spr, x, y, r, sx, sy)
 
 end
 
@@ -229,8 +236,17 @@ function print_centered(text, x, y, rot, sx, sy, ...)
 	sy = sy or sx
 	local font   = love.graphics.getFont()
 	local text_w = font:getWidth(text)
-	local text_h = font:getHeight(text)
+	local text_h = font:getHeight()
 	love.graphics.print(text, x-text_w/2, y-text_h/2, rot, sx, sy, ...)
+end
+
+function print_ycentered(text, x, y, rot, sx, sy, ...)
+	rot = rot or 0
+	sx = sx or 1
+	sy = sy or sx
+	local font   = love.graphics.getFont()
+	local text_h = font:getHeight()
+	love.graphics.print(text, x, y-text_h/2, rot, sx, sy, ...)
 end
 
 -- Thanks to steVeRoll: https://www.reddit.com/r/love2d/comments/h84gwo/how_to_make_a_colored_sprite_white/
@@ -246,14 +262,30 @@ function draw_white(drawable, x, y, r, sx, sy, ox, oy, kx, ky)
 	love.graphics.setShader()
 end
 
+function draw_using_shader(drawable, shader, x, y, r, sx, sy, ox, oy, kx, ky)
+	-- drawable, x, y, r, sx, sy, ox, oy, kx, ky
+	love.graphics.setShader(shader)
+	love.graphics.draw(drawable, x, y, r, sx, sy, ox, oy, kx, ky)
+	love.graphics.setShader()
+end
+
 function print_centered_outline(col_in, col_out, text, x, y, thick, rot, sx, sy, ...)
 	rot = rot or 0
 	sx = sx or 1
 	sy = sy or sx
 	local font   = love.graphics.getFont()
 	local text_w = font:getWidth(text)
-	local text_h = font:getHeight(text)
+	local text_h = font:getHeight()
 	print_outline(col_in, col_out, text, x-text_w/2, y-text_h/2, thick, rot, sx, sy, ...)
+end
+
+function print_ycentered_outline(col_in, col_out, text, x, y, thick, rot, sx, sy, ...)
+	rot = rot or 0
+	sx = sx or 1
+	sy = sy or sx
+	local font   = love.graphics.getFont()
+	local text_h = font:getHeight()
+	print_outline(col_in, col_out, text, x, y-text_h/2, thick, rot, sx, sy, ...)
 end
 
 function get_text_width(text, font)
@@ -369,6 +401,10 @@ function split_str(inputstr, sep)
 	return t
 end
 
+function print_debug(...)
+	print(concat("[DEBUG] ", concatsep({...}, " ")))
+end
+
 function table_to_str(tab)
 	if type(tab) ~= "table" then
 		return tostring(tab)
@@ -387,8 +423,93 @@ function table_to_str(tab)
 	return s
 end
 
-function print_table(tab)
-	print(table_to_str(tab))
+function print_table(node)
+	if node == nil then
+		print("[nil]")
+		return
+	end
+	if type(node) ~= "table" then
+		print("[print_table: not a table]")
+		return
+	end
+
+	-- https://www.grepper.com/answers/167958/print+table+lua?ucard=1
+	local cache, stack, output = {},{},{}
+    local depth = 1
+    local output_str = "{\n"
+
+    while true do
+        local size = 0
+        for k,v in pairs(node) do
+            size = size + 1
+        end
+
+        local cur_index = 1
+        for k,v in pairs(node) do
+            if (cache[node] == nil) or (cur_index >= cache[node]) then
+
+                if (string.find(output_str,"}",output_str:len())) then
+                    output_str = output_str .. ",\n"
+                elseif not (string.find(output_str,"\n",output_str:len())) then
+                    output_str = output_str .. "\n"
+                end
+
+                -- This is necessary for working with HUGE tables otherwise we run out of memory using concat on huge strings
+                table.insert(output,output_str)
+                output_str = ""
+
+                local key
+                if (type(k) == "number" or type(k) == "boolean") then
+                    key = "["..tostring(k).."]"
+                else
+                    key = "['"..tostring(k).."']"
+                end
+
+                if (type(v) == "number" or type(v) == "boolean") then
+                    output_str = output_str .. string.rep('\t',depth) .. key .. " = "..tostring(v)
+                elseif (type(v) == "table") then
+                    output_str = output_str .. string.rep('\t',depth) .. key .. " = {\n"
+                    table.insert(stack,node)
+                    table.insert(stack,v)
+                    cache[node] = cur_index+1
+                    break
+                else
+                    output_str = output_str .. string.rep('\t',depth) .. key .. " = '"..tostring(v).."'"
+                end
+
+                if (cur_index == size) then
+                    output_str = output_str .. "\n" .. string.rep('\t',depth-1) .. "}"
+                else
+                    output_str = output_str .. ","
+                end
+            else
+                -- close the table
+                if (cur_index == size) then
+                    output_str = output_str .. "\n" .. string.rep('\t',depth-1) .. "}"
+                end
+            end
+
+            cur_index = cur_index + 1
+        end
+
+        if (size == 0) then
+            output_str = output_str .. "\n" .. string.rep('\t',depth-1) .. "}"
+        end
+
+        if (#stack > 0) then
+            node = stack[#stack]
+            stack[#stack] = nil
+            depth = cache[node] == nil and depth + 1 or depth - 1
+        else
+            break
+        end
+    end
+
+    -- This is necessary for working with HUGE tables otherwise we run out of memory using concat on huge strings
+    table.insert(output,output_str)
+    output_str = table.concat(output)
+
+    print(output_str)
 end
 
 function table_2d(w,h,val)
