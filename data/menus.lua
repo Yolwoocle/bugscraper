@@ -217,7 +217,17 @@ local function generate_menus()
     menus.controls_controller = Menu:new(game, {
         { "<<<<<<<<< CONTROLS >>>>>>>>>" },
         { "" },
-        { "RESET CONTROLS", function() Input:reset_controls(1) end },
+        { "RESET CONTROLS", function() Input:reset_controls(1, "c") end },
+        { SliderMenuItem, "BUTTON STYLE", function(self, diff)
+            diff = diff or 1
+            self:next_value(diff)
+            Options:set_button_style(1, self.value)
+            Audio:play("menu_select", 1.0)
+        end, BUTTON_STYLES,
+        function(self)
+            self.value = Options:get("button_style_p1")
+            self.value_text = concat(self.value)
+        end},
         { "" },
         { "<<< Gameplay >>>" },
         { ControlsMenuItem, 1, "c", "left"},
@@ -249,16 +259,15 @@ local function generate_menus()
         { StatsMenuItem, "Max combo", function(self) return concat(game.stats.max_combo) end },
         { "" },
         { "RETRY", function() game:new_game() end },
-        { "QUIT", quit_game },
         { "" },
     }
-    if OPERATING_SYSTEM == "Web" then
-        table.remove(items, 9)
-    end
+    -- if OPERATING_SYSTEM == "Web" then
+    --     table.remove(items, 9)
+    -- end
     menus.game_over = Menu:new(game, items, DEFAULT_MENU_BG_COLOR)
 
     menus.credits = Menu:new(game, {
-        {"<<<<<<<<< CREDITS (1/4) >>>>>>>>>"},
+        {"<<<<<<<<< CREDITS >>>>>>>>>"},
         { "" },
         { "<<< Design, programming & art >>>"},
         { "Léo Bernard (Yolwoocle)", func_url("https://twitter.com/yolwoocle_")},

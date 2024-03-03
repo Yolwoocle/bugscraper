@@ -22,6 +22,15 @@ function OptionsManager:init(game)
 		pause_on_unfocus = ternary(love.system.getOS()=="Web", false, true),
 		screenshake_on = true,
 		disable_background_noise = false,
+
+		button_style_p1 = BUTTON_STYLE_DETECT,
+		button_style_p2 = BUTTON_STYLE_DETECT,
+		button_style_p3 = BUTTON_STYLE_DETECT,
+		button_style_p4 = BUTTON_STYLE_DETECT,
+		button_style_p5 = BUTTON_STYLE_DETECT,
+		button_style_p6 = BUTTON_STYLE_DETECT,
+		button_style_p7 = BUTTON_STYLE_DETECT,
+		button_style_p8 = BUTTON_STYLE_DETECT,
 	}
 	self.options = copy_table(self.default_options)
 
@@ -167,6 +176,10 @@ end
 
 function OptionsManager:on_quit()
 	self:update_options_file()
+end
+
+function OptionsManager:set_button_style(player_n, style)
+	self:set("button_style_p"..player_n, style)
 end
 
 return OptionsManager

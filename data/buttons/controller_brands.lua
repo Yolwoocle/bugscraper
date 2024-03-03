@@ -3,6 +3,7 @@ local controller_brands = {
     "xbox",
     "playstation4",
     "playstation5",
+    "generic",
 }
 
 return controller_brands

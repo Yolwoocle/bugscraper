@@ -310,7 +310,7 @@ function Game:new_game(number_of_players)
 
 	self.draw_shadows = true
 	self.shadow_ox = 1
-	self.shadow_oy = 3
+	self.shadow_oy = 2
 	self.shadow_canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
 	self.front_canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
 
@@ -432,7 +432,7 @@ end
 
 function Game:removeme_test()
 	local y = 0
-	for action, buttons in pairs(Input.control_presets[1]) do
+	for action, buttons in pairs(Input.default_input_maps[1]) do
 		print_outline(COL_WHITE, COL_DARK_BLUE, action, 8, y, 0)
 
 		local x = 80
@@ -1296,6 +1296,16 @@ end
 
 function Game:joystickremoved(joystick)
 	Input:joystickremoved(joystick)
+end
+
+function Game:gamepadpressed(joystick, buttoncode)
+	Input:gamepadpressed(joystick, buttoncode)
+	if self.menu_manager then   self.menu_manager:gamepadpressed(joystick, buttoncode)   end
+end
+
+function Game:gamepadreleased(joystick, buttoncode)
+	Input:gamepadreleased(joystick, buttoncode)
+	if self.menu_manager then   self.menu_manager:gamepadreleased(joystick, buttoncode)   end
 end
 
 -- function Game:keyreleased(key, scancode)

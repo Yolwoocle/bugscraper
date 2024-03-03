@@ -1,6 +1,7 @@
 require "scripts.util"
 local Class = require "scripts.class"
 local InputUser = require "scripts.input_user"
+local InputMap = require "scripts.input_map"
 local images = require "data.images"
 local key_constant_to_image_name = require "data.buttons.images_buttons_keyboard"
 local controller_buttons = require "data.buttons.controller_buttons"
@@ -14,8 +15,8 @@ function InputManager:init()
 	self.standby_mode = false
 	self.buffer_standby_mode = {active = false, value = false}
 
-	self.control_presets = {
-		[1] = self:process_input_map {
+	self.default_mappings = {
+		[1] = self:process_input_map({
 			left =  {"k_a", "k_left",     "c_dpleft",  "c_leftstickxneg", "c_rightstickxneg"},
 			right = {"k_d", "k_right",    "c_dpright", "c_leftstickxpos", "c_rightstickxpos"},
 			up =    {"k_w", "k_up",       "c_dpup",    "c_leftstickyneg", "c_rightstickyneg"},
@@ -26,14 +27,16 @@ function InputManager:init()
 
 			ui_select = {"k_c", "k_b", "k_return",   "c_a"},
 			ui_back =   {"k_x", "k_escape", "k_backspace",  "c_b"},
-			ui_left =   {"k_a", "k_left",  "c_dpleft"},
-			ui_right =  {"k_d", "k_right", "c_dpright"},
-			ui_up =     {"k_w", "k_up",    "c_dpup"},
-			ui_down =   {"k_s", "k_down",  "c_dpdown"},
-		},
+			ui_left =   {"k_a", "k_left",  "c_dpleft",  "c_leftstickxneg", "c_rightstickxneg"},
+			ui_right =  {"k_d", "k_right", "c_dpright", "c_leftstickxpos", "c_rightstickxpos"},
+			ui_up =     {"k_w", "k_up",    "c_dpup",    "c_leftstickyneg", "c_rightstickyneg"},
+			ui_down =   {"k_s", "k_down",  "c_dpdown",  "c_leftstickypos", "c_rightstickypos"},
+		}),
 	}
 
-	self.control_schemes = copy_table(self.control_presets)
+	self.input_maps = {
+        [1] = InputMap:new(self.default_mappings[1])
+    }
 
     self:load_controls()
 end
@@ -53,15 +56,13 @@ function InputManager:update_last_input_state(dt)
 end
 
 function InputManager:get_input_map(n)
-    return self.control_schemes[n]
+    return self.input_maps[n]:get_mappings()
 end
 
 function InputManager:new_user()
     local n = #self.users + 1
 
-    local default_input_map = self.control_schemes[n]
-    local input_map = self.control_schemes[n]
-    table.insert(self.users, InputUser:new(n, default_input_map, input_map))
+    table.insert(self.users, InputUser:new(n))
 end
 
 function InputManager:joystickadded(joystick)
@@ -82,6 +83,23 @@ function InputManager:joystickremoved(joystick)
     end
 
     input_user.joystick = joystick
+end
+
+function InputManager:get_joystick_user(joystick)
+    return self.joystick_to_user_map[joystick]
+end
+
+function InputManager:get_joystick_user_n(joystick)
+    local user = self.joystick_to_user_map[joystick]
+    if user == nil then return -1 end
+
+    return user.n
+end
+
+function InputManager:gamepadpressed(joystick, buttoncode)
+end
+
+function InputManager:gamepadreleased(joystick, buttoncode)
 end
 
 function InputManager:action_down(n, action, bypass_standy)
@@ -132,29 +150,64 @@ function InputManager:get_user(n)
     return self.users[n]
 end
 
-function InputManager:set_action_buttons(n, action, buttons)
-	if type(buttons) ~= table then
-		buttons = {buttons}
-	end
+function InputManager:get_buttons(n, action)
+    if self.input_maps[n] == nil then   return {}   end
+    return self.input_maps[n]:get_buttons(action)
+end
 
-    local user = self.users[n]
-    if user == nil then
-        print(concat("set_action_buttons: user number ",n," doesn't exist"))
+function InputManager:set_action_buttons(n, action, buttons)
+    local map = self.input_maps[n]
+    if map == nil then
+        print(concat("set_action_buttons: input map number ",n," doesn't exist"))
         return
     end
 
-    self.control_schemes[n][action] = buttons
+    map:set_action_buttons(action, buttons)
 
 	self:update_controls_file(n)
 end
 
-function InputManager:reset_controls(n, mode)
+function InputManager:add_action_buttons(n, action, buttons)
+    local map = self.input_maps[n]
+    if map == nil then
+        print(concat("set_action_buttons: input map number ",n," doesn't exist"))
+        return
+    end
+
+    local current_buttons = map:get_buttons(action)
+    for _, new_button in pairs(buttons) do
+        table.insert(current_buttons, new_button)
+    end
+
+	self:update_controls_file(n)
+end
+
+function InputManager:reset_controls(n, input_mode)
 	local user = self.users[n]
     assert(user ~= nil, concat("user ",n, " does not exist"))
 
-    self.control_schemes[n] = copy_table(self.control_presets[n])
+    local new_mapping = {}
+    for action, default_buttons in pairs(self.default_mappings[n]) do
+        local current_buttons = self.input_maps[n]:get_buttons(action)
 
-	self:update_controls_file(n)
+        local new_buttons = {}
+        for _, button in pairs(default_buttons) do
+            if button.type == input_mode then
+                table.insert(new_buttons, button)
+            end
+        end
+
+        for _, button in pairs(current_buttons) do
+            if button.type ~= input_mode then
+                table.insert(new_buttons, button)
+            end
+        end
+        new_mapping[action] = new_buttons
+    end
+
+    self.input_maps[n] = InputMap:new(new_mapping)
+
+    self:update_controls_file(n)
 end
 
 function InputManager:is_button_in_use(n, action, button)
@@ -193,7 +246,7 @@ function InputManager:generate_unknown_key_icon(icon, text)
     return new_canvas
 end
 
-function InputManager:get_button_icon(button)
+function InputManager:get_button_icon(player_n, button)
     local img = nil
     if button.type == "k" then
 		local key_constant = love.keyboard.getKeyFromScancode(button.key_name)
@@ -207,9 +260,12 @@ function InputManager:get_button_icon(button)
         end
 
     elseif button.type == "c" then
-        local brand = "xbox"
-        local image_name = string.format("btn_c_%s_%s", brand, button.key_name)
-        img = images[image_name]
+        local user = self:get_user(player_n)
+        if user ~= nil then
+            local brand = user:get_button_style()
+            local image_name = string.format("btn_c_%s_%s", brand, button.key_name)
+            img = images[image_name]
+        end
 
         if img == nil then
             return self:generate_unknown_key_icon(images.btn_c_unknown, button.key_name)
@@ -255,7 +311,7 @@ function InputManager:load_controls()
 		return
 	end
 
-	for n=1, #self.control_schemes do
+	for n=1, #self.input_maps do
 		local filename = concat("controls_p",n,".txt")
 
 		-- Check if file exists
@@ -269,8 +325,7 @@ function InputManager:load_controls()
 		local file = love.filesystem.newFile(filename)
 		file:open("r")
 
-        local new_controls = copy_table(self.control_presets[n])
-        -- process_input_map
+        local new_input_map = copy_table(self.default_mappings[n])
 
 		-- Read file contents
 		local text, size = file:read()
@@ -283,18 +338,19 @@ function InputManager:load_controls()
 			local action_name, keycodes = tab[1], tab[2]
             local keycode_table = split_str(keycodes, " ")
 
-            new_controls[action_name] = {}
+            local new_buttons = {}
             for _, keycode in pairs(keycode_table) do
                 local button = self:keycode_to_button(keycode)
                 if button ~= nil then
-                    table.insert(new_controls[action_name], button)
+                    table.insert(new_buttons, button)
                 end
             end
+            new_input_map[action_name] = new_buttons
 		end
 
 		file:close()
-        
-        self.control_schemes[n] = new_controls
+
+        self.input_maps[n] = InputMap:new(new_input_map)
 	end
 end
 
@@ -307,7 +363,7 @@ function InputManager:buttons_to_keycodes(buttons)
 end
 
 function InputManager:update_all_controls_files()
-	for n=1, #self.control_schemes do
+	for n=1, #self.input_maps do
         self:update_controls_file(n)
     end
 end
@@ -318,7 +374,7 @@ function InputManager:update_controls_file(player_n)
     print(concat("Creating or updating ", filename, " file"))
     controlsfile:open("w")
 
-    for action_name, buttons in pairs(self.control_schemes[player_n]) do
+    for action_name, buttons in pairs(self.input_maps[player_n]:get_mappings()) do
         local keycodes = self:buttons_to_keycodes(buttons)
         local keycodes_string = concatsep(keycodes," ")
 

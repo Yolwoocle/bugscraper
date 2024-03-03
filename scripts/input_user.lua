@@ -1,5 +1,8 @@
 require "scripts.util"
 local Class = require "scripts.class"
+local InputButton = require "scripts.input_button"
+local gamepadguesser = require "lib.gamepadguesser"
+gamepadguesser.loadMappings("lib/gamepadguesser")
 
 local InputUser = Class:inherit()
 
@@ -20,10 +23,8 @@ local axis_functions = {
     righttrigger = function(joystick) return joystick:getAxis(6) > -1 + AXIS_DEADZONE end,
 }
 
-function InputUser:init(n, default_input_map, input_map)
+function InputUser:init(n)
     self.n = n
-    -- self.default_input_map = self:process_input_map(default_input_map)
-    -- self.input_map = self:process_input_map(input_map)
     self:init_last_input_state()
 
     self.joystick = nil
@@ -77,12 +78,37 @@ function InputUser:action_down(action)
     local keys = self:get_input_map()[action]
 	if not keys then   error(concat("Attempt to access button '",concat(action),"'"))   end
 
-	for k, key in pairs(keys) do
+	for _, key in pairs(keys) do
 		if self:is_keycode_down(key) then
 			return true
 		end
 	end
 	return false
+end
+
+function InputUser:get_button_style()
+    local style = Options:get("button_style_p"..self.n)
+    if style == BUTTON_STYLE_DETECT then
+        local console_name = "generic"
+        if self.joystick then
+            console_name = gamepadguesser.joystickToConsole(self.joystick)
+        end
+
+        if console_name == "playstation" then
+            return BUTTON_STYLE_PLAYSTATION5
+        elseif console_name == "nintendo" then
+            return BUTTON_STYLE_SWITCH
+        elseif console_name == "xbox" then
+            return BUTTON_STYLE_XBOX
+        else 
+            return BUTTON_STYLE_XBOX
+        end
+    end
+    return style
+end
+
+function InputUser:set_button_style(style)
+    Options:set_button_style(self.n, style)
 end
 
 return InputUser

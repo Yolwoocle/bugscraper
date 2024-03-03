@@ -115,6 +115,14 @@ function love.joystickremoved(joystick)
 	if game.joystickremoved then   game:joystickremoved(joystick)   end
 end
 
+function love.gamepadpressed(joystick, buttoncode)
+	if game.gamepadpressed then   game:gamepadpressed(joystick, buttoncode)   end
+end
+
+function love.gamepadreleased(joystick, buttoncode)
+	if game.gamepadreleased then   game:gamepadreleased(joystick, buttoncode)   end
+end
+
 --function love.quit()
 --	game:quit()
 --end
