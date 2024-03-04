@@ -41,6 +41,10 @@ function InputManager:init()
     self:load_controls()
 end
 
+function InputManager:init_users()
+    self:new_user()
+end
+
 function InputManager:update(dt)
 end
 

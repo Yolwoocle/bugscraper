@@ -31,6 +31,8 @@ function Game:init()
 	Collision = CollisionManager:new()
 	Particles = ParticleSystem:new()
 	Audio = AudioManager:new()
+
+	Input:init_users()
 	
 	-- Global Options ==> Moved to OptionsManager
 	-- is_fullscreen = options:get("is_fullscreen")
@@ -783,7 +785,6 @@ function Game:init_players()
 		local player = Player:new(i, mx*16 + i*16, my*16, sprs[i])
 		self.players[i] = player
 		self:new_actor(player)
-		Input:new_user()
 	end
 end
 
