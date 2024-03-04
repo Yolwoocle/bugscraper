@@ -31,7 +31,7 @@ function Enemy:init_enemy(x,y, img, w,h)
 	self.max_life = 10
 	self.life = self.max_life
 	self.color = COL_BLUE
-	self.speed = 20
+	self.speed = 1200
 	self.speed_x = self.speed
 	self.speed_y = 0
 
@@ -102,11 +102,11 @@ function Enemy:follow_nearest_player(dt)
 	if not nearest_player then    return    end
 	
 	self.speed_x = self.speed_x or self.speed
-	if self.is_flying then    self.speed_y = self.speed_y or self.speed 
-	else                      self.speed_y = self.speed_y or 0    end 
+	if self.is_flying then    self.speed_y = self.speed_y or self.speed
+	else                      self.speed_y = self.speed_y or 0    end
 
-	self.vx = self.vx + sign0(nearest_player.x - self.x) * self.speed_x
-	self.vy = self.vy + sign0(nearest_player.y - self.y) * self.speed_y
+	self.vx = self.vx + sign0(nearest_player.x - self.x) * self.speed_x * dt
+	self.vy = self.vy + sign0(nearest_player.y - self.y) * self.speed_y * dt
 end
 
 function Enemy:draw_enemy()
