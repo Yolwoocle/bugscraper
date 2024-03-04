@@ -27,7 +27,7 @@ function Actor:init_actor(x, y, w, h, spr, args)
 
 	self.rot = 0
 
-	self.default_gravity = 20
+	self.default_gravity = 1100
 	self.gravity = self.default_gravity
 	self.gravity_cap = 400
 	self.gravity_mult = 1
@@ -56,7 +56,7 @@ function Actor:init_actor(x, y, w, h, spr, args)
 		self.spr_w = self.spr:getWidth()
 		self.spr_h = self.spr:getHeight()
 		self.spr_ox = floor((self.spr_w - self.w) / 2)
-		self.spr_oy = self.spr_h - self.h 
+		self.spr_oy = self.spr_h - self.h
 	end
 
 	self.spr_x = 0
@@ -79,10 +79,10 @@ function Actor:add_collision()
 end
 
 function Actor:do_gravity(dt)
-	self.vy = self.vy + self.gravity * self.gravity_mult
+	self.vy = self.vy + self.gravity * self.gravity_mult * dt
 	if self.gravity * self.gravity_mult > 0 then
 		self.vy = min(self.vy, self.gravity_cap)
-	end	
+	end
 end
 
 function Actor:update_actor(dt)
@@ -90,8 +90,8 @@ function Actor:update_actor(dt)
 	self:do_gravity(dt)
 
 	-- apply friction
-	self.vx = self.vx * self.friction_x
-	self.vy = self.vy * self.friction_y
+	-- self.vx = move_toward(self.vx, 0.0, self.speed)
+	-- self.vy = move_toward(self.vy, 0.0, self.speed)
 	
 	-- apply position
 	local goal_x = self.x + self.vx * dt
@@ -170,19 +170,7 @@ function Actor:draw_actor(fx, fy, custom_draw)
 
 	local x, y = self.spr_x, self.spr_y
 	if self.spr then
-		-- local old_col = {gfx.getColor()}
-		-- Shadow
-		-- if self.draw_shadow then
-		-- 	local o = ((self.x / CANVAS_WIDTH)-.5) * 6
-		-- 	love.graphics.setColor(0, 0, 0, 0.5)
-		-- 	-- (self.spr, floor(x+o), floor(y+3), 0, fx, fy, spr_w2, spr_h2)
-
-		-- 	love.graphics.draw(self.spr, floor(x+o), floor(y+3), self.rot, fx, fy, spr_w2, spr_h2)
-		-- end
-		
 		-- Draw
-		-- love.graphics.setColor(old_col)
-		
 		local drw_func = gfx.draw
 		if custom_draw then    drw_func = custom_draw    end
 		drw_func(self.spr, x, y, self.rot, fx, fy, spr_w2, spr_h2)

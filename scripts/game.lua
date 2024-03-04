@@ -403,12 +403,22 @@ function Game:update_main_game(dt)
 	for i = #self.actors, 1, -1 do
 		local actor = self.actors[i]
 
-		actor:update(dt)
-	
+		if not actor.is_player then --removeme
+			actor:update(dt)
+		end--removeme
+
 		if actor.is_removed then
 			table.remove(self.actors, i)
 		end
 	end
+
+	for i, player in ipairs(self.players) do--removeme
+		if i == 1 then
+			player:update(dt)
+		elseif i == 2 and self.frame % 2 == 0 then
+			player:update(dt*2)
+		end
+	end--removeme
 
 	-- Flash 
 	self.flash_alpha = max(self.flash_alpha - dt, 0)
@@ -475,8 +485,6 @@ function Game:draw()
 	end
 end
 
-testx = 0
-testy = 0
 function Game:draw_game()
 	-- Sky
 	gfx.clear(self.bg_col)
@@ -489,7 +497,7 @@ function Game:draw_game()
 			local y = o.y + o.oy
 			local mult = 1 - clamp(abs(self.elevator_speed / 100), 0, 1)
 			local sin_oy = mult * sin(self.t + o.rnd_pi) * o.oh * o.h 
-			
+
 			rect_color(o.col, "fill", o.x, o.y + o.oy + sin_oy, o.w, o.h * o.oh)
 		end
 	end
@@ -498,9 +506,9 @@ function Game:draw_game()
 
 	-- Map
 	self.map:draw()
-	
+
 	-- Background
-	
+
 	-- Door background
 	if self.show_cabin then
 		rect_color(self.bg_col, "fill", self.door_ax, self.door_ay, self.door_bx - self.door_ax+1, self.door_by - self.door_ay+1)
@@ -782,9 +790,14 @@ function Game:init_players()
 	local my = floor(self.map.height - 3)
 
 	for i=1, self.number_of_players do
-		local player = Player:new(i, mx*16 + i*16, my*16, sprs[i])
-		self.players[i] = player
-		self:new_actor(player)
+		local player1 = Player:new(i, mx*16 + i*16, my*16, sprs[i])
+		self.players[i] = player1
+		self:new_actor(player1)
+
+		-- local player2 = Player:new(i, mx*16 + i*16, my*16, sprs[i])--removeme;
+		-- player2:flip_player_type()--remove;
+		-- self.players[2] = player2--removeme;
+		-- self:new_actor(player2)--removeme;
 	end
 end
 
