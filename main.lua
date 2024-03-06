@@ -59,7 +59,7 @@ function love.keypressed(key, scancode, isrepeat)
 	-- 	CAPTURING_GIF = not CAPTURING_GIF
 	-- 	gif_n = gif_n + 1
 
-	elseif key == "f11" then
+	elseif key == "f11" then 
 		if Options then   Options:toggle_fullscreen()    end
 
 	-- elseif key == "m" then
