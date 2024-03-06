@@ -19,24 +19,23 @@ function Actor:init_actor(x, y, w, h, spr, args)
 	self.sx = 1
 	self.sy = 1
 
-	self.dx = 0
-	self.dy = 0
-
 	self.vx = 0
 	self.vy = 0
+	self.ax = 0
+	self.ay = 0
 
 	self.rot = 0
 
-	self.default_gravity = 1100
+	self.default_gravity = 2200
 	self.gravity = self.default_gravity
 	self.gravity_cap = 400
 	self.gravity_mult = 1
 	
-	self.default_friction = 0.8
+	self.default_friction = 80
 	self.friction_x = self.default_friction -- !!!!! This assumes that the game is running at 60FPS
 	self.friction_y = 1 -- By default we don't apply friction to the Y axis for gravity
 
-	self.speed_cap = 10000
+	self.velocity_cap = 10000
 	self.is_solid = false
 
 	self.is_grounded = false
@@ -90,8 +89,14 @@ function Actor:update_actor(dt)
 	self:do_gravity(dt)
 
 	-- apply friction
-	-- self.vx = move_toward(self.vx, 0.0, self.speed)
-	-- self.vy = move_toward(self.vy, 0.0, self.speed)
+	local epsilon = 0.001
+	if length_vect_sq(self.ax, self.ay) <= epsilon*epsilon then
+		self.vx = move_toward(self.vx, 0.0, self.friction_x * dt)
+		self.vy = move_toward(self.vy, 0.0, self.friction_y * dt)
+	else
+		self.vx = self.vx + self.ax * dt
+		self.vy = self.vy + self.ay * dt
+	end
 	
 	-- apply position
 	local goal_x = self.x + self.vx * dt
@@ -119,9 +124,8 @@ function Actor:update_actor(dt)
 	end
 
 	-- Cap velocity
-	local cap = self.speed_cap
-	self.vx = clamp(self.vx, -cap, cap)
-	self.vy = clamp(self.vy, -cap, cap)
+	self.vx = clamp(self.vx, -self.velocity_cap, self.velocity_cap)
+	self.vy = clamp(self.vy, -self.velocity_cap, self.velocity_cap)
 
 	self.mid_x = self.x + self.w/2
 	self.mid_y = self.y + self.h/2
@@ -198,13 +202,13 @@ end
 function Actor:set_flying(bool)
 	if bool then
 		self.is_flying = true
-		self.friction_x = 1
-		self.friction_y = 1
+		-- self.friction_x = 1
+		-- self.friction_y = 1
 		self.gravity = 0
 	else
 		self.is_flying = false
-		self.friction_x = self.default_friction
-		self.friction_y = 1
+		-- self.friction_x = self.default_friction
+		-- self.friction_y = 1
 		self.gravity = self.default_gravity
 		
 	end

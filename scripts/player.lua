@@ -54,8 +54,8 @@ function Player:init(n, x, y, spr)
 	self.dir_y = 0
 	
 	-- Speed 
-	self.acceleration = 1800
-	self.deceleration = 1500
+	self.movement_acceleration = 1800
+	self.movement_deceleration = 1500
 	self.max_speed = 200
 
 	-- Jump
@@ -175,7 +175,7 @@ function Player:update(dt)
 	self:move(dt)
 	self:do_wall_sliding(dt)
 	self:do_jumping(dt)
-	self:do_gravity(dt)
+	-- self:do_gravity(dt)
 	self:update_actor(dt)
 	self:do_aiming(dt)
 	self.mid_x = self.x + floor(self.w/2)
@@ -329,11 +329,11 @@ function Player:move(dt)
 	if Input:action_down('right') then   dir.x = dir.x + 1   end
 
 	if dir.x == 0 then
-		self.vx = move_toward(self.vx, 0.0, self.deceleration * dt)
+		self.vx = move_toward(self.vx, 0.0, self.movement_deceleration * dt)
 		-- self.vy = move_toward(self.vy, 0.0, self.speed * dt)
 	else
 		self.dir_x = dir.x
-		self.vx = clamp(self.vx + dir.x * self.acceleration * dt, -self.max_speed, self.max_speed)
+		self.vx = clamp(self.vx + dir.x * self.movement_acceleration * dt, -self.max_speed, self.max_speed)
 		-- self.vy = clamp(self.vy + dir.y * self.speed * dt, -self.max_speed, self.max_speed)
 	end
 

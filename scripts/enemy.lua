@@ -31,7 +31,7 @@ function Enemy:init_enemy(x,y, img, w,h)
 	self.max_life = 10
 	self.life = self.max_life
 	self.color = COL_BLUE
-	self.speed = 1200
+	self.speed = 30
 	self.speed_x = self.speed
 	self.speed_y = 0
 
@@ -68,7 +68,7 @@ end
 function Enemy:update_enemy(dt)
 	-- if not self.is_active then    return    end
 	self:update_actor(dt)
-	
+
 	self:follow_nearest_player(dt)
 	self.harmless_frames = max(self.harmless_frames - dt, 0)
 	self.damaged_flash_timer = max(self.damaged_flash_timer - dt, 0)
@@ -77,13 +77,14 @@ function Enemy:update_enemy(dt)
 		self:remove()
 	end
 end
+
 function Enemy:update(dt)
 	self:update_enemy(dt)
 end
 
 function Enemy:get_nearest_player()
 	local shortest_dist = math.huge
-	local nearest_player 
+	local nearest_player
 	for _, ply in pairs(game.players) do
 		local dist = distsqr(self.x, self.y, ply.x, ply.y)
 		if dist < shortest_dist then
@@ -102,11 +103,17 @@ function Enemy:follow_nearest_player(dt)
 	if not nearest_player then    return    end
 	
 	self.speed_x = self.speed_x or self.speed
-	if self.is_flying then    self.speed_y = self.speed_y or self.speed
-	else                      self.speed_y = self.speed_y or 0    end
+	if self.is_flying then
+		self.speed_y = self.speed_y or self.speed
 
-	self.vx = self.vx + sign0(nearest_player.x - self.x) * self.speed_x * dt
-	self.vy = self.vy + sign0(nearest_player.y - self.y) * self.speed_y * dt
+		local dir_x, dir_y = vector_pointing_to(self.x, self.y, nearest_player.x, nearest_player.y)
+		self.vx = dir_x * self.speed_x
+		self.vy = dir_y * self.speed_y
+	else
+		self.speed_y = self.speed_y or 0
+		self.vx = sign0(nearest_player.x - self.x) * self.speed_x
+	end
+
 end
 
 function Enemy:draw_enemy()

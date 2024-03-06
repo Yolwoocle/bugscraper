@@ -13,8 +13,6 @@ local OptionsManager = require "scripts.options"
 local InputManager = require "scripts.input"
 local utf8 = require "utf8"
 
-local removeme_key_constant_to_image = require "data.buttons.images_buttons_keyboard"
-
 local waves = require "data.waves"
 local sounds = require "data.sounds"
 local images = require "data.images"
@@ -326,7 +324,6 @@ function Game:new_game(number_of_players)
 	self.music_loop:seek(0)
 	self.current_music_source = self.music_intro
 	self.current_music_source:play()
-	print_debug("game.intro ", (self.music_intro == nil), " loop ", (self.music_loop == nil))
 	-- self.current_music_source = sounds.music_galaxy_trip[1]
 
 	self.sfx_elevator_bg = sounds.elevator_bg[1]
@@ -343,6 +340,58 @@ function Game:new_game(number_of_players)
 	Options:update_sound_on()
 end
 
+local removeme_60fps_pos = 0
+local removeme_60fps_vel = 100
+local removeme_30fps_pos = 0
+local removeme_30fps_vel = 100
+local removeme_15fps_pos = 0
+local removeme_15fps_vel = 100
+
+local b = -60
+local removeme_bounce60fps_pos = 0
+local removeme_bounce60fps_vel = b
+local removeme_bounce30fps_pos = 0
+local removeme_bounce30fps_vel = b
+local removeme_bounce15fps_pos = 0
+local removeme_bounce15fps_vel = b
+local removeme_g = 150
+
+function Game:removeme_test_friction(dttt)
+	local decel = 20
+	local dt = 1/60
+	if self.frame % (4*60) == 0 then
+		local bb = -200
+		removeme_bounce60fps_vel = bb
+		removeme_bounce30fps_vel = bb
+		removeme_bounce15fps_vel = bb
+	end
+
+	if self.frame % 1 == 0 then
+		local mydt = dt
+		removeme_60fps_vel = move_toward(removeme_60fps_vel, 0.0, decel * mydt)
+		removeme_60fps_pos = removeme_60fps_pos + removeme_60fps_vel * mydt
+
+		removeme_bounce60fps_vel = removeme_bounce60fps_vel + removeme_g * mydt
+		removeme_bounce60fps_pos = removeme_bounce60fps_pos + removeme_bounce60fps_vel * mydt
+	end
+	if self.frame % 2 == 0 then
+		local mydt = dt*2
+		removeme_30fps_vel = move_toward(removeme_30fps_vel, 0.0, decel * mydt)
+		removeme_30fps_pos = removeme_30fps_pos + removeme_30fps_vel * mydt
+		
+		removeme_bounce30fps_vel = removeme_bounce30fps_vel + removeme_g * mydt
+		removeme_bounce30fps_pos = removeme_bounce30fps_pos + removeme_bounce30fps_vel * mydt
+	end
+	if self.frame % 4 == 0 then
+		local mydt = dt*4
+		removeme_15fps_vel = move_toward(removeme_15fps_vel, 0.0, decel * mydt)
+		removeme_15fps_pos = removeme_15fps_pos + removeme_15fps_vel * mydt
+
+		removeme_bounce15fps_vel = removeme_bounce15fps_vel + removeme_g * mydt
+		removeme_bounce15fps_pos = removeme_bounce15fps_pos + removeme_bounce15fps_vel * mydt
+	end
+end
+
 local n = 0
 function Game:update(dt)
 	self.frame = self.frame + 1
@@ -353,6 +402,8 @@ function Game:update(dt)
 		self:apply_screenshake(dt)
 		return
 	end
+
+	self:removeme_test_friction(dt)
 
 	Input:update(dt)
 	
@@ -381,9 +432,7 @@ function Game:update_main_game(dt)
 		self.current_music_source = self.music_loop
 		self.current_music_source:play()
 	end
-	if self.music_state == MUSIC_STATE_INTRO and (not self.current_music_source:isPlaying()) then
-	end
-
+	
 	-- BG color gradient
 	if not self.is_on_win_screen then
 		self.bg_color_progress = self.bg_color_progress + dt*0.2
@@ -456,27 +505,6 @@ function Game:update_main_game(dt)
 	-- if love.keyboard.isScancodeDown("d") then self.cam_x = self.cam_x + q end
 	-- if love.keyboard.isScancodeDown("w") then self.cam_y = self.cam_y - q end
 	-- if love.keyboard.isScancodeDown("s") then self.cam_y = self.cam_y + q end
-end
-
-function Game:removeme_test()
-	local y = 0
-	for action, buttons in pairs(Input.default_input_maps[1]) do
-		print_outline(COL_WHITE, COL_DARK_BLUE, action, 8, y, 0)
-
-		local x = 80
-		for _, button in ipairs(buttons) do
-			if button.type == "k" then
-				local key_constant = love.keyboard.getKeyFromScancode(button.key_name)
-				local img = images[removeme_key_constant_to_image[key_constant]]
-				if img ~= nil then
-					love.graphics.draw(img, x, y)
-					x = x + img:getWidth()
-				end
-			end
-		end
-
-		y = y + 18
-	end
 end
 
 function Game:draw()
@@ -652,10 +680,7 @@ function Game:draw_game()
 	if self.menu_manager.cur_menu then
 		self.menu_manager:draw()
 	end
-
 	
-	-- self:removeme_test()
-
 	--'Memory used (in kB): ' .. collectgarbage('count')
 
 	-- local t = "EARLY VERSION - NOT FINAL!"
@@ -663,6 +688,13 @@ function Game:draw_game()
 	-- local t = os.date('%a %d/%b/%Y')
 	-- print_color({.7,.7,.7}, t, CANVAS_WIDTH-get_text_width(t), 12)
 
+	love.graphics.circle("fill", 20 + removeme_60fps_pos, 20, 4)
+	love.graphics.circle("fill", 20 + removeme_30fps_pos, 40, 4)
+	love.graphics.circle("fill", 20 + removeme_15fps_pos, 60, 4)
+
+	love.graphics.circle("fill", 20, 100+ removeme_bounce60fps_pos, 4)
+	love.graphics.circle("fill", 40, 100+removeme_bounce30fps_pos, 4)
+	love.graphics.circle("fill", 60, 100+removeme_bounce15fps_pos, 4)
 end
 
 function Game:draw_colview()

@@ -10,16 +10,16 @@ local waves = {
 	min = 4,
 	max = 6,
 	enemies = {
-		{E.Larva, 1},
-		{E.Fly, 1},
+		-- {E.Larva, 1},
+		-- {E.Fly, 1},
 
-		-- {E.Larva, 4},
-		-- {E.Fly, 3},
-		-- {E.SpikedFly, 3},
-		-- {E.SnailShelled, 3},
-		-- {E.Slug, 2},
-		-- {E.Grasshopper, 1},
-		-- {E.MushroomAnt, 10},
+		-- {E.Larva, 4}, --removeme
+		-- {E.Fly, 3}, --removeme
+		-- {E.Slug, 1}, --removeme
+		-- {E.SpikedFly, 3}, --removeme
+		-- {E.SnailShelled, 3}, --removeme
+		-- {E.Grasshopper, 1}, --removeme
+		{E.MushroomAnt, 10}, --removeme
 	},
 },
 
