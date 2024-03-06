@@ -25,6 +25,15 @@ function mod_plus_1(val, mod)
 	return ((val-1) % mod)+1
 end
 
+function vector_pointing_to(source_x, source_y, dest_x, dest_y)
+	local x, y = (dest_x - source_x), (dest_y - source_y)
+	if x == 0 and y == 0 then
+		return 0, 0
+	end
+
+	return normalise_vect(x, y)
+end
+
 function normalize_vect(x, y)
 	if x==0 and y==0 then  return 1,0  end
 	local d = sqrt(x*x + y*y)
@@ -33,6 +42,14 @@ function normalize_vect(x, y)
 	-- return math.cos(a), math.sin(a)
 end
 normalise_vect = normalize_vect
+
+function length_vect_sq(x, y)
+	return x*x + y*y
+end
+
+function length_vect(x, y)
+	return sqrt(x*x + y*y)
+end
 
 function color(hex)
 	if not hex then  return white  end
