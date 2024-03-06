@@ -11,12 +11,12 @@ function love.load(arg)
 end
 
 t = 0
-fdt = 1/60 -- fixed frame delta time
+fixed_dt = 1/60 -- fixed frame delta time
 frm = 0
 local function fixed_update()
 	--update that happens at the fixed fdt interval
 	frm = frm + 1
-	game:update(fdt)
+	game:update(fixed_dt)
 	-- if frm % 2 == 0 and CAPTURING_GIF then
 	-- 	love.graphics.captureScreenshot("gif"..tostring(gif_n).."_"..tostring(floor(frm/2))..".png")
 	-- end
@@ -26,8 +26,8 @@ function love.update(dt)
 	t = t + dt
 	local cap = 1 --If there's lag spike, repeat up to how many frames?
 	local i = 0
-	while t > fdt and cap > 0 do
-		t = t - fdt
+	while t > fixed_dt and cap > 0 do
+		t = t - fixed_dt
 		fixed_update()
 		cap = cap - 1
 		i=i+1
@@ -43,6 +43,8 @@ end
 
 CAPTURING_GIF = false
 gif_n = 0
+
+local removeme_lag_mode = false
 function love.keypressed(key, scancode, isrepeat)
 	if key == "f5" then
 		if love.keyboard.isDown("lshift") then

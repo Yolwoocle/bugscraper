@@ -13,8 +13,6 @@ local OptionsManager = require "scripts.options"
 local InputManager = require "scripts.input"
 local utf8 = require "utf8"
 
-local removeme_key_constant_to_image = require "data.buttons.images_buttons_keyboard"
-
 local waves = require "data.waves"
 local sounds = require "data.sounds"
 local images = require "data.images"
@@ -318,7 +316,16 @@ function Game:new_game(number_of_players)
 
 	-- Music
 	-- TODO: a "ambient sfx" system
-	self.music_source    = sounds.music_galaxy_trip[1]
+	self.music_state = MUSIC_STATE_LOBBY
+	self.music_intro = sounds.test_intro[1]
+	self.music_intro:seek(0)
+	self.music_intro:setLooping(true)
+	self.music_loop = sounds.test_loop[1]
+	self.music_loop:seek(0)
+	self.current_music_source = self.music_intro
+	self.current_music_source:play()
+	-- self.current_music_source = sounds.music_galaxy_trip[1]
+
 	self.sfx_elevator_bg = sounds.elevator_bg[1]
 	self.sfx_elevator_bg_volume     = self.sfx_elevator_bg:getVolume()
 	self.sfx_elevator_bg_def_volume = self.sfx_elevator_bg:getVolume()
@@ -333,6 +340,58 @@ function Game:new_game(number_of_players)
 	Options:update_sound_on()
 end
 
+local removeme_60fps_pos = 0
+local removeme_60fps_vel = 100
+local removeme_30fps_pos = 0
+local removeme_30fps_vel = 100
+local removeme_15fps_pos = 0
+local removeme_15fps_vel = 100
+
+local b = -60
+local removeme_bounce60fps_pos = 0
+local removeme_bounce60fps_vel = b
+local removeme_bounce30fps_pos = 0
+local removeme_bounce30fps_vel = b
+local removeme_bounce15fps_pos = 0
+local removeme_bounce15fps_vel = b
+local removeme_g = 150
+
+function Game:removeme_test_friction(dttt)
+	local decel = 20
+	local dt = 1/60
+	if self.frame % (4*60) == 0 then
+		local bb = -200
+		removeme_bounce60fps_vel = bb
+		removeme_bounce30fps_vel = bb
+		removeme_bounce15fps_vel = bb
+	end
+
+	if self.frame % 1 == 0 then
+		local mydt = dt
+		removeme_60fps_vel = move_toward(removeme_60fps_vel, 0.0, decel * mydt)
+		removeme_60fps_pos = removeme_60fps_pos + removeme_60fps_vel * mydt
+
+		removeme_bounce60fps_vel = removeme_bounce60fps_vel + removeme_g * mydt
+		removeme_bounce60fps_pos = removeme_bounce60fps_pos + removeme_bounce60fps_vel * mydt
+	end
+	if self.frame % 2 == 0 then
+		local mydt = dt*2
+		removeme_30fps_vel = move_toward(removeme_30fps_vel, 0.0, decel * mydt)
+		removeme_30fps_pos = removeme_30fps_pos + removeme_30fps_vel * mydt
+		
+		removeme_bounce30fps_vel = removeme_bounce30fps_vel + removeme_g * mydt
+		removeme_bounce30fps_pos = removeme_bounce30fps_pos + removeme_bounce30fps_vel * mydt
+	end
+	if self.frame % 4 == 0 then
+		local mydt = dt*4
+		removeme_15fps_vel = move_toward(removeme_15fps_vel, 0.0, decel * mydt)
+		removeme_15fps_pos = removeme_15fps_pos + removeme_15fps_vel * mydt
+
+		removeme_bounce15fps_vel = removeme_bounce15fps_vel + removeme_g * mydt
+		removeme_bounce15fps_pos = removeme_bounce15fps_pos + removeme_bounce15fps_vel * mydt
+	end
+end
+
 local n = 0
 function Game:update(dt)
 	self.frame = self.frame + 1
@@ -343,6 +402,8 @@ function Game:update(dt)
 		self:apply_screenshake(dt)
 		return
 	end
+
+	self:removeme_test_friction(dt)
 
 	Input:update(dt)
 	
@@ -364,10 +425,14 @@ function Game:update_main_game(dt)
 	-- Music
 	self.time_before_music = self.time_before_music - dt
 	if self.time_before_music <= 0 and not self.game_started then
-		self.music_source:play()
 		self.game_started = true
+		self.music_state = MUSIC_STATE_INTRO
+		self.music_intro:stop()
+		self.music_state = MUSIC_STATE_LOOP
+		self.current_music_source = self.music_loop
+		self.current_music_source:play()
 	end
-
+	
 	-- BG color gradient
 	if not self.is_on_win_screen then
 		self.bg_color_progress = self.bg_color_progress + dt*0.2
@@ -403,12 +468,22 @@ function Game:update_main_game(dt)
 	for i = #self.actors, 1, -1 do
 		local actor = self.actors[i]
 
-		actor:update(dt)
-	
+		if not actor.is_player then --removeme
+			actor:update(dt)
+		end--removeme
+
 		if actor.is_removed then
 			table.remove(self.actors, i)
 		end
 	end
+
+	for i, player in ipairs(self.players) do--removeme
+		if i == 1 then
+			player:update(dt)
+		elseif i == 2 and self.frame % 2 == 0 then
+			player:update(dt*2)
+		end
+	end--removeme
 
 	-- Flash 
 	self.flash_alpha = max(self.flash_alpha - dt, 0)
@@ -430,27 +505,6 @@ function Game:update_main_game(dt)
 	-- if love.keyboard.isScancodeDown("d") then self.cam_x = self.cam_x + q end
 	-- if love.keyboard.isScancodeDown("w") then self.cam_y = self.cam_y - q end
 	-- if love.keyboard.isScancodeDown("s") then self.cam_y = self.cam_y + q end
-end
-
-function Game:removeme_test()
-	local y = 0
-	for action, buttons in pairs(Input.default_input_maps[1]) do
-		print_outline(COL_WHITE, COL_DARK_BLUE, action, 8, y, 0)
-
-		local x = 80
-		for _, button in ipairs(buttons) do
-			if button.type == "k" then
-				local key_constant = love.keyboard.getKeyFromScancode(button.key_name)
-				local img = images[removeme_key_constant_to_image[key_constant]]
-				if img ~= nil then
-					love.graphics.draw(img, x, y)
-					x = x + img:getWidth()
-				end
-			end
-		end
-
-		y = y + 18
-	end
 end
 
 function Game:draw()
@@ -475,8 +529,6 @@ function Game:draw()
 	end
 end
 
-testx = 0
-testy = 0
 function Game:draw_game()
 	-- Sky
 	gfx.clear(self.bg_col)
@@ -489,7 +541,7 @@ function Game:draw_game()
 			local y = o.y + o.oy
 			local mult = 1 - clamp(abs(self.elevator_speed / 100), 0, 1)
 			local sin_oy = mult * sin(self.t + o.rnd_pi) * o.oh * o.h 
-			
+
 			rect_color(o.col, "fill", o.x, o.y + o.oy + sin_oy, o.w, o.h * o.oh)
 		end
 	end
@@ -498,9 +550,9 @@ function Game:draw_game()
 
 	-- Map
 	self.map:draw()
-	
+
 	-- Background
-	
+
 	-- Door background
 	if self.show_cabin then
 		rect_color(self.bg_col, "fill", self.door_ax, self.door_ay, self.door_bx - self.door_ax+1, self.door_by - self.door_ay+1)
@@ -628,10 +680,7 @@ function Game:draw_game()
 	if self.menu_manager.cur_menu then
 		self.menu_manager:draw()
 	end
-
 	
-	-- self:removeme_test()
-
 	--'Memory used (in kB): ' .. collectgarbage('count')
 
 	-- local t = "EARLY VERSION - NOT FINAL!"
@@ -639,6 +688,13 @@ function Game:draw_game()
 	-- local t = os.date('%a %d/%b/%Y')
 	-- print_color({.7,.7,.7}, t, CANVAS_WIDTH-get_text_width(t), 12)
 
+	love.graphics.circle("fill", 20 + removeme_60fps_pos, 20, 4)
+	love.graphics.circle("fill", 20 + removeme_30fps_pos, 40, 4)
+	love.graphics.circle("fill", 20 + removeme_15fps_pos, 60, 4)
+
+	love.graphics.circle("fill", 20, 100+ removeme_bounce60fps_pos, 4)
+	love.graphics.circle("fill", 40, 100+removeme_bounce30fps_pos, 4)
+	love.graphics.circle("fill", 60, 100+removeme_bounce15fps_pos, 4)
 end
 
 function Game:draw_colview()
@@ -682,7 +738,7 @@ end
 function Game:pause_repeating_sounds()
 	-- THIS is SO stupid. We should have a system that stores all sounds instead
 	-- of doing this manually.
-	self.music_source:pause()
+	self.current_music_source:pause()
 	self.sfx_elevator_bg:pause()
 	for k,p in pairs(self.players) do
 		p.sfx_wall_slide:setVolume(0)
@@ -694,12 +750,12 @@ function Game:pause_repeating_sounds()
 	end
 end
 function Game:on_button_glass_spawn()
-	self.music_source:pause()
+	self.current_music_source:pause()
 end
 
 function Game:on_unmenu()
 	if self.game_started then
-		self.music_source:play()
+		self.current_music_source:play()
 	end
 	self.sfx_elevator_bg:play()
 	
@@ -710,7 +766,7 @@ function Game:on_unmenu()
 	end
 end
 function Game:set_music_volume(vol)
-	self.music_source:setVolume(vol*0.7)
+	self.current_music_source:setVolume(vol*0.7)
 end
 
 function Game:new_actor(actor)
@@ -737,7 +793,7 @@ function Game:on_kill(actor)
 	
 	if actor.is_player then
 		-- Save stats
-		self.music_source:pause()
+		self.current_music_source:pause()
 		self:pause_repeating_sounds()
 		self:save_stats()
 	end
@@ -782,9 +838,14 @@ function Game:init_players()
 	local my = floor(self.map.height - 3)
 
 	for i=1, self.number_of_players do
-		local player = Player:new(i, mx*16 + i*16, my*16, sprs[i])
-		self.players[i] = player
-		self:new_actor(player)
+		local player1 = Player:new(i, mx*16 + i*16, my*16, sprs[i])
+		self.players[i] = player1
+		self:new_actor(player1)
+
+		-- local player2 = Player:new(i, mx*16 + i*16, my*16, sprs[i])--removeme;
+		-- player2:flip_player_type()--remove;
+		-- self.players[2] = player2--removeme;
+		-- self:new_actor(player2)--removeme;
 	end
 end
 
@@ -804,7 +865,7 @@ end
 
 function Game:enable_endless_mode()
 	self.endless_mode = true
-	self.music_source:play()
+	self.current_music_source:play()
 end
 
 -----------------------------------------------------

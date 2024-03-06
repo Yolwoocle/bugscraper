@@ -22,7 +22,7 @@ function Enemies:init()
 		self.life = 10
 		--self.speed_y = 0--self.speed * 0.5
 		
-		self.speed = random_range(7,13) --10
+		self.speed = random_range(35, 65)
 		self.speed_x = self.speed
 		self.speed_y = self.speed
 
@@ -75,7 +75,7 @@ function Enemies:init()
 		self.is_stompable = false
 		--self.speed_y = 0--self.speed * 0.5
 		
-		self.speed = random_range(7,13)
+		self.speed = random_range(35, 65)
 		self.speed_x = self.speed
 		self.speed_y = self.speed*0.5
 
@@ -93,7 +93,7 @@ function Enemies:init()
 		self.follow_player = false
 		
 		self.life = random_range(2, 3)
-		self.friction_x = 1
+		self.friction_x = 0
 		self.speed = 40
 		self.walk_dir_x = random_sample{-1, 1}
 
@@ -141,12 +141,13 @@ function Enemies:init()
 		self.speed = 100
 		self.vx = self.speed
 		self.friction = 1
-		self.friction_x = 1
-		self.friction_y = 1
+		self.friction_x = 0
+		self.friction_y = 0
 		self.walk_dir_x = random_sample{-1, 1}
 		self.is_knockbackable = true
 
-		self.gravity = self.gravity * 0.5
+		self.gravity_mult = 0.5
+		self.gravity = self.default_gravity * 0.5
 
 		self.jump_speed = 300
 	end
@@ -177,18 +178,21 @@ function Enemies:init()
 
 	self.Slug = Enemy:inherit()
 
-	function self.Slug:init(x, y) 
+	function self.Slug:init(x, y)
 		self:init_enemy(x, y, images.slug1, 14, 9)
 		self.name = "slug"
 		self.follow_player = true
 
-		self.gravity = self.default_gravity * 0.5
+		self.gravity = self.default_gravity
 
 		self.anim_frame_len = 0.4
 		self.anim_frames = {images.slug1, images.slug2}
 	end
-
 	
+	function self.Slug:update(dt)
+		self:update_enemy(dt)
+	end
+
 	------------------
 
 	self.SnailShelled = Enemy:inherit()
@@ -209,7 +213,7 @@ function Enemies:init()
 		self.gravity = 0
 		self.friction_y = self.friction_x 
 
-		self.pong_speed = 40
+		self.pong_speed = 150
 		self.dir = (pi/4 + pi/2 * love.math.random(0,3)) % pi2
 		-- self.dir = love.math.random() * pi2
 		self.pong_vx = cos(self.dir) * self.pong_speed
@@ -222,10 +226,10 @@ function Enemies:init()
 
 	function self.SnailShelled:update(dt)
 		self:update_enemy(dt)
-		self.rot = self.rot + self.rot_speed * dt 
+		self.rot = self.rot + self.rot_speed * dt
 
-		self.vx = self.vx + (self.pong_vx or 0)
-		self.vy = self.vy + (self.pong_vy or 0)
+		self.vx = (self.pong_vx or 0)
+		self.vy = (self.pong_vy or 0)
 	end
 
 	function self.SnailShelled:after_collision(col, other)
@@ -360,8 +364,8 @@ function Enemies:init()
 	function self.MushroomAnt:on_grounded()
 		-- After gounded, reset to floating
 		self.gravity = 0
-		self.friction_x = 1
-		self.friction_y = 1
+		self.friction_x = 0
+		self.friction_y = 0
 	end
 
 	--------

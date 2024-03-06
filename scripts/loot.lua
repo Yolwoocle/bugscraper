@@ -233,12 +233,12 @@ Loot.Gun = Loot:inherit()
 function Loot.Gun:init(x, y, val, vx, vy)
 	local gun = Guns:get_random_gun()
 	self.gun = gun
-	
+
 	self:init_loot(gun.spr, x, y, 2, 2, val, vx, vy)
 	self.min_attract_dist = 16
-	
+
 	self.friction_x = self.default_friction
-	
+
 	self.loot_type = "gun"
 	self.t = 0
 
