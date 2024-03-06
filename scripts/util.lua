@@ -25,6 +25,15 @@ function mod_plus_1(val, mod)
 	return ((val-1) % mod)+1
 end
 
+function vector_pointing_to(source_x, source_y, dest_x, dest_y)
+	local x, y = (dest_x - source_x), (dest_y - source_y)
+	if x == 0 and y == 0 then
+		return 0, 0
+	end
+
+	return normalise_vect(x, y)
+end
+
 function normalize_vect(x, y)
 	if x==0 and y==0 then  return 1,0  end
 	local d = sqrt(x*x + y*y)
@@ -33,6 +42,14 @@ function normalize_vect(x, y)
 	-- return math.cos(a), math.sin(a)
 end
 normalise_vect = normalize_vect
+
+function length_vect_sq(x, y)
+	return x*x + y*y
+end
+
+function length_vect(x, y)
+	return sqrt(x*x + y*y)
+end
 
 function color(hex)
 	if not hex then  return white  end
@@ -745,8 +762,12 @@ function cerp(a,b,t)
 	return a + sign0(b-a)*t
 end
 
-function lerp(a,b,t)
-	return a + (b - a) * t
+function lerp(a,b,f)
+	return a + (b - a) * f
+end
+
+function lerp_dt(a, b, f, dt)
+	return lerp(a, b, 1 - f ^ dt)
 end
 
 function lerp_color(a,b,t)
@@ -757,6 +778,15 @@ function lerp_color(a,b,t)
 		lerp(a[4] or 1, b[4] or 1, t),
 	}
 	return c
+end
+
+function move_toward(from, to, delta)
+	-- https://github.com/godotengine/godot/blob/f2045ba822bff7d34964901393581a3117c394a9/core/math/math_funcs.h#L464
+	if math.abs(to - from) <= delta then
+		return to
+	else
+		return from + sign(to - from) * delta
+	end
 end
 
 function wrap_to_pi(a)

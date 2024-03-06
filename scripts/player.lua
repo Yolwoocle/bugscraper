@@ -54,7 +54,9 @@ function Player:init(n, x, y, spr)
 	self.dir_y = 0
 	
 	-- Speed 
-	self.speed = 50 --This is acceleration not speed but I'm too lazy to change now
+	self.movement_acceleration = 1800
+	self.movement_deceleration = 1500
+	self.max_speed = 200
 
 	-- Jump
 	self.jump_speed = 450--450
@@ -66,7 +68,7 @@ function Player:init(n, x, y, spr)
 	-- Air time
 	self.air_time = 0
 	self.jump_air_time = 0.3
-	self.air_jump_force = 22
+	self.air_jump_force = 1320
 
 	self.frames_since_land = 0
 
@@ -173,7 +175,7 @@ function Player:update(dt)
 	self:move(dt)
 	self:do_wall_sliding(dt)
 	self:do_jumping(dt)
-	self:do_gravity(dt)
+	-- self:do_gravity(dt)
 	self:update_actor(dt)
 	self:do_aiming(dt)
 	self.mid_x = self.x + floor(self.w/2)
@@ -211,10 +213,9 @@ function Player:update(dt)
 	self:shoot(dt, false)
 	self:update_gun_pos(dt)
 
-	self.ui_x = lerp(self.ui_x, game.cam_x + floor(self.mid_x), 0.2)
-	self.ui_y = lerp(self.ui_y, game.cam_y + floor(self.y), 0.2)
+	self.ui_x = lerp_dt(self.ui_x, game.cam_x + floor(self.mid_x), 0.00000001, dt)
+	self.ui_y = lerp_dt(self.ui_y, game.cam_y + floor(self.y),     0.00000001, dt)
 
-	
 	--Visuals
 	self:update_visuals()
 end
@@ -327,19 +328,15 @@ function Player:move(dt)
 	if Input:action_down('left') then   dir.x = dir.x - 1   end
 	if Input:action_down('right') then   dir.x = dir.x + 1   end
 
-	if dir.x ~= 0 then
+	if dir.x == 0 then
+		self.vx = move_toward(self.vx, 0.0, self.movement_deceleration * dt)
+		-- self.vy = move_toward(self.vy, 0.0, self.speed * dt)
+	else
 		self.dir_x = dir.x
-
-		-- If not shooting, update shooting direction
-		if not self.is_shooting then
-			-- self.shoot_dir_x = dir.x
-			-- self.shoot_dir
-		end
+		self.vx = clamp(self.vx + dir.x * self.movement_acceleration * dt, -self.max_speed, self.max_speed)
+		-- self.vy = clamp(self.vy + dir.y * self.speed * dt, -self.max_speed, self.max_speed)
 	end
 
-	-- Apply velocity 
-	self.vx = self.vx + dir.x * self.speed
-	self.vy = self.vy + dir.y * self.speed
 end
 
 function Player:do_invincibility(dt)
@@ -370,20 +367,20 @@ function Player:do_wall_sliding(dt)
 		local is_falling = (self.vy > 0)
 		local holding_left = Input:action_down('left') and col_normal.x == 1
 		local holding_right = Input:action_down('right') and col_normal.x == -1
-		
+
 		local is_wall_sliding = is_walled and is_falling and (holding_left or holding_right) 
 			and not self.wall_col.other.is_not_slidable
 		self.is_wall_sliding = is_wall_sliding
 		self.is_walled = is_walled
 	end
 
-	
+
 	-- Perform wall sliding
 	if self.is_wall_sliding then
 		-- Orient player opposite if wall sliding
 		self.dir_x = self.wall_col.normal.x
 		self.shoot_dir_x = self.wall_col.normal.x
-	
+
 		-- Slow down descent
 		self.gravity = 0
 		self.vy = self.wall_slide_speed
@@ -414,19 +411,19 @@ function Player:do_jumping(dt)
 	if self.is_grounded then self.air_time = 0 end
 	if self.air_time < self.jump_air_time and not self.is_grounded then
 		if Input:action_down("jump") then
-			self.vy = self.vy - self.air_jump_force
+			self.vy = self.vy - self.air_jump_force * dt
 		end
 	end
 
 	-- Coyote time
 	--FIXME: if you press jump really fast, you can exploit coyote time and double jump 
 	self.coyote_time = self.coyote_time - 1
-	
+
 	if self.buffer_jump_timer > 0 then
 		-- Detect nearby walls using a collision box
 		local wall_normal = self:get_nearby_wall()
 
-		if self.is_grounded or self.coyote_time > 0 then 
+		if self.is_grounded or self.coyote_time > 0 then
 			-- Regular jump
 			self:jump(dt)
 			self:on_jump()
@@ -435,7 +432,7 @@ function Player:do_jumping(dt)
 			-- Conditions for a wall jump ("wall kick")
 			local left_jump  = (wall_normal.x == 1) and Input:action_down(self.n, "right")
 			local right_jump = (wall_normal.x == -1) and Input:action_down(self.n, "left")
-			
+
 			-- Conditions for a wall jump used for climbing, while sliding ("wall climb")
 			local wall_climb = self.is_wall_sliding
 

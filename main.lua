@@ -43,6 +43,8 @@ end
 
 CAPTURING_GIF = false
 gif_n = 0
+
+local removeme_lag_mode = false
 function love.keypressed(key, scancode, isrepeat)
 	if key == "f5" then
 		if love.keyboard.isDown("lshift") then
@@ -59,6 +61,13 @@ function love.keypressed(key, scancode, isrepeat)
 	-- 	CAPTURING_GIF = not CAPTURING_GIF
 	-- 	gif_n = gif_n + 1
 
+	elseif key == "f1" then
+		removeme_lag_mode = not removeme_lag_mode
+		if removeme_lag_mode then
+			fdt = 1/15
+		else
+			fdt = 1/60
+		end
 	elseif key == "f11" then
 		if Options then   Options:toggle_fullscreen()    end
 
