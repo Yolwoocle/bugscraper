@@ -34,6 +34,7 @@ local function generate_menus()
         { "OPTIONS", func_set_menu('options') },
         { "QUIT", quit_game },
         { "" },
+        { "" },
     }, DEFAULT_MENU_BG_COLOR)
 
     menus.pause = Menu:new(game, {

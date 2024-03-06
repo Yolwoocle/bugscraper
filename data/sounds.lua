@@ -153,9 +153,9 @@ for i=0,9 do
 	sounds["footstep0"..tostring(i)]:setVolume(0.2)
 end
 
--- sounds.music_galaxy_trip = new_source("music/v2_teelopes.mp3", "static", {looping = true})
-sounds.test_intro = new_source("music/music_w1_intro_unpaused.wav", "static", {looping = true})
-sounds.test_loop = new_source("music/music_w1_loop_unpaused.wav", "static", {looping = true})
+sounds.music_galaxy_trip = new_source("music/v2_teelopes.mp3", "static", {looping = true})
+sounds.test_intro = new_source("test/test_intro.wav", "static")
+sounds.test_loop = new_source("test/test_loop.wav", "static", {looping = true})
 
 -- Static sounds are sounds that are played without the use of the audio:play function
 -- local static_sfx_names = {
