@@ -8,7 +8,7 @@ local DummyTarget = Enemy:inherit()
 
 function DummyTarget:init(x, y)
     self:init_enemy(x,y, images.dummy_target, 15, 26)
-    self.name = "dummy_target"
+    self.name = "dummy"
     self.follow_player = false
 
     self.life = 12

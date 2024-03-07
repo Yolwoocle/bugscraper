@@ -2,14 +2,18 @@ require "scripts.util"
 local Enemy = require "scripts.enemy"
 local images = require "data.images"
 
-local ButtonPressed = Enemy:inherit()
+local ButtonBigPressed = Enemy:inherit()
 
-function ButtonPressed:init(x, y)
+function ButtonBigPressed:init(x, y)
+    self:init_button_big_pressed(x, y)
+end
+
+function ButtonBigPressed:init_button_big_pressed(x, y)
     -- x,y = CANVAS_WIDTH/2, game.world_generator.box_by * BLOCK_WIDTH 
     -- x = floor(x - 34/2)
     y = game.door_by - 40
     self:init_enemy(x,y, images.big_red_button_pressed, 34, 40)
-    self.name = "button_pressed"
+    self.name = "button_big_pressed"
     self.follow_player = false
 
     self.max_life = 999999
@@ -29,11 +33,5 @@ function ButtonPressed:init(x, y)
     self.damage = 0
 end
 
-function ButtonPressed:update(dt)
-    self:update_enemy(dt)
-    -- self.squash = lerp(self.squash, 1, 0.2)
-    -- self.sx = self.squash
-    -- self.sy = 1/self.squash
-end
 
-return ButtonPressed
+return ButtonBigPressed

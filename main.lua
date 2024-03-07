@@ -41,8 +41,8 @@ function love.draw()
 	game:draw()
 end
 
-CAPTURING_GIF = false
-gif_n = 0
+-- CAPTURING_GIF = false
+-- gif_n = 0
 function love.keypressed(key, scancode, isrepeat)
 	if key == "f5" then
 		if love.keyboard.isDown("lshift") then

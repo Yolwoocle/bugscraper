@@ -673,6 +673,10 @@ function Game:draw_debug()
 
 	for i=1, #txts do  print_label(txts[i], self.cam_x, self.cam_y+txt_h*i) end
 
+	for _, e in pairs(self.actors) do
+		love.graphics.circle("fill", e.x, e.y, 3)
+	end
+
 	self.world_generator:draw()
 	draw_log()
 end
@@ -696,8 +700,8 @@ function Game:pause_repeating_sounds()
 		end
 	end
 end
-function Game:on_button_glass_spawn()
-	self.music_player:pause()
+function Game:on_button_glass_spawn(button)
+	self.music_player:stop()
 end
 
 function Game:on_unmenu()
@@ -730,17 +734,25 @@ function Game:on_kill(actor)
 		self.enemy_count = self.enemy_count - 1
 		self.kills = self.kills + 1
 
-		if actor.name == "dummy_target" then
+		if actor.name == "dummy" then
 			-- self.game_started = true
 			self.time_before_music = 0.7
 		end
 	end
-	
+
 	if actor.is_player then
 		-- Save stats
 		self.music_player:pause()
 		self:pause_repeating_sounds()
 		self:save_stats()
+	end
+end
+
+function Game:kill_all_enemies()
+	for _, actor in pairs(self.actors) do
+		if actor.counts_as_enemy then
+			actor:kill()
+		end
 	end
 end
 
@@ -867,7 +879,7 @@ function Game:update_bg_particles(dt)
 		o.oh = max(o.w/o.h, abs(self.elevator_speed) / self.def_elevator_speed)
 		o.oy = .5 * o.h * o.oh
 	end
-end	
+end
 
 function Game:progress_elevator(dt)
 	-- Set bg elevator noise and this should be its own function or some lame dumb shit
@@ -1011,24 +1023,22 @@ function Game:new_wave_buffer_enemies()
 		local x = love.math.random(self.door_ax + 16, self.door_bx - 16)
 		local y = love.math.random(self.door_ay + 16, self.door_by - 16)
 
-		local enem = random_weighted(wave.enemies)
-		local e = enem:new(x,y)
+		local enemy_class = random_weighted(wave.enemies)
+		local enemy_instance = enemy_class:new(x,y)
 
 		-- If button is summoned, last wave happened
-		if e.name == "button_glass" then
-			self:on_button_glass_spawn()
-		end
-
-		-- Center enemy
-		if enem ~= Enemies.ButtonGlass then
-			e.x = floor(e.x - e.w/2)
-			e.y = floor(e.y - e.h/2)
+		if enemy_instance.name == "button_big_glass" then
+			self:on_button_glass_spawn(enemy_instance)
+		else
+			-- Center enemy
+			enemy_instance.x = floor(enemy_instance.x - enemy_instance.w/2)
+			enemy_instance.y = floor(enemy_instance.y - enemy_instance.h/2)
 		end
 		
 		-- Prevent collisions with floor
-		if e.y+e.h > self.door_by then   e.y = self.door_by - e.h    end
-		Collision:remove(e)
-		table.insert(self.door_animation_enemy_buffer, e)
+		if enemy_instance.y+enemy_instance.h > self.door_by then   enemy_instance.y = self.door_by - enemy_instance.h    end
+		Collision:remove(enemy_instance)
+		table.insert(self.door_animation_enemy_buffer, enemy_instance)
 	end
 end
 
@@ -1252,13 +1262,13 @@ function Game:on_exploding_elevator(dt)
 	end
 
 	--reset player gravity
-	for _,p in pairs(self.actors) do
-		p.friction_y = 1
-		if p.is_player then  p.is_flying = false end
+	for _,a in pairs(self.actors) do
+		a.friction_y = 1
+		if a.is_player then  a.is_flying = false end
 
-		p.gravity_mult = 1--max(0, 1 - abs(self.elevator_speed / speed_cap))
-		if p.name == "button_pressed" then
-			p:kill()
+		a.gravity_mult = 1--max(0, 1 - abs(self.elevator_speed / speed_cap))
+		if a.name == "button_big_pressed" then
+			a:kill()
 		end
 	end
 end
@@ -1318,7 +1328,8 @@ end
 
 function Game:screenshake(q)
 	if not Options:get('screenshake_on') then  return   end
-	self.screenshake_q = self.screenshake_q + q
+	-- self.screenshake_q = self.screenshake_q + q
+	self.screenshake_q = math.max(self.screenshake_q, q)
 end
 
 function Game:frameskip(q)

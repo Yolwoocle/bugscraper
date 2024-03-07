@@ -2,14 +2,17 @@ require "scripts.util"
 local Enemy = require "scripts.enemy"
 local images = require "data.images"
 
-local ButtonPressed = require "data.enemies.button_pressed"
+local ButtonPressed = require "data.enemies.button_big_pressed"
 
-local Button = Enemy:inherit()
+local ButtonBig = Enemy:inherit()
 
-function Button:init(x, y)
-    -- We can reuse this for other stuff
+function ButtonBig:init(x, y)
+    self:init_button_big(x, y)
+end
+
+function ButtonBig:init_button_big(x, y)
     self:init_enemy(x,y, images.big_red_button, 34, 40)
-    self.name = "button"
+    self.name = "button_big"
     self.follow_player = false
 
     self.max_life = 40
@@ -25,28 +28,30 @@ function Button:init(x, y)
     self.loot = {}
 
     self.damage = 0
+
+    self.spawned_button_pressed = ButtonPressed
 end
 
-function Button:update(dt)
+function ButtonBig:update(dt)
     self:update_enemy(dt)
 end
 
-function Button:draw()
+function ButtonBig:draw()
     self:draw_enemy()
 end
 
-function Button:on_stomped(damager)
+function ButtonBig:on_stomped(damager)
     game:screenshake(10)
     game:on_red_button_pressed()
     Audio:play("button_press")
     
     -- TODO: smoke particles
     -- local b = ButtonPressed:new(CANVAS_WIDTH/2, game.world_generator.box_rby)
-    local b = ButtonPressed:new(self.x, self.y)
+    local b = self.spawned_button_pressed:new(self.x, self.y)
     game:new_actor(b)
 end
 
-function Button:on_death(damager, reason)
+function ButtonBig:on_death(damager, reason)
     if reason ~= "stomped" then
         game:screenshake(15)
         Audio:play("glass_fracture", nil, 0.2)
@@ -63,4 +68,4 @@ function Button:on_death(damager, reason)
     end
 end
 
-return Button
+return ButtonBig

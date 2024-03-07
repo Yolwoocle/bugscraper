@@ -16,10 +16,14 @@ local SnailShelled = require "data.enemies.snail_shelled"
 local Dummy = require "data.enemies.dummy"
 local MushroomAnt = require "data.enemies.mushroom_ant"
 local Spider = require "data.enemies.spider"
-local ButtonPressed = require "data.enemies.button_pressed"
-local Button = require "data.enemies.button"
-local ButtonGlass = require "data.enemies.button_glass"
 
+local ButtonBigPressed = require "data.enemies.button_big_pressed"
+local ButtonBig = require "data.enemies.button_big"
+local ButtonBigGlass = require "data.enemies.button_big_glass"
+
+local ButtonSmallPressed = require "data.enemies.button_small_pressed"
+local ButtonSmall = require "data.enemies.button_small"
+local ButtonSmallGlass = require "data.enemies.button_small_glass"
 
 local Enemies = Class:inherit()
 
@@ -33,9 +37,13 @@ function Enemies:init()
 	self.MushroomAnt = MushroomAnt
 	self.Spider = Spider
 
-	self.ButtonPressed = ButtonPressed
-	self.Button = Button
-	self.ButtonGlass = ButtonGlass
+	self.ButtonBigPressed = ButtonBigPressed
+	self.ButtonBig = ButtonBig
+	self.ButtonBigGlass = ButtonBigGlass
+
+	self.ButtonSmallPressed = ButtonSmallPressed
+	self.ButtonSmall = ButtonSmall
+	self.ButtonSmallGlass = ButtonSmallGlass
 
 	self.Dummy = Dummy
 end

@@ -104,7 +104,6 @@ local img_names = {
 	"small_button_crack0",
 	"small_button_crack1",
 	"small_button_crack2",
-	"small_button_crack3",
 	"small_button",
 	"small_button_pressed",
 

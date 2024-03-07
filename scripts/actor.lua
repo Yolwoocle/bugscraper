@@ -52,11 +52,7 @@ function Actor:init_actor(x, y, w, h, spr, args)
 	-- Visuals
 	self.draw_shadow = true
 	if spr then
-		self.spr = spr
-		self.spr_w = self.spr:getWidth()
-		self.spr_h = self.spr:getHeight()
-		self.spr_ox = floor((self.spr_w - self.w) / 2)
-		self.spr_oy = self.spr_h - self.h 
+		self:set_sprite(spr)
 	end
 
 	self.spr_x = 0
@@ -68,6 +64,29 @@ function Actor:init_actor(x, y, w, h, spr, args)
 	self.anim_cur_frame = 1
 
 	self:update_sprite_position()
+end
+
+function Actor:set_sprite(spr)
+	self.spr = spr
+	self.spr_w = self.spr:getWidth()
+	self.spr_h = self.spr:getHeight()
+	self:update_sprite_offset()
+end
+
+function Actor:update_sprite_offset()
+	self.spr_ox = floor((self.spr_w - self.w) / 2)
+	self.spr_oy = self.spr_h - self.h
+end
+
+function Actor:set_size(w, h)
+	self.w = w or self.w
+	self.h = h or self.h
+	self:update_sprite_offset()
+end
+
+function Actor:center_self()
+	self.x = self.x - self.w/2
+	self.y = self.y - self.h/2
 end
 
 function Actor:update()
@@ -230,6 +249,10 @@ function Actor:do_knockback(q, source, ox, oy)
 	local ang = atan2(source.y-self.y + oy, source.x-self.x + ox)
 	self.vx = self.vx - cos(ang)*q
 	self.vy = self.vy - sin(ang)*q
+end
+
+-- When the enemy is buffered for the next wave of enemies
+function Actor:on_buffered()
 end
 
 function Actor:on_collision(col, other)
