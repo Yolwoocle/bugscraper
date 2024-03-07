@@ -49,7 +49,6 @@ function MusicPlayer:pause()
 end
 
 function MusicPlayer:play()
-	print_debug("PLAY")
 	self.current_disk:play()
 	if self.current_disk ~= nil then
 		self.current_disk:set_mode(MUSIC_MODE_INGAME)

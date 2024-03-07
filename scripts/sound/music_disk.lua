@@ -19,12 +19,10 @@ function MusicDisk:pause()
 end
 
 function MusicDisk:play()
-    print("play self.current_source == nil", self.current_source == nil)
     if self.current_source ~= nil then    self.current_source:play()    end
 end
 
 function MusicDisk:stop()
-    print("stop self.current_source == nil", self.current_source == nil)
     if self.current_source ~= nil then    self.current_source:stop()    end
 end
 

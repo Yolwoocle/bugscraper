@@ -249,7 +249,7 @@ function Game:new_game(number_of_players)
 	local nx = CANVAS_WIDTH/2
 	local ny = self.world_generator.box_by * BLOCK_WIDTH
 	-- local l = create_actor_centered(Enemies.ButtonGlass, nx, ny)
-	local l = create_actor_centered(Enemies.DummyTarget, floor(nx), floor(ny))
+	local l = create_actor_centered(Enemies.Dummy, floor(nx), floor(ny))
 	self:new_actor(l)
 
 	self.inventory = Inventory:new()
