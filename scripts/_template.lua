@@ -1,18 +1,18 @@
 require "scripts.util"
 local Class = require "scripts.class"
 
-local Player = Class:inherit()
+local MyClass = Class:inherit()
 
-function Player:init(x,y)
+function MyClass:init()
 
 end
 
-function Player:update(dt)
+function MyClass:update(dt)
 	--
 end
 
-function Player:draw()
+function MyClass:draw()
 	--
 end
 
-return Player
+return MyClass

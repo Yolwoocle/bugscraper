@@ -11,6 +11,8 @@ local AudioManager = require "scripts.audio"
 local MenuManager = require "scripts.menu.menu_manager"
 local OptionsManager = require "scripts.options"
 local InputManager = require "scripts.input"
+local MusicPlayer = require "scripts.sound.music_player"
+local MusicDisk = require "scripts.sound.music_disk"
 local utf8 = require "utf8"
 
 local removeme_key_constant_to_image = require "data.buttons.images_buttons_keyboard"
@@ -317,8 +319,7 @@ function Game:new_game(number_of_players)
 	self.front_canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
 
 	-- Music
-	-- TODO: a "ambient sfx" system
-	self.music_source    = sounds.music_galaxy_trip[1]
+	self.music_player = MusicPlayer:new()
 	self.sfx_elevator_bg = sounds.elevator_bg[1]
 	self.sfx_elevator_bg_volume     = self.sfx_elevator_bg:getVolume()
 	self.sfx_elevator_bg_def_volume = self.sfx_elevator_bg:getVolume()
@@ -364,7 +365,7 @@ function Game:update_main_game(dt)
 	-- Music
 	self.time_before_music = self.time_before_music - dt
 	if self.time_before_music <= 0 and not self.game_started then
-		self.music_source:play()
+		self.music_player:play()
 		self.game_started = true
 	end
 
@@ -677,12 +678,14 @@ function Game:draw_debug()
 end
 
 function Game:on_menu()
+	self.music_player:on_menu()
 	self:pause_repeating_sounds()
 end
 function Game:pause_repeating_sounds()
 	-- THIS is SO stupid. We should have a system that stores all sounds instead
 	-- of doing this manually.
-	self.music_source:pause()
+	self.music_player:pause()
+
 	self.sfx_elevator_bg:pause()
 	for k,p in pairs(self.players) do
 		p.sfx_wall_slide:setVolume(0)
@@ -694,13 +697,11 @@ function Game:pause_repeating_sounds()
 	end
 end
 function Game:on_button_glass_spawn()
-	self.music_source:pause()
+	self.music_player:pause()
 end
 
 function Game:on_unmenu()
-	if self.game_started then
-		self.music_source:play()
-	end
+	self.music_player:on_unmenu()
 	self.sfx_elevator_bg:play()
 	
 	for k,a in pairs(self.actors) do
@@ -710,15 +711,15 @@ function Game:on_unmenu()
 	end
 end
 function Game:set_music_volume(vol)
-	self.music_source:setVolume(vol*0.7)
+	self.music_player:set_volume(vol*0.7)
 end
 
 function Game:new_actor(actor)
-	if #self.actors >= self.actor_limit then   
+	if #self.actors >= self.actor_limit then
 		actor:remove()
 		return
 	end
-	if actor.counts_as_enemy then 
+	if actor.counts_as_enemy then
 		self.enemy_count = self.enemy_count + 1
 	end
 	table.insert(self.actors, actor)
@@ -737,7 +738,7 @@ function Game:on_kill(actor)
 	
 	if actor.is_player then
 		-- Save stats
-		self.music_source:pause()
+		self.music_player:pause()
 		self:pause_repeating_sounds()
 		self:save_stats()
 	end
@@ -804,7 +805,7 @@ end
 
 function Game:enable_endless_mode()
 	self.endless_mode = true
-	self.music_source:play()
+	self.music_player:play()
 end
 
 -----------------------------------------------------
