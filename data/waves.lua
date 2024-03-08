@@ -7,14 +7,14 @@ local E = require "data.enemies"
 local waves = {
 
 { -- 1
-	min = 4,
-	max = 6,
-	-- min = 1,
-	-- max = 1,
+	-- min = 4,
+	-- max = 6,
+	min = 1,
+	max = 1,
 	enemies = {
-		-- {E.ButtonBigGlass, 1},
-		{E.Larva, 3},
-		{E.Fly, 1},
+		{E.ButtonBigGlass, 1},
+		-- {E.Larva, 3},
+		-- {E.Fly, 1},
 
 		-- {E.Larva, 4},
 		-- {E.Fly, 3},

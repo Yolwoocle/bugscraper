@@ -19,7 +19,6 @@ end
 
 function ButtonSmall:on_stomped(damager)
     game:screenshake(5)
-    -- game:on_red_button_pressed()
     Audio:play("button_press")
     
     -- TODO: smoke particles

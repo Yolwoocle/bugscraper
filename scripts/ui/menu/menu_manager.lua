@@ -109,7 +109,7 @@ end
 
 function MenuManager:pause()
 	-- Retry if game ended
-	if game.is_on_win_screen then
+	if game.elevator.is_on_win_screen then --scotch
 		self:set_menu("win")
 		return
 	end
