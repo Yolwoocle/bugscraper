@@ -19,7 +19,6 @@ function ButtonSmallGlass:init(x, y)
     self.spawned_button = ButtonSmall
     self.images_cracked = {
         [0] = images.small_button_crack0,
-        -- [1] = images.small_button_crack1,
         [1] = images.small_button_crack2,
     }
     self.number_of_break_states = 2

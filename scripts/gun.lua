@@ -57,7 +57,9 @@ function Gun:init_gun(user)
 
 	self.natural_recharge_progress = 0
 	self.original_natural_recharge_ammo = self.max_ammo
-	self.natural_recharge_speed = 1/4
+	self.natural_recharge_time = 2.0
+	self.natural_recharge_delay = 1.0
+	self.natural_recharge_delay_timer = 0.0
 	
 	-- Jetpack
 	self.default_jetpack_force = 340
@@ -145,6 +147,7 @@ function Gun:shoot(dt, player, x, y, dx, dy, is_burst)
 	self.ammo = self.ammo - 1
 	-- self.ammo = self.ammo - self.bullet_number
 
+	self.natural_recharge_delay_timer = self.natural_recharge_delay
 	self.natural_recharge_progress = 0
 	self.original_natural_recharge_ammo = self.ammo
 
@@ -199,11 +202,14 @@ function Gun:do_reloading(dt)
 end
 
 function Gun:do_natural_recharge(dt)
-	if not self.is_reloading then
-		self.natural_recharge_progress = math.min(1.0, self.natural_recharge_progress + dt*self.natural_recharge_speed)
-		local natural_recharge_amount = math.floor(self.original_natural_recharge_ammo + self.natural_recharge_progress * self.max_ammo)
-		self.ammo = math.max(self.ammo, math.min(self.max_ammo, natural_recharge_amount))
-	end
+	if self.is_reloading then   return   end
+
+	self.natural_recharge_delay_timer = math.max(0.0, self.natural_recharge_delay_timer - dt)
+	if self.natural_recharge_delay_timer > 0.0 then   return   end
+	
+	self.natural_recharge_progress = math.min(1.0, self.natural_recharge_progress + dt/self.natural_recharge_time)
+	local natural_recharge_amount = math.floor(self.original_natural_recharge_ammo + self.natural_recharge_progress * self.max_ammo)
+	self.ammo = math.max(self.ammo, math.min(self.max_ammo, natural_recharge_amount))
 end
 
 function Gun:reload()

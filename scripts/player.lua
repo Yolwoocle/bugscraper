@@ -353,7 +353,7 @@ function Player:do_invincibility(dt)
 end
 
 function Player:set_invincibility(n)
-	self.iframes = n
+	self.iframes = math.max(n, self.iframes)
 end
 
 function Player:do_wall_sliding(dt)
@@ -630,9 +630,9 @@ function Player:on_stomp(enemy)
 		Particles:word(self.mid_x, self.mid_y, tostring(self.combo), COL_LIGHT_BLUE)
 	end
 	
-	self.ui_col_gradient = 1
-	self.gun.ammo = self.gun.ammo + floor(self.gun.max_ammo*.25)
-	self.gun.reload_timer = 0
+	-- self.ui_col_gradient = 1
+	-- self.gun.ammo = self.gun.ammo + floor(self.gun.max_ammo*.25)
+	-- self.gun.reload_timer = 0
 end
 
 function Player:do_damage(n, source)

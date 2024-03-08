@@ -50,6 +50,9 @@ function Guns:init()
 		self.random_angle_offset = 0
 		self.jetpack_force = self.default_jetpack_force * 2
 
+		self.reload_time = 3
+		self.natural_recharge_time = 4.0
+		
 		self.bullet_spr = images.bullet_red
 
 		self.screenshake = 2

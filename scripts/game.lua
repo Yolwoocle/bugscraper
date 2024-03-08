@@ -19,6 +19,7 @@ local removeme_key_constant_to_image = require "data.buttons.images_buttons_keyb
 local waves = require "data.waves"
 local sounds = require "data.sounds"
 local images = require "data.images"
+local guns = require "data.guns"
 
 require "scripts.util"
 require "scripts.constants"
@@ -1282,12 +1283,26 @@ end
 -----------------------------------------------------
 -----------------------------------------------------
 
+local igun = 1
 function Game:keypressed(key, scancode, isrepeat)
 	if key == "f3" then
 		self.debug_mode = not self.debug_mode
 	elseif key == "f2" then
 		self.colview_mode = not self.colview_mode
 	elseif key == "f1" then
+		local all_guns = {
+			guns.Machinegun,
+			guns.Triple,
+			guns.Burst,
+			guns.Shotgun,
+			guns.Minigun,
+			guns.Ring,
+			guns.MushroomCannon,
+			guns.unlootable.DebugGun,
+		}
+		
+		igun = mod_plus_1(igun + 1, #all_guns)
+		self.players[1]:equip_gun(all_guns[igun]:new())
 	end
 
 	if self.menu_manager then
