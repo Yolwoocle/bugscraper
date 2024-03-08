@@ -101,7 +101,7 @@ function Actor:do_gravity(dt)
 	self.vy = self.vy + self.gravity * self.gravity_mult
 	if self.gravity * self.gravity_mult > 0 then
 		self.vy = min(self.vy, self.gravity_cap)
-	end	
+	end
 end
 
 function Actor:update_actor(dt)

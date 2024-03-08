@@ -23,7 +23,7 @@ function ButtonSmallGlass:init(x, y)
         [1] = images.small_button_crack2,
     }
     self.number_of_break_states = 2
-    
+
     self.damage_screenshake = 0.5
     self.change_break_state_screenshake = 3
     self.change_break_state_num_particles = 10

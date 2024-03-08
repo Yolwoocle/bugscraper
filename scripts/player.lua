@@ -256,7 +256,7 @@ function Player:draw_hud()
 	local y = floor(ui_y) + 8
 	local ammo_w = images.ammo:getWidth()
 	gfx.draw(images.ammo, x, y)
-	
+
 	local text = self.gun.ammo
 	local col_shad = COL_DARK_BLUE
 	local col_fill = COL_MID_BLUE
