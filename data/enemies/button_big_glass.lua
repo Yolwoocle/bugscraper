@@ -13,9 +13,9 @@ end
 
 function ButtonBigGlass:init_button_big_glass(x, y)
     -- We can reuse this for other stuff
-    x,y = CANVAS_WIDTH/2, game.world_generator.box_by * BLOCK_WIDTH
-    y = game.door_by - 45
-    x = floor(x - 58/2)
+    -- x,y = CANVAS_WIDTH/2, game.world_generator.box_by * BLOCK_WIDTH
+    -- y = game.door_by - 45
+    -- x = floor(x - 58/2)
     self:init_enemy(x,y, images.big_red_button_crack3, 58, 45)
     
     self.name = "button_big_glass"
@@ -49,6 +49,12 @@ function ButtonBigGlass:init_button_big_glass(x, y)
         [3] = images.big_red_button_crack3,
     }
     self.number_of_break_states = 4
+
+    self.damage_screenshake = 2
+    self.change_break_state_screenshake = 10
+    self.change_break_state_num_particles = 100
+    self.break_screenshake = 15
+    self.break_num_particles = 300
 end
 
 function ButtonBigGlass:on_buffered()
@@ -80,21 +86,21 @@ function ButtonBigGlass:on_damage(n, old_life)
         local spr = self.images_cracked[self.break_state] or images.big_red_button_crack3
 
         self.spr = spr
-        game:screenshake(10)
-        Particles:image(self.mid_x, self.mid_y, 100, images.ptc_glass_shard, self.h)
+        game:screenshake(self.change_break_state_screenshake)
+        Particles:image(self.mid_x, self.mid_y, self.change_break_state_num_particles, images.ptc_glass_shard, self.h)
         local pitch = max(0.1, lerp(0.5, 1, self.life/self.max_life))
         Audio:play("glass_fracture", nil, pitch)
     end
 
     if game.screenshake_q < 5 then
-        game:screenshake(2)
+        game:screenshake(self.damage_screenshake)
     end
 end
 
 function ButtonBigGlass:on_death()
     Audio:play("glass_break")
-    game:screenshake(15)
-    Particles:image(self.mid_x, self.mid_y, 300, images.ptc_glass_shard, self.h)
+    game:screenshake(self.break_screenshake)
+    Particles:image(self.mid_x, self.mid_y, self.break_num_particles, images.ptc_glass_shard, self.h)
 
     -- local b = create_actor_centered(self.spawned_button, CANVAS_WIDTH/2, game.world_generator.box_rby)
     local b = create_actor_centered(self.spawned_button, self.mid_x, self.mid_y)

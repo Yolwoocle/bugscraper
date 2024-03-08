@@ -5,7 +5,6 @@ local Enemies = require "data.enemies"
 local Bullet = require "scripts.bullet"
 local TileMap = require "scripts.tilemap"
 local WorldGenerator = require "scripts.worldgenerator"
-local Inventory = require "scripts.inventory"
 local ParticleSystem = require "scripts.particles"
 local AudioManager = require "scripts.audio"
 local MenuManager = require "scripts.menu.menu_manager"
@@ -246,13 +245,11 @@ function Game:new_game(number_of_players)
 	self:init_players()
 
 	-- Start lever
-	local nx = CANVAS_WIDTH/2
+	local nx = CANVAS_WIDTH * 0.75
 	local ny = self.world_generator.box_by * BLOCK_WIDTH
 	-- local l = create_actor_centered(Enemies.ButtonGlass, nx, ny)
-	local l = create_actor_centered(Enemies.Dummy, floor(nx), floor(ny))
+	local l = create_actor_centered(Enemies.ButtonSmallGlass, floor(nx), floor(ny))
 	self:new_actor(l)
-
-	self.inventory = Inventory:new()
 
 	-- Camera & screenshake
 	self.cam_x = 0

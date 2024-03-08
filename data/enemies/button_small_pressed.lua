@@ -9,7 +9,7 @@ function ButtonSmallPressed:init(x, y)
     self:init_button_big_pressed(x, y)
     self.name = "button_small_pressed"
 
-    self.pressed_disappear_timer = 2.0
+    self.pressed_disappear_timer = 0.5
 
     self:set_sprite(images.small_button_pressed)
 end
