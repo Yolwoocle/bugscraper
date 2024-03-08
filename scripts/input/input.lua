@@ -17,20 +17,20 @@ function InputManager:init()
 
 	self.default_mappings = {
 		[1] = self:process_input_map({
-			left =  {"k_a", "k_left",     "c_dpleft",  "c_leftstickxneg", "c_rightstickxneg"},
-			right = {"k_d", "k_right",    "c_dpright", "c_leftstickxpos", "c_rightstickxpos"},
-			up =    {"k_w", "k_up",       "c_dpup",    "c_leftstickyneg", "c_rightstickyneg"},
-			down =  {"k_s", "k_down",     "c_dpdown",  "c_leftstickypos", "c_rightstickypos"},
-			jump =  {"k_c", "k_b", "c_a", "c_b"},
-			shoot = {"k_x", "k_v", "c_x", "c_y", "c_righttrigger"},
+			left =  {"k_left", "k_a",     "c_dpleft",  "c_leftstickxneg", "c_rightstickxneg"},
+			right = {"k_right", "k_d",    "c_dpright", "c_leftstickxpos", "c_rightstickxpos"},
+			up =    {"k_up", "k_w",       "c_dpup",    "c_leftstickyneg", "c_rightstickyneg"},
+			down =  {"k_down", "k_s",     "c_dpdown",  "c_leftstickypos", "c_rightstickypos"},
+			jump =  {"k_c", "k_b",        "c_a", "c_b"},
+			shoot = {"k_x", "k_v",        "c_x", "c_y", "c_righttrigger"},
 			pause = {"k_escape", "k_p",   "c_start"},
 
-			ui_select = {"k_c", "k_b", "k_return",   "c_a"},
+			ui_select = {"k_c", "k_b", "k_return",          "c_a"},
 			ui_back =   {"k_x", "k_escape", "k_backspace",  "c_b"},
-			ui_left =   {"k_a", "k_left",  "c_dpleft",  "c_leftstickxneg", "c_rightstickxneg"},
-			ui_right =  {"k_d", "k_right", "c_dpright", "c_leftstickxpos", "c_rightstickxpos"},
-			ui_up =     {"k_w", "k_up",    "c_dpup",    "c_leftstickyneg", "c_rightstickyneg"},
-			ui_down =   {"k_s", "k_down",  "c_dpdown",  "c_leftstickypos", "c_rightstickypos"},
+			ui_left =   {"k_a", "k_left",  "c_dpleft",      "c_leftstickxneg", "c_rightstickxneg"},
+			ui_right =  {"k_d", "k_right", "c_dpright",     "c_leftstickxpos", "c_rightstickxpos"},
+			ui_up =     {"k_w", "k_up",    "c_dpup",        "c_leftstickyneg", "c_rightstickyneg"},
+			ui_down =   {"k_s", "k_down",  "c_dpdown",      "c_leftstickypos", "c_rightstickypos"},
 		}),
 	}
 
