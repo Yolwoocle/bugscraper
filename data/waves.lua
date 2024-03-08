@@ -1,6 +1,6 @@
 require "scripts.util"
-local Class = require "scripts.class"
-local Gun = require "scripts.gun"
+local Class = require "scripts.meta.class"
+local Gun = require "scripts.game.gun"
 local images = require "data.images"
 local E = require "data.enemies"
 

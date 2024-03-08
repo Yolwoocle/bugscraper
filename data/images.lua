@@ -1,5 +1,5 @@
 require "scripts.util"
-local Class = require "scripts.class"
+local Class = require "scripts.meta.class"
 local key_constant_to_image = require "data.buttons.images_buttons_keyboard"
 local controller_brands = require "data.buttons.controller_brands"
 local controller_buttons = require "data.buttons.controller_buttons"

@@ -1,6 +1,6 @@
 local utf8 = require "utf8"
-require "scripts.constants"
-local shaders = require "scripts.shaders"
+require "scripts.meta.constants"
+local shaders = require "scripts.graphics.shaders"
 
 abs = math.abs
 exp = math.exp

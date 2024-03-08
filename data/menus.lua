@@ -1,7 +1,7 @@
-local Menu = require "scripts.menu.menu"
-local SliderMenuItem = require "scripts.menu.menu_item_slider"
-local StatsMenuItem = require "scripts.menu.menu_item_stats"
-local ControlsMenuItem = require "scripts.menu.menu_item_controls"
+local Menu = require "scripts.ui.menu.menu"
+local SliderMenuItem = require "scripts.ui.menu.menu_item_slider"
+local StatsMenuItem = require "scripts.ui.menu.menu_item_stats"
+local ControlsMenuItem = require "scripts.ui.menu.menu_item_controls"
 
 local function func_set_menu(menu)
 	return function()

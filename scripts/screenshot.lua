@@ -1,5 +1,5 @@
 require "scripts.utility"
-require "scripts.constants"
+require "scripts.meta.constants"
 local ffi = require "scripts.ffi"
 
 function screenshot()

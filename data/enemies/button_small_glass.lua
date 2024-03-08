@@ -1,5 +1,5 @@
 require "scripts.util"
-local Enemy = require "scripts.enemy"
+local Enemy = require "scripts.actor.enemy"
 local sounds = require "data.sounds"
 local images = require "data.images"
 local Guns = require "data.guns"
@@ -21,7 +21,7 @@ function ButtonSmallGlass:init(x, y)
         [0] = images.small_button_crack0,
         [1] = images.small_button_crack2,
     }
-    self.number_of_break_states = 2
+    self.number_of_break_states = 1
 
     self.damage_screenshake = 0.5
     self.change_break_state_screenshake = 3

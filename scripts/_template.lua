@@ -1,5 +1,5 @@
 require "scripts.util"
-local Class = require "scripts.class"
+local Class = require "scripts.meta.class"
 
 local MyClass = Class:inherit()
 

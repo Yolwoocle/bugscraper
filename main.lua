@@ -1,5 +1,5 @@
-local Class = require "scripts.class"
-local Game = require "scripts.game"
+local Class = require "scripts.meta.class"
+local Game = require "scripts.game.game"
 require "scripts.util"
 
 game = nil
