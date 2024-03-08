@@ -7,14 +7,14 @@ local E = require "data.enemies"
 local waves = {
 
 { -- 1
-	-- min = 4,
-	-- max = 6,
-	min = 1,
-	max = 1,
+	min = 4,
+	max = 6,
+	-- min = 1,
+	-- max = 1,
 	enemies = {
-		{E.ButtonBigGlass, 1},
-		-- {E.Larva, 3},
-		-- {E.Fly, 1},
+		-- {E.ButtonBigGlass, 1},
+		{E.Larva, 3},
+		{E.Fly, 1},
 
 		-- {E.Larva, 4},
 		-- {E.Fly, 3},
@@ -204,10 +204,27 @@ local waves = {
 	min = 1,
 	max = 1,
 	enemies = {
-		{E.ButtonGlass, 1}
+		{E.ButtonBigGlass, 1}
 	}
 }
 
 }
+
+local function sanity_check_waves()
+	for i, wave in ipairs(waves) do
+		assert((wave.min <= wave.max), "max > min for wave "..tostring(i))
+
+		for j, enemy_pair in ipairs(wave.enemies) do
+			local enemy_class = enemy_pair[1]
+			local weight = enemy_pair[2]
+
+			assert(enemy_class ~= nil, "enemy "..tostring(j).." for wave "..tostring(i).." doesn't exist")
+			assert(type(weight) == "number", "weight for enemy "..tostring(j).." for wave "..tostring(i).." isn't a number")
+			assert(weight >= 0, "weight for enemy "..tostring(j).." for wave "..tostring(i).." is negative")
+		end
+	end
+end
+
+sanity_check_waves()
 
 return waves

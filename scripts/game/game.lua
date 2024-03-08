@@ -516,22 +516,7 @@ function Game:draw_game()
 	love.graphics.translate(-real_camx, -real_camy)
 
 	-- Logo
-	for i=1, #self.logo_cols + 1 do
-		local ox, oy = cos(self.logo_a + i*.4)*8, sin(self.logo_a + i*.4)*8
-		local logo_x = floor((CANVAS_WIDTH - images.logo_noshad:getWidth())/2)
-		
-		local col = self.logo_cols[i]
-		local spr = images.logo_shad
-		if col == nil then
-			col = COL_WHITE
-			spr = images.logo_noshad
-		end
-		gfx.setColor(col)
-		gfx.draw(spr, logo_x + ox, self.logo_y + oy)
-	end
-	gfx.draw(images.controls, floor((CANVAS_WIDTH - images.controls:getWidth())/2), floor(self.logo_y) + images.logo:getHeight()+6)
-	local ox, oy = cos(self.t*3)*4, sin(self.t*3)*4
-	gfx.draw(images.controls_jetpack, ox + floor((CANVAS_WIDTH - images.controls_jetpack:getWidth())/2), oy + floor(self.jetpack_tutorial_y))
+	self:draw_logo_and_controls()
 
 	-- "CONGRATS" at the end
 	if self.elevator.is_on_win_screen then
@@ -571,6 +556,46 @@ function Game:draw_game()
 	-- local t = os.date('%a %d/%b/%Y')
 	-- print_color({.7,.7,.7}, t, CANVAS_WIDTH-get_text_width(t), 12)
 
+end
+
+function Game:draw_logo_and_controls()
+	for i=1, #self.logo_cols + 1 do
+		local ox, oy = cos(self.logo_a + i*.4)*8, sin(self.logo_a + i*.4)*8
+		local logo_x = floor((CANVAS_WIDTH - images.logo_noshad:getWidth())/2)
+		
+		local col = self.logo_cols[i]
+		local spr = images.logo_shad
+		if col == nil then
+			col = COL_WHITE
+			spr = images.logo_noshad
+		end
+		gfx.setColor(col)
+		gfx.draw(spr, logo_x + ox, self.logo_y + oy)
+	end
+	
+	self:draw_controls(floor(CANVAS_WIDTH/2), floor(self.logo_y) + images.logo:getHeight()+6)
+	gfx.draw(images.controls, floor((CANVAS_WIDTH - images.controls:getWidth())/2), floor(self.logo_y) + images.logo:getHeight()+6)
+	local ox, oy = cos(self.t*3)*4, sin(self.t*3)*4
+	gfx.draw(images.controls_jetpack, ox + floor((CANVAS_WIDTH - images.controls_jetpack:getWidth())/2), oy + floor(self.jetpack_tutorial_y))
+end
+
+function Game:draw_controls(x, y)
+	local tutorials = {
+		{{"left", "right", "up", "down"}, "move"},
+		{{"jump"}, "jump"},
+		{{"shoot"}, "shoot"},
+	}
+
+	for _, tuto in ipairs(tutorials) do
+		local btn_x = x
+		for __, action in ipairs(tuto[1]) do
+			local button = Input:get_buttons(1, action)[1]
+			local icon = Input:get_button_icon(1, button or "?")
+		end
+		
+		print_outline(COL_WHITE, COL_BLACK_BLUE, tuto[2], x, y)
+		y = y + 18
+	end
 end
 
 function Game:draw_colview()
@@ -836,18 +861,5 @@ end
 function Game:reset_slow_mo(q)
 	self.slow_mo_rate = 0
 end
-
--- Moved to OptionsManager
--- function Game:toggle_sound()
--- 	-- TODO: move from bool to a number (0-1), customisable in settings
--- 	self.sound_on = not self.sound_on
--- 	if options then    options:update_options_file()    end
--- end
-
--- function Game:set_volume(n)
--- 	self.volume = n
--- 	love.audio.setVolume( self.volume )
--- 	if options then    options:update_options_file()    end
--- end
 
 return Game
