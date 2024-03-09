@@ -24,13 +24,14 @@ function InputManager:init()
 			jump =  {"k_c", "k_b",        "c_a", "c_b"},
 			shoot = {"k_x", "k_v",        "c_x", "c_y", "c_righttrigger"},
 			pause = {"k_escape", "k_p",   "c_start"},
-
+            
 			ui_select = {"k_c", "k_b", "k_return",          "c_a"},
 			ui_back =   {"k_x", "k_escape", "k_backspace",  "c_b"},
 			ui_left =   {"k_a", "k_left",  "c_dpleft",      "c_leftstickxneg", "c_rightstickxneg"},
 			ui_right =  {"k_d", "k_right", "c_dpright",     "c_leftstickxpos", "c_rightstickxpos"},
 			ui_up =     {"k_w", "k_up",    "c_dpup",        "c_leftstickyneg", "c_rightstickyneg"},
 			ui_down =   {"k_s", "k_down",  "c_dpdown",      "c_leftstickypos", "c_rightstickypos"},
+			ui_reset_keys = {"k_tab", "c_righttrigger"},
 		}),
 	}
 
@@ -276,7 +277,7 @@ function InputManager:get_button_icon(player_n, button)
         end
 
 	end
-    return img
+    return img or self:generate_unknown_key_icon(images.btn_k_unknown, "?")
 end
 
 -----------------------------------------------------

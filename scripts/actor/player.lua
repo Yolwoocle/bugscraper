@@ -264,7 +264,7 @@ function Player:draw_hud()
 	if self.gun.is_reloading then
 		text = ""
 		col_fill = COL_WHITE
-		col_shad = COL_LIGHT_GRAY
+		col_shad = COL_LIGHTEST_GRAY
 		val, maxval = self.gun.max_reload_timer - self.gun.reload_timer, self.gun.max_reload_timer
 	end
 
@@ -272,7 +272,7 @@ function Player:draw_hud()
 	self.ui_col_gradient = self.ui_col_gradient * 0.9
 	if self.ui_col_gradient >= 0.02 then
 		col_fill = lerp_color(col_fill, COL_WHITE, self.ui_col_gradient)
-		col_shad = lerp_color(col_fill, COL_LIGHT_GRAY, self.ui_col_gradient)
+		col_shad = lerp_color(col_fill, COL_LIGHTEST_GRAY, self.ui_col_gradient)
 	end
 
 	ui:draw_progress_bar(x+ammo_w+2, y, bar_w-ammo_w-2, ammo_w, val, maxval, 

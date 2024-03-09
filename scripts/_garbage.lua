@@ -2,6 +2,49 @@
 -- I might have an use for later on. 
 
 --
+------------------------------------
+
+
+local function replace_color_shader(col1_org, col1_new, col2_org, col2_new, col3_org, col3_new)
+    local r_org1, g_org1, b_org1 = col1_org[1], col1_org[2], col1_org[3]
+    local r_new1, g_new1, b_new1 = col1_new[1], col1_new[2], col1_new[3]
+    
+    local r_org2, g_org2, b_org2 = col2_org[1], col2_org[2], col2_org[3]
+    local r_new2, g_new2, b_new2 = col2_new[1], col2_new[2], col2_new[3]
+    
+    local r_org3, g_org3, b_org3 = col3_org[1], col3_org[2], col3_org[3]
+    local r_new3, g_new3, b_new3 = col3_new[1], col3_new[2], col3_new[3]
+    local code = string.format([[
+        vec4 effect( vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords ){
+            number eps = 0.01;
+            vec4 pixel = Texel(texture, texture_coords);
+            if (%f - eps <= pixel.r && pixel.r <= %f + eps  &&  %f - eps <= pixel.g && pixel.g <= %f + eps  &&  %f - eps <= pixel.b && pixel.b <= %f + eps){
+                return vec4(%f, %f, %f, 1.0);
+            } else if (%f - eps <= pixel.r && pixel.r <= %f + eps  &&  %f - eps <= pixel.g && pixel.g <= %f + eps  &&  %f - eps <= pixel.b && pixel.b <= %f + eps){
+                return vec4(%f, %f, %f, 1.0);
+            } else if (%f - eps <= pixel.r && pixel.r <= %f + eps  &&  %f - eps <= pixel.g && pixel.g <= %f + eps  &&  %f - eps <= pixel.b && pixel.b <= %f + eps){
+                return vec4(%f, %f, %f, 1.0);
+            } else {
+                return pixel;
+            }
+        }
+    ]], 
+        r_org1, r_org1, g_org1, g_org1, b_org1, b_org1, r_new1, g_new1, b_new1,
+        r_org2, r_org2, g_org2, g_org2, b_org2, b_org2, r_new2, g_new2, b_new2,
+        r_org3, r_org3, g_org3, g_org3, b_org3, b_org3, r_new3, g_new3, b_new3
+    )
+    return love.graphics.newShader(code)
+end
+
+shaders.button_icon_to_red    = replace_color_shader(COL_LIGHT_GRAY, COL_LIGHT_RED,     COL_MID_GRAY, COL_DARK_RED,  COL_LIGHTEST_GRAY, COL_PINK)
+shaders.button_icon_to_blue   = replace_color_shader(COL_LIGHT_GRAY, COL_MID_BLUE,      COL_MID_GRAY, COL_DARK_BLUE, COL_LIGHTEST_GRAY, COL_LIGHT_BLUE)
+shaders.button_icon_to_yellow = replace_color_shader(COL_LIGHT_GRAY, COL_YELLOW_ORANGE, COL_MID_GRAY, COL_ORANGE,    COL_LIGHTEST_GRAY, COL_LIGHT_YELLOW)
+shaders.button_icon_to_def = replace_color_shader(COL_LIGHT_GRAY, COL_LIGHT_GRAY, COL_MID_GRAY, COL_MID_GRAY,    COL_LIGHTEST_GRAY, COL_LIGHTEST_GRAY)
+
+------------------------------------
+
+
+--
 
 	-- Elevator swing  >> in Game:update_main_game
 	if love.math.random(0,10) == 0 then

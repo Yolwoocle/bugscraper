@@ -3,8 +3,8 @@ local function rgb(r,g,b)
 end
 
 local function color(hex)
-	if not hex then  return white  end
-	if type(hex) ~= "number" then  return white  end
+	if not hex then  return  {1.0, 1.0, 1.0}  end
+	if type(hex) ~= "number" then  return {1.0, 1.0, 1.0}  end
 
 	local b = hex % 256;  hex = (hex - b) / 256
 	local g = hex % 256;  hex = (hex - b) / 256
@@ -25,12 +25,15 @@ COL_BLUE = {0, 0, 1, 1}
 COL_MAGENTA = {1, 0, 1, 1}
 
 -- Reference is EDG32 palette
-COL_DARK_GRAY = rgb(38, 43, 68) --[[]] COL_DARK_GREY = COL_DARK_GRAY
-COL_MID_GRAY = rgb(58, 68, 102)
-COL_LIGHT_GRAY = color(0xc0cbdc)
+COL_VERY_DARK_GRAY = rgb(38, 43, 68)
+COL_DARK_GRAY = rgb(58, 68, 102)
+COL_MID_GRAY = color(0x5a6988)
+COL_LIGHT_GRAY = color(0x8b9bb4)
+COL_LIGHTEST_GRAY = color(0xc0cbdc)
 
 COL_DARK_RED = rgb(158, 40, 53)
-COL_LIGHT_RED = rgb(228,59, 68)
+COL_LIGHT_RED = color(0xe43b44)
+COL_PINK = color(0xf6757a)
 
 COL_YELLOW_ORANGE = color(0xfeae34)
 COL_ORANGE = color(0xf77622)

@@ -10,11 +10,11 @@ local AudioManager = require "scripts.audio.audio"
 local MenuManager = require "scripts.ui.menu.menu_manager"
 local OptionsManager = require "scripts.game.options"
 local InputManager = require "scripts.input.input"
+local InputButton = require "scripts.input.input_button"
 local MusicPlayer = require "scripts.audio.music_player"
 local MusicDisk = require "scripts.audio.music_disk"
 local Elevator = require "scripts.game.elevator"
-
-local removeme_key_constant_to_image = require "data.buttons.images_buttons_keyboard"
+local shaders  = require "scripts.graphics.shaders"
 
 local sounds = require "data.sounds"
 local images = require "data.images"
@@ -364,27 +364,6 @@ function Game:update_main_game(dt)
 	-- if love.keyboard.isScancodeDown("s") then self.cam_y = self.cam_y + q end
 end
 
-function Game:removeme_test()
-	local y = 0
-	for action, buttons in pairs(Input.default_input_maps[1]) do
-		print_outline(COL_WHITE, COL_DARK_BLUE, action, 8, y, 0)
-
-		local x = 80
-		for _, button in ipairs(buttons) do
-			if button.type == "k" then
-				local key_constant = love.keyboard.getKeyFromScancode(button.key_name)
-				local img = images[removeme_key_constant_to_image[key_constant]]
-				if img ~= nil then
-					love.graphics.draw(img, x, y)
-					x = x + img:getWidth()
-				end
-			end
-		end
-
-		y = y + 18
-	end
-end
-
 function Game:draw()
 	if OPERATING_SYSTEM == "Web" then
 		gfx.scale(CANVAS_SCALE, CANVAS_SCALE)
@@ -510,7 +489,7 @@ function Game:draw_game()
 	-- UI
 	-- print_centered_outline(COL_WHITE, COL_DARK_BLUE, concat("FLOOR ",self.floor), CANVAS_WIDTH/2, 8)
 	-- local w = 64
-	-- rect_color(COL_MID_GRAY, "fill", floor((CANVAS_WIDTH-w)/2),    16, w, 8)
+	-- rect_color(COL_DARK_GRAY, "fill", floor((CANVAS_WIDTH-w)/2),    16, w, 8)
 	-- rect_color(COL_WHITE,    "fill", floor((CANVAS_WIDTH-w)/2) +1, 17, (w-2)*self.floor_progress, 6)
 
 	love.graphics.translate(-real_camx, -real_camy)
@@ -546,9 +525,6 @@ function Game:draw_game()
 		self.menu_manager:draw()
 	end
 
-	
-	-- self:removeme_test()
-
 	--'Memory used (in kB): ' .. collectgarbage('count')
 
 	-- local t = "EARLY VERSION - NOT FINAL!"
@@ -574,23 +550,28 @@ function Game:draw_logo_and_controls()
 	end
 	
 	self:draw_controls(floor(CANVAS_WIDTH/2), floor(self.logo_y) + images.logo:getHeight()+6)
-	gfx.draw(images.controls, floor((CANVAS_WIDTH - images.controls:getWidth())/2), floor(self.logo_y) + images.logo:getHeight()+6)
 	local ox, oy = cos(self.t*3)*4, sin(self.t*3)*4
 	gfx.draw(images.controls_jetpack, ox + floor((CANVAS_WIDTH - images.controls_jetpack:getWidth())/2), oy + floor(self.jetpack_tutorial_y))
 end
 
 function Game:draw_controls(x, y)
 	local tutorials = {
-		{{"left", "right", "up", "down"}, "move"},
-		{{"jump"}, "jump"},
-		{{"shoot"}, "shoot"},
+		{{"left", "right", "up", "down"}, "MOVE"},
+		{{"jump"}, "JUMP"},
+		{{"shoot"}, "SHOOT"},
 	}
 
 	for _, tuto in ipairs(tutorials) do
 		local btn_x = x
 		for __, action in ipairs(tuto[1]) do
-			local button = Input:get_buttons(1, action)[1]
-			local icon = Input:get_button_icon(1, button or "?")
+			local button = Input:get_buttons(1, action)[1] or InputButton:new("?", "?")
+			local icon = Input:get_button_icon(1, button)
+			local w = icon:getWidth()
+
+			btn_x = btn_x - w
+			exec_using_shader(shaders.button_icon_to_def, function()
+				love.graphics.draw(icon, btn_x, y)
+			end)
 		end
 		
 		print_outline(COL_WHITE, COL_BLACK_BLUE, tuto[2], x, y)

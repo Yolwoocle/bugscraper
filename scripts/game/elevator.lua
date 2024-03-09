@@ -39,7 +39,7 @@ function Elevator:init(game)
 	self.def_bg_col = COL_BLACK_BLUE
 	self.bg_col = self.def_bg_col
 	self.bg_particles = {}
-	self.bg_particle_col = {COL_DARK_GRAY, COL_MID_GRAY}
+	self.bg_particle_col = {COL_VERY_DARK_GRAY, COL_DARK_GRAY}
 	self.bg_colors = {
 		COL_BLACK_BLUE,
 		COL_DARK_GREEN,
@@ -53,7 +53,7 @@ function Elevator:init(game)
 		color(0xe8b796) --beige
 	}
 	self.bg_particle_colors = {
-		{COL_DARK_GRAY, COL_MID_GRAY},
+		{COL_VERY_DARK_GRAY, COL_DARK_GRAY},
 		{COL_MID_DARK_GREEN, color(0x3e8948)},
 		{COL_LIGHT_RED, color(0xf6757a)}, --l red + light pink
 		{COL_MID_BLUE, COL_WHITE},
@@ -95,7 +95,7 @@ function Elevator:new_bg_particle()
 		o.y = CANVAS_HEIGHT + o.h + love.math.random(0, CANVAS_HEIGHT)
 	end
 
-	o.col = random_sample{COL_DARK_GRAY, COL_MID_GRAY}
+	o.col = random_sample{COL_VERY_DARK_GRAY, COL_DARK_GRAY}
 	if self.bg_particle_col then
 		o.col = random_sample(self.bg_particle_col)
 	end
@@ -200,7 +200,7 @@ function Elevator:update_door_anim(dt)
 		-- ...Close doors
 		self.door_offset = lerp(self.door_offset, 0, 0.1)
 		sounds.elev_door_close[1]:play()
-		self:activate_enemy_buffer(dt)
+		self:activate_enemy_buffer()
 	end
 
 	-- Elevator speed
@@ -473,7 +473,7 @@ function Elevator:on_exploding_elevator(dt)
 	self.show_rubble = true
 	self.show_cabin = false
 	for _,p in pairs(self.bg_particles) do
-		p.col = random_sample{COL_DARK_GRAY, COL_MID_GRAY}
+		p.col = random_sample{COL_VERY_DARK_GRAY, COL_DARK_GRAY}
 	end
 	
 	-- Crash sfx

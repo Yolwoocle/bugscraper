@@ -40,7 +40,7 @@ function Gun:init_gun(user)
 	self.ammo = math.huge
 	self.is_reloading = false
 	self.reload_timer = 0
-	self.reload_time = 3
+	self.reload_time = 1.5
 	self.max_reload_timer = 1
 	
 	-- Cooldown

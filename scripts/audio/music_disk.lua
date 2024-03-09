@@ -19,7 +19,9 @@ function MusicDisk:pause()
 end
 
 function MusicDisk:play()
-    if self.current_source ~= nil then    self.current_source:play()    end
+    if self.current_source ~= nil then    
+        -- self.current_source:play()   
+    end
 end
 
 function MusicDisk:stop()
