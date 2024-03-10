@@ -1,5 +1,5 @@
-local Class = require "scripts.class"
-local Game = require "scripts.game"
+local Class = require "scripts.meta.class"
+local Game = require "scripts.game.game"
 require "scripts.util"
 
 game = nil
@@ -41,8 +41,8 @@ function love.draw()
 	game:draw()
 end
 
-CAPTURING_GIF = false
-gif_n = 0
+-- CAPTURING_GIF = false
+-- gif_n = 0
 function love.keypressed(key, scancode, isrepeat)
 	if key == "f5" then
 		if love.keyboard.isDown("lshift") then

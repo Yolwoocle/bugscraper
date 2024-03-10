@@ -1,7 +1,7 @@
-local Menu = require "scripts.menu.menu"
-local SliderMenuItem = require "scripts.menu.menu_item_slider"
-local StatsMenuItem = require "scripts.menu.menu_item_stats"
-local ControlsMenuItem = require "scripts.menu.menu_item_controls"
+local Menu = require "scripts.ui.menu.menu"
+local SliderMenuItem = require "scripts.ui.menu.menu_item_slider"
+local StatsMenuItem = require "scripts.ui.menu.menu_item_stats"
+local ControlsMenuItem = require "scripts.ui.menu.menu_item_controls"
 
 local function func_set_menu(menu)
 	return function()
@@ -16,6 +16,22 @@ local function func_url(url)
 end
 
 local DEFAULT_MENU_BG_COLOR = {0, 0, 0, 0.85}
+
+local PROMPTS_NORMAL = {
+    {{"ui_select"}, "confirm"},
+    {{"ui_back"}, "back"},
+}
+
+local PROMPTS_GAME_OVER = {
+    {{"ui_select"}, "confirm"},
+    {},
+}
+
+local PROMPTS_CONTROLS = {
+    {{"ui_select"}, "confirm"},
+    {{"ui_reset_keys"}, "clear keys"},
+    {{"ui_back"}, "back"},
+}
 
 -----------------------------------------------------
 ------ [[[[[[[[[[[[[[[[ MENUS ]]]]]]]]]]]]]]]] ------
@@ -45,7 +61,7 @@ local function generate_menus()
         { "OPTIONS", func_set_menu('options') },
         { "CREDITS", func_set_menu('credits') },
         { "QUIT", quit_game },
-    }, DEFAULT_MENU_BG_COLOR)
+    }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
     if OPERATING_SYSTEM == "Web" then
         -- Disable quitting on web
         menus.pause.items[7].is_selectable = false
@@ -55,8 +71,8 @@ local function generate_menus()
         { "<<<<<<<<< OPTIONS >>>>>>>>>" },
         { "" },
         { "<<< Controls >>>" },
-        { "KEYBOARD BINDINGS", func_set_menu("controls_keyboard")},
-        { "CONTROLLER BINDINGS", func_set_menu("controls_controller")},
+        { "KEYBOARD SETTINGS", func_set_menu("controls_keyboard")},
+        { "CONTROLLER SETTINGS", func_set_menu("controls_controller")},
         { ""},
         { "<<< Audio >>>" },
         { "SOUND", function(self, option)
@@ -188,7 +204,7 @@ local function generate_menus()
             self.value = Options:get("screenshake") * 20
             self.value_text = concat(floor(100 * self.value / 20), "%")
         end},
-    }, DEFAULT_MENU_BG_COLOR)
+    }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
 
     menus.controls_keyboard = Menu:new(game, {
         { "<<<<<<<<< CONTROLS >>>>>>>>>" },
@@ -196,23 +212,22 @@ local function generate_menus()
         { "RESET CONTROLS", function() Input:reset_controls(1, "k") end },
         { "" },
         { "<<< Gameplay >>>" },
-        { ControlsMenuItem, 1, "k", "left"},
-        { ControlsMenuItem, 1, "k", "right"},
-        { ControlsMenuItem, 1, "k", "up"},
-        { ControlsMenuItem, 1, "k", "down"},
-        { ControlsMenuItem, 1, "k", "jump"},
-        { ControlsMenuItem, 1, "k", "shoot"},
-        { ""},
+        { ControlsMenuItem, 1, "k", "left" },
+        { ControlsMenuItem, 1, "k", "right" },
+        { ControlsMenuItem, 1, "k", "up" },
+        { ControlsMenuItem, 1, "k", "down" },
+        { ControlsMenuItem, 1, "k", "jump" },
+        { ControlsMenuItem, 1, "k", "shoot" },
+        { "" },
         { "<<< Interface >>>" },
-        { ControlsMenuItem, 1, "k", "ui_left"},
-        { ControlsMenuItem, 1, "k", "ui_right"},
-        { ControlsMenuItem, 1, "k", "ui_up"},
-        { ControlsMenuItem, 1, "k", "ui_down"},
-        { ControlsMenuItem, 1, "k", "ui_select"},
-        { ControlsMenuItem, 1, "k", "ui_back"},
-        { ControlsMenuItem, 1, "k", "pause"},
-
-    }, DEFAULT_MENU_BG_COLOR)
+        { ControlsMenuItem, 1, "k", "ui_left" },
+        { ControlsMenuItem, 1, "k", "ui_right" },
+        { ControlsMenuItem, 1, "k", "ui_up" },
+        { ControlsMenuItem, 1, "k", "ui_down" },
+        { ControlsMenuItem, 1, "k", "ui_select" },
+        { ControlsMenuItem, 1, "k", "ui_back" },
+        { ControlsMenuItem, 1, "k", "pause" },
+    }, DEFAULT_MENU_BG_COLOR, PROMPTS_CONTROLS)
 
     menus.controls_controller = Menu:new(game, {
         { "<<<<<<<<< CONTROLS >>>>>>>>>" },
@@ -246,9 +261,9 @@ local function generate_menus()
         { ControlsMenuItem, 1, "c", "ui_back"},
         { ControlsMenuItem, 1, "c", "pause"},
 
-    }, DEFAULT_MENU_BG_COLOR)
+    }, DEFAULT_MENU_BG_COLOR, PROMPTS_CONTROLS)
 
-    local items = {
+    menus.game_over = Menu:new(game, {
         {"********** GAME OVER! **********"},
         { "" },
         { StatsMenuItem, "Kills", function(self) return game.stats.kills end },
@@ -260,11 +275,7 @@ local function generate_menus()
         { "" },
         { "RETRY", function() game:new_game() end },
         { "" },
-    }
-    -- if OPERATING_SYSTEM == "Web" then
-    --     table.remove(items, 9)
-    -- end
-    menus.game_over = Menu:new(game, items, DEFAULT_MENU_BG_COLOR)
+    }, DEFAULT_MENU_BG_COLOR, PROMPTS_GAME_OVER)
 
     menus.credits = Menu:new(game, {
         {"<<<<<<<<< CREDITS >>>>>>>>>"},
@@ -318,7 +329,7 @@ local function generate_menus()
         { "CC BY 3.0", func_url("https://creativecommons.org/licenses/by/3.0/")},
         { "CC BY 4.0", func_url("https://creativecommons.org/licenses/by/4.0/")},
         { "Common Sense License (CSL)", func_url("http://www.palmentieri.it/somepx/license.txt")},
-    }, DEFAULT_MENU_BG_COLOR)
+    }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
 
     local items = {
         { "<<<<<<<<< CONGRATULATIONS! >>>>>>>>>" },
@@ -337,7 +348,7 @@ local function generate_menus()
     if OPERATING_SYSTEM == "Web" or true then
         table.remove(items, 8)
     end
-    menus.win = Menu:new(game, items, { 0, 0, 0, 0.95 })
+    menus.win = Menu:new(game, items, { 0, 0, 0, 0.95 }, PROMPTS_GAME_OVER)
 
     return menus
 end

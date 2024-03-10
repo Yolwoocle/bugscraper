@@ -1,6 +1,6 @@
 local utf8 = require "utf8"
-require "scripts.constants"
-local shaders = require "scripts.shaders"
+require "scripts.meta.constants"
+local shaders = require "scripts.graphics.shaders"
 
 abs = math.abs
 exp = math.exp
@@ -257,16 +257,25 @@ local white_shader = love.graphics.newShader[[
 ]]
 function draw_white(drawable, x, y, r, sx, sy, ox, oy, kx, ky)
 	-- drawable, x, y, r, sx, sy, ox, oy, kx, ky
+	local old_shader = love.graphics.getShader()
 	love.graphics.setShader(white_shader)
 	love.graphics.draw(drawable, x, y, r, sx, sy, ox, oy, kx, ky)
-	love.graphics.setShader()
+	love.graphics.setShader(old_shader)
+end
+
+function exec_using_shader(shader, func)
+	local old_shader = love.graphics.getShader()
+	love.graphics.setShader(shader)
+	func()
+	love.graphics.setShader(old_shader)
 end
 
 function draw_using_shader(drawable, shader, x, y, r, sx, sy, ox, oy, kx, ky)
 	-- drawable, x, y, r, sx, sy, ox, oy, kx, ky
+	local old_shader = love.graphics.getShader()
 	love.graphics.setShader(shader)
 	love.graphics.draw(drawable, x, y, r, sx, sy, ox, oy, kx, ky)
-	love.graphics.setShader()
+	love.graphics.setShader(old_shader)
 end
 
 function print_centered_outline(col_in, col_out, text, x, y, thick, rot, sx, sy, ...)

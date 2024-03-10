@@ -1,6 +1,6 @@
 require "scripts.util"
-local Class = require "scripts.class"
-local Tile = require "scripts.tile"
+local Class = require "scripts.meta.class"
+local Tile = require "scripts.level.tile"
 local images = require "data.images"
 
 local Tiles = Class:inherit()

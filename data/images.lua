@@ -1,5 +1,5 @@
 require "scripts.util"
-local Class = require "scripts.class"
+local Class = require "scripts.meta.class"
 local key_constant_to_image = require "data.buttons.images_buttons_keyboard"
 local controller_brands = require "data.buttons.controller_brands"
 local controller_buttons = require "data.buttons.controller_buttons"
@@ -100,6 +100,12 @@ local img_names = {
 	"big_red_button_crack3",
 	"big_red_button",
 	"big_red_button_pressed",
+
+	"small_button_crack0",
+	"small_button_crack1",
+	"small_button_crack2",
+	"small_button",
+	"small_button_pressed",
 
 	"ptc_glass_shard",
 	"snail_shell_fragment",

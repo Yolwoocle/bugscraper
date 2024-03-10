@@ -1,0 +1,846 @@
+local Class = require "scripts.meta.class"
+local CollisionManager = require "scripts.game.collision"
+local Player = require "scripts.actor.player"
+local Enemies = require "data.enemies"
+local Bullet = require "scripts.actor.bullet"
+local TileMap = require "scripts.level.tilemap"
+local WorldGenerator = require "scripts.level.worldgenerator"
+local ParticleSystem = require "scripts.game.particles"
+local AudioManager = require "scripts.audio.audio"
+local MenuManager = require "scripts.ui.menu.menu_manager"
+local OptionsManager = require "scripts.game.options"
+local InputManager = require "scripts.input.input"
+local InputButton = require "scripts.input.input_button"
+local MusicPlayer = require "scripts.audio.music_player"
+local MusicDisk = require "scripts.audio.music_disk"
+local Elevator = require "scripts.game.elevator"
+local shaders  = require "scripts.graphics.shaders"
+
+local sounds = require "data.sounds"
+local images = require "data.images"
+local guns = require "data.guns"
+
+require "scripts.util"
+require "scripts.meta.constants"
+
+local Game = Class:inherit()
+
+function Game:init()
+	-- Global singletons
+	Input = InputManager:new(self)
+	Options = OptionsManager:new(self)
+	Collision = CollisionManager:new()
+	Particles = ParticleSystem:new()
+	Audio = AudioManager:new()
+
+	Input:init_users()
+	
+	-- Global Options ==> Moved to OptionsManager
+	-- is_fullscreen = options:get("is_fullscreen")
+	-- is_vsync = options:get("is_vsync")
+	-- pixel_scale = options:get("pixel_scale")
+
+	CANVAS_WIDTH = 480
+	CANVAS_HEIGHT = 270
+
+	-- OPERATING_SYSTEM = "Web"
+	OPERATING_SYSTEM = love.system.getOS()
+	USE_CANVAS_RESIZING = true
+	SCREEN_WIDTH, SCREEN_HEIGHT = 0, 0
+
+	if OPERATING_SYSTEM == "Web" then
+		USE_CANVAS_RESIZING = false
+		CANVAS_SCALE = 2
+		-- Init window
+		love.window.setMode(CANVAS_WIDTH*CANVAS_SCALE, CANVAS_HEIGHT*CANVAS_SCALE, {
+			fullscreen = false,
+			resizable = true,
+			vsync = Options:get"is_vsync",
+			minwidth = CANVAS_WIDTH,
+			minheight = CANVAS_HEIGHT,
+		})
+		SCREEN_WIDTH, SCREEN_HEIGHT = gfx.getDimensions()
+		love.window.setTitle("Bugscraper")
+		love.window.setIcon(love.image.newImageData("icon.png"))
+	else
+		-- Init window
+		love.window.setMode(0, 0, {
+			fullscreen = Options:get("is_fullscreen"),
+			resizable = true,
+			vsync = Options:get("is_vsync"),
+			minwidth = CANVAS_WIDTH,
+			minheight = CANVAS_HEIGHT,
+		})
+		SCREEN_WIDTH, SCREEN_HEIGHT = gfx.getDimensions()
+		love.window.setTitle("Bugscraper")
+		love.window.setIcon(love.image.newImageData("icon.png"))
+	end
+	gfx.setDefaultFilter("nearest", "nearest")
+	love.graphics.setLineStyle("rough")
+
+	self:update_screen()
+
+	canvas = gfx.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
+
+	-- Load fonts
+	FONT_REGULAR = gfx.newFont("fonts/HopeGold.ttf", 16)
+	FONT_7SEG = gfx.newImageFont("fonts/7seg_font.png", " 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+	FONT_MINI = gfx.newFont("fonts/Kenney Mini.ttf", 8)
+	FONT_PAINT = gfx.newFont("fonts/NicoPaint-Regular.ttf", 16)
+	gfx.setFont(FONT_REGULAR)
+	
+	-- Audio ===> Moved to OptionsManager
+	-- self.volume = options:get("volume")
+	-- self.sound_on = options:get("sound_on")
+
+	Options:set_volume(Options:get("volume"))
+	
+	self:new_game()
+	
+	-- Menu Manager
+	self.menu_manager = MenuManager:new(self)
+
+	love.mouse.setVisible(Options:get("mouse_visible"))
+
+	self.is_first_time = Options.is_first_time
+end
+
+
+function Game:update_screen(scale)
+	-- When scale is (-1), it will find the maximum whole number
+	if scale == "auto" then   scale = nil    end
+	if scale == "max whole" then   scale = -1    end
+	if type(scale) ~= "number" then    scale = nil    end
+ 
+	CANVAS_WIDTH = 480
+	CANVAS_HEIGHT = 270
+
+	WINDOW_WIDTH, WINDOW_HEIGHT = gfx.getDimensions()
+
+	screen_sx = WINDOW_WIDTH / CANVAS_WIDTH
+	screen_sy = WINDOW_HEIGHT / CANVAS_HEIGHT
+	CANVAS_SCALE = min(screen_sx, screen_sy)
+
+	if scale then
+		if scale == -1 then
+			CANVAS_SCALE = floor(CANVAS_SCALE)
+		else
+			CANVAS_SCALE = scale
+		end
+	end
+
+	CANVAS_OX = max(0, (WINDOW_WIDTH  - CANVAS_WIDTH  * CANVAS_SCALE)/2)
+	CANVAS_OY = max(0, (WINDOW_HEIGHT - CANVAS_HEIGHT * CANVAS_SCALE)/2)
+end
+
+function Game:new_game(number_of_players)
+	-- Reset global systems
+	Collision = CollisionManager:new()
+	Particles = ParticleSystem:new()
+
+	number_of_players = number_of_players or 1
+
+	self.t = 0
+	self.frame = 0
+
+	-- Players
+	self.max_number_of_players = 4 
+	self.number_of_players = number_of_players
+
+	self.elevator = Elevator:new(self)
+
+	-- Map & world gen
+	self.shaft_w, self.shaft_h = 26,14
+	self.map = TileMap:new(30, 17)
+	self.world_generator = WorldGenerator:new(self.map)
+	self.world_generator:generate(10203)
+	self.world_generator:make_box(self.shaft_w, self.shaft_h)
+
+	-- Level info
+	self.floor = 0 --Floor n°
+	self.end_floor = 16
+	self.max_floor = 16
+	-- self.max_elev_speed = 1/2
+	self.cur_wave_max_enemy = 1
+
+	-- Bounding box
+	local map_w = self.map.width * BW
+	local map_h = self.map.height * BW
+	local box_ax = self.world_generator.box_ax
+	local box_ay = self.world_generator.box_ay
+	local box_bx = self.world_generator.box_bx
+	local box_by = self.world_generator.box_by
+	-- Don't try to understand all you have to know is that it puts collision 
+	-- boxes around the elevator shaft
+	self.boxes = {
+		{name="box_up",     is_solid = false, x = -BW, y = -BW,  w=map_w + 2*BW,     h=BW + box_ay*BW},
+		{name="box_down", is_solid = false, x = -BW, y = (box_by+1)*BW,  w=map_w + 2*BW,     h=BW*box_ay},
+		{name="box_left", is_solid = false, x = -BW,  y = -BW,   w=BW + box_ax * BW, h=map_h + 2*BW},
+		{name="box_right", is_solid = false, x = BW*(box_bx+1), y = -BW, w=BW*box_ax, h=map_h + 2*BW},
+	}
+	for i,box in pairs(self.boxes) do   Collision:add(box)   end
+	
+	-- Actors
+	self.actor_limit = 100
+	self.enemy_count = 0
+	self.actors = {}
+	self:init_players()
+
+	-- Start lever
+	local nx = CANVAS_WIDTH * 0.75
+	local ny = self.world_generator.box_by * BLOCK_WIDTH
+	-- local l = create_actor_centered(Enemies.ButtonGlass, nx, ny)
+	local l = create_actor_centered(Enemies.ButtonSmallGlass, floor(nx), floor(ny))
+	self:new_actor(l)
+
+	-- Camera & screenshake
+	self.cam_x = 0
+	self.cam_y = 0
+	self.cam_realx, self.cam_realy = 0, 0
+	self.cam_ox, self.cam_oy = 0, 0
+	self.screenshake_q = 0
+	self.screenshake_speed = 20
+
+	-- Debugging
+	self.debug_mode = false
+	self.colview_mode = false
+	self.msg_log = {}
+
+	self.test_t = 0
+
+	-- Logo
+	self.logo_y = 30
+	self.logo_vy = 0
+	self.logo_a = 0
+	self.logo_cols = {COL_LIGHT_YELLOW, COL_LIGHT_BLUE, COL_LIGHT_RED}
+	self.move_logo = false
+	self.jetpack_tutorial_y = -30
+	self.move_jetpack_tutorial = false
+	
+	if self.menu_manager then
+		self.menu_manager:set_menu()
+	end
+
+	self.stats = {
+		floor = 0,
+		kills = 0,
+		time = 0,
+		max_combo = 0,
+	}
+	self.kills = 0
+	self.time = 0
+	self.max_combo = 0
+
+	-- Cabin stats
+	--TODO: fuze it into map or remove map, only have coll boxes & no map
+	local bw = BLOCK_WIDTH
+	self.cabin_x, self.cabin_y = self.world_generator.box_ax*bw, self.world_generator.box_ay*bw
+	self.cabin_ax, self.cabin_ay = self.world_generator.box_ax*bw, self.world_generator.box_ay*bw
+	self.cabin_bx, self.cabin_by = self.world_generator.box_bx*bw, self.world_generator.box_by*bw
+	self.door_ax, self.door_ay = self.cabin_x+154, self.cabin_x+122
+	self.door_bx, self.door_by = self.cabin_y+261, self.cabin_y+207
+
+	self.frames_to_skip = 0
+	self.slow_mo_rate = 0
+
+	self.draw_shadows = true
+	self.shadow_ox = 1
+	self.shadow_oy = 2
+	self.shadow_canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
+	self.front_canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
+
+	-- Music
+	self.music_player = MusicPlayer:new()
+	self.sfx_elevator_bg = sounds.elevator_bg[1]
+	self.sfx_elevator_bg_volume     = self.sfx_elevator_bg:getVolume()
+	self.sfx_elevator_bg_def_volume = self.sfx_elevator_bg:getVolume()
+	-- self.music_source:setVolume(options:get("music_volume"))
+	self.sfx_elevator_bg:setVolume(0)
+	self.sfx_elevator_bg:play()
+	self:set_music_volume(Options:get("music_volume"))
+	self.time_before_music = math.huge
+
+	self.endless_mode = false
+
+	Options:update_sound_on()
+end
+
+local n = 0
+function Game:update(dt)
+	self.frame = self.frame + 1
+
+	self.frames_to_skip = max(0, self.frames_to_skip - 1)
+	local do_frameskip = self.slow_mo_rate ~= 0 and self.frame%self.slow_mo_rate ~= 0
+	if self.frames_to_skip > 0 or do_frameskip then
+		self:apply_screenshake(dt)
+		return
+	end
+
+	Input:update(dt)
+	
+	-- Menus
+	self.menu_manager:update(dt)
+	
+	if not self.menu_manager.cur_menu then
+		self:update_main_game(dt)
+	end
+	Input:update_last_input_state(dt)
+end
+
+function Game:update_main_game(dt)
+	if self.game_started then
+		self.time = self.time + dt
+	end
+	self.t = self.t + dt
+
+	-- Music
+	self.time_before_music = self.time_before_music - dt
+	if self.time_before_music <= 0 and not self.game_started then
+		self.music_player:play()
+		self.game_started = true
+	end
+
+	-- BG color gradient
+	if not self.elevator.is_on_win_screen then
+		self.elevator.bg_color_progress = self.elevator.bg_color_progress + dt*0.2
+		local i_prev = mod_plus_1(self.elevator.bg_color_index-1, #self.elevator.bg_colors)
+		if self.floor <= 1 then
+			i_prev = 1
+		end
+
+		local i_target = mod_plus_1(self.elevator.bg_color_index, #self.elevator.bg_colors)
+		local prog = clamp(self.elevator.bg_color_progress, 0, 1)
+		self.elevator.bg_col = lerp_color(self.elevator.bg_colors[i_prev], self.elevator.bg_colors[i_target], prog)
+		self.elevator.bg_particle_col = self.elevator.bg_particle_colors[i_target]
+	end
+	
+	-- Elevator swing 
+	-- self.elev_x = cos(self.t) * 4
+	-- self.elev_y = 4 + sin(self.t) * 4
+
+	self:apply_screenshake(dt)
+	
+	if not Options:get("screenshake_on") then self.cam_ox, self.cam_oy = 0,0 end
+	self.cam_realx, self.cam_realy = self.cam_x + self.cam_ox, self.cam_y + self.cam_oy
+
+	self.map:update(dt)
+
+	-- Particles
+	Particles:update(dt)
+	self.elevator:update_bg_particles(dt)
+
+	self.elevator:progress_elevator(dt)
+
+	-- Update actors
+	for i = #self.actors, 1, -1 do
+		local actor = self.actors[i]
+
+		actor:update(dt)
+	
+		if actor.is_removed then
+			table.remove(self.actors, i)
+		end
+	end
+
+	-- Flash 
+	self.elevator.flash_alpha = max(self.elevator.flash_alpha - dt, 0)
+	
+	-- Logo
+	self.logo_a = self.logo_a + dt*3
+	if self.move_logo then
+		self.logo_vy = self.logo_vy - dt
+		self.logo_y = self.logo_y + self.logo_vy
+	end
+	if self.move_jetpack_tutorial then
+		self.jetpack_tutorial_y = lerp(self.jetpack_tutorial_y, 70, 0.1)
+	else
+		self.jetpack_tutorial_y = lerp(self.jetpack_tutorial_y, -30, 0.1)
+	end
+
+	local q = 4
+	-- if love.keyboard.isScancodeDown("a") then self.cam_x = self.cam_x - q end
+	-- if love.keyboard.isScancodeDown("d") then self.cam_x = self.cam_x + q end
+	-- if love.keyboard.isScancodeDown("w") then self.cam_y = self.cam_y - q end
+	-- if love.keyboard.isScancodeDown("s") then self.cam_y = self.cam_y + q end
+end
+
+function Game:draw()
+	if OPERATING_SYSTEM == "Web" then
+		gfx.scale(CANVAS_SCALE, CANVAS_SCALE)
+		gfx.translate(0, 0)
+		gfx.clear(0,0,0)
+		
+		game:draw_game()
+	else
+		-- Using a canvas for that sweet, resizable pixel art
+		gfx.setCanvas(canvas)
+		gfx.clear(0,0,0)
+		gfx.translate(0, 0)
+		
+		game:draw_game()
+		
+		gfx.setCanvas()
+		gfx.origin()
+		gfx.scale(1, 1)
+		gfx.draw(canvas, CANVAS_OX, CANVAS_OY, 0, CANVAS_SCALE, CANVAS_SCALE)
+	end
+end
+
+testx = 0
+testy = 0
+function Game:draw_game()
+	-- Sky
+	gfx.clear(self.elevator.bg_col)
+	local real_camx, real_camy = (self.cam_x + self.cam_ox), (self.cam_y + self.cam_oy)
+	gfx.translate(-real_camx, -real_camy)
+
+	-- Draw bg particles
+	if self.elevator.show_bg_particles then
+		for i,o in pairs(self.elevator.bg_particles) do
+			local y = o.y + o.oy
+			local mult = 1 - clamp(abs(self.elevator.elevator_speed / 100), 0, 1)
+			local sin_oy = mult * sin(self.t + o.rnd_pi) * o.oh * o.h 
+			
+			rect_color(o.col, "fill", o.x, o.y + o.oy + sin_oy, o.w, o.h * o.oh)
+		end
+	end
+
+	love.graphics.translate(-(real_camx + self.elevator.elev_x), -(real_camy + self.elevator.elev_y))
+
+	-- Map
+	self.map:draw()
+	
+	-- Background
+	
+	-- Door background
+	if self.elevator.show_cabin then
+		rect_color(self.elevator.bg_col, "fill", self.door_ax, self.door_ay, self.door_bx - self.door_ax+1, self.door_by - self.door_ay+1)
+		-- If doing door animation, draw buffered enemies
+		if self.elevator.door_animation then
+			for i,e in pairs(self.elevator.door_animation_enemy_buffer) do
+				e:draw()
+			end
+		end
+		self.elevator:draw_background(self.cabin_x, self.cabin_y)
+	end
+
+	local old_canvas
+	if self.draw_shadows then
+		old_canvas = love.graphics.getCanvas()
+		love.graphics.setCanvas(self.shadow_canvas)
+		love.graphics.clear()
+	end
+
+	-- Draw actors
+	for _,actor in pairs(self.actors) do
+		if not actor.is_player then
+			actor:draw()
+		end
+	end
+	for _,p in pairs(self.players) do
+		p:draw()
+	end
+
+	Particles:draw()
+	
+	if self.elevator.show_rubble then
+		self.elevator:draw_rubble(self.cabin_x, self.cabin_y)
+	end
+
+
+	-- Buffering these so that we can draw their shadows but still draw then in front of everything
+	local draw_front_objects = function()
+		-- Draw actors UI
+		Particles:draw_front()
+		-- Draw actors
+		for k,actor in pairs(self.actors) do
+			if actor.draw_hud then     actor:draw_hud()    end
+		end
+	end
+
+	if self.draw_shadows then
+		love.graphics.setCanvas(self.front_canvas)
+		love.graphics.clear()
+		draw_front_objects()
+		love.graphics.setCanvas(self.shadow_canvas)
+	end
+
+	if self.draw_shadows then
+		love.graphics.setCanvas(old_canvas)
+		
+		love.graphics.setColor(0,0,0, 0.5)
+		love.graphics.draw(self.shadow_canvas, self.shadow_ox, self.shadow_oy)
+		love.graphics.draw(self.front_canvas,  self.shadow_ox, self.shadow_oy)
+		love.graphics.setColor(1,1,1, 1)
+		love.graphics.draw(self.shadow_canvas, 0, 0)
+	end
+
+	-- Walls
+	if self.elevator.show_cabin then
+		gfx.draw(images.cabin_walls, self.cabin_x, self.cabin_y)
+	end
+
+	if self.draw_shadows then
+		love.graphics.draw(self.front_canvas, 0, 0)
+	else
+		draw_front_objects()
+	end
+
+	-- UI
+	-- print_centered_outline(COL_WHITE, COL_DARK_BLUE, concat("FLOOR ",self.floor), CANVAS_WIDTH/2, 8)
+	-- local w = 64
+	-- rect_color(COL_DARK_GRAY, "fill", floor((CANVAS_WIDTH-w)/2),    16, w, 8)
+	-- rect_color(COL_WHITE,    "fill", floor((CANVAS_WIDTH-w)/2) +1, 17, (w-2)*self.floor_progress, 6)
+
+	love.graphics.translate(-real_camx, -real_camy)
+
+	-- Logo
+	self:draw_logo_and_controls()
+
+	-- "CONGRATS" at the end
+	if self.elevator.is_on_win_screen then
+		self.elevator:draw_win_screen()
+	end
+
+	-- Flash
+	if self.elevator.flash_alpha then
+		rect_color({1,1,1,self.elevator.flash_alpha}, "fill", self.cam_realx, self.cam_realy, CANVAS_WIDTH, CANVAS_HEIGHT)
+	end
+
+	-- Timer
+	if Options:get("timer_on") then
+		gfx.print(time_to_string(self.time), 2, 2)
+	end
+
+	-- Debug
+	if self.colview_mode then
+		self:draw_colview()
+	end
+	if self.debug_mode then
+		self:draw_debug()
+	end
+
+	-- Menus
+	if self.menu_manager.cur_menu then
+		self.menu_manager:draw()
+	end
+
+	--'Memory used (in kB): ' .. collectgarbage('count')
+
+	-- local t = "EARLY VERSION - NOT FINAL!"
+	-- gfx.print(t, CANVAS_WIDTH-get_text_width(t), 0)
+	-- local t = os.date('%a %d/%b/%Y')
+	-- print_color({.7,.7,.7}, t, CANVAS_WIDTH-get_text_width(t), 12)
+
+end
+
+function Game:draw_logo_and_controls()
+	for i=1, #self.logo_cols + 1 do
+		local ox, oy = cos(self.logo_a + i*.4)*8, sin(self.logo_a + i*.4)*8
+		local logo_x = floor((CANVAS_WIDTH - images.logo_noshad:getWidth())/2)
+		
+		local col = self.logo_cols[i]
+		local spr = images.logo_shad
+		if col == nil then
+			col = COL_WHITE
+			spr = images.logo_noshad
+		end
+		gfx.setColor(col)
+		gfx.draw(spr, logo_x + ox, self.logo_y + oy)
+	end
+	
+	self:draw_controls(floor(CANVAS_WIDTH/2), floor(self.logo_y) + images.logo:getHeight()+6)
+	local ox, oy = cos(self.t*3)*4, sin(self.t*3)*4
+	gfx.draw(images.controls_jetpack, ox + floor((CANVAS_WIDTH - images.controls_jetpack:getWidth())/2), oy + floor(self.jetpack_tutorial_y))
+end
+
+function Game:draw_controls(x, y)
+	local tutorials = {
+		{{"down", "up", "right", "left"}, "MOVE"},
+		{{"jump"}, "JUMP"},
+		{{"shoot"}, "SHOOT"},
+	}
+
+	for _, tuto in ipairs(tutorials) do
+		local btn_x = x - 2
+		for __, action in ipairs(tuto[1]) do
+			local button = Input:get_primary_button(1, action) or InputButton:new("?", "?")
+			local icon = Input:get_button_icon(1, button)
+			local w = icon:getWidth()
+
+			btn_x = btn_x - w
+			exec_using_shader(shaders.button_icon_to_def, function()
+				love.graphics.draw(icon, btn_x, y)
+			end)
+		end
+		
+		print_outline(COL_WHITE, COL_BLACK_BLUE, tuto[2], x, y)
+		y = y + 18
+	end
+end
+
+function Game:draw_colview()
+	local items, len = Collision.world:getItems()
+	for i,it in pairs(items) do
+		local x,y,w,h = Collision.world:getRect(it)
+		rect_color({0,1,0,.2},"fill", x, y, w, h)
+		rect_color({0,1,0,.5},"line", x, y, w, h)
+	end
+end
+
+function Game:draw_debug()
+	gfx.print(concat("FPS: ",love.timer.getFPS(), " / frmRpeat: ",self.frame_repeat, " / frame: ",frame), 0, 0)
+	
+	-- Print debug info
+	local txt_h = get_text_height(" ")
+	local txts = {
+		concat("FPS: ",love.timer.getFPS()),
+		concat("n° of actors: ", #self.actors, " / ", self.actor_limit),
+		concat("n° of enemies: ", self.enemy_count),
+		concat("n° collision items: ", Collision.world:countItems()),
+		concat("frames_to_skip: ", self.frames_to_skip),
+		concat("self.sfx_elevator_bg_volume", self.sfx_elevator_bg_volume),
+		concat("debug1 ", self.debug1),
+		concat("real_wave_n ", self.debug2),
+		concat("bg_color_index ", self.debug3),
+		"",
+	}
+
+	for i=1, #txts do  print_label(txts[i], self.cam_x, self.cam_y+txt_h*i) end
+
+	for _, e in pairs(self.actors) do
+		love.graphics.circle("fill", e.x, e.y, 3)
+	end
+
+	self.world_generator:draw()
+	draw_log()
+end
+
+function Game:on_menu()
+	self.music_player:on_menu()
+	self:pause_repeating_sounds()
+end
+function Game:pause_repeating_sounds()
+	-- THIS is SO stupid. We should have a system that stores all sounds instead
+	-- of doing this manually.
+	self.music_player:pause()
+
+	self.sfx_elevator_bg:pause()
+	for k,p in pairs(self.players) do
+		p.sfx_wall_slide:setVolume(0)
+	end
+	for k,a in pairs(self.actors) do
+		if a.pause_repeating_sounds then
+			a:pause_repeating_sounds()
+		end
+	end
+end
+function Game:on_button_glass_spawn(button)
+	self.music_player:stop()
+end
+
+function Game:on_unmenu()
+	self.music_player:on_unmenu()
+	self.sfx_elevator_bg:play()
+	
+	for k,a in pairs(self.actors) do
+		if a.play_repeating_sounds then
+			a:play_repeating_sounds()
+		end
+	end
+end
+function Game:set_music_volume(vol)
+	self.music_player:set_volume(vol*0.7)
+end
+
+function Game:new_actor(actor)
+	if #self.actors >= self.actor_limit then
+		actor:remove()
+		return
+	end
+	if actor.counts_as_enemy then
+		self.enemy_count = self.enemy_count + 1
+	end
+	table.insert(self.actors, actor)
+end
+
+function Game:on_kill(actor)
+	if actor.counts_as_enemy then
+		self.enemy_count = self.enemy_count - 1
+		self.kills = self.kills + 1
+
+		if actor.name == "dummy" then
+			-- self.game_started = true
+			self.time_before_music = 0.7
+		end
+	end
+
+	if actor.is_player then
+		-- Save stats
+		self.music_player:pause()
+		self:pause_repeating_sounds()
+		self:save_stats()
+	end
+end
+
+function Game:kill_all_enemies()
+	for _, actor in pairs(self.actors) do
+		if actor.counts_as_enemy then
+			actor:kill()
+		end
+	end
+end
+
+function Game:save_stats()
+	self.stats.time = self.time
+	self.stats.floor = self.floor
+	self.stats.kills = self.kills
+	self.stats.max_combo = self.max_combo
+end
+
+function Game:on_game_over()
+	self.menu_manager:set_menu("game_over")
+end
+
+function Game:do_win()
+
+end
+
+function draw_log()
+	-- log
+	local x2 = floor(CANVAS_WIDTH/2)
+	local h = gfx.getFont():getHeight()
+	print_label("--- LOG ---", x2, 0)
+	for i=1, min(#msg_log, max_msg_log) do
+		print_label(msg_log[i], x2, i*h)
+	end
+end
+
+function Game:init_players()
+	-- TODO: move this to a general function (?)
+	local sprs = {
+		images.ant,
+		images.caterpillar
+	}
+
+	self.players = {}
+
+	-- Spawn at middle
+	local mx = floor((self.map.width / self.max_number_of_players))
+	local my = floor(self.map.height - 3)
+
+	for i=1, self.number_of_players do
+		local player = Player:new(i, mx*16 + i*16, my*16, sprs[i])
+		self.players[i] = player
+		self:new_actor(player)
+	end
+end
+
+function Game:apply_screenshake(dt)
+	-- Screenshake
+	self.screenshake_q = max(0, self.screenshake_q - self.screenshake_speed * dt)
+	-- self.screenshake_q = lerp(self.screenshake_q, 0, 0.2)
+
+	local multiplier = Options:get("screenshake")
+	local q = self.screenshake_q * multiplier
+	local ox, oy = random_neighbor(q), random_neighbor(q)
+	if abs(ox) >= 0.2 then   ox = sign(ox) * max(abs(ox), 1)   end -- Using an epsilon of 0.2 to avoid
+	if abs(oy) >= 0.2 then   oy = sign(oy) * max(abs(oy), 1)   end -- jittery effects on UI elmts
+	self.cam_ox = ox
+	self.cam_oy = oy
+end
+
+function Game:enable_endless_mode()
+	self.endless_mode = true
+	self.music_player:play()
+end
+
+-----------------------------------------------------
+--- [[[[[[[[ BACKGROUND & LEVEL PROGRESS ]]]]]]]] ---
+-----------------------------------------------------
+
+-- TODO: Should we move this to a separate 'Elevator'/'Level' class?
+---> Yes, but that would require effort
+
+function Game:on_red_button_pressed()
+	self.elevator:on_red_button_pressed()
+end
+
+-----------------------------------------------------
+-----------------------------------------------------
+-----------------------------------------------------
+
+local igun = 1
+function Game:keypressed(key, scancode, isrepeat)
+	if key == "f3" then
+		self.debug_mode = not self.debug_mode
+	elseif key == "f2" then
+		self.colview_mode = not self.colview_mode
+	elseif key == "f1" then
+		local all_guns = {
+			guns.Machinegun,
+			guns.Triple,
+			guns.Burst,
+			guns.Shotgun,
+			guns.Minigun,
+			guns.Ring,
+			guns.MushroomCannon,
+			guns.unlootable.DebugGun,
+		}
+		
+		igun = mod_plus_1(igun + 1, #all_guns)
+		self.players[1]:equip_gun(all_guns[igun]:new())
+	end
+
+	if self.menu_manager then
+		self.menu_manager:keypressed(key, scancode, isrepeat)
+	end
+
+	for i, ply in pairs(self.players) do
+		--ply:keypressed(key, scancode, isrepeat)
+	end
+end
+
+function Game:joystickadded(joystick)
+	Input:joystickadded(joystick)
+end
+
+function Game:joystickremoved(joystick)
+	Input:joystickremoved(joystick)
+end
+
+function Game:gamepadpressed(joystick, buttoncode)
+	Input:gamepadpressed(joystick, buttoncode)
+	if self.menu_manager then   self.menu_manager:gamepadpressed(joystick, buttoncode)   end
+end
+
+function Game:gamepadreleased(joystick, buttoncode)
+	Input:gamepadreleased(joystick, buttoncode)
+	if self.menu_manager then   self.menu_manager:gamepadreleased(joystick, buttoncode)   end
+end
+
+-- function Game:keyreleased(key, scancode)
+-- 	for i, ply in pairs(self.players) do
+-- 		--ply:keyreleased(key, scancode)
+-- 	end
+-- end
+
+function Game:screenshake(q)
+	if not Options:get('screenshake_on') then  return   end
+	-- self.screenshake_q = self.screenshake_q + q
+	self.screenshake_q = math.max(self.screenshake_q, q)
+end
+
+function Game:frameskip(q)
+	self.frames_to_skip = min(60, self.frames_to_skip + q + 1)
+end
+
+function Game:slow_mo(q)
+	self.slow_mo_rate = q
+end
+
+function Game:reset_slow_mo(q)
+	self.slow_mo_rate = 0
+end
+
+return Game
