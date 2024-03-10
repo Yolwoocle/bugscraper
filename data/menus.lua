@@ -311,20 +311,18 @@ local function generate_menus()
         { ""},
         { "<<< Asset creators >>>"},
         { "Kenney / CC0", func_url("https://kenney.nl/")},
-        -- { "'Hope Gold' font by somepx / CSL", func_url("https://somepx.itch.io/")},
         { "somepx", func_url("https://somepx.itch.io/")},
-        { "'NicoPaint' font by amhuo", func_url("https://emhuo.itch.io/")},
+        { "amhuo", func_url("https://emhuo.itch.io/")},
         { "freesound.org sounds [see more...]", func_set_menu("credits_sounds")},
         { ""},
         { "<< Asset Licenses >>"},
         { "CC0", func_url("https://creativecommons.org/publicdomain/zero/1.0/")},
         { "CC BY 3.0", func_url("https://creativecommons.org/licenses/by/3.0/")},
         { "CC BY 4.0", func_url("https://creativecommons.org/licenses/by/4.0/")},
-        { "Common Sense License (CSL)", func_url("http://www.palmentieri.it/somepx/license.txt")},
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
 
     menus.credits_sounds = Menu:new(game, {
-        {"<<<<<<<<< FREESOUND.ORG CREDITS >>>>>>>>>"},
+        {"<<< freesound.org credits >>>"},
         {""},
         { "'jf Glass Breaking.wav' by cmusounddesign / CC BY 3.0", func_url("https://freesound.org/people/cmusounddesign/sounds/85168/")},
         { "'Glass Break' by avrahamy / CC0", func_url("https://freesound.org/people/avrahamy/sounds/141563/")},
