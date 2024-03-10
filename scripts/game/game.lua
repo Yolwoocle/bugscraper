@@ -209,7 +209,7 @@ function Game:new_game(number_of_players)
 	self.test_t = 0
 
 	-- Logo
-	self.logo_y = 15
+	self.logo_y = 30
 	self.logo_vy = 0
 	self.logo_a = 0
 	self.logo_cols = {COL_LIGHT_YELLOW, COL_LIGHT_BLUE, COL_LIGHT_RED}

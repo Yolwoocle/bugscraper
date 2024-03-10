@@ -155,9 +155,20 @@ function InputManager:get_user(n)
     return self.users[n]
 end
 
-function InputManager:get_buttons(n, action)
+function InputManager:get_buttons(n, action, input_type)
     if self.input_maps[n] == nil then   return {}   end
-    return self.input_maps[n]:get_buttons(action)
+    local buttons = self.input_maps[n]:get_buttons(action) or {}
+    
+    local output = {}
+    if input_type ~= nil then
+        for _, b in pairs(buttons) do
+            if b.type == input_type then
+                table.insert(output, b)
+            end
+        end
+        return output
+    end
+    return buttons
 end
 
 function InputManager:set_action_buttons(n, action, buttons)

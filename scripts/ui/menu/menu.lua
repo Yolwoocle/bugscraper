@@ -4,7 +4,7 @@ local TextMenuItem = require "scripts.ui.menu.menu_item_text"
 
 local Menu = Class:inherit()
 
-function Menu:init(game, items, bg_color)
+function Menu:init(game, items, bg_color, prompts)
 	self.items = {}
 	self.is_menu = true
 	
@@ -22,6 +22,7 @@ function Menu:init(game, items, bg_color)
 	end
 
 	self.bg_color = bg_color or { 1, 1, 1, 0 }
+	self.prompts = prompts or {}
 	self.padding = 50
 
 	self.is_scrollable = self.height > (CANVAS_HEIGHT - self.padding)

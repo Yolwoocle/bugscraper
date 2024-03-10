@@ -33,9 +33,14 @@ function ControlsMenuItem:draw_value_text()
 	local right_bound = self.x + CANVAS_WIDTH*0.25 + self.ox
 	local y = self.y + self.oy
 
+	local draw_func = self:get_leftjustified_text_draw_function()
 	if self.is_waiting_for_input then
-		local draw_func = self:get_leftjustified_text_draw_function()
 		local text = "[PRESS KEY]"
+		local w = get_text_width(text)
+		draw_func(text, right_bound - w, y)
+
+	elseif type(self.value) == "table" and #self.value == 0 then
+		local text = "[NO BUTTONS]"
 		local w = get_text_width(text)
 		draw_func(text, right_bound - w, y)
 
@@ -69,12 +74,7 @@ function ControlsMenuItem:draw_button_icon(button, x, y)
 end
 
 function ControlsMenuItem:get_buttons()
-	local input_map = Input:get_input_map(self.player_n)
-	if input_map == nil then return {} end
-	local buttons = input_map[self.action_name]
-	if buttons == nil then return {} end
-
-	return buttons
+	return Input:get_buttons(self.player_n, self.action_name, self.input_type)
 end
 
 function ControlsMenuItem:on_click()
@@ -119,7 +119,10 @@ function ControlsMenuItem:on_button_pressed(button)
 		if Input:is_button_in_use(self.player_n, self.action_name, button) then
 			return
 		end
-
+		if #Input:get_buttons(self.player_n, self.action_name, self.input_type) >= MAX_ASSIGNABLE_BUTTONS then
+			return
+		end
+		
 		self.value = button.key_name
 
 		self.scancode = button.key_name
