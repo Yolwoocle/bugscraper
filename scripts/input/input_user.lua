@@ -28,10 +28,16 @@ function InputUser:init(n)
     self:init_last_input_state()
 
     self.joystick = nil
+    self.primary_input_type = ternary(n == 1, "k", "c")
 end
 
 function InputUser:get_input_map()
     return Input:get_input_map(self.n)
+end
+
+function InputUser:get_primary_button(action)
+    local buttons = Input:get_buttons(self.n, action, self.primary_input_type) or {}
+    return buttons[1]
 end
 
 function InputUser:init_last_input_state()
@@ -59,11 +65,15 @@ function InputUser:action_pressed(action)
 	return not last and now
 end
 
-function InputUser:is_keycode_down(key)
-    if key.type == "k" then
+function InputUser:is_button_down(key)
+    if key.type == INPUT_TYPE_KEYBOARD then
+        self.primary_input_type = INPUT_TYPE_KEYBOARD
+        
         return love.keyboard.isScancodeDown(key.key_name)
 
-    elseif key.type == "c" and self.joystick then
+    elseif key.type == INPUT_TYPE_CONTROLLER and self.joystick then
+        self.primary_input_type = INPUT_TYPE_CONTROLLER
+
         local axis_func = axis_functions[key.key_name]
         if axis_func ~= nil then
             return axis_func(self.joystick)
@@ -75,11 +85,11 @@ function InputUser:is_keycode_down(key)
 end
 
 function InputUser:action_down(action)
-    local keys = self:get_input_map()[action]
-	if not keys then   error(concat("Attempt to access button '",concat(action),"'"))   end
+    local buttons = self:get_input_map()[action]
+	if not buttons then   error(concat("Attempt to access button '",concat(action),"'"))   end
 
-	for _, key in pairs(keys) do
-		if self:is_keycode_down(key) then
+	for _, button in pairs(buttons) do
+		if self:is_button_down(button) then
 			return true
 		end
 	end

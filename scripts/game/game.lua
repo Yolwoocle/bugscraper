@@ -556,15 +556,15 @@ end
 
 function Game:draw_controls(x, y)
 	local tutorials = {
-		{{"left", "right", "up", "down"}, "MOVE"},
+		{{"down", "up", "right", "left"}, "MOVE"},
 		{{"jump"}, "JUMP"},
 		{{"shoot"}, "SHOOT"},
 	}
 
 	for _, tuto in ipairs(tutorials) do
-		local btn_x = x
+		local btn_x = x - 2
 		for __, action in ipairs(tuto[1]) do
-			local button = Input:get_buttons(1, action)[1] or InputButton:new("?", "?")
+			local button = Input:get_primary_button(1, action) or InputButton:new("?", "?")
 			local icon = Input:get_button_icon(1, button)
 			local w = icon:getWidth()
 

@@ -27,10 +27,10 @@ function InputManager:init()
             
 			ui_select = {"k_c", "k_b", "k_return",          "c_a"},
 			ui_back =   {"k_x", "k_escape", "k_backspace",  "c_b"},
-			ui_left =   {"k_a", "k_left",  "c_dpleft",      "c_leftstickxneg", "c_rightstickxneg"},
-			ui_right =  {"k_d", "k_right", "c_dpright",     "c_leftstickxpos", "c_rightstickxpos"},
-			ui_up =     {"k_w", "k_up",    "c_dpup",        "c_leftstickyneg", "c_rightstickyneg"},
-			ui_down =   {"k_s", "k_down",  "c_dpdown",      "c_leftstickypos", "c_rightstickypos"},
+			ui_left =   {"k_left", "k_a",                   "c_dpleft", "c_leftstickxneg", "c_rightstickxneg"},
+			ui_right =  {"k_right", "k_d",                  "c_dpright", "c_leftstickxpos", "c_rightstickxpos"},
+			ui_up =     {"k_up", "k_w",                     "c_dpup", "c_leftstickyneg", "c_rightstickyneg"},
+			ui_down =   {"k_down", "k_s",                   "c_dpdown", "c_leftstickypos", "c_rightstickypos"},
 			ui_reset_keys = {"k_tab", "c_righttrigger"},
 		}),
 	}
@@ -61,7 +61,9 @@ function InputManager:update_last_input_state(dt)
 end
 
 function InputManager:get_input_map(n)
-    return self.input_maps[n]:get_mappings()
+    local map = self.input_maps[n]
+    if map == nil then return {} end
+    return self.input_maps[n]:get_mappings() or {}
 end
 
 function InputManager:new_user()
@@ -153,6 +155,14 @@ end
 
 function InputManager:get_user(n)
     return self.users[n]
+end
+
+function InputManager:get_primary_button(n, action)
+    local user = self:get_user(n)
+    if user == nil then
+        return nil
+    end
+    return user:get_primary_button(action)
 end
 
 function InputManager:get_buttons(n, action, input_type)
@@ -262,7 +272,15 @@ function InputManager:generate_unknown_key_icon(icon, text)
     return new_canvas
 end
 
+function InputManager:get_action_primary_icon(player_n, action)
+    local button = Input:get_primary_button(player_n, action)
+    local icon = Input:get_button_icon(player_n, button)
+    return icon
+end
+
 function InputManager:get_button_icon(player_n, button)
+    button = button or {}
+
     local img = nil
     if button.type == "k" then
 		local key_constant = love.keyboard.getKeyFromScancode(button.key_name)
