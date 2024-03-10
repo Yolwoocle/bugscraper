@@ -55,6 +55,9 @@ function ButtonBigGlass:init_button_big_glass(x, y)
     self.change_break_state_num_particles = 100
     self.break_screenshake = 15
     self.break_num_particles = 300
+
+    self.sound_fracture = "glass_fracture"
+    self.sound_break = "glass_break"
 end
 
 function ButtonBigGlass:on_buffered()
@@ -89,7 +92,7 @@ function ButtonBigGlass:on_damage(n, old_life)
         game:screenshake(self.change_break_state_screenshake)
         Particles:image(self.mid_x, self.mid_y, self.change_break_state_num_particles, images.ptc_glass_shard, self.h)
         local pitch = max(0.1, lerp(0.5, 1, self.life/self.max_life))
-        Audio:play("glass_fracture", nil, pitch)
+        Audio:play(self.sound_fracture, nil, pitch)
     end
 
     if game.screenshake_q < 5 then
@@ -98,7 +101,7 @@ function ButtonBigGlass:on_damage(n, old_life)
 end
 
 function ButtonBigGlass:on_death()
-    Audio:play("glass_break")
+    Audio:play(self.sound_break)
     game:screenshake(self.break_screenshake)
     Particles:image(self.mid_x, self.mid_y, self.break_num_particles, images.ptc_glass_shard, self.h)
 

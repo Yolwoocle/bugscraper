@@ -218,6 +218,7 @@ function Game:new_game(number_of_players)
 	self.move_jetpack_tutorial = false
 	
 	if self.menu_manager then
+		self.menu_manager:reset()
 		self.menu_manager:set_menu()
 	end
 
@@ -250,7 +251,10 @@ function Game:new_game(number_of_players)
 	self.front_canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
 
 	-- Music
+	if self.music_player then self.music_player:stop() end
 	self.music_player = MusicPlayer:new()
+	self.music_player:set_disk("intro")
+	self.music_player:play()
 	self.sfx_elevator_bg = sounds.elevator_bg[1]
 	self.sfx_elevator_bg_volume     = self.sfx_elevator_bg:getVolume()
 	self.sfx_elevator_bg_def_volume = self.sfx_elevator_bg:getVolume()
@@ -296,7 +300,8 @@ function Game:update_main_game(dt)
 	-- Music
 	self.time_before_music = self.time_before_music - dt
 	if self.time_before_music <= 0 and not self.game_started then
-		self.music_player:play()
+		print_debug("aeauyrzehizerhrhzek")
+		self.music_player:set_disk("w1")
 		self.game_started = true
 	end
 
@@ -550,8 +555,8 @@ function Game:draw_logo_and_controls()
 	end
 	
 	self:draw_controls(floor(CANVAS_WIDTH/2), floor(self.logo_y) + images.logo:getHeight()+6)
-	local ox, oy = cos(self.t*3)*4, sin(self.t*3)*4
-	gfx.draw(images.controls_jetpack, ox + floor((CANVAS_WIDTH - images.controls_jetpack:getWidth())/2), oy + floor(self.jetpack_tutorial_y))
+	-- local ox, oy = cos(self.t*3)*4, sin(self.t*3)*4
+	-- gfx.draw(images.controls_jetpack, ox + floor((CANVAS_WIDTH - images.controls_jetpack:getWidth())/2), oy + floor(self.jetpack_tutorial_y))
 end
 
 function Game:draw_controls(x, y)
@@ -561,7 +566,7 @@ function Game:draw_controls(x, y)
 		{{"shoot"}, "SHOOT"},
 	}
 
-	for _, tuto in ipairs(tutorials) do
+	for i, tuto in ipairs(tutorials) do
 		local btn_x = x - 2
 		for __, action in ipairs(tuto[1]) do
 			local button = Input:get_primary_button(1, action) or InputButton:new("?", "?")
@@ -574,7 +579,7 @@ function Game:draw_controls(x, y)
 			end)
 		end
 		
-		print_outline(COL_WHITE, COL_BLACK_BLUE, tuto[2], x, y)
+		print_outline(self.logo_cols[4-i] or COL_WHITE, COL_BLACK_BLUE, tuto[2], x, y)
 		y = y + 18
 	end
 end
@@ -677,11 +682,6 @@ function Game:on_kill(actor)
 	if actor.counts_as_enemy then
 		self.enemy_count = self.enemy_count - 1
 		self.kills = self.kills + 1
-
-		if actor.name == "dummy" then
-			-- self.game_started = true
-			self.time_before_music = 0.7
-		end
 	end
 
 	if actor.is_player then
@@ -762,6 +762,11 @@ end
 function Game:enable_endless_mode()
 	self.endless_mode = true
 	self.music_player:play()
+end
+
+function Game:start_game()
+	self.move_logo = true
+	self.music_player:set_disk("w1")
 end
 
 -----------------------------------------------------

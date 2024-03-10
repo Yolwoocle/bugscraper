@@ -8,8 +8,12 @@ local MENU_SCROLL_DEADZONE = 32
 
 function MenuManager:init(game)
 	self.game = game
+	
+	self:reset()
+end
+function MenuManager:reset()
 	self.menus = generate_menus()
-
+	
 	self.cur_menu = nil
 	self.cur_menu_name = ""
 	self.is_paused = false
@@ -39,7 +43,7 @@ function MenuManager:update(dt)
 		if btn and self.sel_item and self.sel_item.on_click then
 			if not self.sel_item.is_waiting_for_input then
 				self.sel_item:on_click()
-				self.sel_item:after_click()
+				if self.sel_item then self.sel_item:after_click() end
 			end
 		end
 

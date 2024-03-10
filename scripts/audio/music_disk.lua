@@ -4,7 +4,8 @@ local Class = require "scripts.meta.class"
 
 local MusicDisk = Class:inherit()
 
-function MusicDisk:init(music_ingame, music_pause)
+function MusicDisk:init(music_player, music_ingame, music_pause)
+    self.music_player = music_player
     self.sources = {
         [MUSIC_MODE_INGAME] = music_ingame,
         [MUSIC_MODE_PAUSE] = music_pause,

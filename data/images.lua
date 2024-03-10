@@ -4,12 +4,12 @@ local key_constant_to_image = require "data.buttons.images_buttons_keyboard"
 local controller_brands = require "data.buttons.controller_brands"
 local controller_buttons = require "data.buttons.controller_buttons"
 
-function load_image(name)
+local function load_image(name)
 	local im = love.graphics.newImage("images/"..name)
 	im:setFilter("nearest", "nearest")
 	return im 
 end
-function load_image_table(name, n, w, h)
+local function load_image_table(name, n, w, h)
 	if not n then  error("number of images `n` not defined")  end
 	local t = {}
 	for i=1,n do 

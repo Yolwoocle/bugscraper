@@ -28,6 +28,9 @@ function ButtonSmallGlass:init(x, y)
     self.change_break_state_num_particles = 10
     self.break_screenshake = 5
     self.break_num_particles = 20
+    
+    self.sound_fracture = "glass_fracture"
+    self.sound_break = "glass_break"
 
     self:set_sprite(images.small_button_crack2)
     self:set_size(22, 21)

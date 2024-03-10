@@ -82,13 +82,6 @@ local function generate_menus()
             self.value = Options:get("sound_on")
             self.value_text = Options:get("sound_on") and "ON" or "OFF"
         end},
-        -- { "BACKGROUND SOUNDS", function(self, option)
-        --     Options:toggle_background_noise()
-        -- end,
-        -- function(self)
-        --     self.value = Options:get("disable_background_noise")
-        --     self.value_text = (not Options:get("disable_background_noise")) and "ON" or "OFF"
-        -- end},
         { SliderMenuItem, "VOLUME", function(self, diff)
             diff = diff or 1
             self.value = (self.value + diff)
@@ -128,6 +121,15 @@ local function generate_menus()
         function(self)
             self.value = Options:get("play_music_on_pause_menu")
             self.value_text = Options:get("play_music_on_pause_menu") and "ON" or "OFF"
+            self.is_selectable = Options:get("sound_on")
+        end},
+        { "BACKGROUND SOUNDS", function(self, option)
+            Options:toggle_background_noise()
+        end,
+        function(self)
+            self.value = Options:get("disable_background_noise")
+            self.value_text = (not Options:get("disable_background_noise")) and "ON" or "OFF"
+            self.is_selectable = Options:get("sound_on")
         end},
         {""},
 

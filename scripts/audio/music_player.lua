@@ -7,7 +7,8 @@ local MusicPlayer = Class:inherit()
 
 function MusicPlayer:init()
 	self.disks = {
-		["w1"] = MusicDisk:new(sounds.music_w1_unpaused[1], sounds.music_w1_paused[1])
+		["intro"] = MusicDisk:new(self, sounds.music_intro_unpaused[1], sounds.music_intro_paused[1]),
+		["w1"] =    MusicDisk:new(self, sounds.music_w1_unpaused[1], sounds.music_w1_paused[1]),
 	}
 
 	-- self.music_source    = sounds.music_galaxy_trip[1]
@@ -16,7 +17,7 @@ function MusicPlayer:init()
 	-- self.sfx_elevator_bg_def_volume = self.sfx_elevator_bg:getVolume()
 	
 	self.music_mode = MUSIC_MODE_INGAME
-	self.current_disk = self.disks["w1"]
+	self.current_disk = self.disks["intro"]
 	self.current_disk:set_mode(self.music_mode)
 
 	self.volume = Options:get("music_volume")
@@ -34,10 +35,10 @@ function MusicPlayer:set_disk(disk_name)
 
 	self.current_disk:stop()
 	self.current_disk = disk
+	self:play()
 end
 
 function MusicPlayer:on_menu()
-	print_debug("menu play_music_on_pause_menu ", Options:get("play_music_on_pause_menu"))
 	self:set_music_mode(MUSIC_MODE_PAUSE)
 
 	if Options:get("play_music_on_pause_menu") then

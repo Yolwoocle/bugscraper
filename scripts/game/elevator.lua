@@ -222,8 +222,11 @@ function Elevator:update_door_anim(dt)
 end
 
 function Elevator:next_floor(dt, new_floor, old_floor)
-	self.game.move_logo = true
-	if old_floor ~= 0 then
+	if old_floor == 0 then
+		self.game:start_game()
+
+	else
+
 		local pitch = 0.8 + 0.5 * clamp(self.game.floor/self.game.max_floor, 0, 3)
 		Audio:play("elev_ding", 0.8, pitch)
 	end
