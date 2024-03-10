@@ -7,9 +7,10 @@ local Guns = require "data.guns"
 local sounds = require "data.sounds"
 local images = require "data.images"
 
+local Larva = require "data.enemies.larva"
 local Fly = require "data.enemies.fly"
 local SpikedFly = require "data.enemies.spiked_fly"
-local Larva = require "data.enemies.larva"
+local Mosquito = require "data.enemies.mosquito"
 local Grasshopper = require "data.enemies.grasshopper"
 local Slug = require "data.enemies.slug"
 local SnailShelled = require "data.enemies.snail_shelled"
@@ -31,6 +32,7 @@ function Enemies:init()
 	self.Larva = Larva
 	self.Fly = Fly
 	self.SpikedFly = SpikedFly
+	self.Mosquito = Mosquito
 	self.Grasshopper = Grasshopper
 	self.Slug = Slug
 	self.SnailShelled = SnailShelled

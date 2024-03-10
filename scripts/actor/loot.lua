@@ -262,7 +262,6 @@ function Loot.Gun:update(dt)
 
 	self.t = self.t + dt
 
-	-- self.spr_ox = cos(self.t) * 6
 	self.sprite_oy = -6 - sin(self.t * 4) * 4
 	self.rot = sin(self.t * 4 + 0.4) * 0.1
 end

@@ -310,7 +310,7 @@ local function generate_menus()
         { "LÖVE Engine", func_url("https://love2d.org/") },
         { ""},
         { "<<< Asset creators >>>"},
-        { "Kenney / CC0", func_url("https://kenney.nl/")},
+        { "Kenney", func_url("https://kenney.nl/")},
         -- { "'Hope Gold' font by somepx / CSL", func_url("https://somepx.itch.io/")},
         { "somepx", func_url("https://somepx.itch.io/")},
         { "'NicoPaint' font by amhuo", func_url("https://emhuo.itch.io/")},
