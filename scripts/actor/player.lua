@@ -293,8 +293,8 @@ function Player:draw_player()
 	local spr_w2 = floor(self.spr:getWidth() / 2)
 	local spr_h2 = floor(self.spr:getHeight() / 2)
 
-	local x = self.x + spr_w2 - self.spr_ox
-	local y = self.y + spr_h2 - self.spr_oy - self.walkbounce_oy
+	local x = self.x + spr_w2 - self.spr_centering_ox
+	local y = self.y + spr_h2 - self.spr_centering_oy - self.walkbounce_oy
 	if self.spr then
 		local old_col = {gfx.getColor()}
 

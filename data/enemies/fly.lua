@@ -5,8 +5,12 @@ local images = require "data.images"
 
 local Fly = Enemy:inherit()
 	
-function Fly:init(x, y)
-    self:init_enemy(x,y, images.fly1)
+function Fly:init(x, y, spr)
+    self:init_fly(x, y)
+end
+
+function Fly:init_fly(x, y, spr)
+    self:init_enemy(x,y, spr or images.fly1)
     self.name = "fly"
     self.is_flying = true
     self.life = 10
@@ -28,6 +32,10 @@ function Fly:init(x, y)
 end
 
 function Fly:update(dt)
+    self:update_fly(dt)
+end
+
+function Fly:update_fly(dt)
     self:update_enemy(dt)
 
     if not self.buzz_is_started then  self.buzz_source:play() self.buzz_is_started = true end
