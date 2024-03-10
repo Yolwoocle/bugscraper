@@ -12,9 +12,9 @@ local waves = {
 	-- min = 1,
 	-- max = 1,
 	enemies = {
-		-- {E.ButtonBigGlass, 1},
-		{E.Larva, 3},
-		{E.Fly, 1},
+		{E.Mosquito, 3},
+		-- {E.Larva, 3},
+		-- {E.Fly, 1},
 
 		-- {E.Larva, 4},
 		-- {E.Fly, 3},

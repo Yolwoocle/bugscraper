@@ -46,6 +46,8 @@ local img_names = {
 	"duck",
 	"fly1",
 	"fly2",
+	"mosquito1",
+	"mosquito2",
 	"grasshopper",
 	"larva",
 	"larva1",

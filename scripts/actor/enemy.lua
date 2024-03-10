@@ -61,6 +61,8 @@ function Enemy:init_enemy(x,y, img, w,h)
 	self.sound_damage = "enemy_damage"
 	self.sound_death = "enemy_death_1"
 	self.sound_stomp = "enemy_death_1"
+
+	self.target = nil
 	-- self.sound_stomp = {"enemy_stomp_2", "enemy_stomp_3"}
 	--{"crush_bug_1", "crush_bug_2", "crush_bug_3", "crush_bug_4"}
 end
@@ -95,11 +97,17 @@ function Enemy:get_nearest_player()
 end
 
 function Enemy:follow_nearest_player(dt)
-	if not self.follow_player then    return    end
+	self.target = nil
+	if not self.follow_player then
+		return
+	end
 
 	-- Find closest player
 	local nearest_player = self:get_nearest_player()
-	if not nearest_player then    return    end
+	if not nearest_player then
+		return
+	end
+	self.target = nearest_player
 	
 	self.speed_x = self.speed_x or self.speed
 	if self.is_flying then    self.speed_y = self.speed_y or self.speed 

@@ -58,6 +58,9 @@ function Actor:init_actor(x, y, w, h, spr, args)
 	self.spr_x = 0
 	self.spr_y = 0
 
+	self.spr_ox = 0
+	self.spr_oy = 0
+
 	self.anim_frame_len = 0.2
 	self.anim_t = random_range(0, self.anim_frame_len)
 	self.anim_frames = nil
@@ -74,8 +77,8 @@ function Actor:set_sprite(spr)
 end
 
 function Actor:update_sprite_offset()
-	self.spr_ox = floor((self.spr_w - self.w) / 2)
-	self.spr_oy = self.spr_h - self.h
+	self.spr_centering_ox = floor((self.spr_w - self.w) / 2)
+	self.spr_centering_oy = self.spr_h - self.h
 end
 
 function Actor:set_size(w, h)
@@ -163,8 +166,8 @@ function Actor:update_sprite_position()
 	local spr_w2 = floor(self.spr:getWidth() / 2)
 	local spr_h2 = floor(self.spr:getHeight() / 2)
 
-	local x = self.x + spr_w2 - self.spr_ox
-	local y = self.y + spr_h2 - self.spr_oy
+	local x = self.x + spr_w2 - self.spr_centering_ox
+	local y = self.y + spr_h2 - self.spr_centering_oy
 	self.spr_x = floor(x)
 	self.spr_y = floor(y)
 end
@@ -204,7 +207,7 @@ function Actor:draw_actor(fx, fy, custom_draw)
 		
 		local drw_func = gfx.draw
 		if custom_draw then    drw_func = custom_draw    end
-		drw_func(self.spr, x, y, self.rot, fx, fy, spr_w2, spr_h2)
+		drw_func(self.spr, x, y, self.rot, fx, fy, spr_w2 - self.spr_ox, spr_h2 - self.spr_oy)
 	end
 end
 
