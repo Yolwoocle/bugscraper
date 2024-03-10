@@ -257,7 +257,6 @@ function Game:new_game(number_of_players)
 	-- self.music_source:setVolume(options:get("music_volume"))
 	self.sfx_elevator_bg:setVolume(0)
 	self.sfx_elevator_bg:play()
-	self:set_music_volume(Options:get("music_volume"))
 	self.time_before_music = math.huge
 
 	self.endless_mode = false
@@ -277,6 +276,7 @@ function Game:update(dt)
 	end
 
 	Input:update(dt)
+	self.music_player:update(dt)
 	
 	-- Menus
 	self.menu_manager:update(dt)
@@ -620,10 +620,18 @@ function Game:on_menu()
 	self.music_player:on_menu()
 	self:pause_repeating_sounds()
 end
+
+function Game:on_pause()
+	Audio:play("menu_pause")
+end
+
+function Game:on_unpause()
+	Audio:play("menu_unpause")
+end
+
 function Game:pause_repeating_sounds()
 	-- THIS is SO stupid. We should have a system that stores all sounds instead
 	-- of doing this manually.
-	self.music_player:pause()
 
 	self.sfx_elevator_bg:pause()
 	for k,p in pairs(self.players) do
@@ -649,8 +657,9 @@ function Game:on_unmenu()
 		end
 	end
 end
+
 function Game:set_music_volume(vol)
-	self.music_player:set_volume(vol*0.7)
+	self.music_player:set_volume(vol)
 end
 
 function Game:new_actor(actor)

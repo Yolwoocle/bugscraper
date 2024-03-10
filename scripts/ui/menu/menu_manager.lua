@@ -109,6 +109,8 @@ end
 
 function MenuManager:pause()
 	-- Retry if game ended
+	if self.is_paused then return end
+
 	if game.elevator.is_on_win_screen then --scotch
 		self:set_menu("win")
 		return
@@ -117,13 +119,17 @@ function MenuManager:pause()
 	if self.cur_menu == nil then
 		self.is_paused = true
 		self:set_menu("pause")
+		game:on_pause()
 	end
 end
 
 function MenuManager:unpause()
+	if not self.is_paused then return end
+
 	self.is_paused = false
 	self:set_menu()
 	game:on_unmenu()
+	game:on_unpause()
 end
 
 function MenuManager:toggle_pause()

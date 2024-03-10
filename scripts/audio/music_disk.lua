@@ -15,12 +15,14 @@ function MusicDisk:init(music_ingame, music_pause)
 end
 
 function MusicDisk:pause()
-    if self.current_source ~= nil then    self.current_source:pause()    end
+    if self.current_source ~= nil then
+        self.current_source:pause()
+    end
 end
 
 function MusicDisk:play()
     if self.current_source ~= nil then    
-        -- self.current_source:play()   
+        self.current_source:play()   
     end
 end
 
@@ -46,8 +48,10 @@ function MusicDisk:set_mode(mode)
     end
 end
 
-function MusicDisk:draw()
-	--
+function MusicDisk:set_volume(vol)
+    for _, source in pairs(self.sources) do
+        source:setVolume(vol)
+    end
 end
 
 return MusicDisk

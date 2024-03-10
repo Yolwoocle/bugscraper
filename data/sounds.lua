@@ -30,10 +30,12 @@ local sfxnames = {
 	"land",  "land.wav",
 	"item_collect", "item_collect.wav",
 
-	"menu_hover_old", "menu_hover.wav",
-	"menu_hover",     "menu_hover_5.ogg",
+	"menu_hover_old",  "menu_hover.wav",
+	"menu_hover",      "menu_hover_5.ogg",
 	"menu_select_old", "menu_select.wav",
 	"menu_select",     "menu_select_2.ogg",
+	"menu_pause",      "menu_pause.wav",
+	"menu_unpause",    "menu_unpause.wav",
 
 	"wall_slide", "wall_slide.wav",
 	"game_over_1", "game_over_1.wav",

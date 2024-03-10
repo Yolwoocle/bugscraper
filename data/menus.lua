@@ -82,13 +82,13 @@ local function generate_menus()
             self.value = Options:get("sound_on")
             self.value_text = Options:get("sound_on") and "ON" or "OFF"
         end},
-        { "BACKGROUND SOUNDS", function(self, option)
-            Options:toggle_background_noise()
-        end,
-        function(self)
-            self.value = Options:get("disable_background_noise")
-            self.value_text = (not Options:get("disable_background_noise")) and "ON" or "OFF"
-        end},
+        -- { "BACKGROUND SOUNDS", function(self, option)
+        --     Options:toggle_background_noise()
+        -- end,
+        -- function(self)
+        --     self.value = Options:get("disable_background_noise")
+        --     self.value_text = (not Options:get("disable_background_noise")) and "ON" or "OFF"
+        -- end},
         { SliderMenuItem, "VOLUME", function(self, diff)
             diff = diff or 1
             self.value = (self.value + diff)
@@ -118,6 +118,16 @@ local function generate_menus()
             self.value_text = concat(floor(100 * self.value / 20), "%")
 
             self.is_selectable = Options:get("sound_on")
+        end},
+        { "MUSIC ON PAUSE MENU", function(self, option)
+            Options:toggle_play_music_on_pause_menu()
+            if Options:get("play_music_on_pause_menu") then
+                game.music_player:play()
+            end
+        end,
+        function(self)
+            self.value = Options:get("play_music_on_pause_menu")
+            self.value_text = Options:get("play_music_on_pause_menu") and "ON" or "OFF"
         end},
         {""},
 
@@ -220,6 +230,7 @@ local function generate_menus()
         { ControlsMenuItem, 1, "k", "shoot" },
         { "" },
         { "<<< Interface >>>" },
+        { "At least one binding is required" },
         { ControlsMenuItem, 1, "k", "ui_left" },
         { ControlsMenuItem, 1, "k", "ui_right" },
         { ControlsMenuItem, 1, "k", "ui_up" },
@@ -253,6 +264,7 @@ local function generate_menus()
         { ControlsMenuItem, 1, "c", "shoot"},
         { ""},
         { "<<< Interface >>>" },
+        { "At least one binding is required" },
         { ControlsMenuItem, 1, "c", "ui_left"},
         { ControlsMenuItem, 1, "c", "ui_right"},
         { ControlsMenuItem, 1, "c", "ui_up"},
@@ -284,23 +296,34 @@ local function generate_menus()
         { "Léo Bernard (Yolwoocle)", func_url("https://twitter.com/yolwoocle_")},
         { "" },
         { "<<< Music >>>"},
-        { "'Galaxy Trip' by Raphaël Marcon / CC BY 4.0", func_url("https://raphytator.itch.io/")},
-        { ""},
-        { "<<< Playtesting >>>"},
-        { "hades140701", function() end },
+        { "OLX", func_url("https://www.youtube.com/@olx1831")},
+        -- { "'Galaxy Trip' by Raphaël Marcon / CC BY 4.0", func_url("https://raphytator.itch.io/")},
         { ""},
         { "<<< Special Thanks >>>"},
         { "Gouspourd", func_url("https://gouspourd.itch.io/")},
         { "Louie Chapman", func_url("https://louiechapm.itch.io/") },
-        { "SmellyFishstiks", func_url("https://www.lexaloffle.com/bbs/?uid=42184") },
-        { "Made using LÖVE Engine", func_url("https://love2d.org/") },
+        { "Raphaël Marcon", func_url("https://raphytator.itch.io/") },
+        { "hades140701", function() end },
+        -- { "SmellyFishstiks", func_url("https://www.lexaloffle.com/bbs/?uid=42184") },
+        { "LÖVE Engine", func_url("https://love2d.org/") },
         { ""},
-        { "<<<<< Assets Used >>>>>"},
-        { "Kenney assets, including sound effects and fonts / CC0", func_url("https://kenney.nl/")},
-        { "'Hope Gold' font by somepx / CSL", func_url("https://somepx.itch.io/")},
+        { "<<< Asset creators >>>"},
+        { "Kenney / CC0", func_url("https://kenney.nl/")},
+        -- { "'Hope Gold' font by somepx / CSL", func_url("https://somepx.itch.io/")},
+        { "somepx", func_url("https://somepx.itch.io/")},
         { "'NicoPaint' font by amhuo", func_url("https://emhuo.itch.io/")},
+        { "freesound.org sounds [see more...]", func_set_menu("credits_sounds")},
         { ""},
-        { "<< freesound.org sounds >>"},
+        { "<< Asset Licenses >>"},
+        { "CC0", func_url("https://creativecommons.org/publicdomain/zero/1.0/")},
+        { "CC BY 3.0", func_url("https://creativecommons.org/licenses/by/3.0/")},
+        { "CC BY 4.0", func_url("https://creativecommons.org/licenses/by/4.0/")},
+        { "Common Sense License (CSL)", func_url("http://www.palmentieri.it/somepx/license.txt")},
+    }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
+
+    menus.credits_sounds = Menu:new(game, {
+        {"<<<<<<<<< FREESOUND.ORG CREDITS >>>>>>>>>"},
+        {""},
         { "'jf Glass Breaking.wav' by cmusounddesign / CC BY 3.0", func_url("https://freesound.org/people/cmusounddesign/sounds/85168/")},
         { "'Glass Break' by avrahamy / CC0", func_url("https://freesound.org/people/avrahamy/sounds/141563/")},
         { "'Glass shard tinkle texture' by el-bee / CC BY 4.0", func_url("https://freesound.org/people/el-bee/sounds/636238/")},
@@ -323,12 +346,6 @@ local function generate_menus()
         { "'Bike falling down an escalator' by dundass / CC BY 3.0", func_url("https://freesound.org/people/dundass/sounds/509831/")},
         { "'squishing and squeezing a wet sponge in a bowl' by breadparticles / CC0", func_url("https://freesound.org/people/breadparticles/sounds/575332/#comments")},
         { "'Insect Bug Smash & Crush' by EminYILDIRIM / CC BY 4.0", func_url("https://freesound.org/people/EminYILDIRIM/sounds/570767/")},
-        { ""},
-        { "<< Asset Licenses >>"},
-        { "CC0", func_url("https://creativecommons.org/publicdomain/zero/1.0/")},
-        { "CC BY 3.0", func_url("https://creativecommons.org/licenses/by/3.0/")},
-        { "CC BY 4.0", func_url("https://creativecommons.org/licenses/by/4.0/")},
-        { "Common Sense License (CSL)", func_url("http://www.palmentieri.it/somepx/license.txt")},
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
 
     local items = {

@@ -15,8 +15,11 @@ function MusicPlayer:init()
 	-- self.sfx_elevator_bg_volume     = self.sfx_elevator_bg:getVolume()
 	-- self.sfx_elevator_bg_def_volume = self.sfx_elevator_bg:getVolume()
 	
+	self.music_mode = MUSIC_MODE_INGAME
 	self.current_disk = self.disks["w1"]
-	self.current_disk:set_mode(MUSIC_MODE_INGAME)
+	self.current_disk:set_mode(self.music_mode)
+
+	self.volume = Options:get("music_volume")
 
 	self:reset()
 end
@@ -34,25 +37,46 @@ function MusicPlayer:set_disk(disk_name)
 end
 
 function MusicPlayer:on_menu()
-	self:pause()
+	print_debug("menu play_music_on_pause_menu ", Options:get("play_music_on_pause_menu"))
+	self:set_music_mode(MUSIC_MODE_PAUSE)
+
+	if Options:get("play_music_on_pause_menu") then
+		if self.current_disk ~= nil then
+			self.current_disk:play()
+		end	
+	else 
+		self:pause()
+	end
 end
 
 function MusicPlayer:on_unmenu()
-	self:play()
+	self:set_music_mode(MUSIC_MODE_INGAME)
+
+	if Options:get("play_music_on_pause_menu") then
+		if self.current_disk ~= nil then
+			self.current_disk:play()
+		end
+	else
+		self:play()
+	end
+end
+
+function MusicPlayer:set_music_mode(mode)
+	self.music_mode = mode
+	if self.current_disk ~= nil then
+		self.current_disk:set_mode(mode)
+	end
 end
 
 function MusicPlayer:pause()
 	if self.current_disk ~= nil then
-		self.current_disk:set_mode(MUSIC_MODE_PAUSE)
-		-- self.current_disk:pause()
+		self.current_disk:pause()
 	end
 end
 
 function MusicPlayer:play()
-	self.current_disk:play()
 	if self.current_disk ~= nil then
-		self.current_disk:set_mode(MUSIC_MODE_INGAME)
-		-- self.current_disk:play()
+		self.current_disk:play()
 	end
 end
 
@@ -63,12 +87,17 @@ function MusicPlayer:stop()
 end
 
 function MusicPlayer:set_volume(vol)
-	-- TODO
-	-- self.source:setVolume(vol*0.7)
+	self.volume = vol
 end
 
 function MusicPlayer:update(dt)
-	
+	if self.current_disk ~= nil then
+		self.current_disk:set_volume(self.volume)
+		
+		if not Options:get("play_music_on_pause_menu") and self.music_mode == MUSIC_MODE_PAUSE then
+			self.current_disk:set_volume(0)
+		end
+	end
 end
 
 return MusicPlayer

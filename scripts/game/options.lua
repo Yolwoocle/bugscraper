@@ -22,6 +22,7 @@ function OptionsManager:init(game)
 		pause_on_unfocus = ternary(love.system.getOS()=="Web", false, true),
 		screenshake_on = true,
 		disable_background_noise = false,
+		play_music_on_pause_menu = true,
 
 		button_style_p1 = BUTTON_STYLE_DETECT,
 		button_style_p2 = BUTTON_STYLE_DETECT,
@@ -172,6 +173,10 @@ end
 
 function OptionsManager:toggle_background_noise()
 	self:toggle("disable_background_noise")
+end
+
+function OptionsManager:toggle_play_music_on_pause_menu()
+	self:toggle("play_music_on_pause_menu")
 end
 
 function OptionsManager:on_quit()

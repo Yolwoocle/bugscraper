@@ -642,7 +642,7 @@ function Player:do_damage(n, source)
 	game:frameskip(8)
 	Audio:play("hurt")
 	game:screenshake(5)
-	Particles:word(self.mid_x, self.mid_y, concat("-",n))
+	Particles:word(self.mid_x, self.mid_y, concat("-",n), COL_LIGHT_RED)
 	-- self:do_knockback(source.knockback, source)--, 0, source.h/2)
 	--source:do_knockback(source.knockback*0.75, self)
 	if self.is_knockbackable then
