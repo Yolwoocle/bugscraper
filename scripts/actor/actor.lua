@@ -46,6 +46,8 @@ function Actor:init_actor(x, y, w, h, spr, args)
 
 	self.wall_col = nil
 
+	self.effects = {}
+
 	self.is_removed = false
 	self:add_collision()
 	
@@ -110,6 +112,7 @@ end
 function Actor:update_actor(dt)
 	if self.is_removed then   return   end
 	self:do_gravity(dt)
+	self:update_effects(dt)
 
 	-- apply friction
 	self.vx = self.vx * self.friction_x
@@ -192,23 +195,22 @@ function Actor:draw_actor(fx, fy, custom_draw)
 
 	local x, y = self.spr_x, self.spr_y
 	if self.spr then
-		-- local old_col = {gfx.getColor()}
-		-- Shadow
-		-- if self.draw_shadow then
-		-- 	local o = ((self.x / CANVAS_WIDTH)-.5) * 6
-		-- 	love.graphics.setColor(0, 0, 0, 0.5)
-		-- 	-- (self.spr, floor(x+o), floor(y+3), 0, fx, fy, spr_w2, spr_h2)
-
-		-- 	love.graphics.draw(self.spr, floor(x+o), floor(y+3), self.rot, fx, fy, spr_w2, spr_h2)
-		-- end
-		
-		-- Draw
-		-- love.graphics.setColor(old_col)
-		
 		local drw_func = gfx.draw
 		if custom_draw then    drw_func = custom_draw    end
 		drw_func(self.spr, x, y, self.rot, fx, fy, spr_w2 - self.spr_ox, spr_h2 - self.spr_oy)
 	end
+
+	self:post_draw(x, y)
+end
+
+function Actor:post_draw(x, y)
+	self:draw_effect_overlays(x, y)
+end
+
+function Actor:draw_effect_overlays(x, y)
+	for i, effect in pairs(self.effects) do
+		effect:draw_overlay(x, y)
+	end 
 end
 
 function Actor:react_to_collision(col)
@@ -270,7 +272,6 @@ function Actor:on_leaving_ground()
 
 end
 
-
 function Actor:remove()
 	if not self.is_removed then
 		self.is_removed = true
@@ -288,6 +289,25 @@ function Actor:set_pos(x, y)
 	self.x = x
 	self.y = y
 	Collision:update(self, x, y)
+end
+
+function Actor:apply_effect(effect, duration)
+	effect:apply(self, duration)
+	table.insert(self.effects, effect)
+end
+
+function Actor:update_effects(dt)
+	for i=1, #self.effects do 
+		local effect = self.effects[i]
+		effect:update(dt)
+	end
+	
+	for i=#self.effects, 1, -1 do 
+		local effect = self.effects[i]
+		if not effect.is_active then
+			table.remove(self.effects, i)
+		end
+	end
 end
 
 return Actor

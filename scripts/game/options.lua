@@ -10,19 +10,19 @@ function OptionsManager:init(game)
 	self.is_first_time = false
 	self.default_options = {
 		volume = 1,
-		music_volume = 1,
+		music_volume = 0.5,
 		screenshake = 0.5,
 		sound_on = true,
+		disable_background_noise = false,
+		play_music_on_pause_menu = true,
 
 		is_vsync = true,
 		is_fullscreen = true,
 		pixel_scale = "auto",
 		timer_on = false,
 		mouse_visible = false,
-		pause_on_unfocus = ternary(love.system.getOS()=="Web", false, true),
+		pause_on_unfocus = ternary(love.system.getOS() == "Web", false, true),
 		screenshake_on = true,
-		disable_background_noise = false,
-		play_music_on_pause_menu = true,
 
 		button_style_p1 = BUTTON_STYLE_DETECT,
 		button_style_p2 = BUTTON_STYLE_DETECT,

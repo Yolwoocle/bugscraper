@@ -182,6 +182,13 @@ end
 -- 	end
 -- end
 
+function exec_with_color(col, func) 
+	local old_col = {love.graphics.getColor()}
+	love.graphics.setColor(col)
+	func()
+	love.graphics.setColor(old_col)
+end
+
 function rect_color_centered(col, mode, x, y, w, h)
 	rect_color(col, mode, x - w/2, y - h/2, w, h)
 end
@@ -250,15 +257,10 @@ function print_ycentered(text, x, y, rot, sx, sy, ...)
 end
 
 -- Thanks to steVeRoll: https://www.reddit.com/r/love2d/comments/h84gwo/how_to_make_a_colored_sprite_white/
-local white_shader = love.graphics.newShader[[
-	vec4 effect(vec4 color, Image texture, vec2 textureCoords, vec2 screenCoords){
-		return vec4(1, 1, 1, Texel(texture, textureCoords).a) * color;
-	}
-]]
 function draw_white(drawable, x, y, r, sx, sy, ox, oy, kx, ky)
 	-- drawable, x, y, r, sx, sy, ox, oy, kx, ky
 	local old_shader = love.graphics.getShader()
-	love.graphics.setShader(white_shader)
+	love.graphics.setShader(shaders.white_shader)
 	love.graphics.draw(drawable, x, y, r, sx, sy, ox, oy, kx, ky)
 	love.graphics.setShader(old_shader)
 end
@@ -541,20 +543,6 @@ function table_2d_0(w,h,val)
 		end
 	end
 	return t
-end
-
-
-function draw_rank_medal(rank, defcol, x, y)
-	--- Circle
-	local rank_col = get_rank_color(rank, defcol)
-	love.graphics.setColor(rank_col)
-	love.graphics.draw(img.circle, x, y)
-	--- Text
-	love.graphics.setColor(1,1,1)
-	print_centered(rank, x+16, y+16)
-	--- 1"er", 2"e"...
-	local e = rank==1 and "er" or "e"
-	print_centered(e, x+32, y+12, 0, .75)
 end
 
 function strtobool(str)

@@ -159,9 +159,10 @@ function Enemy:on_collision(col, other)
 			-- Damage player
 			if self.harmless_frames <= 0 then
 				player:do_damage(self.damage, self)
+				self:on_damage_player(player, self.damage)
 			end
 		end
-
+		
 	end
 	
 	-- Being collider push force
@@ -171,6 +172,9 @@ function Enemy:on_collision(col, other)
 	end
 
 	self:after_collision(col, col.other)
+end
+
+function Enemy:on_damage_player(player, damage)
 end
 
 function Enemy:after_collision(col, other)  end

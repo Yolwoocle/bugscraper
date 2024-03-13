@@ -26,6 +26,13 @@ local images = {}
 
 local img_names = {
 	"empty",
+
+	"_test_layer0",
+	"_test_layer1",
+	"_test_layer2",
+	"_test_layer3",
+	"_test_window",
+	"_test_shine",
 	
 	"grass",
 	"dirt",
@@ -46,12 +53,16 @@ local img_names = {
 	"duck",
 	"fly1",
 	"fly2",
-	"mosquito1",
-	"mosquito2",
 	"grasshopper",
+	"honeypot_ant1",
+	"honeypot_ant2",
+	"honeypot_liquid",
+	"honey_blob",
 	"larva",
 	"larva1",
 	"larva2",
+	"mosquito1",
+	"mosquito2",
 	"slug1",
 	"slug2",
 	"snail_open",
@@ -134,8 +145,15 @@ local img_names = {
 	"btnfrag_4",
 	"btnfrag_5",
 }
-
 for i=1,#img_names do   images[img_names[i]] = load_image(img_names[i]..".png")   end
+
+images.button_fragments = {
+	images.btnfrag_1,
+	images.btnfrag_2,
+	images.btnfrag_3,
+	images.btnfrag_4,
+	images.btnfrag_5,
+}
 
 for key_constant, button_image_name in pairs(key_constant_to_image) do
 	images[button_image_name] = load_image("buttons/keyboard/"..button_image_name..".png")

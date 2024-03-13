@@ -2,6 +2,8 @@ local Class = require "scripts.meta.class"
 local Actor = require "scripts.actor.actor"
 local Guns = require "data.guns"
 local Bullet = require "scripts.actor.bullet"
+local Effect = require "scripts.effect.effect"
+local EffectSlowness = require "scripts.effect.effect_slowness"
 local images = require "data.images"
 local sounds = require "data.sounds"
 local ui = require "scripts.ui.ui"
@@ -55,9 +57,11 @@ function Player:init(n, x, y, spr)
 	
 	-- Speed 
 	self.speed = 50 --This is acceleration not speed but I'm too lazy to change now
+	self.speed_mult = 1.0
 
 	-- Jump
-	self.jump_speed = 450--450
+	self.jump_speed = 450
+	self.jump_speed_mult = 1.0
 	self.buffer_jump_timer = 0
 	self.coyote_time = 0
 	self.default_coyote_time = 6
@@ -126,8 +130,6 @@ function Player:init(n, x, y, spr)
 	self.gun_number = 1
 
 	self.is_dead = false
-	self.gameoveranim_a = 0
-	self.gameoveranim_y = 0
 	self.timer_before_death = 0
 	self.max_timer_before_death = 3.3
 
@@ -165,15 +167,18 @@ function Player:update(dt)
 	-- 		end
 	-- 	end
 	-- end
-	-- if self:button_pressed("select") then
+	-- if self:button_pressed("ui_reset_keys") then
 	-- 	game.floor = game.floor + 1
 	-- end
+	if Input:action_pressed(self.n, "ui_reset_keys") then
+		self:apply_effect(EffectSlowness:new(), random_range(5.0, 10.0))
+	end
 
 	-- Movement
 	self:move(dt)
 	self:do_wall_sliding(dt)
 	self:do_jumping(dt)
-	self:do_gravity(dt)
+	self:do_gravity(dt) -- FIXME: ouch, this is already called in update_actor
 	self:update_actor(dt)
 	self:do_aiming(dt)
 	self.mid_x = self.x + floor(self.w/2)
@@ -297,17 +302,13 @@ function Player:draw_player()
 	local y = self.y + spr_h2 - self.spr_centering_oy - self.walkbounce_oy
 	if self.spr then
 		local old_col = {gfx.getColor()}
-
-		-- if self.draw_shadow then
-		-- 	local o = ((self.x / CANVAS_WIDTH)-.5) * 6
-		-- 	love.graphics.setColor(0, 0, 0, 0.5)
-		-- 	love.graphics.draw(self.spr, x+o, y+3, 0, fx, fy, spr_w2, spr_h2)
-		-- end
 		
 		-- Draw
 		love.graphics.setColor(old_col)
 		gfx.draw(self.spr, x, y, self.rot, fx, fy, spr_w2, spr_h2)
 	end
+
+	self:post_draw(x-spr_w2, y-spr_h2)
 end
 
 function Player:heal(val)
@@ -338,8 +339,8 @@ function Player:move(dt)
 	end
 
 	-- Apply velocity 
-	self.vx = self.vx + dir.x * self.speed
-	self.vy = self.vy + dir.y * self.speed
+	self.vx = self.vx + dir.x * self.speed * self.speed_mult
+	self.vy = self.vy + dir.y * self.speed * self.speed_mult
 end
 
 function Player:do_invincibility(dt)
@@ -472,7 +473,7 @@ function Player:get_nearby_wall()
 end
 
 function Player:jump(dt)
-	self.vy = -self.jump_speed
+	self.vy = -self.jump_speed * self.jump_speed_mult
 	
 	Particles:smoke(self.mid_x, self.y+self.h)
 	Audio:play_var("jump", 0, 1.2)
@@ -481,7 +482,7 @@ end
 
 function Player:wall_jump(normal)
 	self.vx = normal.x * self.wall_jump_kick_speed
-	self.vy = -self.jump_speed
+	self.vy = -self.jump_speed * self.jump_speed_mult
 	
 	Audio:play_var("jump", 0, 1.2)
 	self.jump_squash = 1/4
@@ -623,7 +624,7 @@ function Player:on_stomp(enemy)
 		spd = spd * 1.3
 	end
 	self.vy = spd
-	self:set_invincibility(0.2)
+	self:set_invincibility(0.1)
 
 	self.combo = self.combo + 1
 	if self.combo >= 4 then
@@ -783,7 +784,7 @@ function Player:do_particles(dt)
 	local flr_y = self.y + self.h
 	if self.is_walking then
 		self.walk_timer = self.walk_timer + 1
-		if self.walk_timer % 10 == 0 then
+		if self.walk_timer % 7 == 0 then
 			Particles:dust(self.mid_x, flr_y)
 		end
 	end

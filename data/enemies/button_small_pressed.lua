@@ -23,4 +23,9 @@ function ButtonSmallPressed:update(dt)
     end
 end
 
+function ButtonSmallPressed:on_death(damager, reason)
+    -- x, y, number, spr, spw_rad, life, vs, g, parms
+    Particles:image(self.mid_x, self.mid_y, 15, images.button_fragments, 8, 0.5, 0.5, 10)
+end
+
 return ButtonSmallPressed

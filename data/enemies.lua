@@ -16,6 +16,7 @@ local Slug = require "data.enemies.slug"
 local SnailShelled = require "data.enemies.snail_shelled"
 local Dummy = require "data.enemies.dummy"
 local MushroomAnt = require "data.enemies.mushroom_ant"
+local HoneypotAnt = require "data.enemies.honeypot_ant"
 local Spider = require "data.enemies.spider"
 
 local ButtonBigPressed = require "data.enemies.button_big_pressed"
@@ -37,6 +38,7 @@ function Enemies:init()
 	self.Slug = Slug
 	self.SnailShelled = SnailShelled
 	self.MushroomAnt = MushroomAnt
+	self.HoneypotAnt = HoneypotAnt
 	self.Spider = Spider
 
 	self.ButtonBigPressed = ButtonBigPressed

@@ -11,7 +11,9 @@ function ButtonSmall:init(x, y)
     self:init_button_big(x, y)
 
     self.name = "button_small"
-    self.max_life = 40
+    self.max_life = 40000000
+	self.destroy_bullet_on_impact = false
+	self.is_immune_to_bullets = true
 
     self.spawned_button_pressed = ButtonSmallPressed
     self:set_sprite(images.small_button)
@@ -25,23 +27,6 @@ function ButtonSmall:on_stomped(damager)
     -- local b = ButtonPressed:new(CANVAS_WIDTH/2, game.world_generator.box_rby)
     local b = ButtonSmallPressed:new(self.x, self.y)
     game:new_actor(b)
-end
-
-function ButtonSmall:on_death(damager, reason)
-    if reason ~= "stomped" then
-        -- game:screenshake(15)
-        -- Audio:play("glass_fracture", nil, 0.2)
-        -- game:enable_endless_mode()
-        -- -- particles:image(self.mid_x, self.mid_y, 100, images.ptc_glass_shard, self.h)
-        -- Particles:image(self.mid_x, self.mid_y, 300, {
-        --     images.btnfrag_1,
-        --     images.btnfrag_2,
-        --     images.btnfrag_3,
-        --     images.btnfrag_4,
-        --     images.btnfrag_5,
-        -- }, self.h, 6, 0.05, 0, parms)
-        -- Particles:word(self.mid_x, self.mid_y, "ENDLESS MODE!")
-    end
 end
 
 return ButtonSmall

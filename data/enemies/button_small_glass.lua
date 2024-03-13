@@ -13,7 +13,7 @@ function ButtonSmallGlass:init(x, y)
 
     self.name = "button_small_glass"
 
-    self.max_life = 15
+    self.max_life = 10
     self.life = self.max_life
 
     self.spawned_button = ButtonSmall

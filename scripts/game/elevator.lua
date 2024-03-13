@@ -285,6 +285,10 @@ function Elevator:new_wave_buffer_enemies()
 		local y = love.math.random(self.game.door_ay + 16, self.game.door_by - 16)
 
 		local enemy_class = random_weighted(wave.enemies)
+		if enemy_class == Enemies.ButtonBigGlass then
+			x = floor(CANVAS_WIDTH/2 - 58/2)
+			y = self.game.door_by - 45
+		end
 		local enemy_instance = enemy_class:new(x,y)
 
 		-- If button is summoned, last wave happened

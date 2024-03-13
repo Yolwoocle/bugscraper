@@ -10,6 +10,8 @@ local PHASE_CHASE = "chase"
 local PHASE_TELEGRAPH = "telegraph"
 local PHASE_ATTACK = "attack"
 
+local PHASE_TELEGRAPH_DURATION = 0.4
+
 function Mosquito:init(x, y)
     self:init_fly(x,y, images.mosquito1)
     self.name = "mosquito"
@@ -80,7 +82,7 @@ function Mosquito:update_phase(dt)
             
         elseif self.phase == PHASE_CHASE then
             self.phase = PHASE_TELEGRAPH
-            self.current_phase_timer = 0.8
+            self.current_phase_timer = PHASE_TELEGRAPH_DURATION
             self.t = 0
 
         elseif self.phase == PHASE_TELEGRAPH then

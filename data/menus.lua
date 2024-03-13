@@ -314,7 +314,7 @@ local function generate_menus()
         -- { "'Hope Gold' font by somepx / CSL", func_url("https://somepx.itch.io/")},
         { "somepx", func_url("https://somepx.itch.io/")},
         { "amhuo", func_url("https://emhuo.itch.io/")},
-        { "freesound.org sounds [see more...]", func_set_menu("credits_sounds")},
+        { "freesound.org [see more...]", func_set_menu("credits_sounds")},
         { ""},
         { "<< Asset Licenses >>"},
         { "CC0", func_url("https://creativecommons.org/publicdomain/zero/1.0/")},

@@ -5,8 +5,12 @@ local images = require "data.images"
 
 local Larva = Enemy:inherit()
 	
-function Larva:init(x, y)
-    self:init_enemy(x,y, images.larva1, 14, 6)
+function Larva:init(x, y, spr, w, h)
+    self:init_larva(x, y, spr, w, h)
+end
+
+function Larva:init_larva(x, y, spr, w, h)
+    self:init_enemy(x,y, spr or images.larva1, w or 14, h or 6)
     self.name = "larva"
     self.follow_player = false
     
@@ -23,6 +27,9 @@ function Larva:init(x, y)
 end
 
 function Larva:update(dt)
+    self:update_larva(dt)
+end
+function Larva:update_larva(dt)
     self:update_enemy(dt)
     self.vx = self.speed * self.walk_dir_x
     

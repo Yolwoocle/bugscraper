@@ -56,10 +56,12 @@ function WorldGenerator:make_box(w, h)
 	self.box_ax, self.box_ay, self.box_bx, self.box_by = ax, ay, bx, by
 	self.box_rax, self.box_ray, self.box_rbx, self.box_rby = ax*BW, ay*BW, bx*BW, by*BW
 
+	-- Floor/Ceiling
 	for ix=ax, bx do
 		map:set_tile(ix, ay, 1)
 		map:set_tile(ix, by, 1)
 	end
+	-- Left/Right walls
 	for iy=ay, by do
 		map:set_tile(ax, iy, 1)
 		map:set_tile(bx, iy, 1)

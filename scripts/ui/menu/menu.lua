@@ -70,6 +70,7 @@ function Menu:draw_prompts()
 	love.graphics.clear()
 
 	local bottom_width = 0
+	local top_width = 0
 	for i, prompt in ipairs(self.prompts) do
 		if i == #self.prompts then
 			bottom_width = x
@@ -96,6 +97,7 @@ function Menu:draw_prompts()
 
 	love.graphics.setCanvas(old_canvas)
 	rect_color({0,0,0,0.7}, "fill", 0, def_y, bottom_width, rect_h)
+	rect_color({0,0,0,0.7}, "fill", 0, 0, x, rect_h)
 	love.graphics.draw(self.second_layer, 0, 0)
 end
 
