@@ -4,7 +4,7 @@ local TextMenuItem = require "scripts.ui.menu.menu_item_text"
 
 local Menu = Class:inherit()
 
-function Menu:init(game, items, bg_color, prompts)
+function Menu:init(game, items, bg_color, prompts, extra_draw)
 	self.items = {}
 	self.is_menu = true
 	
@@ -36,6 +36,8 @@ function Menu:init(game, items, bg_color, prompts)
 
 	self.scroll_position = self.def_y
 	self.target_scroll_position = self.def_y
+
+	self.extra_draw = extra_draw or function() end
 end
 
 function Menu:update(dt)
@@ -53,6 +55,7 @@ function Menu:draw()
 		item:draw()
 	end
 	self:draw_prompts()
+	if self.extra_draw then self.extra_draw() end
 end
 
 function Menu:set_target_scroll_position(value)

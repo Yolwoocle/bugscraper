@@ -61,7 +61,34 @@ local function generate_menus()
         { "OPTIONS", func_set_menu('options') },
         { "CREDITS", func_set_menu('credits') },
         { "QUIT", quit_game },
-    }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
+    }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL, function()
+        local pad_x = 80
+        local pad_y = 50
+        local x1, y1 = CANVAS_WIDTH - pad_x, pad_y
+        local x2, y2 = CANVAS_WIDTH - pad_x, CANVAS_HEIGHT - pad_y
+        
+        local end_w = 5
+        love.graphics.rectangle("fill", x1 - end_w/2, y1 - end_w, end_w, end_w)
+        love.graphics.rectangle("fill", x2 - end_w/2, y2, end_w, end_w)
+        love.graphics.line(x1, y1, x2, y2)
+        
+        local n_floors = game.elevator.max_floor
+        local sep_w = 3
+        local h = y2 - y1
+        for i = 1, n_floors-1 do
+            local y = y2 - (i/n_floors) * h
+            local sep_x = x1 - sep_w/2
+            local sep_y = round(y - sep_w/2)
+            love.graphics.rectangle("fill", sep_x, sep_y, sep_w, sep_w)
+            if i == game.floor then
+                love.graphics.rectangle("line", sep_x-2, sep_y-1, sep_w+3, sep_w+3)
+            end
+        end
+
+        local text = concat(game.floor,"/",game.elevator.max_floor)
+        local text_y = y2 - (game.floor/n_floors) * h
+        love.graphics.print(text, x1- get_text_width(text) - 5, text_y- get_text_height(text)/2-2)
+    end)
     if OPERATING_SYSTEM == "Web" then
         -- Disable quitting on web
         menus.pause.items[7].is_selectable = false
