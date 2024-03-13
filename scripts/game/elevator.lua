@@ -11,6 +11,8 @@ local Elevator = Class:inherit()
 function Elevator:init(game)
     self.game = game
 
+	self.max_floor = #waves
+	
 	self.floor_progress = 3.5 --How far the cabin is to the next floor
 	-- Background
 	self.door_offset = 0
@@ -226,8 +228,7 @@ function Elevator:next_floor(dt, new_floor, old_floor)
 		self.game:start_game()
 
 	else
-
-		local pitch = 0.8 + 0.5 * clamp(self.game.floor/self.game.max_floor, 0, 3)
+		local pitch = 0.8 + 0.5 * clamp(self.game.floor/self.max_floor, 0, 3)
 		Audio:play("elev_ding", 0.8, pitch)
 	end
 end
@@ -328,7 +329,7 @@ function Elevator:draw_background(cabin_x, cabin_y)
 	gfx.draw(images.cabin_bg_amboccl, cabin_x, cabin_y)
 	-- Level counter clock thing
 	local x1, y1 = cabin_x + 207.5, cabin_y + 89
-	self.clock_ang = lerp(self.clock_ang, pi + clamp(self.game.floor / self.game.end_floor, 0, 1) * pi, 0.1)
+	self.clock_ang = lerp(self.clock_ang, pi + clamp(self.game.floor / self.max_floor, 0, 1) * pi, 0.1)
 	local a = self.clock_ang
 	gfx.line(x1, y1, x1 + cos(a)*11, y1 + sin(a)*11)
 	

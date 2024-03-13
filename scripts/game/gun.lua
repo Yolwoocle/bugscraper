@@ -40,7 +40,6 @@ function Gun:init_gun(user)
 	self.ammo = math.huge
 	self.is_reloading = false
 	self.reload_timer = 0
-	self.reload_time = 1.5
 	self.max_reload_timer = 1
 	
 	-- Cooldown
@@ -194,7 +193,7 @@ function Gun:on_shoot()
 end
 
 function Gun:do_reloading(dt)
-	self.reload_timer = max(self.reload_timer - dt/self.reload_time, 0)
+	self.reload_timer = max(self.reload_timer - dt/self.max_reload_timer, 0)
 	if self.reload_timer <= 0 and self.is_reloading then
 		self.is_reloading = false
 		self.ammo = self.max_ammo

@@ -152,6 +152,7 @@ function Player:init(n, x, y, spr)
 	self.dt = 1
 end
 
+local igun = 1
 function Player:update(dt)
 	self.dt = dt
 	if self.is_dead then
@@ -171,7 +172,9 @@ function Player:update(dt)
 	-- 	game.floor = game.floor + 1
 	-- end
 	if Input:action_pressed(self.n, "ui_reset_keys") then
-		self:apply_effect(EffectSlowness:new(), random_range(5.0, 10.0))
+		local all_guns = Guns:get_all_guns()
+		igun = mod_plus_1(igun + 1, #all_guns)
+		self:equip_gun(all_guns[igun]:new())
 	end
 
 	-- Movement
@@ -219,7 +222,6 @@ function Player:update(dt)
 	self.ui_x = lerp(self.ui_x, game.cam_x + floor(self.mid_x), 0.2)
 	self.ui_y = lerp(self.ui_y, game.cam_y + floor(self.y), 0.2)
 
-	
 	--Visuals
 	self:update_visuals()
 end

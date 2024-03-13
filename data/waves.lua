@@ -131,25 +131,11 @@ local waves = {
 			{E.Spider, 3},
 		},
 	},
-	
-	{
-		min = 8,
-		max = 10,
-		enemies = {
-			-- 
-			{E.Mosquito, 3},
-			{E.Fly, 4},
-			{E.Larva, 4},
-			{E.SnailShelled, 3},
-			{E.Grasshopper, 3},
-			{E.Spider, 3},
-		},
-	},
 
 	{ 
 		-- Spiked Fly intro
-		min = 5,
-		max = 7,
+		min = 6,
+		max = 8,
 		enemies = {
 			{E.Larva, 1},
 			{E.Fly, 2},
@@ -159,8 +145,8 @@ local waves = {
 	},
 
 	{ 
-		min = 5,
-		max = 7,
+		min = 7,
+		max = 9,
 		enemies = {
 			{E.Fly, 2},
 			{E.Mosquito, 4},
@@ -169,7 +155,7 @@ local waves = {
 		},
 	},
 
-	{ -- 10
+	{ 
 		-- Mushroom Ant intro
 		min = 5,
 		max = 6,
@@ -181,14 +167,26 @@ local waves = {
 	},
 
 
-	{ -- 11
-		min = 6,
-		max = 8,
+	{ 
+		min = 8,
+		max = 10,
 		enemies = {
 			{E.MushroomAnt, 3},
 			{E.Fly, 1},
 			{E.SpikedFly, 1},
 			{E.Spider, 2},
+		},
+	},
+
+	{ 
+		-- Honeypot ant intro
+		min = 6,
+		max = 8,
+		enemies = {
+			{E.Larva, 3},
+			{E.HoneypotAnt, 6},
+			{E.MushroomAnt, 3},
+			{E.SpikedFly, 3},
 		},
 	},
 
@@ -202,6 +200,7 @@ local waves = {
 			{E.SnailShelled, 3},
 			{E.Mosquito, 3},
 			{E.Slug, 2},
+			{E.HoneypotAnt, 2},
 			{E.SpikedFly, 1},
 			{E.Grasshopper, 1},
 			{E.MushroomAnt, 1},
@@ -235,6 +234,7 @@ local waves = {
 			-- {E.Fly, 3},
 			-- {E.SnailShelled, 3},
 			-- {E.Slug, 2},
+			{E.HoneypotAnt, 2},
 			{E.SpikedFly, 1},
 			{E.Grasshopper, 1},
 			{E.Mosquito, 3},
@@ -243,11 +243,12 @@ local waves = {
 		},
 	},
 	{
-		min = 12,
-		max = 14,
+		min = 14,
+		max = 16,
 		enemies = {
 			{E.Larva, 4},
 			{E.Fly, 3},
+			{E.HoneypotAnt, 2},
 			{E.SnailShelled, 3},
 			{E.Slug, 2},
 			{E.Mosquito, 3},
@@ -260,7 +261,7 @@ local waves = {
 	-- }, 4)),
 
 	-- Last wave
-	{ -- 16
+	{ 
 		min = 1,
 		max = 1,
 		enemies = {

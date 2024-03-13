@@ -50,7 +50,7 @@ function Guns:init()
 		self.random_angle_offset = 0
 		self.jetpack_force = self.default_jetpack_force * 2
 
-		self.reload_time = 3
+		self.max_reload_timer = 1
 		self.natural_recharge_time = 4.0
 		
 		self.bullet_spr = images.bullet_red
@@ -103,7 +103,7 @@ function Guns:init()
 		self.bullet_number = 12
 
 		self.max_ammo = 7
-		self.max_reload_timer = 2
+		self.max_reload_timer = 1.5
 
 		self.bullet_spread = 0
 		self.bullet_friction = 0.95
@@ -156,7 +156,7 @@ function Guns:init()
 		self.display_name = "big berry"
 		
 		self.max_ammo = 8
-		self.max_reload_timer = 2
+		self.max_reload_timer = 1.3
 		self.bullet_number = 24
 		self.bullet_spread = pi2
 		self.bullet_friction = 0.9
@@ -265,6 +265,10 @@ for k, gun in pairs(guns_instance) do
 	if k ~= "unlootable" then
 		table.insert(all_guns, gun)
 	end
+end
+
+function Guns:get_all_guns()
+	return all_guns
 end
 
 function Guns:get_random_gun(user)

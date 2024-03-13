@@ -278,13 +278,13 @@ local function generate_menus()
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_CONTROLS)
 
     menus.game_over = Menu:new(game, {
-        {"********** GAME OVER! **********"},
+        {"<<<<<<<<< GAME OVER! >>>>>>>>>"},
         { "" },
         { StatsMenuItem, "Kills", function(self) return game.stats.kills end },
         { StatsMenuItem, "Time",  function(self)
             return time_to_string(game.stats.time)
         end },
-        { StatsMenuItem, "Floor", function(self) return concat(game.stats.floor, " / 16") end },
+        { StatsMenuItem, "Floor", function(self) return concat(game.stats.floor, "/", game.elevator.max_floor) end },
         { StatsMenuItem, "Max combo", function(self) return concat(game.stats.max_combo) end },
         { "" },
         { "RETRY", function() game:new_game() end },

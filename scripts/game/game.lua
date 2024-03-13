@@ -34,11 +34,6 @@ function Game:init()
 	Audio = AudioManager:new()
 
 	Input:init_users()
-	
-	-- Global Options ==> Moved to OptionsManager
-	-- is_fullscreen = options:get("is_fullscreen")
-	-- is_vsync = options:get("is_vsync")
-	-- pixel_scale = options:get("pixel_scale")
 
 	CANVAS_WIDTH = 480
 	CANVAS_HEIGHT = 270
@@ -158,8 +153,6 @@ function Game:new_game(number_of_players)
 
 	-- Level info
 	self.floor = 0 --Floor n°
-	self.end_floor = 16
-	self.max_floor = 16
 	-- self.max_elev_speed = 1/2
 	self.cur_wave_max_enemy = 1
 
