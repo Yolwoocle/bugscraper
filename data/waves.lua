@@ -34,16 +34,6 @@ local waves = {
 			{E.Slug, 2},
 		},
 	},
-
-	{
-		min = 6,
-		max = 8,
-		enemies = {
-			{E.Larva, 2},
-			{E.Fly, 2},
-			{E.Slug, 2},
-		},
-	},
 	
 	{
 		-- Spider intro
@@ -72,7 +62,7 @@ local waves = {
 		max = 8,
 		enemies = {
 			{E.Grasshopper, 8},
-			{E.Spider, 4},
+			{E.Larva, 4},
 		},
 	},
 
@@ -83,8 +73,8 @@ local waves = {
 		enemies = {
 			{E.Larva, 3},
 			{E.Slug, 3},
+			{E.Grasshopper, 8},
 			{E.Fly, 3},
-			{E.Spider, 4},
 		},
 	},
 
@@ -286,5 +276,9 @@ local function sanity_check_waves()
 end
 
 sanity_check_waves()
+
+for i, wave in pairs(waves) do
+	table.sort(wave.enemies, function(a,b) return a[2] > b[2] end)
+end
 
 return waves

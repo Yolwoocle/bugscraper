@@ -49,6 +49,7 @@ function TextMenuItem:update(dt)
 	self:update_textitem(dt)
 end
 function TextMenuItem:update_textitem(dt)
+	self:update_menuitem()
 	self:update_value()
 
 	self.ox = lerp(self.ox, 0, 0.3)

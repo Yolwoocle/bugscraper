@@ -171,10 +171,20 @@ function Player:update(dt)
 	-- if self:button_pressed("ui_reset_keys") then
 	-- 	game.floor = game.floor + 1
 	-- end
+	-- if Input:action_pressed(self.n, "ui_reset_keys") then
+	-- 	local all_guns = Guns:get_all_guns()
+	-- 	igun = mod_plus_1(igun + 1, #all_guns)
+	-- 	self:equip_gun(all_guns[igun]:new())
+	-- end
 	if Input:action_pressed(self.n, "ui_reset_keys") then
-		local all_guns = Guns:get_all_guns()
-		igun = mod_plus_1(igun + 1, #all_guns)
-		self:equip_gun(all_guns[igun]:new())
+		if Input:action_down(self.n, "up") then
+			game.floor = game.elevator.max_floor
+		end
+		for i,e in pairs(game.actors) do
+			if e.is_enemy then
+				e:kill()
+			end
+		end
 	end
 
 	-- Movement

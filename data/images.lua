@@ -4,9 +4,17 @@ local key_constant_to_image = require "data.buttons.images_buttons_keyboard"
 local controller_brands = require "data.buttons.controller_brands"
 local controller_buttons = require "data.buttons.controller_buttons"
 
+REMOVEME_image_to_col = {}
+local function removeme_set_image_col(im, name)
+	local image_data = love.image.newImageData("images/"..name)
+	local col = {image_data:getPixel(im:getWidth()/2, im:getHeight()/2)}
+	REMOVEME_image_to_col[im] = col
+end
+
 local function load_image(name)
 	local im = love.graphics.newImage("images/"..name)
 	im:setFilter("nearest", "nearest")
+	removeme_set_image_col(im, name)
 	return im 
 end
 local function load_image_table(name, n, w, h)

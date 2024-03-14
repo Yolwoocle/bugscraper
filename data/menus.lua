@@ -2,6 +2,9 @@ local Menu = require "scripts.ui.menu.menu"
 local SliderMenuItem = require "scripts.ui.menu.menu_item_slider"
 local StatsMenuItem = require "scripts.ui.menu.menu_item_stats"
 local ControlsMenuItem = require "scripts.ui.menu.menu_item_controls"
+local CustomDrawMenuItem = require "scripts.ui.menu.menu_item_custom_draw"
+local waves = require "data.waves"
+local Enemies = require "data.enemies"
 
 local function func_set_menu(menu)
 	return function()
@@ -43,8 +46,7 @@ local function generate_menus()
     -- FIXME: This is messy, eamble multiple types of menuitems
     -- This is so goddamn overengineered and needlessly complicated
     menus.title = Menu:new(game, {
-        { ">>>> ELEVATOR DITCH (logo here) <<<<" },
-        -- {"********** PAUSED **********"},
+        { ">>>> Bugscraper (logo here) <<<<" },
         { "" },
         { "PLAY", function() game:new_game() end },
         { "OPTIONS", func_set_menu('options') },
@@ -53,6 +55,84 @@ local function generate_menus()
         { "" },
     }, DEFAULT_MENU_BG_COLOR)
 
+    menus.view_waves = Menu:new(game, {
+        {"waves"},
+        {CustomDrawMenuItem, function(self)
+            local x = self.x - CANVAS_WIDTH/2
+            local y = self.y
+            local slot_w = 25
+            local slot_h = 10
+            for i, wave in ipairs(waves) do
+                love.graphics.print(concat("W", i, " ",wave.min, "-", wave.max), x, y)
+                x = x + 50
+
+                local total_w = slot_w * (wave.min + wave.max)/2
+                love.graphics.rectangle("fill", x, y, total_w, 10)
+                local weight_sum = 0
+                for j, enemy in ipairs(wave.enemies) do
+                    weight_sum = weight_sum + enemy[2]
+                end
+
+                for j, enemy in ipairs(wave.enemies) do
+                    local e = enemy[1]:new()
+                    local spr = e.spr
+                    e:remove()
+
+                    local weight = enemy[2] 
+
+                    love.graphics.setColor(REMOVEME_image_to_col[spr] or ternary(j % 2 == 0, COL_WHITE, COL_RED))
+                    local w = total_w * (weight/weight_sum)
+                    love.graphics.rectangle("fill", x, y, w, 10)
+                    love.graphics.setColor(COL_WHITE)
+
+                    love.graphics.draw(spr, x, y, 0, 0.8, 0.8)
+                    print_outline(COL_WHITE, COL_BLACK_BLUE, concat(weight), x, y)
+                    x = x + w
+                end
+                x = self.x - CANVAS_WIDTH/2
+                y = y + 24
+            end
+        end},
+        {"", function() end},
+        {"", function() end},
+        {"", function() end},
+        {"", function() end},
+        {"", function() end},
+        {"", function() end},
+        {"", function() end},
+        {"", function() end},
+        {"", function() end},
+        {"", function() end},
+        {"", function() end},
+        {"", function() end},
+        {"", function() end},
+        {"", function() end},
+        {"", function() end},
+        {"", function() end},
+        {"", function() end},
+        {"", function() end},
+        {"", function() end},
+        {"", function() end},
+        {"", function() end},
+        {"", function() end},
+        {"", function() end},
+        {"", function() end},
+        {"", function() end},
+        {"", function() end},
+        {"", function() end},
+        {"", function() end},
+        {"", function() end},
+        {"", function() end},
+        {"", function() end},
+        {"", function() end},
+        {"", function() end},
+        {"", function() end},
+        {"", function() end},
+        {"", function() end},
+        {"", function() end},
+    }, DEFAULT_MENU_BG_COLOR, {}, function()
+    end)
+
     menus.pause = Menu:new(game, {
         { "<<<<<<<<< PAUSED >>>>>>>>>" },
         { "" },
@@ -60,6 +140,7 @@ local function generate_menus()
         { "RETRY", function() game:new_game() end },
         { "OPTIONS", func_set_menu('options') },
         { "CREDITS", func_set_menu('credits') },
+        { "DEBUG_WAVES", func_set_menu('view_waves') },
         { "QUIT", quit_game },
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL, function()
         local pad_x = 80

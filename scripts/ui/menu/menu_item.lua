@@ -15,6 +15,9 @@ function MenuItem:init_menuitem(i, x, y)
 	self.is_selected = false
 end
 
+function MenuItem:update(dt)
+	self:update_menuitem(dt)
+end
 function MenuItem:update_menuitem(dt)
 
 end
