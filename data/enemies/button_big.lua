@@ -6,12 +6,12 @@ local ButtonPressed = require "data.enemies.button_big_pressed"
 
 local ButtonBig = Enemy:inherit()
 
-function ButtonBig:init(x, y)
-    self:init_button_big(x, y)
+function ButtonBig:init(x, y, spr, w, h)
+    self:init_button_big(x, y, spr, w, h)
 end
 
-function ButtonBig:init_button_big(x, y)
-    self:init_enemy(x,y, images.big_red_button, 34, 40)
+function ButtonBig:init_button_big(x, y, spr, w, h)
+    self:init_enemy(x,y, spr or images.big_red_button, w or 34, h or 40)
     self.name = "button_big"
     self.follow_player = false
 

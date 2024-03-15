@@ -43,6 +43,7 @@ function Enemy:init_enemy(x,y, img, w,h)
 	}
 
 	self.is_stompable = true
+	self.is_killed_on_stomp = true
 	self.do_stomp_animation = true
 	self.is_pushable = true
 	self.is_knockbackable = true -- Multiplicator when knockback is applied to
@@ -153,7 +154,9 @@ function Enemy:on_collision(col, other)
 				Particles:stomped_enemy(self.spr_x, self.spr_y, self.spr)
 			end
 			self:on_stomped(player)
-			self:kill(player, "stomped")
+			if self.is_killed_on_stomp then
+				self:kill(player, "stomped")
+			end
 
 		else
 			-- Damage player

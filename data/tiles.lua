@@ -44,26 +44,6 @@ function Tiles:init()
 		self.is_not_slidable = true
 	end)
 
-	-- -- Grass
-	-- self.tiles[2] = make_tile(function(self, x, y, w)
-	-- 	self:init_tile(x, y, w)
-	-- 	self.id = 2
-	-- 	self.name = "grass"
-	-- 	self.spr = images.grass
-		
-	-- 	self.is_solid = true
-	-- end)
-
-	-- -- Dirt
-	-- self.tiles[3] = make_tile(function(self, x, y, w)
-	-- 	self:init_tile(x, y, w)
-	-- 	self.id = 3
-
-	-- 	self.name = "dirt"
-	-- 	self.spr = images.dirt
-	-- 	self.is_solid = true
-	-- end)
-
 	-- Chain
 	self.tiles[4] = make_tile(function(self, x, y, w)
 		self:init_tile(x, y, w)

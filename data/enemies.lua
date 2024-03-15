@@ -23,9 +23,10 @@ local ButtonBigPressed = require "data.enemies.button_big_pressed"
 local ButtonBig = require "data.enemies.button_big"
 local ButtonBigGlass = require "data.enemies.button_big_glass"
 
-local ButtonSmallPressed = require "data.enemies.button_small_pressed"
-local ButtonSmall = require "data.enemies.button_small"
 local ButtonSmallGlass = require "data.enemies.button_small_glass"
+local ButtonSmall = require "data.enemies.button_small"
+
+local VendingMachine = require "data.enemies.vending_machine.vending_machine"
 
 local Enemies = Class:inherit()
 
@@ -45,9 +46,10 @@ function Enemies:init()
 	self.ButtonBig = ButtonBig
 	self.ButtonBigGlass = ButtonBigGlass
 
-	self.ButtonSmallPressed = ButtonSmallPressed
 	self.ButtonSmall = ButtonSmall
 	self.ButtonSmallGlass = ButtonSmallGlass
+
+	self.VendingMachine = VendingMachine
 
 	self.Dummy = Dummy
 end

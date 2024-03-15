@@ -33,127 +33,148 @@ end
 local images = {}
 
 local img_names = {
-	"empty",
+	empty = "empty",
 
-	"_test_layer0",
-	"_test_layer1",
-	"_test_layer2",
-	"_test_layer3",
-	"_test_window",
-	"_test_shine",
+	-----------------------------------------------------
+
+	-- test
+	_test_layer0 = "_test_layer0",
+	_test_layer1 = "_test_layer1",
+	_test_layer2 = "_test_layer2",
+	_test_layer3 = "_test_layer3",
+	_test_window = "_test_window",
+	_test_shine = "_test_shine",
+
+	-----------------------------------------------------
+
+	-- players
+	ant1 =             "actors/players/ant1",
+	ant2 =             "actors/players/ant2",
+	ant_dead =         "actors/players/ant_dead",
+	bee =              "actors/players/bee",
+	caterpillar_1 =    "actors/players/caterpillar_1",
+	caterpillar_2 =    "actors/players/caterpillar_2",
+	caterpillar_dead = "actors/players/caterpillar_dead",
+	duck =             "actors/players/duck",
+
+	-- enemies
+	dummy_target =    "actors/enemies/dummy_target",
+	fly1 =            "actors/enemies/fly1",
+	fly2 =            "actors/enemies/fly2",
+	grasshopper =     "actors/enemies/grasshopper",
+	honeypot_ant1 =   "actors/enemies/honeypot_ant1",
+	honeypot_ant2 =   "actors/enemies/honeypot_ant2",
+	honeypot_liquid = "actors/enemies/honeypot_liquid",
+	larva =           "actors/enemies/larva",
+	larva1 =          "actors/enemies/larva1",
+	larva2 =          "actors/enemies/larva2",
+	mosquito1 =       "actors/enemies/mosquito1",
+	mosquito2 =       "actors/enemies/mosquito2",
+	slug1 =           "actors/enemies/slug1",
+	slug2 =           "actors/enemies/slug2",
+	snail_open =      "actors/enemies/snail_open",
+	snail_shell =     "actors/enemies/snail_shell",
+	spider1 =         "actors/enemies/spider1",
+	spider2 =         "actors/enemies/spider2",
+	spiked_fly =      "actors/enemies/spiked_fly",
+	mushroom_ant1 =   "actors/enemies/mushroom_ant1",
+	mushroom_ant2 =   "actors/enemies/mushroom_ant2",
+
+	big_red_button_crack0 =  "actors/enemies/big_red_button_crack0",
+	big_red_button_crack1 =  "actors/enemies/big_red_button_crack1",
+	big_red_button_crack2 =  "actors/enemies/big_red_button_crack2",
+	big_red_button_crack3 =  "actors/enemies/big_red_button_crack3",
+	big_red_button =         "actors/enemies/big_red_button",
+	big_red_button_pressed = "actors/enemies/big_red_button_pressed",
+	small_button_crack0 =  "actors/enemies/small_button_crack0",
+	small_button_crack1 =  "actors/enemies/small_button_crack1",
+	small_button_crack2 =  "actors/enemies/small_button_crack2",
+	small_button =         "actors/enemies/small_button",
+	small_button_pressed = "actors/enemies/small_button_pressed",
+
+	machine_coffee =         "actors/enemies/machine_coffee",
+	machine_coffee_pressed = "actors/enemies/machine_coffee_pressed",
+	machine_snacks =         "actors/enemies/machine_snacks",
+	machine_toys =           "actors/enemies/machine_toys",
+
+	loot_ammo =     "actors/loot/loot_ammo",
+	loot_ammo_big = "actors/loot/loot_ammo_big",
+	loot_life =     "actors/loot/loot_life",
+	loot_life_big = "actors/loot/loot_life_big",
 	
-	"grass",
-	"dirt",
-	"snowball",
+	bullet =          "actors/bullets/bullet",
+	bullet_pea =      "actors/bullets/bullet_pea",
+	bullet_red =      "actors/bullets/bullet_red",
+	bullet_blue =     "actors/bullets/bullet_blue",
+	bullet_ring =     "actors/bullets/bullet_ring",
+	mushroom =        "actors/bullets/mushroom",
+	mushroom_yellow = "actors/bullets/mushroom_yellow",
+	mushroom_spike =  "actors/bullets/mushroom_spike",
 
-	"heart",
-	"heart_half",
-	"heart_empty",
-	"ammo",
-
-	"ant1",
-	"ant2",
-	"ant_dead",
-	"bee",
-	"caterpillar_1",
-	"caterpillar_2",
-	"caterpillar_dead",
-	"duck",
-	"fly1",
-	"fly2",
-	"grasshopper",
-	"honeypot_ant1",
-	"honeypot_ant2",
-	"honeypot_liquid",
-	"honey_blob",
-	"larva",
-	"larva1",
-	"larva2",
-	"mosquito1",
-	"mosquito2",
-	"slug1",
-	"slug2",
-	"snail_open",
-	"snail_shell",
-	"spider1",
-	"spider2",
-	"spiked_fly",
+	-----------------------------------------------------
 	
-	"bullet",
-	"bullet_pea",
-	"bullet_red",
-	"bullet_blue",
-	"bullet_ring",
+	-- guns
+	gun_machinegun =      "guns/gun_machinegun",
+	gun_triple =          "guns/gun_triple",
+	gun_burst =           "guns/gun_burst",
+	gun_shotgun =         "guns/gun_shotgun",
+	gun_minigun =         "guns/gun_minigun",
+	gun_mushroom_cannon = "guns/gun_mushroom_cannon",
+	gun_ring =            "guns/gun_ring",
+	
+	-----------------------------------------------------
+	
+	-- particles
+	dummy_target_ptc1 =    "particles/dummy_target_ptc1",
+	dummy_target_ptc2 =    "particles/dummy_target_ptc2",
+	ptc_glass_shard =      "particles/ptc_glass_shard",
+	snail_shell_fragment = "particles/snail_shell_fragment",
+	ptc_bullet_casing =    "particles/ptc_bullet_casing",
+	btnfrag_1 =            "particles/btnfrag_1",
+	btnfrag_2 =            "particles/btnfrag_2",
+	btnfrag_3 =            "particles/btnfrag_3",
+	btnfrag_4 =            "particles/btnfrag_4",
+	btnfrag_5 =            "particles/btnfrag_5",
 
-	"gun_machinegun",
-	"gun_triple",
-	"gun_burst",
-	"gun_shotgun",
-	"gun_minigun",
-	"gun_mushroom_cannon",
-	"gun_ring",
+	-----------------------------------------------------
+	
+	-- level
+	metal =    "level/metal",
+	chain =    "level/chain",
+	bg_plate = "level/bg_plate",
 
-	"metal",
-	"chain",
-	"bg_plate",
-	"cabin_bg",
-	"cabin_bg_2",
-	"cabin_bg_amboccl",
-	"cabin_walls",
-	"cabin_door_left", "cabin_door_right",
-	"cabin_rubble",
+	cabin_bg =         "level/cabin_bg",
+	cabin_bg_2 =       "level/cabin_bg_2",
+	cabin_bg_amboccl = "level/cabin_bg_amboccl",
+	cabin_walls =      "level/cabin_walls",
+	cabin_door_left =  "level/cabin_door_left", 
+	cabin_door_right = "level/cabin_door_right",
+	cabin_rubble =     "level/cabin_rubble",
 
-	"logo",
-	"logo_noshad",
-	"logo_shad",
+	-----------------------------------------------------
 
-	"loot_ammo",
-	"loot_ammo_big",
-	"loot_life",
-	"loot_life_big",
+	-- hud
+	heart =       "ui/hud/heart",
+	heart_half =  "ui/hud/heart_half",
+	heart_empty = "ui/hud/heart_empty",
+	ammo =        "ui/hud/ammo",
 
-	"lever_on",
-	"lever_off",
+	-- logo
+	logo =        "ui/logo/logo",
+	logo_noshad = "ui/logo/logo_noshad",
+	logo_shad =   "ui/logo/logo_shad",
 
-	"big_red_button_crack0",
-	"big_red_button_crack1",
-	"big_red_button_crack2",
-	"big_red_button_crack3",
-	"big_red_button",
-	"big_red_button_pressed",
+	controls_jetpack = "ui/controls_jetpack",
 
-	"small_button_crack0",
-	"small_button_crack1",
-	"small_button_crack2",
-	"small_button",
-	"small_button_pressed",
+	-----------------------------------------------------
 
-	"ptc_glass_shard",
-	"snail_shell_fragment",
+	-- effects
+	honey_blob = "effects/honey_blob",
 
-	"dummy_target",
-
-	"controls",
-	"controls_jetpack",
-
-	"mushroom_ant1",
-	"mushroom_ant2",
-	"mushroom",
-	"mushroom_yellow",
-	"mushroom_spike",
-
-	"dummy_target_ptc1",
-	"dummy_target_ptc2",
-
-	"ptc_bullet_casing",
-
-	"btnfrag_1",
-	"btnfrag_2",
-	"btnfrag_3",
-	"btnfrag_4",
-	"btnfrag_5",
 }
-for i=1,#img_names do   images[img_names[i]] = load_image(img_names[i]..".png")   end
+for id, path in pairs(img_names) do
+	images[id] = load_image(path..".png")
+end
 
 images.button_fragments = {
 	images.btnfrag_1,

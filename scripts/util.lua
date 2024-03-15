@@ -650,7 +650,6 @@ function utf8.sub(str, i, j)
 end
 
 
-
 function print_color(col, text, x, y)
 	col = col or {1,1,1,1}
 	love.graphics.setColor(col)
