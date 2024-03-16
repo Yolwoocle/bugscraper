@@ -148,6 +148,8 @@ function Player:init(n, x, y, spr)
 	self.combo = 0
 	self.max_combo = 0
 
+	self.upgrades = {}
+
 	-- Debug 
 	self.dt = 1
 end
@@ -176,16 +178,16 @@ function Player:update(dt)
 	-- 	igun = mod_plus_1(igun + 1, #all_guns)
 	-- 	self:equip_gun(all_guns[igun]:new())
 	-- end
-	if Input:action_pressed(self.n, "ui_reset_keys") then
-		if Input:action_down(self.n, "up") then
-			game.floor = game.elevator.max_floor
-		end
-		for i,e in pairs(game.actors) do
-			if e.is_enemy then
-				e:kill()
-			end
-		end
-	end
+	-- if Input:action_pressed(self.n, "ui_reset_keys") then
+	-- 	if Input:action_down(self.n, "up") then
+	-- 		game.floor = game.elevator.max_floor
+	-- 	end
+	-- 	for i,e in pairs(game.actors) do
+	-- 		if e.is_enemy then
+	-- 			e:kill()
+	-- 		end
+	-- 	end
+	-- end
 
 	-- Movement
 	self:move(dt)
@@ -201,6 +203,7 @@ function Player:update(dt)
 	self:animate_walk(dt)
 	self:update_sprite(dt)
 	self:do_particles(dt)
+	self:update_upgrades(dt)
 
 	if self.life <= 0 then
 		self:kill()
@@ -813,6 +816,19 @@ function Player:flip_player_type()
 		self.spr_idle = images.ant1
 		self.spr_jump = images.ant2
 		self.spr_dead = images.ant_dead
+	end
+end
+
+function Player:apply_upgrade(upgrade)
+	upgrade:on_apply(self)
+	if upgrade.type == UPGRADE_TYPE_TEMPORARY or upgrade.type == UPGRADE_TYPE_PERMANENT then
+		table.insert(self.upgrades, upgrade)
+	end
+end
+
+function Player:update_upgrades(dt)
+	for i, upgrade in pairs(self.upgrades) do
+		upgrade:update(dt)
 	end
 end
 

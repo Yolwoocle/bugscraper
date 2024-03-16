@@ -5,12 +5,12 @@ local ButtonBig = require "data.enemies.button_big"
 
 local ButtonSmall = ButtonBig:inherit()
 
-function ButtonSmall:init(x, y)
-    self:init_button_small(x, y)
+function ButtonSmall:init(x, y, spr, w, h)
+    self:init_button_small(x, y, spr, w, h)
 end
 
-function ButtonSmall:init_button_small(x, y)
-    self:init_button_big(x, y)
+function ButtonSmall:init_button_small(x, y, spr, w, h)
+    self:init_button_big(x, y, spr, w, h)
 
     self.name = "button_small"
     self.max_life = 40000000
@@ -26,6 +26,10 @@ function ButtonSmall:init_button_small(x, y)
 end
 
 function ButtonSmall:update(dt)
+    self:update_button_small(dt)
+end
+
+function ButtonSmall:update_button_small(dt)
     self:update_enemy(dt)
 
     if self.is_pressed then

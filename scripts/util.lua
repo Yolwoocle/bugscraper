@@ -209,7 +209,10 @@ function draw_with_selected_outline(spr, x, y, r, sx, sy)
 	
 	love.graphics.setShader()
 	love.graphics.draw(spr, x, y, r, sx, sy)
+end
 
+function draw_centered(spr, x, y, r, sx, sy)
+	love.graphics.draw(spr, x, y, r, sx, sy, spr:getWidth()/2, spr:getHeight()/2)
 end
 
 function draw_centered_text(text, rect_x, rect_y, rect_w, rect_h, rot, sx, sy, font)
@@ -553,6 +556,10 @@ function random_neighbor(n)
 	return love.math.random()*2*n - n
 end
 
+function random_range_int(a, b)
+	return love.math.random(a, b)
+end
+
 function random_range(a,b)
 	return love.math.random()*(b-a) + a
 end
@@ -731,12 +738,13 @@ function distsqr(ax, ay, bx, by)
 	return sqr(bx - ax) + sqr(by - ay)
 end
 
-function dist(...)
-	return sqrt(distsqr(...))
+function dist(ax, ay, bx, by)
+	return sqrt(distsqr(ax, ay, bx, by))
 end
 
 function cerp(a,b,t)
 	-- "constant" interpolation?
+	-- 2024 leo here: wtf is this
 	if abs(a-b) <= t then    return b    end
 	return a + sign0(b-a)*t
 end

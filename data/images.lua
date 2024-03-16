@@ -167,10 +167,15 @@ local img_names = {
 	controls_jetpack = "ui/controls_jetpack",
 
 	-----------------------------------------------------
-
+	
 	-- effects
 	honey_blob = "effects/honey_blob",
 
+	-----------------------------------------------------
+
+	-- upgrades
+	upgrade_coffee = "upgrades/upgrade_coffee"
+	
 }
 for id, path in pairs(img_names) do
 	images[id] = load_image(path..".png")

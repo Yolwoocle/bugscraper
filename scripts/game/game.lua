@@ -826,15 +826,14 @@ function Game:start_game()
 	self.music_player:set_disk("w1")
 end
 
------------------------------------------------------
---- [[[[[[[[ BACKGROUND & LEVEL PROGRESS ]]]]]]]] ---
------------------------------------------------------
-
--- TODO: Should we move this to a separate 'Elevator'/'Level' class?
----> Yes, but that would require effort
-
 function Game:on_red_button_pressed()
 	self.elevator:on_red_button_pressed()
+end
+
+function Game:apply_upgrade(upgrade) 
+	for i, player in pairs(self.players) do
+		player:apply_upgrade(upgrade)
+	end
 end
 
 -----------------------------------------------------

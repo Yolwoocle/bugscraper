@@ -59,7 +59,7 @@ def export_win64():
 
 today = str(dt.date.today()) 
 y, m, d = today.split("-")
-gamename = f'DemineurRoyale'
+gamename = f'bugscraper'
 gamename_time = f'{gamename}_v0_{y[2:]}-{m}-{d}'
 
 platforms = ("win32","win64","macos","linux")
