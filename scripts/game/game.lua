@@ -240,7 +240,7 @@ function Game:new_game(number_of_players)
 	self.draw_shadows = true
 	self.shadow_ox = 1
 	self.shadow_oy = 2
-	self.shadow_canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
+	self.object_canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
 	self.front_canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
 
 	-- Music
@@ -289,14 +289,6 @@ function Game:update_main_game(dt)
 		self.time = self.time + dt
 	end
 	self.t = self.t + dt
-
-	-- Music
-	self.time_before_music = self.time_before_music - dt
-	if self.time_before_music <= 0 and not self.game_started then
-		print_debug("aeauyrzehizerhrhzek")
-		self.music_player:set_disk("w1")
-		self.game_started = true
-	end
 
 	-- BG color gradient
 	if not self.elevator.is_on_win_screen then
@@ -382,6 +374,11 @@ function Game:draw()
 		gfx.scale(1, 1)
 		gfx.draw(canvas, CANVAS_OX, CANVAS_OY, 0, CANVAS_SCALE, CANVAS_SCALE)
 	end
+
+	gfx.rectangle("line", 10, 10, self.object_canvas:getWidth(), self.object_canvas:getHeight())
+	gfx.draw(self.object_canvas, 10, 10)
+	gfx.rectangle("line", 600, 10, self.front_canvas:getWidth(), self.front_canvas:getHeight())
+	gfx.draw(self.front_canvas, 600, 10)
 end
 
 testx = 0
@@ -390,15 +387,11 @@ function Game:draw_game()
 	-- Sky
 	gfx.clear(self.elevator.bg_col)
 	local real_camx, real_camy = (self.cam_x + self.cam_ox), (self.cam_y + self.cam_oy)
-	gfx.translate(-real_camx, -real_camy)
-	love.graphics.translate(-(real_camx + self.elevator.elev_x), -(real_camy + self.elevator.elev_y))
+	love.graphics.translate(-real_camx, -real_camy)
 
-	local old_canvas
-	if self.draw_shadows then
-		old_canvas = love.graphics.getCanvas()
-		love.graphics.setCanvas(self.shadow_canvas)
-		love.graphics.clear()
-	end
+	local old_canvas = love.graphics.getCanvas()
+	love.graphics.setCanvas(self.object_canvas)
+	love.graphics.clear()
 
 	-- Draw actors
 	for _,actor in pairs(self.actors) do
@@ -416,24 +409,26 @@ function Game:draw_game()
 		self.elevator:draw_rubble(self.cabin_x, self.cabin_y)
 	end
 
+	---------------------------------------------
 
 	-- Buffering these so that we can draw their shadows but still draw then in front of everything
 	local draw_front_objects = function()
 		-- Draw actors UI
 		Particles:draw_front()
 		-- Draw actors
+		love.graphics.origin()			
 		for k,actor in pairs(self.actors) do
 			if actor.draw_hud then     actor:draw_hud()    end
 		end
+		love.graphics.translate(-real_camx, -real_camy)
 	end
 
-	if self.draw_shadows then
-		love.graphics.setCanvas(self.front_canvas)
-		love.graphics.clear()
-		draw_front_objects()
-		love.graphics.setCanvas(self.shadow_canvas)
-	end
+	love.graphics.setCanvas(self.front_canvas)
+	love.graphics.clear()
+	draw_front_objects()
+	love.graphics.setCanvas(self.object_canvas)
 	love.graphics.setCanvas(old_canvas)
+	
 	---------------------------------------------
 
 	--Draw bg particles
@@ -464,22 +459,22 @@ function Game:draw_game()
 		self.elevator:draw_background(self.cabin_x, self.cabin_y)
 	end
 	
+	love.graphics.origin()
 	love.graphics.setColor(0,0,0, 0.5)
-	love.graphics.draw(self.shadow_canvas, self.shadow_ox, self.shadow_oy)
+	love.graphics.draw(self.object_canvas, self.shadow_ox, self.shadow_oy)
 	love.graphics.draw(self.front_canvas,  self.shadow_ox, self.shadow_oy)
 	love.graphics.setColor(1,1,1, 1)
-	love.graphics.draw(self.shadow_canvas, 0, 0)
+	love.graphics.draw(self.object_canvas, 0, 0)
+	love.graphics.translate(-real_camx, -real_camy)
 
 	-- Walls
 	if self.elevator.show_cabin then
 		gfx.draw(images.cabin_walls, self.cabin_x, self.cabin_y)
 	end
 
-	if self.draw_shadows then
-		love.graphics.draw(self.front_canvas, 0, 0)
-	else
-		draw_front_objects()
-	end
+	love.graphics.origin()
+	love.graphics.draw(self.front_canvas, 0, 0)
+	love.graphics.translate(-real_camx, -real_camy)
 
 	-- UI
 	-- print_centered_outline(COL_WHITE, COL_DARK_BLUE, concat("FLOOR ",self.floor), CANVAS_WIDTH/2, 8)
@@ -487,7 +482,7 @@ function Game:draw_game()
 	-- rect_color(COL_DARK_GRAY, "fill", floor((CANVAS_WIDTH-w)/2),    16, w, 8)
 	-- rect_color(COL_WHITE,    "fill", floor((CANVAS_WIDTH-w)/2) +1, 17, (w-2)*self.floor_progress, 6)
 
-	love.graphics.translate(-real_camx, -real_camy)
+	gfx.origin()
 
 	-- Logo
 	self:draw_logo_and_controls()
@@ -504,7 +499,8 @@ function Game:draw_game()
 
 	-- Timer
 	if Options:get("timer_on") then
-		gfx.print(time_to_string(self.time), 2, 2)
+		rect_color({0,0,0,0.5}, "fill", 0, 10, 50, 12)
+		gfx.print(time_to_string(self.time), 8, 8)
 	end
 
 	-- Debug
@@ -527,10 +523,6 @@ function Game:draw_game()
 	-- gfx.print(t, CANVAS_WIDTH-get_text_width(t), 0)
 	-- local t = os.date('%a %d/%b/%Y')
 	-- print_color({.7,.7,.7}, t, CANVAS_WIDTH-get_text_width(t), 12)	
-end
-
-function Game:draw_shadow_canvas()
-
 end
 
 function Game:removeme_bg_test()
@@ -575,7 +567,7 @@ function Game:removeme_bg_test2()
 	love.graphics.draw(images._test_shine, 0, 0)
 
 	exec_using_shader(shaders.lighten, function()
-		love.graphics.draw(self.shadow_canvas, -4, -12)
+		love.graphics.draw(self.object_canvas, -4, -12)
 	end)
 	local y0 = (removeme_parallax_y * 5) % (96*2)
 	local i_line = 1
@@ -745,6 +737,7 @@ function Game:on_kill(actor)
 		-- Save stats
 		self.music_player:pause()
 		self:pause_repeating_sounds()
+		self.game_started = false
 		self:save_stats()
 	end
 end
@@ -823,6 +816,7 @@ end
 
 function Game:start_game()
 	self.move_logo = true
+	self.game_started = true
 	self.music_player:set_disk("w1")
 end
 

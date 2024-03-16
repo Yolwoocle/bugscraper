@@ -232,8 +232,8 @@ function Player:update(dt)
 	self:shoot(dt, false)
 	self:update_gun_pos(dt)
 
-	self.ui_x = lerp(self.ui_x, game.cam_x + floor(self.mid_x), 0.2)
-	self.ui_y = lerp(self.ui_y, game.cam_y + floor(self.y), 0.2)
+	self.ui_x = lerp(self.ui_x, floor(self.mid_x), 0.2)
+	self.ui_y = lerp(self.ui_y, floor(self.y), 0.2)
 
 	--Visuals
 	self:update_visuals()

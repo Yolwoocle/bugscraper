@@ -36,6 +36,73 @@ local PROMPTS_CONTROLS = {
     {{"ui_back"}, "back"},
 }
 
+local function draw_elevator_progress()
+    local pad_x = 80
+    local pad_y = 50
+    local x1, y1 = CANVAS_WIDTH - pad_x, pad_y
+    local x2, y2 = CANVAS_WIDTH - pad_x, CANVAS_HEIGHT - pad_y
+    
+    local end_w = 5
+    love.graphics.rectangle("fill", x1 - end_w/2, y1 - end_w, end_w, end_w)
+    love.graphics.rectangle("fill", x2 - end_w/2, y2, end_w, end_w)
+    love.graphics.line(x1, y1, x2, y2)
+    
+    local n_floors = game.elevator.max_floor
+    local sep_w = 3
+    local h = y2 - y1
+    for i = 1, n_floors-1 do
+        local y = y2 - (i/n_floors) * h
+        local sep_x = x1 - sep_w/2
+        local sep_y = round(y - sep_w/2)
+        love.graphics.rectangle("fill", sep_x, sep_y, sep_w, sep_w)
+        if i == game.floor then
+            love.graphics.rectangle("line", sep_x-2, sep_y-1, sep_w+3, sep_w+3)
+        end
+    end
+
+    local text = concat(game.floor,"/",game.elevator.max_floor)
+    local text_y = y2 - (game.floor/n_floors) * h
+    love.graphics.print(text, x1- get_text_width(text) - 5, text_y- get_text_height(text)/2-2)
+end
+
+
+local function removeme_draw_waves(self)
+    local x = self.x - CANVAS_WIDTH/2
+    local y = self.y
+    local slot_w = 25
+    local slot_h = 10
+    for i, wave in ipairs(waves) do
+        love.graphics.print(concat("W", i, " ",wave.min, "-", wave.max), x, y)
+        x = x + 50
+
+        local total_w = slot_w * (wave.min + wave.max)/2
+        love.graphics.rectangle("fill", x, y, total_w, 10)
+        local weight_sum = 0
+        for j, enemy in ipairs(wave.enemies) do
+            weight_sum = weight_sum + enemy[2]
+        end
+
+        for j, enemy in ipairs(wave.enemies) do
+            local e = enemy[1]:new()
+            local spr = e.spr
+            e:remove()
+
+            local weight = enemy[2] 
+
+            love.graphics.setColor(REMOVEME_image_to_col[spr] or ternary(j % 2 == 0, COL_WHITE, COL_RED))
+            local w = total_w * (weight/weight_sum)
+            love.graphics.rectangle("fill", x, y, w, 10)
+            love.graphics.setColor(COL_WHITE)
+
+            love.graphics.draw(spr, x, y, 0, 0.8, 0.8)
+            print_outline(COL_WHITE, COL_BLACK_BLUE, concat(weight), x, y)
+            x = x + w
+        end
+        x = self.x - CANVAS_WIDTH/2
+        y = y + 24
+    end
+end
+
 -----------------------------------------------------
 ------ [[[[[[[[[[[[[[[[ MENUS ]]]]]]]]]]]]]]]] ------
 -----------------------------------------------------
@@ -57,42 +124,7 @@ local function generate_menus()
 
     menus.view_waves = Menu:new(game, {
         {"waves"},
-        {CustomDrawMenuItem, function(self)
-            local x = self.x - CANVAS_WIDTH/2
-            local y = self.y
-            local slot_w = 25
-            local slot_h = 10
-            for i, wave in ipairs(waves) do
-                love.graphics.print(concat("W", i, " ",wave.min, "-", wave.max), x, y)
-                x = x + 50
-
-                local total_w = slot_w * (wave.min + wave.max)/2
-                love.graphics.rectangle("fill", x, y, total_w, 10)
-                local weight_sum = 0
-                for j, enemy in ipairs(wave.enemies) do
-                    weight_sum = weight_sum + enemy[2]
-                end
-
-                for j, enemy in ipairs(wave.enemies) do
-                    local e = enemy[1]:new()
-                    local spr = e.spr
-                    e:remove()
-
-                    local weight = enemy[2] 
-
-                    love.graphics.setColor(REMOVEME_image_to_col[spr] or ternary(j % 2 == 0, COL_WHITE, COL_RED))
-                    local w = total_w * (weight/weight_sum)
-                    love.graphics.rectangle("fill", x, y, w, 10)
-                    love.graphics.setColor(COL_WHITE)
-
-                    love.graphics.draw(spr, x, y, 0, 0.8, 0.8)
-                    print_outline(COL_WHITE, COL_BLACK_BLUE, concat(weight), x, y)
-                    x = x + w
-                end
-                x = self.x - CANVAS_WIDTH/2
-                y = y + 24
-            end
-        end},
+        {CustomDrawMenuItem, removeme_draw_waves},
         {"", function() end},
         {"", function() end},
         {"", function() end},
@@ -142,34 +174,7 @@ local function generate_menus()
         { "CREDITS", func_set_menu('credits') },
         { "DEBUG_WAVES", func_set_menu('view_waves') },
         { "QUIT", quit_game },
-    }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL, function()
-        local pad_x = 80
-        local pad_y = 50
-        local x1, y1 = CANVAS_WIDTH - pad_x, pad_y
-        local x2, y2 = CANVAS_WIDTH - pad_x, CANVAS_HEIGHT - pad_y
-        
-        local end_w = 5
-        love.graphics.rectangle("fill", x1 - end_w/2, y1 - end_w, end_w, end_w)
-        love.graphics.rectangle("fill", x2 - end_w/2, y2, end_w, end_w)
-        love.graphics.line(x1, y1, x2, y2)
-        
-        local n_floors = game.elevator.max_floor
-        local sep_w = 3
-        local h = y2 - y1
-        for i = 1, n_floors-1 do
-            local y = y2 - (i/n_floors) * h
-            local sep_x = x1 - sep_w/2
-            local sep_y = round(y - sep_w/2)
-            love.graphics.rectangle("fill", sep_x, sep_y, sep_w, sep_w)
-            if i == game.floor then
-                love.graphics.rectangle("line", sep_x-2, sep_y-1, sep_w+3, sep_w+3)
-            end
-        end
-
-        local text = concat(game.floor,"/",game.elevator.max_floor)
-        local text_y = y2 - (game.floor/n_floors) * h
-        love.graphics.print(text, x1- get_text_width(text) - 5, text_y- get_text_height(text)/2-2)
-    end)
+    }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL, draw_elevator_progress)
     if OPERATING_SYSTEM == "Web" then
         -- Disable quitting on web
         menus.pause.items[7].is_selectable = false
@@ -397,7 +402,7 @@ local function generate_menus()
         { "" },
         { "RETRY", function() game:new_game() end },
         { "" },
-    }, DEFAULT_MENU_BG_COLOR, PROMPTS_GAME_OVER)
+    }, DEFAULT_MENU_BG_COLOR, PROMPTS_GAME_OVER, draw_elevator_progress)
 
     menus.credits = Menu:new(game, {
         {"<<<<<<<<< CREDITS >>>>>>>>>"},
