@@ -17,21 +17,21 @@ function InputManager:init()
 
 	self.default_mappings = {
 		[1] = self:process_input_map({
-			left =  {"k_left", "k_a",     "c_dpleft",  "c_leftstickxneg", "c_rightstickxneg"},
-			right = {"k_right", "k_d",    "c_dpright", "c_leftstickxpos", "c_rightstickxpos"},
-			up =    {"k_up", "k_w",       "c_dpup",    "c_leftstickyneg", "c_rightstickyneg"},
-			down =  {"k_down", "k_s",     "c_dpdown",  "c_leftstickypos", "c_rightstickypos"},
+			left =  {"k_left", "k_a",     "c_leftstickxneg", "c_rightstickxneg", "c_dpleft"},
+			right = {"k_right", "k_d",    "c_leftstickxpos", "c_rightstickxpos", "c_dpright"},
+			up =    {"k_up", "k_w",       "c_leftstickyneg", "c_rightstickyneg", "c_dpup"},
+			down =  {"k_down", "k_s",     "c_leftstickypos", "c_rightstickypos", "c_dpdown"},
 			jump =  {"k_c", "k_b",        "c_a", "c_b"},
 			shoot = {"k_x", "k_v",        "c_x", "c_y", "c_righttrigger"},
 			pause = {"k_escape", "k_p",   "c_start"},
             
 			ui_select = {"k_c", "k_b", "k_return",          "c_a"},
 			ui_back =   {"k_x", "k_escape", "k_backspace",  "c_b"},
-			ui_left =   {"k_left", "k_a",                   "c_dpleft", "c_leftstickxneg", "c_rightstickxneg"},
-			ui_right =  {"k_right", "k_d",                  "c_dpright", "c_leftstickxpos", "c_rightstickxpos"},
-			ui_up =     {"k_up", "k_w",                     "c_dpup", "c_leftstickyneg", "c_rightstickyneg"},
-			ui_down =   {"k_down", "k_s",                   "c_dpdown", "c_leftstickypos", "c_rightstickypos"},
-			ui_reset_keys = {"k_tab", "c_righttrigger"},
+			ui_left =   {"k_left", "k_a",                   "c_leftstickxneg", "c_rightstickxneg", "c_dpleft"},
+			ui_right =  {"k_right", "k_d",                  "c_leftstickxpos", "c_rightstickxpos", "c_dpright"},
+			ui_up =     {"k_up", "k_w",                     "c_leftstickyneg", "c_rightstickyneg", "c_dpup"},
+			ui_down =   {"k_down", "k_s",                   "c_leftstickypos", "c_rightstickypos", "c_dpdown"},
+			ui_reset_keys = {"k_tab", "c_lefttrigger"},
 		}),
 	}
 
@@ -90,6 +90,27 @@ function InputManager:joystickremoved(joystick)
     end
 
     input_user.joystick = joystick
+end
+
+function InputManager:gamepadaxis(joystick, axis, value)
+end
+
+function InputManager:axis_to_key_name(axis, value)
+    local code = tostring(axis)..ternary(value > 0, "+", "-")
+    local name = AXIS_TO_KEY_NAME_MAP[code]
+    return name
+end
+
+function InputManager:is_axis_down_from_number(player_n, axis, value)
+    local key_name = self:axis_to_key_name(axis, value)
+    return self:is_axis_down(player_n, key_name)
+end
+
+function InputManager:is_axis_down(player_n, axis_name) 
+    local user = self:get_user(player_n)
+    assert(user ~= nil, "user "..tostring(player_n).." doesn't exist")
+
+    return user:is_axis_down(axis_name)
 end
 
 function InputManager:get_joystick_user(joystick)

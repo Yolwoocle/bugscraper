@@ -374,11 +374,6 @@ function Game:draw()
 		gfx.scale(1, 1)
 		gfx.draw(canvas, CANVAS_OX, CANVAS_OY, 0, CANVAS_SCALE, CANVAS_SCALE)
 	end
-
-	gfx.rectangle("line", 10, 10, self.object_canvas:getWidth(), self.object_canvas:getHeight())
-	gfx.draw(self.object_canvas, 10, 10)
-	gfx.rectangle("line", 600, 10, self.front_canvas:getWidth(), self.front_canvas:getHeight())
-	gfx.draw(self.front_canvas, 600, 10)
 end
 
 testx = 0
@@ -619,7 +614,7 @@ function Game:draw_controls(x, y)
 		local btn_x = x - 2
 		for __, action in ipairs(tuto[1]) do
 			local button = Input:get_primary_button(1, action) or InputButton:new("?", "?")
-			local icon = Input:get_button_icon(1, button)
+			local icon = Input:get_button_icon(1, button) or images.btn_k_unknown
 			local w = icon:getWidth()
 
 			btn_x = btn_x - w
@@ -881,6 +876,16 @@ end
 function Game:gamepadreleased(joystick, buttoncode)
 	Input:gamepadreleased(joystick, buttoncode)
 	if self.menu_manager then   self.menu_manager:gamepadreleased(joystick, buttoncode)   end
+end
+
+-- InputManager:get_joystick_user
+-- local axis_func = AXIS_FUNCTIONS[key.key_name]
+-- if axis_func ~= nil then
+-- 	return axis_func(self.joystick)
+-- end
+function Game:gamepadaxis(joystick, axis, value)
+	Input:gamepadaxis(joystick, axis, value)
+	if self.menu_manager then   self.menu_manager:gamepadaxis(joystick, axis, value)   end
 end
 
 -- function Game:keyreleased(key, scancode)

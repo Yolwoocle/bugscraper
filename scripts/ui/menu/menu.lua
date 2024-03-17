@@ -22,14 +22,14 @@ function Menu:init(game, items, bg_color, prompts, extra_draw)
 	end
 
 	self.bg_color = bg_color or { 1, 1, 1, 0 }
-	self.padding = 50
+	self.padding_y = 50
 
 	self.prompts = prompts or {}
 	self.second_layer = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
 
-	self.is_scrollable = self.height > (CANVAS_HEIGHT - self.padding)
+	self.is_scrollable = self.height > (CANVAS_HEIGHT - self.padding_y)
 	if self.is_scrollable then
-		self.def_y = -self.padding
+		self.def_y = -self.padding_y
 	else
 		self.def_y = -CANVAS_HEIGHT / 2 + self.height / 2
 	end
@@ -59,7 +59,7 @@ function Menu:draw()
 end
 
 function Menu:set_target_scroll_position(value)
-	self.target_scroll_position = clamp(value, -self.padding, self.height - CANVAS_HEIGHT + self.padding)
+	self.target_scroll_position = clamp(value, -self.padding_y, self.height - CANVAS_HEIGHT + self.padding_y)
 end
 
 function Menu:draw_prompts()

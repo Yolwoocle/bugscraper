@@ -208,21 +208,27 @@ function MenuManager:back()
 end
 
 function MenuManager:keypressed(key, scancode, isrepeat)
-	if nil == self.sel_item then return end
-	if nil == self.sel_item.keypressed then return end
+	if self.sel_item == nil then return end
+	if self.sel_item.keypressed == nil then return end
 	self.sel_item:keypressed(key, scancode, isrepeat)
 end
 
 function MenuManager:gamepadpressed(joystick, buttoncode)
-	if nil == self.sel_item then return end
-	if nil == self.sel_item.gamepadpressed then return end
+	if self.sel_item == nil then return end
+	if self.sel_item.gamepadpressed == nil then return end
 	self.sel_item:gamepadpressed(joystick, buttoncode)
 end
 
 function MenuManager:gamepadreleased(joystick, buttoncode)
-	if nil == self.sel_item then return end
-	if nil == self.sel_item.gamepadreleased then return end
+	if self.sel_item == nil then return end
+	if self.sel_item.gamepadreleased == nil then return end
 	self.sel_item:gamepadreleased(joystick, buttoncode)
+end
+
+function MenuManager:gamepadaxis(joystick, axis, value)
+	if self.sel_item == nil then return end
+	if self.sel_item.gamepadaxis == nil then return end
+	self.sel_item:gamepadaxis(joystick, axis, value)
 end
 
 return MenuManager

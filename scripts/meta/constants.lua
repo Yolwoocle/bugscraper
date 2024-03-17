@@ -58,6 +58,8 @@ COL_DARK_PURPLE = rgb(104, 56, 108)
 
 SELECTED_HIGHLIGHT_COLOR = COL_LIGHT_RED
 
+MAX_ASSIGNABLE_BUTTONS = 8
+
 INPUT_TYPE_KEYBOARD = "k"
 INPUT_TYPE_CONTROLLER = "c"
 
@@ -75,7 +77,37 @@ BUTTON_STYLES = {
 	BUTTON_STYLE_DETECT,
 }
 
-MAX_ASSIGNABLE_BUTTONS = 8
+AXIS_DEADZONE = 0.2
+AXIS_FUNCTIONS = {
+    leftstickxpos =  function(joystick) return joystick:getAxis(1) >  AXIS_DEADZONE end,
+    leftstickxneg =  function(joystick) return joystick:getAxis(1) < -AXIS_DEADZONE end,
+    leftstickypos =  function(joystick) return joystick:getAxis(2) >  AXIS_DEADZONE end,
+    leftstickyneg =  function(joystick) return joystick:getAxis(2) < -AXIS_DEADZONE end,
+
+    rightstickxpos = function(joystick) return joystick:getAxis(3) >  AXIS_DEADZONE end,
+    rightstickxneg = function(joystick) return joystick:getAxis(3) < -AXIS_DEADZONE end,
+    rightstickypos = function(joystick) return joystick:getAxis(4) >  AXIS_DEADZONE end,
+    rightstickyneg = function(joystick) return joystick:getAxis(4) < -AXIS_DEADZONE end,
+
+    lefttrigger =    function(joystick) return joystick:getAxis(5) > -1 + AXIS_DEADZONE end,
+    righttrigger =   function(joystick) return joystick:getAxis(6) > -1 + AXIS_DEADZONE end,
+}
+AXIS_TO_KEY_NAME_MAP = {
+    ["leftx+"] = "leftstickxpos",
+    ["leftx-"] = "leftstickxneg",
+    ["lefty+"] = "leftstickypos",
+    ["lefty-"] = "leftstickyneg",
+
+    ["rightx+"] = "rightstickxpos",
+    ["rightx-"] = "rightstickxneg",
+    ["righty+"] = "rightstickypos",
+    ["righty-"] = "rightstickyneg",
+
+    ["triggerleft+"] = "lefttrigger",
+    ["triggerleft-"] = "lefttrigger",
+    ["triggerright+"] = "righttrigger",
+    ["triggerright-"] = "righttrigger",
+}
 
 MUSIC_MODE_OFF = "off"
 MUSIC_MODE_INGAME = "ingame"

@@ -27,6 +27,11 @@ function ControlsMenuItem:update(dt)
 	self.label_text = self.action_name
 	self.value = self:get_buttons()
 	self.value_text = ""
+
+	if self.is_selected and not self.is_waiting_for_input and Input:action_pressed("ui_reset_keys") then
+		self:clear_buttons()
+		return
+	end
 end
 
 function ControlsMenuItem:draw_value_text()
@@ -94,9 +99,6 @@ function ControlsMenuItem:keypressed(key, scancode, isrepeat)
 	if scancode == "escape" then
 		self.is_waiting_for_input = false
 		Input:set_standby_mode(false)
-	elseif scancode == "tab" and not self.is_waiting_for_input then
-		self:clear_buttons()
-		return
 	end
 	
 	-- Apply new key control
@@ -111,11 +113,25 @@ function ControlsMenuItem:gamepadpressed(joystick, buttoncode)
 	self:on_button_pressed(InputButton:new("c", buttoncode))
 end
 
+function ControlsMenuItem:gamepadaxis(joystick, axis, value)
+	if self.player_n ~= Input:get_joystick_user_n(joystick) then
+		return
+	end
+
+	local key_name = Input:axis_to_key_name(axis, value)
+	if Input:is_axis_down(self.player_n, key_name) then
+		self:on_button_pressed(InputButton:new("c", key_name))
+	end
+end
+
 function ControlsMenuItem:on_button_pressed(button)
 	if self.is_waiting_for_input then
 		self.is_waiting_for_input = false
 		Input:set_standby_mode(false)
 
+		if self.input_type ~= button.type then
+			return
+		end
 		if Input:is_button_in_use(self.player_n, self.action_name, button) then
 			return
 		end
@@ -123,10 +139,10 @@ function ControlsMenuItem:on_button_pressed(button)
 			return
 		end
 		
-		self.value = button.key_name
-
 		self.scancode = button.key_name
 		Input:add_action_buttons(self.player_n, self.action_name, {button})
+		
+		self.value = self:get_buttons()
 	end
 end
 

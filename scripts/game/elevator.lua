@@ -244,10 +244,10 @@ function Elevator:new_wave_buffer_enemies()
 	-- Select a wave
 	local wave_n = clamp(self.game.floor+1, 1, #waves) -- floor+1 because the floor indicator changes before enemies are spawned
 	local wave = waves[wave_n]
-	if self.endless_mode then
+	if self.game.endless_mode then
 		-- Wave on endless mode
-		local min = random_range(3,8)
-		local max = min + random_range(0,8)
+		local min = 8
+		local max = 16
 		wave = {
 			min = min,
 			max = max,
@@ -255,7 +255,10 @@ function Elevator:new_wave_buffer_enemies()
 				{Enemies.Larva, random_range(1,6)},
 				{Enemies.Fly, random_range(1,6)},
 				{Enemies.Slug, random_range(1,6)},
+				{Enemies.Mosquito, random_range(1, 6)},
+
 				{Enemies.SnailShelled, random_range(1,4)},
+				{Enemies.HoneypotAnt, random_range(1,4)},
 				{Enemies.SpikedFly, random_range(1,4)},
 				{Enemies.Grasshopper, random_range(1,4)},
 				{Enemies.MushroomAnt, random_range(1,4)},

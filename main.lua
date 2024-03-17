@@ -123,6 +123,10 @@ function love.gamepadreleased(joystick, buttoncode)
 	if game.gamepadreleased then   game:gamepadreleased(joystick, buttoncode)   end
 end
 
+function love.gamepadaxis(joystick, axis, value)
+	if game.gamepadaxis then   game:gamepadaxis(joystick, axis, value)   end
+end
+
 --function love.quit()
 --	game:quit()
 --end

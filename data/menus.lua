@@ -61,7 +61,7 @@ local function draw_elevator_progress()
     end
 
     local text = concat(game.floor,"/",game.elevator.max_floor)
-    local text_y = y2 - (game.floor/n_floors) * h
+    local text_y = clamp(y2 - (game.floor/n_floors) * h, 0, game.elevator.max_floor)
     love.graphics.print(text, x1- get_text_width(text) - 5, text_y- get_text_height(text)/2-2)
 end
 
@@ -369,6 +369,17 @@ local function generate_menus()
             self.value = Options:get("button_style_p1")
             self.value_text = concat(self.value)
         end},
+        { "CURRENT GAMEPAD", nil,
+        function(self)
+            local joystick = Input:get_user(1).joystick
+            if joystick ~= nil then
+                self.value = "\""..joystick:getName().."\""
+                self.value_text = "\""..joystick:getName().."\""
+            else
+                self.value = "[NO GAMEPAD CONNECTED]"
+                self.value_text = "[NO GAMEPAD CONNECTED]"
+            end
+        end},
         { "" },
         { "<<< Gameplay >>>" },
         { ControlsMenuItem, 1, "c", "left"},
@@ -416,6 +427,7 @@ local function generate_menus()
         { ""},
         { "<<< Special Thanks >>>"},
         { "Gouspourd", func_url("https://gouspourd.itch.io/")},
+        { "ArkanYota", func_url("https://github.com/ARKANYOTA")},
         { "Louie Chapman", func_url("https://louiechapm.itch.io/") },
         { "Raphaël Marcon", func_url("https://raphytator.itch.io/") },
         { "hades140701", function() end },

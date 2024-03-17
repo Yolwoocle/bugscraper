@@ -6,23 +6,6 @@ gamepadguesser.loadMappings("lib/gamepadguesser")
 
 local InputUser = Class:inherit()
 
-local AXIS_DEADZONE = 0.2
-
-local axis_functions = {
-    leftstickxpos = function(joystick) return joystick:getAxis(1) > AXIS_DEADZONE end,
-    leftstickxneg = function(joystick) return joystick:getAxis(1) < -AXIS_DEADZONE end,
-    leftstickypos = function(joystick) return joystick:getAxis(2) > AXIS_DEADZONE end,
-    leftstickyneg = function(joystick) return joystick:getAxis(2) < -AXIS_DEADZONE end,
-
-    rightstickxpos = function(joystick) return joystick:getAxis(3) > AXIS_DEADZONE end,
-    rightstickxneg = function(joystick) return joystick:getAxis(3) < -AXIS_DEADZONE end,
-    rightstickypos = function(joystick) return joystick:getAxis(4) > AXIS_DEADZONE end,
-    rightstickyneg = function(joystick) return joystick:getAxis(4) < -AXIS_DEADZONE end,
-
-    lefttrigger  = function(joystick) return joystick:getAxis(5) > -1 + AXIS_DEADZONE end,
-    righttrigger = function(joystick) return joystick:getAxis(6) > -1 + AXIS_DEADZONE end,
-}
-
 function InputUser:init(n)
     self.n = n
     self:init_last_input_state()
@@ -67,19 +50,27 @@ end
 
 function InputUser:is_button_down(key)
     if key.type == INPUT_TYPE_KEYBOARD then
-        self.primary_input_type = INPUT_TYPE_KEYBOARD
-        
         return love.keyboard.isScancodeDown(key.key_name)
 
     elseif key.type == INPUT_TYPE_CONTROLLER and self.joystick then
-        self.primary_input_type = INPUT_TYPE_CONTROLLER
-
-        local axis_func = axis_functions[key.key_name]
+        local axis_func = AXIS_FUNCTIONS[key.key_name]
         if axis_func ~= nil then
             return axis_func(self.joystick)
         end
         return self.joystick:isGamepadDown(key.key_name)
         
+    end
+    return false
+end
+
+function InputUser:is_axis_down(axis_name)
+    if self.joystick == nil then
+        return false
+    end
+
+    local axis_func = AXIS_FUNCTIONS[axis_name]
+    if axis_func ~= nil then
+        return axis_func(self.joystick)
     end
     return false
 end
@@ -90,10 +81,15 @@ function InputUser:action_down(action)
 
 	for _, button in pairs(buttons) do
 		if self:is_button_down(button) then
+            self:update_primary_input_type(button.type)
 			return true
 		end
 	end
 	return false
+end
+
+function InputUser:update_primary_input_type(input_type)
+    self.primary_input_type = input_type
 end
 
 function InputUser:get_button_style()
