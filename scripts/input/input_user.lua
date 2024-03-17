@@ -1,6 +1,7 @@
 require "scripts.util"
 local Class = require "scripts.meta.class"
 local InputButton = require "scripts.input.input_button"
+local InputActionState = require "scripts.input.input_action_state"
 local gamepadguesser = require "lib.gamepadguesser"
 gamepadguesser.loadMappings("lib/gamepadguesser")
 
@@ -8,10 +9,16 @@ local InputUser = Class:inherit()
 
 function InputUser:init(n)
     self.n = n
-    self:init_last_input_state()
+    self:init_action_states()
 
     self.joystick = nil
     self.primary_input_type = ternary(n == 1, "k", "c")
+end
+
+function InputUser:update(dt)
+    for action, action_state in pairs(self.action_states) do
+        action_state:update(dt)
+	end
 end
 
 function InputUser:get_input_map()
@@ -23,27 +30,38 @@ function InputUser:get_primary_button(action)
     return buttons[1]
 end
 
-function InputUser:init_last_input_state()
-	self.last_input_state = {}
+function InputUser:init_action_states()
+    local hold_repeat_actions = {
+        ui_left = true,
+        ui_right = true,
+        ui_up = true,
+        ui_down = true
+    }
+
+	self.action_states = {}
 	for action, _ in pairs(self:get_input_map()) do
-        self.last_input_state[action] = false
+        self.action_states[action] = InputActionState:new(self, action, hold_repeat_actions[action] ~= nil)
 	end
 end
 
 function InputUser:update_last_input_state()
-	for action, v in pairs(self:get_input_map()) do
-		if type(v) == "table" then
-			self.last_input_state[action] = Input:action_down(self.n, action, true)
-		end
-	end
+    for action, action_state in pairs(self.action_states) do
+        action_state:update_last_input_state()
+    end
 end
 
 function InputUser:action_pressed(action)
     -- This makes sure that the button state table assigns "true" to buttons
 	-- that have been just pressed 
-	local last = self.last_input_state[action]
+    local action_state = self.action_states[action]
+	local last = action_state.last_state
 	local now = self:action_down(action)
-	return not last and now
+    local result = not last and now
+
+    if not result and action_state.can_action_hold_repeat then
+        return action_state:is_hold_repeat_pressed()
+    end
+    return result
 end
 
 function InputUser:is_button_down(key)

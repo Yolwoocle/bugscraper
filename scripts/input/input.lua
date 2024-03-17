@@ -47,6 +47,9 @@ function InputManager:init_users()
 end
 
 function InputManager:update(dt)
+    for i, user in ipairs(self.users) do
+        user:update(dt)
+    end
 end
 
 function InputManager:update_last_input_state(dt)

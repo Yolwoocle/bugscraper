@@ -60,6 +60,8 @@ SELECTED_HIGHLIGHT_COLOR = COL_LIGHT_RED
 
 MAX_ASSIGNABLE_BUTTONS = 8
 
+---------------------------------------------
+
 INPUT_TYPE_KEYBOARD = "k"
 INPUT_TYPE_CONTROLLER = "c"
 
@@ -76,6 +78,9 @@ BUTTON_STYLES = {
 	BUTTON_STYLE_XBOX,
 	BUTTON_STYLE_DETECT,
 }
+
+BUTTON_HOLD_REPEAT_TIME = 0.35
+BUTTON_HOLD_REPEAT_INTERVAL = 0.07
 
 AXIS_DEADZONE = 0.2
 AXIS_FUNCTIONS = {
@@ -108,6 +113,8 @@ AXIS_TO_KEY_NAME_MAP = {
     ["triggerright+"] = "righttrigger",
     ["triggerright-"] = "righttrigger",
 }
+
+---------------------------------------------
 
 MUSIC_MODE_OFF = "off"
 MUSIC_MODE_INGAME = "ingame"
