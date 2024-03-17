@@ -26,9 +26,7 @@ end
 function InputUser:init_last_input_state()
 	self.last_input_state = {}
 	for action, _ in pairs(self:get_input_map()) do
-		if action ~= "type" then
-			self.last_input_state[action] = false
-		end
+        self.last_input_state[action] = false
 	end
 end
 

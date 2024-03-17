@@ -61,7 +61,7 @@ local function draw_elevator_progress()
     end
 
     local text = concat(game.floor,"/",game.elevator.max_floor)
-    local text_y = clamp(y2 - (game.floor/n_floors) * h, 0, game.elevator.max_floor)
+    local text_y = clamp(y2 - (game.floor/n_floors) * h, y1, y2)
     love.graphics.print(text, x1- get_text_width(text) - 5, text_y- get_text_height(text)/2-2)
 end
 
