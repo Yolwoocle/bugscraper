@@ -15,6 +15,8 @@ end
 BLOCK_WIDTH = 16
 BW = BLOCK_WIDTH
 
+--------------------------------------------- 
+
 COL_WHITE = {1, 1, 1, 1}
 COL_BLACK = {0, 0, 0, 1}
 COL_RED = {1, 0, 0, 1}
@@ -58,9 +60,9 @@ COL_DARK_PURPLE = rgb(104, 56, 108)
 
 SELECTED_HIGHLIGHT_COLOR = COL_LIGHT_RED
 
-MAX_ASSIGNABLE_BUTTONS = 8
-
 ---------------------------------------------
+
+MAX_ASSIGNABLE_BUTTONS = 8
 
 INPUT_TYPE_KEYBOARD = "k"
 INPUT_TYPE_CONTROLLER = "c"
@@ -114,11 +116,13 @@ AXIS_TO_KEY_NAME_MAP = {
     ["triggerright-"] = "righttrigger",
 }
 
----------------------------------------------
+--------------------------------------------- 
 
 MUSIC_MODE_OFF = "off"
 MUSIC_MODE_INGAME = "ingame"
 MUSIC_MODE_PAUSE = "pause"
+
+--------------------------------------------- 
 
 UPGRADE_TYPE_TEMPORARY = "temporary"
 UPGRADE_TYPE_INSTANT = "instant"
