@@ -605,23 +605,27 @@ end
 
 function Game:draw_controls(x, y)
 	local tutorials = {
-		{{"down", "up", "right", "left"}, "MOVE"},
+		{{"left", "up", "right", "down"}, "MOVE"},
 		{{"jump"}, "JUMP"},
 		{{"shoot"}, "SHOOT"},
 	}
 
 	for i, tuto in ipairs(tutorials) do
 		local btn_x = x - 2
-		for __, action in ipairs(tuto[1]) do
-			local button = Input:get_primary_button(1, action) or InputButton:new("?", "?")
-			local icon = Input:get_button_icon(1, button) or images.btn_k_unknown
-			local w = icon:getWidth()
 
-			btn_x = btn_x - w
-			exec_using_shader(shaders.button_icon_to_def, function()
-				love.graphics.draw(icon, btn_x, y)
-			end)
-		end
+		local shown_duration = 0.5
+		local actions = tuto[1]
+		local action_index = math.floor((self.t % (shown_duration * #actions)) / shown_duration) + 1
+		local action = actions[action_index]
+
+		local button = Input:get_primary_button(1, action) or InputButton:new("?", "?")
+		local icon = Input:get_button_icon(1, button) or images.btn_k_unknown
+		local w = icon:getWidth()
+
+		btn_x = btn_x - w
+		exec_using_shader(shaders.button_icon_to_def, function()
+			love.graphics.draw(icon, btn_x, y)
+		end)
 		
 		print_outline(self.logo_cols[4-i] or COL_WHITE, COL_BLACK_BLUE, tuto[2], x, y)
 		y = y + 18
