@@ -12,12 +12,11 @@ require "scripts.meta.constants"
 
 local Player = Actor:inherit()
 
-function Player:init(n, x, y, spr)
+function Player:init(n, x, y, skin)
 	n = n or 1
 	x = x or 0
 	y = y or 0
-	spr = spr or images.ant1
-	self:init_actor(x, y, 14, 14, spr)
+	self:init_actor(x, y, 14, 14, images.ant1)
 	self.is_player = true
 	self.is_being = true
 	self.name = concat("player", n)
@@ -35,9 +34,9 @@ function Player:init(n, x, y, spr)
 	self.is_enemy = false
 	
 	-- Animation
-	self.spr_idle = images.ant1
-	self.spr_jump = images.ant2
-	self.spr_dead = images.ant_dead
+	self.spr_idle = skin.spr_idle
+	self.spr_jump = skin.spr_jump
+	self.spr_dead = skin.spr_dead
 	self.spr = self.spr_idle
 	self.is_walking = false
 	self.squash = 1
@@ -130,8 +129,6 @@ function Player:init(n, x, y, spr)
 	self.gun_number = 1
 
 	self.is_dead = false
-	self.timer_before_death = 0
-	self.max_timer_before_death = 3.3
 
 	-- UI
 	self.ui_x = self.x
@@ -157,10 +154,6 @@ end
 local igun = 1
 function Player:update(dt)
 	self.dt = dt
-	if self.is_dead then
-		self:do_death_anim(dt)
-		return
-	end
 
 	-- if self:button_pressed("up") then
 	-- 	-- game.floor = 16
@@ -178,16 +171,19 @@ function Player:update(dt)
 	-- 	igun = mod_plus_1(igun + 1, #all_guns)
 	-- 	self:equip_gun(all_guns[igun]:new())
 	-- end
-	if Input:action_pressed(self.n, "ui_reset_keys") then
-		if Input:action_down(self.n, "up") then
-			game.floor = game.elevator.max_floor-1
-		end
-		for i,e in pairs(game.actors) do
-			if e.is_enemy then
-				e:kill()
-			end
-		end
-	end
+	-- if Input:action_pressed(self.n, "ui_reset_keys") then
+	-- 	if Input:action_down(self.n, "up") then
+	-- 		game.floor = game.elevator.max_floor-1
+	-- 	end
+	-- 	for i,e in pairs(game.actors) do
+	-- 		if e.is_enemy then
+	-- 			e:kill()
+	-- 		end
+	-- 	end
+	-- end
+	-- if Input:action_pressed(self.n, "ui_reset_keys") then
+	-- 	self:kill()
+	-- end
 
 	-- Movement
 	self:update_upgrades(dt)
@@ -322,8 +318,13 @@ function Player:draw_player()
 		love.graphics.setColor(old_col)
 		gfx.draw(self.spr, x, y, self.rot, fx, fy, spr_w2, spr_h2)
 	end
+	gfx.print(self.n, x, y- 20)
 
 	self:post_draw(x-spr_w2, y-spr_h2)
+end
+
+function Player:set_player_n(n)
+	self.n = n
 end
 
 function Player:heal(val)
@@ -340,8 +341,8 @@ end
 function Player:move(dt)
 	-- compute movement dir
 	local dir = {x=0, y=0}
-	if Input:action_down('left') then   dir.x = dir.x - 1   end
-	if Input:action_down('right') then   dir.x = dir.x + 1   end
+	if Input:action_down(self.n, 'left') then   dir.x = dir.x - 1   end
+	if Input:action_down(self.n, 'right') then   dir.x = dir.x + 1   end
 
 	if dir.x ~= 0 then
 		self.dir_x = dir.x
@@ -384,8 +385,8 @@ function Player:do_wall_sliding(dt)
 		local col_normal = self.wall_col.normal
 		local is_walled = (col_normal.y == 0)
 		local is_falling = (self.vy > 0)
-		local holding_left = Input:action_down('left') and col_normal.x == 1
-		local holding_right = Input:action_down('right') and col_normal.x == -1
+		local holding_left = Input:action_down(self.n, 'left') and col_normal.x == 1
+		local holding_right = Input:action_down(self.n, 'right') and col_normal.x == -1
 		
 		local is_wall_sliding = is_walled and is_falling and (holding_left or holding_right) 
 			and not self.wall_col.other.is_not_slidable
@@ -421,7 +422,7 @@ end
 function Player:do_jumping(dt)
 	-- This buffer is so that you still jump even if you're a few frames behind
 	self.buffer_jump_timer = self.buffer_jump_timer - 1
-	if Input:action_pressed("jump") then
+	if Input:action_pressed(self.n, "jump") then
 		self.buffer_jump_timer = 12
 	end
 
@@ -429,7 +430,7 @@ function Player:do_jumping(dt)
 	self.air_time = self.air_time + dt
 	if self.is_grounded then self.air_time = 0 end
 	if self.air_time < self.jump_air_time and not self.is_grounded then
-		if Input:action_down("jump") then
+		if Input:action_down(self.n, "jump") then
 			self.vy = self.vy - self.air_jump_force
 		end
 	end
@@ -528,20 +529,12 @@ function Player:kill()
 	
 	self.timer_before_death = self.max_timer_before_death
 	Audio:play("game_over_1")
+
+	self:remove()
 end
 
 function Player:on_death()
 	
-end
-
-function Player:do_death_anim(dt)
-	if not self.is_dead then   return   end
-	self.timer_before_death = self.timer_before_death - dt
-	
-	if self.timer_before_death <= 0 then
-		game:on_game_over()
-		Audio:play("game_over_2")
-	end
 end
 
 function Player:shoot(dt, is_burst)

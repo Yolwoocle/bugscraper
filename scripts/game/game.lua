@@ -90,7 +90,7 @@ function Game:init()
 
 	Options:set_volume(Options:get("volume"))
 	
-	self:new_game()
+	self:new_game(4)
 	
 	-- Menu Manager
 	self.menu_manager = MenuManager:new(self)
@@ -133,13 +133,13 @@ function Game:new_game(number_of_players)
 	Collision = CollisionManager:new()
 	Particles = ParticleSystem:new()
 
-	number_of_players = number_of_players or 1
+	number_of_players = (number_of_players or self.number_of_players) or 1
 
 	self.t = 0
 	self.frame = 0
 
 	-- Players
-	self.max_number_of_players = 4 
+	self.max_number_of_players = MAX_NUMBER_OF_PLAYERS
 	self.number_of_players = number_of_players
 
 	self.elevator = Elevator:new(self)
@@ -178,6 +178,7 @@ function Game:new_game(number_of_players)
 	self.enemy_count = 0
 	self.actors = {}
 	self:init_players()
+	self.number_of_alive_players = number_of_players
 
 	-- Start lever
 	local nx = CANVAS_WIDTH * 0.75
@@ -257,6 +258,10 @@ function Game:new_game(number_of_players)
 	self.time_before_music = math.huge
 
 	self.endless_mode = false
+	self.game_started = false
+	self.is_game_over = false
+	self.timer_before_game_over = 0
+	self.max_timer_before_game_over = 3.3
 
 	Options:update_sound_on()
 end
@@ -281,6 +286,8 @@ function Game:update(dt)
 	if not self.menu_manager.cur_menu then
 		self:update_main_game(dt)
 	end
+
+	-- THIS SHOULD BE LAST
 	Input:update_last_input_state(dt)
 end
 
@@ -290,6 +297,22 @@ function Game:update_main_game(dt)
 	end
 	self.t = self.t + dt
 
+	if Input:action_pressed_any_player("debug_1") then
+		self:leave_game(1)
+	end
+	if Input:action_pressed_any_player("debug_2") then
+		self:leave_game(2)
+	end
+	if Input:action_pressed_any_player("debug_3") then
+		self:leave_game(3)
+	end
+	if Input:action_pressed_any_player("debug_4") then
+		self:leave_game(4)
+	end
+	if Input:action_pressed_any_player("ui_reset_keys") then
+		self:join_game()
+	end
+	
 	-- BG color gradient
 	if not self.elevator.is_on_win_screen then
 		self.elevator.bg_color_progress = self.elevator.bg_color_progress + dt*0.2
@@ -307,6 +330,8 @@ function Game:update_main_game(dt)
 	-- Elevator swing 
 	-- self.elev_x = cos(self.t) * 4
 	-- self.elev_y = 4 + sin(self.t) * 4
+
+	self:update_timer_before_game_over(dt)
 
 	self:apply_screenshake(dt)
 	
@@ -644,6 +669,22 @@ end
 function Game:draw_debug()
 	gfx.print(concat("FPS: ",love.timer.getFPS(), " / frmRpeat: ",self.frame_repeat, " / frame: ",frame), 0, 0)
 	
+	local players_str = "players: "
+	for k, player in pairs(self.players) do
+		players_str = concat(players_str, "{", k, ":", player.n, "}, ")
+	end
+
+	local users_str = "users: "	
+	for k, player in pairs(Input.users) do
+		users_str = concat(users_str, "{", k, ":", player.n, "}, ")
+	end
+	
+	local joystick_str = "joysticks: "	
+	for joy, user in pairs(Input.joystick_to_user_map) do
+		joystick_str = concat(joystick_str, "{", string.sub(joy:getName(),1,4), "... ", ":", user.n, "}, ")
+	end
+
+	
 	-- Print debug info
 	local txt_h = get_text_height(" ")
 	local txts = {
@@ -656,6 +697,10 @@ function Game:draw_debug()
 		concat("debug1 ", self.debug1),
 		concat("real_wave_n ", self.debug2),
 		concat("bg_color_index ", self.debug3),
+		concat("number_of_alive_players ", self.number_of_alive_players),
+		players_str,
+		users_str,
+		joystick_str,
 		"",
 	}
 
@@ -733,11 +778,33 @@ function Game:on_kill(actor)
 	end
 
 	if actor.is_player then
+		self:on_player_death(actor)
+	end
+end
+
+function Game:on_player_death(player)
+	self.number_of_alive_players = self.number_of_alive_players - 1
+
+	if self.number_of_alive_players <= 0 then
 		-- Save stats
 		self.music_player:pause()
 		self:pause_repeating_sounds()
 		self.game_started = false
+		self.is_game_over = true
+		self.timer_before_game_over = self.max_timer_before_game_over
 		self:save_stats()
+	end
+end
+
+function Game:update_timer_before_game_over(dt)
+	if not self.is_game_over then
+		return 
+	end
+	self.timer_before_game_over = self.timer_before_game_over - dt
+	
+	if self.timer_before_game_over <= 0 then
+		self:on_game_over()
+		Audio:play("game_over_2")
 	end
 end
 
@@ -775,23 +842,80 @@ function draw_log()
 end
 
 function Game:init_players()
-	-- TODO: move this to a general function (?)
-	local sprs = {
-		images.ant,
-		images.caterpillar
-	}
-
 	self.players = {}
 
-	-- Spawn at middle
+	for i=1, self.number_of_players do
+		self:new_player(i)
+	end
+end
+
+function Game:find_free_player_number()
+	for i = 1, self.max_number_of_players do
+		print_debug("i", i)
+		if self.players[i] == nil then
+			print_debug("i nil", i)
+			return i
+		end
+	end
+	print_debug("return nil")
+	return nil
+end
+
+function Game:join_game(player_n)
+	player_n = player_n or self:find_free_player_number()
+	if player_n == nil then
+		return
+	end
+
+	Input:new_user(player_n)
+	self:new_player(player_n)
+end
+
+function Game:new_player(player_n)
+	player_n = player_n or self:find_free_player_number()
+	if player_n == nil then
+		return
+	end
+
+	local skins = {
+		{
+			spr_idle = images.ant1,
+			spr_jump = images.ant2,
+			spr_dead = images.ant_dead,
+		},
+		{
+			spr_idle = images.caterpillar_1,
+			spr_jump = images.caterpillar_2,
+			spr_dead = images.caterpillar_dead,
+		},
+		{
+			spr_idle = images.caterpillar_1,
+			spr_jump = images.caterpillar_2,
+			spr_dead = images.caterpillar_dead,
+		},
+		{
+			spr_idle = images.caterpillar_1,
+			spr_jump = images.caterpillar_2,
+			spr_dead = images.caterpillar_dead,
+		},
+	}
+
 	local mx = floor((self.map.width / self.max_number_of_players))
 	local my = floor(self.map.height - 3)
 
-	for i=1, self.number_of_players do
-		local player = Player:new(i, mx*16 + i*16, my*16, sprs[i])
-		self.players[i] = player
-		self:new_actor(player)
+	local player = Player:new(player_n, mx*16 + player_n*16, my*16, skins[player_n])
+	self.players[player_n] = player
+	self:new_actor(player)
+end
+
+function Game:leave_game(player_n)
+	if self.players[player_n] == nil then
+		return
 	end
+
+	self.players[player_n]:remove()
+	self.players[player_n] = nil
+	Input:remove_user(player_n)
 end
 
 function Game:apply_screenshake(dt)

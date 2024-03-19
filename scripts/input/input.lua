@@ -16,44 +16,132 @@ function InputManager:init()
 	self.buffer_standby_mode = {active = false, value = false}
 
 	self.default_mappings = {
-		[1] = self:process_input_map({
-			left =  {"k_left", "k_a",     "c_leftstickxneg", "c_rightstickxneg", "c_dpleft"},
-			right = {"k_right", "k_d",    "c_leftstickxpos", "c_rightstickxpos", "c_dpright"},
-			up =    {"k_up", "k_w",       "c_leftstickyneg", "c_rightstickyneg", "c_dpup"},
-			down =  {"k_down", "k_s",     "c_leftstickypos", "c_rightstickypos", "c_dpdown"},
-			jump =  {"k_c", "k_b",        "c_a", "c_b"},
-			shoot = {"k_x", "k_v",        "c_x", "c_y", "c_righttrigger"},
-			pause = {"k_escape", "k_p",   "c_start"},
+		-- [1] = self:process_input_map({
+		-- 	left =  {"k_left", "k_a",     "c_leftstickxneg", "c_rightstickxneg", "c_dpleft"},
+		-- 	right = {"k_right", "k_d",    "c_leftstickxpos", "c_rightstickxpos", "c_dpright"},
+		-- 	up =    {"k_up", "k_w",       "c_leftstickyneg", "c_rightstickyneg", "c_dpup"},
+		-- 	down =  {"k_down", "k_s",     "c_leftstickypos", "c_rightstickypos", "c_dpdown"},
+		-- 	jump =  {"k_c", "k_b",        "c_a", "c_b"},
+		-- 	shoot = {"k_x", "k_v",        "c_x", "c_y", "c_righttrigger"},
+		-- 	pause = {"k_escape", "k_p",   "c_start"},
             
-			ui_select = {"k_c", "k_b", "k_return",          "c_a"},
-			ui_back =   {"k_x", "k_escape", "k_backspace",  "c_b"},
-			ui_left =   {"k_left", "k_a",                   "c_leftstickxneg", "c_rightstickxneg", "c_dpleft"},
-			ui_right =  {"k_right", "k_d",                  "c_leftstickxpos", "c_rightstickxpos", "c_dpright"},
-			ui_up =     {"k_up", "k_w",                     "c_leftstickyneg", "c_rightstickyneg", "c_dpup"},
-			ui_down =   {"k_down", "k_s",                   "c_leftstickypos", "c_rightstickypos", "c_dpdown"},
-			ui_reset_keys = {"k_tab", "c_lefttrigger"},
+		-- 	ui_select = {"k_c", "k_b", "k_return",          "c_a"},
+		-- 	ui_back =   {"k_x", "k_escape", "k_backspace",  "c_b"},
+		-- 	ui_left =   {"k_left", "k_a",                   "c_leftstickxneg", "c_rightstickxneg", "c_dpleft"},
+		-- 	ui_right =  {"k_right", "k_d",                  "c_leftstickxpos", "c_rightstickxpos", "c_dpright"},
+		-- 	ui_up =     {"k_up", "k_w",                     "c_leftstickyneg", "c_rightstickyneg", "c_dpup"},
+		-- 	ui_down =   {"k_down", "k_s",                   "c_leftstickypos", "c_rightstickypos", "c_dpdown"},
+		-- 	ui_reset_keys = {"k_tab", "c_lefttrigger"},
+		-- }),
+        [1] = self:process_input_map({
+			left =  {"c_leftstickxneg", "c_rightstickxneg", "c_dpleft"},
+			right = {"c_leftstickxpos", "c_rightstickxpos", "c_dpright"},
+			up =    {"c_leftstickyneg", "c_rightstickyneg", "c_dpup"},
+			down =  {"c_leftstickypos", "c_rightstickypos", "c_dpdown"},
+			jump =  {"c_a", "c_b",                   "k_h"},
+			shoot = {"c_x", "c_y", "c_righttrigger"},
+			pause = {"c_start"},
+            
+			ui_select = {"c_a"},
+			ui_back =   {"c_b"},
+			ui_left =   {"c_leftstickxneg", "c_rightstickxneg", "c_dpleft"},
+			ui_right =  {"c_leftstickxpos", "c_rightstickxpos", "c_dpright"},
+			ui_up =     {"c_leftstickyneg", "c_rightstickyneg", "c_dpup"},
+			ui_down =   {"c_leftstickypos", "c_rightstickypos", "c_dpdown"},
+			ui_reset_keys = {"c_lefttrigger"},
+			debug_1 = {"k_1"},
+			debug_2 = {"k_2"},
+			debug_3 = {"k_3"},
+			debug_4 = {"k_4"},
+		}),
+		[2] = self:process_input_map({
+			left =  {"k_left", "k_a"},
+			right = {"k_right", "k_d"},
+			up =    {"k_up", "k_w"},
+			down =  {"k_down", "k_s"},
+			jump =  {"k_c", "k_b",                 "k_j"},
+			shoot = {"k_x", "k_v"},
+			pause = {"k_escape", "k_p"},
+            
+			ui_select = {"k_c", "k_b", "k_return"},
+			ui_back =   {"k_x", "k_escape", "k_backspace"},
+			ui_left =   {"k_left", "k_a"},
+			ui_right =  {"k_right", "k_d"},
+			ui_up =     {"k_up", "k_w"},
+			ui_down =   {"k_down", "k_s"},
+			ui_reset_keys = {"k_tab"},
+			debug_1 = {"k_1"},
+			debug_2 = {"k_2"},
+			debug_3 = {"k_3"},
+			debug_4 = {"k_4"},
+		}),
+        
+		[3] = self:process_input_map({
+			left =  {"k_left", "k_a"},
+			right = {"k_right", "k_d"},
+			up =    {"k_up", "k_w"},
+			down =  {"k_down", "k_s"},
+			jump =  {"k_c", "k_b",                   "k_k"},
+			shoot = {"k_x", "k_v"},
+			pause = {"k_escape", "k_p"},
+            
+			ui_select = {"k_c", "k_b", "k_return"},
+			ui_back =   {"k_x", "k_escape", "k_backspace"},
+			ui_left =   {"k_left", "k_a"},
+			ui_right =  {"k_right", "k_d"},
+			ui_up =     {"k_up", "k_w"},
+			ui_down =   {"k_down", "k_s"},
+			ui_reset_keys = {"k_tab"},
+			debug_1 = {"k_1"},
+			debug_2 = {"k_2"},
+			debug_3 = {"k_3"},
+			debug_4 = {"k_4"},
+		}),
+        
+		[4] = self:process_input_map({
+			left =  {"k_left", "k_a"},
+			right = {"k_right", "k_d"},
+			up =    {"k_up", "k_w"},
+			down =  {"k_down", "k_s"},
+			jump =  {"k_c", "k_b",                    "k_l"},
+			shoot = {"k_x", "k_v"},
+			pause = {"k_escape", "k_p"},
+            
+			ui_select = {"k_c", "k_b", "k_return"},
+			ui_back =   {"k_x", "k_escape", "k_backspace"},
+			ui_left =   {"k_left", "k_a"},
+			ui_right =  {"k_right", "k_d"},
+			ui_up =     {"k_up", "k_w"},
+			ui_down =   {"k_down", "k_s"},
+			ui_reset_keys = {"k_tab"},
+			debug_1 = {"k_1"},
+			debug_2 = {"k_2"},
+			debug_3 = {"k_3"},
+			debug_4 = {"k_4"},
 		}),
 	}
 
 	self.input_maps = {
-        [1] = InputMap:new(self.default_mappings[1])
+        [1] = InputMap:new(self.default_mappings[1]),
+        [2] = InputMap:new(self.default_mappings[2]),
+        [3] = InputMap:new(self.default_mappings[3]),
+        [4] = InputMap:new(self.default_mappings[4]),
     }
 
     self:load_controls()
 end
 
 function InputManager:init_users()
-    self:new_user()
 end
 
 function InputManager:update(dt)
-    for i, user in ipairs(self.users) do
+    for i, user in pairs(self.users) do
         user:update(dt)
     end
 end
 
 function InputManager:update_last_input_state(dt)
-    for i, user in ipairs(self.users) do
+    for i, user in pairs(self.users) do
         user:update_last_input_state()
     end
 
@@ -69,14 +157,24 @@ function InputManager:get_input_map(n)
     return self.input_maps[n]:get_mappings() or {}
 end
 
-function InputManager:new_user()
-    local n = #self.users + 1
+function InputManager:new_user(n)
+    self.users[n] = InputUser:new(n)
+end
 
-    table.insert(self.users, InputUser:new(n))
+function InputManager:remove_user(n)
+    local user = self.users[n]
+    if user == nil then
+        return false
+    end
+
+    if user.joystick then
+        self.joystick_to_user_map[user.joystick] = nil
+    end
+    self.users[n] = nil
 end
 
 function InputManager:joystickadded(joystick)
-    for i = 1, #self.users do
+    for i = 1, MAX_NUMBER_OF_PLAYERS do
 		local input_user = Input.users[i]
 		if input_user and (input_user.joystick == nil or not input_user.joystick:isConnected()) then
 			input_user.joystick = joystick
@@ -93,6 +191,7 @@ function InputManager:joystickremoved(joystick)
     end
 
     input_user.joystick = joystick
+    self.joystick_to_user_map[joystick] = nil
 end
 
 function InputManager:gamepadaxis(joystick, axis, value)
@@ -161,7 +260,7 @@ function InputManager:action_down_any_player(action, bypass_standy)
     if self.standby_mode and not bypass_standy then
         return false
     end
-    for i, user in ipairs(self.users) do
+    for i, user in pairs(self.users) do
         if user:action_down(action) then return true end
     end
     return false
@@ -171,7 +270,7 @@ function InputManager:action_pressed_any_player(action, bypass_standy)
     if self.standby_mode and not bypass_standy then
         return false
     end
-    for i, user in ipairs(self.users) do
+    for i, user in pairs(self.users) do
         if user:action_pressed(action) then return true end
     end
     return false

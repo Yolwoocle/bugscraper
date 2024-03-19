@@ -96,11 +96,14 @@ function InputUser:action_down(action)
 	if not buttons then   error(concat("Attempt to access button '",concat(action),"'"))   end
 
 	for _, button in pairs(buttons) do
+        -- print_debug(self.n, action, "button", button)
 		if self:is_button_down(button) then
             self:update_primary_input_type(button.type)
+            -- print_debug(self.n, action, "true")
 			return true
 		end
 	end
+    -- print_debug(self.n, action, "false")
 	return false
 end
 
