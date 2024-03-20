@@ -120,6 +120,8 @@ AXIS_TO_KEY_NAME_MAP = {
     ["triggerright-"] = "righttrigger",
 }
 
+GLOBAL_INPUT_USER_PLAYER_N = -1
+
 --------------------------------------------- 
 
 MUSIC_MODE_OFF = "off"

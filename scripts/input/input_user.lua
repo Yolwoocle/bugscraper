@@ -7,11 +7,15 @@ gamepadguesser.loadMappings("lib/gamepadguesser")
 
 local InputUser = Class:inherit()
 
-function InputUser:init(n)
+function InputUser:init(n, is_global)
+    is_global = param(is_global, false)
+
     self.n = n
+    self.is_global = is_global
     self:init_action_states()
 
     self.joystick = nil
+    self.last_active_joystick = nil
     self.primary_input_type = ternary(n == 1, "k", "c")
 end
 
@@ -50,6 +54,19 @@ function InputUser:update_last_input_state()
     end
 end
 
+function InputUser:action_down(action)
+    local buttons = self:get_input_map()[action]
+	if not buttons then   error(concat("Attempt to access button '",concat(action),"'"))   end
+
+	for _, button in pairs(buttons) do
+		if self:is_button_down(button) then
+            self:update_primary_input_type(button.type)
+			return true
+		end
+	end
+	return false
+end
+
 function InputUser:action_pressed(action)
     -- This makes sure that the button state table assigns "true" to buttons
 	-- that have been just pressed 
@@ -64,17 +81,44 @@ function InputUser:action_pressed(action)
     return result
 end
 
-function InputUser:is_button_down(key)
-    if key.type == INPUT_TYPE_KEYBOARD then
-        return love.keyboard.isScancodeDown(key.key_name)
+function InputUser:is_button_down(button)
+    if button.type == INPUT_TYPE_KEYBOARD then
+        return love.keyboard.isScancodeDown(button.key_name)
 
-    elseif key.type == INPUT_TYPE_CONTROLLER and self.joystick then
-        local axis_func = AXIS_FUNCTIONS[key.key_name]
-        if axis_func ~= nil then
-            return axis_func(self.joystick)
+    elseif button.type == INPUT_TYPE_CONTROLLER then 
+        if self.joystick then 
+            return self:is_joystick_down(button)
+        elseif self.is_global then
+            return self:is_any_joystick_down(button)            
         end
-        return self.joystick:isGamepadDown(key.key_name)
-        
+    end
+    return false
+end      
+
+function InputUser:is_joystick_down(button, joystick)
+    joystick = param(joystick, self.joystick)
+    if joystick == nil then return end
+    local output = false
+
+    local axis_func = AXIS_FUNCTIONS[button.key_name]
+    if axis_func ~= nil then
+        output = axis_func(joystick)
+    else
+        output = joystick:isGamepadDown(button.key_name)
+    end
+
+    if output then
+        self.last_active_joystick = joystick
+    end
+    return output
+end
+
+function InputUser:is_any_joystick_down(button)
+    local joysticks = love.joystick.getJoysticks()
+    for i, joystick in ipairs(joysticks) do
+        if joystick:isGamepad() and self:is_joystick_down(button, joystick) then
+            return true
+        end
     end
     return false
 end
@@ -89,22 +133,6 @@ function InputUser:is_axis_down(axis_name)
         return axis_func(self.joystick)
     end
     return false
-end
-
-function InputUser:action_down(action)
-    local buttons = self:get_input_map()[action]
-	if not buttons then   error(concat("Attempt to access button '",concat(action),"'"))   end
-
-	for _, button in pairs(buttons) do
-        -- print_debug(self.n, action, "button", button)
-		if self:is_button_down(button) then
-            self:update_primary_input_type(button.type)
-            -- print_debug(self.n, action, "true")
-			return true
-		end
-	end
-    -- print_debug(self.n, action, "false")
-	return false
 end
 
 function InputUser:update_primary_input_type(input_type)

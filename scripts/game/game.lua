@@ -309,8 +309,9 @@ function Game:update_main_game(dt)
 	if Input:action_pressed_any_player("debug_4") then
 		self:leave_game(4)
 	end
-	if Input:action_pressed_any_player("ui_reset_keys") then
-		self:join_game()
+	if Input:action_pressed_global("ui_reset_keys") then
+		local joystick = Input:get_global_user().last_active_joystick
+		self:join_game(joystick)
 	end
 	
 	-- BG color gradient
@@ -843,32 +844,35 @@ end
 
 function Game:init_players()
 	self.players = {}
-
-	for i=1, self.number_of_players do
-		self:new_player(i)
-	end
 end
 
 function Game:find_free_player_number()
 	for i = 1, self.max_number_of_players do
-		print_debug("i", i)
 		if self.players[i] == nil then
-			print_debug("i nil", i)
 			return i
 		end
 	end
-	print_debug("return nil")
 	return nil
 end
 
-function Game:join_game(player_n)
-	player_n = player_n or self:find_free_player_number()
+function Game:join_game(joystick)
+	-- fixme ça marche pas quand tu join avec manette puis que tu join sur clavier
+	local player_n = self:find_free_player_number()
 	if player_n == nil then
+		return
+	end
+
+	-- Is joystick already taken?
+	if joystick ~= nil and Input:get_joystick_user(joystick) ~= nil then
 		return
 	end
 
 	Input:new_user(player_n)
 	self:new_player(player_n)
+	if joystick ~= nil then
+		Input:assign_joystick(player_n, joystick)
+	end
+	return player_n
 end
 
 function Game:new_player(player_n)
@@ -889,9 +893,9 @@ function Game:new_player(player_n)
 			spr_dead = images.caterpillar_dead,
 		},
 		{
-			spr_idle = images.caterpillar_1,
-			spr_jump = images.caterpillar_2,
-			spr_dead = images.caterpillar_dead,
+			spr_idle = images.bee_1,
+			spr_jump = images.bee_2,
+			spr_dead = images.bee_dead,
 		},
 		{
 			spr_idle = images.caterpillar_1,
@@ -982,10 +986,6 @@ function Game:keypressed(key, scancode, isrepeat)
 	if self.menu_manager then
 		self.menu_manager:keypressed(key, scancode, isrepeat)
 	end
-
-	for i, ply in pairs(self.players) do
-		--ply:keypressed(key, scancode, isrepeat)
-	end
 end
 
 function Game:joystickadded(joystick)
@@ -1006,11 +1006,6 @@ function Game:gamepadreleased(joystick, buttoncode)
 	if self.menu_manager then   self.menu_manager:gamepadreleased(joystick, buttoncode)   end
 end
 
--- InputManager:get_joystick_user
--- local axis_func = AXIS_FUNCTIONS[key.key_name]
--- if axis_func ~= nil then
--- 	return axis_func(self.joystick)
--- end
 function Game:gamepadaxis(joystick, axis, value)
 	Input:gamepadaxis(joystick, axis, value)
 	if self.menu_manager then   self.menu_manager:gamepadaxis(joystick, axis, value)   end

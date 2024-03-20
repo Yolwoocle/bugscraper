@@ -20,6 +20,13 @@ pi = math.pi
 pi2 = 2*math.pi
 inf = math.huge
 
+function param(value, def_value)
+	if value == nil then
+		return def_value
+	end
+	return value
+end
+
 function mod_plus_1(val, mod)
 	-- i hate lua
 	return ((val-1) % mod)+1

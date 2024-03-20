@@ -16,24 +16,28 @@ function InputManager:init()
 	self.buffer_standby_mode = {active = false, value = false}
 
 	self.default_mappings = {
-		-- [1] = self:process_input_map({
-		-- 	left =  {"k_left", "k_a",     "c_leftstickxneg", "c_rightstickxneg", "c_dpleft"},
-		-- 	right = {"k_right", "k_d",    "c_leftstickxpos", "c_rightstickxpos", "c_dpright"},
-		-- 	up =    {"k_up", "k_w",       "c_leftstickyneg", "c_rightstickyneg", "c_dpup"},
-		-- 	down =  {"k_down", "k_s",     "c_leftstickypos", "c_rightstickypos", "c_dpdown"},
-		-- 	jump =  {"k_c", "k_b",        "c_a", "c_b"},
-		-- 	shoot = {"k_x", "k_v",        "c_x", "c_y", "c_righttrigger"},
-		-- 	pause = {"k_escape", "k_p",   "c_start"},
+		[-1] = self:process_input_map({
+			left =  {"k_left", "k_a",     "c_leftstickxneg", "c_rightstickxneg", "c_dpleft"},
+			right = {"k_right", "k_d",    "c_leftstickxpos", "c_rightstickxpos", "c_dpright"},
+			up =    {"k_up", "k_w",       "c_leftstickyneg", "c_rightstickyneg", "c_dpup"},
+			down =  {"k_down", "k_s",     "c_leftstickypos", "c_rightstickypos", "c_dpdown"},
+			jump =  {"k_c", "k_b",        "c_a", "c_b"},
+			shoot = {"k_x", "k_v",        "c_x", "c_y", "c_righttrigger"},
+			pause = {"k_escape", "k_p",   "c_start"},
             
-		-- 	ui_select = {"k_c", "k_b", "k_return",          "c_a"},
-		-- 	ui_back =   {"k_x", "k_escape", "k_backspace",  "c_b"},
-		-- 	ui_left =   {"k_left", "k_a",                   "c_leftstickxneg", "c_rightstickxneg", "c_dpleft"},
-		-- 	ui_right =  {"k_right", "k_d",                  "c_leftstickxpos", "c_rightstickxpos", "c_dpright"},
-		-- 	ui_up =     {"k_up", "k_w",                     "c_leftstickyneg", "c_rightstickyneg", "c_dpup"},
-		-- 	ui_down =   {"k_down", "k_s",                   "c_leftstickypos", "c_rightstickypos", "c_dpdown"},
-		-- 	ui_reset_keys = {"k_tab", "c_lefttrigger"},
-		-- }),
-        [1] = self:process_input_map({
+			ui_select = {"k_c", "k_b", "k_return",          "c_a"},
+			ui_back =   {"k_x", "k_escape", "k_backspace",  "c_b"},
+			ui_left =   {"k_left", "k_a",                   "c_leftstickxneg", "c_rightstickxneg", "c_dpleft"},
+			ui_right =  {"k_right", "k_d",                  "c_leftstickxpos", "c_rightstickxpos", "c_dpright"},
+			ui_up =     {"k_up", "k_w",                     "c_leftstickyneg", "c_rightstickyneg", "c_dpup"},
+			ui_down =   {"k_down", "k_s",                   "c_leftstickypos", "c_rightstickypos", "c_dpdown"},
+			ui_reset_keys = {"k_tab", "c_lefttrigger"},
+			debug_1 = {"k_1"},
+			debug_2 = {"k_2"},
+			debug_3 = {"k_3"},
+			debug_4 = {"k_4"},
+		}),
+        [2] = self:process_input_map({
 			left =  {"c_leftstickxneg", "c_rightstickxneg", "c_dpleft"},
 			right = {"c_leftstickxpos", "c_rightstickxpos", "c_dpright"},
 			up =    {"c_leftstickyneg", "c_rightstickyneg", "c_dpup"},
@@ -54,7 +58,7 @@ function InputManager:init()
 			debug_3 = {"k_3"},
 			debug_4 = {"k_4"},
 		}),
-		[2] = self:process_input_map({
+		[1] = self:process_input_map({
 			left =  {"k_left", "k_a"},
 			right = {"k_right", "k_d"},
 			up =    {"k_up", "k_w"},
@@ -122,6 +126,7 @@ function InputManager:init()
 	}
 
 	self.input_maps = {
+        [GLOBAL_INPUT_USER_PLAYER_N] = InputMap:new(self.default_mappings[-1]),
         [1] = InputMap:new(self.default_mappings[1]),
         [2] = InputMap:new(self.default_mappings[2]),
         [3] = InputMap:new(self.default_mappings[3]),
@@ -132,6 +137,7 @@ function InputManager:init()
 end
 
 function InputManager:init_users()
+    self.global_user = self:new_user(GLOBAL_INPUT_USER_PLAYER_N, true)
 end
 
 function InputManager:update(dt)
@@ -157,8 +163,12 @@ function InputManager:get_input_map(n)
     return self.input_maps[n]:get_mappings() or {}
 end
 
-function InputManager:new_user(n)
-    self.users[n] = InputUser:new(n)
+function InputManager:new_user(n, is_global)
+    is_global = param(is_global, false)
+
+    local user = InputUser:new(n, is_global)
+    self.users[n] = user
+    return user
 end
 
 function InputManager:remove_user(n)
@@ -173,25 +183,37 @@ function InputManager:remove_user(n)
     self.users[n] = nil
 end
 
+function InputManager:assign_joystick(user_n, joystick)
+    if joystick == nil or not joystick:isConnected() then
+        return 
+    end
+
+    local input_user = Input.users[user_n]
+    if input_user then
+        input_user.joystick = joystick
+        self.joystick_to_user_map[joystick] = input_user
+    end
+end
+
 function InputManager:joystickadded(joystick)
-    for i = 1, MAX_NUMBER_OF_PLAYERS do
-		local input_user = Input.users[i]
-		if input_user and (input_user.joystick == nil or not input_user.joystick:isConnected()) then
-			input_user.joystick = joystick
-            self.joystick_to_user_map[joystick] = input_user
-			return
-		end
-	end
+    -- for i = 1, MAX_NUMBER_OF_PLAYERS do
+	-- 	local input_user = Input.users[i]
+	-- 	if input_user and (input_user.joystick == nil or not input_user.joystick:isConnected()) then
+	-- 		input_user.joystick = joystick
+    --         self.joystick_to_user_map[joystick] = input_user
+	-- 		return
+	-- 	end
+	-- end
 end
 
 function InputManager:joystickremoved(joystick)
-    local input_user = self.joystick_to_user_map[joystick]
-    if input_user == nil then
-        return
-    end
+    -- local input_user = self.joystick_to_user_map[joystick]
+    -- if input_user == nil then
+    --     return
+    -- end
 
-    input_user.joystick = joystick
-    self.joystick_to_user_map[joystick] = nil
+    -- input_user.joystick = joystick
+    -- self.joystick_to_user_map[joystick] = nil
 end
 
 function InputManager:gamepadaxis(joystick, axis, value)
@@ -276,8 +298,26 @@ function InputManager:action_pressed_any_player(action, bypass_standy)
     return false
 end
 
+function InputManager:action_down_global(action, bypass_standy)
+    if self.standby_mode and not bypass_standy then
+        return false
+    end
+    return self.global_user:action_down(action)
+end
+
+function InputManager:action_pressed_global(action, bypass_standy)
+    if self.standby_mode and not bypass_standy then
+        return false
+    end
+    return self.global_user:action_pressed(action)
+end
+
 function InputManager:get_user(n)
     return self.users[n]
+end
+
+function InputManager:get_global_user()
+    return self.global_user
 end
 
 function InputManager:get_primary_button(n, action)
