@@ -795,6 +795,7 @@ end
 
 function Game:on_player_death(player)
 	self.number_of_alive_players = self.number_of_alive_players - 1
+	self.players[player.n] = nil
 
 	if self.number_of_alive_players <= 0 then
 		-- Save stats
