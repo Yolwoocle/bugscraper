@@ -63,6 +63,7 @@ COL_LIGHT_BLUE = color(0x2ce8f5)
 COL_DARK_PURPLE = rgb(104, 56, 108)
 
 SELECTED_HIGHLIGHT_COLOR = COL_LIGHT_RED
+LOGO_COLS = {COL_LIGHT_YELLOW, COL_LIGHT_BLUE, COL_LIGHT_RED}
 
 ---------------------------------------------
 
@@ -87,6 +88,94 @@ BUTTON_STYLES = {
 
 BUTTON_HOLD_REPEAT_TIME = 0.35
 BUTTON_HOLD_REPEAT_INTERVAL = 0.07
+
+RAW_INPUT_MAP_DEFAULT_GLOBAL = {
+    left =      {},
+    right =     {},
+    up =        {},
+    down =      {},
+    jump =      {"k_c", "k_b", "c_a", "c_b"},
+    shoot =     {},
+    pause =     {},
+    
+    ui_select = {},
+    ui_back =   {},
+    ui_left =   {},
+    ui_right =  {},
+    ui_up =     {},
+    ui_down =   {},
+    ui_reset_keys = {},
+    debug_1 = {"k_1"},
+    debug_2 = {"k_2"},
+    debug_3 = {"k_3"},
+    debug_4 = {"k_4"},
+}
+
+RAW_INPUT_MAP_DEFAULT_SOLO = {
+    left =      {"k_left", "k_a",                   "c_leftstickxneg", "c_rightstickxneg", "c_dpleft"},
+    right =     {"k_right", "k_d",                  "c_leftstickxpos", "c_rightstickxpos", "c_dpright"},
+    up =        {"k_up", "k_w",                     "c_leftstickyneg", "c_rightstickyneg", "c_dpup"},
+    down =      {"k_down", "k_s",                   "c_leftstickypos", "c_rightstickypos", "c_dpdown"},
+    jump =      {"k_c", "k_b",                      "c_a", "c_b"},
+    shoot =     {"k_x", "k_v",                      "c_x", "c_y", "c_righttrigger"},
+    pause =     {"k_escape", "k_p",                 "c_start"},
+    
+    ui_select = {"k_c", "k_b", "k_return",          "c_a"},
+    ui_back =   {"k_x", "k_escape", "k_backspace",  "c_b"},
+    ui_left =   {"k_left", "k_a",                   "c_leftstickxneg", "c_rightstickxneg", "c_dpleft"},
+    ui_right =  {"k_right", "k_d",                  "c_leftstickxpos", "c_rightstickxpos", "c_dpright"},
+    ui_up =     {"k_up", "k_w",                     "c_leftstickyneg", "c_rightstickyneg", "c_dpup"},
+    ui_down =   {"k_down", "k_s",                   "c_leftstickypos", "c_rightstickypos", "c_dpdown"},
+    ui_reset_keys = {"k_tab", "c_lefttrigger"},
+    debug_1 = {"k_1"},
+    debug_2 = {"k_2"},
+    debug_3 = {"k_3"},
+    debug_4 = {"k_4"},
+}
+
+RAW_INPUT_MAP_DEFAULT_SPLIT_KEYBOARD_P1 = {
+    left =      {"k_a"},
+    right =     {"k_d"},
+    up =        {"k_w"},
+    down =      {"k_s"},
+    jump =      {"k_f"},
+    shoot =     {"k_g"},
+    pause =     {"k_escape", "k_p"},
+    
+    ui_select = {"k_f"},
+    ui_back =   {"k_g", "k_escape"},
+    ui_left =   {"k_a"},
+    ui_right =  {"k_d"},
+    ui_up =     {"k_w"},
+    ui_down =   {"k_s"},
+    ui_reset_keys = {"k_tab"},
+    debug_1 = {"k_1"},
+    debug_2 = {"k_2"},
+    debug_3 = {"k_3"},
+    debug_4 = {"k_4"},
+}
+
+RAW_INPUT_MAP_DEFAULT_SPLIT_KEYBOARD_P2 = {
+    left =      {"k_h"},--, "k_left"},
+    right =     {"k_k"},--, "k_right"},
+    up =        {"k_u"},--, "k_up"},
+    down =      {"k_j"},--, "k_down"},
+    jump =      {"k_l"},
+    shoot =     {"k_;"},
+    pause =     {"k_escape", "k_p"},
+    
+    ui_select = {"k_l", "k_return"},
+    ui_back =   {"k_k", "k_backspace"},
+    ui_left =   {"k_h", "k_left"},
+    ui_right =  {"k_k", "k_right"},
+    ui_up =     {"k_u", "k_up"},
+    ui_down =   {"k_j", "k_down"},
+    ui_reset_keys = {"k_tab"},
+    debug_1 = {"k_1"},
+    debug_2 = {"k_2"},
+    debug_3 = {"k_3"},
+    debug_4 = {"k_4"},
+}
 
 AXIS_DEADZONE = 0.2
 AXIS_FUNCTIONS = {

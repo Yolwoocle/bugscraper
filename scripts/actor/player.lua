@@ -4,8 +4,10 @@ local Guns = require "data.guns"
 local Bullet = require "scripts.actor.bullet"
 local Effect = require "scripts.effect.effect"
 local EffectSlowness = require "scripts.effect.effect_slowness"
+local InputButton = require "scripts.input.input_button"
 local images = require "data.images"
 local sounds = require "data.sounds"
+local shaders = require "scripts.graphics.shaders"
 local ui = require "scripts.ui.ui"
 require "scripts.util"
 require "scripts.meta.constants"
@@ -184,6 +186,10 @@ function Player:update(dt)
 	-- if Input:action_pressed(self.n, "ui_reset_keys") then
 	-- 	self:kill()
 	-- end
+	-- if Input:action_pressed(self.n, "ui_reset_keys") then
+	-- 	self:do_damage(1)
+	-- 	self.iframes = 1
+	-- end
 
 	-- Movement
 	self:update_upgrades(dt)
@@ -294,12 +300,42 @@ function Player:draw_hud()
 	ui:draw_progress_bar(x+ammo_w+2, y, bar_w-ammo_w-2, ammo_w, val, maxval, 
 						col_fill, COL_BLACK_BLUE, col_shad, text)
 
-	-- x, y, w, h, val, max_val, col_fill, col_out, col_fill_shadow, text, text_col, font
-	-- rect_color(COL_GREEN, "fill", self.mid_x, self.y-32, 1, 60)
-
-	if game.debug_mode then
+	
+	if not game.game_started then
+		self:draw_controls()
 	end
 
+end
+
+function Player:draw_controls()
+	local tutorials = {
+		{{"shoot"}, "SHOOT"},
+		{{"jump"}, "JUMP"},
+		{{"down", "up", "right", "left"}, "MOVE"},
+	}
+
+	local x = self.ui_x
+	local y = self.ui_y - 32
+	for i, tuto in ipairs(tutorials) do
+		y = y - 16
+		local btn_x = x - 2
+
+		local shown_duration = 0.5
+		local actions = tuto[1]
+		-- local action_index = math.floor((self.t % (shown_duration * #actions)) / shown_duration) + 1
+		for i_action = 1, #actions do
+			local action = actions[i_action]
+
+			local button = Input:get_primary_button(self.n, action) or InputButton:new("?", "?")
+			local icon = Input:get_button_icon(self.n, button) or images.btn_k_unknown
+			local w = icon:getWidth()
+
+			btn_x = btn_x - w
+			love.graphics.draw(icon, btn_x, y)
+		end
+		
+		print_outline(LOGO_COLS[4-i] or COL_WHITE, COL_BLACK_BLUE, tuto[2], x, y)
+	end
 end
 
 function Player:draw_player()
@@ -654,7 +690,7 @@ function Player:do_damage(n, source)
 	Particles:word(self.mid_x, self.mid_y, concat("-",n), COL_LIGHT_RED)
 	-- self:do_knockback(source.knockback, source)--, 0, source.h/2)
 	--source:do_knockback(source.knockback*0.75, self)
-	if self.is_knockbackable then
+	if self.is_knockbackable and source then
 		self.vx = self.vx + sign(self.mid_x - source.mid_x)*source.knockback
 		self.vy = self.vy - 50
 	end

@@ -163,7 +163,8 @@ function Elevator:progress_elevator(dt)
 	end
 
 	-- Only switch to next floor until all enemies killed
-	if not self.door_animation and self.game.enemy_count == 0 then
+	if not self.door_animation and self.game.enemy_count <= 0 then
+		self.game.enemy_count = 0
 		self.door_animation = true
 		self.has_switched_to_next_floor = false
 		self:new_wave_buffer_enemies(dt)
@@ -350,14 +351,14 @@ function Elevator:draw_win_screen()
 	local w = get_text_width(text, FONT_PAINT)
 	local text_x1 = floor((CANVAS_WIDTH - w)/2)
 
-	for i=1, #self.game.logo_cols + 1 do
+	for i=1, #LOGO_COLS + 1 do
 		local text_x = text_x1
 		for i_chr=1, #text do
 			local chr = utf8.sub(text, i_chr, i_chr)
 			local t = self.game.t + i_chr*0.04
 			local ox, oy = cos(t*4 + i*.2)*8, sin(t*4 + i*.2)*8
 			
-			local col = self.game.logo_cols[i]
+			local col = LOGO_COLS[i]
 			if col == nil then
 				col = COL_WHITE
 			end

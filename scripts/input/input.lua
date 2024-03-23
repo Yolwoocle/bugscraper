@@ -15,125 +15,79 @@ function InputManager:init()
 	self.standby_mode = false
 	self.buffer_standby_mode = {active = false, value = false}
 
-	self.default_mappings = {
-		[-1] = self:process_input_map({
-			left =  {"k_left", "k_a",     "c_leftstickxneg", "c_rightstickxneg", "c_dpleft"},
-			right = {"k_right", "k_d",    "c_leftstickxpos", "c_rightstickxpos", "c_dpright"},
-			up =    {"k_up", "k_w",       "c_leftstickyneg", "c_rightstickyneg", "c_dpup"},
-			down =  {"k_down", "k_s",     "c_leftstickypos", "c_rightstickypos", "c_dpdown"},
-			jump =  {"k_c", "k_b",        "c_a", "c_b"},
-			shoot = {"k_x", "k_v",        "c_x", "c_y", "c_righttrigger"},
-			pause = {"k_escape", "k_p",   "c_start"},
-            
-			ui_select = {"k_c", "k_b", "k_return",          "c_a"},
-			ui_back =   {"k_x", "k_escape", "k_backspace",  "c_b"},
-			ui_left =   {"k_left", "k_a",                   "c_leftstickxneg", "c_rightstickxneg", "c_dpleft"},
-			ui_right =  {"k_right", "k_d",                  "c_leftstickxpos", "c_rightstickxpos", "c_dpright"},
-			ui_up =     {"k_up", "k_w",                     "c_leftstickyneg", "c_rightstickyneg", "c_dpup"},
-			ui_down =   {"k_down", "k_s",                   "c_leftstickypos", "c_rightstickypos", "c_dpdown"},
-			ui_reset_keys = {"k_tab", "c_lefttrigger"},
-			debug_1 = {"k_1"},
-			debug_2 = {"k_2"},
-			debug_3 = {"k_3"},
-			debug_4 = {"k_4"},
-		}),
-        [2] = self:process_input_map({
-			left =  {"c_leftstickxneg", "c_rightstickxneg", "c_dpleft"},
-			right = {"c_leftstickxpos", "c_rightstickxpos", "c_dpright"},
-			up =    {"c_leftstickyneg", "c_rightstickyneg", "c_dpup"},
-			down =  {"c_leftstickypos", "c_rightstickypos", "c_dpdown"},
-			jump =  {"c_a", "c_b",                   "k_h"},
-			shoot = {"c_x", "c_y", "c_righttrigger"},
-			pause = {"c_start"},
-            
-			ui_select = {"c_a"},
-			ui_back =   {"c_b"},
-			ui_left =   {"c_leftstickxneg", "c_rightstickxneg", "c_dpleft"},
-			ui_right =  {"c_leftstickxpos", "c_rightstickxpos", "c_dpright"},
-			ui_up =     {"c_leftstickyneg", "c_rightstickyneg", "c_dpup"},
-			ui_down =   {"c_leftstickypos", "c_rightstickypos", "c_dpdown"},
-			ui_reset_keys = {"c_lefttrigger"},
-			debug_1 = {"k_1"},
-			debug_2 = {"k_2"},
-			debug_3 = {"k_3"},
-			debug_4 = {"k_4"},
-		}),
-		[1] = self:process_input_map({
-			left =  {"k_left", "k_a"},
-			right = {"k_right", "k_d"},
-			up =    {"k_up", "k_w"},
-			down =  {"k_down", "k_s"},
-			jump =  {"k_c", "k_b",                 "k_j"},
-			shoot = {"k_x", "k_v"},
-			pause = {"k_escape", "k_p"},
-            
-			ui_select = {"k_c", "k_b", "k_return"},
-			ui_back =   {"k_x", "k_escape", "k_backspace"},
-			ui_left =   {"k_left", "k_a"},
-			ui_right =  {"k_right", "k_d"},
-			ui_up =     {"k_up", "k_w"},
-			ui_down =   {"k_down", "k_s"},
-			ui_reset_keys = {"k_tab"},
-			debug_1 = {"k_1"},
-			debug_2 = {"k_2"},
-			debug_3 = {"k_3"},
-			debug_4 = {"k_4"},
-		}),
-        
-		[3] = self:process_input_map({
-			left =  {"k_left", "k_a"},
-			right = {"k_right", "k_d"},
-			up =    {"k_up", "k_w"},
-			down =  {"k_down", "k_s"},
-			jump =  {"k_c", "k_b",                   "k_k"},
-			shoot = {"k_x", "k_v"},
-			pause = {"k_escape", "k_p"},
-            
-			ui_select = {"k_c", "k_b", "k_return"},
-			ui_back =   {"k_x", "k_escape", "k_backspace"},
-			ui_left =   {"k_left", "k_a"},
-			ui_right =  {"k_right", "k_d"},
-			ui_up =     {"k_up", "k_w"},
-			ui_down =   {"k_down", "k_s"},
-			ui_reset_keys = {"k_tab"},
-			debug_1 = {"k_1"},
-			debug_2 = {"k_2"},
-			debug_3 = {"k_3"},
-			debug_4 = {"k_4"},
-		}),
-        
-		[4] = self:process_input_map({
-			left =  {"k_left", "k_a"},
-			right = {"k_right", "k_d"},
-			up =    {"k_up", "k_w"},
-			down =  {"k_down", "k_s"},
-			jump =  {"k_c", "k_b",                    "k_l"},
-			shoot = {"k_x", "k_v"},
-			pause = {"k_escape", "k_p"},
-            
-			ui_select = {"k_c", "k_b", "k_return"},
-			ui_back =   {"k_x", "k_escape", "k_backspace"},
-			ui_left =   {"k_left", "k_a"},
-			ui_right =  {"k_right", "k_d"},
-			ui_up =     {"k_up", "k_w"},
-			ui_down =   {"k_down", "k_s"},
-			ui_reset_keys = {"k_tab"},
-			debug_1 = {"k_1"},
-			debug_2 = {"k_2"},
-			debug_3 = {"k_3"},
-			debug_4 = {"k_4"},
-		}),
-	}
+	self.default_mapping = self:process_input_map(RAW_INPUT_MAP_DEFAULT_GLOBAL)
+	self.default_mapping_split_kb_p1 = self:process_input_map(RAW_INPUT_MAP_DEFAULT_SPLIT_KEYBOARD_P1)
+	self.default_mapping_split_kb_p2 = self:process_input_map(RAW_INPUT_MAP_DEFAULT_SPLIT_KEYBOARD_P2)
 
 	self.input_maps = {
-        [GLOBAL_INPUT_USER_PLAYER_N] = InputMap:new(self.default_mappings[-1]),
-        [1] = InputMap:new(self.default_mappings[1]),
-        [2] = InputMap:new(self.default_mappings[2]),
-        [3] = InputMap:new(self.default_mappings[3]),
-        [4] = InputMap:new(self.default_mappings[4]),
+        [GLOBAL_INPUT_USER_PLAYER_N] = InputMap:new(self.default_mapping),
+        [1] = InputMap:new(self.default_mapping),
+        [2] = InputMap:new(self.default_mapping),
+        [3] = InputMap:new(self.default_mapping),
+        [4] = InputMap:new(self.default_mapping),
     }
 
     self:load_controls()
+end
+
+function InputManager:can_add_user(input_type)
+    return self:get_number_of_users() < MAX_NUMBER_OF_PLAYERS
+    -- if input_type == INPUT_TYPE_CONTROLLER then 
+    -- elseif input_type == INPUT_TYPE_KEYBOARD then 
+    --     return (self:get_number_of_users() < MAX_NUMBER_OF_PLAYERS) and 
+    --         self:get_number_of_users(INPUT_TYPE_KEYBOARD) < 1
+    -- end
+    -- return true
+end
+
+function InputManager:get_number_of_users(input_type)
+    local count = 0
+    for i = 1, MAX_NUMBER_OF_PLAYERS do
+        if self.users[i] ~= nil then
+            if (input_type == nil) or (self.users[i].primary_input_type == input_type) then
+                count = count + 1
+            end
+        end
+    end
+    return count
+end
+
+function InputManager:assign_control_method(player_n, method)
+    local user = self:get_user(player_n)
+    if user == nil then return end
+
+    local input_map = self:generate_input_map(player_n, method)
+    self.input_maps[player_n] = input_map
+
+    if method == "controller" then
+        user.primary_input_type = INPUT_TYPE_CONTROLLER
+    else
+        user.primary_input_type = INPUT_TYPE_KEYBOARD
+    end
+end
+
+function InputManager:generate_input_map(player_n, method)
+    if method == "controller" then
+        return self:get_input_map_filtered(player_n, INPUT_TYPE_CONTROLLER)
+
+    elseif method == "keyboard_solo" then
+        return self:get_input_map_filtered(player_n, INPUT_TYPE_KEYBOARD)
+
+    elseif method == "keyboard_split_p1" then
+        return self:get_input_map_split_keyboard(1)
+
+    elseif method == "keyboard_split_p2" then
+        return self:get_input_map_split_keyboard(2)
+    end
+    return {}
+end
+
+function InputManager:get_input_map_filtered(player_n, input_type)
+    local new_map = {}
+    for action, _ in pairs(self.input_maps[player_n]:get_mappings()) do
+        new_map[action] = self:get_buttons(player_n, action, input_type)
+    end
+    return InputMap:new(new_map)
 end
 
 function InputManager:init_users()
@@ -252,6 +206,19 @@ function InputManager:gamepadpressed(joystick, buttoncode)
 end
 
 function InputManager:gamepadreleased(joystick, buttoncode)
+end
+
+function InputManager:is_keyboard_button_in_list_down(buttons)
+    for _, button in pairs(buttons) do
+		if love.keyboard.isScancodeDown(button.key_name) then
+			return true
+		end
+	end
+	return false
+end
+
+function InputManager:is_keyboard_down(button)
+    return love.keyboard.isScancodeDown(button.key_name)
 end
 
 function InputManager:action_down(n, action, bypass_standy)
@@ -376,7 +343,7 @@ function InputManager:reset_controls(n, input_mode)
     assert(user ~= nil, concat("user ",n, " does not exist"))
 
     local new_mapping = {}
-    for action, default_buttons in pairs(self.default_mappings[n]) do
+    for action, default_buttons in pairs(self.default_mapping) do
         local current_buttons = self.input_maps[n]:get_buttons(action)
 
         local new_buttons = {}
@@ -419,6 +386,41 @@ function InputManager:set_standby_mode(enabled)
     self.buffer_standby_mode.active = true
 end
 
+function InputManager:split_keyboard()
+    local p1 = nil
+    local p2 = nil
+    for i=1, MAX_NUMBER_OF_PLAYERS do
+        local user = self.users[i]
+        print_debug("user ", i, " is nil ?", user == nil)
+        if user and user.primary_input_type == INPUT_TYPE_KEYBOARD then
+            if p1 == nil then
+                p1 = i
+            else
+                p2 = i
+            end
+        end
+    end
+
+    print_debug("p1, p2", p1==nil, p2==nil, p1, p2)
+    if p2 == nil then
+        return
+    end
+
+    self:assign_control_method(p1, "keyboard_split_p1")
+    self:assign_control_method(p2, "keyboard_split_p2")
+end
+
+function InputManager:get_input_map_split_keyboard(split_side)
+    -- split_side: 1 or 2
+    local mappings = {
+        self.default_mapping_split_kb_p1,
+        self.default_mapping_split_kb_p2,
+    }
+    return InputMap:new(mappings[split_side])
+end
+
+-----------------------------------------------------
+
 function InputManager:generate_unknown_key_icon(icon, text)
     local old_canvas = love.graphics.getCanvas()
 
@@ -460,16 +462,38 @@ function InputManager:get_button_icon(player_n, button)
         local user = self:get_user(player_n)
         if user ~= nil then
             local brand = user:get_button_style()
-            local image_name = string.format("btn_c_%s_%s", brand, button.key_name)
-            img = images[image_name]
+            img = self:get_button_icon_controller(button, brand)
         end
-
+        
         if img == nil then
             return self:generate_unknown_key_icon(images.btn_c_unknown, button.key_name)
         end
-
+        
 	end
     return img or self:generate_unknown_key_icon(images.btn_k_unknown, "?")
+end
+
+function InputManager:get_button_icon_controller(button, brand)
+    assert(button ~= nil, "no button defined")
+    assert(button.type == INPUT_TYPE_CONTROLLER, "input type is not controller")
+
+    local image_name = string.format("btn_c_%s_%s", brand, button.key_name)
+    return images[image_name] or self:generate_unknown_key_icon(images.btn_c_unknown, button.key_name)
+end
+
+function InputManager:draw_input_prompt(player_n, actions, label, label_color, x, y)
+    for __, action in ipairs(actions) do
+        local icon = Input:get_action_primary_icon(player_n, action)
+        local icon_w = icon:getWidth()
+        
+        love.graphics.draw(icon, x, y)
+        x = x + icon_w + 2
+    end
+    local text_w = get_text_width(label)
+    print_outline(label_color, COL_BLACK_BLUE, label, x, y)
+
+    x = x + text_w
+    return x
 end
 
 -----------------------------------------------------
@@ -522,7 +546,7 @@ function InputManager:load_controls()
 		local file = love.filesystem.newFile(filename)
 		file:open("r")
 
-        local new_input_map = copy_table(self.default_mappings[n])
+        local new_input_map = copy_table(self.default_mapping)
 
 		-- Read file contents
 		local text, size = file:read()

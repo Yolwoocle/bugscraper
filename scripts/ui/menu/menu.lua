@@ -83,18 +83,8 @@ function Menu:draw_prompts()
 
 		if #prompt >= 2 then
 			local actions, text = prompt[1], prompt[2]
-	
-			for __, action in ipairs(actions) do
-				local icon = Input:get_action_primary_icon(1, action)
-				local icon_w = icon:getWidth()
-				
-				love.graphics.draw(icon, x, y)
-				x = x + icon_w + 2
-			end
-			local text_w = get_text_width(text)
-			print_outline(COL_LIGHTEST_GRAY, COL_BLACK_BLUE, text, x, y)
-	
-			x = x + text_w + 4
+			local new_x = Input:draw_input_prompt(1, actions, text, COL_LIGHTEST_GRAY, x, y)
+			x = new_x + 4
 		end
 	end
 

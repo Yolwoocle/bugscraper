@@ -10,12 +10,12 @@ local AudioManager = require "scripts.audio.audio"
 local MenuManager = require "scripts.ui.menu.menu_manager"
 local OptionsManager = require "scripts.game.options"
 local InputManager = require "scripts.input.input"
-local InputButton = require "scripts.input.input_button"
 local MusicPlayer = require "scripts.audio.music_player"
 local MusicDisk = require "scripts.audio.music_disk"
 local Elevator = require "scripts.game.elevator"
-local shaders  = require "scripts.graphics.shaders"
+local InputButton = require "scripts.input.input_button"
 
+local shaders  = require "scripts.graphics.shaders"
 local sounds = require "data.sounds"
 local images = require "data.images"
 local guns = require "data.guns"
@@ -90,7 +90,7 @@ function Game:init()
 
 	Options:set_volume(Options:get("volume"))
 	
-	self:new_game(4)
+	self:new_game()
 	
 	-- Menu Manager
 	self.menu_manager = MenuManager:new(self)
@@ -128,19 +128,20 @@ function Game:update_screen(scale)
 	CANVAS_OY = max(0, (WINDOW_HEIGHT - CANVAS_HEIGHT * CANVAS_SCALE)/2)
 end
 
-function Game:new_game(number_of_players)
+function Game:new_game()
 	-- Reset global systems
 	Collision = CollisionManager:new()
 	Particles = ParticleSystem:new()
 
-	number_of_players = (number_of_players or self.number_of_players) or 1
+	-- number_of_players = (number_of_players or self.number_of_players) or 0
 
 	self.t = 0
 	self.frame = 0
 
 	-- Players
 	self.max_number_of_players = MAX_NUMBER_OF_PLAYERS
-	self.number_of_players = number_of_players
+	self.number_of_players = 0
+	self.number_of_alive_players = 0
 
 	self.elevator = Elevator:new(self)
 
@@ -178,7 +179,6 @@ function Game:new_game(number_of_players)
 	self.enemy_count = 0
 	self.actors = {}
 	self:init_players()
-	self.number_of_alive_players = number_of_players
 
 	-- Start lever
 	local nx = CANVAS_WIDTH * 0.75
@@ -206,7 +206,6 @@ function Game:new_game(number_of_players)
 	self.logo_y = 30
 	self.logo_vy = 0
 	self.logo_a = 0
-	self.logo_cols = {COL_LIGHT_YELLOW, COL_LIGHT_BLUE, COL_LIGHT_RED}
 	self.move_logo = false
 	self.jetpack_tutorial_y = -30
 	self.move_jetpack_tutorial = false
@@ -297,22 +296,7 @@ function Game:update_main_game(dt)
 	end
 	self.t = self.t + dt
 
-	if Input:action_pressed_any_player("debug_1") then
-		self:leave_game(1)
-	end
-	if Input:action_pressed_any_player("debug_2") then
-		self:leave_game(2)
-	end
-	if Input:action_pressed_any_player("debug_3") then
-		self:leave_game(3)
-	end
-	if Input:action_pressed_any_player("debug_4") then
-		self:leave_game(4)
-	end
-	if Input:action_pressed_global("ui_reset_keys") then
-		local joystick = Input:get_global_user().last_active_joystick
-		self:join_game(joystick)
-	end
+	self:listen_for_player_join(dt)
 	
 	-- BG color gradient
 	if not self.elevator.is_on_win_screen then
@@ -344,7 +328,6 @@ function Game:update_main_game(dt)
 	-- Particles
 	Particles:update(dt)
 	self.elevator:update_bg_particles(dt)
-
 	self.elevator:progress_elevator(dt)
 
 	-- Update actors
@@ -506,7 +489,7 @@ function Game:draw_game()
 	gfx.origin()
 
 	-- Logo
-	self:draw_logo_and_controls()
+	self:draw_logo()
 
 	-- "CONGRATS" at the end
 	if self.elevator.is_on_win_screen then
@@ -544,6 +527,43 @@ function Game:draw_game()
 	-- gfx.print(t, CANVAS_WIDTH-get_text_width(t), 0)
 	-- local t = os.date('%a %d/%b/%Y')
 	-- print_color({.7,.7,.7}, t, CANVAS_WIDTH-get_text_width(t), 12)	
+end
+
+function Game:listen_for_player_join(dt)
+	if Input:action_pressed_any_player("debug_1") then
+		self:leave_game(1)
+	end
+	if Input:action_pressed_any_player("debug_2") then
+		self:leave_game(2)
+	end
+	if Input:action_pressed_any_player("debug_3") then
+		self:leave_game(3)
+	end
+	if Input:action_pressed_any_player("debug_4") then
+		self:leave_game(4)
+	end
+	if Input:action_pressed_global("jump") then -- TODO only if no keyboard users
+		local global_user = Input:get_global_user()
+		local last_button = global_user.last_pressed_button
+
+		local can_add_keyboard_user = ternary(
+			last_button and last_button.type == INPUT_TYPE_KEYBOARD,
+			(Input:get_number_of_users(INPUT_TYPE_KEYBOARD) <= 0),
+			true
+		)
+		if last_button and Input:can_add_user(last_button.type) and can_add_keyboard_user then
+
+			local joystick = nil
+			if last_button.type == INPUT_TYPE_CONTROLLER then
+				joystick = Input:get_global_user().last_active_joystick
+			end
+			self:join_game(last_button.type, joystick)
+		end
+	end
+	-- local map_split_p2 = Input:get_input_map_split_keyboard(2) -- TODO only if already 1 keyboard user
+	-- if Input:is_keyboard_button_in_list_down(map_split_p2.jump) then
+		
+	-- end
 end
 
 function Game:removeme_bg_test()
@@ -609,12 +629,12 @@ function Game:removeme_bg_test2()
 	end
 end
 
-function Game:draw_logo_and_controls()
-	for i=1, #self.logo_cols + 1 do
+function Game:draw_logo()
+	for i=1, #LOGO_COLS + 1 do
 		local ox, oy = cos(self.logo_a + i*.4)*8, sin(self.logo_a + i*.4)*8
 		local logo_x = floor((CANVAS_WIDTH - images.logo_noshad:getWidth())/2)
 		
-		local col = self.logo_cols[i]
+		local col = LOGO_COLS[i]
 		local spr = images.logo_shad
 		if col == nil then
 			col = COL_WHITE
@@ -623,39 +643,21 @@ function Game:draw_logo_and_controls()
 		gfx.setColor(col)
 		gfx.draw(spr, logo_x + ox, self.logo_y + oy)
 	end
-	
-	self:draw_controls(floor(CANVAS_WIDTH/2), floor(self.logo_y) + images.logo:getHeight()+6)
-	-- local ox, oy = cos(self.t*3)*4, sin(self.t*3)*4
-	-- gfx.draw(images.controls_jetpack, ox + floor((CANVAS_WIDTH - images.controls_jetpack:getWidth())/2), oy + floor(self.jetpack_tutorial_y))
+	self:draw_join_tutorial()
 end
 
-function Game:draw_controls(x, y)
-	local tutorials = {
-		{{"left", "up", "right", "down"}, "MOVE"},
-		{{"jump"}, "JUMP"},
-		{{"shoot"}, "SHOOT"},
-	}
+function Game:draw_join_tutorial()
+	-- local x = (self.door_ax + self.door_bx) / 2
+	-- local y = self.door_ay
 
-	for i, tuto in ipairs(tutorials) do
-		local btn_x = x - 2
+	-- local buttons = {
+	-- 	InputButton:new("?", "?")
+	-- }
+	-- local button = Input:get_primary_button(self.n, action) or 
+	-- local icon = Input:get_button_icon(self.n, button) or images.btn_k_unknown
+	-- local w = icon:getWidth()
 
-		local shown_duration = 0.5
-		local actions = tuto[1]
-		local action_index = math.floor((self.t % (shown_duration * #actions)) / shown_duration) + 1
-		local action = actions[action_index]
-
-		local button = Input:get_primary_button(1, action) or InputButton:new("?", "?")
-		local icon = Input:get_button_icon(1, button) or images.btn_k_unknown
-		local w = icon:getWidth()
-
-		btn_x = btn_x - w
-		exec_using_shader(shaders.button_icon_to_def, function()
-			love.graphics.draw(icon, btn_x, y)
-		end)
-		
-		print_outline(self.logo_cols[4-i] or COL_WHITE, COL_BLACK_BLUE, tuto[2], x, y)
-		y = y + 18
-	end
+	-- love.graphics.print("JOIN", x, y)
 end
 
 function Game:draw_colview()
@@ -680,9 +682,14 @@ function Game:draw_debug()
 		users_str = concat(users_str, "{", k, ":", player.n, "}, ")
 	end
 	
-	local joystick_str = "joysticks: "	
+	local joystick_user_str = "joysticks_to_users: "	
 	for joy, user in pairs(Input.joystick_to_user_map) do
-		joystick_str = concat(joystick_str, "{", string.sub(joy:getName(),1,4), "... ", ":", user.n, "}, ")
+		joystick_user_str = concat(joystick_user_str, "{", string.sub(joy:getName(),1,4), "... ", ":", user.n, "}, ")
+	end
+	
+	local joystick_str = "joysticks: "	
+	for _, joy in pairs(love.joystick.getJoysticks()) do
+		joystick_str = concat(joystick_str, "{", string.sub(joy:getName(),1,4), "...}, ")
 	end
 
 	
@@ -694,13 +701,16 @@ function Game:draw_debug()
 		concat("n° of enemies: ", self.enemy_count),
 		concat("n° collision items: ", Collision.world:countItems()),
 		concat("frames_to_skip: ", self.frames_to_skip),
-		concat("self.sfx_elevator_bg_volume", self.sfx_elevator_bg_volume),
 		concat("debug1 ", self.debug1),
 		concat("real_wave_n ", self.debug2),
 		concat("bg_color_index ", self.debug3),
 		concat("number_of_alive_players ", self.number_of_alive_players),
+		concat("number_of_users(*) ", Input:get_number_of_users()),
+		concat("number_of_users(KEYBOARD) ", Input:get_number_of_users(INPUT_TYPE_KEYBOARD)),
+		concat("number_of_users(CONTROLLER) ", Input:get_number_of_users(INPUT_TYPE_CONTROLLER)),
 		players_str,
 		users_str,
+		joystick_user_str,
 		joystick_str,
 		"",
 	}
@@ -844,6 +854,12 @@ end
 
 function Game:init_players()
 	self.players = {}
+
+	for i = 1, self.max_number_of_players do
+		if Input:get_user(i) ~= nil then
+			self:new_player(i)
+		end
+	end
 end
 
 function Game:find_free_player_number()
@@ -855,23 +871,34 @@ function Game:find_free_player_number()
 	return nil
 end
 
-function Game:join_game(joystick)
-	-- fixme ça marche pas quand tu join avec manette puis que tu join sur clavier
+function Game:join_game(input_type, joystick)
+	-- FIXME ça marche pas quand tu join avec manette puis que tu join sur clavier
 	local player_n = self:find_free_player_number()
 	if player_n == nil then
 		return
 	end
-
 	-- Is joystick already taken?
 	if joystick ~= nil and Input:get_joystick_user(joystick) ~= nil then
 		return
 	end
 
+	local control_method = ""
 	Input:new_user(player_n)
 	self:new_player(player_n)
 	if joystick ~= nil then
 		Input:assign_joystick(player_n, joystick)
+		control_method = "controller"
 	end
+	if input_type == INPUT_TYPE_KEYBOARD then
+		control_method = "keyboard_solo"
+		
+	end
+	Input:assign_control_method(player_n, control_method)
+	
+	if Input:get_number_of_users(INPUT_TYPE_KEYBOARD) >= 1 then
+		Input:split_keyboard()
+	end
+
 	return player_n
 end
 
@@ -880,6 +907,8 @@ function Game:new_player(player_n)
 	if player_n == nil then
 		return
 	end
+
+	self.number_of_alive_players = self.number_of_alive_players + 1
 
 	local skins = {
 		{

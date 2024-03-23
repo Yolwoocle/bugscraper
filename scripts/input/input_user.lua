@@ -16,6 +16,7 @@ function InputUser:init(n, is_global)
 
     self.joystick = nil
     self.last_active_joystick = nil
+    self.last_pressed_button = nil
     self.primary_input_type = ternary(n == 1, "k", "c")
 end
 
@@ -82,22 +83,27 @@ function InputUser:action_pressed(action)
 end
 
 function InputUser:is_button_down(button)
+    local v = false
     if button.type == INPUT_TYPE_KEYBOARD then
-        return love.keyboard.isScancodeDown(button.key_name)
+        v = Input:is_keyboard_down(button)
 
     elseif button.type == INPUT_TYPE_CONTROLLER then 
         if self.joystick then 
-            return self:is_joystick_down(button)
+            v = self:is_joystick_down(button)
         elseif self.is_global then
-            return self:is_any_joystick_down(button)            
+            v = self:is_any_joystick_down(button)            
         end
     end
-    return false
+    
+    if v then
+        self.last_pressed_button = button
+    end
+    return v
 end      
 
 function InputUser:is_joystick_down(button, joystick)
     joystick = param(joystick, self.joystick)
-    if joystick == nil then return end
+    if joystick == nil then return false end
     local output = false
 
     local axis_func = AXIS_FUNCTIONS[button.key_name]

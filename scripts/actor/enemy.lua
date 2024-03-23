@@ -120,7 +120,7 @@ end
 
 function Enemy:draw_enemy()
 	local f = (self.damaged_flash_timer > 0) and draw_white or gfx.draw
-	self:draw_actor(self.vx < 0, _, f)
+	self:draw_actor(self.vx < 0, nil, f)
 
 	if game.debug_mode then
 		gfx.draw(images.heart, self.x-7 -2+16, self.y-16)
@@ -133,6 +133,8 @@ function Enemy:draw()
 end
 
 function Enemy:on_collision(col, other)
+	if self.is_removed then return end
+
 	-- If hit wall, reverse x vel (why is this here?????) TODO: wtf
 	if col.other.is_solid and col.normal.y == 0 then 
 		self.vx = -self.vx
