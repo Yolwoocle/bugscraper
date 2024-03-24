@@ -169,7 +169,7 @@ end
 
 local DeadPlayerParticle = Particle:inherit()
 
-function DeadPlayerParticle:init(x,y,spr,dir_x)
+function DeadPlayerParticle:init(x,y,spr, colors, dir_x)
 	--                 x,y,s,r, vx,vy,vs,vr, life, g, is_solid
 	self:init_particle(x,y,1,0, 0,0,0,0,     10, 0, false)
 	self.spr = spr
@@ -188,7 +188,7 @@ function DeadPlayerParticle:init(x,y,spr,dir_x)
 
 	self.r = 0
 
-	self.cols = {color(0xf6757a), color(0xb55088), color(0xe43b44), color(0x3a4466), color(0x262b44)}
+	self.cols = colors
 
 	Particles:splash(self.x, self.y - self.oy, 40, self.cols)
 end
@@ -392,8 +392,8 @@ function ParticleSystem:stomped_enemy(x, y, spr)
 	self:add_particle(StompedEnemyParticle:new(x, y, spr))
 end
 
-function ParticleSystem:dead_player(x, y, spr, dir_x)
-	self:add_particle(DeadPlayerParticle:new(x, y, spr, dir_x))
+function ParticleSystem:dead_player(x, y, spr, colors, dir_x)
+	self:add_particle(DeadPlayerParticle:new(x, y, spr, colors, dir_x))
 end
 
 function ParticleSystem:letter(x, y, str, spawn_delay, col)

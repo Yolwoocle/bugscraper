@@ -340,7 +340,7 @@ end
 
 function concatsep(tab, sep)
 	sep = sep or " "
-	local s = tostring(tab[1])
+	local s = tostring(tab[1] or "")
 	for i=2,#tab do
 		s = s..sep..tostring(tab[i])
 	end

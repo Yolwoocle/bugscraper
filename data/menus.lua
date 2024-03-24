@@ -183,8 +183,7 @@ local function generate_menus()
         { "<<<<<<<<< OPTIONS >>>>>>>>>" },
         { "" },
         { "<<< Controls >>>" },
-        { "KEYBOARD SETTINGS", func_set_menu("controls_keyboard")},
-        { "CONTROLLER SETTINGS", func_set_menu("controls_controller")},
+        { "INPUT SETTINGS...", func_set_menu("options_input")},
         { ""},
         { "<<< Audio >>>" },
         { "SOUND", function(self, option)
@@ -329,76 +328,108 @@ local function generate_menus()
             self.value_text = concat(floor(100 * self.value / 20), "%")
         end},
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
+    
+    menus.options_input = Menu:new(game, {
+        { "<<<<<<<<< INPUT SETTINGS >>>>>>>>>" },
+        { "" },
+        { "<<< Keyboard >>>" },
+        { "KEYBOARD (Default)", func_set_menu("controls_keyboard_solo")},
+        { "KEYBOARD (Split 1)", func_set_menu("controls_keyboard_split_p1")},
+        { "KEYBOARD (Split 2)", func_set_menu("controls_keyboard_split_p2")},
+        { "" },
+        { "<<< Gamepad >>>" },
+        { "GAMEPAD 1", func_set_menu("controls_controller_p1")},
+        { "GAMEPAD 2", func_set_menu("controls_controller_p2")},
+        { "GAMEPAD 3", func_set_menu("controls_controller_p3")},
+        { "GAMEPAD 4", func_set_menu("controls_controller_p4")},
+    }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
 
-    menus.controls_keyboard = Menu:new(game, {
-        { "<<<<<<<<< CONTROLS >>>>>>>>>" },
-        { "" },
-        { "RESET CONTROLS", function() Input:reset_controls(1, "k") end },
-        { "" },
-        { "<<< Gameplay >>>" },
-        { ControlsMenuItem, 1, "k", "left" },
-        { ControlsMenuItem, 1, "k", "right" },
-        { ControlsMenuItem, 1, "k", "up" },
-        { ControlsMenuItem, 1, "k", "down" },
-        { ControlsMenuItem, 1, "k", "jump" },
-        { ControlsMenuItem, 1, "k", "shoot" },
-        { "" },
-        { "<<< Interface >>>" },
-        { "At least one binding is required" },
-        { ControlsMenuItem, 1, "k", "ui_left" },
-        { ControlsMenuItem, 1, "k", "ui_right" },
-        { ControlsMenuItem, 1, "k", "ui_up" },
-        { ControlsMenuItem, 1, "k", "ui_down" },
-        { ControlsMenuItem, 1, "k", "ui_select" },
-        { ControlsMenuItem, 1, "k", "ui_back" },
-        { ControlsMenuItem, 1, "k", "pause" },
-    }, DEFAULT_MENU_BG_COLOR, PROMPTS_CONTROLS)
+    local function create_keyboard_controls_menu(title, input_profile_id)
+        return Menu:new(game, {
+            { "<<<<<<<<< "..title.." >>>>>>>>>" },
+            { "" },
+            { "RESET CONTROLS", function() Input:reset_controls(input_profile_id, "k") end },
+            { "" },
+            { "<<< Gameplay >>>" },
+            { ControlsMenuItem, -1, input_profile_id, "k", "left",  "LEFT" },
+            { ControlsMenuItem, -1, input_profile_id, "k", "right", "RIGHT" },
+            { ControlsMenuItem, -1, input_profile_id, "k", "up",    "UP" },
+            { ControlsMenuItem, -1, input_profile_id, "k", "down",  "DOWN" },
+            { ControlsMenuItem, -1, input_profile_id, "k", "jump",  "JUMP" },
+            { ControlsMenuItem, -1, input_profile_id, "k", "shoot", "SHOOT" },
+            { "" },
+            { "<<< Interface >>>" },
+            { "At least one binding is required" },
+            { ControlsMenuItem, -1, input_profile_id, "k", "ui_left",    "MENU LEFT" },
+            { ControlsMenuItem, -1, input_profile_id, "k", "ui_right",   "MENU RIGHT" },
+            { ControlsMenuItem, -1, input_profile_id, "k", "ui_up",      "MENU UP" },
+            { ControlsMenuItem, -1, input_profile_id, "k", "ui_down",    "MENU DOWN" },
+            { ControlsMenuItem, -1, input_profile_id, "k", "ui_select",  "SELECT" },
+            { ControlsMenuItem, -1, input_profile_id, "k", "ui_back",    "BACK" },
+            { ControlsMenuItem, -1, input_profile_id, "k", "pause",      "PAUSE" },
+            { ControlsMenuItem, -1, input_profile_id, "k", "leave_game", "LEAVE GAME" },
+        }, DEFAULT_MENU_BG_COLOR, PROMPTS_CONTROLS)
+    end
 
-    menus.controls_controller = Menu:new(game, {
-        { "<<<<<<<<< CONTROLS >>>>>>>>>" },
-        { "" },
-        { "RESET CONTROLS", function() Input:reset_controls(1, "c") end },
-        { SliderMenuItem, "BUTTON STYLE", function(self, diff)
-            diff = diff or 1
-            self:next_value(diff)
-            Options:set_button_style(1, self.value)
-            Audio:play("menu_select", 1.0)
-        end, BUTTON_STYLES,
-        function(self)
-            self.value = Options:get("button_style_p1")
-            self.value_text = concat(self.value)
-        end},
-        { "CURRENT GAMEPAD", nil,
-        function(self)
-            local joystick = Input:get_user(1).joystick
-            if joystick ~= nil then
-                self.value = "\""..joystick:getName().."\""
-                self.value_text = "\""..joystick:getName().."\""
-            else
-                self.value = "[NO GAMEPAD CONNECTED]"
-                self.value_text = "[NO GAMEPAD CONNECTED]"
-            end
-        end},
-        { "" },
-        { "<<< Gameplay >>>" },
-        { ControlsMenuItem, 1, "c", "left"},
-        { ControlsMenuItem, 1, "c", "right"},
-        { ControlsMenuItem, 1, "c", "up"},
-        { ControlsMenuItem, 1, "c", "down"},
-        { ControlsMenuItem, 1, "c", "jump"},
-        { ControlsMenuItem, 1, "c", "shoot"},
-        { ""},
-        { "<<< Interface >>>" },
-        { "At least one binding is required" },
-        { ControlsMenuItem, 1, "c", "ui_left"},
-        { ControlsMenuItem, 1, "c", "ui_right"},
-        { ControlsMenuItem, 1, "c", "ui_up"},
-        { ControlsMenuItem, 1, "c", "ui_down"},
-        { ControlsMenuItem, 1, "c", "ui_select"},
-        { ControlsMenuItem, 1, "c", "ui_back"},
-        { ControlsMenuItem, 1, "c", "pause"},
-
-    }, DEFAULT_MENU_BG_COLOR, PROMPTS_CONTROLS)
+    local function create_controller_controls_menu(title, input_profile_id, player_n)
+        return Menu:new(game, {
+            { "<<<<<<<<< "..title.." >>>>>>>>>" },
+            { "", nil,
+            function(self) 
+                local user = Input:get_user(player_n)
+                if user == nil then  
+                    self.label_text = "[NO PLAYER "..tostring(player_n).."]"
+                    return
+                end
+                local joystick = user.joystick
+                if joystick ~= nil then
+                    self.label_text = "\""..joystick:getName().."\""
+                else
+                    self.label_text = "[NO GAMEPAD CONNECTED]"
+                end
+            end},
+            { "" },
+            { "RESET CONTROLS", function() Input:reset_controls(input_profile_id, "c") end },
+            { SliderMenuItem, "BUTTON STYLE", function(self, diff)
+                diff = diff or 1
+                self:next_value(diff)
+                Options:set_button_style(player_n, self.value)
+                Audio:play("menu_select", 1.0)
+            end, BUTTON_STYLES,
+            function(self)
+                self.value = Options:get("button_style_p"..tostring(player_n))
+                self.value_text = concat(self.value)
+            end},
+            { "" },
+            { "<<< Gameplay >>>" },
+            { ControlsMenuItem, player_n, input_profile_id, "c", "left",  "LEFT"},
+            { ControlsMenuItem, player_n, input_profile_id, "c", "right", "RIGHT"},
+            { ControlsMenuItem, player_n, input_profile_id, "c", "up",    "UP"},
+            { ControlsMenuItem, player_n, input_profile_id, "c", "down",  "DOWN"},
+            { ControlsMenuItem, player_n, input_profile_id, "c", "jump",  "JUMP"},
+            { ControlsMenuItem, player_n, input_profile_id, "c", "shoot", "SHOOT"},
+            { ""},
+            { "<<< Interface >>>" },
+            { "At least one binding is required" },
+            { ControlsMenuItem, player_n, input_profile_id, "c", "ui_left",    "MENU LEFT"},
+            { ControlsMenuItem, player_n, input_profile_id, "c", "ui_right",   "MENU RIGHT"},
+            { ControlsMenuItem, player_n, input_profile_id, "c", "ui_up",      "MENU UP"},
+            { ControlsMenuItem, player_n, input_profile_id, "c", "ui_down",    "MENU DOWN"},
+            { ControlsMenuItem, player_n, input_profile_id, "c", "ui_select",  "SELECT" },
+            { ControlsMenuItem, player_n, input_profile_id, "c", "ui_back",    "BACK" },
+            { ControlsMenuItem, player_n, input_profile_id, "c", "pause",      "PAUSE" },
+            { ControlsMenuItem, player_n, input_profile_id, "c", "leave_game", "LEAVE GAME" },
+    
+        }, DEFAULT_MENU_BG_COLOR, PROMPTS_CONTROLS)
+    end
+    
+    menus.controls_keyboard_solo =     create_keyboard_controls_menu("KEYBOARD SETTINGS (Default)", "keyboard_solo")
+    menus.controls_keyboard_split_p1 = create_keyboard_controls_menu("KEYBOARD SETTINGS (Split 1)", "keyboard_split_p1")
+    menus.controls_keyboard_split_p2 = create_keyboard_controls_menu("KEYBOARD SETTINGS (Split 2)", "keyboard_split_p2")
+    menus.controls_controller_p1 =     create_controller_controls_menu("GAMEPAD SETTINGS (Player 1)", "controller_1", 1)
+    menus.controls_controller_p2 =     create_controller_controls_menu("GAMEPAD SETTINGS (Player 2)", "controller_2", 2)
+    menus.controls_controller_p3 =     create_controller_controls_menu("GAMEPAD SETTINGS (Player 3)", "controller_3", 3)
+    menus.controls_controller_p4 =     create_controller_controls_menu("GAMEPAD SETTINGS (Player 4)", "controller_4", 4)
 
     menus.game_over = Menu:new(game, {
         {"<<<<<<<<< GAME OVER! >>>>>>>>>"},

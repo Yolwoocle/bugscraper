@@ -141,7 +141,6 @@ function Game:new_game()
 	-- Players
 	self.max_number_of_players = MAX_NUMBER_OF_PLAYERS
 	self.number_of_players = 0
-	self.number_of_alive_players = 0
 
 	self.elevator = Elevator:new(self)
 
@@ -530,40 +529,47 @@ function Game:draw_game()
 end
 
 function Game:listen_for_player_join(dt)
-	if Input:action_pressed_any_player("debug_1") then
-		self:leave_game(1)
-	end
-	if Input:action_pressed_any_player("debug_2") then
-		self:leave_game(2)
-	end
-	if Input:action_pressed_any_player("debug_3") then
-		self:leave_game(3)
-	end
-	if Input:action_pressed_any_player("debug_4") then
-		self:leave_game(4)
-	end
-	if Input:action_pressed_global("jump") then -- TODO only if no keyboard users
+	if self.game_started then return end
+
+	-- if Input:action_pressed_any_player("debug_1") then
+	-- 	self:leave_game(1)
+	-- end
+	-- if Input:action_pressed_any_player("debug_2") then
+	-- 	self:leave_game(2)
+	-- end
+	-- if Input:action_pressed_any_player("debug_3") then
+	-- 	self:leave_game(3)
+	-- end
+	-- if Input:action_pressed_any_player("debug_4") then
+	-- 	self:leave_game(4)
+	-- end
+
+	if Input:action_pressed_global("jump") then 
 		local global_user = Input:get_global_user()
 		local last_button = global_user.last_pressed_button
+		local input_profile_id = ""
+		local joystick = nil
 
 		local can_add_keyboard_user = ternary(
 			last_button and last_button.type == INPUT_TYPE_KEYBOARD,
 			(Input:get_number_of_users(INPUT_TYPE_KEYBOARD) <= 0),
 			true
 		)
-		if last_button and Input:can_add_user(last_button.type) and can_add_keyboard_user then
-
-			local joystick = nil
-			if last_button.type == INPUT_TYPE_CONTROLLER then
+		if last_button and Input:can_add_user() and can_add_keyboard_user then
+			if last_button.type == INPUT_TYPE_KEYBOARD then
+				input_profile_id = "keyboard_solo"
+			
+			elseif last_button.type == INPUT_TYPE_CONTROLLER then
+				input_profile_id = "controller"
 				joystick = Input:get_global_user().last_active_joystick
 			end
-			self:join_game(last_button.type, joystick)
+			self:join_game(input_profile_id, joystick)
 		end
 	end
-	-- local map_split_p2 = Input:get_input_map_split_keyboard(2) -- TODO only if already 1 keyboard user
-	-- if Input:is_keyboard_button_in_list_down(map_split_p2.jump) then
-		
-	-- end
+	if Input:action_pressed_global("split_keyboard") and Input:get_number_of_users(INPUT_TYPE_KEYBOARD) == 1 then
+		self:join_game("keyboard_solo")
+		Input:split_keyboard()
+	end
 end
 
 function Game:removeme_bg_test()
@@ -647,17 +653,34 @@ function Game:draw_logo()
 end
 
 function Game:draw_join_tutorial()
-	-- local x = (self.door_ax + self.door_bx) / 2
-	-- local y = self.door_ay
+	local def_x = math.floor((self.door_ax + self.door_bx) / 2)
+	local def_y = self.logo_y + 50
 
-	-- local buttons = {
-	-- 	InputButton:new("?", "?")
-	-- }
-	-- local button = Input:get_primary_button(self.n, action) or 
-	-- local icon = Input:get_button_icon(self.n, button) or images.btn_k_unknown
-	-- local w = icon:getWidth()
-
-	-- love.graphics.print("JOIN", x, y)
+	local icons = {
+		Input:get_button_icon(1, Input:get_input_profile("global"):get_primary_button("jump", INPUT_TYPE_KEYBOARD)),
+		Input:get_button_icon(1, Input:get_input_profile("global"):get_primary_button("jump", INPUT_TYPE_CONTROLLER), BUTTON_STYLE_SWITCH),
+		Input:get_button_icon(1, Input:get_input_profile("global"):get_primary_button("jump", INPUT_TYPE_CONTROLLER), BUTTON_STYLE_PLAYSTATION5),
+	}
+	
+	local x = def_x
+	local y = def_y
+	print_outline(COL_WHITE, COL_BLACK_BLUE, "JOIN", x, y)
+	for i, icon in pairs(icons) do
+		x = x - icon:getWidth() - 2
+		love.graphics.draw(icon, x, y)
+		if i ~= #icons then
+			print_outline(COL_WHITE, COL_BLACK_BLUE, "/", x-3, y)
+		end
+	end
+	
+	x = def_x
+	y = y + 16
+	if Input:get_number_of_users(INPUT_TYPE_KEYBOARD) == 1 then
+		local icon_split_kb = Input:get_button_icon(1, Input:get_input_profile("global"):get_primary_button("split_keyboard"))
+		print_outline(COL_WHITE, COL_BLACK_BLUE, "SPLIT KEYBOARD", x, y)
+		x = x - icon_split_kb:getWidth() - 2
+		love.graphics.draw(icon_split_kb, x, y)
+	end
 end
 
 function Game:draw_colview()
@@ -704,7 +727,7 @@ function Game:draw_debug()
 		concat("debug1 ", self.debug1),
 		concat("real_wave_n ", self.debug2),
 		concat("bg_color_index ", self.debug3),
-		concat("number_of_alive_players ", self.number_of_alive_players),
+		concat("number_of_alive_players ", self:get_number_of_alive_players()),
 		concat("number_of_users(*) ", Input:get_number_of_users()),
 		concat("number_of_users(KEYBOARD) ", Input:get_number_of_users(INPUT_TYPE_KEYBOARD)),
 		concat("number_of_users(CONTROLLER) ", Input:get_number_of_users(INPUT_TYPE_CONTROLLER)),
@@ -794,10 +817,9 @@ function Game:on_kill(actor)
 end
 
 function Game:on_player_death(player)
-	self.number_of_alive_players = self.number_of_alive_players - 1
 	self.players[player.n] = nil
 
-	if self.number_of_alive_players <= 0 then
+	if self:get_number_of_alive_players() <= 0 then
 		-- Save stats
 		self.music_player:pause()
 		self:pause_repeating_sounds()
@@ -872,7 +894,7 @@ function Game:find_free_player_number()
 	return nil
 end
 
-function Game:join_game(input_type, joystick)
+function Game:join_game(input_profile_id, joystick)
 	-- FIXME ça marche pas quand tu join avec manette puis que tu join sur clavier
 	local player_n = self:find_free_player_number()
 	if player_n == nil then
@@ -883,22 +905,12 @@ function Game:join_game(input_type, joystick)
 		return
 	end
 
-	local control_method = ""
 	Input:new_user(player_n)
 	self:new_player(player_n)
 	if joystick ~= nil then
 		Input:assign_joystick(player_n, joystick)
-		control_method = "controller"
 	end
-	if input_type == INPUT_TYPE_KEYBOARD then
-		control_method = "keyboard_solo"
-		
-	end
-	Input:assign_control_method(player_n, control_method)
-	
-	if Input:get_number_of_users(INPUT_TYPE_KEYBOARD) >= 1 then
-		Input:split_keyboard()
-	end
+	Input:assign_input_profile(player_n, input_profile_id)
 
 	return player_n
 end
@@ -909,28 +921,30 @@ function Game:new_player(player_n)
 		return
 	end
 
-	self.number_of_alive_players = self.number_of_alive_players + 1
-
 	local skins = {
 		{
 			spr_idle = images.ant1,
 			spr_jump = images.ant2,
 			spr_dead = images.ant_dead,
+			color_palette = {color(0xf6757a), color(0xb55088), color(0xe43b44), color(0x9e2835), color(0x3a4466), color(0x262b44)},
 		},
 		{
 			spr_idle = images.caterpillar_1,
 			spr_jump = images.caterpillar_2,
 			spr_dead = images.caterpillar_dead,
+			color_palette = {color(0x63c74d), color(0x3e8948), color(0x265c42), color(0x193c3e), color(0x5a6988), color(0x3a4466)},
 		},
 		{
 			spr_idle = images.bee_1,
 			spr_jump = images.bee_2,
 			spr_dead = images.bee_dead,
+			color_palette = {color(0xfee761), color(0xfeae34), color(0x743f39), color(0x3f2832), color(0xc0cbdc), color(0x9e2835)},
 		},
 		{
-			spr_idle = images.caterpillar_1,
-			spr_jump = images.caterpillar_2,
-			spr_dead = images.caterpillar_dead,
+			spr_idle = images.ant2_1,
+			spr_jump = images.ant2_2,
+			spr_dead = images.ant2_dead,
+			color_palette = {color(0x2ce8f5), color(0x2ce8f5), color(0x0195e9), color(0x9e2835), color(0x3a4466), color(0x262b44)},
 		},
 	}
 
@@ -947,9 +961,25 @@ function Game:leave_game(player_n)
 		return
 	end
 
+	local player = self.players[player_n]
+	local profile_id = Input:get_input_profile_from_player_n(player.n):get_profile_id()
+	
 	self.players[player_n]:remove()
 	self.players[player_n] = nil
 	Input:remove_user(player_n)
+	if profile_id == "keyboard_split_p1" or profile_id == "keyboard_split_p2" then
+		Input:unsplit_keyboard()
+	end
+end
+
+function Game:get_number_of_alive_players()
+	local count = 0
+	for i = 1, self.max_number_of_players do
+		if self.players[i] ~= nil then
+			count = count + 1
+		end
+	end
+	return count
 end
 
 function Game:apply_screenshake(dt)
@@ -1039,6 +1069,15 @@ end
 function Game:gamepadaxis(joystick, axis, value)
 	Input:gamepadaxis(joystick, axis, value)
 	if self.menu_manager then   self.menu_manager:gamepadaxis(joystick, axis, value)   end
+end
+
+function Game:focus(f)
+	if f then
+	else
+		if Options:get("pause_on_unfocus") and self.menu_manager and Input:get_number_of_users() >= 1 then
+			self.menu_manager:pause()
+		end
+	end
 end
 
 -- function Game:keyreleased(key, scancode)

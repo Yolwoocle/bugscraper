@@ -36,6 +36,7 @@ function Player:init(n, x, y, skin)
 	self.is_enemy = false
 	
 	-- Animation
+	self.color_palette = skin.color_palette
 	self.spr_idle = skin.spr_idle
 	self.spr_jump = skin.spr_jump
 	self.spr_dead = skin.spr_dead
@@ -190,6 +191,9 @@ function Player:update(dt)
 	-- 	self:do_damage(1)
 	-- 	self.iframes = 1
 	-- end
+	if Input:action_pressed(self.n, "leave_game") and not game.game_started then
+		game:leave_game(self.n)
+	end
 
 	-- Movement
 	self:update_upgrades(dt)
@@ -309,20 +313,32 @@ end
 
 function Player:draw_controls()
 	local tutorials = {
-		{{"shoot"}, "SHOOT"},
-		{{"jump"}, "JUMP"},
-		{{"down", "up", "right", "left"}, "MOVE"},
+		{{"leave_game"}, "Leave"},
+		{{"shoot"}, "Shoot"},
+		{{"jump"}, "Jump"},
+		{{"right", "down", "left", "up"}, "Move", Input:get_primary_input_type(self.n) == INPUT_TYPE_KEYBOARD},
 	}
 
 	local x = self.ui_x
 	local y = self.ui_y - 32
+	-- local x = (CANVAS_WIDTH * 0.15) + (CANVAS_WIDTH * 0.9) * (self.n-1)/4
+	-- local y = 140
+
+	-- love.graphics.line(x, y, self.ui_x, self.ui_y - 30)
 	for i, tuto in ipairs(tutorials) do
 		y = y - 16
 		local btn_x = x - 2
 
 		local shown_duration = 0.5
 		local actions = tuto[1]
-		-- local action_index = math.floor((self.t % (shown_duration * #actions)) / shown_duration) + 1
+		local label = tuto[2]
+		local show_in_keybaord_form = tuto[3]
+
+		local x_of_second_button = 0
+		if not show_in_keybaord_form then
+			local action_index = math.floor((game.t % (shown_duration * #actions)) / shown_duration) + 1
+			actions = {actions[action_index]}
+		end
 		for i_action = 1, #actions do
 			local action = actions[i_action]
 
@@ -331,10 +347,21 @@ function Player:draw_controls()
 			local w = icon:getWidth()
 
 			btn_x = btn_x - w
-			love.graphics.draw(icon, btn_x, y)
+			if not (show_in_keybaord_form and i_action == 4) then
+				love.graphics.draw(icon, btn_x, y)
+			end
+
+			if show_in_keybaord_form then
+				if i_action == 2 then
+					x_of_second_button = btn_x
+				elseif i_action == 4 then
+					love.graphics.draw(icon, x_of_second_button, y - 16)
+				end
+			end
 		end
 		
-		print_outline(LOGO_COLS[4-i] or COL_WHITE, COL_BLACK_BLUE, tuto[2], x, y)
+		local text_color = self.color_palette[1] --LOGO_COLS[4-i] or COL_WHITE
+		print_outline(text_color, COL_BLACK_BLUE, label, x, y)
 	end
 end
 
@@ -354,7 +381,6 @@ function Player:draw_player()
 		love.graphics.setColor(old_col)
 		gfx.draw(self.spr, x, y, self.rot, fx, fy, spr_w2, spr_h2)
 	end
-	gfx.print(self.n, x, y- 20)
 
 	self:post_draw(x-spr_w2, y-spr_h2)
 end
@@ -557,7 +583,7 @@ function Player:kill()
 	self.is_dead = true
 	
 	game:screenshake(10)
-	Particles:dead_player(self.spr_x, self.spr_y, self.spr_dead, self.dir_x)
+	Particles:dead_player(self.spr_x, self.spr_y, self.spr_dead, self.color_palette, self.dir_x)
 	game:frameskip(30)
 
 	self:on_death()

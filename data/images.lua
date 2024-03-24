@@ -1,7 +1,7 @@
 require "scripts.util"
+require "scripts.meta.constants"
 local Class = require "scripts.meta.class"
 local key_constant_to_image = require "data.buttons.images_buttons_keyboard"
-local controller_brands = require "data.buttons.controller_brands"
 local controller_buttons = require "data.buttons.controller_buttons"
 
 REMOVEME_image_to_col = {}
@@ -48,6 +48,9 @@ local img_names = {
 	-----------------------------------------------------
 
 	-- players
+	ant2_1 =           "actors/players/ant2_1",
+	ant2_2 =           "actors/players/ant2_2",
+	ant2_dead =        "actors/players/ant2_dead",
 	ant1 =             "actors/players/ant1",
 	ant2 =             "actors/players/ant2",
 	ant_dead =         "actors/players/ant_dead",
@@ -195,7 +198,7 @@ for key_constant, button_image_name in pairs(key_constant_to_image) do
 	images[button_image_name] = load_image("buttons/keyboard/"..button_image_name..".png")
 end
 
-for _, brand in pairs(controller_brands) do
+for _, brand in pairs(CONTROLLER_BRANDS) do
 	for button, __ in pairs(controller_buttons) do
 		local name = string.format("btn_c_%s_%s", brand, button)
 		local path = string.format("buttons/controller/%s/%s.png", brand, name)
