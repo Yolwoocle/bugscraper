@@ -360,13 +360,14 @@ local function generate_menus()
             { "" },
             { "<<< Interface >>>" },
             { "At least one binding is required" },
-            { ControlsMenuItem, -1, input_profile_id, "k", "ui_left",   "MENU LEFT" },
-            { ControlsMenuItem, -1, input_profile_id, "k", "ui_right",  "MENU RIGHT" },
-            { ControlsMenuItem, -1, input_profile_id, "k", "ui_up",     "MENU UP" },
-            { ControlsMenuItem, -1, input_profile_id, "k", "ui_down",   "MENU DOWN" },
-            { ControlsMenuItem, -1, input_profile_id, "k", "ui_select", "SELECT" },
-            { ControlsMenuItem, -1, input_profile_id, "k", "ui_back",   "BACK" },
-            { ControlsMenuItem, -1, input_profile_id, "k", "pause",     "PAUSE" },
+            { ControlsMenuItem, -1, input_profile_id, "k", "ui_left",    "MENU LEFT" },
+            { ControlsMenuItem, -1, input_profile_id, "k", "ui_right",   "MENU RIGHT" },
+            { ControlsMenuItem, -1, input_profile_id, "k", "ui_up",      "MENU UP" },
+            { ControlsMenuItem, -1, input_profile_id, "k", "ui_down",    "MENU DOWN" },
+            { ControlsMenuItem, -1, input_profile_id, "k", "ui_select",  "SELECT" },
+            { ControlsMenuItem, -1, input_profile_id, "k", "ui_back",    "BACK" },
+            { ControlsMenuItem, -1, input_profile_id, "k", "pause",      "PAUSE" },
+            { ControlsMenuItem, -1, input_profile_id, "k", "leave_game", "LEAVE GAME" },
         }, DEFAULT_MENU_BG_COLOR, PROMPTS_CONTROLS)
     end
 
@@ -410,13 +411,14 @@ local function generate_menus()
             { ""},
             { "<<< Interface >>>" },
             { "At least one binding is required" },
-            { ControlsMenuItem, player_n, input_profile_id, "c", "ui_left",   "MENU LEFT"},
-            { ControlsMenuItem, player_n, input_profile_id, "c", "ui_right",  "MENU RIGHT"},
-            { ControlsMenuItem, player_n, input_profile_id, "c", "ui_up",     "MENU UP"},
-            { ControlsMenuItem, player_n, input_profile_id, "c", "ui_down",   "MENU DOWN"},
-            { ControlsMenuItem, player_n, input_profile_id, "c", "ui_select", "SELECT" },
-            { ControlsMenuItem, player_n, input_profile_id, "c", "ui_back",   "BACK" },
-            { ControlsMenuItem, player_n, input_profile_id, "c", "pause",     "PAUSE" },
+            { ControlsMenuItem, player_n, input_profile_id, "c", "ui_left",    "MENU LEFT"},
+            { ControlsMenuItem, player_n, input_profile_id, "c", "ui_right",   "MENU RIGHT"},
+            { ControlsMenuItem, player_n, input_profile_id, "c", "ui_up",      "MENU UP"},
+            { ControlsMenuItem, player_n, input_profile_id, "c", "ui_down",    "MENU DOWN"},
+            { ControlsMenuItem, player_n, input_profile_id, "c", "ui_select",  "SELECT" },
+            { ControlsMenuItem, player_n, input_profile_id, "c", "ui_back",    "BACK" },
+            { ControlsMenuItem, player_n, input_profile_id, "c", "pause",      "PAUSE" },
+            { ControlsMenuItem, player_n, input_profile_id, "c", "leave_game", "LEAVE GAME" },
     
         }, DEFAULT_MENU_BG_COLOR, PROMPTS_CONTROLS)
     end

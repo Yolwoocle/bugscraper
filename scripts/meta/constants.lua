@@ -112,6 +112,8 @@ RAW_INPUT_MAP_DEFAULT_EMPTY = {
     ui_down =   {},
     ui_reset_keys = {},
     split_keyboard = {},
+    leave_game = {},
+
     debug_1 = {},
     debug_2 = {},
     debug_3 = {},
@@ -135,6 +137,8 @@ RAW_INPUT_MAP_DEFAULT_GLOBAL = {
     ui_down =   {},
     ui_reset_keys = {},
     split_keyboard = {"k_space"},
+    leave_game = {},
+
     debug_1 = {"k_1"},
     debug_2 = {"k_2"},
     debug_3 = {"k_3"},
@@ -158,6 +162,8 @@ RAW_INPUT_MAP_DEFAULT_CONTROLLER = {
     ui_down =   {"c_leftstickypos", "c_dpdown"},
     ui_reset_keys = {"c_lefttrigger"},
     split_keyboard = {},
+    leave_game = {"c_lefttrigger"},
+
     debug_1 = {"k_1"},
     debug_2 = {"k_2"},
     debug_3 = {"k_3"},
@@ -181,6 +187,8 @@ RAW_INPUT_MAP_DEFAULT_KEYBOARD_SOLO = {
     ui_down =   {"k_down", "k_s"},
     ui_reset_keys = {"k_tab"},
     split_keyboard = {},
+    leave_game = {"k_tab"},
+
     debug_1 = {"k_1"},
     debug_2 = {"k_2"},
     debug_3 = {"k_3"},
@@ -204,6 +212,8 @@ RAW_INPUT_MAP_DEFAULT_SPLIT_KEYBOARD_P1 = {
     ui_down =   {"k_s"},
     ui_reset_keys = {"k_tab"},
     split_keyboard = {},
+    leave_game = {"k_tab"},
+
     debug_1 = {"k_1"},
     debug_2 = {"k_2"},
     debug_3 = {"k_3"},
@@ -225,8 +235,10 @@ RAW_INPUT_MAP_DEFAULT_SPLIT_KEYBOARD_P2 = {
     ui_right =  {"k_k", "k_right"},
     ui_up =     {"k_u", "k_up"},
     ui_down =   {"k_j", "k_down"},
-    ui_reset_keys = {"k_tab"},
+    ui_reset_keys = {"k_o"},
     split_keyboard = {},
+    leave_game = {"k_o"},
+
     debug_1 = {"k_1"},
     debug_2 = {"k_2"},
     debug_3 = {"k_3"},

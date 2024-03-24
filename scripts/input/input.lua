@@ -23,15 +23,15 @@ function InputManager:init()
 	self.default_mapping_split_kb_p2 =   self:process_input_map(RAW_INPUT_MAP_DEFAULT_SPLIT_KEYBOARD_P2)
 
 	self.input_profiles = {
-        ["empty"] =             InputProfile:new("k", self.default_mapping_empty),
-        ["global"] =            InputProfile:new("k", self.default_mapping),
-        ["controller_1"] =      InputProfile:new("c", self.default_mapping_controller),
-        ["controller_2"] =      InputProfile:new("c", self.default_mapping_controller),
-        ["controller_3"] =      InputProfile:new("c", self.default_mapping_controller),
-        ["controller_4"] =      InputProfile:new("c", self.default_mapping_controller),
-        ["keyboard_solo"] =     InputProfile:new("k", self.default_mapping_keyboard_solo),
-        ["keyboard_split_p1"] = InputProfile:new("k", self.default_mapping_split_kb_p1),
-        ["keyboard_split_p2"] = InputProfile:new("k", self.default_mapping_split_kb_p2),
+        ["empty"] =             InputProfile:new("empty",             "k", self.default_mapping_empty),
+        ["global"] =            InputProfile:new("global",            "k", self.default_mapping),
+        ["controller_1"] =      InputProfile:new("controller_1",      "c", self.default_mapping_controller),
+        ["controller_2"] =      InputProfile:new("controller_2",      "c", self.default_mapping_controller),
+        ["controller_3"] =      InputProfile:new("controller_3",      "c", self.default_mapping_controller),
+        ["controller_4"] =      InputProfile:new("controller_4",      "c", self.default_mapping_controller),
+        ["keyboard_solo"] =     InputProfile:new("keyboard_solo",     "k", self.default_mapping_keyboard_solo),
+        ["keyboard_split_p1"] = InputProfile:new("keyboard_split_p1", "k", self.default_mapping_split_kb_p1),
+        ["keyboard_split_p2"] = InputProfile:new("keyboard_split_p2", "k", self.default_mapping_split_kb_p2),
     }
 
     self:load_controls()
@@ -395,6 +395,15 @@ function InputManager:split_keyboard()
 
     self:assign_input_profile(p1, "keyboard_split_p1")
     self:assign_input_profile(p2, "keyboard_split_p2")
+end
+
+function InputManager:unsplit_keyboard()
+    for i=1, MAX_NUMBER_OF_PLAYERS do
+        local user = self.users[i]
+        if user and user.primary_input_type == INPUT_TYPE_KEYBOARD then
+            self:assign_input_profile(i, "keyboard_solo")
+        end
+    end
 end
 
 -----------------------------------------------------

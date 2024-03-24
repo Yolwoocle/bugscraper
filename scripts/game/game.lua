@@ -141,7 +141,6 @@ function Game:new_game()
 	-- Players
 	self.max_number_of_players = MAX_NUMBER_OF_PLAYERS
 	self.number_of_players = 0
-	self.number_of_alive_players = 0
 
 	self.elevator = Elevator:new(self)
 
@@ -532,18 +531,18 @@ end
 function Game:listen_for_player_join(dt)
 	if self.game_started then return end
 
-	if Input:action_pressed_any_player("debug_1") then
-		self:leave_game(1)
-	end
-	if Input:action_pressed_any_player("debug_2") then
-		self:leave_game(2)
-	end
-	if Input:action_pressed_any_player("debug_3") then
-		self:leave_game(3)
-	end
-	if Input:action_pressed_any_player("debug_4") then
-		self:leave_game(4)
-	end
+	-- if Input:action_pressed_any_player("debug_1") then
+	-- 	self:leave_game(1)
+	-- end
+	-- if Input:action_pressed_any_player("debug_2") then
+	-- 	self:leave_game(2)
+	-- end
+	-- if Input:action_pressed_any_player("debug_3") then
+	-- 	self:leave_game(3)
+	-- end
+	-- if Input:action_pressed_any_player("debug_4") then
+	-- 	self:leave_game(4)
+	-- end
 
 	if Input:action_pressed_global("jump") then 
 		local global_user = Input:get_global_user()
@@ -658,9 +657,9 @@ function Game:draw_join_tutorial()
 	local def_y = self.logo_y + 50
 
 	local icons = {
-		Input:get_button_icon(1, Input:get_input_profile("keyboard_solo"):get_primary_button("jump")),
-		Input:get_button_icon(1, Input:get_input_profile("controller_1"):get_primary_button("jump"), BUTTON_STYLE_SWITCH),
-		Input:get_button_icon(1, Input:get_input_profile("controller_1"):get_primary_button("jump"), BUTTON_STYLE_PLAYSTATION5),
+		Input:get_button_icon(1, Input:get_input_profile("global"):get_primary_button("jump", INPUT_TYPE_KEYBOARD)),
+		Input:get_button_icon(1, Input:get_input_profile("global"):get_primary_button("jump", INPUT_TYPE_CONTROLLER), BUTTON_STYLE_SWITCH),
+		Input:get_button_icon(1, Input:get_input_profile("global"):get_primary_button("jump", INPUT_TYPE_CONTROLLER), BUTTON_STYLE_PLAYSTATION5),
 	}
 	
 	local x = def_x
@@ -728,7 +727,7 @@ function Game:draw_debug()
 		concat("debug1 ", self.debug1),
 		concat("real_wave_n ", self.debug2),
 		concat("bg_color_index ", self.debug3),
-		concat("number_of_alive_players ", self.number_of_alive_players),
+		concat("number_of_alive_players ", self:get_number_of_alive_players()),
 		concat("number_of_users(*) ", Input:get_number_of_users()),
 		concat("number_of_users(KEYBOARD) ", Input:get_number_of_users(INPUT_TYPE_KEYBOARD)),
 		concat("number_of_users(CONTROLLER) ", Input:get_number_of_users(INPUT_TYPE_CONTROLLER)),
@@ -818,10 +817,9 @@ function Game:on_kill(actor)
 end
 
 function Game:on_player_death(player)
-	self.number_of_alive_players = self.number_of_alive_players - 1
 	self.players[player.n] = nil
 
-	if self.number_of_alive_players <= 0 then
+	if self:get_number_of_alive_players() <= 0 then
 		-- Save stats
 		self.music_player:pause()
 		self:pause_repeating_sounds()
@@ -923,8 +921,6 @@ function Game:new_player(player_n)
 		return
 	end
 
-	self.number_of_alive_players = self.number_of_alive_players + 1
-
 	local skins = {
 		{
 			spr_idle = images.ant1,
@@ -965,9 +961,25 @@ function Game:leave_game(player_n)
 		return
 	end
 
+	local player = self.players[player_n]
+	local profile_id = Input:get_input_profile_from_player_n(player.n):get_profile_id()
+	
 	self.players[player_n]:remove()
 	self.players[player_n] = nil
 	Input:remove_user(player_n)
+	if profile_id == "keyboard_split_p1" or profile_id == "keyboard_split_p2" then
+		Input:unsplit_keyboard()
+	end
+end
+
+function Game:get_number_of_alive_players()
+	local count = 0
+	for i = 1, self.max_number_of_players do
+		if self.players[i] ~= nil then
+			count = count + 1
+		end
+	end
+	return count
 end
 
 function Game:apply_screenshake(dt)

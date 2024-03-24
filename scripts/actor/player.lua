@@ -191,6 +191,9 @@ function Player:update(dt)
 	-- 	self:do_damage(1)
 	-- 	self.iframes = 1
 	-- end
+	if Input:action_pressed(self.n, "leave_game") and not game.game_started then
+		game:leave_game(self.n)
+	end
 
 	-- Movement
 	self:update_upgrades(dt)
@@ -310,9 +313,10 @@ end
 
 function Player:draw_controls()
 	local tutorials = {
-		{{"shoot"}, "SHOOT"},
-		{{"jump"}, "JUMP"},
-		{{"right", "down", "left", "up"}, "MOVE", Input:get_primary_input_type(self.n) == INPUT_TYPE_KEYBOARD},
+		{{"leave_game"}, "Leave"},
+		{{"shoot"}, "Shoot"},
+		{{"jump"}, "Jump"},
+		{{"right", "down", "left", "up"}, "Move", Input:get_primary_input_type(self.n) == INPUT_TYPE_KEYBOARD},
 	}
 
 	local x = self.ui_x
