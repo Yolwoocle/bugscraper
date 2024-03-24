@@ -63,6 +63,7 @@ local img_names = {
 	duck =             "actors/players/duck",
 
 	-- enemies
+	cocoon =          "actors/enemies/cocoon",
 	dummy_target =    "actors/enemies/dummy_target",
 	fly1 =            "actors/enemies/fly1",
 	fly2 =            "actors/enemies/fly2",

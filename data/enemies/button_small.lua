@@ -10,7 +10,7 @@ function ButtonSmall:init(x, y, spr, w, h)
 end
 
 function ButtonSmall:init_button_small(x, y, spr, w, h)
-    self:init_button_big(x, y, spr, w, h)
+    self:init_button_big(x, y, spr, 16, 18)
 
     self.name = "button_small"
     self.max_life = 40000000
