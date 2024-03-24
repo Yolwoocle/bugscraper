@@ -37,7 +37,7 @@ function InputUser:get_input_profile()
 end
 
 function InputUser:get_primary_button(action)
-    local buttons = Input:get_buttons(self.n, action) or {}
+    local buttons = Input:get_buttons_from_player_n(self.n, action) or {}
     return buttons[1]
 end
 

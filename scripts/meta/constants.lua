@@ -142,20 +142,20 @@ RAW_INPUT_MAP_DEFAULT_GLOBAL = {
 }
 
 RAW_INPUT_MAP_DEFAULT_CONTROLLER = {
-    left =      {"c_leftstickxneg", "c_rightstickxneg", "c_dpleft"},
-    right =     {"c_leftstickxpos", "c_rightstickxpos", "c_dpright"},
-    up =        {"c_leftstickyneg", "c_rightstickyneg", "c_dpup"},
-    down =      {"c_leftstickypos", "c_rightstickypos", "c_dpdown"},
+    left =      {"c_leftstickxneg", "c_dpleft"},
+    right =     {"c_leftstickxpos", "c_dpright"},
+    up =        {"c_leftstickyneg", "c_dpup"},
+    down =      {"c_leftstickypos", "c_dpdown"},
     jump =      {"c_a", "c_b"},
     shoot =     {"c_x", "c_y", "c_righttrigger"},
     pause =     {"c_start"},
     
     ui_select = {"c_a"},
     ui_back =   {"c_b"},
-    ui_left =   {"c_leftstickxneg", "c_rightstickxneg", "c_dpleft"},
-    ui_right =  {"c_leftstickxpos", "c_rightstickxpos", "c_dpright"},
-    ui_up =     {"c_leftstickyneg", "c_rightstickyneg", "c_dpup"},
-    ui_down =   {"c_leftstickypos", "c_rightstickypos", "c_dpdown"},
+    ui_left =   {"c_leftstickxneg", "c_dpleft"},
+    ui_right =  {"c_leftstickxpos", "c_dpright"},
+    ui_up =     {"c_leftstickyneg", "c_dpup"},
+    ui_down =   {"c_leftstickypos", "c_dpdown"},
     ui_reset_keys = {"c_lefttrigger"},
     split_keyboard = {},
     debug_1 = {"k_1"},

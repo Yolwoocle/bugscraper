@@ -25,13 +25,16 @@ function InputManager:init()
 	self.input_profiles = {
         ["empty"] =             InputProfile:new("k", self.default_mapping_empty),
         ["global"] =            InputProfile:new("k", self.default_mapping),
-        ["controller"] =        InputProfile:new("c", self.default_mapping_controller),
+        ["controller_1"] =      InputProfile:new("c", self.default_mapping_controller),
+        ["controller_2"] =      InputProfile:new("c", self.default_mapping_controller),
+        ["controller_3"] =      InputProfile:new("c", self.default_mapping_controller),
+        ["controller_4"] =      InputProfile:new("c", self.default_mapping_controller),
         ["keyboard_solo"] =     InputProfile:new("k", self.default_mapping_keyboard_solo),
         ["keyboard_split_p1"] = InputProfile:new("k", self.default_mapping_split_kb_p1),
         ["keyboard_split_p2"] = InputProfile:new("k", self.default_mapping_split_kb_p2),
     }
 
-    -- self:load_controls()
+    self:load_controls()
 end
 
 function InputManager:init_users()
@@ -71,6 +74,7 @@ function InputManager:assign_input_profile(player_n, profile_id)
     if user == nil then return end
 
     if profile_id == "controller" then
+        profile_id = concat("controller_", player_n)
         user.primary_input_type = INPUT_TYPE_CONTROLLER
     else
         user.primary_input_type = INPUT_TYPE_KEYBOARD
@@ -175,11 +179,6 @@ function InputManager:axis_to_key_name(axis, value)
     local code = tostring(axis)..ternary(value > 0, "+", "-")
     local name = AXIS_TO_KEY_NAME_MAP[code]
     return name
-end
-
-function InputManager:is_axis_down_from_number(player_n, axis, value)
-    local key_name = self:axis_to_key_name(axis, value)
-    return self:is_axis_down(player_n, key_name)
 end
 
 function InputManager:is_axis_down(player_n, axis_name) 
@@ -293,18 +292,18 @@ function InputManager:get_primary_button(n, action)
     return user:get_primary_button(action)
 end
 
-function InputManager:get_buttons(n, action)
-    local map = self:get_input_profile_from_player_n(n)
-    if map == nil then 
+function InputManager:get_buttons_from_player_n(player_n, action)
+    local profile = self:get_input_profile_from_player_n(player_n)
+    if profile == nil then 
         return {} 
     end
-    local buttons = map:get_buttons(action) or {}
+    local buttons = profile:get_buttons(action) or {}
 
     return buttons
 end
 
 function InputManager:set_action_buttons(profile_id, action, buttons)
-    local map = self:get_input_profile_from_player_n(profile_id)
+    local map = self:get_input_profile(profile_id)
     if map == nil then
         print(concat("set_action_buttons: profile '",profile_id,"' doesn't exist"))
         return
@@ -315,24 +314,21 @@ function InputManager:set_action_buttons(profile_id, action, buttons)
 	self:update_controls_file(profile_id)
 end
 
-function InputManager:add_action_buttons(profile_id, action, buttons)
-    local profile = self:get_input_profile_from_player_n(profile_id)
-    if profile == nil then
-        print(concat("set_action_buttons: input map '",profile_id,"' doesn't exist"))
-        return
-    end
+function InputManager:add_action_button(profile_id, action, new_button)
+    local profile = self:get_input_profile(profile_id)
+    assert(profile ~= nil, concat("add_action_button: profile '",profile_id,"' doesn't exist"))
 
     local current_buttons = profile:get_buttons(action)
-    for _, new_button in pairs(buttons) do
-        table.insert(current_buttons, new_button)
-    end
+    print_table(current_buttons)
+    table.insert(current_buttons, new_button)
+    print_table(current_buttons)
 
 	self:update_controls_file(profile_id)
 end
 
 function InputManager:reset_controls(profile_id, input_mode)
     -- fixme assign default controls to input scheme and load them in this function
-	local profile = self:get_input_profile_from_player_n(profile_id)
+	local profile = self:get_input_profile(profile_id)
     assert(profile ~= nil, concat("profile '",profile_id, "' does not exist"))
 
     local new_mapping = {}
@@ -360,11 +356,11 @@ function InputManager:reset_controls(profile_id, input_mode)
 end
 
 function InputManager:is_button_in_use(profile_id, action, button)
-	local profile = self:get_input_profile_from_player_n(profile_id)
+	local profile = self:get_input_profile(profile_id)
     assert(profile ~= nil, concat("profile '", profile_id, "'' does not exist"))
     
-    local assigned_buttons = profile[action]
-    assert(assigned_buttons ~= nil, concat("action ",action, " has no assigned buttons for user number ", profile_id))
+    local assigned_buttons = profile:get_buttons(action)
+    assert(assigned_buttons ~= nil, concat("action ",action, " has no assigned buttons for profile '", profile_id, "'"))
     for _, assigned_button in ipairs(assigned_buttons) do
         if assigned_button.type == button.type and assigned_button.key_name == button.key_name then
             return true
@@ -399,15 +395,6 @@ function InputManager:split_keyboard()
 
     self:assign_input_profile(p1, "keyboard_split_p1")
     self:assign_input_profile(p2, "keyboard_split_p2")
-end
-
-function InputManager:get_input_map_split_keyboard(split_side)
-    -- split_side: 1 or 2
-    local mappings = {
-        self.default_mapping_split_kb_p1,
-        self.default_mapping_split_kb_p2,
-    }
-    return InputProfile:new(mappings[split_side])
 end
 
 -----------------------------------------------------
@@ -522,21 +509,21 @@ function InputManager:load_controls()
 		return
 	end
 
-	for n=1, #self.input_profiles do
-		local filename = concat("controls_p",n,".txt")
+	for profile_id, profile in pairs(self.input_profiles) do
+		local filename = concat("inputprofile_",profile_id,".txt")
 
 		-- Check if file exists
 		local file_exists = love.filesystem.getInfo(filename)
 		if not file_exists then
 			print(filename, "does not exist, so creating it")
-			self:update_controls_file(n)
-			break
+			self:update_controls_file(profile_id)
+            goto continue
 		end
 
 		local file = love.filesystem.newFile(filename)
 		file:open("r")
 
-        local new_input_map = copy_table(self.default_mapping)
+        local new_mappings = copy_table(profile:get_mappings())
 
 		-- Read file contents
 		local text, size = file:read()
@@ -546,7 +533,8 @@ function InputManager:load_controls()
 		for iline = 1, #lines do
 			local line = lines[iline]
 			local tab = split_str(line, ":")
-			local action_name, keycodes = tab[1], tab[2]
+			local action_name = tab[1]
+			local keycodes = tab[2] or ""
             local keycode_table = split_str(keycodes, " ")
 
             local new_buttons = {}
@@ -556,12 +544,13 @@ function InputManager:load_controls()
                     table.insert(new_buttons, button)
                 end
             end
-            new_input_map[action_name] = new_buttons
+            new_mappings[action_name] = new_buttons
 		end
 
 		file:close()
 
-        self.input_profiles[n] = InputProfile:new(new_input_map)
+        self.input_profiles[profile_id]:set_mappings(new_mappings)
+        ::continue::
 	end
 end
 
@@ -574,18 +563,18 @@ function InputManager:buttons_to_keycodes(buttons)
 end
 
 function InputManager:update_all_controls_files()
-	for n=1, #self.input_profiles do
-        self:update_controls_file(n)
+	for profile_id, profile in pairs(self.input_profiles) do
+        self:update_controls_file(profile_id)
     end
 end
 
-function InputManager:update_controls_file(player_n)
-    local filename = concat("controls_p",player_n,".txt")
+function InputManager:update_controls_file(profile_id)
+    local filename = concat("inputprofile_",profile_id,".txt")
     local controlsfile = love.filesystem.newFile(filename)
     print(concat("Creating or updating ", filename, " file"))
     controlsfile:open("w")
 
-    for action_name, buttons in pairs(self.input_profiles[player_n]:get_mappings()) do
+    for action_name, buttons in pairs(self.input_profiles[profile_id]:get_mappings()) do
         local keycodes = self:buttons_to_keycodes(buttons)
         local keycodes_string = concatsep(keycodes," ")
 

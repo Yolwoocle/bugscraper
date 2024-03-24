@@ -655,12 +655,12 @@ end
 
 function Game:draw_join_tutorial()
 	local def_x = math.floor((self.door_ax + self.door_bx) / 2)
-	local def_y = 80
+	local def_y = self.logo_y + 50
 
 	local icons = {
 		Input:get_button_icon(1, Input:get_input_profile("keyboard_solo"):get_primary_button("jump")),
-		Input:get_button_icon(1, Input:get_input_profile("controller"):get_primary_button("jump"), BUTTON_STYLE_XBOX),
-		Input:get_button_icon(1, Input:get_input_profile("controller"):get_primary_button("jump"), BUTTON_STYLE_PLAYSTATION5),
+		Input:get_button_icon(1, Input:get_input_profile("controller_1"):get_primary_button("jump"), BUTTON_STYLE_SWITCH),
+		Input:get_button_icon(1, Input:get_input_profile("controller_1"):get_primary_button("jump"), BUTTON_STYLE_PLAYSTATION5),
 	}
 	
 	local x = def_x
