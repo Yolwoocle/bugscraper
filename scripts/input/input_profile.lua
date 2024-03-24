@@ -26,6 +26,10 @@ function InputProfile:get_buttons(action)
     return self.mappings[action] or {}
 end
 
+function InputProfile:get_primary_button(action)
+    return (self:get_buttons(action) or {})[1]
+end
+
 function InputProfile:set_action_buttons(action, buttons)
     self.mappings[action] = buttons
 end

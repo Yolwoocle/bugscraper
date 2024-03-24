@@ -530,6 +530,8 @@ function Game:draw_game()
 end
 
 function Game:listen_for_player_join(dt)
+	if self.game_started then return end
+
 	if Input:action_pressed_any_player("debug_1") then
 		self:leave_game(1)
 	end
@@ -543,7 +545,7 @@ function Game:listen_for_player_join(dt)
 		self:leave_game(4)
 	end
 
-	if Input:action_pressed_global("jump") then -- TODO only if no keyboard users
+	if Input:action_pressed_global("jump") then 
 		local global_user = Input:get_global_user()
 		local last_button = global_user.last_pressed_button
 		local input_profile_id = ""
@@ -652,17 +654,34 @@ function Game:draw_logo()
 end
 
 function Game:draw_join_tutorial()
-	-- local x = (self.door_ax + self.door_bx) / 2
-	-- local y = self.door_ay
+	local def_x = math.floor((self.door_ax + self.door_bx) / 2)
+	local def_y = 80
 
-	-- local buttons = {
-	-- 	InputButton:new("?", "?")
-	-- }
-	-- local button = Input:get_primary_button(self.n, action) or 
-	-- local icon = Input:get_button_icon(self.n, button) or images.btn_k_unknown
-	-- local w = icon:getWidth()
-
-	-- love.graphics.print("JOIN", x, y)
+	local icons = {
+		Input:get_button_icon(1, Input:get_input_profile("keyboard_solo"):get_primary_button("jump")),
+		Input:get_button_icon(1, Input:get_input_profile("controller"):get_primary_button("jump"), BUTTON_STYLE_XBOX),
+		Input:get_button_icon(1, Input:get_input_profile("controller"):get_primary_button("jump"), BUTTON_STYLE_PLAYSTATION5),
+	}
+	
+	local x = def_x
+	local y = def_y
+	print_outline(COL_WHITE, COL_BLACK_BLUE, "JOIN", x, y)
+	for i, icon in pairs(icons) do
+		x = x - icon:getWidth() - 2
+		love.graphics.draw(icon, x, y)
+		if i ~= #icons then
+			print_outline(COL_WHITE, COL_BLACK_BLUE, "/", x-3, y)
+		end
+	end
+	
+	x = def_x
+	y = y + 16
+	if Input:get_number_of_users(INPUT_TYPE_KEYBOARD) == 1 then
+		local icon_split_kb = Input:get_button_icon(1, Input:get_input_profile("global"):get_primary_button("split_keyboard"))
+		print_outline(COL_WHITE, COL_BLACK_BLUE, "SPLIT KEYBOARD", x, y)
+		x = x - icon_split_kb:getWidth() - 2
+		love.graphics.draw(icon_split_kb, x, y)
+	end
 end
 
 function Game:draw_colview()
@@ -911,21 +930,25 @@ function Game:new_player(player_n)
 			spr_idle = images.ant1,
 			spr_jump = images.ant2,
 			spr_dead = images.ant_dead,
+			color_palette = {color(0xf6757a), color(0xb55088), color(0xe43b44), color(0x9e2835), color(0x3a4466), color(0x262b44)},
 		},
 		{
 			spr_idle = images.caterpillar_1,
 			spr_jump = images.caterpillar_2,
 			spr_dead = images.caterpillar_dead,
+			color_palette = {color(0x63c74d), color(0x3e8948), color(0x265c42), color(0x193c3e), color(0x5a6988), color(0x3a4466)},
 		},
 		{
 			spr_idle = images.bee_1,
 			spr_jump = images.bee_2,
 			spr_dead = images.bee_dead,
+			color_palette = {color(0xfee761), color(0xfeae34), color(0x743f39), color(0x3f2832), color(0xc0cbdc), color(0x9e2835)},
 		},
 		{
-			spr_idle = images.caterpillar_1,
-			spr_jump = images.caterpillar_2,
-			spr_dead = images.caterpillar_dead,
+			spr_idle = images.ant2_1,
+			spr_jump = images.ant2_2,
+			spr_dead = images.ant2_dead,
+			color_palette = {color(0x2ce8f5), color(0x2ce8f5), color(0x0195e9), color(0x9e2835), color(0x3a4466), color(0x262b44)},
 		},
 	}
 
@@ -1034,6 +1057,15 @@ end
 function Game:gamepadaxis(joystick, axis, value)
 	Input:gamepadaxis(joystick, axis, value)
 	if self.menu_manager then   self.menu_manager:gamepadaxis(joystick, axis, value)   end
+end
+
+function Game:focus(f)
+	if f then
+	else
+		if Options:get("pause_on_unfocus") and self.menu_manager and Input:get_number_of_users() >= 1 then
+			self.menu_manager:pause()
+		end
+	end
 end
 
 -- function Game:keyreleased(key, scancode)

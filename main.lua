@@ -145,12 +145,7 @@ function love.textinput(text)
 end
 
 function love.focus(f)
-	if f then
-	else
-		if Options:get("pause_on_unfocus") and game.menu_manager then
-			game.menu_manager:pause()
-		end
-	end
+	if game.focus then  game:focus(f)  end
 end
 
 -- function love.textinput( text )
