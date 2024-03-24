@@ -311,11 +311,13 @@ function Player:draw_controls()
 	local tutorials = {
 		{{"shoot"}, "SHOOT"},
 		{{"jump"}, "JUMP"},
-		{{"down", "up", "right", "left"}, "MOVE"},
+		{{"right", "down", "left", "up"}, "MOVE"},
 	}
 
 	local x = self.ui_x
 	local y = self.ui_y - 32
+	-- local x = CANVAS_WIDTH * (self.n-1)/4 + 100
+	-- local y = 150
 	for i, tuto in ipairs(tutorials) do
 		y = y - 16
 		local btn_x = x - 2

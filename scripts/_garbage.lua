@@ -5,6 +5,32 @@
 ------------------------------------
 
 
+RAW_INPUT_MAP_DEFAULT_SOLO = {
+    left =      {"k_left", "k_a",                   "c_leftstickxneg", "c_rightstickxneg", "c_dpleft"},
+    right =     {"k_right", "k_d",                  "c_leftstickxpos", "c_rightstickxpos", "c_dpright"},
+    up =        {"k_up", "k_w",                     "c_leftstickyneg", "c_rightstickyneg", "c_dpup"},
+    down =      {"k_down", "k_s",                   "c_leftstickypos", "c_rightstickypos", "c_dpdown"},
+    jump =      {"k_c", "k_b",                      "c_a", "c_b"},
+    shoot =     {"k_x", "k_v",                      "c_x", "c_y", "c_righttrigger"},
+    pause =     {"k_escape", "k_p",                 "c_start"},
+    
+    ui_select = {"k_c", "k_b", "k_return",          "c_a"},
+    ui_back =   {"k_x", "k_escape", "k_backspace",  "c_b"},
+    ui_left =   {"k_left", "k_a",                   "c_leftstickxneg", "c_rightstickxneg", "c_dpleft"},
+    ui_right =  {"k_right", "k_d",                  "c_leftstickxpos", "c_rightstickxpos", "c_dpright"},
+    ui_up =     {"k_up", "k_w",                     "c_leftstickyneg", "c_rightstickyneg", "c_dpup"},
+    ui_down =   {"k_down", "k_s",                   "c_leftstickypos", "c_rightstickypos", "c_dpdown"},
+    ui_reset_keys = {"k_tab", "c_lefttrigger"},
+    debug_1 = {"k_1"},
+    debug_2 = {"k_2"},
+    debug_3 = {"k_3"},
+    debug_4 = {"k_4"},
+}
+
+
+------------------------------------
+
+
 local function replace_color_shader(col1_org, col1_new, col2_org, col2_new, col3_org, col3_new)
     local r_org1, g_org1, b_org1 = col1_org[1], col1_org[2], col1_org[3]
     local r_new1, g_new1, b_new1 = col1_new[1], col1_new[2], col1_new[3]

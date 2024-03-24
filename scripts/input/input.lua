@@ -1,7 +1,7 @@
 require "scripts.util"
 local Class = require "scripts.meta.class"
 local InputUser = require "scripts.input.input_user"
-local InputMap = require "scripts.input.input_map"
+local InputProfile = require "scripts.input.input_profile"
 local images = require "data.images"
 local key_constant_to_image_name = require "data.buttons.images_buttons_keyboard"
 local controller_buttons = require "data.buttons.controller_buttons"
@@ -15,22 +15,30 @@ function InputManager:init()
 	self.standby_mode = false
 	self.buffer_standby_mode = {active = false, value = false}
 
-	self.default_mapping = self:process_input_map(RAW_INPUT_MAP_DEFAULT_GLOBAL)
-	self.default_mapping_split_kb_p1 = self:process_input_map(RAW_INPUT_MAP_DEFAULT_SPLIT_KEYBOARD_P1)
-	self.default_mapping_split_kb_p2 = self:process_input_map(RAW_INPUT_MAP_DEFAULT_SPLIT_KEYBOARD_P2)
+	self.default_mapping_empty =         self:process_input_map(RAW_INPUT_MAP_DEFAULT_EMPTY)
+	self.default_mapping =               self:process_input_map(RAW_INPUT_MAP_DEFAULT_GLOBAL)
+	self.default_mapping_controller =    self:process_input_map(RAW_INPUT_MAP_DEFAULT_CONTROLLER)
+	self.default_mapping_keyboard_solo = self:process_input_map(RAW_INPUT_MAP_DEFAULT_KEYBOARD_SOLO)
+	self.default_mapping_split_kb_p1 =   self:process_input_map(RAW_INPUT_MAP_DEFAULT_SPLIT_KEYBOARD_P1)
+	self.default_mapping_split_kb_p2 =   self:process_input_map(RAW_INPUT_MAP_DEFAULT_SPLIT_KEYBOARD_P2)
 
-	self.input_maps = {
-        [GLOBAL_INPUT_USER_PLAYER_N] = InputMap:new(self.default_mapping),
-        [1] = InputMap:new(self.default_mapping),
-        [2] = InputMap:new(self.default_mapping),
-        [3] = InputMap:new(self.default_mapping),
-        [4] = InputMap:new(self.default_mapping),
+	self.input_profiles = {
+        ["empty"] =             InputProfile:new("k", self.default_mapping_empty),
+        ["global"] =            InputProfile:new("k", self.default_mapping),
+        ["controller"] =        InputProfile:new("c", self.default_mapping_controller),
+        ["keyboard_solo"] =     InputProfile:new("k", self.default_mapping_keyboard_solo),
+        ["keyboard_split_p1"] = InputProfile:new("k", self.default_mapping_split_kb_p1),
+        ["keyboard_split_p2"] = InputProfile:new("k", self.default_mapping_split_kb_p2),
     }
 
-    self:load_controls()
+    -- self:load_controls()
 end
 
-function InputManager:can_add_user(input_type)
+function InputManager:init_users()
+    self.global_user = self:new_user(GLOBAL_INPUT_USER_PLAYER_N, "global", true)
+end
+
+function InputManager:can_add_user()
     return self:get_number_of_users() < MAX_NUMBER_OF_PLAYERS
     -- if input_type == INPUT_TYPE_CONTROLLER then 
     -- elseif input_type == INPUT_TYPE_KEYBOARD then 
@@ -52,46 +60,16 @@ function InputManager:get_number_of_users(input_type)
     return count
 end
 
-function InputManager:assign_control_method(player_n, method)
+function InputManager:assign_input_profile(player_n, profile_id)
     local user = self:get_user(player_n)
     if user == nil then return end
 
-    local input_map = self:generate_input_map(player_n, method)
-    self.input_maps[player_n] = input_map
-
-    if method == "controller" then
+    if profile_id == "controller" then
         user.primary_input_type = INPUT_TYPE_CONTROLLER
     else
         user.primary_input_type = INPUT_TYPE_KEYBOARD
     end
-end
-
-function InputManager:generate_input_map(player_n, method)
-    if method == "controller" then
-        return self:get_input_map_filtered(player_n, INPUT_TYPE_CONTROLLER)
-
-    elseif method == "keyboard_solo" then
-        return self:get_input_map_filtered(player_n, INPUT_TYPE_KEYBOARD)
-
-    elseif method == "keyboard_split_p1" then
-        return self:get_input_map_split_keyboard(1)
-
-    elseif method == "keyboard_split_p2" then
-        return self:get_input_map_split_keyboard(2)
-    end
-    return {}
-end
-
-function InputManager:get_input_map_filtered(player_n, input_type)
-    local new_map = {}
-    for action, _ in pairs(self.input_maps[player_n]:get_mappings()) do
-        new_map[action] = self:get_buttons(player_n, action, input_type)
-    end
-    return InputMap:new(new_map)
-end
-
-function InputManager:init_users()
-    self.global_user = self:new_user(GLOBAL_INPUT_USER_PLAYER_N, true)
+    user:set_input_profile_id(profile_id)
 end
 
 function InputManager:update(dt)
@@ -111,16 +89,25 @@ function InputManager:update_last_input_state(dt)
     end
 end
 
-function InputManager:get_input_map(n)
-    local map = self.input_maps[n]
-    if map == nil then return {} end
-    return self.input_maps[n]:get_mappings() or {}
+function InputManager:get_input_profile(profile_id)
+    return self.input_profiles[profile_id]
 end
 
-function InputManager:new_user(n, is_global)
+function InputManager:get_input_profile_from_player_n(n)
+    -- local map = self.input_maps[n]
+    -- if map == nil then return {} end
+    -- return self.input_maps[n]:get_mappings() or {}
+    
+    local user = self:get_user(n)
+    if user == nil then return end
+    return user:get_input_profile()
+end
+
+function InputManager:new_user(n, input_profile_id, is_global)
+    input_profile_id = param(input_profile_id, "empty")
     is_global = param(is_global, false)
 
-    local user = InputUser:new(n, is_global)
+    local user = InputUser:new(n, input_profile_id, is_global)
     self.users[n] = user
     return user
 end
@@ -131,6 +118,11 @@ function InputManager:remove_user(n)
         return false
     end
 
+    if user.joystick == nil then
+        print_debug("user.joystick nil")
+    else
+        print_debug(user.joystick:getName())
+    end
     if user.joystick then
         self.joystick_to_user_map[user.joystick] = nil
     end
@@ -295,56 +287,51 @@ function InputManager:get_primary_button(n, action)
     return user:get_primary_button(action)
 end
 
-function InputManager:get_buttons(n, action, input_type)
-    if self.input_maps[n] == nil then   return {}   end
-    local buttons = self.input_maps[n]:get_buttons(action) or {}
-    
-    local output = {}
-    if input_type ~= nil then
-        for _, b in pairs(buttons) do
-            if b.type == input_type then
-                table.insert(output, b)
-            end
-        end
-        return output
+function InputManager:get_buttons(n, action)
+    local map = self:get_input_profile_from_player_n(n)
+    if map == nil then 
+        return {} 
     end
+    local buttons = map:get_buttons(action) or {}
+
     return buttons
 end
 
-function InputManager:set_action_buttons(n, action, buttons)
-    local map = self.input_maps[n]
+function InputManager:set_action_buttons(profile_id, action, buttons)
+    local map = self:get_input_profile_from_player_n(profile_id)
     if map == nil then
-        print(concat("set_action_buttons: input map number ",n," doesn't exist"))
+        print(concat("set_action_buttons: profile '",profile_id,"' doesn't exist"))
         return
     end
 
     map:set_action_buttons(action, buttons)
 
-	self:update_controls_file(n)
+	self:update_controls_file(profile_id)
 end
 
-function InputManager:add_action_buttons(n, action, buttons)
-    local map = self.input_maps[n]
-    if map == nil then
-        print(concat("set_action_buttons: input map number ",n," doesn't exist"))
+function InputManager:add_action_buttons(profile_id, action, buttons)
+    local profile = self:get_input_profile_from_player_n(profile_id)
+    if profile == nil then
+        print(concat("set_action_buttons: input map '",profile_id,"' doesn't exist"))
         return
     end
 
-    local current_buttons = map:get_buttons(action)
+    local current_buttons = profile:get_buttons(action)
     for _, new_button in pairs(buttons) do
         table.insert(current_buttons, new_button)
     end
 
-	self:update_controls_file(n)
+	self:update_controls_file(profile_id)
 end
 
-function InputManager:reset_controls(n, input_mode)
-	local user = self.users[n]
-    assert(user ~= nil, concat("user ",n, " does not exist"))
+function InputManager:reset_controls(profile_id, input_mode)
+    -- fixme assign default controls to input scheme and load them in this function
+	local profile = self:get_input_profile_from_player_n(profile_id)
+    assert(profile ~= nil, concat("profile '",profile_id, "' does not exist"))
 
     local new_mapping = {}
-    for action, default_buttons in pairs(self.default_mapping) do
-        local current_buttons = self.input_maps[n]:get_buttons(action)
+    for action, default_buttons in pairs(profile:get_default_mappings()) do
+        local current_buttons = profile:get_buttons(action)
 
         local new_buttons = {}
         for _, button in pairs(default_buttons) do
@@ -361,17 +348,17 @@ function InputManager:reset_controls(n, input_mode)
         new_mapping[action] = new_buttons
     end
 
-    self.input_maps[n] = InputMap:new(new_mapping)
+    profile:set_mappings(new_mapping)
 
-    self:update_controls_file(n)
+    self:update_controls_file(profile_id)
 end
 
-function InputManager:is_button_in_use(n, action, button)
-	local input_map = self:get_input_map(n)
-    assert(input_map ~= nil, concat("input map number ", n, " does not exist"))
+function InputManager:is_button_in_use(profile_id, action, button)
+	local profile = self:get_input_profile_from_player_n(profile_id)
+    assert(profile ~= nil, concat("profile '", profile_id, "'' does not exist"))
     
-    local assigned_buttons = input_map[action]
-    assert(assigned_buttons ~= nil, concat("action ",action, " has no assigned buttons for user number ", n))
+    local assigned_buttons = profile[action]
+    assert(assigned_buttons ~= nil, concat("action ",action, " has no assigned buttons for user number ", profile_id))
     for _, assigned_button in ipairs(assigned_buttons) do
         if assigned_button.type == button.type and assigned_button.key_name == button.key_name then
             return true
@@ -391,7 +378,6 @@ function InputManager:split_keyboard()
     local p2 = nil
     for i=1, MAX_NUMBER_OF_PLAYERS do
         local user = self.users[i]
-        print_debug("user ", i, " is nil ?", user == nil)
         if user and user.primary_input_type == INPUT_TYPE_KEYBOARD then
             if p1 == nil then
                 p1 = i
@@ -401,13 +387,12 @@ function InputManager:split_keyboard()
         end
     end
 
-    print_debug("p1, p2", p1==nil, p2==nil, p1, p2)
     if p2 == nil then
         return
     end
 
-    self:assign_control_method(p1, "keyboard_split_p1")
-    self:assign_control_method(p2, "keyboard_split_p2")
+    self:assign_input_profile(p1, "keyboard_split_p1")
+    self:assign_input_profile(p2, "keyboard_split_p2")
 end
 
 function InputManager:get_input_map_split_keyboard(split_side)
@@ -416,7 +401,7 @@ function InputManager:get_input_map_split_keyboard(split_side)
         self.default_mapping_split_kb_p1,
         self.default_mapping_split_kb_p2,
     }
-    return InputMap:new(mappings[split_side])
+    return InputProfile:new(mappings[split_side])
 end
 
 -----------------------------------------------------
@@ -532,7 +517,7 @@ function InputManager:load_controls()
 		return
 	end
 
-	for n=1, #self.input_maps do
+	for n=1, #self.input_profiles do
 		local filename = concat("controls_p",n,".txt")
 
 		-- Check if file exists
@@ -571,7 +556,7 @@ function InputManager:load_controls()
 
 		file:close()
 
-        self.input_maps[n] = InputMap:new(new_input_map)
+        self.input_profiles[n] = InputProfile:new(new_input_map)
 	end
 end
 
@@ -584,7 +569,7 @@ function InputManager:buttons_to_keycodes(buttons)
 end
 
 function InputManager:update_all_controls_files()
-	for n=1, #self.input_maps do
+	for n=1, #self.input_profiles do
         self:update_controls_file(n)
     end
 end
@@ -595,7 +580,7 @@ function InputManager:update_controls_file(player_n)
     print(concat("Creating or updating ", filename, " file"))
     controlsfile:open("w")
 
-    for action_name, buttons in pairs(self.input_maps[player_n]:get_mappings()) do
+    for action_name, buttons in pairs(self.input_profiles[player_n]:get_mappings()) do
         local keycodes = self:buttons_to_keycodes(buttons)
         local keycodes_string = concatsep(keycodes," ")
 

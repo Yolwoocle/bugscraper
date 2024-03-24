@@ -542,28 +542,33 @@ function Game:listen_for_player_join(dt)
 	if Input:action_pressed_any_player("debug_4") then
 		self:leave_game(4)
 	end
+
 	if Input:action_pressed_global("jump") then -- TODO only if no keyboard users
 		local global_user = Input:get_global_user()
 		local last_button = global_user.last_pressed_button
+		local input_profile_id = ""
+		local joystick = nil
 
 		local can_add_keyboard_user = ternary(
 			last_button and last_button.type == INPUT_TYPE_KEYBOARD,
 			(Input:get_number_of_users(INPUT_TYPE_KEYBOARD) <= 0),
 			true
 		)
-		if last_button and Input:can_add_user(last_button.type) and can_add_keyboard_user then
-
-			local joystick = nil
-			if last_button.type == INPUT_TYPE_CONTROLLER then
+		if last_button and Input:can_add_user() and can_add_keyboard_user then
+			if last_button.type == INPUT_TYPE_KEYBOARD then
+				input_profile_id = "keyboard_solo"
+			
+			elseif last_button.type == INPUT_TYPE_CONTROLLER then
+				input_profile_id = "controller"
 				joystick = Input:get_global_user().last_active_joystick
 			end
-			self:join_game(last_button.type, joystick)
+			self:join_game(input_profile_id, joystick)
 		end
 	end
-	-- local map_split_p2 = Input:get_input_map_split_keyboard(2) -- TODO only if already 1 keyboard user
-	-- if Input:is_keyboard_button_in_list_down(map_split_p2.jump) then
-		
-	-- end
+	if Input:action_pressed_global("split_keyboard") and Input:get_number_of_users(INPUT_TYPE_KEYBOARD) == 1 then
+		self:join_game("keyboard_solo")
+		Input:split_keyboard()
+	end
 end
 
 function Game:removeme_bg_test()
@@ -872,7 +877,7 @@ function Game:find_free_player_number()
 	return nil
 end
 
-function Game:join_game(input_type, joystick)
+function Game:join_game(input_profile_id, joystick)
 	-- FIXME ça marche pas quand tu join avec manette puis que tu join sur clavier
 	local player_n = self:find_free_player_number()
 	if player_n == nil then
@@ -883,22 +888,12 @@ function Game:join_game(input_type, joystick)
 		return
 	end
 
-	local control_method = ""
 	Input:new_user(player_n)
 	self:new_player(player_n)
 	if joystick ~= nil then
 		Input:assign_joystick(player_n, joystick)
-		control_method = "controller"
 	end
-	if input_type == INPUT_TYPE_KEYBOARD then
-		control_method = "keyboard_solo"
-		
-	end
-	Input:assign_control_method(player_n, control_method)
-	
-	if Input:get_number_of_users(INPUT_TYPE_KEYBOARD) >= 1 then
-		Input:split_keyboard()
-	end
+	Input:assign_input_profile(player_n, input_profile_id)
 
 	return player_n
 end
