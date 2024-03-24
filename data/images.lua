@@ -1,7 +1,7 @@
 require "scripts.util"
+require "scripts.meta.constants"
 local Class = require "scripts.meta.class"
 local key_constant_to_image = require "data.buttons.images_buttons_keyboard"
-local controller_brands = require "data.buttons.controller_brands"
 local controller_buttons = require "data.buttons.controller_buttons"
 
 REMOVEME_image_to_col = {}
@@ -48,16 +48,22 @@ local img_names = {
 	-----------------------------------------------------
 
 	-- players
+	ant2_1 =           "actors/players/ant2_1",
+	ant2_2 =           "actors/players/ant2_2",
+	ant2_dead =        "actors/players/ant2_dead",
 	ant1 =             "actors/players/ant1",
 	ant2 =             "actors/players/ant2",
 	ant_dead =         "actors/players/ant_dead",
-	bee =              "actors/players/bee",
+	bee_1 =            "actors/players/bee_1",
+	bee_2 =            "actors/players/bee_2",
+	bee_dead =         "actors/players/bee_dead",
 	caterpillar_1 =    "actors/players/caterpillar_1",
 	caterpillar_2 =    "actors/players/caterpillar_2",
 	caterpillar_dead = "actors/players/caterpillar_dead",
 	duck =             "actors/players/duck",
 
 	-- enemies
+	cocoon =          "actors/enemies/cocoon",
 	dummy_target =    "actors/enemies/dummy_target",
 	fly1 =            "actors/enemies/fly1",
 	fly2 =            "actors/enemies/fly2",
@@ -77,6 +83,7 @@ local img_names = {
 	spider1 =         "actors/enemies/spider1",
 	spider2 =         "actors/enemies/spider2",
 	spiked_fly =      "actors/enemies/spiked_fly",
+	stink_bug_1 =     "actors/enemies/stink_bug_1",
 	mushroom_ant1 =   "actors/enemies/mushroom_ant1",
 	mushroom_ant2 =   "actors/enemies/mushroom_ant2",
 
@@ -86,11 +93,11 @@ local img_names = {
 	big_red_button_crack3 =  "actors/enemies/big_red_button_crack3",
 	big_red_button =         "actors/enemies/big_red_button",
 	big_red_button_pressed = "actors/enemies/big_red_button_pressed",
-	small_button_crack0 =  "actors/enemies/small_button_crack0",
-	small_button_crack1 =  "actors/enemies/small_button_crack1",
-	small_button_crack2 =  "actors/enemies/small_button_crack2",
-	small_button =         "actors/enemies/small_button",
-	small_button_pressed = "actors/enemies/small_button_pressed",
+	small_button_crack0 =    "actors/enemies/small_button_crack0",
+	small_button_crack1 =    "actors/enemies/small_button_crack1",
+	small_button_crack2 =    "actors/enemies/small_button_crack2",
+	small_button =           "actors/enemies/small_button",
+	small_button_pressed =   "actors/enemies/small_button_pressed",
 
 	machine_coffee =         "actors/enemies/machine_coffee",
 	machine_coffee_pressed = "actors/enemies/machine_coffee_pressed",
@@ -125,6 +132,8 @@ local img_names = {
 	-----------------------------------------------------
 	
 	-- particles
+	cocoon_fragment_1 =    "particles/cocoon_fragment_1",
+	cocoon_fragment_2 =    "particles/cocoon_fragment_2",
 	dummy_target_ptc1 =    "particles/dummy_target_ptc1",
 	dummy_target_ptc2 =    "particles/dummy_target_ptc2",
 	ptc_glass_shard =      "particles/ptc_glass_shard",
@@ -193,7 +202,7 @@ for key_constant, button_image_name in pairs(key_constant_to_image) do
 	images[button_image_name] = load_image("buttons/keyboard/"..button_image_name..".png")
 end
 
-for _, brand in pairs(controller_brands) do
+for _, brand in pairs(CONTROLLER_BRANDS) do
 	for button, __ in pairs(controller_buttons) do
 		local name = string.format("btn_c_%s_%s", brand, button)
 		local path = string.format("buttons/controller/%s/%s.png", brand, name)

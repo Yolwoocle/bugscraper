@@ -179,16 +179,16 @@ function Actor:draw()
 	error("draw not implemented")
 end
 
-function Actor:draw_actor(fx, fy, custom_draw)
+function Actor:draw_actor(flip_x, flip_y, custom_draw)
 	if self.is_removed then   return   end
 	
 	-- f : flip
 	-- fix this, this is dumb
-	if fx == true then   fx = -1   elseif fx == false then   fx = 1 end
-	if fy == true then   fy = -1   elseif fy == false then   fy = 1 end
+	if flip_x == true then   flip_x = -1   elseif flip_x == false then   flip_x = 1 end
+	if flip_y == true then   flip_y = -1   elseif flip_y == false then   flip_y = 1 end
 
-	fx = (fx or 1)*self.sx
-	fy = (fy or 1)*self.sy
+	flip_x = (flip_x or 1)*self.sx
+	flip_y = (flip_y or 1)*self.sy
 
 	local spr_w2 = floor(self.spr:getWidth() / 2)
 	local spr_h2 = floor(self.spr:getHeight() / 2)
@@ -197,7 +197,7 @@ function Actor:draw_actor(fx, fy, custom_draw)
 	if self.spr then
 		local drw_func = gfx.draw
 		if custom_draw then    drw_func = custom_draw    end
-		drw_func(self.spr, x, y, self.rot, fx, fy, spr_w2 - self.spr_ox, spr_h2 - self.spr_oy)
+		drw_func(self.spr, x, y, self.rot, flip_x, flip_y, spr_w2 - self.spr_ox, spr_h2 - self.spr_oy)
 	end
 
 	self:post_draw(x, y)

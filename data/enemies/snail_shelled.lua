@@ -51,8 +51,7 @@ function SnailShelled:after_collision(col, other)
 
         Particles:smoke(col.touch.x, col.touch.y)
 
-        if col.normal.x ~= 0 then    self.pong_vx = sign(col.normal.x) * abs(self.pong_vx)    end
-        if col.normal.y ~= 0 then    self.pong_vy = sign(col.normal.y) * abs(self.pong_vy)    end
+        self.pong_vx, self.pong_vy = bounce_vector_cardinal(self.pong_vx, self.pong_vy, col.normal.x, col.normal.y)
     end
 end
 

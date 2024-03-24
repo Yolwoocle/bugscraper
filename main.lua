@@ -2,6 +2,9 @@ local Class = require "scripts.meta.class"
 local Game = require "scripts.game.game"
 require "scripts.util"
 
+-- LÖVE uses Luajit 2.1 which is based on Lua 5.1 but has some additions (like goto)
+
+
 game = nil
 
 function love.load(arg)
@@ -142,12 +145,7 @@ function love.textinput(text)
 end
 
 function love.focus(f)
-	if f then
-	else
-		if Options:get("pause_on_unfocus") and game.menu_manager then
-			game.menu_manager:pause()
-		end
-	end
+	if game.focus then  game:focus(f)  end
 end
 
 -- function love.textinput( text )
@@ -164,21 +162,21 @@ print_log_file:close()
 max_msg_log = 20
 old_print = print
 msg_log = {}
--- function print(...)
--- 	print_log_file:open("a")
+function print(...)
+	-- print_log_file:open("a")
 
--- 	old_print(...)
+	old_print(...)
 	
--- 	local text = concatsep({...}, " ")
--- 	table.insert(msg_log, text)
--- 	print_log_file:write(concat(os.date("%c", os.time())," | ",text,"\n"))
+	local text = concatsep({...}, " ")
+	table.insert(msg_log, text)
+	-- print_log_file:write(concat(os.date("%c", os.time())," | ",text,"\n"))
 	
--- 	if #msg_log > max_msg_log then
--- 		table.remove(msg_log, 1)
--- 	end
+	if #msg_log > max_msg_log then
+		table.remove(msg_log, 1)
+	end
 
--- 	print_log_file:close()
--- end
+	-- print_log_file:close()
+end
 
 function quit_game()
 	print("Quitting game")

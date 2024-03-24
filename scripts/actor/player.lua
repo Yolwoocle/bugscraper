@@ -4,20 +4,21 @@ local Guns = require "data.guns"
 local Bullet = require "scripts.actor.bullet"
 local Effect = require "scripts.effect.effect"
 local EffectSlowness = require "scripts.effect.effect_slowness"
+local InputButton = require "scripts.input.input_button"
 local images = require "data.images"
 local sounds = require "data.sounds"
+local shaders = require "scripts.graphics.shaders"
 local ui = require "scripts.ui.ui"
 require "scripts.util"
 require "scripts.meta.constants"
 
 local Player = Actor:inherit()
 
-function Player:init(n, x, y, spr)
+function Player:init(n, x, y, skin)
 	n = n or 1
 	x = x or 0
 	y = y or 0
-	spr = spr or images.ant1
-	self:init_actor(x, y, 14, 14, spr)
+	self:init_actor(x, y, 14, 14, images.ant1)
 	self.is_player = true
 	self.is_being = true
 	self.name = concat("player", n)
@@ -35,9 +36,10 @@ function Player:init(n, x, y, spr)
 	self.is_enemy = false
 	
 	-- Animation
-	self.spr_idle = images.ant1
-	self.spr_jump = images.ant2
-	self.spr_dead = images.ant_dead
+	self.color_palette = skin.color_palette
+	self.spr_idle = skin.spr_idle
+	self.spr_jump = skin.spr_jump
+	self.spr_dead = skin.spr_dead
 	self.spr = self.spr_idle
 	self.is_walking = false
 	self.squash = 1
@@ -130,8 +132,6 @@ function Player:init(n, x, y, spr)
 	self.gun_number = 1
 
 	self.is_dead = false
-	self.timer_before_death = 0
-	self.max_timer_before_death = 3.3
 
 	-- UI
 	self.ui_x = self.x
@@ -157,10 +157,6 @@ end
 local igun = 1
 function Player:update(dt)
 	self.dt = dt
-	if self.is_dead then
-		self:do_death_anim(dt)
-		return
-	end
 
 	-- if self:button_pressed("up") then
 	-- 	-- game.floor = 16
@@ -178,15 +174,25 @@ function Player:update(dt)
 	-- 	igun = mod_plus_1(igun + 1, #all_guns)
 	-- 	self:equip_gun(all_guns[igun]:new())
 	-- end
-	if Input:action_pressed(self.n, "ui_reset_keys") then
-		if Input:action_down(self.n, "up") then
-			game.floor = game.elevator.max_floor-1
-		end
-		for i,e in pairs(game.actors) do
-			if e.is_enemy then
-				e:kill()
-			end
-		end
+	-- if Input:action_pressed(self.n, "ui_reset_keys") then
+	-- 	if Input:action_down(self.n, "up") then
+	-- 		game.floor = game.elevator.max_floor-1
+	-- 	end
+	-- 	for i,e in pairs(game.actors) do
+	-- 		if e.is_enemy then
+	-- 			e:kill()
+	-- 		end
+	-- 	end
+	-- end
+	-- if Input:action_pressed(self.n, "ui_reset_keys") then
+	-- 	self:kill()
+	-- end
+	-- if Input:action_pressed(self.n, "ui_reset_keys") then
+	-- 	self:do_damage(1)
+	-- 	self.iframes = 1
+	-- end
+	if Input:action_pressed(self.n, "leave_game") and not game.game_started then
+		game:leave_game(self.n)
 	end
 
 	-- Movement
@@ -298,12 +304,65 @@ function Player:draw_hud()
 	ui:draw_progress_bar(x+ammo_w+2, y, bar_w-ammo_w-2, ammo_w, val, maxval, 
 						col_fill, COL_BLACK_BLUE, col_shad, text)
 
-	-- x, y, w, h, val, max_val, col_fill, col_out, col_fill_shadow, text, text_col, font
-	-- rect_color(COL_GREEN, "fill", self.mid_x, self.y-32, 1, 60)
-
-	if game.debug_mode then
+	
+	if not game.game_started then
+		self:draw_controls()
 	end
 
+end
+
+function Player:draw_controls()
+	local tutorials = {
+		{{"leave_game"}, "Leave"},
+		{{"shoot"}, "Shoot"},
+		{{"jump"}, "Jump"},
+		{{"right", "down", "left", "up"}, "Move", Input:get_primary_input_type(self.n) == INPUT_TYPE_KEYBOARD},
+	}
+
+	local x = self.ui_x
+	local y = self.ui_y - 32
+	-- local x = (CANVAS_WIDTH * 0.15) + (CANVAS_WIDTH * 0.9) * (self.n-1)/4
+	-- local y = 140
+
+	-- love.graphics.line(x, y, self.ui_x, self.ui_y - 30)
+	for i, tuto in ipairs(tutorials) do
+		y = y - 16
+		local btn_x = x - 2
+
+		local shown_duration = 0.5
+		local actions = tuto[1]
+		local label = tuto[2]
+		local show_in_keybaord_form = tuto[3]
+
+		local x_of_second_button = 0
+		if not show_in_keybaord_form then
+			local action_index = math.floor((game.t % (shown_duration * #actions)) / shown_duration) + 1
+			actions = {actions[action_index]}
+		end
+		for i_action = 1, #actions do
+			local action = actions[i_action]
+
+			local button = Input:get_primary_button(self.n, action) or InputButton:new("?", "?")
+			local icon = Input:get_button_icon(self.n, button) or images.btn_k_unknown
+			local w = icon:getWidth()
+
+			btn_x = btn_x - w
+			if not (show_in_keybaord_form and i_action == 4) then
+				love.graphics.draw(icon, btn_x, y)
+			end
+
+			if show_in_keybaord_form then
+				if i_action == 2 then
+					x_of_second_button = btn_x
+				elseif i_action == 4 then
+					love.graphics.draw(icon, x_of_second_button, y - 16)
+				end
+			end
+		end
+		
+		local text_color = self.color_palette[1] --LOGO_COLS[4-i] or COL_WHITE
+		print_outline(text_color, COL_BLACK_BLUE, label, x, y)
+	end
 end
 
 function Player:draw_player()
@@ -326,6 +385,10 @@ function Player:draw_player()
 	self:post_draw(x-spr_w2, y-spr_h2)
 end
 
+function Player:set_player_n(n)
+	self.n = n
+end
+
 function Player:heal(val)
 	local overflow = self.max_life - (self.life + val)
 	if overflow >= 0 then
@@ -340,8 +403,8 @@ end
 function Player:move(dt)
 	-- compute movement dir
 	local dir = {x=0, y=0}
-	if Input:action_down('left') then   dir.x = dir.x - 1   end
-	if Input:action_down('right') then   dir.x = dir.x + 1   end
+	if Input:action_down(self.n, 'left') then   dir.x = dir.x - 1   end
+	if Input:action_down(self.n, 'right') then   dir.x = dir.x + 1   end
 
 	if dir.x ~= 0 then
 		self.dir_x = dir.x
@@ -384,8 +447,8 @@ function Player:do_wall_sliding(dt)
 		local col_normal = self.wall_col.normal
 		local is_walled = (col_normal.y == 0)
 		local is_falling = (self.vy > 0)
-		local holding_left = Input:action_down('left') and col_normal.x == 1
-		local holding_right = Input:action_down('right') and col_normal.x == -1
+		local holding_left = Input:action_down(self.n, 'left') and col_normal.x == 1
+		local holding_right = Input:action_down(self.n, 'right') and col_normal.x == -1
 		
 		local is_wall_sliding = is_walled and is_falling and (holding_left or holding_right) 
 			and not self.wall_col.other.is_not_slidable
@@ -421,7 +484,7 @@ end
 function Player:do_jumping(dt)
 	-- This buffer is so that you still jump even if you're a few frames behind
 	self.buffer_jump_timer = self.buffer_jump_timer - 1
-	if Input:action_pressed("jump") then
+	if Input:action_pressed(self.n, "jump") then
 		self.buffer_jump_timer = 12
 	end
 
@@ -429,7 +492,7 @@ function Player:do_jumping(dt)
 	self.air_time = self.air_time + dt
 	if self.is_grounded then self.air_time = 0 end
 	if self.air_time < self.jump_air_time and not self.is_grounded then
-		if Input:action_down("jump") then
+		if Input:action_down(self.n, "jump") then
 			self.vy = self.vy - self.air_jump_force
 		end
 	end
@@ -520,7 +583,7 @@ function Player:kill()
 	self.is_dead = true
 	
 	game:screenshake(10)
-	Particles:dead_player(self.spr_x, self.spr_y, self.spr_dead, self.dir_x)
+	Particles:dead_player(self.spr_x, self.spr_y, self.spr_dead, self.color_palette, self.dir_x)
 	game:frameskip(30)
 
 	self:on_death()
@@ -528,20 +591,12 @@ function Player:kill()
 	
 	self.timer_before_death = self.max_timer_before_death
 	Audio:play("game_over_1")
+
+	self:remove()
 end
 
 function Player:on_death()
 	
-end
-
-function Player:do_death_anim(dt)
-	if not self.is_dead then   return   end
-	self.timer_before_death = self.timer_before_death - dt
-	
-	if self.timer_before_death <= 0 then
-		game:on_game_over()
-		Audio:play("game_over_2")
-	end
 end
 
 function Player:shoot(dt, is_burst)
@@ -661,7 +716,7 @@ function Player:do_damage(n, source)
 	Particles:word(self.mid_x, self.mid_y, concat("-",n), COL_LIGHT_RED)
 	-- self:do_knockback(source.knockback, source)--, 0, source.h/2)
 	--source:do_knockback(source.knockback*0.75, self)
-	if self.is_knockbackable then
+	if self.is_knockbackable and source then
 		self.vx = self.vx + sign(self.mid_x - source.mid_x)*source.knockback
 		self.vy = self.vy - 50
 	end

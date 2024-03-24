@@ -1,0 +1,40 @@
+require "scripts.util"
+local Enemy = require "scripts.actor.enemy"
+local sounds = require "data.sounds"
+local images = require "data.images"
+local Guns = require "data.guns"
+
+local Cocoon = Enemy:inherit()
+
+function Cocoon:init(x, y, player_n)
+    self:init_enemy(x,y, images.cocoon, 15, 26)
+    self.player_n = player_n or 1
+
+    self.name = "dummy"
+    self.follow_player = false
+
+    self.life = 12
+    self.damage = 0
+    self.self_knockback_mult = 0.1
+
+    self.knockback = 0
+    
+    self.is_pushable = false
+    self.is_knockbackable = false
+    self.loot = {}
+
+    self.sound_damage = {"cloth1", "cloth2", "cloth3"}
+    self.sound_death = "cloth_drop"
+    self.sound_stomp = "cloth_drop"
+end
+
+function Cocoon:update(dt)
+    self:update_enemy(dt)
+end
+
+function Cocoon:on_death()
+    Particles:image(self.mid_x, self.mid_y, 20, {images.cocoon_fragment_1, images.cocoon_fragment_2}, self.w, nil, nil, 0.5)
+    game:new_player(self.player_n, self.x, self.y)
+end
+
+return Cocoon

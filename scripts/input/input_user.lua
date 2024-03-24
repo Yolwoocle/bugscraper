@@ -7,12 +7,19 @@ gamepadguesser.loadMappings("lib/gamepadguesser")
 
 local InputUser = Class:inherit()
 
-function InputUser:init(n)
+function InputUser:init(n, input_profile_id, is_global)
+    is_global = param(is_global, false)
+
     self.n = n
+    self.is_global = is_global
+    self.input_profile_id = input_profile_id or "empty"
+
     self:init_action_states()
 
     self.joystick = nil
-    self.primary_input_type = ternary(n == 1, "k", "c")
+    self.last_active_joystick = nil
+    self.last_pressed_button = nil
+    self.primary_input_type = self:get_input_profile():get_primary_input_type()
 end
 
 function InputUser:update(dt)
@@ -21,12 +28,16 @@ function InputUser:update(dt)
 	end
 end
 
-function InputUser:get_input_map()
-    return Input:get_input_map(self.n)
+function InputUser:set_input_profile_id(profile_id)
+    self.input_profile_id = profile_id
+end
+
+function InputUser:get_input_profile()
+    return Input:get_input_profile(self.input_profile_id)
 end
 
 function InputUser:get_primary_button(action)
-    local buttons = Input:get_buttons(self.n, action, self.primary_input_type) or {}
+    local buttons = Input:get_buttons_from_player_n(self.n, action) or {}
     return buttons[1]
 end
 
@@ -38,8 +49,11 @@ function InputUser:init_action_states()
         ui_down = true
     }
 
+    local profile = self:get_input_profile()
+    assert(profile ~= nil, "cannot find input profile")
+
 	self.action_states = {}
-	for action, _ in pairs(self:get_input_map()) do
+	for action, _ in pairs(profile:get_mappings()) do
         self.action_states[action] = InputActionState:new(self, action, hold_repeat_actions[action] ~= nil)
 	end
 end
@@ -48,6 +62,18 @@ function InputUser:update_last_input_state()
     for action, action_state in pairs(self.action_states) do
         action_state:update_last_input_state()
     end
+end
+
+function InputUser:action_down(action)
+    local buttons = self:get_input_profile():get_mappings()[action]
+	if not buttons then   error(concat("Attempt to access button '",concat(action),"'"))   end
+
+	for _, button in pairs(buttons) do
+		if self:is_button_down(button) then
+			return true
+		end
+	end
+	return false
 end
 
 function InputUser:action_pressed(action)
@@ -64,17 +90,49 @@ function InputUser:action_pressed(action)
     return result
 end
 
-function InputUser:is_button_down(key)
-    if key.type == INPUT_TYPE_KEYBOARD then
-        return love.keyboard.isScancodeDown(key.key_name)
+function InputUser:is_button_down(button)
+    local v = false
+    if button.type == INPUT_TYPE_KEYBOARD then
+        v = Input:is_keyboard_down(button)
 
-    elseif key.type == INPUT_TYPE_CONTROLLER and self.joystick then
-        local axis_func = AXIS_FUNCTIONS[key.key_name]
-        if axis_func ~= nil then
-            return axis_func(self.joystick)
+    elseif button.type == INPUT_TYPE_CONTROLLER then 
+        if self.joystick then 
+            v = self:is_joystick_down(button)
+        elseif self.is_global then
+            v = self:is_any_joystick_down(button)            
         end
-        return self.joystick:isGamepadDown(key.key_name)
-        
+    end
+    
+    if v then
+        self.last_pressed_button = button
+    end
+    return v
+end      
+
+function InputUser:is_joystick_down(button, joystick)
+    joystick = param(joystick, self.joystick)
+    if joystick == nil then return false end
+    local output = false
+
+    local axis_func = AXIS_FUNCTIONS[button.key_name]
+    if axis_func ~= nil then
+        output = axis_func(joystick)
+    else
+        output = joystick:isGamepadDown(button.key_name)
+    end
+
+    if output then
+        self.last_active_joystick = joystick
+    end
+    return output
+end
+
+function InputUser:is_any_joystick_down(button)
+    local joysticks = love.joystick.getJoysticks()
+    for i, joystick in ipairs(joysticks) do
+        if joystick:isGamepad() and self:is_joystick_down(button, joystick) then
+            return true
+        end
     end
     return false
 end
@@ -89,23 +147,6 @@ function InputUser:is_axis_down(axis_name)
         return axis_func(self.joystick)
     end
     return false
-end
-
-function InputUser:action_down(action)
-    local buttons = self:get_input_map()[action]
-	if not buttons then   error(concat("Attempt to access button '",concat(action),"'"))   end
-
-	for _, button in pairs(buttons) do
-		if self:is_button_down(button) then
-            self:update_primary_input_type(button.type)
-			return true
-		end
-	end
-	return false
-end
-
-function InputUser:update_primary_input_type(input_type)
-    self.primary_input_type = input_type
 end
 
 function InputUser:get_button_style()

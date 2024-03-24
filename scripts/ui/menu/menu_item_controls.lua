@@ -5,10 +5,12 @@ local images = require "data.images"
 
 local ControlsMenuItem = TextMenuItem:inherit()
 
-function ControlsMenuItem:init(i, x, y, player_n, input_type, action_name)
+function ControlsMenuItem:init(i, x, y, player_n, profile_id, input_type, action_name, label_text)
 	self:init_textitem(i, x, y, action_name)
 
 	self.player_n = player_n
+	self.label_text = label_text or action_name
+	self.profile_id = profile_id
 	self.input_type = input_type
 	self.action_name = action_name
 	
@@ -21,10 +23,8 @@ end
 function ControlsMenuItem:update(dt)
 	self:update_textitem(dt)
 
-	self.label_text = concat(self.action_name)
 	self.value_text = "[ERROR]"
 
-	self.label_text = self.action_name
 	self.value = self:get_buttons()
 	self.value_text = ""
 
@@ -40,7 +40,7 @@ function ControlsMenuItem:draw_value_text()
 
 	local draw_func = self:get_leftjustified_text_draw_function()
 	if self.is_waiting_for_input then
-		local text = "[PRESS KEY]"
+		local text = "[PRESS BUTTON]"
 		local w = get_text_width(text)
 		draw_func(text, right_bound - w, y)
 
@@ -78,8 +78,12 @@ function ControlsMenuItem:draw_button_icon(button, x, y)
 	return x
 end
 
+function ControlsMenuItem:get_profile()
+	return Input:get_input_profile(self.profile_id)
+end
+
 function ControlsMenuItem:get_buttons()
-	return Input:get_buttons(self.player_n, self.action_name, self.input_type)
+	return self:get_profile():get_buttons(self.action_name, self.input_type)
 end
 
 function ControlsMenuItem:on_click()
@@ -106,20 +110,22 @@ function ControlsMenuItem:keypressed(key, scancode, isrepeat)
 end
 
 function ControlsMenuItem:gamepadpressed(joystick, buttoncode)
-	if self.player_n ~= Input:get_joystick_user_n(joystick) then
+	if Input:get_user(self.player_n) and self.player_n ~= Input:get_joystick_user_n(joystick) then
 		return
 	end
-
+	
 	self:on_button_pressed(InputButton:new("c", buttoncode))
 end
 
 function ControlsMenuItem:gamepadaxis(joystick, axis, value)
-	if self.player_n ~= Input:get_joystick_user_n(joystick) then
+	if Input:get_user(self.player_n) and self.player_n ~= Input:get_joystick_user_n(joystick) then
 		return
 	end
 
+	local user_n = ternary(Input:get_user(self.player_n) == nil, Input:get_joystick_user_n(joystick), self.player_n)
+
 	local key_name = Input:axis_to_key_name(axis, value)
-	if Input:is_axis_down(self.player_n, key_name) then
+	if Input:is_axis_down(user_n, key_name) then
 		self:on_button_pressed(InputButton:new("c", key_name))
 	end
 end
@@ -128,26 +134,26 @@ function ControlsMenuItem:on_button_pressed(button)
 	if self.is_waiting_for_input then
 		self.is_waiting_for_input = false
 		Input:set_standby_mode(false)
-
+		
 		if self.input_type ~= button.type then
 			return
 		end
-		if Input:is_button_in_use(self.player_n, self.action_name, button) then
+		if Input:is_button_in_use(self.profile_id, self.action_name, button) then
 			return
 		end
-		if #Input:get_buttons(self.player_n, self.action_name, self.input_type) >= MAX_ASSIGNABLE_BUTTONS then
+		if #self:get_buttons() >= MAX_ASSIGNABLE_BUTTONS then
 			return
 		end
 		
 		self.scancode = button.key_name
-		Input:add_action_buttons(self.player_n, self.action_name, {button})
+		Input:add_action_button(self.profile_id, self.action_name, button)
 		
 		self.value = self:get_buttons()
 	end
 end
 
 function ControlsMenuItem:clear_buttons()
-	local old_buttons = Input:get_buttons(self.player_n, self.action_name)
+	local old_buttons = self:get_buttons()
 	local new_bindings = {}
 	for _, button in pairs(old_buttons) do
 		if button.type ~= self.input_type then
@@ -158,7 +164,7 @@ function ControlsMenuItem:clear_buttons()
 	-- keep at least one button if clearing an UI action
 	if is_in_table({"ui_up", "ui_down", "ui_left", "ui_right", "ui_select", "ui_back", "pause"}, self.action_name) then
 		local button = nil
-		local default_buttons = Input.default_mappings[self.player_n][self.action_name] or {}
+		local default_buttons = self:get_profile():get_default_mappings()[self.action_name] or {}
 		for _, default_button in pairs(default_buttons) do
 			if default_button.type == self.input_type then
 				button = default_button
@@ -167,7 +173,7 @@ function ControlsMenuItem:clear_buttons()
 		end
 		if button then   table.insert(new_bindings, button)   end
 	end
-	Input:set_action_buttons(self.player_n, self.action_name, new_bindings)
+	Input:set_action_buttons(self.profile_id, self.action_name, new_bindings)
 end
 
 return ControlsMenuItem

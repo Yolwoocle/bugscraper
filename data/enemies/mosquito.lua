@@ -41,36 +41,51 @@ function Mosquito:update(dt)
     self.t = self.t + dt
 
     if self.phase == PHASE_CHASE then
-        self.follow_player = true
-        self.buzz_source:setPitch(1.5)
-
+        self:update_phase_chase(dt)
+        
     elseif self.phase == PHASE_TELEGRAPH then
-        self.buzz_source:setPitch(1)
-        self.follow_player = false
-
-        self.attack_target = self:get_nearest_player()
-            
-        local dir_x = self.attack_target.x - self.x
-        local dir_y = self.attack_target.y - self.y
-        self.attack_vector_x, self.attack_vector_y = normalize_vect(dir_x, dir_y)
-
-        self.spr_ox = math.sin(self.t * 30) * self.attack_vector_x * 5
-        self.spr_oy = math.sin(self.t * 30) * self.attack_vector_y * 5
-        Particles:dust(self.mid_x + random_polar(8), self.mid_y + random_polar(8))
-
+        self:update_phase_telegraph(dt)
+        
     elseif self.phase == PHASE_ATTACK then
-        local target = self.attack_target
-        if target == nil then
-            return
-        end
-        self.buzz_source:setPitch(2)
-        self.follow_player = false
-        self.vx = self.vx + self.attack_vector_x * dt * self.attack_speed
-        self.vy = self.vy + self.attack_vector_y * dt * self.attack_speed
-
-        Particles:dust(self.mid_x, self.mid_y)
-
+        self:update_phase_attack(dt)
+        
     end
+end
+
+function Mosquito:update_phase_chase(dt)
+    self.follow_player = true
+    self.buzz_source:setPitch(1.5)
+end
+
+function Mosquito:update_phase_telegraph(dt)
+    self.buzz_source:setPitch(1)
+    self.follow_player = false
+    
+    self.attack_target = self:get_nearest_player()
+    if self.attack_target == nil then
+        return
+    end
+    
+    local dir_x = self.attack_target.x - self.x
+    local dir_y = self.attack_target.y - self.y
+    self.attack_vector_x, self.attack_vector_y = normalize_vect(dir_x, dir_y)
+    
+    self.spr_ox = math.sin(self.t * 30) * self.attack_vector_x * 5
+    self.spr_oy = math.sin(self.t * 30) * self.attack_vector_y * 5
+    Particles:dust(self.mid_x + random_polar(8), self.mid_y + random_polar(8))    
+end
+
+function Mosquito:update_phase_attack(dt)
+    local target = self.attack_target
+    if target == nil then
+        return
+    end
+    self.buzz_source:setPitch(2)
+    self.follow_player = false
+    self.vx = self.vx + self.attack_vector_x * dt * self.attack_speed
+    self.vy = self.vy + self.attack_vector_y * dt * self.attack_speed
+    
+    Particles:dust(self.mid_x, self.mid_y)
 end
 
 function Mosquito:update_phase(dt)
@@ -84,7 +99,7 @@ function Mosquito:update_phase(dt)
             self.phase = PHASE_TELEGRAPH
             self.current_phase_timer = PHASE_TELEGRAPH_DURATION
             self.t = 0
-
+            
         elseif self.phase == PHASE_TELEGRAPH then
             self.phase = PHASE_ATTACK
             self.current_phase_timer = random_range(0.3, 0.5)
@@ -94,7 +109,7 @@ end
 
 function Mosquito:draw()
 	self:draw_enemy()
-
+    
     -- love.graphics.print(concat(self.phase), self.x, self.y-16)
     -- love.graphics.print(concat(self.attack_target == nil), self.x, self.y-32)
 end

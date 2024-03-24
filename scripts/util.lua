@@ -20,6 +20,13 @@ pi = math.pi
 pi2 = 2*math.pi
 inf = math.huge
 
+function param(value, def_value)
+	if value == nil then
+		return def_value
+	end
+	return value
+end
+
 function mod_plus_1(val, mod)
 	-- i hate lua
 	return ((val-1) % mod)+1
@@ -33,6 +40,19 @@ function normalize_vect(x, y)
 	-- return math.cos(a), math.sin(a)
 end
 normalise_vect = normalize_vect
+
+function bounce_vector_cardinal(incoming_x, incoming_y, normal_x, normal_y)
+	-- https://gamedev.stackexchange.com/questions/23672/determine-resulting-angle-of-wall-collision
+	-- If n is a normalized vector, and v is the incoming direction, then what you want is −(2(n · v) n − v)
+	if normal_x ~= 0 then    return sign(normal_x) * abs(incoming_x), incoming_y    end
+	if normal_y ~= 0 then    return incoming_x, sign(normal_y) * abs(incoming_y)    end
+end
+
+function bounce_vector(incoming_x, incoming_y, normal_x, normal_y)
+	-- https://gamedev.stackexchange.com/questions/23672/determine-resulting-angle-of-wall-collision
+	-- If n is a normalized vector, and v is the incoming direction, then what you want is −(2(n · v) n − v)
+	return 
+end
 
 function color(hex)
 	if not hex then  return white  end
@@ -333,7 +353,7 @@ end
 
 function concatsep(tab, sep)
 	sep = sep or " "
-	local s = tostring(tab[1])
+	local s = tostring(tab[1] or "")
 	for i=2,#tab do
 		s = s..sep..tostring(tab[i])
 	end

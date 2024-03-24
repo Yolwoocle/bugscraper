@@ -18,6 +18,7 @@ local Dummy = require "data.enemies.dummy"
 local MushroomAnt = require "data.enemies.mushroom_ant"
 local HoneypotAnt = require "data.enemies.honeypot_ant"
 local Spider = require "data.enemies.spider"
+local StinkBug = require "data.enemies.stink_bug"
 
 local ButtonBigPressed = require "data.enemies.button_big_pressed"
 local ButtonBig = require "data.enemies.button_big"
@@ -25,6 +26,8 @@ local ButtonBigGlass = require "data.enemies.button_big_glass"
 
 local ButtonSmallGlass = require "data.enemies.button_small_glass"
 local ButtonSmall = require "data.enemies.button_small"
+
+local Cocoon = require "data.enemies.cocoon"
 
 local VendingMachine = require "data.enemies.vending_machine.vending_machine"
 
@@ -41,6 +44,7 @@ function Enemies:init()
 	self.MushroomAnt = MushroomAnt
 	self.HoneypotAnt = HoneypotAnt
 	self.Spider = Spider
+	self.StinkBug = StinkBug
 
 	self.ButtonBigPressed = ButtonBigPressed
 	self.ButtonBig = ButtonBig
@@ -50,6 +54,7 @@ function Enemies:init()
 	self.ButtonSmallGlass = ButtonSmallGlass
 
 	self.VendingMachine = VendingMachine
+	self.Cocoon = Cocoon
 
 	self.Dummy = Dummy
 end

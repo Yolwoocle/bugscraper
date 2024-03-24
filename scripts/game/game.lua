@@ -10,12 +10,12 @@ local AudioManager = require "scripts.audio.audio"
 local MenuManager = require "scripts.ui.menu.menu_manager"
 local OptionsManager = require "scripts.game.options"
 local InputManager = require "scripts.input.input"
-local InputButton = require "scripts.input.input_button"
 local MusicPlayer = require "scripts.audio.music_player"
 local MusicDisk = require "scripts.audio.music_disk"
 local Elevator = require "scripts.game.elevator"
-local shaders  = require "scripts.graphics.shaders"
+local InputButton = require "scripts.input.input_button"
 
+local shaders  = require "scripts.graphics.shaders"
 local sounds = require "data.sounds"
 local images = require "data.images"
 local guns = require "data.guns"
@@ -128,19 +128,19 @@ function Game:update_screen(scale)
 	CANVAS_OY = max(0, (WINDOW_HEIGHT - CANVAS_HEIGHT * CANVAS_SCALE)/2)
 end
 
-function Game:new_game(number_of_players)
+function Game:new_game()
 	-- Reset global systems
 	Collision = CollisionManager:new()
 	Particles = ParticleSystem:new()
 
-	number_of_players = number_of_players or 1
+	-- number_of_players = (number_of_players or self.number_of_players) or 0
 
 	self.t = 0
 	self.frame = 0
 
 	-- Players
-	self.max_number_of_players = 4 
-	self.number_of_players = number_of_players
+	self.max_number_of_players = MAX_NUMBER_OF_PLAYERS
+	self.number_of_players = 0
 
 	self.elevator = Elevator:new(self)
 
@@ -153,8 +153,6 @@ function Game:new_game(number_of_players)
 
 	-- Level info
 	self.floor = 0 --Floor n°
-	-- self.max_elev_speed = 1/2
-	self.cur_wave_max_enemy = 1
 
 	-- Bounding box
 	local map_w = self.map.width * BW
@@ -205,7 +203,6 @@ function Game:new_game(number_of_players)
 	self.logo_y = 30
 	self.logo_vy = 0
 	self.logo_a = 0
-	self.logo_cols = {COL_LIGHT_YELLOW, COL_LIGHT_BLUE, COL_LIGHT_RED}
 	self.move_logo = false
 	self.jetpack_tutorial_y = -30
 	self.move_jetpack_tutorial = false
@@ -257,6 +254,10 @@ function Game:new_game(number_of_players)
 	self.time_before_music = math.huge
 
 	self.endless_mode = false
+	self.game_started = false
+	self.is_game_over = false
+	self.timer_before_game_over = 0
+	self.max_timer_before_game_over = 3.3
 
 	Options:update_sound_on()
 end
@@ -281,6 +282,8 @@ function Game:update(dt)
 	if not self.menu_manager.cur_menu then
 		self:update_main_game(dt)
 	end
+
+	-- THIS SHOULD BE LAST
 	Input:update_last_input_state(dt)
 end
 
@@ -290,6 +293,8 @@ function Game:update_main_game(dt)
 	end
 	self.t = self.t + dt
 
+	self:listen_for_player_join(dt)
+	
 	-- BG color gradient
 	if not self.elevator.is_on_win_screen then
 		self.elevator.bg_color_progress = self.elevator.bg_color_progress + dt*0.2
@@ -308,6 +313,8 @@ function Game:update_main_game(dt)
 	-- self.elev_x = cos(self.t) * 4
 	-- self.elev_y = 4 + sin(self.t) * 4
 
+	self:update_timer_before_game_over(dt)
+
 	self:apply_screenshake(dt)
 	
 	if not Options:get("screenshake_on") then self.cam_ox, self.cam_oy = 0,0 end
@@ -318,7 +325,6 @@ function Game:update_main_game(dt)
 	-- Particles
 	Particles:update(dt)
 	self.elevator:update_bg_particles(dt)
-
 	self.elevator:progress_elevator(dt)
 
 	-- Update actors
@@ -480,7 +486,7 @@ function Game:draw_game()
 	gfx.origin()
 
 	-- Logo
-	self:draw_logo_and_controls()
+	self:draw_logo()
 
 	-- "CONGRATS" at the end
 	if self.elevator.is_on_win_screen then
@@ -518,6 +524,50 @@ function Game:draw_game()
 	-- gfx.print(t, CANVAS_WIDTH-get_text_width(t), 0)
 	-- local t = os.date('%a %d/%b/%Y')
 	-- print_color({.7,.7,.7}, t, CANVAS_WIDTH-get_text_width(t), 12)	
+end
+
+function Game:listen_for_player_join(dt)
+	if self.game_started then return end
+
+	-- if Input:action_pressed_any_player("debug_1") then
+	-- 	self:leave_game(1)
+	-- end
+	-- if Input:action_pressed_any_player("debug_2") then
+	-- 	self:leave_game(2)
+	-- end
+	-- if Input:action_pressed_any_player("debug_3") then
+	-- 	self:leave_game(3)
+	-- end
+	-- if Input:action_pressed_any_player("debug_4") then
+	-- 	self:leave_game(4)
+	-- end
+
+	if Input:action_pressed_global("jump") then 
+		local global_user = Input:get_global_user()
+		local last_button = global_user.last_pressed_button
+		local input_profile_id = ""
+		local joystick = nil
+
+		local can_add_keyboard_user = ternary(
+			last_button and last_button.type == INPUT_TYPE_KEYBOARD,
+			(Input:get_number_of_users(INPUT_TYPE_KEYBOARD) <= 0),
+			true
+		)
+		if last_button and Input:can_add_user() and can_add_keyboard_user then
+			if last_button.type == INPUT_TYPE_KEYBOARD then
+				input_profile_id = "keyboard_solo"
+			
+			elseif last_button.type == INPUT_TYPE_CONTROLLER then
+				input_profile_id = "controller"
+				joystick = Input:get_global_user().last_active_joystick
+			end
+			self:join_game(input_profile_id, joystick)
+		end
+	end
+	if Input:action_pressed_global("split_keyboard") and Input:get_number_of_users(INPUT_TYPE_KEYBOARD) == 1 then
+		self:join_game("keyboard_solo")
+		Input:split_keyboard()
+	end
 end
 
 function Game:removeme_bg_test()
@@ -583,12 +633,12 @@ function Game:removeme_bg_test2()
 	end
 end
 
-function Game:draw_logo_and_controls()
-	for i=1, #self.logo_cols + 1 do
+function Game:draw_logo()
+	for i=1, #LOGO_COLS + 1 do
 		local ox, oy = cos(self.logo_a + i*.4)*8, sin(self.logo_a + i*.4)*8
 		local logo_x = floor((CANVAS_WIDTH - images.logo_noshad:getWidth())/2)
 		
-		local col = self.logo_cols[i]
+		local col = LOGO_COLS[i]
 		local spr = images.logo_shad
 		if col == nil then
 			col = COL_WHITE
@@ -597,38 +647,37 @@ function Game:draw_logo_and_controls()
 		gfx.setColor(col)
 		gfx.draw(spr, logo_x + ox, self.logo_y + oy)
 	end
-	
-	self:draw_controls(floor(CANVAS_WIDTH/2), floor(self.logo_y) + images.logo:getHeight()+6)
-	-- local ox, oy = cos(self.t*3)*4, sin(self.t*3)*4
-	-- gfx.draw(images.controls_jetpack, ox + floor((CANVAS_WIDTH - images.controls_jetpack:getWidth())/2), oy + floor(self.jetpack_tutorial_y))
+	self:draw_join_tutorial()
 end
 
-function Game:draw_controls(x, y)
-	local tutorials = {
-		{{"left", "up", "right", "down"}, "MOVE"},
-		{{"jump"}, "JUMP"},
-		{{"shoot"}, "SHOOT"},
+function Game:draw_join_tutorial()
+	local def_x = math.floor((self.door_ax + self.door_bx) / 2)
+	local def_y = self.logo_y + 50
+
+	local icons = {
+		Input:get_button_icon(1, Input:get_input_profile("global"):get_primary_button("jump", INPUT_TYPE_KEYBOARD)),
+		Input:get_button_icon(1, Input:get_input_profile("global"):get_primary_button("jump", INPUT_TYPE_CONTROLLER), BUTTON_STYLE_SWITCH),
+		Input:get_button_icon(1, Input:get_input_profile("global"):get_primary_button("jump", INPUT_TYPE_CONTROLLER), BUTTON_STYLE_PLAYSTATION5),
 	}
-
-	for i, tuto in ipairs(tutorials) do
-		local btn_x = x - 2
-
-		local shown_duration = 0.5
-		local actions = tuto[1]
-		local action_index = math.floor((self.t % (shown_duration * #actions)) / shown_duration) + 1
-		local action = actions[action_index]
-
-		local button = Input:get_primary_button(1, action) or InputButton:new("?", "?")
-		local icon = Input:get_button_icon(1, button) or images.btn_k_unknown
-		local w = icon:getWidth()
-
-		btn_x = btn_x - w
-		exec_using_shader(shaders.button_icon_to_def, function()
-			love.graphics.draw(icon, btn_x, y)
-		end)
-		
-		print_outline(self.logo_cols[4-i] or COL_WHITE, COL_BLACK_BLUE, tuto[2], x, y)
-		y = y + 18
+	
+	local x = def_x
+	local y = def_y
+	print_outline(COL_WHITE, COL_BLACK_BLUE, "JOIN", x, y)
+	for i, icon in pairs(icons) do
+		x = x - icon:getWidth() - 2
+		love.graphics.draw(icon, x, y)
+		if i ~= #icons then
+			print_outline(COL_WHITE, COL_BLACK_BLUE, "/", x-3, y)
+		end
+	end
+	
+	x = def_x
+	y = y + 16
+	if Input:get_number_of_users(INPUT_TYPE_KEYBOARD) == 1 then
+		local icon_split_kb = Input:get_button_icon(1, Input:get_input_profile("global"):get_primary_button("split_keyboard"))
+		print_outline(COL_WHITE, COL_BLACK_BLUE, "SPLIT KEYBOARD", x, y)
+		x = x - icon_split_kb:getWidth() - 2
+		love.graphics.draw(icon_split_kb, x, y)
 	end
 end
 
@@ -644,6 +693,27 @@ end
 function Game:draw_debug()
 	gfx.print(concat("FPS: ",love.timer.getFPS(), " / frmRpeat: ",self.frame_repeat, " / frame: ",frame), 0, 0)
 	
+	local players_str = "players: "
+	for k, player in pairs(self.players) do
+		players_str = concat(players_str, "{", k, ":", player.n, "}, ")
+	end
+
+	local users_str = "users: "	
+	for k, player in pairs(Input.users) do
+		users_str = concat(users_str, "{", k, ":", player.n, "}, ")
+	end
+	
+	local joystick_user_str = "joysticks_to_users: "	
+	for joy, user in pairs(Input.joystick_to_user_map) do
+		joystick_user_str = concat(joystick_user_str, "{", string.sub(joy:getName(),1,4), "... ", ":", user.n, "}, ")
+	end
+	
+	local joystick_str = "joysticks: "	
+	for _, joy in pairs(love.joystick.getJoysticks()) do
+		joystick_str = concat(joystick_str, "{", string.sub(joy:getName(),1,4), "...}, ")
+	end
+
+	
 	-- Print debug info
 	local txt_h = get_text_height(" ")
 	local txts = {
@@ -652,10 +722,17 @@ function Game:draw_debug()
 		concat("n° of enemies: ", self.enemy_count),
 		concat("n° collision items: ", Collision.world:countItems()),
 		concat("frames_to_skip: ", self.frames_to_skip),
-		concat("self.sfx_elevator_bg_volume", self.sfx_elevator_bg_volume),
 		concat("debug1 ", self.debug1),
 		concat("real_wave_n ", self.debug2),
 		concat("bg_color_index ", self.debug3),
+		concat("number_of_alive_players ", self:get_number_of_alive_players()),
+		concat("number_of_users(*) ", Input:get_number_of_users()),
+		concat("number_of_users(KEYBOARD) ", Input:get_number_of_users(INPUT_TYPE_KEYBOARD)),
+		concat("number_of_users(CONTROLLER) ", Input:get_number_of_users(INPUT_TYPE_CONTROLLER)),
+		players_str,
+		users_str,
+		joystick_user_str,
+		joystick_str,
 		"",
 	}
 
@@ -733,11 +810,33 @@ function Game:on_kill(actor)
 	end
 
 	if actor.is_player then
+		self:on_player_death(actor)
+	end
+end
+
+function Game:on_player_death(player)
+	self.players[player.n] = nil
+
+	if self:get_number_of_alive_players() <= 0 then
 		-- Save stats
 		self.music_player:pause()
 		self:pause_repeating_sounds()
 		self.game_started = false
+		self.is_game_over = true
+		self.timer_before_game_over = self.max_timer_before_game_over
 		self:save_stats()
+	end
+end
+
+function Game:update_timer_before_game_over(dt)
+	if not self.is_game_over then
+		return 
+	end
+	self.timer_before_game_over = self.timer_before_game_over - dt
+	
+	if self.timer_before_game_over <= 0 then
+		self:on_game_over()
+		Audio:play("game_over_2")
 	end
 end
 
@@ -775,23 +874,111 @@ function draw_log()
 end
 
 function Game:init_players()
-	-- TODO: move this to a general function (?)
-	local sprs = {
-		images.ant,
-		images.caterpillar
-	}
-
 	self.players = {}
 
-	-- Spawn at middle
+	for i = 1, self.max_number_of_players do
+		if Input:get_user(i) ~= nil then
+			self:new_player(i)
+		end
+	end
+end
+
+function Game:find_free_player_number()
+	for i = 1, self.max_number_of_players do
+		if self.players[i] == nil then
+			return i
+		end
+	end
+	return nil
+end
+
+function Game:join_game(input_profile_id, joystick)
+	-- FIXME ça marche pas quand tu join avec manette puis que tu join sur clavier
+	local player_n = self:find_free_player_number()
+	if player_n == nil then
+		return
+	end
+	-- Is joystick already taken?
+	if joystick ~= nil and Input:get_joystick_user(joystick) ~= nil then
+		return
+	end
+
+	Input:new_user(player_n)
+	self:new_player(player_n)
+	if joystick ~= nil then
+		Input:assign_joystick(player_n, joystick)
+	end
+	Input:assign_input_profile(player_n, input_profile_id)
+
+	return player_n
+end
+
+function Game:new_player(player_n, x, y)
+	player_n = player_n or self:find_free_player_number()
+	if player_n == nil then
+		return
+	end
 	local mx = floor((self.map.width / self.max_number_of_players))
 	local my = floor(self.map.height - 3)
+	x = param(x, mx*16 + player_n*24)
+	y = param(y, my*16)
 
-	for i=1, self.number_of_players do
-		local player = Player:new(i, mx*16 + i*16, my*16, sprs[i])
-		self.players[i] = player
-		self:new_actor(player)
+	local skins = {
+		{
+			spr_idle = images.ant1,
+			spr_jump = images.ant2,
+			spr_dead = images.ant_dead,
+			color_palette = {color(0xf6757a), color(0xb55088), color(0xe43b44), color(0x9e2835), color(0x3a4466), color(0x262b44)},
+		},
+		{
+			spr_idle = images.caterpillar_1,
+			spr_jump = images.caterpillar_2,
+			spr_dead = images.caterpillar_dead,
+			color_palette = {color(0x63c74d), color(0x3e8948), color(0x265c42), color(0x193c3e), color(0x5a6988), color(0x3a4466)},
+		},
+		{
+			spr_idle = images.bee_1,
+			spr_jump = images.bee_2,
+			spr_dead = images.bee_dead,
+			color_palette = {color(0xfee761), color(0xfeae34), color(0x743f39), color(0x3f2832), color(0xc0cbdc), color(0x9e2835)},
+		},
+		{
+			spr_idle = images.ant2_1,
+			spr_jump = images.ant2_2,
+			spr_dead = images.ant2_dead,
+			color_palette = {color(0x2ce8f5), color(0x2ce8f5), color(0x0195e9), color(0x9e2835), color(0x3a4466), color(0x262b44)},
+		},
+	}
+
+	local player = Player:new(player_n, x ,y, skins[player_n])
+	self.players[player_n] = player
+	self:new_actor(player)
+end
+
+function Game:leave_game(player_n)
+	if self.players[player_n] == nil then
+		return
 	end
+
+	local player = self.players[player_n]
+	local profile_id = Input:get_input_profile_from_player_n(player.n):get_profile_id()
+	
+	self.players[player_n]:remove()
+	self.players[player_n] = nil
+	Input:remove_user(player_n)
+	if profile_id == "keyboard_split_p1" or profile_id == "keyboard_split_p2" then
+		Input:unsplit_keyboard()
+	end
+end
+
+function Game:get_number_of_alive_players()
+	local count = 0
+	for i = 1, self.max_number_of_players do
+		if self.players[i] ~= nil then
+			count = count + 1
+		end
+	end
+	return count
 end
 
 function Game:apply_screenshake(dt)
@@ -858,10 +1045,6 @@ function Game:keypressed(key, scancode, isrepeat)
 	if self.menu_manager then
 		self.menu_manager:keypressed(key, scancode, isrepeat)
 	end
-
-	for i, ply in pairs(self.players) do
-		--ply:keypressed(key, scancode, isrepeat)
-	end
 end
 
 function Game:joystickadded(joystick)
@@ -882,14 +1065,18 @@ function Game:gamepadreleased(joystick, buttoncode)
 	if self.menu_manager then   self.menu_manager:gamepadreleased(joystick, buttoncode)   end
 end
 
--- InputManager:get_joystick_user
--- local axis_func = AXIS_FUNCTIONS[key.key_name]
--- if axis_func ~= nil then
--- 	return axis_func(self.joystick)
--- end
 function Game:gamepadaxis(joystick, axis, value)
 	Input:gamepadaxis(joystick, axis, value)
 	if self.menu_manager then   self.menu_manager:gamepadaxis(joystick, axis, value)   end
+end
+
+function Game:focus(f)
+	if f then
+	else
+		if Options:get("pause_on_unfocus") and self.menu_manager and Input:get_number_of_users() >= 1 then
+			self.menu_manager:pause()
+		end
+	end
 end
 
 -- function Game:keyreleased(key, scancode)
