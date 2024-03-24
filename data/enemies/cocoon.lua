@@ -6,8 +6,10 @@ local Guns = require "data.guns"
 
 local Cocoon = Enemy:inherit()
 
-function Cocoon:init(x, y)
+function Cocoon:init(x, y, player_n)
     self:init_enemy(x,y, images.cocoon, 15, 26)
+    self.player_n = player_n or 1
+
     self.name = "dummy"
     self.follow_player = false
 
@@ -17,7 +19,7 @@ function Cocoon:init(x, y)
 
     self.knockback = 0
     
-    self.is_pushable =false
+    self.is_pushable = false
     self.is_knockbackable = false
     self.loot = {}
 
@@ -31,8 +33,8 @@ function Cocoon:update(dt)
 end
 
 function Cocoon:on_death()
-    Particles:image(self.mid_x, self.mid_y, 20, {images.dummy_target_ptc1, images.dummy_target_ptc2}, self.w, nil, nil, 0.5)
-    --number, spr, spw_rad, life, vs, g
+    Particles:image(self.mid_x, self.mid_y, 20, {images.cocoon_fragment_1, images.cocoon_fragment_2}, self.w, nil, nil, 0.5)
+    game:new_player(self.player_n, self.x, self.y)
 end
 
 return Cocoon

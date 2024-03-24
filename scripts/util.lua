@@ -41,6 +41,19 @@ function normalize_vect(x, y)
 end
 normalise_vect = normalize_vect
 
+function bounce_vector_cardinal(incoming_x, incoming_y, normal_x, normal_y)
+	-- https://gamedev.stackexchange.com/questions/23672/determine-resulting-angle-of-wall-collision
+	-- If n is a normalized vector, and v is the incoming direction, then what you want is −(2(n · v) n − v)
+	if normal_x ~= 0 then    return sign(normal_x) * abs(incoming_x), incoming_y    end
+	if normal_y ~= 0 then    return incoming_x, sign(normal_y) * abs(incoming_y)    end
+end
+
+function bounce_vector(incoming_x, incoming_y, normal_x, normal_y)
+	-- https://gamedev.stackexchange.com/questions/23672/determine-resulting-angle-of-wall-collision
+	-- If n is a normalized vector, and v is the incoming direction, then what you want is −(2(n · v) n − v)
+	return 
+end
+
 function color(hex)
 	if not hex then  return white  end
 	if type(hex) ~= "number" then  return white  end

@@ -153,8 +153,6 @@ function Game:new_game()
 
 	-- Level info
 	self.floor = 0 --Floor n°
-	-- self.max_elev_speed = 1/2
-	self.cur_wave_max_enemy = 1
 
 	-- Bounding box
 	local map_w = self.map.width * BW
@@ -915,11 +913,15 @@ function Game:join_game(input_profile_id, joystick)
 	return player_n
 end
 
-function Game:new_player(player_n)
+function Game:new_player(player_n, x, y)
 	player_n = player_n or self:find_free_player_number()
 	if player_n == nil then
 		return
 	end
+	local mx = floor((self.map.width / self.max_number_of_players))
+	local my = floor(self.map.height - 3)
+	x = param(x, mx*16 + player_n*24)
+	y = param(y, my*16)
 
 	local skins = {
 		{
@@ -948,10 +950,7 @@ function Game:new_player(player_n)
 		},
 	}
 
-	local mx = floor((self.map.width / self.max_number_of_players))
-	local my = floor(self.map.height - 3)
-
-	local player = Player:new(player_n, mx*16 + player_n*16, my*16, skins[player_n])
+	local player = Player:new(player_n, x ,y, skins[player_n])
 	self.players[player_n] = player
 	self:new_actor(player)
 end

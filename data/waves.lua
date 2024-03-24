@@ -5,14 +5,15 @@ local images = require "data.images"
 local E = require "data.enemies"
 
 local waves = {
-	-- {
-	-- 	min = 3,
-	-- 	max = 3,
-	-- 	enemies = {
-	-- 		-- {E.VendingMachine, 3},
-	-- 		{E.HoneypotAnt, 4},
-	-- 	}
-	-- },
+	{
+		min = 3,
+		max = 3,
+		enemies = {
+			-- {E.VendingMachine, 3},
+			{E.StinkBug, 4},
+			-- {E.SnailShelled, 4},
+		}
+	},
 	{
 		min = 4,
 		max = 6,

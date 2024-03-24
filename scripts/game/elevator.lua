@@ -234,42 +234,59 @@ function Elevator:next_floor(dt, new_floor, old_floor)
 	end
 end
 
-function Elevator:new_wave_buffer_enemies()
-	-- Spawn a bunch of enemies
-	local bw = BLOCK_WIDTH
-	local wg = self.game.world_generator
-	
-	self.game.cur_wave_max_enemy = n
-	self.door_animation_enemy_buffer = {}
+function Elevator:new_endless_wave()
+	local min = 8
+	local max = 16
+	return {
+		min = min,
+		max = max,
+		enemies = {
+			{Enemies.Larva, random_range(1,6)},
+			{Enemies.Fly, random_range(1,6)},
+			{Enemies.Slug, random_range(1,6)},
+			{Enemies.Mosquito, random_range(1, 6)},
 
-	-- Select a wave
-	local wave_n = clamp(self.game.floor+1, 1, #waves) -- floor+1 because the floor indicator changes before enemies are spawned
+			{Enemies.SnailShelled, random_range(1,4)},
+			{Enemies.HoneypotAnt, random_range(1,4)},
+			{Enemies.SpikedFly, random_range(1,4)},
+			{Enemies.Grasshopper, random_range(1,4)},
+			{Enemies.MushroomAnt, random_range(1,4)},
+			{Enemies.Spider, random_range(1,4)},
+		},
+	}
+end
+
+function Elevator:construct_new_wave(wave_n)
 	local wave = waves[wave_n]
 	if self.game.endless_mode then
 		-- Wave on endless mode
-		local min = 8
-		local max = 16
-		wave = {
-			min = min,
-			max = max,
-			enemies = {
-				{Enemies.Larva, random_range(1,6)},
-				{Enemies.Fly, random_range(1,6)},
-				{Enemies.Slug, random_range(1,6)},
-				{Enemies.Mosquito, random_range(1, 6)},
-
-				{Enemies.SnailShelled, random_range(1,4)},
-				{Enemies.HoneypotAnt, random_range(1,4)},
-				{Enemies.SpikedFly, random_range(1,4)},
-				{Enemies.Grasshopper, random_range(1,4)},
-				{Enemies.MushroomAnt, random_range(1,4)},
-				{Enemies.Spider, random_range(1,4)},
-			},
-		}
+		wave = self:new_endless_wave()
 	end
 	local n = love.math.random(wave.min, wave.max)
 
-	-- BG color changes
+	local output = {}
+	for i=1, n do
+		local enemy_class = random_weighted(wave.enemies)
+		table.insert(output, {
+			enemy_class = enemy_class
+		})
+	end
+
+	if game:get_number_of_alive_players() < Input:get_number_of_users() then
+		for i = 1, MAX_NUMBER_OF_PLAYERS do
+			if game.players[i] == nil and Input:get_user(i) ~= nil then
+				table.insert(output, {
+					enemy_class = Enemies.Cocoon,
+					extra_info = i,
+				})
+			end
+		end
+	end
+
+	return output
+end
+
+function Elevator:change_bg_color(wave_n)
 	-- if wave_n == floor((self.bg_color_index) * (#waves / 4)) then
 	local real_wave_n = max(1, self.game.floor + 1)
 	self.debug2 = real_wave_n
@@ -279,22 +296,36 @@ function Elevator:new_wave_buffer_enemies()
 		self.bg_color_index = mod_plus_1( floor(real_wave_n / 4) + 1, #self.bg_colors)
 		self.bg_color_progress = 0
 	end
+end
 
-	-- On wave 5, summon jetpack tutorial
-	-- self.move_jetpack_tutorial = (self.is_first_time and wave_n == 5)
-	self.move_jetpack_tutorial = (wave_n == 5)
-	for i=1, n do
-		-- local x = love.math.random((wg.box_ax+1)*bw, (wg.box_bx-1)*bw)
-		-- local y = love.math.random((wg.box_ay+1)*bw, (wg.box_by-1)*bw)
+function Elevator:new_wave_buffer_enemies()
+	-- Spawn a bunch of enemies
+	local bw = BLOCK_WIDTH
+	local wg = self.game.world_generator
+	
+	self.door_animation_enemy_buffer = {}
+
+	local wave_n = clamp(self.game.floor+1, 1, #waves) -- floor+1 because the floor indicator changes before enemies are spawned
+	local wave = self:construct_new_wave(wave_n)
+
+	self:change_bg_color(wave_n)
+
+	for i=1, #wave do
 		local x = love.math.random(self.game.door_ax + 16, self.game.door_bx - 16)
 		local y = love.math.random(self.game.door_ay + 16, self.game.door_by - 16)
 
-		local enemy_class = random_weighted(wave.enemies)
+		local enemy_class = wave[i].enemy_class
+		local extra_info = wave[i].extra_info
+		
+		local args = {} 
 		if enemy_class == Enemies.ButtonBigGlass then
 			x = floor(CANVAS_WIDTH/2 - 58/2)
 			y = self.game.door_by - 45
 		end
-		local enemy_instance = enemy_class:new(x,y)
+		if enemy_class == Enemies.Cocoon then
+			args = {extra_info}
+		end
+		local enemy_instance = enemy_class:new(x,y, unpack(args))
 
 		-- If button is summoned, last wave happened
 		if enemy_instance.name == "button_big_glass" then

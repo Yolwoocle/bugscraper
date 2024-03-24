@@ -83,6 +83,7 @@ local img_names = {
 	spider1 =         "actors/enemies/spider1",
 	spider2 =         "actors/enemies/spider2",
 	spiked_fly =      "actors/enemies/spiked_fly",
+	stink_bug_1 =     "actors/enemies/stink_bug_1",
 	mushroom_ant1 =   "actors/enemies/mushroom_ant1",
 	mushroom_ant2 =   "actors/enemies/mushroom_ant2",
 
@@ -92,11 +93,11 @@ local img_names = {
 	big_red_button_crack3 =  "actors/enemies/big_red_button_crack3",
 	big_red_button =         "actors/enemies/big_red_button",
 	big_red_button_pressed = "actors/enemies/big_red_button_pressed",
-	small_button_crack0 =  "actors/enemies/small_button_crack0",
-	small_button_crack1 =  "actors/enemies/small_button_crack1",
-	small_button_crack2 =  "actors/enemies/small_button_crack2",
-	small_button =         "actors/enemies/small_button",
-	small_button_pressed = "actors/enemies/small_button_pressed",
+	small_button_crack0 =    "actors/enemies/small_button_crack0",
+	small_button_crack1 =    "actors/enemies/small_button_crack1",
+	small_button_crack2 =    "actors/enemies/small_button_crack2",
+	small_button =           "actors/enemies/small_button",
+	small_button_pressed =   "actors/enemies/small_button_pressed",
 
 	machine_coffee =         "actors/enemies/machine_coffee",
 	machine_coffee_pressed = "actors/enemies/machine_coffee_pressed",
@@ -131,6 +132,8 @@ local img_names = {
 	-----------------------------------------------------
 	
 	-- particles
+	cocoon_fragment_1 =    "particles/cocoon_fragment_1",
+	cocoon_fragment_2 =    "particles/cocoon_fragment_2",
 	dummy_target_ptc1 =    "particles/dummy_target_ptc1",
 	dummy_target_ptc2 =    "particles/dummy_target_ptc2",
 	ptc_glass_shard =      "particles/ptc_glass_shard",

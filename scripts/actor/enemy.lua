@@ -64,6 +64,8 @@ function Enemy:init_enemy(x,y, img, w,h)
 	self.sound_stomp = "enemy_death_1"
 
 	self.target = nil
+
+	self.do_vx_flipping = true
 	-- self.sound_stomp = {"enemy_stomp_2", "enemy_stomp_3"}
 	--{"crush_bug_1", "crush_bug_2", "crush_bug_3", "crush_bug_4"}
 end
@@ -120,7 +122,7 @@ end
 
 function Enemy:draw_enemy()
 	local f = (self.damaged_flash_timer > 0) and draw_white or gfx.draw
-	self:draw_actor(self.vx < 0, nil, f)
+	self:draw_actor(ternary(self.do_vx_flipping, self.vx < 0, false), nil, f)
 
 	if game.debug_mode then
 		gfx.draw(images.heart, self.x-7 -2+16, self.y-16)
