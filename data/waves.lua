@@ -6,11 +6,12 @@ local E = require "data.enemies"
 
 local waves = {
 	{
-		min = 3,
-		max = 3,
+		min = 14,
+		max = 14,
 		enemies = {
 			-- {E.VendingMachine, 3},
 			{E.StinkBug, 4},
+			-- {E.PoisonCloud, 4},
 			-- {E.SnailShelled, 4},
 		}
 	},

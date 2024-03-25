@@ -202,6 +202,13 @@ end
 -- 	end
 -- end
 
+function exec_on_canvas(canvas, func)
+	local old_canvas = love.graphics.getCanvas()
+	love.graphics.setCanvas(canvas)
+	func()
+	love.graphics.setCanvas(old_canvas)
+end
+
 function exec_with_color(col, func) 
 	local old_col = {love.graphics.getColor()}
 	love.graphics.setColor(col)

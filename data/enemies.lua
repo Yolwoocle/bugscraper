@@ -20,6 +20,8 @@ local HoneypotAnt = require "data.enemies.honeypot_ant"
 local Spider = require "data.enemies.spider"
 local StinkBug = require "data.enemies.stink_bug"
 
+local PoisonCloud = require "data.enemies.poison_cloud"
+
 local ButtonBigPressed = require "data.enemies.button_big_pressed"
 local ButtonBig = require "data.enemies.button_big"
 local ButtonBigGlass = require "data.enemies.button_big_glass"
@@ -45,6 +47,8 @@ function Enemies:init()
 	self.HoneypotAnt = HoneypotAnt
 	self.Spider = Spider
 	self.StinkBug = StinkBug
+
+	self.PoisonCloud = PoisonCloud
 
 	self.ButtonBigPressed = ButtonBigPressed
 	self.ButtonBig = ButtonBig

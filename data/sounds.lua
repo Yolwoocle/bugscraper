@@ -128,6 +128,8 @@ local sfxnames = {
 	"crush_bug_3", "crush_bug_3.wav",
 	"crush_bug_4", "crush_bug_4.wav",
 
+	"stink_bug_death", "stink_bug_death.wav",
+
 	"jump_short", "jump_short.wav"
 }
 

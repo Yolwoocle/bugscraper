@@ -84,6 +84,7 @@ function InputUser:action_pressed(action)
 	local now = self:action_down(action)
     local result = not last and now
 
+    
     if not result and action_state.can_action_hold_repeat then
         return action_state:is_hold_repeat_pressed()
     end

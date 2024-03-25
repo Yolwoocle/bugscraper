@@ -95,14 +95,9 @@ function Player:init(n, x, y, skin)
 	-- Visuals
 	self.color = ({COL_RED, COL_GREEN, COL_DARK_RED, COL_YELLOW})[self.n]
 	self.color = self.color or COL_RED
+
 	-- Loot & drops
 	self.min_loot_dist = BLOCK_WIDTH*5
-
-	-- Cursor
-	self.cu_x = 0
-	self.cu_y = 0
-	self.mine_timer = 0
-	self.cu_target = nil
 
 	-- Invicibility
 	self.is_invincible = false
@@ -148,7 +143,14 @@ function Player:init(n, x, y, skin)
 	self.combo = 0
 	self.max_combo = 0
 
+	-- Upgrades
 	self.upgrades = {}
+
+	-- Effects
+	self.poison_cloud = nil
+	self.is_in_poison_cloud = false
+	self.poison_timer = 0.0
+	self.poison_damage_time = 1.5
 
 	-- Debug 
 	self.dt = 1
@@ -194,7 +196,8 @@ function Player:update(dt)
 	if Input:action_pressed(self.n, "leave_game") and not game.game_started then
 		game:leave_game(self.n)
 	end
-
+	self.is_in_poison_cloud = false 
+	
 	-- Movement
 	self:update_upgrades(dt)
 	self:move(dt)
@@ -210,6 +213,7 @@ function Player:update(dt)
 	self:animate_walk(dt)
 	self:update_sprite(dt)
 	self:do_particles(dt)
+	self:update_poison(dt)
 
 	if self.life <= 0 then
 		self:kill()
@@ -243,12 +247,20 @@ function Player:update(dt)
 
 	--Visuals
 	self:update_visuals()
+	if self.is_in_poison_cloud then
+		Particles:dust(self.mid_x + random_neighbor(7), self.mid_y + random_neighbor(7), random_sample{color(0x3e8948), color(0x265c42), color(0x193c3e)})
+	end
 end
 
 function Player:draw()
 	if self.is_removed then   return   end
 	if self.is_dead then    return    end
 	
+	if self.poison_timer > 0.1 then
+		local v = 1 - (self.poison_timer / self.poison_damage_time)
+		gfx.setColor(v, 1, v, 1)
+	end
+
 	if self.is_invincible then
 		local v = 1 - (self.iframes / self.max_iframes)
 		local a = 1
@@ -684,8 +696,23 @@ function Player:update_gun_pos(dt, lerpval)
 	self.gun.rot = lerp_angle(self.gun.rot, ang, 0.3)
 end
 
+function Player:update_poison(dt)
+	if self.is_in_poison_cloud and not self.is_invincible then
+		self.poison_timer = self.poison_timer + dt
+		if self.poison_timer >= self.poison_damage_time then
+			self:do_damage(1, self.poison_cloud)
+			self.poison_timer = 0.0	
+		end
+	else
+		self.poison_timer = math.max(0.0, self.poison_timer - dt)	
+	end
+end
+
 function Player:on_collision(col, other)
-	
+	if col.other.is_poisonous then
+		self.is_in_poison_cloud = true
+		self.poison_cloud = col.other
+	end
 end
 
 function Player:on_stomp(enemy)

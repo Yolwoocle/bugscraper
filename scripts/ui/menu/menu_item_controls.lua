@@ -110,17 +110,17 @@ function ControlsMenuItem:keypressed(key, scancode, isrepeat)
 end
 
 function ControlsMenuItem:gamepadpressed(joystick, buttoncode)
-	if Input:get_user(self.player_n) and self.player_n ~= Input:get_joystick_user_n(joystick) then
-		return
-	end
+	-- if Input:get_user(self.player_n) and self.player_n ~= Input:get_joystick_user_n(joystick) then
+	-- 	return
+	-- end
 	
 	self:on_button_pressed(InputButton:new("c", buttoncode))
 end
 
 function ControlsMenuItem:gamepadaxis(joystick, axis, value)
-	if Input:get_user(self.player_n) and self.player_n ~= Input:get_joystick_user_n(joystick) then
-		return
-	end
+	-- if Input:get_user(self.player_n) and self.player_n ~= Input:get_joystick_user_n(joystick) then
+	-- 	return
+	-- end
 
 	local user_n = ternary(Input:get_user(self.player_n) == nil, Input:get_joystick_user_n(joystick), self.player_n)
 

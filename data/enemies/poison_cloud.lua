@@ -3,62 +3,79 @@ local Enemy = require "scripts.actor.enemy"
 local sounds = require "data.sounds"
 local images = require "data.images"
 
-local StinkBug = Enemy:inherit()
+local PoisonCloud = Enemy:inherit()
 	
-function StinkBug:init(x, y, spr)
+function PoisonCloud:init(x, y, spr)
     self:init_fly(x, y)
 end
 
-function StinkBug:init_fly(x, y, spr)
-    self:init_enemy(x,y, spr or images.stink_bug_1)
-    self.name = "fly"
+function PoisonCloud:init_fly(x, y, spr)
+    self:init_enemy(x,y, spr or images.poison_cloud, 16, 16)
+    self.name = "poison_cloud"
     self.is_flying = true
     self.life = 10
     self.follow_player = false
-    --self.speed_y = 0--self.speed * 0.5
+    self.is_stompable = false
+    self.is_pushable = false
+	self.destroy_bullet_on_impact = false
+	self.is_immune_to_bullets = true
+    self.is_killed_on_stomp = false
+	self.counts_as_enemy = false
+    self.center_sprite = true
+    self.do_killed_smoke = false
+    self.play_sfx = false
+
+    self.is_poisonous = true
     
-    self.speed = random_range(7,13) --10
-    self.speed_x = self.speed
-    self.speed_y = self.speed
-
-    self.direction = random_range(0, pi2)
-
+    self.speed = 0
     self.gravity = 0
+
+    self.friction_x = 0.9
     self.friction_y = self.friction_x
 
-    self.anim_frame_len = 0.05
-    self.anim_frames = {images.stink_bug_1, images.stink_bug_1}
-    self.do_vx_flipping = false
+    -- self.anim_frame_len = 0.05
+    -- self.anim_frames = {images.stink_bug_1, images.stink_bug_1}
+    
+    self.damage = 0
+    self.is_knockbackable = false
+
+    self.loot = {}
+    self.lifespan = random_range(6.0, 10.0)
+
+    self.s_t_mult = random_range(1.8, 2.2)
+    self.s_t_offset = random_range(0.0, pi2)
+    self.pos_t_mult = random_range(1.8, 2.2)
+    self.pos_t_offset = random_range(0.0, pi2)
 end
 
-function StinkBug:update(dt)
-    self:update_stink_bug(dt)
+function PoisonCloud:update(dt)
+    self:update_poison_cloud(dt)
 end
 
-function StinkBug:update_stink_bug(dt)
+function PoisonCloud:update_poison_cloud(dt)
     self:update_enemy(dt)
 
-    self.direction = self.direction + random_sample({-1, 1}) * dt * 3
+    self.sx = clamp(self.lifespan*5, 0, 1) * (1 + math.cos(game.t * self.s_t_mult + self.s_t_offset)*0.1)   
+    self.sy = clamp(self.lifespan*5, 0, 1) * (1 + math.sin(game.t * self.s_t_mult + self.s_t_offset)*0.1)
+    self.spr_ox = math.cos(game.t * self.pos_t_mult + self.pos_t_offset) * 3.0   
+    self.spr_oy = math.sin(game.t * self.pos_t_mult + self.pos_t_offset) * 3.0
     
-	self.vx = self.vx + math.cos(self.direction) * self.speed
-	self.vy = self.vy + math.sin(self.direction) * self.speed
-
-    self.rot = self.direction
-end
-
-function StinkBug:draw()
-	self:draw_enemy()
-    love.graphics.line(self.mid_x, self.mid_y, self.mid_x + math.cos(self.direction) * 20, self.mid_y + math.sin(self.direction) * 20)
-end
-
-function StinkBug:after_collision(col, other)
-    -- Pong-like bounce
-    if col.other.is_solid then
-        Particles:smoke(col.touch.x, col.touch.y)
-
-        local new_vx, new_vy = bounce_vector_cardinal(math.cos(self.direction), math.sin(self.direction), col.normal.x, col.normal.y)
-        self.direction = math.atan2(new_vy, new_vx)
+    self.lifespan = math.max(0.0, self.lifespan - dt)
+    if self.lifespan <= 0 then
+        self:kill()
     end
 end
 
-return StinkBug
+function PoisonCloud:draw()
+	exec_on_canvas(game.smoke_canvas, function() 
+            self:draw_enemy()
+        end
+    )
+end
+
+function PoisonCloud:after_collision(col, other)
+    if col.other.is_player then
+    end
+end
+
+return PoisonCloud

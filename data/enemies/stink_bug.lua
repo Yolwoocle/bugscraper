@@ -1,5 +1,6 @@
 require "scripts.util"
 local Enemy = require "scripts.actor.enemy"
+local PoisonCloud = require "data.enemies.poison_cloud"
 local sounds = require "data.sounds"
 local images = require "data.images"
 
@@ -13,7 +14,7 @@ function StinkBug:init_fly(x, y, spr)
     self:init_enemy(x,y, spr or images.stink_bug_1)
     self.name = "stink_cloud"
     self.is_flying = true
-    self.life = 10
+    self.life = 7
     self.follow_player = false
     --self.speed_y = 0--self.speed * 0.5
     
@@ -25,10 +26,14 @@ function StinkBug:init_fly(x, y, spr)
 
     self.gravity = 0
     self.friction_y = self.friction_x
+    self.center_sprite = true
 
     self.anim_frame_len = 0.05
     self.anim_frames = {images.stink_bug_1, images.stink_bug_1}
     self.do_vx_flipping = false
+    
+    self.sound_death = "stink_bug_death"
+    self.sound_stomp = "stink_bug_death"
 end
 
 function StinkBug:update(dt)
@@ -48,7 +53,11 @@ end
 
 function StinkBug:draw()
 	self:draw_enemy()
-    love.graphics.line(self.mid_x, self.mid_y, self.mid_x + math.cos(self.direction) * 20, self.mid_y + math.sin(self.direction) * 20)
+
+    local r = 1/10
+    local ox, oy = ((CANVAS_WIDTH/2) - self.mid_x) * r, ((CANVAS_HEIGHT/2) - self.mid_y) * r
+    love.graphics.line(self.mid_x, self.mid_y, self.mid_x + ox, self.mid_y + oy)
+    love.graphics.circle("fill", self.mid_x + ox, self.mid_y + oy, 3)
 end
 
 function StinkBug:after_collision(col, other)
@@ -58,6 +67,20 @@ function StinkBug:after_collision(col, other)
 
         local new_vx, new_vy = bounce_vector_cardinal(math.cos(self.direction), math.sin(self.direction), col.normal.x, col.normal.y)
         self.direction = math.atan2(new_vy, new_vx)
+    end
+end
+
+function StinkBug:on_death()
+    for i = 1, random_range_int(3, 5) do
+        local spawn_x = clamp(self.mid_x - 8, game.cabin_ax, game.cabin_bx - 16)
+        local spawn_y = clamp(self.mid_y - 8, game.cabin_ay, game.cabin_by - 16)
+        local cloud = PoisonCloud:new(spawn_x, spawn_y)
+
+        local d = random_range(0, pi2)
+        local r = random_range(0, 200)
+        cloud.vx = 0--math.cos(d) * r
+        cloud.vy = 0--math.sin(d) * r
+        game:new_actor(cloud)
     end
 end
 

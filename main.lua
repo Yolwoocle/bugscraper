@@ -13,12 +13,13 @@ function love.load(arg)
 	game = Game:new()
 end
 
-t = 0
-fdt = 1/60 -- fixed frame delta time
-frm = 0
+local t = 0
+local fdt = 1/60 -- fixed frame delta time
+local frm = 0
 local function fixed_update()
 	--update that happens at the fixed fdt interval
 	frm = frm + 1
+	
 	game:update(fdt)
 	-- if frm % 2 == 0 and CAPTURING_GIF then
 	-- 	love.graphics.captureScreenshot("gif"..tostring(gif_n).."_"..tostring(floor(frm/2))..".png")
@@ -130,9 +131,9 @@ function love.gamepadaxis(joystick, axis, value)
 	if game.gamepadaxis then   game:gamepadaxis(joystick, axis, value)   end
 end
 
---function love.quit()
---	game:quit()
---end
+function love.quit()
+	if game.quit then   game:quit()   end
+end
 
 function love.resize(w, h)
 	if not game then     return     end
@@ -147,12 +148,6 @@ end
 function love.focus(f)
 	if game.focus then  game:focus(f)  end
 end
-
--- function love.textinput( text )
--- 	if not game then return end
-
--- 	game:textinput(text)
--- end
 
 print_log_file = love.filesystem.newFile("consolelog.txt")
 print_log_file:open("w")

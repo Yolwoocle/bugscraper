@@ -10,8 +10,9 @@ function Cocoon:init(x, y, player_n)
     self:init_enemy(x,y, images.cocoon, 15, 26)
     self.player_n = player_n or 1
 
-    self.name = "dummy"
+    self.name = "cocoon"
     self.follow_player = false
+    self.counts_as_enemy = false
 
     self.life = 12
     self.damage = 0

@@ -240,6 +240,9 @@ function Game:new_game()
 	self.object_canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
 	self.front_canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
 
+	self.smoke_canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
+	self.smoke_buffer_canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
+
 	-- Music
 	if self.music_player then self.music_player:stop() end
 	self.music_player = MusicPlayer:new()
@@ -385,6 +388,8 @@ end
 testx = 0
 testy = 0
 function Game:draw_game()
+	exec_on_canvas(self.smoke_canvas, love.graphics.clear)
+
 	-- Sky
 	gfx.clear(self.elevator.bg_col)
 	local real_camx, real_camy = (self.cam_x + self.cam_ox), (self.cam_y + self.cam_oy)
@@ -466,8 +471,12 @@ function Game:draw_game()
 	love.graphics.draw(self.front_canvas,  self.shadow_ox, self.shadow_oy)
 	love.graphics.setColor(1,1,1, 1)
 	love.graphics.draw(self.object_canvas, 0, 0)
+	
+	self:draw_smoke_canvas()
+	
+	love.graphics.setColor(1,1,1, 1)
 	love.graphics.translate(-real_camx, -real_camy)
-
+	
 	-- Walls
 	if self.elevator.show_cabin then
 		gfx.draw(images.cabin_walls, self.cabin_x, self.cabin_y)
@@ -526,6 +535,32 @@ function Game:draw_game()
 	-- print_color({.7,.7,.7}, t, CANVAS_WIDTH-get_text_width(t), 12)	
 end
 
+function Game:draw_smoke_canvas()
+	exec_on_canvas(self.smoke_buffer_canvas, function()
+		love.graphics.clear()
+
+		love.graphics.setColor(0.2,0.2,0.2)
+		love.graphics.draw(self.smoke_canvas, 0, 4)
+		love.graphics.setColor(1,1,1)
+		love.graphics.draw(self.smoke_canvas, 0, 0)
+	end)
+	exec_on_canvas(self.smoke_canvas, function()
+		love.graphics.clear()
+		
+		love.graphics.setColor(0,0,0.1)
+		love.graphics.draw(self.smoke_buffer_canvas, -1, 0)
+		love.graphics.draw(self.smoke_buffer_canvas, 1, 0)
+		love.graphics.draw(self.smoke_buffer_canvas, 0, -1)
+		love.graphics.draw(self.smoke_buffer_canvas, 0, 1)
+		love.graphics.setColor(1,1,1)
+		love.graphics.draw(self.smoke_buffer_canvas, 0, 0)
+	end)
+	
+	love.graphics.setColor(1,1,1,0.5)
+	love.graphics.draw(self.smoke_canvas, 0, 0)
+	love.graphics.setColor(1,1,1,1)
+end
+
 function Game:listen_for_player_join(dt)
 	if self.game_started then return end
 
@@ -565,6 +600,7 @@ function Game:listen_for_player_join(dt)
 		end
 	end
 	if Input:action_pressed_global("split_keyboard") and Input:get_number_of_users(INPUT_TYPE_KEYBOARD) == 1 then
+		self:join_game("keyboard_solo")
 		self:join_game("keyboard_solo")
 		Input:split_keyboard()
 	end

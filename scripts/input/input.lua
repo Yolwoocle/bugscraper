@@ -128,11 +128,6 @@ function InputManager:remove_user(n)
         return false
     end
 
-    if user.joystick == nil then
-        print_debug("user.joystick nil")
-    else
-        print_debug(user.joystick:getName())
-    end
     if user.joystick then
         self.joystick_to_user_map[user.joystick] = nil
     end

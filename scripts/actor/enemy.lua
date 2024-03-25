@@ -66,6 +66,7 @@ function Enemy:init_enemy(x,y, img, w,h)
 	self.target = nil
 
 	self.do_vx_flipping = true
+	self.do_killed_smoke = true
 	-- self.sound_stomp = {"enemy_stomp_2", "enemy_stomp_3"}
 	--{"crush_bug_1", "crush_bug_2", "crush_bug_3", "crush_bug_4"}
 end
@@ -173,7 +174,7 @@ function Enemy:on_collision(col, other)
 	end
 	
 	-- Being collider push force
-	if col.other.is_being and self.is_pushable then
+	if col.other.is_being and self.is_pushable and other.is_pushable then
 		self:do_knockback(10, col.other)
 		col.other:do_knockback(10, self)
 	end
@@ -211,7 +212,9 @@ function Enemy:kill(damager, reason)
 	self.death_reason = reason or ""
 
 	game:frameskip(1)
-	Particles:smoke(self.mid_x, self.mid_y)
+	if self.do_killed_smoke then
+		Particles:smoke(self.mid_x, self.mid_y)
+	end
 	if self.play_sfx then
 		if reason == "stomped" then
 			Audio:play_var(self.sound_stomp, 0.3, 1.1)

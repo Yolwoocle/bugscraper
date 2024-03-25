@@ -171,7 +171,8 @@ local function generate_menus()
         { "RESUME", function() game.menu_manager:unpause() end },
         { "RETRY", function() game:new_game() end },
         { "OPTIONS", func_set_menu('options') },
-        { "CREDITS", func_set_menu('credits') },
+        { "CREDITS", func_set_menu('credits' ) },
+        { "CREDITS", func_set_menu('view_waves' ) },
         { "QUIT", quit_game },
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL, draw_elevator_progress)
     if OPERATING_SYSTEM == "Web" then
@@ -455,13 +456,17 @@ local function generate_menus()
         { "OLX", func_url("https://www.youtube.com/@olx1831")},
         -- { "'Galaxy Trip' by Raphaël Marcon / CC BY 4.0", func_url("https://raphytator.itch.io/")},
         { ""},
+        { "<<< Playtesting >>>"},
+        { "Corentin Vaillant", func_url("https://github.com/CorentinVaillant/")},
+        { "hades140701", function() end },
+        { ""},
         { "<<< Special Thanks >>>"},
         { "Gouspourd", func_url("https://gouspourd.itch.io/")},
         { "ArkanYota", func_url("https://github.com/ARKANYOTA")},
         { "Louie Chapman", func_url("https://louiechapm.itch.io/") },
         { "Raphaël Marcon", func_url("https://raphytator.itch.io/") },
-        { "hades140701", function() end },
         -- { "SmellyFishstiks", func_url("https://www.lexaloffle.com/bbs/?uid=42184") },
+        { "Indie Game Lyon", func_url("https://www.indiegamelyon.com/")},
         { "LÖVE Engine", func_url("https://love2d.org/") },
         { ""},
         { "<<< Asset creators >>>"},
@@ -502,6 +507,8 @@ local function generate_menus()
         { "'Bike falling down an escalator' by dundass / CC BY 3.0", func_url("https://freesound.org/people/dundass/sounds/509831/")},
         { "'squishing and squeezing a wet sponge in a bowl' by breadparticles / CC0", func_url("https://freesound.org/people/breadparticles/sounds/575332/#comments")},
         { "'Insect Bug Smash & Crush' by EminYILDIRIM / CC BY 4.0", func_url("https://freesound.org/people/EminYILDIRIM/sounds/570767/")},
+        { "'Inhaler  Puff 170427_1464' by megashroom / CC0", func_url("https://freesound.org/s/390174/")},
+        { "'Poof/Puff' by JustInvoke / CC BY 4.0", func_url("https://freesound.org/s/446124/")},
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
 
     local items = {

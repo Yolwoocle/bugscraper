@@ -1,5 +1,5 @@
 name = "bugscraper"
-default_targets = ["win32", "win64", "appimage"]
+default_targets = ["win32", "win64", "lovejs", "appimage"]
 build_directory = "bugscraper-export"
 
 love_files = [

@@ -59,9 +59,9 @@ function Actor:init_actor(x, y, w, h, spr, args)
 
 	self.spr_x = 0
 	self.spr_y = 0
-
 	self.spr_ox = 0
 	self.spr_oy = 0
+	self.center_sprite = false
 
 	self.anim_frame_len = 0.2
 	self.anim_t = random_range(0, self.anim_frame_len)
@@ -80,7 +80,11 @@ end
 
 function Actor:update_sprite_offset()
 	self.spr_centering_ox = floor((self.spr_w - self.w) / 2)
-	self.spr_centering_oy = self.spr_h - self.h
+	if self.center_sprite then
+		self.spr_centering_oy = floor((self.spr_h - self.h) / 2)
+	else
+		self.spr_centering_oy = self.spr_h - self.h
+	end
 end
 
 function Actor:set_size(w, h)
@@ -113,6 +117,7 @@ function Actor:update_actor(dt)
 	if self.is_removed then   return   end
 	self:do_gravity(dt)
 	self:update_effects(dt)
+	self:update_sprite_offset()
 
 	-- apply friction
 	self.vx = self.vx * self.friction_x

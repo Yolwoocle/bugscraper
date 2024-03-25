@@ -87,6 +87,8 @@ local img_names = {
 	mushroom_ant1 =   "actors/enemies/mushroom_ant1",
 	mushroom_ant2 =   "actors/enemies/mushroom_ant2",
 
+	poison_cloud =    "actors/enemies/poison_cloud_1",
+
 	big_red_button_crack0 =  "actors/enemies/big_red_button_crack0",
 	big_red_button_crack1 =  "actors/enemies/big_red_button_crack1",
 	big_red_button_crack2 =  "actors/enemies/big_red_button_crack2",
