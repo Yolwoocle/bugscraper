@@ -76,10 +76,14 @@ function Game:init()
 	canvas = gfx.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
 
 	-- Load fonts
-	FONT_REGULAR = gfx.newFont("fonts/HopeGold.bcfnt", 16)
-	FONT_7SEG = gfx.newImageFont("fonts/7seg_font.t3x", " 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
-	FONT_MINI = gfx.newFont("fonts/Kenney Mini.bcfnt", 8)
-	FONT_PAINT = gfx.newFont("fonts/NicoPaint-Regular.bcfnt", 16)
+	-- local fontformat = "bcfnt"
+	-- local imgformat = "t3x"
+	local fontformat = "ttf"
+	local imgformat = "png"
+	FONT_REGULAR = gfx.newFont("fonts/HopeGold."..fontformat, 16)
+	FONT_7SEG = gfx.newImageFont("fonts/7seg_font."..imgformat, " 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+	FONT_MINI = gfx.newFont("fonts/Kenney Mini."..fontformat, 8)
+	FONT_PAINT = gfx.newFont("fonts/NicoPaint-Regular."..fontformat, 16)
 	gfx.setFont(FONT_REGULAR)
 	
 	-- Audio ===> Moved to OptionsManager

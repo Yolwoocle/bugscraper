@@ -1,13 +1,35 @@
 require "scripts.util"
 
 local function new_source(path, type, args)
-	local source = love.audio.newSource("sfx/"..path, type)
-	if not args then   return source   end
+	local t = {
+		play = function (...)end,
+		pause = function (...)end,
+		seek = function (...)end,
+		stop = function (...)end,
+		tell = function (...)end,
+		setVolume = function (...)end,
+		setPosition = function (...)end,
+		setPitch = function (...)end,
+		setLooping = function (...)end,
+		getPitch = function (...) return 1 end,
+		getVolume = function (...)return 1 end,
+		isLooping = function (...)return false end,
+		isPlaying = function (...)return false end,
+		setFilter = function (...)end,
+		rewind = function (...)end,
+		getPosition = function (...) return 0 end,
+		getDuration = function (...)return 0 end,
+		clone = function (self, ...) return copy_table(self) end,
+		isStopped = function (...) return true end,
+	}
+	return t
+	-- local source = love.audio.newSource("sfx/"..path, type)
+	-- if not args then   return source   end
 
-	if args.looping then
-		source:setLooping(true)
-	end
-	return source
+	-- if args.looping then
+	-- 	source:setLooping(true)
+	-- end
+	-- return source
 end
 
 local sounds = {}
@@ -183,9 +205,9 @@ sounds.music_w1_paused =      new_source("music/music_w1_paused.mp3",      "stat
 for k, snd in pairs(sounds) do
 	sounds[k] = {
 		snd,
-		pitch = snd:getPitch(),
-		volume = snd:getVolume(),
-		is_looping = snd:isLooping(),
+		pitch = 0,-- snd:getPitch(),
+		volume = 1,--snd:getVolume(),
+		is_looping = false,--snd:isLooping(),
 	}
 end
 

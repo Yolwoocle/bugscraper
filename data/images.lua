@@ -189,8 +189,9 @@ local img_names = {
 	upgrade_coffee = "upgrades/upgrade_coffee"
 	
 }
+local format = ".png"
 for id, path in pairs(img_names) do
-	images[id] = load_image(path..".t3x")
+	images[id] = load_image(path..format)
 end
 
 images.button_fragments = {
@@ -202,16 +203,16 @@ images.button_fragments = {
 }
 
 for key_constant, button_image_name in pairs(key_constant_to_image) do
-	images[button_image_name] = load_image("buttons/keyboard/"..button_image_name..".t3x")
+	images[button_image_name] = load_image("buttons/keyboard/"..button_image_name..format)
 end
 
 for _, brand in pairs(CONTROLLER_BRANDS) do
 	for button, __ in pairs(controller_buttons) do
 		local name = string.format("btn_c_%s_%s", brand, button)
-		local path = string.format("buttons/controller/%s/%s.t3x", brand, name)
+		local path = string.format("buttons/controller/%s/%s"..format, brand, name)
 		images[name] = load_image(path)
 	end
 end
-images.btn_c_unknown = load_image("buttons/controller/btn_c_unknown.t3x")
+images.btn_c_unknown = load_image("buttons/controller/btn_c_unknown"..format)
 
 return images
