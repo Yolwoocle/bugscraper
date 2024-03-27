@@ -141,6 +141,10 @@ function Game:new_game()
 	-- Players
 	self.max_number_of_players = MAX_NUMBER_OF_PLAYERS
 	self.number_of_players = 0
+	self.waves_until_respawn = {}
+	for i = 1, MAX_NUMBER_OF_PLAYERS do 
+		self.waves_until_respawn[i] = -1
+	end
 
 	self.elevator = Elevator:new(self)
 
@@ -747,6 +751,11 @@ function Game:draw_debug()
 	for _, joy in pairs(love.joystick.getJoysticks()) do
 		joystick_str = concat(joystick_str, "{", string.sub(joy:getName(),1,4), "...}, ")
 	end
+	
+	local wave_resp_str = "waves_until_respawn "	
+	for i = 1, MAX_NUMBER_OF_PLAYERS do
+		wave_resp_str = concat(wave_resp_str, "{", i, ":", self.waves_until_respawn[i], "}, ")
+	end
 
 	
 	-- Print debug info
@@ -768,6 +777,7 @@ function Game:draw_debug()
 		users_str,
 		joystick_user_str,
 		joystick_str,
+		wave_resp_str, 
 		"",
 	}
 
@@ -851,6 +861,7 @@ end
 
 function Game:on_player_death(player)
 	self.players[player.n] = nil
+	self.waves_until_respawn[player.n] = 3
 
 	if self:get_number_of_alive_players() <= 0 then
 		-- Save stats
@@ -987,6 +998,7 @@ function Game:new_player(player_n, x, y)
 
 	local player = Player:new(player_n, x ,y, skins[player_n])
 	self.players[player_n] = player
+	self.waves_until_respawn[player_n] = -1
 	self:new_actor(player)
 end
 

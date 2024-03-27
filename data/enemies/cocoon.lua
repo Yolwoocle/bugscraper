@@ -12,7 +12,7 @@ function Cocoon:init(x, y, player_n)
 
     self.name = "cocoon"
     self.follow_player = false
-    self.counts_as_enemy = false
+    self.counts_as_enemy = true
 
     self.life = 12
     self.damage = 0

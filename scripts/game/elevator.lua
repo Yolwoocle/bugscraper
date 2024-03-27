@@ -272,9 +272,15 @@ function Elevator:construct_new_wave(wave_n)
 		})
 	end
 
+	for i = 1, MAX_NUMBER_OF_PLAYERS do
+		if self.game.waves_until_respawn[i] ~= -1 then
+			self.game.waves_until_respawn[i] = math.max(0, self.game.waves_until_respawn[i] - 1)
+		end
+	end
+
 	if game:get_number_of_alive_players() < Input:get_number_of_users() then
 		for i = 1, MAX_NUMBER_OF_PLAYERS do
-			if game.players[i] == nil and Input:get_user(i) ~= nil then
+			if self.game.waves_until_respawn[i] ~= -1 and self.game.waves_until_respawn[i] == 0 then
 				table.insert(output, {
 					enemy_class = Enemies.Cocoon,
 					extra_info = i,
