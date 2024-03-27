@@ -215,7 +215,7 @@ function Player:update(dt)
 	self:do_particles(dt)
 	self:update_poison(dt)
 
-	if self.life <= 0 then
+	if self.life <= 0 and not self.is_killed then
 		self:kill()
 	end
 	
@@ -754,7 +754,6 @@ function Player:do_damage(n, source)
 	self.iframes = self.max_iframes
 
 	if self.life <= 0 then
-		-- coucou OLX
 		self.life = 0 
 		self:kill()
 	end
