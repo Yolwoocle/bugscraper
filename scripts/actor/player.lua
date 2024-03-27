@@ -754,12 +754,10 @@ function Player:do_damage(n, source)
 	self.iframes = self.max_iframes
 
 	if self.life <= 0 then
-		self:die()
+		-- coucou OLX
+		self.life = 0 
+		self:kill()
 	end
-end
-
-function Player:die()
-	self.life = 0
 end
 
 function Player:on_hit_bullet(bul, col)
