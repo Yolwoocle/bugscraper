@@ -12,6 +12,7 @@ local function removeme_set_image_col(im, name)
 end
 
 local function load_image(name)
+	print("loading "..tostring(name))
 	local im = love.graphics.newImage("images/"..name)
 	im:setFilter("nearest", "nearest")
 	removeme_set_image_col(im, name)
