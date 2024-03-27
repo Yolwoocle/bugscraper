@@ -172,7 +172,7 @@ local function generate_menus()
         { "RETRY", function() game:new_game() end },
         { "OPTIONS", func_set_menu('options') },
         { "CREDITS", func_set_menu('credits' ) },
-        { "CREDITS", func_set_menu('view_waves' ) },
+        -- { "CREDITS", func_set_menu('view_waves' ) },
         { "QUIT", quit_game },
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL, draw_elevator_progress)
     if OPERATING_SYSTEM == "Web" then

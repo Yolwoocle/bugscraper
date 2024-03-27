@@ -601,7 +601,6 @@ function Game:listen_for_player_join(dt)
 	end
 	if Input:action_pressed_global("split_keyboard") and Input:get_number_of_users(INPUT_TYPE_KEYBOARD) == 1 then
 		self:join_game("keyboard_solo")
-		self:join_game("keyboard_solo")
 		Input:split_keyboard()
 	end
 end
@@ -1063,20 +1062,34 @@ function Game:keypressed(key, scancode, isrepeat)
 	elseif key == "f2" then
 		self.colview_mode = not self.colview_mode
 	elseif key == "f1" then
-		local all_guns = {
-			guns.Machinegun,
-			guns.Triple,
-			guns.Burst,
-			guns.Shotgun,
-			guns.Minigun,
-			guns.Ring,
-			guns.MushroomCannon,
-			guns.unlootable.DebugGun,
-		}
-		
-		igun = mod_plus_1(igun + 1, #all_guns)
-		self.players[1]:equip_gun(all_guns[igun]:new())
+		-- REMOVEME FOR RELEASE
+		local p = nil
+		for i, ply in pairs(self.players) do
+			if ply ~= nil then
+				p = ply
+				break
+			end
+		end
+
+		if p ~= nil then
+			p:do_damage(1, nil)
+			p.iframes = 0.1
+		end
 	end
+		-- local all_guns = {
+		-- 	guns.Machinegun,
+		-- 	guns.Triple,
+		-- 	guns.Burst,
+		-- 	guns.Shotgun,
+		-- 	guns.Minigun,
+		-- 	guns.Ring,
+		-- 	guns.MushroomCannon,
+		-- 	guns.unlootable.DebugGun,
+		-- }
+		
+		-- igun = mod_plus_1(igun + 1, #all_guns)
+		-- self.players[1]:equip_gun(all_guns[igun]:new())
+	-- end
 
 	if self.menu_manager then
 		self.menu_manager:keypressed(key, scancode, isrepeat)
