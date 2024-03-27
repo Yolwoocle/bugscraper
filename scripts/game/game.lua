@@ -56,7 +56,6 @@ function Game:init()
 		})
 		SCREEN_WIDTH, SCREEN_HEIGHT = gfx.getDimensions()
 		love.window.setTitle("Bugscraper")
-		love.window.setIcon(love.image.newImageData("icon.png"))
 	else
 		-- Init window
 		love.window.setMode(0, 0, {
@@ -68,7 +67,6 @@ function Game:init()
 		})
 		SCREEN_WIDTH, SCREEN_HEIGHT = gfx.getDimensions()
 		love.window.setTitle("Bugscraper")
-		love.window.setIcon(love.image.newImageData("icon.png"))
 	end
 	gfx.setDefaultFilter("nearest", "nearest")
 	love.graphics.setLineStyle("rough")
@@ -78,10 +76,10 @@ function Game:init()
 	canvas = gfx.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
 
 	-- Load fonts
-	FONT_REGULAR = gfx.newFont("fonts/HopeGold.ttf", 16)
-	FONT_7SEG = gfx.newImageFont("fonts/7seg_font.png", " 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
-	FONT_MINI = gfx.newFont("fonts/Kenney Mini.ttf", 8)
-	FONT_PAINT = gfx.newFont("fonts/NicoPaint-Regular.ttf", 16)
+	FONT_REGULAR = gfx.newFont("fonts/HopeGold.bcfnt", 16)
+	FONT_7SEG = gfx.newImageFont("fonts/7seg_font.t3x", " 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+	FONT_MINI = gfx.newFont("fonts/Kenney Mini.bcfnt", 8)
+	FONT_PAINT = gfx.newFont("fonts/NicoPaint-Regular.bcfnt", 16)
 	gfx.setFont(FONT_REGULAR)
 	
 	-- Audio ===> Moved to OptionsManager
