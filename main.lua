@@ -4,6 +4,8 @@ require "scripts.util"
 
 -- LÖVE uses Luajit 2.1 which is based on Lua 5.1 but has some additions (like goto)
 
+love.graphics.newShader = function(...) end
+love.graphics.setShader = function(...) end
 
 game = nil
 
