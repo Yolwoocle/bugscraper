@@ -300,7 +300,6 @@ local function generate_menus()
         
         { "PAUSE ON LOST FOCUS", function(self)
             Options:toggle_pause_on_unfocus()
-            love.mouse.setVisible(Options:get("pause_on_unfocus"))
         end,
         function(self)
             self.value = Options:get("pause_on_unfocus")
