@@ -521,40 +521,39 @@ function InputManager:load_controls()
 		if not file_exists then
 			print(filename, "does not exist, so creating it")
 			self:update_controls_file(profile_id)
-            goto continue
-		end
-
-		local file = love.filesystem.newFile(filename)
-		file:open("r")
-
-        local new_mappings = copy_table(profile:get_mappings())
-
-		-- Read file contents
-		local text, size = file:read()
-		if not text then    print(concat("Error reading ",filename,": ",size))    end
-		local lines = split_str(text, "\n") -- Split lines
-	
-		for iline = 1, #lines do
-			local line = lines[iline]
-			local tab = split_str(line, ":")
-			local action_name = tab[1]
-			local keycodes = tab[2] or ""
-            local keycode_table = split_str(keycodes, " ")
-
-            local new_buttons = {}
-            for _, keycode in pairs(keycode_table) do
-                local button = self:keycode_to_button(keycode)
-                if button ~= nil then
-                    table.insert(new_buttons, button)
+        else
+            local file = love.filesystem.newFile(filename)
+            file:open("r")
+    
+            local new_mappings = copy_table(profile:get_mappings())
+    
+            -- Read file contents
+            local text, size = file:read()
+            if not text then    print(concat("Error reading ",filename,": ",size))    end
+            local lines = split_str(text, "\n") -- Split lines
+        
+            for iline = 1, #lines do
+                local line = lines[iline]
+                local tab = split_str(line, ":")
+                local action_name = tab[1]
+                local keycodes = tab[2] or ""
+                local keycode_table = split_str(keycodes, " ")
+    
+                local new_buttons = {}
+                for _, keycode in pairs(keycode_table) do
+                    local button = self:keycode_to_button(keycode)
+                    if button ~= nil then
+                        table.insert(new_buttons, button)
+                    end
                 end
+                new_mappings[action_name] = new_buttons
             end
-            new_mappings[action_name] = new_buttons
+    
+            file:close()
+    
+            self.input_profiles[profile_id]:set_mappings(new_mappings)
+
 		end
-
-		file:close()
-
-        self.input_profiles[profile_id]:set_mappings(new_mappings)
-        ::continue::
 	end
 end
 
