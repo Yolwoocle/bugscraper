@@ -12,49 +12,49 @@ end
 
 local sounds = {}
 
---music_level_1 = new_source("music/level_1.mp3", "stream", {looping = true})
+--music_level_1 = new_source("music/level_1.ogg", "stream", {looping = true})
 local sfxnames = {
-	"jump", "jump1.wav",
-	"shot1", "shot1.wav", -- these are pico 8 sfx from birds with guns
-	"shot2", "shot2.wav",
-	"shot3", "shot3.wav",
-	"gunshot1", "gunshot1.wav",
-	"gunshot_machinegun", "gunshot_machinegun.wav",
-	"gunshot_shotgun", "gunshot_shotgun.wav",
-	"gunshot_ring_1", "gunshot_ring_1.wav",
-	"gunshot_ring_2", "gunshot_ring_2.wav",
-	"gunshot_ring_3", "gunshot_ring_3.wav",
-	"pop_ring", "pop_ring.wav",
+	"jump", "jump1.ogg",
+	"shot1", "shot1.ogg", -- these are pico 8 sfx from birds with guns
+	"shot2", "shot2.ogg",
+	"shot3", "shot3.ogg",
+	"gunshot1", "gunshot1.ogg",
+	"gunshot_machinegun", "gunshot_machinegun.ogg",
+	"gunshot_shotgun", "gunshot_shotgun.ogg",
+	"gunshot_ring_1", "gunshot_ring_1.ogg",
+	"gunshot_ring_2", "gunshot_ring_2.ogg",
+	"gunshot_ring_3", "gunshot_ring_3.ogg",
+	"pop_ring", "pop_ring.ogg",
 
-	"hurt",  "hurt.wav",
-	"land",  "land.wav",
-	"item_collect", "item_collect.wav",
+	"hurt",  "hurt.ogg",
+	"land",  "land.ogg",
+	"item_collect", "item_collect.ogg",
 
-	"menu_hover_old",  "menu_hover.wav",
+	"menu_hover_old",  "menu_hover.ogg",
 	"menu_hover",      "menu_hover_5.ogg",
-	"menu_select_old", "menu_select.wav",
+	"menu_select_old", "menu_select.ogg",
 	"menu_select",     "menu_select_2.ogg",
-	"menu_pause",      "menu_pause.wav",
-	"menu_unpause",    "menu_unpause.wav",
+	"menu_pause",      "menu_pause.ogg",
+	"menu_unpause",    "menu_unpause.ogg",
 
-	"wall_slide", "wall_slide.wav",
-	"game_over_1", "game_over_1.wav",
-	"game_over_2", "game_over_2.wav",
+	"wall_slide", "wall_slide.ogg",
+	"game_over_1", "game_over_1.ogg",
+	"game_over_2", "game_over_2.ogg",
 
-	"explosion", "explosion.wav",
+	"explosion", "explosion.ogg",
 
-	"sliding_wall_metal", "sliding_wall_metal.wav",
+	"sliding_wall_metal", "sliding_wall_metal.ogg",
 
-	"footstep00", "footstep00.wav", -- CC0 https://kenney.nl/
-	"footstep01", "footstep01.wav",
-	"footstep02", "footstep02.wav",
-	"footstep03", "footstep03.wav",
-	"footstep04", "footstep04.wav",
-	"footstep05", "footstep05.wav",
-	"footstep06", "footstep06.wav",
-	"footstep07", "footstep07.wav",
-	"footstep08", "footstep08.wav",
-	"footstep09", "footstep09.wav",
+	"footstep00", "footstep00.ogg", -- CC0 https://kenney.nl/
+	"footstep01", "footstep01.ogg",
+	"footstep02", "footstep02.ogg",
+	"footstep03", "footstep03.ogg",
+	"footstep04", "footstep04.ogg",
+	"footstep05", "footstep05.ogg",
+	"footstep06", "footstep06.ogg",
+	"footstep07", "footstep07.ogg",
+	"footstep08", "footstep08.ogg",
+	"footstep09", "footstep09.ogg",
 
 	"metalfootstep_00", "footstep/metalfootstep_000.ogg", -- CC0 https://kenney.nl/
 	"metalfootstep_01", "footstep/metalfootstep_001.ogg",
@@ -74,63 +74,63 @@ local sfxnames = {
 	"impactglass_light_003", "impactglass_light_003.ogg",
 	"impactglass_light_004", "impactglass_light_004.ogg",
 
-	"glass_fracture", "glass_fracture.wav", -- CC BY https://freesound.org/people/cmusounddesign/sounds/85168/
-	"glass_break", "glass_break.wav", 
+	"glass_fracture", "glass_fracture.ogg", -- CC BY https://freesound.org/people/cmusounddesign/sounds/85168/
+	"glass_break", "glass_break.ogg", 
 	-- CC0  window shatter https://freesound.org/people/avrahamy/sounds/141563/
 	-- + combined & deeper CCBY   glass shatter https://freesound.org/people/cmusounddesign/sounds/85168/
 	-- + combined & fade out CCBY sprinkle texture https://freesound.org/people/el-bee/sounds/636238/
 
-	"button_press", "button_press.wav",
+	"button_press", "button_press.ogg",
 	-- CCBY RICHERlandTV Buzz https://freesound.org/people/RICHERlandTV/sounds/216090/
 	-- CCBY keypress slowed down https://freesound.org/people/MattRuthSound/sounds/561661/
 	-- CC0 Impact Sound https://kenney.nl/
 
-	"cloth1", "cloth1.wav", -- CC0 Kenney
-	"cloth2", "cloth2.wav",
-	"cloth3", "cloth3.wav",
-	"cloth_drop", "cloth_drop.wav", -- CC0 Kenney + CC0 https://freesound.org/people/RossBell/sounds/389442/
+	"cloth1", "cloth1.ogg", -- CC0 Kenney
+	"cloth2", "cloth2.ogg",
+	"cloth3", "cloth3.ogg",
+	"cloth_drop", "cloth_drop.ogg", -- CC0 Kenney + CC0 https://freesound.org/people/RossBell/sounds/389442/
 
-	"larva_damage1", "larva_damage1.wav",
-	"larva_damage2", "larva_damage2.wav",
-	"larva_damage3", "larva_damage3.wav",
-	"larva_death", "larva_death.wav",
+	"larva_damage1", "larva_damage1.ogg",
+	"larva_damage2", "larva_damage2.ogg",
+	"larva_damage3", "larva_damage3.ogg",
+	"larva_death", "larva_death.ogg",
 
-	"fly_buzz", "fly_buzz.wav",
+	"fly_buzz", "fly_buzz.ogg",
 
-	"elevator_bg", "elevator_bg.wav",
-	"elev_door_open", "elev_door_open.wav",
-	"elev_door_close", "elev_door_close.wav",
-	"elev_burning", "elev_burning.wav",
-	"elev_ding", "elev_ding.wav",
+	"elevator_bg", "elevator_bg.ogg",
+	"elev_door_open", "elev_door_open.ogg",
+	"elev_door_close", "elev_door_close.ogg",
+	"elev_burning", "elev_burning.ogg",
+	"elev_ding", "elev_ding.ogg",
 
-	"gravel_footstep_1", "gravel_footstep_1.wav",
-	"gravel_footstep_2", "gravel_footstep_2.wav",
-	"gravel_footstep_3", "gravel_footstep_3.wav",
-	"gravel_footstep_4", "gravel_footstep_4.wav",
-	"gravel_footstep_5", "gravel_footstep_5.wav",
-	"gravel_footstep_6", "gravel_footstep_6.wav",
+	"gravel_footstep_1", "gravel_footstep_1.ogg",
+	"gravel_footstep_2", "gravel_footstep_2.ogg",
+	"gravel_footstep_3", "gravel_footstep_3.ogg",
+	"gravel_footstep_4", "gravel_footstep_4.ogg",
+	"gravel_footstep_5", "gravel_footstep_5.ogg",
+	"gravel_footstep_6", "gravel_footstep_6.ogg",
 
-	"elev_crash", "elev_crash.wav",
-	"elev_siren", "elev_siren.wav",
-	"mushroom_ant_pop", "mushroom_ant_pop.wav",
+	"elev_crash", "elev_crash.ogg",
+	"elev_siren", "elev_siren.ogg",
+	"mushroom_ant_pop", "mushroom_ant_pop.ogg",
 
-	"enemy_damage", "enemy_damage.wav",
-	"enemy_death_1", "enemy_death_1.wav",
-	"enemy_death_2", "enemy_death_2.wav",
-	"enemy_stomp_2", "enemy_stomp_2.wav",
-	"enemy_stomp_3", "enemy_stomp_3.wav",
+	"enemy_damage", "enemy_damage.ogg",
+	"enemy_death_1", "enemy_death_1.ogg",
+	"enemy_death_2", "enemy_death_2.ogg",
+	"enemy_stomp_2", "enemy_stomp_2.ogg",
+	"enemy_stomp_3", "enemy_stomp_3.ogg",
 
-	"snail_shell_crack", "snail_shell_crack.wav",
-	"triple_pop", "triple_pop.wav",
+	"snail_shell_crack", "snail_shell_crack.ogg",
+	"triple_pop", "triple_pop.ogg",
 
-	"crush_bug_1", "crush_bug_1.wav",
-	"crush_bug_2", "crush_bug_2.wav",
-	"crush_bug_3", "crush_bug_3.wav",
-	"crush_bug_4", "crush_bug_4.wav",
+	"crush_bug_1", "crush_bug_1.ogg",
+	"crush_bug_2", "crush_bug_2.ogg",
+	"crush_bug_3", "crush_bug_3.ogg",
+	"crush_bug_4", "crush_bug_4.ogg",
 
-	"stink_bug_death", "stink_bug_death.wav",
+	"stink_bug_death", "stink_bug_death.ogg",
 
-	"jump_short", "jump_short.wav"
+	"jump_short", "jump_short.ogg"
 }
 
 for i=1, #sfxnames, 2 do    sounds[sfxnames[i]] = new_source(sfxnames[i+1], "static")    end
@@ -157,11 +157,11 @@ for i=0,9 do
 	sounds["footstep0"..tostring(i)]:setVolume(0.2)
 end
 
--- sounds.music_galaxy_trip = new_source("music/v2_teelopes.mp3", "static", {looping = true})
-sounds.music_intro_unpaused = new_source("music/music_intro_unpaused.wav", "static", {looping = true})
-sounds.music_intro_paused   = new_source("music/music_intro_paused.wav",   "static", {looping = true})
-sounds.music_w1_unpaused =    new_source("music/music_w1_unpaused.wav",    "static", {looping = true})
-sounds.music_w1_paused =      new_source("music/music_w1_paused.mp3",      "static", {looping = true})
+-- sounds.music_galaxy_trip = new_source("music/v2_teelopes.ogg", "static", {looping = true})
+sounds.music_intro_unpaused = new_source("music/music_intro_unpaused.ogg", "static", {looping = true})
+sounds.music_intro_paused   = new_source("music/music_intro_paused.ogg",   "static", {looping = true})
+sounds.music_w1_unpaused =    new_source("music/music_w1_unpaused.ogg",    "static", {looping = true})
+sounds.music_w1_paused =      new_source("music/music_w1_paused.ogg",      "static", {looping = true})
 
 -- Static sounds are sounds that are played without the use of the audio:play function
 -- local static_sfx_names = {
