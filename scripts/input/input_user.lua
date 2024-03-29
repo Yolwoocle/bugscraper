@@ -14,6 +14,7 @@ function InputUser:init(n, input_profile_id, is_global)
     self.is_global = is_global
     self.input_profile_id = input_profile_id or "empty"
 
+    self.action_states = {}
     self:init_action_states()
 
     self.joystick = nil
@@ -67,6 +68,9 @@ end
 function InputUser:action_down(action)
     local buttons = self:get_input_profile():get_mappings()[action]
 	if not buttons then   error(concat("Attempt to access button '",concat(action),"'"))   end
+    if self.action_states[action].is_handled then
+        return false
+    end
 
 	for _, button in pairs(buttons) do
 		if self:is_button_down(button) then
@@ -76,6 +80,10 @@ function InputUser:action_down(action)
 	return false
 end
 
+function InputUser:mark_action_as_handled(action)
+    self.action_states[action]:mark_as_handled()
+end
+
 function InputUser:action_pressed(action)
     -- This makes sure that the button state table assigns "true" to buttons
 	-- that have been just pressed 
@@ -83,7 +91,6 @@ function InputUser:action_pressed(action)
 	local last = action_state.last_state
 	local now = self:action_down(action)
     local result = not last and now
-
     
     if not result and action_state.can_action_hold_repeat then
         return action_state:is_hold_repeat_pressed()

@@ -17,6 +17,7 @@ function InputManager:init()
     -- active = is the buffer active? 
     -- value = what value should standby_mode take?
 	self.buffer_standby_mode = {active = false, value = false} 
+    self.buffer_unsplit_keyboard = false
 
 	self.default_mapping_empty =         self:process_input_map(RAW_INPUT_MAP_DEFAULT_EMPTY)
 	self.default_mapping =               self:process_input_map(RAW_INPUT_MAP_DEFAULT_GLOBAL)
@@ -89,6 +90,7 @@ function InputManager:update(dt)
     for i, user in pairs(self.users) do
         user:update(dt)
     end
+    self:actually_unsplit_keyboard()
 end
 
 function InputManager:update_last_input_state(dt)
@@ -324,6 +326,12 @@ function InputManager:add_action_button(profile_id, action, new_button)
 	self:update_controls_file(profile_id)
 end
 
+function InputManager:mark_action_as_handled(player_n, action)
+    local user = self:get_user(player_n)
+    if user == nil then return end
+    self:get_user(player_n):mark_action_as_handled(action)
+end
+
 function InputManager:reset_controls(profile_id, input_mode)
     -- fixme assign default controls to input scheme and load them in this function
 	local profile = self:get_input_profile(profile_id)
@@ -395,7 +403,13 @@ function InputManager:split_keyboard()
     self:assign_input_profile(p2, "keyboard_split_p2")
 end
 
+-- This is so stupid. Too bad.
 function InputManager:unsplit_keyboard()
+    self.buffer_unsplit_keyboard = true
+end
+
+function InputManager:actually_unsplit_keyboard()
+    if not self.buffer_unsplit_keyboard then return end
     for i=1, MAX_NUMBER_OF_PLAYERS do
         local user = self.users[i]
         if user and user.primary_input_type == INPUT_TYPE_KEYBOARD then
@@ -535,40 +549,38 @@ function InputManager:load_controls()
 		if not file_exists then
 			print(filename, "does not exist, so creating it")
 			self:update_controls_file(profile_id)
-            goto continue
-		end
-
-		local file = love.filesystem.newFile(filename)
-		file:open("r")
-
-        local new_mappings = copy_table(profile:get_mappings())
-
-		-- Read file contents
-		local text, size = file:read()
-		if not text then    print(concat("Error reading ",filename,": ",size))    end
-		local lines = split_str(text, "\n") -- Split lines
-	
-		for iline = 1, #lines do
-			local line = lines[iline]
-			local tab = split_str(line, ":")
-			local action_name = tab[1]
-			local keycodes = tab[2] or ""
-            local keycode_table = split_str(keycodes, " ")
-
-            local new_buttons = {}
-            for _, keycode in pairs(keycode_table) do
-                local button = self:keycode_to_button(keycode)
-                if button ~= nil then
-                    table.insert(new_buttons, button)
+        else
+            local file = love.filesystem.newFile(filename)
+            file:open("r")
+    
+            local new_mappings = copy_table(profile:get_mappings())
+    
+            -- Read file contents
+            local text, size = file:read()
+            if not text then    print(concat("Error reading ",filename,": ",size))    end
+            local lines = split_str(text, "\n") -- Split lines
+        
+            for iline = 1, #lines do
+                local line = lines[iline]
+                local tab = split_str(line, ":")
+                local action_name = tab[1]
+                local keycodes = tab[2] or ""
+                local keycode_table = split_str(keycodes, " ")
+    
+                local new_buttons = {}
+                for _, keycode in pairs(keycode_table) do
+                    local button = self:keycode_to_button(keycode)
+                    if button ~= nil then
+                        table.insert(new_buttons, button)
+                    end
                 end
+                new_mappings[action_name] = new_buttons
             end
-            new_mappings[action_name] = new_buttons
+    
+            file:close()
+    
+            self.input_profiles[profile_id]:set_mappings(new_mappings)
 		end
-
-		file:close()
-
-        self.input_profiles[profile_id]:set_mappings(new_mappings)
-        ::continue::
 	end
 end
 

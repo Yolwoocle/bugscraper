@@ -107,8 +107,6 @@ function Game:update_fullscreen(is_fullscreen)
 	if not is_fullscreen then
 		local window_w = Options:get("windowed_width")
 		local window_h = Options:get("windowed_height")
-		print_debug("win w ", window_w)
-		print_debug("win h ", window_h)
 		love.window.setMode(window_w, window_h, self:get_window_flags())
 	end
 
@@ -581,19 +579,6 @@ end
 
 function Game:listen_for_player_join(dt)
 	if self.game_started then return end
-
-	-- if Input:action_pressed_any_player("debug_1") then
-	-- 	self:leave_game(1)
-	-- end
-	-- if Input:action_pressed_any_player("debug_2") then
-	-- 	self:leave_game(2)
-	-- end
-	-- if Input:action_pressed_any_player("debug_3") then
-	-- 	self:leave_game(3)
-	-- end
-	-- if Input:action_pressed_any_player("debug_4") then
-	-- 	self:leave_game(4)
-	-- end
 
 	if Input:action_pressed_global("jump") then 
 		local global_user = Input:get_global_user()

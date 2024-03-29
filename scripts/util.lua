@@ -446,32 +446,15 @@ function print_debug(...)
 	print(concat("[DEBUG] ", concatsep({...}, " ")))
 end
 
-function table_to_str(tab)
-	if type(tab) ~= "table" then
-		return tostring(tab)
-	end
-	
-	local s = ""
-	for k,v in pairs(tab) do
-		if type(k) == "number" then
-			s = s..table_to_str(v)..", "
-		else
-			s = s..tostring(k).." = "..table_to_str(v)..", "
-		end
-	end
-	s = string.sub(s, 1, #s-2)
-	s = "{"..s.."}"
-	return s
-end
-
-function print_table(node)
+--- func desc
+---@param node table
+---@return string
+function table_to_str(node)
 	if node == nil then
-		print("[nil]")
-		return
+		return "[nil]"
 	end
 	if type(node) ~= "table" then
-		print("[print_table: not a table]")
-		return
+		return "[print_table: not a table]"
 	end
 
 	-- https://www.grepper.com/answers/167958/print+table+lua?ucard=1
@@ -550,8 +533,13 @@ function print_table(node)
     table.insert(output,output_str)
     output_str = table.concat(output)
 
-    print(output_str)
+    return (output_str)
 end
+
+function print_table(node)
+	print(table_to_str(node))
+end
+
 
 function table_2d(w,h,val)
 	local t = {}

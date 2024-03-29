@@ -10,6 +10,8 @@ function InputActionState:init(user, action, can_action_hold_repeat)
     self.last_state = false
     self.can_action_hold_repeat = can_action_hold_repeat
 
+    self.is_handled = false -- whether the input should be ignored on consecutive reads
+
     self.held_time = 0.0
     self.hold_repeat_timer = 0.0
 end
@@ -39,6 +41,11 @@ function InputActionState:update_last_input_state()
     if self.hold_repeat_timer >= BUTTON_HOLD_REPEAT_INTERVAL then
         self.hold_repeat_timer = 0.0
     end
+    self.is_handled = false
+end
+
+function InputActionState:mark_as_handled()
+    self.is_handled = true
 end
 
 return InputActionState
