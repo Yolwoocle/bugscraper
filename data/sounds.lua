@@ -161,7 +161,7 @@ sounds.music_intro_unpaused = new_source("music/music_intro_unpaused.ogg", "stat
 sounds.music_intro_paused =   new_source("music/music_intro_paused.ogg",   "static", {looping = true})
 sounds.music_w1_unpaused =    new_source("music/music_w1_unpaused.ogg",    "static", {looping = true})
 sounds.music_w1_paused =      new_source("music/music_w1_paused.ogg",      "static", {looping = true})
-sounds.music_game_over =      new_source("music/music_game_over.wav",      "static", {looping = true})
+sounds.music_game_over =      new_source("music/music_game_over.ogg",      "static", {looping = true})
 
 -- Static sounds are sounds that are played without the use of the audio:play function
 -- local static_sfx_names = {

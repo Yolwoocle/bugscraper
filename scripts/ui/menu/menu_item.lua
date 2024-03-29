@@ -1,9 +1,6 @@
 require "scripts.util"
 local Class = require "scripts.meta.class"
 
--- Help. If you are the poor sod sent to modify the code within 
--- this, be warned: it's a mess.
-
 local MenuItem = Class:inherit()
 function MenuItem:init_menuitem(i, x, y)
 	self.i = i

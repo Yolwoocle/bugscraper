@@ -31,7 +31,7 @@ function MenuManager:update(dt)
 		self.cur_menu:update(dt)
 
 		-- Navigate up and down
-		if Input:action_pressed("ui_up") then self:incr_selection(-1) end
+		if Input:action_pressed("ui_up") then   self:incr_selection(-1) end
 		if Input:action_pressed("ui_down") then self:incr_selection(1) end
 
 		-- Update current selection
@@ -89,7 +89,6 @@ function MenuManager:set_menu(menu, is_back)
 	end
 
 	local m = self.menus[menu]
-
 	if type(menu) ~= "string" and menu.is_menu then
 		m = menu
 	end
@@ -101,6 +100,8 @@ function MenuManager:set_menu(menu, is_back)
 	-- Update selection to first selectable
 	local sel, found = self:find_selectable_from(1, 1)
 	self:set_selection(sel)
+	
+	self.cur_menu:update()
 
 	-- Reset game screenshake
 	if game then
