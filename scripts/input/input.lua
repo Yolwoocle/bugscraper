@@ -404,6 +404,19 @@ function InputManager:unsplit_keyboard()
     end
 end
 
+function InputManager:get_button_style(player_n)
+    local user_brand = nil
+    if self:get_user(player_n) then
+        user_brand = self:get_user(player_n):get_button_style()
+    else
+        user_brand = Options:get("button_style_p"..tostring(player_n))
+        if user_brand == BUTTON_STYLE_DETECT then
+            user_brand = BUTTON_STYLE_XBOX
+        end
+    end
+    return user_brand or BUTTON_STYLE_XBOX
+end
+
 -----------------------------------------------------
 
 function InputManager:generate_unknown_key_icon(icon, text)
@@ -444,9 +457,7 @@ function InputManager:get_button_icon(player_n, button, brand_override)
         end
 
     elseif button.type == "c" then
-        local user_brand = BUTTON_STYLE_XBOX
-        if self:get_user(player_n) then  user_brand = self:get_user(player_n):get_button_style()  end
-        local brand = (brand_override or user_brand) or BUTTON_STYLE_XBOX
+        local brand = (brand_override or self:get_button_style(player_n)) or BUTTON_STYLE_XBOX
         img = self:get_button_icon_controller(button, brand)
         
         if img == nil then
