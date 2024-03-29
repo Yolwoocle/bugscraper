@@ -18,6 +18,7 @@ function MenuManager:reset()
 	self.cur_menu_name = ""
 	self.is_paused = false
 	self.can_pause = true
+	self.buffer_unpause = false
 
 	self.sel_n = 1
 	self.sel_item = nil
@@ -27,6 +28,7 @@ function MenuManager:reset()
 end
 
 function MenuManager:update(dt)
+	self:update_unpause_menu()
 	if self.cur_menu then
 		self.cur_menu:update(dt)
 
@@ -59,8 +61,12 @@ function MenuManager:update(dt)
 	end
 
 	
-	if Input:action_pressed("pause") and self.cur_menu == nil then
-		self:pause()
+	if Input:action_pressed("pause") then 
+		if self.cur_menu == nil then
+			self:pause()
+		else
+			self:unpause()
+		end
 	elseif Input:action_pressed("ui_back") then
 		self:back()
 	end
@@ -78,9 +84,7 @@ function MenuManager:set_menu(menu, is_back)
 
 	-- nil menu
 	if menu == nil then
-		self.cur_menu = nil
-		self.menu_stack = {}
-		game:on_unmenu()
+		self.buffer_unpause = true
 		return
 	else
 		if not is_back then
@@ -100,7 +104,6 @@ function MenuManager:set_menu(menu, is_back)
 	-- Update selection to first selectable
 	local sel, found = self:find_selectable_from(1, 1)
 	self:set_selection(sel)
-	
 	self.cur_menu:update()
 
 	-- Reset game screenshake
@@ -111,6 +114,15 @@ function MenuManager:set_menu(menu, is_back)
 
 	game:on_menu()
 	return true
+end
+
+function MenuManager:update_unpause_menu()
+	if self.buffer_unpause then
+		self.buffer_unpause = false
+		self.cur_menu = nil
+		self.menu_stack = {}
+		game:on_unmenu()
+	end
 end
 
 function MenuManager:set_can_pause(value)
