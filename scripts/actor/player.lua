@@ -591,6 +591,10 @@ function Player:on_leaving_collision()
 	self.coyote_time = self.default_coyote_time
 end
 
+function Player:on_removed()
+	Collision:remove(self.wall_collision_box)
+end
+
 function Player:kill()
 	self.is_dead = true
 	

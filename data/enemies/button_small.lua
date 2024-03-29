@@ -56,6 +56,7 @@ function ButtonSmall:press_button()
 end
 
 function ButtonSmall:on_press()
+    game:start_game()
     self.pressed_disappear_timer = 0.5
 end
 

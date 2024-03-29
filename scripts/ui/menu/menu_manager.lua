@@ -17,6 +17,7 @@ function MenuManager:reset()
 	self.cur_menu = nil
 	self.cur_menu_name = ""
 	self.is_paused = false
+	self.can_pause = true
 
 	self.sel_n = 1
 	self.sel_item = nil
@@ -111,9 +112,14 @@ function MenuManager:set_menu(menu, is_back)
 	return true
 end
 
+function MenuManager:set_can_pause(value)
+    self.can_pause = value
+end
+
 function MenuManager:pause()
 	-- Retry if game ended
 	if self.is_paused then return end
+	if not self.can_pause then return end
 
 	if game.elevator.is_on_win_screen then --scotch
 		self:set_menu("win")

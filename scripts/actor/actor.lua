@@ -277,11 +277,19 @@ function Actor:on_leaving_ground()
 
 end
 
+function Actor:on_removed()
+end
+
 function Actor:remove()
+	-- This doesn't immediately remove the Actor, but queues its removal
 	if not self.is_removed then
 		self.is_removed = true
-		Collision:remove(self)
 	end
+end
+
+function Actor:final_remove()
+	Collision:remove(self)
+	self:on_removed()
 end
 
 function Actor:move_to(goal_x,goal_y)

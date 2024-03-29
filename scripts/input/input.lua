@@ -13,7 +13,10 @@ function InputManager:init()
     self.joystick_to_user_map = {}
 
 	self.standby_mode = false
-	self.buffer_standby_mode = {active = false, value = false}
+    -- We need to enable/disable standy mode a frame later so we buffer it 
+    -- active = is the buffer active? 
+    -- value = what value should standby_mode take?
+	self.buffer_standby_mode = {active = false, value = false} 
 
 	self.default_mapping_empty =         self:process_input_map(RAW_INPUT_MAP_DEFAULT_EMPTY)
 	self.default_mapping =               self:process_input_map(RAW_INPUT_MAP_DEFAULT_GLOBAL)

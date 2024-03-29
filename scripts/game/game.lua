@@ -35,9 +35,6 @@ function Game:init()
 
 	Input:init_users()
 
-	CANVAS_WIDTH = 480
-	CANVAS_HEIGHT = 270
-
 	-- OPERATING_SYSTEM = "Web"
 	OPERATING_SYSTEM = love.system.getOS()
 	USE_CANVAS_RESIZING = true
@@ -47,29 +44,15 @@ function Game:init()
 		USE_CANVAS_RESIZING = false
 		CANVAS_SCALE = 2
 		-- Init window
-		love.window.setMode(CANVAS_WIDTH*CANVAS_SCALE, CANVAS_HEIGHT*CANVAS_SCALE, {
-			fullscreen = false,
-			resizable = true,
-			vsync = Options:get"is_vsync",
-			minwidth = CANVAS_WIDTH,
-			minheight = CANVAS_HEIGHT,
-		})
-		SCREEN_WIDTH, SCREEN_HEIGHT = gfx.getDimensions()
-		love.window.setTitle("Bugscraper")
-		love.window.setIcon(love.image.newImageData("icon.png"))
+		love.window.setMode(CANVAS_WIDTH*CANVAS_SCALE, CANVAS_HEIGHT*CANVAS_SCALE, self:get_window_flags())
 	else
 		-- Init window
-		love.window.setMode(0, 0, {
-			fullscreen = Options:get("is_fullscreen"),
-			resizable = true,
-			vsync = Options:get("is_vsync"),
-			minwidth = CANVAS_WIDTH,
-			minheight = CANVAS_HEIGHT,
-		})
-		SCREEN_WIDTH, SCREEN_HEIGHT = gfx.getDimensions()
-		love.window.setTitle("Bugscraper")
-		love.window.setIcon(love.image.newImageData("icon.png"))
+		love.window.setMode(Options:get("windowed_width"), Options:get("windowed_height"), self:get_window_flags())
 	end
+	
+	SCREEN_WIDTH, SCREEN_HEIGHT = gfx.getDimensions()
+	love.window.setTitle("Bugscraper")
+	love.window.setIcon(love.image.newImageData("icon.png"))
 	gfx.setDefaultFilter("nearest", "nearest")
 	love.graphics.setLineStyle("rough")
 
@@ -100,32 +83,62 @@ function Game:init()
 	self.is_first_time = Options.is_first_time
 end
 
+function Game:get_window_flags()
+	return {
+		fullscreen = ternary(OPERATING_SYSTEM == "Web", false, Options:get("is_fullscreen")),
+		resizable = true,
+		vsync = Options:get("is_vsync"),
+		minwidth = CANVAS_WIDTH,
+		minheight = CANVAS_HEIGHT,
+	}
+end
 
-function Game:update_screen(scale)
-	-- When scale is (-1), it will find the maximum whole number
-	if scale == "auto" then   scale = nil    end
-	if scale == "max whole" then   scale = -1    end
-	if type(scale) ~= "number" then    scale = nil    end
- 
-	CANVAS_WIDTH = 480
-	CANVAS_HEIGHT = 270
+function Game:on_resize(w, h)
+	if not Options:get("is_fullscreen") then
+		Options:set("windowed_width", w)
+		Options:set("windowed_height", h)
+	end
+	self:update_screen()
+end
 
-	WINDOW_WIDTH, WINDOW_HEIGHT = gfx.getDimensions()
+function Game:update_fullscreen(is_fullscreen)
+	love.window.setFullscreen(is_fullscreen)
 
-	screen_sx = WINDOW_WIDTH / CANVAS_WIDTH
-	screen_sy = WINDOW_HEIGHT / CANVAS_HEIGHT
-	CANVAS_SCALE = min(screen_sx, screen_sy)
-
-	if scale then
-		if scale == -1 then
-			CANVAS_SCALE = floor(CANVAS_SCALE)
-		else
-			CANVAS_SCALE = scale
-		end
+	if not is_fullscreen then
+		local window_w = Options:get("windowed_width")
+		local window_h = Options:get("windowed_height")
+		print_debug("win w ", window_w)
+		print_debug("win h ", window_h)
+		love.window.setMode(window_w, window_h, self:get_window_flags())
 	end
 
-	CANVAS_OX = max(0, (WINDOW_WIDTH  - CANVAS_WIDTH  * CANVAS_SCALE)/2)
-	CANVAS_OY = max(0, (WINDOW_HEIGHT - CANVAS_HEIGHT * CANVAS_SCALE)/2)
+	self:update_screen()
+end
+
+function Game:update_screen()
+	WINDOW_WIDTH, WINDOW_HEIGHT = gfx.getDimensions()
+	
+	local pixel_scale_mode = Options:get("pixel_scale")
+	
+	local screen_sx = WINDOW_WIDTH / CANVAS_WIDTH
+	local screen_sy = WINDOW_HEIGHT / CANVAS_HEIGHT
+	local auto_scale = math.min(screen_sx, screen_sy)
+
+	local scale = auto_scale
+	if type(pixel_scale_mode) == "number" then
+		scale = math.min(pixel_scale_mode, auto_scale)
+
+	elseif pixel_scale_mode == "auto" then
+		scale = auto_scale
+		
+	elseif pixel_scale_mode == "max whole" then
+		scale = math.floor(auto_scale)
+	end
+
+	CANVAS_SCALE = scale
+
+	CANVAS_OX = math.floor(max(0, (WINDOW_WIDTH  - CANVAS_WIDTH  * CANVAS_SCALE)/2))
+	CANVAS_OY = math.floor(max(0, (WINDOW_HEIGHT - CANVAS_HEIGHT * CANVAS_SCALE)/2))
 end
 
 function Game:new_game()
@@ -341,6 +354,7 @@ function Game:update_main_game(dt)
 		actor:update(dt)
 	
 		if actor.is_removed then
+			actor:final_remove()
 			table.remove(self.actors, i)
 		end
 	end
@@ -765,8 +779,8 @@ function Game:draw_debug()
 		concat("n° of actors: ", #self.actors, " / ", self.actor_limit),
 		concat("n° of enemies: ", self.enemy_count),
 		concat("n° collision items: ", Collision.world:countItems()),
-		concat("frames_to_skip: ", self.frames_to_skip),
-		concat("debug1 ", self.debug1),
+		concat("windowed_w: ", Options:get("windowed_width")),
+		concat("windowed_h: ", Options:get("windowed_height")),
 		concat("real_wave_n ", self.debug2),
 		concat("bg_color_index ", self.debug3),
 		concat("number_of_alive_players ", self:get_number_of_alive_players()),
@@ -865,6 +879,9 @@ function Game:on_player_death(player)
 
 	if self:get_number_of_alive_players() <= 0 then
 		-- Save stats
+		self.menu_manager:set_can_pause(false)
+
+		self.music_player:set_disk("game_over")
 		self.music_player:pause()
 		self:pause_repeating_sounds()
 		self.game_started = false
@@ -882,7 +899,6 @@ function Game:update_timer_before_game_over(dt)
 	
 	if self.timer_before_game_over <= 0 then
 		self:on_game_over()
-		Audio:play("game_over_2")
 	end
 end
 

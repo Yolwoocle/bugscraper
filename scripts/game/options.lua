@@ -1,4 +1,5 @@
 require "scripts.util"
+require "scripts.meta.constants"
 local Class = require "scripts.meta.class"
 local images = require "data.images"
 local utf8 = require "utf8"
@@ -19,6 +20,9 @@ function OptionsManager:init(game)
 		is_vsync = true,
 		is_fullscreen = true,
 		pixel_scale = "auto",
+		windowed_width = CANVAS_WIDTH,
+		windowed_height = CANVAS_HEIGHT,
+
 		timer_on = false,
 		mouse_visible = false,
 		pause_on_unfocus = ternary(love.system.getOS() == "Web", false, true),
@@ -112,13 +116,13 @@ function OptionsManager:toggle_fullscreen()
 	-- local success = love.graphics.toggleFullscreen( )
 	self:toggle("is_fullscreen")
 	local is_fullscreen = self:get("is_fullscreen")
-	love.window.setFullscreen(is_fullscreen)
+	game:update_fullscreen(is_fullscreen)
 end
 
 function OptionsManager:set_pixel_scale(scale)
 	if not game then  return  end
 	self:set("pixel_scale", scale)
-	game:update_screen(scale)
+	game:update_screen()
 end
 
 function OptionsManager:toggle_vsync()

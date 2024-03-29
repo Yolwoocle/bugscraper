@@ -136,9 +136,8 @@ function love.quit()
 end
 
 function love.resize(w, h)
-	if not game then     return     end
-	if game.resize then   game:resize(w,h)   end
-	game:update_screen()
+	if not game then   return   end
+	if game.on_resize then   game:on_resize(w,h)   end
 end
 
 function love.textinput(text)

@@ -12,6 +12,11 @@ local function color(hex)
 	return {r/255, g/255, b/255}
 end
 
+CANVAS_WIDTH = 480
+CANVAS_HEIGHT = 270
+
+--------------------------------------------- 
+
 BLOCK_WIDTH = 16
 BW = BLOCK_WIDTH
 
