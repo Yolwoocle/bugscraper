@@ -17,7 +17,6 @@ function InputManager:init()
     -- active = is the buffer active? 
     -- value = what value should standby_mode take?
 	self.buffer_standby_mode = {active = false, value = false} 
-    self.buffer_unsplit_keyboard = false
 
 	self.default_mapping_empty =         self:process_input_map(RAW_INPUT_MAP_DEFAULT_EMPTY)
 	self.default_mapping =               self:process_input_map(RAW_INPUT_MAP_DEFAULT_GLOBAL)
@@ -90,7 +89,6 @@ function InputManager:update(dt)
     for i, user in pairs(self.users) do
         user:update(dt)
     end
-    self:actually_unsplit_keyboard()
 end
 
 function InputManager:update_last_input_state(dt)
@@ -332,6 +330,12 @@ function InputManager:mark_action_as_handled(player_n, action)
     self:get_user(player_n):mark_action_as_handled(action)
 end
 
+function InputManager:mark_action_as_handled_for_all_users(action)
+    for i = 1, MAX_NUMBER_OF_PLAYERS do
+        self:mark_action_as_handled(i, action)
+    end
+end
+
 function InputManager:reset_controls(profile_id, input_mode)
     -- fixme assign default controls to input scheme and load them in this function
 	local profile = self:get_input_profile(profile_id)
@@ -403,12 +407,7 @@ function InputManager:split_keyboard()
     self:assign_input_profile(p2, "keyboard_split_p2")
 end
 
--- This is so stupid. Too bad.
 function InputManager:unsplit_keyboard()
-    self.buffer_unsplit_keyboard = true
-end
-
-function InputManager:actually_unsplit_keyboard()
     if not self.buffer_unsplit_keyboard then return end
     for i=1, MAX_NUMBER_OF_PLAYERS do
         local user = self.users[i]

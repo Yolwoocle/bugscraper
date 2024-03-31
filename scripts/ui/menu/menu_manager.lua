@@ -30,8 +30,6 @@ end
 function MenuManager:update(dt)
 	self:update_unpause_menu()
 	if self.cur_menu then
-		self.cur_menu:update(dt)
-
 		-- Navigate up and down
 		if Input:action_pressed("ui_up") then
 			self:incr_selection(-1)
@@ -39,6 +37,8 @@ function MenuManager:update(dt)
 		if Input:action_pressed("ui_down") then
 			self:incr_selection(1)
 		end
+		
+		self.cur_menu:update(dt)
 
 		-- Update current selection
 		self.sel_n = mod_plus_1(self.sel_n, #self.cur_menu.items)
