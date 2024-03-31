@@ -183,7 +183,7 @@ local img_names = {
 	honey_blob = "effects/honey_blob",
 
 	-----------------------------------------------------
-
+	
 	-- upgrades
 	upgrade_coffee = "upgrades/upgrade_coffee"
 	
@@ -200,17 +200,56 @@ images.button_fragments = {
 	images.btnfrag_5,
 }
 
+-----------------------------------------------------
+-- Input buttons
+
+-- Keyboard
 for key_constant, button_image_name in pairs(key_constant_to_image) do
 	images[button_image_name] = load_image("buttons/keyboard/"..button_image_name..".png")
 end
 
-for _, brand in pairs(CONTROLLER_BRANDS) do
+-- Controller
+local function get_button_name(brand, button)
+	return string.format("btn_c_%s_%s", brand, button)
+end
+local function load_button_icon(brand, button)
+	local name = get_button_name(brand, button)
+	local path = string.format("buttons/controller/%s/%s.png", brand, name)
+	images[name] = load_image(path)
+end
+
+local brands = copy_table(CONTROLLER_BRANDS)
+local ps5_index = 0
+for i = 1, #brands do 
+	if brands[i] == BUTTON_STYLE_PLAYSTATION5 then
+		ps5_index = i
+		break
+	end
+end
+assert(ps5_index ~= 0, "no PS5 button scheme found")
+table.remove(brands, ps5_index)
+for _, brand in pairs(brands) do
 	for button, __ in pairs(controller_buttons) do
-		local name = string.format("btn_c_%s_%s", brand, button)
-		local path = string.format("buttons/controller/%s/%s.png", brand, name)
-		images[name] = load_image(path)
+		load_button_icon(brand, button)
+	end
+end
+
+-- PS5 buttons
+local ps5_buttons = {
+    ["back"] = true,
+    ["start"] = true,
+    ["misc1"] = true,
+    ["touchpad"] = true,
+}
+for button, _ in pairs(controller_buttons) do
+	if ps5_buttons[button] then
+		load_button_icon(BUTTON_STYLE_PLAYSTATION5, button)
+	else
+		images[get_button_name(BUTTON_STYLE_PLAYSTATION5, button)] = images[get_button_name(BUTTON_STYLE_PLAYSTATION4, button)]
 	end
 end
 images.btn_c_unknown = load_image("buttons/controller/btn_c_unknown.png")
+
+-----------------------------------------------------
 
 return images
