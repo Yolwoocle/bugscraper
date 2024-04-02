@@ -101,6 +101,9 @@ local img_names = {
 	small_button =           "actors/enemies/small_button",
 	small_button_pressed =   "actors/enemies/small_button_pressed",
 	exit_sign =              "actors/enemies/exit_sign",
+	exit_sign_front =        "actors/enemies/exit_sign_front",
+	punching_glove =         "actors/enemies/punching_glove",
+	spring =                 "actors/enemies/spring",
 
 	machine_coffee =         "actors/enemies/machine_coffee",
 	machine_coffee_pressed = "actors/enemies/machine_coffee_pressed",

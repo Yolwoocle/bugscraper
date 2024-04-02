@@ -30,6 +30,7 @@ function Particle:update_particle(dt)
 	self.x = self.x + self.vx*dt
 	self.y = self.y + self.vy*dt
 	self.s = self.s - self.vs*dt
+	self.r = self.r + self.vr*dt
 
 	self.vy = self.vy + self.gravity
 	self.life = self.life - dt
@@ -199,6 +200,8 @@ function DeadPlayerParticle:update(dt)
 	self.r = lerp(self.r, goal_r, 0.06)
 	self.oy = lerp(self.oy, 40, 0.05)
 
+	self.is_front = true
+	
 	if abs(self.r - goal_r) < 0.1 then
 		game:screenshake(10)
 		Audio:play("explosion")
@@ -208,6 +211,32 @@ function DeadPlayerParticle:update(dt)
 end
 function DeadPlayerParticle:draw()
 	love.graphics.draw(self.spr, self.x, self.y - self.oy, self.r, self.sx, self.sy, self.spr_ox, self.spr_oy)
+end
+
+------------------------------------------------------------
+
+
+local EjectedPlayerParticle = Particle:inherit()
+
+function EjectedPlayerParticle:init(spr, x, y, vx, vy)
+	--                (x,y,s,r, vx,vy,vs,vr,                    life, g, is_solid)
+	self:init_particle(x,y,1,0, vx,vy,0,random_range(10, 20),   3,    15)
+	self.spr = spr
+	
+	self.spr_w = self.spr:getWidth()
+	self.spr_h = self.spr:getWidth()
+	self.spr_ox = self.spr_w / 2
+	self.spr_oy = self.spr_h / 2
+	
+	self.is_solid = false
+	self.is_front = true
+end
+function EjectedPlayerParticle:update(dt)
+	self:update_particle(dt)
+	Particles:dust(self.x, self.y, COL_WHITE, nil, nil, nil, true)
+end
+function EjectedPlayerParticle:draw()
+	love.graphics.draw(self.spr, self.x, self.y, self.r, self.s, self.s, self.spr_ox, self.spr_oy)
 end
 
 ------------------------------------------------------------
@@ -273,9 +302,9 @@ function ParticleSystem:smoke(x, y, number, col, spw_rad, size, sizevar)
 end
 
 function ParticleSystem:dust(x, y, col, size, rnd_pos, sizevar)
-	rnd_pos = rnd_pos or 3
-	size = size or 4
-	sizevar = sizevar or 2
+	rnd_pos = param(rnd_pos, 3)
+	size = param(size, 4)
+	sizevar = param(sizevar, 2)
 
 	local dx, dy = random_neighbor(rnd_pos), random_neighbor(rnd_pos)
 	local dsize = random_neighbor(sizevar)
@@ -394,6 +423,10 @@ end
 
 function ParticleSystem:dead_player(x, y, spr, colors, dir_x)
 	self:add_particle(DeadPlayerParticle:new(x, y, spr, colors, dir_x))
+end
+
+function ParticleSystem:ejected_player(spr, x, y, vx, vy)
+	self:add_particle(EjectedPlayerParticle:new(spr, x, y, random_range(100, 300), vy or -random_range(400, 600)))
 end
 
 function ParticleSystem:letter(x, y, str, spawn_delay, col)

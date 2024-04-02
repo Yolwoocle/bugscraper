@@ -7,7 +7,7 @@ local EffectSlowness = require "scripts.effect.effect_slowness"
 local InputButton = require "scripts.input.input_button"
 local images = require "data.images"
 local sounds = require "data.sounds"
-local shaders = require "scripts.graphics.shaders"
+local shaders = require "data.shaders"
 local ui = require "scripts.ui.ui"
 require "scripts.util"
 require "scripts.meta.constants"
@@ -132,6 +132,7 @@ function Player:init(n, x, y, skin)
 	self.ui_x = self.x
 	self.ui_y = self.y
 	self.ui_col_gradient = 0
+	self.controls_oy = 0
 
 	-- SFX
 	self.sfx_wall_slide = sounds.sliding_wall_metal[1]
@@ -148,9 +149,11 @@ function Player:init(n, x, y, skin)
 
 	-- Effects
 	self.poison_cloud = nil
-	self.is_in_poison_cloud = false
 	self.poison_timer = 0.0
 	self.poison_damage_time = 1.5
+
+	-- Exiting 
+	self.is_touching_exit_sign = false
 
 	-- Debug 
 	self.dt = 1
@@ -193,10 +196,6 @@ function Player:update(dt)
 	-- 	self:do_damage(1)
 	-- 	self.iframes = 1
 	-- end
-	if Input:action_pressed(self.n, "leave_game") and not game.game_started then
-		game:leave_game(self.n)
-	end
-	self.is_in_poison_cloud = false 
 	
 	-- Movement
 	self:update_upgrades(dt)
@@ -214,6 +213,7 @@ function Player:update(dt)
 	self:update_sprite(dt)
 	self:do_particles(dt)
 	self:update_poison(dt)
+	self:leave_game_if_possible(dt)
 
 	if self.life <= 0 and not self.is_killed then
 		self:kill()
@@ -247,7 +247,7 @@ function Player:update(dt)
 
 	--Visuals
 	self:update_visuals()
-	if self.is_in_poison_cloud then
+	if self:is_in_poison_cloud() then
 		Particles:dust(self.mid_x + random_neighbor(7), self.mid_y + random_neighbor(7), random_sample{color(0x3e8948), color(0x265c42), color(0x193c3e)})
 	end
 end
@@ -323,16 +323,39 @@ function Player:draw_hud()
 
 end
 
+function Player:get_controls_tutorial_values()
+	if self.is_touching_exit_sign then
+		return {
+			{{"leave_game"}, "Leave"},
+		}
+	else
+		return {
+			{{"shoot"}, "Shoot"},
+			{{"jump"}, "Jump"},
+			{{"right", "down", "left", "up"}, "Move", Input:get_primary_input_type(self.n) == INPUT_TYPE_KEYBOARD},
+		} 
+	end
+end
+
+function Player:get_controls_text_color(i)
+	local color
+	if Input:get_number_of_users() == 1 then
+		if self.is_touching_exit_sign then
+			color = COL_LIGHT_GREEN
+		else
+			color = LOGO_COLS[i]
+		end
+	else
+		color = self.color_palette[1] 
+	end 
+	return color or COL_WHITE
+end
+
 function Player:draw_controls()
-	local tutorials = {
-		{{"leave_game"}, "Leave"},
-		{{"shoot"}, "Shoot"},
-		{{"jump"}, "Jump"},
-		{{"right", "down", "left", "up"}, "Move", Input:get_primary_input_type(self.n) == INPUT_TYPE_KEYBOARD},
-	}
+	local tutorials = self:get_controls_tutorial_values()
 
 	local x = self.ui_x
-	local y = self.ui_y - 32
+	local y = self.ui_y - 32 + self.controls_oy
 	-- local x = (CANVAS_WIDTH * 0.15) + (CANVAS_WIDTH * 0.9) * (self.n-1)/4
 	-- local y = 140
 
@@ -372,7 +395,7 @@ function Player:draw_controls()
 			end
 		end
 		
-		local text_color = self.color_palette[1] --LOGO_COLS[4-i] or COL_WHITE
+		local text_color = self:get_controls_text_color(i)
 		print_outline(text_color, COL_BLACK_BLUE, label, x, y)
 	end
 end
@@ -700,8 +723,18 @@ function Player:update_gun_pos(dt, lerpval)
 	self.gun.rot = lerp_angle(self.gun.rot, ang, 0.3)
 end
 
+function Player:is_in_poison_cloud()
+	local is_touching, col = self:is_touching_collider(function(col) return col.other.is_poisonous end)
+	if col then
+		self.poison_cloud = col.other
+	else
+		self.poison_cloud = nil
+	end
+	return is_touching
+end
+
 function Player:update_poison(dt)
-	if self.is_in_poison_cloud and not self.is_invincible then
+	if self:is_in_poison_cloud() and not self.is_invincible then
 		self.poison_timer = self.poison_timer + dt
 		if self.poison_timer >= self.poison_damage_time then
 			self:do_damage(1, self.poison_cloud)
@@ -713,10 +746,6 @@ function Player:update_poison(dt)
 end
 
 function Player:on_collision(col, other)
-	if col.other.is_poisonous then
-		self.is_in_poison_cloud = true
-		self.poison_cloud = col.other
-	end
 end
 
 function Player:on_stomp(enemy)
@@ -912,6 +941,20 @@ end
 function Player:update_upgrades(dt)
 	for i, upgrade in pairs(self.upgrades) do
 		upgrade:update(dt)
+	end
+end
+
+function Player:leave_game_if_possible(dt)
+	local is_touching, exit_sign = self:is_touching_collider(function(col) return col.other.is_exit_sign end)
+
+	self.is_touching_exit_sign = is_touching
+	if is_touching then
+		self.controls_oy = lerp(self.controls_oy, -6, 0.3)
+		if Input:action_pressed(self.n, "leave_game") and not game.game_started then
+			exit_sign.other:activate(self)
+		end
+	else
+		self.controls_oy = lerp(self.controls_oy, 0, 0.3)
 	end
 end
 

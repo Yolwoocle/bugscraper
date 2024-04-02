@@ -53,17 +53,12 @@ end
 
 function StinkBug:draw()
 	self:draw_enemy()
-
-    local r = 1/10
-    local ox, oy = ((CANVAS_WIDTH/2) - self.mid_x) * r, ((CANVAS_HEIGHT/2) - self.mid_y) * r
-    love.graphics.line(self.mid_x, self.mid_y, self.mid_x + ox, self.mid_y + oy)
-    love.graphics.circle("fill", self.mid_x + ox, self.mid_y + oy, 3)
 end
 
 function StinkBug:after_collision(col, other)
     -- Pong-like bounce
     if col.other.is_solid then
-        Particles:smoke(col.touch.x, col.touch.y)
+        -- Particles:smoke(col.touch.x, col.touch.y)
 
         local new_vx, new_vy = bounce_vector_cardinal(math.cos(self.direction), math.sin(self.direction), col.normal.x, col.normal.y)
         self.direction = math.atan2(new_vy, new_vx)
@@ -72,14 +67,14 @@ end
 
 function StinkBug:on_death()
     for i = 1, random_range_int(3, 5) do
-        local spawn_x = clamp(self.mid_x - 8, game.cabin_ax, game.cabin_bx - 16)
-        local spawn_y = clamp(self.mid_y - 8, game.cabin_ay, game.cabin_by - 16)
+        local spawn_x = clamp(self.mid_x - 10, game.cabin_ax, game.cabin_bx - 20)
+        local spawn_y = clamp(self.mid_y - 10, game.cabin_ay, game.cabin_by - 20)
         local cloud = PoisonCloud:new(spawn_x, spawn_y)
 
         local d = random_range(0, pi2)
         local r = random_range(0, 200)
-        cloud.vx = 0--math.cos(d) * r
-        cloud.vy = 0--math.sin(d) * r
+        cloud.vx = math.cos(d) * r
+        cloud.vy = math.sin(d) * r
         game:new_actor(cloud)
     end
 end

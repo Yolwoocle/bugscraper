@@ -10,7 +10,7 @@ function PoisonCloud:init(x, y, spr)
 end
 
 function PoisonCloud:init_fly(x, y, spr)
-    self:init_enemy(x,y, spr or images.poison_cloud, 16, 16)
+    self:init_enemy(x,y, spr or images.poison_cloud, 20, 20)
     self.name = "poison_cloud"
     self.is_flying = true
     self.life = 10

@@ -55,6 +55,7 @@ COL_DARK_BROWN = rgb(63, 40, 50)
 
 COL_LIGHT_YELLOW = color(0xfee761)
 
+COL_LIGHT_GREEN = color(0x63c74d)
 COL_MID_DARK_GREEN = rgb(38, 92, 66)
 COL_DARK_GREEN = rgb(25, 60, 62)
 

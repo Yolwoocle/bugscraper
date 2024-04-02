@@ -10,8 +10,8 @@ local waves = {
 		max = 5,
 		enemies = {
 			-- {E.VendingMachine, 3},
-			{E.HoneypotAnt, 4},
-			-- {E.StinkBug, 4},
+			-- {E.HoneypotAnt, 4},
+			{E.StinkBug, 4},
 			-- {E.PoisonCloud, 4},
 			-- {E.SnailShelled, 4},
 		}

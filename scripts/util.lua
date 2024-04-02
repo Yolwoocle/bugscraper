@@ -1,6 +1,6 @@
 local utf8 = require "utf8"
 require "scripts.meta.constants"
-local shaders = require "scripts.graphics.shaders"
+local shaders = require "data.shaders"
 
 abs = math.abs
 exp = math.exp
@@ -239,7 +239,7 @@ function draw_with_selected_outline(spr, x, y, r, sx, sy)
 end
 
 function draw_centered(spr, x, y, r, sx, sy)
-	love.graphics.draw(spr, x, y, r, sx, sy, spr:getWidth()/2, spr:getHeight()/2)
+	love.graphics.draw(spr, math.floor(x), math.floor(y), r, sx, sy, spr:getWidth()/2, spr:getHeight()/2)
 end
 
 function draw_centered_text(text, rect_x, rect_y, rect_w, rect_h, rot, sx, sy, font)

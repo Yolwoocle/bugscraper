@@ -44,6 +44,7 @@ function Actor:init_actor(x, y, w, h, spr, args)
 
 	self.is_knockbackable = true
 
+	self.collisions = {}
 	self.wall_col = nil
 
 	self.effects = {}
@@ -127,6 +128,7 @@ function Actor:update_actor(dt)
 	local goal_x = self.x + self.vx * dt
 	local goal_y = self.y + self.vy * dt
 
+	self.collisions = {}
 	local actual_x, actual_y, cols, len = Collision:move(self, goal_x, goal_y)
 	self.x = actual_x
 	self.y = actual_y
@@ -138,6 +140,7 @@ function Actor:update_actor(dt)
 	for _,col in pairs(cols) do
 		self:on_collision(col, col.other)
 		self:react_to_collision(col)
+		table.insert(self.collisions, col)
 	end
 
 	-- Grounding events
@@ -234,6 +237,15 @@ function Actor:react_to_collision(col)
 			self.grounded_col = col
 		end
 	end
+end
+
+function Actor:is_touching_collider(condition)
+	for i, col in pairs(self.collisions) do
+		if condition(col) then
+			return true, col
+		end
+	end
+	return false, nil
 end
 
 function Actor:set_flying(bool)
