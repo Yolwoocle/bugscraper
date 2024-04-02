@@ -19,6 +19,8 @@ local MushroomAnt = require "data.enemies.mushroom_ant"
 local HoneypotAnt = require "data.enemies.honeypot_ant"
 local Spider = require "data.enemies.spider"
 local StinkBug = require "data.enemies.stink_bug"
+local DungBeetle = require "data.enemies.dung_beetle"
+local FlyingDung = require "data.enemies.flying_dung"
 
 local PoisonCloud = require "data.enemies.poison_cloud"
 
@@ -48,6 +50,8 @@ function Enemies:init()
 	self.HoneypotAnt = HoneypotAnt
 	self.Spider = Spider
 	self.StinkBug = StinkBug
+	self.DungBeetle = DungBeetle
+	self.FlyingDung = FlyingDung
 
 	self.PoisonCloud = PoisonCloud
 

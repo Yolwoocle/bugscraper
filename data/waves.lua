@@ -11,7 +11,9 @@ local waves = {
 		enemies = {
 			-- {E.VendingMachine, 3},
 			-- {E.HoneypotAnt, 4},
-			{E.StinkBug, 4},
+			-- {E.DungBeetle, 4},
+			{E.FlyingDung, 4},
+			-- {E.SnailShelled, 3},
 			-- {E.PoisonCloud, 4},
 			-- {E.SnailShelled, 4},
 		}

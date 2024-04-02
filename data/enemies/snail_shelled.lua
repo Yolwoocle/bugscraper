@@ -8,8 +8,12 @@ local Slug = require "data.enemies.slug"
 
 local SnailShelled = Enemy:inherit()
 
-function SnailShelled:init(x, y)
-    self:init_enemy(x,y, images.snail_shell, 16, 16)
+function SnailShelled:init(x, y, spr)
+    self:init_snail_shelled(x, y, spr)
+end
+
+function SnailShelled:init_snail_shelled(x, y, spr)
+    self:init_enemy(x,y, spr or images.snail_shell, 16, 16)
     self.name = "snail_shelled"
     self.is_flying = true
     self.follow_player = false
@@ -30,12 +34,17 @@ function SnailShelled:init(x, y)
     self.pong_vx = cos(self.dir) * self.pong_speed
     self.pong_vy = sin(self.dir) * self.pong_speed
 
+    self.center_sprite = true
     self.spr_oy = floor((self.spr_h - self.h) / 2)
     self.sound_death = "snail_shell_crack"
     self.sound_stomp = "snail_shell_crack"
 end
 
 function SnailShelled:update(dt)
+    self:update_snail_shelled(dt)
+end
+
+function SnailShelled:update_snail_shelled(dt)
     self:update_enemy(dt)
     self.rot = self.rot + self.rot_speed * dt
 

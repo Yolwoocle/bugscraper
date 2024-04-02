@@ -65,6 +65,8 @@ local img_names = {
 	-- enemies
 	cocoon =          "actors/enemies/cocoon",
 	dummy_target =    "actors/enemies/dummy_target",
+	dung_beetle_1 =   "actors/enemies/dung_beetle_1",
+	dung_1 =          "actors/enemies/dung_1",
 	fly1 =            "actors/enemies/fly1",
 	fly2 =            "actors/enemies/fly2",
 	grasshopper =     "actors/enemies/grasshopper",
