@@ -28,6 +28,7 @@ local ButtonBigGlass = require "data.enemies.button_big_glass"
 
 local ButtonSmallGlass = require "data.enemies.button_small_glass"
 local ButtonSmall = require "data.enemies.button_small"
+local ExitSign = require "data.enemies.exit_sign"
 
 local Cocoon = require "data.enemies.cocoon"
 
@@ -56,7 +57,8 @@ function Enemies:init()
 
 	self.ButtonSmall = ButtonSmall
 	self.ButtonSmallGlass = ButtonSmallGlass
-
+	
+	self.ExitSign = ExitSign
 	self.VendingMachine = VendingMachine
 	self.Cocoon = Cocoon
 

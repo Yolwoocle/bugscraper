@@ -192,12 +192,16 @@ function Game:new_game()
 	self.actors = {}
 	self:init_players()
 
-	-- Start lever
+	-- Start button
 	local nx = CANVAS_WIDTH * 0.75
 	local ny = self.world_generator.box_by * BLOCK_WIDTH
 	-- local l = create_actor_centered(Enemies.ButtonGlass, nx, ny)
 	local l = create_actor_centered(Enemies.ButtonSmallGlass, floor(nx), floor(ny))
 	self:new_actor(l)
+	
+	-- Exit sign 
+	local exit_x = CANVAS_WIDTH * 0.25
+	self:new_actor(create_actor_centered(Enemies.ExitSign, floor(exit_x), floor(ny)))
 
 	-- Camera & screenshake
 	self.cam_x = 0

@@ -100,6 +100,7 @@ local img_names = {
 	small_button_crack2 =    "actors/enemies/small_button_crack2",
 	small_button =           "actors/enemies/small_button",
 	small_button_pressed =   "actors/enemies/small_button_pressed",
+	exit_sign =              "actors/enemies/exit_sign",
 
 	machine_coffee =         "actors/enemies/machine_coffee",
 	machine_coffee_pressed = "actors/enemies/machine_coffee_pressed",
