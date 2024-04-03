@@ -68,8 +68,19 @@ end
 function TextMenuItem:draw_textitem()
 	gfx.setColor(1, 1, 1, 1)
 	local text_height = get_text_height(self.text)
+	
+	-- if self.is_selected then
+	-- 	local col = Input:get_last_ui_player_color()
+	-- 	local x = math.floor(self.x - MENU_PADDING - 8)
+	-- 	local y = math.floor(self.y + self.oy - 6)
+	-- 	local w = math.floor(MENU_PADDING*2 + 16)
+	-- 	local h = math.floor(14)
+	-- 	circle_color(col, "fill", x,   y+h/2, h/2)
+	-- 	circle_color(col, "fill", x+w, y+h/2, h/2)
+	-- 	rect_color(col, "fill", x, y, w, h)
+	-- end
 
-	-- /!\ This is rlly sketchy
+	-- /!\ This is really sketchy. Too bad
 	if type(self.value) == "nil" then
 		self:draw_withoutvalue()
 	else
@@ -81,7 +92,7 @@ end
 
 function TextMenuItem:get_leftjustified_text_draw_function()
 	local draw_func = ternary(self.is_selected,
-		function(...) print_ycentered_outline(COL_WHITE, SELECTED_HIGHLIGHT_COLOR, ...) end,
+		function(...) print_ycentered_outline(COL_WHITE, Input:get_last_ui_player_color(), ...) end,
 		function(...) print_ycentered(...) end
 	)
 
@@ -90,7 +101,7 @@ end
 
 function TextMenuItem:draw_withoutvalue()
 	local draw_func = ternary(self.is_selected,
-		function(...) print_centered_outline(COL_WHITE, SELECTED_HIGHLIGHT_COLOR, ...) end,
+		function(...) print_centered_outline(COL_WHITE, Input:get_last_ui_player_color(), ...) end,
 		function(...) print_centered(...) end
 	)
 
@@ -108,7 +119,7 @@ function TextMenuItem:draw_withvalue()
 		local v = 0.5
 		gfx.setColor(v, v, v, 1)
 	end
-	draw_func(self.text, self.x - CANVAS_WIDTH*0.25, self.y + self.oy)
+	draw_func(self.text, self.x - MENU_PADDING, self.y + self.oy)
 
 	self:draw_value_text()
 end

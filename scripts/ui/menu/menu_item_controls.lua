@@ -35,7 +35,7 @@ function ControlsMenuItem:update(dt)
 end
 
 function ControlsMenuItem:draw_value_text()
-	local right_bound = self.x + CANVAS_WIDTH*0.25 + self.ox
+	local right_bound = self.x + MENU_PADDING + self.ox
 	local y = self.y + self.oy
 
 	local draw_func = self:get_leftjustified_text_draw_function()
@@ -66,7 +66,7 @@ function ControlsMenuItem:draw_button_icon(button, x, y)
 
 	if img ~= nil then
 		local icon_draw_func = ternary(self.is_selected,
-		function(_img, _x, _y) draw_with_selected_outline(_img, _x, _y) end,
+			function(_img, _x, _y) draw_with_outline(Input:get_last_ui_player_color(), _img, _x, _y) end,
 			function(_img, _x, _y) love.graphics.draw(_img, _x, _y) end
 		)
 

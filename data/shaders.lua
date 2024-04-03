@@ -15,6 +15,17 @@ local draw_in_highlight_color = love.graphics.newShader(
 )
 shaders.draw_in_highlight_color = draw_in_highlight_color
 
+--------
+
+shaders.draw_in_color = love.graphics.newShader([[
+	uniform vec4 fillColor;
+	vec4 effect(vec4 color, Image texture, vec2 textureCoords, vec2 screenCoords){
+		return vec4(fillColor.r, fillColor.g, fillColor.b, Texel(texture, textureCoords).a) * color;
+	}
+]])
+
+--------
+
 shaders.white_shader = love.graphics.newShader[[
 	vec4 effect(vec4 color, Image texture, vec2 textureCoords, vec2 screenCoords){
 		return vec4(1, 1, 1, Texel(texture, textureCoords).a);

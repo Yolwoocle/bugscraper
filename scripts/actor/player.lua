@@ -112,8 +112,8 @@ function Player:init(n, x, y, skin)
 	self.shoot_dir_y = 0
 	self.shoot_ang = 0
 	
-	-- self:equip_gun(Guns.Machinegun:new())
-	self:equip_gun(Guns.unlootable.DebugGun:new())
+	self:equip_gun(Guns.Machinegun:new())
+	-- self:equip_gun(Guns.unlootable.DebugGun:new())
 	-- FOR DEBUGGING
 	self.guns = {
 		Guns.Machinegun:new(self),

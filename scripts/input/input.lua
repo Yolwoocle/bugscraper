@@ -5,6 +5,7 @@ local InputProfile = require "scripts.input.input_profile"
 local images = require "data.images"
 local key_constant_to_image_name = require "data.buttons.images_buttons_keyboard"
 local controller_buttons = require "data.buttons.controller_buttons"
+local skins = require "data.skins"
 
 local InputManager = Class:inherit()
 
@@ -429,6 +430,17 @@ function InputManager:get_button_style(player_n)
         end
     end
     return user_brand or BUTTON_STYLE_XBOX
+end
+
+function InputManager:get_last_ui_player_color()
+    local skin = skins[self.last_ui_user_n]
+    if skin == nil then
+        return COL_LIGHT_RED
+    end
+    if self.last_ui_user_n == 1 then
+        return skin.color_palette[1]
+    end
+    return skin.color_palette[2]
 end
 
 function InputManager:get_last_ui_user_n()

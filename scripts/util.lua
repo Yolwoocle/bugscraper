@@ -61,7 +61,7 @@ function color(hex)
 	local b = hex % 256;  hex = (hex - b) / 256
 	local g = hex % 256;  hex = (hex - b) / 256
 	local r = hex % 256
-	return {r/255, g/255, b/255}
+	return {r/255, g/255, b/255, 1.0}
 end
 
 function round(num, num_dec)
@@ -222,6 +222,25 @@ end
 
 function draw_with_selected_outline(spr, x, y, r, sx, sy)
 	love.graphics.setShader(shaders.draw_in_highlight_color)
+	local offset = 1
+
+	love.graphics.draw(spr, x, y, r, sx, sy, offset , 0)
+	love.graphics.draw(spr, x, y, r, sx, sy, -offset, 0)
+	love.graphics.draw(spr, x, y, r, sx, sy, 0,       offset)
+	love.graphics.draw(spr, x, y, r, sx, sy, 0,      -offset)
+
+	love.graphics.draw(spr, x, y, r, sx, sy, offset , offset)
+	love.graphics.draw(spr, x, y, r, sx, sy,-offset , offset)
+	love.graphics.draw(spr, x, y, r, sx, sy, offset ,-offset)
+	love.graphics.draw(spr, x, y, r, sx, sy,-offset ,-offset)
+	
+	love.graphics.setShader()
+	love.graphics.draw(spr, x, y, r, sx, sy)
+end
+
+function draw_with_outline(outline_color, spr, x, y, r, sx, sy)
+	shaders.draw_in_color:sendColor("fillColor", outline_color)
+	love.graphics.setShader(shaders.draw_in_color)
 	local offset = 1
 
 	love.graphics.draw(spr, x, y, r, sx, sy, offset , 0)
