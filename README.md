@@ -15,9 +15,10 @@ Rise to the top of a bug-infested tower by fighting on an elevator. On each floo
   🐞🐞🐞🐞🐞
 </div>  
 
-## Running
+## Running & contributing
 To run the game, please follow the instructions on the [LÖVE Getting started page](https://love2d.org/wiki/Getting_Started).   
-To export the game, please look into [Makelove](https://github.com/pfirsich/makelove).
+To export the game, please look into [Makelove](https://github.com/pfirsich/makelove).   
+Please note that I was in highschool when I began this project. I did not always plan for the future or make the best design choices when it comes to code architecture. The code is almost not documented. Modify at your own risk.
 
 <div align="center">
   🐝🐝🐝🐝🐝
