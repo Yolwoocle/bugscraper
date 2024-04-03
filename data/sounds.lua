@@ -129,7 +129,9 @@ local sfxnames = {
 
 	"stink_bug_death", "stink_bug_death.ogg",
 
-	"jump_short", "jump_short.ogg"
+	"jump_short", "jump_short.ogg",
+
+	"exit_sign_activate", "exit_sign_activate.ogg",
 }
 
 for i=1, #sfxnames, 2 do    sounds[sfxnames[i]] = new_source(sfxnames[i+1], "static")    end

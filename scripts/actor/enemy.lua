@@ -208,10 +208,12 @@ function Enemy:on_stomped(damager)
 end
 
 function Enemy:kill(damager, reason)
-	if self.is_removed then print(concat("/!\\:", self.name, "(", self, ") was killed while destroyed")) end
+	if self.is_removed then
+		print(concat("/!\\:", self.name, "(", self, ") was killed while destroyed"))
+		return
+	end
 	self.death_reason = reason or ""
 
-	game:frameskip(1)
 	if self.do_killed_smoke then
 		Particles:smoke(self.mid_x, self.mid_y)
 	end

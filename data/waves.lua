@@ -5,19 +5,19 @@ local images = require "data.images"
 local E = require "data.enemies"
 
 local waves = {
-	-- {
-	-- 	min = 5,
-	-- 	max = 5,
-	-- 	enemies = {
-	-- 		-- {E.VendingMachine, 3},
-	-- 		-- {E.HoneypotAnt, 4},
-	-- 		-- {E.DungBeetle, 4},
-	-- 		{E.FlyingDung, 4},
-	-- 		-- {E.SnailShelled, 3},
-	-- 		-- {E.PoisonCloud, 4},
-	-- 		-- {E.SnailShelled, 4},
-	-- 	}
-	-- },
+	{
+		min = 5,
+		max = 5,
+		enemies = {
+			-- {E.VendingMachine, 3},
+			-- {E.HoneypotAnt, 4},
+			{E.DungBeetle, 4},
+			-- {E.FlyingDung, 4},
+			-- {E.SnailShelled, 3},
+			-- {E.PoisonCloud, 4},
+			-- {E.SnailShelled, 4},
+		}
+	},
 	{
 		min = 4,
 		max = 6,

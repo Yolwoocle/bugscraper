@@ -49,6 +49,7 @@ function ExitSign:update(dt)
         self.spring_retract_timer = max(0.0, self.spring_retract_timer - dt)
     else
         self.spring_ideal_length = self.default_spring_ideal_length
+        self.spring_active = false
     end
 
     self:update_enemy(dt)
@@ -61,9 +62,11 @@ function ExitSign:on_collision(col, other)
 end
 
 function ExitSign:activate(player)
+    if self.spring_active then return end
     game:leave_game(player.n)
     game:screenshake(4)
     Particles:ejected_player(player.spr_dead, player.x, player.y)
+    Audio:play_var("exit_sign_activate", 0.1, 0.2)
 
     self.spring_active = true
     self.spring_retract_timer = 2.0
