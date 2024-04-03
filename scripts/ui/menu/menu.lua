@@ -83,7 +83,7 @@ function Menu:draw_prompts()
 
 		if #prompt >= 2 then
 			local actions, text = prompt[1], prompt[2]
-			local new_x = Input:draw_input_prompt(1, actions, text, COL_LIGHTEST_GRAY, x, y)
+			local new_x = Input:draw_input_prompt(Input:get_last_ui_user_n(), actions, text, COL_LIGHTEST_GRAY, x, y)
 			x = new_x + 4
 		end
 	end

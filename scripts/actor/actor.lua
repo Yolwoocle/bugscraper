@@ -15,6 +15,7 @@ function Actor:init_actor(x, y, w, h, spr, args)
 
 	self.mid_x = 0
 	self.mid_y = 0
+	self:update_mid_position()
 
 	self.sx = 1
 	self.sy = 1
@@ -99,6 +100,11 @@ function Actor:center_self()
 	self.y = self.y - self.h/2
 end
 
+function Actor:update_mid_position()
+	self.mid_x = self.x + self.w/2
+	self.mid_y = self.y + self.h/2
+end
+
 function Actor:update()
 	error("update not implemented")
 end
@@ -156,8 +162,7 @@ function Actor:update_actor(dt)
 	self.vx = clamp(self.vx, -cap, cap)
 	self.vy = clamp(self.vy, -cap, cap)
 
-	self.mid_x = self.x + self.w/2
-	self.mid_y = self.y + self.h/2
+	self:update_mid_position()
 
 	-- animation
 	if self.anim_frames ~= nil then

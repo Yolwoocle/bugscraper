@@ -86,14 +86,18 @@ end
 
 function InputUser:action_pressed(action)
     -- This makes sure that the button state table assigns "true" to buttons
-	-- that have been just pressed 
+	-- that have been just pressed  
     local action_state = self.action_states[action]
 	local last = action_state.last_state
 	local now = self:action_down(action)
     local result = not last and now
     
     if not result and action_state.can_action_hold_repeat then
-        return action_state:is_hold_repeat_pressed()
+        result = action_state:is_hold_repeat_pressed()
+    end
+
+    if result and is_in_table(UI_ACTIONS, action) then
+        Input:set_last_ui_user_n(self.n)
     end
     return result
 end

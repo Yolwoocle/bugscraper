@@ -251,6 +251,8 @@ RAW_INPUT_MAP_DEFAULT_SPLIT_KEYBOARD_P2 = {
     debug_4 = {"k_4"},
 }
 
+UI_ACTIONS = {"ui_up", "ui_down", "ui_left", "ui_right", "ui_select", "ui_back", "pause", "leave_game"}
+
 AXIS_DEADZONE = 0.2
 AXIS_FUNCTIONS = {
     leftstickxpos =  function(joystick) return joystick:getAxis(1) >  AXIS_DEADZONE end,

@@ -163,8 +163,8 @@ local igun = 1
 function Player:update(dt)
 	self.dt = dt
 
-	-- if self:button_pressed("up") then
-	-- 	-- game.floor = 16
+	-- if Input:action_pressed("up") then
+	-- 	game.floor = 20
 	-- 	for i,e in pairs(game.actors) do
 	-- 		if e.is_enemy then
 	-- 			e:kill()

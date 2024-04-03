@@ -17,13 +17,14 @@ function MusicPlayer:init()
 	-- self.sfx_elevator_bg_volume     = self.sfx_elevator_bg:getVolume()
 	-- self.sfx_elevator_bg_def_volume = self.sfx_elevator_bg:getVolume()
 	
+	self.volume = Options:get("music_volume")
+
 	self.music_mode = MUSIC_MODE_INGAME
 	self.current_disk = self.disks["intro"]
 	self.current_disk:set_mode(self.music_mode)
 
-	self.volume = Options:get("music_volume")
-
 	self:reset()
+	self:update()
 end
 
 function MusicPlayer:reset()

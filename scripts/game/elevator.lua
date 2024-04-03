@@ -415,11 +415,11 @@ function Elevator:draw_win_screen()
 		local val = v
 		local key = k
 		if k == "time" then val = time_to_string(v) end
-		if k == "floor" then val = concat(v, " / 16") end
+		if k == "floor" then val = concat(v, " / ", self.game.elevator.max_floor) end
 		if k == "max_combo" then key = "max combo" end
 		table.insert(ta, concat(k,": ",val))
 	end
-	table.insert(ta, "PRESS [ESCAPE]")
+	table.insert(ta, "Pause to exit")
 
 	for k,v in pairs(ta) do
 		local t = self.game.t + iy*0.2

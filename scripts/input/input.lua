@@ -17,6 +17,7 @@ function InputManager:init()
     -- active = is the buffer active? 
     -- value = what value should standby_mode take?
 	self.buffer_standby_mode = {active = false, value = false} 
+    self.last_ui_user_n = -1
 
 	self.default_mapping_empty =         self:process_input_map(RAW_INPUT_MAP_DEFAULT_EMPTY)
 	self.default_mapping =               self:process_input_map(RAW_INPUT_MAP_DEFAULT_GLOBAL)
@@ -237,7 +238,8 @@ function InputManager:action_pressed(n, action, bypass_standy)
     end
     local user = self.users[n]
     if not user then return false end
-    return user:action_pressed(action)
+    local output = user:action_pressed(action)
+    return output
 end
 
 function InputManager:action_down_any_player(action, bypass_standy)
@@ -408,7 +410,6 @@ function InputManager:split_keyboard()
 end
 
 function InputManager:unsplit_keyboard()
-    if not self.buffer_unsplit_keyboard then return end
     for i=1, MAX_NUMBER_OF_PLAYERS do
         local user = self.users[i]
         if user and user.primary_input_type == INPUT_TYPE_KEYBOARD then
@@ -428,6 +429,14 @@ function InputManager:get_button_style(player_n)
         end
     end
     return user_brand or BUTTON_STYLE_XBOX
+end
+
+function InputManager:get_last_ui_user_n()
+    return self.last_ui_user_n
+end
+
+function InputManager:set_last_ui_user_n(n)
+    self.last_ui_user_n = n 
 end
 
 -----------------------------------------------------
