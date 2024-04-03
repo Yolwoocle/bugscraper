@@ -295,9 +295,9 @@ function InputManager:get_buttons_from_player_n(player_n, action)
     if profile == nil then 
         return {} 
     end
-    local buttons = profile:get_buttons(action) or {}
+    local buttons = profile:get_buttons(action)
 
-    return buttons
+    return buttons or {}
 end
 
 function InputManager:set_action_buttons(profile_id, action, buttons)
@@ -450,6 +450,9 @@ end
 
 function InputManager:get_action_primary_icon(player_n, action, brand_override)
     local button = Input:get_primary_button(player_n, action)
+    if button == nil then
+        return ternary(self:get_primary_input_type(player_n) == INPUT_TYPE_KEYBOARD, images.btn_k_unknown, images.btn_c_unknown)
+    end
     local icon = Input:get_button_icon(player_n, button, brand_override)
     return icon
 end

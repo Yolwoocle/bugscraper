@@ -377,8 +377,7 @@ function Player:draw_controls()
 		for i_action = 1, #actions do
 			local action = actions[i_action]
 
-			local button = Input:get_primary_button(self.n, action) or InputButton:new("?", "?")
-			local icon = Input:get_button_icon(self.n, button) or images.btn_k_unknown
+			local icon = Input:get_action_primary_icon(self.n, action)
 			local w = icon:getWidth()
 
 			btn_x = btn_x - w

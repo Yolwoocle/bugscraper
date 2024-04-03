@@ -162,7 +162,7 @@ function ControlsMenuItem:clear_buttons()
 	end
 
 	-- keep at least one button if clearing an UI action
-	if is_in_table({"ui_up", "ui_down", "ui_left", "ui_right", "ui_select", "ui_back", "pause"}, self.action_name) then
+	if is_in_table({"ui_up", "ui_down", "ui_left", "ui_right", "ui_select", "ui_back", "pause", "leave_game"}, self.action_name) then
 		local button = nil
 		local default_buttons = self:get_profile():get_default_mappings()[self.action_name] or {}
 		for _, default_button in pairs(default_buttons) do
