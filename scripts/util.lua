@@ -238,23 +238,26 @@ function draw_with_selected_outline(spr, x, y, r, sx, sy)
 	love.graphics.draw(spr, x, y, r, sx, sy)
 end
 
-function draw_with_outline(outline_color, spr, x, y, r, sx, sy)
+function draw_with_outline(outline_color, spr, x, y, r, sx, sy, ox, oy, ...)
+	ox = ox or 0
+	oy = oy or 0
+
 	shaders.draw_in_color:sendColor("fillColor", outline_color)
 	love.graphics.setShader(shaders.draw_in_color)
 	local offset = 1
 
-	love.graphics.draw(spr, x, y, r, sx, sy, offset , 0)
-	love.graphics.draw(spr, x, y, r, sx, sy, -offset, 0)
-	love.graphics.draw(spr, x, y, r, sx, sy, 0,       offset)
-	love.graphics.draw(spr, x, y, r, sx, sy, 0,      -offset)
+	love.graphics.draw(spr, x, y, r, sx, sy, ox+offset, oy, ...)
+	love.graphics.draw(spr, x, y, r, sx, sy, ox-offset, oy, ...)
+	love.graphics.draw(spr, x, y, r, sx, sy, ox,       oy+offset, ...)
+	love.graphics.draw(spr, x, y, r, sx, sy, ox,       oy-offset, ...)
 
-	love.graphics.draw(spr, x, y, r, sx, sy, offset , offset)
-	love.graphics.draw(spr, x, y, r, sx, sy,-offset , offset)
-	love.graphics.draw(spr, x, y, r, sx, sy, offset ,-offset)
-	love.graphics.draw(spr, x, y, r, sx, sy,-offset ,-offset)
+	love.graphics.draw(spr, x, y, r, sx, sy, ox+offset, oy+offset, ...)
+	love.graphics.draw(spr, x, y, r, sx, sy, ox-offset, oy+offset, ...)
+	love.graphics.draw(spr, x, y, r, sx, sy, ox+offset, oy-offset, ...)
+	love.graphics.draw(spr, x, y, r, sx, sy, ox-offset, oy-offset, ...)
 	
 	love.graphics.setShader()
-	love.graphics.draw(spr, x, y, r, sx, sy)
+	love.graphics.draw(spr, x, y, r, sx, sy, ox, oy)
 end
 
 function draw_centered(spr, x, y, r, sx, sy)
@@ -586,18 +589,28 @@ function strtobool(str)
 	return str ~= "false" -- Anything other than "false" returns as true
 end
 
+--- Returns a number in the range ]-n, n[. (-n and n excluded)
+---@param n any
 function random_neighbor(n)
 	return love.math.random()*2*n - n
 end
 
+--- Returns an INTEGER between in the range [a, b[. (a included, b excluded)
+---@param a number
+---@param b number
 function random_range_int(a, b)
 	return love.math.random(a, b)
 end
 
+--- Returns a FLOAT between in the range [a, b[. (a included, b excluded)
+---@param a number
+---@param b number
 function random_range(a,b)
 	return love.math.random()*(b-a) + a
 end
 
+--- Returns a random element of the given table.
+---@param t table
 function random_sample(t)
 	return t[love.math.random(1,#t)]
 end

@@ -7,12 +7,12 @@ local MusicPlayer = Class:inherit()
 
 function MusicPlayer:init()
 	self.disks = {
-		["intro"] =     MusicDisk:new(self, sounds.music_intro_unpaused[1], sounds.music_intro_paused[1]),
-		["w1"] =        MusicDisk:new(self, sounds.music_w1_unpaused[1], sounds.music_w1_paused[1]),
-		["game_over"] = MusicDisk:new(self, sounds.music_game_over[1], sounds.music_game_over[1]),
+		["intro"] =     MusicDisk:new(self, sounds.music_intro_unpaused.source, sounds.music_intro_paused.source),
+		["w1"] =        MusicDisk:new(self, sounds.music_w1_unpaused.source, sounds.music_w1_paused.source),
+		["game_over"] = MusicDisk:new(self, sounds.music_game_over.source, sounds.music_game_over.source),
 	}
 
-	-- self.music_source    = sounds.music_galaxy_trip[1]
+	-- self.music_source    = sounds.music_galaxy_trip[1] 
 	-- self.sfx_elevator_bg = sounds.elevator_bg[1]
 	-- self.sfx_elevator_bg_volume     = self.sfx_elevator_bg:getVolume()
 	-- self.sfx_elevator_bg_def_volume = self.sfx_elevator_bg:getVolume()

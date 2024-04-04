@@ -195,14 +195,14 @@ function Elevator:update_door_anim(dt)
 	elseif self.floor_progress > 3 then
 		-- ...Open door...
 		self.door_offset = lerp(self.door_offset, 54, 0.1)
-		sounds.elev_door_open[1]:play()
+		sounds.elev_door_open.source:play()
 	elseif self.floor_progress > 2 then
 		-- ...Keep door open...
 		self.door_offset = 54
 	elseif self.floor_progress > 1 then
 		-- ...Close doors
 		self.door_offset = lerp(self.door_offset, 0, 0.1)
-		sounds.elev_door_close[1]:play()
+		sounds.elev_door_close.source:play()
 		self:activate_enemy_buffer()
 	end
 
@@ -455,15 +455,15 @@ function Elevator:do_reverse_elevator(dt)
 		self.is_reversing_elevator = false
 		self.is_exploding_elevator = true -- I SHOULDVE MADE A STATE SYSTEM BUT FUCK LOGIC
 		self:on_exploding_elevator(dt)
-		sounds.elev_burning[1]:stop()
-		sounds.elev_siren[1]:stop()
+		sounds.elev_burning.source:stop()
+		sounds.elev_siren.source:stop()
 		return
 	end
 
-	sounds.elev_burning[1]:play()
-	sounds.elev_siren[1]:play()
-	sounds.elev_burning[1]:setVolume(abs(self.elevator_speed/speed_cap))
-	sounds.elev_siren[1]:setVolume(abs(self.elevator_speed/speed_cap))
+	sounds.elev_burning.source:play()
+	sounds.elev_siren.source:play()
+	sounds.elev_burning.source:setVolume(abs(self.elevator_speed/speed_cap))
+	sounds.elev_siren.source:setVolume(abs(self.elevator_speed/speed_cap))
 
 	-- Screenshake
 	local spdratio = self.elevator_speed / self.def_elevator_speed

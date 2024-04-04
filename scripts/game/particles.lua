@@ -52,6 +52,9 @@ function Particle:update(dt)
 end
 function Particle:draw()
 end
+function Particle:remove()
+	self.is_removed = true
+end
 
 -----------
 
@@ -241,6 +244,101 @@ end
 
 ------------------------------------------------------------
 
+
+local SmashedPlayerParticle = Particle:inherit()
+
+function SmashedPlayerParticle:init(spr, x, y, vx, vy)
+	--                (x,y,s,r, vx,vy,vs,vr,                    life, g, is_solid)
+	self:init_particle(x,y,1,0, 0,0,0,0,   3,    0)
+	self.future_vx = vx
+	self.future_vy = vy
+	self.future_vr = random_range(10, 20)
+
+	self.spr = spr
+	
+	self.spr_w = self.spr:getWidth()
+	self.spr_h = self.spr:getWidth()
+	self.spr_ox = self.spr_w / 2
+	self.spr_oy = self.spr_h / 2
+	
+	self.freeze_duration = 1.0
+
+	self.is_solid = false
+	self.is_front = true
+end
+function SmashedPlayerParticle:update(dt)
+	self:update_particle(dt)
+
+	self.freeze_duration = max(0.0, self.freeze_duration - dt)
+	if self.freeze_duration <= 0 then
+		self.vx = self.future_vx
+		self.vy = self.future_vy
+		self.vr = self.future_vr
+	end
+
+	if self.y <= -8 then
+		local a = atan2(self.vy, self.vx)
+		game:screenshake(15)
+		Particles:smash_flash(self.x, -8, a, COL_LIGHT_BLUE)
+		Particles:smash_flash(self.x, -8, a, color(0xf6757a))
+		Particles:smash_flash(self.x, -8, a, COL_WHITE)
+		self:remove()
+	end
+
+	Particles:dust(self.x, self.y, COL_WHITE, nil, nil, nil, true)
+end
+function SmashedPlayerParticle:draw()
+	love.graphics.draw(self.spr, self.x, self.y, self.r, self.s, self.s, self.spr_ox, self.spr_oy)
+end
+
+------------------------------------------------------------
+
+
+local SmashFlashParticle = Particle:inherit()
+
+function SmashFlashParticle:init(x, y, r, col)
+	--                (x,y,s,r, vx,vy,vs,vr, life, g, is_solid)
+	self:init_particle(x,y,1,r, 0,0,0,0,     1,    0)
+	self.spr = images.smash_flash
+	self.col = col
+
+	self.sx = 1
+	self.sy = 1
+	self.flip_y = false
+	self.flash_size = 1.0
+
+	self.spr_w = self.spr:getWidth()
+	self.spr_h = self.spr:getWidth()
+	self.spr_ox = self.spr_w
+	self.spr_oy = self.spr_h / 4
+	
+	self.is_solid = false
+	self.is_front = true
+
+	self.points = {}
+end
+function SmashFlashParticle:update(dt)
+	self:update_particle(dt)
+	
+	self.ox = random_neighbor(10)
+	self.oy = random_neighbor(10)
+
+	-- self.sx = random_range(0.7, 1.2)
+	self.sy = random_range(0.8, 1.2) * self.flash_size
+	self.flash_size = (self.life / self.max_life)
+	if random_sample{0, 1} == 1 then
+		self.flip_y = not self.flip_y
+	end
+end
+function SmashFlashParticle:draw()
+	exec_color(self.col, function()
+		local fy = 1-- ternary(self.flip_y, -1, 1)
+		love.graphics.draw(self.spr, self.x + self.ox, self.y + self.oy, self.r, self.sx, fy*self.sy, self.spr_ox, self.spr_oy)
+	end)
+end
+
+------------------------------------------------------------
+
 local ParticleSystem = Class:inherit()
 
 function ParticleSystem:init(x,y)
@@ -426,7 +524,15 @@ function ParticleSystem:dead_player(x, y, spr, colors, dir_x)
 end
 
 function ParticleSystem:ejected_player(spr, x, y, vx, vy)
-	self:add_particle(EjectedPlayerParticle:new(spr, x, y, random_range(100, 300), vy or -random_range(400, 600)))
+	self:add_particle(EjectedPlayerParticle:new(spr, x, y, vx or random_range(100, 300), vy or -random_range(400, 600)))
+end
+
+function ParticleSystem:smashed_player(spr, x, y, vx, vy)
+	self:add_particle(SmashedPlayerParticle:new(spr, x, y, vx or 400, vy or -random_range(600, 600)))
+end
+
+function ParticleSystem:smash_flash(x, y, r, col)
+	self:add_particle(SmashFlashParticle:new(x, y, r, col))
 end
 
 function ParticleSystem:letter(x, y, str, spawn_delay, col)

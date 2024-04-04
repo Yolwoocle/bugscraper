@@ -152,6 +152,7 @@ local img_names = {
 	btnfrag_3 =            "particles/btnfrag_3",
 	btnfrag_4 =            "particles/btnfrag_4",
 	btnfrag_5 =            "particles/btnfrag_5",
+	smash_flash =          "particles/smash_flash",
 
 	-----------------------------------------------------
 	
@@ -182,6 +183,10 @@ local img_names = {
 	logo_shad =   "ui/logo/logo_shad",
 
 	controls_jetpack = "ui/controls_jetpack",
+
+	selection_left = "ui/selection_left",
+	selection_mid = "ui/selection_mid",
+	selection_right = "ui/selection_right",
 
 	-----------------------------------------------------
 	

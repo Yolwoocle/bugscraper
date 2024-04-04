@@ -28,7 +28,7 @@ function Mosquito:init(x, y)
     self.attack_vector_y = 0.0
     self.current_phase_timer = random_range(0.0, 5.0)
 
-    self.buzz_source = sounds.fly_buzz[1]:clone()
+    self.buzz_source = sounds.fly_buzz.source:clone()
     self.buzz_source:setPitch(1.5)
 
     self.t = 0

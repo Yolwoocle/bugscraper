@@ -37,7 +37,7 @@ function AudioManager:play(snd, volume, pitch, object)
 		end
 	end
 
-	local new_source = snd_table[1]:clone()
+	local new_source = snd_table.source:clone()
 	table.insert(snd_table, new_source)
 	new_source:setVolume(volume * snd_table.volume)
 	new_source:setPitch(pitch   * snd_table.pitch)

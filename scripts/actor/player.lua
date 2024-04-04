@@ -135,7 +135,7 @@ function Player:init(n, x, y, skin)
 	self.controls_oy = 0
 
 	-- SFX
-	self.sfx_wall_slide = sounds.sliding_wall_metal[1]
+	self.sfx_wall_slide = sounds.sliding_wall_metal.source
 	self.sfx_wall_slide:play()
 	self.sfx_wall_slide_volume = 0
 	self.sfx_wall_slide_max_volume = 0.1
@@ -413,6 +413,9 @@ function Player:draw_player()
 		
 		-- Draw
 		love.graphics.setColor(old_col)
+		-- if Input:get_number_of_users() > 1 then
+		-- 	draw_with_outline(COL_WHITE, self.spr, x, y, self.rot, fx, fy, spr_w2, spr_h2)
+		-- end
 		gfx.draw(self.spr, x, y, self.rot, fx, fy, spr_w2, spr_h2)
 	end
 
@@ -815,7 +818,7 @@ function Player:on_grounded()
 	end
 	Audio:play_var(s, 0.3, 1, {pitch=0.5, volume=0.5})
 
-	self.jump_squash = 2
+	self.jump_squash = 1.5
 	self.spr = self.spr_idle
 	Particles:smoke(self.mid_x, self.y+self.h, 10, COL_WHITE, 8, 4, 2)
 
@@ -826,18 +829,6 @@ function Player:do_aiming(dt)
 	self.dir_y = 0
 	if Input:action_down(self.n, "up") then      self.dir_y = -1    end
 	if Input:action_down(self.n, "down") then    self.dir_y = 1     end
-end
-
-function Player:do_snowballing()
-	local moving = Input:action_down(self.n, "left") or Input:action_down(self.n, "right")
-	if self.is_grounded and Input:action_down(self.n, "down") and moving then
-		self.snowball_size = self.snowball_size + 0.1
-	end
-
-	if Input:action_down(self.n, "shoot") then
-		local spd = self.snowball_speed * self.dir_x
-		game:new_actor(Bullet:new(self, self.mid_x, self.mid_y, 10, 10, spd, -self.snowball_speed))
-	end
 end
 
 function Player:equip_gun(gun)

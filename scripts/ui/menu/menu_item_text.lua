@@ -1,4 +1,5 @@
 local MenuItem = require "scripts.ui.menu.menu_item"
+local images   = require "data.images"
 
 local TextMenuItem = MenuItem:inherit()
 
@@ -54,6 +55,8 @@ function TextMenuItem:update_textitem(dt)
 
 	self.ox = lerp(self.ox, 0, 0.3)
 	self.oy = lerp(self.oy, 0, 0.3)
+	if math.abs(self.ox) <= 0.1 then self.ox = 0 end
+	if math.abs(self.oy) <= 0.1 then self.oy = 0 end
 
 	self.text = self.label_text
 	-- if self.value == nil or #self.value_text == "0" then
@@ -79,6 +82,20 @@ function TextMenuItem:draw_textitem()
 	-- 	circle_color(col, "fill", x+w, y+h/2, h/2)
 	-- 	rect_color(col, "fill", x, y, w, h)
 	-- end
+	
+	if self.is_selected then
+		local col = Input:get_last_ui_player_color()
+		local x = math.floor(self.x - MENU_PADDING - 8)
+		local y = math.floor(self.y + self.oy - 6)
+		local w = math.floor(MENU_PADDING*2 + 16)
+		local h = math.floor(16)
+
+		exec_color(col, function()
+			love.graphics.draw(images.selection_left, x-16, y)
+			love.graphics.draw(images.selection_right, x + w, y)
+			rect_color(col, "fill", x, y, w, h)
+		end)
+	end
 
 	-- /!\ This is really sketchy. Too bad
 	if type(self.value) == "nil" then

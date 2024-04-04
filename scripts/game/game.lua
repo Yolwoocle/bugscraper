@@ -84,63 +84,9 @@ function Game:init()
 	self.is_first_time = Options.is_first_time
 end
 
-function Game:get_window_flags()
-	return {
-		fullscreen = ternary(OPERATING_SYSTEM == "Web", false, Options:get("is_fullscreen")),
-		resizable = true,
-		vsync = Options:get("is_vsync"),
-		minwidth = CANVAS_WIDTH,
-		minheight = CANVAS_HEIGHT,
-	}
-end
-
-function Game:on_resize(w, h)
-	if not Options:get("is_fullscreen") then
-		Options:set("windowed_width", w)
-		Options:set("windowed_height", h)
-	end
-	self:update_screen()
-end
-
-function Game:update_fullscreen(is_fullscreen)
-	love.window.setFullscreen(is_fullscreen)
-
-	if not is_fullscreen then
-		local window_w = Options:get("windowed_width")
-		local window_h = Options:get("windowed_height")
-		love.window.setMode(window_w, window_h, self:get_window_flags())
-	end
-
-	self:update_screen()
-end
-
-function Game:update_screen()
-	WINDOW_WIDTH, WINDOW_HEIGHT = gfx.getDimensions()
-	
-	local pixel_scale_mode = Options:get("pixel_scale")
-	
-	local screen_sx = WINDOW_WIDTH / CANVAS_WIDTH
-	local screen_sy = WINDOW_HEIGHT / CANVAS_HEIGHT
-	local auto_scale = math.min(screen_sx, screen_sy)
-
-	local scale = auto_scale
-	if type(pixel_scale_mode) == "number" then
-		scale = math.min(pixel_scale_mode, auto_scale)
-
-	elseif pixel_scale_mode == "auto" then
-		scale = auto_scale
-		
-	elseif pixel_scale_mode == "max whole" then
-		scale = math.floor(auto_scale)
-	end
-
-	CANVAS_SCALE = scale
-
-	CANVAS_OX = math.floor(max(0, (WINDOW_WIDTH  - CANVAS_WIDTH  * CANVAS_SCALE)/2))
-	CANVAS_OY = math.floor(max(0, (WINDOW_HEIGHT - CANVAS_HEIGHT * CANVAS_SCALE)/2))
-end
-
 function Game:new_game()
+	love.audio.stop()
+	
 	-- Reset global systems
 	Collision = CollisionManager:new()
 	Particles = ParticleSystem:new()
@@ -207,6 +153,7 @@ function Game:new_game()
 	-- Camera & screenshake
 	self.cam_x = 0
 	self.cam_y = 0
+	self.cam_zoom = 1
 	self.cam_realx, self.cam_realy = 0, 0
 	self.cam_ox, self.cam_oy = 0, 0
 	self.screenshake_q = 0
@@ -268,7 +215,7 @@ function Game:new_game()
 	self.music_player = MusicPlayer:new()
 	self.music_player:set_disk("intro")
 	self.music_player:play()
-	self.sfx_elevator_bg = sounds.elevator_bg[1]
+	self.sfx_elevator_bg = sounds.elevator_bg.source
 	self.sfx_elevator_bg_volume     = self.sfx_elevator_bg:getVolume()
 	self.sfx_elevator_bg_def_volume = self.sfx_elevator_bg:getVolume()
 	-- self.music_source:setVolume(options:get("music_volume"))
@@ -283,6 +230,63 @@ function Game:new_game()
 	self.max_timer_before_game_over = 3.3
 
 	Options:update_sound_on()
+end
+
+
+function Game:get_window_flags()
+	return {
+		fullscreen = ternary(OPERATING_SYSTEM == "Web", false, Options:get("is_fullscreen")),
+		resizable = true,
+		vsync = Options:get("is_vsync"),
+		minwidth = CANVAS_WIDTH,
+		minheight = CANVAS_HEIGHT,
+	}
+end
+
+function Game:on_resize(w, h)
+	if not Options:get("is_fullscreen") then
+		Options:set("windowed_width", w)
+		Options:set("windowed_height", h)
+	end
+	self:update_screen()
+end
+
+function Game:update_fullscreen(is_fullscreen)
+	love.window.setFullscreen(is_fullscreen)
+
+	if not is_fullscreen then
+		local window_w = Options:get("windowed_width")
+		local window_h = Options:get("windowed_height")
+		love.window.setMode(window_w, window_h, self:get_window_flags())
+	end
+
+	self:update_screen()
+end
+
+function Game:update_screen()
+	WINDOW_WIDTH, WINDOW_HEIGHT = gfx.getDimensions()
+	
+	local pixel_scale_mode = Options:get("pixel_scale")
+	
+	local screen_sx = WINDOW_WIDTH / CANVAS_WIDTH
+	local screen_sy = WINDOW_HEIGHT / CANVAS_HEIGHT
+	local auto_scale = math.min(screen_sx, screen_sy)
+
+	local scale = auto_scale
+	if type(pixel_scale_mode) == "number" then
+		scale = math.min(pixel_scale_mode, auto_scale)
+
+	elseif pixel_scale_mode == "auto" then
+		scale = auto_scale
+		
+	elseif pixel_scale_mode == "max whole" then
+		scale = math.floor(auto_scale)
+	end
+
+	CANVAS_SCALE = scale
+
+	CANVAS_OX = math.floor(max(0, (WINDOW_WIDTH  - CANVAS_WIDTH  * CANVAS_SCALE)/2))
+	CANVAS_OY = math.floor(max(0, (WINDOW_HEIGHT - CANVAS_HEIGHT * CANVAS_SCALE)/2))
 end
 
 local n = 0
@@ -377,11 +381,32 @@ function Game:update_main_game(dt)
 		self.jetpack_tutorial_y = lerp(self.jetpack_tutorial_y, -30, 0.1)
 	end
 
-	local q = 4
+	self:update_debug(dt)
+	-- local q = 4
 	-- if love.keyboard.isScancodeDown("a") then self.cam_x = self.cam_x - q end
 	-- if love.keyboard.isScancodeDown("d") then self.cam_x = self.cam_x + q end
 	-- if love.keyboard.isScancodeDown("w") then self.cam_y = self.cam_y - q end
 	-- if love.keyboard.isScancodeDown("s") then self.cam_y = self.cam_y + q end
+end
+
+function Game:get_camera()
+	return self.cam_x, self.cam_y
+end
+
+function Game:set_camera(x, y)
+	self.cam_x = x
+	self.cam_y = y
+end
+
+function Game:get_zoom()
+	return self.cam_zoom
+end
+function Game:set_zoom(zoom)
+	self.cam_zoom = zoom
+end
+
+function Game:update_debug(dt)
+	
 end
 
 function Game:draw()
@@ -410,15 +435,19 @@ testx = 0
 testy = 0
 function Game:draw_game()
 	exec_on_canvas(self.smoke_canvas, love.graphics.clear)
-
+	local real_camx, real_camy = (self.cam_x + self.cam_ox), (self.cam_y + self.cam_oy)
+	local function reset_transform()
+		love.graphics.origin()
+		love.graphics.scale(self.cam_zoom)
+	end
+	
 	-- Sky
 	gfx.clear(self.elevator.bg_col)
-	local real_camx, real_camy = (self.cam_x + self.cam_ox), (self.cam_y + self.cam_oy)
-	love.graphics.translate(-real_camx, -real_camy)
-
+	
 	local old_canvas = love.graphics.getCanvas()
 	love.graphics.setCanvas(self.object_canvas)
 	love.graphics.clear()
+	love.graphics.translate(-real_camx, -real_camy)
 
 	-- Draw actors
 	for _,actor in pairs(self.actors) do
@@ -443,7 +472,7 @@ function Game:draw_game()
 		-- Draw actors UI
 		Particles:draw_front()
 		-- Draw actors
-		love.graphics.origin()			
+		reset_transform()		
 		for k,actor in pairs(self.actors) do
 			if actor.draw_hud then     actor:draw_hud()    end
 		end
@@ -486,7 +515,7 @@ function Game:draw_game()
 		self.elevator:draw_background(self.cabin_x, self.cabin_y)
 	end
 	
-	love.graphics.origin()
+	reset_transform()
 	love.graphics.setColor(0,0,0, 0.5)
 	love.graphics.draw(self.object_canvas, self.shadow_ox, self.shadow_oy)
 	love.graphics.draw(self.front_canvas,  self.shadow_ox, self.shadow_oy)
@@ -503,7 +532,7 @@ function Game:draw_game()
 		gfx.draw(images.cabin_walls, self.cabin_x, self.cabin_y)
 	end
 
-	love.graphics.origin()
+	reset_transform()
 	love.graphics.draw(self.front_canvas, 0, 0)
 	love.graphics.translate(-real_camx, -real_camy)
 
@@ -513,7 +542,7 @@ function Game:draw_game()
 	-- rect_color(COL_DARK_GRAY, "fill", floor((CANVAS_WIDTH-w)/2),    16, w, 8)
 	-- rect_color(COL_WHITE,    "fill", floor((CANVAS_WIDTH-w)/2) +1, 17, (w-2)*self.floor_progress, 6)
 
-	gfx.origin()
+	reset_transform()
 
 	-- Logo
 	self:draw_logo()
@@ -766,6 +795,8 @@ function Game:draw_debug()
 	local txt_h = get_text_height(" ")
 	local txts = {
 		concat("FPS: ",love.timer.getFPS()),
+		concat("LÖVE version: ", string.format("%d.%d.%d - %s", love.getVersion())),
+		concat("n° of active source: ", love.audio.getActiveSourceCount()),
 		concat("n° of actors: ", #self.actors, " / ", self.actor_limit),
 		concat("n° of enemies: ", self.enemy_count),
 		concat("n° collision items: ", Collision.world:countItems()),
@@ -774,9 +805,6 @@ function Game:draw_debug()
 		concat("real_wave_n ", self.debug2),
 		concat("bg_color_index ", self.debug3),
 		concat("number_of_alive_players ", self:get_number_of_alive_players()),
-		concat("number_of_users(*) ", Input:get_number_of_users()),
-		concat("number_of_users(KEYBOARD) ", Input:get_number_of_users(INPUT_TYPE_KEYBOARD)),
-		concat("number_of_users(CONTROLLER) ", Input:get_number_of_users(INPUT_TYPE_CONTROLLER)),
 		players_str,
 		users_str,
 		joystick_user_str,
@@ -1063,8 +1091,8 @@ function Game:keypressed(key, scancode, isrepeat)
 		end
 
 		if p ~= nil then
-			p:do_damage(1, nil)
-			p.iframes = 0.1
+			p:kill()
+			-- p.iframes = 0.1
 		end
 	end
 		-- local all_guns = {

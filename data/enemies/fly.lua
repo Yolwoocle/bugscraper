@@ -26,7 +26,7 @@ function Fly:init_fly(x, y, spr)
     self.anim_frame_len = 0.05
     self.anim_frames = {images.fly1, images.fly2}
 
-    self.buzz_source = sounds.fly_buzz[1]:clone()
+    self.buzz_source = sounds.fly_buzz.source:clone()
     self.buzz_source:seek(random_range(0, self.buzz_source:getDuration()))
     self.buzz_is_started = false
 end
@@ -49,7 +49,7 @@ function Fly:update_fly(dt)
 end
 
 function Fly:pause_repeating_sounds()
-    self.buzz_source:setVolume(0)
+    -- self.buzz_source:setVolume(0)
 end
 function Fly:play_repeating_sounds()
     self.buzz_source:setVolume(1)
