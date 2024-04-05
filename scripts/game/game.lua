@@ -229,6 +229,8 @@ function Game:new_game()
 	self.timer_before_game_over = 0
 	self.max_timer_before_game_over = 3.3
 
+	self.show_ui = true
+
 	Options:update_sound_on()
 end
 
@@ -474,7 +476,7 @@ function Game:draw_game()
 		-- Draw actors
 		reset_transform()		
 		for k,actor in pairs(self.actors) do
-			if actor.draw_hud then     actor:draw_hud()    end
+			if actor.draw_hud and self.show_ui then     actor:draw_hud()    end
 		end
 		love.graphics.translate(-real_camx, -real_camy)
 	end
@@ -545,7 +547,7 @@ function Game:draw_game()
 	reset_transform()
 
 	-- Logo
-	self:draw_logo()
+	self:draw_ui()
 
 	-- "CONGRATS" at the end
 	if self.elevator.is_on_win_screen then
@@ -705,6 +707,12 @@ function Game:removeme_bg_test2()
 	end
 end
 
+function Game:draw_ui()
+	if not self.show_ui then return end
+	self:draw_logo()
+	self:draw_join_tutorial()
+end
+
 function Game:draw_logo()
 	for i=1, #LOGO_COLS + 1 do
 		local ox, oy = cos(self.logo_a + i*.4)*8, sin(self.logo_a + i*.4)*8
@@ -719,7 +727,6 @@ function Game:draw_logo()
 		gfx.setColor(col)
 		gfx.draw(spr, logo_x + ox, self.logo_y + oy)
 	end
-	self:draw_join_tutorial()
 end
 
 function Game:draw_join_tutorial()
@@ -1058,6 +1065,9 @@ function Game:start_game()
 	self.move_logo = true
 	self.game_started = true
 	self.music_player:set_disk("w1")
+
+	game.menu_manager:set_can_pause(true)
+	game:set_zoom(1)
 end
 
 function Game:on_red_button_pressed()

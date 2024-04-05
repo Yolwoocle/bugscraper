@@ -254,6 +254,9 @@ function SmashedPlayerParticle:init(spr, x, y, vx, vy)
 	self.future_vy = vy
 	self.future_vr = random_range(10, 20)
 
+	self.ox = 0
+	self.oy = 0
+
 	self.spr = spr
 	
 	self.spr_w = self.spr:getWidth()
@@ -274,21 +277,24 @@ function SmashedPlayerParticle:update(dt)
 		self.vx = self.future_vx
 		self.vy = self.future_vy
 		self.vr = self.future_vr
+	-- else
+		-- self.ox = random_neighbor(3)
+		-- self.oy = random_neighbor(3)
 	end
 
 	if self.y <= -8 then
 		local a = atan2(self.vy, self.vx)
 		game:screenshake(15)
-		Particles:smash_flash(self.x, -8, a, COL_LIGHT_BLUE)
-		Particles:smash_flash(self.x, -8, a, color(0xf6757a))
-		Particles:smash_flash(self.x, -8, a, COL_WHITE)
+		Particles:smash_flash(self.x, -80, a, COL_LIGHT_BLUE)
+		Particles:smash_flash(self.x, -80, a, color(0xf6757a))
+		Particles:smash_flash(self.x, -80, a, COL_WHITE)
 		self:remove()
 	end
 
 	Particles:dust(self.x, self.y, COL_WHITE, nil, nil, nil, true)
 end
 function SmashedPlayerParticle:draw()
-	love.graphics.draw(self.spr, self.x, self.y, self.r, self.s, self.s, self.spr_ox, self.spr_oy)
+	love.graphics.draw(self.spr, self.x + self.ox, self.y + self.oy, self.r, self.s, self.s, self.spr_ox, self.spr_oy)
 end
 
 ------------------------------------------------------------
@@ -310,7 +316,7 @@ function SmashFlashParticle:init(x, y, r, col)
 	self.spr_w = self.spr:getWidth()
 	self.spr_h = self.spr:getWidth()
 	self.spr_ox = self.spr_w
-	self.spr_oy = self.spr_h / 4
+	self.spr_oy = 0
 	
 	self.is_solid = false
 	self.is_front = true
@@ -323,12 +329,12 @@ function SmashFlashParticle:update(dt)
 	self.ox = random_neighbor(10)
 	self.oy = random_neighbor(10)
 
-	-- self.sx = random_range(0.7, 1.2)
-	self.sy = random_range(0.8, 1.2) * self.flash_size
 	self.flash_size = (self.life / self.max_life)
-	if random_sample{0, 1} == 1 then
-		self.flip_y = not self.flip_y
-	end
+	self.sy = random_range(0.8, 1.2) * self.flash_size
+	-- self.sx = 0.5 * self.flash_size
+	-- if random_sample{0, 1} == 1 then
+	-- 	self.flip_y = not self.flip_y
+	-- end
 end
 function SmashFlashParticle:draw()
 	exec_color(self.col, function()

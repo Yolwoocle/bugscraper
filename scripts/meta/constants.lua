@@ -234,7 +234,7 @@ RAW_INPUT_MAP_DEFAULT_SPLIT_KEYBOARD_P2 = {
     debug = {},
 }
 
-UI_ACTIONS = {"ui_up", "ui_down", "ui_left", "ui_right", "ui_select", "ui_back", "pause", "leave_game"}
+UI_ACTIONS = {"ui_up", "ui_down", "ui_left", "ui_right", "ui_select", "ui_back", "pause"}
 
 AXIS_DEADZONE = 0.2
 AXIS_FUNCTIONS = {
