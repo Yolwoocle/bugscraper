@@ -14,6 +14,7 @@ local MusicPlayer = require "scripts.audio.music_player"
 local MusicDisk = require "scripts.audio.music_disk"
 local Elevator = require "scripts.game.elevator"
 local InputButton = require "scripts.input.input_button"
+local GameUI = require "scripts.ui.game_ui"
 
 local skins = require "data.skins"
 local shaders  = require "data.shaders"
@@ -229,7 +230,8 @@ function Game:new_game()
 	self.timer_before_game_over = 0
 	self.max_timer_before_game_over = 3.3
 
-	self.show_ui = true
+	-- UI
+	self.game_ui = GameUI:new()
 
 	Options:update_sound_on()
 end
@@ -476,7 +478,7 @@ function Game:draw_game()
 		-- Draw actors
 		reset_transform()		
 		for k,actor in pairs(self.actors) do
-			if actor.draw_hud and self.show_ui then     actor:draw_hud()    end
+			if actor.draw_hud and self.game_ui.is_visible then     actor:draw_hud()    end
 		end
 		love.graphics.translate(-real_camx, -real_camy)
 	end
@@ -547,7 +549,7 @@ function Game:draw_game()
 	reset_transform()
 
 	-- Logo
-	self:draw_ui()
+	self.game_ui:draw()
 
 	-- "CONGRATS" at the end
 	if self.elevator.is_on_win_screen then
@@ -611,6 +613,10 @@ function Game:draw_smoke_canvas()
 	love.graphics.setColor(1,1,1,0.5)
 	love.graphics.draw(self.smoke_canvas, 0, 0)
 	love.graphics.setColor(1,1,1,1)
+end
+
+function Game:set_ui_visible(bool)
+	self.game_ui:set_visible(bool)
 end
 
 function Game:listen_for_player_join(dt)
@@ -718,70 +724,6 @@ function Game:removeme_bg_test2()
 		if bglines[i].y > CANVAS_HEIGHT then
 			bglines[i] = new_bg_line()
 		end
-	end
-end
-
-function Game:draw_ui()
-	if not self.show_ui then return end
-	self:draw_logo()
-	self:draw_join_tutorial()
-end
-
-function Game:draw_logo()
-	for i=1, #LOGO_COLS + 1 do
-		local ox, oy = cos(self.logo_a + i*.4)*8, sin(self.logo_a + i*.4)*8
-		local logo_x = floor((CANVAS_WIDTH - images.logo_noshad:getWidth())/2)
-		
-		local col = LOGO_COLS[i]
-		local spr = images.logo_shad
-		if col == nil then
-			col = COL_WHITE
-			spr = images.logo_noshad
-		end
-		gfx.setColor(col)
-		gfx.draw(spr, logo_x + ox, self.logo_y + oy)
-	end
-end
-
-function Game:draw_join_tutorial()
-	local def_x = math.floor((self.door_ax + self.door_bx) / 2)
-	local def_y = self.logo_y + 50
-
-	local icons = {
-		Input:get_button_icon(1, Input:get_input_profile("global"):get_primary_button("jump", INPUT_TYPE_KEYBOARD)),
-		Input:get_button_icon(1, Input:get_input_profile("global"):get_primary_button("jump", INPUT_TYPE_CONTROLLER), BUTTON_STYLE_XBOX),
-		Input:get_button_icon(1, Input:get_input_profile("global"):get_primary_button("jump", INPUT_TYPE_CONTROLLER), BUTTON_STYLE_PLAYSTATION5),
-	}
-	
-	local x = def_x
-	local y = def_y
-	print_outline(COL_WHITE, COL_BLACK_BLUE, "JOIN", x, y)
-	for i, icon in pairs(icons) do
-		x = x - icon:getWidth() - 2
-		love.graphics.draw(icon, x, y)
-		if i ~= #icons then
-			print_outline(COL_WHITE, COL_BLACK_BLUE, "/", x-3, y)
-		end
-	end
-	
-	x = def_x
-	y = y + 16
-	local number_of_keyboard_users = Input:get_number_of_users(INPUT_TYPE_KEYBOARD)
-	if number_of_keyboard_users >= 1 then
-		local icon_split_kb = Input:get_button_icon(1, Input:get_input_profile("global"):get_primary_button("split_keyboard"))
-
-		print_outline(COL_WHITE, COL_BLACK_BLUE, ternary(number_of_keyboard_users == 1, "SPLIT KEYBOARD", "UNSPLIT KEYBOARD"), x, y)
-		x = x - icon_split_kb:getWidth() - 2
-		love.graphics.draw(icon_split_kb, x, y)
-	end
-end
-
-function Game:draw_colview()
-	local items, len = Collision.world:getItems()
-	for i,it in pairs(items) do
-		local x,y,w,h = Collision.world:getRect(it)
-		rect_color({0,1,0,.2},"fill", x, y, w, h)
-		rect_color({0,1,0,.5},"line", x, y, w, h)
 	end
 end
 
@@ -1007,6 +949,7 @@ function Game:join_game(input_profile_id, joystick)
 	end
 
 	Input:new_user(player_n)
+	Input:set_last_ui_user_n(player_n)
 	self:new_player(player_n)
 	if joystick ~= nil then
 		Input:assign_joystick(player_n, joystick)
@@ -1084,6 +1027,7 @@ function Game:start_game()
 
 	game.menu_manager:set_can_pause(true)
 	game:set_zoom(1)
+	game:set_camera(0, 0)
 end
 
 function Game:on_red_button_pressed()

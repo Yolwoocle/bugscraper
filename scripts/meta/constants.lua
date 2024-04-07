@@ -284,3 +284,7 @@ UPGRADE_TYPE_PERMANENT = "permanent"
 
 UPGRADE_TARGET_SINGLE = "single"
 UPGRADE_TARGET_ALL = "all"
+
+--------------------------------------------- 
+
+SMASH_EASTER_EGG_PROBABILITY = 1/50

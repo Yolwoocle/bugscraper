@@ -36,7 +36,6 @@ function ExitSign:init(x, y)
     self.spring_retract_timer = 0.0
 
     self.is_in_smash_easter_egg = false
-    self.smash_easter_egg_probability = 0.5
     self.smash_stars = {}
     self.old_camera_x, self.old_camera_y = 0, 0
     self.smash_x, self.smash_y = 0, 0
@@ -74,7 +73,7 @@ end
 function ExitSign:activate(player)
     if self.spring_active then return end
 
-    if random_range(0, 1) < self.smash_easter_egg_probability then
+    if random_range(0, 1) < SMASH_EASTER_EGG_PROBABILITY then
         self:activate_smash_easter_egg(player)
     else
         game:leave_game(player.n)
@@ -150,7 +149,7 @@ function ExitSign:activate_smash_easter_egg(player)
     self.old_camera_x, self.old_camera_y = game:get_camera()
     self.smash_unzoom_timer = 0.9
     game:set_zoom(2)
-    game.show_ui = false
+    game:set_ui_visible(false)
     game.menu_manager:set_can_pause(false)
 
     self:update_star()
@@ -216,7 +215,7 @@ function ExitSign:update_smash_effect_end(dt)
         self.pan_camera_to_default = true
         self.is_in_smash_easter_egg = false
 
-        game.show_ui = true
+        game:set_ui_visible(true)
     end
     
     if self.pan_camera_to_default then
