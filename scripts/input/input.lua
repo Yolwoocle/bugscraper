@@ -281,6 +281,21 @@ function InputManager:get_user(n)
     return self.users[n]
 end
 
+function InputManager:get_users(input_type)
+    if input_type == nil then
+        return self.users
+    end
+
+    local users = {}
+    for i = 1, MAX_NUMBER_OF_PLAYERS do
+        local user = self.users[i]
+        if user and user:get_primary_input_type() == input_type then
+            table.insert(users, user)
+        end
+    end
+    return users
+end
+
 function InputManager:get_global_user()
     return self.global_user
 end

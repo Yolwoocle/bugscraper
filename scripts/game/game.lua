@@ -638,10 +638,24 @@ function Game:listen_for_player_join(dt)
 			self:join_game(input_profile_id, joystick)
 		end
 	end
-	if Input:action_pressed_global("split_keyboard") and Input:get_number_of_users(INPUT_TYPE_KEYBOARD) == 1 then
-		self:join_game("keyboard_solo")
-		Input:split_keyboard()
+
+	if Input:action_pressed_global("split_keyboard") then
+		if Input:get_number_of_users(INPUT_TYPE_KEYBOARD) == 1 then
+			self:join_game("keyboard_solo")
+			Input:split_keyboard()
+
+		elseif Input:get_number_of_users(INPUT_TYPE_KEYBOARD) == 2 then
+			self:unsplit_keyboard_and_kick_second_player()
+		end
 	end
+end
+
+function Game:unsplit_keyboard_and_kick_second_player()
+	local second_user = Input:get_users(INPUT_TYPE_KEYBOARD)[2]
+	if second_user == nil then return end
+
+	self:leave_game(second_user.n)
+	Input:unsplit_keyboard()
 end
 
 function Game:removeme_bg_test()
@@ -752,9 +766,11 @@ function Game:draw_join_tutorial()
 	
 	x = def_x
 	y = y + 16
-	if Input:get_number_of_users(INPUT_TYPE_KEYBOARD) == 1 then
+	local number_of_keyboard_users = Input:get_number_of_users(INPUT_TYPE_KEYBOARD)
+	if number_of_keyboard_users >= 1 then
 		local icon_split_kb = Input:get_button_icon(1, Input:get_input_profile("global"):get_primary_button("split_keyboard"))
-		print_outline(COL_WHITE, COL_BLACK_BLUE, "SPLIT KEYBOARD", x, y)
+
+		print_outline(COL_WHITE, COL_BLACK_BLUE, ternary(number_of_keyboard_users == 1, "SPLIT KEYBOARD", "UNSPLIT KEYBOARD"), x, y)
 		x = x - icon_split_kb:getWidth() - 2
 		love.graphics.draw(icon_split_kb, x, y)
 	end

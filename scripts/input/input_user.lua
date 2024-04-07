@@ -29,6 +29,10 @@ function InputUser:update(dt)
 	end
 end
 
+function InputUser:get_primary_input_type()
+    return self.primary_input_type
+end
+
 function InputUser:set_input_profile_id(profile_id)
     self.input_profile_id = profile_id
 end
