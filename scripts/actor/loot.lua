@@ -13,7 +13,6 @@ function Loot:init_loot(spr, x, y, w, h, val, vx, vy)
 	self:init_actor(x, y, w, h, spr)
 	self.is_loot = true
 
-	self.speed = 300
 	self.max_life = 10
 	self.life = self.max_life
 
@@ -30,7 +29,8 @@ function Loot:init_loot(spr, x, y, w, h, val, vx, vy)
 
 	self.move_dir_x = 1
 
-	self.speed = 10
+	self.speed = 0
+	self.accel = 300
 	self.speed_min = 100
 	self.speed_max = 200
 
@@ -162,8 +162,8 @@ function Loot:assign_attract_player(dt)
 	end
 
 	self.target_player = winner
-	self.vx = self.vx * 0.1
-	self.vy = self.vy * 0.1
+	-- self.vx = self.vx * 0.1
+	-- self.vy = self.vy * 0.1
 	self:set_flying(true)
 
 	return true, ""
@@ -176,8 +176,9 @@ function Loot:attract_to_player(dt)
 	local diff_y = (self.target_player.mid_y - self.mid_y)
 	diff_x, diff_y = normalize_vect(diff_x, diff_y)
 
-	self.vx = self.vx + diff_x * self.speed
-	self.vy = self.vy + diff_y * self.speed
+	self.speed = self.speed + self.accel*dt
+	self.vx = diff_x * self.speed
+	self.vy = diff_y * self.speed
 end
 
 function Loot:on_collision(col, other)
