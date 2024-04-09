@@ -786,7 +786,7 @@ function Player:do_damage(n, source)
 	self.life = self.life - n
 	self.life = clamp(self.life, 0, self.max_life)
 
-	self.iframes = self.max_iframes
+	self:set_invincibility(self.max_iframes)
 
 	if self.life <= 0 then
 		self.life = 0 

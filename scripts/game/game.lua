@@ -15,6 +15,7 @@ local MusicDisk = require "scripts.audio.music_disk"
 local Elevator = require "scripts.game.elevator"
 local InputButton = require "scripts.input.input_button"
 local GameUI = require "scripts.ui.game_ui"
+local Loot = require "scripts.actor.loot"
 
 local skins = require "data.skins"
 local shaders  = require "data.shaders"
@@ -920,6 +921,8 @@ function Game:new_player(player_n, x, y)
 	self.players[player_n] = player
 	self.waves_until_respawn[player_n] = -1
 	self:new_actor(player)
+
+	return player
 end
 
 function Game:leave_game(player_n)
@@ -993,24 +996,19 @@ end
 
 local igun = 1
 function Game:keypressed(key, scancode, isrepeat)
-	if key == "f3" then
+	if scancode == "f3" then
 		self.debug_mode = not self.debug_mode
-	elseif key == "f2" then
+	elseif scancode == "f2" then
 		self.colview_mode = not self.colview_mode
-	elseif key == "f1" then
-		-- REMOVEME FOR RELEASE
-		local p = nil
-		for i, ply in pairs(self.players) do
-			if ply ~= nil then
-				p = ply
-				break
-			end
-		end
-
+	elseif scancode == "1" or scancode == "2" or scancode == "3" or scancode == "4" then
+		local p = self.players[tonumber(scancode)]
 		if p ~= nil then
-			p:kill()
-			-- p.iframes = 0.1
+			p:do_damage(1)
+			p.iframes = 0.1
 		end
+	elseif scancode == "l" then
+		local a = Loot.Life:new(CANVAS_WIDTH/2, CANVAS_HEIGHT/2, 1, 0, 0)
+		self:new_actor(a)
 	end
 		-- local all_guns = {
 		-- 	guns.Machinegun,

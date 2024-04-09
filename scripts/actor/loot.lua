@@ -71,14 +71,13 @@ function Loot:update_loot(dt)
 		if self.target_player then
 			self:attract_to_player(dt)
 		else
-			self:find_close_player(dt)
+			self:assign_attract_player(dt)
 		end
 	end
 
 	-- blink timer 
 	if self.life < self.max_life * 0.5 then
 		self.blink_timer = self.blink_timer - dt
-
 		
 		if self.blink_timer < 0 then
 			local val = self.max_blink_timer
@@ -113,29 +112,61 @@ function Loot:draw()
 	--gfx.draw(self.spr, self.x, self.y)
 end
 
-function Loot:find_close_player(dt)
-	-- Be attracted to players
+--- Used in find_close_player to find the player that the loot should be attracted to. 
+--- Returns the score assigned to the given player. For example, if the 
+--- loot should be attracted to the closest player, this value should be the distance 
+--- to the player). The lower the score, the better that candidate is.
+--- @return function score_func The score function assigned to that player.
+function Loot:get_player_score_function()
+	return function(player)
+		local d = dist(self.mid_x, self.mid_y, player.mid_x, player.mid_y) 
+		return ternary(d < self.min_attract_dist, d, math.huge)
+	end
+end
 
-	local near_ply
-	local min_dist = math.huge
-	for _, p in pairs(game.players) do
-		local d = dist(self.mid_x, self.mid_y, p.mid_x, p.mid_y) 
-		if d < min_dist then
-			min_dist = d
-			near_ply = p
+--- Return a table containing the player with the lowest score as defined in the score_function, which  
+function Loot:get_attract_candidates(score_function)
+	local best_candidates = {}
+	local min_score = math.huge
+	for _, player in pairs(game.players) do
+		local score = score_function(player)
+		if score <= min_score then
+			if score < min_score then
+				min_score = score
+				best_candidates = {}
+			end
+			table.insert(best_candidates, player)
 		end
 	end
+	return best_candidates
+end
 
-	if not near_ply then    return false, "No nearest player"    end
+function Loot:assign_attract_player(dt)
+	local best_candidates = self:get_attract_candidates(self:get_player_score_function())
 
-	if min_dist < self.min_attract_dist then
-		self.target_player = near_ply
-		self.vx = self.vx * 0.1
-		self.vy = self.vy * 0.1
-		self:set_flying(true)
+	if #best_candidates == 0 then
+		return false, "No best player"
 	end
 
-	return true
+	local winner = best_candidates[1]
+	if #best_candidates > 1 then
+		-- If more than one candidate, then take the closest player
+		local distance_candidates = self:get_attract_candidates(function(player)
+			return dist(self.mid_x, self.mid_y, player.mid_x, player.mid_y)
+		end)
+
+		if #distance_candidates == 0 then
+			return false, "No nearest player (somehow, this should never happen???)"
+		end
+		winner = distance_candidates[1]
+	end
+
+	self.target_player = winner
+	self.vx = self.vx * 0.1
+	self.vy = self.vy * 0.1
+	self:set_flying(true)
+
+	return true, ""
 end
 
 function Loot:attract_to_player(dt)
@@ -197,7 +228,7 @@ function Loot.Ammo:on_collect(player)
 	-- end
 end
 
---- [[[[[[[]]]]]]] ---
+----------------------------------
 
 Loot.Life = Loot:inherit()
 
@@ -205,6 +236,12 @@ function Loot.Life:init(x, y, val, vx, vy)
 	self:init_loot(images.loot_life, x, y, 2, 2, val, vx, vy)
 	self.loot_type = "life"
 	self.value = val
+end
+
+function Loot.Life:get_player_score_function()
+	return function(player)
+		return player.life
+	end
 end
 
 function Loot.Life:on_collect(player)
@@ -218,15 +255,9 @@ function Loot.Life:on_collect(player)
 		--TODO
 	end
 	self:remove()
-	
-	-- if success then
-	-- 	self:remove()
-	-- else
-	-- 	self.quantity = overflow
-	-- end
 end
 
--- [[[[[[[[[[]]]]]]]]]]
+----------------------------------
 
 Loot.Gun = Loot:inherit()
 
