@@ -472,12 +472,12 @@ local function generate_menus()
         { "Kenney", func_url("https://kenney.nl/")},
         -- { "'Hope Gold' font by somepx / CSL", func_url("https://somepx.itch.io/")},
         { "somepx", func_url("https://somepx.itch.io/")},
-        { "amhuo", func_url("https://emhuo.itch.io/")},
+        { "emhuo", func_url("https://emhuo.itch.io/")},
         { "freesound.org [see more...]", func_set_menu("credits_sounds")},
         { ""},
         { "<< Asset Licenses >>"},
         { "CC0", func_url("https://creativecommons.org/publicdomain/zero/1.0/")},
-        { "CC BY 3.0", func_url("https://creativecommons.org/licenses/by/3.0/")},
+        { "CC BY 3.0", func_url("https://creativecommons.org/licenses/by/3.0/")},          
         { "CC BY 4.0", func_url("https://creativecommons.org/licenses/by/4.0/")},
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
 

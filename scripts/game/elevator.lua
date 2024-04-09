@@ -343,7 +343,9 @@ function Elevator:new_wave_buffer_enemies()
 		end
 		
 		-- Prevent collisions with floor
-		if enemy_instance.y+enemy_instance.h > self.game.door_by then   enemy_instance.y = self.game.door_by - enemy_instance.h    end
+		if enemy_instance.y+enemy_instance.h > self.game.door_by then
+			enemy_instance.y = self.game.door_by - enemy_instance.h
+		end
 		Collision:remove(enemy_instance)
 		table.insert(self.door_animation_enemy_buffer, enemy_instance)
 	end

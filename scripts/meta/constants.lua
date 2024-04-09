@@ -236,21 +236,23 @@ RAW_INPUT_MAP_DEFAULT_SPLIT_KEYBOARD_P2 = {
 
 UI_ACTIONS = {"ui_up", "ui_down", "ui_left", "ui_right", "ui_select", "ui_back", "pause"}
 
-AXIS_DEADZONE = 0.2
-AXIS_FUNCTIONS = {
-    leftstickxpos =  function(joystick) return joystick:getAxis(1) >  AXIS_DEADZONE end,
-    leftstickxneg =  function(joystick) return joystick:getAxis(1) < -AXIS_DEADZONE end,
-    leftstickypos =  function(joystick) return joystick:getAxis(2) >  AXIS_DEADZONE end,
-    leftstickyneg =  function(joystick) return joystick:getAxis(2) < -AXIS_DEADZONE end,
+AXIS_TABLE = {
+    leftstickxpos =  true,
+    leftstickxneg =  true,
+    leftstickypos =  true,
+    leftstickyneg =  true,
 
-    rightstickxpos = function(joystick) return joystick:getAxis(3) >  AXIS_DEADZONE end,
-    rightstickxneg = function(joystick) return joystick:getAxis(3) < -AXIS_DEADZONE end,
-    rightstickypos = function(joystick) return joystick:getAxis(4) >  AXIS_DEADZONE end,
-    rightstickyneg = function(joystick) return joystick:getAxis(4) < -AXIS_DEADZONE end,
+    rightstickxpos = true,
+    rightstickxneg = true,
+    rightstickypos = true,
+    rightstickyneg = true,
 
-    lefttrigger =    function(joystick) return joystick:getAxis(5) > -1 + AXIS_DEADZONE end,
-    righttrigger =   function(joystick) return joystick:getAxis(6) > -1 + AXIS_DEADZONE end,
+    lefttrigger =    true,
+    righttrigger =   true,
 }
+
+AXIS_DEADZONE = 0.2
+AXIS_ANGLE_MARGIN = 3 * math.pi/8
 AXIS_TO_KEY_NAME_MAP = {
     ["leftx+"] = "leftstickxpos",
     ["leftx-"] = "leftstickxneg",

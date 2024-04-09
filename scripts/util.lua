@@ -830,6 +830,14 @@ function lerp_angle(a, b, t)
 	end
 end
 
+function angle_in_range(alpha, lower, upper)
+	-- https://stackoverflow.com/questions/66799475/how-to-elegantly-find-if-an-angle-is-between-a-range
+	alpha = alpha % pi2
+	lower = lower % pi2
+	upper = upper % pi2
+    return (alpha - lower) % pi2 <= (upper - lower) % pi2
+end
+
 function get_left_vec(x, y)
 	return y, -x
 end

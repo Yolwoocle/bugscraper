@@ -70,13 +70,4 @@ function GameUI:draw_join_tutorial()
 	end
 end
 
-function GameUI:draw_colview()
-	local items, len = Collision.world:getItems()
-	for i,it in pairs(items) do
-		local x,y,w,h = Collision.world:getRect(it)
-		rect_color({0,1,0,.2},"fill", x, y, w, h)
-		rect_color({0,1,0,.5},"line", x, y, w, h)
-	end
-end
-
 return GameUI

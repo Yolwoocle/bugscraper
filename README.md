@@ -1,9 +1,11 @@
-**NOTE:** if you are here to obtain a free version of the game, fair enough, but please do consider [supporting me financially](https://yolwoocle.itch.io/bugscraper) if you can, or sharing the game with other people. Thanks 🙂!
+<!-- **NOTE:** if you are here to obtain a free version of the game, fair enough, but please do consider [supporting me financially](https://yolwoocle.itch.io/bugscraper) if you can, or sharing the game with other people. Thanks 🙂! -->
 <div align="center">
   <h1>Bugscraper</h1>
 </div>
 
-[Play the game on itch.io](https://yolwoocle.itch.io/bugscraper)
+[Github](https://github.com/yolwoocle/bugscraper)
+[itch.io](https://yolwoocle.itch.io/bugscraper)
+[Website](https://bugscraper.net)
 
 Welcome to the bugscraper.
 Here, nefarious insects and pests all around the world come to plan their next mischief. 

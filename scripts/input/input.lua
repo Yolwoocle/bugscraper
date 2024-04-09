@@ -181,6 +181,25 @@ function InputManager:axis_to_key_name(axis, value)
     return name
 end
 
+function InputManager:get_axis_angle(joystick, axis_x, axis_y) 
+    return math.atan2(joystick:getAxis(axis_y), joystick:getAxis(axis_x))
+end
+function InputManager:get_axis_radius_sqr(joystick, axis_x, axis_y) 
+    return distsqr(joystick:getAxis(axis_x), joystick:getAxis(axis_y))
+end
+function InputManager:is_axis_in_angle_range(joystick, axis_x, axis_y, deadzone, angle, angle_margin)
+    if self:get_axis_radius_sqr(joystick, axis_x, axis_y) < deadzone*deadzone then
+        return false
+    end
+    local a = self:get_axis_angle(joystick, axis_x, axis_y)
+    return angle_in_range(a, angle - angle_margin, angle + angle_margin)
+end
+
+function InputManager:is_axis(axis_name)
+    local axis_func = AXIS_TABLE[axis_name]
+    return axis_func ~= nil
+end
+
 function InputManager:is_axis_down(player_n, axis_name) 
     local user = self:get_user(player_n)
     assert(user ~= nil, "user "..tostring(player_n).." doesn't exist")

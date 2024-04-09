@@ -69,21 +69,6 @@ function InputUser:update_last_input_state()
     end
 end
 
-function InputUser:action_down(action)
-    local buttons = self:get_input_profile():get_mappings()[action]
-	if not buttons then   error(concat("Attempt to access button '",concat(action),"'"))   end
-    if self.action_states[action].is_handled then
-        return false
-    end
-
-	for _, button in pairs(buttons) do
-		if self:is_button_down(button) then
-			return true
-		end
-	end
-	return false
-end
-
 function InputUser:mark_action_as_handled(action)
     self.action_states[action]:mark_as_handled()
 end
@@ -104,6 +89,21 @@ function InputUser:action_pressed(action)
         Input:set_last_ui_user_n(self.n)
     end
     return result
+end
+
+function InputUser:action_down(action)
+    local buttons = self:get_input_profile():get_mappings()[action]
+	if not buttons then   error(concat("Attempt to access button '",concat(action),"'"))   end
+    if self.action_states[action].is_handled then
+        return false
+    end
+
+	for _, button in pairs(buttons) do
+		if self:is_button_down(button) then
+			return true
+		end
+	end
+	return false
 end
 
 function InputUser:is_button_down(button)
@@ -130,9 +130,8 @@ function InputUser:is_joystick_down(button, joystick)
     if joystick == nil then return false end
     local output = false
 
-    local axis_func = AXIS_FUNCTIONS[button.key_name]
-    if axis_func ~= nil then
-        output = axis_func(joystick)
+    if Input:is_axis(button.key_name) then
+        return self:is_axis_down(button.key_name, joystick)
     else
         output = joystick:isGamepadDown(button.key_name)
     end
@@ -153,14 +152,29 @@ function InputUser:is_any_joystick_down(button)
     return false
 end
 
-function InputUser:is_axis_down(axis_name)
+local axis_functions = {
+    leftstickxpos =  function(joystick) return Input:is_axis_in_angle_range(joystick, 1, 2, AXIS_DEADZONE, 0,     AXIS_ANGLE_MARGIN) end,
+    leftstickxneg =  function(joystick) return Input:is_axis_in_angle_range(joystick, 1, 2, AXIS_DEADZONE, pi,    AXIS_ANGLE_MARGIN) end,
+    leftstickypos =  function(joystick) return Input:is_axis_in_angle_range(joystick, 1, 2, AXIS_DEADZONE, pi/2,  AXIS_ANGLE_MARGIN) end,
+    leftstickyneg =  function(joystick) return Input:is_axis_in_angle_range(joystick, 1, 2, AXIS_DEADZONE, -pi/2, AXIS_ANGLE_MARGIN) end,
+
+    rightstickxpos = function(joystick) return Input:is_axis_in_angle_range(joystick, 3, 4, AXIS_DEADZONE, 0,     AXIS_ANGLE_MARGIN) end,
+    rightstickxneg = function(joystick) return Input:is_axis_in_angle_range(joystick, 3, 4, AXIS_DEADZONE, pi,    AXIS_ANGLE_MARGIN) end,
+    rightstickypos = function(joystick) return Input:is_axis_in_angle_range(joystick, 3, 4, AXIS_DEADZONE, pi/2,  AXIS_ANGLE_MARGIN) end,
+    rightstickyneg = function(joystick) return Input:is_axis_in_angle_range(joystick, 3, 4, AXIS_DEADZONE, -pi/2, AXIS_ANGLE_MARGIN) end,
+
+    lefttrigger =    function(joystick) return joystick:getAxis(5) > -1 + AXIS_DEADZONE end,
+    righttrigger =   function(joystick) return joystick:getAxis(6) > -1 + AXIS_DEADZONE end,
+}
+function InputUser:is_axis_down(axis_name, joystick)
+    joystick = param(joystick, self.joystick)
     if self.joystick == nil then
         return false
     end
 
-    local axis_func = AXIS_FUNCTIONS[axis_name]
-    if axis_func ~= nil then
-        return axis_func(self.joystick)
+    if Input:is_axis(axis_name) then
+        local axis_func = axis_functions[axis_name]
+        return axis_func(joystick)
     end
     return false
 end

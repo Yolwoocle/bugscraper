@@ -258,8 +258,8 @@ function Enemy:on_hit_bullet(bul, col)
 	if self.is_knockbackable then
 		-- self:do_knockback(bul.knockback * self.self_knockback_mult, bul)
 		local ang = atan2(bul.vy, bul.vx)
-		self.vx = self.vx + cos(ang) * bul.knockback
-		self.vy = self.vy + sin(ang) * bul.knockback
+		self.vx = self.vx + cos(ang) * bul.knockback * self.self_knockback_mult
+		self.vy = self.vy + sin(ang) * bul.knockback * self.self_knockback_mult
 	end
 end
 

@@ -1,77 +1,38 @@
 require "scripts.util"
 local Enemy = require "scripts.actor.enemy"
-local Larva = require "data.enemies.larva"
 local sounds = require "data.sounds"
 local images = require "data.images"
+local Guns = require "data.guns"
 
 local DungBeetle = Enemy:inherit()
-	
-function DungBeetle:init(x, y, spr, w, h)
-    self:init_dung_beetle(x, y, spr, w, h)
-end
 
-function DungBeetle:init_dung_beetle(x, y, spr, w, h)
-    self:init_enemy(x,y, spr or images.dung_beetle_1, w or 24, h or 24)
-    self.name = "dung_beetle"
-    self.follow_player = true
+function DungBeetle:init(x, y)
+    self:init_enemy(x,y, images.dummy_target, 15, 26)
+    self.name = "dummy"
+    self.follow_player = false
+
+    self.life = 12
+    self.damage = 0
+    self.self_knockback_mult = 0.1
+
+    self.knockback = 0
     
-    self.life = random_range(2, 3)
-    self.friction_x = 0.999
-    self.speed_x = 5
+    self.is_pushable =false
+    self.is_knockbackable = false
+    self.loot = {}
 
-    -- self.sound_damage = {"larva_damage1", "larva_damage2", "larva_damage3"}
-    -- self.sound_death = "larva_death"
-    -- self.anim_frame_len = 0.2
-    -- self.anim_frames = {images.larva1, images.larva2}
-    self.audio_delay = love.math.random(0.3, 1)
+    self.sound_damage = {"cloth1", "cloth2", "cloth3"}
+    self.sound_death = "cloth_drop"
+    self.sound_stomp = "cloth_drop"
 end
 
 function DungBeetle:update(dt)
-    self:update_dung_beetle(dt)
-end
-function DungBeetle:update_dung_beetle(dt)
     self:update_enemy(dt)
-    -- self.vx = self.speed * self.walk_dir_x
-    
-    -- self.audio_delay = self.audio_delay - dt
-    -- if self.audio_delay <= 0 then
-    -- 	self.audio_delay = love.math.random(0.3, 1.5)
-    -- 	audio:play({
-    -- 		"larva_damage1",
-    -- 		"larva_damage2",
-    -- 		"larva_damage3",
-    -- 		"larva_death"
-    -- 	})
-    -- end
 end
 
-function DungBeetle:after_collision(col, other)
-    if other.is_solid then
-        if col.normal.y == 0 then
-            self.vx = col.normal.x * math.abs(self.vx)
-        end
-    end
-end
-
-function DungBeetle:follow_nearest_player(dt)
-	self.target = nil
-	if not self.follow_player then
-		return
-	end
-
-	-- Find closest player
-	local nearest_player = self:get_nearest_player()
-	if not nearest_player then
-		return
-	end
-	self.target = nearest_player
-	
-	self.speed_x = self.speed_x or self.speed
-	if self.is_flying then    self.speed_y = self.speed_y or self.speed 
-	else                      self.speed_y = self.speed_y or 0    end 
-
-	self.vx = self.vx + sign0(nearest_player.x - self.x) * self.speed_x * 0.3
-	self.vy = self.vy + sign0(nearest_player.y - self.y) * self.speed_y * 0.3
+function DungBeetle:on_death()
+    Particles:image(self.mid_x, self.mid_y, 20, {images.dummy_target_ptc1, images.dummy_target_ptc2}, self.w, nil, nil, 0.5)
+    --number, spr, spw_rad, life, vs, g
 end
 
 return DungBeetle

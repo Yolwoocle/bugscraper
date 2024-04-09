@@ -4,6 +4,54 @@
 --
 ------------------------------------
 
+-- (in Game:draw_game) displays joystick info like angle and stuff
+
+print_outline(ternary(Input:action_down_any_player("left"), COL_GREEN, COL_WHITE),  COL_BLACK_BLUE, tostring(Input:action_down_any_player("left")), 40, 60)
+print_outline(ternary(Input:action_down_any_player("right"), COL_GREEN, COL_WHITE), COL_BLACK_BLUE, tostring(Input:action_down_any_player("right")), 80, 60)
+print_outline(ternary(Input:action_down_any_player("up"), COL_GREEN, COL_WHITE),    COL_BLACK_BLUE, tostring(Input:action_down_any_player("up")), 60, 40)
+print_outline(ternary(Input:action_down_any_player("down"), COL_GREEN, COL_WHITE),  COL_BLACK_BLUE, tostring(Input:action_down_any_player("down")), 60, 80)
+
+local x = 60
+local y = 140
+local r = 30
+love.graphics.circle("line", x, y, r)
+love.graphics.line(x, y-r, x, y+r)
+love.graphics.line(x-r, y, x+r, y)
+
+-- love.graphics.setColor(COL_GREEN)
+-- love.graphics.line(x-AXIS_DEADZONE*r, y-r, x-AXIS_DEADZONE*r, y+r)
+-- love.graphics.line(x+AXIS_DEADZONE*r, y-r, x+AXIS_DEADZONE*r, y+r)
+-- love.graphics.line(x-r, y-AXIS_DEADZONE*r, x+r, y-AXIS_DEADZONE*r)
+-- love.graphics.line(x-r, y+AXIS_DEADZONE*r, x+r, y+AXIS_DEADZONE*r)
+-- love.graphics.setColor(COL_WHITE)
+love.graphics.setColor(COL_GREEN)
+love.graphics.circle("line", x, y, r*AXIS_DEADZONE)
+for a = pi/8, pi2, pi/4 do
+	local ax = math.cos(a)
+	local ay = math.sin(a)
+	love.graphics.line(x + AXIS_DEADZONE*ax, y + AXIS_DEADZONE*ay, x + r*ax, y + r*ay)
+end
+love.graphics.setColor(COL_WHITE)
+
+local function get_axis_angle(joystick, axis_x, axis_y) 
+	return math.atan2(joystick:getAxis(axis_y), joystick:getAxis(axis_x))
+end
+local function get_axis_radius_sqr(joystick, axis_x, axis_y) 
+	return distsqr(joystick:getAxis(axis_x), joystick:getAxis(axis_y))
+end
+
+local u = Input:get_user(1)
+if u ~= nil then
+	local j = u.joystick
+	circle_color(COL_RED, "fill", x + r*j:getAxis(1), y + r*j:getAxis(2), 1)
+
+	print_outline(COL_WHITE, COL_BLACK_BLUE, "a "..tostring(get_axis_angle(j, 1, 2)), x, y + 60)
+	print_outline(COL_WHITE, COL_BLACK_BLUE, "r "..tostring(math.sqrt(get_axis_radius_sqr(j, 1, 2))), x, y + 80)
+end
+
+
+------------------------------------
+
 
 RAW_INPUT_MAP_DEFAULT_SOLO = {
     left =      {"k_left", "k_a",                   "c_leftstickxneg", "c_rightstickxneg", "c_dpleft"},

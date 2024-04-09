@@ -40,8 +40,6 @@ local maxd = 0
 function CollisionManager:move(o, goal_x, goal_y, filter)
 	-- Attempts to move object `o` and returns data about the collision
 	filter = filter or self.filter
-	goal_x = goal_x
-	goal_y = goal_y
 	
 	local d = dist(o.x, o.y, goal_x, goal_y)
 	if maxd < d then
@@ -64,8 +62,6 @@ end
 function CollisionManager:check(o, goal_x, goal_y, filter)
 	-- Attempts to move object `o` and returns data about the collision
 	filter = filter or self.filter
-	goal_x = goal_x
-	goal_y = goal_y
 
 	local actual_x, actual_y, cols, len = self.world:check(o, goal_x, goal_y, filter)
 	return actual_x, actual_y, cols, len
