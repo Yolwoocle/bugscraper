@@ -124,7 +124,7 @@ function Loot:get_player_score_function()
 	end
 end
 
---- Return a table containing the player with the lowest score as defined in the score_function, which  
+--- Return a table containing the player with the lowest score as defined in the score_function ((player) -> number)
 function Loot:get_attract_candidates(score_function)
 	local best_candidates = {}
 	local min_score = math.huge

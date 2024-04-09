@@ -251,7 +251,8 @@ AXIS_TABLE = {
     righttrigger =   true,
 }
 
-AXIS_DEADZONE = 0.2
+AXIS_DEADZONE = 0.15
+TRIGGER_DEADZONE = 0.2
 AXIS_ANGLE_MARGIN = 3 * math.pi/8
 AXIS_TO_KEY_NAME_MAP = {
     ["leftx+"] = "leftstickxpos",

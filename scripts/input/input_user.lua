@@ -163,8 +163,8 @@ local axis_functions = {
     rightstickypos = function(joystick) return Input:is_axis_in_angle_range(joystick, 3, 4, AXIS_DEADZONE, pi/2,  AXIS_ANGLE_MARGIN) end,
     rightstickyneg = function(joystick) return Input:is_axis_in_angle_range(joystick, 3, 4, AXIS_DEADZONE, -pi/2, AXIS_ANGLE_MARGIN) end,
 
-    lefttrigger =    function(joystick) return joystick:getAxis(5) > -1 + AXIS_DEADZONE end,
-    righttrigger =   function(joystick) return joystick:getAxis(6) > -1 + AXIS_DEADZONE end,
+    lefttrigger =    function(joystick) return joystick:getAxis(5) > -1 + TRIGGER_DEADZONE end,
+    righttrigger =   function(joystick) return joystick:getAxis(6) > -1 + TRIGGER_DEADZONE end,
 }
 function InputUser:is_axis_down(axis_name, joystick)
     joystick = param(joystick, self.joystick)
