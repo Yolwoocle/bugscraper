@@ -41,6 +41,10 @@ function normalize_vect(x, y)
 end
 normalise_vect = normalize_vect
 
+function vector_dot(ax, ay, bx, by)
+	return ax*bx + ay*by
+end
+
 function bounce_vector_cardinal(incoming_x, incoming_y, normal_x, normal_y)
 	-- https://gamedev.stackexchange.com/questions/23672/determine-resulting-angle-of-wall-collision
 	-- If n is a normalized vector, and v is the incoming direction, then what you want is −(2(n · v) n − v)
@@ -49,10 +53,13 @@ function bounce_vector_cardinal(incoming_x, incoming_y, normal_x, normal_y)
 end
 
 function bounce_vector(incoming_x, incoming_y, normal_x, normal_y)
-	-- https://gamedev.stackexchange.com/questions/23672/determine-resulting-angle-of-wall-collision
-	-- If n is a normalized vector, and v is the incoming direction, then what you want is −(2(n · v) n − v)
-	return 
+	-- https://math.stackexchange.com/questions/13261/how-to-get-a-reflection-vector
+	-- r = d−2(d⋅n)n
+	local dot = vector_dot(incoming_x, incoming_y, normal_x, normal_y)
+	local vx, vy = 2*dot*normal_x, 2*dot*normal_y 	
+	return incoming_x - vx, incoming_y - vy
 end
+
 
 function color(hex)
 	if not hex then  return white  end

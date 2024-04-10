@@ -22,6 +22,7 @@ local StinkBug = require "data.enemies.stink_bug"
 local Dung = require "data.enemies.dung"
 local DungBeetle = require "data.enemies.dung_beetle"
 local FlyingDung = require "data.enemies.flying_dung"
+local ShelledBug = require "data.enemies.shelled_bug"
 
 local PoisonCloud = require "data.enemies.poison_cloud"
 
@@ -53,7 +54,8 @@ function Enemies:init()
 	self.StinkBug = StinkBug
 	self.DungBeetle = Dung
 	self.FlyingDung = FlyingDung
-
+	self.ShelledBug = ShelledBug
+	
 	self.PoisonCloud = PoisonCloud
 
 	self.ButtonBigPressed = ButtonBigPressed

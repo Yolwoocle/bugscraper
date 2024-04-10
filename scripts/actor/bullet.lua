@@ -28,6 +28,9 @@ function Bullet:init(gun, player, x, y, w, h, vx, vy)
 
 	self.damage = gun.damage
 	self.knockback = gun.knockback or 500
+
+	self.bounce_immunity_timer = 0.0
+	self.bounce_immunity_duration = 0.1
 end
 
 function Bullet:update(dt)
@@ -44,6 +47,8 @@ function Bullet:update(dt)
 	if v_sq <= self.speed_floor then
 		self:kill()
 	end 
+
+	self.bounce_immunity_timer = math.max(0.0, self.bounce_immunity_timer - dt)
 end
 
 function Bullet:draw()
@@ -68,23 +73,19 @@ function Bullet:on_collision(col)
 			self:kill()
 		end
 
-		if col.other.is_bouncy_to_bullets then
-			-- TODO: actual bounce that makes sense in the laws of physics (angle mirror)
+		if col.other.is_bouncy_to_bullets and self.bounce_immunity_timer <= 0 then
 			local bounce_x = (self.mid_x - col.other.mid_x)
 			local bounce_y = (self.mid_y - col.other.mid_y)
-			local bounce_a = atan2(bounce_y, bounce_x)
+			local normal_x, normal_y = normalise_vect(bounce_x, bounce_y)
 
-			local vel_r = dist(self.vx, self.vy)
-			local vel_a = atan2(-self.vy, -self.vx)
-
-			local new_a = bounce_a + vel_a
-			local new_vx, new_vy = cos(new_a) * vel_r, sin(new_a) * vel_r 
-
+			local new_vel_x, new_vel_y = bounce_vector(self.vx, self.vy, normal_x, normal_y)
 			local spd_slow = 1
 			-- self.friction_x = spd_slow
 			-- self.friction_y = spd_slow
-			self.vx = new_vx * spd_slow
-			self.vy = new_vy * spd_slow
+			self.vx = new_vel_x * spd_slow
+			self.vy = new_vel_y * spd_slow
+
+			self.bounce_immunity_timer = self.bounce_immunity_duration
 		end
 	end
 	

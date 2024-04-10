@@ -5,30 +5,31 @@ local images = require "data.images"
 local E = require "data.enemies"
 
 local waves = {
-	-- {
-	-- 	min = 1,
-	-- 	max = 1,
-	-- 	enemies = {
-	-- 		-- {E.DungBeetle, 4},
-	-- 		-- {E.Fly, 3},
-	-- 		-- {E.VendingMachine, 3},
-	-- 		-- {E.HoneypotAnt, 4},
-	-- 		-- {E.FlyingDung, 4},
-	-- 		-- {E.SnailShelled, 3},
-	-- 		-- {E.PoisonCloud, 4},
-	-- 		-- {E.SnailShelled, 4},
+	{
+		min = 6,
+		max = 6,
+		enemies = {
+			{E.ShelledBug, 4},
+			-- {E.DungBeetle, 4},
+			-- {E.Fly, 3},
+			-- {E.VendingMachine, 3},
+			-- {E.HoneypotAnt, 4},
+			-- {E.FlyingDung, 4},
+			-- {E.SnailShelled, 3},
+			-- {E.PoisonCloud, 4},
+			-- {E.SnailShelled, 4},
 
-	-- 		-- {E.Mosquito, 4},
-	-- 		-- {E.HoneypotAnt, 4},
-	-- 		-- {E.Larva, 4},
-	-- 		-- {E.Fly, 3},
-	-- 		-- {E.SpikedFly, 3},
-	-- 		-- {E.SnailShelled, 3},
-	-- 		-- {E.Slug, 2},
-	-- 		-- {E.Grasshopper, 1},
-	-- 		-- {E.MushroomAnt, 10},
-	-- 	}
-	-- },
+			-- {E.Mosquito, 4},
+			-- {E.HoneypotAnt, 4},
+			-- {E.Larva, 4},
+			-- {E.Fly, 3},
+			-- {E.SpikedFly, 3},
+			-- {E.SnailShelled, 3},
+			-- {E.Slug, 2},
+			-- {E.Grasshopper, 1},
+			-- {E.MushroomAnt, 10},
+		}
+	},
 	{
 		min = 4,
 		max = 6,

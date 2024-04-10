@@ -3,6 +3,24 @@
 
 --
 ------------------------------------
+-- (in Game:draw_game) testing bounce vectors
+
+function Game:removeme_()
+	local p = self.players[1]
+	if not p then return end
+	local mx, my = CANVAS_WIDTH/2, CANVAS_HEIGHT/2
+
+	local vx, vy = CANVAS_WIDTH/2 - p.x, CANVAS_HEIGHT/2 - p.y
+	local nx, ny = math.cos(self.t), math.sin(self.t)
+	local bx, by = bounce_vector(vx, vy, nx, ny)
+
+	line_color(COL_WHITE, mx, my, mx + nx*30, my + ny*30)
+	line_color(COL_RED,   mx - vx, my - vy, mx, my)
+	line_color(COL_GREEN, mx, my, mx + bx, my + by)
+end
+
+
+------------------------------------
 
 -- (in Game:draw_game) displays joystick info like angle and stuff
 

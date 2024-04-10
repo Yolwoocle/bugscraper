@@ -583,7 +583,7 @@ function Game:draw_game()
 
 	-- self:removeme_bg_test2()
 	--'Memory used (in kB): ' .. collectgarbage('count')
-
+	
 	-- local t = "EARLY VERSION - NOT FINAL!"
 	-- gfx.print(t, CANVAS_WIDTH-get_text_width(t), 0)
 	-- local t = os.date('%a %d/%b/%Y')
