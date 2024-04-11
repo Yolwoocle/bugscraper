@@ -1,8 +1,6 @@
 require "scripts.util"
 require "scripts.meta.constants"
 local Class = require "scripts.meta.class"
-local key_constant_to_image = require "data.buttons.images_buttons_keyboard"
-local controller_buttons = require "data.buttons.controller_buttons"
 
 REMOVEME_image_to_col = {}
 local function removeme_set_image_col(im, name)
@@ -88,6 +86,8 @@ local img_names = {
 	stink_bug_1 =     "actors/enemies/stink_bug_1",
 	mushroom_ant1 =   "actors/enemies/mushroom_ant1",
 	mushroom_ant2 =   "actors/enemies/mushroom_ant2",
+	woodlouse_1 =     "actors/enemies/woodlouse_1",
+	woodlouse_2 =     "actors/enemies/woodlouse_2",
 
 	poison_cloud =    "actors/enemies/poison_cloud_1",
 
@@ -215,7 +215,7 @@ images.button_fragments = {
 -- Input buttons
 
 -- Keyboard
-for key_constant, button_image_name in pairs(key_constant_to_image) do
+for key_constant, button_image_name in pairs(KEY_CONSTANT_TO_IMAGE_NAME) do
 	images[button_image_name] = load_image("buttons/keyboard/"..button_image_name..".png")
 end
 
@@ -240,7 +240,7 @@ end
 assert(ps5_index ~= 0, "no PS5 button scheme found")
 table.remove(brands, ps5_index)
 for _, brand in pairs(brands) do
-	for button, __ in pairs(controller_buttons) do
+	for button, __ in pairs(CONTROLLER_BUTTONS) do
 		load_button_icon(brand, button)
 	end
 end
@@ -252,7 +252,7 @@ local ps5_buttons = {
     ["misc1"] = true,
     ["touchpad"] = true,
 }
-for button, _ in pairs(controller_buttons) do
+for button, _ in pairs(CONTROLLER_BUTTONS) do
 	if ps5_buttons[button] then
 		load_button_icon(BUTTON_STYLE_PLAYSTATION5, button)
 	else

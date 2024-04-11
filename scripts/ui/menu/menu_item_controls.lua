@@ -17,6 +17,8 @@ function ControlsMenuItem:init(i, x, y, player_n, profile_id, input_type, action
 	self.scancode = nil
 	
 	self.is_waiting_for_input = false
+	self.waiting_timer = 0.0
+	self.waiting_duration = 5.0
 	self.is_selectable = true
 end
 
@@ -27,6 +29,11 @@ function ControlsMenuItem:update(dt)
 
 	self.value = self:get_buttons()
 	self.value_text = ""
+
+	self.waiting_timer = max(0.0, self.waiting_timer - dt)
+	if self.is_waiting_for_input and self.waiting_timer <= 0 then
+		self:stop_waiting()
+	end
 
 	if self.is_selected and not self.is_waiting_for_input and Input:action_pressed("ui_reset_keys") then
 		self:clear_buttons()
@@ -97,6 +104,7 @@ function ControlsMenuItem:on_click()
 	
 	Input:set_standby_mode(true)
 	self.is_waiting_for_input = true
+	self.waiting_timer = self.waiting_duration
 end
 
 function ControlsMenuItem:keypressed(key, scancode, isrepeat)
@@ -106,7 +114,7 @@ function ControlsMenuItem:keypressed(key, scancode, isrepeat)
 	end
 	
 	-- Apply new key control
-	self:on_button_pressed(InputButton:new("k", scancode))
+	self:on_button_pressed(InputButton:new(INPUT_TYPE_KEYBOARD, scancode))
 end
 
 function ControlsMenuItem:gamepadpressed(joystick, buttoncode)
@@ -114,7 +122,7 @@ function ControlsMenuItem:gamepadpressed(joystick, buttoncode)
 	-- 	return
 	-- end
 	
-	self:on_button_pressed(InputButton:new("c", buttoncode))
+	self:on_button_pressed(InputButton:new(INPUT_TYPE_CONTROLLER, buttoncode))
 end
 
 function ControlsMenuItem:gamepadaxis(joystick, axis, value)
@@ -126,18 +134,27 @@ function ControlsMenuItem:gamepadaxis(joystick, axis, value)
 
 	local key_name = Input:axis_to_key_name(axis, value)
 	if Input:is_axis_down(user_n, key_name) then
-		self:on_button_pressed(InputButton:new("c", key_name))
+		self:on_button_pressed(InputButton:new(INPUT_TYPE_CONTROLLER, key_name))
 	end
+end
+
+function ControlsMenuItem:stop_waiting()
+	self.is_waiting_for_input = false
+	Input:set_standby_mode(false)
 end
 
 function ControlsMenuItem:on_button_pressed(button)
 	if self.is_waiting_for_input then
-		self.is_waiting_for_input = false
-		Input:set_standby_mode(false)
-		
+		if not Input:is_allowed_button(button) then
+			return
+		end
 		if self.input_type ~= button.type then
 			return
 		end
+
+		self.oy = -4
+		self:stop_waiting()
+		
 		if Input:is_button_in_use(self.profile_id, self.action_name, button) then
 			return
 		end

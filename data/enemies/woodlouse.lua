@@ -3,15 +3,11 @@ local Enemy = require "scripts.actor.enemy"
 local sounds = require "data.sounds"
 local images = require "data.images"
 
-local ShelledBug = Enemy:inherit()
+local Woodlouse = Enemy:inherit()
 
-function ShelledBug:init(x, y, spr, w, h)
-    self:init_larva(x, y, spr, w, h)
-end
-
-function ShelledBug:init_larva(x, y, spr, w, h)
-    self:init_enemy(x,y, spr or images.larva1, w or 20, h or 14)
-    self.name = "shelled_bug"
+function Woodlouse:init(x, y, spr, w, h)
+    self:init_enemy(x,y, spr or images.woodlouse_1, w or 20, h or 14)
+    self.name = "woodlouse"
     self.follow_player = false
     
     self.destroy_bullet_on_impact = false
@@ -25,20 +21,17 @@ function ShelledBug:init_larva(x, y, spr, w, h)
 
     -- self.sound_damage = {"larva_damage1", "larva_damage2", "larva_damage3"}
     -- self.sound_death = "larva_death"
-    self.anim_frame_len = 0.2
-    self.anim_frames = {images.larva1, images.larva2}
+    -- self.anim_frame_len = 0.2
+    self.anim_frames = {images.woodlouse_1, images.woodlouse_2}
     self.audio_delay = love.math.random(0.3, 1)
 end
 
-function ShelledBug:update(dt)
-    self:update_larva(dt)
-end
-function ShelledBug:update_larva(dt)
+function Woodlouse:update(dt)
     self:update_enemy(dt)
     self.vx = self.speed * self.walk_dir_x
 end
 
-function ShelledBug:after_collision(col, other)
+function Woodlouse:after_collision(col, other)
     if other.is_solid then
         if col.normal.y == 0 then
             self.walk_dir_x = col.normal.x
@@ -46,4 +39,4 @@ function ShelledBug:after_collision(col, other)
     end
 end
 
-return ShelledBug
+return Woodlouse

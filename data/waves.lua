@@ -9,7 +9,7 @@ local waves = {
 		min = 6,
 		max = 6,
 		enemies = {
-			{E.ShelledBug, 4},
+			{E.Woodlouse, 4},
 			-- {E.DungBeetle, 4},
 			-- {E.Fly, 3},
 			-- {E.VendingMachine, 3},

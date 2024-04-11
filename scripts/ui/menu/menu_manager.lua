@@ -108,7 +108,7 @@ function MenuManager:set_menu(menu, is_back)
 	-- Update selection to first selectable
 	local sel, found = self:find_selectable_from(1, 1)
 	self:set_selection(sel)
-	self.cur_menu:update()
+	self.cur_menu:update(0)
 
 	-- Reset game screenshake
 	if game then

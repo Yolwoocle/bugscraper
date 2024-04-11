@@ -3,9 +3,9 @@
   <h1>Bugscraper</h1>
 </div>
 
-[Github](https://github.com/yolwoocle/bugscraper)
+[Website](https://bugscraper.net) ·
+[Github](https://github.com/yolwoocle/bugscraper) ·
 [itch.io](https://yolwoocle.itch.io/bugscraper)
-[Website](https://bugscraper.net)
 
 Welcome to the bugscraper.
 Here, nefarious insects and pests all around the world come to plan their next mischief. 

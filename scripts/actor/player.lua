@@ -413,9 +413,9 @@ function Player:draw_player()
 		
 		-- Draw
 		love.graphics.setColor(old_col)
-		-- if Input:get_number_of_users() > 1 then
-		-- 	draw_with_outline(COL_WHITE, self.spr, x, y, self.rot, fx, fy, spr_w2, spr_h2)
-		-- end
+		if Input:get_number_of_users() > 1 then
+			draw_with_outline(self.color_palette[1], self.spr, x, y, self.rot, fx, fy, spr_w2, spr_h2)
+		end
 		gfx.draw(self.spr, x, y, self.rot, fx, fy, spr_w2, spr_h2)
 	end
 

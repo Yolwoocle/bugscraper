@@ -28,16 +28,17 @@ function SnailShelled:init_snail_shelled(x, y, spr)
     self.gravity = 0
     self.friction_y = self.friction_x 
 
-    self.pong_speed = 0--40
+    self.pong_speed = 40
     self.dir = (pi/4 + pi/2 * love.math.random(0,3)) % pi2
     -- self.dir = love.math.random() * pi2
     self.pong_vx = cos(self.dir) * self.pong_speed
     self.pong_vy = sin(self.dir) * self.pong_speed
 
     self.center_sprite = true
-    self.spr_oy = floor((self.spr_h - self.h) / 2)
+    -- self.spr_oy = floor((self.spr_h - self.h) / 2)
     self.sound_death = "snail_shell_crack"
     self.sound_stomp = "snail_shell_crack"
+    self:update_sprite_offset()
 end
 
 function SnailShelled:update(dt)

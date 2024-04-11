@@ -3,8 +3,6 @@ local Class = require "scripts.meta.class"
 local InputUser = require "scripts.input.input_user"
 local InputProfile = require "scripts.input.input_profile"
 local images = require "data.images"
-local key_constant_to_image_name = require "data.buttons.images_buttons_keyboard"
-local controller_buttons = require "data.buttons.controller_buttons"
 local skins = require "data.skins"
 
 local InputManager = Class:inherit()
@@ -28,15 +26,15 @@ function InputManager:init()
 	self.default_mapping_split_kb_p2 =   self:process_input_map(RAW_INPUT_MAP_DEFAULT_SPLIT_KEYBOARD_P2)
 
 	self.input_profiles = {
-        ["empty"] =             InputProfile:new("empty",             "k", self.default_mapping_empty),
-        ["global"] =            InputProfile:new("global",            "k", self.default_mapping),
-        ["controller_1"] =      InputProfile:new("controller_1",      "c", self.default_mapping_controller),
-        ["controller_2"] =      InputProfile:new("controller_2",      "c", self.default_mapping_controller),
-        ["controller_3"] =      InputProfile:new("controller_3",      "c", self.default_mapping_controller),
-        ["controller_4"] =      InputProfile:new("controller_4",      "c", self.default_mapping_controller),
-        ["keyboard_solo"] =     InputProfile:new("keyboard_solo",     "k", self.default_mapping_keyboard_solo),
-        ["keyboard_split_p1"] = InputProfile:new("keyboard_split_p1", "k", self.default_mapping_split_kb_p1),
-        ["keyboard_split_p2"] = InputProfile:new("keyboard_split_p2", "k", self.default_mapping_split_kb_p2),
+        ["empty"] =             InputProfile:new("empty",             INPUT_TYPE_KEYBOARD, self.default_mapping_empty),
+        ["global"] =            InputProfile:new("global",            INPUT_TYPE_KEYBOARD, self.default_mapping),
+        ["controller_1"] =      InputProfile:new("controller_1",      INPUT_TYPE_CONTROLLER, self.default_mapping_controller),
+        ["controller_2"] =      InputProfile:new("controller_2",      INPUT_TYPE_CONTROLLER, self.default_mapping_controller),
+        ["controller_3"] =      InputProfile:new("controller_3",      INPUT_TYPE_CONTROLLER, self.default_mapping_controller),
+        ["controller_4"] =      InputProfile:new("controller_4",      INPUT_TYPE_CONTROLLER, self.default_mapping_controller),
+        ["keyboard_solo"] =     InputProfile:new("keyboard_solo",     INPUT_TYPE_KEYBOARD, self.default_mapping_keyboard_solo),
+        ["keyboard_split_p1"] = InputProfile:new("keyboard_split_p1", INPUT_TYPE_KEYBOARD, self.default_mapping_split_kb_p1),
+        ["keyboard_split_p2"] = InputProfile:new("keyboard_split_p2", INPUT_TYPE_KEYBOARD, self.default_mapping_split_kb_p2),
     }
 
     self:load_controls()
@@ -485,6 +483,15 @@ function InputManager:set_last_ui_user_n(n)
     self.last_ui_user_n = n 
 end
 
+function InputManager:is_allowed_button(button) 
+    if button.type == INPUT_TYPE_KEYBOARD then
+        return KEY_CONSTANT_TO_IMAGE_NAME[button.key_name] ~= nil
+    elseif button.type == INPUT_TYPE_CONTROLLER then
+        return CONTROLLER_BUTTONS[button.key_name] ~= nil
+    end
+    return false
+end
+
 -----------------------------------------------------
 
 function InputManager:generate_unknown_key_icon(icon, text)
@@ -516,9 +523,9 @@ function InputManager:get_button_icon(player_n, button, brand_override)
     button = button or {}
 
     local img = nil
-    if button.type == "k" then
+    if button.type == INPUT_TYPE_KEYBOARD then
 		local key_constant = love.keyboard.getKeyFromScancode(button.key_name)
-        local image_name = key_constant_to_image_name[key_constant]
+        local image_name = KEY_CONSTANT_TO_IMAGE_NAME[key_constant]
 		if image_name ~= nil then
             img = images[image_name]
         end
@@ -527,7 +534,7 @@ function InputManager:get_button_icon(player_n, button, brand_override)
             return self:generate_unknown_key_icon(images.btn_k_unknown, button.key_name)
         end
 
-    elseif button.type == "c" then
+    elseif button.type == INPUT_TYPE_CONTROLLER then
         local brand = (brand_override or self:get_button_style(player_n)) or BUTTON_STYLE_XBOX
         img = self:get_button_icon_controller(button, brand)
         
