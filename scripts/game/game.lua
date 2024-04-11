@@ -1000,15 +1000,22 @@ function Game:keypressed(key, scancode, isrepeat)
 		self.debug_mode = not self.debug_mode
 	elseif scancode == "f2" then
 		self.colview_mode = not self.colview_mode
+	elseif scancode == "l" then
+		local p = self.players[1]
+		if p ~= nil then
+			p:add_temporary_life(1)
+		end
+	elseif scancode == ";" then
+		local p = self.players[1]
+		if p ~= nil then
+			p:heal(1)
+		end
 	elseif scancode == "1" or scancode == "2" or scancode == "3" or scancode == "4" then
 		local p = self.players[tonumber(scancode)]
 		if p ~= nil then
 			p:do_damage(1)
 			p.iframes = 0.1
 		end
-	elseif scancode == "l" then
-		local a = Loot.Life:new(CANVAS_WIDTH/2, CANVAS_HEIGHT/2, 1, 0, 0)
-		self:new_actor(a)
 	end
 		-- local all_guns = {
 		-- 	guns.Machinegun,

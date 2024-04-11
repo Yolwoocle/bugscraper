@@ -441,7 +441,7 @@ local function generate_menus()
         { StatsMenuItem, "Floor", function(self) return concat(game.stats.floor, "/", game.elevator.max_floor) end },
         { StatsMenuItem, "Max combo", function(self) return concat(game.stats.max_combo) end },
         { "" },
-        { "RETRY", function() game:new_game() end },
+        { "CONTINUE", function() game:new_game() end },
         { "" },
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_GAME_OVER, draw_elevator_progress)
 

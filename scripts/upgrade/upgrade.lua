@@ -20,10 +20,10 @@ end
 function Upgrade:update_upgrade(dt)
 end
 
-function Upgrade:on_apply(actor)
+function Upgrade:on_apply(player)
 end
 
-function Upgrade:on_finish(actor)
+function Upgrade:on_finish(player)
 end
 
 function Upgrade:draw(x, y)

@@ -26,7 +26,8 @@ function Player:init(n, x, y, skin)
 
 	-- Life
 	self.max_life = 4
-	self.life = self.max_life
+	self.life = self.max_life*0.5
+	self.temporary_life = 1
 	
 	-- Death
 	self.is_dead = false
@@ -228,7 +229,9 @@ function Player:update(dt)
 	-- Stop combo if landed for more than a few frames
 	if self.frames_since_land > 3 then
 		if self.combo > self.max_combo then
-			game.max_combo = self.combo
+			if self.combo > game.max_combo then
+				game.max_combo = self.combo
+			end
 			self.max_combo = self.combo
 		end
 		
@@ -282,13 +285,28 @@ end
 function Player:draw_hud()
 	if self.is_removed or self.is_dead then    return    end
 
-	-- Life
-	-- local ui_y = floor(self.y - self.spr:getHeight() - 6)
-	-- ui:draw_icon_bar(self.mid_x, ui_y, self.life, self.max_life, images.heart, images.heart_empty)
 	local ui_x = floor(self.ui_x)
 	local ui_y = floor(self.ui_y) - self.spr:getHeight() - 6
-	ui:draw_icon_bar(ui_x, ui_y, self.life, self.max_life, images.heart, images.heart_empty)
-	-- Ammo bar
+
+	self:draw_life_bar(ui_x, ui_y)
+	self:draw_ammo_bar(ui_x, ui_y)
+
+	if not game.game_started then
+		self:draw_controls()
+	end
+end
+
+function Player:draw_life_bar(ui_x, ui_y)
+	local life = self.life
+	local max_life = self.max_life
+	if self.temporary_life > 0 then
+		life = life + self.temporary_life
+		max_life = max_life + self.temporary_life
+	end
+	ui:draw_icon_bar(ui_x, ui_y, self.life, self.max_life, self.temporary_life, images.heart, images.heart_empty, images.heart_temporary)
+end
+
+function Player:draw_ammo_bar(ui_x, ui_y)
 	local bar_w = 32
 	local x = floor(ui_x) - floor(bar_w/2)
 	local y = floor(ui_y) + 8
@@ -315,12 +333,6 @@ function Player:draw_hud()
 
 	ui:draw_progress_bar(x+ammo_w+2, y, bar_w-ammo_w-2, ammo_w, val, maxval, 
 						col_fill, COL_BLACK_BLUE, col_shad, text)
-
-	
-	if not game.game_started then
-		self:draw_controls()
-	end
-
 end
 
 function Player:get_controls_tutorial_values()
@@ -435,6 +447,14 @@ function Player:heal(val)
 		self.life = self.max_life
 		return false, -overflow
 	end
+end
+
+function Player:add_max_life(val)
+	self.max_life = self.max_life + val
+end
+
+function Player:add_temporary_life(val)
+	self.temporary_life = self.temporary_life + val
 end
 
 function Player:move(dt)
@@ -783,15 +803,25 @@ function Player:do_damage(n, source)
 		self.vy = self.vy - 50
 	end
 
-	self.life = self.life - n
-	self.life = clamp(self.life, 0, self.max_life)
-
+	self:subtract_life(n)
+	
 	self:set_invincibility(self.max_iframes)
-
+	
 	if self.life <= 0 then
 		self.life = 0 
 		self:kill()
 	end
+end
+
+function Player:subtract_life(n)
+	if self.temporary_life > 0 then
+		self.temporary_life = self.temporary_life - n
+		n = math.max(0, -self.temporary_life)
+		self.temporary_life = math.max(0, self.temporary_life)
+	end
+
+	self.life = self.life - n
+	self.life = math.max(0, self.life)
 end
 
 function Player:on_hit_bullet(bul, col)

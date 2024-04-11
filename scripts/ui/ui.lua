@@ -26,18 +26,28 @@ function UI:draw_half_icon_bar(x, y, val, max_val, img_full, img_half, img_empty
 	end
 end
 
-function UI:draw_icon_bar(x, y, val, max_val, img_full, img_empty, margin)
+function UI:draw_icon_bar(x, y, val, max_val, val_extra, img_full, img_empty, img_extra, margin)
 	-- Draw a bar in this style:
 	-- ♥️ ♥️ ♥️ ♥️ ♡ ♡ ♡ 
 	margin = margin or 0
+
+	local total = math.max(val + val_extra, max_val)
+
 	local iy = floor(y)
 	local img_w = img_full:getWidth() + margin
-	local full_w = max_val * img_w + margin
-	local x1 = x - full_w *.5
-	for i=0, max_val-1 do
-		local img = (i < val) and img_full or img_empty
+	local full_w = total * img_w + margin
+	local x1 = x - full_w/2
+	for i=0, total-1 do
+		local img = img_empty
+		if i < val then
+			img = img_full 
+		elseif i < val + val_extra then
+			img = img_extra
+		end 
+
 		local ix = floor(x1 + img_w*i)
-		gfx.draw(img, ix, iy)
+		local oy = math.max(0, img:getHeight() - img_empty:getHeight())
+		gfx.draw(img, ix, iy - oy)
 	end
 end
 

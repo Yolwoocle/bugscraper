@@ -29,6 +29,8 @@ function HoneypotLiquid:after_collision(col, other)
 end
 
 function HoneypotLiquid:on_death()
+    Particles:image(self.mid_x, self.mid_y, 15, {images.honey_fragment_1, images.honey_fragment_2}, 13, nil, 0, 10)
+    
     -- Particles:image(self.mid_x, self.mid_y, 30, images.snail_shell_fragment, 13, nil, 0, 10)
     -- local slug = Slug:new(self.x, self.y)
     -- slug.vy = -200

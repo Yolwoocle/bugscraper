@@ -142,6 +142,8 @@ local img_names = {
 	-- particles
 	cocoon_fragment_1 =    "particles/cocoon_fragment_1",
 	cocoon_fragment_2 =    "particles/cocoon_fragment_2",
+	honey_fragment_1 =     "particles/honey_fragment_1",
+	honey_fragment_2 =     "particles/honey_fragment_2",
 	dummy_target_ptc1 =    "particles/dummy_target_ptc1",
 	dummy_target_ptc2 =    "particles/dummy_target_ptc2",
 	ptc_glass_shard =      "particles/ptc_glass_shard",
@@ -172,10 +174,11 @@ local img_names = {
 	-----------------------------------------------------
 
 	-- hud
-	heart =       "ui/hud/heart",
-	heart_half =  "ui/hud/heart_half",
-	heart_empty = "ui/hud/heart_empty",
-	ammo =        "ui/hud/ammo",
+	heart =           "ui/hud/heart",
+	heart_half =      "ui/hud/heart_half",
+	heart_empty =     "ui/hud/heart_empty",
+	heart_temporary = "ui/hud/heart_temporary",
+	ammo =            "ui/hud/ammo",
 
 	-- logo
 	logo =        "ui/logo/logo",

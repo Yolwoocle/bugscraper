@@ -5,6 +5,8 @@ local ButtonSmall = require "data.enemies.button_small"
 local EffectSlowness = require "scripts.effect.effect_slowness"
 
 local UpgradeCoffee = require "scripts.upgrade.upgrade_coffee"
+local UpgradeMoreLife = require "scripts.upgrade.upgrade_more_life"
+local UpgradeTemporaryLife = require "scripts.upgrade.upgrade_temporary_life"
 
 local VendingMachine = ButtonSmall:inherit()
 
@@ -13,7 +15,11 @@ function VendingMachine:init(x, y)
     self.name = "vending_machine"
 
     self.sprite_pressed = images.machine_coffee_pressed
-    self.products = {UpgradeCoffee:new()}
+    self.products = {
+        -- UpgradeCoffee:new(),
+        -- UpgradeMoreLife:new(),
+        UpgradeTemporaryLife:new(),
+    }
     self.product = nil
     self:select_random_product()
     self:set_sprite(images.machine_coffee)

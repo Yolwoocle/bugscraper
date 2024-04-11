@@ -15,11 +15,11 @@ function UpgradeCoffee:update(dt)
     self:update_upgrade(dt)
 end
 
-function UpgradeCoffee:on_apply(actor)
-    actor:apply_effect(EffectSlowness:new(), 5)
+function UpgradeCoffee:on_apply(player)
+    player:apply_effect(EffectSlowness:new(), 5)
 end
 
-function UpgradeCoffee:on_finish(actor)
+function UpgradeCoffee:on_finish(player)
 end
 
 return UpgradeCoffee
