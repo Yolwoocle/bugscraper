@@ -199,8 +199,16 @@ local img_names = {
 	-----------------------------------------------------
 	
 	-- upgrades
-	upgrade_coffee = "upgrades/upgrade_coffee"
+	upgrade_coffee =    "upgrades/upgrade_coffee",
+	upgrade_tea =       "upgrades/upgrade_tea",
+	upgrade_chocolate = "upgrades/upgrade_chocolate",
+	upgrade_milk =      "upgrades/upgrade_milk",
 	
+	-----------------------------------------------------
+
+	-- misc
+	rays = "ui/rays"
+
 }
 for id, path in pairs(img_names) do
 	images[id] = load_image(path..".png")

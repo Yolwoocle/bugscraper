@@ -6,7 +6,7 @@ local EffectSlowness = require "scripts.effect.effect_slowness"
 
 local UpgradeCoffee = require "scripts.upgrade.upgrade_coffee"
 local UpgradeMoreLife = require "scripts.upgrade.upgrade_more_life"
-local UpgradeTemporaryLife = require "scripts.upgrade.upgrade_temporary_life"
+local UpgradeTea = require "scripts.upgrade.upgrade_tea"
 
 local VendingMachine = ButtonSmall:inherit()
 
@@ -18,7 +18,7 @@ function VendingMachine:init(x, y)
     self.products = {
         -- UpgradeCoffee:new(),
         -- UpgradeMoreLife:new(),
-        UpgradeTemporaryLife:new(),
+        UpgradeTea:new(),
     }
     self.product = nil
     self:select_random_product()
@@ -65,8 +65,16 @@ function VendingMachine:draw()
 	self:draw_enemy()
 
     if self.is_focused then
-        self.product:draw(self.mid_x, self.mid_y - self.h)
+        self:draw_product()
     end
+end
+function VendingMachine:draw_product()
+    local x = self.mid_x
+    local y = self.mid_y - self.h - 30
+    local s = 0.4
+    
+    draw_centered(images.rays, x, y, game.t, s, s)
+    self.product:draw(x, y)
 end
 
 return VendingMachine
