@@ -18,7 +18,7 @@ local function func_url(url)
 	end
 end
 
-local DEFAULT_MENU_BG_COLOR = {0, 0, 0, 0.85}
+local DEFAULT_MENU_BG_COLOR = {0, 0, 0, 0.9}
 
 local PROMPTS_NORMAL = {
     {{"ui_select"}, "confirm"},
