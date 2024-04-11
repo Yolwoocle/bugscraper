@@ -26,8 +26,8 @@ function Player:init(n, x, y, skin)
 
 	-- Life
 	self.max_life = 4
-	self.life = self.max_life*0.5
-	self.temporary_life = 1
+	self.life = self.max_life
+	self.temporary_life = 0
 	
 	-- Death
 	self.is_dead = false
