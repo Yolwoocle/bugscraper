@@ -22,6 +22,7 @@ local shaders  = require "data.shaders"
 local sounds = require "data.sounds"
 local images = require "data.images"
 local guns = require "data.guns"
+local utf8 = require "utf8"
 
 require "scripts.util"
 require "scripts.meta.constants"
@@ -64,7 +65,8 @@ function Game:init()
 	canvas = gfx.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
 
 	-- Load fonts
-	FONT_REGULAR = gfx.newFont("fonts/HopeGold.ttf", 16)
+	-- FONT_REGULAR = gfx.newFont("fonts/HopeGold.ttf", 16)
+	FONT_REGULAR = gfx.newImageFont("fonts/hope_gold.png", FONT_CHARACTERS)
 	FONT_7SEG = gfx.newImageFont("fonts/7seg_font.png", " 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 	FONT_MINI = gfx.newFont("fonts/Kenney Mini.ttf", 8)
 	FONT_PAINT = gfx.newFont("fonts/NicoPaint-Regular.ttf", 16)
@@ -436,8 +438,7 @@ function Game:draw()
 	end
 end
 
-testx = 0
-testy = 0
+removeme_itext = 0
 function Game:draw_game()
 	exec_on_canvas(self.smoke_canvas, love.graphics.clear)
 	local real_camx, real_camy = (self.cam_x + self.cam_ox), (self.cam_y + self.cam_oy)
@@ -580,6 +581,8 @@ function Game:draw_game()
 	if self.menu_manager.cur_menu then
 		self.menu_manager:draw()
 	end
+
+	-----------------------------------------------------
 
 	-- self:removeme_bg_test2()
 	--'Memory used (in kB): ' .. collectgarbage('count')

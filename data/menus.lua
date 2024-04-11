@@ -168,12 +168,12 @@ local function generate_menus()
     menus.pause = Menu:new(game, {
         { "<<<<<<<<< PAUSED >>>>>>>>>" },
         { "" },
-        { "RESUME", function() game.menu_manager:unpause() end },
-        { "RETRY", function() game:new_game() end },
-        { "OPTIONS", func_set_menu('options') },
-        { "CREDITS", func_set_menu('credits' ) },
-        { "[DEBUG] VIEW WAVES", func_set_menu('view_waves' ) },
-        { "QUIT", quit_game },
+        { "▶ RESUME", function() game.menu_manager:unpause() end },
+        { "🔄 RETRY", function() game:new_game() end },
+        { "🎚 OPTIONS", func_set_menu('options') },
+        { "❤ CREDITS", func_set_menu('credits' ) },
+        -- { "[DEBUG] VIEW WAVES", func_set_menu('view_waves' ) },
+        { "🔚 QUIT", quit_game },
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL, draw_elevator_progress)
     if OPERATING_SYSTEM == "Web" then
         -- Disable quitting on web
@@ -184,17 +184,17 @@ local function generate_menus()
         { "<<<<<<<<< OPTIONS >>>>>>>>>" },
         { "" },
         { "<<< Controls >>>" },
-        { "INPUT SETTINGS...", func_set_menu("options_input")},
+        { "🔘 INPUT SETTINGS...", func_set_menu("options_input")},
         { ""},
         { "<<< Audio >>>" },
-        { "SOUND", function(self, option)
+        { "🔊 SOUND", function(self, option)
             Options:toggle_sound()
         end,
         function(self)
             self.value = Options:get("sound_on")
             self.value_text = Options:get("sound_on") and "ON" or "OFF"
         end},
-        { SliderMenuItem, "VOLUME", function(self, diff)
+        { SliderMenuItem, "🔉 VOLUME", function(self, diff)
             diff = diff or 1
             self.value = (self.value + diff)
             if self.value < 0 then self.value = 20 end
@@ -209,7 +209,7 @@ local function generate_menus()
 
             self.is_selectable = Options:get("sound_on")
         end},
-        { SliderMenuItem, "MUSIC VOLUME", function(self, diff)
+        { SliderMenuItem, "🎵 MUSIC VOLUME", function(self, diff)
             diff = diff or 1
             self.value = (self.value + diff)
             if self.value < 0 then self.value = 20 end
@@ -224,7 +224,7 @@ local function generate_menus()
 
             self.is_selectable = Options:get("sound_on")
         end},
-        { "MUSIC ON PAUSE MENU", function(self, option)
+        { "🎼 MUSIC ON PAUSE MENU", function(self, option)
             Options:toggle_play_music_on_pause_menu()
             if Options:get("play_music_on_pause_menu") then
                 game.music_player:play()
@@ -235,7 +235,7 @@ local function generate_menus()
             self.value_text = Options:get("play_music_on_pause_menu") and "ON" or "OFF"
             self.is_selectable = Options:get("sound_on")
         end},
-        { "BACKGROUND SOUNDS", function(self, option)
+        { "🔈 BACKGROUND SOUNDS", function(self, option)
             Options:toggle_background_noise()
         end,
         function(self)
@@ -249,7 +249,7 @@ local function generate_menus()
         -- 	game:toggle_sound()
         -- end},
         { "<<< Visuals >>>"},
-        { "FULLSCREEN", function(self)
+        { "🔳 FULLSCREEN", function(self)
             Options:toggle_fullscreen()
         end,
         function(self)
@@ -257,7 +257,7 @@ local function generate_menus()
             self.value_text = Options:get("is_fullscreen") and "ON" or "OFF"
         end},
 
-        { SliderMenuItem, "PIXEL SCALE", function(self, diff)
+        { SliderMenuItem, "🔲 PIXEL SCALE", function(self, diff)
             diff = diff or 1
             self:next_value(diff)
 
@@ -272,7 +272,7 @@ local function generate_menus()
             if OPERATING_SYSTEM == "Web" then  self.is_selectable = false  end
         end},
 
-        { "VERTICAL SYNC", function(self)
+        { "📺 VERTICAL SYNC", function(self)
             Options:toggle_vsync()
         end,
         function(self)
@@ -281,7 +281,7 @@ local function generate_menus()
         end},
         { ""},
         { "<<< Game >>>"},
-        { "TIMER", function(self)
+        { "🕐 TIMER", function(self)
             Options:toggle_timer()
         end,
         function(self)
@@ -289,7 +289,7 @@ local function generate_menus()
             self.value_text = Options:get("timer_on") and "ON" or "OFF"
         end},
 
-        { "SHOW MOUSE CURSOR", function(self)
+        { "↖ SHOW MOUSE CURSOR", function(self)
             Options:toggle_mouse_visible()
             love.mouse.setVisible(Options:get("mouse_visible"))
         end,
@@ -298,7 +298,7 @@ local function generate_menus()
             self.value_text = Options:get("mouse_visible") and "ON" or "OFF"
         end},
         
-        { "PAUSE ON LOST FOCUS", function(self)
+        { "⏸ PAUSE ON LOST FOCUS", function(self)
             Options:toggle_pause_on_unfocus()
         end,
         function(self)
@@ -314,7 +314,7 @@ local function generate_menus()
         --     self.value = Options:get("screenshake_on")
         --     self.value_text = Options:get("screenshake_on") and "ON" or "OFF"
         -- end},
-        { SliderMenuItem, "SCREENSHAKE", function(self, diff)
+        { SliderMenuItem, "🛜 SCREENSHAKE", function(self, diff)
             diff = diff or 1
             self.value = (self.value + diff)
             if self.value < 0 then self.value = 20 end
@@ -333,41 +333,41 @@ local function generate_menus()
         { "<<<<<<<<< INPUT SETTINGS >>>>>>>>>" },
         { "" },
         { "<<< Keyboard >>>" },
-        { "KEYBOARD (Default)", func_set_menu("controls_keyboard_solo")},
-        { "KEYBOARD (Split 1)", func_set_menu("controls_keyboard_split_p1")},
-        { "KEYBOARD (Split 2)", func_set_menu("controls_keyboard_split_p2")},
+        { "⌨ KEYBOARD (Default)", func_set_menu("controls_keyboard_solo")},
+        { "⌨ KEYBOARD (Split 1)", func_set_menu("controls_keyboard_split_p1")},
+        { "⌨ KEYBOARD (Split 2)", func_set_menu("controls_keyboard_split_p2")},
         { "" },
         { "<<< Gamepad >>>" },
-        { "GAMEPAD (Player 1)", func_set_menu("controls_controller_p1")},
-        { "GAMEPAD (Player 2)", func_set_menu("controls_controller_p2")},
-        { "GAMEPAD (Player 3)", func_set_menu("controls_controller_p3")},
-        { "GAMEPAD (Player 4)", func_set_menu("controls_controller_p4")},
+        { "🎮 GAMEPAD (Player 1)", func_set_menu("controls_controller_p1")},
+        { "🎮 GAMEPAD (Player 2)", func_set_menu("controls_controller_p2")},
+        { "🎮 GAMEPAD (Player 3)", func_set_menu("controls_controller_p3")},
+        { "🎮 GAMEPAD (Player 4)", func_set_menu("controls_controller_p4")},
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
 
     local function create_keyboard_controls_menu(title, input_profile_id)
         return Menu:new(game, {
             { "<<<<<<<<< "..title.." >>>>>>>>>" },
             { "" },
-            { "RESET CONTROLS", function() Input:reset_controls(input_profile_id, INPUT_TYPE_KEYBOARD) end },
+            { "🔄 RESET CONTROLS", function() Input:reset_controls(input_profile_id, INPUT_TYPE_KEYBOARD) end },
             { "" },
             { "<<< Gameplay >>>" },
-            { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_KEYBOARD, "left",  "LEFT" },
-            { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_KEYBOARD, "right", "RIGHT" },
-            { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_KEYBOARD, "up",    "UP" },
-            { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_KEYBOARD, "down",  "DOWN" },
-            { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_KEYBOARD, "jump",  "JUMP" },
-            { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_KEYBOARD, "shoot", "SHOOT" },
-            { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_KEYBOARD, "leave_game", "LEAVE GAME" },
+            { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_KEYBOARD, "left",  "⬅ LEFT" },
+            { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_KEYBOARD, "right", "➡️ RIGHT" },
+            { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_KEYBOARD, "up",    "⬆ UP" },
+            { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_KEYBOARD, "down",  "⬇ DOWN" },
+            { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_KEYBOARD, "jump",  "⏏ JUMP" },
+            { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_KEYBOARD, "shoot", "🔫 SHOOT" },
+            { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_KEYBOARD, "leave_game", "🔚 LEAVE GAME" },
             { "" },
             { "<<< Interface >>>" },
             { "At least one binding is required" },
-            { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_KEYBOARD, "ui_left",    "MENU LEFT" },
-            { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_KEYBOARD, "ui_right",   "MENU RIGHT" },
-            { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_KEYBOARD, "ui_up",      "MENU UP" },
-            { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_KEYBOARD, "ui_down",    "MENU DOWN" },
-            { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_KEYBOARD, "ui_select",  "SELECT" },
-            { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_KEYBOARD, "ui_back",    "BACK" },
-            { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_KEYBOARD, "pause",      "PAUSE" },
+            { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_KEYBOARD, "ui_left",    "⬅ MENU LEFT" },
+            { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_KEYBOARD, "ui_right",   "➡ MENU RIGHT" },
+            { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_KEYBOARD, "ui_up",      "⬆ MENU UP" },
+            { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_KEYBOARD, "ui_down",    "⬇ MENU DOWN" },
+            { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_KEYBOARD, "ui_select",  "👆 SELECT" },
+            { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_KEYBOARD, "ui_back",    "🔙 BACK" },
+            { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_KEYBOARD, "pause",      "⏸ PAUSE" },
         }, DEFAULT_MENU_BG_COLOR, PROMPTS_CONTROLS)
     end
 
@@ -389,8 +389,8 @@ local function generate_menus()
                 end
             end},
             { "" },
-            { "RESET CONTROLS", function() Input:reset_controls(input_profile_id, INPUT_TYPE_CONTROLLER) end },
-            { SliderMenuItem, "BUTTON STYLE", function(self, diff)
+            { "🔄 RESET CONTROLS", function() Input:reset_controls(input_profile_id, INPUT_TYPE_CONTROLLER) end },
+            { SliderMenuItem, "🔘 BUTTON STYLE", function(self, diff)
                 diff = diff or 1
                 self:next_value(diff)
                 Options:set_button_style(player_n, self.value)
@@ -402,23 +402,23 @@ local function generate_menus()
             end},
             { "" },
             { "<<< Gameplay >>>" },
-            { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "left",  "LEFT"},
-            { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "right", "RIGHT"},
-            { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "up",    "UP"},
-            { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "down",  "DOWN"},
-            { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "jump",  "JUMP"},
-            { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "shoot", "SHOOT"},
-            { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "leave_game", "LEAVE GAME" },
+            { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "left",  "⬅ LEFT"},
+            { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "right", "➡️ RIGHT"},
+            { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "up",    "⬆ UP"},
+            { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "down",  "⬇ DOWN"},
+            { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "jump",  "⏏ JUMP"},
+            { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "shoot", "🔫 SHOOT"},
+            { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "leave_game", "🔚 LEAVE GAME" },
             { ""},
             { "<<< Interface >>>" },
             { "At least one binding is required" },
-            { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "ui_left",    "MENU LEFT"},
-            { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "ui_right",   "MENU RIGHT"},
-            { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "ui_up",      "MENU UP"},
-            { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "ui_down",    "MENU DOWN"},
-            { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "ui_select",  "SELECT" },
-            { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "ui_back",    "BACK" },
-            { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "pause",      "PAUSE" },
+            { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "ui_left",    "⬅ MENU LEFT"},
+            { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "ui_right",   "➡ MENU RIGHT"},
+            { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "ui_up",      "⬆ MENU UP"},
+            { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "ui_down",    "⬇ MENU DOWN"},
+            { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "ui_select",  "👆 SELECT" },
+            { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "ui_back",    "🔙 BACK" },
+            { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "pause",      "⏸ PAUSE" },
     
         }, DEFAULT_MENU_BG_COLOR, PROMPTS_CONTROLS)
     end

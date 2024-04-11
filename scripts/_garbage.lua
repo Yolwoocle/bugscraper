@@ -3,6 +3,34 @@
 
 --
 ------------------------------------
+
+-- draw font characters to image
+if removeme_itext == 0 then
+	removeme_itext = 1
+
+	local text = FONT_CHARACTERS
+	local oldcanvas = love.graphics.getCanvas()
+	local h = get_text_height(text)
+	local x = 1
+	local totalw = get_text_width(text) + 2 * #text + 1
+	local newcanvas = love.graphics.newCanvas(totalw, h)
+	love.graphics.setCanvas(newcanvas)
+	for i=1, #text do
+		line_color(COL_RED, x, 0, x, h)
+		
+		local c = utf8.sub(text, i,i)
+		local w = get_text_width(c)
+		love.graphics.print(c, x, 0)
+		
+		x = x + w + 2
+	end
+	line_color(COL_RED, x, 0, x, h)
+	love.graphics.setCanvas(oldcanvas)
+
+	newcanvas:newImageData():encode("png", concat("testimgaefile",random_range(0,1),".png"))
+end
+
+------------------------------------
 -- (in Game:draw_game) testing bounce vectors
 
 function Game:removeme_()

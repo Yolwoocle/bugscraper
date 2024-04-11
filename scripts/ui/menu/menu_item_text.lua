@@ -123,8 +123,7 @@ function TextMenuItem:draw_withoutvalue()
 	)
 
 	if not self.is_selectable then
-		local v = 0.5
-		gfx.setColor(v, v, v, 1)
+		gfx.setColor(COL_LIGHT_GRAY)
 	end
 	draw_func(self.text, self.x, self.y + self.oy)
 end
@@ -133,8 +132,7 @@ function TextMenuItem:draw_withvalue()
 	local draw_func = self:get_leftjustified_text_draw_function()
 
 	if not self.is_selectable then
-		local v = 0.5
-		gfx.setColor(v, v, v, 1)
+		gfx.setColor(COL_LIGHT_GRAY)
 	end
 	draw_func(self.text, self.x - MENU_PADDING, self.y + self.oy)
 
