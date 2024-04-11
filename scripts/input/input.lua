@@ -474,7 +474,7 @@ function InputManager:get_last_ui_player_color()
     end
     return skin.color_palette[2]
 end
-
+  
 function InputManager:get_last_ui_user_n()
     return self.last_ui_user_n
 end
