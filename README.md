@@ -1,11 +1,12 @@
-<!-- **NOTE:** if you are here to obtain a free version of the game, fair enough, but please do consider [supporting me financially](https://yolwoocle.itch.io/bugscraper) if you can, or sharing the game with other people. Thanks 🙂! -->
+**NOTE:** if you are here to obtain a free version of the game, I'm okay with that, but please consider sharing the game with other people, or [supporting me financially](https://yolwoocle.itch.io/bugscraper) if you can. Thanks 🙂!
+<br>
 <div align="center">
   <h1>Bugscraper</h1>
 </div>
 
-[Website](https://bugscraper.net) ·
-[GitHub](https://github.com/yolwoocle/bugscraper) ·
-[itch.io](https://yolwoocle.itch.io/bugscraper)
+[**Website**](https://bugscraper.net) ·
+[**GitHub**](https://github.com/yolwoocle/bugscraper) ·
+[**itch.io**](https://yolwoocle.itch.io/bugscraper)
 
 Welcome to the bugscraper.
 Here, nefarious insects and pests all around the world come to plan their next mischief. 
@@ -29,7 +30,7 @@ Please note that I was in highschool when I began this project. I did not always
 ## Distribution
 Please feel free to reuse, modify, or remix the source code of the game for any non commercial project.   
 If it is commercial please [contact me first](https://yolwoocle.github.io/aboutme.html) (I'll probably say yes!).   
-I am very lax with what you can do with the source code, but please note that I reserve all rights of the original work.
+I am very lax with what you can do with the source code, but please note that I reserve all rights of the original work (just in case).
 
 <div align="center">
   🐛🐛🐛🐛🐛

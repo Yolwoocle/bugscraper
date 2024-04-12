@@ -127,7 +127,7 @@ function Enemy:draw_enemy()
 	local f = (self.damaged_flash_timer > 0) and draw_white or gfx.draw
 	self:draw_actor(ternary(self.do_vx_flipping, self.vx < 0, false), nil, f)
 
-	if game.debug_mode then
+	if game.debug.info_view then
 		gfx.draw(images.heart, self.x-7 -2+16, self.y-16)
 		print_outline(COL_WHITE, COL_DARK_BLUE, self.life, self.x+16, self.y-16-2)
 	end

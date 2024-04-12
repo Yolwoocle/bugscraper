@@ -719,6 +719,9 @@ function print_color(col, text, x, y)
 end
 
 function print_outline(col_in, col_out, text, x, y, r)
+	col_in = param(col_in, COL_WHITE)
+	col_out = param(col_out, COL_BLACK_BLUE)
+
 	r=r or 1
 	for ix=-r, r do
 		for iy=-r, r do

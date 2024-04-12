@@ -250,7 +250,7 @@ function Guns:init()
 		self.recoil_force = 0
 	end
 	function self.unlootable.DebugGun:on_shoot(user)
-		game.players[1].life = game.players[1].life + 1
+		user:heal(1)
 	end
 end
 

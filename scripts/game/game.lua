@@ -16,6 +16,7 @@ local Elevator = require "scripts.game.elevator"
 local InputButton = require "scripts.input.input_button"
 local GameUI = require "scripts.ui.game_ui"
 local Loot = require "scripts.actor.loot"
+local Debug = require "scripts.game.debug"
 
 local skins = require "data.skins"
 local shaders  = require "data.shaders"
@@ -80,9 +81,8 @@ function Game:init()
 	
 	self:new_game()
 	
-	-- Menu Manager
+	self.debug = Debug:new(self)
 	self.menu_manager = MenuManager:new(self)
-
 	love.mouse.setVisible(Options:get("mouse_visible"))
 
 	self.is_first_time = Options.is_first_time
@@ -167,7 +167,7 @@ function Game:new_game()
 	self.screenshake_speed = 20
 
 	-- Debugging
-	self.debug_mode = false
+	self.debug_mode = true
 	self.colview_mode = false
 	self.msg_log = {}
 
@@ -315,6 +315,9 @@ function Game:update(dt)
 	
 	-- Menus
 	self.menu_manager:update(dt)
+	if self.debug_mode then
+		self.debug:update(dt)
+	end
 	
 	if not self.menu_manager.cur_menu then
 		self:update_main_game(dt)
@@ -576,13 +579,15 @@ function Game:draw_game()
 	if self.colview_mode then
 		self:draw_colview()
 	end
-	if self.debug_mode then
-		self:draw_debug()
-	end
 
 	-- Menus
 	if self.menu_manager.cur_menu then
 		self.menu_manager:draw()
+	end
+
+	
+	if self.debug_mode then
+		self.debug:draw()
 	end
 
 	-----------------------------------------------------
@@ -670,76 +675,6 @@ function Game:unsplit_keyboard_and_kick_second_player()
 
 	self:leave_game(second_user.n)
 	Input:unsplit_keyboard()
-end
-
-function Game:draw_colview()
-	local items, len = Collision.world:getItems()
-	for i,it in pairs(items) do
-		local x,y,w,h = Collision.world:getRect(it)
-		rect_color({0,1,0,.2},"fill", x, y, w, h)
-		rect_color({0,1,0,.5},"line", x, y, w, h)
-	end
-end
-
-function Game:draw_debug()
-	gfx.print(concat("FPS: ",love.timer.getFPS(), " / frmRpeat: ",self.frame_repeat, " / frame: ",frame), 0, 0)
-	
-	local players_str = "players: "
-	for k, player in pairs(self.players) do
-		players_str = concat(players_str, "{", k, ":", player.n, "}, ")
-	end
-
-	local users_str = "users: "	
-	for k, player in pairs(Input.users) do
-		users_str = concat(users_str, "{", k, ":", player.n, "}, ")
-	end
-	
-	local joystick_user_str = "joysticks_to_users: "	
-	for joy, user in pairs(Input.joystick_to_user_map) do
-		joystick_user_str = concat(joystick_user_str, "{", string.sub(joy:getName(),1,4), "... ", ":", user.n, "}, ")
-	end
-	
-	local joystick_str = "joysticks: "	
-	for _, joy in pairs(love.joystick.getJoysticks()) do
-		joystick_str = concat(joystick_str, "{", string.sub(joy:getName(),1,4), "...}, ")
-	end
-	
-	local wave_resp_str = "waves_until_respawn "	
-	for i = 1, MAX_NUMBER_OF_PLAYERS do
-		wave_resp_str = concat(wave_resp_str, "{", i, ":", self.waves_until_respawn[i], "}, ")
-	end
-
-	
-	-- Print debug info
-	local txt_h = get_text_height(" ")
-	local txts = {
-		concat("FPS: ",love.timer.getFPS()),
-		concat("LÖVE version: ", string.format("%d.%d.%d - %s", love.getVersion())),
-		concat("n° of active source: ", love.audio.getActiveSourceCount()),
-		concat("n° of actors: ", #self.actors, " / ", self.actor_limit),
-		concat("n° of enemies: ", self.enemy_count),
-		concat("n° collision items: ", Collision.world:countItems()),
-		concat("windowed_w: ", Options:get("windowed_width")),
-		concat("windowed_h: ", Options:get("windowed_height")),
-		concat("real_wave_n ", self.debug2),
-		concat("bg_color_index ", self.debug3),
-		concat("number_of_alive_players ", self:get_number_of_alive_players()),
-		players_str,
-		users_str,
-		joystick_user_str,
-		joystick_str,
-		wave_resp_str, 
-		"",
-	}
-
-	for i=1, #txts do  print_label(txts[i], self.cam_x, self.cam_y+txt_h*i) end
-
-	for _, e in pairs(self.actors) do
-		love.graphics.circle("fill", e.x, e.y, 3)
-	end
-
-	self.world_generator:draw()
-	draw_log()
 end
 
 function Game:on_menu()
@@ -1000,46 +935,18 @@ end
 -----------------------------------------------------
 -----------------------------------------------------
 
-local igun = 1
 function Game:keypressed(key, scancode, isrepeat)
-	if scancode == "f3" then
-		self.debug_mode = not self.debug_mode
-	elseif scancode == "f2" then
-		self.colview_mode = not self.colview_mode
-	-- elseif scancode == "l" then
-	-- 	local p = self.players[1]
-	-- 	if p ~= nil then
-	-- 		p:add_temporary_life(1)
-	-- 	end
-	-- elseif scancode == ";" then
-	-- 	local p = self.players[1]
-	-- 	if p ~= nil then
-	-- 		p:heal(1)
-	-- 	end
-	elseif scancode == "1" or scancode == "2" or scancode == "3" or scancode == "4" then
-		local p = self.players[tonumber(scancode)]
-		if p ~= nil then
-			p:do_damage(1)
-			p.iframes = 0.1
-		end
-	end
-		-- local all_guns = {
-		-- 	guns.Machinegun,
-		-- 	guns.Triple,
-		-- 	guns.Burst,
-		-- 	guns.Shotgun,
-		-- 	guns.Minigun,
-		-- 	guns.Ring,
-		-- 	guns.MushroomCannon,
-		-- 	guns.unlootable.DebugGun,
-		-- }
-		
-		-- igun = mod_plus_1(igun + 1, #all_guns)
-		-- self.players[1]:equip_gun(all_guns[igun]:new())
-	-- end
-
 	if self.menu_manager then
 		self.menu_manager:keypressed(key, scancode, isrepeat)
+	end
+	if self.debug then
+		self.debug:keypressed(key, scancode, isrepeat)
+	end
+end
+
+function Game:keyreleased(key, scancode)
+	if self.debug then
+		self.debug:keyreleased(key, scancode)
 	end
 end
 
@@ -1054,16 +961,19 @@ end
 function Game:gamepadpressed(joystick, buttoncode)
 	Input:gamepadpressed(joystick, buttoncode)
 	if self.menu_manager then   self.menu_manager:gamepadpressed(joystick, buttoncode)   end
+	if self.debug then          self.debug:gamepadpressed(joystick, buttoncode)    end
 end
 
 function Game:gamepadreleased(joystick, buttoncode)
 	Input:gamepadreleased(joystick, buttoncode)
 	if self.menu_manager then   self.menu_manager:gamepadreleased(joystick, buttoncode)   end
+	if self.debug then          self.debug:gamepadreleased(joystick, buttoncode)    end
 end
 
 function Game:gamepadaxis(joystick, axis, value)
 	Input:gamepadaxis(joystick, axis, value)
 	if self.menu_manager then   self.menu_manager:gamepadaxis(joystick, axis, value)   end
+	if self.debug then          self.debug:gamepadaxis(joystick, axis, value)    end
 end
 
 function Game:focus(f)
@@ -1074,12 +984,6 @@ function Game:focus(f)
 		end
 	end
 end
-
--- function Game:keyreleased(key, scancode)
--- 	for i, ply in pairs(self.players) do
--- 		--ply:keyreleased(key, scancode)
--- 	end
--- end
 
 function Game:screenshake(q)
 	if not Options:get('screenshake_on') then  return   end

@@ -978,4 +978,9 @@ function Player:leave_game_if_possible(dt)
 	end
 end
 
+function Player:next_gun()
+	self.gun_number = mod_plus_1(self.gun_number + 1, #self.guns)
+	self:equip_gun(self.guns[self.gun_number])
+end
+
 return Player

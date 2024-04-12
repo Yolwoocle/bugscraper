@@ -180,7 +180,7 @@ function Gun:shoot(dt, player, x, y, dx, dy, is_burst)
 		end
 	end
 
-	self:on_shoot()
+	self:on_shoot(player)
 
 	-- Reload if ammo is 0
 	if self.ammo == 0 and not self.is_reloading then
@@ -189,7 +189,7 @@ function Gun:shoot(dt, player, x, y, dx, dy, is_burst)
 
 	return true
 end
-function Gun:on_shoot()
+function Gun:on_shoot(player)
 end
 
 function Gun:do_reloading(dt)
