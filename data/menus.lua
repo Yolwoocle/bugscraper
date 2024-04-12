@@ -184,6 +184,7 @@ local function generate_menus()
         { "<<<<<<<<< OPTIONS >>>>>>>>>" },
         { "" },
         { "<<< Controls >>>" },
+        {"removeme 你要记得那些黑暗中默默抱紧你的人"},
         { "🔘 INPUT SETTINGS...", func_set_menu("options_input")},
         { ""},
         { "<<< Audio >>>" },
@@ -192,7 +193,7 @@ local function generate_menus()
         end,
         function(self)
             self.value = Options:get("sound_on")
-            self.value_text = Options:get("sound_on") and "ON" or "OFF"
+            self.value_text = Options:get("sound_on") and "✅" or "❎"
         end},
         { SliderMenuItem, "🔉 VOLUME", function(self, diff)
             diff = diff or 1
@@ -232,7 +233,7 @@ local function generate_menus()
         end,
         function(self)
             self.value = Options:get("play_music_on_pause_menu")
-            self.value_text = Options:get("play_music_on_pause_menu") and "ON" or "OFF"
+            self.value_text = Options:get("play_music_on_pause_menu") and "✅" or "❎"
             self.is_selectable = Options:get("sound_on")
         end},
         { "🔈 BACKGROUND SOUNDS", function(self, option)
@@ -240,7 +241,7 @@ local function generate_menus()
         end,
         function(self)
             self.value = Options:get("disable_background_noise")
-            self.value_text = (not Options:get("disable_background_noise")) and "ON" or "OFF"
+            self.value_text = (not Options:get("disable_background_noise")) and "✅" or "❎"
             self.is_selectable = Options:get("sound_on")
         end},
         {""},
@@ -254,7 +255,7 @@ local function generate_menus()
         end,
         function(self)
             self.value = Options:get("is_fullscreen")
-            self.value_text = Options:get("is_fullscreen") and "ON" or "OFF"
+            self.value_text = Options:get("is_fullscreen") and "✅" or "❎"
         end},
 
         { SliderMenuItem, "🔲 PIXEL SCALE", function(self, diff)
@@ -277,7 +278,7 @@ local function generate_menus()
         end,
         function(self)
             self.value = Options:get("is_vsync")
-            self.value_text = Options:get("is_vsync") and "ON" or "OFF"
+            self.value_text = Options:get("is_vsync") and "✅" or "❎"
         end},
         { ""},
         { "<<< Game >>>"},
@@ -286,7 +287,7 @@ local function generate_menus()
         end,
         function(self)
             self.value = Options:get("timer_on")
-            self.value_text = Options:get("timer_on") and "ON" or "OFF"
+            self.value_text = Options:get("timer_on") and "✅" or "❎"
         end},
 
         { "↖ SHOW MOUSE CURSOR", function(self)
@@ -295,7 +296,7 @@ local function generate_menus()
         end,
         function(self)
             self.value = Options:get("mouse_visible")
-            self.value_text = Options:get("mouse_visible") and "ON" or "OFF"
+            self.value_text = Options:get("mouse_visible") and "✅" or "❎"
         end},
         
         { "⏸ PAUSE ON LOST FOCUS", function(self)
@@ -303,7 +304,7 @@ local function generate_menus()
         end,
         function(self)
             self.value = Options:get("pause_on_unfocus")
-            self.value_text = Options:get("pause_on_unfocus") and "ON" or "OFF"
+            self.value_text = Options:get("pause_on_unfocus") and "✅" or "❎"
         end},
         
         -- { "SCREENSHAKE", function(self)
@@ -312,7 +313,7 @@ local function generate_menus()
         -- end,
         -- function(self)
         --     self.value = Options:get("screenshake_on")
-        --     self.value_text = Options:get("screenshake_on") and "ON" or "OFF"
+        --     self.value_text = Options:get("screenshake_on") and "✅" or "❎"
         -- end},
         { SliderMenuItem, "🛜 SCREENSHAKE", function(self, diff)
             diff = diff or 1
@@ -352,12 +353,12 @@ local function generate_menus()
             { "" },
             { "<<< Gameplay >>>" },
             { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_KEYBOARD, "left",  "⬅ LEFT" },
-            { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_KEYBOARD, "right", "➡️ RIGHT" },
+            { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_KEYBOARD, "right", "➡ RIGHT" },
             { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_KEYBOARD, "up",    "⬆ UP" },
             { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_KEYBOARD, "down",  "⬇ DOWN" },
             { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_KEYBOARD, "jump",  "⏏ JUMP" },
             { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_KEYBOARD, "shoot", "🔫 SHOOT" },
-            { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_KEYBOARD, "leave_game", "🔚 LEAVE GAME" },
+            { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_KEYBOARD, "leave_game", "🔚 LEAVE" },
             { "" },
             { "<<< Interface >>>" },
             { "At least one binding is required" },
@@ -403,12 +404,12 @@ local function generate_menus()
             { "" },
             { "<<< Gameplay >>>" },
             { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "left",  "⬅ LEFT"},
-            { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "right", "➡️ RIGHT"},
+            { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "right", "➡ RIGHT"},
             { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "up",    "⬆ UP"},
             { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "down",  "⬇ DOWN"},
             { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "jump",  "⏏ JUMP"},
             { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "shoot", "🔫 SHOOT"},
-            { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "leave_game", "🔚 LEAVE GAME" },
+            { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "leave_game", "🔚 LEAVE" },
             { ""},
             { "<<< Interface >>>" },
             { "At least one binding is required" },

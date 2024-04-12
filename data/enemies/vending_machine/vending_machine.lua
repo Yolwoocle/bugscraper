@@ -8,25 +8,34 @@ local UpgradeCoffee = require "scripts.upgrade.upgrade_coffee"
 local UpgradeMoreLife = require "scripts.upgrade.upgrade_more_life"
 local UpgradeTea = require "scripts.upgrade.upgrade_tea"
 
+local utf8 = require "utf8"
+
 local VendingMachine = ButtonSmall:inherit()
 
 function VendingMachine:init(x, y)
     self:init_button_small(x, y, nil, 25, 61)
     self.name = "vending_machine"
-
+    
+    self:set_sprite(images.machine_coffee)
     self.sprite_pressed = images.machine_coffee_pressed
+
     self.products = {
         -- UpgradeCoffee:new(),
         -- UpgradeMoreLife:new(),
         UpgradeTea:new(),
     }
     self.product = nil
-    self:select_random_product()
-    self:set_sprite(images.machine_coffee)
     self.is_focused = false
-
-    self.player_detection_radius = 40
+    
+    self.stomp_height = 12
+    
+    self.player_detection_radius = 50
     self.target_player = nil
+    
+    self.animation_t = 0
+    self.letters = {}
+
+    self:select_random_product()
 end
 
 function VendingMachine:update(dt)
@@ -36,6 +45,11 @@ function VendingMachine:update(dt)
     self.is_focused = (distance <= self.player_detection_radius)
 
     self.target_player = ternary(self.is_focused, player, nil)
+    if self.is_focused then
+        self.animation_t = clamp(self.animation_t + dt*2, 0, 1)
+    else
+        self.animation_t = clamp(self.animation_t - dt*2, 0, 1)
+    end
 end
 
 function VendingMachine:get_nearest_player()
@@ -63,18 +77,35 @@ end
 
 function VendingMachine:draw()
 	self:draw_enemy()
-
-    if self.is_focused then
-        self:draw_product()
-    end
+    
+    self:draw_product()
 end
 function VendingMachine:draw_product()
     local x = self.mid_x
-    local y = self.mid_y - self.h - 30
-    local s = 0.4
+    local y = self.mid_y - 64
+    local s = ease_out_cubic(clamp(self.animation_t, 0, 1))
     
-    draw_centered(images.rays, x, y, game.t, s, s)
-    self.product:draw(x, y)
+    love.graphics.setColor(COL_MID_GREEN)
+    draw_centered(images.rays, x, y, game.t, s*0.4, s*0.4)
+    love.graphics.setColor(COL_WHITE)
+    self.product:draw(x, y, s)
+    self:draw_text(x, y - 42)
+end
+
+function VendingMachine:draw_text(x, y)
+    local text = self.product:get_title()
+    local total_w = get_text_width(text)
+    local text_x = x - total_w/2
+    for i=1, #text do
+        local t = (#text - i)/#text + self.animation_t*2 - 1
+        local c = utf8.sub(text, i, i)
+        local w = get_text_width(c)
+        if t > 0 then
+            local oy = ease_out_cubic(clamp(t, 0, 1)) * (-4)
+            print_outline(COL_WHITE, COL_BLACK_BLUE, c, text_x, y + oy)
+        end
+        text_x = text_x + w
+    end
 end
 
 return VendingMachine

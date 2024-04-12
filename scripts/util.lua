@@ -916,3 +916,7 @@ function get_orthogonal(x, y, dir)
 		return get_right_vec(x,y)
 	end
 end
+
+function ease_out_cubic(x)
+	return 1 - math.pow(1 - x, 3)
+end

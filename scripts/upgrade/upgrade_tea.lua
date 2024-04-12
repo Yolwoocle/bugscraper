@@ -9,6 +9,8 @@ function UpgradeTea:init()
     self:init_upgrade()
     self.name = "upgrade_tea"
     self.sprite = images.upgrade_tea
+
+    self.title = "THE VERY GOOD CUP OF TEA THAT IS VERY TEA"
 end
 
 function UpgradeTea:update(dt)
@@ -23,5 +25,7 @@ end
 
 function UpgradeTea:on_finish(player)
 end
+
+
 
 return UpgradeTea

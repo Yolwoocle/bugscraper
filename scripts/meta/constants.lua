@@ -25,7 +25,8 @@ BW = BLOCK_WIDTH
 FONT_CHARACTERS = 
     " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz"..
     "{|}~ ¡¢£©®°¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿŒœŸЁАБВГДЕЖЗИЙКЛМНО"..
-    "ПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюяё€🔊🔉🔈🎵🎼🔳🔲📺🕐↖🛜▶⏸🔄🔘⬅➡⬆⬇⏏🔫🔚👆🔙⌨🎮🎚❤"
+    "ПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюяё€🔊🔉🔈🎵🎼🔳🔲📺🕐↖🛜▶⏸🔄🔘⬅➡⬆⬇⏏🔫🔚👆🔙⌨🎮🎚❤"..
+    "✅❎"
 
 --------------------------------------------- 
 
@@ -63,8 +64,9 @@ COL_DARK_BROWN = rgb(63, 40, 50)
 COL_LIGHT_YELLOW = color(0xfee761)
 
 COL_LIGHT_GREEN = color(0x63c74d)
-COL_MID_DARK_GREEN = rgb(38, 92, 66)
-COL_DARK_GREEN = rgb(25, 60, 62)
+COL_MID_GREEN = color(0x3e8948)
+COL_MID_DARK_GREEN = color(0x265c42)
+COL_DARK_GREEN = color(0x193c3e)
 
 COL_SKY = rgb(104, 174, 212)
 

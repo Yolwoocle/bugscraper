@@ -45,6 +45,8 @@ function Enemy:init_enemy(x,y, img, w,h)
 	self.is_stompable = true
 	self.is_killed_on_stomp = true
 	self.do_stomp_animation = true
+	self.stomp_height = self.h
+
 	self.is_pushable = true
 	self.is_knockbackable = true -- Multiplicator when knockback is applied to
 
@@ -152,7 +154,8 @@ function Enemy:on_collision(col, other)
 	
 		-- if player.vy > epsilon and self.is_stompable then
 		local recently_landed = 0 < player.frames_since_land and player.frames_since_land <= 7
-		if (player.vy > 0.0001 or recently_landed) and self.is_stompable then
+		local feet_y = player.y + player.h
+		if self.is_stompable and (feet_y <= self.y + self.stomp_height) and (player.vy > 0.0001 or recently_landed) then
 			player.vy = 0
 			player:on_stomp(self)
 			if self.do_stomp_animation then

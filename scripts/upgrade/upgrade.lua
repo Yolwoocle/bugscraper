@@ -9,8 +9,12 @@ function Upgrade:init()
 end
 function Upgrade:init_upgrade()
     self.name = "upgrade"
-    self.sprite = images.upgrade_coffee
     self.type = UPGRADE_TYPE_INSTANT
+
+    self.title = self.name
+
+    self.sprite = images.upgrade_coffee
+    self.color = COL_MID_GREEN 
 end
 
 function Upgrade:update(dt)
@@ -26,11 +30,15 @@ end
 function Upgrade:on_finish(player)
 end
 
-function Upgrade:draw(x, y)
-    self:draw_upgrade(x, y)
+function Upgrade:draw(x, y, s)
+    self:draw_upgrade(x, y, s)
 end
-function Upgrade:draw_upgrade(x, y)
-    draw_centered(self.sprite, x, y)
+function Upgrade:draw_upgrade(x, y, s)
+    draw_centered(self.sprite, x, y, 0, s, s)
+end
+
+function Upgrade:get_title()
+    return self.title
 end
 
 return Upgrade
