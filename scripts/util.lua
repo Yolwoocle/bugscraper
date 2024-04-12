@@ -711,26 +711,28 @@ function utf8.sub(str, i, j)
 end
 
 
-function print_color(col, text, x, y)
+function print_color(col, text, x, y, r, s)
 	col = col or {1,1,1,1}
 	love.graphics.setColor(col)
-	love.graphics.print(text, x, y)
+	love.graphics.print(text, x, y, r, s, s)
 	love.graphics.setColor(1,1,1,1)
 end
 
-function print_outline(col_in, col_out, text, x, y, r)
+function print_outline(col_in, col_out, text, x, y, radius, r, s)
 	col_in = param(col_in, COL_WHITE)
 	col_out = param(col_out, COL_BLACK_BLUE)
+	radius = param(radius, 1)
+	r = param(r, 0)
+	s = param(s, 1)
 
-	r=r or 1
-	for ix=-r, r do
-		for iy=-r, r do
+	for ix=-radius, radius do
+		for iy=-radius, radius do
 			if not (ix == 0 and iy == 0) then 
-				print_color(col_out, text, x+ix, y+iy)
+				print_color(col_out, text, x+ix, y+iy, r, s)
 			end
 		end
 	end
-	print_color(col_in, text, x, y)
+	print_color(col_in, text, x, y, r, s)
 end
 
 function print_label(text, x, y, col_txt, col_label)

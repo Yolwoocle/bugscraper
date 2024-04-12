@@ -150,9 +150,6 @@ function Game:new_game()
 	local l = create_actor_centered(Enemies.ButtonSmallGlass, floor(nx), floor(ny))
 	self:new_actor(l)
 	
-	local l = create_actor_centered(Enemies.VendingMachine, floor(nx) - 40, floor(ny))
-	self:new_actor(l)
-
 	-- Exit sign 
 	local exit_x = CANVAS_WIDTH * 0.25
 	self:new_actor(create_actor_centered(Enemies.ExitSign, floor(exit_x), floor(ny)))

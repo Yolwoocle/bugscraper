@@ -274,6 +274,7 @@ AXIS_TABLE = {
 AXIS_DEADZONE = 0.2
 TRIGGER_DEADZONE = 0.2
 AXIS_ANGLE_MARGIN = 3 * math.pi/8
+UI_AXIS_ANGLE_MARGIN = 2 * math.pi/8
 AXIS_TO_KEY_NAME_MAP = {
     ["leftx+"] = "leftstickxpos",
     ["leftx-"] = "leftstickxneg",

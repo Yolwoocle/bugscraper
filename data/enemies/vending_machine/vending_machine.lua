@@ -85,24 +85,28 @@ function VendingMachine:draw_product()
     local y = self.mid_y - 64
     local s = ease_out_cubic(clamp(self.animation_t, 0, 1))
     
-    love.graphics.setColor(COL_MID_GREEN)
+    love.graphics.setColor(self.product.color)
     draw_centered(images.rays, x, y, game.t, s*0.4, s*0.4)
     love.graphics.setColor(COL_WHITE)
+
     self.product:draw(x, y, s)
-    self:draw_text(x, y - 42)
+    self:draw_text(x, y - 52, self.product:get_title(), self.product.color, 2)
+    self:draw_text(x, y - 30, self.product:get_description())
 end
 
-function VendingMachine:draw_text(x, y)
-    local text = self.product:get_title()
-    local total_w = get_text_width(text)
+function VendingMachine:draw_text(x, y, text, col, s)
+    col = param(col, COL_WHITE)
+    s = param(s, 1)
+
+    local total_w = get_text_width(text) * s
     local text_x = x - total_w/2
     for i=1, #text do
         local t = (#text - i)/#text + self.animation_t*2 - 1
         local c = utf8.sub(text, i, i)
-        local w = get_text_width(c)
+        local w = get_text_width(c) * s
         if t > 0 then
             local oy = ease_out_cubic(clamp(t, 0, 1)) * (-4)
-            print_outline(COL_WHITE, COL_BLACK_BLUE, c, text_x, y + oy)
+            print_outline(col, COL_BLACK_BLUE, c, text_x, y + oy, nil, nil, s)
         end
         text_x = text_x + w
     end

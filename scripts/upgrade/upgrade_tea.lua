@@ -10,7 +10,9 @@ function UpgradeTea:init()
     self.name = "upgrade_tea"
     self.sprite = images.upgrade_tea
 
-    self.title = "THE VERY GOOD CUP OF TEA THAT IS VERY TEA"
+    self.title = "GREEN TEA"
+    self.description = "+2 temporary ❤"
+    self.color = COL_MID_GREEN
 end
 
 function UpgradeTea:update(dt)
@@ -18,7 +20,7 @@ function UpgradeTea:update(dt)
 end
 
 function UpgradeTea:on_apply(player)
-    player:add_temporary_life(1)
+    player:add_temporary_life(2)
 
     Particles:smoke(player.mid_x, player.mid_y, 8, COL_LIGHT_GREEN)
 end

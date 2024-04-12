@@ -9,6 +9,8 @@ function UpgradeCoffee:init()
     self:init_upgrade()
     self.name = "upgrade_coffee"
     self.sprite = images.upgrade_coffee
+
+    self.color = COL_MID_BROWN
 end
 
 function UpgradeCoffee:update(dt)

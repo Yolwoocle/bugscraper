@@ -11,10 +11,11 @@ function Upgrade:init_upgrade()
     self.name = "upgrade"
     self.type = UPGRADE_TYPE_INSTANT
 
-    self.title = self.name
-
     self.sprite = images.upgrade_coffee
-    self.color = COL_MID_GREEN 
+
+    self.title = self.name
+    self.description = "[description]"
+    self.color = COL_WHITE
 end
 
 function Upgrade:update(dt)
@@ -39,6 +40,10 @@ end
 
 function Upgrade:get_title()
     return self.title
+end
+
+function Upgrade:get_description()
+    return self.description
 end
 
 return Upgrade
