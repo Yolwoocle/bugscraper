@@ -4,7 +4,7 @@
 </div>
 
 [Website](https://bugscraper.net) ·
-[Github](https://github.com/yolwoocle/bugscraper) ·
+[GitHub](https://github.com/yolwoocle/bugscraper) ·
 [itch.io](https://yolwoocle.itch.io/bugscraper)
 
 Welcome to the bugscraper.
