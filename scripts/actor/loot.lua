@@ -119,8 +119,7 @@ end
 --- @return function score_func The score function assigned to that player.
 function Loot:get_player_score_function()
 	return function(player)
-		local d = dist(self.mid_x, self.mid_y, player.mid_x, player.mid_y) 
-		return ternary(d < self.min_attract_dist, d, math.huge)
+		return distsqr(self.mid_x, self.mid_y, player.mid_x, player.mid_y) 
 	end
 end
 
@@ -130,7 +129,8 @@ function Loot:get_attract_candidates(score_function)
 	local min_score = math.huge
 	for _, player in pairs(game.players) do
 		local score = score_function(player)
-		if score <= min_score then
+		local d = distsqr(self.mid_x, self.mid_y, player.mid_x, player.mid_y)
+		if score <= min_score and d <= sqr(self.min_attract_dist) then
 			if score < min_score then
 				min_score = score
 				best_candidates = {}

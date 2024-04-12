@@ -576,8 +576,8 @@ function Game:draw_game()
 	end
 
 	-- Debug
-	if self.colview_mode then
-		self:draw_colview()
+	if self.debug.colview_mode then
+		self.debug:draw_colview()
 	end
 
 	-- Menus

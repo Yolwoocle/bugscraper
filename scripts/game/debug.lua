@@ -1,5 +1,6 @@
 require "scripts.util"
 local Class = require "scripts.meta.class"
+local Loot = require "scripts.actor.loot"
 
 local Debug = Class:inherit()
 
@@ -67,6 +68,24 @@ function Debug:init(game)
             if p then
                 p:next_gun()
             end
+        end},
+        ["l"] = {"spawn random loot", function()
+            local loot, parms = random_weighted({
+                {Loot.Life, 3, loot_type="life", value=1},
+		        {Loot.Gun, 3, loot_type="gun"},
+            })
+            if not loot then return end
+            
+            local x, y = CANVAS_WIDTH/2, CANVAS_HEIGHT/2
+            local instance
+            local vx = random_neighbor(300)
+            local vy = random_range(-200, -500)
+            local loot_type = parms.loot_type
+            if loot_type == "ammo" or loot_type == "life" or loot_type == "gun" then
+                instance = loot:new(x, y, parms.value, vx, vy)
+            end 
+
+            game:new_actor(instance)
         end},
     }
 
@@ -142,7 +161,7 @@ function Debug:draw_debug_menu()
     local y = self.game.cam_y 
     for i, button in pairs(self.action_keys) do
         local action = self.actions[button]
-        local text = concat(button, ": ", action[1])
+        local text = concat("[", button, "]: ", action[1])
         print_outline(nil, nil, text, x, y)
         y = y + 16
     end
@@ -207,6 +226,15 @@ function Debug:draw_info_view()
 
 	self.game.world_generator:draw()
 	draw_log()
+end
+
+function Debug:draw_colview()
+	local items, len = Collision.world:getItems()
+	for i,it in pairs(items) do
+		local x,y,w,h = Collision.world:getRect(it)
+		rect_color({0,1,0,.2},"fill", x, y, w, h)
+		rect_color({0,1,0,.5},"line", x, y, w, h)
+	end
 end
 
 return Debug
