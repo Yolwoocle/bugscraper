@@ -66,7 +66,7 @@ local function draw_elevator_progress()
 end
 
 
-local function removeme_draw_waves(self)
+local function debug_draw_waves(self)
     local x = self.x - CANVAS_WIDTH/2
     local y = self.y
     local slot_w = 25
@@ -89,7 +89,7 @@ local function removeme_draw_waves(self)
 
             local weight = enemy[2] 
 
-            love.graphics.setColor(REMOVEME_image_to_col[spr] or ternary(j % 2 == 0, COL_WHITE, COL_RED))
+            love.graphics.setColor(DEBUG_IMAGE_TO_COL[spr] or ternary(j % 2 == 0, COL_WHITE, COL_RED))
             local w = total_w * (weight/weight_sum)
             love.graphics.rectangle("fill", x, y, w, 10)
             love.graphics.setColor(COL_WHITE)
@@ -124,7 +124,7 @@ local function generate_menus()
 
     menus.view_waves = Menu:new(game, {
         {"waves"},
-        {CustomDrawMenuItem, removeme_draw_waves},
+        {CustomDrawMenuItem, debug_draw_waves},
         {"", function() end},
         {"", function() end},
         {"", function() end},
@@ -172,7 +172,7 @@ local function generate_menus()
         { "🔄 RETRY", function() game:new_game() end },
         { "🎚 OPTIONS", func_set_menu('options') },
         { "❤ CREDITS", func_set_menu('credits' ) },
-        -- { "[DEBUG] VIEW WAVES", func_set_menu('view_waves' ) },
+        { "[DEBUG] VIEW WAVES", func_set_menu('view_waves' ) },
         { "🔚 QUIT", quit_game },
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL, draw_elevator_progress)
     if OPERATING_SYSTEM == "Web" then
@@ -184,7 +184,6 @@ local function generate_menus()
         { "<<<<<<<<< OPTIONS >>>>>>>>>" },
         { "" },
         { "<<< Controls >>>" },
-        {"removeme 你要记得那些黑暗中默默抱紧你的人"},
         { "🔘 INPUT SETTINGS...", func_set_menu("options_input")},
         { ""},
         { "<<< Audio >>>" },

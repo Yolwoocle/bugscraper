@@ -79,7 +79,18 @@ COL_DARK_PURPLE = rgb(104, 56, 108)
 
 SELECTED_HIGHLIGHT_COLOR = COL_LIGHT_RED
 LOGO_COLS = {COL_LIGHT_YELLOW, COL_LIGHT_BLUE, COL_LIGHT_RED}
+
+---------------------------------------------
+
 MENU_PADDING = CANVAS_WIDTH * 0.25
+
+---------------------------------------------
+
+GAME_STATE_WAITING = "waiting"
+GAME_STATE_PLAYING = "playing"
+GAME_STATE_DYING = "dying"
+GAME_STATE_ELEVATOR_BURNING = "elevator_burning"
+GAME_STATE_WIN = "win"
 
 ---------------------------------------------
 

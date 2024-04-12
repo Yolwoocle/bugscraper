@@ -38,10 +38,9 @@ function Player:init(n, x, y, skin)
 	
 	-- Animation
 	self.color_palette = skin.color_palette
-	self.spr_idle = skin.spr_idle
-	self.spr_jump = skin.spr_jump
-	self.spr_dead = skin.spr_dead
-	self.spr = self.spr_idle
+	self.skin = skin
+	self.spr = self.skin.spr_idle
+
 	self.is_walking = false
 	self.squash = 1
 	self.jump_squash = 1
@@ -291,7 +290,7 @@ function Player:draw_hud()
 	self:draw_life_bar(ui_x, ui_y)
 	self:draw_ammo_bar(ui_x, ui_y)
 
-	if not game.game_started then
+	if game.game_state == GAME_STATE_WAITING then
 		self:draw_controls()
 	end
 end
@@ -644,7 +643,7 @@ function Player:kill()
 	self.is_dead = true
 	
 	game:screenshake(10)
-	Particles:dead_player(self.spr_x, self.spr_y, self.spr_dead, self.color_palette, self.dir_x)
+	Particles:dead_player(self.spr_x, self.spr_y, self.skin.spr_dead, self.color_palette, self.dir_x)
 	game:frameskip(30)
 
 	self:on_death()
@@ -849,7 +848,7 @@ function Player:on_grounded()
 	Audio:play_var(s, 0.3, 1, {pitch=0.5, volume=0.5})
 
 	self.jump_squash = 1.5
-	self.spr = self.spr_idle
+	self.spr = self.skin.spr_idle
 	Particles:smoke(self.mid_x, self.y+self.h, 10, COL_WHITE, 8, 4, 2)
 
 	self.air_time = 0
@@ -897,9 +896,9 @@ function Player:animate_walk(dt)
 
 		--- Jump sprite
 		local old_spr = self.spr
-		self.spr = self.spr_idle
+		self.spr = self.skin.spr_idle
 		if self.is_walking and self.walkbounce_y > 4 then
-			self.spr = self.spr_jump
+			self.spr = self.skin.spr_jump
 		end
 	else
 		-- If not walking and close enough to ground, reset
@@ -922,8 +921,12 @@ function Player:animate_walk(dt)
 end
 
 function Player:update_sprite(dt)
+	self.spr = self.skin.spr_idle
 	if not self.is_grounded then
-		self.spr = self.spr_jump
+		self.spr = self.skin.spr_jump
+	end
+	if self.is_wall_sliding then
+		self.spr = self.skin.spr_wall_slide 
 	end
 end
 
@@ -934,20 +937,6 @@ function Player:do_particles(dt)
 		if self.walk_timer % 7 == 0 then
 			Particles:dust(self.mid_x, flr_y)
 		end
-	end
-end
-
-function Player:flip_player_type()
-	if self.player_type == "ant" then
-		self.player_type = "caterpillar"
-		self.spr_idle = images.caterpillar_1
-		self.spr_jump = images.caterpillar_2
-		self.spr_dead = images.caterpillar_dead
-	else
-		self.player_type = "ant"
-		self.spr_idle = images.ant1
-		self.spr_jump = images.ant2
-		self.spr_dead = images.ant_dead
 	end
 end
 
@@ -970,7 +959,7 @@ function Player:leave_game_if_possible(dt)
 	self.is_touching_exit_sign = is_touching
 	if is_touching then
 		self.controls_oy = lerp(self.controls_oy, -6, 0.3)
-		if Input:action_pressed(self.n, "leave_game") and not game.game_started then
+		if Input:action_pressed(self.n, "leave_game") and game.game_state == GAME_STATE_WAITING then
 			exit_sign.other:activate(self)
 		end
 	else

@@ -168,8 +168,6 @@ function Debug:draw_debug_menu()
 end
 
 function Debug:draw_info_view()
-	gfx.print(concat("FPS: ",love.timer.getFPS(), " / frmRpeat: ",self.game.frame_repeat, " / frame: ",frame), 0, 0)
-	
 	local players_str = "players: "
 	for k, player in pairs(self.game.players) do
 		players_str = concat(players_str, "{", k, ":", player.n, "}, ")
@@ -199,9 +197,10 @@ function Debug:draw_info_view()
 	-- Print debug info
 	local txt_h = get_text_height(" ")
 	local txts = {
-		concat("FPS: ",love.timer.getFPS()),
+		concat("FPS: ",love.timer.getFPS(), " / frmRpeat: ",self.game.frame_repeat, " / frame: ",frame),
 		concat("LÖVE version: ", string.format("%d.%d.%d - %s", love.getVersion())),
-		concat("n° of active source: ", love.audio.getActiveSourceCount()),
+		concat("game state: ", game.game_state),
+		concat("n° of active sources: ", love.audio.getActiveSourceCount()),
 		concat("n° of actors: ", #self.game.actors, " / ", self.game.actor_limit),
 		concat("n° of enemies: ", self.game.enemy_count),
 		concat("n° collision items: ", Collision.world:countItems()),
@@ -218,7 +217,7 @@ function Debug:draw_info_view()
 		"",
 	}
 
-	for i=1, #txts do  print_label(txts[i], self.game.cam_x, self.game.cam_y+txt_h*i) end
+	for i=1, #txts do  print_label(txts[i], self.game.cam_x, self.game.cam_y+txt_h*(i-1)) end
 
 	for _, e in pairs(self.game.actors) do
 		love.graphics.circle("fill", e.x, e.y, 1)

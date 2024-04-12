@@ -2,17 +2,17 @@ require "scripts.util"
 require "scripts.meta.constants"
 local Class = require "scripts.meta.class"
 
-REMOVEME_image_to_col = {}
-local function removeme_set_image_col(im, name)
+DEBUG_IMAGE_TO_COL = {}
+local function debug_set_image_col(im, name)
 	local image_data = love.image.newImageData("images/"..name)
 	local col = {image_data:getPixel(im:getWidth()/2, im:getHeight()/2)}
-	REMOVEME_image_to_col[im] = col
+	DEBUG_IMAGE_TO_COL[im] = col
 end
 
 local function load_image(name)
 	local im = love.graphics.newImage("images/"..name)
 	im:setFilter("nearest", "nearest")
-	removeme_set_image_col(im, name)
+	debug_set_image_col(im, name)
 	return im 
 end
 local function load_image_table(name, n, w, h)
@@ -51,6 +51,7 @@ local img_names = {
 	ant2_dead =        "actors/players/ant2_dead",
 	ant1 =             "actors/players/ant1",
 	ant2 =             "actors/players/ant2",
+	ant_wall_slide =   "actors/players/ant_wall_slide",
 	ant_dead =         "actors/players/ant_dead",
 	bee_1 =            "actors/players/bee_1",
 	bee_2 =            "actors/players/bee_2",

@@ -35,8 +35,6 @@ function Elevator:init(game)
 	self.bg_color_index = 1
 	self.bg_col = COL_BLACK_BLUE
 	
-	self.game_started = false
-	
 	self.show_bg_particles = true
 	self.def_bg_col = COL_BLACK_BLUE
 	self.bg_col = self.def_bg_col
@@ -413,14 +411,14 @@ function Elevator:draw_win_screen()
 	-- Win stats
 	local iy = 0
 	local ta = {}
-	for k,v in pairs(self.game.stats) do
-		local val = v
-		local key = k
-		if k == "time" then val = time_to_string(v) end
-		if k == "floor" then val = concat(v, " / ", self.game.elevator.max_floor) end
-		if k == "max_combo" then key = "max combo" end
-		table.insert(ta, concat(k,": ",val))
-	end
+	-- for k,v in pairs(self.game.stats) do
+	-- 	local val = v
+	-- 	local key = k
+	-- 	if k == "time" then val = time_to_string(v) end
+	-- 	if k == "floor" then val = concat(v, " / ", self.game.elevator.max_floor) end
+	-- 	if k == "max_combo" then key = "max combo" end
+	-- 	table.insert(ta, concat(k,": ",val))
+	-- end
 	table.insert(ta, "Pause to exit")
 
 	for k,v in pairs(ta) do
@@ -439,7 +437,6 @@ function Elevator:draw_rubble(x,y)
 end
 
 function Elevator:on_red_button_pressed()
-	self.game:save_stats()
 	self.is_reversing_elevator = true
 end
 
@@ -516,6 +513,8 @@ end
 
 
 function Elevator:on_exploding_elevator(dt)
+	self.game:on_exploding_elevator()
+
 	self.elevator_speed = 0
 	self.bg_col = COL_BLACK_BLUE
 	self.bg_particle_col = nil--{ {r+0.1, g+0.1, b+0.1, 1},{r+0.2, g+0.2, b+0.2, 1} }

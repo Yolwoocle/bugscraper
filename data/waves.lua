@@ -40,6 +40,26 @@ local waves = {
 	},
 
 	{
+		-- Woodlouse intro
+		min = 4,
+		max = 6,
+		enemies = {
+			{E.Larva, 2},
+			{E.Woodlouse, 2},
+		},
+	},
+
+	{
+		min = 4,
+		max = 6,
+		enemies = {
+			{E.Larva, 2},
+			{E.Fly, 3},
+			{E.Woodlouse, 2},
+		},
+	},
+
+	{
 		-- Slug intro
 		min = 4,
 		max = 6,
@@ -64,20 +84,10 @@ local waves = {
 		min = 6,
 		max = 8,
 		enemies = {
-			{E.Larva, 2},
 			{E.Fly, 5},
 			{E.Slug, 2},
 			{E.Spider, 3},
-		},
-	},
-
-	{
-		-- Grasshopper intro
-		min = 6,
-		max = 8,
-		enemies = {
-			{E.Grasshopper, 8},
-			{E.Larva, 4},
+			{E.Woodlouse, 2},
 		},
 	},
 
@@ -88,8 +98,8 @@ local waves = {
 		enemies = {
 			{E.Larva, 3},
 			{E.Slug, 3},
-			{E.Grasshopper, 8},
 			{E.Fly, 3},
+			{E.Woodlouse, 2},
 		},
 	},
 
@@ -111,6 +121,7 @@ local waves = {
 			{E.Slug, 5},
 			{E.Fly, 2},
 			{E.Mosquito, 2},
+			{E.Woodlouse, 2},
 		},
 	},
 
@@ -132,7 +143,6 @@ local waves = {
 			{E.Fly, 4},
 			{E.Larva, 4},
 			{E.SnailShelled, 3},
-			{E.Grasshopper, 3},
 			{E.Spider, 3},
 		},
 	},
@@ -161,6 +171,28 @@ local waves = {
 	},
 
 	{ 
+		-- Grasshopper intro
+		min = 4,
+		max = 6,
+		enemies = {
+			{E.Grasshopper, 8},
+		},
+	},
+
+	{ 
+		min = 7,
+		max = 9,
+		enemies = {
+			{E.Fly, 2},
+			{E.Mosquito, 4},
+			{E.Grasshopper, 8},
+			{E.Woodlouse, 2},
+			{E.SpikedFly, 4},
+			{E.Spider, 4},
+		},
+	},
+
+	{ 
 		-- Mushroom Ant intro
 		min = 5,
 		max = 6,
@@ -177,6 +209,7 @@ local waves = {
 		max = 10,
 		enemies = {
 			{E.MushroomAnt, 3},
+			{E.Woodlouse, 2},
 			{E.Fly, 1},
 			{E.SpikedFly, 1},
 			{E.Spider, 2},
@@ -215,12 +248,10 @@ local waves = {
 
 	-- unpack(duplicate_table({
 		-- ALL BUT HARDER
-		-- 13, 14, 15
 	{
 		min = 8,
 		max = 10,
 		enemies = {
-			{E.Larva, 4},
 			{E.Fly, 3},
 			{E.SnailShelled, 3},
 			{E.Slug, 2},
@@ -244,6 +275,7 @@ local waves = {
 			{E.Grasshopper, 1},
 			{E.Mosquito, 3},
 			{E.MushroomAnt, 1},
+			{E.Woodlouse, 1},
 			{E.Spider, 1},
 		},
 	},
@@ -251,10 +283,10 @@ local waves = {
 		min = 14,
 		max = 16,
 		enemies = {
-			{E.Larva, 4},
 			{E.Fly, 3},
 			{E.HoneypotAnt, 2},
 			{E.SnailShelled, 3},
+			{E.Woodlouse, 1},
 			{E.Slug, 2},
 			{E.Mosquito, 3},
 			{E.SpikedFly, 1},

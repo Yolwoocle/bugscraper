@@ -230,9 +230,8 @@ function Game:new_game()
 	self.sfx_elevator_bg:play()
 	self.time_before_music = math.huge
 
+	self.game_state = GAME_STATE_WAITING
 	self.endless_mode = false
-	self.game_started = false
-	self.is_game_over = false
 	self.timer_before_game_over = 0
 	self.max_timer_before_game_over = 3.3
 
@@ -328,7 +327,7 @@ function Game:update(dt)
 end
 
 function Game:update_main_game(dt)
-	if self.game_started then
+	if self.game_state == GAME_STATE_PLAYING then
 		self.time = self.time + dt
 	end
 	self.t = self.t + dt
@@ -444,7 +443,6 @@ function Game:draw()
 	end
 end
 
-removeme_itext = 0
 function Game:draw_game()
 	exec_on_canvas(self.smoke_canvas, love.graphics.clear)
 	local real_camx, real_camy = (self.cam_x + self.cam_ox), (self.cam_y + self.cam_oy)
@@ -592,7 +590,6 @@ function Game:draw_game()
 
 	-----------------------------------------------------
 
-	-- self:removeme_bg_test2()
 	--'Memory used (in kB): ' .. collectgarbage('count')
 	
 	-- local t = "EARLY VERSION - NOT FINAL!"
@@ -633,7 +630,7 @@ function Game:set_ui_visible(bool)
 end
 
 function Game:listen_for_player_join(dt)
-	if self.game_started then return end
+	if self.game_state ~= GAME_STATE_WAITING then return end
 
 	if Input:action_pressed_global("jump") then 
 		local global_user = Input:get_global_user()
@@ -756,15 +753,14 @@ function Game:on_player_death(player)
 		self.music_player:set_disk("game_over")
 		self.music_player:pause()
 		self:pause_repeating_sounds()
-		self.game_started = false
-		self.is_game_over = true
+		self.game_state = GAME_STATE_DYING
 		self.timer_before_game_over = self.max_timer_before_game_over
 		self:save_stats()
 	end
 end
 
 function Game:update_timer_before_game_over(dt)
-	if not self.is_game_over then
+	if self.game_state ~= GAME_STATE_DYING then
 		return 
 	end
 	self.timer_before_game_over = self.timer_before_game_over - dt
@@ -913,16 +909,24 @@ end
 
 function Game:start_game()
 	self.move_logo = true
-	self.game_started = true
+	self.game_state = GAME_STATE_PLAYING
 	self.music_player:set_disk("w1")
 
-	game.menu_manager:set_can_pause(true)
-	game:set_zoom(1)
-	game:set_camera(0, 0)
+	self.menu_manager:set_can_pause(true)
+	self:set_zoom(1)
+	self:set_camera(0, 0)
 end
 
 function Game:on_red_button_pressed()
+	self:save_stats()
+	self.menu_manager:set_can_pause(false)
+	self.game_state = GAME_STATE_ELEVATOR_BURNING
 	self.elevator:on_red_button_pressed()
+end
+
+function Game:on_exploding_elevator()
+	self.game_state = GAME_STATE_WIN
+	self.menu_manager:set_can_pause(true)
 end
 
 function Game:apply_upgrade(upgrade) 

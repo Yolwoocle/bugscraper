@@ -78,7 +78,7 @@ function ExitSign:activate(player)
     else
         game:leave_game(player.n)
         game:screenshake(4)
-        Particles:ejected_player(player.spr_dead, player.x, player.y)
+        Particles:ejected_player(player.skin.spr_dead, player.x, player.y)
         Audio:play("exit_sign_activate")
         
         self.spring_active = true
@@ -156,7 +156,7 @@ function ExitSign:activate_smash_easter_egg(player)
 
     game:leave_game(player.n)
     game:screenshake(14)
-    Particles:smashed_player(player.spr_dead, impact_x, impact_y)
+    Particles:smashed_player(player.skin.spr_dead, impact_x, impact_y)
     Audio:play("smash_easter_egg")
     
     self.spring_active = true
