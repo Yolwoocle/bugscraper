@@ -30,8 +30,7 @@ function Debug:init(game)
         return function()
             local p = self.game.players[tonumber(n)]
             if p ~= nil then
-                p:do_damage(1)
-                p.iframes = 0.0
+                p:heal(1)
             end
         end
     end 
