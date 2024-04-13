@@ -44,7 +44,6 @@ local waves = {
 		min = 4,
 		max = 6,
 		enemies = {
-			{E.Larva, 2},
 			{E.Woodlouse, 2},
 		},
 	},
@@ -87,18 +86,6 @@ local waves = {
 			{E.Fly, 5},
 			{E.Slug, 2},
 			{E.Spider, 3},
-			{E.Woodlouse, 2},
-		},
-	},
-
-	{
-		-- 
-		min = 6,
-		max = 8,
-		enemies = {
-			{E.Larva, 3},
-			{E.Slug, 3},
-			{E.Fly, 3},
 			{E.Woodlouse, 2},
 		},
 	},

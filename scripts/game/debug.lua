@@ -1,6 +1,7 @@
 require "scripts.util"
 local Class = require "scripts.meta.class"
 local Loot = require "scripts.actor.loot"
+local utf8 = require "utf8"
 
 local Debug = Class:inherit()
 
@@ -11,6 +12,7 @@ function Debug:init(game)
     self.debug_menu = false
     self.colview_mode = false
     self.info_view = false
+    self.joystick_view = false
 
     self.notification_message = ""
     self.notification_timer = 0.0
@@ -39,6 +41,9 @@ function Debug:init(game)
         end},
         ["f3"] = {"view more info", function()
             self.info_view = not self.info_view
+        end},
+        ["f4"] = {"view joystick info", function()
+            self.joystick_view = not self.joystick_view
         end},
         ["1"] = {"damage P1", func_damage(1)},
         ["2"] = {"damage P2", func_damage(2)},
@@ -151,9 +156,81 @@ function Debug:draw()
     if self.debug_menu then
         self:draw_debug_menu()
     end
+    if self.joystick_view then
+        self:draw_joystick_view()
+    end
     if self.notification_timer > 0.0 then
         print_outline(nil, nil, self.notification_message, self.game.cam_x, self.game.cam_y)
     end
+end
+
+function Debug:draw_joystick_view()
+    local spacing = 70
+    local i = 0
+    for _, joy in pairs(love.joystick.getJoysticks()) do
+        self:draw_joystick_view_for(joy, i*spacing, 20, 1, 2)
+        i = i + 1
+        self:draw_joystick_view_for(joy, i*spacing, 20, 3, 4)
+        i = i + 1
+    end
+end
+
+function Debug:draw_joystick_view_for(joystick, x, y, axis_x, axis_y)
+    local user_n = Input:get_joystick_user_n(joystick)
+    local name = concat(utf8.sub(joystick:getName(), 1, 4), "...", utf8.sub(joystick:getName(), -4, -1))
+	print_outline(COL_WHITE, COL_BLACK_BLUE, name, x+30, y+20)
+	print_outline(COL_WHITE, COL_BLACK_BLUE, concat("(P", user_n, ")"), x+30, y+30)
+
+	print_outline(ternary(Input:action_down(user_n, "left"), COL_GREEN, COL_WHITE),  COL_BLACK_BLUE, ternary(Input:action_down_any_player("left"), "✅", "❎"), x+30, y+60)
+	print_outline(ternary(Input:action_down(user_n, "right"), COL_GREEN, COL_WHITE), COL_BLACK_BLUE, ternary(Input:action_down_any_player("right"), "✅", "❎"), x+70, y+60)
+	print_outline(ternary(Input:action_down(user_n, "up"), COL_GREEN, COL_WHITE),    COL_BLACK_BLUE, ternary(Input:action_down_any_player("up"), "✅", "❎"), x+50, y+40)
+	print_outline(ternary(Input:action_down(user_n, "down"), COL_GREEN, COL_WHITE),  COL_BLACK_BLUE, ternary(Input:action_down_any_player("down"), "✅", "❎"), x+50, y+80)
+	
+	local ox = x+60
+	local oy = y+140
+	local r = 30
+	love.graphics.setColor(COL_GREEN)
+    circle_color({0,0,0,0.5}, "fill", ox, oy, r)
+    circle_color(COL_WHITE, "line", ox, oy, r)
+	love.graphics.line(ox, oy-r, ox, oy+r)
+	love.graphics.line(ox-r, oy, ox+r, oy)
+	
+	-- love.graphics.setColor(COL_GREEN)
+	-- love.graphics.line(x-AXIS_DEADZONE*r, y-r, x-AXIS_DEADZONE*r, y+r)
+	-- love.graphics.line(x+AXIS_DEADZONE*r, y-r, x+AXIS_DEADZONE*r, y+r)
+	-- love.graphics.line(x-r, y-AXIS_DEADZONE*r, x+r, y-AXIS_DEADZONE*r)
+	-- love.graphics.line(x-r, y+AXIS_DEADZONE*r, x+r, y+AXIS_DEADZONE*r)
+	-- love.graphics.setColor(COL_WHITE)
+	love.graphics.setColor(COL_GREEN)
+	love.graphics.circle("line", ox, oy, r*AXIS_DEADZONE)
+	for a = pi/8, pi2, pi/4 do
+		local ax = math.cos(a)
+		local ay = math.sin(a)
+		love.graphics.line(ox + AXIS_DEADZONE*ax*r, oy + AXIS_DEADZONE*ay*r, ox + r*ax, oy + r*ay)
+	end
+	love.graphics.setColor(COL_WHITE)
+	
+	local function get_axis_angle(j, ax, ay) 
+		return math.atan2(j:getAxis(ay), j:getAxis(ax))
+	end
+	local function get_axis_radius_sqr(j, ax, ay) 
+		return distsqr(j:getAxis(ax), j:getAxis(ay))
+	end
+	
+	local u = Input:get_user(1)
+	if u ~= nil then
+		local j = joystick
+		circle_color(COL_RED, "fill", ox + r*j:getAxis(axis_x), oy + r*j:getAxis(axis_y), 1)
+	
+        local val_x = round(j:getAxis(axis_x), 3)
+        local val_y = round(j:getAxis(axis_y), 3)
+        local val_a = round(get_axis_angle(j, 1, 2), 3)
+        local val_r = round(math.sqrt(get_axis_radius_sqr(j, 1, 2)), 3)
+		print_outline(COL_WHITE, COL_BLACK_BLUE, "x "..tostring(val_x), ox - 20, oy + 40)
+		print_outline(COL_WHITE, COL_BLACK_BLUE, "y "..tostring(val_y), ox - 20, oy + 50)
+		print_outline(COL_WHITE, COL_BLACK_BLUE, "a "..tostring(val_a), ox - 20, oy + 60)
+		print_outline(COL_WHITE, COL_BLACK_BLUE, "r "..tostring(val_r), ox - 20, oy + 70)
+	end
 end
 
 function Debug:draw_debug_menu()
@@ -161,9 +238,10 @@ function Debug:draw_debug_menu()
     local y = self.game.cam_y 
     for i, button in pairs(self.action_keys) do
         local action = self.actions[button]
-        local text = concat("[", button, "]: ", action[1])
+        local text = concat("[f1+", button, "]: ", action[1])
+        rect_color({0,0,0,0.5}, "fill", x, y, get_text_width(text), 10)
         print_outline(nil, nil, text, x, y)
-        y = y + 16
+        y = y + 12
     end
 end
 

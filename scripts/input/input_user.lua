@@ -110,22 +110,22 @@ end
 function InputUser:is_button_down(button, is_ui_action)
     is_ui_action = param(is_ui_action, false)
 
-    local v = false
+    local is_down = false
     if button.type == INPUT_TYPE_KEYBOARD then
-        v = Input:is_keyboard_down(button)
+        is_down = Input:is_keyboard_down(button)
 
     elseif button.type == INPUT_TYPE_CONTROLLER then 
         if self.joystick then 
-            v = self:is_joystick_down(button, self.joystick, is_ui_action)
+            is_down = self:is_joystick_down(button, self.joystick, is_ui_action)
         elseif self.is_global then
-            v = self:is_any_joystick_down(button, is_ui_action)
+            is_down = self:is_any_joystick_down(button, is_ui_action)
         end
     end
     
-    if v then
+    if is_down then
         self.last_pressed_button = button
     end
-    return v
+    return is_down
 end      
 
 function InputUser:is_joystick_down(button, joystick, is_ui_action)
