@@ -160,7 +160,7 @@ RAW_INPUT_MAP_DEFAULT_GLOBAL = {
     ui_up =     {},
     ui_down =   {},
     ui_reset_keys = {},
-    split_keyboard = {"k_space"},
+    split_keyboard = {"k_return"},
     leave_game = {},
 
     debug = {"k_f1", "c_back"},

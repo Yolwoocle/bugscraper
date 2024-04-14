@@ -1,6 +1,8 @@
 require "scripts.util"
 local Class = require "scripts.meta.class"
 local Enemies = require "data.enemies"
+local TileMap = require "scripts.level.tilemap"
+
 local images = require "data.images"
 local sounds = require "data.sounds"
 local waves = require "data.waves"
@@ -10,6 +12,8 @@ local Level = Class:inherit()
 
 function Level:init(game)
     self.game = game
+
+	self.map = TileMap:new(30, 17)
 
 	self.max_floor = #waves
 	
@@ -82,6 +86,28 @@ function Level:init(game)
     self.door_animation_enemy_buffer = {}
 end
 
+function Level:update(dt)
+	self.map:update(dt)
+
+	-- BG color gradient
+	if not self.is_on_win_screen then
+		self.bg_color_progress = self.bg_color_progress + dt*0.2
+		local i_prev = mod_plus_1(self.bg_color_index-1, #self.bg_colors)
+		if self.game.floor <= 1 then
+			i_prev = 1
+		end
+
+		local i_target = mod_plus_1(self.bg_color_index, #self.bg_colors)
+		local prog = clamp(self.bg_color_progress, 0, 1)
+		self.bg_col = lerp_color(self.bg_colors[i_prev], self.bg_colors[i_target], prog)
+		self.bg_particle_col = self.bg_particle_colors[i_target]
+	end
+	
+	self:update_bg_particles(dt)
+	self:progress_elevator(dt)
+
+	self.flash_alpha = max(self.flash_alpha - dt, 0)
+end
 
 function Level:new_bg_particle()
 	local o = {}
@@ -293,8 +319,6 @@ end
 function Level:change_bg_color(wave_n)
 	-- if wave_n == floor((self.bg_color_index) * (#waves / 4)) then
 	local real_wave_n = max(1, self.game.floor + 1)
-	self.debug2 = real_wave_n
-	self.debug3 = self.bg_color_index
 	if wave_n % 4 == 0 then
 		-- self.bg_color_index = self.bg_color_index + 1
 		self.bg_color_index = mod_plus_1( floor(real_wave_n / 4) + 1, #self.bg_colors)
@@ -358,6 +382,29 @@ function Level:activate_enemy_buffer()
 	self.door_animation_enemy_buffer = {}
 end
 
+-----------------------------------------------------
+
+function Level:draw()
+	self:draw_background_particles()
+	self.map:draw()
+	self:draw_cabin()
+	self:draw_rubble(self.cabin_x, self.cabin_y)
+end
+
+function Level:draw_background_particles()
+	if not self.show_bg_particles then
+		return 
+	end
+
+	for i,o in pairs(self.bg_particles) do
+		local y = o.y + o.oy
+		local mult = 1 - clamp(abs(self.elevator_speed / 100), 0, 1)
+		local sin_oy = mult * sin(self.game.t + o.rnd_pi) * o.oh * o.h 
+		
+		rect_color(o.col, "fill", o.x, o.y + o.oy + sin_oy, o.w, o.h * o.oh)
+	end
+end
+
 function Level:draw_background(cabin_x, cabin_y)
 	local bw = BLOCK_WIDTH
 
@@ -380,7 +427,26 @@ function Level:draw_background(cabin_x, cabin_y)
 	gfx.setFont(FONT_REGULAR)
 end
 
+function Level:draw_cabin()
+	if not self.show_cabin then
+		return 
+	end
+	
+	rect_color(self.bg_col, "fill", self.game.door_ax, self.game.door_ay, self.game.door_bx - self.game.door_ax+1, self.game.door_by - self.game.door_ay+1);
+	-- Draw buffered enemies
+	if self.door_animation then
+		for i,e in pairs(self.door_animation_enemy_buffer) do
+			e:draw()
+		end
+	end
+	self:draw_background(self.game.cabin_x, self.game.cabin_y)
+end
+
 function Level:draw_win_screen()
+	if not self.is_on_win_screen then
+		return
+	end
+
 	local old_font = gfx.getFont()
 	gfx.setFont(FONT_PAINT)
 
@@ -431,8 +497,19 @@ function Level:draw_win_screen()
 	end
 end
 
+function Level:draw_front(x,y)
+	self:draw_win_screen()
+
+	if self.flash_alpha then
+		rect_color({1,1,1,self.flash_alpha}, "fill", 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
+	end
+end
 
 function Level:draw_rubble(x,y)
+	if not self.show_rubble then
+		return
+	end
+
 	gfx.draw(images.cabin_rubble, x, (16-5)*BW)
 end
 

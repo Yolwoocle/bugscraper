@@ -3,7 +3,6 @@ local CollisionManager = require "scripts.game.collision"
 local Player = require "scripts.actor.player"
 local Enemies = require "data.enemies"
 local Bullet = require "scripts.actor.bullet"
-local TileMap = require "scripts.level.tilemap"
 local WorldGenerator = require "scripts.level.worldgenerator"
 local ParticleSystem = require "scripts.game.particles"
 local AudioManager = require "scripts.audio.audio"
@@ -112,8 +111,7 @@ function Game:new_game()
 
 	-- Map & world gen
 	self.shaft_w, self.shaft_h = 26,14
-	self.map = TileMap:new(30, 17)
-	self.world_generator = WorldGenerator:new(self.map)
+	self.world_generator = WorldGenerator:new(self.level.map)
 	self.world_generator:generate(10203)
 	self.world_generator:make_box(self.shaft_w, self.shaft_h)
 
@@ -121,8 +119,8 @@ function Game:new_game()
 	self.floor = 0 --Floor n°
 
 	-- Bounding box
-	local map_w = self.map.width * BW
-	local map_h = self.map.height * BW
+	local map_w = self.level.map.width * BW
+	local map_h = self.level.map.height * BW
 	local box_ax = self.world_generator.box_ax
 	local box_ay = self.world_generator.box_ay
 	local box_bx = self.world_generator.box_bx
@@ -331,37 +329,20 @@ function Game:update_main_game(dt)
 
 	self:listen_for_player_join(dt)
 	
-	-- BG color gradient
-	if not self.level.is_on_win_screen then
-		self.level.bg_color_progress = self.level.bg_color_progress + dt*0.2
-		local i_prev = mod_plus_1(self.level.bg_color_index-1, #self.level.bg_colors)
-		if self.floor <= 1 then
-			i_prev = 1
-		end
-
-		local i_target = mod_plus_1(self.level.bg_color_index, #self.level.bg_colors)
-		local prog = clamp(self.level.bg_color_progress, 0, 1)
-		self.level.bg_col = lerp_color(self.level.bg_colors[i_prev], self.level.bg_colors[i_target], prog)
-		self.level.bg_particle_col = self.level.bg_particle_colors[i_target]
-	end
+	self.level:update(dt)
 	
 	-- Elevator swing 
 	-- self.elev_x = cos(self.t) * 4
 	-- self.elev_y = 4 + sin(self.t) * 4
 
 	self:update_timer_before_game_over(dt)
-
 	self:apply_screenshake(dt)
 	
 	if not Options:get("screenshake_on") then self.cam_ox, self.cam_oy = 0,0 end
 	self.cam_realx, self.cam_realy = self.cam_x + self.cam_ox, self.cam_y + self.cam_oy
 
-	self.map:update(dt)
-
 	-- Particles
 	Particles:update(dt)
-	self.level:update_bg_particles(dt)
-	self.level:progress_elevator(dt)
 
 	-- Update actors
 	for i = #self.actors, 1, -1 do
@@ -374,9 +355,6 @@ function Game:update_main_game(dt)
 			table.remove(self.actors, i)
 		end
 	end
-
-	-- Flash 
-	self.level.flash_alpha = max(self.level.flash_alpha - dt, 0)
 	
 	-- Logo
 	self.logo_a = self.logo_a + dt*3
@@ -441,8 +419,8 @@ function Game:draw()
 end
 
 function Game:draw_game()
-	exec_on_canvas(self.smoke_canvas, love.graphics.clear)
 	local real_camx, real_camy = (self.cam_x + self.cam_ox), (self.cam_y + self.cam_oy)
+	-- local real_camx, real_camy = math.cos(self.t) * 10, math.sin(self.t) * 10;
 	local function reset_transform()
 		love.graphics.origin()
 		love.graphics.scale(self.cam_zoom)
@@ -468,10 +446,6 @@ function Game:draw_game()
 
 	Particles:draw()
 	
-	if self.level.show_rubble then
-		self.level:draw_rubble(self.cabin_x, self.cabin_y)
-	end
-
 	---------------------------------------------
 
 	-- Buffering these so that we can draw their shadows but still draw then in front of everything
@@ -494,33 +468,7 @@ function Game:draw_game()
 	
 	---------------------------------------------
 
-	--Draw bg particles
-	if self.level.show_bg_particles then
-		for i,o in pairs(self.level.bg_particles) do
-			local y = o.y + o.oy
-			local mult = 1 - clamp(abs(self.level.elevator_speed / 100), 0, 1)
-			local sin_oy = mult * sin(self.t + o.rnd_pi) * o.oh * o.h 
-			
-			rect_color(o.col, "fill", o.x, o.y + o.oy + sin_oy, o.w, o.h * o.oh)
-		end
-	end
-
-	-- Map
-	self.map:draw()
-	
-	-- Background
-	
-	-- Door background
-	if self.level.show_cabin then
-		rect_color(self.level.bg_col, "fill", self.door_ax, self.door_ay, self.door_bx - self.door_ax+1, self.door_by - self.door_ay+1)
-		-- If doing door animation, draw buffered enemies
-		if self.level.door_animation then
-			for i,e in pairs(self.level.door_animation_enemy_buffer) do
-				e:draw()
-			end
-		end
-		self.level:draw_background(self.cabin_x, self.cabin_y)
-	end
+	self.level:draw()
 	
 	reset_transform()
 	love.graphics.setColor(0,0,0, 0.5)
@@ -541,34 +489,12 @@ function Game:draw_game()
 
 	reset_transform()
 	love.graphics.draw(self.front_canvas, 0, 0)
-	love.graphics.translate(-real_camx, -real_camy)
-
-	-- UI
-	-- print_centered_outline(COL_WHITE, COL_DARK_BLUE, concat("FLOOR ",self.floor), CANVAS_WIDTH/2, 8)
-	-- local w = 64
-	-- rect_color(COL_DARK_GRAY, "fill", floor((CANVAS_WIDTH-w)/2),    16, w, 8)
-	-- rect_color(COL_WHITE,    "fill", floor((CANVAS_WIDTH-w)/2) +1, 17, (w-2)*self.floor_progress, 6)
-
+	-- love.graphics.translate(-real_camx, -real_camy)
 	reset_transform()
 
 	-- Logo
 	self.game_ui:draw()
-
-	-- "CONGRATS" at the end
-	if self.level.is_on_win_screen then
-		self.level:draw_win_screen()
-	end
-
-	-- Flash
-	if self.level.flash_alpha then
-		rect_color({1,1,1,self.level.flash_alpha}, "fill", self.cam_realx, self.cam_realy, CANVAS_WIDTH, CANVAS_HEIGHT)
-	end
-
-	-- Timer
-	if Options:get("timer_on") then
-		rect_color({0,0,0,0.5}, "fill", 0, 10, 50, 12)
-		gfx.print(time_to_string(self.time), 8, 8)
-	end
+	self.level:draw_front()
 
 	-- Debug
 	if self.debug.colview_mode then
@@ -596,6 +522,8 @@ function Game:draw_game()
 end
 
 function Game:draw_smoke_canvas()
+	exec_on_canvas(self.smoke_canvas, love.graphics.clear)
+
 	-- Used for effects for the stink bugs
 	exec_on_canvas(self.smoke_buffer_canvas, function()
 		love.graphics.clear()
@@ -847,11 +775,10 @@ function Game:new_player(player_n, x, y)
 		return
 	end
 	local mx = floor(self.door_ax)
-	local my = floor(self.map.height - 3)
 	x = param(x, mx + ((player_n-1) / (MAX_NUMBER_OF_PLAYERS-1)) * (self.door_bx - self.door_ax))
-	y = param(y, my*16)
+	y = param(y, CANVAS_HEIGHT - 3*16)
 
-	local player = Player:new(player_n, x ,y, skins[player_n])
+	local player = Player:new(player_n, x, y, skins[player_n])
 	self.players[player_n] = player
 	self.waves_until_respawn[player_n] = -1
 	self:new_actor(player)

@@ -19,6 +19,7 @@ function GameUI:draw()
 	if not self.is_visible then return end
 	self:draw_logo()
 	self:draw_join_tutorial()
+	self:draw_timer()
 end
 
 function GameUI:draw_logo()
@@ -68,6 +69,15 @@ function GameUI:draw_join_tutorial()
 		x = x - icon_split_kb:getWidth() - 2
 		love.graphics.draw(icon_split_kb, x, y)
 	end
+end
+
+function GameUI:draw_timer()
+	if not Options:get("timer_on") then
+		return
+	end
+
+	rect_color({0,0,0,0.5}, "fill", 0, 10, 50, 12)
+	gfx.print(time_to_string(game.time), 8, 8)
 end
 
 return GameUI

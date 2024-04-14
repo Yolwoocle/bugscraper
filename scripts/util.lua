@@ -62,12 +62,12 @@ end
 
 
 function color(hex)
-	if not hex then  return white  end
-	if type(hex) ~= "number" then  return white  end
+	if not hex then  return {1, 1, 1}  end
+	assert(type(hex) == "number", "incorrect type for 'hex' ("..type(hex).."), argument given should be number")
 
-	local b = hex % 256;  hex = (hex - b) / 256
-	local g = hex % 256;  hex = (hex - b) / 256
-	local r = hex % 256
+	local r = math.floor(hex / 65536) % 256
+	local g = math.floor(hex / 256) % 256 
+	local b = hex % 256
 	return {r/255, g/255, b/255, 1.0}
 end
 
