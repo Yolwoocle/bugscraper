@@ -6,9 +6,9 @@ local sounds = require "data.sounds"
 local waves = require "data.waves"
 local utf8 = require "utf8"
 
-local Elevator = Class:inherit()
+local Level = Class:inherit()
 
-function Elevator:init(game)
+function Level:init(game)
     self.game = game
 
 	self.max_floor = #waves
@@ -83,7 +83,7 @@ function Elevator:init(game)
 end
 
 
-function Elevator:new_bg_particle()
+function Level:new_bg_particle()
 	local o = {}
 	o.x = love.math.random(0, CANVAS_WIDTH)
 	o.w = love.math.random(2, 12)
@@ -109,7 +109,7 @@ function Elevator:new_bg_particle()
 	return o
 end
 
-function Elevator:update_bg_particles(dt)
+function Level:update_bg_particles(dt)
 	-- Background lines
 	for i,o in pairs(self.bg_particles) do
 		o.y = o.y + dt*self.elevator_speed*o.spd
@@ -137,7 +137,7 @@ function Elevator:update_bg_particles(dt)
 	end
 end
 
-function Elevator:progress_elevator(dt)
+function Level:progress_elevator(dt)
 	-- FIXMEelev
 	-- local r = abs(self.elevator_speed / self.elevator_speed_cap)
 	-- self.sfx_elevator_bg_volume = lerp(
@@ -185,7 +185,7 @@ function Elevator:progress_elevator(dt)
 end
 
 
-function Elevator:update_door_anim(dt)
+function Level:update_door_anim(dt)
 	-- 4-3: open doors / 3-2: idle / 2-1: close doors
 	if self.floor_progress > 4 then
 		-- Door is closed at first...
@@ -222,7 +222,7 @@ function Elevator:update_door_anim(dt)
 	end
 end
 
-function Elevator:next_floor(dt, new_floor, old_floor)
+function Level:next_floor(dt, new_floor, old_floor)
 	if old_floor == 0 then
 		self.game:start_game()
 
@@ -232,7 +232,7 @@ function Elevator:next_floor(dt, new_floor, old_floor)
 	end
 end
 
-function Elevator:new_endless_wave()
+function Level:new_endless_wave()
 	local min = 8
 	local max = 16
 	return {
@@ -254,7 +254,7 @@ function Elevator:new_endless_wave()
 	}
 end
 
-function Elevator:construct_new_wave(wave_n)
+function Level:construct_new_wave(wave_n)
 	local wave = waves[wave_n]
 	if self.game.endless_mode then
 		-- Wave on endless mode
@@ -290,7 +290,7 @@ function Elevator:construct_new_wave(wave_n)
 	return output
 end
 
-function Elevator:change_bg_color(wave_n)
+function Level:change_bg_color(wave_n)
 	-- if wave_n == floor((self.bg_color_index) * (#waves / 4)) then
 	local real_wave_n = max(1, self.game.floor + 1)
 	self.debug2 = real_wave_n
@@ -302,7 +302,7 @@ function Elevator:change_bg_color(wave_n)
 	end
 end
 
-function Elevator:new_wave_buffer_enemies()
+function Level:new_wave_buffer_enemies()
 	-- Spawn a bunch of enemies
 	local bw = BLOCK_WIDTH
 	local wg = self.game.world_generator
@@ -350,7 +350,7 @@ function Elevator:new_wave_buffer_enemies()
 end
 
 
-function Elevator:activate_enemy_buffer()
+function Level:activate_enemy_buffer()
 	for k, e in pairs(self.door_animation_enemy_buffer) do
 		e:add_collision()
 		self.game:new_actor(e)
@@ -358,7 +358,7 @@ function Elevator:activate_enemy_buffer()
 	self.door_animation_enemy_buffer = {}
 end
 
-function Elevator:draw_background(cabin_x, cabin_y)
+function Level:draw_background(cabin_x, cabin_y)
 	local bw = BLOCK_WIDTH
 
 	-- Doors
@@ -380,7 +380,7 @@ function Elevator:draw_background(cabin_x, cabin_y)
 	gfx.setFont(FONT_REGULAR)
 end
 
-function Elevator:draw_win_screen()
+function Level:draw_win_screen()
 	local old_font = gfx.getFont()
 	gfx.setFont(FONT_PAINT)
 
@@ -432,15 +432,15 @@ function Elevator:draw_win_screen()
 end
 
 
-function Elevator:draw_rubble(x,y)
+function Level:draw_rubble(x,y)
 	gfx.draw(images.cabin_rubble, x, (16-5)*BW)
 end
 
-function Elevator:on_red_button_pressed()
+function Level:on_red_button_pressed()
 	self.is_reversing_elevator = true
 end
 
-function Elevator:do_reverse_elevator(dt)
+function Level:do_reverse_elevator(dt)
 	self.elevator_speed_cap = -1000
 	local speed_cap = self.elevator_speed_cap
 
@@ -512,7 +512,7 @@ function Elevator:do_reverse_elevator(dt)
 end
 
 
-function Elevator:on_exploding_elevator(dt)
+function Level:on_exploding_elevator(dt)
 	self.game:on_exploding_elevator()
 
 	self.elevator_speed = 0
@@ -584,7 +584,7 @@ function Elevator:on_exploding_elevator(dt)
 	end
 end
 
-function Elevator:do_exploding_elevator(dt)
+function Level:do_exploding_elevator(dt)
 	local x,y = random_range(self.game.cabin_ax, self.game.cabin_bx), 16*BW
 	local mw = CANVAS_WIDTH/2
 	y = 16*BW-8 - max(0, lerp(BW*4-8, -16, abs(mw-x)/mw))
@@ -593,4 +593,4 @@ function Elevator:do_exploding_elevator(dt)
 end
 
 
-return Elevator
+return Level

@@ -12,7 +12,7 @@ local OptionsManager = require "scripts.game.options"
 local InputManager = require "scripts.input.input"
 local MusicPlayer = require "scripts.audio.music_player"
 local MusicDisk = require "scripts.audio.music_disk"
-local Elevator = require "scripts.game.elevator"
+local Level = require "scripts.game.level"
 local InputButton = require "scripts.input.input_button"
 local GameUI = require "scripts.ui.game_ui"
 local Loot = require "scripts.actor.loot"
@@ -108,7 +108,7 @@ function Game:new_game()
 		self.waves_until_respawn[i] = -1
 	end
 
-	self.elevator = Elevator:new(self)
+	self.level = Level:new(self)
 
 	-- Map & world gen
 	self.shaft_w, self.shaft_h = 26,14
@@ -332,17 +332,17 @@ function Game:update_main_game(dt)
 	self:listen_for_player_join(dt)
 	
 	-- BG color gradient
-	if not self.elevator.is_on_win_screen then
-		self.elevator.bg_color_progress = self.elevator.bg_color_progress + dt*0.2
-		local i_prev = mod_plus_1(self.elevator.bg_color_index-1, #self.elevator.bg_colors)
+	if not self.level.is_on_win_screen then
+		self.level.bg_color_progress = self.level.bg_color_progress + dt*0.2
+		local i_prev = mod_plus_1(self.level.bg_color_index-1, #self.level.bg_colors)
 		if self.floor <= 1 then
 			i_prev = 1
 		end
 
-		local i_target = mod_plus_1(self.elevator.bg_color_index, #self.elevator.bg_colors)
-		local prog = clamp(self.elevator.bg_color_progress, 0, 1)
-		self.elevator.bg_col = lerp_color(self.elevator.bg_colors[i_prev], self.elevator.bg_colors[i_target], prog)
-		self.elevator.bg_particle_col = self.elevator.bg_particle_colors[i_target]
+		local i_target = mod_plus_1(self.level.bg_color_index, #self.level.bg_colors)
+		local prog = clamp(self.level.bg_color_progress, 0, 1)
+		self.level.bg_col = lerp_color(self.level.bg_colors[i_prev], self.level.bg_colors[i_target], prog)
+		self.level.bg_particle_col = self.level.bg_particle_colors[i_target]
 	end
 	
 	-- Elevator swing 
@@ -360,8 +360,8 @@ function Game:update_main_game(dt)
 
 	-- Particles
 	Particles:update(dt)
-	self.elevator:update_bg_particles(dt)
-	self.elevator:progress_elevator(dt)
+	self.level:update_bg_particles(dt)
+	self.level:progress_elevator(dt)
 
 	-- Update actors
 	for i = #self.actors, 1, -1 do
@@ -376,7 +376,7 @@ function Game:update_main_game(dt)
 	end
 
 	-- Flash 
-	self.elevator.flash_alpha = max(self.elevator.flash_alpha - dt, 0)
+	self.level.flash_alpha = max(self.level.flash_alpha - dt, 0)
 	
 	-- Logo
 	self.logo_a = self.logo_a + dt*3
@@ -449,7 +449,7 @@ function Game:draw_game()
 	end
 	
 	-- Sky
-	gfx.clear(self.elevator.bg_col)
+	gfx.clear(self.level.bg_col)
 	
 	local old_canvas = love.graphics.getCanvas()
 	love.graphics.setCanvas(self.object_canvas)
@@ -468,8 +468,8 @@ function Game:draw_game()
 
 	Particles:draw()
 	
-	if self.elevator.show_rubble then
-		self.elevator:draw_rubble(self.cabin_x, self.cabin_y)
+	if self.level.show_rubble then
+		self.level:draw_rubble(self.cabin_x, self.cabin_y)
 	end
 
 	---------------------------------------------
@@ -495,10 +495,10 @@ function Game:draw_game()
 	---------------------------------------------
 
 	--Draw bg particles
-	if self.elevator.show_bg_particles then
-		for i,o in pairs(self.elevator.bg_particles) do
+	if self.level.show_bg_particles then
+		for i,o in pairs(self.level.bg_particles) do
 			local y = o.y + o.oy
-			local mult = 1 - clamp(abs(self.elevator.elevator_speed / 100), 0, 1)
+			local mult = 1 - clamp(abs(self.level.elevator_speed / 100), 0, 1)
 			local sin_oy = mult * sin(self.t + o.rnd_pi) * o.oh * o.h 
 			
 			rect_color(o.col, "fill", o.x, o.y + o.oy + sin_oy, o.w, o.h * o.oh)
@@ -511,15 +511,15 @@ function Game:draw_game()
 	-- Background
 	
 	-- Door background
-	if self.elevator.show_cabin then
-		rect_color(self.elevator.bg_col, "fill", self.door_ax, self.door_ay, self.door_bx - self.door_ax+1, self.door_by - self.door_ay+1)
+	if self.level.show_cabin then
+		rect_color(self.level.bg_col, "fill", self.door_ax, self.door_ay, self.door_bx - self.door_ax+1, self.door_by - self.door_ay+1)
 		-- If doing door animation, draw buffered enemies
-		if self.elevator.door_animation then
-			for i,e in pairs(self.elevator.door_animation_enemy_buffer) do
+		if self.level.door_animation then
+			for i,e in pairs(self.level.door_animation_enemy_buffer) do
 				e:draw()
 			end
 		end
-		self.elevator:draw_background(self.cabin_x, self.cabin_y)
+		self.level:draw_background(self.cabin_x, self.cabin_y)
 	end
 	
 	reset_transform()
@@ -535,7 +535,7 @@ function Game:draw_game()
 	love.graphics.translate(-real_camx, -real_camy)
 	
 	-- Walls
-	if self.elevator.show_cabin then
+	if self.level.show_cabin then
 		gfx.draw(images.cabin_walls, self.cabin_x, self.cabin_y)
 	end
 
@@ -555,13 +555,13 @@ function Game:draw_game()
 	self.game_ui:draw()
 
 	-- "CONGRATS" at the end
-	if self.elevator.is_on_win_screen then
-		self.elevator:draw_win_screen()
+	if self.level.is_on_win_screen then
+		self.level:draw_win_screen()
 	end
 
 	-- Flash
-	if self.elevator.flash_alpha then
-		rect_color({1,1,1,self.elevator.flash_alpha}, "fill", self.cam_realx, self.cam_realy, CANVAS_WIDTH, CANVAS_HEIGHT)
+	if self.level.flash_alpha then
+		rect_color({1,1,1,self.level.flash_alpha}, "fill", self.cam_realx, self.cam_realy, CANVAS_WIDTH, CANVAS_HEIGHT)
 	end
 
 	-- Timer
@@ -918,7 +918,7 @@ function Game:on_red_button_pressed()
 	self:save_stats()
 	self.menu_manager:set_can_pause(false)
 	self.game_state = GAME_STATE_ELEVATOR_BURNING
-	self.elevator:on_red_button_pressed()
+	self.level:on_red_button_pressed()
 end
 
 function Game:on_exploding_elevator()

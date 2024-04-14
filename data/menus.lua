@@ -47,7 +47,7 @@ local function draw_elevator_progress()
     love.graphics.rectangle("fill", x2 - end_w/2, y2, end_w, end_w)
     love.graphics.line(x1, y1, x2, y2)
     
-    local n_floors = game.elevator.max_floor
+    local n_floors = game.level.max_floor
     local sep_w = 3
     local h = y2 - y1
     for i = 1, n_floors-1 do
@@ -60,7 +60,7 @@ local function draw_elevator_progress()
         end
     end
 
-    local text = concat(game.floor,"/",game.elevator.max_floor)
+    local text = concat(game.floor,"/",game.level.max_floor)
     local text_y = clamp(y2 - (game.floor/n_floors) * h, y1, y2)
     love.graphics.print(text, x1- get_text_width(text) - 5, text_y- get_text_height(text)/2-2)
 end
@@ -438,7 +438,7 @@ local function generate_menus()
         { StatsMenuItem, "Time",  function(self)
             return time_to_string(game.stats.time)
         end },
-        { StatsMenuItem, "Floor", function(self) return concat(game.stats.floor, "/", game.elevator.max_floor) end },
+        { StatsMenuItem, "Floor", function(self) return concat(game.stats.floor, "/", game.level.max_floor) end },
         { StatsMenuItem, "Max combo", function(self) return concat(game.stats.max_combo) end },
         { "" },
         { "CONTINUE", function() game:new_game() end },
@@ -465,7 +465,6 @@ local function generate_menus()
         { "ArkanYota", func_url("https://github.com/ARKANYOTA")},
         { "Louie Chapman", func_url("https://louiechapm.itch.io/") },
         { "Raphaël Marcon", func_url("https://raphytator.itch.io/") },
-        -- { "SmellyFishstiks", func_url("https://www.lexaloffle.com/bbs/?uid=42184") },
         { "Indie Game Lyon", func_url("https://www.indiegamelyon.com/")},
         { "LÖVE Engine", func_url("https://love2d.org/") },
         { ""},

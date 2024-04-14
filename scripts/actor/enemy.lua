@@ -250,7 +250,7 @@ function Enemy:drop_loot()
 	game:new_actor(instance)
 end
 
-function Enemy:on_death()
+function Enemy:on_death(damager, reason)
 	
 end
 

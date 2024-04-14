@@ -3,6 +3,7 @@ local Actor = require "scripts.actor.actor"
 local Guns = require "data.guns"
 local Bullet = require "scripts.actor.bullet"
 local Effect = require "scripts.effect.effect"
+local Enemies = require "data.enemies"
 local EffectSlowness = require "scripts.effect.effect_slowness"
 local InputButton = require "scripts.input.input_button"
 local images = require "data.images"
@@ -162,40 +163,6 @@ end
 local igun = 1
 function Player:update(dt)
 	self.dt = dt
-
-	-- if Input:action_pressed("up") then
-	-- 	game.floor = 20
-	-- 	for i,e in pairs(game.actors) do
-	-- 		if e.is_enemy then
-	-- 			e:kill()
-	-- 		end
-	-- 	end
-	-- end
-	-- if self:button_pressed("ui_reset_keys") then
-	-- 	game.floor = game.floor + 1
-	-- end
-	-- if Input:action_pressed(self.n, "ui_reset_keys") then
-	-- 	local all_guns = Guns:get_all_guns()
-	-- 	igun = mod_plus_1(igun + 1, #all_guns)
-	-- 	self:equip_gun(all_guns[igun]:new())
-	-- end
-	-- if Input:action_pressed(self.n, "ui_reset_keys") then
-	-- 	if Input:action_down(self.n, "up") then
-	-- 		game.floor = game.elevator.max_floor-1
-	-- 	end
-	-- 	for i,e in pairs(game.actors) do
-	-- 		if e.is_enemy then
-	-- 			e:kill()
-	-- 		end
-	-- 	end
-	-- end
-	-- if Input:action_pressed(self.n, "ui_reset_keys") then
-	-- 	self:kill()
-	-- end
-	-- if Input:action_pressed(self.n, "ui_reset_keys") then
-	-- 	self:do_damage(1)
-	-- 	self.iframes = 1
-	-- end
 	
 	-- Movement
 	self:update_upgrades(dt)
@@ -437,6 +404,10 @@ function Player:set_player_n(n)
 	self.n = n
 end
 
+function Player:set_life(val)
+	self.life = clamp(val, 0, self.max_life)
+end
+
 function Player:heal(val)
 	local overflow = self.max_life - (self.life + val)
 	if overflow >= 0 then
@@ -640,8 +611,12 @@ function Player:on_removed()
 end
 
 function Player:kill()
+	if self.is_dead then return end
 	self.is_dead = true
 	
+	-- local fainted_player = Enemies.Cocoon:new(self.x, self.y)
+	-- game:new_actor(fainted_player)
+
 	game:screenshake(10)
 	Particles:dead_player(self.spr_x, self.spr_y, self.skin.spr_dead, self.color_palette, self.dir_x)
 	game:frameskip(30)

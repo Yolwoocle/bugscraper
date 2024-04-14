@@ -138,7 +138,7 @@ function MenuManager:pause()
 	if self.is_paused then return end
 	if not self.can_pause then return end
 
-	if game.elevator.is_on_win_screen then --scotch
+	if game.level.is_on_win_screen then --scotch
 		self:set_menu("win")
 		return
 	end

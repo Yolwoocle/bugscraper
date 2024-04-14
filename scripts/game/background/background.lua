@@ -2,11 +2,11 @@ local Class = require "scripts.meta.class"
 
 local Background = Class:inherit()
 
-function Background:init(elevator)
-	self:init_background(elevator)
+function Background:init(level)
+	self:init_background(level)
 end
-function Background:init_background(elevator)
-	self.elevator = elevator
+function Background:init_background(level)
+	self.level = level
 end
 
 function Background:update_background(dt)
