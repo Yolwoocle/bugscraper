@@ -28,51 +28,56 @@ function MenuManager:reset()
 end
 
 function MenuManager:update(dt)
-	self:update_unpause_menu()
+	self:update_menu_unpausing()
 	if self.cur_menu then
-		-- Navigate up and down
-		if Input:action_pressed("ui_up") then
-			self:incr_selection(-1)
-		end
-		if Input:action_pressed("ui_down") then
-			self:incr_selection(1)
-		end
-		
-		self.cur_menu:update(dt)
-
-		-- Update current selection
-		self.sel_n = mod_plus_1(self.sel_n, #self.cur_menu.items)
-		self.sel_item = self.cur_menu.items[self.sel_n]
-		self.sel_item.is_selected = true
-
-		-- On pressed
-		local btn = Input:action_pressed("ui_select")
-		if btn and self.sel_item and self.sel_item.on_click then
-			if not self.sel_item.is_waiting_for_input then
-				self.sel_item:on_click()
-				if self.sel_item then self.sel_item:after_click() end
-			end
-		end
-
-		-- Scroll
-		if self.cur_menu and self.sel_item and self.cur_menu.is_scrollable then
-			if self.sel_item.y > CANVAS_HEIGHT/2 + MENU_SCROLL_DEADZONE then
-				self.cur_menu:set_target_scroll_position(self.sel_item.def_y - (CANVAS_HEIGHT/2 + MENU_SCROLL_DEADZONE))
-			elseif self.sel_item.y < CANVAS_HEIGHT/2 - MENU_SCROLL_DEADZONE then
-				self.cur_menu:set_target_scroll_position(self.sel_item.def_y - (CANVAS_HEIGHT/2 - MENU_SCROLL_DEADZONE))
-			end
-		end
+		self:update_current_menu(dt)
 	end
 
-	
-	if Input:action_pressed("pause") then 
+	local pause_button = Input:action_pressed("pause")
+	local back_button = Input:action_pressed("ui_back")
+	if pause_button then 
 		if self.cur_menu == nil then
 			self:pause()
 		else
 			self:unpause()
 		end
-	elseif Input:action_pressed("ui_back") then
+	elseif back_button then
 		self:back()
+	end
+end
+
+function MenuManager:update_current_menu(dt)
+	-- Navigate up and down
+	if Input:action_pressed("ui_up") then
+		self:incr_selection(-1)
+	end
+	if Input:action_pressed("ui_down") then
+		self:incr_selection(1)
+	end
+	
+	self.cur_menu:update(dt)
+
+	-- Update current selection
+	self.sel_n = mod_plus_1(self.sel_n, #self.cur_menu.items)
+	self.sel_item = self.cur_menu.items[self.sel_n]
+	self.sel_item.is_selected = true
+
+	-- On pressed
+	local btn = Input:action_pressed("ui_select")
+	if btn and self.sel_item and self.sel_item.on_click then
+		if not self.sel_item.is_waiting_for_input then
+			self.sel_item:on_click()
+			if self.sel_item then self.sel_item:after_click() end
+		end
+	end
+
+	-- Scroll
+	if self.cur_menu and self.sel_item and self.cur_menu.is_scrollable then
+		if self.sel_item.y > CANVAS_HEIGHT/2 + MENU_SCROLL_DEADZONE then
+			self.cur_menu:set_target_scroll_position(self.sel_item.def_y - (CANVAS_HEIGHT/2 + MENU_SCROLL_DEADZONE))
+		elseif self.sel_item.y < CANVAS_HEIGHT/2 - MENU_SCROLL_DEADZONE then
+			self.cur_menu:set_target_scroll_position(self.sel_item.def_y - (CANVAS_HEIGHT/2 - MENU_SCROLL_DEADZONE))
+		end
 	end
 end
 
@@ -92,7 +97,10 @@ function MenuManager:set_menu(menu, is_back)
 		return
 	else
 		if not is_back then
-			table.insert(self.menu_stack, self.cur_menu)
+			table.insert(self.menu_stack, {
+				menu = self.cur_menu,
+				sel_n = self.sel_n,
+			})
 		end
 	end
 
@@ -120,7 +128,7 @@ function MenuManager:set_menu(menu, is_back)
 	return true
 end
 
-function MenuManager:update_unpause_menu()
+function MenuManager:update_menu_unpausing()
 	if self.buffer_unpause then
 		self.buffer_unpause = false
 		self.cur_menu = nil
@@ -224,9 +232,10 @@ function MenuManager:back()
 		return
 	end
 
-	local menu = table.remove(self.menu_stack)
-	if menu then
-		self:set_menu(menu, true)
+	local item = table.remove(self.menu_stack)
+	if item.menu then
+		self:set_menu(item.menu, true)
+		self:set_selection(item.sel_n)
 	end
 end
 

@@ -286,6 +286,7 @@ function Debug:draw_info_view()
 		concat("real_wave_n ", self.game.debug2),
 		concat("bg_color_index ", self.game.debug3),
 		concat("number_of_alive_players ", self.game:get_number_of_alive_players()),
+		concat("menu_stack ", #self.game.menu_manager.menu_stack),
 		players_str,
 		users_str,
 		joystick_user_str,
