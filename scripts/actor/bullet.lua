@@ -31,6 +31,14 @@ function Bullet:init(gun, player, x, y, w, h, vx, vy)
 
 	self.bounce_immunity_timer = 0.0
 	self.bounce_immunity_duration = 0.1
+
+	-- self.collision_filter = function(item, other)
+	-- 	if other.type == "tile" and not other.is_solid_to_bullets then
+	-- 		return "cross"
+	-- 	else
+	-- 		return Collision.filter(item, other)
+	-- 	end
+	-- end
 end
 
 function Bullet:update(dt)
@@ -57,9 +65,13 @@ function Bullet:draw()
 end
 
 function Bullet:on_collision(col)
+	if self.is_removed then    return    end
 	if col.other == self.player then    return   end
-	
-	if not self.is_removed and col.other.is_solid then
+	-- if not col.other.is_solid_to_bullets then
+	-- 	return
+	-- end
+
+	if col.other.is_solid then
 		local s = "metalfootstep_0"..tostring(love.math.random(0,4))
 		Audio:play_var(s, 0.3, 1, {pitch=0.7, volume=0.5})
 		self:kill()

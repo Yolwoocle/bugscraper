@@ -241,7 +241,7 @@ function Guns:init()
 		
 		self.sfx = "shot1"
 		self.damage = 200
-		self.is_auto = true
+		self.is_auto = false
 		self.spr = images.metal
 		self.max_ammo = math.huge
 		
@@ -275,7 +275,7 @@ function Guns:get_random_gun(user)
 	local gun = random_sample(all_guns) or self.Machinegun
 	local inst = gun:new(user)
 	
-	if game.floor <= 5 then
+	if game:get_floor() <= 5 then
 		local limit = 10
 		while limit > 0 and inst.name == "ring" do
 			inst = random_sample(all_guns):new(user)

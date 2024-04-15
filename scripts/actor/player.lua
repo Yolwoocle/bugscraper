@@ -478,7 +478,7 @@ function Player:do_wall_sliding(dt)
 		local holding_right = Input:action_down(self.n, 'right') and col_normal.x == -1
 		
 		local is_wall_sliding = is_walled and is_falling and (holding_left or holding_right) 
-			and not self.wall_col.other.is_not_slidable
+			and self.wall_col.other.is_slidable
 		self.is_wall_sliding = is_wall_sliding
 		self.is_walled = is_walled
 	end

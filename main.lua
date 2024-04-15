@@ -65,39 +65,6 @@ function love.keypressed(key, scancode, isrepeat)
 
 	elseif key == "return" and (love.keyboard.isDown("lalt") or love.keyboard.isDown("ralt")) then
 		if Options then   Options:toggle_fullscreen()    end
-
-	-- elseif key == "m" then
-	-- 	options:und()
-		
-	-- elseif key == "g" then
-	-- 	game.players[1]:kill()
-
-	-- elseif key == "e" then
-	-- 	if not game then return end
-	-- 	for i,e in pairs(game.actors) do
-	-- 		if e.is_enemy then
-	-- 			e:kill()
-	-- 		end
-	-- 	end
-	-- 	game.floor = 998
-		-- game:on_red_button_pressed()
-
-	-- elseif key == "b" then
-	-- 	if not game then return end
-	-- 	local Enemies = require "data.enemies"
-	-- 	local nx = CANVAS_WIDTH/2
-	-- 	local ny = game.world_generator.box_by * BLOCK_WIDTH
-	-- 	local l = create_actor_centered(Enemies.ButtonGlass, nx, ny)
-	-- 	game:new_actor(l)
-
-	-- elseif key == "k" then
-	-- 	if not game then return end
-	-- 	for i,e in pairs(game.actors) do
-	-- 		if e.is_enemy then
-	-- 			e:kill()
-	-- 		end
-	-- 	end
-
 	end
 
 	if game.keypressed then  game:keypressed(key, scancode, isrepeat)  end

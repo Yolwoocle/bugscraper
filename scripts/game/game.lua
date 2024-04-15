@@ -11,7 +11,7 @@ local OptionsManager = require "scripts.game.options"
 local InputManager = require "scripts.input.input"
 local MusicPlayer = require "scripts.audio.music_player"
 local MusicDisk = require "scripts.audio.music_disk"
-local Level = require "scripts.game.level"
+local Level = require "scripts.level.level"
 local InputButton = require "scripts.input.input_button"
 local GameUI = require "scripts.ui.game_ui"
 local Loot = require "scripts.actor.loot"
@@ -114,9 +114,6 @@ function Game:new_game()
 	self.world_generator = WorldGenerator:new(self.level.map)
 	self.world_generator:generate(10203)
 	self.world_generator:make_box(self.shaft_w, self.shaft_h)
-
-	-- Level info
-	self.floor = 0 --Floor n°
 
 	-- Bounding box
 	local map_w = self.level.map.width * BW
@@ -427,7 +424,7 @@ function Game:draw_game()
 	end
 	
 	-- Sky
-	gfx.clear(self.level.bg_col)
+	gfx.clear(self.level.background.bg_col)
 	
 	local old_canvas = love.graphics.getCanvas()
 	love.graphics.setCanvas(self.object_canvas)
@@ -448,11 +445,9 @@ function Game:draw_game()
 	
 	---------------------------------------------
 
-	-- Buffering these so that we can draw their shadows but still draw then in front of everything
+	-- Buffering actors UI so that we can draw their shadows but still draw then in front of everything
 	local draw_front_objects = function()
-		-- Draw actors UI
 		Particles:draw_front()
-		-- Draw actors
 		reset_transform()		
 		for k,actor in pairs(self.actors) do
 			if actor.draw_hud and self.game_ui.is_visible then     actor:draw_hud()    end
@@ -471,35 +466,34 @@ function Game:draw_game()
 	self.level:draw()
 	
 	reset_transform()
-	love.graphics.setColor(0,0,0, 0.5)
-	love.graphics.draw(self.object_canvas, self.shadow_ox, self.shadow_oy)
-	love.graphics.draw(self.front_canvas,  self.shadow_ox, self.shadow_oy)
 	love.graphics.setColor(1,1,1, 1)
+	exec_color({0,0,0, 0.5}, function()
+		love.graphics.draw(self.object_canvas, self.shadow_ox, self.shadow_oy)
+		love.graphics.draw(self.front_canvas,  self.shadow_ox, self.shadow_oy)
+	end)
 	love.graphics.draw(self.object_canvas, 0, 0)
 	
 	self:draw_smoke_canvas()
-	
-	love.graphics.setColor(1,1,1, 1)
 	love.graphics.translate(-real_camx, -real_camy)
+	self.level:draw_rubble(self.cabin_x, self.cabin_y)
 	
 	-- Walls
 	if self.level.show_cabin then
 		gfx.draw(images.cabin_walls, self.cabin_x, self.cabin_y)
 	end
 
+	-----------------------------------------------------
+	
+	-- UI
 	reset_transform()
 	love.graphics.draw(self.front_canvas, 0, 0)
-	-- love.graphics.translate(-real_camx, -real_camy)
-	reset_transform()
-
-	-- Logo
 	self.game_ui:draw()
 	self.level:draw_front()
-
-	-- Debug
 	if self.debug.colview_mode then
 		self.debug:draw_colview()
 	end
+
+	-----------------------------------------------------
 
 	-- Menus
 	if self.menu_manager.cur_menu then
@@ -705,7 +699,7 @@ end
 
 function Game:save_stats()
 	self.stats.time = self.time
-	self.stats.floor = self.floor
+	self.stats.floor = self.level.floor
 	self.stats.kills = self.kills
 	self.stats.max_combo = self.max_combo
 end
@@ -716,6 +710,13 @@ end
 
 function Game:do_win()
 
+end
+
+function Game:get_floor()
+	return self.level:get_floor()
+end
+function Game:set_floor(val)
+	self.level:set_floor(val)
 end
 
 function draw_log()

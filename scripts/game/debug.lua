@@ -13,6 +13,7 @@ function Debug:init(game)
     self.colview_mode = false
     self.info_view = false
     self.joystick_view = false
+    self.instant_end = false
 
     self.notification_message = ""
     self.notification_timer = 0.0
@@ -53,10 +54,10 @@ function Debug:init(game)
         ["7"] = {"heal P3", func_heal(3)},
         ["8"] = {"heal P4", func_heal(4)},
         ["q"] = {"previous floor",function()
-            self.game.floor = self.game.floor - 1
+            self.game:set_floor(self:get_floor() - 1)
         end},
         ["w"] = {"next floor", function()
-            self.game.floor = self.game.floor + 1
+            self.game:set_floor(self.game:get_floor() + 1)
         end},
         
         ["e"] = {"kill all enemies", function()
@@ -65,6 +66,10 @@ function Debug:init(game)
                     e:kill()
                 end
             end
+        end},
+        
+        ["i"] = {"toggle instant end", function()
+            self.instant_end = not self.instant_end
         end},
         
         ["g"] = {"next gun for P1", function()
@@ -108,6 +113,7 @@ function Debug:debug_action(key, scancode, isrepeat)
 	local action = self.actions[scancode]
     if action then
         action[2]()
+        self:new_notification("Executed '"..tostring(action[1]).."'")
     else
         self:new_notification("Action not recognized")
     end
@@ -115,7 +121,7 @@ end
 
 function Debug:new_notification(msg)
     self.notification_message = msg
-    self.notification_timer = 5.0
+    self.notification_timer = 2.0
 end
 
 function Debug:keypressed(key, scancode, isrepeat)
@@ -237,7 +243,7 @@ function Debug:draw_debug_menu()
     local y = self.game.cam_y 
     for i, button in pairs(self.action_keys) do
         local action = self.actions[button]
-        local text = concat("[f1+", button, "]: ", action[1])
+        local text = concat("[f1 + ", button, "]: ", action[1])
         rect_color({0,0,0,0.5}, "fill", x, y, get_text_width(text), 10)
         print_outline(nil, nil, text, x, y)
         y = y + 12
@@ -277,14 +283,14 @@ function Debug:draw_info_view()
 		concat("FPS: ",love.timer.getFPS(), " / frmRpeat: ",self.game.frame_repeat, " / frame: ",frame),
 		concat("LÖVE version: ", string.format("%d.%d.%d - %s", love.getVersion())),
 		concat("game state: ", game.game_state),
-		concat("n° of active sources: ", love.audio.getActiveSourceCount()),
+		concat("instant end: ", self.instant_end),
+		concat("n° of active audio sources: ", love.audio.getActiveSourceCount()),
 		concat("n° of actors: ", #self.game.actors, " / ", self.game.actor_limit),
 		concat("n° of enemies: ", self.game.enemy_count),
 		concat("n° collision items: ", Collision.world:countItems()),
 		concat("windowed_w: ", Options:get("windowed_width")),
 		concat("windowed_h: ", Options:get("windowed_height")),
 		concat("real_wave_n ", self.game.debug2),
-		concat("bg_color_index ", self.game.debug3),
 		concat("number_of_alive_players ", self.game:get_number_of_alive_players()),
 		concat("menu_stack ", #self.game.menu_manager.menu_stack),
 		players_str,

@@ -55,13 +55,13 @@ local function draw_elevator_progress()
         local sep_x = x1 - sep_w/2
         local sep_y = round(y - sep_w/2)
         love.graphics.rectangle("fill", sep_x, sep_y, sep_w, sep_w)
-        if i == game.floor then
+        if i == game:get_floor() then
             love.graphics.rectangle("line", sep_x-2, sep_y-1, sep_w+3, sep_w+3)
         end
     end
 
-    local text = concat(game.floor,"/",game.level.max_floor)
-    local text_y = clamp(y2 - (game.floor/n_floors) * h, y1, y2)
+    local text = concat(game:get_floor(), "/", game.level.max_floor)
+    local text_y = clamp(y2 - (game:get_floor()/n_floors) * h, y1, y2)
     love.graphics.print(text, x1- get_text_width(text) - 5, text_y- get_text_height(text)/2-2)
 end
 

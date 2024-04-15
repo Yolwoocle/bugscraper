@@ -2,6 +2,7 @@ require "scripts.util"
 local Class = require "scripts.meta.class"
 local Enemies = require "data.enemies"
 local TileMap = require "scripts.level.tilemap"
+local Background = require "scripts.game.background.background"
 
 local images = require "data.images"
 local sounds = require "data.sounds"
@@ -15,6 +16,8 @@ function Level:init(game)
 
 	self.map = TileMap:new(30, 17)
 
+	-- Level info
+	self.floor = 0 --Floor n°
 	self.max_floor = #waves
 	
 	self.floor_progress = 3.5 --How far the cabin is to the next floor
@@ -34,46 +37,6 @@ function Level:init(game)
 	self.downwards_elev_progress = 0
 	self.elev_x, self.elev_y = 0, 0
 	self.elev_vx, self.elev_vy = 0, 0
-	
-	self.bg_color_progress = 0
-	self.bg_color_index = 1
-	self.bg_col = COL_BLACK_BLUE
-	
-	self.show_bg_particles = true
-	self.def_bg_col = COL_BLACK_BLUE
-	self.bg_col = self.def_bg_col
-	self.bg_particles = {}
-	self.bg_particle_col = {COL_VERY_DARK_GRAY, COL_DARK_GRAY}
-	self.bg_colors = {
-		COL_BLACK_BLUE,
-		COL_DARK_GREEN,
-		COL_DARK_RED,
-		COL_LIGHT_BLUE,
-		COL_WHITE,
-		color(0xb55088), -- purple
-		COL_BLACK_BLUE,
-		color(0xfee761), -- lyellow
-		color(0x743f39), -- mid brown
-		color(0xe8b796) --beige
-	}
-	self.bg_particle_colors = {
-		{COL_VERY_DARK_GRAY, COL_DARK_GRAY},
-		{COL_MID_DARK_GREEN, color(0x3e8948)},
-		{COL_LIGHT_RED, color(0xf6757a)}, --l red + light pink
-		{COL_MID_BLUE, COL_WHITE},
-		{color(0xc0cbdc), color(0x8b9bb4)}, --gray & dgray
-		{color(0x68386c), color(0x9e2835)}, --dpurple & dred
-		{COL_LIGHT_RED, COL_ORANGE, COL_LIGHT_YELLOW, color(0x63c74d), COL_LIGHT_BLUE, color(0xb55088)}, --rainbow
-		{color(0xfeae34), COL_WHITE}, --orange & white
-		{color(0x3f2832), COL_BLACK_BLUE}, --orange & white
-		{color(0xe4a672), color(0xb86f50)} --midbeige & dbeige (~brown ish)
-	}
-	for i=1,60 do
-		local p = self:new_bg_particle()
-		p.x = random_range(0, CANVAS_WIDTH)
-		p.y = random_range(0, CANVAS_HEIGHT)
-		table.insert(self.bg_particles, p)
-	end
     
 	self.clock_ang = pi
 
@@ -84,83 +47,17 @@ function Level:init(game)
 	self.is_on_win_screen = false
 
     self.door_animation_enemy_buffer = {}
+
+	self.background = Background:new(self)
 end
 
 function Level:update(dt)
 	self.map:update(dt)
-
-	-- BG color gradient
-	if not self.is_on_win_screen then
-		self.bg_color_progress = self.bg_color_progress + dt*0.2
-		local i_prev = mod_plus_1(self.bg_color_index-1, #self.bg_colors)
-		if self.game.floor <= 1 then
-			i_prev = 1
-		end
-
-		local i_target = mod_plus_1(self.bg_color_index, #self.bg_colors)
-		local prog = clamp(self.bg_color_progress, 0, 1)
-		self.bg_col = lerp_color(self.bg_colors[i_prev], self.bg_colors[i_target], prog)
-		self.bg_particle_col = self.bg_particle_colors[i_target]
-	end
 	
-	self:update_bg_particles(dt)
+	self.background:update(dt)
 	self:progress_elevator(dt)
 
 	self.flash_alpha = max(self.flash_alpha - dt, 0)
-end
-
-function Level:new_bg_particle()
-	local o = {}
-	o.x = love.math.random(0, CANVAS_WIDTH)
-	o.w = love.math.random(2, 12)
-	o.h = love.math.random(8, 64)
-	
-	if self.elevator_speed >= 0 then
-		o.y = -o.h - love.math.random(0, CANVAS_HEIGHT)
-	else
-		o.y = CANVAS_HEIGHT + o.h + love.math.random(0, CANVAS_HEIGHT)
-	end
-
-	o.col = random_sample{COL_VERY_DARK_GRAY, COL_DARK_GRAY}
-	if self.bg_particle_col then
-		o.col = random_sample(self.bg_particle_col)
-	end
-	o.spd = random_range(0.5, 1.5)
-
-	o.oy = 0
-	o.oh = 1
-
-	o.t = 0
-	o.rnd_pi = random_neighbor(math.pi)
-	return o
-end
-
-function Level:update_bg_particles(dt)
-	-- Background lines
-	for i,o in pairs(self.bg_particles) do
-		o.y = o.y + dt*self.elevator_speed*o.spd
-		
-		local del_cond = (self.elevator_speed>=0 and o.y > CANVAS_HEIGHT) or (self.elevator_speed<0 and o.y < -CANVAS_HEIGHT) 
-		if del_cond then
-			-- print("y at: CANVAS_HEIGHT * ", (o.y)/CANVAS_HEIGHT)
-			local p = self:new_bg_particle()
-			-- o = p
-			-- ^^^^^ WHY DOES THIS NOT. WORK. I'm going crazy
-			o.x = p.x
-			o.y = p.y
-			o.w = p.w
-			o.h = p.h
-			o.col = p.col
-			o.spd = p.spd
-			o.oy = p.oy
-			o.oh = p.oh
-			o.rnd_pi = p.rnd_pi
-		end
-
-		-- Size corresponds to elevator speed
-		o.oh = max(o.w/o.h, abs(self.elevator_speed) / self.def_elevator_speed)
-		o.oy = .5 * o.h * o.oh
-	end
 end
 
 function Level:progress_elevator(dt)
@@ -235,16 +132,16 @@ function Level:update_door_anim(dt)
 		-- Slow down
 		self.elevator_speed = max(0, self.elevator_speed - 18)
 	
-	elseif self.floor_progress < 1 then
+	elseif 1 > self.floor_progress then
 		-- Speed up	
 		self.elevator_speed = min(self.elevator_speed + 10, self.def_elevator_speed)
 	end
 
 	-- Switch to next floor if just opened doors
 	if self.floor_progress < 4.2 and not self.has_switched_to_next_floor then
-		self.game.floor = self.game.floor + 1
+		self.game:set_floor(self.floor + 1)
 		self.has_switched_to_next_floor = true
-		self:next_floor(dt, self.game.floor, self.game.floor-1)
+		self:next_floor(dt, self.floor, self.floor - 1)
 	end
 end
 
@@ -253,7 +150,7 @@ function Level:next_floor(dt, new_floor, old_floor)
 		self.game:start_game()
 
 	else
-		local pitch = 0.8 + 0.5 * clamp(self.game.floor/self.max_floor, 0, 3)
+		local pitch = 0.8 + 0.5 * clamp(self.floor / self.max_floor, 0, 3)
 		Audio:play("elev_ding", 0.8, pitch)
 	end
 end
@@ -316,16 +213,6 @@ function Level:construct_new_wave(wave_n)
 	return output
 end
 
-function Level:change_bg_color(wave_n)
-	-- if wave_n == floor((self.bg_color_index) * (#waves / 4)) then
-	local real_wave_n = max(1, self.game.floor + 1)
-	if wave_n % 4 == 0 then
-		-- self.bg_color_index = self.bg_color_index + 1
-		self.bg_color_index = mod_plus_1( floor(real_wave_n / 4) + 1, #self.bg_colors)
-		self.bg_color_progress = 0
-	end
-end
-
 function Level:new_wave_buffer_enemies()
 	-- Spawn a bunch of enemies
 	local bw = BLOCK_WIDTH
@@ -333,10 +220,10 @@ function Level:new_wave_buffer_enemies()
 	
 	self.door_animation_enemy_buffer = {}
 
-	local wave_n = clamp(self.game.floor+1, 1, #waves) -- floor+1 because the floor indicator changes before enemies are spawned
+	local wave_n = clamp(self.floor + 1, 1, #waves) -- floor+1 because the floor indicator changes before enemies are spawned
 	local wave = self:construct_new_wave(wave_n)
 
-	self:change_bg_color(wave_n)
+	self.background:change_bg_color(wave_n)
 
 	for i=1, #wave do
 		local x = love.math.random(self.game.door_ax + 16, self.game.door_bx - 16)
@@ -385,27 +272,28 @@ end
 -----------------------------------------------------
 
 function Level:draw()
-	self:draw_background_particles()
+	self.background:draw()
 	self.map:draw()
-	self:draw_cabin()
-	self:draw_rubble(self.cabin_x, self.cabin_y)
+	self:draw_level()
 end
 
-function Level:draw_background_particles()
-	if not self.show_bg_particles then
+function Level:draw_level()
+	if not self.show_cabin then
 		return 
 	end
-
-	for i,o in pairs(self.bg_particles) do
-		local y = o.y + o.oy
-		local mult = 1 - clamp(abs(self.elevator_speed / 100), 0, 1)
-		local sin_oy = mult * sin(self.game.t + o.rnd_pi) * o.oh * o.h 
-		
-		rect_color(o.col, "fill", o.x, o.y + o.oy + sin_oy, o.w, o.h * o.oh)
+	
+	rect_color(self.background.bg_col, "fill", self.game.door_ax, self.game.door_ay, self.game.door_bx - self.game.door_ax+1, self.game.door_by - self.game.door_ay+1);
+	-- Draw buffered enemies
+	if self.door_animation then
+		for i,e in pairs(self.door_animation_enemy_buffer) do
+			e:draw()
+		end
 	end
+
+	self:draw_cabin(self.game.cabin_x, self.game.cabin_y)
 end
 
-function Level:draw_background(cabin_x, cabin_y)
+function Level:draw_cabin(cabin_x, cabin_y)
 	local bw = BLOCK_WIDTH
 
 	-- Doors
@@ -417,30 +305,16 @@ function Level:draw_background(cabin_x, cabin_y)
 	gfx.draw(images.cabin_bg_amboccl, cabin_x, cabin_y)
 	-- Level counter clock thing
 	local x1, y1 = cabin_x + 207.5, cabin_y + 89
-	self.clock_ang = lerp(self.clock_ang, pi + clamp(self.game.floor / self.max_floor, 0, 1) * pi, 0.1)
+	self.clock_ang = lerp(self.clock_ang, pi + clamp(self.floor / self.max_floor, 0, 1) * pi, 0.1)
 	local a = self.clock_ang
 	gfx.line(x1, y1, x1 + cos(a)*11, y1 + sin(a)*11)
 	
 	-- Level counter
 	gfx.setFont(FONT_7SEG)
-	print_color(COL_WHITE, string.sub("00000"..tostring(self.game.floor),-3,-1), 198+16*2, 97+16*2)
+	print_color(COL_WHITE, string.sub("00000"..tostring(self.floor),-3,-1), 198+16*2, 97+16*2)
 	gfx.setFont(FONT_REGULAR)
 end
 
-function Level:draw_cabin()
-	if not self.show_cabin then
-		return 
-	end
-	
-	rect_color(self.bg_col, "fill", self.game.door_ax, self.game.door_ay, self.game.door_bx - self.game.door_ax+1, self.game.door_by - self.game.door_ay+1);
-	-- Draw buffered enemies
-	if self.door_animation then
-		for i,e in pairs(self.door_animation_enemy_buffer) do
-			e:draw()
-		end
-	end
-	self:draw_background(self.game.cabin_x, self.game.cabin_y)
-end
 
 function Level:draw_win_screen()
 	if not self.is_on_win_screen then
@@ -527,7 +401,7 @@ function Level:do_reverse_elevator(dt)
 	end
 
 	-- exploding bits
-	if self.elevator_speed_overflow > 2 then
+	if self.elevator_speed_overflow > 2 or game.debug.instant_end then
 		self.is_reversing_elevator = false
 		self.is_exploding_elevator = true -- I SHOULDVE MADE A STATE SYSTEM BUT FUCK LOGIC
 		self:on_exploding_elevator(dt)
@@ -548,13 +422,13 @@ function Level:do_reverse_elevator(dt)
 	self.downwards_elev_progress = self.downwards_elev_progress - self.elevator_speed
 	if self.downwards_elev_progress > 100 then
 		self.downwards_elev_progress = self.downwards_elev_progress - 100
-		self.game.floor = self.game.floor - 1
-		if self.game.floor <= 0 then
+		self.floor = self.floor - 1
+		if self.floor <= 0 then
 			self.do_random_elevator_digits = true
 		end
 
 		if self.do_random_elevator_digits then
-			self.game.floor = random_range(0,999)
+			self.floor = random_range(0,999)
 		end
 	end
 
@@ -578,30 +452,20 @@ function Level:do_reverse_elevator(dt)
 		end
 
 		-- bg color shift to red
-		local p = self.elevator_speed / speed_cap
-		self.bg_col = lerp_color(self.bg_colors[#self.bg_colors], color(0xff7722), p)
-		-- self.bg_particle_col = self.bg_particle_colors[#self.bg_particle_colors]
-		local r = self.bg_col[1]
-		local g = self.bg_col[2]
-		local b = self.bg_col[3]
-		self.bg_particle_col = { {r+0.1, g+0.1, b+0.1, 1},{r+0.2, g+0.2, b+0.2, 1} }
+		self.background:shift_to_red(speed_cap)
 	end
 end
 
 
 function Level:on_exploding_elevator(dt)
 	self.game:on_exploding_elevator()
+	self.background:on_exploding_elevator()
 
 	self.elevator_speed = 0
-	self.bg_col = COL_BLACK_BLUE
-	self.bg_particle_col = nil--{ {r+0.1, g+0.1, b+0.1, 1},{r+0.2, g+0.2, b+0.2, 1} }
 	self.flash_alpha = 2
 	self.game:screenshake(40)
 	self.show_rubble = true
 	self.show_cabin = false
-	for _,p in pairs(self.bg_particles) do
-		p.col = random_sample{COL_VERY_DARK_GRAY, COL_DARK_GRAY}
-	end
 	
 	-- Crash sfx
 	Audio:play("elev_crash")
@@ -610,7 +474,7 @@ function Level:on_exploding_elevator(dt)
 	self.is_on_win_screen = true
 
 	-- init map coll
-	local map = self.game.map
+	local map = self.map
 	map:reset()
 	local lens = {
 		0,29,
@@ -667,6 +531,13 @@ function Level:do_exploding_elevator(dt)
 	y = 16*BW-8 - max(0, lerp(BW*4-8, -16, abs(mw-x)/mw))
 	local size = random_range(4, 8)
 	Particles:fire(x,y,size, nil, 80, -5)
+end
+
+function Level:get_floor()
+	return self.floor
+end
+function Level:set_floor(val)
+	self.floor = val
 end
 
 

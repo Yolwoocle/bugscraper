@@ -40,6 +40,8 @@ function Actor:init_actor(x, y, w, h, spr, args)
 	self.speed_cap = 10000
 	self.is_solid = false
 
+	self.collision_filter = Collision.filter
+
 	self.is_grounded = false
 	self.is_walled = false
 
@@ -135,7 +137,7 @@ function Actor:update_actor(dt)
 	local goal_y = self.y + self.vy * dt
 
 	self.collisions = {}
-	local actual_x, actual_y, cols, len = Collision:move(self, goal_x, goal_y)
+	local actual_x, actual_y, cols, len = Collision:move(self, goal_x, goal_y, self.collision_filter)
 	self.x = actual_x
 	self.y = actual_y
 	

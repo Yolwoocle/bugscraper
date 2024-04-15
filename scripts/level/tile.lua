@@ -16,9 +16,11 @@ function Tile:init_tile(x, y, w, spr)
 	self.y = y * w
 	self.w = w
 	self.h = w
-	self.is_solid = false
 	self.spr = spr
-	self.is_not_slidable = false
+
+	self.is_solid = false
+	self.is_solid_to_bullets = true
+	self.is_slidable = true
 end
 
 function Tile:update(dt)

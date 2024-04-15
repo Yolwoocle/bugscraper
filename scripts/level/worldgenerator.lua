@@ -40,9 +40,6 @@ function WorldGenerator:generate(seed)
 			map:set_tile(x, y, 2)
 		end
 	end)
-
-	-- Grassify
-	self:grassify()
 	--]]
 end
 
@@ -65,6 +62,7 @@ function WorldGenerator:make_box(w, h)
 	for iy=ay, by do
 		map:set_tile(ax, iy, 1)
 		map:set_tile(bx, iy, 1)
+		map:set_tile(math.floor((ax+bx)/2), iy, 2)
 	end
 
 	-- interior
@@ -92,18 +90,6 @@ function WorldGenerator:make_floor()
 		end
 		i=i+1
 	end
-end
-
-function WorldGenerator:grassify()
-	local map = self.map
-
-	map:for_all_tiles(function(tile, x, y)
-		if y == 0 then    return    end
-
-		if tile.name == "dirt" and map:get_tile(x, y-1).name == "air" then
-			map:set_tile(x, y, 1)
-		end
-	end)
 end
 
 function WorldGenerator:draw()
