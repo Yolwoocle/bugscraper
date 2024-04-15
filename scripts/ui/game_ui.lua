@@ -39,7 +39,7 @@ function GameUI:draw_logo()
 end
 
 function GameUI:draw_join_tutorial()
-	local def_x = math.floor((game.door_ax + game.door_bx) / 2)
+	local def_x = math.floor((game.level.door_ax + game.level.door_bx) / 2)
 	local def_y = game.logo_y + 50
 
 	local icons = {

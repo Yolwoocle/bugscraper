@@ -108,29 +108,6 @@ function Game:new_game()
 	end
 
 	self.level = Level:new(self)
-
-	-- Map & world gen
-	self.shaft_w, self.shaft_h = 26,14
-	self.world_generator = WorldGenerator:new(self.level.map)
-	self.world_generator:generate(10203)
-	self.world_generator:make_box(self.shaft_w, self.shaft_h)
-
-	-- Bounding box
-	local map_w = self.level.map.width * BW
-	local map_h = self.level.map.height * BW
-	local box_ax = self.world_generator.box_ax
-	local box_ay = self.world_generator.box_ay
-	local box_bx = self.world_generator.box_bx
-	local box_by = self.world_generator.box_by
-	-- Don't try to understand all you have to know is that it puts collision 
-	-- boxes around the elevator shaft
-	self.boxes = {
-		{name="box_up",     is_solid = false, x = -BW, y = -BW,  w=map_w + 2*BW,     h=BW + box_ay*BW},
-		{name="box_down", is_solid = false, x = -BW, y = (box_by+1)*BW,  w=map_w + 2*BW,     h=BW*box_ay},
-		{name="box_left", is_solid = false, x = -BW,  y = -BW,   w=BW + box_ax * BW, h=map_h + 2*BW},
-		{name="box_right", is_solid = false, x = BW*(box_bx+1), y = -BW, w=BW*box_ax, h=map_h + 2*BW},
-	}
-	for i,box in pairs(self.boxes) do   Collision:add(box)   end
 	
 	-- Actors
 	self.actor_limit = 100
@@ -140,7 +117,7 @@ function Game:new_game()
 
 	-- Start button
 	local nx = CANVAS_WIDTH * 0.75
-	local ny = self.world_generator.box_by * BLOCK_WIDTH
+	local ny = self.level.world_generator.box_by * BLOCK_WIDTH
 	-- local l = create_actor_centered(Enemies.ButtonGlass, nx, ny)
 	local l = create_actor_centered(Enemies.ButtonSmallGlass, floor(nx), floor(ny))
 	self:new_actor(l)
@@ -187,15 +164,6 @@ function Game:new_game()
 	self.kills = 0
 	self.time = 0
 	self.max_combo = 0
-
-	-- Cabin stats
-	--TODO: fuze it into map or remove map, only have coll boxes & no map
-	local bw = BLOCK_WIDTH
-	self.cabin_x, self.cabin_y = self.world_generator.box_ax*bw, self.world_generator.box_ay*bw
-	self.cabin_ax, self.cabin_ay = self.world_generator.box_ax*bw, self.world_generator.box_ay*bw
-	self.cabin_bx, self.cabin_by = self.world_generator.box_bx*bw, self.world_generator.box_by*bw
-	self.door_ax, self.door_ay = self.cabin_x+154, self.cabin_x+122
-	self.door_bx, self.door_by = self.cabin_y+261, self.cabin_y+207
 
 	self.frames_to_skip = 0
 	self.slow_mo_rate = 0
@@ -475,12 +443,7 @@ function Game:draw_game()
 	
 	self:draw_smoke_canvas()
 	love.graphics.translate(-real_camx, -real_camy)
-	self.level:draw_rubble(self.cabin_x, self.cabin_y)
-	
-	-- Walls
-	if self.level.show_cabin then
-		gfx.draw(images.cabin_walls, self.cabin_x, self.cabin_y)
-	end
+	self.level:draw_front()
 
 	-----------------------------------------------------
 	
@@ -488,7 +451,7 @@ function Game:draw_game()
 	reset_transform()
 	love.graphics.draw(self.front_canvas, 0, 0)
 	self.game_ui:draw()
-	self.level:draw_front()
+	self.level:draw_ui()
 	if self.debug.colview_mode then
 		self.debug:draw_colview()
 	end
@@ -775,8 +738,8 @@ function Game:new_player(player_n, x, y)
 	if player_n == nil then
 		return
 	end
-	local mx = floor(self.door_ax)
-	x = param(x, mx + ((player_n-1) / (MAX_NUMBER_OF_PLAYERS-1)) * (self.door_bx - self.door_ax))
+	local mx = floor(self.level.door_ax)
+	x = param(x, mx + ((player_n-1) / (MAX_NUMBER_OF_PLAYERS-1)) * (self.level.door_bx - self.level.door_ax))
 	y = param(y, CANVAS_HEIGHT - 3*16)
 
 	local player = Player:new(player_n, x, y, skins[player_n])

@@ -10,9 +10,9 @@ function OptionsManager:init(game)
 	self.game = game
 	self.is_first_time = false
 	self.default_options = {
-		volume = 1,
+		volume = 1.0,
 		music_volume = 0.5,
-		screenshake = 0.5,
+		screenshake = 1.0,
 		sound_on = true,
 		disable_background_noise = false,
 		play_music_on_pause_menu = true,

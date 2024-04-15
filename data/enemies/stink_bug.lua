@@ -67,8 +67,8 @@ end
 
 function StinkBug:on_death()
     for i = 1, random_range_int(3, 5) do
-        local spawn_x = clamp(self.mid_x - 10, game.cabin_ax, game.cabin_bx - 20)
-        local spawn_y = clamp(self.mid_y - 10, game.cabin_ay, game.cabin_by - 20)
+        local spawn_x = clamp(self.mid_x - 10, game.level.cabin_ax, game.level.cabin_bx - 20)
+        local spawn_y = clamp(self.mid_y - 10, game.level.cabin_ay, game.level.cabin_by - 20)
         local cloud = PoisonCloud:new(spawn_x, spawn_y)
 
         local d = random_range(0, pi2)

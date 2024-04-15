@@ -2,7 +2,9 @@ require "scripts.util"
 local Class = require "scripts.meta.class"
 local Enemies = require "data.enemies"
 local TileMap = require "scripts.level.tilemap"
+local WorldGenerator = require "scripts.level.worldgenerator"
 local Background = require "scripts.game.background.background_dots"
+local Elevator = require "scripts.level.elevator"
 
 local images = require "data.images"
 local sounds = require "data.sounds"
@@ -15,6 +17,37 @@ function Level:init(game)
     self.game = game
 
 	self.map = TileMap:new(30, 17)
+
+	-- Map & world gen
+	self.shaft_w, self.shaft_h = 26, 14
+	self.world_generator = WorldGenerator:new(self.map)
+	self.world_generator:generate(10203)
+	self.world_generator:make_box(self.shaft_w, self.shaft_h)
+	
+	-- Bounding box
+	-- Don't try to understand, all you have to know is that it puts collision 
+	-- boxes around the elevator shaft
+	local map_w = self.map.width * BW
+	local map_h = self.map.height * BW
+	local box_ax = self.world_generator.box_ax
+	local box_ay = self.world_generator.box_ay
+	local box_bx = self.world_generator.box_bx
+	local box_by = self.world_generator.box_by
+	self.boxes = {
+		{name="box_up",     is_solid = false, x = -BW, y = -BW,  w=map_w + 2*BW,     h=BW + box_ay*BW},
+		{name="box_down", is_solid = false, x = -BW, y = (box_by+1)*BW,  w=map_w + 2*BW,     h=BW*box_ay},
+		{name="box_left", is_solid = false, x = -BW,  y = -BW,   w=BW + box_ax * BW, h=map_h + 2*BW},
+		{name="box_right", is_solid = false, x = BW*(box_bx+1), y = -BW, w=BW*box_ax, h=map_h + 2*BW},
+	}
+	for i,box in pairs(self.boxes) do   Collision:add(box)   end
+
+	-- Cabin stats
+	local bw = BLOCK_WIDTH
+	self.cabin_x, self.cabin_y = self.world_generator.box_ax*bw, self.world_generator.box_ay*bw
+	self.cabin_ax, self.cabin_ay = self.world_generator.box_ax*bw, self.world_generator.box_ay*bw
+	self.cabin_bx, self.cabin_by = self.world_generator.box_bx*bw, self.world_generator.box_by*bw
+	self.door_ax, self.door_ay = self.cabin_x+154, self.cabin_x+122
+	self.door_bx, self.door_by = self.cabin_y+261, self.cabin_y+207
 
 	-- Level info
 	self.floor = 0 --Floor n°
@@ -226,8 +259,8 @@ function Level:new_wave_buffer_enemies()
 	self.background:change_bg_color(wave_n)
 
 	for i=1, #wave do
-		local x = love.math.random(self.game.door_ax + 16, self.game.door_bx - 16)
-		local y = love.math.random(self.game.door_ay + 16, self.game.door_by - 16)
+		local x = love.math.random(self.door_ax + 16, self.door_bx - 16)
+		local y = love.math.random(self.door_ay + 16, self.door_by - 16)
 
 		local enemy_class = wave[i].enemy_class
 		local extra_info = wave[i].extra_info
@@ -235,7 +268,7 @@ function Level:new_wave_buffer_enemies()
 		local args = {} 
 		if enemy_class == Enemies.ButtonBigGlass then
 			x = floor(CANVAS_WIDTH/2 - 58/2)
-			y = self.game.door_by - 45
+			y = self.door_by - 45
 		end
 		if enemy_class == Enemies.Cocoon then
 			args = {extra_info}
@@ -252,8 +285,8 @@ function Level:new_wave_buffer_enemies()
 		end
 		
 		-- Prevent collisions with floor
-		if enemy_instance.y+enemy_instance.h > self.game.door_by then
-			enemy_instance.y = self.game.door_by - enemy_instance.h
+		if enemy_instance.y+enemy_instance.h > self.door_by then
+			enemy_instance.y = self.door_by - enemy_instance.h
 		end
 		Collision:remove(enemy_instance)
 		table.insert(self.door_animation_enemy_buffer, enemy_instance)
@@ -282,7 +315,7 @@ function Level:draw_level()
 		return 
 	end
 	
-	rect_color(self.background.bg_col, "fill", self.game.door_ax, self.game.door_ay, self.game.door_bx - self.game.door_ax+1, self.game.door_by - self.game.door_ay+1);
+	rect_color(self.background.bg_col, "fill", self.door_ax, self.door_ay, self.door_bx - self.door_ax+1, self.door_by - self.door_ay+1);
 	-- Draw buffered enemies
 	if self.door_animation then
 		for i,e in pairs(self.door_animation_enemy_buffer) do
@@ -290,7 +323,7 @@ function Level:draw_level()
 		end
 	end
 
-	self:draw_cabin(self.game.cabin_x, self.game.cabin_y)
+	self:draw_cabin(self.cabin_x, self.cabin_y)
 end
 
 function Level:draw_cabin(cabin_x, cabin_y)
@@ -379,6 +412,14 @@ function Level:draw_win_screen()
 end
 
 function Level:draw_front(x,y)
+	self:draw_rubble()
+	
+	if self.show_cabin then
+		gfx.draw(images.cabin_walls, self.cabin_x, self.cabin_y)
+	end
+end
+
+function Level:draw_ui()
 	self:draw_win_screen()
 
 	if self.flash_alpha then
@@ -386,12 +427,12 @@ function Level:draw_front(x,y)
 	end
 end
 
-function Level:draw_rubble(x,y)
+function Level:draw_rubble()
 	if not self.show_rubble then
 		return
 	end
 
-	gfx.draw(images.cabin_rubble, x, (16-5)*BW)
+	gfx.draw(images.cabin_rubble, self.cabin_x, (16-5)*BW)
 end
 
 function Level:on_red_button_pressed()
@@ -452,7 +493,7 @@ function Level:do_reverse_elevator(dt)
 		-- fire particles
 		local q = max(0, (abs(self.elevator_speed) - 200)*0.01)
 		for i=1, q do
-			local x,y = random_range(self.game.cabin_ax, self.game.cabin_bx),random_range(self.game.cabin_ay, self.game.cabin_by)
+			local x,y = random_range(self.cabin_ax, self.cabin_bx),random_range(self.cabin_ay, self.cabin_by)
 			local size = max(4, abs(self.elevator_speed)*0.01)
 			local velvar = max(5, abs(self.elevator_speed))
 			Particles:fire(x,y,size, nil, velvar)
@@ -516,7 +557,7 @@ function Level:on_exploding_elevator(dt)
 
 	----smoke
 	for i=1, 200 do
-		local x,y = random_range(self.game.cabin_ax, self.game.cabin_bx), random_range(self.game.cabin_ay, self.game.cabin_by)
+		local x,y = random_range(self.cabin_ax, self.cabin_bx), random_range(self.cabin_ay, self.cabin_by)
 		Particles:splash(x,y, 5, nil, nil, 10, 4)
 	end
 
@@ -533,7 +574,7 @@ function Level:on_exploding_elevator(dt)
 end
 
 function Level:do_exploding_elevator(dt)
-	local x,y = random_range(self.game.cabin_ax, self.game.cabin_bx), 16*BW
+	local x,y = random_range(self.cabin_ax, self.cabin_bx), 16*BW
 	local mw = CANVAS_WIDTH/2
 	y = 16*BW-8 - max(0, lerp(BW*4-8, -16, abs(mw-x)/mw))
 	local size = random_range(4, 8)
