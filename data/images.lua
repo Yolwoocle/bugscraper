@@ -164,13 +164,14 @@ local img_names = {
 	chain =    "level/chain",
 	bg_plate = "level/bg_plate",
 
-	cabin_bg =         "level/cabin_bg",
-	cabin_bg_2 =       "level/cabin_bg_2",
-	cabin_bg_amboccl = "level/cabin_bg_amboccl",
-	cabin_walls =      "level/cabin_walls",
-	cabin_door_left =  "level/cabin_door_left", 
-	cabin_door_right = "level/cabin_door_right",
-	cabin_rubble =     "level/cabin_rubble",
+	cabin_bg =                "level/cabin_bg",
+	cabin_bg_ambient_occlusion = "level/cabin_bg_ambient_occlusion",
+	cabin_walls =             "level/cabin_walls",
+	cabin_door_left_far =     "level/cabin_door_left_far", 
+	cabin_door_left_center =  "level/cabin_door_left_center",
+	cabin_door_right_center = "level/cabin_door_right_center",
+	cabin_door_right_far =    "level/cabin_door_right_far",
+	cabin_rubble =            "level/cabin_rubble",
 
 	-----------------------------------------------------
 

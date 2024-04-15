@@ -41,7 +41,6 @@ function Tiles:init()
 		self.spr = images.empty
 		
 		self.is_solid = true
-		self.is_solid_to_bullets = false
 		self.is_slidable = false
 	end)
 

@@ -62,7 +62,6 @@ function WorldGenerator:make_box(w, h)
 	for iy=ay, by do
 		map:set_tile(ax, iy, 1)
 		map:set_tile(bx, iy, 1)
-		map:set_tile(math.floor((ax+bx)/2), iy, 2)
 	end
 
 	-- interior

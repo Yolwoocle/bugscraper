@@ -2,7 +2,7 @@ require "scripts.util"
 local Class = require "scripts.meta.class"
 local Enemies = require "data.enemies"
 local TileMap = require "scripts.level.tilemap"
-local Background = require "scripts.game.background.background"
+local Background = require "scripts.game.background.background_dots"
 
 local images = require "data.images"
 local sounds = require "data.sounds"
@@ -297,12 +297,19 @@ function Level:draw_cabin(cabin_x, cabin_y)
 	local bw = BLOCK_WIDTH
 
 	-- Doors
-	gfx.draw(images.cabin_door_left,  cabin_x + 154 - self.door_offset, cabin_y + 122)
-	gfx.draw(images.cabin_door_right, cabin_x + 208 + self.door_offset, cabin_y + 122)
+	local door_x_left_center =  cabin_x + 154 - self.door_offset
+	local door_x_right_center = cabin_x + 208 + self.door_offset
+	local door_x_left_far =     cabin_x + 154 - math.max(0, self.door_offset - 54/2)
+	local door_x_right_far =    cabin_x + 208 + math.max(0, self.door_offset - 54/2)
+	local door_y = cabin_y + 122
+	gfx.draw(images.cabin_door_left_center,  door_x_left_center,  door_y)
+	gfx.draw(images.cabin_door_right_center, door_x_right_center, door_y)
+	gfx.draw(images.cabin_door_left_far,     door_x_left_far,     door_y)
+	gfx.draw(images.cabin_door_right_far,    door_x_right_far,    door_y)
 
 	-- Cabin background
-	gfx.draw(images.cabin_bg_2, cabin_x, cabin_y)
-	gfx.draw(images.cabin_bg_amboccl, cabin_x, cabin_y)
+	gfx.draw(images.cabin_bg, cabin_x, cabin_y)
+	gfx.draw(images.cabin_bg_ambient_occlusion, cabin_x, cabin_y)
 	-- Level counter clock thing
 	local x1, y1 = cabin_x + 207.5, cabin_y + 89
 	self.clock_ang = lerp(self.clock_ang, pi + clamp(self.floor / self.max_floor, 0, 1) * pi, 0.1)

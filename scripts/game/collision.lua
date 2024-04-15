@@ -5,7 +5,7 @@ require "scripts.meta.constants"
 local CollisionManager = Class:inherit()
 
 function CollisionManager:init()
-	self.world = bump.newWorld(BLOCK_WIDTH*2)
+	self.world = bump.newWorld(BLOCK_WIDTH*4)
 end
 
 function CollisionManager:add(o, x, y, w, h)
