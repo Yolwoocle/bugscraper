@@ -1,5 +1,5 @@
 local Class = require "scripts.meta.class"
-local Background = require "scripts.game.background.background"
+local Background = require "scripts.level.background.background"
 
 local BackgroundDots = Background:inherit()
 
@@ -12,11 +12,10 @@ function BackgroundDots:init(level)
 
 	self.bg_color_progress = 0
 	self.bg_color_index = 1
-	self.bg_col = COL_BLACK_BLUE
 	
 	self.show_bg_particles = true
 	self.def_bg_col = COL_BLACK_BLUE
-	self.bg_col = self.def_bg_col
+	self.clear_color = self.def_bg_col
 
 	self.bg_particles = {}	
 	self.bg_particle_col = {COL_VERY_DARK_GRAY, COL_DARK_GRAY}
@@ -67,7 +66,7 @@ function BackgroundDots:update(dt)
 
 		local i_target = mod_plus_1(self.bg_color_index, #self.bg_colors)
 		local prog = clamp(self.bg_color_progress, 0, 1)
-		self.bg_col = lerp_color(self.bg_colors[i_prev], self.bg_colors[i_target], prog)
+		self.clear_color = lerp_color(self.bg_colors[i_prev], self.bg_colors[i_target], prog)
 		self.bg_particle_col = self.bg_particle_colors[i_target]
 	end
 
@@ -143,16 +142,16 @@ end
 
 function BackgroundDots:shift_to_red(speed_cap)
 	local p = self.speed / speed_cap
-	self.bg_col = lerp_color(self.bg_colors[#self.bg_colors], color(0xff7722), p)
+	self.clear_color = lerp_color(self.bg_colors[#self.bg_colors], color(0xff7722), p)
 	-- self.bg_particle_col = self.bg_particle_colors[#self.bg_particle_colors]
-	local r = self.bg_col[1]
-	local g = self.bg_col[2]
-	local b = self.bg_col[3]
+	local r = self.clear_color[1]
+	local g = self.clear_color[2]
+	local b = self.clear_color[3]
 	self.bg_particle_col = { {r+0.1, g+0.1, b+0.1, 1},{r+0.2, g+0.2, b+0.2, 1} }
 end
 
 function BackgroundDots:on_exploding_elevator()
-	self.bg_col = COL_BLACK_BLUE
+	self.clear_color = COL_BLACK_BLUE
 	self.bg_particle_col = nil--{ {r+0.1, g+0.1, b+0.1, 1},{r+0.2, g+0.2, b+0.2, 1} }
 
 	for _,p in pairs(self.bg_particles) do
@@ -163,6 +162,7 @@ end
 -----------------------------------------------------
 
 function BackgroundDots:draw()
+	self:draw_background()
 	-- if not self.show_bg_particles then
 	-- 	return 
 	-- end

@@ -54,27 +54,26 @@ end
 function Elevator:draw(enemy_buffer)
 	local x, y = self.level.door_ax, self.level.door_ay
 	local w, h = self.level.door_bx - self.level.door_ax+1, self.level.door_by - self.level.door_ay+1
-	rect_color(self.level.background.bg_col, "fill", x, y, w, h);
+	rect_color(self.level.background.clear_color, "fill", x, y, w, h);
 
 	-- Draw buffered enemies
 	for i,e in pairs(enemy_buffer) do
 		e:draw()
 	end
 
-	self:draw_cabin(self.level.cabin_x, self.level.cabin_y)
-
-	print_outline(nil, nil, tostring(self.floor_progress), CANVAS_WIDTH/2, CANVAS_HEIGHT/2)
+	self:draw_cabin()
 end
 
 
-function Elevator:draw_cabin(cabin_x, cabin_y)
-	local bw = BLOCK_WIDTH
+function Elevator:draw_cabin()
+	local cabin_x, cabin_y = self.level.cabin_x, self.level.cabin_y 
 
 	self.door:draw()
 
 	-- Cabin background
 	gfx.draw(images.cabin_bg, cabin_x, cabin_y)
 	gfx.draw(images.cabin_bg_ambient_occlusion, cabin_x, cabin_y)
+	
 	-- Level counter clock thing
 	local x1, y1 = cabin_x + 207.5, cabin_y + 89
 	self.clock_ang = lerp(self.clock_ang, pi + clamp(self.level.floor / self.level.max_floor, 0, 1) * pi, 0.1)
@@ -83,7 +82,7 @@ function Elevator:draw_cabin(cabin_x, cabin_y)
 	
 	-- Level counter
 	gfx.setFont(FONT_7SEG)
-	print_color(COL_WHITE, string.sub("00000"..tostring(self.level.floor),-3,-1), 198+16*2, 97+16*2)
+	print_color(COL_WHITE, string.sub("00000"..tostring(self.level.floor), -3, -1), 198+16*2, 97+16*2)
 	gfx.setFont(FONT_REGULAR)
 end
 

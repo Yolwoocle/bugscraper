@@ -4,6 +4,7 @@ local Background = Class:inherit()
 
 function Background:init_background(level)
 	self.level = level
+	self.clear_color = COL_BLACK
 
 	self.speed = 0.0
 end
@@ -27,6 +28,10 @@ end
 -----------------------------------------------------
 
 function Background:draw()
+end
+
+function Background:draw_background()
+	love.graphics.clear(self.clear_color)
 end
 
 return Background

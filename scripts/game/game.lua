@@ -391,9 +391,6 @@ function Game:draw_game()
 		love.graphics.scale(self.cam_zoom)
 	end
 	
-	-- Sky
-	gfx.clear(self.level.background.bg_col)
-	
 	local old_canvas = love.graphics.getCanvas()
 	love.graphics.setCanvas(self.object_canvas)
 	love.graphics.clear()

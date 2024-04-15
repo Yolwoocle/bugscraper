@@ -3,7 +3,7 @@ local Class = require "scripts.meta.class"
 local Enemies = require "data.enemies"
 local TileMap = require "scripts.level.tilemap"
 local WorldGenerator = require "scripts.level.worldgenerator"
-local Background = require "scripts.game.background.background_dots"
+local Background = require "scripts.level.background.background_servers"
 local Elevator = require "scripts.level.elevator"
 
 local images = require "data.images"
@@ -88,16 +88,6 @@ function Level:update(dt)
 end
 
 function Level:update_elevator_progress(dt)
-	-- Manage elevator speed
-	if 5 > self.floor_progress and self.floor_progress > 3 then
-		-- Slow down
-		self.level_speed = max(0, self.level_speed - 18)
-	
-	elseif 1 > self.floor_progress then
-		-- Speed up	
-		self.level_speed = min(self.level_speed + 10, self.def_level_speed)
-	end
-
 	-- Only switch to next floor until all enemies killed
 	if not self.door_animation and game.enemy_count <= 0 then
 		game.enemy_count = 0
@@ -107,24 +97,35 @@ function Level:update_elevator_progress(dt)
 		self:new_wave_buffer_enemies(dt)
 	end
 
-	-- Go to next floor once animation is finished
-	if self.floor_progress <= 0 then
-		self.floor_progress = 5.5
-		
-		self.door_animation = false
-		self.draw_enemies_in_bg = false
-		self.elevator.door:close()
-	end
-
-	-- Switch to next floor if just opened doors
-	if self.floor_progress < 4.2 and not self.has_switched_to_next_floor then
-		self.has_switched_to_next_floor = true
-		self:next_floor()
-	end
-
 	-- Update door animation
 	if self.door_animation then
 		self.floor_progress = self.floor_progress - dt
+
+		-- Manage elevator speed
+		if 5 > self.floor_progress and self.floor_progress > 3 then
+			-- Slow down
+			self.level_speed = max(0, self.level_speed - 18)
+		
+		elseif 1 > self.floor_progress then
+			-- Speed up	
+			self.level_speed = min(self.level_speed + 10, self.def_level_speed)
+		end
+
+		-- Go to next floor once animation is finished
+		if self.floor_progress <= 0 then
+			self.floor_progress = 5.0
+			
+			self.door_animation = false
+			self.draw_enemies_in_bg = false
+			self.elevator.door:close()
+		end
+
+		-- Switch to next floor if just opened doors
+		if self.floor_progress < 4.2 and not self.has_switched_to_next_floor then
+			self.has_switched_to_next_floor = true
+			self:next_floor()
+		end
+
 	end
 end
 
@@ -206,7 +207,9 @@ function Level:new_wave_buffer_enemies()
 	local wave_n = clamp(self.floor + 1, 1, #waves) -- floor+1 because the floor indicator changes before enemies are spawned
 	local wave = self:construct_new_wave(wave_n)
 
-	self.background:change_bg_color(wave_n)
+	if self.background.change_bg_color then
+		self.background:change_bg_color(wave_n)
+	end
 
 	for i=1, #wave do
 		local x = love.math.random(self.door_ax + 16, self.door_bx - 16)
@@ -256,6 +259,9 @@ end
 
 function Level:draw()
 	self.background:draw()
+
+	if true then return end
+
 	self.map:draw()
 	if self.show_cabin then
 		self.elevator:draw(self.enemy_buffer)
@@ -318,6 +324,7 @@ function Level:draw_win_screen()
 end
 
 function Level:draw_front(x,y)
+	if true then return end
 	self:draw_rubble()
 	
 	if self.show_cabin then
@@ -359,6 +366,5 @@ end
 function Level:set_floor(val)
 	self.floor = val
 end
-
 
 return Level
