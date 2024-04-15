@@ -7,6 +7,9 @@ function BackgroundDots:init(level)
 	self:init_background(level)
 	self.level = level
 
+	self.speed = 0
+	self.def_speed = 10 --TODO
+
 	self.bg_color_progress = 0
 	self.bg_color_index = 1
 	self.bg_col = COL_BLACK_BLUE
@@ -71,6 +74,9 @@ function BackgroundDots:update(dt)
 	self:update_bg_particles(dt)
 end
 
+function BackgroundDots:set_speed(val)
+	self.speed = val
+end
 
 function BackgroundDots:change_bg_color(wave_n)
 	-- if wave_n == floor((self.bg_color_index) * (#waves / 4)) then
@@ -88,7 +94,7 @@ function BackgroundDots:new_bg_particle()
 	o.w = love.math.random(2, 12)
 	o.h = love.math.random(8, 64)
 	
-	if self.level.elevator_speed >= 0 then
+	if self.speed >= 0 then
 		o.y = -o.h - love.math.random(0, CANVAS_HEIGHT)
 	else
 		o.y = CANVAS_HEIGHT + o.h + love.math.random(0, CANVAS_HEIGHT)
@@ -111,9 +117,9 @@ end
 function BackgroundDots:update_bg_particles(dt)
 	-- Background lines
 	for i,o in pairs(self.bg_particles) do
-		o.y = o.y + dt*self.level.elevator_speed*o.spd
+		o.y = o.y + dt*self.speed*o.spd
 		
-		local del_cond = (self.level.elevator_speed>=0 and o.y > CANVAS_HEIGHT) or (self.level.elevator_speed<0 and o.y < -CANVAS_HEIGHT) 
+		local del_cond = (self.speed>=0 and o.y > CANVAS_HEIGHT) or (self.speed<0 and o.y < -CANVAS_HEIGHT) 
 		if del_cond then
 			local p = self:new_bg_particle()
 			-- o = p
@@ -130,13 +136,13 @@ function BackgroundDots:update_bg_particles(dt)
 		end
 
 		-- Size corresponds to elevator speed
-		o.oh = max(o.w/o.h, abs(self.level.elevator_speed) / self.level.def_elevator_speed)
+		o.oh = max(o.w/o.h, abs(self.speed) / self.def_speed)
 		o.oy = .5 * o.h * o.oh
 	end
 end
 
 function BackgroundDots:shift_to_red(speed_cap)
-	local p = self.level.elevator_speed / speed_cap
+	local p = self.speed / speed_cap
 	self.bg_col = lerp_color(self.bg_colors[#self.bg_colors], color(0xff7722), p)
 	-- self.bg_particle_col = self.bg_particle_colors[#self.bg_particle_colors]
 	local r = self.bg_col[1]
@@ -145,7 +151,7 @@ function BackgroundDots:shift_to_red(speed_cap)
 	self.bg_particle_col = { {r+0.1, g+0.1, b+0.1, 1},{r+0.2, g+0.2, b+0.2, 1} }
 end
 
-function BackgroundDots:on_exploding_elevator(dt)
+function BackgroundDots:on_exploding_elevator()
 	self.bg_col = COL_BLACK_BLUE
 	self.bg_particle_col = nil--{ {r+0.1, g+0.1, b+0.1, 1},{r+0.2, g+0.2, b+0.2, 1} }
 
@@ -163,7 +169,7 @@ function BackgroundDots:draw()
 
 	for i,o in pairs(self.bg_particles) do
 		local y = o.y + o.oy
-		local mult = 1 - clamp(abs(self.level.elevator_speed / 100), 0, 1)
+		local mult = 1 - clamp(abs(self.speed / 100), 0, 1)
 		local sin_oy = mult * sin(game.t + o.rnd_pi) * o.oh * o.h 
 		
 		rect_color(o.col, "fill", o.x, o.y + o.oy + sin_oy, o.w, o.h * o.oh)

@@ -4,6 +4,150 @@
 --
 ------------------------------------
 
+
+self.elevator_speed_cap = -1000
+self.elevator_speed_overflow = 0
+self.is_reversing_elevator = false
+self.is_exploding_elevator = false
+self.downwards_elev_progress = 0
+
+function Elevator:do_reverse_elevator(dt)
+	self.elevator_speed_cap = -1000
+	local speed_cap = self.elevator_speed_cap
+
+	self.elevator_speed = max(self.elevator_speed - dt*100, speed_cap)
+	if self.elevator_speed == speed_cap then
+		self.elevator_speed_overflow = self.elevator_speed_overflow + dt
+	end
+
+	-- exploding bits
+	if self.elevator_speed_overflow > 2 or game.debug.instant_end then
+		self.is_reversing_elevator = false
+		self.is_exploding_elevator = true -- I SHOULDVE MADE A STATE SYSTEM BUT FUCK LOGIC
+		self:on_exploding_elevator(dt)
+		sounds.elev_burning.source:stop()
+		sounds.elev_siren.source:stop()
+		return
+	end
+
+	sounds.elev_burning.source:play()
+	sounds.elev_siren.source:play()
+	sounds.elev_burning.source:setVolume(abs(self.elevator_speed/speed_cap))
+	sounds.elev_siren.source:setVolume(abs(self.elevator_speed/speed_cap))
+
+	-- Screenshake
+	local spdratio = self.elevator_speed / self.def_elevator_speed
+	game.screenshake_q = 2 * abs(spdratio)
+
+	self.downwards_elev_progress = self.downwards_elev_progress - self.elevator_speed
+	if self.downwards_elev_progress > 100 then
+		self.downwards_elev_progress = self.downwards_elev_progress - 100
+		self.floor = self.floor - 1
+		if self.floor <= 0 then
+			self.do_random_elevator_digits = true
+		end
+
+		if self.do_random_elevator_digits then
+			self.floor = random_range(0,999)
+		end
+	end
+
+	-- Downwards elevator
+	if self.elevator_speed < 0 then
+		for _,p in pairs(self.game.actors) do
+			p.friction_y = p.friction_x
+			if p.is_player then  p.is_flying = true end
+
+			p.gravity_mult = max(0, 1 - abs(self.elevator_speed / speed_cap))
+			p.vy = p.vy - 4
+		end
+
+		-- fire particles
+		local q = max(0, (abs(self.elevator_speed) - 200)*0.01)
+		for i=1, q do
+			local x,y = random_range(self.cabin_ax, self.cabin_bx),random_range(self.cabin_ay, self.cabin_by)
+			local size = max(4, abs(self.elevator_speed)*0.01)
+			local velvar = max(5, abs(self.elevator_speed))
+			Particles:fire(x,y,size, nil, velvar)
+		end
+
+		-- bg color shift to red
+		self.background:shift_to_red(speed_cap)
+	end
+end
+
+function Elevator:on_exploding_elevator(dt)
+	self.game:on_exploding_elevator()
+	self.background:on_exploding_elevator()
+
+	self.elevator_speed = 0
+	self.flash_alpha = 2
+	self.game:screenshake(40)
+	self.show_rubble = true
+	self.show_cabin = false
+	
+	-- Crash sfx
+	Audio:play("elev_crash")
+
+	-- YOU WIN
+	self.is_on_win_screen = true
+
+	-- init map coll
+	local map = self.map
+	map:reset()
+	local lens = {
+		0,29,
+		5,26,
+		7,23,
+		10,22,
+		16,17
+	}
+	--bounds
+	for ix=0,map.width do
+		map:set_tile(ix,0, 2)
+	end
+	for iy=0,map.height do
+		map:set_tile(0,iy, 2)
+		map:set_tile(map.width-1,iy, 2)
+	end
+	-- map collision
+	local mx = map.width/2
+	local i=1
+	for iy=map.height-1, map.height-1-#lens, -1 do
+		local x1, x2 = lens[i], lens[i+1]
+		if x1~= nil and x2~= nil then
+			local til = 2
+			if i==1 then til=1 end
+
+			for ix=x1,x2 do
+				map:set_tile(ix, iy, til)
+			end
+		end
+		i=i+2
+	end
+
+	----smoke
+	for i=1, 200 do
+		local x,y = random_range(self.cabin_ax, self.cabin_bx), random_range(self.cabin_ay, self.cabin_by)
+		Particles:splash(x,y, 5, nil, nil, 10, 4)
+	end
+
+	--reset player gravity
+	for _,a in pairs(self.game.actors) do
+		a.friction_y = 1
+		if a.is_player then  a.is_flying = false end
+
+		a.gravity_mult = 1--max(0, 1 - abs(self.elevator_speed / speed_cap))
+		if a.name == "button_big_pressed" then
+			a:kill()
+		end
+	end
+end
+
+
+
+------------------------------------
+
 -- draw font characters to image
 if removeme_itext == 0 then
 	removeme_itext = 1
