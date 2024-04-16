@@ -64,6 +64,10 @@ function WorldGenerator:make_box(w, h)
 		map:set_tile(bx, iy, 1)
 	end
 
+	for ix=ax+4, bx-4 do
+		map:set_tile(ix, by-4, 3)
+	end
+
 	-- interior
 	-- for ix=ax+1, bx-1 do
 	-- 	for iy=ay+1, by-1 do

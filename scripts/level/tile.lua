@@ -7,6 +7,7 @@ local Tile = Class:inherit()
 function Tile:init_tile(x, y, w, spr)
 	self.type = "tile"
 	self.name = "tile"
+	self.id = -1
 
 	self.mine_time = 0
 
@@ -19,7 +20,10 @@ function Tile:init_tile(x, y, w, spr)
 	self.spr = spr
 
 	self.is_solid = false
+	self.is_semisolid = false
 	self.is_slidable = true
+
+	self.has_collision = false
 end
 
 function Tile:update(dt)

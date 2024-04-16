@@ -31,6 +31,7 @@ function Tiles:init()
 		self.spr = images.metal
 		
 		self.is_solid = true
+		self.has_collision = true
 	end)
 
 	-- Rubble
@@ -42,6 +43,21 @@ function Tiles:init()
 		
 		self.is_solid = true
 		self.is_slidable = false
+		self.has_collision = true
+	end)
+
+	-- Semi-solid
+	self.tiles[3] = make_tile(function(self, x, y, w)
+		self:init_tile(x, y, w)
+		self.id = 3
+		self.name = "semisolid"
+		self.spr = images.semisolid
+		
+		self.is_solid = false
+		self.is_semisolid = true
+		self.is_slidable = false
+
+		self.has_collision = true
 	end)
 
 	-- Chain
@@ -69,7 +85,7 @@ function Tiles:new_tile(n, x, y, w, ...)
 	local tile = tile_class:new(x, y, w, ...)
 
 	-- Init collision box
-	if tile.is_solid then
+	if tile.has_collision then
 		Collision:add(tile, tile.x, tile.y, tile.w, tile.w)
 	end
 

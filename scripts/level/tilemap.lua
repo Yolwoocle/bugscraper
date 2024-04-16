@@ -54,20 +54,28 @@ function TileMap:set_tile(x,y,n)
 	-- Assertions
 	if not self:is_valid_tile(x,y) then   return   end
 	-- Remove collisions
-	if self.map[x][y].is_solid then   self:set_collision(x, y, false)   end
+	if self.map[x][y].has_collision then 
+		self:set_collision(x, y, false)
+	end
 	
 	-- Create tile class
 	local tile = Tiles:new_tile(n, x, y, self.tile_size)
 	self.map[x][y] = tile
-	if tile.is_solid then   self:set_collision(x,y,true)   end
+	if tile.has_collision then
+		self:set_collision(x,y,true)
+	end
 end
 
 function TileMap:set_collision(x,y, val)
-	if not self:is_valid_tile(x,y) then   return   end
+	if not self:is_valid_tile(x,y) then
+		return 
+	end
 
 	local tile = self:get_tile(x, y)
 	-- Return is the tile is already at the wanted state
-	if val == tile.is_solid then    return    end		
+	if val == tile.has_collision then
+		return 
+	end		
 
 	if val then
 		Collision:add(tile, tile.x, tile.y, tile.w, tile.w)
@@ -77,7 +85,7 @@ function TileMap:set_collision(x,y, val)
 end
 
 function TileMap:is_valid_tile(x,y)
-	return 0 <= x and x < self.width and 0 <= y and y < self.height
+	return (0 <= x and x < self.width) and (0 <= y and y < self.height)
 end
 
 return TileMap

@@ -260,8 +260,6 @@ end
 function Level:draw()
 	self.background:draw()
 
-	if true then return end
-
 	self.map:draw()
 	if self.show_cabin then
 		self.elevator:draw(self.enemy_buffer)
@@ -324,7 +322,6 @@ function Level:draw_win_screen()
 end
 
 function Level:draw_front(x,y)
-	if true then return end
 	self:draw_rubble()
 	
 	if self.show_cabin then

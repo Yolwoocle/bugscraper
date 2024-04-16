@@ -160,9 +160,10 @@ local img_names = {
 	-----------------------------------------------------
 	
 	-- level
-	metal =    "level/metal",
-	chain =    "level/chain",
-	bg_plate = "level/bg_plate",
+	metal =     "level/metal",
+	chain =     "level/chain",
+	semisolid = "level/semisolid",
+	bg_plate =  "level/bg_plate",
 
 	cabin_bg =                "level/cabin_bg",
 	cabin_bg_ambient_occlusion = "level/cabin_bg_ambient_occlusion",
