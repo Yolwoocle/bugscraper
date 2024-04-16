@@ -83,7 +83,7 @@ end
 
 function MenuManager:draw()
 	if self.cur_menu.bg_color then
-		rect_color(self.cur_menu.bg_color, "fill", game.cam_realx-1 or -1, game.cam_realy or -1, CANVAS_WIDTH+2, CANVAS_HEIGHT+2)
+		rect_color(self.cur_menu.bg_color, "fill", -1, -1, CANVAS_WIDTH+2, CANVAS_HEIGHT+2)
 	end
 	self.cur_menu:draw()
 end
@@ -119,9 +119,8 @@ function MenuManager:set_menu(menu, is_back)
 	self.cur_menu:update(0)
 
 	-- Reset game screenshake
-	if game then
-		game.cam_x = 0
-		game.cam_y = 0
+	if game and game.camera then
+		game.camera:reset()
 	end
 
 	game:on_menu()

@@ -658,13 +658,7 @@ function Player:shoot(dt, is_burst)
 
 		if success then
 			-- screenshake
-			if game.screenshake_q <= self.gun.screenshake * 3 then
-				game:screenshake(self.gun.screenshake)
-			end 
-			-- if self.gun.screenshake >= 1 then
-			-- else
-			-- 	if love.math.random() <= self.gun.screenshake then game:screenshake(1) end
-			-- end
+			game:screenshake(self.gun.screenshake)
 			if dx ~= 0 then
 				self.vx = self.vx - self.dir_x * self.gun.recoil_force
 			end

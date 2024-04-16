@@ -16,6 +16,7 @@ local InputButton = require "scripts.input.input_button"
 local GameUI = require "scripts.ui.game_ui"
 local Loot = require "scripts.actor.loot"
 local Debug = require "scripts.game.debug"
+local Camera = require "scripts.game.camera"
 
 local skins = require "data.skins"
 local shaders  = require "data.shaders"
@@ -94,14 +95,10 @@ function Game:new_game()
 	Collision = CollisionManager:new()
 	Particles = ParticleSystem:new()
 
-	-- number_of_players = (number_of_players or self.number_of_players) or 0
-
 	self.t = 0
 	self.frame = 0
 
 	-- Players
-	self.max_number_of_players = MAX_NUMBER_OF_PLAYERS
-	self.number_of_players = 0
 	self.waves_until_respawn = {}
 	for i = 1, MAX_NUMBER_OF_PLAYERS do 
 		self.waves_until_respawn[i] = -1
@@ -127,13 +124,7 @@ function Game:new_game()
 	self:new_actor(create_actor_centered(Enemies.ExitSign, floor(exit_x), floor(ny)))
 
 	-- Camera & screenshake
-	self.cam_x = 0
-	self.cam_y = 0
-	self.cam_zoom = 1
-	self.cam_realx, self.cam_realy = 0, 0
-	self.cam_ox, self.cam_oy = 0, 0
-	self.screenshake_q = 0
-	self.screenshake_speed = 20
+	self.camera = Camera:new()
 
 	-- Debugging
 	self.debug_mode = true
@@ -262,10 +253,11 @@ local n = 0
 function Game:update(dt)
 	self.frame = self.frame + 1
 
+	self.camera:update(dt)
+
 	self.frames_to_skip = max(0, self.frames_to_skip - 1)
 	local do_frameskip = self.slow_mo_rate ~= 0 and self.frame%self.slow_mo_rate ~= 0
 	if self.frames_to_skip > 0 or do_frameskip then
-		self:apply_screenshake(dt)
 		return
 	end
 
@@ -295,21 +287,17 @@ function Game:update_main_game(dt)
 	self:listen_for_player_join(dt)
 	
 	self.level:update(dt)
-	
-	-- Elevator swing 
-	-- self.elev_x = cos(self.t) * 4
-	-- self.elev_y = 4 + sin(self.t) * 4
 
 	self:update_timer_before_game_over(dt)
-	self:apply_screenshake(dt)
-	
-	if not Options:get("screenshake_on") then self.cam_ox, self.cam_oy = 0,0 end
-	self.cam_realx, self.cam_realy = self.cam_x + self.cam_ox, self.cam_y + self.cam_oy
 
 	-- Particles
 	Particles:update(dt)
+	self:update_actors(dt)
+	self:update_logo(dt)
+	self:update_debug(dt)
+end
 
-	-- Update actors
+function Game:update_actors(dt)
 	for i = #self.actors, 1, -1 do
 		local actor = self.actors[i]
 
@@ -320,8 +308,9 @@ function Game:update_main_game(dt)
 			table.remove(self.actors, i)
 		end
 	end
-	
-	-- Logo
+end
+
+function Game:update_logo(dt)
 	self.logo_a = self.logo_a + dt*3
 	if self.move_logo then
 		self.logo_vy = self.logo_vy - dt
@@ -332,22 +321,14 @@ function Game:update_main_game(dt)
 	else
 		self.jetpack_tutorial_y = lerp(self.jetpack_tutorial_y, -30, 0.1)
 	end
-
-	self:update_debug(dt)
-	-- local q = 4
-	-- if love.keyboard.isScancodeDown("a") then self.cam_x = self.cam_x - q end
-	-- if love.keyboard.isScancodeDown("d") then self.cam_x = self.cam_x + q end
-	-- if love.keyboard.isScancodeDown("w") then self.cam_y = self.cam_y - q end
-	-- if love.keyboard.isScancodeDown("s") then self.cam_y = self.cam_y + q end
 end
 
 function Game:get_camera()
-	return self.cam_x, self.cam_y
+	return self.camera:get_position()
 end
 
 function Game:set_camera(x, y)
-	self.cam_x = x
-	self.cam_y = y
+	self.camera:set_position(x, y)
 end
 
 function Game:get_zoom()
@@ -389,13 +370,13 @@ function Game:draw_game()
 		love.graphics.scale(self.cam_zoom)
 	end
 
-	local real_camx, real_camy = math.cos(self.t) * 10, math.sin(self.t) * 10;
-	-- local real_camx, real_camy = (self.cam_x + self.cam_ox), (self.cam_y + self.cam_oy)
+	-- local real_camx, real_camy = math.cos(self.t) * 10, math.sin(self.t) * 10;
+	self.camera:apply_transform()
 	local base_canvas = love.graphics.getCanvas()
 	
 	love.graphics.setCanvas(self.object_canvas)
 	love.graphics.clear()
-	love.graphics.translate(-real_camx, -real_camy)
+	self.camera:apply_transform()
 
 	-- Draw actors
 	for _,actor in pairs(self.actors) do
@@ -418,7 +399,7 @@ function Game:draw_game()
 		for k,actor in pairs(self.actors) do
 			if actor.draw_hud and self.game_ui.is_visible then     actor:draw_hud()    end
 		end
-		love.graphics.translate(-real_camx, -real_camy)
+		self.camera:apply_transform()
 	end
 
 	love.graphics.setCanvas(self.front_canvas)
@@ -440,7 +421,7 @@ function Game:draw_game()
 	love.graphics.draw(self.object_canvas, 0, 0)
 	
 	self:draw_smoke_canvas()
-	love.graphics.translate(-real_camx, -real_camy)
+	self.camera:apply_transform()
 	self.level:draw_front()
 
 	-----------------------------------------------------
@@ -693,7 +674,7 @@ end
 function Game:init_players()
 	self.players = {}
 
-	for i = 1, self.max_number_of_players do
+	for i = 1, MAX_NUMBER_OF_PLAYERS do
 		if Input:get_user(i) ~= nil then
 			self:new_player(i)
 		end
@@ -701,7 +682,7 @@ function Game:init_players()
 end
 
 function Game:find_free_player_number()
-	for i = 1, self.max_number_of_players do
+	for i = 1, MAX_NUMBER_OF_PLAYERS do
 		if self.players[i] == nil then
 			return i
 		end
@@ -766,26 +747,12 @@ end
 
 function Game:get_number_of_alive_players()
 	local count = 0
-	for i = 1, self.max_number_of_players do
+	for i = 1, MAX_NUMBER_OF_PLAYERS do
 		if self.players[i] ~= nil then
 			count = count + 1
 		end
 	end
 	return count
-end
-
-function Game:apply_screenshake(dt)
-	-- Screenshake
-	self.screenshake_q = max(0, self.screenshake_q - self.screenshake_speed * dt)
-	-- self.screenshake_q = lerp(self.screenshake_q, 0, 0.2)
-
-	local multiplier = Options:get("screenshake")
-	local q = self.screenshake_q * multiplier
-	local ox, oy = random_neighbor(q), random_neighbor(q)
-	if abs(ox) >= 0.2 then   ox = sign(ox) * max(abs(ox), 1)   end -- Using an epsilon of 0.2 to avoid
-	if abs(oy) >= 0.2 then   oy = sign(oy) * max(abs(oy), 1)   end -- jittery effects on UI elmts
-	self.cam_ox = ox
-	self.cam_oy = oy
 end
 
 function Game:enable_endless_mode()
@@ -877,9 +844,7 @@ function Game:focus(f)
 end
 
 function Game:screenshake(q)
-	if not Options:get('screenshake_on') then  return   end
-	-- self.screenshake_q = self.screenshake_q + q
-	self.screenshake_q = math.max(self.screenshake_q, q)
+	self.camera:screenshake(q)
 end
 
 function Game:frameskip(q)
