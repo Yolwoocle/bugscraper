@@ -100,9 +100,7 @@ function ButtonBigGlass:on_damage(n, old_life)
         Audio:play(self.sound_fracture, nil, pitch)
     end
 
-    if game.screenshake_q < 5 then
-        game:screenshake(self.damage_screenshake)
-    end
+    game:screenshake(self.damage_screenshake)
 end
 
 function ButtonBigGlass:on_death()

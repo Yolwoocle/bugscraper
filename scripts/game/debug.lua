@@ -165,7 +165,7 @@ function Debug:draw()
         self:draw_joystick_view()
     end
     if self.notification_timer > 0.0 then
-        print_outline(nil, nil, self.notification_message, self.game.cam_x, self.game.cam_y)
+        print_outline(nil, nil, self.notification_message, 0, 0)
     end
 end
 
@@ -239,8 +239,8 @@ function Debug:draw_joystick_view_for(joystick, x, y, axis_x, axis_y)
 end
 
 function Debug:draw_debug_menu()
-    local x = self.game.cam_x 
-    local y = self.game.cam_y 
+    local x = 0
+    local y = 0
     for i, button in pairs(self.action_keys) do
         local action = self.actions[button]
         local text = concat("[f1 + ", button, "]: ", action[1])
@@ -301,13 +301,13 @@ function Debug:draw_info_view()
 		"",
 	}
 
-	for i=1, #txts do  print_label(txts[i], self.game.cam_x, self.game.cam_y+txt_h*(i-1)) end
+	for i=1, #txts do  print_label(txts[i], 0, 0+txt_h*(i-1)) end
 
 	for _, e in pairs(self.game.actors) do
 		love.graphics.circle("fill", e.x, e.y, 1)
 	end
 
-	self.game.world_generator:draw()
+	self.game.level.world_generator:draw()
 	draw_log()
 end
 
