@@ -1,7 +1,9 @@
 require "scripts.util"
+local images = require "data.images"
+
 local Class = require "scripts.meta.class"
 local Tile = require "scripts.level.tile"
-local images = require "data.images"
+local CollisionInfo = require "scripts.physics.collision_info"
 
 local Tiles = Class:inherit()
 
@@ -30,8 +32,10 @@ function Tiles:init()
 		self.name = "metal"
 		self.spr = images.metal
 		
-		self.is_solid = true
-		self.has_collision = true
+		self.collision_info = CollisionInfo:new {
+			type = COLLISION_TYPE_SOLID,
+			is_slidable = true,
+		}
 	end)
 
 	-- Rubble
@@ -41,9 +45,10 @@ function Tiles:init()
 		self.name = "rubble"
 		self.spr = images.empty
 		
-		self.is_solid = true
-		self.is_slidable = false
-		self.has_collision = true
+		self.collision_info = CollisionInfo:new {
+			type = COLLISION_TYPE_SOLID,
+			is_slidable = false,
+		}
 	end)
 
 	-- Semi-solid
@@ -53,11 +58,10 @@ function Tiles:init()
 		self.name = "semisolid"
 		self.spr = images.semisolid
 		
-		self.is_solid = false
-		self.is_semisolid = true
-		self.is_slidable = false
-
-		self.has_collision = true
+		self.collision_info = CollisionInfo:new {
+			type = COLLISION_TYPE_SEMISOLID,
+			is_slidable = false,
+		}
 	end)
 
 	-- Chain
@@ -67,7 +71,11 @@ function Tiles:init()
 
 		self.name = "chain"
 		self.spr = images.chain
-		self.is_solid = false
+		
+		self.collision_info = CollisionInfo:new {
+			type = COLLISION_TYPE_SOLID,
+			is_slidable = false,
+		}
 	end)
 
 	-- self.tiles[5] = make_tile(function(self, x, y, w)
@@ -76,7 +84,6 @@ function Tiles:init()
 		
 	-- 	self.name = "bg_plate"
 	-- 	self.spr = images.bg_plate
-	-- 	self.is_solid = false
 	-- end)
 end
 
@@ -85,7 +92,7 @@ function Tiles:new_tile(n, x, y, w, ...)
 	local tile = tile_class:new(x, y, w, ...)
 
 	-- Init collision box
-	if tile.has_collision then
+	if tile.collision_info then
 		Collision:add(tile, tile.x, tile.y, tile.w, tile.w)
 	end
 

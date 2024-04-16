@@ -19,7 +19,6 @@ function ButtonBig:init_button_big(x, y, spr, w, h)
     self.life = self.max_life
     
     self.knockback = 0
-    self.is_solid = false
     self.is_stompable = true
     self.do_stomp_animation = false
     self.is_pushable = false

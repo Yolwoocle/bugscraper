@@ -55,7 +55,7 @@ end
 
 function SnailShelled:after_collision(col, other)
     -- Pong-like bounce
-    if col.other.is_solid or col.other.name == "" then
+    if col.type ~= "cross" or col.other.name == "" then
         local s = "metalfootstep_0"..tostring(love.math.random(0,4))
         Audio:play_var(s, 0.3, 1.1, {pitch=0.8, volume=0.5})
 

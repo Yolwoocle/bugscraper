@@ -141,7 +141,7 @@ function Enemy:on_collision(col, other)
 	if self.is_removed then return end
 
 	-- If hit wall, reverse x vel (why is this here?????) TODO: wtf
-	if col.other.is_solid and col.normal.y == 0 then 
+	if col.type ~= "cross" and col.normal.y == 0 then 
 		self.vx = -self.vx
 	end
 

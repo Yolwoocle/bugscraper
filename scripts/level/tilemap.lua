@@ -54,14 +54,14 @@ function TileMap:set_tile(x,y,n)
 	-- Assertions
 	if not self:is_valid_tile(x,y) then   return   end
 	-- Remove collisions
-	if self.map[x][y].has_collision then 
+	if self.map[x][y].collision_info then 
 		self:set_collision(x, y, false)
 	end
 	
 	-- Create tile class
 	local tile = Tiles:new_tile(n, x, y, self.tile_size)
 	self.map[x][y] = tile
-	if tile.has_collision then
+	if tile.collision_info then
 		self:set_collision(x,y,true)
 	end
 end
@@ -73,7 +73,7 @@ function TileMap:set_collision(x,y, val)
 
 	local tile = self:get_tile(x, y)
 	-- Return is the tile is already at the wanted state
-	if val == tile.has_collision then
+	if val == (tile.collision_info ~= nil) then
 		return 
 	end		
 

@@ -23,7 +23,7 @@ function HoneypotLiquid:init(x, y)
 end
 
 function HoneypotLiquid:after_collision(col, other)
-    if (col.other.is_solid or col.other.name == "") and (col.normal.x == 0 and col.normal.y == -1) then
+    if (col.type ~= "cross" or col.other.name == "") and (col.normal.x == 0 and col.normal.y == -1) then
         self:kill()
     end
 end

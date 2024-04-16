@@ -1,5 +1,5 @@
 local Class = require "scripts.meta.class"
-local CollisionManager = require "scripts.game.collision"
+local CollisionManager = require "scripts.physics.collision"
 local Player = require "scripts.actor.player"
 local Enemies = require "data.enemies"
 local Bullet = require "scripts.actor.bullet"

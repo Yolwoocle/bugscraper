@@ -20,7 +20,6 @@ function ButtonBigPressed:init_button_big_pressed(x, y)
     self.life = self.max_life
     
     self.knockback = 0
-    self.is_solid = false
     self.is_stompable = false
     self.is_pushable = false
     self.is_knockbackable = false

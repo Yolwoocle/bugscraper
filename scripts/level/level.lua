@@ -33,10 +33,10 @@ function Level:init(game)
 	local box_bx = self.world_generator.box_bx
 	local box_by = self.world_generator.box_by
 	self.boxes = {
-		{name="box_up",     is_solid = false, x = -BW, y = -BW,  w=map_w + 2*BW,     h=BW + box_ay*BW},
-		{name="box_down", is_solid = false, x = -BW, y = (box_by+1)*BW,  w=map_w + 2*BW,     h=BW*box_ay},
-		{name="box_left", is_solid = false, x = -BW,  y = -BW,   w=BW + box_ax * BW, h=map_h + 2*BW},
-		{name="box_right", is_solid = false, x = BW*(box_bx+1), y = -BW, w=BW*box_ax, h=map_h + 2*BW},
+		{name="box_up",    x = -BW, y = -BW,  w=map_w + 2*BW,     h=BW + box_ay*BW},
+		{name="box_down",  x = -BW, y = (box_by+1)*BW,  w=map_w + 2*BW,     h=BW*box_ay},
+		{name="box_left",  x = -BW,  y = -BW,   w=BW + box_ax * BW, h=map_h + 2*BW},
+		{name="box_right", x = BW*(box_bx+1), y = -BW, w=BW*box_ax, h=map_h + 2*BW},
 	}
 	for i,box in pairs(self.boxes) do   Collision:add(box)   end
 
