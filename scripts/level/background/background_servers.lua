@@ -49,7 +49,7 @@ local function new_edge(point_a, point_b, color)
 end
 local function new_point(pos, radius, color)
 	return {
-		type = "edge",
+		type = "point",
 		pos = pos,
 		radius = radius,
 		color = random_sample{COL_GREEN, COL_MID_GREEN, COL_MID_DARK_GREEN},
