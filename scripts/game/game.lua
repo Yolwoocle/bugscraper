@@ -367,14 +367,14 @@ function Game:draw()
 		gfx.translate(0, 0)
 		gfx.clear(0,0,0)
 		
-		game:draw_game()
+		self:draw_game()
 	else
 		-- Using a canvas for that sweet, resizable pixel art
 		gfx.setCanvas(canvas)
 		gfx.clear(0,0,0)
 		gfx.translate(0, 0)
 		
-		game:draw_game()
+		self:draw_game()
 		
 		gfx.setCanvas()
 		gfx.origin()
@@ -384,14 +384,15 @@ function Game:draw()
 end
 
 function Game:draw_game()
-	local real_camx, real_camy = (self.cam_x + self.cam_ox), (self.cam_y + self.cam_oy)
-	-- local real_camx, real_camy = math.cos(self.t) * 10, math.sin(self.t) * 10;
 	local function reset_transform()
 		love.graphics.origin()
 		love.graphics.scale(self.cam_zoom)
 	end
+
+	local real_camx, real_camy = math.cos(self.t) * 10, math.sin(self.t) * 10;
+	-- local real_camx, real_camy = (self.cam_x + self.cam_ox), (self.cam_y + self.cam_oy)
+	local base_canvas = love.graphics.getCanvas()
 	
-	local old_canvas = love.graphics.getCanvas()
 	love.graphics.setCanvas(self.object_canvas)
 	love.graphics.clear()
 	love.graphics.translate(-real_camx, -real_camy)
@@ -424,7 +425,7 @@ function Game:draw_game()
 	love.graphics.clear()
 	draw_front_objects()
 	love.graphics.setCanvas(self.object_canvas)
-	love.graphics.setCanvas(old_canvas)
+	love.graphics.setCanvas(base_canvas)
 	
 	---------------------------------------------
 
@@ -796,6 +797,7 @@ function Game:start_game()
 	self.move_logo = true
 	self.game_state = GAME_STATE_PLAYING
 	self.music_player:set_disk("w1")
+	self.level.is_hole_stencil_enabled = true
 
 	self.menu_manager:set_can_pause(true)
 	self:set_zoom(1)

@@ -1,11 +1,13 @@
 require "scripts.util"
+local images = require "data.images"
+
 local Class = require "scripts.meta.class"
 local Gun = require "scripts.game.gun"
-local images = require "data.images"
+local Wave = require "scripts.level.wave"
 local E = require "data.enemies"
 
 local waves = {
-	{
+	Wave:new({
 		min = 1,
 		max = 1,
 		enemies = {	
@@ -29,26 +31,26 @@ local waves = {
 			-- {E.Grasshopper, 1},
 			-- {E.MushroomAnt, 10},
 		}
-	},
-	{
+	}),
+	Wave:new({
 		min = 4,
 		max = 6,
 		enemies = {
 			{E.Larva, 3},
 			{E.Fly, 3},
 		},
-	},
+	}),
 
-	{
+	Wave:new({
 		-- Woodlouse intro
 		min = 4,
 		max = 6,
 		enemies = {
 			{E.Woodlouse, 2},
 		},
-	},
+	}),
 
-	{
+	Wave:new({
 		min = 4,
 		max = 6,
 		enemies = {
@@ -56,9 +58,9 @@ local waves = {
 			{E.Fly, 3},
 			{E.Woodlouse, 2},
 		},
-	},
+	}),
 
-	{
+	Wave:new({
 		-- Slug intro
 		min = 4,
 		max = 6,
@@ -67,9 +69,9 @@ local waves = {
 			{E.Fly, 2},
 			{E.Slug, 2},
 		},
-	},
+	}),
 	
-	{
+	Wave:new({
 		-- Spider intro
 		min = 4,
 		max = 6,
@@ -77,9 +79,9 @@ local waves = {
 			{E.Larva, 2},
 			{E.Spider, 4},
 		},
-	},
+	}),
 
-	{
+	Wave:new({
 		min = 6,
 		max = 8,
 		enemies = {
@@ -88,9 +90,9 @@ local waves = {
 			{E.Spider, 3},
 			{E.Woodlouse, 2},
 		},
-	},
+	}),
 
-	{
+	Wave:new({
 		-- Mosquito intro
 		min = 6,
 		max = 8,
@@ -98,9 +100,9 @@ local waves = {
 			{E.Fly, 3},
 			{E.Mosquito, 4},
 		},
-	},
+	}),
 
-	{ 
+	Wave:new({ 
 		min = 6,
 		max = 8,
 		enemies = {
@@ -110,18 +112,18 @@ local waves = {
 			{E.Mosquito, 2},
 			{E.Woodlouse, 2},
 		},
-	},
+	}),
 
-	{
+	Wave:new({
 		min = 3,
 		max = 5,
 		enemies = {
 			-- Shelled Snail intro
 			{E.SnailShelled, 3},
 		},
-	},
+	}),
 
-	{
+	Wave:new({
 		min = 6,
 		max = 8,
 		enemies = {
@@ -132,9 +134,9 @@ local waves = {
 			{E.SnailShelled, 3},
 			{E.Spider, 3},
 		},
-	},
+	}),
 
-	{ 
+	Wave:new({ 
 		-- Spiked Fly intro
 		min = 6,
 		max = 8,
@@ -144,9 +146,9 @@ local waves = {
 			{E.Mosquito, 2},
 			{E.SpikedFly, 4},
 		},
-	},
+	}),
 
-	{ 
+	Wave:new({ 
 		min = 7,
 		max = 9,
 		enemies = {
@@ -155,18 +157,18 @@ local waves = {
 			{E.SpikedFly, 4},
 			{E.Spider, 4},
 		},
-	},
+	}),
 
-	{ 
+	Wave:new({ 
 		-- Grasshopper intro
 		min = 4,
 		max = 6,
 		enemies = {
 			{E.Grasshopper, 8},
 		},
-	},
+	}),
 
-	{ 
+	Wave:new({ 
 		min = 7,
 		max = 9,
 		enemies = {
@@ -177,9 +179,9 @@ local waves = {
 			{E.SpikedFly, 4},
 			{E.Spider, 4},
 		},
-	},
+	}),
 
-	{ 
+	Wave:new({ 
 		-- Mushroom Ant intro
 		min = 5,
 		max = 6,
@@ -188,10 +190,10 @@ local waves = {
 			{E.Mosquito, 3},
 			{E.MushroomAnt, 3},
 		},
-	},
+	}),
 
 
-	{ 
+	Wave:new({ 
 		min = 8,
 		max = 10,
 		enemies = {
@@ -201,9 +203,9 @@ local waves = {
 			{E.SpikedFly, 1},
 			{E.Spider, 2},
 		},
-	},
+	}),
 
-	{ 
+	Wave:new({ 
 		-- Honeypot ant intro
 		min = 6,
 		max = 8,
@@ -213,9 +215,9 @@ local waves = {
 			{E.MushroomAnt, 3},
 			{E.SpikedFly, 3},
 		},
-	},
+	}),
 
-	{ -- 12
+	Wave:new({ -- 12
 		-- ALL
 		min = 6,
 		max = 8,
@@ -231,11 +233,11 @@ local waves = {
 			{E.MushroomAnt, 1},
 			{E.Spider, 1},
 		},
-	},
+	}),
 
 	-- unpack(duplicate_table({
 		-- ALL BUT HARDER
-	{
+		Wave:new({
 		min = 8,
 		max = 10,
 		enemies = {
@@ -248,8 +250,8 @@ local waves = {
 			-- {E.MushroomAnt, 1},
 			-- {E.Spider, 1},
 		},
-	},
-	{
+	}),
+	Wave:new({
 		min = 10,
 		max = 12,
 		enemies = {
@@ -265,8 +267,8 @@ local waves = {
 			{E.Woodlouse, 1},
 			{E.Spider, 1},
 		},
-	},
-	{
+	}),
+	Wave:new({
 		min = 14,
 		max = 16,
 		enemies = {
@@ -281,17 +283,17 @@ local waves = {
 			{E.MushroomAnt, 1},
 			{E.Spider, 1},
 		},
-	},
+	}),
 	-- }, 4)),
 
 	-- Last wave
-	{ 
+	Wave:new({ 
 		min = 1,
 		max = 1,
 		enemies = {
 			{E.ButtonBigGlass, 1}
 		}
-	}
+	})
 }
 
 local function sanity_check_waves()

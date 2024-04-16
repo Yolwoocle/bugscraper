@@ -19,9 +19,9 @@ function TileMap:init(w,h)
 end
 
 function TileMap:update(dt)
-	self:for_all_tiles(function(tile)
-		tile:update(dt)
-	end)
+	-- self:for_all_tiles(function(tile)
+	-- 	tile:update(dt)
+	-- end)
 end
 
 function TileMap:draw()

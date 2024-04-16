@@ -174,6 +174,8 @@ local img_names = {
 	cabin_door_right_far =    "level/cabin_door_right_far",
 	cabin_rubble =            "level/cabin_rubble",
 
+	cafeteria =               "level/cafeteria",
+
 	-----------------------------------------------------
 
 	-- hud

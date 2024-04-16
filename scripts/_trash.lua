@@ -5,6 +5,29 @@
 ------------------------------------
 
 
+function Level:draw_with_hole(draw_func)
+	exec_on_canvas({self.canvas, stencil=true}, function()
+		love.graphics.clear()
+		
+		if self.is_hole_stencil_enabled then
+			love.graphics.stencil(function()
+				love.graphics.clear()
+				love.graphics.circle("fill", (self.door_ax + self.door_bx)/2, (self.door_ay + self.door_by)/2, self.hole_stencil_radius)
+			end, "increment")
+			love.graphics.setStencilTest("less", 1)
+		end
+	
+		draw_func()
+		
+		love.graphics.setStencilTest()
+	end)
+	love.graphics.draw(self.canvas, 0, 0)
+end
+
+
+------------------------------------
+
+
 self.elevator_speed_cap = -1000
 self.elevator_speed_overflow = 0
 self.is_reversing_elevator = false

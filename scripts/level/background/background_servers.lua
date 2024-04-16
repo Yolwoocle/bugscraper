@@ -64,7 +64,7 @@ local function new_point(pos, radius, color)
 			love.graphics.print(
 				self.text,
 				math.floor(CANVAS_WIDTH/2  + fov * (ox + self.pos.x)/self.pos.z),
-				math.floor(CANVAS_HEIGHT/2 + fov * (oy + self.pos.y)/self.pos.z),
+				(CANVAS_HEIGHT/2 + fov * (oy + self.pos.y)/self.pos.z),
 				0, 
 				0.7 * self.radius / self.pos.z,
 				0.7 * self.radius / self.pos.z
@@ -126,6 +126,7 @@ end
 
 function BackgroundServers:update(dt)
 	self:update_background(dt)
+	print_debug("a", 3, "b", 34)
 
 	local speed = self.speed * dt * 0.5
 

@@ -3,8 +3,11 @@ local Class = require "scripts.meta.class"
 local Enemies = require "data.enemies"
 local TileMap = require "scripts.level.tilemap"
 local WorldGenerator = require "scripts.level.worldgenerator"
-local Background = require "scripts.level.background.background_servers"
+local BackgroundDots = require "scripts.level.background.background_dots"
+local BackgroundServers = require "scripts.level.background.background_servers"
+local BackgroundCafeteria = require "scripts.level.background.background_cafeteria"
 local Elevator = require "scripts.level.elevator"
+local Wave = require "scripts.level.wave"
 
 local images = require "data.images"
 local sounds = require "data.sounds"
@@ -26,19 +29,19 @@ function Level:init(game)
 	-- Bounding box
 	-- Don't try to understand, all you have to know is that it puts collision 
 	-- boxes around the elevator shaft
-	local map_w = self.map.width * BW
-	local map_h = self.map.height * BW
-	local box_ax = self.world_generator.box_ax
-	local box_ay = self.world_generator.box_ay
-	local box_bx = self.world_generator.box_bx
-	local box_by = self.world_generator.box_by
-	self.boxes = {
-		{name="box_up",    x = -BW, y = -BW,  w=map_w + 2*BW,     h=BW + box_ay*BW},
-		{name="box_down",  x = -BW, y = (box_by+1)*BW,  w=map_w + 2*BW,     h=BW*box_ay},
-		{name="box_left",  x = -BW,  y = -BW,   w=BW + box_ax * BW, h=map_h + 2*BW},
-		{name="box_right", x = BW*(box_bx+1), y = -BW, w=BW*box_ax, h=map_h + 2*BW},
-	}
-	for i,box in pairs(self.boxes) do   Collision:add(box)   end
+	-- local map_w = self.map.width * BW
+	-- local map_h = self.map.height * BW
+	-- local box_ax = self.world_generator.box_ax
+	-- local box_ay = self.world_generator.box_ay
+	-- local box_bx = self.world_generator.box_bx
+	-- local box_by = self.world_generator.box_by
+	-- self.boxes = {
+	-- 	{name="box_up",    x = -BW, y = -BW,  w=map_w + 2*BW,     h=BW + box_ay*BW},
+	-- 	{name="box_down",  x = -BW, y = (box_by+1)*BW,  w=map_w + 2*BW,     h=BW*box_ay},
+	-- 	{name="box_left",  x = -BW,  y = -BW,   w=BW + box_ax * BW, h=map_h + 2*BW},
+	-- 	{name="box_right", x = BW*(box_bx+1), y = -BW, w=BW*box_ax, h=map_h + 2*BW},
+	-- }
+	-- for i,box in pairs(self.boxes) do   Collision:add(box)   end
 
 	-- Cabin stats
 	local bw = BLOCK_WIDTH
@@ -71,8 +74,12 @@ function Level:init(game)
     self.enemy_buffer = {}
 
 	self.elevator = Elevator:new(self)
-	self.background = Background:new(self)
+	self.background = BackgroundCafeteria:new(self)
 	self.background:set_def_speed(self.def_level_speed)
+
+	self.canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
+	self.is_hole_stencil_enabled = false
+	self.hole_stencil_radius = 0
 end
 
 function Level:update(dt)
@@ -85,6 +92,10 @@ function Level:update(dt)
 	self.elevator:update(dt)
 	
 	self.flash_alpha = max(self.flash_alpha - dt, 0)
+
+	if self.is_hole_stencil_enabled then
+		self.hole_stencil_radius = self.hole_stencil_radius + dt * 40
+	end
 end
 
 function Level:update_elevator_progress(dt)
@@ -129,6 +140,10 @@ function Level:update_elevator_progress(dt)
 	end
 end
 
+function Level:set_background(background)
+	self.background = background
+end
+
 function Level:next_floor(old_floor)
 	self.floor = self.floor + 1
 	if self.floor-1 == 0 then
@@ -142,7 +157,7 @@ end
 function Level:new_endless_wave()
 	local min = 8
 	local max = 16
-	return {
+	return Wave:new({
 		min = min,
 		max = max,
 		enemies = {
@@ -158,7 +173,7 @@ function Level:new_endless_wave()
 			{Enemies.MushroomAnt, random_range(1,4)},
 			{Enemies.Spider, random_range(1,4)},
 		},
-	}
+	})
 end
 
 function Level:construct_new_wave(wave_n)
@@ -167,16 +182,17 @@ function Level:construct_new_wave(wave_n)
 		-- Wave on endless mode
 		wave = self:new_endless_wave()
 	end
-	local n = love.math.random(wave.min, wave.max)
+	local number_of_enemies = love.math.random(wave.min, wave.max)
 
 	local output = {}
-	for i=1, n do
+	for i=1, number_of_enemies do
 		local enemy_class = random_weighted(wave.enemies)
 		table.insert(output, {
 			enemy_class = enemy_class
 		})
 	end
 
+	-- TODO: the fuck is this doing here ???? TODO: move somewhere else wtf
 	for i = 1, MAX_NUMBER_OF_PLAYERS do
 		if self.game.waves_until_respawn[i] ~= -1 then
 			self.game.waves_until_respawn[i] = math.max(0, self.game.waves_until_respawn[i] - 1)
@@ -261,8 +277,17 @@ function Level:draw()
 	self.background:draw()
 
 	self.map:draw()
+
 	if self.show_cabin then
 		self.elevator:draw(self.enemy_buffer)
+	end
+end
+
+function Level:draw_front(x,y)
+	self:draw_rubble()
+	
+	if self.show_cabin then
+		gfx.draw(images.cabin_walls, self.cabin_x, self.cabin_y)
 	end
 end
 
@@ -318,14 +343,6 @@ function Level:draw_win_screen()
 
 		print_centered_outline(COL_WHITE, COL_BLACK_BLUE, v, mx+ox, 80+iy*14 +oy)
 		iy = iy + 1
-	end
-end
-
-function Level:draw_front(x,y)
-	self:draw_rubble()
-	
-	if self.show_cabin then
-		gfx.draw(images.cabin_walls, self.cabin_x, self.cabin_y)
 	end
 end
 

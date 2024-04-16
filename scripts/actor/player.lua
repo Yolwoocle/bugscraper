@@ -246,7 +246,6 @@ function Player:draw()
 	self:draw_player()
 
 	gfx.setColor(COL_WHITE)
-	gfx.print(tostring(self.is_wall_sliding), self.x+24, self.y)
 end
 
 function Player:draw_hud()

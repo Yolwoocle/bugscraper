@@ -377,14 +377,18 @@ end
 
 function concat(...)
 	local args = {...}
-	local s = ""
-	for _,v in pairs(args) do
-		local seg = tostring(v)
-		if v == nil then  seg = "nil"  end
-		if type(v) == table then   seg = table_to_str(v)   end
-		s = s..seg
+	for i = 1, #args do
+		local val = args[i]
+		local val_str = tostring(val)
+		if type(val) == "nil" then  
+			val_str = "nil"
+		-- elseif type(val) == "table" then 
+		-- 	val_str = table_to_str(val)
+		end
+
+		args[i] = val_str
 	end
-	return s
+	return table.concat(args)
 end
 
 function concatsep(tab, sep)
