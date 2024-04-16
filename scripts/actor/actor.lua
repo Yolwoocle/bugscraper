@@ -38,7 +38,6 @@ function Actor:init_actor(x, y, w, h, spr, args)
 	self.friction_y = 1 -- By default we don't apply friction to the Y axis for gravity
 
 	self.speed_cap = 10000
-	self.is_solid = false
 
 	self.is_grounded = false
 	self.is_walled = false
@@ -79,14 +78,14 @@ function Actor:init_actor(x, y, w, h, spr, args)
 		if not other.is_active then
 			type = "cross"
 		end
-		if other.is_solid then
-			type = "slide"
-		elseif other.is_semisolid then
-			-- type = ternary(self.y + self.h >= other.y 
-			if self.is_player then
-				print_debug("(y + h)", self.y + self.h, "vy", self.vy, "other.y", other.y)
+
+		if other.collision_info then
+			local collision_info = other.collision_info
+			if collision_info.type == COLLISION_TYPE_SOLID then
+				type = "slide"
+			elseif collision_info.type == COLLISION_TYPE_SEMISOLID then
+				type = ternary((self.y + self.h <= other.y) and (self.vy >= 0), "slide", "cross")
 			end
-			type = ternary((self.y + self.h <= other.y) and (self.vy >= 0), "slide", "cross")
 		end
 
 		return type

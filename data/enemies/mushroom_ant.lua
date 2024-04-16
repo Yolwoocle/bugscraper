@@ -60,7 +60,7 @@ function MushroomAnt:update(dt)
 end
 
 function MushroomAnt:after_collision(col, other)
-    if other.is_solid then
+    if col.type ~= "cross" then
         self.is_on_wall = true
 
         self.up_vect.x = col.normal.x

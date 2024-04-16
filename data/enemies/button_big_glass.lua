@@ -1,9 +1,11 @@
 require "scripts.util"
-local Enemy = require "scripts.actor.enemy"
-local sounds = require "data.sounds"
 local images = require "data.images"
+local sounds = require "data.sounds"
+
+local Enemy = require "scripts.actor.enemy"
 local Guns = require "data.guns"
 local Button = require "data.enemies.button_big"
+local CollisionInfo = require "scripts.physics.collision_info"
 
 local ButtonBigGlass = Enemy:inherit()
 
@@ -27,7 +29,10 @@ function ButtonBigGlass:init_button_big_glass(x, y)
     self.break_range = self.life - self.activ_thresh
     self.knockback = 0
 
-    self.is_solid = true
+    self.collision_info = CollisionInfo:new {
+        type = COLLISION_TYPE_SOLID,
+        is_slidable = true,
+    }
     self.is_stompable = false
     self.is_pushable = false
     self.is_knockbackable = false

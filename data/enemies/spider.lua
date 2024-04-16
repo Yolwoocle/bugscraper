@@ -64,7 +64,7 @@ function Spider:draw()
 end
 
 function Spider:after_collision(col, other)
-    if other.is_solid then
+    if col.type ~= "cross" then
         if col.normal.x == 0 and col.normal.y == 1 then
             self.is_on_ceiling = true
             self.gravity = 0

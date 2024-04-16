@@ -94,6 +94,11 @@ GAME_STATE_WIN = "win"
 
 ---------------------------------------------
 
+COLLISION_TYPE_SOLID = "solid"
+COLLISION_TYPE_SEMISOLID = "semisolid"
+
+---------------------------------------------
+
 MAX_ASSIGNABLE_BUTTONS = 8
 
 INPUT_TYPE_KEYBOARD = "k"

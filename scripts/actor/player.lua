@@ -246,6 +246,7 @@ function Player:draw()
 	self:draw_player()
 
 	gfx.setColor(COL_WHITE)
+	gfx.print(tostring(self.is_wall_sliding), self.x+24, self.y)
 end
 
 function Player:draw_hud()
@@ -478,7 +479,7 @@ function Player:do_wall_sliding(dt)
 		local holding_right = Input:action_down(self.n, 'right') and col_normal.x == -1
 		
 		local is_wall_sliding = is_walled and is_falling and (holding_left or holding_right) 
-			and self.wall_col.other.is_slidable
+			and (self.wall_col.other.collision_info and self.wall_col.other.collision_info.is_slidable)
 		self.is_wall_sliding = is_wall_sliding
 		self.is_walled = is_walled
 	end
@@ -569,7 +570,7 @@ function Player:get_nearby_wall()
 	
 	local x,y, cols, len = Collision:move(box, box.x, box.y, null_filter)
 	for _,col in pairs(cols) do
-		if col.other.is_solid and col.normal.y == 0 then 
+		if col.normal.y == 0 and col.other.collision_info and col.other.collision_info.type == COLLISION_TYPE_SOLID then 
 			return col.normal	
 		end
 	end

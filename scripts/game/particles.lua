@@ -36,7 +36,9 @@ function Particle:update_particle(dt)
 	self.life = self.life - dt
 
 	if self.is_solid then
-		local items, len = Collision.world:queryPoint(self.x, self.y, function(item) return item.is_solid end)
+		local items, len = Collision.world:queryPoint(self.x, self.y, function(item) 
+			return item.collision_info and item.collision_info.type == COLLISION_TYPE_SOLID
+		end)
 		if len > 0 then
 			self.bounces = self.bounces - 1
 			self.vy = -self.bounce_force - random_neighbor(40)

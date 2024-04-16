@@ -198,7 +198,7 @@ function ExitSign:update_smash_easter_egg(dt)
         -- assert(false)
         for _, star in pairs(self.smash_stars) do
             for i = 1, #star-1, 2 do
-                -- print_debug(i_star, i, self.smash_stars[i_star][i], self.smash_stars[i_star][i] +1)
+                -- print_ debug(i_star, i, self.smash_stars[i_star][i], self.smash_stars[i_star][i] +1)
                 -- star[i]   = star[i]   + random_neighbor(20) * dt
                 -- star[i+1] = star[i+1] + random_neighbor(20) * dt
             end

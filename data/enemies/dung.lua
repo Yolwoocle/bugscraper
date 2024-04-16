@@ -59,7 +59,7 @@ function Dung:update_dung_beetle(dt)
 end
 
 function Dung:after_collision(col, other)
-    if other.is_solid then
+    if col.type ~= "cross" then
         if col.normal.y == 0 then
             self.vx = col.normal.x * math.abs(self.vx)
         end

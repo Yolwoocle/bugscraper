@@ -46,10 +46,11 @@ function Loot:init_loot(spr, x, y, w, h, val, vx, vy)
 	self.ghost_time = random_range(0.4, 0.8)
 	self.ghost_timer = self.ghost_time
 
-	local actual_x, actual_y, cols, len = Collision:check(self, self.x, self.y)
+	-- Verify if the loot is spawned through the wall
+	local actual_x, actual_y, cols, len = Collision:check(self, self.x, self.y, self.collision_filter)
 	local is_coll = false
 	for _,c in pairs(cols) do
-		if c.is_solid then
+		if c.type ~= "cross" then
 			is_coll = true
 		end
 	end
@@ -188,10 +189,8 @@ function Loot:on_collision(col, other)
 		self:on_collect(other)
 	end
 
-	if other.is_solid then
-		if col.normal.y == 0 then
-			self.move_dir_x = col.normal.x
-		end
+	if col.type ~= "cross" and col.normal.y == 0 then
+		self.move_dir_x = col.normal.x
 	end
 end
 

@@ -34,7 +34,7 @@ function Grasshopper:draw()
 end
 
 function Grasshopper:after_collision(col, other)
-    if other.is_solid then
+    if col.type ~= "cross"  then
         if col.normal.y == 0 then
             self.walk_dir_x = col.normal.x
         end
