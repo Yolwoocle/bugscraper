@@ -3,8 +3,8 @@ local Enemy = require "scripts.actor.enemy"
 local sounds = require "data.sounds"
 local images = require "data.images"
 local Guns = require "data.guns"
-local ButtonSmall = require "data.enemies.button_small"
-local ButtonBigGlass = require "data.enemies.button_big_glass"
+local ButtonSmall = require "scripts.actor.enemies.button_small"
+local ButtonBigGlass = require "scripts.actor.enemies.button_big_glass"
 
 local ButtonSmallGlass = ButtonBigGlass:inherit()
 

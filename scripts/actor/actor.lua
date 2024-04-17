@@ -75,8 +75,8 @@ function Actor:init_actor(x, y, w, h, spr, args)
 		-- By default, do not react to collisions
 		local type = "cross"
 
-		if not other.is_active then
-			type = "cross"
+		if other.is_active ~= nil and not other.is_active then 
+			return false
 		end
 
 		if other.collision_info then
@@ -90,6 +90,10 @@ function Actor:init_actor(x, y, w, h, spr, args)
 
 		return type
 	end
+end
+
+function Actor:set_active(val)
+	self.is_active = val
 end
 
 function Actor:set_sprite(spr)

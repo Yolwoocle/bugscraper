@@ -3,7 +3,7 @@ local Enemy = require "scripts.actor.enemy"
 local sounds = require "data.sounds"
 local images = require "data.images"
 local Guns = require "data.guns"
-local SnailShelled = require "data.enemies.snail_shelled"
+local SnailShelled = require "scripts.actor.enemies.snail_shelled"
 
 local FlyingDung = SnailShelled:inherit()
 

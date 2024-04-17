@@ -1,9 +1,9 @@
 require "scripts.util"
 local Enemy = require "scripts.actor.enemy"
-local Larva = require "data.enemies.larva"
+local Larva = require "scripts.actor.enemies.larva"
 local sounds = require "data.sounds"
 local images = require "data.images"
-local DungBeetle = require "data.enemies.dung_beetle"
+local DungBeetle = require "scripts.actor.enemies.dung_beetle"
 
 local Dung = Enemy:inherit()
 	

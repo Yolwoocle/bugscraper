@@ -55,6 +55,14 @@ function Camera:set_position(x, y)
     self.y = y
 end
 
+function Camera:get_zoom()
+    return self.zoom
+end
+
+function Camera:set_zoom(zoom)
+    self.zoom = zoom
+end
+
 function Camera:reset()
     self.x = 0
     self.ox = 0
@@ -66,6 +74,8 @@ end
 function Camera:apply_transform()
     local x, y = self:get_real_position()
 
+    love.graphics.origin()
+	love.graphics.scale(1)
 	love.graphics.translate(-x, -y)
 	love.graphics.scale(self.zoom)
 end

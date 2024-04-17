@@ -4,6 +4,24 @@
 --
 ------------------------------------
 
+-- View layers
+	local x = 0
+	local y = 0
+	for i=1, #self.layers do
+		rect_color({1,1,1,0.8}, "fill", x, y, CANVAS_WIDTH, CANVAS_HEIGHT)
+		love.graphics.draw(self.layers[i].canvas, x, y)
+		love.graphics.print(tostring(i), x, y)
+		rect_color(COL_RED, "line", x, y, CANVAS_WIDTH, CANVAS_HEIGHT)
+
+		x = x + (CANVAS_WIDTH)
+		if x + CANVAS_WIDTH > SCREEN_WIDTH then
+			x = 0
+			y = y + CANVAS_HEIGHT
+		end
+	end
+
+------------------------------------
+
 
 function Level:draw_with_hole(draw_func)
 	exec_on_canvas({self.canvas, stencil=true}, function()

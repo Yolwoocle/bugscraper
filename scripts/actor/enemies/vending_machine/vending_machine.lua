@@ -1,7 +1,7 @@
 require "scripts.util"
 local Enemy = require "scripts.actor.enemy"
 local images = require "data.images"
-local ButtonSmall = require "data.enemies.button_small"
+local ButtonSmall = require "scripts.actor.enemies.button_small"
 local EffectSlowness = require "scripts.effect.effect_slowness"
 
 local UpgradeCoffee = require "scripts.upgrade.upgrade_coffee"

@@ -1,6 +1,6 @@
 require "scripts.util"
-local Larva = require "data.enemies.larva"
-local HoneypotLiquid = require "data.enemies.honeypot_liquid"
+local Larva = require "scripts.actor.enemies.larva"
+local HoneypotLiquid = require "scripts.actor.enemies.honeypot_liquid"
 local sounds = require "data.sounds"
 local images = require "data.images"
 

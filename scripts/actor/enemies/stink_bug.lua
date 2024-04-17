@@ -1,6 +1,6 @@
 require "scripts.util"
 local Enemy = require "scripts.actor.enemy"
-local PoisonCloud = require "data.enemies.poison_cloud"
+local PoisonCloud = require "scripts.actor.enemies.poison_cloud"
 local sounds = require "data.sounds"
 local images = require "data.images"
 

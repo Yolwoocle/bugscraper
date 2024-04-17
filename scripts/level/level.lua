@@ -59,7 +59,7 @@ function Level:init(game)
 	self.door_offset = 0
 	self.has_switched_to_next_floor = false
 
-	self.floor_progress = 0.0
+	self.floor_progress = 5.0
 	self.level_speed = 0
 	self.def_level_speed = 400
 	self.elev_x, self.elev_y = 0, 0
@@ -74,7 +74,7 @@ function Level:init(game)
     self.enemy_buffer = {}
 
 	self.elevator = Elevator:new(self)
-	self.background = BackgroundCafeteria:new(self)
+	self.background = BackgroundDots:new(self)
 	self.background:set_def_speed(self.def_level_speed)
 
 	self.canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
@@ -105,7 +105,14 @@ function Level:update_elevator_progress(dt)
 		
 		self.door_animation = true
 		self.has_switched_to_next_floor = false
-		self:new_wave_buffer_enemies(dt)
+		self:new_wave_buffer_enemies()
+
+		-- TODO: move this somewhere else, this has nothing to do here wtf
+		for i = 1, MAX_NUMBER_OF_PLAYERS do
+			if self.game.waves_until_respawn[i] ~= -1 then
+				self.game.waves_until_respawn[i] = math.max(0, self.game.waves_until_respawn[i] - 1)
+			end
+		end
 	end
 
 	-- Update door animation
@@ -124,6 +131,7 @@ function Level:update_elevator_progress(dt)
 
 		-- Go to next floor once animation is finished
 		if self.floor_progress <= 0 then
+			print_debug("set to false")
 			self.floor_progress = 5.0
 			
 			self.door_animation = false
@@ -176,97 +184,30 @@ function Level:new_endless_wave()
 	})
 end
 
-function Level:construct_new_wave(wave_n)
+function Level:get_new_wave(wave_n)
 	local wave = waves[wave_n]
 	if self.game.endless_mode then
-		-- Wave on endless mode
 		wave = self:new_endless_wave()
 	end
-	local number_of_enemies = love.math.random(wave.min, wave.max)
-
-	local output = {}
-	for i=1, number_of_enemies do
-		local enemy_class = random_weighted(wave.enemies)
-		table.insert(output, {
-			enemy_class = enemy_class
-		})
-	end
-
-	-- TODO: the fuck is this doing here ???? TODO: move somewhere else wtf
-	for i = 1, MAX_NUMBER_OF_PLAYERS do
-		if self.game.waves_until_respawn[i] ~= -1 then
-			self.game.waves_until_respawn[i] = math.max(0, self.game.waves_until_respawn[i] - 1)
-		end
-	end
-
-	if game:get_number_of_alive_players() < Input:get_number_of_users() then
-		for i = 1, MAX_NUMBER_OF_PLAYERS do
-			if self.game.waves_until_respawn[i] ~= -1 and self.game.waves_until_respawn[i] == 0 then
-				table.insert(output, {
-					enemy_class = Enemies.Cocoon,
-					extra_info = i,
-				})
-			end
-		end
-	end
-
-	return output
+	return wave
 end
 
 function Level:new_wave_buffer_enemies()
 	-- Spawn a bunch of enemies
-	local bw = BLOCK_WIDTH
-	local wg = self.game.world_generator
-	
-	self.enemy_buffer = {}
-
 	local wave_n = clamp(self.floor + 1, 1, #waves) -- floor+1 because the floor indicator changes before enemies are spawned
-	local wave = self:construct_new_wave(wave_n)
+	local wave = self:get_new_wave(wave_n)
+
+	self.enemy_buffer = wave:spawn(self.door_ax, self.door_ay, self.door_bx, self.door_by)
 
 	if self.background.change_bg_color then
 		self.background:change_bg_color(wave_n)
-	end
-
-	for i=1, #wave do
-		local x = love.math.random(self.door_ax + 16, self.door_bx - 16)
-		local y = love.math.random(self.door_ay + 16, self.door_by - 16)
-
-		local enemy_class = wave[i].enemy_class
-		local extra_info = wave[i].extra_info
-		
-		local args = {} 
-		if enemy_class == Enemies.ButtonBigGlass then
-			x = floor(CANVAS_WIDTH/2 - 58/2)
-			y = self.door_by - 45
-		end
-		if enemy_class == Enemies.Cocoon then
-			args = {extra_info}
-		end
-		local enemy_instance = enemy_class:new(x,y, unpack(args))
-
-		-- If button is summoned, last wave happened
-		if enemy_instance.name == "button_big_glass" then
-			self.game:on_button_glass_spawn(enemy_instance)
-		else
-			-- Center enemy
-			enemy_instance.x = floor(enemy_instance.x - enemy_instance.w/2)
-			enemy_instance.y = floor(enemy_instance.y - enemy_instance.h/2)
-		end
-		
-		-- Prevent collisions with floor
-		if enemy_instance.y+enemy_instance.h > self.door_by then
-			enemy_instance.y = self.door_by - enemy_instance.h
-		end
-		Collision:remove(enemy_instance)
-		table.insert(self.enemy_buffer, enemy_instance)
 	end
 end
 
 
 function Level:activate_enemy_buffer()
 	for k, e in pairs(self.enemy_buffer) do
-		e:add_collision()
-		self.game:new_actor(e)
+		e:set_active(true)
 	end
 	self.enemy_buffer = {}
 end
@@ -281,6 +222,9 @@ function Level:draw()
 	if self.show_cabin then
 		self.elevator:draw(self.enemy_buffer)
 	end
+
+	-- print_outline(nil, nil, tostring(self.floor_progress), 100, 100)
+	-- print_outline(nil, nil, tostring(self.door_animation), 100, 110)
 end
 
 function Level:draw_front(x,y)

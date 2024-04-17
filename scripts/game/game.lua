@@ -17,6 +17,7 @@ local GameUI = require "scripts.ui.game_ui"
 local Loot = require "scripts.actor.loot"
 local Debug = require "scripts.game.debug"
 local Camera = require "scripts.game.camera"
+local Layer = require "scripts.graphics.layer"
 
 local skins = require "data.skins"
 local shaders  = require "data.shaders"
@@ -159,6 +160,10 @@ function Game:new_game()
 	self.frames_to_skip = 0
 	self.slow_mo_rate = 0
 
+	self.layers = {}
+	self.layers_count = 6
+	self:init_layers()
+
 	self.draw_shadows = true
 	self.shadow_ox = 1
 	self.shadow_oy = 2
@@ -192,6 +197,12 @@ function Game:new_game()
 	Options:update_sound_on()
 end
 
+function Game:init_layers()
+	self.layers = {}
+	for i = 1, self.layers_count do
+		table.insert(self.layers, Layer:new(CANVAS_WIDTH, CANVAS_HEIGHT))
+	end
+end
 
 function Game:get_window_flags()
 	return {
@@ -301,7 +312,9 @@ function Game:update_actors(dt)
 	for i = #self.actors, 1, -1 do
 		local actor = self.actors[i]
 
-		actor:update(dt)
+		if not actor.is_removed and actor.is_active then
+			actor:update(dt)
+		end
 	
 		if actor.is_removed then
 			actor:final_remove()
@@ -323,23 +336,40 @@ function Game:update_logo(dt)
 	end
 end
 
-function Game:get_camera()
+function Game:get_camera_position()
 	return self.camera:get_position()
 end
 
-function Game:set_camera(x, y)
+function Game:set_camera_position(x, y)
 	self.camera:set_position(x, y)
 end
 
 function Game:get_zoom()
-	return self.cam_zoom
+	return self.camera:get_zoom()
 end
 function Game:set_zoom(zoom)
-	self.cam_zoom = zoom
+	self.camera:set_zoom(zoom)
 end
 
 function Game:update_debug(dt)
 	
+end
+
+function Game:get_layer(layer_id)
+	return self.layers[layer_id]
+end
+
+function Game:draw_on_layer(layer_id, paint_function, params)
+	local layer = self.layers[layer_id]
+	if layer == nil then return end
+
+    params = param(params, {})
+	local apply_camera = param(params.apply_camera, true)
+
+	layer:paint(paint_function, {
+		apply_camera = apply_camera,
+		camera = ternary(apply_camera, self.camera, nil),
+	})
 end
 
 function Game:draw()
@@ -362,92 +392,117 @@ function Game:draw()
 		gfx.scale(1, 1)
 		gfx.draw(canvas, CANVAS_OX, CANVAS_OY, 0, CANVAS_SCALE, CANVAS_SCALE)
 	end
+
+	if self.debug.layer_view then
+		self.debug:draw_layers()
+	end
 end
 
+LAYER_BACKGROUND = 1
+LAYER_SHADOW = 2
+LAYER_OBJECTS = 3
+LAYER_FRONT = 4
+LAYER_HUD = 5
+LAYER_UI = 6
+
+LAYER_NAMES = {
+	[1] = "LAYER_BACKGROUND",
+	[2] = "LAYER_SHADOW",
+	[3] = "LAYER_OBJECTS",
+	[4] = "LAYER_FRONT",
+	[5] = "LAYER_HUD",
+	[6] = "LAYER_UI",
+}
+
 function Game:draw_game()
-	local function reset_transform()
-		love.graphics.origin()
-		love.graphics.scale(self.cam_zoom)
-	end
-
 	-- local real_camx, real_camy = math.cos(self.t) * 10, math.sin(self.t) * 10;
-	self.camera:apply_transform()
-	local base_canvas = love.graphics.getCanvas()
 	
-	love.graphics.setCanvas(self.object_canvas)
-	love.graphics.clear()
-	self.camera:apply_transform()
-
-	-- Draw actors
-	for _,actor in pairs(self.actors) do
-		if not actor.is_player then
-			actor:draw()
-		end
-	end
-	for _,p in pairs(self.players) do
-		p:draw()
-	end
-
-	Particles:draw()
+	---------------------------------------------
+	
+	self:draw_on_layer(LAYER_BACKGROUND, function()
+		love.graphics.clear()
+		self.level:draw()
+	end)
 	
 	---------------------------------------------
 
-	-- Buffering actors UI so that we can draw their shadows but still draw then in front of everything
-	local draw_front_objects = function()
-		Particles:draw_front()
-		reset_transform()		
+	self:draw_on_layer(LAYER_OBJECTS, function()
+		love.graphics.clear()
+
+		-- Draw actors
+		for _,actor in pairs(self.actors) do
+			if not actor.is_player and actor.is_active then
+				actor:draw()
+			end
+		end
+		for _,p in pairs(self.players) do
+			p:draw()
+		end
+	
+		Particles:draw()
+	end)
+	
+	---------------------------------------------
+
+	self:draw_on_layer(LAYER_HUD, function()
+		love.graphics.clear()
 		for k,actor in pairs(self.actors) do
 			if actor.draw_hud and self.game_ui.is_visible then     actor:draw_hud()    end
 		end
-		self.camera:apply_transform()
-	end
-
-	love.graphics.setCanvas(self.front_canvas)
-	love.graphics.clear()
-	draw_front_objects()
-	love.graphics.setCanvas(self.object_canvas)
-	love.graphics.setCanvas(base_canvas)
+	end, {apply_camera = false})
 	
 	---------------------------------------------
 
-	self.level:draw()
+	self:draw_on_layer(LAYER_SHADOW, function()
+		love.graphics.clear()
+
+		exec_color({0,0,0, 0.5}, function()
+			love.graphics.draw(self:get_layer(LAYER_OBJECTS).canvas, self.shadow_ox, self.shadow_oy)
+			love.graphics.draw(self:get_layer(LAYER_HUD).canvas,     self.shadow_ox, self.shadow_oy)
+		end)
+	end, {apply_camera = false})
+
+	-----------------------------------------------------
 	
-	reset_transform()
-	love.graphics.setColor(1,1,1, 1)
-	exec_color({0,0,0, 0.5}, function()
-		love.graphics.draw(self.object_canvas, self.shadow_ox, self.shadow_oy)
-		love.graphics.draw(self.front_canvas,  self.shadow_ox, self.shadow_oy)
+	self:draw_on_layer(LAYER_FRONT, function()
+		love.graphics.clear()
+
+		self:draw_smoke_canvas()
+		self.level:draw_front()
+
+		Particles:draw_front()
 	end)
-	love.graphics.draw(self.object_canvas, 0, 0)
-	
-	self:draw_smoke_canvas()
-	self.camera:apply_transform()
-	self.level:draw_front()
 
 	-----------------------------------------------------
 	
 	-- UI
-	reset_transform()
-	love.graphics.draw(self.front_canvas, 0, 0)
-	self.game_ui:draw()
-	self.level:draw_ui()
-	if self.debug.colview_mode then
-		self.debug:draw_colview()
-	end
+	self:draw_on_layer(LAYER_UI, function()
+		love.graphics.clear()
+
+		love.graphics.draw(self.front_canvas, 0, 0)
+		self.game_ui:draw()
+		self.level:draw_ui()
+		if self.debug.colview_mode then
+			self.debug:draw_colview()
+		end
+
+		-- Menus
+		if self.menu_manager.cur_menu then
+			self.menu_manager:draw()
+		end
+		
+		if self.debug_mode then
+			self.debug:draw()
+		end
+	end)
 
 	-----------------------------------------------------
 
-	-- Menus
-	if self.menu_manager.cur_menu then
-		self.menu_manager:draw()
+	love.graphics.origin()
+	love.graphics.scale(1)
+	for i = 1, #self.layers do
+		self.layers[i]:draw(0, 0)
 	end
-
-	
-	if self.debug_mode then
-		self.debug:draw()
-	end
-
-	-----------------------------------------------------
 
 	--'Memory used (in kB): ' .. collectgarbage('count')
 	
@@ -768,7 +823,7 @@ function Game:start_game()
 
 	self.menu_manager:set_can_pause(true)
 	self:set_zoom(1)
-	self:set_camera(0, 0)
+	self:set_camera_position(0, 0)
 end
 
 function Game:on_red_button_pressed()

@@ -4,7 +4,7 @@ local sounds = require "data.sounds"
 
 local Enemy = require "scripts.actor.enemy"
 local Guns = require "data.guns"
-local Button = require "data.enemies.button_big"
+local Button = require "scripts.actor.enemies.button_big"
 local CollisionInfo = require "scripts.physics.collision_info"
 
 local ButtonBigGlass = Enemy:inherit()

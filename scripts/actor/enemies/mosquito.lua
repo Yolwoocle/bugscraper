@@ -1,6 +1,6 @@
 require "scripts.util"
 local Enemy = require "scripts.actor.enemy"
-local Fly = require "data.enemies.fly"
+local Fly = require "scripts.actor.enemies.fly"
 local sounds = require "data.sounds"
 local images = require "data.images"
 

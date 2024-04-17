@@ -172,13 +172,22 @@ local function generate_menus()
         { "🔄 RETRY", function() game:new_game() end },
         { "🎚 OPTIONS", func_set_menu('options') },
         { "❤ CREDITS", func_set_menu('credits' ) },
-        { "[DEBUG] VIEW WAVES", func_set_menu('view_waves' ) },
+        { "💡 FEEDBACK", func_set_menu("feedback") },
         { "🔚 QUIT", quit_game },
+        { "" },
+        { "[DEBUG] VIEW WAVES", func_set_menu('view_waves' ) },
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL, draw_elevator_progress)
     if OPERATING_SYSTEM == "Web" then
         -- Disable quitting on web
-        menus.pause.items[7].is_selectable = false
+        menus.pause.items[8].is_selectable = false
     end
+    
+    menus.feedback = Menu:new(game, {
+        { "<<<<<<<<< FEEDBACK >>>>>>>>>" },
+        { "" },
+        { "REPORT A BUG 🔗", func_url("https://github.com/Yolwoocle/bugscraper/issues")},
+        { "SUGGEST A FEATURE 🔗", func_url("https://github.com/Yolwoocle/bugscraper/issues")},
+    }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL, draw_elevator_progress)
 
     menus.options = Menu:new(game, {
         { "<<<<<<<<< OPTIONS >>>>>>>>>" },

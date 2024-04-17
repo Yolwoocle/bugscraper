@@ -2,7 +2,7 @@ require "scripts.util"
 local Enemy = require "scripts.actor.enemy"
 local images = require "data.images"
 
-local ButtonPressed = require "data.enemies.button_big_pressed"
+local ButtonPressed = require "scripts.actor.enemies.button_big_pressed"
 
 local ButtonBig = Enemy:inherit()
 

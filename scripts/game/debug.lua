@@ -14,6 +14,7 @@ function Debug:init(game)
     self.info_view = false
     self.joystick_view = false
     self.instant_end = false
+    self.layer_view = false
 
     self.notification_message = ""
     self.notification_timer = 0.0
@@ -72,6 +73,10 @@ function Debug:init(game)
             self.instant_end = not self.instant_end
         end},
         
+        ["y"] = {"toggle layer view", function()
+            self.layer_view = not self.layer_view
+        end},
+        
         ["g"] = {"next gun for P1", function()
             local p = self.game.players[1]
             if p then
@@ -95,6 +100,30 @@ function Debug:init(game)
             end 
 
             game:new_actor(instance)
+        end},
+
+        ["z"] = {"zoom -", function()
+            self.game:set_zoom(self.game:get_zoom() - 0.1)
+        end},
+        ["x"] = {"zoom +", function()
+            self.game:set_zoom(self.game:get_zoom() + 0.1)
+        end},
+        
+        ["left"] = {"move camera left", function()
+            local cam_x, cam_y = self.game:get_camera_position()
+            self.game:set_camera_position(cam_x - 8, cam_y)
+        end},
+        ["right"] = {"move camera right", function()
+            local cam_x, cam_y = self.game:get_camera_position()
+            self.game:set_camera_position(cam_x + 8, cam_y)
+        end},
+        ["up"] = {"move camera up", function()
+            local cam_x, cam_y = self.game:get_camera_position()
+            self.game:set_camera_position(cam_x, cam_y - 8)
+        end},
+        ["down"] = {"move camera down", function()
+            local cam_x, cam_y = self.game:get_camera_position()
+            self.game:set_camera_position(cam_x, cam_y + 8)
         end},
     }
 
@@ -317,6 +346,23 @@ function Debug:draw_colview()
 		local x,y,w,h = Collision.world:getRect(it)
 		rect_color({0,1,0,.2},"fill", x, y, w, h)
 		rect_color({0,1,0,.5},"line", x, y, w, h)
+	end
+end
+
+function Debug:draw_layers()
+    local x = 0
+	local y = 0
+	for i=1, #self.game.layers do
+		rect_color({1,1,1,0.8}, "fill", x, y, CANVAS_WIDTH, CANVAS_HEIGHT)
+		love.graphics.draw(self.game.layers[i].canvas, x, y)
+		print_outline(nil, nil, concat(i, " ", LAYER_NAMES[i]), x, y, nil, nil, 2)
+		rect_color(COL_RED, "line", x, y, CANVAS_WIDTH, CANVAS_HEIGHT)
+
+		x = x + (CANVAS_WIDTH)
+		if x + CANVAS_WIDTH > SCREEN_WIDTH then
+			x = 0
+			y = y + CANVAS_HEIGHT
+		end
 	end
 end
 
