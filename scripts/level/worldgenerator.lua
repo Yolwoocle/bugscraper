@@ -3,78 +3,53 @@ local Class = require "scripts.meta.class"
 
 local WorldGenerator = Class:inherit()
 
-function WorldGenerator:init(map, seed)
+function WorldGenerator:init(map)
 	self.map = map
-	self.seed = seed or love.math.random(-999999, 999999)
-	self.noise_scale = 7
-	self.scale_y = 3
 end
 
-function WorldGenerator:generate(seed)
+function WorldGenerator:reset()
+	self.map:reset()
+end
+
+function WorldGenerator:generate_cabin(x, y, w, h)
+	self:reset()
+
 	local map = self.map
-	local seed = self.seed
-	local seed_details = self.seed + 50.3242
 	
-	local map_w = map.width
-	local map_h = map.height
-	local map_mid_w = floor(map.width / 2) 
-	local map_mid_h = floor(map.height / 2)
-
-	local floor_oy = -3
-
-	map:reset()
-
-	-- Box around map 
-	--self:make_box()
-	--[[
-
-	-- Generate cave
-	map:for_all_tiles(function(tile, x, y)
-		local s = 7
-		local n = noise01(seed, x/s, y/s) 
-		-- More likely to have block the farther away
-		--local thresh = distsqr(x/map_mid_w, y/map_mid_h, 1, 1) 
-		local thresh = (y+floor_oy)/map_h 
-
-		if n < thresh + noise(seed_details, x/s, y/s)*0.5 then 
-			map:set_tile(x, y, 2)
-		end
-	end)
-	--]]
-end
-
-function WorldGenerator:make_box(w, h)
-	local map = self.map
-	local ox = 0
-	local oy = 1
-
-	local ax, ay = floor((map.width - w)/2) + ox, floor((map.height - h)/2) + oy
+	-- local ax, ay = floor((map.width - w)/2) + ox, floor((map.height - h)/2) + oy
+	-- local bx, by = ax+w-1, ay+h-1
+	local ax, ay = x, y
 	local bx, by = ax+w-1, ay+h-1
-	self.box_ax, self.box_ay, self.box_bx, self.box_by = ax, ay, bx, by
+	self.box_ax,  self.box_ay,  self.box_bx,  self.box_by  = ax,    ay,    bx,    by
 	self.box_rax, self.box_ray, self.box_rbx, self.box_rby = ax*BW, ay*BW, bx*BW, by*BW
-
-	-- Floor/Ceiling
-	for ix=ax, bx do
-		map:set_tile(ix, ay, 1)
-		map:set_tile(ix, by, 1)
-	end
-	-- Left/Right walls
-	for iy=ay, by do
-		map:set_tile(ax, iy, 1)
-		map:set_tile(bx, iy, 1)
-	end
-
-	-- interior
-	-- for ix=ax+1, bx-1 do
-	-- 	for iy=ay+1, by-1 do
-	-- 		map:set_tile(ix, iy, 5)
-	-- 	end
-	-- end
-
+	
+	self:write_box(ax, ay, bx, by, 1)
+	
 	-- chains
 	for iy = 0,ay-1 do
 		map:set_tile(4, iy, 4)
 		map:set_tile(map.width-1-4, iy, 4)
+	end
+end
+
+function WorldGenerator:generate_cafeteria()
+	self:reset()
+	self:write_box(2, 2, 68, 15, 1)
+
+	-- table
+	self:write_box(31, 13, 45, 13, 3)
+end
+
+function WorldGenerator:write_box(ax, ay, bx, by, value)
+	-- Floor/Ceiling
+	for ix=ax, bx do
+		self.map:set_tile(ix, ay, value)
+		self.map:set_tile(ix, by, value)
+	end
+	-- Left/Right walls
+	for iy=ay, by do
+		self.map:set_tile(ax, iy, value)
+		self.map:set_tile(bx, iy, value)
 	end
 end
 

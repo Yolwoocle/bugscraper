@@ -46,14 +46,14 @@ function vector_dot(ax, ay, bx, by)
 end
 
 function bounce_vector_cardinal(incoming_x, incoming_y, normal_x, normal_y)
-	-- https://gamedev.stackexchange.com/questions/23672/determine-resulting-angle-of-wall-collision
+	-- thanks to https://gamedev.stackexchange.com/questions/23672/determine-resulting-angle-of-wall-collision
 	-- If n is a normalized vector, and v is the incoming direction, then what you want is −(2(n · v) n − v)
 	if normal_x ~= 0 then    return sign(normal_x) * abs(incoming_x), incoming_y    end
 	if normal_y ~= 0 then    return incoming_x, sign(normal_y) * abs(incoming_y)    end
 end
 
 function bounce_vector(incoming_x, incoming_y, normal_x, normal_y)
-	-- https://math.stackexchange.com/questions/13261/how-to-get-a-reflection-vector
+	-- thanks to https://math.stackexchange.com/questions/13261/how-to-get-a-reflection-vector
 	-- r = d−2(d⋅n)n
 	local dot = vector_dot(incoming_x, incoming_y, normal_x, normal_y)
 	local vx, vy = 2*dot*normal_x, 2*dot*normal_y 	
@@ -62,6 +62,7 @@ end
 
 
 function color(hex)
+	-- thanks to chatgpt :saluting_face:
 	if not hex then  return {1, 1, 1}  end
 	assert(type(hex) == "number", "incorrect type for 'hex' ("..type(hex).."), argument given should be number")
 
@@ -649,7 +650,7 @@ function random_weighted(li, rng)
 		end
 		rnd = rnd - li[i][2]
 	end
-	assert("Random_weighted out of range // Something has gone wrong and your code definitely sucks!")
+	assert("Random_weighted out of range. This is NOT supposed to happen: something has definitely gone wrong and your code sucks!")
 end
 
 function random_polar(rad)
@@ -807,9 +808,17 @@ end
 
 function cerp(a,b,t)
 	-- "constant" interpolation?
-	-- 2024 leo here: wtf is this
+	-- 2024 leo here: wtf is this shit
 	if abs(a-b) <= t then    return b    end
 	return a + sign0(b-a)*t
+end
+
+function move_toward(from, to, delta)
+    if math.abs(to - from) <= delta then
+        return to
+    else
+        return from + sign(to - from) * delta
+    end
 end
 
 function lerp(a,b,t)

@@ -398,22 +398,6 @@ function Game:draw()
 	end
 end
 
-LAYER_BACKGROUND = 1
-LAYER_SHADOW = 2
-LAYER_OBJECTS = 3
-LAYER_FRONT = 4
-LAYER_HUD = 5
-LAYER_UI = 6
-
-LAYER_NAMES = {
-	[1] = "LAYER_BACKGROUND",
-	[2] = "LAYER_SHADOW",
-	[3] = "LAYER_OBJECTS",
-	[4] = "LAYER_FRONT",
-	[5] = "LAYER_HUD",
-	[6] = "LAYER_UI",
-}
-
 function Game:draw_game()
 	-- local real_camx, real_camy = math.cos(self.t) * 10, math.sin(self.t) * 10;
 	
@@ -449,7 +433,7 @@ function Game:draw_game()
 		for k,actor in pairs(self.actors) do
 			if actor.draw_hud and self.game_ui.is_visible then     actor:draw_hud()    end
 		end
-	end, {apply_camera = false})
+	end)--, {apply_camera = false})
 	
 	---------------------------------------------
 
@@ -494,7 +478,7 @@ function Game:draw_game()
 		if self.debug_mode then
 			self.debug:draw()
 		end
-	end)
+	end, {apply_camera = false})
 
 	-----------------------------------------------------
 
@@ -819,7 +803,6 @@ function Game:start_game()
 	self.move_logo = true
 	self.game_state = GAME_STATE_PLAYING
 	self.music_player:set_disk("w1")
-	self.level.is_hole_stencil_enabled = true
 
 	self.menu_manager:set_can_pause(true)
 	self:set_zoom(1)

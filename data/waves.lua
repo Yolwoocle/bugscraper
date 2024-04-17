@@ -1,5 +1,6 @@
 require "scripts.util"
 local images = require "data.images"
+local backgrounds = require "data.backgrounds"
 
 local Class = require "scripts.meta.class"
 local Gun = require "scripts.game.gun"
@@ -7,31 +8,54 @@ local Wave = require "scripts.level.wave"
 local E = require "data.enemies"
 
 local waves = {
+	-- Wave:new({
+	-- 	min = 1,
+	-- 	max = 1,
+	-- 	enemies = {	
+	-- 		-- {E.Woodlouse, 4},
+	-- 		-- {E.DungBeetle, 4},
+	-- 		{E.Fly, 3},
+	-- 		-- {E.VendingMachine, 3},
+	-- 		-- {E.HoneypotAnt, 4},
+	-- 		-- {E.FlyingDung, 4},
+	-- 		-- {E.SnailShelled, 3},
+	-- 		-- {E.PoisonCloud, 4},
+	-- 		-- {E.SnailShelled, 4},
+
+	-- 		-- {E.Mosquito, 4},
+	-- 		-- {E.HoneypotAnt, 4},
+	-- 		-- {E.Larva, 4},
+	-- 		-- {E.Fly, 3},
+	-- 		-- {E.SpikedFly, 3},
+	-- 		-- {E.SnailShelled, 3},
+	-- 		-- {E.Slug, 2},
+	-- 		-- {E.Grasshopper, 1},
+	-- 		-- {E.MushroomAnt, 10},
+	-- 	}
+	-- }),
+
+
 	Wave:new({
 		min = 1,
 		max = 1,
-		enemies = {	
-			-- {E.Woodlouse, 4},
-			-- {E.DungBeetle, 4},
+		enemies = {
+			{E.Larva, 3},
 			{E.Fly, 3},
-			-- {E.VendingMachine, 3},
-			-- {E.HoneypotAnt, 4},
-			-- {E.FlyingDung, 4},
-			-- {E.SnailShelled, 3},
-			-- {E.PoisonCloud, 4},
-			-- {E.SnailShelled, 4},
-
-			-- {E.Mosquito, 4},
-			-- {E.HoneypotAnt, 4},
-			-- {E.Larva, 4},
-			-- {E.Fly, 3},
-			-- {E.SpikedFly, 3},
-			-- {E.SnailShelled, 3},
-			-- {E.Slug, 2},
-			-- {E.Grasshopper, 1},
-			-- {E.MushroomAnt, 10},
-		}
+		},
 	}),
+
+	Wave:new({
+		floor_type = FLOOR_TYPE_CAFETERIA,
+
+		roll_type = WAVE_ROLL_TYPE_FIXED,
+		enemies = {
+			{E.VendingMachine, 1, position = {550, 200}},
+		},
+		background = backgrounds.BackgroundCafeteria:new(),
+	}),
+
+	---------------------------------------------
+
 	Wave:new({
 		min = 4,
 		max = 6,
@@ -40,7 +64,7 @@ local waves = {
 			{E.Fly, 3},
 		},
 	}),
-
+	
 	Wave:new({
 		-- Woodlouse intro
 		min = 4,

@@ -20,14 +20,15 @@ function Level:init(game)
     self.game = game
 
 	-- Map & world gen
-	self.map = TileMap:new(30, 17)
+	self.map = TileMap:new(69, 17) --nice.
 	self.shaft_w, self.shaft_h = 26, 14
 	self.world_generator = WorldGenerator:new(self.map)
-	self.world_generator:generate(10203)
-	self.world_generator:make_box(self.shaft_w, self.shaft_h)
+	self.world_generator:reset()
+	self.world_generator:generate_cabin(2, 2, self.shaft_w, self.shaft_h)
 	
 	-- Bounding box
 	-- Don't try to understand, all you have to know is that it puts collision 
+	-- FIXME: the fuck is this
 	-- boxes around the elevator shaft
 	-- local map_w = self.map.width * BW
 	-- local map_h = self.map.height * BW
@@ -54,12 +55,13 @@ function Level:init(game)
 	-- Level info
 	self.floor = 0 --Floor n°
 	self.max_floor = #waves
+	self.current_wave = nil
 	
 	self.door_animation = false
 	self.door_offset = 0
 	self.has_switched_to_next_floor = false
 
-	self.floor_progress = 5.0
+	self.floor_progress = .0
 	self.level_speed = 0
 	self.def_level_speed = 400
 	self.elev_x, self.elev_y = 0, 0
@@ -79,7 +81,10 @@ function Level:init(game)
 
 	self.canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
 	self.is_hole_stencil_enabled = false
+	self.hole_stencil_start_timer = 0
 	self.hole_stencil_radius = 0
+	self.hole_stencil_radius_speed = 0
+	self.hole_stencil_radius_accel = 60
 end
 
 function Level:update(dt)
@@ -93,9 +98,7 @@ function Level:update(dt)
 	
 	self.flash_alpha = max(self.flash_alpha - dt, 0)
 
-	if self.is_hole_stencil_enabled then
-		self.hole_stencil_radius = self.hole_stencil_radius + dt * 40
-	end
+	self:update_cafeteria(dt)
 end
 
 function Level:update_elevator_progress(dt)
@@ -117,30 +120,28 @@ function Level:update_elevator_progress(dt)
 
 	-- Update door animation
 	if self.door_animation then
-		self.floor_progress = self.floor_progress - dt
+		self.floor_progress = self.floor_progress + dt
 
 		-- Manage elevator speed
-		if 5 > self.floor_progress and self.floor_progress > 3 then
+		if 0 <= self.floor_progress and self.floor_progress <= 2 then
 			-- Slow down
 			self.level_speed = max(0, self.level_speed - 18)
 		
-		elseif 1 > self.floor_progress then
+		elseif 4 <= self.floor_progress then
 			-- Speed up	
 			self.level_speed = min(self.level_speed + 10, self.def_level_speed)
 		end
 
 		-- Go to next floor once animation is finished
-		if self.floor_progress <= 0 then
-			print_debug("set to false")
-			self.floor_progress = 5.0
+		if 5.0 <= self.floor_progress then
+			self.floor_progress = 0.0
 			
 			self.door_animation = false
 			self.draw_enemies_in_bg = false
-			self.elevator.door:close()
 		end
 
 		-- Switch to next floor if just opened doors
-		if self.floor_progress < 4.2 and not self.has_switched_to_next_floor then
+		if 1.8 <= self.floor_progress and not self.has_switched_to_next_floor then
 			self.has_switched_to_next_floor = true
 			self:next_floor()
 		end
@@ -192,18 +193,34 @@ function Level:get_new_wave(wave_n)
 	return wave
 end
 
+function Level:get_floor_type()
+	if not self.current_wave then
+		return FLOOR_TYPE_NORMAL 
+	end
+	return self.current_wave:get_floor_type()
+end
+
+function Level:get_current_wave(wave)
+	return self.current_wave
+end
+
+function Level:set_current_wave(wave)
+	self.current_wave = wave
+end
+
 function Level:new_wave_buffer_enemies()
 	-- Spawn a bunch of enemies
 	local wave_n = clamp(self.floor + 1, 1, #waves) -- floor+1 because the floor indicator changes before enemies are spawned
 	local wave = self:get_new_wave(wave_n)
-
+	self:set_current_wave(wave)
+	
 	self.enemy_buffer = wave:spawn(self.door_ax, self.door_ay, self.door_bx, self.door_by)
-
+	wave:apply_side_effects(self)
+	
 	if self.background.change_bg_color then
 		self.background:change_bg_color(wave_n)
 	end
 end
-
 
 function Level:activate_enemy_buffer()
 	for k, e in pairs(self.enemy_buffer) do
@@ -212,27 +229,94 @@ function Level:activate_enemy_buffer()
 	self.enemy_buffer = {}
 end
 
+function Level:begin_cafeteria()
+	self.world_generator:generate_cafeteria()
+
+	self.hole_stencil_radius = 0
+	self.hole_stencil_radius_accel = 60
+
+	self.hole_stencil_start_timer = 2.0
+
+	game.camera:set_x_locked(false)
+	game.camera:set_y_locked(true)
+end
+
+function Level:update_cafeteria(dt)
+	if self.is_hole_stencil_enabled then
+		self.hole_stencil_radius_speed = self.hole_stencil_radius_speed + self.hole_stencil_radius_accel * dt
+		self.hole_stencil_radius_speed = math.min(self.hole_stencil_radius_speed, CANVAS_WIDTH)
+		
+		self.hole_stencil_radius = self.hole_stencil_radius + self.hole_stencil_radius_speed * dt
+		self.hole_stencil_radius = math.min(CANVAS_WIDTH, self.hole_stencil_radius) 
+	end
+
+	if self:get_floor_type() == FLOOR_TYPE_CAFETERIA then
+		self.hole_stencil_start_timer = math.max(0.0, self.hole_stencil_start_timer - dt)
+		if self.hole_stencil_start_timer <= 0 then
+			self.is_hole_stencil_enabled = true
+		end
+	end
+end
+
+function Level:end_cafeteria()
+	self.world_generator:generate_cabin()
+
+	self.is_hole_stencil_enabled = true
+	self.hole_stencil_radius = 0
+	self.hole_stencil_radius_speed = 0
+	self.hole_stencil_radius_accel = -60
+
+	game.camera:set_position(0, 0)
+	game.camera:set_x_locked(true)
+	game.camera:set_y_locked(true)
+end
+
 -----------------------------------------------------
+
+function Level:draw_with_hole(draw_func)
+	exec_on_canvas({self.canvas, stencil=true}, function()
+		game.camera:reset_transform()
+		love.graphics.clear()
+		
+		if self.is_hole_stencil_enabled then
+			love.graphics.stencil(function()
+				love.graphics.clear()
+				love.graphics.circle("fill", (self.door_ax + self.door_bx)/2, (self.door_ay + self.door_by)/2, self.hole_stencil_radius)
+			end, "increment")
+			love.graphics.setStencilTest("less", 1)
+		end
+		
+		draw_func()
+		
+		love.graphics.setStencilTest()
+		game.camera:apply_transform()
+	end)
+	love.graphics.draw(self.canvas, 0, 0)
+end
 
 function Level:draw()
 	self.background:draw()
 
-	self.map:draw()
-
-	if self.show_cabin then
-		self.elevator:draw(self.enemy_buffer)
-	end
+	self:draw_with_hole(function()
+		self.map:draw()
+	
+		if self.show_cabin then
+			self.elevator:draw(self.enemy_buffer)
+		end
+	end)
 
 	-- print_outline(nil, nil, tostring(self.floor_progress), 100, 100)
 	-- print_outline(nil, nil, tostring(self.door_animation), 100, 110)
 end
 
 function Level:draw_front(x,y)
-	self:draw_rubble()
-	
-	if self.show_cabin then
-		gfx.draw(images.cabin_walls, self.cabin_x, self.cabin_y)
-	end
+	self:draw_with_hole(function()
+		self:draw_rubble()
+		
+		if self.show_cabin then
+			gfx.draw(images.cabin_walls, self.cabin_x, self.cabin_y)
+		end
+	end)
 end
 
 function Level:draw_win_screen()

@@ -3,17 +3,36 @@ local function rgb(r,g,b)
 end
 
 local function color(hex)
-	if not hex then  return  {1.0, 1.0, 1.0}  end
-	if type(hex) ~= "number" then  return {1.0, 1.0, 1.0}  end
+    -- thaks to chatgpt :saluting_face:
+	if not hex then  return {1, 1, 1}  end
+	assert(type(hex) == "number", "incorrect type for 'hex' ("..type(hex).."), argument given should be number")
 
-	local b = hex % 256;  hex = (hex - b) / 256
-	local g = hex % 256;  hex = (hex - b) / 256
-	local r = hex % 256
-	return {r/255, g/255, b/255}
+	local r = math.floor(hex / 65536) % 256
+	local g = math.floor(hex / 256) % 256 
+	local b = hex % 256
+	return {r/255, g/255, b/255, 1.0}
 end
 
 CANVAS_WIDTH = 480
 CANVAS_HEIGHT = 270
+
+--------------------------------------------- 
+
+LAYER_BACKGROUND = 1
+LAYER_SHADOW = 2
+LAYER_OBJECTS = 3
+LAYER_FRONT = 4
+LAYER_HUD = 5
+LAYER_UI = 6
+
+LAYER_NAMES = {
+	[1] = "LAYER_BACKGROUND",
+	[2] = "LAYER_SHADOW",
+	[3] = "LAYER_OBJECTS",
+	[4] = "LAYER_FRONT",
+	[5] = "LAYER_HUD",
+	[6] = "LAYER_UI",
+}
 
 --------------------------------------------- 
 
@@ -465,4 +484,15 @@ UPGRADE_TARGET_ALL = "all"
 
 --------------------------------------------- 
 
-SMASH_EASTER_EGG_PROBABILITY = 1/50
+FLOOR_TYPE_NORMAL = "normal"
+FLOOR_TYPE_CAFETERIA = "cafeteria"
+
+--------------------------------------------- 
+
+WAVE_ROLL_TYPE_RANDOM = "random"
+WAVE_ROLL_TYPE_FIXED = "fixed"
+
+--------------------------------------------- 
+
+-- Go ahead. Change it to 1. I'm not here to stop you
+SMASH_EASTER_EGG_PROBABILITY = 0.02

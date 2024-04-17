@@ -11,8 +11,9 @@ function Elevator:init(level)
     self.level = level
 
 	self.door = ElevatorDoor:new(self.level.cabin_x + 154, self.level.cabin_y + 122)
+	self.door:close()
 
-	self.floor_progress = 3.5
+	self.floor_progress = 0.0
 	self.door_animation = false
 	self.has_switched_to_next_floor = false 
 	self.draw_enemies_in_bg = false
@@ -26,22 +27,26 @@ end
 
 function Elevator:update_door_animation(dt)
 	self.door:update(dt)
-	
-	-- 4+: closed doors / 4-3: open doors / 3-2: idle / 2-1: close doors
-	if self.floor_progress > 4 then
+	if self.floor_progress == 0 then return end
+
+	--  4+: closed doors / 4-3: open doors / 3-2: idle / 2-1: close doors
+	-- 0-1: closed doors / 1-2: open doors / 2-3: idle / 3+: close doors
+	if 0 < self.floor_progress and self.floor_progress <= 1 then
 		self.door:close()
 	
-	elseif self.floor_progress > 3 then
+	elseif self.floor_progress <= 2 then
 		self.door:open()
 		sounds.elev_door_open.source:play()
 	
-	elseif self.floor_progress > 2 then
+	elseif self.floor_progress <= 3 then
 		-- Opened door
 	
-	elseif self.floor_progress > 1 then
-		self.door:close()
+	elseif self.floor_progress <= 4 then
+		if self.level:get_floor_type() == FLOOR_TYPE_NORMAL then
+			self.door:close()
+			sounds.elev_door_close.source:play()
+		end
 		self.level:activate_enemy_buffer()
-		sounds.elev_door_close.source:play()
 	end
 end
 

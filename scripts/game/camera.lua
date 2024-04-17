@@ -9,9 +9,23 @@ function Camera:init()
     self.ox = 0.0
     self.oy = 0.0
     self.zoom = 1.0
+    
+    self.w = CANVAS_WIDTH
+    self.h = CANVAS_HEIGHT
+
+    self.min_x, self.max_x = 0, 640
+    self.min_y, self.max_y = 0, 0
+    self.target_x = 0.0
+    self.target_y = 0.0
+
+    self.follow_speed = 5
+    self.max_speed = 200
 
     self.screenshake_q = 0.0
 	self.screenshake_speed = 20
+
+    self.is_x_locked = true
+    self.is_y_locked = true
 
     self:reset()
 end
@@ -19,7 +33,47 @@ end
 function Camera:update(dt)
 	if not Options:get("screenshake_on") then self.ox, self.oy = 0,0 end
 
+    self:follow_players(dt)  
+    self:clamp_camera_position(dt)
+    self:follow_target(dt)
     self:apply_screenshake(dt)
+end
+
+function Camera:follow_target(dt)
+    local speed = math.min(dist(self.x, self.y, self.target_x, self.target_y) * self.follow_speed, self.max_speed)
+    self.x = move_toward(self.x, self.target_x, speed * dt)
+    self.y = move_toward(self.y, self.target_y, speed * dt)
+end
+
+function Camera:clamp_camera_position(dt)
+    self.x = clamp(self.x, self.min_x, self.max_x)
+    self.y = clamp(self.y, self.min_y, self.max_y)
+    self.target_x = clamp(self.target_x, self.min_x, self.max_x)
+    self.target_y = clamp(self.target_y, self.min_y, self.max_y)
+end
+
+function Camera:follow_players(dt)
+    if Input:get_number_of_users() == 0 then 
+        return
+    end 
+
+    local total_n = game:get_number_of_alive_players()
+    local mid_x = 0
+    local mid_y = 0
+    for i = 1, MAX_NUMBER_OF_PLAYERS do 
+        local player = game.players[i]
+        if player then
+            mid_x = mid_x + (player.x / total_n)
+            mid_y = mid_y + (player.y / total_n)
+        end
+    end
+
+    if not self.is_x_locked then
+        self.target_x = mid_x - self.w/2
+    end
+    if not self.is_y_locked then
+        self.target_y = mid_y - self.h/2
+    end
 end
 
 function Camera:apply_screenshake(dt)
@@ -40,6 +94,22 @@ end
 function Camera:screenshake(q)
 	if not Options:get('screenshake_on') then  return   end
     self.screenshake_q = math.max(self.screenshake_q, q)
+end
+
+function Camera:get_x_locked()
+    return self.is_x_locked
+end
+
+function Camera:set_x_locked(val)
+    self.is_x_locked = val
+end
+
+function Camera:get_y_locked()
+    return self.is_y_locked
+end
+
+function Camera:set_y_locked(val)
+    self.is_y_locked = val
 end
 
 function Camera:get_real_position()
@@ -71,12 +141,16 @@ function Camera:reset()
     self.zoom = 1
 end
 
-function Camera:apply_transform()
-    local x, y = self:get_real_position()
-
+function Camera:reset_transform()
     love.graphics.origin()
 	love.graphics.scale(1)
-	love.graphics.translate(-x, -y)
+end
+
+function Camera:apply_transform()
+    self:reset_transform()
+
+    local x, y = self:get_real_position()
+	love.graphics.translate(math.floor(-x), math.floor(-y))
 	love.graphics.scale(self.zoom)
 end
 
