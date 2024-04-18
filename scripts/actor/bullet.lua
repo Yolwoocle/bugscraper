@@ -7,6 +7,7 @@ local Bullet = Actor:inherit()
 function Bullet:init(gun, player, x, y, w, h, vx, vy)
 	local x, y = x-w/2, y-h/2
 	self:init_actor(x, y, w, h, gun.bullet_spr or images.bullet)
+	self.name = "bullet"
 	self.gun = gun
 	self.player = player
 	self.is_enemy_bul = player.is_enemy

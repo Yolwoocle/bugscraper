@@ -3,24 +3,28 @@ local Upgrade = require "scripts.upgrade.upgrade"
 local images= require "data.images"
 local EffectSlowness = require "scripts.effect.effect_slowness"
 
-local UpgradeMoreLife = Upgrade:inherit()
+local UpgradeMilk = Upgrade:inherit()
 
-function UpgradeMoreLife:init()
+function UpgradeMilk:init()
     self:init_upgrade()
     self.name = "upgrade_more_life"
-    self.sprite = images.upgrade_coffee
+    self.sprite = images.upgrade_milk
+
+    self.color = COL_WHITE
+    self.title = "MILK"
+    self.description = "+1 permanent ❤"
 end
 
-function UpgradeMoreLife:update(dt)
+function UpgradeMilk:update(dt)
     self:update_upgrade(dt)
 end
 
-function UpgradeMoreLife:on_apply(player)
+function UpgradeMilk:on_apply(player)
     player:add_max_life(1)
     player:heal(1)
 end
 
-function UpgradeMoreLife:on_finish(player)
+function UpgradeMilk:on_finish(player)
 end
 
-return UpgradeMoreLife
+return UpgradeMilk

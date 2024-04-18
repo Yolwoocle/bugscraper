@@ -9,6 +9,10 @@ function Background:init_background(level)
 	self.speed = 0.0
 end
 
+function Background:set_level(level)
+	self.level = level
+end
+
 -----------------------------------------------------
 
 function Background:update(dt)

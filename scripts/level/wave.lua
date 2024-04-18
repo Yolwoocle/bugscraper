@@ -105,7 +105,7 @@ function Wave:spawn(ax, ay, bx, by)
 	return spawned_enemies
 end
 
-function Wave:apply_side_effects(level)
+function Wave:load_background(level)
 	if self.background then
 		level:set_background(self.background)
 	end

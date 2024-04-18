@@ -1,5 +1,6 @@
 require "scripts.util"
 local Class = require "scripts.meta.class"
+local Timer = require "scripts.timer"
 local Enemies = require "data.enemies"
 local TileMap = require "scripts.level.tilemap"
 local WorldGenerator = require "scripts.level.worldgenerator"
@@ -29,7 +30,7 @@ function Level:init(game)
 	
 	-- Bounding box
 	-- Don't try to understand, all you have to know is that it puts collision 
-	-- FIXME: the fuck is this
+	-- FIXME: the fuck is this, commented it out
 	-- boxes around the elevator shaft
 	-- local map_w = self.map.width * BW
 	-- local map_h = self.map.height * BW
@@ -58,10 +59,7 @@ function Level:init(game)
 	self.max_floor = #waves
 	self.current_wave = nil
 	
-	self.door_animation = false
-	self.door_offset = 0
-	self.has_switched_to_next_floor = false
-
+	self.door_animation_state = "off"
 	self.floor_progress = .0
 	self.level_speed = 0
 	self.def_level_speed = 400
@@ -82,11 +80,16 @@ function Level:init(game)
 
 	self.canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
 	self.cafeteria_animation_state = "off"
+	self.close_door_flag = false
+	self.force_next_wave_flag = false
+
 	self.is_hole_stencil_enabled = true
-	self.hole_stencil_start_timer = 0
+	self.hole_stencil_pause_radius = CANVAS_WIDTH
+	self.hole_stencil_max_radius = CANVAS_WIDTH
+	self.hole_stencil_start_timer = Timer:new(2.0)
 	self.hole_stencil_radius = 0
 	self.hole_stencil_radius_speed = 0
-	self.hole_stencil_radius_accel = 200
+	self.hole_stencil_radius_accel = 500
 	self.hole_stencil_radius_accel_sign = 1
 end
 
@@ -100,55 +103,77 @@ function Level:update(dt)
 	self.elevator:update(dt)
 	
 	self.flash_alpha = max(self.flash_alpha - dt, 0)
-
+	
 	self:update_cafeteria(dt)
 end
 
-function Level:update_elevator_progress(dt)
-	-- Only switch to next floor until all enemies killed
-	if not self.door_animation and game.enemy_count <= 0 then
+function Level:check_for_next_wave(dt)
+	if (#self.enemy_buffer == 0 and game.enemy_count <= 0) or self.force_next_wave_flag then
+		self.force_next_wave_flag = false
 		game.enemy_count = 0
 		
-		self.door_animation = true
-		self.has_switched_to_next_floor = false
 		self:new_wave_buffer_enemies()
-
-		-- TODO: move this somewhere else, this has nothing to do here wtf
-		for i = 1, MAX_NUMBER_OF_PLAYERS do
-			if self.game.waves_until_respawn[i] ~= -1 then
-				self.game.waves_until_respawn[i] = math.max(0, self.game.waves_until_respawn[i] - 1)
-			end
-		end
 	end
+end
 
-	-- Update door animation
-	if self.door_animation then
-		self.floor_progress = self.floor_progress + dt
+function Level:begin_door_animation()
+	if self:is_on_cafeteria() then
+		self:begin_cafeteria()
+	end
+	self.draw_enemies_in_bg = true
+	
+	self.floor_progress = 1.0
+	self.door_animation_state = "slowdown"
+end
 
-		-- Manage elevator speed
-		if 0 <= self.floor_progress and self.floor_progress <= 2 then
-			-- Slow down
-			self.level_speed = max(0, self.level_speed - 18)
+function Level:update_elevator_progress(dt)
+	self.floor_progress = math.max(0, self.floor_progress - dt)
+	
+	if self.door_animation_state == "off" then
+		self:check_for_next_wave(dt)
+		if #self.enemy_buffer > 0 then
+			self:begin_door_animation()			
+		end
 		
-		elseif 4 <= self.floor_progress then
-			-- Speed up	
-			if not self:is_on_cafeteria() then
-				self.level_speed = min(self.level_speed + 10, self.def_level_speed)
-			end
-		end
+	elseif self.door_animation_state == "slowdown" then
+		self.level_speed = max(0, self.level_speed - 18)
 
-		-- Go to next floor once animation is finished
-		if 5.0 <= self.floor_progress then
-			self.floor_progress = 0.0
-			
-			self.door_animation = false
-			self.draw_enemies_in_bg = false
-		end
-
-		-- Switch to next floor if just opened doors
-		if 1.8 <= self.floor_progress and not self.has_switched_to_next_floor then
-			self.has_switched_to_next_floor = true
+		if self.floor_progress <= 0 then
+			self.elevator:open_door()
 			self:next_floor()
+			self.floor_progress = 1.0
+			self.door_animation_state = "opening"
+		end
+
+	elseif self.door_animation_state == "opening" then
+		if self.floor_progress <= 0 then
+			self.floor_progress = 0.4
+			self.door_animation_state = "on"
+			self.close_door_flag = false
+			self:activate_enemy_buffer()
+		end
+		
+	elseif self.door_animation_state == "on" then
+		local condition_normal = (not self:is_on_cafeteria() and self.floor_progress <= 0) 
+		if condition_normal or self.close_door_flag then
+			self.elevator:close_door()
+			self.floor_progress = 1.0
+			self.close_door_flag = false
+			self.door_animation_state = "closing"
+		end
+	
+	elseif self.door_animation_state == "closing" then
+		if self.floor_progress <= 0 then
+			self.door_animation_state = "speedup"
+			self.floor_progress = 1.0
+		end
+	
+	elseif self.door_animation_state == "speedup" then
+		self.level_speed = min(self.level_speed + 10, self.def_level_speed)
+
+		if self.floor_progress <= 0 then
+			self.door_animation_state = "off"
+			self.floor_progress = 0.0
 		end
 
 	end
@@ -156,10 +181,12 @@ end
 
 function Level:set_background(background)
 	self.background = background
+	self.background:set_level(self)
 end
 
 function Level:next_floor(old_floor)
 	self.floor = self.floor + 1
+
 	if self.floor-1 == 0 then
 		self.game:start_game()
 	else
@@ -205,7 +232,7 @@ function Level:get_floor_type()
 	return self.current_wave:get_floor_type()
 end
 
-function Level:get_current_wave(wave)
+function Level:get_current_wave()
 	return self.current_wave
 end
 
@@ -214,13 +241,20 @@ function Level:set_current_wave(wave)
 end
 
 function Level:new_wave_buffer_enemies()
+	for i = 1, MAX_NUMBER_OF_PLAYERS do
+		if self.game.waves_until_respawn[i] ~= -1 then
+			self.game.waves_until_respawn[i] = math.max(0, self.game.waves_until_respawn[i] - 1)
+		end
+	end
+
 	-- Spawn a bunch of enemies
 	local wave_n = clamp(self.floor + 1, 1, #waves) -- floor+1 because the floor indicator changes before enemies are spawned
 	local wave = self:get_new_wave(wave_n)
 	
 	self.enemy_buffer = wave:spawn(self.door_ax, self.door_ay, self.door_bx, self.door_by)
-	wave:apply_side_effects(self)
+	print_debug("#self.enemy_buffer", #self.enemy_buffer)
 	
+	wave:load_background(self)
 	if self.background.change_bg_color then
 		self.background:change_bg_color(wave_n)
 	end
@@ -238,23 +272,19 @@ end
 -----------------------------------------------------
 
 function Level:begin_cafeteria()
+	self.cafeteria_animation_state = "wait"
 	self.hole_stencil_radius = 0
 	self.hole_stencil_radius_accel_sign = 1
 
-	self.hole_stencil_start_timer = 2.0
+	self.hole_stencil_start_timer:start()
 end
 
 function Level:update_cafeteria(dt)
 	if self.cafeteria_animation_state == "off" then
 		self.is_hole_stencil_enabled = false
-		if self:is_on_cafeteria() then
-			self.cafeteria_animation_state = "wait"
-			self:begin_cafeteria()
-		end
 		
 	elseif self.cafeteria_animation_state == "wait" then
-		self.hole_stencil_start_timer = math.max(0.0, self.hole_stencil_start_timer - dt)
-		if self.hole_stencil_start_timer <= 0 then
+		if self.hole_stencil_start_timer:update(dt) then
 			self.cafeteria_animation_state = "grow"
 			self.is_hole_stencil_enabled = true
 		end
@@ -265,33 +295,39 @@ function Level:update_cafeteria(dt)
 		if self.hole_stencil_radius >= CANVAS_WIDTH*0.5 then
 			self.cafeteria_animation_state = "on"
 			self.world_generator:generate_cafeteria()
+			game.music_player:set_disk("cafeteria")
 			
 			game.camera:set_x_locked(false)
 			game.camera:set_y_locked(true)
 		end
 	elseif self.cafeteria_animation_state == "on" then
 		self:update_hole_stencil(dt)
-		if not self:is_on_cafeteria() then
+		if game.enemy_count <= 0 then
+			self:new_wave_buffer_enemies()
+			self.floor_progress = math.huge
+			self.draw_enemies_in_bg = false
 			self:end_cafeteria()
+
 			self.cafeteria_animation_state = "shrink"
 		end
 		
 	elseif self.cafeteria_animation_state == "shrink" then
 		self:update_hole_stencil(dt)
 		if self.hole_stencil_radius <= 0 then
+			game.camera:set_position(0, 0)
+
 			self.is_hole_stencil_enabled = false
+			self.floor_progress = 0.0
 			self.cafeteria_animation_state = "off"
-			self.elevator.door:close()
 		end
 	end
 end
 
 function Level:update_hole_stencil(dt)
 	self.hole_stencil_radius_speed = self.hole_stencil_radius_speed + self.hole_stencil_radius_accel_sign * self.hole_stencil_radius_accel * dt
-	-- self.hole_stencil_radius_speed = clamp(self.hole_stencil_radius_speed, -CANVAS_WIDTH, CANVAS_WIDTH)
 	
 	self.hole_stencil_radius = self.hole_stencil_radius + self.hole_stencil_radius_speed * dt
-	self.hole_stencil_radius = clamp(self.hole_stencil_radius, 0, CANVAS_WIDTH)
+	self.hole_stencil_radius = clamp(self.hole_stencil_radius, 0, self.hole_stencil_max_radius)
 end
 
 function Level:is_on_cafeteria() 
@@ -301,12 +337,13 @@ end
 function Level:end_cafeteria()
 	self.world_generator:generate_cabin()
 
+	self.hole_stencil_radius = CANVAS_WIDTH
 	self.hole_stencil_radius_speed = 0
 	self.hole_stencil_radius_accel_sign = -1
 
-	game.camera:set_target_position(0, 0)
 	game.camera:set_x_locked(true)
 	game.camera:set_y_locked(true)
+	game.camera:set_target_position(0, 0)
 end
 
 -----------------------------------------------------
@@ -358,18 +395,13 @@ function Level:draw()
 		self.map:draw()
 	
 		if self.show_cabin then
-			self.elevator:draw(self.enemy_buffer)
+			self.elevator:draw(ternary(self.draw_enemies_in_bg, self.enemy_buffer, {}))
 		end
 	end)
 	if self.show_cabin then
 		self.elevator:draw_counter()
 	end
 
-	-- print_outline(nil, nil, tostring(self.cafeteria_animation_state), game.camera.x, 100)
-	-- print_outline(nil, nil, tostring(self.is_hole_stencil_enabled), game.camera.x, 110)
-	-- print_outline(nil, nil, tostring(self.hole_stencil_radius), game.camera.x, 120)
-	-- print_outline(nil, nil, tostring(self.background), game.camera.x, 130)
-	-- print_outline(nil, nil, tostring(self.door_animation), 100, 110)
 end
 
 function Level:draw_front(x,y)
@@ -380,6 +412,16 @@ function Level:draw_front(x,y)
 			gfx.draw(images.cabin_walls, self.cabin_x, self.cabin_y)
 		end
 	end)
+
+	-- print_outline(nil, nil, concat("is cafet ",self:is_on_cafeteria()), game.camera.x, 0)
+	-- print_outline(nil, nil, concat("door_animation_state ",self.door_animation_state), game.camera.x, 10)
+	-- print_outline(nil, nil, concat("cafeteria_animation_state ",self.cafeteria_animation_state), game.camera.x, 20)
+	-- print_outline(nil, nil, concat("enemy_count ", game.enemy_count), game.camera.x, 30)
+	-- print_outline(nil, nil, tostring(self.is_hole_stencil_enabled), game.camera.x, 110)
+	-- print_outline(nil, nil, tostring(self.hole_stencil_radius), game.camera.x, 120)
+	-- print_outline(nil, nil, tostring(self.background), game.camera.x, 130)
+	-- print_outline(nil, nil, tostring(self.door_animation), 100, 110)
+
 end
 
 function Level:draw_win_screen()
@@ -468,6 +510,7 @@ end
 function Level:get_floor()
 	return self.floor
 end
+
 function Level:set_floor(val)
 	self.floor = val
 end

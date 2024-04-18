@@ -36,7 +36,7 @@ function Camera:update(dt)
     self:follow_players(dt)  
     self:clamp_camera_position(dt)
     self:follow_target(dt)
-    self:apply_screenshake(dt)
+    -- self:update_screenshake(dt)
 end
 
 function Camera:follow_target(dt)
@@ -53,7 +53,7 @@ function Camera:clamp_camera_position(dt)
 end
 
 function Camera:follow_players(dt)
-    if Input:get_number_of_users() == 0 then 
+    if Input:get_number_of_users() == 0 or (self.is_x_locked and self.is_y_locked) then 
         return
     end 
 
@@ -76,7 +76,7 @@ function Camera:follow_players(dt)
     end
 end
 
-function Camera:apply_screenshake(dt)
+function Camera:update_screenshake(dt)
 	-- Screenshake
 	self.screenshake_q = max(0, self.screenshake_q - self.screenshake_speed * dt)
 
@@ -130,6 +130,7 @@ function Camera:get_position()
 end
 
 function Camera:set_position(x, y)
+    self:set_target_position(x, y)
     self.x = x
     self.y = y
 end

@@ -2,28 +2,20 @@ local Class = require "scripts.meta.class"
 local CollisionManager = require "scripts.physics.collision"
 local Player = require "scripts.actor.player"
 local Enemies = require "data.enemies"
-local Bullet = require "scripts.actor.bullet"
-local WorldGenerator = require "scripts.level.worldgenerator"
 local ParticleSystem = require "scripts.game.particles"
 local AudioManager = require "scripts.audio.audio"
 local MenuManager = require "scripts.ui.menu.menu_manager"
 local OptionsManager = require "scripts.game.options"
 local InputManager = require "scripts.input.input"
 local MusicPlayer = require "scripts.audio.music_player"
-local MusicDisk = require "scripts.audio.music_disk"
 local Level = require "scripts.level.level"
-local InputButton = require "scripts.input.input_button"
 local GameUI = require "scripts.ui.game_ui"
-local Loot = require "scripts.actor.loot"
 local Debug = require "scripts.game.debug"
 local Camera = require "scripts.game.camera"
 local Layer = require "scripts.graphics.layer"
 
 local skins = require "data.skins"
-local shaders  = require "data.shaders"
 local sounds = require "data.sounds"
-local images = require "data.images"
-local guns = require "data.guns"
 local utf8 = require "utf8"
 
 require "scripts.util"
@@ -264,8 +256,8 @@ local n = 0
 function Game:update(dt)
 	self.frame = self.frame + 1
 
-	self.camera:update(dt)
-
+	self.camera:update_screenshake(dt)
+	
 	self.frames_to_skip = max(0, self.frames_to_skip - 1)
 	local do_frameskip = self.slow_mo_rate ~= 0 and self.frame%self.slow_mo_rate ~= 0
 	if self.frames_to_skip > 0 or do_frameskip then
@@ -290,6 +282,8 @@ function Game:update(dt)
 end
 
 function Game:update_main_game(dt)
+	self.camera:update(dt)
+
 	if self.game_state == GAME_STATE_PLAYING then
 		self.time = self.time + dt
 	end

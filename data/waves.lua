@@ -34,21 +34,50 @@ local waves = {
 	-- 	}
 	-- }),
 
-
-	-- Wavec
+	Wave:new({
+		floor_type = FLOOR_TYPE_CAFETERIA,
+		roll_type = WAVE_ROLL_TYPE_FIXED,
+		
+		min = 1,
+		max = 1,
+		enemies = {
+			{E.Dummy, 1, position = {5000, 200}},
+			{E.UpgradeDisplay, 1, position = {544, 200}},
+			{E.UpgradeDisplay, 1, position = {608, 200}},
+			{E.UpgradeDisplay, 1, position = {672, 200}},
+		},
+	}),
+	
+	Wave:new({
+		min = 1,
+		max = 1,
+		enemies = {
+			{E.Larva, 3},
+			{E.Fly, 3},
+		},
+		background = backgrounds.BackgroundServers:new(),
+	}),
 	
 	Wave:new({
 		floor_type = FLOOR_TYPE_CAFETERIA,
 		
 		roll_type = WAVE_ROLL_TYPE_FIXED,
 		enemies = {
-			{E.VendingMachine, 1, position = {544, 10}},
-			{E.VendingMachine, 1, position = {608, 10}},
-			{E.VendingMachine, 1, position = {672, 10}},
+			{E.VendingMachine, 1, position = {544, 100}},
+			{E.VendingMachine, 1, position = {608, 100}},
+			{E.VendingMachine, 1, position = {672, 100}},
 		},
-		-- background = backgrounds.BackgroundCafeteria:new(),
 	}),
-	
+	Wave:new({
+		min = 1,
+		max = 1,
+		enemies = {
+			{E.Larva, 3},
+			{E.Fly, 3},
+		},
+		background = backgrounds.BackgroundDots:new(),
+	}),
+
 	---------------------------------------------
 	
 	Wave:new({
@@ -58,7 +87,6 @@ local waves = {
 			{E.Larva, 3},
 			{E.Fly, 3},
 		},
-		background = backgrounds.BackgroundServers:new(),
 	}),
 	
 	Wave:new({

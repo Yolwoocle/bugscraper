@@ -5,7 +5,6 @@ local BackgroundDots = Background:inherit()
 
 function BackgroundDots:init(level)
 	self:init_background(level)
-	self.level = level
 
 	self.speed = 0
 	self.def_speed = 10 --TODO

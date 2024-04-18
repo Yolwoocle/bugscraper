@@ -10,6 +10,7 @@ function MusicPlayer:init()
 		["intro"] =     MusicDisk:new(self, sounds.music_intro_unpaused.source, sounds.music_intro_paused.source),
 		["w1"] =        MusicDisk:new(self, sounds.music_w1_unpaused.source, sounds.music_w1_paused.source),
 		["game_over"] = MusicDisk:new(self, sounds.music_game_over.source, sounds.music_game_over.source),
+		["cafeteria"] = MusicDisk:new(self, sounds.music_cafeteria.source, sounds.music_cafeteria.source),
 	}
 
 	-- self.music_source    = sounds.music_galaxy_trip[1] 

@@ -25,29 +25,19 @@ function Elevator:update(dt)
 	self:update_door_animation(dt)
 end
 
+function Elevator:open_door(dt)
+	self.door:open()
+	sounds.elev_door_open.source:play()
+end
+
+function Elevator:close_door(dt)
+	self.door:close()
+	sounds.elev_door_close.source:play()
+end
+
 function Elevator:update_door_animation(dt)
 	self.door:update(dt)
 	if self.floor_progress == 0 then return end
-
-	--  4+: closed doors / 4-3: open doors / 3-2: idle / 2-1: close doors
-	-- 0-1: closed doors / 1-2: open doors / 2-3: idle / 3+: close doors
-	if 0 < self.floor_progress and self.floor_progress <= 1 then
-		self.door:close()
-	
-	elseif self.floor_progress <= 2 then
-		self.door:open()
-		sounds.elev_door_open.source:play()
-	
-	elseif self.floor_progress <= 3 then
-		-- Opened door
-	
-	elseif self.floor_progress <= 4 then
-		if self.level:get_floor_type() == FLOOR_TYPE_NORMAL then
-			self.door:close()
-			sounds.elev_door_close.source:play()
-		end
-		self.level:activate_enemy_buffer()
-	end
 end
 
 function Elevator:set_floor_progress(val)

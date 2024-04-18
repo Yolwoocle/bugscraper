@@ -5,7 +5,7 @@ local ButtonSmall = require "scripts.actor.enemies.button_small"
 local EffectSlowness = require "scripts.effect.effect_slowness"
 
 local UpgradeCoffee = require "scripts.upgrade.upgrade_coffee"
-local UpgradeMoreLife = require "scripts.upgrade.upgrade_more_life"
+local UpgradeMoreLife = require "scripts.upgrade.upgrade_milk"
 local UpgradeTea = require "scripts.upgrade.upgrade_tea"
 
 local utf8 = require "utf8"

@@ -3,6 +3,35 @@
 
 --
 ------------------------------------
+-- old timer class
+require "scripts.util"
+local Class = require "scripts.meta.class"
+
+local Timer = Class:inherit()
+
+function Timer:init(duration, on_timeout)
+    self.duration = duration
+    self.time = duration
+    self.on_timeout = on_timeout
+
+    self.is_marked_for_deletion = false
+end
+
+function Timer:update(dt)
+    if self.is_marked_for_deletion then
+        return
+    end
+
+    self.time = self.time - dt
+    if self.time <= 0 then
+        self.on_timeout()
+        self.is_marked_for_deletion = true
+    end
+end
+
+return Timer
+
+------------------------------------
 
 -- View layers
 	local x = 0
@@ -19,29 +48,6 @@
 			y = y + CANVAS_HEIGHT
 		end
 	end
-
-------------------------------------
-
-
-function Level:draw_with_hole(draw_func)
-	exec_on_canvas({self.canvas, stencil=true}, function()
-		love.graphics.clear()
-		
-		if self.is_hole_stencil_enabled then
-			love.graphics.stencil(function()
-				love.graphics.clear()
-				love.graphics.circle("fill", (self.door_ax + self.door_bx)/2, (self.door_ay + self.door_by)/2, self.hole_stencil_radius)
-			end, "increment")
-			love.graphics.setStencilTest("less", 1)
-		end
-	
-		draw_func()
-		
-		love.graphics.setStencilTest()
-	end)
-	love.graphics.draw(self.canvas, 0, 0)
-end
-
 
 ------------------------------------
 

@@ -77,6 +77,16 @@ function Debug:init(game)
             self.layer_view = not self.layer_view
         end},
         
+        ["c"] = {"set cam target", function()
+            game.camera:set_x_locked(true)
+            game.camera:set_y_locked(true)
+            game.camera:set_target_position(0, 100)
+        end},
+        
+        ["b"] = {"toggle cabin view", function()
+            game.level.show_cabin = not game.level.show_cabin
+        end},
+        
         ["g"] = {"next gun for P1", function()
             local p = self.game.players[1]
             if p then
@@ -142,7 +152,7 @@ function Debug:debug_action(key, scancode, isrepeat)
 	local action = self.actions[scancode]
     if action then
         action[2]()
-        self:new_notification("Executed '"..tostring(action[1]).."'")
+        -- self:new_notification("Executed '"..tostring(action[1]).."'")
     else
         self:new_notification("Action not recognized")
     end
@@ -194,7 +204,7 @@ function Debug:draw()
         self:draw_joystick_view()
     end
     if self.notification_timer > 0.0 then
-        print_outline(nil, nil, self.notification_message, 0, 0)
+        print_outline(nil, nil, self.notification_message, 0, CANVAS_HEIGHT-16)
     end
 end
 
@@ -312,7 +322,8 @@ function Debug:draw_info_view()
 		concat("FPS: ",love.timer.getFPS(), " / frmRpeat: ",self.game.frame_repeat, " / frame: ",frame),
 		concat("LÖVE version: ", string.format("%d.%d.%d - %s", love.getVersion())),
 		concat("game state: ", game.game_state),
-		concat("instant end: ", self.instant_end),
+		concat("cam pos:  ", concatsep({game.camera:get_position()})),
+		concat("cam tpos: ", concatsep({game.camera:get_target_position()})),
 		concat("n° of active audio sources: ", love.audio.getActiveSourceCount()),
 		concat("n° of actors: ", #self.game.actors, " / ", self.game.actor_limit),
 		concat("n° of enemies: ", self.game.enemy_count),
@@ -341,12 +352,16 @@ function Debug:draw_info_view()
 end
 
 function Debug:draw_colview()
+    game.camera:apply_transform()
+    
 	local items, len = Collision.world:getItems()
 	for i,it in pairs(items) do
 		local x,y,w,h = Collision.world:getRect(it)
 		rect_color({0,1,0,.2},"fill", x, y, w, h)
 		rect_color({0,1,0,.5},"line", x, y, w, h)
 	end
+
+    game.camera:reset_transform()
 end
 
 function Debug:draw_layers()
