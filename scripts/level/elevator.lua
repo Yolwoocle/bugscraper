@@ -79,6 +79,12 @@ function Elevator:draw_cabin()
 	gfx.draw(images.cabin_bg, cabin_x, cabin_y)
 	gfx.draw(images.cabin_bg_ambient_occlusion, cabin_x, cabin_y)
 	
+	self:draw_counter()
+end
+
+function Elevator:draw_counter()
+	local cabin_x, cabin_y = self.level.cabin_x, self.level.cabin_y 
+
 	-- Level counter clock thing
 	local x1, y1 = cabin_x + 207.5, cabin_y + 89
 	self.clock_ang = lerp(self.clock_ang, pi + clamp(self.level.floor / self.level.max_floor, 0, 1) * pi, 0.1)

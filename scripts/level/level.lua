@@ -344,7 +344,7 @@ end
 
 function Level:draw()
 	-- hack to get the cafeteria backgrounds to work
-	local on_cafeteria = self.cafeteria_animation_state ~= "off"
+	local on_cafeteria = (self.cafeteria_animation_state ~= "off")
 	if on_cafeteria then
 		love.graphics.draw(images.cafeteria, 0, 0)
 	else
@@ -361,6 +361,9 @@ function Level:draw()
 			self.elevator:draw(self.enemy_buffer)
 		end
 	end)
+	if self.show_cabin then
+		self.elevator:draw_counter()
+	end
 
 	-- print_outline(nil, nil, tostring(self.cafeteria_animation_state), game.camera.x, 100)
 	-- print_outline(nil, nil, tostring(self.is_hole_stencil_enabled), game.camera.x, 110)

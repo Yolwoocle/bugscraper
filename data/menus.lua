@@ -37,7 +37,7 @@ local PROMPTS_CONTROLS = {
 }
 
 local function draw_elevator_progress()
-    local pad_x = 80
+    local pad_x = 40
     local pad_y = 50
     local x1, y1 = CANVAS_WIDTH - pad_x, pad_y
     local x2, y2 = CANVAS_WIDTH - pad_x, CANVAS_HEIGHT - pad_y

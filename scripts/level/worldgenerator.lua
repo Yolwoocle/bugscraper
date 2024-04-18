@@ -36,7 +36,7 @@ function WorldGenerator:generate_cabin()
 	-- chains
 	for iy = 0,ay-1 do
 		map:set_tile(4, iy, 4)
-		map:set_tile(map.width-1-4, iy, 4)
+		map:set_tile(self.box_bx-2, iy, 4)
 	end
 end
 
