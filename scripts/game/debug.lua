@@ -3,6 +3,7 @@ local Class = require "scripts.meta.class"
 local Loot = require "scripts.actor.loot"
 local upgrades = require "data.upgrades"
 local utf8 = require "utf8"
+local images = require "data.images"
 
 local Debug = Class:inherit()
 
@@ -61,8 +62,8 @@ function Debug:init(game)
         ["w"] = {"next floor", function()
             self.game:set_floor(self.game:get_floor() + 1)
         end},
-        ["u"] = {"test", function()
-            game:apply_upgrade(upgrades.UpgradePeanut:new())
+        ["p"] = {"test", function()
+            game:apply_upgrade(upgrades.UpgradeTea:new())
         end},
         
         ["e"] = {"kill all enemies", function()

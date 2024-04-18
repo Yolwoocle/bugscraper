@@ -157,6 +157,7 @@ local img_names = {
 	btnfrag_4 =            "particles/btnfrag_4",
 	btnfrag_5 =            "particles/btnfrag_5",
 	smash_flash =          "particles/smash_flash",
+	particle_leaf =        "particles/particle_leaf",
 
 	-----------------------------------------------------
 	

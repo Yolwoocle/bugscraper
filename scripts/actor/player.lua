@@ -777,7 +777,13 @@ function Player:do_damage(n, source)
 		self.vy = self.vy - 50
 	end
 
+	local old_temporary_life = self.temporary_life
 	self:subtract_life(n)
+	local temporary_life_diff = old_temporary_life - self.temporary_life
+	if temporary_life_diff > 0 then
+		--                                            x, y, number,     spr,             spw_rad, life, vs, g, parms
+		Particles:image(self.ui_x, self.ui_y - 16, temporary_life_diff, images.particle_leaf, 5, 1.5, 0.6, 0.5)
+	end
 	
 	self:set_invincibility(self.max_iframes)
 	

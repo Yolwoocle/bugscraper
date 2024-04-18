@@ -87,6 +87,10 @@ function round_if_near_zero(val, thr)
 	return thr
 end
 
+function is_point_in_rect(px, py, ax, ay, bx, by)
+	return (ax <= px and px <= bx) and (ay <= py and py <= by)
+end
+
 -- function copy_table(tab)
 -- 	local newtab = {}
 -- 	for k,v in pairs(tab) do

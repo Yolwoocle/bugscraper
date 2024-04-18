@@ -9,6 +9,7 @@ function UpgradeMilk:init()
     self:init_upgrade()
     self.name = "upgrade_more_life"
     self.sprite = images.upgrade_milk
+    self.strength = 1
 
     self.color = COL_WHITE
     self.title = "MILK"
@@ -20,8 +21,10 @@ function UpgradeMilk:update(dt)
 end
 
 function UpgradeMilk:on_apply(player)
-    player:add_max_life(1)
-    player:heal(1)
+    for _, p in pairs(game.players) do
+        p:add_max_life(self.strength)
+        p:heal(self.strength)
+    end 
 end
 
 function UpgradeMilk:on_finish(player)

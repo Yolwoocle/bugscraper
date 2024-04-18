@@ -298,7 +298,8 @@ function Level:update_cafeteria(dt)
 		self.is_hole_stencil_enabled = false
 		
 	elseif self.cafeteria_animation_state == "wait" then
-		if self.hole_stencil_start_timer:update(dt) then
+		local timeout = self.hole_stencil_start_timer:update(dt)
+		if timeout then
 			self.cafeteria_animation_state = "grow"
 			self.is_hole_stencil_enabled = true
 		end
@@ -316,11 +317,12 @@ function Level:update_cafeteria(dt)
 		end
 	elseif self.cafeteria_animation_state == "on" then
 		self:update_hole_stencil(dt)
-		if game.enemy_count <= 0 then
+		if self:can_exit_cafeteria() then
+			game:kill_all_enemies()
 			self:new_wave_buffer_enemies()
+			self:end_cafeteria()
 			self.floor_progress = math.huge
 			self.draw_enemies_in_bg = false
-			self:end_cafeteria()
 
 			self.cafeteria_animation_state = "shrink"
 		end
@@ -335,6 +337,21 @@ function Level:update_cafeteria(dt)
 			self.cafeteria_animation_state = "off"
 		end
 	end
+end
+
+function Level:can_exit_cafeteria()
+	for _, a in pairs(game.actors) do
+		if a.name == "upgrade_display" then
+			return false
+		end
+	end
+
+	for _, p in pairs(game.players) do
+		if not is_point_in_rect(p.mid_x, p.mid_y, self.door_ax, self.door_ay, self.door_bx, self.door_by) then
+			return false
+		end		
+	end
+	return true
 end
 
 function Level:update_hole_stencil(dt)

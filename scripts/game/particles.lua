@@ -79,6 +79,9 @@ end
 local ImageParticle = Particle:inherit()
 
 function ImageParticle:init(spr, x,y,s,r, vx,vy,vs,vr, life, g, is_solid)
+	self:init_image_particle(spr, x,y,s,r, vx,vy,vs,vr, life, g, is_solid)
+end
+function ImageParticle:init_image_particle(spr, x,y,s,r, vx,vy,vs,vr, life, g, is_solid)
 	self:init_particle(x,y,s,r, vx,vy,vs,vr, life, g, is_solid)
 	self.spr = spr
 	
