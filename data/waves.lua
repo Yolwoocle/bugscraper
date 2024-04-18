@@ -42,6 +42,7 @@ local waves = {
 			{E.Larva, 3},
 			{E.Fly, 3},
 		},
+		-- background = backgrounds.BackgroundServers:new(),
 	}),
 
 	Wave:new({
@@ -49,9 +50,9 @@ local waves = {
 
 		roll_type = WAVE_ROLL_TYPE_FIXED,
 		enemies = {
-			{E.VendingMachine, 1, position = {550, 200}},
+			{E.VendingMachine, 1, position = {550, 10}},
 		},
-		background = backgrounds.BackgroundCafeteria:new(),
+		-- background = backgrounds.BackgroundCafeteria:new(),
 	}),
 
 	---------------------------------------------

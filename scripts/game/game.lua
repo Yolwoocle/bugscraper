@@ -192,7 +192,7 @@ function Game:new_game()
 	self.max_timer_before_game_over = 3.3
 
 	-- UI
-	self.game_ui = GameUI:new()
+	self.game_ui = GameUI:new(self)
 
 	Options:update_sound_on()
 end

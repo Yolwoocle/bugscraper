@@ -126,7 +126,6 @@ end
 
 function BackgroundServers:update(dt)
 	self:update_background(dt)
-	print_debug("a", 3, "b", 34)
 
 	local speed = self.speed * dt * 0.5
 
@@ -146,9 +145,9 @@ end
 -----------------------------------------------------
 
 function BackgroundServers:draw()
-	local ox, oy = CANVAS_WIDTH/2, CANVAS_HEIGHT/2
-
 	self:draw_background()
+
+	local ox, oy = CANVAS_WIDTH/2, CANVAS_HEIGHT/2
 
 	for i, row in pairs(self.server_rows) do
 		local row_y = row.y

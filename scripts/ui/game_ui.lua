@@ -4,7 +4,9 @@ local Class = require "scripts.meta.class"
 
 local GameUI = Class:inherit()
 
-function GameUI:init()
+function GameUI:init(game)
+	self.game = game
+
     self.is_visible = true
 end
 
@@ -20,6 +22,7 @@ function GameUI:draw()
 	self:draw_logo()
 	self:draw_join_tutorial()
 	self:draw_timer()
+	self:draw_version()
 end
 
 function GameUI:draw_logo()
@@ -36,6 +39,13 @@ function GameUI:draw_logo()
 		gfx.setColor(col)
 		gfx.draw(spr, logo_x + ox, game.logo_y + oy)
 	end
+end
+
+function GameUI:draw_version()
+	local text = concat("v", BUGSCRAPER_VERSION)
+	local x = math.floor(CANVAS_WIDTH - get_text_width(text) - 2)
+	local y = CANVAS_HEIGHT - self.game.logo_y + 16
+	print_outline(COL_DARK_GRAY, nil, text, x, y)
 end
 
 function GameUI:draw_join_tutorial()

@@ -30,7 +30,7 @@ function Tiles:init()
 		self:init_tile(x, y, w)
 		self.id = 1
 		self.name = "metal"
-		self.spr = images.metal
+		self.spr = nil
 		
 		self.collision_info = CollisionInfo:new {
 			type = COLLISION_TYPE_SOLID,

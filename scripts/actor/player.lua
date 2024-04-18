@@ -862,13 +862,6 @@ function Player:animate_walk(dt)
 		--cos is the derivative, aka rate of change ("speed") of sin
 		local speed_t = math.cos(self.walkbounce_t)
 		self.walkbounce_squash = speed_t*squash_amount + 1
-
-		--- Jump sprite
-		local old_spr = self.spr
-		self.spr = self.skin.spr_idle
-		if self.is_walking and self.walkbounce_y > 4 then
-			self.spr = self.skin.spr_jump
-		end
 	else
 		-- If not walking and close enough to ground, reset
 		self.walkbounce_squash = 1
@@ -896,6 +889,13 @@ function Player:update_sprite(dt)
 	end
 	if self.is_wall_sliding then
 		self.spr = self.skin.spr_wall_slide 
+	end
+	if self.is_walking then
+		if self.walkbounce_y > 4 then
+			self.spr = self.skin.spr_idle
+		else
+			self.spr = self.skin.spr_jump
+		end
 	end
 end
 

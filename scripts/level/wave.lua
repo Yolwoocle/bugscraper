@@ -109,10 +109,6 @@ function Wave:apply_side_effects(level)
 	if self.background then
 		level:set_background(self.background)
 	end
-
-	if self.floor_type == FLOOR_TYPE_CAFETERIA then
-		level:begin_cafeteria()
-	end
 end
 
 function Wave:get_floor_type()

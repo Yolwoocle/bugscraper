@@ -116,6 +116,15 @@ function Camera:get_real_position()
     return self.x + self.ox, self.y + self.oy
 end
 
+function Camera:get_target_position()
+    return self.target_x, self.target_y
+end
+
+function Camera:set_target_position(x, y)
+    self.target_x = x
+    self.target_y = y
+end
+
 function Camera:get_position()
     return self.x, self.y
 end

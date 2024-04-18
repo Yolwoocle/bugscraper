@@ -13,6 +13,10 @@ local function color(hex)
 	return {r/255, g/255, b/255, 1.0}
 end
 
+BUGSCRAPER_VERSION = "0.4"
+
+--------------------------------------------- 
+
 CANVAS_WIDTH = 480
 CANVAS_HEIGHT = 270
 

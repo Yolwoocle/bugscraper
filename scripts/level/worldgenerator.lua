@@ -11,13 +11,21 @@ function WorldGenerator:reset()
 	self.map:reset()
 end
 
-function WorldGenerator:generate_cabin(x, y, w, h)
+function WorldGenerator:set_shaft_rect(x, y, w, h)
+	self.shaft_x = x
+	self.shaft_y = y
+	self.shaft_w = w
+	self.shaft_h = h
+end
+
+function WorldGenerator:generate_cabin()
 	self:reset()
 
 	local map = self.map
 	
 	-- local ax, ay = floor((map.width - w)/2) + ox, floor((map.height - h)/2) + oy
 	-- local bx, by = ax+w-1, ay+h-1
+	local x, y, w, h = self.shaft_x, self.shaft_y, self.shaft_w, self.shaft_h
 	local ax, ay = x, y
 	local bx, by = ax+w-1, ay+h-1
 	self.box_ax,  self.box_ay,  self.box_bx,  self.box_by  = ax,    ay,    bx,    by

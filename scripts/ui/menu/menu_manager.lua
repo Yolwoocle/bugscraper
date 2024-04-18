@@ -119,9 +119,9 @@ function MenuManager:set_menu(menu, is_back)
 	self.cur_menu:update(0)
 
 	-- Reset game screenshake
-	if game and game.camera then
-		game.camera:reset()
-	end
+	-- if game and game.camera then
+		-- game.camera:reset()
+	-- end
 
 	game:on_menu()
 	return true

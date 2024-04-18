@@ -23,8 +23,9 @@ function Level:init(game)
 	self.map = TileMap:new(69, 17) --nice.
 	self.shaft_w, self.shaft_h = 26, 14
 	self.world_generator = WorldGenerator:new(self.map)
+	self.world_generator:set_shaft_rect(2, 2, self.shaft_w, self.shaft_h)
 	self.world_generator:reset()
-	self.world_generator:generate_cabin(2, 2, self.shaft_w, self.shaft_h)
+	self.world_generator:generate_cabin()
 	
 	-- Bounding box
 	-- Don't try to understand, all you have to know is that it puts collision 
@@ -80,11 +81,13 @@ function Level:init(game)
 	self.background:set_def_speed(self.def_level_speed)
 
 	self.canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
-	self.is_hole_stencil_enabled = false
+	self.cafeteria_animation_state = "off"
+	self.is_hole_stencil_enabled = true
 	self.hole_stencil_start_timer = 0
 	self.hole_stencil_radius = 0
 	self.hole_stencil_radius_speed = 0
-	self.hole_stencil_radius_accel = 60
+	self.hole_stencil_radius_accel = 200
+	self.hole_stencil_radius_accel_sign = 1
 end
 
 function Level:update(dt)
@@ -129,7 +132,9 @@ function Level:update_elevator_progress(dt)
 		
 		elseif 4 <= self.floor_progress then
 			-- Speed up	
-			self.level_speed = min(self.level_speed + 10, self.def_level_speed)
+			if not self:is_on_cafeteria() then
+				self.level_speed = min(self.level_speed + 10, self.def_level_speed)
+			end
 		end
 
 		-- Go to next floor once animation is finished
@@ -212,7 +217,6 @@ function Level:new_wave_buffer_enemies()
 	-- Spawn a bunch of enemies
 	local wave_n = clamp(self.floor + 1, 1, #waves) -- floor+1 because the floor indicator changes before enemies are spawned
 	local wave = self:get_new_wave(wave_n)
-	self:set_current_wave(wave)
 	
 	self.enemy_buffer = wave:spawn(self.door_ax, self.door_ay, self.door_bx, self.door_by)
 	wave:apply_side_effects(self)
@@ -220,6 +224,8 @@ function Level:new_wave_buffer_enemies()
 	if self.background.change_bg_color then
 		self.background:change_bg_color(wave_n)
 	end
+
+	self:set_current_wave(wave)
 end
 
 function Level:activate_enemy_buffer()
@@ -229,51 +235,93 @@ function Level:activate_enemy_buffer()
 	self.enemy_buffer = {}
 end
 
-function Level:begin_cafeteria()
-	self.world_generator:generate_cafeteria()
+-----------------------------------------------------
 
+function Level:begin_cafeteria()
 	self.hole_stencil_radius = 0
-	self.hole_stencil_radius_accel = 60
+	self.hole_stencil_radius_accel_sign = 1
 
 	self.hole_stencil_start_timer = 2.0
-
-	game.camera:set_x_locked(false)
-	game.camera:set_y_locked(true)
 end
 
 function Level:update_cafeteria(dt)
-	if self.is_hole_stencil_enabled then
-		self.hole_stencil_radius_speed = self.hole_stencil_radius_speed + self.hole_stencil_radius_accel * dt
-		self.hole_stencil_radius_speed = math.min(self.hole_stencil_radius_speed, CANVAS_WIDTH)
+	if self.cafeteria_animation_state == "off" then
+		self.is_hole_stencil_enabled = false
+		if self:is_on_cafeteria() then
+			self.cafeteria_animation_state = "wait"
+			self:begin_cafeteria()
+		end
 		
-		self.hole_stencil_radius = self.hole_stencil_radius + self.hole_stencil_radius_speed * dt
-		self.hole_stencil_radius = math.min(CANVAS_WIDTH, self.hole_stencil_radius) 
-	end
-
-	if self:get_floor_type() == FLOOR_TYPE_CAFETERIA then
+	elseif self.cafeteria_animation_state == "wait" then
 		self.hole_stencil_start_timer = math.max(0.0, self.hole_stencil_start_timer - dt)
 		if self.hole_stencil_start_timer <= 0 then
+			self.cafeteria_animation_state = "grow"
 			self.is_hole_stencil_enabled = true
 		end
+
+	elseif self.cafeteria_animation_state == "grow" then
+		self:update_hole_stencil(dt)
+		
+		if self.hole_stencil_radius >= CANVAS_WIDTH*0.5 then
+			self.cafeteria_animation_state = "on"
+			self.world_generator:generate_cafeteria()
+			
+			game.camera:set_x_locked(false)
+			game.camera:set_y_locked(true)
+		end
+	elseif self.cafeteria_animation_state == "on" then
+		self:update_hole_stencil(dt)
+		if not self:is_on_cafeteria() then
+			self:end_cafeteria()
+			self.cafeteria_animation_state = "shrink"
+		end
+		
+	elseif self.cafeteria_animation_state == "shrink" then
+		self:update_hole_stencil(dt)
+		if self.hole_stencil_radius <= 0 then
+			self.is_hole_stencil_enabled = false
+			self.cafeteria_animation_state = "off"
+			self.elevator.door:close()
+		end
 	end
+end
+
+function Level:update_hole_stencil(dt)
+	self.hole_stencil_radius_speed = self.hole_stencil_radius_speed + self.hole_stencil_radius_accel_sign * self.hole_stencil_radius_accel * dt
+	-- self.hole_stencil_radius_speed = clamp(self.hole_stencil_radius_speed, -CANVAS_WIDTH, CANVAS_WIDTH)
+	
+	self.hole_stencil_radius = self.hole_stencil_radius + self.hole_stencil_radius_speed * dt
+	self.hole_stencil_radius = clamp(self.hole_stencil_radius, 0, CANVAS_WIDTH)
+end
+
+function Level:is_on_cafeteria() 
+	return self:get_floor_type() == FLOOR_TYPE_CAFETERIA
 end
 
 function Level:end_cafeteria()
 	self.world_generator:generate_cabin()
 
-	self.is_hole_stencil_enabled = true
-	self.hole_stencil_radius = 0
 	self.hole_stencil_radius_speed = 0
-	self.hole_stencil_radius_accel = -60
+	self.hole_stencil_radius_accel_sign = -1
 
-	game.camera:set_position(0, 0)
+	game.camera:set_target_position(0, 0)
 	game.camera:set_x_locked(true)
 	game.camera:set_y_locked(true)
 end
 
 -----------------------------------------------------
 
+local buffer_canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
 function Level:draw_with_hole(draw_func)
+	exec_on_canvas(buffer_canvas, function()
+		game.camera:reset_transform()
+
+		love.graphics.clear()
+		draw_func()
+
+		game.camera:apply_transform()
+	end)
+
 	exec_on_canvas({self.canvas, stencil=true}, function()
 		game.camera:reset_transform()
 		love.graphics.clear()
@@ -286,7 +334,7 @@ function Level:draw_with_hole(draw_func)
 			love.graphics.setStencilTest("less", 1)
 		end
 		
-		draw_func()
+		love.graphics.draw(buffer_canvas)
 		
 		love.graphics.setStencilTest()
 		game.camera:apply_transform()
@@ -295,9 +343,18 @@ function Level:draw_with_hole(draw_func)
 end
 
 function Level:draw()
-	self.background:draw()
-
+	-- hack to get the cafeteria backgrounds to work
+	local on_cafeteria = self.cafeteria_animation_state ~= "off"
+	if on_cafeteria then
+		love.graphics.draw(images.cafeteria, 0, 0)
+	else
+		self.background:draw()
+	end
+	
 	self:draw_with_hole(function()
+		if on_cafeteria then
+			self.background:draw()
+		end
 		self.map:draw()
 	
 		if self.show_cabin then
@@ -305,7 +362,10 @@ function Level:draw()
 		end
 	end)
 
-	-- print_outline(nil, nil, tostring(self.floor_progress), 100, 100)
+	-- print_outline(nil, nil, tostring(self.cafeteria_animation_state), game.camera.x, 100)
+	-- print_outline(nil, nil, tostring(self.is_hole_stencil_enabled), game.camera.x, 110)
+	-- print_outline(nil, nil, tostring(self.hole_stencil_radius), game.camera.x, 120)
+	-- print_outline(nil, nil, tostring(self.background), game.camera.x, 130)
 	-- print_outline(nil, nil, tostring(self.door_animation), 100, 110)
 end
 
