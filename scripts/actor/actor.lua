@@ -47,8 +47,6 @@ function Actor:init_actor(x, y, w, h, spr, args)
 	self.collisions = {}
 	self.wall_col = nil
 
-	self.effects = {}
-
 	self.is_removed = false
 	self:add_collision()
 	
@@ -146,7 +144,6 @@ end
 function Actor:update_actor(dt)
 	if self.is_removed then   return   end
 	self:do_gravity(dt)
-	self:update_effects(dt)
 	self:update_sprite_offset()
 
 	-- apply friction
@@ -235,18 +232,6 @@ function Actor:draw_actor(flip_x, flip_y, custom_draw)
 		if custom_draw then    drw_func = custom_draw    end
 		drw_func(self.spr, x, y, self.rot, flip_x, flip_y, spr_w2 - self.spr_ox, spr_h2 - self.spr_oy)
 	end
-
-	self:post_draw(x, y)
-end
-
-function Actor:post_draw(x, y)
-	self:draw_effect_overlays(x, y)
-end
-
-function Actor:draw_effect_overlays(x, y)
-	for i, effect in pairs(self.effects) do
-		effect:draw_overlay(x, y)
-	end 
 end
 
 function Actor:react_to_collision(col)
@@ -344,23 +329,5 @@ function Actor:set_pos(x, y)
 	Collision:update(self, x, y)
 end
 
-function Actor:apply_effect(effect, duration)
-	effect:apply(self, duration)
-	table.insert(self.effects, effect)
-end
-
-function Actor:update_effects(dt)
-	for i=1, #self.effects do 
-		local effect = self.effects[i]
-		effect:update(dt)
-	end
-	
-	for i=#self.effects, 1, -1 do 
-		local effect = self.effects[i]
-		if not effect.is_active then
-			table.remove(self.effects, i)
-		end
-	end
-end
 
 return Actor

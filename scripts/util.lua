@@ -646,7 +646,7 @@ function random_weighted(li, rng)
 	
 	for i=1, #li do
 		if rnd < li[i][2] then
-			return li[i][1], li[i]
+			return li[i][1], li[i], i
 		end
 		rnd = rnd - li[i][2]
 	end

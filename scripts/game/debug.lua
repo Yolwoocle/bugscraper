@@ -1,6 +1,7 @@
 require "scripts.util"
 local Class = require "scripts.meta.class"
 local Loot = require "scripts.actor.loot"
+local upgrades = require "data.upgrades"
 local utf8 = require "utf8"
 
 local Debug = Class:inherit()
@@ -55,10 +56,13 @@ function Debug:init(game)
         ["7"] = {"heal P3", func_heal(3)},
         ["8"] = {"heal P4", func_heal(4)},
         ["q"] = {"previous floor",function()
-            self.game:set_floor(self:get_floor() - 1)
+            self.game:set_floor(self.game:get_floor() - 1)
         end},
         ["w"] = {"next floor", function()
             self.game:set_floor(self.game:get_floor() + 1)
+        end},
+        ["u"] = {"test", function()
+            game:apply_upgrade(upgrades.UpgradePeanut:new())
         end},
         
         ["e"] = {"kill all enemies", function()
@@ -152,7 +156,7 @@ function Debug:debug_action(key, scancode, isrepeat)
 	local action = self.actions[scancode]
     if action then
         action[2]()
-        -- self:new_notification("Executed '"..tostring(action[1]).."'")
+        self:new_notification("Executed '"..tostring(action[1]).."'")
     else
         self:new_notification("Action not recognized")
     end
@@ -160,7 +164,7 @@ end
 
 function Debug:new_notification(msg)
     self.notification_message = msg
-    self.notification_timer = 2.0
+    self.notification_timer = 1.0
 end
 
 function Debug:keypressed(key, scancode, isrepeat)

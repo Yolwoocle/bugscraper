@@ -6,12 +6,12 @@ local TileMap = require "scripts.level.tilemap"
 local WorldGenerator = require "scripts.level.worldgenerator"
 local BackgroundDots = require "scripts.level.background.background_dots"
 local BackgroundServers = require "scripts.level.background.background_servers"
-local BackgroundCafeteria = require "scripts.level.background.background_cafeteria"
 local Elevator = require "scripts.level.elevator"
 local Wave = require "scripts.level.wave"
 
 local images = require "data.images"
 local sounds = require "data.sounds"
+local upgrades = require "data.upgrades"
 local waves = require "data.waves"
 local utf8 = require "utf8"
 
@@ -79,6 +79,7 @@ function Level:init(game)
 	self.background:set_def_speed(self.def_level_speed)
 
 	self.canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
+	self.buffer_canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
 	self.cafeteria_animation_state = "off"
 	self.close_door_flag = false
 	self.force_next_wave_flag = false
@@ -254,12 +255,25 @@ function Level:new_wave_buffer_enemies()
 	self.enemy_buffer = wave:spawn(self.door_ax, self.door_ay, self.door_bx, self.door_by)
 	print_debug("#self.enemy_buffer", #self.enemy_buffer)
 	
-	wave:load_background(self)
+	self:load_background(wave)
+	self:load_music(wave)
 	if self.background.change_bg_color then
 		self.background:change_bg_color(wave_n)
 	end
-
+	
 	self:set_current_wave(wave)
+end
+
+function Level:load_background(wave)
+	if wave.background then
+		self:set_background(wave.background)
+	end
+end
+
+function Level:load_music(wave)
+	if wave.music then
+		game.music_player:set_disk(wave.music)
+	end
 end
 
 function Level:activate_enemy_buffer()
@@ -295,7 +309,7 @@ function Level:update_cafeteria(dt)
 		if self.hole_stencil_radius >= CANVAS_WIDTH*0.5 then
 			self.cafeteria_animation_state = "on"
 			self.world_generator:generate_cafeteria()
-			game.music_player:set_disk("cafeteria")
+			self:assign_cafeteria_upgrades()
 			
 			game.camera:set_x_locked(false)
 			game.camera:set_y_locked(true)
@@ -346,11 +360,28 @@ function Level:end_cafeteria()
 	game.camera:set_target_position(0, 0)
 end
 
+function Level:assign_cafeteria_upgrades()
+	local bag = {
+		{upgrades.UpgradeTea, 1},
+		{upgrades.UpgradeCoffee, 1},
+		{upgrades.UpgradeMilk, 1},
+		{upgrades.UpgradePeanut, 1},
+	}
+
+	for _, actor in pairs(self.game.actors) do
+		if actor.name == "upgrade_display" then
+			local upgrade, _, i = random_weighted(bag)
+			table.remove(bag, i)
+
+			actor:assign_upgrade(upgrade:new())
+		end
+	end
+end
+
 -----------------------------------------------------
 
-local buffer_canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
 function Level:draw_with_hole(draw_func)
-	exec_on_canvas(buffer_canvas, function()
+	exec_on_canvas(self.buffer_canvas, function()
 		game.camera:reset_transform()
 
 		love.graphics.clear()
@@ -371,7 +402,7 @@ function Level:draw_with_hole(draw_func)
 			love.graphics.setStencilTest("less", 1)
 		end
 		
-		love.graphics.draw(buffer_canvas)
+		love.graphics.draw(self.buffer_canvas)
 		
 		love.graphics.setStencilTest()
 		game.camera:apply_transform()

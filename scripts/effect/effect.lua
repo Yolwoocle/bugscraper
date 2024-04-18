@@ -11,25 +11,25 @@ function Effect:init_effect()
     self.name = "effect"
     self.is_active = false
 
-    self.actor = nil
+    self.player = nil
     self.duration = 5.0
     self.timer = 0.0
 end
 
-function Effect:apply(actor, duration)
-    self.actor = actor
+function Effect:apply(player, duration)
+    self.player = player
     
     self.duration = duration
 
     self.timer = self.duration
     self.is_active = true
-    self:on_apply(actor, duration)
+    self:on_apply(player, duration)
 end
 
 function Effect:finish()
-    self:on_finish(self.actor)
+    self:on_finish(self.player)
     self.is_active = false
-    self.actor = nil
+    self.player = nil
 end 
 
 function Effect:update_effect(dt)
@@ -39,14 +39,14 @@ function Effect:update_effect(dt)
     end
 end
 
-function Effect:on_apply(actor, duration)
+function Effect:on_apply(player, duration)
 end
 
 function Effect:update(dt)
     self:update_effect(dt)
 end
 
-function Effect:on_finish(actor)
+function Effect:on_finish(player)
 end
 
 function Effect:draw_overlay(spr_x, spr_y)

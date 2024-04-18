@@ -112,6 +112,8 @@ function Player:init(n, x, y, skin)
 	self.shoot_dir_x = 1
 	self.shoot_dir_y = 0
 	self.shoot_ang = 0
+	self.gun_cooldown_multiplier = 1.0
+	self.max_ammo_multiplier = 1.0
 	
 	self:equip_gun(Guns.Machinegun:new())
 	-- self:equip_gun(Guns.unlootable.DebugGun:new())
@@ -149,6 +151,7 @@ function Player:init(n, x, y, skin)
 	self.upgrades = {}
 
 	-- Effects
+	self.effects = {}
 	self.poison_cloud = nil
 	self.poison_timer = 0.0
 	self.poison_damage_time = 1.5
@@ -166,6 +169,7 @@ function Player:update(dt)
 	
 	-- Movement
 	self:update_upgrades(dt)
+	self:update_effects(dt, self)
 	self:move(dt)
 	self:do_wall_sliding(dt)
 	self:do_jumping(dt)
@@ -273,16 +277,18 @@ function Player:draw_life_bar(ui_x, ui_y)
 end
 
 function Player:draw_ammo_bar(ui_x, ui_y)
-	local bar_w = 32
+	local ammo_icon_w = images.ammo:getWidth()
+	local slider_w = 23 * (1 + (self:get_max_ammo_multiplier() - 1)/2)
+	local bar_w = slider_w + ammo_icon_w + 2
+
 	local x = floor(ui_x) - floor(bar_w/2)
 	local y = floor(ui_y) + 8
-	local ammo_w = images.ammo:getWidth()
 	gfx.draw(images.ammo, x, y)
 
 	local text = self.gun.ammo
 	local col_shad = COL_DARK_BLUE
 	local col_fill = COL_MID_BLUE
-	local val, maxval = self.gun.ammo, self.gun.max_ammo
+	local val, maxval = self.gun.ammo, self.gun:get_max_ammo()
 	if self.gun.is_reloading then
 		text = ""
 		col_fill = COL_WHITE
@@ -297,7 +303,7 @@ function Player:draw_ammo_bar(ui_x, ui_y)
 		col_shad = lerp_color(col_fill, COL_LIGHTEST_GRAY, self.ui_col_gradient)
 	end
 
-	ui:draw_progress_bar(x+ammo_w+2, y, bar_w-ammo_w-2, ammo_w, val, maxval, 
+	ui:draw_progress_bar(x+ammo_icon_w+2, y, slider_w, ammo_icon_w, val, maxval, 
 						col_fill, COL_BLACK_BLUE, col_shad, text)
 end
 
@@ -939,6 +945,57 @@ end
 function Player:next_gun()
 	self.gun_number = mod_plus_1(self.gun_number + 1, #self.guns)
 	self:equip_gun(self.guns[self.gun_number])
+end
+
+
+function Player:apply_effect(effect, duration)
+	effect:apply(self, duration)
+	table.insert(self.effects, effect)
+end
+
+function Player:update_effects(dt)
+	for i=1, #self.effects do 
+		local effect = self.effects[i]
+		effect:update(dt, self)
+	end
+	
+	for i=#self.effects, 1, -1 do 
+		local effect = self.effects[i]
+		if not effect.is_active then
+			table.remove(self.effects, i)
+		end
+	end
+end
+
+function Player:post_draw(x, y)
+	self:draw_effect_overlays(x, y)
+end
+
+function Player:draw_effect_overlays(x, y)
+	for i, effect in pairs(self.effects) do
+		effect:draw_overlay(x, y)
+	end 
+end
+
+function Player:get_max_ammo_multiplier()
+	return self.max_ammo_multiplier
+end
+function Player:set_max_ammo_multiplier(val)
+	self.max_ammo_multiplier = val
+end
+function Player:multiply_max_ammo_multiplier(val)
+	self.max_ammo_multiplier = self.max_ammo_multiplier * val
+end
+
+function Player:set_gun_cooldown_multiplier(val)
+	self.gun_cooldown_multiplier = val
+end
+function Player:multiply_gun_cooldown_multiplier(val)
+	self.gun_cooldown_multiplier = self.gun_cooldown_multiplier * val
+end
+
+function Player:get_gun_cooldown_multiplier()
+	return self.gun_cooldown_multiplier
 end
 
 return Player

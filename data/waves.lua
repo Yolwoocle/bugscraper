@@ -35,8 +35,19 @@ local waves = {
 	-- }),
 
 	Wave:new({
+		min = 1,
+		max = 1,
+		enemies = {
+			{E.Larva, 3},
+			{E.Fly, 3},
+		},
+		-- background = backgrounds.BackgroundDots:new(),
+	}),
+	
+	Wave:new({
 		floor_type = FLOOR_TYPE_CAFETERIA,
 		roll_type = WAVE_ROLL_TYPE_FIXED,
+		music = "cafeteria",
 		
 		min = 1,
 		max = 1,
@@ -49,33 +60,15 @@ local waves = {
 	}),
 	
 	Wave:new({
-		min = 1,
-		max = 1,
-		enemies = {
-			{E.Larva, 3},
-			{E.Fly, 3},
-		},
+		music = "w1",
 		background = backgrounds.BackgroundServers:new(),
-	}),
-	
-	Wave:new({
-		floor_type = FLOOR_TYPE_CAFETERIA,
-		
-		roll_type = WAVE_ROLL_TYPE_FIXED,
-		enemies = {
-			{E.VendingMachine, 1, position = {544, 100}},
-			{E.VendingMachine, 1, position = {608, 100}},
-			{E.VendingMachine, 1, position = {672, 100}},
-		},
-	}),
-	Wave:new({
+
 		min = 1,
 		max = 1,
 		enemies = {
 			{E.Larva, 3},
 			{E.Fly, 3},
 		},
-		background = backgrounds.BackgroundDots:new(),
 	}),
 
 	---------------------------------------------

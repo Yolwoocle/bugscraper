@@ -9,18 +9,18 @@ function EffectSlowness:init()
     self.name = "effect_slowness"
 end
 
-function EffectSlowness:on_apply(actor, duration)
-    actor.speed_mult = 0.3
-    actor.jump_speed_mult = 0.5
+function EffectSlowness:on_apply(player, duration)
+    player.speed_mult = 0.3
+    player.jump_speed_mult = 0.5
 end
 
 function EffectSlowness:update(dt)
     self:update_effect(dt)
 end
 
-function EffectSlowness:on_finish(actor)
-    actor.speed_mult = 1.0
-    actor.jump_speed_mult = 1.0
+function EffectSlowness:on_finish(player)
+    player.speed_mult = 1.0
+    player.jump_speed_mult = 1.0
 end
 
 function EffectSlowness:draw_overlay(spr_x, spr_y)

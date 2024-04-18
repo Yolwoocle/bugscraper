@@ -17,18 +17,12 @@ function UpgradeDisplay:init(x, y)
     self:init_enemy(x, y, images.upgrade_jar, 16, 16)
     self.name = "upgrade_display"
     
-    self.products = {
-        UpgradeTea:new(),
-        UpgradeCoffee:new(),
-        UpgradeMilk:new(),
-        UpgradeTea:new(),
-    }
-    self.product = self.products[mod_plus_1(upgradei, #self.products)]
-    upgradei = upgradei + 1
+    self.product = nil
     -- self:select_random_product()
     self.is_focused = false
     
     self.life = 10
+    self.loot = {}
 
     self.damage = 0
     self.gravity = 0
@@ -53,8 +47,8 @@ function UpgradeDisplay:init(x, y)
     self.letters = {}
 end
 
-function UpgradeDisplay:select_random_product()
-    self.product = self.products[random_range_int(1, #self.products)]
+function UpgradeDisplay:assign_upgrade(upgrade)
+    self.product = upgrade
 end
 
 function UpgradeDisplay:update(dt)
@@ -81,7 +75,9 @@ function UpgradeDisplay:is_player_in_range()
 end
 
 function UpgradeDisplay:draw()
-    self.product:draw(self.mid_x, self.mid_y)
+    if self.product then
+        self.product:draw(self.mid_x, self.mid_y)
+    end
 	self:draw_enemy()
     
     self:draw_product()
@@ -108,17 +104,19 @@ function UpgradeDisplay:apply()
 end
 
 function UpgradeDisplay:draw_product()
-    local x = self.mid_x
-    local y = self.mid_y - 64
-    local s = ease_out_cubic(clamp(self.animation_t, 0, 1))
+    if self.product then
+        local x = self.mid_x
+        local y = self.mid_y - 64
+        local s = ease_out_cubic(clamp(self.animation_t, 0, 1))
+        
+        love.graphics.setColor(self.product.color)
+        draw_centered(images.rays, x, y, game.t, s*0.4, s*0.4)
+        love.graphics.setColor(COL_WHITE)
     
-    love.graphics.setColor(self.product.color)
-    draw_centered(images.rays, x, y, game.t, s*0.4, s*0.4)
-    love.graphics.setColor(COL_WHITE)
-
-    self.product:draw(x, y, s)
-    self:draw_text(x, y - 52, self.product:get_title(), self.product.color, 2)
-    self:draw_text(x, y - 30, self.product:get_description())
+        self.product:draw(x, y, s)
+        self:draw_text(x, y - 52, self.product:get_title(), self.product.color, 2)
+        self:draw_text(x, y - 30, self.product:get_description())
+    end
 end
 
 function UpgradeDisplay:draw_text(x, y, text, col, s)

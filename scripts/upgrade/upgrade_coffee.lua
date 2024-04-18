@@ -1,7 +1,7 @@
 require "scripts.util"
 local Upgrade = require "scripts.upgrade.upgrade"
 local images= require "data.images"
-local EffectSlowness = require "scripts.effect.effect_slowness"
+local EffectCoffee = require "scripts.effect.effect_coffee"
 
 local UpgradeEspresso = Upgrade:inherit()
 
@@ -12,7 +12,7 @@ function UpgradeEspresso:init()
 
     self.color = COL_DARK_BROWN
     self.title = "ESPRESSO"
-    self.description = "x2 shooting speed"
+    self.description = "x2 shooting speed for a minute"
 end
 
 function UpgradeEspresso:update(dt)
@@ -20,7 +20,7 @@ function UpgradeEspresso:update(dt)
 end
 
 function UpgradeEspresso:on_apply(player)
-    player:apply_effect(EffectSlowness:new(), 5)
+    player:apply_effect(EffectCoffee:new(), 60)
 end
 
 function UpgradeEspresso:on_finish(player)

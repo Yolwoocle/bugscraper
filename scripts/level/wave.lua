@@ -7,6 +7,7 @@ local Wave = Class:inherit()
 function Wave:init(params)
 	self.floor_type = param(params.floor_type, FLOOR_TYPE_NORMAL)
 	self.roll_type = param(params.roll_type, WAVE_ROLL_TYPE_RANDOM)
+	self.music = param(params.music, nil)
 
 	self.min = param(params.min, 1)
 	self.max = param(params.max, 1)
@@ -103,12 +104,6 @@ function Wave:spawn(ax, ay, bx, by)
 	end
 	
 	return spawned_enemies
-end
-
-function Wave:load_background(level)
-	if self.background then
-		level:set_background(self.background)
-	end
 end
 
 function Wave:get_floor_type()

@@ -80,6 +80,8 @@ COL_PINK = color(0xf6757a)
 COL_YELLOW_ORANGE = color(0xfeae34)
 COL_ORANGE = color(0xf77622)
 
+COL_LIGHT_BEIGE = color(0xead4aa)
+COL_MID_BEIGE = color(0xe4a672)
 COL_LIGHT_BROWN = color(0xb86f50)
 COL_MID_BROWN = color(0x743f39)
 COL_DARK_BROWN = color(0x3f2832)
