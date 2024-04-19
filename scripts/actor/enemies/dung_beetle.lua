@@ -21,6 +21,8 @@ function DungBeetle:init(x, y)
     self.is_pushable = false
     self.is_knockbackable = false
     self.is_stompable = false
+    self.destroy_bullet_on_impact = false
+	self.is_immune_to_bullets = true
 
     self.sound_damage = {"cloth1", "cloth2", "cloth3"}
     self.sound_death = "cloth_drop"
@@ -33,7 +35,7 @@ function DungBeetle:init(x, y)
 
     self.hits = self.dung_limit
     self.life = math.huge
-    self.unridden_life = 30
+    self.unridden_life = 15
 end
 
 function DungBeetle:update(dt)
@@ -92,6 +94,9 @@ function DungBeetle:unride()
     self.follow_player = true 
     self.is_pushable = true
     self.is_knockbackable = true
+
+    self.destroy_bullet_on_impact = true
+	self.is_immune_to_bullets = false
 
     self.life = self.unridden_life
 end

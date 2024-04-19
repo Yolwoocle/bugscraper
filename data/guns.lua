@@ -241,7 +241,7 @@ function Guns:init()
 		
 		self.sfx = "shot1"
 		self.damage = 200
-		self.is_auto = false
+		self.is_auto = true
 		self.spr = images.metal
 		self.max_ammo = math.huge
 		

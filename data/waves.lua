@@ -58,21 +58,23 @@ local waves = {
 		},
 	}),
 	
-	Wave:new({
-		music = "w1",
-		background = backgrounds.BackgroundServers:new(),
-
-		min = 1,
-		max = 1,
-		enemies = {
-			{E.Larva, 3},
-			{E.Fly, 3},
-		},
-	}),
+	-- Wave:new({
+	-- 	music = "w1",
+	-- 	background = backgrounds.BackgroundServers:new(),
+	
+	-- 	min = 1,
+	-- 	max = 1,
+	-- 	enemies = {
+	-- 		{E.Larva, 3},
+	-- 		{E.Fly, 3},
+	-- 	},
+	-- }),
 
 	---------------------------------------------
 	
 	Wave:new({
+		music = "w1",
+
 		min = 4,
 		max = 6,
 		enemies = {
@@ -202,7 +204,7 @@ local waves = {
 	Wave:new({ 
 		-- Grasshopper intro
 		min = 4,
-		max = 6,
+		max = 4,
 		enemies = {
 			{E.Grasshopper, 8},
 		},

@@ -216,6 +216,7 @@ local img_names = {
 	
 	-- misc
 	rays = "ui/rays",
+	offscreen_indicator = "ui/offscreen_indicator",
 	daniel_small = "actors/enemies/daniel_small"
 
 }

@@ -1,6 +1,7 @@
 require "scripts.util"
 local images = require "data.images"
 local Class = require "scripts.meta.class"
+local shaders = require "data.shaders"
 
 local GameUI = Class:inherit()
 
@@ -23,6 +24,7 @@ function GameUI:draw()
 	self:draw_join_tutorial()
 	self:draw_timer()
 	self:draw_version()
+	self:draw_offscreen_indicator()
 end
 
 function GameUI:draw_logo()
@@ -91,6 +93,36 @@ function GameUI:draw_timer()
 
 	rect_color({0,0,0,0.5}, "fill", 0, 10, 50, 12)
 	gfx.print(time_to_string(game.time), 8, 8)
+end
+
+function GameUI:draw_offscreen_indicator()
+	local cam_x, cam_y = self.game.camera:get_position()
+	for i, player in pairs(self.game.players) do
+		if (player.x + player.w < cam_x) or (cam_x + CANVAS_WIDTH < player.x) 
+			or (player.y + player.h < cam_y) or (cam_y + CANVAS_HEIGHT < player.y) then 
+			self:draw_offscreen_indicator_for(player, "x-")
+			self:draw_offscreen_indicator_for(player, "x+")
+		end
+	end
+end
+
+function GameUI:draw_offscreen_indicator_for(player, offscreen_type)
+	local padding = 17
+	local radius = 10
+	
+	local cam_x, cam_y = self.game.camera:get_position()
+	local x = math.floor(clamp(player.mid_x - cam_x, padding, CANVAS_WIDTH - padding))
+	local y = math.floor(clamp(player.mid_y - cam_y, padding, CANVAS_HEIGHT - padding))
+	local rot = math.atan2(player.mid_y - (y + cam_y), player.mid_x - (x + cam_x))
+	
+	exec_color(player.skin.color_palette[1], function()
+		draw_centered(images.offscreen_indicator, x, y, rot, 0.5, 0.5)
+	end)
+	
+	shaders.draw_in_color:sendColor("fillColor", player.skin.color_palette[3])
+	exec_using_shader(shaders.draw_in_color, function()
+		draw_centered(player.skin.spr_idle, x, y, 0, 0.5, 0.5)
+	end)
 end
 
 return GameUI
