@@ -16,15 +16,16 @@ function Dung:init_dung(x, y, spr, w, h)
     self.name = "dung"
     self.follow_player = true
     
-    self.life = 40
+    self.life = math.huge
 
     self.friction_x = 0.999
     self.speed_x = 5
-    self.self_knockback_mult = 0.02
+    self.self_knockback_mult = 0.06
     self.is_stompable = false
     
-    self.rider = DungBeetle:new(self.x, self.y - 30)
-    game:new_actor(self.rider)
+    local beetle = DungBeetle:new(self.x, self.y - 30)
+    game:new_actor(beetle)
+    self:set_rider(beetle)
 
     self.rot_mult = 0.1
 
@@ -41,7 +42,6 @@ end
 function Dung:update_dung_beetle(dt)
     self:update_enemy(dt)
 
-    self.rider:move_to(self.x, self.y - self.h)
     self.rot = self.rot + self.vx * self.rot_mult * dt
 
     -- self.vx = self.speed * self.walk_dir_x

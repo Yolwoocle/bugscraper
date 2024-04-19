@@ -14,7 +14,7 @@ local enemies = {
 	Spider =           require "scripts.actor.enemies.spider",
 	StinkBug =         require "scripts.actor.enemies.stink_bug",
 	Dung =             require "scripts.actor.enemies.dung",
-	-- DungBeetle = require "scripts.actor.enemies.dung_beetle",
+	DungBeetle =       require "scripts.actor.enemies.dung_beetle",
 	FlyingDung =       require "scripts.actor.enemies.flying_dung",
 	Woodlouse =        require "scripts.actor.enemies.woodlouse",
 	
@@ -32,6 +32,7 @@ local enemies = {
 	Cocoon =           require "scripts.actor.enemies.cocoon",
 	
 	VendingMachine =   require "scripts.actor.enemies.vending_machine.vending_machine",
+	PongBall =         require "scripts.actor.enemies.pong_ball",
 }
 
 return enemies

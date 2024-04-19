@@ -38,8 +38,7 @@ local waves = {
 		min = 1,
 		max = 1,
 		enemies = {
-			{E.Larva, 3},
-			{E.Fly, 3},
+			{E.Dung, 3, position = {200, 200}},
 		},
 		-- background = backgrounds.BackgroundDots:new(),
 	}),

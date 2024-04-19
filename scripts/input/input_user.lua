@@ -77,9 +77,7 @@ function InputUser:action_pressed(action)
     -- This makes sure that the button state table assigns "true" to buttons
 	-- that have been just pressed  
     local action_state = self.action_states[action]
-	local last = action_state.last_state
-	local now = self:action_down(action)
-    local result = not last and now
+    local result = action_state.state == STATE_PRESSED
     
     if not result and action_state.can_action_hold_repeat then
         result = action_state:is_hold_repeat_pressed()
@@ -132,6 +130,7 @@ function InputUser:is_joystick_down(button, joystick, is_ui_action)
     joystick = param(joystick, self.joystick)
     is_ui_action = param(is_ui_action, false)
     if joystick == nil then return false end
+    if not joystick:isConnected() then return false end
     local output = false
 
     if Input:is_axis(button.key_name) then
@@ -146,6 +145,7 @@ function InputUser:is_joystick_down(button, joystick, is_ui_action)
     return output
 end
 
+-- FIXME: what the fuck is this disgusting hack doing in InputUser
 function InputUser:is_any_joystick_down(button, is_ui_action)
     is_ui_action = param(is_ui_action, false)
 

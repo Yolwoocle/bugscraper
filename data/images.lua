@@ -213,9 +213,10 @@ local img_names = {
 	upgrade_peanut =    "upgrades/upgrade_peanut",
 	
 	-----------------------------------------------------
-
+	
 	-- misc
-	rays = "ui/rays"
+	rays = "ui/rays",
+	daniel_small = "actors/enemies/daniel_small"
 
 }
 for id, path in pairs(img_names) do

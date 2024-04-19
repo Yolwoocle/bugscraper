@@ -289,6 +289,7 @@ function Game:update_main_game(dt)
 	end
 	self.t = self.t + dt
 
+	self:count_enemies()
 	self:listen_for_player_join(dt)
 	
 	self.level:update(dt)
@@ -302,6 +303,15 @@ function Game:update_main_game(dt)
 	self:update_debug(dt)
 end
 
+function Game:count_enemies()
+	self.enemy_count = 0
+	for _, actor in pairs(self.actors) do
+		if actor.counts_as_enemy then
+			self.enemy_count = self.enemy_count + 1
+		end
+	end
+end
+
 function Game:update_actors(dt)
 	for i = #self.actors, 1, -1 do
 		local actor = self.actors[i]
@@ -309,7 +319,8 @@ function Game:update_actors(dt)
 		if not actor.is_removed and actor.is_active then
 			actor:update(dt)
 		end
-	
+
+
 		if actor.is_removed then
 			actor:final_remove()
 			table.remove(self.actors, i)
@@ -619,15 +630,11 @@ function Game:new_actor(actor)
 		actor:remove()
 		return
 	end
-	if actor.counts_as_enemy then
-		self.enemy_count = self.enemy_count + 1
-	end
 	table.insert(self.actors, actor)
 end
 
 function Game:on_kill(actor)
 	if actor.counts_as_enemy then
-		self.enemy_count = self.enemy_count - 1
 		self.kills = self.kills + 1
 	end
 

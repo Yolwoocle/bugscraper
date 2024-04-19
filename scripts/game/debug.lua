@@ -2,6 +2,7 @@ require "scripts.util"
 local Class = require "scripts.meta.class"
 local Loot = require "scripts.actor.loot"
 local upgrades = require "data.upgrades"
+local enemies = require "data.enemies"
 local utf8 = require "utf8"
 local images = require "data.images"
 
@@ -17,6 +18,7 @@ function Debug:init(game)
     self.joystick_view = false
     self.instant_end = false
     self.layer_view = false
+    self.input_view = false
 
     self.notification_message = ""
     self.notification_timer = 0.0
@@ -48,6 +50,9 @@ function Debug:init(game)
         ["f4"] = {"view joystick info", function()
             self.joystick_view = not self.joystick_view
         end},
+        ["f5"] = {"view input info", function()
+            self.input_view = not self.input_view
+        end},
         ["1"] = {"damage P1", func_damage(1)},
         ["2"] = {"damage P2", func_damage(2)},
         ["3"] = {"damage P3", func_damage(3)},
@@ -62,8 +67,12 @@ function Debug:init(game)
         ["w"] = {"next floor", function()
             self.game:set_floor(self.game:get_floor() + 1)
         end},
-        ["p"] = {"test", function()
-            game:apply_upgrade(upgrades.UpgradeTea:new())
+        -- ["p"] = {"test", function()
+        --     game:apply_upgrade(upgrades.UpgradeTea:new())
+        -- end},
+        ["s"] = {"test", function()
+            local dung = enemies.SnailShelled:new(CANVAS_WIDTH/2, CANVAS_HEIGHT/2)
+            game:new_actor(dung)
         end},
         
         ["e"] = {"kill all enemies", function()
@@ -198,6 +207,8 @@ end
 function Debug:gamepadaxis(joystick, axis, value)
 end
 
+------------------------------------------
+
 function Debug:draw()
     if self.info_view then
         self:draw_info_view()
@@ -208,8 +219,48 @@ function Debug:draw()
     if self.joystick_view then
         self:draw_joystick_view()
     end
+    if self.input_view then
+        self:draw_input_view()
+    end
     if self.notification_timer > 0.0 then
         print_outline(nil, nil, self.notification_message, 0, CANVAS_HEIGHT-16)
+    end
+end
+
+function Debug:draw_input_view()
+    local spacing = 70
+    local x = 0
+    for i = 1, MAX_NUMBER_OF_PLAYERS do
+        local u = Input:get_user(i)
+        if u then
+            self:draw_input_view_for(u, x)
+            x = x + spacing
+        end
+    end
+end
+
+function Debug:draw_input_view_for(user, x)
+    local actions = {
+        "left",
+        "right",
+        "up",
+        "down",
+        "jump",
+        "shoot",
+        "pause",
+        "ui_select",
+        "ui_back",
+        "ui_left",
+        "ui_right",
+        "ui_up",
+        "ui_down",
+        "ui_reset_keys",
+        "split_keyboard",
+        "leave_game",
+        "debug",
+    }
+    for i, a in ipairs(actions) do
+        print_outline(nil, nil, concat(a, ": ", user.action_states[a].state), x, 14*i)
     end
 end
 
@@ -285,12 +336,23 @@ end
 function Debug:draw_debug_menu()
     local x = 0
     local y = 0
+    local max_w = 0
     for i, button in pairs(self.action_keys) do
         local action = self.actions[button]
-        local text = concat("[f1 + ", button, "]: ", action[1])
+        local text = concat("[", button, "]: ", action[1])
+        local w = get_text_width(text)
+        if w > max_w then
+            max_w = w
+        end
+
         rect_color({0,0,0,0.5}, "fill", x, y, get_text_width(text), 10)
         print_outline(nil, nil, text, x, y)
         y = y + 12
+        if y +12 >= CANVAS_HEIGHT then
+            y = 0
+            x = x + max_w
+            max_w = 0
+        end
     end
 end
 

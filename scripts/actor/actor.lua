@@ -66,8 +66,11 @@ function Actor:init_actor(x, y, w, h, spr, args)
 	self.anim_t = random_range(0, self.anim_frame_len)
 	self.anim_frames = nil
 	self.anim_cur_frame = 1
-
 	self:update_sprite_position()
+	
+	-- Rider
+	self.rider = nil
+	self.vehicle = nil
 
 	self.collision_filter = function(item, other)
 		-- By default, do not react to collisions
@@ -116,7 +119,7 @@ function Actor:set_size(w, h)
 	self:update_sprite_offset()
 end
 
-function Actor:center_self()
+function Actor:center_actor()
 	self.x = self.x - self.w/2
 	self.y = self.y - self.h/2
 end
@@ -195,6 +198,16 @@ function Actor:update_actor(dt)
 	end
 
 	self:update_sprite_position()
+
+	-- Rider
+	if self.rider and self.rider.is_removed then
+		self.rider = nil
+	end
+	if self.rider then
+        self.rider:move_to(self.x, self.y - self.h)
+		self.rider.vx = 0
+		self.rider.vy = 0
+    end
 end
 
 function Actor:update_sprite_position()
@@ -309,6 +322,13 @@ function Actor:remove()
 	-- This doesn't immediately remove the Actor, but queues its removal
 	if not self.is_removed then
 		self.is_removed = true
+
+		if self.rider then
+			self.rider:remove_vehicle()
+		end
+		if self.vehicle then
+			self.vehicle:remove_rider()
+		end
 	end
 end
 
@@ -329,5 +349,18 @@ function Actor:set_pos(x, y)
 	Collision:update(self, x, y)
 end
 
+function Actor:set_rider(actor)
+	self.rider = nil
+	self.rider = actor
+	actor.vehicle = self 
+end
+
+function Actor:remove_vehicle()
+	self.vehicle = nil
+end
+
+function Actor:remove_rider()
+	self.rider = nil
+end
 
 return Actor

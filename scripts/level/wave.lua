@@ -86,7 +86,6 @@ function Wave:spawn(ax, ay, bx, by)
 		local position = enemy_classes[i].position or {x, y}
 		
 		local enemy_instance = enemy_class:new(position[1], position[2], unpack(args))
-		enemy_instance:set_active(false)
 
 		-- Center enemy
 		enemy_instance.x = floor(enemy_instance.x - enemy_instance.w/2)
@@ -100,7 +99,16 @@ function Wave:spawn(ax, ay, bx, by)
 		end
 
 		game:new_actor(enemy_instance)
-		table.insert(spawned_enemies, enemy_instance)
+		
+		local cur_enemy = enemy_instance
+		local limit = 10
+		while cur_enemy ~= nil and limit >= 0 do
+			table.insert(spawned_enemies, cur_enemy)
+			cur_enemy:set_active(false)
+
+			cur_enemy = cur_enemy.rider
+			limit = limit - 1
+		end
 	end
 	
 	return spawned_enemies
