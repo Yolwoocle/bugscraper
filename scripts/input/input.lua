@@ -91,6 +91,12 @@ function InputManager:update(dt)
     end
 end
 
+function InputManager:mark_all_actions_as_handled()
+    for i, user in pairs(self.users) do
+        user:mark_all_actions_as_handled()
+    end
+end
+
 function InputManager:update_last_input_state(dt)
     for i, user in pairs(self.users) do
         user:update_last_input_state()

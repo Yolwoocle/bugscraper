@@ -87,6 +87,7 @@ function Game:new_game()
 	-- Reset global systems
 	Collision = CollisionManager:new()
 	Particles = ParticleSystem:new()
+	Input:mark_all_actions_as_handled()
 
 	self.t = 0
 	self.frame = 0

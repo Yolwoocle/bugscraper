@@ -63,6 +63,12 @@ function InputUser:init_action_states()
 	end
 end
 
+function InputUser:mark_all_actions_as_handled()
+    for action, action_state in pairs(self.action_states) do
+        action_state:mark_as_handled()
+    end
+end
+
 function InputUser:update_last_input_state()
     for action, action_state in pairs(self.action_states) do
         action_state:update_last_input_state()
@@ -78,6 +84,9 @@ function InputUser:action_pressed(action)
 	-- that have been just pressed  
     local action_state = self.action_states[action]
     local result = action_state.state == STATE_PRESSED
+    if self.action_states[action].is_handled then
+        return false
+    end
     
     if not result and action_state.can_action_hold_repeat then
         result = action_state:is_hold_repeat_pressed()
