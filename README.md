@@ -9,8 +9,8 @@
 [**itch.io**](https://yolwoocle.itch.io/bugscraper)
 
 Welcome to the bugscraper.
-Here, nefarious insects and pests all around the world come to plan their next mischief. 
-Stop them before it is too late!
+Here, pests all around the world come to gather.
+Your mission: stopping them before it is too late!
 
 Rise to the top of a bug-infested tower by fighting on an elevator. On each floor, waves of enemies will come for your skin (or rather, exoskeleton). With your trusty pea gun, eliminate them and prepare for the next floor!
 
@@ -36,9 +36,9 @@ I am very lax with what you can do with the source code, but please note that I 
   🐛🐛🐛🐛🐛
 </div>  
 
-## Can I pirate your game?
-I don't care. I'm not here to tell you what you should do. I've pirated games as a kid myself. I'm making this game for my own enjoyment, and I don't financially depend on it.
+<!-- ## Can I pirate your game?
+I don't care. I'm not here to tell you what you should do. I'm making this game for my own enjoyment and I don't financially depend on it.
 
-This isn't about me, but you: by choosing to buy or pirate a game, you are judging whether you are financially capable of affording it, and whether you are willing, or capable, of supporting the developer. Making games is difficult. People pour their soul and heart into providing enjoyment to others, often with very little gains. It is a work of love. When you buy a game, you also expressing your gratitude towards that work. 
+This isn't about me, but you: by choosing to buy or pirate a game, you are judging whether you are financially capable of affording it and supporting the developer. Not everyone is comfortable financially. But also, making games is a difficult task. People pour their soul and heart into providing enjoyment to others, usually with very little gains. It is often a labor of love. When you buy a game, you are also expressing your gratitude towards that work. 
 
-So you decide. 🙂 
+So, you decide. 🙂  -->

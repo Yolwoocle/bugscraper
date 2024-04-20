@@ -618,10 +618,12 @@ end
 
 function Player:kill()
 	if self.is_dead then return end
-	self.is_dead = true
 	
-	-- local fainted_player = Enemies.Cocoon:new(self.x, self.y)
-	-- game:new_actor(fainted_player)
+	print_debug("summon fainted player n", self.n)
+	local fainted_player = Enemies.FaintedPlayer:new(self.x, self.y, self)
+	game:new_actor(fainted_player)
+	-- if game:get_number_of_alive_players() > 1 then
+	-- end
 
 	game:screenshake(10)
 	Particles:dead_player(self.spr_x, self.spr_y, self.skin.spr_dead, self.color_palette, self.dir_x)
@@ -633,6 +635,7 @@ function Player:kill()
 	self.timer_before_death = self.max_timer_before_death
 	Audio:play("game_over_1")
 
+	self.is_dead = true
 	self:remove()
 end
 

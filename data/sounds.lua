@@ -161,7 +161,7 @@ sounds.fly_buzz:setLooping(true)
 for i=0,9 do
 	sounds["footstep0"..tostring(i)]:setVolume(0.2)
 end
-
+ 
 -- sounds.music_galaxy_trip = new_source("music/v2_teelopes.ogg", "static", {looping = true})
 sounds.music_intro_ingame =     new_source("music/music_intro_ingame.ogg",     "stream", {looping = true})
 sounds.music_intro_paused =     new_source("music/music_intro_paused.ogg",     "stream", {looping = true})

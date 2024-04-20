@@ -4,13 +4,16 @@ local sounds = require "data.sounds"
 local images = require "data.images"
 local Guns = require "data.guns"
 
-local Cocoon = Enemy:inherit()
+local FaintedPlayer = Enemy:inherit()
 
-function Cocoon:init(x, y, player_n)
-    self:init_enemy(x,y, images.cocoon, 15, 26)
-    self.player_n = player_n or 1
+function FaintedPlayer:init(x, y, player)
+	print_debug("i am fainted player n", player.n)
 
-    self.name = "cocoon"
+    self:init_enemy(x,y, player.skin.spr_dead, 15, 26)
+    self.name = "fainted_player"
+
+    self.player_n = player.n or 1
+
     self.follow_player = false
     self.counts_as_enemy = true
 
@@ -32,19 +35,19 @@ function Cocoon:init(x, y, player_n)
     self.sound_stomp = "cloth_drop"
 end
 
-function Cocoon:update(dt)
+function FaintedPlayer:update(dt)
     self:update_enemy(dt)
 end
 
-function Cocoon:on_death(damager, reason)
+function FaintedPlayer:on_death(damager, reason)
     Particles:image(self.mid_x, self.mid_y, 20, {images.cocoon_fragment_1, images.cocoon_fragment_2}, self.w, nil, nil, 0.5)
     local player = game:new_player(self.player_n, self.x, self.y)
     
     player:set_invincibility(player.max_iframes)
 
-    -- local l = math.floor(damager.life/2)
-    -- player:set_life(l)
-    -- damager:set_life(damager.life - l)
+    local l = math.floor(damager.life/2)
+    player:set_life(l)
+    damager:set_life(damager.life - l)
 end
 
-return Cocoon
+return FaintedPlayer
