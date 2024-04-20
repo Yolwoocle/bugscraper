@@ -16,7 +16,7 @@ function Dung:init_dung(x, y, spr, w, h)
     self.name = "dung"
     self.follow_player = true
     
-    self.life = math.huge
+    self.life = 30
 
     self.friction_x = 0.999
     self.speed_x = 5
@@ -25,6 +25,7 @@ function Dung:init_dung(x, y, spr, w, h)
     self.is_stompable = false
     self.destroy_bullet_on_impact = false
 	self.is_immune_to_bullets = true
+    self.is_bouncy_to_bullets = true
     
     local beetle = DungBeetle:new(self.x, self.y - 30)
     game:new_actor(beetle)

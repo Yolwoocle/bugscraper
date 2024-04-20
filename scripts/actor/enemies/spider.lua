@@ -11,6 +11,7 @@ function Spider:init(x, y)
     self.name = "spider"
     self.follow_player = false
 
+    self.life = 8
     self.gravity = -self.default_gravity
 
     self.anim_frame_len = 0.4

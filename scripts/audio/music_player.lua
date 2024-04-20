@@ -7,10 +7,10 @@ local MusicPlayer = Class:inherit()
 
 function MusicPlayer:init()
 	self.disks = {
-		["intro"] =     MusicDisk:new(self, sounds.music_intro_unpaused.source, sounds.music_intro_paused.source),
-		["w1"] =        MusicDisk:new(self, sounds.music_w1_unpaused.source, sounds.music_w1_paused.source),
+		["intro"] =     MusicDisk:new(self, sounds.music_intro_ingame.source, sounds.music_intro_paused.source),
+		["w1"] =        MusicDisk:new(self, sounds.music_w1_ingame.source, sounds.music_w1_paused.source),
 		["game_over"] = MusicDisk:new(self, sounds.music_game_over.source, sounds.music_game_over.source),
-		["cafeteria"] = MusicDisk:new(self, sounds.music_cafeteria.source, sounds.music_cafeteria.source),
+		["cafeteria"] = MusicDisk:new(self, sounds.music_cafeteria_ingame.source, sounds.music_cafeteria_paused.source),
 	}
 
 	-- self.music_source    = sounds.music_galaxy_trip[1] 

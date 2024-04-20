@@ -9,11 +9,12 @@ local images = require "data.images"
 local DungBeetle = Enemy:inherit()
 
 function DungBeetle:init(x, y)
-    self:init_enemy(x,y, images.daniel_small, 24, 20)
+    self:init_enemy(x,y, images.daniel_small, 24, 10)
     self.name = "dung_beetle"
     self.follow_player = false
 
     self.damage = 1
+    self.life = math.huge
     -- self.self_knockback_mult = 0.1
 
     self.knockback = 0
@@ -23,6 +24,7 @@ function DungBeetle:init(x, y)
     self.is_stompable = false
     self.destroy_bullet_on_impact = false
 	self.is_immune_to_bullets = true
+    self.is_bouncy_to_bullets = true
 
     self.sound_damage = {"cloth1", "cloth2", "cloth3"}
     self.sound_death = "cloth_drop"
@@ -35,7 +37,9 @@ function DungBeetle:init(x, y)
 
     self.hits = self.dung_limit
     self.life = math.huge
-    self.unridden_life = 15
+    self.unridden_life = 10
+
+    self.has_unridden = false
 end
 
 function DungBeetle:update(dt)
@@ -59,6 +63,11 @@ function DungBeetle:update(dt)
             self.spawn_dung_timer:start()
         end
     end
+
+    if self.vehicle == nil and not self.has_unridden then
+        self.has_unridden = true
+        self:unride()
+    end
 end
 
 function DungBeetle:on_death()
@@ -73,20 +82,18 @@ end
 function DungBeetle:draw()
     self:draw_enemy()
 
-    print_outline(nil, nil, tostring(self.hits), self.mid_x + 20, self.mid_y)
+    if self.vehicle then
+        print_outline(nil, nil, tostring(self.vehicle.life), self.mid_x + 20, self.mid_y)
+    end
+    print_outline(COL_GREEN, nil, tostring(self.life), self.mid_x + 20, self.mid_y-10)
 end
 
 function DungBeetle:on_hit_flying_dung(flying_dung)
     self.hits = math.max(0, self.hits - 1)
-    self:do_damage(10, flying_dung)
-
+    
+    self:do_damage(5, flying_dung)
     if self.vehicle then
-        self.vehicle:do_damage(1, flying_dung)
-
-        if self.hits <= 0 then
-            self.vehicle:kill()
-            self:unride()
-        end
+        self.vehicle:do_damage(5, flying_dung)
     end
 end
 
@@ -97,6 +104,7 @@ function DungBeetle:unride()
 
     self.destroy_bullet_on_impact = true
 	self.is_immune_to_bullets = false
+    self.is_bouncy_to_bullets = false
 
     self.life = self.unridden_life
 end

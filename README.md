@@ -1,4 +1,4 @@
-**NOTE:** if you are just here to obtain a free version of the game, I'm okay with that, but please consider sharing the game with other people, or [supporting me financially](https://yolwoocle.itch.io/bugscraper) if you can. Thanks! 🙂
+**NOTE:** if you are just here to obtain a free copy of the game, I'm okay with that, but please consider sharing the game with other people, or [supporting me](https://yolwoocle.itch.io/bugscraper) if you can. Thanks! 🙂
 <br>
 <div align="center">
   <h1>Bugscraper</h1>
@@ -35,3 +35,10 @@ I am very lax with what you can do with the source code, but please note that I 
 <div align="center">
   🐛🐛🐛🐛🐛
 </div>  
+
+## Can I pirate your game?
+I don't care. I'm not here to tell you what you should do. I've pirated games as a kid myself. I'm making this game for my own enjoyment, and I don't financially depend on it.
+
+This isn't about me, but you: by choosing to buy or pirate a game, you are judging whether you are financially capable of affording it, and whether you are willing, or capable, of supporting the developer. Making games is difficult. People pour their soul and heart into providing enjoyment to others, often with very little gains. It is a work of love. When you buy a game, you also expressing your gratitude towards that work. 
+
+So you decide. 🙂 

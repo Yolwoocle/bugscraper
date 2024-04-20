@@ -204,7 +204,7 @@ function Actor:update_actor(dt)
 		self.rider = nil
 	end
 	if self.rider then
-        self.rider:move_to(self.x, self.y - self.h)
+        self.rider:move_to(self.x, self.y - self.rider.h)
 		self.rider.vx = 0
 		self.rider.vy = 0
     end
