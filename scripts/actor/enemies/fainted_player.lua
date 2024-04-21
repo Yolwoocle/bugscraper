@@ -9,7 +9,7 @@ local FaintedPlayer = Enemy:inherit()
 function FaintedPlayer:init(x, y, player)
 	print_debug("i am fainted player n", player.n)
 
-    self:init_enemy(x,y, player.skin.spr_dead, 15, 26)
+    self:init_enemy(x,y, player.skin.spr_dead, 13, 13)
     self.name = "fainted_player"
 
     self.player_n = player.n or 1
@@ -40,14 +40,20 @@ function FaintedPlayer:update(dt)
 end
 
 function FaintedPlayer:on_death(damager, reason)
+    print_debug("on death", self.player_n)
     Particles:image(self.mid_x, self.mid_y, 20, {images.cocoon_fragment_1, images.cocoon_fragment_2}, self.w, nil, nil, 0.5)
     local player = game:new_player(self.player_n, self.x, self.y)
     
     player:set_invincibility(player.max_iframes)
 
     local l = math.floor(damager.life/2)
-    player:set_life(l)
-    damager:set_life(damager.life - l)
+    if damager.life > 1 then
+        player:set_life(l)
+        damager:set_life(damager.life - l)
+    else 
+        player:set_life(1)
+        damager:set_life(0)
+    end
 end
 
 return FaintedPlayer
