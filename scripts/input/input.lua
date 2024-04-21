@@ -568,8 +568,9 @@ function InputManager:draw_input_prompt(player_n, actions, label, label_color, x
         love.graphics.draw(icon, x, y)
         x = x + icon_w + 2
     end
-    local text_w = get_text_width(label)
-    print_outline(label_color, COL_BLACK_BLUE, label, x, y)
+    local text = Text:text(label)
+    local text_w = get_text_width(text)
+    print_outline(label_color, COL_BLACK_BLUE, text, x, y)
 
     x = x + text_w
     return x

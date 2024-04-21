@@ -253,7 +253,6 @@ function Level:new_wave_buffer_enemies()
 	local wave = self:get_new_wave(wave_n)
 	
 	self.enemy_buffer = wave:spawn(self.door_ax, self.door_ay, self.door_bx, self.door_by)
-	print_debug("#self.enemy_buffer", #self.enemy_buffer)
 	
 	self:load_background(wave)
 	self:load_music(wave)
@@ -480,7 +479,7 @@ function Level:draw_win_screen()
 	local old_font = gfx.getFont()
 	gfx.setFont(FONT_PAINT)
 
-	local text = "CONGRATULATIONS! "
+	local text = Text:text("game.congratulations")
 	local w = get_text_width(text, FONT_PAINT)
 	local text_x1 = floor((CANVAS_WIDTH - w)/2)
 
@@ -515,7 +514,7 @@ function Level:draw_win_screen()
 	-- 	if k == "max_combo" then key = "max combo" end
 	-- 	table.insert(ta, concat(k,": ",val))
 	-- end
-	table.insert(ta, "Pause to exit")
+	table.insert(ta, Text:text("game.win_prompt"))
 
 	for k,v in pairs(ta) do
 		local t = self.game.t + iy*0.2

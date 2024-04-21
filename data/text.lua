@@ -1,5 +1,0 @@
-local text = {
-
-}
-
-return text

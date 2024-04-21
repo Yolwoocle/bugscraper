@@ -13,6 +13,7 @@ local GameUI = require "scripts.ui.game_ui"
 local Debug = require "scripts.game.debug"
 local Camera = require "scripts.game.camera"
 local Layer = require "scripts.graphics.layer"
+local TextManager = require "scripts.text"
 
 local skins = require "data.skins"
 local sounds = require "data.sounds"
@@ -25,6 +26,7 @@ local Game = Class:inherit()
 
 function Game:init()
 	-- Global singletons
+	Text = TextManager:new()
 	Input = InputManager:new(self)
 	Options = OptionsManager:new(self)
 	Collision = CollisionManager:new()
@@ -243,7 +245,7 @@ function Game:update_screen()
 	elseif pixel_scale_mode == "auto" then
 		scale = auto_scale
 		
-	elseif pixel_scale_mode == "max whole" then
+	elseif pixel_scale_mode == "max_whole" then
 		scale = math.floor(auto_scale)
 	end
 

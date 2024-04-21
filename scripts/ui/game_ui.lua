@@ -66,7 +66,7 @@ function GameUI:draw_join_tutorial()
 	
 	local x = def_x
 	local y = def_y
-	print_outline(COL_WHITE, COL_BLACK_BLUE, "JOIN", x, y)
+	print_outline(COL_WHITE, COL_BLACK_BLUE, Text:text("input.prompts.join"), x, y)
 	for i, icon in pairs(icons) do
 		x = x - icon:getWidth() - 2
 		love.graphics.draw(icon, x, y)
@@ -79,8 +79,9 @@ function GameUI:draw_join_tutorial()
 	y = y + 16
 	if number_of_keyboard_users >= 1 then
 		local icon_split_kb = Input:get_button_icon(1, Input:get_input_profile("global"):get_primary_button("split_keyboard"))
+		local split_label = ternary(number_of_keyboard_users == 1, Text:text("input.prompts.split_keyboard"), Text:text("input.prompts.unsplit_keyboard"))
 
-		print_outline(COL_WHITE, COL_BLACK_BLUE, ternary(number_of_keyboard_users == 1, "SPLIT KEYBOARD", "UNSPLIT KEYBOARD"), x, y)
+		print_outline(COL_WHITE, COL_BLACK_BLUE, split_label, x, y)
 		x = x - icon_split_kb:getWidth() - 2
 		love.graphics.draw(icon_split_kb, x, y)
 	end
