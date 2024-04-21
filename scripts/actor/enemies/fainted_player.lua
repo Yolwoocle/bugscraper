@@ -7,8 +7,6 @@ local Guns = require "data.guns"
 local FaintedPlayer = Enemy:inherit()
 
 function FaintedPlayer:init(x, y, player)
-	print_debug("i am fainted player n", player.n)
-
     self:init_enemy(x,y, player.skin.spr_dead, 13, 13)
     self.name = "fainted_player"
 
@@ -40,7 +38,6 @@ function FaintedPlayer:update(dt)
 end
 
 function FaintedPlayer:on_death(damager, reason)
-    print_debug("on death", self.player_n)
     Particles:image(self.mid_x, self.mid_y, 20, {images.cocoon_fragment_1, images.cocoon_fragment_2}, self.w, nil, nil, 0.5)
     local player = game:new_player(self.player_n, self.x, self.y)
     

@@ -198,7 +198,7 @@ end
 function InputUser:get_button_style()
     local style = Options:get("button_style_p"..self.n)
     if style == BUTTON_STYLE_DETECT then
-        local console_name = "generic"
+        local console_name = "xbox"
         if self.joystick then
             console_name = gamepadguesser.joystickToConsole(self.joystick)
         end

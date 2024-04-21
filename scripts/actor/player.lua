@@ -206,7 +206,7 @@ function Player:update(dt)
 		end
 		
 		if self.combo >= 4 then
-			Particles:word(self.mid_x, self.mid_y, concat("COMBO ", self.combo, "!"), COL_LIGHT_BLUE)
+			Particles:word(self.mid_x, self.mid_y, Text:text("game.combo", self.combo), COL_LIGHT_BLUE)
 		end
 		self.combo = 0
 	end
@@ -310,13 +310,13 @@ end
 function Player:get_controls_tutorial_values()
 	if self.is_touching_exit_sign then
 		return {
-			{{"leave_game"}, "Leave"},
+			{{"leave_game"}, "input.prompts.leave_game"},
 		}
 	else
 		return {
-			{{"shoot"}, "Shoot"},
-			{{"jump"}, "Jump"},
-			{{"right", "down", "left", "up"}, "Move", Input:get_primary_input_type(self.n) == INPUT_TYPE_KEYBOARD},
+			{{"shoot"}, "input.prompts.shoot"},
+			{{"jump"}, "input.prompts.jump"},
+			{{"right", "down", "left", "up"}, "input.prompts.move", Input:get_primary_input_type(self.n) == INPUT_TYPE_KEYBOARD},
 		} 
 	end
 end
@@ -350,7 +350,7 @@ function Player:draw_controls()
 
 		local shown_duration = 0.5
 		local actions = tuto[1]
-		local label = tuto[2]
+		local label = Text:text(tuto[2])
 		local show_in_keybaord_form = tuto[3]
 
 		local x_of_second_button = 0
@@ -619,7 +619,6 @@ end
 function Player:kill()
 	if self.is_dead then return end
 	
-	print_debug("summon fainted player n", self.n)
 	local fainted_player = Enemies.FaintedPlayer:new(self.x, self.y, self)
 	game:new_actor(fainted_player)
 	-- if game:get_number_of_alive_players() > 1 then

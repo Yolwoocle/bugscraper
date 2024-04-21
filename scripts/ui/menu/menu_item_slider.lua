@@ -55,7 +55,7 @@ function SliderMenuItem:next_value(diff)
 	diff = diff or 1
 	self.value_index = mod_plus_1(self.value_index + diff, #self.values)
 	self.value = self.values[self.value_index]
-	self.value_text = tostring(self.value)
+	-- self.value_text = tostring(self.value)
 end
 
 function SliderMenuItem:after_click(diff)

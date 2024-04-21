@@ -10,9 +10,8 @@ function Guns:init()
 	self.Machinegun = Gun:inherit()
 
 	function self.Machinegun:init(user)
-		self:init_gun(user)
 		self.name = "machinegun"
-		self.display_name = "pea gun"
+		self:init_gun(user)
 		
 		self.sfx = "mushroom_ant_pop"
 		self.damage = 1.5
@@ -34,9 +33,8 @@ function Guns:init()
 	self.Triple = Gun:inherit()
 
 	function self.Triple:init(user)
-		self:init_gun(user)
 		self.name = "triple"
-		self.display_name = "triple pepper"
+		self:init_gun(user)
 
 		self.max_ammo = 15
 
@@ -63,9 +61,9 @@ function Guns:init()
 	self.Burst = Gun:inherit()
 
 	function self.Burst:init(user)
-		self:init_gun(user)
 		self.name = "burst"
-		self.display_name = "pollen burst"
+		self:init_gun(user)
+
 		self.spr = images.gun_burst
 		self.sfx = "mushroom_ant_pop"
 		self.sfx_pitch = 1.1
@@ -89,9 +87,9 @@ function Guns:init()
 	self.Shotgun = Gun:inherit()
 
 	function self.Shotgun:init(user)
-		self:init_gun(user)
 		self.name = "shotgun"
-		self.display_name = "raspberry shotgun"
+		self:init_gun(user)
+
 		self.spr = images.gun_shotgun
 		self.sfx = "mushroom_ant_pop"
 		self.sfx_pitch = 0.6
@@ -122,9 +120,8 @@ function Guns:init()
 	self.Minigun = Gun:inherit()
 
 	function self.Minigun:init(user)
-		self:init_gun(user)
 		self.name = "minigun"
-		self.display_name = "seed minigun"
+		self:init_gun(user)
 		
 		self.max_ammo = 150
 		self.max_reload_timer = 1.5
@@ -151,9 +148,8 @@ function Guns:init()
 	self.Ring = Gun:inherit()
 
 	function self.Ring:init(user)
-		self:init_gun(user)
 		self.name = "ring"
-		self.display_name = "big berry"
+		self:init_gun(user)
 		
 		self.max_ammo = 8
 		self.max_reload_timer = 1.3
@@ -186,9 +182,8 @@ function Guns:init()
 	self.MushroomCannon = Gun:inherit()
 
 	function self.MushroomCannon:init(user)
-		self:init_gun(user)
 		self.name = "mushroom_cannon"
-		self.display_name = "mushroom cannon"
+		self:init_gun(user)
 		
 		self.sfx = "mushroom_ant_pop"
 		self.sfx_pitch = 0.7
@@ -215,8 +210,8 @@ function Guns:init()
 	self.unlootable.MushroomAntGun = Gun:inherit()
 
 	function self.unlootable.MushroomAntGun:init(user)
-		self:init_gun(user)
 		self.name = "mushroom_ant_gun"
+		self:init_gun(user)
 		self.is_lootable = false
 		
 		self.sfx = "mushroom_ant_pop"
@@ -236,8 +231,8 @@ function Guns:init()
 	self.unlootable.DebugGun = Gun:inherit()
 
 	function self.unlootable.DebugGun:init(user)
-		self:init_gun(user)
 		self.name = "debug_gun"
+		self:init_gun(user)
 		
 		self.sfx = "shot1"
 		self.damage = 200

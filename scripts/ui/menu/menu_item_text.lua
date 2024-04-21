@@ -107,6 +107,7 @@ function TextMenuItem:draw_textitem()
 	gfx.setColor(1, 1, 1, 1)
 end
 
+-- This whole section is disgusting 
 function TextMenuItem:get_leftjustified_text_draw_function()
 	local draw_func = ternary(self.is_selected,
 		function(...) print_ycentered_outline(COL_WHITE, Input:get_last_ui_player_color(), ...) end,
