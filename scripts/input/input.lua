@@ -358,9 +358,7 @@ function InputManager:add_action_button(profile_id, action, new_button)
     assert(profile ~= nil, concat("add_action_button: profile '",profile_id,"' doesn't exist"))
 
     local current_buttons = profile:get_buttons(action)
-    print_table(current_buttons)
     table.insert(current_buttons, new_button)
-    print_table(current_buttons)
 
 	self:update_controls_file(profile_id)
 end

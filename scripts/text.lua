@@ -8,8 +8,6 @@ local TextManager = Class:inherit()
 
 function TextManager:init()
     self.values = self:unpack(lang_en)
-
-    print_table(self.values)
 end
 
 --- Unpacks a table to be used as text keys. Example:

@@ -194,7 +194,6 @@ function ExitSign:update_smash_easter_egg(dt)
         
         self:update_star()
 
-        -- print_table(self.smash_stars)
         -- assert(false)
         for _, star in pairs(self.smash_stars) do
             for i = 1, #star-1, 2 do

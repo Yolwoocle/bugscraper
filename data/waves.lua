@@ -52,9 +52,9 @@ local waves = {
 		max = 1,
 		enemies = {
 			{E.Dummy, 1, position = {5000, 200}},
+			{E.UpgradeDisplay, 1, position = {488, 200}},
 			{E.UpgradeDisplay, 1, position = {544, 200}},
-			{E.UpgradeDisplay, 1, position = {608, 200}},
-			{E.UpgradeDisplay, 1, position = {672, 200}},
+			{E.UpgradeDisplay, 1, position = {600, 200}},
 		},
 	}),
 	

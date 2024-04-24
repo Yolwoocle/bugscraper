@@ -63,6 +63,8 @@ function Player:init(n, x, y, skin)
 	self.speed_mult = 1.0
 
 	-- Jump
+	-- self.max_jumps = 3
+	-- self.jumps = self.max_jumps
 	self.jump_speed = 450
 	self.jump_speed_mult = 1.0
 	self.buffer_jump_timer = 0
@@ -250,6 +252,8 @@ function Player:draw()
 	self:draw_player()
 
 	gfx.setColor(COL_WHITE)
+
+	-- print_outline(nil, nil, tostring(self.jumps), self.x + 20, self.y)
 end
 
 function Player:draw_hud()
@@ -744,6 +748,9 @@ function Player:update_poison(dt)
 end
 
 function Player:on_collision(col, other)
+	if col.type ~= "cross" and col.normal.y == -1 then
+		-- self.jumps = self.max_jumps
+	end
 end
 
 function Player:on_stomp(enemy)

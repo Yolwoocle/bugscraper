@@ -13,38 +13,10 @@ function Loot:init_loot(spr, x, y, w, h, val, vx, vy)
 	self:init_actor(x, y, w, h, spr)
 	self.is_loot = true
 
-	self.max_life = 10
-	self.life = self.max_life
-
-	self.max_blink_timer = 0.1
-	self.blink_timer = self.max_blink_timer
-	self.blink_is_shown = true
-
-	self.is_collectable = false
-	self.uncollectable_timer = 0.7
-	
-	self.friction_x = 1
 	self.vx = vx or 0
 	self.vy = vy or 0
 
-	self.move_dir_x = 1
-
-	self.speed = 0
-	self.accel = 300
-	self.speed_min = 100
-	self.speed_max = 200
-
-	self.jump_speed_min = 100
-	self.jump_speed_max = 250
-
 	self.value = val
-
-	self.target_player = nil
-	self.min_attract_dist = math.huge
-	self.is_attracted = true
-
-	self.ghost_time = random_range(0.4, 0.8)
-	self.ghost_timer = self.ghost_time
 
 	-- Verify if the loot is spawned through the wall
 	local actual_x, actual_y, cols, len = Collision:check(self, self.x, self.y, self.collision_filter)
@@ -57,13 +29,50 @@ function Loot:init_loot(spr, x, y, w, h, val, vx, vy)
 	if is_coll then
 		self:set_pos(CANVAS_WIDTH/2, CANVAS_HEIGHT/2)
 	end
+
+	self:reset()
+end
+
+function Loot:reset()
+	self:reset_loot()
+end
+function Loot:reset_loot()
+	self.max_life = 10
+	self.life = self.max_life
+
+	self.max_blink_timer = 0.1
+	self.blink_timer = self.max_blink_timer
+	self.blink_is_shown = true
+
+	self.is_collectable = false
+	self.uncollectable_timer = 0.7
+	self.destroy_on_collect = false
+	
+	self.friction_x = 1
+
+	self.move_dir_x = 1
+
+	self.speed = 0
+	self.accel = 300
+	self.speed_min = 100
+	self.speed_max = 200
+
+	self.jump_speed_min = 100
+	self.jump_speed_max = 250
+
+	self.target_player = nil
+	self.min_attract_dist = math.huge
+	self.is_attracted = true
+
+	self.ghost_time = random_range(0.4, 0.8)
+	self.ghost_timer = self.ghost_time
 end
 
 function Loot:update_loot(dt)
 	self:update_actor(dt)
 
 	-- uncollectable timer 
-	self.uncollectable_timer = max(self.uncollectable_timer - dt, 0)
+	self.uncollectable_timer = math.max(self.uncollectable_timer - dt, 0)
 	self.is_collectable = self.uncollectable_timer <= 0
 
 	self.life = self.life - dt
@@ -183,9 +192,12 @@ function Loot:attract_to_player(dt)
 end
 
 function Loot:on_collision(col, other)
-	if col.other == self.player then    return   end
-	
-	if not self.is_removed and col.other.is_player and self.ghost_timer <= 0 then
+	-- if col.other == self.player then    return   end
+	if not self.is_collectable or self.is_removed then
+		return
+	end
+
+	if col.other.is_player and self.ghost_timer <= 0 then
 		self:on_collect(other)
 	end
 
@@ -266,7 +278,16 @@ function Loot.Gun:init(x, y, val, vx, vy)
 	self.gun = gun
 	
 	self:init_loot(gun.spr, x, y, 2, 2, val, vx, vy)
+end
+
+function Loot.Gun:reset()
+	self:reset_loot()
+
+	self.vx = 0
+	self.vy = 0
+
 	self.min_attract_dist = 16
+	self.uncollectable_timer = 1.0
 	
 	self.friction_x = self.default_friction
 	
@@ -278,14 +299,20 @@ function Loot.Gun:init(x, y, val, vx, vy)
 end
 
 function Loot.Gun:on_collect(player)
+	local old_gun = player.gun
 	player:equip_gun(self.gun)
 	
 	Particles:smoke(self.mid_x, self.mid_y, nil, COL_LIGHT_BROWN)
 	Audio:play("item_collect")
 
 	Particles:word(self.mid_x, self.mid_y, string.upper(self.gun.display_name or self.gun.name), COL_LIGHT_YELLOW)
+	self:reset()
+	
+	self.gun = old_gun
+	self:set_sprite(self.gun.spr)
 
-	self:remove()
+	self.uncollectable_timer = 3.0
+	-- self:remove()
 end
 
 function Loot.Gun:update(dt)

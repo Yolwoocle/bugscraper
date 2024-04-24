@@ -36,7 +36,7 @@ function UpgradeDisplay:init(x, y)
 	self.destroy_bullet_on_impact = true
 	self.is_immune_to_bullets = false
 
-    self.player_detection_range_x = 32
+    self.player_detection_range_x = 26
     self.player_detection_range_y = 64
     self.target_player = nil
     
@@ -44,6 +44,7 @@ function UpgradeDisplay:init(x, y)
 	self.sound_death = "glass_break"
 
     self.animation_t = 0
+    self.is_animation_exiting = false
     self.letters = {}
 end
 
@@ -58,8 +59,10 @@ function UpgradeDisplay:update(dt)
 
     if self.is_focused then
         self.animation_t = clamp(self.animation_t + dt*2, 0, 1)
+        self.is_animation_exiting = false
     else
         self.animation_t = clamp(self.animation_t - dt*2, 0, 1)
+        self.is_animation_exiting = true
     end
 end
 
@@ -130,7 +133,7 @@ function UpgradeDisplay:draw_text(x, y, text, col, s)
         local c = utf8.sub(text, i, i)
         local w = get_text_width(c) * s
         if t > 0 then
-            local oy = ease_out_cubic(clamp(t, 0, 1)) * (-4)
+            local oy = ease_out_cubic(clamp(t, 0, 1)) * (-4) 
             print_outline(col, COL_BLACK_BLUE, c, text_x, y + oy, nil, nil, s)
         end
         text_x = text_x + w

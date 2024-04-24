@@ -19,8 +19,8 @@ function FaintedPlayer:init(x, y, player)
     self.damage = 0
     self.self_knockback_mult = 0.1
     
-	-- self.destroy_bullet_on_impact = false
-	-- self.is_immune_to_bullets = true
+	self.destroy_bullet_on_impact = false
+	self.is_immune_to_bullets = true
 
     self.knockback = 0
     

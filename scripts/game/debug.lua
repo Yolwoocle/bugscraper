@@ -109,12 +109,12 @@ function Debug:init(game)
         end},
         ["l"] = {"spawn random loot", function()
             local loot, parms = random_weighted({
-                {Loot.Life, 3, loot_type="life", value=1},
+                -- {Loot.Life, 3, loot_type="life", value=1},
 		        {Loot.Gun, 3, loot_type="gun"},
             })
             if not loot then return end
             
-            local x, y = CANVAS_WIDTH/2, CANVAS_HEIGHT/2
+            local x, y = CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8
             local instance
             local vx = random_neighbor(300)
             local vy = random_range(-200, -500)

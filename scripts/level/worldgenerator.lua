@@ -45,7 +45,7 @@ function WorldGenerator:generate_cafeteria()
 	self:write_box(2, 2, 68, 15, 1)
 
 	-- table
-	self:write_box(31, 13, 45, 13, 3)
+	self:write_box(27, 13, 40, 13, 3)
 end
 
 function WorldGenerator:write_box(ax, ay, bx, by, value)
