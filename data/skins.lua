@@ -2,6 +2,13 @@ require "scripts.util"
 local images = require "data.images"
 
 return {
+	-- {
+	-- 	spr_idle = images.yanis,
+	-- 	spr_jump = images.yanis,
+	-- 	spr_wall_slide = images.yanis,
+	-- 	spr_dead = images.yanis,
+	-- 	color_palette = {color(0xf6757a), color(0xb55088), color(0xe43b44), color(0x9e2835), color(0x3a4466), color(0x262b44)},
+	-- },
 	{
 		spr_idle = images.ant1,
 		spr_jump = images.ant2,

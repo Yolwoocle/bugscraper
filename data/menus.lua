@@ -472,6 +472,8 @@ local function generate_menus()
         { "hades140701", function() end },
         { "Corentin Vaillant", func_url("https://github.com/CorentinVaillant/")},
         { "NerdOfGamers + partner", func_url("https://ryancavendell.itch.io/")},
+        { "Azuras03 (NicolasYT)", function() end},
+        { "Lars Loe (MadByte)", function() end},
         { ""},
         { "<<< "..Text:text("menu.credits.special_thanks").." >>>"},
         { "Gouspourd", func_url("https://gouspourd.itch.io/")},

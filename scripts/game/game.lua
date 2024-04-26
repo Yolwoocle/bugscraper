@@ -14,6 +14,7 @@ local Debug = require "scripts.game.debug"
 local Camera = require "scripts.game.camera"
 local Layer = require "scripts.graphics.layer"
 local TextManager = require "scripts.text"
+local ScreenshotManager = require "scripts.screenshot"
 
 local skins = require "data.skins"
 local sounds = require "data.sounds"
@@ -32,6 +33,7 @@ function Game:init()
 	Collision = CollisionManager:new()
 	Particles = ParticleSystem:new()
 	Audio = AudioManager:new()
+	Screenshot = ScreenshotManager:new()
 
 	Input:init_users()
 
@@ -189,6 +191,9 @@ function Game:new_game()
 	-- UI
 	self.game_ui = GameUI:new(self)
 
+	self.notif = ""
+	self.notif_timer = 0.0
+
 	Options:update_sound_on()
 end
 
@@ -304,6 +309,9 @@ function Game:update_main_game(dt)
 	self:update_actors(dt)
 	self:update_logo(dt)
 	self:update_debug(dt)
+
+	self.notif_timer = math.max(self.notif_timer - dt, 0)
+
 end
 
 function Game:count_enemies()
@@ -403,6 +411,9 @@ function Game:draw()
 
 	if self.debug.layer_view then
 		self.debug:draw_layers()
+	end
+	if self.notif_timer > 0 then
+		love.graphics.print(self.notif, 0, 0, 0, 3, 3)
 	end
 end
 
@@ -831,11 +842,22 @@ function Game:apply_upgrade(upgrade)
 	end
 end
 
+function Game:screenshot()
+	local filename, filepath, imgdata, imgpng = Screenshot:screenshot()
+	self.notif = "screenshot "..filename
+	self.notif_timer = 3.0
+	-- Particles:word(CANVAS_WIDTH/2, CANVAS_HEIGHT/2)
+end
+
 -----------------------------------------------------
 -----------------------------------------------------
 -----------------------------------------------------
 
 function Game:keypressed(key, scancode, isrepeat)
+	if scancode == "space" and self.debug_mode then
+		self:screenshot()
+	end
+
 	if self.menu_manager then
 		self.menu_manager:keypressed(key, scancode, isrepeat)
 	end

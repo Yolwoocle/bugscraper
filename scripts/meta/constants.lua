@@ -19,6 +19,7 @@ BUGSCRAPER_VERSION = "0.4"
 
 CANVAS_WIDTH = 480
 CANVAS_HEIGHT = 270
+SCREENSHOT_SCALE = 4
 
 --------------------------------------------- 
 

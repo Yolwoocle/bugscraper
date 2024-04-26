@@ -623,14 +623,15 @@ end
 function Player:kill()
 	if self.is_dead then return end
 	
-	local fainted_player = Enemies.FaintedPlayer:new(self.x, self.y, self)
-	game:new_actor(fainted_player)
-	-- if game:get_number_of_alive_players() > 1 then
-	-- end
-
 	game:screenshake(10)
-	Particles:dead_player(self.spr_x, self.spr_y, self.skin.spr_dead, self.color_palette, self.dir_x)
 	game:frameskip(30)
+
+	if game:get_number_of_alive_players() > 1 then 
+		local fainted_player = Enemies.FaintedPlayer:new(self.x, self.y, self)
+		game:new_actor(fainted_player)
+	else
+		Particles:dead_player(self.spr_x, self.spr_y, self.skin.spr_dead, self.color_palette, self.dir_x)
+	end
 
 	self:on_death()
 	game:on_kill(self)

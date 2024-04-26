@@ -34,29 +34,14 @@ local waves = {
 	-- 	}
 	-- }),
 
-	Wave:new({
-		min = 1,
-		max = 1,
-		enemies = {
-			{E.Dung, 3, position = {200, 200}},
-		},
-		-- background = backgrounds.BackgroundDots:new(),
-	}),
-	
-	Wave:new({
-		floor_type = FLOOR_TYPE_CAFETERIA,
-		roll_type = WAVE_ROLL_TYPE_FIXED,
-		music = "cafeteria",
-		
-		min = 1,
-		max = 1,
-		enemies = {
-			{E.Dummy, 1, position = {5000, 200}},
-			{E.UpgradeDisplay, 1, position = {488, 200}},
-			{E.UpgradeDisplay, 1, position = {544, 200}},
-			{E.UpgradeDisplay, 1, position = {600, 200}},
-		},
-	}),
+	-- Wave:new({
+	-- 	min = 1,
+	-- 	max = 1,
+	-- 	enemies = {
+	-- 		{E.Dung, 3, position = {200, 200}},
+	-- 	},
+	-- 	-- background = backgrounds.BackgroundDots:new(),
+	-- }),
 	
 	-- Wave:new({
 	-- 	music = "w1",
@@ -198,6 +183,22 @@ local waves = {
 			{E.Mosquito, 4},
 			{E.SpikedFly, 4},
 			{E.Spider, 4},
+		},
+	}),
+
+
+	Wave:new({
+		floor_type = FLOOR_TYPE_CAFETERIA,
+		roll_type = WAVE_ROLL_TYPE_FIXED,
+		music = "cafeteria",
+		
+		min = 1,
+		max = 1,
+		enemies = {
+			{E.Dummy, 1, position = {5000, 200}},
+			{E.UpgradeDisplay, 1, position = {488, 200}},
+			{E.UpgradeDisplay, 1, position = {544, 200}},
+			{E.UpgradeDisplay, 1, position = {600, 200}},
 		},
 	}),
 

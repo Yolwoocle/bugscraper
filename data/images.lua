@@ -217,7 +217,8 @@ local img_names = {
 	-- misc
 	rays = "ui/rays",
 	offscreen_indicator = "ui/offscreen_indicator",
-	daniel_small = "actors/enemies/daniel_small"
+	daniel_small = "actors/enemies/daniel_small",
+	yanis = "yanis",
 
 }
 for id, path in pairs(img_names) do

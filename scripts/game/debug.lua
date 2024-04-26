@@ -159,7 +159,6 @@ function Debug:init(game)
 end
 
 function Debug:update(dt)
-	self.notification_timer = math.max(self.notification_timer - dt, 0.0)
 end
 
 function Debug:debug_action(key, scancode, isrepeat)
@@ -173,8 +172,8 @@ function Debug:debug_action(key, scancode, isrepeat)
 end
 
 function Debug:new_notification(msg)
-    self.notification_message = msg
-    self.notification_timer = 1.0
+    game.notif = msg
+    game.notif_timer = 2.0
 end
 
 function Debug:keypressed(key, scancode, isrepeat)
@@ -221,9 +220,6 @@ function Debug:draw()
     end
     if self.input_view then
         self:draw_input_view()
-    end
-    if self.notification_timer > 0.0 then
-        print_outline(nil, nil, self.notification_message, 0, CANVAS_HEIGHT-16)
     end
 end
 
