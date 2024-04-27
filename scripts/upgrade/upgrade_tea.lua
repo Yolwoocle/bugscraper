@@ -6,12 +6,10 @@ local EffectSlowness = require "scripts.effect.effect_slowness"
 local UpgradeTea = Upgrade:inherit()
 
 function UpgradeTea:init()
+    self.name = "tea"
     self:init_upgrade()
-    self.name = "upgrade_tea"
     self.sprite = images.upgrade_tea
 
-    self.title = "GREEN TEA"
-    self.description = "+2 temporary ❤"
     self.color = COL_MID_GREEN
 end
 

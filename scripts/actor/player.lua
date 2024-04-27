@@ -776,9 +776,11 @@ function Player:do_damage(n, source)
 	if self.iframes > 0 then    return    end
 	if n <= 0 then    return    end
 
-	game:frameskip(8)
-	Audio:play("hurt")
+	if Input:get_number_of_users() == 1 then
+		game:frameskip(8)
+	end
 	game:screenshake(5)
+	Audio:play("hurt")
 	Particles:word(self.mid_x, self.mid_y, concat("-",n), COL_LIGHT_RED)
 	-- self:do_knockback(source.knockback, source)--, 0, source.h/2)
 	--source:do_knockback(source.knockback*0.75, self)

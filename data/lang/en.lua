@@ -13,6 +13,24 @@ return {
         ring = "big berry",
         mushroom_cannon = "mushroom cannon",
     },
+    upgrade = {
+        tea = {
+            title = "GREEN TEA",
+            description = "+2 temporary ❤",
+        },
+        espresso = {
+            title = "ESPRESSO",
+            description = "x2 shooting speed for a minute", 
+        },
+        milk = {
+            title = "MILK",
+            description = "+1 permanent ❤",
+        },
+        peanut = {
+            title = "PEANUT",
+            description = "x2 maximum ammo",
+        }
+    },
     input = {
         prompts = {
             move = "Move",

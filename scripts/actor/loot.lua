@@ -1,9 +1,11 @@
+require "scripts.util"
+
 local Class = require "scripts.meta.class"
 local Actor = require "scripts.actor.actor"
 local images = require "data.images"
 local Guns = require "data.guns"
+
 local sounds = require "data.sounds"
-require "scripts.util"
 local utf8 = require "utf8"
 
 local Loot = Actor:inherit()
@@ -305,13 +307,15 @@ function Loot.Gun:on_collect(player)
 	Particles:smoke(self.mid_x, self.mid_y, nil, COL_LIGHT_BROWN)
 	Audio:play("item_collect")
 
+	local old_life = self.life
 	Particles:word(self.mid_x, self.mid_y, string.upper(self.gun.display_name or self.gun.name), COL_LIGHT_YELLOW)
 	self:reset()
 	
+	self.life = old_life
 	self.gun = old_gun
 	self:set_sprite(self.gun.spr)
 
-	self.uncollectable_timer = 3.0
+	self.uncollectable_timer = 1.0
 	-- self:remove()
 end
 

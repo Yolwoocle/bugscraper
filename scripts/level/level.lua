@@ -29,8 +29,8 @@ function Level:init(game)
 	self.world_generator:generate_cabin()
 	
 	-- Bounding box
+	-- Future Leo: the fuck is this, commented it out
 	-- Don't try to understand, all you have to know is that it puts collision 
-	-- FIXME: the fuck is this, commented it out
 	-- boxes around the elevator shaft
 	-- local map_w = self.map.width * BW
 	-- local map_h = self.map.height * BW
@@ -379,7 +379,7 @@ end
 function Level:assign_cafeteria_upgrades()
 	local bag = {
 		{upgrades.UpgradeTea, 1},
-		{upgrades.UpgradeCoffee, 1},
+		{upgrades.UpgradeEspresso, 1},
 		{upgrades.UpgradeMilk, 1},
 		{upgrades.UpgradePeanut, 1},
 	}

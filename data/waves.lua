@@ -8,31 +8,46 @@ local Wave = require "scripts.level.wave"
 local E = require "data.enemies"
 
 local waves = {
-	-- Wave:new({
-	-- 	min = 1,
-	-- 	max = 1,
-	-- 	enemies = {	
-	-- 		-- {E.Woodlouse, 4},
-	-- 		-- {E.DungBeetle, 4},
-	-- 		{E.Fly, 3},
-	-- 		-- {E.VendingMachine, 3},
-	-- 		-- {E.HoneypotAnt, 4},
-	-- 		-- {E.FlyingDung, 4},
-	-- 		-- {E.SnailShelled, 3},
-	-- 		-- {E.PoisonCloud, 4},
-	-- 		-- {E.SnailShelled, 4},
+	Wave:new({
+		min = 10,
+		max = 10,
+		enemies = {	
+			-- {E.Woodlouse, 4},
+			-- {E.DungBeetle, 4},
+			-- {E.Fly, 3},
+			-- {E.VendingMachine, 3},
+			-- {E.HoneypotAnt, 4},
+			-- {E.FlyingDung, 4},
+			-- {E.SnailShelled, 3},
+			-- {E.PoisonCloud, 4},
+			-- {E.SnailShelled, 4},
 
-	-- 		-- {E.Mosquito, 4},
-	-- 		-- {E.HoneypotAnt, 4},
-	-- 		-- {E.Larva, 4},
-	-- 		-- {E.Fly, 3},
-	-- 		-- {E.SpikedFly, 3},
-	-- 		-- {E.SnailShelled, 3},
-	-- 		-- {E.Slug, 2},
-	-- 		-- {E.Grasshopper, 1},
-	-- 		-- {E.MushroomAnt, 10},
-	-- 	}
-	-- }),
+			-- {E.Mosquito, 4},
+			-- {E.HoneypotAnt, 4},
+			-- {E.Larva, 4},
+			-- {E.Fly, 3},
+			-- {E.SpikedFly, 3},
+			-- {E.SnailShelled, 3},
+			{E.Slug, 2},
+			-- {E.Grasshopper, 1},
+			-- {E.MushroomAnt, 10},
+		}
+	}),
+	
+	Wave:new({
+		floor_type = FLOOR_TYPE_CAFETERIA,
+		roll_type = WAVE_ROLL_TYPE_FIXED,
+		music = "cafeteria",
+		
+		min = 1,
+		max = 1,
+		enemies = {
+			{E.Dummy, 1, position = {5000, 200}},
+			{E.UpgradeDisplay, 1, position = {488, 200}},
+			{E.UpgradeDisplay, 1, position = {544, 200}},
+			{E.UpgradeDisplay, 1, position = {600, 200}},
+		},
+	}),
 
 	-- Wave:new({
 	-- 	min = 1,

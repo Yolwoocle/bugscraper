@@ -36,8 +36,6 @@ function Wave:roll_random()
 			position = enemy_table.position,
 		})
 	end
-
-	self:add_cocoons(output)
 	
 	return output
 end
@@ -54,8 +52,6 @@ function Wave:roll_fixed()
 			})
 		end
 	end
-
-	self:add_cocoons(output)
 	
 	return output
 end

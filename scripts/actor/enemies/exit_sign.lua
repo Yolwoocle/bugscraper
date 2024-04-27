@@ -71,7 +71,7 @@ function ExitSign:on_collision(col, other)
 end
 
 function ExitSign:activate(player)
-    if self.spring_active then return end
+    -- if self.spring_active then return end
 
     if random_range(0, 1) < SMASH_EASTER_EGG_PROBABILITY then
         self:activate_smash_easter_egg(player)

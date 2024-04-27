@@ -5,6 +5,9 @@ local WorldGenerator = Class:inherit()
 
 function WorldGenerator:init(map)
 	self.map = map
+
+	self.screen_w = math.ceil(CANVAS_WIDTH / BW)
+	self.screen_h = math.ceil(CANVAS_HEIGHT / BW)
 end
 
 function WorldGenerator:reset()
@@ -30,8 +33,9 @@ function WorldGenerator:generate_cabin()
 	local bx, by = ax+w-1, ay+h-1
 	self.box_ax,  self.box_ay,  self.box_bx,  self.box_by  = ax,    ay,    bx,    by
 	self.box_rax, self.box_ray, self.box_rbx, self.box_rby = ax*BW, ay*BW, bx*BW, by*BW
-	
-	self:write_box(ax, ay, bx, by, 1)
+
+	-- cabin
+	self:write_rect(ax, ay, bx, by, 1)
 	
 	-- chains
 	for iy = 0,ay-1 do
@@ -42,13 +46,13 @@ end
 
 function WorldGenerator:generate_cafeteria()
 	self:reset()
-	self:write_box(2, 2, 68, 15, 1)
+	self:write_rect(2, 2, 68, 15, 1)
 
 	-- table
-	self:write_box(27, 13, 40, 13, 3)
+	self:write_rect(27, 13, 40, 13, 3)
 end
 
-function WorldGenerator:write_box(ax, ay, bx, by, value)
+function WorldGenerator:write_rect(ax, ay, bx, by, value)
 	-- Floor/Ceiling
 	for ix=ax, bx do
 		self.map:set_tile(ix, ay, value)
@@ -58,6 +62,14 @@ function WorldGenerator:write_box(ax, ay, bx, by, value)
 	for iy=ay, by do
 		self.map:set_tile(ax, iy, value)
 		self.map:set_tile(bx, iy, value)
+	end
+end
+
+function WorldGenerator:write_rect_fill(ax, ay, bx, by, value)
+	for ix=ax, bx do
+		for iy=ay, by do
+			self.map:set_tile(ix, iy, value)
+		end
 	end
 end
 

@@ -6,13 +6,11 @@ local EffectCoffee = require "scripts.effect.effect_coffee"
 local UpgradeEspresso = Upgrade:inherit()
 
 function UpgradeEspresso:init()
+    self.name = "espresso"
     self:init_upgrade()
-    self.name = "upgrade_coffee"
     self.sprite = images.upgrade_coffee
 
     self.color = COL_DARK_BROWN
-    self.title = "ESPRESSO"
-    self.description = "x2 shooting speed for a minute"
 end
 
 function UpgradeEspresso:update(dt)

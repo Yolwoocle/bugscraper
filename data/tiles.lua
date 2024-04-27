@@ -71,11 +71,15 @@ function Tiles:init()
 
 		self.name = "chain"
 		self.spr = images.chain
-		
-		self.collision_info = CollisionInfo:new {
-			type = COLLISION_TYPE_SOLID,
-			is_slidable = false,
-		}
+	end)
+
+	-- Border
+	self.tiles[5] = make_tile(function(self, x, y, w)
+		self:init_tile(x, y, w)
+		self.id = 5
+
+		self.name = "border"
+		self.spr = images.semisolid
 	end)
 
 	-- self.tiles[5] = make_tile(function(self, x, y, w)

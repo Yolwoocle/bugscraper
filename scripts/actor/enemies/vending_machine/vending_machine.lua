@@ -4,7 +4,7 @@ local images = require "data.images"
 local ButtonSmall = require "scripts.actor.enemies.button_small"
 local EffectSlowness = require "scripts.effect.effect_slowness"
 
-local UpgradeCoffee = require "scripts.upgrade.upgrade_coffee"
+local UpgradeEspresso = require "scripts.upgrade.upgrade_espresso"
 local UpgradeMoreLife = require "scripts.upgrade.upgrade_milk"
 local UpgradeTea = require "scripts.upgrade.upgrade_tea"
 

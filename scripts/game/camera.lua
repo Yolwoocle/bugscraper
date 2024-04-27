@@ -80,12 +80,13 @@ function Camera:update_screenshake(dt)
 	-- Screenshake
 	self.screenshake_q = max(0, self.screenshake_q - self.screenshake_speed * dt)
 
-	local multiplier = Options:get("screenshake")
-	local q = self.screenshake_q * multiplier
+	local base_mult = Options:get("screenshake")
+    local multiplayer_mult = clamp(1 / Input:get_number_of_users(), 0, 1)
+	local q = self.screenshake_q * base_mult * multiplayer_mult
 	local ox, oy = random_neighbor(q), random_neighbor(q)
 
-	if abs(ox) >= 0.2 then   ox = sign(ox) * max(abs(ox), 1)   end 
-	if abs(oy) >= 0.2 then   oy = sign(oy) * max(abs(oy), 1)   end 
+	-- if abs(ox) >= 0.2 then   ox = sign(ox) * max(abs(ox), 1)   end 
+	-- if abs(oy) >= 0.2 then   oy = sign(oy) * max(abs(oy), 1)   end 
 
 	self.ox = ox
 	self.oy = oy

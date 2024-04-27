@@ -8,13 +8,13 @@ function Upgrade:init()
     self:init_upgrade()
 end
 function Upgrade:init_upgrade()
-    self.name = "upgrade"
+    self.name = self.name or "upgrade"
     self.type = UPGRADE_TYPE_INSTANT
 
     self.sprite = images.upgrade_coffee
 
-    self.title = self.name
-    self.description = "[description]"
+    self.title       = Text:text("upgrade."..tostring(self.name)..".title")
+    self.description = Text:text("upgrade."..tostring(self.name)..".description")
     self.color = COL_WHITE
 end
 

@@ -250,26 +250,28 @@ function draw_with_selected_outline(spr, x, y, r, sx, sy)
 	love.graphics.draw(spr, x, y, r, sx, sy)
 end
 
-function draw_with_outline(outline_color, spr, x, y, r, sx, sy, ox, oy, ...)
+function draw_with_outline(outline_color, spr, x, y, r, sx, sy, ox, oy)
 	ox = ox or 0
 	oy = oy or 0
 
-	shaders.draw_in_color:sendColor("fillColor", outline_color)
-	love.graphics.setShader(shaders.draw_in_color)
-	local offset = 1
-
-	love.graphics.draw(spr, x, y, r, sx, sy, ox+offset, oy, ...)
-	love.graphics.draw(spr, x, y, r, sx, sy, ox-offset, oy, ...)
-	love.graphics.draw(spr, x, y, r, sx, sy, ox,       oy+offset, ...)
-	love.graphics.draw(spr, x, y, r, sx, sy, ox,       oy-offset, ...)
-
-	love.graphics.draw(spr, x, y, r, sx, sy, ox+offset, oy+offset, ...)
-	love.graphics.draw(spr, x, y, r, sx, sy, ox-offset, oy+offset, ...)
-	love.graphics.draw(spr, x, y, r, sx, sy, ox+offset, oy-offset, ...)
-	love.graphics.draw(spr, x, y, r, sx, sy, ox-offset, oy-offset, ...)
+	exec_with_color(COL_WHITE, function()
+		shaders.draw_in_color:sendColor("fillColor", outline_color)
+		love.graphics.setShader(shaders.draw_in_color)
+		local offset = 1
 	
-	love.graphics.setShader()
-	love.graphics.draw(spr, x, y, r, sx, sy, ox, oy)
+		love.graphics.draw(spr, x, y, r, sx, sy, ox+offset, oy)
+		love.graphics.draw(spr, x, y, r, sx, sy, ox-offset, oy)
+		love.graphics.draw(spr, x, y, r, sx, sy, ox,       oy+offset)
+		love.graphics.draw(spr, x, y, r, sx, sy, ox,       oy-offset)
+	
+		love.graphics.draw(spr, x, y, r, sx, sy, ox+offset, oy+offset)
+		love.graphics.draw(spr, x, y, r, sx, sy, ox-offset, oy+offset)
+		love.graphics.draw(spr, x, y, r, sx, sy, ox+offset, oy-offset)
+		love.graphics.draw(spr, x, y, r, sx, sy, ox-offset, oy-offset)
+		
+		love.graphics.setShader()
+		love.graphics.draw(spr, x, y, r, sx, sy, ox, oy)
+	end)
 end
 
 function draw_centered(spr, x, y, r, sx, sy)

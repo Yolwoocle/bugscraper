@@ -51,15 +51,15 @@ end
 
 function TextManager:text(code, ...)
     local v = self.values[code]
-    assert(v ~= nil, "value for key '"..tostring(code).."' doesn't exist") 
+    -- assert(v ~= nil, "Text value for key '"..tostring(code).."' doesn't exist") 
     if v == nil then
-        return nil
-        -- print_debug("/!\\ TextManager:text - value for key '"..tostring(code).."' doesn't exist)")
+        -- print_debug("/!\\ TextManager:text - value for key '"..tostring(code).."' doesn't exist)");
+        return code, false
     end
     if #({...}) > 0 then
         return string.format(v, ...)
     end
-    return v
+    return v, true
 end
 
 function TextManager:text_fallback(code, fallback, ...)
