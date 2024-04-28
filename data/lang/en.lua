@@ -88,18 +88,18 @@ return {
                 interface = "Interface",
                 note_ui_min_button = "At least one binding is required",
                 subtitle_no_player = "[NO PLAYER %d]",
-                subtitle_no_controller = "[NO GAMEPAD CONNECTED]",
+                subtitle_no_controller = "[NO CONTROLLER CONNECTED]",
 
                 keyboard = "Keyboard",
                 keyboard_solo = "KEYBOARD (Default)",
                 keyboard_p1 = "KEYBOARD (Split 1)",
                 keyboard_p2 = "KEYBOARD (Split 2)",
 
-                controller = "Gamepad",
-                controller_p1 = "GAMEPAD (Player 1)",
-                controller_p2 = "GAMEPAD (Player 2)",
-                controller_p3 = "GAMEPAD (Player 3)",
-                controller_p4 = "GAMEPAD (Player 4)",
+                controller = "Controller",
+                controller_p1 = "CONTROLLER (Player 1)",
+                controller_p2 = "CONTROLLER (Player 2)",
+                controller_p3 = "CONTROLLER (Player 3)",
+                controller_p4 = "CONTROLLER (Player 4)",
             },
             audio = {
                 title = "Audio",
@@ -143,6 +143,12 @@ return {
         },
         win = {
             title = "CONGRATULATIONS!",
+        },
+        joystick_removed = {
+            title = "CONTROLLER DISCONNECTED",
+            description = "Please plug in the following controllers:",
+            continue = "CONTINUE ANYWAY",
+            item = "Player %d (%s)",
         },
         credits = {
             title = "CREDITS",

@@ -87,27 +87,6 @@ function ExitSign:activate(player)
     end
 end
 
-function ExitSign:draw_smash_easter_egg()
-    local colors = {
-        COL_BLACK_BLUE,
-        COL_LIGHT_RED,
-        COL_LIGHT_YELLOW,
-        COL_LIGHT_RED,
-        COL_BLACK_BLUE,
-    }
-
-    for i = 1, #self.smash_stars do
-        local triangles = love.math.triangulate(self.smash_stars[i])
-        local old_col = {love.graphics.getColor()}
-        love.graphics.setColor(colors[i])
-        for _, tri in pairs(triangles) do
-            love.graphics.polygon("fill", tri)
-        end
-        love.graphics.setColor(old_col)
-    end
-    -- self:draw_star(self.mid_x, self.y)
-end
-
 function ExitSign:draw()    
     self.spr = images.exit_sign
     self:draw_enemy()
@@ -139,6 +118,27 @@ end
 
 ------------------------------------------------------------
 
+function ExitSign:draw_smash_easter_egg()
+    local colors = {
+        COL_BLACK_BLUE,
+        COL_LIGHT_RED,
+        COL_LIGHT_YELLOW,
+        COL_LIGHT_RED,
+        COL_BLACK_BLUE,
+    }
+
+    for i = 1, #self.smash_stars do
+        local triangles = love.math.triangulate(self.smash_stars[i])
+        local old_col = {love.graphics.getColor()}
+        love.graphics.setColor(colors[i])
+        for _, tri in pairs(triangles) do
+            love.graphics.polygon("fill", tri)
+        end
+        love.graphics.setColor(old_col)
+    end
+    -- self:draw_star(self.mid_x, self.y)
+end
+
 function ExitSign:activate_smash_easter_egg(player)
     self.is_in_smash_easter_egg = true
     
@@ -151,6 +151,7 @@ function ExitSign:activate_smash_easter_egg(player)
     game:set_zoom(2)
     game:set_ui_visible(false)
     game.menu_manager:set_can_pause(false)
+    game.camera:set_y_locked(false)
 
     self:update_star()
 
@@ -221,10 +222,13 @@ function ExitSign:update_smash_effect_end(dt)
         self.old_camera_x, self.old_camera_y = 0,0
         self:lerp_camera(self.old_camera_x, self.old_camera_y)
         self:lerp_zoom(1)
+
+        -- End smash effect
         if distsqr(0, 0, game:get_camera_position()) <= 0.1 then
             self.pan_camera_to_default = false
             game:set_camera_position(0, 0)
             game:set_zoom(1)
+            game.camera:set_y_locked(true)
             
             game.menu_manager:set_can_pause(true)
         end

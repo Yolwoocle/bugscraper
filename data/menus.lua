@@ -176,6 +176,7 @@ local function generate_menus()
         { "🔚 "..Text:text("menu.pause.quit"), quit_game },
         { "" },
         { "[DEBUG] VIEW WAVES", func_set_menu('view_waves' ) },
+        { "[DEBUG] joystick_removed", func_set_menu('joystick_removed' ) },
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL, draw_elevator_progress)
     if OPERATING_SYSTEM == "Web" then
         -- Disable quitting on web
@@ -555,6 +556,37 @@ local function generate_menus()
         table.remove(items, 8)
     end
     menus.win = Menu:new(game, items, { 0, 0, 0, 0.95 }, PROMPTS_GAME_OVER)
+
+    ------------------------------------------------------------
+
+    menus.joystick_removed = Menu:new(game, {
+        {"<<<<<<<<< "..Text:text("menu.joystick_removed.title").." >>>>>>>>>"},
+        { "" },
+        { Text:text("menu.joystick_removed.description")},
+        { "", nil, 
+        function(self)
+            local keyset = {}
+            for joystick ,_ in pairs(game.menu_manager.joystick_wait_set) do
+                local player_n = Input:get_joystick_user_n(joystick)
+                table.insert(keyset, {player_n, joystick:getName()})
+            end
+            table.sort(keyset, function(a, b) return a[1] < b[1] end)
+
+            local s = ""
+            for _, value in pairs(keyset) do
+                s = s.."🎮 "..Text:text("menu.joystick_removed.item", value[1], value[2])
+            end
+
+            self.label_text = s
+        end,
+        },
+        { "" },
+        { "" },
+        { "" },
+        { "" },
+        { "⚠ "..Text:text("menu.joystick_removed.continue"), function() game.menu_manager:disable_joystick_wait_mode() end },
+        { "" },
+    }, DEFAULT_MENU_BG_COLOR, PROMPTS_GAME_OVER)
 
     return menus
 end

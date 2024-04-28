@@ -84,7 +84,7 @@ end
 
 function UpgradeDisplay:on_death(damager, reason)
     game:screenshake(5)
-    Particles:image(self.mid_x, self.mid_y, 10, images.ptc_glass_shard, self.h)
+    Particles:image(self.mid_x, self.mid_y, 10, images.glass_shard, self.h)
     if damager and damager.name == "bullet" then
         self:apply()
     end

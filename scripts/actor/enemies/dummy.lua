@@ -31,7 +31,7 @@ function DummyTarget:update(dt)
 end
 
 function DummyTarget:on_death()
-    Particles:image(self.mid_x, self.mid_y, 20, {images.dummy_target_ptc1, images.dummy_target_ptc2}, self.w, nil, nil, 0.5)
+    Particles:image(self.mid_x, self.mid_y, 20, {images.dummy_fragment_1, images.dummy_fragment_2}, self.w, nil, nil, 0.5)
     --number, spr, spw_rad, life, vs, g
 end
 

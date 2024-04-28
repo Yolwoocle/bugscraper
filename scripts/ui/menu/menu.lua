@@ -44,6 +44,7 @@ function Menu:update(dt)
 	if self.is_scrollable then
 		self.scroll_position = lerp(self.scroll_position, self.target_scroll_position, 0.3)
 	end
+	
 	for i, item in pairs(self.items) do
 		item.y = item.def_y - self.scroll_position
 		item:update(dt)

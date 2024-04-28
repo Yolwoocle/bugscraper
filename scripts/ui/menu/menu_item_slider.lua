@@ -26,7 +26,7 @@ function SliderMenuItem:update(dt)
 	self.ox = lerp(self.ox, 0, 0.3)
 	self.oy = lerp(self.oy, 0, 0.3)
 	
-	self:update_value()
+	self.update_value(self)
 
 	if type(self.value) ~= "nil" then
 		self.value_text = concat("< ", self.value_text, " >")

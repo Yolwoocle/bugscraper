@@ -22,6 +22,7 @@ function WorldGenerator:set_shaft_rect(x, y, w, h)
 end
 
 function WorldGenerator:generate_cabin()
+
 	self:reset()
 
 	local map = self.map

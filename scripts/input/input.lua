@@ -37,7 +37,9 @@ function InputManager:init()
         ["keyboard_split_p2"] = InputProfile:new("keyboard_split_p2", INPUT_TYPE_KEYBOARD, self.default_mapping_split_kb_p2),
     }
 
+    -- Load user-defined controls
     self:load_controls()
+    self:load_global_mappings()
 end
 
 function InputManager:init_users()
@@ -46,12 +48,6 @@ end
 
 function InputManager:can_add_user()
     return self:get_number_of_users() < MAX_NUMBER_OF_PLAYERS
-    -- if input_type == INPUT_TYPE_CONTROLLER then 
-    -- elseif input_type == INPUT_TYPE_KEYBOARD then 
-    --     return (self:get_number_of_users() < MAX_NUMBER_OF_PLAYERS) and 
-    --         self:get_number_of_users(INPUT_TYPE_KEYBOARD) < 1
-    -- end
-    -- return true
 end
 
 function InputManager:get_number_of_users(input_type)
@@ -685,6 +681,10 @@ end
 
 function InputManager:on_quit()
     self:update_all_controls_files()
+end
+
+function InputManager:load_global_mappings()
+    
 end
 
 return InputManager

@@ -55,7 +55,7 @@ function ButtonBig:on_death(damager, reason)
         game:screenshake(15)
         Audio:play("glass_fracture", nil, 0.2)
         game:enable_endless_mode()
-        -- particles:image(self.mid_x, self.mid_y, 100, images.ptc_glass_shard, self.h)
+        -- particles:image(self.mid_x, self.mid_y, 100, images.glass_shard, self.h)
         Particles:image(self.mid_x, self.mid_y, 300, images.button_fragments, self.h, 6, 0.05, 0)
         Particles:word(self.mid_x, self.mid_y, "ENDLESS MODE!")
     end

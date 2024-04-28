@@ -20,8 +20,7 @@ function TextMenuItem:init_textitem(i, x, y, text, on_click, update_value)
 
 	self.ox = 0
 	self.oy = 0
-	self.text = text or ""
-	self.label_text = self.text
+	self.label_text = text
 	self.value_text = ""
 
 	self.value = nil
@@ -34,12 +33,8 @@ function TextMenuItem:init_textitem(i, x, y, text, on_click, update_value)
 		self.is_selectable = false
 	end
 
-	-- -- Custom update value function
-	-- if custom_update_value then
-	-- 	self.update_value = custom_update_value
-	-- end
-
-	self.update_value = update_value or function() end
+	-- Custom update value function
+	self.update_value = update_value or function(_) end
 
 	-- if default_val ~= nil then
 	-- 	self:update_value(default_val)
@@ -51,18 +46,13 @@ function TextMenuItem:update(dt)
 end
 function TextMenuItem:update_textitem(dt)
 	self:update_menuitem()
-	self:update_value()
+	self.update_value(self)
+	-- self.label_text = random_neighbor(3)
 
 	self.ox = lerp(self.ox, 0, 0.3)
 	self.oy = lerp(self.oy, 0, 0.3)
 	if math.abs(self.ox) <= 0.1 then self.ox = 0 end
 	if math.abs(self.oy) <= 0.1 then self.oy = 0 end
-
-	self.text = self.label_text
-	-- if self.value == nil or #self.value_text == "0" then
-	-- else
-	-- 	self.text = concat(self.label_text, ": ", self.value_text)
-	-- end
 end
 
 function TextMenuItem:draw()
@@ -70,7 +60,7 @@ function TextMenuItem:draw()
 end
 function TextMenuItem:draw_textitem()
 	gfx.setColor(1, 1, 1, 1)
-	local text_height = get_text_height(self.text)
+	local text_height = get_text_height(self.label_text)
 	
 	-- if self.is_selected then
 	-- 	local col = Input:get_last_ui_player_color()
@@ -97,7 +87,6 @@ function TextMenuItem:draw_textitem()
 		end)
 	end
 
-	-- /!\ This is really sketchy. Too bad
 	if type(self.value) == "nil" then
 		self:draw_withoutvalue()
 	else
@@ -107,7 +96,6 @@ function TextMenuItem:draw_textitem()
 	gfx.setColor(1, 1, 1, 1)
 end
 
--- This whole section is disgusting 
 function TextMenuItem:get_leftjustified_text_draw_function()
 	local draw_func = ternary(self.is_selected,
 		function(...) print_ycentered_outline(COL_WHITE, Input:get_last_ui_player_color(), ...) end,
@@ -124,9 +112,9 @@ function TextMenuItem:draw_withoutvalue()
 	)
 
 	if not self.is_selectable then
-		gfx.setColor(COL_MID_GRAY)
+		gfx.setColor(COL_LIGHT_GRAY)
 	end
-	draw_func(self.text, self.x, self.y + self.oy)
+	print_centered(self.label_text, self.x, self.y + self.oy)
 end
 
 function TextMenuItem:draw_withvalue()
@@ -135,7 +123,7 @@ function TextMenuItem:draw_withvalue()
 	if not self.is_selectable then
 		gfx.setColor(COL_MID_GRAY)
 	end
-	draw_func(self.text, self.x - MENU_PADDING, self.y + self.oy)
+	draw_func(self.label_text, self.x - MENU_PADDING, self.y + self.oy)
 
 	self:draw_value_text()
 end

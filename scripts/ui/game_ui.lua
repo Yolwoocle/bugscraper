@@ -24,7 +24,7 @@ function GameUI:draw()
 	self:draw_join_tutorial()
 	self:draw_timer()
 	self:draw_version()
-	self:draw_offscreen_indicator()
+	self:draw_offscreen_indicators()
 end
 
 function GameUI:draw_logo()
@@ -96,19 +96,19 @@ function GameUI:draw_timer()
 	gfx.print(time_to_string(game.time), 8, 8)
 end
 
-function GameUI:draw_offscreen_indicator()
+function GameUI:draw_offscreen_indicators()
 	local cam_x, cam_y = self.game.camera:get_position()
 	for i, player in pairs(self.game.players) do
 		if (player.x + player.w < cam_x) or (cam_x + CANVAS_WIDTH < player.x) 
 			or (player.y + player.h < cam_y) or (cam_y + CANVAS_HEIGHT < player.y) then 
-			self:draw_offscreen_indicator_for(player, "x-")
-			self:draw_offscreen_indicator_for(player, "x+")
+			self:draw_offscreen_indicator_for(player)
 		end
 	end
 end
 
-function GameUI:draw_offscreen_indicator_for(player, offscreen_type)
-	local padding = 17
+function GameUI:draw_offscreen_indicator_for(player)
+	-- local padding = 17
+	local padding = 24
 	local radius = 10
 	
 	local cam_x, cam_y = self.game.camera:get_position()
@@ -116,11 +116,13 @@ function GameUI:draw_offscreen_indicator_for(player, offscreen_type)
 	local y = math.floor(clamp(player.mid_y - cam_y, padding, CANVAS_HEIGHT - padding))
 	local rot = math.atan2(player.mid_y - (y + cam_y), player.mid_x - (x + cam_x))
 	
+	local scale = 0.5
 	exec_color(player.skin.color_palette[1], function()
-		draw_centered(images.offscreen_indicator, x, y, rot, 0.5, 0.5)
+		draw_centered(images.offscreen_indicator, x, y, rot, scale, scale)
 	end)
 	
-	shaders.draw_in_color:sendColor("fillColor", player.skin.color_palette[3])
+	print_centered_outline(player.skin.color_palette[4], player.skin.color_palette[1], player.n, x, y-14)
+	shaders.draw_in_color:sendColor("fillColor", player.skin.color_palette[4])
 	exec_using_shader(shaders.draw_in_color, function()
 		draw_centered(player.skin.spr_idle, x, y, 0, 0.5, 0.5)
 	end)

@@ -49,7 +49,7 @@ function Fly:update_fly(dt)
 end
 
 function Fly:pause_repeating_sounds()
-    -- self.buzz_source:setVolume(0)
+    self.buzz_source:setVolume(0)
 end
 function Fly:play_repeating_sounds()
     self.buzz_source:setVolume(1)

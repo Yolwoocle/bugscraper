@@ -275,7 +275,7 @@ function draw_with_outline(outline_color, spr, x, y, r, sx, sy, ox, oy)
 end
 
 function draw_centered(spr, x, y, r, sx, sy)
-	love.graphics.draw(spr, math.floor(x), math.floor(y), r, sx, sy, spr:getWidth()/2, spr:getHeight()/2)
+	love.graphics.draw(spr, math.floor(x), math.floor(y), r, sx, sy, math.floor(spr:getWidth()/2), math.floor(spr:getHeight()/2))
 end
 
 function draw_centered_text(text, rect_x, rect_y, rect_w, rect_h, rot, sx, sy, font)

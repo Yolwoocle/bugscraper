@@ -136,7 +136,7 @@ function Gun:shoot(dt, player, x, y, dx, dy, is_burst)
 	if self.sfx2 then
 		Audio:play_var(self.sfx2, 0.2, 1.2, {pitch=self.sfx_pitch})
 	end
-	Particles:image(x , y, 1, images.ptc_bullet_casing, 4, nil, nil, nil, {
+	Particles:image(x , y, 1, images.bullet_casing, 4, nil, nil, nil, {
 		vx1 = -dx * 40,
 		vx2 = -dx * 100,
 

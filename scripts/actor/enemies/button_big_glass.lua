@@ -95,7 +95,7 @@ function ButtonBigGlass:on_damage(n, old_life)
 
         self.spr = spr
         game:screenshake(self.change_break_state_screenshake)
-        Particles:image(self.mid_x, self.mid_y, self.change_break_state_num_particles, images.ptc_glass_shard, self.h)
+        Particles:image(self.mid_x, self.mid_y, self.change_break_state_num_particles, images.glass_shard, self.h)
         local pitch = max(0.1, lerp(0.5, 1, self.life/self.max_life))
         Audio:play(self.sound_fracture, nil, pitch)
     end
@@ -106,7 +106,7 @@ end
 function ButtonBigGlass:on_death()
     Audio:play(self.sound_break)
     game:screenshake(self.break_screenshake)
-    Particles:image(self.mid_x, self.mid_y, self.break_num_particles, images.ptc_glass_shard, self.h)
+    Particles:image(self.mid_x, self.mid_y, self.break_num_particles, images.glass_shard, self.h)
 
     -- local b = create_actor_centered(self.spawned_button, CANVAS_WIDTH/2, game.world_generator.box_rby)
     local b = create_actor_centered(self.spawned_button, self.mid_x, self.mid_y)

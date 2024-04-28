@@ -221,6 +221,8 @@ function Debug:draw()
     if self.input_view then
         self:draw_input_view()
     end
+
+    local t = concat(love.timer.getFPS())
 end
 
 function Debug:draw_input_view()

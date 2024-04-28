@@ -662,16 +662,19 @@ function Game:on_player_death(player)
 	self.waves_until_respawn[player.n] = Input:get_number_of_users()
 
 	if self:get_number_of_alive_players() <= 0 then
-		-- Save stats
-		self.menu_manager:set_can_pause(false)
-
-		self.music_player:set_disk("game_over")
-		self.music_player:pause()
-		self:pause_repeating_sounds()
-		self.game_state = GAME_STATE_DYING
-		self.timer_before_game_over = self.max_timer_before_game_over
-		self:save_stats()
+		self:on_last_player_death(player)
 	end
+end
+
+function Game:on_last_player_death(player)
+	self.menu_manager:set_can_pause(false)
+	self.music_player:set_disk("game_over")
+	self.music_player:pause()
+	self:pause_repeating_sounds()
+	self.game_state = GAME_STATE_DYING
+	self.timer_before_game_over = self.max_timer_before_game_over
+
+	self:save_stats()
 end
 
 function Game:update_timer_before_game_over(dt)
@@ -681,7 +684,7 @@ function Game:update_timer_before_game_over(dt)
 	self.timer_before_game_over = self.timer_before_game_over - dt
 	
 	if self.timer_before_game_over <= 0 then
-		self:on_game_over()
+		self:game_over()
 	end
 end
 
@@ -700,7 +703,7 @@ function Game:save_stats()
 	self.stats.max_combo = self.max_combo
 end
 
-function Game:on_game_over()
+function Game:game_over()
 	self.menu_manager:set_menu("game_over")
 end
 
@@ -822,6 +825,9 @@ function Game:start_game()
 	self.menu_manager:set_can_pause(true)
 	self:set_zoom(1)
 	self:set_camera_position(0, 0)
+	game.camera:reset()
+	game.camera:set_x_locked(true)
+	game.camera:set_y_locked(true)
 end
 
 function Game:on_red_button_pressed()
@@ -878,6 +884,15 @@ end
 
 function Game:joystickremoved(joystick)
 	Input:joystickremoved(joystick)
+	
+	local player_n = Input:get_joystick_user_n(joystick)
+	if player_n ~= -1 then 
+		if self.game_state == GAME_STATE_WAITING then
+			self:leave_game(player_n)
+		else
+			self.menu_manager:enable_joystick_wait_mode(joystick)
+		end
+	end
 end
 
 function Game:gamepadpressed(joystick, buttoncode)

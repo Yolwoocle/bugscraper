@@ -49,16 +49,22 @@ local img_names = {
 	ant2_1 =           "actors/players/ant2_1",
 	ant2_2 =           "actors/players/ant2_2",
 	ant2_dead =        "actors/players/ant2_dead",
+
 	ant1 =             "actors/players/ant1",
 	ant2 =             "actors/players/ant2",
 	ant_wall_slide =   "actors/players/ant_wall_slide",
 	ant_dead =         "actors/players/ant_dead",
+	ant_head =         "actors/players/ant_head",
+
 	bee_1 =            "actors/players/bee_1",
 	bee_2 =            "actors/players/bee_2",
 	bee_dead =         "actors/players/bee_dead",
+	
 	caterpillar_1 =    "actors/players/caterpillar_1",
 	caterpillar_2 =    "actors/players/caterpillar_2",
 	caterpillar_dead = "actors/players/caterpillar_dead",
+	caterpillar_head = "actors/players/caterpillar_head",
+
 	duck =             "actors/players/duck",
 
 	-- enemies
@@ -146,16 +152,16 @@ local img_names = {
 	cocoon_fragment_2 =    "particles/cocoon_fragment_2",
 	honey_fragment_1 =     "particles/honey_fragment_1",
 	honey_fragment_2 =     "particles/honey_fragment_2",
-	dummy_target_ptc1 =    "particles/dummy_target_ptc1",
-	dummy_target_ptc2 =    "particles/dummy_target_ptc2",
-	ptc_glass_shard =      "particles/ptc_glass_shard",
+	dummy_fragment_1 =     "particles/dummy_fragment_1",
+	dummy_fragment_2 =     "particles/dummy_fragment_2",
+	glass_shard =          "particles/glass_shard",
 	snail_shell_fragment = "particles/snail_shell_fragment",
-	ptc_bullet_casing =    "particles/ptc_bullet_casing",
-	btnfrag_1 =            "particles/btnfrag_1",
-	btnfrag_2 =            "particles/btnfrag_2",
-	btnfrag_3 =            "particles/btnfrag_3",
-	btnfrag_4 =            "particles/btnfrag_4",
-	btnfrag_5 =            "particles/btnfrag_5",
+	bullet_casing =        "particles/bullet_casing",
+	button_fragment_1 =    "particles/button_fragment_1",
+	button_fragment_2 =    "particles/button_fragment_2",
+	button_fragment_3 =    "particles/button_fragment_3",
+	button_fragment_4 =    "particles/button_fragment_4",
+	button_fragment_5 =    "particles/button_fragment_5",
 	smash_flash =          "particles/smash_flash",
 	particle_leaf =        "particles/particle_leaf",
 
@@ -226,11 +232,11 @@ for id, path in pairs(img_names) do
 end
 
 images.button_fragments = {
-	images.btnfrag_1,
-	images.btnfrag_2,
-	images.btnfrag_3,
-	images.btnfrag_4,
-	images.btnfrag_5,
+	images.button_fragment_1,
+	images.button_fragment_2,
+	images.button_fragment_3,
+	images.button_fragment_4,
+	images.button_fragment_5,
 }
 
 -----------------------------------------------------

@@ -50,7 +50,7 @@ FONT_CHARACTERS =
     " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz"..
     "{|}~ ¡¢£©®°¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿŒœŸЁАБВГДЕЖЗИЙКЛМНО"..
     "ПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюяё€🔊🔉🔈🎵🎼🔳🔲📺🕐↖🛜▶⏸🔄🔘⬅➡⬆⬇⏏🔫🔚👆🔙⌨🎮🎚❤"..
-    "✅❎🐜🔗💡"
+    "✅❎🐜🔗💡⚠"
 
 --------------------------------------------- 
 
@@ -181,8 +181,8 @@ RAW_INPUT_MAP_DEFAULT_GLOBAL = {
     down =      {},
     jump =      {"k_c", "k_b", "c_a", "c_b"},
     shoot =     {},
-    pause =     {},
     
+    pause =     {},
     ui_select = {},
     ui_back =   {},
     ui_left =   {},
@@ -203,8 +203,8 @@ RAW_INPUT_MAP_DEFAULT_CONTROLLER = {
     down =      {"c_leftstickypos", "c_dpdown"},
     jump =      {"c_a", "c_b"},
     shoot =     {"c_x", "c_y", "c_righttrigger"},
-    pause =     {"c_start"},
     
+    pause =     {"c_start"},
     ui_select = {"c_a"},
     ui_back =   {"c_b"},
     ui_left =   {"c_leftstickxneg", "c_dpleft"},
@@ -501,4 +501,4 @@ WAVE_ROLL_TYPE_FIXED = "fixed"
 --------------------------------------------- 
 
 -- Go ahead. Change it to 1. I'm not here to stop you
-SMASH_EASTER_EGG_PROBABILITY = 0.02
+SMASH_EASTER_EGG_PROBABILITY = 1.02

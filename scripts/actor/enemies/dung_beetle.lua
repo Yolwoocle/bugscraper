@@ -71,7 +71,7 @@ function DungBeetle:update(dt)
 end
 
 function DungBeetle:on_death()
-    Particles:image(self.mid_x, self.mid_y, 20, {images.dummy_target_ptc1, images.dummy_target_ptc2}, self.w, nil, nil, 0.5)
+    Particles:image(self.mid_x, self.mid_y, 20, {images.dummy_fragment_1, images.dummy_fragment_2}, self.w, nil, nil, 0.5)
 
     for i = 1, #self.dungs do
         local dung = self.dungs[i]

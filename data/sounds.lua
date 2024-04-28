@@ -39,7 +39,7 @@ local sfxnames = {
 	menu_unpause =    "menu_unpause.ogg",
 
 	wall_slide = "wall_slide.ogg",
-	game_over_1 = "game_over_1.ogg",
+	death = "death.ogg",
 
 	explosion = "explosion.ogg",
 

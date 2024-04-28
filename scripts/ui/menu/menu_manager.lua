@@ -25,6 +25,9 @@ function MenuManager:reset()
 
 	self.menu_stack = {}
 	self.last_menu = "title"
+
+	self.joystick_wait_mode = false
+	self.joystick_wait_set = {}
 end
 
 function MenuManager:update(dt)
@@ -32,13 +35,16 @@ function MenuManager:update(dt)
 	if self.cur_menu then
 		self:update_current_menu(dt)
 	end
+	if self.joystick_wait_mode then
+		self:update_joystick_wait_mode(dt)
+	end
 
 	local pause_button = Input:action_pressed("pause")
 	local back_button = Input:action_pressed("ui_back")
 	if pause_button then 
 		if self.cur_menu == nil then
 			self:pause()
-		else
+		elseif self.is_paused then
 			self:unpause()
 		end
 	elseif back_button then
@@ -166,14 +172,6 @@ function MenuManager:unpause()
 	game:on_unpause()
 end
 
-function MenuManager:toggle_pause()
-	if self.is_paused then
-		self:unpause()
-	else
-		self:pause()
-	end
-end
-
 function MenuManager:incr_selection(n)
 	if not self.cur_menu then return false, "no current menu" end
 
@@ -260,6 +258,37 @@ function MenuManager:gamepadaxis(joystick, axis, value)
 	if self.sel_item == nil then return end
 	if self.sel_item.gamepadaxis == nil then return end
 	self.sel_item:gamepadaxis(joystick, axis, value)
+end
+
+---------------------------------------------
+
+function MenuManager:enable_joystick_wait_mode(joystick)
+	self:set_menu("joystick_removed")
+	self.joystick_wait_mode = true
+	self.joystick_wait_set[joystick] = true
+end
+
+function MenuManager:disable_joystick_wait_mode()
+	self:unpause()
+	self.joystick_wait_mode = false
+	self.joystick_wait_set = {}
+end
+
+function MenuManager:update_joystick_wait_mode(dt)
+	if not self.joystick_wait_mode then return end
+
+	local count = 0
+	for controller, _ in pairs(self.joystick_wait_set) do
+		if controller:isConnected() then
+			self.joystick_wait_set[controller] = nil
+		else
+			count = count + 1
+		end
+	end
+
+	if count == 0 then
+		self:disable_joystick_wait_mode()
+	end
 end
 
 return MenuManager
