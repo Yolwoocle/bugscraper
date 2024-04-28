@@ -1,0 +1,16 @@
+[package]
+name = "midi_input_handler"
+version = "0.1.0"
+edition = "2021"
+authors = ["Corentin Vaillant"]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+midi-control = "0.2.2"
+midir = "0.10.0"
+mlua = { version = "0.9.7", features = ["lua54", "module"] }
+

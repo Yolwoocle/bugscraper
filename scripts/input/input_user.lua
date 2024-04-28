@@ -5,6 +5,8 @@ local InputActionState = require "scripts.input.input_action_state"
 local gamepadguesser = require "lib.gamepadguesser"
 gamepadguesser.loadMappings("lib/gamepadguesser")
 
+local midi = require "input_midi"
+
 local InputUser = Class:inherit()
 
 function InputUser:init(n, input_profile_id, is_global)
@@ -23,6 +25,8 @@ function InputUser:init(n, input_profile_id, is_global)
     self.primary_input_type = self:get_input_profile():get_primary_input_type()
 --Corentin    
     self.midi_controller = nil
+
+    midi.init_midi()
 ---
 end
 
@@ -130,11 +134,12 @@ function InputUser:is_button_down(button, is_ui_action)
         elseif self.is_global then
             is_down = self:is_any_joystick_down(button, is_ui_action)
         end
-    end
 --CORENTIN
-    elseif button.type == INPUT_TYPE_MIDI
-    --!TODO
-    end
+    elseif button.type == INPUT_TYPE_MIDI then
+                
+        --!TODO
+        end
+---
     
     if is_down then
         self.last_pressed_button = button
