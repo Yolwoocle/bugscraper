@@ -61,6 +61,8 @@ function Actor:init_actor(x, y, w, h, spr, args)
 	self.spr_ox = 0
 	self.spr_oy = 0
 	self.center_sprite = false
+	self.flip_x = false
+	self.flip_y = false
 
 	self.anim_frame_len = 0.2
 	self.anim_t = random_range(0, self.anim_frame_len)
@@ -225,16 +227,11 @@ function Actor:draw()
 	error("draw not implemented")
 end
 
-function Actor:draw_actor(flip_x, flip_y, custom_draw)
+function Actor:draw_actor(custom_draw)
 	if self.is_removed then   return   end
 	
-	-- f : flip
-	-- fix this, this is dumb
-	if flip_x == true then   flip_x = -1   elseif flip_x == false then   flip_x = 1 end
-	if flip_y == true then   flip_y = -1   elseif flip_y == false then   flip_y = 1 end
-
-	flip_x = (flip_x or 1)*self.sx
-	flip_y = (flip_y or 1)*self.sy
+	local scale_x = ternary(self.flip_x, -1, 1) * self.sx
+	local scale_y = ternary(self.flip_y, -1, 1) * self.sy
 
 	local spr_w2 = floor(self.spr:getWidth() / 2)
 	local spr_h2 = floor(self.spr:getHeight() / 2)
@@ -243,7 +240,7 @@ function Actor:draw_actor(flip_x, flip_y, custom_draw)
 	if self.spr then
 		local drw_func = gfx.draw
 		if custom_draw then    drw_func = custom_draw    end
-		drw_func(self.spr, x, y, self.rot, flip_x, flip_y, spr_w2 - self.spr_ox, spr_h2 - self.spr_oy)
+		drw_func(self.spr, x, y, self.rot, scale_x, scale_y, spr_w2 - self.spr_ox, spr_h2 - self.spr_oy)
 	end
 end
 

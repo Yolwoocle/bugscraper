@@ -19,10 +19,6 @@ function PongBall:init_pong_ball(x, y, spr)
     self.follow_player = false
     self.do_stomp_animation = false
 
-    self.destroy_bullet_on_impact = false
-    self.is_bouncy_to_bullets = true
-    self.is_immune_to_bullets = true
-
     self.rot_speed = 3
 
     self.gravity = 0

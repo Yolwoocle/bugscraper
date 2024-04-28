@@ -12,24 +12,20 @@ function Dung:init(x, y, spr, w, h)
 end
 
 function Dung:init_dung(x, y, spr, w, h)
-    self:init_enemy(x,y, spr or images.dung_beetle_1, w or 24, h or 30)
+    self:init_enemy(x,y, spr or images.dung, w or 24, h or 30)
     self.name = "dung"
     self.follow_player = true
     
-    self.life = 30
+    self.life = 25
 
     self.friction_x = 0.999
     self.speed_x = 5
-    self.self_knockback_mult = 0.06
+    self.self_knockback_mult = 500
     
     self.is_stompable = false
     self.destroy_bullet_on_impact = false
 	self.is_immune_to_bullets = true
     self.is_bouncy_to_bullets = true
-    
-    local beetle = DungBeetle:new(self.x, self.y - 30)
-    game:new_actor(beetle)
-    self:set_rider(beetle)
 
     self.rot_mult = 0.1
 
@@ -47,6 +43,14 @@ function Dung:update_dung_beetle(dt)
     self:update_enemy(dt)
 
     self.rot = self.rot + self.vx * self.rot_mult * dt
+
+    if self.rider == nil then
+        local beetle = DungBeetle:new(self.x, self.y - 30)
+        game:new_actor(beetle)
+        self:set_rider(beetle)
+    end
+
+    Particles:dust(self.mid_x, self.y + self.h)
 
     -- self.vx = self.speed * self.walk_dir_x
     

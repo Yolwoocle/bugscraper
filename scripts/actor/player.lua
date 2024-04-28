@@ -638,7 +638,7 @@ function Player:kill()
 	game:on_kill(self)
 	
 	self.timer_before_death = self.max_timer_before_death
-	Audio:play("game_over_1")
+	Audio:play("death")
 
 	self.is_dead = true
 	self:remove()

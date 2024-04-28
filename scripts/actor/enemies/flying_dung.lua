@@ -13,9 +13,11 @@ function FlyingDung:init(x, y, spawner)
 end
 
 function FlyingDung:init_flying_dung(x, y, spawner)
-    self:init_pong_ball(x,y, images.dung_1, 16, 16)
+    self:init_pong_ball(x,y, images.dung_flying, 16, 16)
     self.name = "flying_dung"
     self.spawner = spawner
+
+    self.life = 4
 
     self.state = "ponging"
     self.invul = true
@@ -25,10 +27,12 @@ function FlyingDung:init_flying_dung(x, y, spawner)
     self:init_pong(100)
     
     self.is_pushable = false
-    self.is_bouncy_to_bullets = true
-    self.destroy_bullet_on_impact = false
+    self.is_bouncy_to_bullets = false
+    self.destroy_bullet_on_impact = true
+
     self.is_stompable = true
     self.is_killed_on_stomp = false
+    self.kill_when_negative_life = false
 end
 
 function FlyingDung:update(dt)
@@ -45,9 +49,19 @@ end
 
 function FlyingDung:draw()
     self:draw_pong_ball()
+    -- print_outline(nil, nil, self.life, self.x, self.y - 16)
+end
+
+
+function FlyingDung:on_negative_life()
+    self:begin_targeting()
 end
 
 function FlyingDung:on_stomped(damager)
+    self:begin_targeting()
+end
+
+function FlyingDung:begin_targeting()
     self.state = "targeting"
     self.is_ponging = false
 
@@ -57,6 +71,7 @@ function FlyingDung:on_stomped(damager)
         self.pong_vy = 0
         self.vx = math.cos(a) * self.pong_speed * 3
         self.vy = math.sin(a) * self.pong_speed * 3
+        self.self_knockback_mult = 0
         game:screenshake(3) 
     end
 end

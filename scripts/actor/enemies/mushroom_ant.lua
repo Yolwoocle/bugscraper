@@ -47,6 +47,7 @@ function MushroomAnt:update(dt)
     end
 
     self.rot = lerp_angle(self.rot, self.target_rot, 0.4)
+    self.flip_x = self.walk_dir
 
     self.shoot_timer = self.shoot_timer - dt
     if self.shoot_timer <= 0 then
@@ -70,7 +71,7 @@ end
 
 function MushroomAnt:draw()
     local f = (self.damaged_flash_timer > 0) and draw_white or gfx.draw
-    self:draw_actor(self.walk_dir, _, f)
+    self:draw_actor(f)
 end
 
 function MushroomAnt:on_grounded()

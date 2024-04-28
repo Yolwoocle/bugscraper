@@ -28,6 +28,7 @@ function Enemy:init_enemy(x,y, img, w,h)
 
 	self.harmless_frames = 0
 
+	self.kill_when_negative_life = true
 	self.max_life = 10
 	self.life = self.max_life
 	self.color = COL_BLUE
@@ -80,10 +81,7 @@ function Enemy:update_enemy(dt)
 	self:follow_nearest_player(dt)
 	self.harmless_frames = max(self.harmless_frames - dt, 0)
 	self.damaged_flash_timer = max(self.damaged_flash_timer - dt, 0)
-
-	if self.life <= 0 then
-		self:remove()
-	end
+	self.flip_x = ternary(self.do_vx_flipping, self.vx < 0, false)
 end
 function Enemy:update(dt)
 	self:update_enemy(dt)
@@ -125,7 +123,7 @@ end
 
 function Enemy:draw_enemy()
 	local f = (self.damaged_flash_timer > 0) and draw_white or gfx.draw
-	self:draw_actor(ternary(self.do_vx_flipping, self.vx < 0, false), nil, f)
+	self:draw_actor(f)
 
 	if game.debug.info_view then
 		gfx.draw(images.heart, self.x-7 -2+16, self.y-16)
@@ -198,8 +196,14 @@ function Enemy:do_damage(n, damager)
 	self:on_damage(n, self.life + n)
 
 	if self.life <= 0 then
-		self:kill(damager)
+		if self.kill_when_negative_life then
+			self:kill(damager)
+		end 
+		self:on_negative_life()
 	end
+end
+
+function Enemy:on_negative_life()
 end
 
 function Enemy:on_damage()

@@ -794,6 +794,7 @@ function Game:leave_game(player_n)
 	local player = self.players[player_n]
 	local profile_id = Input:get_input_profile_from_player_n(player.n):get_profile_id()
 	
+	Particles:smoke(player.mid_x, player.mid_y, 10)
 	self.players[player_n]:remove()
 	self.players[player_n] = nil
 	Input:remove_user(player_n)
@@ -861,7 +862,7 @@ end
 
 function Game:keypressed(key, scancode, isrepeat)
 	if scancode == "space" and self.debug_mode then
-		self:screenshot()
+		-- self:screenshot()
 	end
 
 	if self.menu_manager then

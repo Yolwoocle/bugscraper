@@ -9,13 +9,12 @@ local images = require "data.images"
 local DungBeetle = Enemy:inherit()
 
 function DungBeetle:init(x, y)
-    self:init_enemy(x,y, images.daniel_small, 24, 10)
+    self:init_enemy(x,y, images.dung_beetle_1, 24, 16)
     self.name = "dung_beetle"
     self.follow_player = false
 
     self.damage = 1
     self.life = math.huge
-    -- self.self_knockback_mult = 0.1
 
     self.knockback = 0
     
@@ -26,14 +25,13 @@ function DungBeetle:init(x, y)
 	self.is_immune_to_bullets = true
     self.is_bouncy_to_bullets = true
 
-    self.sound_damage = {"cloth1", "cloth2", "cloth3"}
-    self.sound_death = "cloth_drop"
-    self.sound_stomp = "cloth_drop"
-
     self.spawn_dung_timer = Timer:new(2.0)
     self.spawn_dung_timer:start()
     self.dung_limit = 6
     self.dungs = {}
+
+    self.anim_frame_len = 0.2
+    self.anim_frames = {images.dung_beetle_1, images.dung_beetle_2}
 
     self.hits = self.dung_limit
     self.life = math.huge
@@ -68,11 +66,17 @@ function DungBeetle:update(dt)
         self.has_unridden = true
         self:unride()
     end
+
+    -- animation
+    if self.vehicle then
+        self.anim_frame_len = math.abs(10/self.vehicle.vx)
+        self.flip_x = self.vehicle.vx < 0
+    else
+        self.anim_frame_len = 0.2
+    end
 end
 
 function DungBeetle:on_death()
-    Particles:image(self.mid_x, self.mid_y, 20, {images.dummy_fragment_1, images.dummy_fragment_2}, self.w, nil, nil, 0.5)
-
     for i = 1, #self.dungs do
         local dung = self.dungs[i]
         dung:kill()
@@ -83,9 +87,9 @@ function DungBeetle:draw()
     self:draw_enemy()
 
     if self.vehicle then
-        print_outline(nil, nil, tostring(self.vehicle.life), self.mid_x + 20, self.mid_y)
+        draw_centered(images.dung_beetle_shield, self.mid_x, self.mid_y)
+        -- print_outline(nil, nil, tostring(self.anim_frame_len), self.mid_x + 20, self.mid_y)
     end
-    print_outline(COL_GREEN, nil, tostring(self.life), self.mid_x + 20, self.mid_y-10)
 end
 
 function DungBeetle:on_hit_flying_dung(flying_dung)
@@ -93,6 +97,7 @@ function DungBeetle:on_hit_flying_dung(flying_dung)
     
     self:do_damage(5, flying_dung)
     if self.vehicle then
+		self.vehicle:do_knockback(self.vehicle.self_knockback_mult, flying_dung)
         self.vehicle:do_damage(5, flying_dung)
     end
 end

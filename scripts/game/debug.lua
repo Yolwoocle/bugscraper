@@ -222,7 +222,8 @@ function Debug:draw()
         self:draw_input_view()
     end
 
-    local t = concat(love.timer.getFPS())
+    local t = concat(love.timer.getFPS(), "FPS")
+    print_outline(nil, nil, t, CANVAS_WIDTH - get_text_width(t), 0)
 end
 
 function Debug:draw_input_view()

@@ -7,13 +7,31 @@ local Gun = require "scripts.game.gun"
 local Wave = require "scripts.level.wave"
 local E = require "data.enemies"
 
+local function new_cafeteria()
+	return Wave:new({
+		floor_type = FLOOR_TYPE_CAFETERIA,
+		roll_type = WAVE_ROLL_TYPE_FIXED,
+		music = "cafeteria",
+		
+		min = 1,
+		max = 1,
+		enemies = {
+			{E.Dummy, 1, position = {5000, 200}},
+			{E.UpgradeDisplay, 1, position = {488, 200}},
+			{E.UpgradeDisplay, 1, position = {544, 200}},
+			{E.UpgradeDisplay, 1, position = {600, 200}},
+		},
+	})
+end
+
 local waves = {
 	Wave:new({
-		min = 10,
-		max = 10,
+		min = 1,
+		max = 1,
 		enemies = {	
 			-- {E.Woodlouse, 4},
-			-- {E.DungBeetle, 4},
+			{E.Dung, 4, position = {CANVAS_WIDTH/2, 200}},
+			-- {E.FlyingDung, 4, position = {CANVAS_WIDTH/2, 200}},
 			-- {E.Fly, 3},
 			-- {E.VendingMachine, 3},
 			-- {E.HoneypotAnt, 4},
@@ -28,25 +46,10 @@ local waves = {
 			-- {E.Fly, 3},
 			-- {E.SpikedFly, 3},
 			-- {E.SnailShelled, 3},
-			{E.Slug, 2},
+			-- {E.Slug, 2},
 			-- {E.Grasshopper, 1},
 			-- {E.MushroomAnt, 10},
 		}
-	}),
-	
-	Wave:new({
-		floor_type = FLOOR_TYPE_CAFETERIA,
-		roll_type = WAVE_ROLL_TYPE_FIXED,
-		music = "cafeteria",
-		
-		min = 1,
-		max = 1,
-		enemies = {
-			{E.Dummy, 1, position = {5000, 200}},
-			{E.UpgradeDisplay, 1, position = {488, 200}},
-			{E.UpgradeDisplay, 1, position = {544, 200}},
-			{E.UpgradeDisplay, 1, position = {600, 200}},
-		},
 	}),
 
 	-- Wave:new({
@@ -73,7 +76,7 @@ local waves = {
 	---------------------------------------------
 	
 	Wave:new({
-		music = "w1",
+		-- music = "w1",
 
 		min = 4,
 		max = 6,

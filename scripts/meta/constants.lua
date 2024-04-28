@@ -501,4 +501,4 @@ WAVE_ROLL_TYPE_FIXED = "fixed"
 --------------------------------------------- 
 
 -- Go ahead. Change it to 1. I'm not here to stop you
-SMASH_EASTER_EGG_PROBABILITY = 1.02
+SMASH_EASTER_EGG_PROBABILITY = 0.02

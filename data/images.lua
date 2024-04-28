@@ -70,8 +70,11 @@ local img_names = {
 	-- enemies
 	cocoon =          "actors/enemies/cocoon",
 	dummy_target =    "actors/enemies/dummy_target",
+	dung =            "actors/enemies/dung",
 	dung_beetle_1 =   "actors/enemies/dung_beetle_1",
-	dung_1 =          "actors/enemies/dung_1",
+	dung_beetle_2 =   "actors/enemies/dung_beetle_2",
+	dung_beetle_shield = "actors/enemies/dung_beetle_shield",
+	dung_flying =     "actors/enemies/dung_flying",
 	fly1 =            "actors/enemies/fly1",
 	fly2 =            "actors/enemies/fly2",
 	grasshopper =     "actors/enemies/grasshopper",
@@ -223,7 +226,6 @@ local img_names = {
 	-- misc
 	rays = "ui/rays",
 	offscreen_indicator = "ui/offscreen_indicator",
-	daniel_small = "actors/enemies/daniel_small",
 	yanis = "yanis",
 
 }
