@@ -254,13 +254,21 @@ function Level:new_wave_buffer_enemies()
 	
 	self.enemy_buffer = wave:spawn(self.door_ax, self.door_ay, self.door_bx, self.door_by)
 	
-	self:load_background(wave)
-	self:load_music(wave)
+	self:enable_wave_side_effects(wave)
 	if self.background.change_bg_color then
 		self.background:change_bg_color(wave_n)
 	end
 	
 	self:set_current_wave(wave)
+end
+
+function Level:enable_wave_side_effects(wave)
+	self:load_background(wave)
+	self:load_music(wave)
+
+	if wave.enable_stomp_arrow_tutorial then
+		game.game_ui:set_stomp_arrow_target(self.enemy_buffer[1])
+	end
 end
 
 function Level:load_background(wave)

@@ -36,6 +36,8 @@ function OptionsManager:init(game)
 		button_style_p6 = BUTTON_STYLE_DETECT,
 		button_style_p7 = BUTTON_STYLE_DETECT,
 		button_style_p8 = BUTTON_STYLE_DETECT,
+
+		has_seen_stomp_tutorial = false,
 	}
 	self.options = copy_table(self.default_options)
 

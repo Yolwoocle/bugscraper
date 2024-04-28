@@ -9,6 +9,7 @@ function GameUI:init(game)
 	self.game = game
 
     self.is_visible = true
+	self.stomp_arrow_target = nil
 end
 
 function GameUI:update(dt)
@@ -20,6 +21,7 @@ end
 
 function GameUI:draw()
 	if not self.is_visible then return end
+	self:draw_stomp_arrow()
 	self:draw_logo()
 	self:draw_join_tutorial()
 	self:draw_timer()
@@ -126,6 +128,24 @@ function GameUI:draw_offscreen_indicator_for(player)
 	exec_using_shader(shaders.draw_in_color, function()
 		draw_centered(player.skin.spr_idle, x, y, 0, 0.5, 0.5)
 	end)
+end
+
+function GameUI:draw_stomp_arrow()
+	if self.stomp_arrow_target and self.stomp_arrow_target.is_active then
+		draw_centered(images.stomp_arrow, self.stomp_arrow_target.mid_x, self.stomp_arrow_target.y - 12)
+
+		if self.stomp_arrow_target.is_removed then
+			self:set_stomp_arrow_target(nil)
+			Options:set("has_seen_stomp_tutorial", true)
+		end
+	end
+end
+
+function GameUI:set_stomp_arrow_target(target)
+	if target and Options:get("has_seen_stomp_tutorial") then
+		return
+	end
+	self.stomp_arrow_target = target
 end
 
 return GameUI

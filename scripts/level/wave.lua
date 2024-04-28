@@ -13,6 +13,8 @@ function Wave:init(params)
 	self.max = param(params.max, 1)
 	self.enemies = param(params.enemies, {})
 
+	self.enable_stomp_arrow_tutorial = param(params.enable_stomp_arrow_tutorial, false)
+
 	self.background = param(params.background, nil)
 end
 

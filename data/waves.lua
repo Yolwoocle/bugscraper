@@ -26,11 +26,12 @@ end
 
 local waves = {
 	Wave:new({
-		min = 1,
-		max = 1,
+		min = 4,
+		max = 4,
+		enable_stomp_arrow_tutorial = true,
 		enemies = {	
-			-- {E.Woodlouse, 4},
-			{E.Dung, 4, position = {CANVAS_WIDTH/2, 200}},
+			{E.Woodlouse, 4},
+			-- {E.Dung, 4, position = {240, 200}},
 			-- {E.FlyingDung, 4, position = {CANVAS_WIDTH/2, 200}},
 			-- {E.Fly, 3},
 			-- {E.VendingMachine, 3},
@@ -90,6 +91,7 @@ local waves = {
 		-- Woodlouse intro
 		min = 4,
 		max = 6,
+		enable_stomp_arrow_tutorial = true,
 		enemies = {
 			{E.Woodlouse, 2},
 		},

@@ -226,6 +226,7 @@ local img_names = {
 	-- misc
 	rays = "ui/rays",
 	offscreen_indicator = "ui/offscreen_indicator",
+	stomp_arrow = "ui/stomp_arrow",
 	yanis = "yanis",
 
 }
