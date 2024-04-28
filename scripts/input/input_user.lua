@@ -10,8 +10,8 @@ local InputUser = Class:inherit()
 function InputUser:init(n, input_profile_id, is_global)
     is_global = param(is_global, false)
 
-    self.n = n
-    self.is_global = is_global
+    self.n = n --player numb
+    self.is_global = is_global 
     self.input_profile_id = input_profile_id or "empty"
 
     self.action_states = {}
@@ -21,6 +21,9 @@ function InputUser:init(n, input_profile_id, is_global)
     self.last_active_joystick = nil
     self.last_pressed_button = nil
     self.primary_input_type = self:get_input_profile():get_primary_input_type()
+--Corentin    
+    self.midi_controller = nil
+---
 end
 
 function InputUser:update(dt)
@@ -127,6 +130,10 @@ function InputUser:is_button_down(button, is_ui_action)
         elseif self.is_global then
             is_down = self:is_any_joystick_down(button, is_ui_action)
         end
+    end
+--CORENTIN
+    elseif button.type == INPUT_TYPE_MIDI
+    --!TODO
     end
     
     if is_down then
