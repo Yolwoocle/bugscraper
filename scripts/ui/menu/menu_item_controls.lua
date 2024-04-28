@@ -164,6 +164,7 @@ function ControlsMenuItem:on_button_pressed(button)
 		
 		self.scancode = button.key_name
 		Input:add_action_button(self.profile_id, self.action_name, button)
+		Input:update_controls_file(self.profile_id)
 		
 		self.value = self:get_buttons()
 	end

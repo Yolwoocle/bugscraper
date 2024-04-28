@@ -625,6 +625,7 @@ function Player:kill()
 	
 	game:screenshake(10)
 	game:frameskip(30)
+	Input:vibrate(self.n, 0.6, 0.4)
 
 	if game:get_number_of_alive_players() > 1 then 
 		local fainted_player = Enemies.FaintedPlayer:new(self.x, self.y, self)
@@ -780,6 +781,7 @@ function Player:do_damage(n, source)
 		game:frameskip(8)
 	end
 	game:screenshake(5)
+	Input:vibrate(self.n, 0.3, 0.45)
 	Audio:play("hurt")
 	Particles:word(self.mid_x, self.mid_y, concat("-",n), COL_LIGHT_RED)
 	-- self:do_knockback(source.knockback, source)--, 0, source.h/2)

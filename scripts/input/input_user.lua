@@ -21,12 +21,17 @@ function InputUser:init(n, input_profile_id, is_global)
     self.last_active_joystick = nil
     self.last_pressed_button = nil
     self.primary_input_type = self:get_input_profile():get_primary_input_type()
+
+    self.vibration_timer = 0.0
+    self.vibration_strength_left  = 0.0
+    self.vibration_strength_right = 0.0
 end
 
 function InputUser:update(dt)
     for action, action_state in pairs(self.action_states) do
         action_state:update(dt)
 	end
+    self:update_vibration(dt)
 end
 
 function InputUser:get_primary_input_type()
@@ -218,6 +223,28 @@ end
 
 function InputUser:set_button_style(style)
     Options:set_button_style(self.n, style)
+end
+
+function InputUser:vibrate(duration, strength_left, strength_right)
+    strength_right = param(strength_right, strength_left)
+    
+    if not self.joystick then 
+        return
+    end
+    self.vibration_timer = math.max(self.vibration_timer, duration)
+    self.vibration_strength_left  = strength_left
+    self.vibration_strength_right = strength_right
+end
+
+function InputUser:update_vibration(dt)
+    if self.joystick then
+        if self.vibration_timer <= 0 then
+            self.vibration_strength_left, self.vibration_strength_right = 0, 0 
+        end
+        self.joystick:setVibration(self.vibration_strength_left, self.vibration_strength_right) 
+    end
+    
+    self.vibration_timer = math.max(self.vibration_timer - dt, 0.0)
 end
 
 return InputUser

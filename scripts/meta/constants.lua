@@ -159,8 +159,8 @@ RAW_INPUT_MAP_DEFAULT_EMPTY = {
     down =      {},
     jump =      {},
     shoot =     {},
-    pause =     {},
     
+    pause =     {},
     ui_select = {},
     ui_back =   {},
     ui_left =   {},
@@ -225,8 +225,8 @@ RAW_INPUT_MAP_DEFAULT_KEYBOARD_SOLO = {
     down =      {"k_down", "k_s"},
     jump =      {"k_c", "k_b"},
     shoot =     {"k_x", "k_v"},
-    pause =     {"k_escape", "k_p"},
     
+    pause =     {"k_escape", "k_p"},
     ui_select = {"k_c", "k_b", "k_return"},
     ui_back =   {"k_x", "k_escape", "k_backspace"},
     ui_left =   {"k_left", "k_a"},
@@ -247,8 +247,8 @@ RAW_INPUT_MAP_DEFAULT_SPLIT_KEYBOARD_P1 = {
     down =      {"k_s"},
     jump =      {"k_f"},
     shoot =     {"k_g"},
-    pause =     {"k_escape", "k_p"},
     
+    pause =     {"k_escape", "k_p"},    
     ui_select = {"k_f"},
     ui_back =   {"k_g", "k_escape"},
     ui_left =   {"k_a"},
@@ -269,8 +269,8 @@ RAW_INPUT_MAP_DEFAULT_SPLIT_KEYBOARD_P2 = {
     down =      {"k_down"},--"k_j"
     jump =      {"k_l"},
     shoot =     {"k_;"},
-    pause =     {"k_escape", "k_p"},
     
+    pause =     {"k_escape", "k_p"},
     ui_select = {"k_l", "k_return"},
     ui_back =   {"k_;", "k_backspace"},
     ui_left =   {"k_h", "k_left"},

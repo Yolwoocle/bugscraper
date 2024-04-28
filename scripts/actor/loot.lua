@@ -102,9 +102,9 @@ function Loot:update_loot(dt)
 	end
 
 	-- if outside bounds
-	if self.x <= 0 or self.x > CANVAS_WIDTH or self.y <= 0 or self.y > CANVAS_HEIGHT then
-		self:set_pos(CANVAS_WIDTH/2, CANVAS_HEIGHT/2)
-	end
+	-- if self.x <= 0 or self.x > CANVAS_WIDTH or self.y <= 0 or self.y > CANVAS_HEIGHT then
+	-- 	self:set_pos(CANVAS_WIDTH/2, CANVAS_HEIGHT/2)
+	-- end
 
 	if self.life < 0 then
 		Particles:smoke(self.mid_x, self.mid_y)
@@ -304,19 +304,23 @@ function Loot.Gun:on_collect(player)
 	local old_gun = player.gun
 	player:equip_gun(self.gun)
 	
-	Particles:smoke(self.mid_x, self.mid_y, nil, COL_LIGHT_BROWN)
+	Particles:smoke(self.mid_x, self.mid_y, 10, COL_LIGHT_BROWN)
 	Audio:play("item_collect")
 
 	local old_life = self.life
 	Particles:word(self.mid_x, self.mid_y, string.upper(self.gun.display_name or self.gun.name), COL_LIGHT_YELLOW)
 	self:reset()
 	
-	self.life = old_life
-	self.gun = old_gun
-	self:set_sprite(self.gun.spr)
+	local new_loot = Loot.Gun:new(self.x, self.y, self.value, 0, 0)
+	new_loot.life = old_life
+	new_loot.gun = old_gun
+	new_loot:set_sprite(old_gun.spr)
+	game:new_actor(new_loot)
 
-	self.uncollectable_timer = 1.0
+	-- self.uncollectable_timer = 1.0
 	-- self:remove()
+
+	self:remove()
 end
 
 function Loot.Gun:update(dt)

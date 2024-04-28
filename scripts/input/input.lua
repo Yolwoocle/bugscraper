@@ -355,8 +355,6 @@ function InputManager:add_action_button(profile_id, action, new_button)
 
     local current_buttons = profile:get_buttons(action)
     table.insert(current_buttons, new_button)
-
-	self:update_controls_file(profile_id)
 end
 
 function InputManager:mark_action_as_handled(player_n, action)
@@ -684,7 +682,38 @@ function InputManager:on_quit()
 end
 
 function InputManager:load_global_mappings()
-    
+    -- local actions = {
+    --     "pause",
+    --     "ui_select",
+    --     "ui_back",
+    --     "ui_left",
+    --     "ui_right",
+    --     "ui_up",
+    --     "ui_down",
+    --     "ui_reset_keys",
+    -- }
+    -- local users = {
+    --     "pause",
+    --     "ui_select",
+    --     "ui_back",
+    --     "ui_left",
+    --     "ui_right",
+    --     "ui_up",
+    --     "ui_down",
+    --     "ui_reset_keys",
+    -- }
+
+    -- for _, user in pairs(users) do
+    --     for __, action in pairs(actions) do
+    --         self:add_action_button()
+    --     end
+    -- end
+end
+
+function InputManager:vibrate(user_n, duration, strength_left, strength_right)
+    local user = self:get_user(user_n)
+    if user == nil then return end
+    user:vibrate(duration, strength_left, strength_right)
 end
 
 return InputManager

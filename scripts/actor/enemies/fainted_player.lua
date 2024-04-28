@@ -9,7 +9,8 @@ local Timer = require "scripts.timer"
 local FaintedPlayer = Enemy:inherit()
 
 function FaintedPlayer:init(x, y, player)
-    self:init_enemy(x,y, player.skin.spr_dead, 15, 15)
+    -- self:init_enemy(x,y, player.skin.spr_dead, 15, 15);
+    self:init_enemy(x,y, images.cocoon, 15, 15)
     self.name = "fainted_player"
 
     self.player_n = player.n or 1
@@ -66,7 +67,6 @@ end
 
 function FaintedPlayer:draw()
     self:draw_enemy()
-    print_outline(nil, nil, tostring(self.is_stompable), self.mid_x + 30, self.mid_y - 20)
     
 end
 
