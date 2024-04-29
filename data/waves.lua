@@ -24,13 +24,12 @@ local function new_cafeteria()
 	})
 end
 
-local waves = {
-	Wave:new({
-		min = 4,
-		max = 4,
+local function debug_wave()
+	return Wave:new({
+		min = 10,
+		max = 10,
 		enable_stomp_arrow_tutorial = true,
 		enemies = {	
-			{E.ChipBug, 4},
 			-- {E.Dung, 4, position = {240, 200}},
 			-- {E.FlyingDung, 4, position = {CANVAS_WIDTH/2, 200}},
 			-- {E.Fly, 3},
@@ -40,6 +39,9 @@ local waves = {
 			-- {E.SnailShelled, 3},
 			-- {E.PoisonCloud, 4},
 			-- {E.SnailShelled, 4},
+
+			-- {E.ButtonBigGlass, 1, position={CANVAS_WIDTH/2, CANVAS_HEIGHT/2}},
+			{E.Fly, 1},
 
 			-- {E.Mosquito, 4},
 			-- {E.HoneypotAnt, 4},
@@ -51,33 +53,11 @@ local waves = {
 			-- {E.Grasshopper, 1},
 			-- {E.MushroomAnt, 10},
 		}
-	}),
+	})
+end
 
-	new_cafeteria(),
-
-	-- Wave:new({
-	-- 	min = 1,
-	-- 	max = 1,
-	-- 	enemies = {
-	-- 		{E.Dung, 3, position = {200, 200}},
-	-- 	},
-	-- 	-- background = backgrounds.BackgroundDots:new(),
-	-- }),
-	
-	-- Wave:new({
-	-- 	music = "w1",
-	-- 	background = backgrounds.BackgroundServers:new(),
-	
-	-- 	min = 1,
-	-- 	max = 1,
-	-- 	enemies = {
-	-- 		{E.Larva, 3},
-	-- 		{E.Fly, 3},
-	-- 	},
-	-- }),
-
-	---------------------------------------------
-	
+local waves = {	
+	-- debug_wave(),
 	Wave:new({
 		-- music = "w1",
 

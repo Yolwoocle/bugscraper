@@ -86,14 +86,16 @@ function Wave:spawn(ax, ay, bx, by)
 		local enemy_instance = enemy_class:new(position[1], position[2], unpack(args))
 
 		-- Center enemy
-		enemy_instance.x = floor(enemy_instance.x - enemy_instance.w/2)
-		enemy_instance.y = floor(enemy_instance.y - enemy_instance.h/2)
+		-- enemy_instance:set_pos(
+		-- 	floor(enemy_instance.x - enemy_instance.w/2),
+		-- 	floor(enemy_instance.y - enemy_instance.h/2)
+		-- )
 		-- If button is summoned, last wave happened
 		-- self.game:on_button_glass_spawn(enemy_instance)
 		
 		-- Prevent collisions with floor
 		if enemy_instance.y + enemy_instance.h > by then
-			enemy_instance.y = by - enemy_instance.h
+			enemy_instance:set_pos(enemy_instance.x, by - enemy_instance.h)
 		end
 
 		game:new_actor(enemy_instance)

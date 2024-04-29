@@ -349,7 +349,7 @@ end
 
 function Actor:set_pos(x, y)
 	self.x = x
-	self.y = y
+	self.y = y 
 	Collision:update(self, x, y)
 end
 
