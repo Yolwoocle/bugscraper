@@ -197,23 +197,23 @@ RAW_INPUT_MAP_DEFAULT_GLOBAL = {
 }
 
 RAW_INPUT_MAP_DEFAULT_CONTROLLER = {
-    left =      {"c_leftstickxneg", "c_dpleft"},
-    right =     {"c_leftstickxpos", "c_dpright"},
-    up =        {"c_leftstickyneg", "c_dpup"},
-    down =      {"c_leftstickypos", "c_dpdown"},
+    left =      {"c_leftxneg", "c_dpleft"},
+    right =     {"c_leftxpos", "c_dpright"},
+    up =        {"c_leftyneg", "c_dpup"},
+    down =      {"c_leftypos", "c_dpdown"},
     jump =      {"c_a", "c_b"},
-    shoot =     {"c_x", "c_y", "c_righttrigger"},
+    shoot =     {"c_x", "c_y", "c_triggerright"},
     
     pause =     {"c_start"},
     ui_select = {"c_a"},
     ui_back =   {"c_b"},
-    ui_left =   {"c_leftstickxneg", "c_dpleft"},
-    ui_right =  {"c_leftstickxpos", "c_dpright"},
-    ui_up =     {"c_leftstickyneg", "c_dpup"},
-    ui_down =   {"c_leftstickypos", "c_dpdown"},
-    ui_reset_keys = {"c_lefttrigger"},
+    ui_left =   {"c_leftxneg", "c_dpleft"},
+    ui_right =  {"c_leftxpos", "c_dpright"},
+    ui_up =     {"c_leftyneg", "c_dpup"},
+    ui_down =   {"c_leftypos", "c_dpdown"},
+    ui_reset_keys = {"c_triggerleft"},
     split_keyboard = {},
-    leave_game = {"c_lefttrigger"},
+    leave_game = {"c_triggerleft"},
 
     debug = {},
 }
@@ -287,18 +287,18 @@ RAW_INPUT_MAP_DEFAULT_SPLIT_KEYBOARD_P2 = {
 UI_ACTIONS = {"ui_up", "ui_down", "ui_left", "ui_right", "ui_select", "ui_back", "pause"}
 
 AXIS_TABLE = {
-    leftstickxpos =  true,
-    leftstickxneg =  true,
-    leftstickypos =  true,
-    leftstickyneg =  true,
+    leftxpos =  true,
+    leftxneg =  true,
+    leftypos =  true,
+    leftyneg =  true,
 
-    rightstickxpos = true,
-    rightstickxneg = true,
-    rightstickypos = true,
-    rightstickyneg = true,
+    rightxpos = true,
+    rightxneg = true,
+    rightypos = true,
+    rightyneg = true,
 
-    lefttrigger =    true,
-    righttrigger =   true,
+    triggerleft =    true,
+    triggerright =   true,
 }
 
 AXIS_DEADZONE = 0.3
@@ -306,20 +306,20 @@ TRIGGER_DEADZONE = 0.3
 AXIS_ANGLE_MARGIN = 3 * math.pi/8
 UI_AXIS_ANGLE_MARGIN = 2 * math.pi/8
 AXIS_TO_KEY_NAME_MAP = {
-    ["leftx+"] = "leftstickxpos",
-    ["leftx-"] = "leftstickxneg",
-    ["lefty+"] = "leftstickypos",
-    ["lefty-"] = "leftstickyneg",
+    ["leftx+"] = "leftxpos",
+    ["leftx-"] = "leftxneg",
+    ["lefty+"] = "leftypos",
+    ["lefty-"] = "leftyneg",
 
-    ["rightx+"] = "rightstickxpos",
-    ["rightx-"] = "rightstickxneg",
-    ["righty+"] = "rightstickypos",
-    ["righty-"] = "rightstickyneg",
+    ["rightx+"] = "rightxpos",
+    ["rightx-"] = "rightxneg",
+    ["righty+"] = "rightypos",
+    ["righty-"] = "rightyneg",
 
-    ["triggerleft+"] = "lefttrigger",
-    ["triggerleft-"] = "lefttrigger",
-    ["triggerright+"] = "righttrigger",
-    ["triggerright-"] = "righttrigger",
+    ["triggerleft+"] = "triggerleft",
+    ["triggerleft-"] = "triggerleft",
+    ["triggerright+"] = "triggerright",
+    ["triggerright-"] = "triggerright",
 }
 
 GLOBAL_INPUT_USER_PLAYER_N = -1
@@ -461,16 +461,16 @@ CONTROLLER_BUTTONS = {
     ["paddle3"] = true,
     ["paddle4"] = true,
     ["touchpad"] = true,
-    ["leftstickxpos"] = true,
-    ["leftstickxneg"] = true,
-    ["leftstickypos"] = true,
-    ["leftstickyneg"] = true,
-    ["rightstickxpos"] = true,
-    ["rightstickxneg"] = true,
-    ["rightstickypos"] = true,
-    ["rightstickyneg"] = true,
-    ["lefttrigger"] = true,
-    ["righttrigger"] = true,
+    ["leftxpos"] = true,
+    ["leftxneg"] = true,
+    ["leftypos"] = true,
+    ["leftyneg"] = true,
+    ["rightxpos"] = true,
+    ["rightxneg"] = true,
+    ["rightypos"] = true,
+    ["rightyneg"] = true,
+    ["triggerleft"] = true,
+    ["triggerright"] = true,
 }
 
 --------------------------------------------- 
