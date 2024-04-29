@@ -256,7 +256,7 @@ function Level:new_wave_buffer_enemies()
 	
 	self:enable_wave_side_effects(wave)
 	if self.background.change_bg_color then
-		self.background:change_bg_color(wave_n)
+		self.background:change_bg_color()
 	end
 	
 	self:set_current_wave(wave)

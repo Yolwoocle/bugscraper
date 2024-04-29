@@ -760,11 +760,15 @@ function Game:join_game(input_profile_id, joystick)
 
 	Input:new_user(player_n)
 	Input:set_last_ui_user_n(player_n)
-	self:new_player(player_n)
+	local new_player = self:new_player(player_n)
 	if joystick ~= nil then
 		Input:assign_joystick(player_n, joystick)
 	end
 	Input:assign_input_profile(player_n, input_profile_id)
+
+	if new_player ~= nil then
+		Particles:smoke(new_player.mid_x, new_player.mid_y)
+	end
 
 	return player_n
 end

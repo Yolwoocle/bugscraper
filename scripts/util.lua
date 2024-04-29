@@ -819,6 +819,16 @@ function cerp(a,b,t)
 	return a + sign0(b-a)*t
 end
 
+function move_toward_color(a, b, t)
+	local c = {
+		move_toward(a[1], b[1], t),
+		move_toward(a[2], b[2], t),
+		move_toward(a[3], b[3], t),
+		move_toward(a[4] or 1, b[4] or 1, t),
+	}
+	return c
+end
+
 function move_toward(from, to, delta)
     if math.abs(to - from) <= delta then
         return to
