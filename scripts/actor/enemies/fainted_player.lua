@@ -60,7 +60,7 @@ function FaintedPlayer:on_death(damager, reason)
     if damager.is_player then
         reviver = damager
     elseif damager.is_bullet then
-        reviver = damager.player        
+        reviver = damager.player
     else
         return
     end
