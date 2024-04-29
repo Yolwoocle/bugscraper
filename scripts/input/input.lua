@@ -176,9 +176,10 @@ function InputManager:gamepadaxis(joystick, axis, value)
 end
 
 function InputManager:axis_to_key_name(axis, value)
-    local code = tostring(axis)..ternary(value > 0, "+", "-")
-    local name = AXIS_TO_KEY_NAME_MAP[code]
-    return name
+    if axis == "triggerleft" or axis == "triggerright" then
+        return axis
+    end
+    return tostring(axis)..ternary(value > 0, "pos", "neg")
 end
 
 function InputManager:get_axis_angle(joystick, axis_x, axis_y) 
