@@ -4,5 +4,5 @@
 /export/*
 
 
-lib/midi_input_handler/bin/*
+*.so
 lib/midi_input_handler/target

@@ -1,14 +1,27 @@
 
 LIBNAME=libmidi_input_handler
 
+OS := $(shell uname)
+ifeq ($(OS),Linux)
+    EXT := so
+else ifeq ($(OS),Darwin)
+    EXT := dylib
+else ifeq ($(OS),Windows_NT)
+    EXT := dll
+else
+    $(error Unsupported operating system: $(OS))
+endif
+
+
 debug:
+	@echo "building for $(shell uname)"
 	cargo build
-	rm ./bin/libmidi_input_handler.so || cp ./target/debug/$(LIBNAME).so ./bin/ -i 
+	rm ./libmidi_input_handler.$(EXT) || cp ./target/debug/$(LIBNAME).$(EXT) ./ -i 
 
 release:
+	@echo "building for $(shell uname)"
 	cargo build --release
-	@mkdir ./bin
-	rm ./bin/libmidi_input_handler.so|| mv ./target/release/$(LIBNAME).so ./bin/ -i 
+	@rm ./libmidi_input_handler.$(EXT)|| mv ./target/release/$(LIBNAME).$(EXT) ./ -i 
 
 
 run :
@@ -17,4 +30,4 @@ run :
 
 clean :
 	cargo clean
-	rm ./bin/libmidi_input_handler.so
+	@rm ./libmidi_input_handler.so
