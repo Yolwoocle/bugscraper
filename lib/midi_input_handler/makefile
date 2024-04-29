@@ -3,12 +3,12 @@ LIBNAME=libmidi_input_handler
 
 debug:
 	cargo build
-	rm ./bin/libmidi_input_handler.so || cp ./target/debug/$(LIBNAME).so ./bin/ -i 
+	rm ./libmidi_input_handler.so || cp ./target/debug/$(LIBNAME).so ./ -i 
 
 release:
 	cargo build --release
 	@mkdir ./bin
-	rm ./bin/libmidi_input_handler.so|| mv ./target/release/$(LIBNAME).so ./bin/ -i 
+	rm ./libmidi_input_handler.so|| mv ./target/release/$(LIBNAME).so ./ -i 
 
 
 run :

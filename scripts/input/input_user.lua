@@ -5,7 +5,7 @@ local InputActionState = require "scripts.input.input_action_state"
 local gamepadguesser = require "lib.gamepadguesser"
 gamepadguesser.loadMappings("lib/gamepadguesser")
 
-local midi = require "input_midi"
+local midi = require "lib.midi_input_handler.midi_input_handler"
 
 local InputUser = Class:inherit()
 
