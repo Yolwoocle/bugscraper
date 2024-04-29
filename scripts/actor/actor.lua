@@ -64,6 +64,8 @@ function Actor:init_actor(x, y, w, h, spr, args)
 	self.flip_x = false
 	self.flip_y = false
 
+	self.outline_color = nil
+
 	self.anim_frame_len = 0.2
 	self.anim_t = random_range(0, self.anim_frame_len)
 	self.anim_frames = nil
@@ -239,7 +241,12 @@ function Actor:draw_actor(custom_draw)
 	local x, y = self.spr_x, self.spr_y
 	if self.spr then
 		local drw_func = gfx.draw
-		if custom_draw then    drw_func = custom_draw    end
+		if self.outline_color then 
+			drw_func = function(...) draw_with_outline(self.outline_color, ...) end
+		end
+		if custom_draw then
+			drw_func = custom_draw 
+		end
 		drw_func(self.spr, x, y, self.rot, scale_x, scale_y, spr_w2 - self.spr_ox, spr_h2 - self.spr_oy)
 	end
 end

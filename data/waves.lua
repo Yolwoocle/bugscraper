@@ -30,7 +30,7 @@ local waves = {
 		max = 4,
 		enable_stomp_arrow_tutorial = true,
 		enemies = {	
-			{E.Woodlouse, 4},
+			{E.ChipBug, 4},
 			-- {E.Dung, 4, position = {240, 200}},
 			-- {E.FlyingDung, 4, position = {CANVAS_WIDTH/2, 200}},
 			-- {E.Fly, 3},
@@ -52,6 +52,8 @@ local waves = {
 			-- {E.MushroomAnt, 10},
 		}
 	}),
+
+	new_cafeteria(),
 
 	-- Wave:new({
 	-- 	min = 1,

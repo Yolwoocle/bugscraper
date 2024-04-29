@@ -17,6 +17,7 @@ local enemies = {
 	DungBeetle =       require "scripts.actor.enemies.dung_beetle",
 	FlyingDung =       require "scripts.actor.enemies.flying_dung",
 	Woodlouse =        require "scripts.actor.enemies.woodlouse",
+	ChipBug =          require "scripts.actor.enemies.chip_bug",
 	
 	PoisonCloud =      require "scripts.actor.enemies.poison_cloud",
 	

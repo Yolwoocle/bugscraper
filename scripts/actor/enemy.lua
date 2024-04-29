@@ -122,7 +122,7 @@ function Enemy:follow_nearest_player(dt)
 end
 
 function Enemy:draw_enemy()
-	local f = (self.damaged_flash_timer > 0) and draw_white or gfx.draw
+	local f = (self.damaged_flash_timer > 0) and draw_white
 	self:draw_actor(f)
 
 	if game.debug.info_view then

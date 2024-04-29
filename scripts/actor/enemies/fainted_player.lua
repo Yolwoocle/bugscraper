@@ -2,6 +2,7 @@ require "scripts.util"
 local Enemy = require "scripts.actor.enemy"
 local sounds = require "data.sounds"
 local images = require "data.images"
+local skins = require "data.skins"
 
 local Guns = require "data.guns"
 local Timer = require "scripts.timer"
@@ -22,8 +23,8 @@ function FaintedPlayer:init(x, y, player)
     self.damage = 0
     self.self_knockback_mult = 0.1
     
-	self.destroy_bullet_on_impact = false
-	self.is_immune_to_bullets = true
+	-- self.destroy_bullet_on_impact = false
+	-- self.is_immune_to_bullets = true
     
     self.knockback = 0
     
@@ -35,10 +36,13 @@ function FaintedPlayer:init(x, y, player)
     self.is_pushable = false
     self.is_knockbackable = false
     self.loot = {}
+    
+    local skin = skins[self.player_n]
+    self.outline_color = skin.color_palette[1]
 
-    self.sound_damage = {"cloth1", "cloth2", "cloth3"}
-    self.sound_death = "cloth_drop"
-    self.sound_stomp = "cloth_drop"
+    -- self.sound_damage = {"cloth1", "cloth2", "cloth3"}
+    -- self.sound_death = "cloth_drop"
+    -- self.sound_stomp = "cloth_drop"
 end
 
 function FaintedPlayer:update(dt)
@@ -52,17 +56,28 @@ end
 function FaintedPlayer:on_death(damager, reason)
     Particles:image(self.mid_x, self.mid_y, 20, {images.cocoon_fragment_1, images.cocoon_fragment_2}, self.w, nil, nil, 0.5)
     
+    local reviver
+    if damager.is_player then
+        reviver = damager
+    elseif damager.is_bullet then
+        reviver = damager.player        
+    else
+        return
+    end
+
     local player = game:new_player(self.player_n, self.x, self.y)
     player:set_invincibility(player.max_iframes)
 
-    local l = math.floor(damager.life/2)
-    if damager.life > 1 then
-        player:set_life(l)
-        damager:set_life(damager.life - l)
-    else 
-        player:set_life(1)
-        damager:set_life(0)
+    local l = math.floor(reviver.life/2)
+    local player_life, reviver_life = l, reviver.life - l
+    if reviver.life <= 1 then
+        player_life = 1
+        reviver_life = 0
     end
+    Particles:word(player.mid_x,  player.mid_y - 16,  concat("+", player_life), COL_LIGHT_RED)    
+    Particles:word(reviver.mid_x, reviver.mid_y - 16, concat("-", reviver.life - reviver_life), COL_LIGHT_RED)    
+    player:set_life(player_life)
+    reviver:set_life(reviver_life)
 end
 
 function FaintedPlayer:draw()

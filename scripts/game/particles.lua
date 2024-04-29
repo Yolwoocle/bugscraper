@@ -116,6 +116,7 @@ function TextParticle:update(dt)
 		self.spawn_delay = self.spawn_delay - dt
 		return
 	end
+
 	self.vy = self.vy * 0.9
 	self.y = self.y + self.vy
 	

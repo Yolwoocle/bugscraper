@@ -123,7 +123,7 @@ function Guns:init()
 		self.name = "minigun"
 		self:init_gun(user)
 		
-		self.max_ammo = 100
+		self.max_ammo = 75
 		self.max_reload_timer = 1.5
 
 		self.random_angle_offset = 0.5
