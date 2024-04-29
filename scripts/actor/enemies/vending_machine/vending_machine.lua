@@ -16,7 +16,7 @@ function VendingMachine:init(x, y)
     self:init_button_small(x, y, nil, 25, 61)
     self.name = "vending_machine"
     
-    self:set_sprite(images.machine_coffee)
+    self:set_image(images.machine_coffee)
     self.sprite_pressed = images.machine_coffee_pressed
 
     self.products = {

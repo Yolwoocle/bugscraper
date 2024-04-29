@@ -70,7 +70,7 @@ function DungBeetle:update(dt)
     -- animation
     if self.vehicle then
         self.anim_frame_len = math.abs(10/self.vehicle.vx)
-        self.flip_x = self.vehicle.vx < 0
+        self.spr:set_flip_x(self.vehicle.vx < 0)
     else
         self.anim_frame_len = 0.2
     end

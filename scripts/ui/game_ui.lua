@@ -35,13 +35,13 @@ function GameUI:draw_logo()
 		local logo_x = floor((CANVAS_WIDTH - images.logo_noshad:getWidth())/2)
 		
 		local col = LOGO_COLS[i]
-		local spr = images.logo_shad
+		local img = images.logo_shad
 		if col == nil then
 			col = COL_WHITE
-			spr = images.logo_noshad
+			img = images.logo_noshad
 		end
 		gfx.setColor(col)
-		gfx.draw(spr, logo_x + ox, game.logo_y + oy)
+		gfx.draw(img, logo_x + ox, game.logo_y + oy)
 	end
 end
 

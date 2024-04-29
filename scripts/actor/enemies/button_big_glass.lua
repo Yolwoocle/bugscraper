@@ -91,9 +91,9 @@ function ButtonBigGlass:on_damage(n, old_life)
     
     if old_state ~= new_state then
         self.break_state = new_state
-        local spr = self.images_cracked[self.break_state] or images.big_red_button_crack3
+        local image = self.images_cracked[self.break_state] or images.big_red_button_crack3
 
-        self.spr = spr
+        self.spr:set_image(image)
         game:screenshake(self.change_break_state_screenshake)
         Particles:image(self.mid_x, self.mid_y, self.change_break_state_num_particles, images.glass_shard, self.h)
         local pitch = max(0.1, lerp(0.5, 1, self.life/self.max_life))

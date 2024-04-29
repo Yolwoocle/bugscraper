@@ -40,7 +40,7 @@ function Player:init(n, x, y, skin)
 	-- Animation
 	self.color_palette = skin.color_palette
 	self.skin = skin
-	self.spr = self.skin.spr_idle
+	self.spr:set_image(self.skin.spr_idle)
 
 	self.is_walking = false
 	self.squash = 1
@@ -260,7 +260,7 @@ function Player:draw_hud()
 	if self.is_removed or self.is_dead then    return    end
 
 	local ui_x = floor(self.ui_x)
-	local ui_y = floor(self.ui_y) - self.spr:getHeight() - 6
+	local ui_y = floor(self.ui_y) - self.spr.image:getHeight() - 6
 
 	self:draw_life_bar(ui_x, ui_y)
 	self:draw_ammo_bar(ui_x, ui_y)
@@ -388,6 +388,9 @@ function Player:draw_controls()
 end
 
 function Player:draw_player()
+	self.spr:draw(self.x, self.y)
+	if true then return end
+
 	local fx = self.dir_x * self.sx
 	local fy = 				self.sy
 	
@@ -631,7 +634,7 @@ function Player:kill()
 		local fainted_player = Enemies.FaintedPlayer:new(self.x, self.y, self)
 		game:new_actor(fainted_player)
 	else
-		Particles:dead_player(self.spr_x, self.spr_y, self.skin.spr_dead, self.color_palette, self.dir_x)
+		Particles:dead_player(self.spr:get_offset_position(self.x, self.y), self.skin.spr_dead, self.color_palette, self.dir_x)
 	end
 
 	self:on_death()
@@ -704,11 +707,11 @@ function Player:update_gun_pos(dt, lerpval)
 	 
 	local gunw = self.gun.spr:getWidth()
 	local gunh = self.gun.spr:getHeight()
-	local top_y = self.y + self.h - self.spr:getHeight()
+	local top_y = self.y + self.h - self.spr.image:getHeight()
 	local hand_oy = 15
 
 	-- x pos is player sprite width minus a bit, plus gun width 
-	local w = (self.spr:getWidth()/2-5 + gunw/2)
+	local w = (self.spr.image:getWidth()/2-5 + gunw/2)
 	
 	local hand_y = top_y + hand_oy - self.walkbounce_oy
 
@@ -830,8 +833,7 @@ function Player:update_visuals()
 	self.walkbounce_squash = lerp(self.walkbounce_squash, 1, 0.2)
 	self.squash = self.jump_squash * self.walkbounce_squash
 
-	self.sx = self.squash
-	self.sy = 1/self.squash
+	self.spr:set_scale(self.squash, 1/self.squash)
 end
 
 function Player:on_grounded()
@@ -843,7 +845,7 @@ function Player:on_grounded()
 	Audio:play_var(s, 0.3, 1, {pitch=0.5, volume=0.5})
 
 	self.jump_squash = 1.5
-	self.spr = self.skin.spr_idle
+	self.spr:set_image(self.skin.spr_idle)
 	Particles:smoke(self.mid_x, self.y+self.h, 10, COL_WHITE, 8, 4, 2)
 
 	self.air_time = 0
@@ -909,18 +911,20 @@ function Player:animate_walk(dt)
 end
 
 function Player:update_sprite(dt)
-	self.spr = self.skin.spr_idle
+	self.spr:set_flip_x(self.dir_x < 0)
+
+	self.spr:set_image(self.skin.spr_idle)
 	if not self.is_grounded then
-		self.spr = self.skin.spr_jump
+		self.spr:set_image(self.skin.spr_jump)
 	end
 	if self.is_wall_sliding then
-		self.spr = self.skin.spr_wall_slide 
+		self.spr:set_image(self.skin.spr_wall_slide)
 	end
 	if self.is_walking then
 		if self.walkbounce_y > 4 then
-			self.spr = self.skin.spr_idle
+			self.spr:set_image(self.skin.spr_idle)
 		else
-			self.spr = self.skin.spr_jump
+			self.spr:set_image(self.skin.spr_jump)
 		end
 	end
 end

@@ -190,30 +190,6 @@ function ternary(cond, t, f)
 	return f
 end
 
--- function draw_centered(spr, x, y, r, sx, sy, ox, oy, color)
--- 	local w = spr:getWidth() or 0
--- 	local h = spr:getHeight() or 0
--- 	local col = color or {1,1,1}
--- 	if spr == nil then spr = spr_missing end 
-
--- 	if (camera.x-w < x) and (x < camera.x+window_w+w) 
--- 	and (camera.y-h < y) and (y < camera.y+window_h+h) then
--- 		x = floor(x)
--- 		y = floor(y)
--- 		r = r or 0
--- 		sx = sx or PIXEL_SCALE
--- 		sy = sy or sx
--- 		ox = ox or 0
--- 		oy = oy or 0
-
--- 		ox = floor(ox + spr:getWidth()/2)
--- 		oy = floor(oy + spr:getHeight()/2)
--- 		love.graphics.setColor(col)
--- 		love.graphics.draw(spr, x, y, r, sx, sy, ox, oy)
--- 		love.graphics.setColor(1,1,1)
--- 	end
--- end
-
 function exec_on_canvas(canvas, func)
 	local old_canvas = love.graphics.getCanvas()
 	love.graphics.setCanvas(canvas)

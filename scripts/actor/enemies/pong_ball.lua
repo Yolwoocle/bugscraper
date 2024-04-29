@@ -28,7 +28,6 @@ function PongBall:init_pong_ball(x, y, spr)
     self:init_pong()
     
     self.center_sprite = true
-    -- self.spr_oy = floor((self.spr_h - self.h) / 2)
     self:update_sprite_offset()
 end
 

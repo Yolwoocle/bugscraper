@@ -81,7 +81,7 @@ function Enemy:update_enemy(dt)
 	self:follow_nearest_player(dt)
 	self.harmless_frames = max(self.harmless_frames - dt, 0)
 	self.damaged_flash_timer = max(self.damaged_flash_timer - dt, 0)
-	self.flip_x = ternary(self.do_vx_flipping, self.vx < 0, false)
+	self.spr:set_flip_x(ternary(self.do_vx_flipping, self.vx < 0, false))
 end
 function Enemy:update(dt)
 	self:update_enemy(dt)
@@ -157,7 +157,7 @@ function Enemy:on_collision(col, other)
 			player.vy = 0
 			player:on_stomp(self)
 			if self.do_stomp_animation then
-				Particles:stomped_enemy(self.spr_x, self.spr_y, self.spr)
+				Particles:stomped_enemy(self.spr:get_offset_position(self.x, self.y), self.spr)
 			end
 			self:on_stomped(player)
 			if self.is_killed_on_stomp then

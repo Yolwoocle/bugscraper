@@ -314,7 +314,7 @@ function Loot.Gun:on_collect(player)
 	local new_loot = Loot.Gun:new(self.x, self.y, self.value, 0, 0)
 	new_loot.life = old_life
 	new_loot.gun = old_gun
-	new_loot:set_sprite(old_gun.spr)
+	new_loot:set_image(old_gun.spr)
 	game:new_actor(new_loot)
 
 	-- self.uncollectable_timer = 1.0
@@ -340,10 +340,10 @@ function Loot.Gun:draw(fx, fy, custom_draw)
 
 	if self.is_removed then   return   end
 
-	local spr_w2 = floor(self.spr:getWidth() / 2)
-	local spr_h2 = floor(self.spr:getHeight() / 2)
+	local spr_w2 = floor(self.spr.image:getWidth() / 2)
+	local spr_h2 = floor(self.spr.image:getHeight() / 2)
 
-	local x, y = self.spr_x, self.spr_y
+	local x, y = self.spr:get_offset_position(self.x, self.y)
 	if self.spr then
 	
 		gfx.draw(self.spr, x + self.sprite_ox, y + self.sprite_oy, self.rot, fx, fy, spr_w2, spr_h2)

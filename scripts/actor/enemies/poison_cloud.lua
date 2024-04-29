@@ -55,11 +55,13 @@ end
 function PoisonCloud:update_poison_cloud(dt)
     self:update_enemy(dt)
 
-    self.sx = clamp(self.lifespan*5, 0, 1) * (1 + math.cos(game.t * self.s_t_mult + self.s_t_offset)*0.1)   
-    self.sy = clamp(self.lifespan*5, 0, 1) * (1 + math.sin(game.t * self.s_t_mult + self.s_t_offset)*0.1)
-    self.spr_ox = math.cos(game.t * self.pos_t_mult + self.pos_t_offset) * 3.0   
-    self.spr_oy = math.sin(game.t * self.pos_t_mult + self.pos_t_offset) * 3.0
-    
+    local sx = clamp(self.lifespan*5, 0, 1) * (1 + math.cos(game.t * self.s_t_mult + self.s_t_offset)*0.1)   
+    local sy = clamp(self.lifespan*5, 0, 1) * (1 + math.sin(game.t * self.s_t_mult + self.s_t_offset)*0.1)
+    local spr_ox = math.cos(game.t * self.pos_t_mult + self.pos_t_offset) * 3.0   
+    local spr_oy = math.sin(game.t * self.pos_t_mult + self.pos_t_offset) * 3.0
+    self.spr:set_scale(sx, sy)
+    self.spr:update_offset(spr_ox, spr_oy)
+
     self.lifespan = math.max(0.0, self.lifespan - dt)
     if self.lifespan <= 0 then
         self:kill()

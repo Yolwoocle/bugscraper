@@ -22,7 +22,7 @@ function ButtonSmall:init_button_small(x, y, spr, w, h)
     self.sprite_pressed = images.small_button_pressed
     self.is_pressed = false
 
-    self:set_sprite(images.small_button)
+    self:set_image(images.small_button)
 end
 
 function ButtonSmall:update(dt)
@@ -50,7 +50,7 @@ end
 function ButtonSmall:press_button()
     self.is_pressed = true
     
-    self:set_sprite(self.sprite_pressed)
+    self:set_image(self.sprite_pressed)
     self:on_press()
     self.is_stompable = false
 end

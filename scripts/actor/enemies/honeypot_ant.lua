@@ -11,7 +11,7 @@ function HoneypotAnt:init(x, y)
     self.name = "honeypot_ant"
 
     self.gravity_mult = -1
-    self.spr_oy = 8
+    self.spr:update_offset(nil, 8)
 
     self.anim_frame_len = 0.4
     self.anim_frames = {images.honeypot_ant1, images.honeypot_ant2}
