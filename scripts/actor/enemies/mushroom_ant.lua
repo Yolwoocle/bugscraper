@@ -47,7 +47,7 @@ function MushroomAnt:update(dt)
     end
 
     self.rot = lerp_angle(self.rot, self.target_rot, 0.4)
-    self.flip_x = self.walk_dir
+    self.spr:set_flip_x(self.walk_dir)
 
     self.shoot_timer = self.shoot_timer - dt
     if self.shoot_timer <= 0 then

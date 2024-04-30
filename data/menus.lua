@@ -84,17 +84,17 @@ local function debug_draw_waves(self)
 
         for j, enemy in ipairs(wave.enemies) do
             local e = enemy[1]:new()
-            local spr = e.spr
+            local image = e.spr
             e:remove()
 
             local weight = enemy[2] 
 
-            love.graphics.setColor(DEBUG_IMAGE_TO_COL[spr] or ternary(j % 2 == 0, COL_WHITE, COL_RED))
+            love.graphics.setColor(DEBUG_IMAGE_TO_COL[image] or ternary(j % 2 == 0, COL_WHITE, COL_RED))
             local w = total_w * (weight/weight_sum)
             love.graphics.rectangle("fill", x, y, w, 10)
             love.graphics.setColor(COL_WHITE)
 
-            love.graphics.draw(spr, x, y, 0, 0.8, 0.8)
+            love.graphics.draw(image, x, y, 0, 0.8, 0.8)
             print_outline(COL_WHITE, COL_BLACK_BLUE, concat(weight), x, y)
             x = x + w
         end

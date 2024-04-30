@@ -70,8 +70,9 @@ function Mosquito:update_phase_telegraph(dt)
     local dir_y = self.attack_target.y - self.y
     self.attack_vector_x, self.attack_vector_y = normalize_vect(dir_x, dir_y)
     
-    self.spr_ox = math.sin(self.t * 30) * self.attack_vector_x * 5
-    self.spr_oy = math.sin(self.t * 30) * self.attack_vector_y * 5
+    local spr_ox = math.sin(self.t * 30) * self.attack_vector_x * 5
+    local spr_oy = math.sin(self.t * 30) * self.attack_vector_y * 5
+    self.spr:update_offset(spr_ox, spr_oy)
     Particles:dust(self.mid_x + random_polar(8), self.mid_y + random_polar(8))    
 end
 

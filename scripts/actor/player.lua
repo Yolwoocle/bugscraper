@@ -40,7 +40,7 @@ function Player:init(n, x, y, skin)
 	-- Animation
 	self.color_palette = skin.color_palette
 	self.skin = skin
-	self.spr = self.skin.spr_idle
+	self.spr:set_image(self.skin.spr_idle)
 
 	self.is_walking = false
 	self.squash = 1
@@ -183,6 +183,7 @@ function Player:update(dt)
 	self.is_walking = self.is_grounded and abs(self.vx) > 50
 	self:do_invincibility(dt)
 	self:animate_walk(dt)
+	self:update_color(dt)
 	self:update_sprite(dt)
 	self:do_particles(dt)
 	self:update_poison(dt)
@@ -230,27 +231,12 @@ end
 function Player:draw()
 	if self.is_removed then   return   end
 	if self.is_dead then    return    end
-	
-	if self.poison_timer > 0.1 then
-		local v = 1 - (self.poison_timer / self.poison_damage_time)
-		gfx.setColor(v, 1, v, 1)
-	end
-
-	if self.is_invincible then
-		local v = 1 - (self.iframes / self.max_iframes)
-		local a = 1
-		if self.iframe_blink_timer < self.iframe_blink_freq/2 then
-			a = 0.5
-		end
-		gfx.setColor(1, v, v, a)
-	end
 
 	-- Draw gun
 	self.gun:draw(1, self.dir_x)
 
 	-- Draw self
 	self:draw_player()
-
 	gfx.setColor(COL_WHITE)
 
 	-- print_outline(nil, nil, tostring(self.jumps), self.x + 20, self.y)
@@ -260,7 +246,7 @@ function Player:draw_hud()
 	if self.is_removed or self.is_dead then    return    end
 
 	local ui_x = floor(self.ui_x)
-	local ui_y = floor(self.ui_y) - self.spr:getHeight() - 6
+	local ui_y = floor(self.ui_y) - self.spr.image:getHeight() - 6
 
 	self:draw_life_bar(ui_x, ui_y)
 	self:draw_ammo_bar(ui_x, ui_y)
@@ -388,26 +374,10 @@ function Player:draw_controls()
 end
 
 function Player:draw_player()
-	local fx = self.dir_x * self.sx
-	local fy = 				self.sy
-	
-	local spr_w2 = floor(self.spr:getWidth() / 2)
-	local spr_h2 = floor(self.spr:getHeight() / 2)
+	self.spr:draw(self.x, self.y - self.walkbounce_oy, self.w, self.h)
 
-	local x = self.x + spr_w2 - self.spr_centering_ox
-	local y = self.y + spr_h2 - self.spr_centering_oy - self.walkbounce_oy
-	if self.spr then
-		local old_col = {gfx.getColor()}
-		
-		-- Draw
-		love.graphics.setColor(old_col)
-		if Input:get_number_of_users() > 1 then
-			draw_with_outline(self.color_palette[1], self.spr, x, y, self.rot, fx, fy, spr_w2, spr_h2)
-		end
-		gfx.draw(self.spr, x, y, self.rot, fx, fy, spr_w2, spr_h2)
-	end
-
-	self:post_draw(x-spr_w2, y-spr_h2)
+	local post_x, post_y = self.spr:get_total_offset_position(self.x, self.y, self.w, self.h)
+	self:post_draw(post_x, post_y)
 end
 
 function Player:set_player_n(n)
@@ -631,7 +601,8 @@ function Player:kill()
 		local fainted_player = Enemies.FaintedPlayer:new(self.x, self.y, self)
 		game:new_actor(fainted_player)
 	else
-		Particles:dead_player(self.spr_x, self.spr_y, self.skin.spr_dead, self.color_palette, self.dir_x)
+		local ox, oy = self.spr:get_total_centered_offset_position(self.x, self.y, self.w, self.h)
+		Particles:dead_player(ox, oy, self.skin.spr_dead, self.color_palette, self.dir_x)
 	end
 
 	self:on_death()
@@ -704,11 +675,11 @@ function Player:update_gun_pos(dt, lerpval)
 	 
 	local gunw = self.gun.spr:getWidth()
 	local gunh = self.gun.spr:getHeight()
-	local top_y = self.y + self.h - self.spr:getHeight()
+	local top_y = self.y + self.h - self.spr.image:getHeight()
 	local hand_oy = 15
 
 	-- x pos is player sprite width minus a bit, plus gun width 
-	local w = (self.spr:getWidth()/2-5 + gunw/2)
+	local w = (self.spr.image:getWidth()/2-5 + gunw/2)
 	
 	local hand_y = top_y + hand_oy - self.walkbounce_oy
 
@@ -830,8 +801,7 @@ function Player:update_visuals()
 	self.walkbounce_squash = lerp(self.walkbounce_squash, 1, 0.2)
 	self.squash = self.jump_squash * self.walkbounce_squash
 
-	self.sx = self.squash
-	self.sy = 1/self.squash
+	self.spr:set_scale(self.squash, 1/self.squash)
 end
 
 function Player:on_grounded()
@@ -843,7 +813,7 @@ function Player:on_grounded()
 	Audio:play_var(s, 0.3, 1, {pitch=0.5, volume=0.5})
 
 	self.jump_squash = 1.5
-	self.spr = self.skin.spr_idle
+	self.spr:set_image(self.skin.spr_idle)
 	Particles:smoke(self.mid_x, self.y+self.h, 10, COL_WHITE, 8, 4, 2)
 
 	self.air_time = 0
@@ -908,19 +878,47 @@ function Player:animate_walk(dt)
 	end
 end
 
+function Player:update_color(dt)
+	self.spr:set_color{1, 1, 1, 1}
+	if self.poison_timer > 0.1 then
+		local v = 1 - (self.poison_timer / self.poison_damage_time)
+		self.spr:set_color{v, 1, v, 1}
+	end
+
+	if self.is_invincible then
+		local v = 1 - (self.iframes / self.max_iframes)
+		local a = 1
+		if self.iframe_blink_timer < self.iframe_blink_freq/2 then
+			a = 0.5
+		end
+		self.spr:set_color{1, v, v, a}
+	end
+end
+
 function Player:update_sprite(dt)
-	self.spr = self.skin.spr_idle
+	-- Outline color
+	if Input:get_number_of_users() > 1 then
+		self.spr:set_outline(self.color_palette[1], "round")
+	else
+		self.spr:set_outline(nil)
+	end
+
+	-- Flipping
+	self.spr:set_flip_x(self.dir_x < 0)
+
+	-- Set sprite 
+	self.spr:set_image(self.skin.spr_idle)
 	if not self.is_grounded then
-		self.spr = self.skin.spr_jump
+		self.spr:set_image(self.skin.spr_jump)
 	end
 	if self.is_wall_sliding then
-		self.spr = self.skin.spr_wall_slide 
+		self.spr:set_image(self.skin.spr_wall_slide)
 	end
 	if self.is_walking then
 		if self.walkbounce_y > 4 then
-			self.spr = self.skin.spr_idle
+			self.spr:set_image(self.skin.spr_idle)
 		else
-			self.spr = self.skin.spr_jump
+			self.spr:set_image(self.skin.spr_jump)
 		end
 	end
 end

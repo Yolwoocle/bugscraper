@@ -88,7 +88,7 @@ function ExitSign:activate(player)
 end
 
 function ExitSign:draw()    
-    self.spr = images.exit_sign
+    self.spr:set_image(images.exit_sign)
     self:draw_enemy()
 
     if self.is_in_smash_easter_egg then
@@ -106,7 +106,7 @@ function ExitSign:draw()
         draw_centered(images.punching_glove, self.mid_x, final_spring_y)
     end
 
-    self.spr = images.exit_sign_front
+    self.spr:set_image(images.exit_sign_front)
     self:draw_enemy()
 
     -- love.graphics.line(self.mid_x, self.y + self.h, self.mid_x, self.y + self.h - self.spring_ideal_length)
