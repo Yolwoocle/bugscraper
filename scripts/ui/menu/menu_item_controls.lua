@@ -73,7 +73,7 @@ function ControlsMenuItem:draw_button_icon(button, x, y)
 
 	if img ~= nil then
 		local icon_draw_func = ternary(self.is_selected,
-			function(_img, _x, _y) draw_with_outline(Input:get_last_ui_player_color(), _img, _x, _y) end,
+			function(_img, _x, _y) draw_with_outline(Input:get_last_ui_player_color(), "square", _img, _x, _y) end,
 			function(_img, _x, _y) love.graphics.draw(_img, _x, _y) end
 		)
 

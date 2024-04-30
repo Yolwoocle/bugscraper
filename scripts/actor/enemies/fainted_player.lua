@@ -38,7 +38,7 @@ function FaintedPlayer:init(x, y, player)
     self.loot = {}
     
     local skin = skins[self.player_n]
-    self.outline_color = skin.color_palette[1]
+    self.spr:set_outline(skin.color_palette[1], "round")
 
     -- self.sound_damage = {"cloth1", "cloth2", "cloth3"}
     -- self.sound_death = "cloth_drop"

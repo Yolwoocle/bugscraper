@@ -18,6 +18,7 @@ function Sprite:init(image)
     self.flip_y = false
 
     self.color = COL_WHITE
+    self.outline = nil
 
     self.anchor = SPRITE_ANCHOR_CENTER_BOTTOM
 end
@@ -93,6 +94,17 @@ function Sprite:set_color(color)
     self.color = color
 end
 
+function Sprite:set_outline(color, type)
+    if color == nil then
+        self.outline = nil
+    else
+        self.outline = {
+            color = color,
+            type = type,
+        }
+    end
+end
+
 function Sprite:update(dt)
 	--
 end
@@ -121,6 +133,9 @@ function Sprite:draw(x, y, w, h, custom_draw)
     local draw_func = love.graphics.draw
     if custom_draw then
         draw_func = custom_draw 
+    end
+    if self.outline then
+        draw_func = function(...) draw_with_outline(self.outline.color, self.outline.type, ...) end
     end
     
 	local scale_x = ternary(self.flip_x, -1, 1) * self.sx

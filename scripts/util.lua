@@ -226,7 +226,8 @@ function draw_with_selected_outline(spr, x, y, r, sx, sy)
 	love.graphics.draw(spr, x, y, r, sx, sy)
 end
 
-function draw_with_outline(outline_color, spr, x, y, r, sx, sy, ox, oy)
+function draw_with_outline(outline_color, outline_type, spr, x, y, r, sx, sy, ox, oy)
+	outline_type = outline_type or "round"
 	ox = ox or 0
 	oy = oy or 0
 
@@ -240,10 +241,12 @@ function draw_with_outline(outline_color, spr, x, y, r, sx, sy, ox, oy)
 		love.graphics.draw(spr, x, y, r, sx, sy, ox,       oy+offset)
 		love.graphics.draw(spr, x, y, r, sx, sy, ox,       oy-offset)
 	
-		love.graphics.draw(spr, x, y, r, sx, sy, ox+offset, oy+offset)
-		love.graphics.draw(spr, x, y, r, sx, sy, ox-offset, oy+offset)
-		love.graphics.draw(spr, x, y, r, sx, sy, ox+offset, oy-offset)
-		love.graphics.draw(spr, x, y, r, sx, sy, ox-offset, oy-offset)
+		if outline_type == "square" then
+			love.graphics.draw(spr, x, y, r, sx, sy, ox+offset, oy+offset)
+			love.graphics.draw(spr, x, y, r, sx, sy, ox-offset, oy+offset)
+			love.graphics.draw(spr, x, y, r, sx, sy, ox+offset, oy-offset)
+			love.graphics.draw(spr, x, y, r, sx, sy, ox-offset, oy-offset)
+		end
 		
 		love.graphics.setShader()
 		love.graphics.draw(spr, x, y, r, sx, sy, ox, oy)

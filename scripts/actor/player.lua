@@ -376,13 +376,16 @@ end
 
 function Player:draw_player()
 	self.spr:draw(self.x, self.y - self.walkbounce_oy, self.w, self.h)
-	if true then return end
 
+	local spr_w2 = floor(self.spr.image:getWidth() / 2)
+	local spr_h2 = floor(self.spr.image:getHeight() / 2)
+	
+	if true then return end
+	
 	local fx = self.dir_x * self.sx
 	local fy = 				self.sy
 	
-	local spr_w2 = floor(self.spr:getWidth() / 2)
-	local spr_h2 = floor(self.spr:getHeight() / 2)
+
 
 	local x = self.x + spr_w2 - self.spr_centering_ox
 	local y = self.y + spr_h2 - self.spr_centering_oy 
@@ -391,13 +394,11 @@ function Player:draw_player()
 		
 		-- Draw
 		love.graphics.setColor(old_col)
-		if Input:get_number_of_users() > 1 then
-			draw_with_outline(self.color_palette[1], self.spr, x, y, self.rot, fx, fy, spr_w2, spr_h2)
-		end
+		
 		gfx.draw(self.spr, x, y, self.rot, fx, fy, spr_w2, spr_h2)
 	end
 
-	self:post_draw(x-spr_w2, y-spr_h2)
+	self:post_draw(x-spr_w2, y-spr_h2) --! todo
 end
 
 function Player:set_player_n(n)
@@ -915,6 +916,13 @@ function Player:update_color(dt)
 end
 
 function Player:update_sprite(dt)
+	-- Outline color
+	if Input:get_number_of_users() > 1 then
+		self.spr:set_outline(self.color_palette[1], "round")
+	else
+		self.spr:set_outline(nil)
+	end
+
 	-- Flipping
 	self.spr:set_flip_x(self.dir_x < 0)
 
