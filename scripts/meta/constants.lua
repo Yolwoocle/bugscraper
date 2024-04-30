@@ -17,11 +17,10 @@ BUGSCRAPER_VERSION = "0.4"
 
 --------------------------------------------- 
 
+-- Graphics
 CANVAS_WIDTH = 480
 CANVAS_HEIGHT = 270
 SCREENSHOT_SCALE = 4
-
---------------------------------------------- 
 
 LAYER_BACKGROUND = 1
 LAYER_SHADOW = 2
@@ -39,13 +38,26 @@ LAYER_NAMES = {
 	[6] = "LAYER_UI",
 }
 
+SPRITE_ANCHOR_START = "s"
+SPRITE_ANCHOR_CENTER = "c"
+SPRITE_ANCHOR_END = "e"
+
+SPRITE_ANCHOR_TOP_LEFT = "ss"
+SPRITE_ANCHOR_CENTER_BOTTOM = "ce"
+SPRITE_ANCHOR_CENTER_CENTER = "cc"
+
 --------------------------------------------- 
 
+-- Physics
 BLOCK_WIDTH = 16
 BW = BLOCK_WIDTH
 
+COLLISION_TYPE_SOLID = "solid"
+COLLISION_TYPE_SEMISOLID = "semisolid"
+
 --------------------------------------------- 
 
+-- Font
 FONT_CHARACTERS = 
     " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz"..
     "{|}~ ¡¢£©®°¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿŒœŸЁАБВГДЕЖЗИЙКЛМНО"..
@@ -54,10 +66,7 @@ FONT_CHARACTERS =
 
 --------------------------------------------- 
 
-MAX_NUMBER_OF_PLAYERS = 4
-
---------------------------------------------- 
-
+-- Colors
 COL_WHITE = {1, 1, 1, 1}
 COL_BLACK = {0, 0, 0, 1}
 COL_RED = {1, 0, 0, 1}
@@ -108,20 +117,19 @@ LOGO_COLS = {COL_LIGHT_YELLOW, COL_LIGHT_BLUE, COL_LIGHT_RED}
 
 ---------------------------------------------
 
+-- Ui
 MENU_PADDING = CANVAS_WIDTH * 0.25
 
 ---------------------------------------------
+
+-- Game
+MAX_NUMBER_OF_PLAYERS = 4
 
 GAME_STATE_WAITING = "waiting"
 GAME_STATE_PLAYING = "playing"
 GAME_STATE_DYING = "dying"
 GAME_STATE_ELEVATOR_BURNING = "elevator_burning"
 GAME_STATE_WIN = "win"
-
----------------------------------------------
-
-COLLISION_TYPE_SOLID = "solid"
-COLLISION_TYPE_SEMISOLID = "semisolid"
 
 ---------------------------------------------
 

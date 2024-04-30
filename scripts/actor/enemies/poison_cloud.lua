@@ -14,16 +14,19 @@ function PoisonCloud:init_fly(x, y, spr)
     self.name = "poison_cloud"
     self.is_flying = true
     self.life = 10
+
     self.follow_player = false
-    self.is_stompable = false
     self.is_pushable = false
+	self.counts_as_enemy = false
+    
 	self.destroy_bullet_on_impact = false
 	self.is_immune_to_bullets = true
+    self.is_stompable = false
     self.is_killed_on_stomp = false
-	self.counts_as_enemy = false
-    self.center_sprite = true
     self.do_killed_smoke = false
+    
     self.play_sfx = false
+    self.spr:set_anchor(SPRITE_ANCHOR_CENTER_CENTER)
 
     self.is_poisonous = true
     

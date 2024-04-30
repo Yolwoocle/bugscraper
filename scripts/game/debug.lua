@@ -109,7 +109,7 @@ function Debug:init(game)
         end},
         ["l"] = {"spawn random loot", function()
             local loot, parms = random_weighted({
-                -- {Loot.Life, 3, loot_type="life", value=1},
+                {Loot.Life, 3, loot_type="life", value=1},
 		        {Loot.Gun, 3, loot_type="gun"},
             })
             if not loot then return end

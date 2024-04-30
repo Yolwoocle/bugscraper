@@ -100,6 +100,8 @@ function Loot:update_loot(dt)
 			self.blink_is_shown = not self.blink_is_shown
 		end
 	end
+	
+	self.spr:set_color(ternary(self.blink_is_shown, COL_WHITE, {1,1,1, 0.2}))
 
 	-- if outside bounds
 	-- if self.x <= 0 or self.x > CANVAS_WIDTH or self.y <= 0 or self.y > CANVAS_HEIGHT then
@@ -107,7 +109,7 @@ function Loot:update_loot(dt)
 	-- end
 
 	if self.life < 0 then
-		Particles:smoke(self.mid_x, self.mid_y)
+		Particles:smoke(self.mid_x, self.mid_y - 8)
 		self:remove()
 	end
 end
@@ -116,11 +118,7 @@ function Loot:update(dt)
 end
 
 function Loot:draw()
-	if not self.blink_is_shown then
-		gfx.setColor(1,1,1, 0.2)
-	end
 	self:draw_actor()
-	gfx.setColor(1,1,1, 1)
 	--gfx.draw(self.spr, self.x, self.y)
 end
 
@@ -328,28 +326,15 @@ function Loot.Gun:update(dt)
 
 	self.t = self.t + dt
 
-	self.sprite_oy = -6 - sin(self.t * 4) * 4
-	self.rot = sin(self.t * 4 + 0.4) * 0.1
-end
+	self.spr:update_offset(nil, -6 - sin(self.t * 4) * 4)
+	self.spr:set_rotation(sin(self.t * 4 + 0.4) * 0.1)
 
-function Loot.Gun:draw(fx, fy, custom_draw)
 	if not self.blink_is_shown then
-		gfx.setColor(1,1,1, 0.2)
+		self.spr:set_color{1, 1, 1, 0.2}
 	end
-	--gfx.draw(self.spr, self.x, self.y)
-
-	if self.is_removed then   return   end
-
-	local spr_w2 = floor(self.spr.image:getWidth() / 2)
-	local spr_h2 = floor(self.spr.image:getHeight() / 2)
-
-	local x, y = self.spr:get_offset_position(self.x, self.y)
-	if self.spr then
-	
-		gfx.draw(self.spr, x + self.sprite_ox, y + self.sprite_oy, self.rot, fx, fy, spr_w2, spr_h2)
-	end
-	
-	gfx.setColor(1,1,1, 1)
 end
+
+-- function Loot.Gun:draw(fx, fy, custom_draw)
+-- end
 
 return Loot

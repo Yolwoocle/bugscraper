@@ -58,8 +58,6 @@ function Actor:init_actor(x, y, w, h, spr, args)
 		self:set_image(spr)
 	end
 
-	self.center_sprite = false
-
 	self.outline_color = nil
 
 	self.anim_frame_len = 0.2
@@ -99,23 +97,21 @@ end
 
 function Actor:set_image(image)
 	self.spr:set_image(image)
-	self:update_sprite_offset()
 end
 
-function Actor:update_sprite_offset()
-	if true then return end
-	self.spr_centering_ox = floor((self.spr_w - self.w) / 2)
-	if self.center_sprite then
-		self.spr_centering_oy = floor((self.spr_h - self.h) / 2)
-	else
-		self.spr_centering_oy = self.spr_h - self.h
-	end
+function Actor:update_sprite_position()
+	-- Sprite
+	-- local spr_w2 = floor(self.spr.image:getWidth() / 2)
+	-- local spr_h2 = floor(self.spr.image:getHeight() / 2)
+
+	-- local ox = math.floor(spr_w2)-- - self.spr_centering_ox)
+	-- local oy = math.floor(spr_h2)-- - self.spr_centering_oy)
+	-- self.spr:update_offset(ox, oy)
 end
 
 function Actor:set_size(w, h)
 	self.w = w or self.w
 	self.h = h or self.h
-	self:update_sprite_offset()
 end
 
 function Actor:center_actor()
@@ -146,7 +142,6 @@ end
 function Actor:update_actor(dt)
 	if self.is_removed then   return   end
 	self:do_gravity(dt)
-	self:update_sprite_offset()
 
 	-- apply friction
 	self.vx = self.vx * self.friction_x
@@ -209,17 +204,6 @@ function Actor:update_actor(dt)
     end
 end
 
-function Actor:update_sprite_position()
-	-- Sprite
-	if true then return end
-	local spr_w2 = floor(self.spr.image:getWidth() / 2)
-	local spr_h2 = floor(self.spr.image:getHeight() / 2)
-
-	local ox = math.floor(spr_w2 - self.spr_centering_ox)
-	local oy = math.floor(spr_h2 - self.spr_centering_oy)
-	self.spr:update_offset(ox, oy)
-end
-
 function Actor:draw()
 	error("draw not implemented")
 end
@@ -228,7 +212,7 @@ function Actor:draw_actor(custom_draw)
 	if self.is_removed then   return   end
 
 	if self.spr then
-		self.spr:draw(self.x, self.y, custom_draw)
+		self.spr:draw(self.x, self.y, self.w, self.h, custom_draw)
 	end
 end
 

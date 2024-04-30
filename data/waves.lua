@@ -26,8 +26,8 @@ end
 
 local function debug_wave()
 	return Wave:new({
-		min = 10,
-		max = 10,
+		min = 1,
+		max = 1,
 		enable_stomp_arrow_tutorial = true,
 		enemies = {	
 			-- {E.Dung, 4, position = {240, 200}},
@@ -38,10 +38,10 @@ local function debug_wave()
 			-- {E.FlyingDung, 4},
 			-- {E.SnailShelled, 3},
 			-- {E.PoisonCloud, 4},
-			-- {E.SnailShelled, 4},
+			{E.SnailShelled, 4},
 
 			-- {E.ButtonBigGlass, 1, position={CANVAS_WIDTH/2, CANVAS_HEIGHT/2}},
-			{E.Fly, 1},
+			-- {E.Fly, 1},
 
 			-- {E.Mosquito, 4},
 			-- {E.HoneypotAnt, 4},
@@ -57,7 +57,7 @@ local function debug_wave()
 end
 
 local waves = {	
-	-- debug_wave(),
+	debug_wave(),
 	Wave:new({
 		-- music = "w1",
 

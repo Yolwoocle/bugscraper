@@ -25,9 +25,8 @@ function SnailShelled:init_snail_shelled(x, y, spr)
     self.is_bouncy_to_bullets = true
     self.is_immune_to_bullets = true
 
-    -- self.sound_death = "snail_shell_crack"
-    -- self.sound_stomp = "snail_shell_crack"
-    self:update_sprite_offset()
+    self.sound_death = "snail_shell_crack"
+    self.sound_stomp = "snail_shell_crack"
 end
 
 function SnailShelled:update(dt)

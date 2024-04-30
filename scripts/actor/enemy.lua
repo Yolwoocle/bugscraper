@@ -157,7 +157,8 @@ function Enemy:on_collision(col, other)
 			player.vy = 0
 			player:on_stomp(self)
 			if self.do_stomp_animation then
-				Particles:stomped_enemy(self.spr:get_offset_position(self.x, self.y), self.spr)
+				local ox, oy = self.spr:get_total_centered_offset_position(self.x, self.y, self.w, self.h)
+				Particles:stomped_enemy(self.mid_x, self.y+self.h, self.spr.image)
 			end
 			self:on_stomped(player)
 			if self.is_killed_on_stomp then

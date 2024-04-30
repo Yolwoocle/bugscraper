@@ -183,6 +183,7 @@ function Player:update(dt)
 	self.is_walking = self.is_grounded and abs(self.vx) > 50
 	self:do_invincibility(dt)
 	self:animate_walk(dt)
+	self:update_color(dt)
 	self:update_sprite(dt)
 	self:do_particles(dt)
 	self:update_poison(dt)
@@ -230,20 +231,6 @@ end
 function Player:draw()
 	if self.is_removed then   return   end
 	if self.is_dead then    return    end
-	
-	if self.poison_timer > 0.1 then
-		local v = 1 - (self.poison_timer / self.poison_damage_time)
-		gfx.setColor(v, 1, v, 1)
-	end
-
-	if self.is_invincible then
-		local v = 1 - (self.iframes / self.max_iframes)
-		local a = 1
-		if self.iframe_blink_timer < self.iframe_blink_freq/2 then
-			a = 0.5
-		end
-		gfx.setColor(1, v, v, a)
-	end
 
 	-- Draw gun
 	self.gun:draw(1, self.dir_x)
@@ -388,7 +375,7 @@ function Player:draw_controls()
 end
 
 function Player:draw_player()
-	self.spr:draw(self.x, self.y)
+	self.spr:draw(self.x, self.y - self.walkbounce_oy, self.w, self.h)
 	if true then return end
 
 	local fx = self.dir_x * self.sx
@@ -398,7 +385,7 @@ function Player:draw_player()
 	local spr_h2 = floor(self.spr:getHeight() / 2)
 
 	local x = self.x + spr_w2 - self.spr_centering_ox
-	local y = self.y + spr_h2 - self.spr_centering_oy - self.walkbounce_oy
+	local y = self.y + spr_h2 - self.spr_centering_oy 
 	if self.spr then
 		local old_col = {gfx.getColor()}
 		
@@ -634,7 +621,8 @@ function Player:kill()
 		local fainted_player = Enemies.FaintedPlayer:new(self.x, self.y, self)
 		game:new_actor(fainted_player)
 	else
-		Particles:dead_player(self.spr:get_offset_position(self.x, self.y), self.skin.spr_dead, self.color_palette, self.dir_x)
+		local ox, oy = self.spr:get_total_centered_offset_position(self.x, self.y, self.w, self.h)
+		Particles:dead_player(ox, oy, self.skin.spr_dead, self.color_palette, self.dir_x)
 	end
 
 	self:on_death()
@@ -910,9 +898,27 @@ function Player:animate_walk(dt)
 	end
 end
 
+function Player:update_color(dt)
+	if self.poison_timer > 0.1 then
+		local v = 1 - (self.poison_timer / self.poison_damage_time)
+		self.spr:set_color{v, 1, v, 1}
+	end
+
+	if self.is_invincible then
+		local v = 1 - (self.iframes / self.max_iframes)
+		local a = 1
+		if self.iframe_blink_timer < self.iframe_blink_freq/2 then
+			a = 0.5
+		end
+		self.spr:set_color{1, v, v, a}
+	end
+end
+
 function Player:update_sprite(dt)
+	-- Flipping
 	self.spr:set_flip_x(self.dir_x < 0)
 
+	-- Set sprite 
 	self.spr:set_image(self.skin.spr_idle)
 	if not self.is_grounded then
 		self.spr:set_image(self.skin.spr_jump)

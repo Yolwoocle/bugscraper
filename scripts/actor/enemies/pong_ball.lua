@@ -27,8 +27,7 @@ function PongBall:init_pong_ball(x, y, spr)
 
     self:init_pong()
     
-    self.center_sprite = true
-    self:update_sprite_offset()
+    self.spr:set_anchor(SPRITE_ANCHOR_CENTER_CENTER)
 end
 
 function PongBall:init_pong(speed)
@@ -45,7 +44,7 @@ end
 
 function PongBall:update_pong_ball(dt)
     self:update_enemy(dt)
-    self.rot = self.rot + self.rot_speed * dt
+    self.spr.rot = self.spr.rot + self.rot_speed * dt
 
     if self.is_ponging then
         self.vx = (self.pong_vx or 0)
