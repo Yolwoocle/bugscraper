@@ -373,6 +373,11 @@ local function generate_menus()
             { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_KEYBOARD, "shoot", "🔫 "..Text:text("input.prompts.shoot") },
             { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_KEYBOARD, "leave_game", "🔚 "..Text:text("input.prompts.leave_game") },
             { "" },
+            { "<<< "..Text:text("menu.options.input_submenu.global").." >>>" },
+            { Text:text("menu.options.input_submenu.note_global_keyboard") },
+            { ControlsMenuItem, -1, "global", INPUT_TYPE_KEYBOARD, "jump",           "📥 "..Text:text("input.prompts.join") },
+            { ControlsMenuItem, -1, "global", INPUT_TYPE_KEYBOARD, "split_keyboard", "🗄 "..Text:text("input.prompts.split_keyboard") },
+            { "" },
             { "<<< "..Text:text("menu.options.input_submenu.interface").." >>>" },
             { Text:text("menu.options.input_submenu.note_ui_min_button") },
             { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_KEYBOARD, "ui_left",    "⬅ "..Text:text("input.prompts.ui_left")},
@@ -423,7 +428,11 @@ local function generate_menus()
             { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "jump",  "⏏ "..Text:text("input.prompts.jump") },
             { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "shoot", "🔫 "..Text:text("input.prompts.shoot") },
             { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "leave_game", "🔚 "..Text:text("input.prompts.leave_game") },
-            { ""},
+            { "" },            
+            { "<<< "..Text:text("menu.options.input_submenu.global").." >>>" },
+            { Text:text("menu.options.input_submenu.note_global_controller") },
+            { ControlsMenuItem, -1, "global", INPUT_TYPE_CONTROLLER, "jump",           "📥 "..Text:text("input.prompts.join") },
+            { "" },
             { "<<< "..Text:text("menu.options.input_submenu.interface").." >>>" },
             { Text:text("menu.options.input_submenu.note_ui_min_button") },
             { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "ui_left",    "⬅ "..Text:text("input.prompts.ui_left")},
@@ -433,7 +442,7 @@ local function generate_menus()
             { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "ui_select",  "👆 "..Text:text("input.prompts.ui_select")},
             { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "ui_back",    "🔙 "..Text:text("input.prompts.ui_back")},
             { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "pause",      "⏸ "..Text:text("input.prompts.pause") },
-    
+
         }, DEFAULT_MENU_BG_COLOR, PROMPTS_CONTROLS)
     end
     

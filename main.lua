@@ -6,23 +6,6 @@ require "scripts.util"
 
 game = nil
 
-local removeme_measure_n = 1000
-local removeme_measure_i = removeme_measure_n
-local function removeme_time_diff(func)
-	if removeme_measure_i <= 0 then
-		func()
-		return 0
-	end
-	removeme_measure_i = removeme_measure_i - 1
-	local start = love.timer.getTime( )
-	func()
-	local result = love.timer.getTime() - start
-	-- print_debug(string.format("Measure '%s': %.4f ms", name, result * 1000 ))
-	return result
-end
-local removeme_update_t = 0
-local removeme_draw_t = 0
-
 function love.load(arg)
 	frame = 0
 
@@ -35,10 +18,12 @@ local frame = 0
 local function fixed_update()
 	--update that happens at the fixed fdt interval
 	frame = frame + 1
-
-	removeme_update_t = removeme_update_t + removeme_time_diff(function()
-		game:update(fixed_dt)
-	end)
+	
+	-- game:update(fixed_dt)
+	game:update(fixed_dt)
+	-- if frm % 2 == 0 and CAPTURING_GIF then
+	-- 	love.graphics.captureScreenshot("gif"..tostring(gif_n).."_"..tostring(floor(frm/2))..".png")
+	-- end
 end
 
 function love.update(dt)
@@ -57,12 +42,7 @@ function love.update(dt)
 end
 
 function love.draw()
-	removeme_draw_t = removeme_draw_t + removeme_time_diff(function()
-		game:draw()
-	end)
-
-	love.graphics.print(concat("update ", removeme_update_t*1000/removeme_measure_n, " ms"), 0, 0, 0, 3, 3)
-	love.graphics.print(concat("draw ", removeme_draw_t*1000/removeme_measure_n, " ms"), 0, 42, 0, 3, 3)
+	game:draw()
 end
 
 -- CAPTURING_GIF = false

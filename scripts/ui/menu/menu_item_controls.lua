@@ -43,7 +43,7 @@ end
 
 function ControlsMenuItem:draw_value_text()
 	local right_bound = self.x + MENU_PADDING + self.ox
-	local y = self.y + self.oy
+	local y = math.floor(self.y + self.oy + 2)
 
 	local draw_func = self:get_leftjustified_text_draw_function()
 	if self.is_waiting_for_input then
@@ -58,9 +58,11 @@ function ControlsMenuItem:draw_value_text()
 
 	else
 		local x = right_bound
-		for i, button in pairs(self.value) do
+		local i = 1
+		for _, button in pairs(self.value) do
 			if button.type == self.input_type then
 				x = self:draw_button_icon(i, button, x, y)
+				i = i + 1
 			end
 		end
 	end
