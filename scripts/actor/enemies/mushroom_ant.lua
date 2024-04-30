@@ -25,7 +25,6 @@ function MushroomAnt:init(x, y)
     self.flip = 1
     self.gun = Guns.unlootable.MushroomAntGun:new(self)
 
-    self.rot = 0
     self.target_rot = 0
 
     self.shoot_cooldown_range = {2, 3}
@@ -46,15 +45,15 @@ function MushroomAnt:update(dt)
         self.target_rot = atan2(self.up_vect.y, self.up_vect.x) + pi/2
     end
 
-    self.rot = lerp_angle(self.rot, self.target_rot, 0.4)
-    self.spr:set_flip_x(self.walk_dir)
+    self.spr:set_rotation(lerp_angle(self.spr.rot, self.target_rot, 0.4))
+    self.spr:set_flip_x(self.walk_dir == -1)
 
     self.shoot_timer = self.shoot_timer - dt
     if self.shoot_timer <= 0 then
         local r1, r2 = unpack(self.shoot_cooldown_range)
         self.shoot_timer = random_range(r1, r2)
 
-        local vx, vy = cos(self.rot - pi/2), sin(self.rot - pi/2)
+        local vx, vy = cos(self.spr.rot - pi/2), sin(self.spr.rot - pi/2)
 
         self.gun:shoot(dt, self, self.mid_x, self.mid_y, vx, vy)
     end

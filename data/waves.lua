@@ -26,32 +26,33 @@ end
 
 local function debug_wave()
 	return Wave:new({
+		roll_type = WAVE_ROLL_TYPE_FIXED,
 		min = 1,
 		max = 1,
 		enable_stomp_arrow_tutorial = true,
 		enemies = {	
-			-- {E.Dung, 4, position = {240, 200}},
-			-- {E.FlyingDung, 4, position = {CANVAS_WIDTH/2, 200}},
-			-- {E.Fly, 3},
-			-- {E.VendingMachine, 3},
-			-- {E.HoneypotAnt, 4},
-			-- {E.FlyingDung, 4},
-			-- {E.SnailShelled, 3},
-			-- {E.PoisonCloud, 4},
-			-- {E.SnailShelled, 4},
+			-- {E.Dung, 1, position = {240, 200}},
+			-- {E.FlyingDung, 1, position = {CANVAS_WIDTH/2, 200}},
+			-- {E.Fly, 1},
+			-- {E.VendingMachine, 1},
+			-- {E.HoneypotAnt, 1},
+			-- {E.FlyingDung, 1},
+			-- {E.SnailShelled, 1},
+			-- {E.PoisonCloud, 1},
+			-- {E.SnailShelled, 1},
+			-- {E.Fly, 1},
+			-- {E.Mosquito, 1},
+			-- {E.HoneypotAnt, 1},
+			-- {E.Larva, 1},
+			-- {E.Fly, 1},
+			-- {E.SpikedFly, 1},
+			-- {E.SnailShelled, 1},
+			-- {E.Slug, 1},
+			-- {E.Grasshopper, 1},
+			{E.MushroomAnt, 5},
 
 			-- {E.ButtonBigGlass, 1, position={CANVAS_WIDTH/2, CANVAS_HEIGHT/2}},
-			-- {E.Fly, 1},
-
-			-- {E.Mosquito, 4},
-			{E.HoneypotAnt, 4},
-			-- {E.Larva, 4},
-			-- {E.Fly, 3},
-			-- {E.SpikedFly, 3},
-			-- {E.SnailShelled, 3},
-			-- {E.Slug, 2},
-			-- {E.Grasshopper, 1},
-			-- {E.MushroomAnt, 10},
+			
 		}
 	})
 end

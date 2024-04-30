@@ -48,7 +48,7 @@ function StinkBug:update_stink_bug(dt)
 	self.vx = self.vx + math.cos(self.direction) * self.speed
 	self.vy = self.vy + math.sin(self.direction) * self.speed
 
-    self.rot = self.direction
+    self.spr:set_rotation(self.direction)
 end
 
 function StinkBug:draw()

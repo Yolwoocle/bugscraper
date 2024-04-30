@@ -27,8 +27,6 @@ function Actor:init_actor(x, y, w, h, spr, args)
 	self.vx = 0
 	self.vy = 0
 
-	self.rot = 0
-
 	self.default_gravity = 20
 	self.gravity = self.default_gravity
 	self.gravity_cap = 400

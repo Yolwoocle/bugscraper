@@ -42,7 +42,7 @@ end
 function Dung:update_dung_beetle(dt)
     self:update_enemy(dt)
 
-    self.rot = self.rot + self.vx * self.rot_mult * dt
+    self.spr:set_rotation(self.spr.rot + self.vx * self.rot_mult * dt)
 
     if self.rider == nil then
         local beetle = DungBeetle:new(self.x, self.y - 30)

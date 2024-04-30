@@ -50,7 +50,7 @@ function ChipBug:update_stink_bug(dt)
 	self.vx = self.vx + math.cos(self.direction * pi/2) * self.speed
 	self.vy = self.vy + math.sin(self.direction * pi/2) * self.speed
     
-    self.rot = self.direction * pi/2
+    self.spr:set_rotation(self.direction * pi/2)
 
     if random_range(0, 1) < 0.02 then
         Particles:word(self.mid_x, self.mid_y, random_sample{"0", "1"}, random_sample{COL_LIGHT_GREEN, COL_MID_GREEN})

@@ -147,9 +147,6 @@ function Sprite:draw(x, y, w, h, custom_draw)
     exec_color(self.color, function()
         draw_func(self.image, x + anchor_ox, y + anchor_oy, self.rot, scale_x, scale_y, sprite_ox, sprite_oy)
     end)
-
-    local dx, dy = self:get_total_offset_position(x, y, w, h)
-    love.graphics.circle("fill", dx, dy, 1)
 end
 
 return Sprite

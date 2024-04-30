@@ -44,7 +44,7 @@ end
 
 function PongBall:update_pong_ball(dt)
     self:update_enemy(dt)
-    self.spr.rot = self.spr.rot + self.rot_speed * dt
+    self.spr:set_rotation(self.spr.rot + self.rot_speed * dt)
 
     if self.is_ponging then
         self.vx = (self.pong_vx or 0)
