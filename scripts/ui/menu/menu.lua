@@ -8,7 +8,7 @@ function Menu:init(game, items, bg_color, prompts, extra_draw)
 	self.items = {}
 	self.is_menu = true
 	
-	local th = get_text_height()
+	local th = get_text_height() + 2
 	self.height = (#items - 1) * th
 
 	for i, parms in pairs(items) do

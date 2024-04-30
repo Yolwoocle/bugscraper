@@ -60,7 +60,7 @@ function ControlsMenuItem:draw_value_text()
 		local x = right_bound
 		for i, button in pairs(self.value) do
 			if button.type == self.input_type then
-				x = self:draw_button_icon(button, x, y)
+				x = self:draw_button_icon(i, button, x, y)
 			end
 		end
 	end
@@ -68,14 +68,19 @@ end
 
 local BUTTON_ICON_MARGIN = 1
 
-function ControlsMenuItem:draw_button_icon(button, x, y)
+function ControlsMenuItem:draw_button_icon(i, button, x, y)
 	local img = Input:get_button_icon(self.player_n, button)
 
 	if img ~= nil then
 		local icon_draw_func = ternary(self.is_selected,
-			function(_img, _x, _y) draw_with_outline(Input:get_last_ui_player_color(), "square", _img, _x, _y) end,
+			function(_img, _x, _y) draw_with_outline(Input:get_last_ui_player_color(), "round", _img, _x, _y) end,
 			function(_img, _x, _y) love.graphics.draw(_img, _x, _y) end
 		)
+		if i == 1 then
+			icon_draw_func = function(_img, _x, _y) 
+				draw_with_outline(COL_WHITE, "round", _img, _x, _y) 
+			end
+		end
 
 		local width = img:getWidth()
 		local height = img:getHeight()
