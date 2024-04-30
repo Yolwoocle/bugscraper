@@ -38,13 +38,13 @@ local function debug_wave()
 			-- {E.FlyingDung, 4},
 			-- {E.SnailShelled, 3},
 			-- {E.PoisonCloud, 4},
-			{E.SnailShelled, 4},
+			-- {E.SnailShelled, 4},
 
 			-- {E.ButtonBigGlass, 1, position={CANVAS_WIDTH/2, CANVAS_HEIGHT/2}},
 			-- {E.Fly, 1},
 
 			-- {E.Mosquito, 4},
-			-- {E.HoneypotAnt, 4},
+			{E.HoneypotAnt, 4},
 			-- {E.Larva, 4},
 			-- {E.Fly, 3},
 			-- {E.SpikedFly, 3},

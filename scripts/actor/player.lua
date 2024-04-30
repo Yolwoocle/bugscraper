@@ -237,7 +237,6 @@ function Player:draw()
 
 	-- Draw self
 	self:draw_player()
-
 	gfx.setColor(COL_WHITE)
 
 	-- print_outline(nil, nil, tostring(self.jumps), self.x + 20, self.y)
@@ -377,28 +376,8 @@ end
 function Player:draw_player()
 	self.spr:draw(self.x, self.y - self.walkbounce_oy, self.w, self.h)
 
-	local spr_w2 = floor(self.spr.image:getWidth() / 2)
-	local spr_h2 = floor(self.spr.image:getHeight() / 2)
-	
-	if true then return end
-	
-	local fx = self.dir_x * self.sx
-	local fy = 				self.sy
-	
-
-
-	local x = self.x + spr_w2 - self.spr_centering_ox
-	local y = self.y + spr_h2 - self.spr_centering_oy 
-	if self.spr then
-		local old_col = {gfx.getColor()}
-		
-		-- Draw
-		love.graphics.setColor(old_col)
-		
-		gfx.draw(self.spr, x, y, self.rot, fx, fy, spr_w2, spr_h2)
-	end
-
-	self:post_draw(x-spr_w2, y-spr_h2) --! todo
+	local post_x, post_y = self.spr:get_total_offset_position(self.x, self.y, self.w, self.h)
+	self:post_draw(post_x, post_y)
 end
 
 function Player:set_player_n(n)
@@ -900,6 +879,7 @@ function Player:animate_walk(dt)
 end
 
 function Player:update_color(dt)
+	self.spr:set_color{1, 1, 1, 1}
 	if self.poison_timer > 0.1 then
 		local v = 1 - (self.poison_timer / self.poison_damage_time)
 		self.spr:set_color{v, 1, v, 1}
