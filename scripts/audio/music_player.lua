@@ -1,6 +1,8 @@
 require "scripts.util"
 local Class = require "scripts.meta.class"
 local MusicDisk = require "scripts.audio.music_disk"
+local Timer = require "scripts.timer"
+
 local sounds = require "data.sounds"
 
 local MusicPlayer = Class:inherit()
@@ -24,12 +26,39 @@ function MusicPlayer:init()
 	self.current_disk = self.disks["intro"]
 	self.current_disk:set_mode(self.music_mode)
 
+	self.fadeout_timer = Timer:new(1.0)
+	self.queued_disk = nil
+	self.queued_volume = 1.0
+
 	self:reset()
 	self:update()
 end
 
 function MusicPlayer:reset()
 	self:stop()
+end
+
+function MusicPlayer:update(dt)
+	if self.current_disk ~= nil then
+		self.current_disk:set_volume(self.volume)
+		
+		if not Options:get("play_music_on_pause_menu") and self.music_mode == MUSIC_MODE_PAUSE then
+			self.current_disk:set_volume(0)
+		end
+	end
+
+	self:update_fadeout(dt)
+end
+
+function MusicPlayer:update_fadeout(dt)
+	if self.fadeout_timer.is_active then
+		self:set_volume(self.fadeout_timer:get_time() / self.fadeout_timer:get_duration())
+	end
+	
+	if self.fadeout_timer:update(dt) then
+		self:set_disk(self.queued_disk)
+		self:set_volume(self.queued_volume)
+	end
 end
 
 function MusicPlayer:set_disk(disk_name)
@@ -39,6 +68,15 @@ function MusicPlayer:set_disk(disk_name)
 	self.current_disk:stop()
 	self.current_disk = disk
 	self:play()
+end
+
+function MusicPlayer:fade_out(new_disk, duration)
+	local disk = self.disks[new_disk]
+	if disk == nil then   error("set_disk: the disk'"..tostring(disk_name).."' doesn't exist")   end
+
+	self.fadeout_timer:set_duration(duration)
+	self.fadeout_timer:start()
+	self.queued_disk = new_disk
 end
 
 function MusicPlayer:on_menu()
@@ -94,14 +132,5 @@ function MusicPlayer:set_volume(vol)
 	self.volume = vol
 end
 
-function MusicPlayer:update(dt)
-	if self.current_disk ~= nil then
-		self.current_disk:set_volume(self.volume)
-		
-		if not Options:get("play_music_on_pause_menu") and self.music_mode == MUSIC_MODE_PAUSE then
-			self.current_disk:set_volume(0)
-		end
-	end
-end
 
 return MusicPlayer

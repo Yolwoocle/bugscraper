@@ -279,7 +279,7 @@ end
 
 function Level:load_music(wave)
 	if wave.music then
-		game.music_player:set_disk(wave.music)
+		game.music_player:fade_out(wave.music, 1.0)
 	end
 end
 

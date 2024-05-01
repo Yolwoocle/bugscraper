@@ -16,14 +16,8 @@ local t = 0
 local fixed_dt = 1/60 -- fixed frame delta time
 local frame = 0
 local function fixed_update()
-	--update that happens at the fixed fdt interval
 	frame = frame + 1
-	
-	-- game:update(fixed_dt)
 	game:update(fixed_dt)
-	-- if frm % 2 == 0 and CAPTURING_GIF then
-	-- 	love.graphics.captureScreenshot("gif"..tostring(gif_n).."_"..tostring(floor(frm/2))..".png")
-	-- end
 end
 
 function love.update(dt)

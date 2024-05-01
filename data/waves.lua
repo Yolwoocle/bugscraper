@@ -17,9 +17,9 @@ local function new_cafeteria()
 		max = 1,
 		enemies = {
 			{E.Dummy, 1, position = {5000, 200}},
-			{E.UpgradeDisplay, 1, position = {488, 200}},
-			{E.UpgradeDisplay, 1, position = {544, 200}},
-			{E.UpgradeDisplay, 1, position = {600, 200}},
+			{E.UpgradeDisplay, 1, position = {488, 192}},
+			{E.UpgradeDisplay, 1, position = {544, 192}},
+			{E.UpgradeDisplay, 1, position = {600, 192}},
 		},
 	})
 end
@@ -59,9 +59,9 @@ end
 
 local waves = {	
 	debug_wave(),
-	-- new_cafeteria(),
+	new_cafeteria(),
 	Wave:new({
-		-- music = "w1",
+		music = "w1",
 
 		min = 4,
 		max = 6,
