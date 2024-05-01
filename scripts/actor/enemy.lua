@@ -177,8 +177,8 @@ function Enemy:on_collision(col, other)
 	
 	-- Being collider push force
 	if col.other.is_being and self.is_pushable and other.is_pushable then
-		self:do_knockback(10, col.other)
-		col.other:do_knockback(10, self)
+		self:do_knockback_from(10, col.other)
+		col.other:do_knockback_from(10, self)
 	end
 
 	self:after_collision(col, col.other)
@@ -264,7 +264,6 @@ function Enemy:on_hit_bullet(bul, col)
 	self:do_damage(bul.damage, bul)
 	
 	if self.is_knockbackable then
-		-- self:do_knockback(bul.knockback * self.self_knockback_mult, bul)
 		local ang = atan2(bul.vy, bul.vx)
 		self.vx = self.vx + cos(ang) * bul.knockback * self.self_knockback_mult
 		self.vy = self.vy + sin(ang) * bul.knockback * self.self_knockback_mult

@@ -755,8 +755,7 @@ function Player:do_damage(n, source)
 	Input:vibrate(self.n, 0.3, 0.45)
 	Audio:play("hurt")
 	Particles:word(self.mid_x, self.mid_y, concat("-",n), COL_LIGHT_RED)
-	-- self:do_knockback(source.knockback, source)--, 0, source.h/2)
-	--source:do_knockback(source.knockback*0.75, self)
+	
 	if self.is_knockbackable and source then
 		self.vx = self.vx + sign(self.mid_x - source.mid_x)*source.knockback
 		self.vy = self.vy - 50

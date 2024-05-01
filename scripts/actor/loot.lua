@@ -287,7 +287,7 @@ function Loot.Gun:reset()
 	self.vy = 0
 
 	self.min_attract_dist = 16
-	self.uncollectable_timer = 1.0
+	self.uncollectable_timer = 0.5
 	
 	self.friction_x = self.default_friction
 	

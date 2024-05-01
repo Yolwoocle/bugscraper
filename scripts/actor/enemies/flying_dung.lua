@@ -44,6 +44,7 @@ function FlyingDung:update(dt)
 
     if self.state == "targeting" then
         Particles:smoke(self.mid_x, self.mid_y, 3)
+        self:target_spawner()
     end
 end
 
@@ -66,14 +67,18 @@ function FlyingDung:begin_targeting()
     self.is_ponging = false
 
     if self.spawner then
-        local a = atan2(self.spawner.mid_y - self.mid_y, self.spawner.mid_x - self.mid_x)
-        self.pong_vx = 0
-        self.pong_vy = 0
-        self.vx = math.cos(a) * self.pong_speed * 3
-        self.vy = math.sin(a) * self.pong_speed * 3
+        self:target_spawner()
         self.self_knockback_mult = 0
         game:screenshake(3) 
     end
+end
+
+function FlyingDung:target_spawner()
+    local a = atan2(self.spawner.mid_y - self.mid_y, self.spawner.mid_x - self.mid_x)
+    self.pong_vx = 0
+    self.pong_vy = 0
+    self.vx = math.cos(a) * self.pong_speed * 3
+    self.vy = math.sin(a) * self.pong_speed * 3
 end
 
 function FlyingDung:after_collision(col, other)

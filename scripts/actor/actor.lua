@@ -256,14 +256,21 @@ function Actor:set_flying(bool)
 	end
 end
 
-function Actor:do_knockback(q, source, ox, oy)
+function Actor:do_knockback_from(q, source, ox, oy)
 	if not self.is_knockbackable then    return    end
 
 	ox, oy = ox or 0, oy or 0
 	--if not source then    return    end
-	local ang = atan2(source.y-self.y + oy, source.x-self.x + ox)
-	self.vx = self.vx - cos(ang)*q
-	self.vy = self.vy - sin(ang)*q
+	local knockback_x, knockback_y = normalize_vect(source.x-self.x + ox, source.y-self.y + oy)
+	self:do_knockback(q, -knockback_x, -knockback_y)
+end
+
+function Actor:do_knockback(q, force_x, force_y)
+	if not self.is_knockbackable then    return    end
+
+	force_x, force_y = normalize_vect(force_x, force_y)
+	self.vx = self.vx + force_x * q
+	self.vy = self.vy + force_y * q
 end
 
 -- When the enemy is buffered for the next wave of enemies

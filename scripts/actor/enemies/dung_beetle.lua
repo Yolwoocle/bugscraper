@@ -97,7 +97,7 @@ function DungBeetle:on_hit_flying_dung(flying_dung)
     
     self:do_damage(5, flying_dung)
     if self.vehicle then
-		self.vehicle:do_knockback(self.vehicle.self_knockback_mult, flying_dung)
+		self.vehicle:do_knockback(self.vehicle.self_knockback_mult, flying_dung.vx, math.max(0, flying_dung.vy))
         self.vehicle:do_damage(5, flying_dung)
     end
 end

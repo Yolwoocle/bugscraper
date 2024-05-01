@@ -16,7 +16,7 @@ function Dung:init_dung(x, y, spr, w, h)
     self.name = "dung"
     self.follow_player = true
     
-    self.life = 25
+    self.life = 35
 
     self.friction_x = 0.999
     self.speed_x = 5
