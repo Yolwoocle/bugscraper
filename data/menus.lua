@@ -245,14 +245,14 @@ local function generate_menus()
             self.value_text = Options:get("play_music_on_pause_menu") and "✅" or "❎"
             self.is_selectable = Options:get("sound_on")
         end},
-        { "🔈 "..Text:text("menu.options.audio.background_sounds"), function(self, option)
-            Options:toggle_background_noise()
-        end,
-        function(self)
-            self.value = Options:get("disable_background_noise")
-            self.value_text = (not Options:get("disable_background_noise")) and "✅" or "❎"
-            self.is_selectable = Options:get("sound_on")
-        end},
+        -- { "🔈 "..Text:text("menu.options.audio.background_sounds"), function(self, option)
+        --     Options:toggle_background_noise()
+        -- end,
+        -- function(self)
+        --     self.value = Options:get("disable_background_noise")
+        --     self.value_text = (not Options:get("disable_background_noise")) and "✅" or "❎"
+        --     self.is_selectable = Options:get("sound_on")
+        -- end},
         {""},
 
         -- {"MUSIC: [ON/OFF]", function(self)
@@ -373,11 +373,6 @@ local function generate_menus()
             { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_KEYBOARD, "shoot", "🔫 "..Text:text("input.prompts.shoot") },
             { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_KEYBOARD, "leave_game", "🔚 "..Text:text("input.prompts.leave_game") },
             { "" },
-            { "<<< "..Text:text("menu.options.input_submenu.global").." >>>" },
-            { Text:text("menu.options.input_submenu.note_global_keyboard") },
-            { ControlsMenuItem, -1, "global", INPUT_TYPE_KEYBOARD, "jump",           "📥 "..Text:text("input.prompts.join") },
-            { ControlsMenuItem, -1, "global", INPUT_TYPE_KEYBOARD, "split_keyboard", "🗄 "..Text:text("input.prompts.split_keyboard") },
-            { "" },
             { "<<< "..Text:text("menu.options.input_submenu.interface").." >>>" },
             { Text:text("menu.options.input_submenu.note_ui_min_button") },
             { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_KEYBOARD, "ui_left",    "⬅ "..Text:text("input.prompts.ui_left")},
@@ -387,6 +382,11 @@ local function generate_menus()
             { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_KEYBOARD, "ui_select",  "👆 "..Text:text("input.prompts.ui_select")},
             { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_KEYBOARD, "ui_back",    "🔙 "..Text:text("input.prompts.ui_back")},
             { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_KEYBOARD, "pause",      "⏸ "..Text:text("input.prompts.pause") },
+            { "" },
+            { "<<< "..Text:text("menu.options.input_submenu.global").." >>>" },
+            { Text:text("menu.options.input_submenu.note_global_keyboard") },
+            { ControlsMenuItem, -1, "global", INPUT_TYPE_KEYBOARD, "jump",           "📥 "..Text:text("input.prompts.join") },
+            { ControlsMenuItem, -1, "global", INPUT_TYPE_KEYBOARD, "split_keyboard", "🗄 "..Text:text("input.prompts.split_keyboard") },
         }, DEFAULT_MENU_BG_COLOR, PROMPTS_CONTROLS)
     end
 
@@ -428,10 +428,6 @@ local function generate_menus()
             { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "jump",  "⏏ "..Text:text("input.prompts.jump") },
             { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "shoot", "🔫 "..Text:text("input.prompts.shoot") },
             { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "leave_game", "🔚 "..Text:text("input.prompts.leave_game") },
-            { "" },            
-            { "<<< "..Text:text("menu.options.input_submenu.global").." >>>" },
-            { Text:text("menu.options.input_submenu.note_global_controller") },
-            { ControlsMenuItem, -1, "global", INPUT_TYPE_CONTROLLER, "jump",           "📥 "..Text:text("input.prompts.join") },
             { "" },
             { "<<< "..Text:text("menu.options.input_submenu.interface").." >>>" },
             { Text:text("menu.options.input_submenu.note_ui_min_button") },
@@ -442,6 +438,10 @@ local function generate_menus()
             { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "ui_select",  "👆 "..Text:text("input.prompts.ui_select")},
             { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "ui_back",    "🔙 "..Text:text("input.prompts.ui_back")},
             { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "pause",      "⏸ "..Text:text("input.prompts.pause") },
+            { "" },            
+            { "<<< "..Text:text("menu.options.input_submenu.global").." >>>" },
+            { Text:text("menu.options.input_submenu.note_global_controller") },
+            { ControlsMenuItem, -1, "global", INPUT_TYPE_CONTROLLER, "jump",           "📥 "..Text:text("input.prompts.join") },
 
         }, DEFAULT_MENU_BG_COLOR, PROMPTS_CONTROLS)
     end
@@ -583,17 +583,25 @@ local function generate_menus()
 
             local s = ""
             for _, value in pairs(keyset) do
-                s = s.."🎮 "..Text:text("menu.joystick_removed.item", value[1], value[2])
+                s = s.."🎮 "..Text:text("menu.joystick_removed.item", value[1], value[2]).."\n"
             end
 
             self.label_text = s
+            --..concat("\n", game.menu_manager.joystick_wait_cooldown, " (", game.menu_manager.joystick_wait_mode, ")")
         end,
         },
         { "" },
         { "" },
         { "" },
         { "" },
-        { "⚠ "..Text:text("menu.joystick_removed.continue"), function() game.menu_manager:disable_joystick_wait_mode() end },
+        { "⚠ "..Text:text("menu.joystick_removed.continue"), 
+            function(self)
+                if game.menu_manager.joystick_wait_cooldown > 0 then
+                    return
+                end
+                game.menu_manager:disable_joystick_wait_mode()
+            end, 
+        },
         { "" },
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_GAME_OVER)
 

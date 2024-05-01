@@ -26,6 +26,7 @@ function MenuManager:reset()
 	self.menu_stack = {}
 	self.last_menu = "title"
 
+	self.joystick_wait_cooldown = 0.0
 	self.joystick_wait_mode = false
 	self.joystick_wait_set = {}
 end
@@ -50,6 +51,8 @@ function MenuManager:update(dt)
 	elseif back_button then
 		self:back()
 	end
+
+	self.joystick_wait_cooldown = math.max(self.joystick_wait_cooldown - dt, 0.0)
 end
 
 function MenuManager:update_current_menu(dt)
@@ -264,19 +267,19 @@ end
 
 function MenuManager:enable_joystick_wait_mode(joystick)
 	self:set_menu("joystick_removed")
+	self.joystick_wait_cooldown = 1.0
 	self.joystick_wait_mode = true
 	self.joystick_wait_set[joystick] = true
 end
 
 function MenuManager:disable_joystick_wait_mode()
 	self:unpause()
+	self:set_menu()
 	self.joystick_wait_mode = false
 	self.joystick_wait_set = {}
 end
 
 function MenuManager:update_joystick_wait_mode(dt)
-	if not self.joystick_wait_mode then return end
-
 	local count = 0
 	for controller, _ in pairs(self.joystick_wait_set) do
 		if controller:isConnected() then
@@ -286,7 +289,7 @@ function MenuManager:update_joystick_wait_mode(dt)
 		end
 	end
 
-	if count == 0 then
+	if count == 0 and self.joystick_wait_mode then
 		self:disable_joystick_wait_mode()
 	end
 end
