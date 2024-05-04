@@ -1,6 +1,7 @@
+require "scripts.util"
+require "lib.error_explorer.error_explorer"
 local Class = require "scripts.meta.class"
 local Game = require "scripts.game.game"
-require "scripts.util"
 
 -- LÖVE uses Luajit 2.1 which is based on Lua 5.1 but has some additions (like goto)
 

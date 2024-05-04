@@ -63,7 +63,7 @@ function Game:init()
 	canvas = gfx.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
 
 	-- Load fonts
-	-- FONT_REGULAR = gfx.newFont("fonts/HopeGold.ttf", 16)
+	-- FONT_REGULAR = gfx.newFont("fonts/Hardpixel.otf", 20)
 	FONT_REGULAR = gfx.newImageFont("fonts/hope_gold.png", FONT_CHARACTERS)
 	FONT_7SEG = gfx.newImageFont("fonts/7seg_font.png", " 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 	FONT_MINI = gfx.newFont("fonts/Kenney Mini.ttf", 8)
@@ -837,8 +837,8 @@ end
 
 function Game:on_red_button_pressed()
 	self:save_stats()
-	self.menu_manager:set_can_pause(false)
 	self.game_state = GAME_STATE_ELEVATOR_BURNING
+	self.menu_manager:set_can_pause(false)
 	self.level:on_red_button_pressed()
 end
 

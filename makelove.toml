@@ -1,5 +1,5 @@
 name = "bugscraper"
-default_targets = []
+default_targets = ["win64"]
 build_directory = "export"
 icon_file = "icon.png"
 

@@ -58,7 +58,8 @@ local function debug_wave()
 end
 
 local waves = {	
-	debug_wave(),
+	-- debug_wave(),
+	-- [[
 	new_cafeteria(),
 	Wave:new({
 		music = "w1",
@@ -213,6 +214,7 @@ local waves = {
 		enemies = {
 			{E.Grasshopper, 8},
 		},
+		music = "w1",
 	}),
 
 	Wave:new({ 
@@ -331,7 +333,17 @@ local waves = {
 			{E.Spider, 1},
 		},
 	}),
+
+	Wave:new({
+		-- roll_type = WAVE_ROLL_TYPE_FIXED,
+		min = 1,
+		max = 1,
+		enemies = {	
+			{E.Dung, 1, position = {240, 200}},			
+		}
+	}),
 	-- }, 4)),
+	--]]
 
 	-- Last wave
 	Wave:new({ 

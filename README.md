@@ -29,9 +29,10 @@ Please note that I was in highschool when I began this project. I am basically t
 </div>  
 
 ## Distribution
+This game is NOT [open source](https://en.wikipedia.org/wiki/Open-source_software), rather it is [source-accessible](https://en.wikipedia.org/wiki/Source-available_software). Some assets, like some fonts 
 Please feel free to reuse, modify, or remix the source code of the game for any non commercial project.   
 If it is commercial please [contact me first](https://yolwoocle.com/about) (I'll probably say yes!).   
-I am very lax with what you can do with the source code, but please note that I reserve all rights of the original work (just in case).
+I am very lax with what you can do with the source code, but please note that I reserve all rights of the original work.
 
 <div align="center">
   🐛🐛🐛🐛🐛

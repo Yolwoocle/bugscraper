@@ -19,7 +19,7 @@ local Level = Class:inherit()
 
 function Level:init(game)
     self.game = game
-
+	
 	-- Map & world gen
 	self.map = TileMap:new(69, 17) --nice.
 	self.shaft_w, self.shaft_h = 26, 14

@@ -72,7 +72,8 @@ function TileMap:set_collision(x,y, val)
 	end
 
 	local tile = self:get_tile(x, y)
-	-- Return is the tile is already at the wanted state
+	if tile == nil then return end
+	-- Return if the tile is already at the wanted state
 	if val == (tile.collision_info ~= nil) then
 		return 
 	end		
