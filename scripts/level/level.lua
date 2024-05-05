@@ -23,12 +23,23 @@ function Level:init(game)
 	
 	-- Map & world gen
 	self.map = TileMap:new(69, 17) --nice.
-	self.shaft_w, self.shaft_h = 26, 14
 	self.world_generator = WorldGenerator:new(self.map)
-	self.world_generator:set_shaft_rect(2, 2, self.shaft_w, self.shaft_h)
+
+	local shaft_w, shaft_h = 26, 14
+	local shaft_rect = Rect:new(2, 2, 2+shaft_w-1, 2+shaft_h-1)
+	self.world_generator:set_shaft_rect(shaft_rect)
 	self.world_generator:reset()
 	self.world_generator:generate_cabin()
-	
+
+	-- Cabin stats
+	local bw = BLOCK_WIDTH
+	local cabin_ax, cabin_ay = shaft_rect.ax,    shaft_rect.ay
+	local cabin_bx, cabin_by = shaft_rect.bx+1, shaft_rect.by+1
+	local door_ax, door_ay = cabin_ax*BW+154, cabin_ax*BW+122
+	local door_bx, door_by = cabin_ay*BW+261, cabin_ay*BW+207
+	self:set_bounds(Rect:new(cabin_ax, cabin_ay, cabin_bx, cabin_by))
+	self.door_rect = Rect:new(door_ax, door_ay, door_bx, door_by)
+
 	-- Bounding box
 	-- Future Leo: the fuck is this, commented it out
 	-- Don't try to understand, all you have to know is that it puts collision 
@@ -47,14 +58,6 @@ function Level:init(game)
 	-- }
 	-- for i,box in pairs(self.boxes) do   Collision:add(box)   end
 
-	-- Cabin stats
-	local bw = BLOCK_WIDTH
-	self.cabin_ax, self.cabin_ay = self.world_generator.box_ax*bw, self.world_generator.box_ay*bw
-	self.cabin_bx, self.cabin_by = self.world_generator.box_bx*bw, self.world_generator.box_by*bw
-	self.door_ax, self.door_ay =   self.cabin_ax+154, self.cabin_ax+122
-	self.door_bx, self.door_by =   self.cabin_ay+261, self.cabin_ay+207
-	self.cabin_rect = Rect:new(self.cabin_ax, self.cabin_ay, self.cabin_bx, self.cabin_by)
-	self.door_rect =  Rect:new(self.door_ax,  self.door_ay,  self.door_bx,  self.door_by)
 
 	-- Level info
 	self.floor = 0 --Floor n°
@@ -108,6 +111,11 @@ function Level:update(dt)
 	self.flash_alpha = max(self.flash_alpha - dt, 0)
 	
 	self:update_cafeteria(dt)
+end
+
+function Level:set_bounds(rect)
+	self.cabin_rect = rect:clone():scale(BW)
+	self.cabin_inner_rect = self.cabin_rect:clone():expand(-BW)
 end
 
 function Level:check_for_next_wave(dt)
@@ -254,7 +262,7 @@ function Level:new_wave_buffer_enemies()
 	local wave_n = clamp(self.floor + 1, 1, #waves) -- floor+1 because the floor indicator changes before enemies are spawned
 	local wave = self:get_new_wave(wave_n)
 	
-	self.enemy_buffer = wave:spawn(self.door_ax, self.door_ay, self.door_bx, self.door_by)
+	self.enemy_buffer = wave:spawn(self.door_rect)
 	
 	self:enable_wave_side_effects(wave)
 	if self.background.change_bg_color then
@@ -265,23 +273,30 @@ function Level:new_wave_buffer_enemies()
 end
 
 function Level:enable_wave_side_effects(wave)
-	self:load_background(wave)
-	self:load_music(wave)
+	self:_load_background(wave)
+	self:_load_music(wave)
+	self:_load_wave_bounds(wave)
 
 	if wave.enable_stomp_arrow_tutorial then
 		game.game_ui:set_stomp_arrow_target(self.enemy_buffer[1])
 	end
 end
 
-function Level:load_background(wave)
+function Level:_load_background(wave)
 	if wave.background then
 		self:set_background(wave.background)
 	end
 end
 
-function Level:load_music(wave)
+function Level:_load_music(wave)
 	if wave.music then
 		game.music_player:fade_out(wave.music, 1.0)
+	end
+end
+
+function Level:_load_wave_bounds(wave)
+	if wave.bounds then
+		self:set_bounds(wave.bounds)
 	end
 end
 
@@ -356,7 +371,7 @@ function Level:can_exit_cafeteria()
 	end
 
 	for _, p in pairs(game.players) do
-		if not is_point_in_rect(p.mid_x, p.mid_y, self.door_ax, self.door_ay, self.door_bx, self.door_by) then
+		if not is_point_in_rect(p.mid_x, p.mid_y, self.door_rect.ax, self.door_rect.ay, self.door_rect.bx, self.door_rect.by) then
 			return false
 		end		
 	end
@@ -423,7 +438,7 @@ function Level:draw_with_hole(draw_func)
 		if self.is_hole_stencil_enabled then
 			love.graphics.stencil(function()
 				love.graphics.clear()
-				love.graphics.circle("fill", (self.door_ax + self.door_bx)/2, (self.door_ay + self.door_by)/2, self.hole_stencil_radius)
+				love.graphics.circle("fill", (self.door_rect.ax + self.door_rect.bx)/2, (self.door_rect.ay + self.door_rect.by)/2, self.hole_stencil_radius)
 			end, "increment")
 			love.graphics.setStencilTest("less", 1)
 		end
@@ -466,7 +481,7 @@ function Level:draw_front(x,y)
 		self:draw_rubble()
 		
 		if self.show_cabin then
-			gfx.draw(images.cabin_walls, self.cabin_ax, self.cabin_ay)
+			gfx.draw(images.cabin_walls, self.cabin_rect.ax, self.cabin_rect.ay)
 		end
 	end)
 

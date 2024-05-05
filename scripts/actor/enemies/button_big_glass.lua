@@ -15,9 +15,6 @@ end
 
 function ButtonBigGlass:init_button_big_glass(x, y)
     -- We can reuse this for other stuff
-    -- x,y = CANVAS_WIDTH/2, game.world_generator.box_by * BLOCK_WIDTH
-    -- y = game.door_by - 45
-    -- x = floor(x - 58/2)
     self:init_enemy(x,y, images.big_red_button_crack3, 58, 45)
     
     self.name = "button_big_glass"
@@ -67,7 +64,7 @@ end
 
 function ButtonBigGlass:on_buffered()
 	self.x = CANVAS_WIDTH/2
-	self.y = game.door_by - 45
+	self.y = game.door_rect.by - 45
 	-- self:center_self()
 end
 

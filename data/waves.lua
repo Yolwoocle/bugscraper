@@ -2,10 +2,12 @@ require "scripts.util"
 local images = require "data.images"
 local backgrounds = require "data.backgrounds"
 
-local Class = require "scripts.meta.class"
-local Gun = require "scripts.game.gun"
+local Rect = require "scripts.rect"
 local Wave = require "scripts.level.wave"
 local E = require "data.enemies"
+
+RECT_ELEVATOR = Rect:new(2, 2, 28, 16)
+RECT_CAFETERIA = Rect:new(2, 2, 69, 16)
 
 local function new_cafeteria()
 	return Wave:new({
@@ -15,6 +17,7 @@ local function new_cafeteria()
 		
 		min = 1,
 		max = 1,
+		bounds = RECT_CAFETERIA,
 		enemies = {
 			{E.Dummy, 1, position = {5000, 200}},
 			{E.UpgradeDisplay, 1, position = {488, 192}},
@@ -57,11 +60,16 @@ local function debug_wave()
 	})
 end
 
+local function new_wave(params)
+	params.bounds = RECT_ELEVATOR
+	return Wave:new(params)
+end
+
 local waves = {	
 	-- debug_wave(),
+	-- new_cafeteria(),
 	-- [[
-	new_cafeteria(),
-	Wave:new({
+	new_wave({
 		music = "w1",
 
 		min = 4,
@@ -71,8 +79,9 @@ local waves = {
 			{E.Fly, 3},
 		},
 	}),
+
 	
-	Wave:new({
+	new_wave({
 		-- Woodlouse intro
 		min = 4,
 		max = 6,
@@ -82,7 +91,7 @@ local waves = {
 		},
 	}),
 
-	Wave:new({
+	new_wave({
 		min = 4,
 		max = 6,
 		enemies = {
@@ -92,7 +101,7 @@ local waves = {
 		},
 	}),
 
-	Wave:new({
+	new_wave({
 		-- Slug intro
 		min = 4,
 		max = 6,
@@ -103,7 +112,7 @@ local waves = {
 		},
 	}),
 	
-	Wave:new({
+	new_wave({
 		-- Spider intro
 		min = 4,
 		max = 6,
@@ -113,7 +122,7 @@ local waves = {
 		},
 	}),
 
-	Wave:new({
+	new_wave({
 		min = 6,
 		max = 8,
 		enemies = {
@@ -124,7 +133,7 @@ local waves = {
 		},
 	}),
 
-	Wave:new({
+	new_wave({
 		-- Mosquito intro
 		min = 6,
 		max = 8,
@@ -134,7 +143,7 @@ local waves = {
 		},
 	}),
 
-	Wave:new({ 
+	new_wave({ 
 		min = 6,
 		max = 8,
 		enemies = {
@@ -146,7 +155,7 @@ local waves = {
 		},
 	}),
 
-	Wave:new({
+	new_wave({
 		min = 3,
 		max = 5,
 		enemies = {
@@ -155,7 +164,7 @@ local waves = {
 		},
 	}),
 
-	Wave:new({
+	new_wave({
 		min = 6,
 		max = 8,
 		enemies = {
@@ -168,7 +177,7 @@ local waves = {
 		},
 	}),
 
-	Wave:new({ 
+	new_wave({ 
 		-- Spiked Fly intro
 		min = 6,
 		max = 8,
@@ -180,7 +189,7 @@ local waves = {
 		},
 	}),
 
-	Wave:new({ 
+	new_wave({ 
 		min = 7,
 		max = 9,
 		enemies = {
@@ -192,22 +201,9 @@ local waves = {
 	}),
 
 
-	Wave:new({
-		floor_type = FLOOR_TYPE_CAFETERIA,
-		roll_type = WAVE_ROLL_TYPE_FIXED,
-		music = "cafeteria",
-		
-		min = 1,
-		max = 1,
-		enemies = {
-			{E.Dummy, 1, position = {5000, 200}},
-			{E.UpgradeDisplay, 1, position = {488, 200}},
-			{E.UpgradeDisplay, 1, position = {544, 200}},
-			{E.UpgradeDisplay, 1, position = {600, 200}},
-		},
-	}),
+	new_cafeteria(),
 
-	Wave:new({ 
+	new_wave({ 
 		-- Grasshopper intro
 		min = 4,
 		max = 4,
@@ -217,7 +213,7 @@ local waves = {
 		music = "w1",
 	}),
 
-	Wave:new({ 
+	new_wave({ 
 		min = 7,
 		max = 9,
 		enemies = {
@@ -230,7 +226,7 @@ local waves = {
 		},
 	}),
 
-	Wave:new({ 
+	new_wave({ 
 		-- Mushroom Ant intro
 		min = 5,
 		max = 6,
@@ -242,7 +238,7 @@ local waves = {
 	}),
 
 
-	Wave:new({ 
+	new_wave({ 
 		min = 8,
 		max = 10,
 		enemies = {
@@ -254,7 +250,7 @@ local waves = {
 		},
 	}),
 
-	Wave:new({ 
+	new_wave({ 
 		-- Honeypot ant intro
 		min = 6,
 		max = 8,
@@ -266,7 +262,7 @@ local waves = {
 		},
 	}),
 
-	Wave:new({ -- 12
+	new_wave({ -- 12
 		-- ALL
 		min = 6,
 		max = 8,
@@ -285,8 +281,8 @@ local waves = {
 	}),
 
 	-- unpack(duplicate_table({
-		-- ALL BUT HARDER
-		Wave:new({
+	-- ALL BUT HARDER
+	new_wave({
 		min = 8,
 		max = 10,
 		enemies = {
@@ -300,7 +296,7 @@ local waves = {
 			-- {E.Spider, 1},
 		},
 	}),
-	Wave:new({
+	new_wave({
 		min = 10,
 		max = 12,
 		enemies = {
@@ -317,7 +313,7 @@ local waves = {
 			{E.Spider, 1},
 		},
 	}),
-	Wave:new({
+	new_wave({
 		min = 14,
 		max = 16,
 		enemies = {
@@ -334,7 +330,7 @@ local waves = {
 		},
 	}),
 
-	Wave:new({
+	new_wave({
 		-- roll_type = WAVE_ROLL_TYPE_FIXED,
 		min = 1,
 		max = 1,
@@ -346,7 +342,7 @@ local waves = {
 	--]]
 
 	-- Last wave
-	Wave:new({ 
+	new_wave({ 
 		min = 1,
 		max = 1,
 		enemies = {

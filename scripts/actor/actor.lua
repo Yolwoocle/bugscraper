@@ -117,6 +117,12 @@ function Actor:center_actor()
 	self.y = self.y - self.h/2
 end
 
+function Actor:clamp_to_bounds(rect)
+	local x = clamp(self.x, rect.ax, rect.bx-self.w)
+	local y = clamp(self.y, rect.ay, rect.by-self.h)
+	self:set_pos(x, y)
+end
+
 function Actor:update_mid_position()
 	self.mid_x = self.x + self.w/2
 	self.mid_y = self.y + self.h/2

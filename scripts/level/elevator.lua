@@ -47,8 +47,8 @@ end
 ---------------------------------------------
 
 function Elevator:draw(enemy_buffer)
-	local x, y = self.level.door_ax, self.level.door_ay
-	local w, h = self.level.door_bx - self.level.door_ax+1, self.level.door_by - self.level.door_ay+1
+	local x, y = self.level.door_rect.ax, self.level.door_rect.ay
+	local w, h = self.level.door_rect.bx - self.level.door_rect.ax+1, self.level.door_rect.by - self.level.door_rect.ay+1
 	rect_color(self.level.background.clear_color, "fill", x, y, w, h);
 
 	-- Draw buffered enemies
@@ -61,7 +61,7 @@ end
 
 
 function Elevator:draw_cabin()
-	local cabin_x, cabin_y = self.level.cabin_ax, self.level.cabin_ay 
+	local cabin_x, cabin_y = self.level.cabin_rect.ax, self.level.cabin_rect.ay 
 
 	self.door:draw()
 
@@ -73,7 +73,7 @@ function Elevator:draw_cabin()
 end
 
 function Elevator:draw_counter()
-	local cabin_x, cabin_y = self.level.cabin_ax, self.level.cabin_ay 
+	local cabin_x, cabin_y = self.level.cabin_rect.ax, self.level.cabin_rect.ay 
 
 	-- Level counter clock thing
 	local x1, y1 = cabin_x + 207.5, cabin_y + 89

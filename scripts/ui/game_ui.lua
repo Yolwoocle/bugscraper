@@ -53,7 +53,7 @@ function GameUI:draw_version()
 end
 
 function GameUI:draw_join_tutorial()
-	local def_x = math.floor((game.level.door_ax + game.level.door_bx) / 2)
+	local def_x = math.floor((game.level.door_rect.ax + game.level.door_rect.bx) / 2)
 	local def_y = game.logo_y + 50
 	local number_of_keyboard_users = Input:get_number_of_users(INPUT_TYPE_KEYBOARD)
 

@@ -20,8 +20,9 @@ local skins = require "data.skins"
 local sounds = require "data.sounds"
 local utf8 = require "utf8"
 
-require "scripts.util"
 require "scripts.meta.constants"
+require "scripts.util"
+require "scripts.meta.post_constants"
 
 local Game = Class:inherit()
 
@@ -112,7 +113,7 @@ function Game:new_game()
 
 	-- Start button
 	local nx = CANVAS_WIDTH * 0.75
-	local ny = self.level.world_generator.box_by * BLOCK_WIDTH
+	local ny = self.level.cabin_inner_rect.by
 	-- local l = create_actor_centered(Enemies.ButtonGlass, nx, ny)
 	local l = create_actor_centered(Enemies.ButtonSmallGlass, floor(nx), floor(ny))
 	self:new_actor(l)
@@ -329,6 +330,7 @@ function Game:update_actors(dt)
 
 		if not actor.is_removed and actor.is_active then
 			actor:update(dt)
+        	actor:clamp_to_bounds(self.level.cabin_inner_rect)
 		end
 
 		if actor.is_removed then
@@ -473,6 +475,11 @@ function Game:draw_game()
 		self.level:draw_front()
 
 		Particles:draw_front()
+		
+		rect_color(COL_CYAN,  "line", self.level.door_rect.ax, self.level.door_rect.ay, self.level.door_rect.bx-self.level.door_rect.ax, self.level.door_rect.by-self.level.door_rect.ay)
+		rect_color(COL_RED,   "line", self.level.cabin_rect.ax, self.level.cabin_rect.ay, self.level.cabin_rect.bx-self.level.cabin_rect.ax, self.level.cabin_rect.by-self.level.cabin_rect.ay)
+		rect_color(COL_GREEN, "line", self.level.cabin_inner_rect.ax, self.level.cabin_inner_rect.ay, self.level.cabin_inner_rect.bx-self.level.cabin_inner_rect.ax, self.level.cabin_inner_rect.by-self.level.cabin_inner_rect.ay)
+		
 	end)
 
 	-----------------------------------------------------
@@ -777,8 +784,8 @@ function Game:new_player(player_n, x, y)
 	if player_n == nil then
 		return
 	end
-	local mx = floor(self.level.door_ax)
-	x = param(x, mx + ((player_n-1) / (MAX_NUMBER_OF_PLAYERS-1)) * (self.level.door_bx - self.level.door_ax))
+	local mx = floor(self.level.door_rect.ax)
+	x = param(x, mx + ((player_n-1) / (MAX_NUMBER_OF_PLAYERS-1)) * (self.level.door_rect.bx - self.level.door_rect.ax))
 	y = param(y, CANVAS_HEIGHT - 3*16)
 
 	local player = Player:new(player_n, x, y, skins[player_n])

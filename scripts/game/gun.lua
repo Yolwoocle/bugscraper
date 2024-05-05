@@ -147,7 +147,7 @@ function Gun:shoot(dt, player, x, y, dx, dy, is_burst)
 	if is_first_fire then 
 		local m = 1
 		if player and player.is_player then
-			player:get_gun_cooldown_multiplier()
+			m = player:get_gun_cooldown_multiplier()
 		end
 		self.cooldown_timer = self.cooldown * m
 	end

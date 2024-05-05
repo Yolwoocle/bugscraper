@@ -8,6 +8,7 @@ function Wave:init(params)
 	self.floor_type = param(params.floor_type, FLOOR_TYPE_NORMAL)
 	self.roll_type = param(params.roll_type, WAVE_ROLL_TYPE_RANDOM)
 	self.music = param(params.music, nil)
+	self.bounds = param(params.bounds, nil)
 
 	self.min = param(params.min, 1)
 	self.max = param(params.max, 1)
@@ -71,13 +72,13 @@ function Wave:add_cocoons(enemy_classes)
 	end
 end
 
-function Wave:spawn(ax, ay, bx, by)
+function Wave:spawn(rect)
 	local enemy_classes = self:roll()
 
 	local spawned_enemies = {}
 	for i=1, #enemy_classes do
-		local x = love.math.random(ax + 16, bx - 16)
-		local y = love.math.random(ay + 16, by - 16)
+		local x = love.math.random(rect.ax + 16, rect.bx - 16)
+		local y = love.math.random(rect.ay + 16, rect.by - 16)
 
 		local enemy_class = enemy_classes[i].enemy_class
 		local args = enemy_classes[i].args
@@ -94,8 +95,8 @@ function Wave:spawn(ax, ay, bx, by)
 		-- self.game:on_button_glass_spawn(enemy_instance)
 		
 		-- Prevent collisions with floor
-		if enemy_instance.y + enemy_instance.h > by then
-			enemy_instance:set_pos(enemy_instance.x, by - enemy_instance.h)
+		if enemy_instance.y + enemy_instance.h > rect.by then
+			enemy_instance:set_pos(enemy_instance.x, rect.by - enemy_instance.h)
 		end
 
 		game:new_actor(enemy_instance)

@@ -9,9 +9,7 @@ function ButtonBigPressed:init(x, y)
 end
 
 function ButtonBigPressed:init_button_big_pressed(x, y)
-    -- x,y = CANVAS_WIDTH/2, game.world_generator.box_by * BLOCK_WIDTH 
-    -- x = floor(x - 34/2)
-    y = game.door_by - 40
+    y = game.door_rect.by - 40
     self:init_enemy(x,y, images.big_red_button_pressed, 34, 40)
     self.name = "button_big_pressed"
     self.follow_player = false

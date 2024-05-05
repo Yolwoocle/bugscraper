@@ -1,7 +1,7 @@
 require "scripts.util"
 local Upgrade = require "scripts.upgrade.upgrade"
 local images= require "data.images"
-local EffectCoffee = require "scripts.effect.effect_coffee"
+local EffectCoffee = require "scripts.effect.effect_espresso"
 
 local UpgradeEspresso = Upgrade:inherit()
 

@@ -112,7 +112,7 @@ function Elevator:do_reverse_elevator(dt)
 		-- fire particles
 		local q = max(0, (abs(self.elevator_speed) - 200)*0.01)
 		for i=1, q do
-			local x,y = random_range(self.cabin_ax, self.cabin_bx),random_range(self.cabin_ay, self.cabin_by)
+			local x,y = random_range(self.cabin_rect.ax, self.cabin_rect.bx),random_range(self.cabin_rect.ay, self.cabin_rect.by)
 			local size = max(4, abs(self.elevator_speed)*0.01)
 			local velvar = max(5, abs(self.elevator_speed))
 			Particles:fire(x,y,size, nil, velvar)
@@ -175,7 +175,7 @@ function Elevator:on_exploding_elevator(dt)
 
 	----smoke
 	for i=1, 200 do
-		local x,y = random_range(self.cabin_ax, self.cabin_bx), random_range(self.cabin_ay, self.cabin_by)
+		local x,y = random_range(self.cabin_rect.ax, self.cabin_rect.bx), random_range(self.cabin_rect.ay, self.cabin_rect.by)
 		Particles:splash(x,y, 5, nil, nil, 10, 4)
 	end
 

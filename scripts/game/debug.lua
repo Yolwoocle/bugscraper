@@ -61,16 +61,18 @@ function Debug:init(game)
         ["6"] = {"heal P2", func_heal(2)},
         ["7"] = {"heal P3", func_heal(3)},
         ["8"] = {"heal P4", func_heal(4)},
+
         ["q"] = {"previous floor",function()
             self.game:set_floor(self.game:get_floor() - 1)
         end},
+
         ["w"] = {"next floor", function()
             self.game:set_floor(self.game:get_floor() + 1)
         end},
-        -- ["p"] = {"test", function()
-        --     game:apply_upgrade(upgrades.UpgradeTea:new())
-        -- end},
-        ["s"] = {"test", function()
+        ["p"] = {"upgrade", function()
+            game:apply_upgrade(upgrades.UpgradeEspresso:new())
+        end},
+        ["s"] = {"spawn", function()
             local dung = enemies.SnailShelled:new(CANVAS_WIDTH/2, CANVAS_HEIGHT/2)
             game:new_actor(dung)
         end},

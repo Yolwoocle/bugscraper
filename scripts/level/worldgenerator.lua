@@ -1,5 +1,6 @@
 require "scripts.util"
 local Class = require "scripts.meta.class"
+local Rect = require "scripts.rect"
 
 local WorldGenerator = Class:inherit()
 
@@ -14,11 +15,8 @@ function WorldGenerator:reset()
 	self.map:reset()
 end
 
-function WorldGenerator:set_shaft_rect(x, y, w, h)
-	self.shaft_x = x
-	self.shaft_y = y
-	self.shaft_w = w
-	self.shaft_h = h
+function WorldGenerator:set_shaft_rect(rect)
+	self.shaft_rect = rect
 end
 
 function WorldGenerator:generate_cabin()
@@ -29,40 +27,38 @@ function WorldGenerator:generate_cabin()
 	
 	-- local ax, ay = floor((map.width - w)/2) + ox, floor((map.height - h)/2) + oy
 	-- local bx, by = ax+w-1, ay+h-1
-	local x, y, w, h = self.shaft_x, self.shaft_y, self.shaft_w, self.shaft_h
-	local ax, ay = x, y
-	local bx, by = ax+w-1, ay+h-1
-	self.box_ax,  self.box_ay,  self.box_bx,  self.box_by  = ax,    ay,    bx,    by
-	self.box_rax, self.box_ray, self.box_rbx, self.box_rby = ax*BW, ay*BW, bx*BW, by*BW
+	-- local x, y, w, h = self.shaft_x, self.shaft_y, self.shaft_w, self.shaft_h
+	-- local ax, ay = x, y
+	-- local bx, by = ax+w, ay+h
 
 	-- cabin
-	self:write_rect(ax, ay, bx, by, 1)
+	self:write_rect(self.shaft_rect, 1)
 	
 	-- chains
-	for iy = 0,ay-1 do
+	for iy = 0,self.shaft_rect.ay-1 do
 		map:set_tile(4, iy, 4)
-		map:set_tile(self.box_bx-2, iy, 4)
+		map:set_tile(self.shaft_rect.bx-2, iy, 4)
 	end
 end
 
 function WorldGenerator:generate_cafeteria()
 	self:reset()
-	self:write_rect(2, 2, 68, 15, 1)
+	self:write_rect(Rect:new(2, 2, 68, 15), 1)
 
 	-- table
-	self:write_rect(27, 13, 40, 13, 3)
+	self:write_rect(Rect:new(27, 13, 40, 13), 3)
 end
 
-function WorldGenerator:write_rect(ax, ay, bx, by, value)
+function WorldGenerator:write_rect(rect, value)
 	-- Floor/Ceiling
-	for ix=ax, bx do
-		self.map:set_tile(ix, ay, value)
-		self.map:set_tile(ix, by, value)
+	for ix=rect.ax, rect.bx do
+		self.map:set_tile(ix, rect.ay, value)
+		self.map:set_tile(ix, rect.by, value)
 	end
 	-- Left/Right walls
-	for iy=ay, by do
-		self.map:set_tile(ax, iy, value)
-		self.map:set_tile(bx, iy, value)
+	for iy=rect.ay, rect.by do
+		self.map:set_tile(rect.ax, iy, value)
+		self.map:set_tile(rect.bx, iy, value)
 	end
 end
 
