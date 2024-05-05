@@ -1,6 +1,7 @@
 require "scripts.util"
 local Class = require "scripts.meta.class"
 local Timer = require "scripts.timer"
+local Rect = require "scripts.rect"
 local Enemies = require "data.enemies"
 local TileMap = require "scripts.level.tilemap"
 local WorldGenerator = require "scripts.level.worldgenerator"
@@ -48,11 +49,12 @@ function Level:init(game)
 
 	-- Cabin stats
 	local bw = BLOCK_WIDTH
-	self.cabin_x, self.cabin_y = self.world_generator.box_ax*bw, self.world_generator.box_ay*bw
 	self.cabin_ax, self.cabin_ay = self.world_generator.box_ax*bw, self.world_generator.box_ay*bw
 	self.cabin_bx, self.cabin_by = self.world_generator.box_bx*bw, self.world_generator.box_by*bw
-	self.door_ax, self.door_ay = self.cabin_x+154, self.cabin_x+122
-	self.door_bx, self.door_by = self.cabin_y+261, self.cabin_y+207
+	self.door_ax, self.door_ay =   self.cabin_ax+154, self.cabin_ax+122
+	self.door_bx, self.door_by =   self.cabin_ay+261, self.cabin_ay+207
+	self.cabin_rect = Rect:new(self.cabin_ax, self.cabin_ay, self.cabin_bx, self.cabin_by)
+	self.door_rect =  Rect:new(self.door_ax,  self.door_ay,  self.door_bx,  self.door_by)
 
 	-- Level info
 	self.floor = 0 --Floor n°
@@ -464,7 +466,7 @@ function Level:draw_front(x,y)
 		self:draw_rubble()
 		
 		if self.show_cabin then
-			gfx.draw(images.cabin_walls, self.cabin_x, self.cabin_y)
+			gfx.draw(images.cabin_walls, self.cabin_ax, self.cabin_ay)
 		end
 	end)
 
@@ -547,7 +549,7 @@ function Level:draw_rubble()
 		return
 	end
 
-	gfx.draw(images.cabin_rubble, self.cabin_x, (16-5)*BW)
+	gfx.draw(images.cabin_rubble, self.cabin_ax, (16-5)*BW)
 end
 
 function Level:on_red_button_pressed()

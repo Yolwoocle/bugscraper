@@ -10,7 +10,7 @@ local Elevator = Class:inherit()
 function Elevator:init(level)
     self.level = level
 
-	self.door = ElevatorDoor:new(self.level.cabin_x + 154, self.level.cabin_y + 122)
+	self.door = ElevatorDoor:new(self.level.door_rect.ax, self.level.door_rect.ay)
 	self.door:close()
 
 	self.floor_progress = 0.0
@@ -61,7 +61,7 @@ end
 
 
 function Elevator:draw_cabin()
-	local cabin_x, cabin_y = self.level.cabin_x, self.level.cabin_y 
+	local cabin_x, cabin_y = self.level.cabin_ax, self.level.cabin_ay 
 
 	self.door:draw()
 
@@ -73,7 +73,7 @@ function Elevator:draw_cabin()
 end
 
 function Elevator:draw_counter()
-	local cabin_x, cabin_y = self.level.cabin_x, self.level.cabin_y 
+	local cabin_x, cabin_y = self.level.cabin_ax, self.level.cabin_ay 
 
 	-- Level counter clock thing
 	local x1, y1 = cabin_x + 207.5, cabin_y + 89

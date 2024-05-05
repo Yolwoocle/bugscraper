@@ -331,7 +331,6 @@ function Game:update_actors(dt)
 			actor:update(dt)
 		end
 
-
 		if actor.is_removed then
 			actor:final_remove()
 			table.remove(self.actors, i)
