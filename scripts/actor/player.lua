@@ -199,6 +199,560 @@ function Player:update(dt)
 		self.frames_since_land = 0
 	end
 
+	self:update_combo(dt)
+
+	self.gun:update(dt)
+	self:shoot(dt, false)
+	self:update_gun_pos(dt)
+
+	self.ui_x = lerp(self.ui_x, floor(self.mid_x), 0.2)
+	self.ui_y = lerp(self.ui_y, floor(self.y), 0.2)
+
+	--Visuals
+	self:update_visuals()
+	if self:is_in_poison_cloud() then
+		Particles:dust(self.mid_x + random_neighbor(7), self.mid_y + random_neighbor(7), random_sample{color(0x3e8948), color(0x265c42), color(0x193c3e)})
+	end
+end
+
+------------------------------------------
+--- Life ---
+
+function Player:set_player_n(n)
+	self.n = n
+end
+
+function Player:set_life(val)
+	self.life = clamp(val, 0, self.max_life)
+end
+
+function Player:heal(val)
+	local overflow = self.max_life - (self.life + val)
+	if overflow >= 0 then
+		self.life = self.life + val
+		return true
+	else
+		self.life = self.max_life
+		return false, -overflow
+	end
+end
+
+function Player:add_max_life(val)
+	self.max_life = self.max_life + val
+end
+
+function Player:add_temporary_life(val)
+	self.temporary_life = self.temporary_life + val
+end
+
+function Player:do_invincibility(dt)
+	self.iframes = max(0, self.iframes - dt)
+
+	self.is_invincible = false
+	if self.iframes > 0 and game.frames_to_skip <= 0 then
+		self.is_invincible = true
+		self.iframe_blink_timer = (self.iframe_blink_timer + dt) % self.iframe_blink_freq
+	end
+end
+
+function Player:set_invincibility(n)
+	self.iframes = math.max(n, self.iframes)
+end
+
+function Player:kill()
+	if self.is_dead then return end
+	
+	game:screenshake(10)
+	game:frameskip(30)
+	Input:vibrate(self.n, 0.6, 0.4)
+
+	if game:get_number_of_alive_players() > 1 then 
+		local fainted_player = Enemies.FaintedPlayer:new(self.x, self.y, self)
+		game:new_actor(fainted_player)
+	else
+		local ox, oy = self.spr:get_total_centered_offset_position(self.x, self.y, self.w, self.h)
+		Particles:dead_player(ox, oy, self.skin.spr_dead, self.color_palette, self.dir_x)
+	end
+
+	self:on_death()
+	game:on_kill(self)
+	
+	self.timer_before_death = self.max_timer_before_death
+	Audio:play("death")
+
+	self.is_dead = true
+	self:remove()
+end
+
+function Player:on_death()
+	
+end
+
+function Player:on_removed()
+	Collision:remove(self.wall_collision_box)
+end
+
+function Player:do_damage(n, source)
+	if self.iframes > 0 then    return    end
+	if n <= 0 then    return    end
+
+	if Input:get_number_of_users() == 1 then
+		game:frameskip(8)
+	end
+	game:screenshake(5)
+	Input:vibrate(self.n, 0.3, 0.45)
+	Audio:play("hurt")
+	Particles:word(self.mid_x, self.mid_y, concat("-",n), COL_LIGHT_RED)
+	
+	if self.is_knockbackable and source then
+		self.vx = self.vx + sign(self.mid_x - source.mid_x)*source.knockback
+		self.vy = self.vy - 50
+	end
+
+	local old_temporary_life = self.temporary_life
+	self:subtract_life(n)
+	local temporary_life_diff = old_temporary_life - self.temporary_life
+	if temporary_life_diff > 0 then
+		--                                            x, y, number,     spr,             spw_rad, life, vs, g, parms
+		Particles:image(self.ui_x, self.ui_y - 16, temporary_life_diff, images.particle_leaf, 5, 1.5, 0.6, 0.5)
+	end
+	
+	self:set_invincibility(self.max_iframes)
+	
+	if self.life <= 0 then
+		self.life = 0 
+		self:kill()
+	end
+end
+
+function Player:subtract_life(n)
+	if self.temporary_life > 0 then
+		self.temporary_life = self.temporary_life - n
+		n = math.max(0, -self.temporary_life)
+		self.temporary_life = math.max(0, self.temporary_life)
+	end
+
+	self.life = self.life - n
+	self.life = math.max(0, self.life)
+end
+
+
+------------------------------------------
+--- Physics ---
+
+function Player:move(dt)
+	-- compute movement dir
+	local dir = {x=0, y=0}
+	if Input:action_down(self.n, 'left') then   dir.x = dir.x - 1   end
+	if Input:action_down(self.n, 'right') then   dir.x = dir.x + 1   end
+
+	if dir.x ~= 0 then
+		self.dir_x = dir.x
+
+		-- If not shooting, update shooting direction
+		if not self.is_shooting then
+			-- self.shoot_dir_x = dir.x
+			-- self.shoot_dir
+		end
+	end
+
+	-- Apply velocity 
+	self.vx = self.vx + dir.x * self.speed * self.speed_mult
+	self.vy = self.vy + dir.y * self.speed * self.speed_mult
+end
+
+function Player:do_wall_sliding(dt)
+	-- Check if wall sliding
+	self.is_wall_sliding = false
+	self.is_walled = false
+
+	self.sfx_wall_slide_volume = lerp(self.sfx_wall_slide_volume, 0, 0.3)
+	self.sfx_wall_slide:setVolume(self.sfx_wall_slide_volume)
+
+	if self.wall_col then
+		local col_normal = self.wall_col.normal
+		local is_walled = (col_normal.y == 0)
+		local is_falling = (self.vy > 0)
+		local holding_left = Input:action_down(self.n, 'left') and col_normal.x == 1
+		local holding_right = Input:action_down(self.n, 'right') and col_normal.x == -1
+		
+		local is_wall_sliding = is_walled and is_falling and (holding_left or holding_right) 
+			and (self.wall_col.other.collision_info and self.wall_col.other.collision_info.is_slidable)
+		self.is_wall_sliding = is_wall_sliding
+		self.is_walled = is_walled
+	end
+
+	
+	-- Perform wall sliding
+	if self.is_wall_sliding then
+		-- Orient player opposite if wall sliding
+		self.dir_x = self.wall_col.normal.x
+		self.shoot_dir_x = self.wall_col.normal.x
+	
+		-- Slow down descent
+		self.gravity = 0
+		self.vy = self.wall_slide_speed
+
+		-- Particles
+		self.wall_slide_particle_timer = self.wall_slide_particle_timer + 1
+		if self.wall_slide_particle_timer % 1 == 0 then
+			Particles:dust(self.mid_x + (self.w/2) * -self.dir_x, self.y)
+		end
+
+		-- SFX
+		self.sfx_wall_slide_volume = lerp(self.sfx_wall_slide_volume, self.sfx_wall_slide_max_volume, 0.3)
+		self.sfx_wall_slide:setVolume(self.sfx_wall_slide_volume)
+	else
+		self.gravity = self.default_gravity
+	end
+end
+
+function Player:do_jumping(dt)
+	-- This buffer is so that you still jump even if you're a few frames behind
+	self.buffer_jump_timer = self.buffer_jump_timer - 1
+	if Input:action_pressed(self.n, "jump") then
+		self.buffer_jump_timer = 12
+	end
+
+	-- Update air time 
+	self.air_time = self.air_time + dt
+	if self.is_grounded then self.air_time = 0 end
+	if self.air_time < self.jump_air_time and not self.is_grounded then
+		if Input:action_down(self.n, "jump") then
+			self.vy = self.vy - self.air_jump_force
+		end
+	end
+
+	-- Coyote time
+	--FIXME: if you press jump really fast, you can exploit coyote time and double jump 
+	self.coyote_time = self.coyote_time - 1
+	
+	if self.buffer_jump_timer > 0 then
+		-- Detect nearby walls using a collision box
+		local wall_normal = self:get_nearby_wall()
+
+		if self.is_grounded or self.coyote_time > 0 then 
+			-- Regular jump
+			self:jump(dt)
+			self:on_jump()
+
+		elseif wall_normal then
+			-- Conditions for a wall jump ("wall kick")
+			local left_jump  = (wall_normal.x == 1) and Input:action_down(self.n, "right")
+			local right_jump = (wall_normal.x == -1) and Input:action_down(self.n, "left")
+			
+			-- Conditions for a wall jump used for climbing, while sliding ("wall climb")
+			local wall_climb = self.is_wall_sliding
+
+			if left_jump or right_jump or wall_climb then
+				self:wall_jump(wall_normal)
+			end
+			self:on_jump()
+		end
+	end
+end
+
+function Player:get_nearby_wall()
+	-- Returns whether the player is near a wall on its side
+	-- This does not count floor and ceilings
+	local null_filter = function()
+		return "cross"
+	end
+	
+	local box = self.wall_collision_box
+	box.x = self.x - self.wall_jump_margin
+	box.y = self.y - self.wall_jump_margin
+	box.w = self.w + self.wall_jump_margin*2
+	box.h = self.h + self.wall_jump_margin*2
+	Collision:update(box)
+	
+	local x,y, cols, len = Collision:move(box, box.x, box.y, null_filter)
+	for _,col in pairs(cols) do
+		if col.normal.y == 0 and col.other.collision_info and col.other.collision_info.type == COLLISION_TYPE_SOLID then 
+			return col.normal	
+		end
+	end
+
+	return false
+end
+
+function Player:jump(dt)
+	self.vy = -self.jump_speed * self.jump_speed_mult
+	
+	Particles:smoke(self.mid_x, self.y+self.h)
+	Audio:play_var("jump", 0, 1.2)
+	self.jump_squash = 1/4
+end
+
+function Player:wall_jump(normal)
+	self.vx = normal.x * self.wall_jump_kick_speed
+	self.vy = -self.jump_speed * self.jump_speed_mult
+	
+	Audio:play_var("jump", 0, 1.2)
+	self.jump_squash = 1/4
+end
+
+function Player:on_jump()
+	self.buffer_jump_timer = 0
+	self.coyote_time = 0
+end
+
+function Player:on_leaving_ground()
+	self.coyote_time = self.default_coyote_time
+end
+
+function Player:on_leaving_collision()
+	self.coyote_time = self.default_coyote_time
+end
+
+function Player:on_collision(col, other)
+	if col.type ~= "cross" and col.normal.y == -1 then
+		-- self.jumps = self.max_jumps
+	end
+end
+
+function Player:on_grounded()
+	-- On land
+	local s = "metalfootstep_0"..tostring(love.math.random(0,4))
+	if self.grounded_col and self.grounded_col.other.name == "rubble" then
+		s = "gravel_footstep_"..tostring(love.math.random(1,6))
+	end
+	Audio:play_var(s, 0.3, 1, {pitch=0.5, volume=0.5})
+
+	self.jump_squash = 1.5
+	self.spr:set_image(self.skin.spr_idle)
+	Particles:smoke(self.mid_x, self.y+self.h, 10, COL_WHITE, 8, 4, 2)
+
+	self.air_time = 0
+end
+
+------------------------------------------
+--- Guns ---
+
+function Player:shoot(dt, is_burst)
+	if is_burst == nil then     is_burst = false    end
+	-- Update aiming direction
+	local dx, dy = self.dir_x, self.dir_y
+	local aim_horizontal = (Input:action_down(self.n, "left") or Input:action_down(self.n, "right"))
+	-- Allow aiming upwards 
+	if self.dir_y ~= 0 and not aim_horizontal then    dx = 0    end
+
+	-- Update shoot dir
+	self.shoot_ang = atan2(dy, dx)
+	self.shoot_dir_x = cos(self.shoot_ang)
+	self.shoot_dir_y = sin(self.shoot_ang)
+
+	local btn_auto = (self.gun.is_auto and Input:action_down(self.n, "shoot"))
+	local btn_manu = (not self.gun.is_auto and Input:action_pressed(self.n, "shoot"))
+	if btn_auto or btn_manu or is_burst then
+		self.is_shooting = true
+
+		local ox = dx * self.gun.bul_w
+		local oy = dy * self.gun.bul_h
+		local success = self.gun:shoot(dt, self, self.mid_x + ox, self.y + oy, dx, dy, is_burst)
+
+		if success then
+			-- screenshake
+			game:screenshake(self.gun.screenshake)
+			if dx ~= 0 then
+				self.vx = self.vx - self.dir_x * self.gun.recoil_force
+			end
+		end
+
+		if self.is_flying then
+			-- (When elevator is going down)
+			if success then
+				self.vx = (self.vx - dx*self.gun.jetpack_force) * self.friction_x
+				self.vy = (self.vy - dy*self.gun.jetpack_force) * self.friction_x
+			end
+		else
+			-- (Normal behaviour) If shooting downwards, then go up like a jetpack
+			if Input:action_down(self.n, "down") and success then
+				self.vy = self.vy - self.gun.jetpack_force
+				self.vy = self.vy * self.friction_x
+			end
+		end
+	else
+		self.is_shooting = false
+	end
+end
+
+function Player:update_gun_pos(dt, lerpval)
+	-- Why do I keep overcomplicating these things
+	-- TODO: move to Gun?
+	-- Gun is drawn at its center
+	lerpval = lerpval or 0.5
+	 
+	local gunw = self.gun.spr:getWidth()
+	local gunh = self.gun.spr:getHeight()
+	local top_y = self.y + self.h - self.spr.image:getHeight()
+	local hand_oy = 15
+
+	-- x pos is player sprite width minus a bit, plus gun width 
+	local w = (self.spr.image:getWidth()/2-5 + gunw/2)
+	
+	local hand_y = top_y + hand_oy - self.walkbounce_oy
+
+	local tar_x = self.mid_x + self.shoot_dir_x * w
+	local tar_y = hand_y - gunh/2 + self.shoot_dir_y * gunh
+	local ang = self.shoot_ang
+	
+	self.gun.x = lerp(self.gun.x, tar_x, lerpval)
+	self.gun.y = lerp(self.gun.y, tar_y, lerpval)
+
+--[[	local rot_offset = ang - atan2(-self.vy, -self.vx)
+	local d = dist(self.vx, self.vy)
+	rot_offset = rot_offset * 0.2
+	if abs(d) < 0.01 then    rot_offset = 0    end
+--]]
+	self.gun.rot = lerp_angle(self.gun.rot, ang, 0.3)
+end
+
+function Player:do_aiming(dt)
+	self.dir_y = 0
+	if Input:action_down(self.n, "up") then      self.dir_y = -1    end
+	if Input:action_down(self.n, "down") then    self.dir_y = 1     end
+end
+
+function Player:equip_gun(gun)
+	self.gun = gun
+	self.gun.user = self
+
+	self:update_gun_pos(1)
+end
+
+function Player:get_max_ammo_multiplier()
+	return self.max_ammo_multiplier
+end
+function Player:set_max_ammo_multiplier(val)
+	self.max_ammo_multiplier = val
+end
+function Player:multiply_max_ammo_multiplier(val)
+	self.max_ammo_multiplier = self.max_ammo_multiplier * val
+end
+
+function Player:set_gun_cooldown_multiplier(val)
+	self.gun_cooldown_multiplier = val
+end
+function Player:multiply_gun_cooldown_multiplier(val)
+	self.gun_cooldown_multiplier = self.gun_cooldown_multiplier * val
+end
+function Player:get_gun_cooldown_multiplier()
+	return self.gun_cooldown_multiplier
+end
+
+------------------------------------------
+--- Combat ---
+
+function Player:is_in_poison_cloud()
+	local is_touching, col = self:is_touching_collider(function(col) return col.other.is_poisonous end)
+	if col then
+		self.poison_cloud = col.other
+	else
+		self.poison_cloud = nil
+	end
+	return is_touching
+end
+
+function Player:update_poison(dt)
+	if self:is_in_poison_cloud() and not self.is_invincible then
+		self.poison_timer = self.poison_timer + dt
+		if self.poison_timer >= self.poison_damage_time then
+			self:do_damage(1, self.poison_cloud)
+			self.poison_timer = 0.0	
+		end
+	else
+		self.poison_timer = math.max(0.0, self.poison_timer - dt)	
+	end
+end
+
+function Player:on_stomp(enemy)
+	local spd = -self.stomp_jump_speed
+	if Input:action_down(self.n, "jump") or self.buffer_jump_timer > 0 then
+		spd = spd * 1.3
+	end
+	self.vy = spd
+	self:set_invincibility(0.1)
+
+	self.combo = self.combo + 1
+	if self.combo >= 4 then
+		Particles:word(self.mid_x, self.mid_y, tostring(self.combo), COL_LIGHT_BLUE)
+	end
+	
+	-- self.ui_col_gradient = 1
+	-- self.gun.ammo = self.gun.ammo + floor(self.gun.max_ammo*.25)
+	-- self.gun.reload_timer = 0
+end
+
+function Player:on_hit_bullet(bul, col)
+	if bul.player == self then   return   end
+
+	self:do_damage(bul.damage, bul)
+	self.vx = self.vx + sign(bul.vx) * bul.knockback
+end
+
+function Player:apply_upgrade(upgrade)
+	upgrade:on_apply(self)
+	if upgrade.type == UPGRADE_TYPE_TEMPORARY or upgrade.type == UPGRADE_TYPE_PERMANENT then
+		table.insert(self.upgrades, upgrade)
+	end
+end
+
+function Player:update_upgrades(dt)
+	for i, upgrade in pairs(self.upgrades) do
+		upgrade:update(dt)
+	end
+end
+
+function Player:leave_game_if_possible(dt)
+	local is_touching, exit_sign = self:is_touching_collider(function(col) return col.other.is_exit_sign end)
+
+	self.is_touching_exit_sign = is_touching
+	if is_touching then
+		self.controls_oy = lerp(self.controls_oy, -6, 0.3)
+		if Input:action_pressed(self.n, "leave_game") and game.game_state == GAME_STATE_WAITING then
+			exit_sign.other:activate(self)
+		end
+	else
+		self.controls_oy = lerp(self.controls_oy, 0, 0.3)
+	end
+end
+
+function Player:next_gun()
+	self.gun_number = mod_plus_1(self.gun_number + 1, #self.guns)
+	self:equip_gun(self.guns[self.gun_number])
+end
+
+function Player:apply_effect(effect, duration)
+	effect:apply(self, duration)
+	table.insert(self.effects, effect)
+end
+
+function Player:update_effects(dt)
+	for i=1, #self.effects do 
+		local effect = self.effects[i]
+		effect:update(dt, self)
+	end
+	
+	for i=#self.effects, 1, -1 do 
+		local effect = self.effects[i]
+		if not effect.is_active then
+			table.remove(self.effects, i)
+		end
+	end
+end
+
+function Player:post_draw(x, y)
+	self:draw_effect_overlays(x, y)
+end
+
+function Player:draw_effect_overlays(x, y)
+	for i, effect in pairs(self.effects) do
+		effect:draw_overlay(x, y)
+	end 
+end
+
+function Player:update_combo(dt)
 	-- Stop combo if landed for more than a few frames
 	if self.frames_since_land > 3 then
 		if self.combo > self.max_combo then
@@ -213,19 +767,17 @@ function Player:update(dt)
 		end
 		self.combo = 0
 	end
+end
 
-	self.gun:update(dt)
-	self:shoot(dt, false)
-	self:update_gun_pos(dt)
+-----------------------------------------------------
+--- Visuals ---
 
-	self.ui_x = lerp(self.ui_x, floor(self.mid_x), 0.2)
-	self.ui_y = lerp(self.ui_y, floor(self.y), 0.2)
+function Player:update_visuals()
+	self.jump_squash       = lerp(self.jump_squash,       1, 0.2)
+	self.walkbounce_squash = lerp(self.walkbounce_squash, 1, 0.2)
+	self.squash = self.jump_squash * self.walkbounce_squash
 
-	--Visuals
-	self:update_visuals()
-	if self:is_in_poison_cloud() then
-		Particles:dust(self.mid_x + random_neighbor(7), self.mid_y + random_neighbor(7), random_sample{color(0x3e8948), color(0x265c42), color(0x193c3e)})
-	end
+	self.spr:set_scale(self.squash, 1/self.squash)
 end
 
 function Player:draw()
@@ -380,457 +932,6 @@ function Player:draw_player()
 	self:post_draw(post_x, post_y)
 end
 
-function Player:set_player_n(n)
-	self.n = n
-end
-
-function Player:set_life(val)
-	self.life = clamp(val, 0, self.max_life)
-end
-
-function Player:heal(val)
-	local overflow = self.max_life - (self.life + val)
-	if overflow >= 0 then
-		self.life = self.life + val
-		return true
-	else
-		self.life = self.max_life
-		return false, -overflow
-	end
-end
-
-function Player:add_max_life(val)
-	self.max_life = self.max_life + val
-end
-
-function Player:add_temporary_life(val)
-	self.temporary_life = self.temporary_life + val
-end
-
-function Player:move(dt)
-	-- compute movement dir
-	local dir = {x=0, y=0}
-	if Input:action_down(self.n, 'left') then   dir.x = dir.x - 1   end
-	if Input:action_down(self.n, 'right') then   dir.x = dir.x + 1   end
-
-	if dir.x ~= 0 then
-		self.dir_x = dir.x
-
-		-- If not shooting, update shooting direction
-		if not self.is_shooting then
-			-- self.shoot_dir_x = dir.x
-			-- self.shoot_dir
-		end
-	end
-
-	-- Apply velocity 
-	self.vx = self.vx + dir.x * self.speed * self.speed_mult
-	self.vy = self.vy + dir.y * self.speed * self.speed_mult
-end
-
-function Player:do_invincibility(dt)
-	self.iframes = max(0, self.iframes - dt)
-
-	self.is_invincible = false
-	if self.iframes > 0 and game.frames_to_skip <= 0 then
-		self.is_invincible = true
-		self.iframe_blink_timer = (self.iframe_blink_timer + dt) % self.iframe_blink_freq
-	end
-end
-
-function Player:set_invincibility(n)
-	self.iframes = math.max(n, self.iframes)
-end
-
-function Player:do_wall_sliding(dt)
-	-- Check if wall sliding
-	self.is_wall_sliding = false
-	self.is_walled = false
-
-	self.sfx_wall_slide_volume = lerp(self.sfx_wall_slide_volume, 0, 0.3)
-	self.sfx_wall_slide:setVolume(self.sfx_wall_slide_volume)
-
-	if self.wall_col then
-		local col_normal = self.wall_col.normal
-		local is_walled = (col_normal.y == 0)
-		local is_falling = (self.vy > 0)
-		local holding_left = Input:action_down(self.n, 'left') and col_normal.x == 1
-		local holding_right = Input:action_down(self.n, 'right') and col_normal.x == -1
-		
-		local is_wall_sliding = is_walled and is_falling and (holding_left or holding_right) 
-			and (self.wall_col.other.collision_info and self.wall_col.other.collision_info.is_slidable)
-		self.is_wall_sliding = is_wall_sliding
-		self.is_walled = is_walled
-	end
-
-	
-	-- Perform wall sliding
-	if self.is_wall_sliding then
-		-- Orient player opposite if wall sliding
-		self.dir_x = self.wall_col.normal.x
-		self.shoot_dir_x = self.wall_col.normal.x
-	
-		-- Slow down descent
-		self.gravity = 0
-		self.vy = self.wall_slide_speed
-
-		-- Particles
-		self.wall_slide_particle_timer = self.wall_slide_particle_timer + 1
-		if self.wall_slide_particle_timer % 1 == 0 then
-			Particles:dust(self.mid_x + (self.w/2) * -self.dir_x, self.y)
-		end
-
-		-- SFX
-		self.sfx_wall_slide_volume = lerp(self.sfx_wall_slide_volume, self.sfx_wall_slide_max_volume, 0.3)
-		self.sfx_wall_slide:setVolume(self.sfx_wall_slide_volume)
-	else
-		self.gravity = self.default_gravity
-	end
-end
-
-function Player:do_jumping(dt)
-	-- This buffer is so that you still jump even if you're a few frames behind
-	self.buffer_jump_timer = self.buffer_jump_timer - 1
-	if Input:action_pressed(self.n, "jump") then
-		self.buffer_jump_timer = 12
-	end
-
-	-- Update air time 
-	self.air_time = self.air_time + dt
-	if self.is_grounded then self.air_time = 0 end
-	if self.air_time < self.jump_air_time and not self.is_grounded then
-		if Input:action_down(self.n, "jump") then
-			self.vy = self.vy - self.air_jump_force
-		end
-	end
-
-	-- Coyote time
-	--FIXME: if you press jump really fast, you can exploit coyote time and double jump 
-	self.coyote_time = self.coyote_time - 1
-	
-	if self.buffer_jump_timer > 0 then
-		-- Detect nearby walls using a collision box
-		local wall_normal = self:get_nearby_wall()
-
-		if self.is_grounded or self.coyote_time > 0 then 
-			-- Regular jump
-			self:jump(dt)
-			self:on_jump()
-
-		elseif wall_normal then
-			-- Conditions for a wall jump ("wall kick")
-			local left_jump  = (wall_normal.x == 1) and Input:action_down(self.n, "right")
-			local right_jump = (wall_normal.x == -1) and Input:action_down(self.n, "left")
-			
-			-- Conditions for a wall jump used for climbing, while sliding ("wall climb")
-			local wall_climb = self.is_wall_sliding
-
-			if left_jump or right_jump or wall_climb then
-				self:wall_jump(wall_normal)
-			end
-			self:on_jump()
-		end
-	end
-end
-
-function Player:get_nearby_wall()
-	-- Returns whether the player is near a wall on its side
-	-- This does not count floor and ceilings
-	local null_filter = function()
-		return "cross"
-	end
-	
-	local box = self.wall_collision_box
-	box.x = self.x - self.wall_jump_margin
-	box.y = self.y - self.wall_jump_margin
-	box.w = self.w + self.wall_jump_margin*2
-	box.h = self.h + self.wall_jump_margin*2
-	Collision:update(box)
-	
-	local x,y, cols, len = Collision:move(box, box.x, box.y, null_filter)
-	for _,col in pairs(cols) do
-		if col.normal.y == 0 and col.other.collision_info and col.other.collision_info.type == COLLISION_TYPE_SOLID then 
-			return col.normal	
-		end
-	end
-
-	return false
-end
-
-function Player:jump(dt)
-	self.vy = -self.jump_speed * self.jump_speed_mult
-	
-	Particles:smoke(self.mid_x, self.y+self.h)
-	Audio:play_var("jump", 0, 1.2)
-	self.jump_squash = 1/4
-end
-
-function Player:wall_jump(normal)
-	self.vx = normal.x * self.wall_jump_kick_speed
-	self.vy = -self.jump_speed * self.jump_speed_mult
-	
-	Audio:play_var("jump", 0, 1.2)
-	self.jump_squash = 1/4
-end
-
-function Player:on_jump()
-	self.buffer_jump_timer = 0
-	self.coyote_time = 0
-end
-
-function Player:on_leaving_ground()
-	self.coyote_time = self.default_coyote_time
-end
-
-function Player:on_leaving_collision()
-	self.coyote_time = self.default_coyote_time
-end
-
-function Player:on_removed()
-	Collision:remove(self.wall_collision_box)
-end
-
-function Player:kill()
-	if self.is_dead then return end
-	
-	game:screenshake(10)
-	game:frameskip(30)
-	Input:vibrate(self.n, 0.6, 0.4)
-
-	if game:get_number_of_alive_players() > 1 then 
-		local fainted_player = Enemies.FaintedPlayer:new(self.x, self.y, self)
-		game:new_actor(fainted_player)
-	else
-		local ox, oy = self.spr:get_total_centered_offset_position(self.x, self.y, self.w, self.h)
-		Particles:dead_player(ox, oy, self.skin.spr_dead, self.color_palette, self.dir_x)
-	end
-
-	self:on_death()
-	game:on_kill(self)
-	
-	self.timer_before_death = self.max_timer_before_death
-	Audio:play("death")
-
-	self.is_dead = true
-	self:remove()
-end
-
-function Player:on_death()
-	
-end
-
-function Player:shoot(dt, is_burst)
-	if is_burst == nil then     is_burst = false    end
-	-- Update aiming direction
-	local dx, dy = self.dir_x, self.dir_y
-	local aim_horizontal = (Input:action_down(self.n, "left") or Input:action_down(self.n, "right"))
-	-- Allow aiming upwards 
-	if self.dir_y ~= 0 and not aim_horizontal then    dx = 0    end
-
-	-- Update shoot dir
-	self.shoot_ang = atan2(dy, dx)
-	self.shoot_dir_x = cos(self.shoot_ang)
-	self.shoot_dir_y = sin(self.shoot_ang)
-
-	local btn_auto = (self.gun.is_auto and Input:action_down(self.n, "shoot"))
-	local btn_manu = (not self.gun.is_auto and Input:action_pressed(self.n, "shoot"))
-	if btn_auto or btn_manu or is_burst then
-		self.is_shooting = true
-
-		local ox = dx * self.gun.bul_w
-		local oy = dy * self.gun.bul_h
-		local success = self.gun:shoot(dt, self, self.mid_x + ox, self.y + oy, dx, dy, is_burst)
-
-		if success then
-			-- screenshake
-			game:screenshake(self.gun.screenshake)
-			if dx ~= 0 then
-				self.vx = self.vx - self.dir_x * self.gun.recoil_force
-			end
-		end
-
-		if self.is_flying then
-			-- (When elevator is going down)
-			if success then
-				self.vx = (self.vx - dx*self.gun.jetpack_force) * self.friction_x
-				self.vy = (self.vy - dy*self.gun.jetpack_force) * self.friction_x
-			end
-		else
-			-- (Normal behaviour) If shooting downwards, then go up like a jetpack
-			if Input:action_down(self.n, "down") and success then
-				self.vy = self.vy - self.gun.jetpack_force
-				self.vy = self.vy * self.friction_x
-			end
-		end
-	else
-		self.is_shooting = false
-	end
-end
-
-function Player:update_gun_pos(dt, lerpval)
-	-- Why do I keep overcomplicating these things
-	-- TODO: move to Gun?
-	-- Gun is drawn at its center
-	lerpval = lerpval or 0.5
-	 
-	local gunw = self.gun.spr:getWidth()
-	local gunh = self.gun.spr:getHeight()
-	local top_y = self.y + self.h - self.spr.image:getHeight()
-	local hand_oy = 15
-
-	-- x pos is player sprite width minus a bit, plus gun width 
-	local w = (self.spr.image:getWidth()/2-5 + gunw/2)
-	
-	local hand_y = top_y + hand_oy - self.walkbounce_oy
-
-	local tar_x = self.mid_x + self.shoot_dir_x * w
-	local tar_y = hand_y - gunh/2 + self.shoot_dir_y * gunh
-	local ang = self.shoot_ang
-	
-	self.gun.x = lerp(self.gun.x, tar_x, lerpval)
-	self.gun.y = lerp(self.gun.y, tar_y, lerpval)
-
---[[	local rot_offset = ang - atan2(-self.vy, -self.vx)
-	local d = dist(self.vx, self.vy)
-	rot_offset = rot_offset * 0.2
-	if abs(d) < 0.01 then    rot_offset = 0    end
---]]
-	self.gun.rot = lerp_angle(self.gun.rot, ang, 0.3)
-end
-
-function Player:is_in_poison_cloud()
-	local is_touching, col = self:is_touching_collider(function(col) return col.other.is_poisonous end)
-	if col then
-		self.poison_cloud = col.other
-	else
-		self.poison_cloud = nil
-	end
-	return is_touching
-end
-
-function Player:update_poison(dt)
-	if self:is_in_poison_cloud() and not self.is_invincible then
-		self.poison_timer = self.poison_timer + dt
-		if self.poison_timer >= self.poison_damage_time then
-			self:do_damage(1, self.poison_cloud)
-			self.poison_timer = 0.0	
-		end
-	else
-		self.poison_timer = math.max(0.0, self.poison_timer - dt)	
-	end
-end
-
-function Player:on_collision(col, other)
-	if col.type ~= "cross" and col.normal.y == -1 then
-		-- self.jumps = self.max_jumps
-	end
-end
-
-function Player:on_stomp(enemy)
-	local spd = -self.stomp_jump_speed
-	if Input:action_down(self.n, "jump") or self.buffer_jump_timer > 0 then
-		spd = spd * 1.3
-	end
-	self.vy = spd
-	self:set_invincibility(0.1)
-
-	self.combo = self.combo + 1
-	if self.combo >= 4 then
-		Particles:word(self.mid_x, self.mid_y, tostring(self.combo), COL_LIGHT_BLUE)
-	end
-	
-	-- self.ui_col_gradient = 1
-	-- self.gun.ammo = self.gun.ammo + floor(self.gun.max_ammo*.25)
-	-- self.gun.reload_timer = 0
-end
-
-function Player:do_damage(n, source)
-	if self.iframes > 0 then    return    end
-	if n <= 0 then    return    end
-
-	if Input:get_number_of_users() == 1 then
-		game:frameskip(8)
-	end
-	game:screenshake(5)
-	Input:vibrate(self.n, 0.3, 0.45)
-	Audio:play("hurt")
-	Particles:word(self.mid_x, self.mid_y, concat("-",n), COL_LIGHT_RED)
-	
-	if self.is_knockbackable and source then
-		self.vx = self.vx + sign(self.mid_x - source.mid_x)*source.knockback
-		self.vy = self.vy - 50
-	end
-
-	local old_temporary_life = self.temporary_life
-	self:subtract_life(n)
-	local temporary_life_diff = old_temporary_life - self.temporary_life
-	if temporary_life_diff > 0 then
-		--                                            x, y, number,     spr,             spw_rad, life, vs, g, parms
-		Particles:image(self.ui_x, self.ui_y - 16, temporary_life_diff, images.particle_leaf, 5, 1.5, 0.6, 0.5)
-	end
-	
-	self:set_invincibility(self.max_iframes)
-	
-	if self.life <= 0 then
-		self.life = 0 
-		self:kill()
-	end
-end
-
-function Player:subtract_life(n)
-	if self.temporary_life > 0 then
-		self.temporary_life = self.temporary_life - n
-		n = math.max(0, -self.temporary_life)
-		self.temporary_life = math.max(0, self.temporary_life)
-	end
-
-	self.life = self.life - n
-	self.life = math.max(0, self.life)
-end
-
-function Player:on_hit_bullet(bul, col)
-	if bul.player == self then   return   end
-
-	self:do_damage(bul.damage, bul)
-	self.vx = self.vx + sign(bul.vx) * bul.knockback
-end
-
-function Player:update_visuals()
-	self.jump_squash       = lerp(self.jump_squash,       1, 0.2)
-	self.walkbounce_squash = lerp(self.walkbounce_squash, 1, 0.2)
-	self.squash = self.jump_squash * self.walkbounce_squash
-
-	self.spr:set_scale(self.squash, 1/self.squash)
-end
-
-function Player:on_grounded()
-	-- On land
-	local s = "metalfootstep_0"..tostring(love.math.random(0,4))
-	if self.grounded_col and self.grounded_col.other.name == "rubble" then
-		s = "gravel_footstep_"..tostring(love.math.random(1,6))
-	end
-	Audio:play_var(s, 0.3, 1, {pitch=0.5, volume=0.5})
-
-	self.jump_squash = 1.5
-	self.spr:set_image(self.skin.spr_idle)
-	Particles:smoke(self.mid_x, self.y+self.h, 10, COL_WHITE, 8, 4, 2)
-
-	self.air_time = 0
-end
-
-function Player:do_aiming(dt)
-	self.dir_y = 0
-	if Input:action_down(self.n, "up") then      self.dir_y = -1    end
-	if Input:action_down(self.n, "down") then    self.dir_y = 1     end
-end
-
-function Player:equip_gun(gun)
-	self.gun = gun
-	self.gun.user = self
-
-	self:update_gun_pos(1)
-end
-
 function Player:animate_walk(dt)
 	-- Ridiculously overengineered bounce + squash & stretch while walking
 	local old_bounce = self.walkbounce_oy
@@ -930,89 +1031,6 @@ function Player:do_particles(dt)
 			Particles:dust(self.mid_x, flr_y)
 		end
 	end
-end
-
-function Player:apply_upgrade(upgrade)
-	upgrade:on_apply(self)
-	if upgrade.type == UPGRADE_TYPE_TEMPORARY or upgrade.type == UPGRADE_TYPE_PERMANENT then
-		table.insert(self.upgrades, upgrade)
-	end
-end
-
-function Player:update_upgrades(dt)
-	for i, upgrade in pairs(self.upgrades) do
-		upgrade:update(dt)
-	end
-end
-
-function Player:leave_game_if_possible(dt)
-	local is_touching, exit_sign = self:is_touching_collider(function(col) return col.other.is_exit_sign end)
-
-	self.is_touching_exit_sign = is_touching
-	if is_touching then
-		self.controls_oy = lerp(self.controls_oy, -6, 0.3)
-		if Input:action_pressed(self.n, "leave_game") and game.game_state == GAME_STATE_WAITING then
-			exit_sign.other:activate(self)
-		end
-	else
-		self.controls_oy = lerp(self.controls_oy, 0, 0.3)
-	end
-end
-
-function Player:next_gun()
-	self.gun_number = mod_plus_1(self.gun_number + 1, #self.guns)
-	self:equip_gun(self.guns[self.gun_number])
-end
-
-
-function Player:apply_effect(effect, duration)
-	effect:apply(self, duration)
-	table.insert(self.effects, effect)
-end
-
-function Player:update_effects(dt)
-	for i=1, #self.effects do 
-		local effect = self.effects[i]
-		effect:update(dt, self)
-	end
-	
-	for i=#self.effects, 1, -1 do 
-		local effect = self.effects[i]
-		if not effect.is_active then
-			table.remove(self.effects, i)
-		end
-	end
-end
-
-function Player:post_draw(x, y)
-	self:draw_effect_overlays(x, y)
-end
-
-function Player:draw_effect_overlays(x, y)
-	for i, effect in pairs(self.effects) do
-		effect:draw_overlay(x, y)
-	end 
-end
-
-function Player:get_max_ammo_multiplier()
-	return self.max_ammo_multiplier
-end
-function Player:set_max_ammo_multiplier(val)
-	self.max_ammo_multiplier = val
-end
-function Player:multiply_max_ammo_multiplier(val)
-	self.max_ammo_multiplier = self.max_ammo_multiplier * val
-end
-
-function Player:set_gun_cooldown_multiplier(val)
-	self.gun_cooldown_multiplier = val
-end
-function Player:multiply_gun_cooldown_multiplier(val)
-	self.gun_cooldown_multiplier = self.gun_cooldown_multiplier * val
-end
-
-function Player:get_gun_cooldown_multiplier()
-	return self.gun_cooldown_multiplier
 end
 
 return Player
