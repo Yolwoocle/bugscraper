@@ -393,11 +393,12 @@ function ParticleSystem:smoke_big(x, y)
 	self:smoke(x, y, 15, COL_WHITE, 16, 8, 4)
 end
 
-function ParticleSystem:smoke(x, y, number, col, spw_rad, size, sizevar)
+function ParticleSystem:smoke(x, y, number, col, spw_rad, size, sizevar, is_front)
 	number = number or 10
 	spw_rad = spw_rad or 8
 	size = size or 4
 	sizevar = sizevar or 2
+	is_front = param(is_front, true)
 
 	for i=1,number do
 		local ang = love.math.random() * pi2
@@ -407,7 +408,9 @@ function ParticleSystem:smoke(x, y, number, col, spw_rad, size, sizevar)
 		
 		local v = random_range(0.6, 1)
 		local col = col or {v,v,v,1}
-		self:add_particle(CircleParticle:new(x+dx, y+dy, size+dsize, col, 0, 0, _vr, _life))
+		local particle = CircleParticle:new(x+dx, y+dy, size+dsize, col, 0, 0, _vr, _life)
+		particle.is_front = is_front
+		self:add_particle(particle)
 	end
 end
 

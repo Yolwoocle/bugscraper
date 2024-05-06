@@ -148,6 +148,8 @@ function Player:init(n, x, y, skin)
 	-- Combo
 	self.combo = 0
 	self.max_combo = 0
+	self.fury_bar = 0.0
+	self.fury_threshold = 2.6
 
 	-- Upgrades
 	self.upgrades = {}
@@ -165,7 +167,6 @@ function Player:init(n, x, y, skin)
 	self.dt = 1
 end
 
-local igun = 1
 function Player:update(dt)
 	self.dt = dt
 	
@@ -205,8 +206,11 @@ function Player:update(dt)
 	self:shoot(dt, false)
 	self:update_gun_pos(dt)
 
-	self.ui_x = lerp(self.ui_x, floor(self.mid_x), 0.2)
-	self.ui_y = lerp(self.ui_y, floor(self.y), 0.2)
+	self.ui_x = lerp(self.ui_x, floor(self.mid_x), 0.1)
+	self.ui_y = lerp(self.ui_y, floor(self.y), 0.1)
+
+	-- self.ui_x = CANVAS_WIDTH/2
+	-- self.ui_y = 50
 
 	--Visuals
 	self:update_visuals()
@@ -293,8 +297,8 @@ function Player:on_removed()
 end
 
 function Player:do_damage(n, source)
-	if self.iframes > 0 then    return    end
-	if n <= 0 then    return    end
+	if self.iframes > 0 then    return false   end
+	if n <= 0 then    return false   end
 
 	if Input:get_number_of_users() == 1 then
 		game:frameskip(8)
@@ -323,6 +327,8 @@ function Player:do_damage(n, source)
 		self.life = 0 
 		self:kill()
 	end
+
+	return true
 end
 
 function Player:subtract_life(n)
@@ -641,8 +647,89 @@ function Player:get_gun_cooldown_multiplier()
 	return self.gun_cooldown_multiplier
 end
 
+function Player:next_gun()
+	self.gun_number = mod_plus_1(self.gun_number + 1, #self.guns)
+	self:equip_gun(self.guns[self.gun_number])
+end
+
 ------------------------------------------
 --- Combat ---
+
+function Player:on_stomp(enemy)
+	local spd = -self.stomp_jump_speed
+	if Input:action_down(self.n, "jump") or self.buffer_jump_timer > 0 then
+		spd = spd * 1.3
+	end
+	self.vy = spd
+	self:set_invincibility(0.1)
+
+	self.combo = self.combo + 1
+	if self.combo >= 4 then
+		-- Particles:word(self.mid_x, self.mid_y, tostring(self.combo), COL_LIGHT_BLUE)
+	end
+
+	self:add_combo(0.8)
+	
+	-- self.ui_col_gradient = 1
+	-- self.gun.ammo = self.gun.ammo + floor(self.gun.max_ammo*.25)
+	-- self.gun.reload_timer = 0
+end
+
+--- When an enemy bullet hits the player
+function Player:on_hit_bullet(bullet, col)
+	if bullet.player == self then   return   end
+
+	self:do_damage(bullet.damage, bullet)
+	self.vx = self.vx + sign(bullet.vx) * bullet.knockback
+	return true
+end
+
+--- When a bullet the player shot hits an enemy
+function Player:on_my_bullet_hit(bullet, victim, col)
+	-- Why tf would this happen
+	if bullet.player ~= self then   return   end
+
+	self:add_combo(bullet.damage / 7)
+end
+
+------------------------------------------
+--- Upgrades & effects ---
+
+function Player:apply_upgrade(upgrade)
+	upgrade:on_apply(self)
+	if upgrade.type == UPGRADE_TYPE_TEMPORARY or upgrade.type == UPGRADE_TYPE_PERMANENT then
+		table.insert(self.upgrades, upgrade)
+	end
+end
+
+function Player:update_upgrades(dt)
+	for i, upgrade in pairs(self.upgrades) do
+		upgrade:update(dt)
+	end
+end
+
+function Player:apply_effect(effect, duration)
+	effect:apply(self, duration)
+	table.insert(self.effects, effect)
+end
+
+function Player:update_effects(dt)
+	for i=1, #self.effects do 
+		local effect = self.effects[i]
+		effect:update(dt, self)
+	end
+	
+	for i=#self.effects, 1, -1 do 
+		local effect = self.effects[i]
+		if not effect.is_active then
+			table.remove(self.effects, i)
+		end
+	end
+end
+
+
+------------------------------------------
+--- Misc ---
 
 function Player:is_in_poison_cloud()
 	local is_touching, col = self:is_touching_collider(function(col) return col.other.is_poisonous end)
@@ -666,44 +753,6 @@ function Player:update_poison(dt)
 	end
 end
 
-function Player:on_stomp(enemy)
-	local spd = -self.stomp_jump_speed
-	if Input:action_down(self.n, "jump") or self.buffer_jump_timer > 0 then
-		spd = spd * 1.3
-	end
-	self.vy = spd
-	self:set_invincibility(0.1)
-
-	self.combo = self.combo + 1
-	if self.combo >= 4 then
-		Particles:word(self.mid_x, self.mid_y, tostring(self.combo), COL_LIGHT_BLUE)
-	end
-	
-	-- self.ui_col_gradient = 1
-	-- self.gun.ammo = self.gun.ammo + floor(self.gun.max_ammo*.25)
-	-- self.gun.reload_timer = 0
-end
-
-function Player:on_hit_bullet(bul, col)
-	if bul.player == self then   return   end
-
-	self:do_damage(bul.damage, bul)
-	self.vx = self.vx + sign(bul.vx) * bul.knockback
-end
-
-function Player:apply_upgrade(upgrade)
-	upgrade:on_apply(self)
-	if upgrade.type == UPGRADE_TYPE_TEMPORARY or upgrade.type == UPGRADE_TYPE_PERMANENT then
-		table.insert(self.upgrades, upgrade)
-	end
-end
-
-function Player:update_upgrades(dt)
-	for i, upgrade in pairs(self.upgrades) do
-		upgrade:update(dt)
-	end
-end
-
 function Player:leave_game_if_possible(dt)
 	local is_touching, exit_sign = self:is_touching_collider(function(col) return col.other.is_exit_sign end)
 
@@ -718,55 +767,29 @@ function Player:leave_game_if_possible(dt)
 	end
 end
 
-function Player:next_gun()
-	self.gun_number = mod_plus_1(self.gun_number + 1, #self.guns)
-	self:equip_gun(self.guns[self.gun_number])
-end
-
-function Player:apply_effect(effect, duration)
-	effect:apply(self, duration)
-	table.insert(self.effects, effect)
-end
-
-function Player:update_effects(dt)
-	for i=1, #self.effects do 
-		local effect = self.effects[i]
-		effect:update(dt, self)
-	end
-	
-	for i=#self.effects, 1, -1 do 
-		local effect = self.effects[i]
-		if not effect.is_active then
-			table.remove(self.effects, i)
-		end
-	end
-end
-
-function Player:post_draw(x, y)
-	self:draw_effect_overlays(x, y)
-end
-
-function Player:draw_effect_overlays(x, y)
-	for i, effect in pairs(self.effects) do
-		effect:draw_overlay(x, y)
-	end 
-end
-
 function Player:update_combo(dt)
-	-- Stop combo if landed for more than a few frames
-	if self.frames_since_land > 3 then
-		if self.combo > self.max_combo then
-			if self.combo > game.max_combo then
-				game.max_combo = self.combo
-			end
-			self.max_combo = self.combo
-		end
-		
-		if self.combo >= 4 then
-			Particles:word(self.mid_x, self.mid_y, Text:text("game.combo", self.combo), COL_LIGHT_BLUE)
-		end
-		self.combo = 0
+	if game:get_enemy_count() > 0 then
+		self.fury_bar = math.max(self.fury_bar - dt, 0.0)
 	end
+	self.fury_active = (self.fury_bar >= self.fury_threshold)
+	if self.fury_active then
+		Particles:smoke(self.mid_x, self.mid_y, 1, COL_LIGHT_YELLOW, nil, nil, nil, false)
+	end
+end
+
+function Player:add_combo(val)
+	self.fury_bar = self.fury_bar + val
+end
+
+function Player:set_combo(val)
+	self.fury_bar = val
+end
+
+function Player:new_best_combo()
+	if self.combo > game.max_combo then
+		game.max_combo = self.combo
+	end
+	self.max_combo = self.combo
 end
 
 -----------------------------------------------------
@@ -798,7 +821,7 @@ function Player:draw_hud()
 	if self.is_removed or self.is_dead then    return    end
 
 	local ui_x = floor(self.ui_x)
-	local ui_y = floor(self.ui_y) - self.spr.image:getHeight() - 6
+	local ui_y = floor(self.ui_y) - self.spr.image:getHeight() - 12
 
 	self:draw_life_bar(ui_x, ui_y)
 	self:draw_ammo_bar(ui_x, ui_y)
@@ -845,8 +868,17 @@ function Player:draw_ammo_bar(ui_x, ui_y)
 		col_shad = lerp_color(col_fill, COL_LIGHTEST_GRAY, self.ui_col_gradient)
 	end
 
-	ui:draw_progress_bar(x+ammo_icon_w+2, y, slider_w, ammo_icon_w, val, maxval, 
+	-- (x, y, w, h, val, max_val, col_fill, col_out, col_fill_shadow, text, text_col, font);
+	local bar_x = x+ammo_icon_w+2
+	ui:draw_progress_bar(bar_x, y, slider_w, ammo_icon_w, val, maxval, 
 						col_fill, COL_BLACK_BLUE, col_shad, text)
+	ui:draw_progress_bar(bar_x, y+ammo_icon_w-1, slider_w, 4, self.fury_bar, self.fury_threshold, 
+						ternary(game.t % 0.2 <= 0.1, COL_LIGHT_YELLOW, COL_WHITE), COL_BLACK_BLUE, COL_ORANGE)
+
+	-- Fury bar
+	-- print_outline(nil, nil, concat("enms ", game:get_enemy_count()), ui_x + 20, ui_y-15)
+	-- print_outline(nil, nil, concat(round(self.fury_bar, 1)), ui_x-10, ui_y+15)
+	-- rect_color(COL_LIGHT_YELLOW, "fill", ui_x-10, ui_y+15, self.fury_bar*10, 3)
 end
 
 function Player:get_controls_tutorial_values()
@@ -881,7 +913,7 @@ function Player:draw_controls()
 	local tutorials = self:get_controls_tutorial_values()
 
 	local x = self.ui_x
-	local y = self.ui_y - 32 + self.controls_oy
+	local y = self.ui_y - 40 + self.controls_oy
 	-- local x = (CANVAS_WIDTH * 0.15) + (CANVAS_WIDTH * 0.9) * (self.n-1)/4
 	-- local y = 140
 
@@ -930,6 +962,16 @@ function Player:draw_player()
 
 	local post_x, post_y = self.spr:get_total_offset_position(self.x, self.y, self.w, self.h)
 	self:post_draw(post_x, post_y)
+end
+
+function Player:post_draw(x, y)
+	self:draw_effect_overlays(x, y)
+end
+
+function Player:draw_effect_overlays(x, y)
+	for i, effect in pairs(self.effects) do
+		effect:draw_overlay(x, y)
+	end 
 end
 
 function Player:animate_walk(dt)
@@ -1032,5 +1074,6 @@ function Player:do_particles(dt)
 		end
 	end
 end
+
 
 return Player

@@ -119,9 +119,9 @@ function Level:set_bounds(rect)
 end
 
 function Level:check_for_next_wave(dt)
-	if (#self.enemy_buffer == 0 and game.enemy_count <= 0) or self.force_next_wave_flag then
+	if (#self.enemy_buffer == 0 and game:get_enemy_count() <= 0) or self.force_next_wave_flag then
 		self.force_next_wave_flag = false
-		game.enemy_count = 0
+		-- game.enemy_count = 0
 		
 		self:new_wave_buffer_enemies()
 	end

@@ -107,7 +107,6 @@ function Game:new_game()
 	
 	-- Actors
 	self.actor_limit = 100
-	self.enemy_count = 0
 	self.actors = {}
 	self:init_players()
 
@@ -298,7 +297,6 @@ function Game:update_main_game(dt)
 	end
 	self.t = self.t + dt
 
-	self:count_enemies()
 	self:listen_for_player_join(dt)
 	
 	self.level:update(dt)
@@ -315,13 +313,14 @@ function Game:update_main_game(dt)
 
 end
 
-function Game:count_enemies()
-	self.enemy_count = 0
+function Game:get_enemy_count()
+	local enemy_count = 0
 	for _, actor in pairs(self.actors) do
-		if actor.counts_as_enemy then
-			self.enemy_count = self.enemy_count + 1
+		if actor.is_active and actor.counts_as_enemy then
+			enemy_count = enemy_count + 1
 		end
 	end
+	return enemy_count
 end
 
 function Game:update_actors(dt)
@@ -474,12 +473,7 @@ function Game:draw_game()
 		self:draw_smoke_canvas()
 		self.level:draw_front()
 
-		Particles:draw_front()
-		
-		rect_color(COL_CYAN,  "line", self.level.door_rect.ax, self.level.door_rect.ay, self.level.door_rect.bx-self.level.door_rect.ax, self.level.door_rect.by-self.level.door_rect.ay)
-		rect_color(COL_RED,   "line", self.level.cabin_rect.ax, self.level.cabin_rect.ay, self.level.cabin_rect.bx-self.level.cabin_rect.ax, self.level.cabin_rect.by-self.level.cabin_rect.ay)
-		rect_color(COL_GREEN, "line", self.level.cabin_inner_rect.ax, self.level.cabin_inner_rect.ay, self.level.cabin_inner_rect.bx-self.level.cabin_inner_rect.ax, self.level.cabin_inner_rect.by-self.level.cabin_inner_rect.ay)
-		
+		Particles:draw_front()		
 	end)
 
 	-----------------------------------------------------

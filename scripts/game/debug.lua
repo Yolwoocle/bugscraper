@@ -394,7 +394,7 @@ function Debug:draw_info_view()
 		concat("cam tpos: ", concatsep({game.camera:get_target_position()})),
 		concat("n° of active audio sources: ", love.audio.getActiveSourceCount()),
 		concat("n° of actors: ", #self.game.actors, " / ", self.game.actor_limit),
-		concat("n° of enemies: ", self.game.enemy_count),
+		concat("n° of enemies: ", self.game:get_enemy_count()),
 		concat("n° collision items: ", Collision.world:countItems()),
 		concat("windowed_w: ", Options:get("windowed_width")),
 		concat("windowed_h: ", Options:get("windowed_height")),

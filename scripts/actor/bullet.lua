@@ -67,7 +67,11 @@ function Bullet:on_collision(col)
 	end
 	
 	if col.other.on_hit_bullet and col.other.is_enemy ~= self.is_enemy_bul then
-		col.other:on_hit_bullet(self, col)
+		local damaged = col.other:on_hit_bullet(self, col)
+		if damaged and self.player and self.player.is_player then
+			self.player:on_my_bullet_hit(self, col.other, col)
+		end
+
 		if col.other.destroy_bullet_on_impact then
 			local s = "metalfootstep_0"..tostring(love.math.random(0,4))
 			Audio:play_var(s, 0.3, 1, {pitch=0.7, volume=0.5})
