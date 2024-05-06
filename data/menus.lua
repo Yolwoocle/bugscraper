@@ -462,7 +462,7 @@ local function generate_menus()
             return time_to_string(game.stats.time)
         end },
         { StatsMenuItem, Text:text("menu.game_over.floor"), function(self) return concat(game.stats.floor, "/", game.level.max_floor) end },
-        { StatsMenuItem, Text:text("menu.game_over.max_combo"), function(self) return concat(game.stats.max_combo) end },
+        -- { StatsMenuItem, Text:text("menu.game_over.max_combo"), function(self) return concat(game.stats.max_combo) end },
         { "" },
         { Text:text("menu.game_over.continue"), function() game:new_game() end },
         { "" },
@@ -555,7 +555,7 @@ local function generate_menus()
             return time_to_string(game.stats.time)
         end },
         { StatsMenuItem, Text:text("menu.game_over.floor"), function(self) return concat(game.stats.floor, "/", game.level.max_floor) end },
-        { StatsMenuItem, Text:text("menu.game_over.max_combo"), function(self) return concat(game.stats.max_combo) end },
+        -- { StatsMenuItem, Text:text("menu.game_over.max_combo"), function(self) return concat(game.stats.max_combo) end },
         { ""},
         { --[["🔄 "..]]Text:text("menu.pause.retry"), function() game:new_game() end },
         { --[["🔚 "..]]Text:text("menu.pause.quit"), quit_game },

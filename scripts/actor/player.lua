@@ -150,6 +150,7 @@ function Player:init(n, x, y, skin)
 	self.max_combo = 0
 	self.fury_bar = 0.0
 	self.fury_threshold = 2.6
+	self.fury_max = 10
 
 	-- Upgrades
 	self.upgrades = {}
@@ -768,12 +769,13 @@ function Player:leave_game_if_possible(dt)
 end
 
 function Player:update_combo(dt)
-	if game:get_enemy_count() > 0 then
+	if game:get_enemy_count() > 0 and not game.level:is_on_cafeteria() then
 		self.fury_bar = math.max(self.fury_bar - dt, 0.0)
 	end
+	self.fury_max = clamp(self.fury_bar, 0.0, self.fury_max)
 	self.fury_active = (self.fury_bar >= self.fury_threshold)
 	if self.fury_active then
-		Particles:smoke(self.mid_x, self.mid_y, 1, COL_LIGHT_YELLOW, nil, nil, nil, false)
+		-- Particles:smoke(self.mid_x, self.mid_y, 1, COL_LIGHT_YELLOW, nil, nil, nil, false)
 	end
 end
 
@@ -872,8 +874,14 @@ function Player:draw_ammo_bar(ui_x, ui_y)
 	local bar_x = x+ammo_icon_w+2
 	ui:draw_progress_bar(bar_x, y, slider_w, ammo_icon_w, val, maxval, 
 						col_fill, COL_BLACK_BLUE, col_shad, text)
+	
+	local fury_color = ternary(
+		self.fury_active, 
+		ternary(game.t % 0.2 <= 0.1, COL_LIGHT_YELLOW, COL_RED),
+		COL_LIGHT_YELLOW
+	)
 	ui:draw_progress_bar(bar_x, y+ammo_icon_w-1, slider_w, 4, self.fury_bar, self.fury_threshold, 
-						ternary(game.t % 0.2 <= 0.1, COL_LIGHT_YELLOW, COL_WHITE), COL_BLACK_BLUE, COL_ORANGE)
+						fury_color, COL_BLACK_BLUE, COL_ORANGE)
 
 	-- Fury bar
 	-- print_outline(nil, nil, concat("enms ", game:get_enemy_count()), ui_x + 20, ui_y-15)
