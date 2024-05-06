@@ -170,6 +170,7 @@ sounds.music_w1_paused =        new_source("music/music_w1_paused.ogg",        "
 sounds.music_game_over =        new_source("music/music_game_over.ogg",        "stream", {looping = true})
 sounds.music_cafeteria_ingame = new_source("music/music_cafeteria_ingame.mp3", "stream", {looping = true})
 sounds.music_cafeteria_paused = new_source("music/music_cafeteria_paused.mp3", "stream", {looping = true})
+sounds.music_miniboss =         new_source("music/music_miniboss_ingame.mp3",         "stream", {looping = true})
 
 -- Static sounds are sounds that are played without the use of the audio:play function
 -- local static_sfx_names = {
