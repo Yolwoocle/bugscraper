@@ -1,10 +1,11 @@
 local Class = require "scripts.meta.class"
 local Actor = require "scripts.actor.actor"
+local Timer = require "scripts.timer"
 local images = require "data.images"
 
 local Bullet = Actor:inherit()
 
-function Bullet:init(gun, player, x, y, w, h, vx, vy)
+function Bullet:init(gun, player, damage, x, y, w, h, vx, vy)
 	local x, y = x-w/2, y-h/2
 	self:init_actor(x, y, w, h, gun.bullet_spr or images.bullet)
 	self.name = "bullet"
@@ -27,8 +28,12 @@ function Bullet:init(gun, player, x, y, w, h, vx, vy)
 
 	self.life = 5
 
-	self.damage = gun.damage
+	self.damage = damage
 	self.knockback = gun.knockback or 500
+	self.harmless_timer = Timer:new(gun.harmless_time or 0.0) 
+	if self.harmless_timer.duration > 0 then
+		self.harmless_timer:start()
+	end
 
 	self.bounce_immunity_timer = 0.0
 	self.bounce_immunity_duration = 0.1
@@ -37,6 +42,7 @@ end
 function Bullet:update(dt)
 	self:update_actor(dt)
 
+	self.harmless_timer:update(dt)
 	self.spr:set_rotation(atan2(self.vy, self.vx))
 
 	self.life = self.life - dt
@@ -54,6 +60,8 @@ end
 
 function Bullet:draw()
 	self:draw_actor()
+
+	-- print_centered_outline(nil, nil, ternary(self.harmless_timer.is_active, "O", "X"), self.x, self.y)
 end
 
 function Bullet:on_collision(col)
@@ -61,11 +69,13 @@ function Bullet:on_collision(col)
 	if col.other == self.player then    return   end
 
 	if col.type ~= "cross" then
+		-- Solid collision
 		local s = "metalfootstep_0"..tostring(love.math.random(0,4))
 		Audio:play_var(s, 0.3, 1, {pitch=0.7, volume=0.5})
 		self:kill()
 	end
-	
+		
+	if self.harmless_timer.is_active then return end
 	if col.other.on_hit_bullet and col.other.is_enemy ~= self.is_enemy_bul then
 		local damaged = col.other:on_hit_bullet(self, col)
 		if damaged and self.player and self.player.is_player then

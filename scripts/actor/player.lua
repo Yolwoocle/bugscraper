@@ -149,8 +149,10 @@ function Player:init(n, x, y, skin)
 	self.combo = 0
 	self.max_combo = 0
 	self.fury_bar = 0.0
-	self.fury_threshold = 2.6
-	self.fury_max = 10
+	self.fury_threshold = 2.5
+	self.fury_max = 5.0
+	self.fury_gun_cooldown_multiplier = 0.75
+	self.fury_gun_damage_multiplier = 2.0
 
 	-- Upgrades
 	self.upgrades = {}
@@ -645,7 +647,19 @@ function Player:multiply_gun_cooldown_multiplier(val)
 	self.gun_cooldown_multiplier = self.gun_cooldown_multiplier * val
 end
 function Player:get_gun_cooldown_multiplier()
-	return self.gun_cooldown_multiplier
+	local value = self.gun_cooldown_multiplier
+	if self.fury_active then 
+		value = value * self.fury_gun_cooldown_multiplier
+	end
+	return value
+end
+
+function Player:get_gun_damage_multiplier()
+	local value = 1.0
+	if self.fury_active then 
+		value = value * self.fury_gun_damage_multiplier
+	end
+	return value
 end
 
 function Player:next_gun()
@@ -679,6 +693,7 @@ end
 --- When an enemy bullet hits the player
 function Player:on_hit_bullet(bullet, col)
 	if bullet.player == self then   return   end
+	if self.iframes > 0 then   return   end
 
 	self:do_damage(bullet.damage, bullet)
 	self.vx = self.vx + sign(bullet.vx) * bullet.knockback
@@ -772,7 +787,7 @@ function Player:update_combo(dt)
 	if game:get_enemy_count() > 0 and not game.level:is_on_cafeteria() then
 		self.fury_bar = math.max(self.fury_bar - dt, 0.0)
 	end
-	self.fury_max = clamp(self.fury_bar, 0.0, self.fury_max)
+	self.fury_bar = clamp(self.fury_bar, 0.0, self.fury_max)
 	self.fury_active = (self.fury_bar >= self.fury_threshold)
 	if self.fury_active then
 		-- Particles:smoke(self.mid_x, self.mid_y, 1, COL_LIGHT_YELLOW, nil, nil, nil, false)

@@ -417,6 +417,12 @@ function Debug:draw_info_view()
 
 	self.game.level.world_generator:draw()
 	draw_log()
+
+    local w = 40
+    rect_color(COL_CYAN, "line", 200, 200, w, w)
+    for ix=0, 1, 0.05 do
+        circle_color(COL_WHITE, "fill", 200 + ix*w, 200 + w - ease_out_elastic(ix)*w, 1)
+    end
 end
 
 function Debug:draw_colview()

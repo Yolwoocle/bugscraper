@@ -34,8 +34,9 @@ function Gun:init_gun(user)
 	
 	self.speed_floor = 3 -- min speed before it despawns
 	
-	--
+	-- Damage
 	self.damage = 2
+	self.harmless_time = 0 
 	
 	-- Ammo
 	self.max_ammo = 100
@@ -200,6 +201,14 @@ end
 function Gun:on_shoot(player)
 end
 
+function Gun:get_damage(user)
+	local value = self.damage
+	if user and user.is_player then
+		value = value * user:get_gun_damage_multiplier()
+	end
+	return value
+end
+
 function Gun:get_max_ammo()
 	return self.max_ammo * self.user:get_max_ammo_multiplier()
 end
@@ -230,11 +239,11 @@ function Gun:reload()
 	self.reload_timer = self.max_reload_timer
 end
 
-function Gun:fire_bullet(dt, player, x, y, bul_w, bul_h, dx, dy)
+function Gun:fire_bullet(dt, user, x, y, bul_w, bul_h, dx, dy)
 	local spd = self.bullet_speed + random_neighbor(self.random_speed_offset)
 	local spd_x = dx * spd
 	local spd_y = dy * spd 
-	game:new_actor(Bullet:new(self, player, x, y, bul_w, bul_h, spd_x, spd_y))
+	game:new_actor(Bullet:new(self, user, self:get_damage(user), x, y, bul_w, bul_h, spd_x, spd_y))
 end
 
 function Gun:add_ammo(quantity)

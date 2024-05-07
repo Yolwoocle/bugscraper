@@ -930,6 +930,20 @@ function get_orthogonal(x, y, dir)
 	end
 end
 
+-- https://easings.net/#easeOutBack
+-- https://www.lexaloffle.com/bbs/?tid=40577
+
 function ease_out_cubic(x)
 	return 1 - math.pow(1 - x, 3)
+end
+
+function ease_out_back(x)
+	local c1 = 1.70158;
+	local c3 = c1 + 1;
+	
+	return 1 + c3 * math.pow(x - 1, 3) + c1 * math.pow(x - 1, 2)
+end
+
+function ease_out_elastic(x)
+	return 1 - (2^(-10*x))*math.cos(2*x)
 end

@@ -222,6 +222,7 @@ function Guns:init()
 		self.max_ammo = 20
 		self.bullet_speed = 100
 		self.random_angle_offset = 0.5
+		self.harmless_time = 0.4
 
 		self.cooldown = 0
 		self.jetpack_force = 340

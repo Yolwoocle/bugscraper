@@ -66,8 +66,8 @@ local function new_wave(params)
 end
 
 local waves = {	
-	debug_wave(),
-	-- new_cafeteria(),
+	-- debug_wave(),
+	new_cafeteria(),
 	-- [[
 	new_wave({
 		music = "w1",
