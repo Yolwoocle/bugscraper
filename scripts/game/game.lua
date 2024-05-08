@@ -439,7 +439,9 @@ function Game:draw_game()
 			end
 		end
 		for _,p in pairs(self.players) do
-			p:draw()
+			if p.is_active then
+				p:draw()
+			end
 		end
 	
 		Particles:draw()
@@ -450,7 +452,9 @@ function Game:draw_game()
 	self:draw_on_layer(LAYER_HUD, function()
 		love.graphics.clear()
 		for k,actor in pairs(self.actors) do
-			if actor.draw_hud and self.game_ui.is_visible then     actor:draw_hud()    end
+			if actor.is_active and actor.draw_hud and self.game_ui.is_visible then
+				actor:draw_hud()
+			end
 		end
 	end)--, {apply_camera = false})
 	
@@ -688,6 +692,14 @@ function Game:update_timer_before_game_over(dt)
 	end
 end
 
+function Game:kill_all_active_enemies()
+	for _, actor in pairs(self.actors) do
+		if actor.is_active and actor.counts_as_enemy then
+			actor:kill()
+		end
+	end
+end
+
 function Game:kill_all_enemies()
 	for _, actor in pairs(self.actors) do
 		if actor.counts_as_enemy then
@@ -760,31 +772,34 @@ function Game:join_game(input_profile_id, joystick)
 
 	Input:new_user(player_n)
 	Input:set_last_ui_user_n(player_n)
-	local new_player = self:new_player(player_n)
+	local new_player = self:new_player(player_n, nil, nil, true)
 	if joystick ~= nil then
 		Input:assign_joystick(player_n, joystick)
 	end
 	Input:assign_input_profile(player_n, input_profile_id)
 
-	if new_player ~= nil then
-		Particles:smoke(new_player.mid_x, new_player.mid_y)
-	end
-
 	return player_n
 end
 
-function Game:new_player(player_n, x, y)
+function Game:new_player(player_n, x, y, put_in_buffer)
 	player_n = player_n or self:find_free_player_number()
 	if player_n == nil then
 		return
 	end
-	local mx = floor(self.level.door_rect.ax)
-	x = param(x, mx + ((player_n-1) / (MAX_NUMBER_OF_PLAYERS-1)) * (self.level.door_rect.bx - self.level.door_rect.ax))
-	y = param(y, CANVAS_HEIGHT - 3*16)
+	local mx = math.floor(self.level.door_rect.ax)
+	-- x = param(x, mx + ((player_n-1) / (MAX_NUMBER_OF_PLAYERS-1)) * (self.level.door_rect.bx - self.level.door_rect.ax))
+	x = param(x, mx + math.floor((self.level.door_rect.bx - self.level.door_rect.ax)/2))
+	y = param(y, CANVAS_HEIGHT - 3*16 + 4)
 
 	local player = Player:new(player_n, x, y, skins[player_n])
 	self.players[player_n] = player
 	self.waves_until_respawn[player_n] = -1
+	if put_in_buffer then
+		player:set_active(false)
+		self.level:buffer_actor(player)
+		self.level.elevator:open_door(1.0)
+	end
+	
 	self:new_actor(player)
 
 	return player
@@ -826,6 +841,7 @@ function Game:start_game()
 	self.move_logo = true
 	self.game_state = GAME_STATE_PLAYING
 	self.music_player:set_disk("w1")
+	self.level:begin_next_wave_animation()
 
 	self.menu_manager:set_can_pause(true)
 	self:set_zoom(1)

@@ -66,18 +66,17 @@ local function new_wave(params)
 end
 
 local waves = {	
-	-- debug_wave(),
+	debug_wave(),
 	new_cafeteria(),
 	-- [[
 	new_wave({
-		music = "w1",
-
 		min = 4,
 		max = 6,
 		enemies = {
 			{E.Larva, 3},
 			{E.Fly, 3},
 		},
+		music = "w1",
 	}),
 
 	

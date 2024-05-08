@@ -64,8 +64,8 @@ function Level:init(game)
 	self.max_floor = #waves
 	self.current_wave = nil
 	
-	self.door_animation_state = "off"
-	self.floor_progress = .0
+	self.new_wave_animation_state = "off"
+	self.new_wave_progress = .0
 	self.level_speed = 0
 	self.def_level_speed = 400
 	self.elev_x, self.elev_y = 0, 0
@@ -86,7 +86,6 @@ function Level:init(game)
 	self.canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
 	self.buffer_canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
 	self.cafeteria_animation_state = "off"
-	self.close_door_flag = false
 	self.force_next_wave_flag = false
 
 	self.is_hole_stencil_enabled = true
@@ -101,7 +100,7 @@ end
 
 function Level:update(dt)
 	self:update_elevator_progress(dt)
-	self.elevator:set_floor_progress(self.floor_progress)
+	self.elevator:set_floor_progress(self.new_wave_progress)
 	self.background:set_speed(self.level_speed)
 
 	self.map:update(dt)
@@ -119,74 +118,74 @@ function Level:set_bounds(rect)
 end
 
 function Level:check_for_next_wave(dt)
-	if (#self.enemy_buffer == 0 and game:get_enemy_count() <= 0) or self.force_next_wave_flag then
+	local conditions_for_new_wave = (game.game_state == GAME_STATE_PLAYING) and (#self.enemy_buffer == 0) and (game:get_enemy_count() <= 0)
+	if conditions_for_new_wave or self.force_next_wave_flag then
+		self:begin_next_wave_animation()			
 		self.force_next_wave_flag = false
-		-- game.enemy_count = 0
-		
-		self:new_wave_buffer_enemies()
 	end
 end
 
-function Level:begin_door_animation()
+function Level:begin_next_wave_animation()
+	self:new_wave_buffer_enemies()
+	self.new_wave_progress = 1.0
+	self.new_wave_animation_state = "slowdown"
+
 	if self:is_on_cafeteria() then
 		self:begin_cafeteria()
 	end
-	self.draw_enemies_in_bg = true
-	
-	self.floor_progress = 1.0
-	self.door_animation_state = "slowdown"
 end
 
 function Level:update_elevator_progress(dt)
-	self.floor_progress = math.max(0, self.floor_progress - dt)
+	self.new_wave_progress = math.max(0, self.new_wave_progress - dt)
 	
-	if self.door_animation_state == "off" then
+	if self.new_wave_animation_state == "off" then
 		self:check_for_next_wave(dt)
-		if #self.enemy_buffer > 0 then
-			self:begin_door_animation()			
-		end
 		
-	elseif self.door_animation_state == "slowdown" then
+	elseif self.new_wave_animation_state == "slowdown" then
 		self.level_speed = max(0, self.level_speed - 18)
 
-		if self.floor_progress <= 0 then
-			self.elevator:open_door()
-			self:next_floor()
-			self.floor_progress = 1.0
-			self.door_animation_state = "opening"
+		if self.new_wave_progress <= 0 then
+			self.elevator:open_door(ternary(self:is_on_cafeteria(), nil, 1.4))
+			self:increment_floor()
+			self.new_wave_progress = 1.0
+			self.new_wave_animation_state = "opening"
 		end
 
-	elseif self.door_animation_state == "opening" then
-		if self.floor_progress <= 0 then
-			self.floor_progress = 0.4
-			self.door_animation_state = "on"
-			self.close_door_flag = false
+	elseif self.new_wave_animation_state == "opening" then		
+		if self.new_wave_progress <= 0 then
+			self.new_wave_progress = 0.4
+			self.new_wave_animation_state = "on"
 			self:activate_enemy_buffer()
 		end
 		
-	elseif self.door_animation_state == "on" then
-		local condition_normal = (not self:is_on_cafeteria() and self.floor_progress <= 0) 
-		if condition_normal or self.close_door_flag then
+	elseif self.new_wave_animation_state == "on" then
+		local condition_normal = (not self:is_on_cafeteria() and self.new_wave_progress <= 0) 
+		if condition_normal then
+			self.new_wave_progress = 1.0
 			self.elevator:close_door()
-			self.floor_progress = 1.0
-			self.close_door_flag = false
-			self.door_animation_state = "closing"
+			self.new_wave_animation_state = "closing"
 		end
 	
-	elseif self.door_animation_state == "closing" then
-		if self.floor_progress <= 0 then
-			self.door_animation_state = "speedup"
-			self.floor_progress = 1.0
+	elseif self.new_wave_animation_state == "closing" then
+		if self.new_wave_progress <= 0 then
+			self.new_wave_animation_state = "speedup"
+			self.new_wave_progress = 1.0
 		end
 	
-	elseif self.door_animation_state == "speedup" then
+	elseif self.new_wave_animation_state == "speedup" then
 		self.level_speed = min(self.level_speed + 10, self.def_level_speed)
 
-		if self.floor_progress <= 0 then
-			self.door_animation_state = "off"
-			self.floor_progress = 0.0
+		if self.new_wave_progress <= 0 then
+			self.new_wave_animation_state = "off"
+			self.new_wave_progress = 0.0
 		end
 
+	end
+end
+
+function Level:on_door_close()
+	if game.game_state == GAME_STATE_WAITING then
+		self:activate_enemy_buffer()
 	end
 end
 
@@ -195,15 +194,11 @@ function Level:set_background(background)
 	self.background:set_level(self)
 end
 
-function Level:next_floor(old_floor)
-	self.floor = self.floor + 1
+function Level:increment_floor()
+	local pitch = 0.8 + 0.5 * clamp(self.floor / self.max_floor, 0, 3)
+	Audio:play("elev_ding", 0.8, pitch)
 
-	if self.floor-1 == 0 then
-		self.game:start_game()
-	else
-		local pitch = 0.8 + 0.5 * clamp(self.floor / self.max_floor, 0, 3)
-		Audio:play("elev_ding", 0.8, pitch)
-	end
+	self.floor = self.floor + 1
 end
 
 function Level:new_endless_wave()
@@ -249,6 +244,10 @@ end
 
 function Level:set_current_wave(wave)
 	self.current_wave = wave
+end
+
+function Level:buffer_actor(actor)
+	table.insert(self.enemy_buffer, actor)
 end
 
 function Level:new_wave_buffer_enemies()
@@ -322,8 +321,7 @@ function Level:update_cafeteria(dt)
 		self.is_hole_stencil_enabled = false
 		
 	elseif self.cafeteria_animation_state == "wait" then
-		local timeout = self.hole_stencil_start_timer:update(dt)
-		if timeout then
+		if self.hole_stencil_start_timer:update(dt) then
 			self.cafeteria_animation_state = "grow"
 			self.is_hole_stencil_enabled = true
 		end
@@ -342,11 +340,9 @@ function Level:update_cafeteria(dt)
 	elseif self.cafeteria_animation_state == "on" then
 		self:update_hole_stencil(dt)
 		if self:can_exit_cafeteria() then
-			game:kill_all_enemies()
-			self:new_wave_buffer_enemies()
+			game:kill_all_active_enemies()
 			self:end_cafeteria()
-			self.floor_progress = math.huge
-			self.draw_enemies_in_bg = false
+			self.new_wave_progress = math.huge
 
 			self.cafeteria_animation_state = "shrink"
 		end
@@ -357,7 +353,7 @@ function Level:update_cafeteria(dt)
 			game.camera:set_position(0, 0)
 
 			self.is_hole_stencil_enabled = false
-			self.floor_progress = 0.0
+			self.new_wave_progress = 0.0
 			self.cafeteria_animation_state = "off"
 		end
 	end
@@ -395,6 +391,9 @@ function Level:end_cafeteria()
 	self.hole_stencil_radius = CANVAS_WIDTH
 	self.hole_stencil_radius_speed = 0
 	self.hole_stencil_radius_accel_sign = -1
+	self.new_wave_progress = 1.0
+	self.elevator:close_door()
+	self.new_wave_animation_state = "closing"
 
 	game.camera:set_x_locked(true)
 	game.camera:set_y_locked(true)
@@ -467,7 +466,7 @@ function Level:draw()
 		self.map:draw()
 	
 		if self.show_cabin then
-			self.elevator:draw(ternary(self.draw_enemies_in_bg, self.enemy_buffer, {}))
+			self.elevator:draw(self.enemy_buffer, self.new_wave_progress)
 		end
 	end)
 	if self.show_cabin then

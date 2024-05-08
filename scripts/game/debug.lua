@@ -390,6 +390,7 @@ function Debug:draw_info_view()
 		concat("FPS: ",love.timer.getFPS(), " / frmRpeat: ",self.game.frame_repeat, " / frame: ",frame),
 		concat("LÖVE version: ", string.format("%d.%d.%d - %s", love.getVersion())),
 		concat("game state: ", game.game_state),
+		concat("level.new_wave_animation_state: ", game.level.new_wave_animation_state),
 		concat("cam pos:  ", concatsep({game.camera:get_position()})),
 		concat("cam tpos: ", concatsep({game.camera:get_target_position()})),
 		concat("n° of active audio sources: ", love.audio.getActiveSourceCount()),

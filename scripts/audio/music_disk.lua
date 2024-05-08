@@ -6,13 +6,18 @@ local MusicDisk = Class:inherit()
 
 function MusicDisk:init(music_player, music_ingame, music_pause)
     self.music_player = music_player
+    self.name = nil
     self.sources = {
         [MUSIC_MODE_INGAME] = music_ingame,
         [MUSIC_MODE_PAUSE] = music_pause,
     }
-
+    
     self.music_mode = MUSIC_MODE_OFF
     self.current_source = self.sources[MUSIC_MODE_INGAME]
+end
+
+function MusicDisk:set_name(name)
+    self.name = name
 end
 
 function MusicDisk:pause()

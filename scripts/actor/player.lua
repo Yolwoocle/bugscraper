@@ -42,6 +42,7 @@ function Player:init(n, x, y, skin)
 	self.skin = skin
 	self.spr:set_image(self.skin.spr_idle)
 
+	self.is_grounded = true
 	self.is_walking = false
 	self.squash = 1
 	self.jump_squash = 1

@@ -15,11 +15,13 @@ end
 
 local t = 0
 local fixed_dt = 1/60 -- fixed frame delta time
-local frame = 0
+_G_frame = 0
+_G_fixed_frame = 0
 local function fixed_update()
-	frame = frame + 1
+	_G_fixed_frame = _G_fixed_frame + 1
 	game:update(fixed_dt)
 end
+
 
 function love.update(dt)
 	t = t + dt
@@ -33,7 +35,7 @@ function love.update(dt)
 	end
 
 	if game then   game.frame_repeat = i end
-	frame = frame + 1
+	_G_frame = _G_frame + 1
 end
 
 function love.draw()
