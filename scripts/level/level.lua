@@ -7,6 +7,7 @@ local TileMap = require "scripts.level.tilemap"
 local WorldGenerator = require "scripts.level.worldgenerator"
 local BackgroundDots = require "scripts.level.background.background_dots"
 local BackgroundServers = require "scripts.level.background.background_servers"
+local BackgroundCafeteria = require "scripts.level.background.background_cafeteria"
 local Elevator = require "scripts.level.elevator"
 local Wave = require "scripts.level.wave"
 
@@ -82,6 +83,7 @@ function Level:init(game)
 	self.elevator = Elevator:new(self)
 	self.background = BackgroundDots:new(self)
 	self.background:set_def_speed(self.def_level_speed)
+	self.cafeteria_background = BackgroundCafeteria:new(self)
 
 	self.canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
 	self.buffer_canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
@@ -207,6 +209,7 @@ function Level:new_endless_wave()
 	return Wave:new({
 		min = min,
 		max = max,
+		music = "w1",
 		enemies = {
 			{Enemies.Larva, random_range(1,6)},
 			{Enemies.Fly, random_range(1,6)},
@@ -454,6 +457,9 @@ function Level:draw()
 	-- hack to get the cafeteria backgrounds to work
 	local on_cafeteria = (self.cafeteria_animation_state ~= "off")
 	if on_cafeteria then
+		if self.cafeteria_background then
+			self.cafeteria_background:draw()
+		end
 		love.graphics.draw(images.cafeteria, 0, 0)
 	else
 		self.background:draw()
@@ -472,7 +478,6 @@ function Level:draw()
 	if self.show_cabin then
 		self.elevator:draw_counter()
 	end
-
 end
 
 function Level:draw_front(x,y)

@@ -19,7 +19,6 @@ local function new_cafeteria()
 		max = 1,
 		bounds = RECT_CAFETERIA,
 		enemies = {
-			{E.Dummy, 1, position = {5000, 200}},
 			{E.UpgradeDisplay, 1, position = {488, 192}},
 			{E.UpgradeDisplay, 1, position = {544, 192}},
 			{E.UpgradeDisplay, 1, position = {600, 192}},
@@ -348,7 +347,7 @@ local waves = {
 		enemies = {
 			{E.ButtonBigGlass, 1}
 		},
-		music = "w1",
+		music = "off",
 	})
 }
 

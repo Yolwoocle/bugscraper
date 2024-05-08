@@ -66,6 +66,12 @@ function MusicPlayer:update_fadeout(dt)
 end
 
 function MusicPlayer:set_disk(disk_name)
+	if disk_name == "off" then
+		self.current_disk = nil
+		self:stop()
+		return
+	end
+	
 	local disk = self.disks[disk_name]
 	if disk == nil then
 		error("MusicPlayer:set_disk: the disk'"..tostring(disk_name).."' doesn't exist")
@@ -73,19 +79,16 @@ function MusicPlayer:set_disk(disk_name)
 	if self.current_disk and disk_name == self.current_disk.name then 
 		return 
 	end
-	if disk_name == "off" then
-		self:stop()
-		return
+	
+	if self.current_disk then
+		self.current_disk:stop()
 	end
-
-	self.current_disk:stop()
+	
 	self.current_disk = disk
 	self:play()
 end
 
 function MusicPlayer:fade_out(new_disk, duration)
-	local disk = self.disks[new_disk]
-	if disk == nil then   error("MusicPlayer:fade_out: the disk'"..tostring(new_disk).."' doesn't exist")   end
 	if self.current_disk and new_disk == self.current_disk.name then 
 		return 
 	end

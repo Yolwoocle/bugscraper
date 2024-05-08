@@ -76,6 +76,9 @@ function Debug:init(game)
             local dung = enemies.SnailShelled:new(CANVAS_WIDTH/2, CANVAS_HEIGHT/2)
             game:new_actor(dung)
         end},
+        ["r"] = {"start game", function()
+            game:start_game()
+        end},
         
         ["e"] = {"kill all enemies", function()
             for k,e in pairs(self.game.actors) do

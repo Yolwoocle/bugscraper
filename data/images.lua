@@ -222,6 +222,15 @@ local img_names = {
 	upgrade_peanut =    "upgrades/upgrade_peanut",
 	
 	-----------------------------------------------------
+
+	-- background
+	bg_city_0 =     "level/city_0",
+	bg_city_1 =     "level/city_1",
+	bg_city_2 =     "level/city_2",
+	bg_city_3 =     "level/city_3",
+	bg_city_shine = "level/city_shine",
+
+	-----------------------------------------------------
 	
 	-- misc
 	rays = "ui/rays",

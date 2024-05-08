@@ -10,7 +10,7 @@ function Gun:init_gun(user)
 	self.display_name = Text:text_fallback("gun."..self.name, self.name)
 
 	self.spr = images.gun_machinegun
-	self.x, self.y = 0, 0
+	self.x, self.y = -100, -100
 	self.rot = 0
 	
 	self.is_lootable = true
