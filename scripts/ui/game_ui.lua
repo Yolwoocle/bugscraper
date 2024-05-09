@@ -58,9 +58,9 @@ function GameUI:draw_join_tutorial()
 	local number_of_keyboard_users = Input:get_number_of_users(INPUT_TYPE_KEYBOARD)
 
 	local icons = {
-		Input:get_button_icon(1, Input:get_input_profile("global"):get_primary_button("jump", INPUT_TYPE_CONTROLLER), BUTTON_STYLE_XBOX),
-		Input:get_button_icon(1, Input:get_input_profile("global"):get_primary_button("jump", INPUT_TYPE_CONTROLLER), BUTTON_STYLE_PLAYSTATION5),
-		Input:get_button_icon(1, Input:get_input_profile("global"):get_primary_button("jump", INPUT_TYPE_KEYBOARD)),
+		Input:get_button_icon(1, Input:get_input_profile("global"):get_primary_button("join_game", INPUT_TYPE_CONTROLLER), BUTTON_STYLE_XBOX),
+		Input:get_button_icon(1, Input:get_input_profile("global"):get_primary_button("join_game", INPUT_TYPE_CONTROLLER), BUTTON_STYLE_PLAYSTATION5),
+		Input:get_button_icon(1, Input:get_input_profile("global"):get_primary_button("join_game", INPUT_TYPE_KEYBOARD)),
 	}
 	if number_of_keyboard_users >= 1 then
 		table.remove(icons)

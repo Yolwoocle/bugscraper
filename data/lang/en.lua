@@ -84,6 +84,11 @@ return {
                     playstation5 = "PlayStation 5",
                     xbox = "Xbox",
                 },
+                deadzone = "JOYSTICK DEADZONE",
+                vibration = "VIBRATION",
+                low_deadzone_warning = "Low values may cause issues",
+                note_deadzone = "Deadzone settings will be applied after leaving this menu",
+
                 gameplay = "Gameplay",
                 interface = "Interface",
                 global = "Global",

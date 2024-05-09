@@ -555,7 +555,7 @@ end
 function Game:listen_for_player_join(dt)
 	if self.game_state ~= GAME_STATE_WAITING then return end
 
-	if Input:action_pressed_global("jump") then 
+	if Input:action_pressed_global("join_game") then 
 		local global_user = Input:get_global_user()
 		local last_button = global_user.last_pressed_button
 		local input_profile_id = ""

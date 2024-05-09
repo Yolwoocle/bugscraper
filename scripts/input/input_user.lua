@@ -173,18 +173,18 @@ function InputUser:is_any_joystick_down(button, is_ui_action)
 end
 
 local axis_functions = {
-    leftxpos =  function(joystick, margin) return Input:is_axis_in_angle_range(joystick, 1, 2, AXIS_DEADZONE, 0,     margin) end,
-    leftxneg =  function(joystick, margin) return Input:is_axis_in_angle_range(joystick, 1, 2, AXIS_DEADZONE, pi,    margin) end,
-    leftypos =  function(joystick, margin) return Input:is_axis_in_angle_range(joystick, 1, 2, AXIS_DEADZONE, pi/2,  margin) end,
-    leftyneg =  function(joystick, margin) return Input:is_axis_in_angle_range(joystick, 1, 2, AXIS_DEADZONE, -pi/2, margin) end,
+    leftxpos =  function(joystick, margin, deadzone) return Input:is_axis_in_angle_range(joystick, 1, 2, deadzone, 0,     margin) end,
+    leftxneg =  function(joystick, margin, deadzone) return Input:is_axis_in_angle_range(joystick, 1, 2, deadzone, pi,    margin) end,
+    leftypos =  function(joystick, margin, deadzone) return Input:is_axis_in_angle_range(joystick, 1, 2, deadzone, pi/2,  margin) end,
+    leftyneg =  function(joystick, margin, deadzone) return Input:is_axis_in_angle_range(joystick, 1, 2, deadzone, -pi/2, margin) end,
 
-    rightxpos = function(joystick, margin) return Input:is_axis_in_angle_range(joystick, 3, 4, AXIS_DEADZONE, 0,     margin) end,
-    rightxneg = function(joystick, margin) return Input:is_axis_in_angle_range(joystick, 3, 4, AXIS_DEADZONE, pi,    margin) end,
-    rightypos = function(joystick, margin) return Input:is_axis_in_angle_range(joystick, 3, 4, AXIS_DEADZONE, pi/2,  margin) end,
-    rightyneg = function(joystick, margin) return Input:is_axis_in_angle_range(joystick, 3, 4, AXIS_DEADZONE, -pi/2, margin) end,
+    rightxpos = function(joystick, margin, deadzone) return Input:is_axis_in_angle_range(joystick, 3, 4, deadzone, 0,     margin) end,
+    rightxneg = function(joystick, margin, deadzone) return Input:is_axis_in_angle_range(joystick, 3, 4, deadzone, pi,    margin) end,
+    rightypos = function(joystick, margin, deadzone) return Input:is_axis_in_angle_range(joystick, 3, 4, deadzone, pi/2,  margin) end,
+    rightyneg = function(joystick, margin, deadzone) return Input:is_axis_in_angle_range(joystick, 3, 4, deadzone, -pi/2, margin) end,
 
-    triggerleft =    function(joystick, margin) return joystick:getAxis(5) > -1 + TRIGGER_DEADZONE end,
-    triggerright =   function(joystick, margin) return joystick:getAxis(6) > -1 + TRIGGER_DEADZONE end,
+    triggerleft =    function(joystick, margin, deadzone) return joystick:getAxis(5) > -1 + TRIGGER_DEADZONE end,
+    triggerright =   function(joystick, margin, deadzone) return joystick:getAxis(6) > -1 + TRIGGER_DEADZONE end,
 }
 
 function InputUser:is_axis_down(axis_name, joystick, is_ui_axis)
@@ -195,7 +195,28 @@ function InputUser:is_axis_down(axis_name, joystick, is_ui_axis)
 
     if Input:is_axis(axis_name) then
         local axis_func = axis_functions[axis_name]
-        return axis_func(joystick, ternary(is_ui_axis, UI_AXIS_ANGLE_MARGIN, AXIS_ANGLE_MARGIN))
+        local deadzone = Options:get("axis_deadzone_p"..tostring(self.n)) or AXIS_DEADZONE
+        if is_in_table({
+            "controls_keyboard_solo",
+            "controls_keyboard_split_p1",
+            "controls_keyboard_split_p2",
+            "controls_controller_p1",
+            "controls_controller_p2",
+            "controls_controller_p3",
+            "controls_controller_p4",
+            "controls_controller_p5",
+            "controls_controller_p6",
+            "controls_controller_p7",
+            "controls_controller_p8",
+        }, game.menu_manager.cur_menu_name) then
+            -- Specific exception if in the joystick settings menu
+            deadzone = AXIS_DEADZONE
+        end
+        return axis_func(
+            joystick, 
+            ternary(is_ui_axis, UI_AXIS_ANGLE_MARGIN, AXIS_ANGLE_MARGIN),
+            deadzone
+        )
     end
     return false
 end
@@ -241,7 +262,8 @@ function InputUser:update_vibration(dt)
         if self.vibration_timer <= 0 then
             self.vibration_strength_left, self.vibration_strength_right = 0, 0 
         end
-        self.joystick:setVibration(self.vibration_strength_left, self.vibration_strength_right) 
+        local m = Options:get("vibration_p"..tostring(self.n))
+        self.joystick:setVibration(self.vibration_strength_left * m, self.vibration_strength_right * m)
     end
     
     self.vibration_timer = math.max(self.vibration_timer - dt, 0.0)

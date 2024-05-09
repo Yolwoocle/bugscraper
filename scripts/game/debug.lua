@@ -228,7 +228,7 @@ function Debug:draw()
     end
 
     local t = concat(love.timer.getFPS(), "FPS")
-    print_outline(nil, nil, t, CANVAS_WIDTH - get_text_width(t), 0)
+    -- print_outline(nil, nil, t, CANVAS_WIDTH - get_text_width(t), 0)
 end
 
 function Debug:draw_input_view()
@@ -305,12 +305,14 @@ function Debug:draw_joystick_view_for(joystick, x, y, axis_x, axis_y)
 	-- love.graphics.line(x-r, y-AXIS_DEADZONE*r, x+r, y-AXIS_DEADZONE*r)
 	-- love.graphics.line(x-r, y+AXIS_DEADZONE*r, x+r, y+AXIS_DEADZONE*r)
 	-- love.graphics.setColor(COL_WHITE)
+    local deadzone = Options:get("axis_deadzone_p"..tostring(user_n)) or AXIS_DEADZONE
+
 	love.graphics.setColor(COL_GREEN)
-	love.graphics.circle("line", ox, oy, r*AXIS_DEADZONE)
+	love.graphics.circle("line", ox, oy, r*deadzone)
 	for a = pi/8, pi2, pi/4 do
 		local ax = math.cos(a)
 		local ay = math.sin(a)
-		love.graphics.line(ox + AXIS_DEADZONE*ax*r, oy + AXIS_DEADZONE*ay*r, ox + r*ax, oy + r*ay)
+		love.graphics.line(ox + deadzone*ax*r, oy + deadzone*ay*r, ox + r*ax, oy + r*ay)
 	end
 	love.graphics.setColor(COL_WHITE)
 	
@@ -321,10 +323,10 @@ function Debug:draw_joystick_view_for(joystick, x, y, axis_x, axis_y)
 		return distsqr(j:getAxis(ax), j:getAxis(ay))
 	end
 	
-	local u = Input:get_user(1)
+	local u = Input:get_user(user_n)
 	if u ~= nil then
 		local j = joystick
-		circle_color(COL_RED, "fill", ox + r*j:getAxis(axis_x), oy + r*j:getAxis(axis_y), 1)
+		circle_color(COL_RED, "fill", ox + r*j:getAxis(axis_x), oy + r*j:getAxis(axis_y), 2)
 	
         local val_x = round(j:getAxis(axis_x), 3)
         local val_y = round(j:getAxis(axis_y), 3)

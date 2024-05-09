@@ -175,8 +175,8 @@ local function generate_menus()
         { "💡 "..Text:text("menu.pause.feedback"), func_set_menu("feedback") },
         { "🔚 "..Text:text("menu.pause.quit"), quit_game },
         { "" },
-        { "[DEBUG] VIEW WAVES", func_set_menu('view_waves' ) },
-        { "[DEBUG] joystick_removed", func_set_menu('joystick_removed' ) },
+        -- { "[DEBUG] VIEW WAVES", func_set_menu('view_waves' ) },
+        -- { "[DEBUG] joystick_removed", func_set_menu('joystick_removed' ) },
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL, draw_elevator_progress)
     if OPERATING_SYSTEM == "Web" then
         -- Disable quitting on web
@@ -385,7 +385,8 @@ local function generate_menus()
             { "" },
             { "<<< "..Text:text("menu.options.input_submenu.global").." >>>" },
             { Text:text("menu.options.input_submenu.note_global_keyboard") },
-            { ControlsMenuItem, -1, "global", INPUT_TYPE_KEYBOARD, "jump",           "📥 "..Text:text("input.prompts.join") },
+            { Text:text("menu.options.input_submenu.note_ui_min_button") },
+            { ControlsMenuItem, -1, "global", INPUT_TYPE_KEYBOARD, "join_game",      "📥 "..Text:text("input.prompts.join") },
             { ControlsMenuItem, -1, "global", INPUT_TYPE_KEYBOARD, "split_keyboard", "🗄 "..Text:text("input.prompts.split_keyboard") },
         }, DEFAULT_MENU_BG_COLOR, PROMPTS_CONTROLS)
     end
@@ -419,6 +420,42 @@ local function generate_menus()
                 self.value = Options:get("button_style_p"..tostring(player_n))
                 self.value_text = Text:text("menu.options.input_submenu.controller_button_style_value."..Options:get("button_style_p"..tostring(player_n)))
             end},
+
+            { SliderMenuItem, "🫨 "..Text:text("menu.options.input_submenu.vibration"), function(self, diff)
+                diff = diff or 1
+                self.value = (self.value + diff)
+                if self.value < 0 then self.value = 5 end
+                if self.value > 5 then self.value = 0 end
+                
+                Options:set("vibration_p"..tostring(player_n), self.value/5)
+                Audio:play("menu_select", 1.0, 0.8+(self.value/5)*0.4)
+                Input:vibrate(player_n, 0.4, 1.0)
+            end, range_table(0,5),
+            function(self)
+                local value = Options:get("vibration_p"..tostring(player_n))
+                self.value_text = concat(math.floor(100 * value), "%")
+                self.label_text = concat(Options:get("vibration_p"..tostring(player_n)))
+            end},
+
+            { SliderMenuItem, "🕹 "..Text:text("menu.options.input_submenu.deadzone"), function(self, diff)
+                diff = diff or 1
+                self.value = (self.value + diff)
+                if self.value < 1 then self.value = 19 end
+                if self.value > 19 then self.value = 1 end
+                
+                Options:set_axis_deadzone(player_n, self.value/20)
+                Audio:play("menu_select", 1.0, 0.8+(self.value/20)*0.4)
+            end, range_table(1,19),
+            function(self)
+                self.value = Options:get("axis_deadzone_p"..tostring(player_n)) * 20
+                self.value_text = concat(floor(100 * self.value / 20), "%")
+                
+                self.label_text = "🕹 "..Text:text("menu.options.input_submenu.deadzone")
+                if self.is_selected and self.value <= 4 then
+                    self.label_text = self.label_text.."\n⚠ "..Text:text("menu.options.input_submenu.low_deadzone_warning")
+                end
+            end},
+            { Text:text("menu.options.input_submenu.note_deadzone") },
             { "" },
             { "<<< "..Text:text("menu.options.input_submenu.gameplay").." >>>" },
             { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "left",  "⬅ "..Text:text("input.prompts.left") },
@@ -441,7 +478,8 @@ local function generate_menus()
             { "" },            
             { "<<< "..Text:text("menu.options.input_submenu.global").." >>>" },
             { Text:text("menu.options.input_submenu.note_global_controller") },
-            { ControlsMenuItem, -1, "global", INPUT_TYPE_CONTROLLER, "jump",           "📥 "..Text:text("input.prompts.join") },
+            { Text:text("menu.options.input_submenu.note_ui_min_button") },
+            { ControlsMenuItem, -1, "global", INPUT_TYPE_CONTROLLER, "join_game", "📥 "..Text:text("input.prompts.join") },
 
         }, DEFAULT_MENU_BG_COLOR, PROMPTS_CONTROLS)
     end

@@ -53,7 +53,14 @@ end
 
 function Menu:draw()
 	for i, item in pairs(self.items) do
-		item:draw()
+		if not item.is_selected then
+			item:draw()
+		end
+	end
+	for i, item in pairs(self.items) do
+		if item.is_selected then
+			item:draw()
+		end
 	end
 	self:draw_prompts()
 	if self.extra_draw then self.extra_draw() end
