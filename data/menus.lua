@@ -434,7 +434,6 @@ local function generate_menus()
             function(self)
                 local value = Options:get("vibration_p"..tostring(player_n))
                 self.value_text = concat(math.floor(100 * value), "%")
-                self.label_text = concat(Options:get("vibration_p"..tostring(player_n)))
             end},
 
             { SliderMenuItem, "🕹 "..Text:text("menu.options.input_submenu.deadzone"), function(self, diff)
