@@ -248,6 +248,27 @@ function Guns:init()
 	function self.unlootable.DebugGun:on_shoot(user)
 		user:heal(1)
 	end
+
+	------
+	self.unlootable.DebugGunManual = Gun:inherit()
+
+	function self.unlootable.DebugGunManual:init(user)
+		self.name = "debug_gun_manual"
+		self:init_gun(user)
+		
+		self.sfx = "shot1"
+		self.damage = 40
+		self.is_auto = false
+		self.spr = images.honey_blob
+		self.max_ammo = math.huge
+		
+		self.cooldown = 0
+		self.jetpack_force = 400
+		self.recoil_force = 0
+	end
+	function self.unlootable.DebugGunManual:on_shoot(user)
+		user:heal(1)
+	end
 end
 
 local guns_instance = Guns:new()

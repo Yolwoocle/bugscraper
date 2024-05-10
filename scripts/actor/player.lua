@@ -124,6 +124,7 @@ function Player:init(n, x, y, skin)
 	self.guns = {
 		Guns.Machinegun:new(self),
 		Guns.unlootable.DebugGun:new(self),
+		Guns.unlootable.DebugGunManual:new(self),
 		Guns.Triple:new(self),
 		Guns.Burst:new(self),
 		Guns.Shotgun:new(self),

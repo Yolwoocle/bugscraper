@@ -37,6 +37,8 @@ function Bullet:init(gun, player, damage, x, y, w, h, vx, vy)
 
 	self.bounce_immunity_timer = 0.0
 	self.bounce_immunity_duration = 0.1
+
+	self.is_affected_by_bounds = false
 end
 
 function Bullet:update(dt)

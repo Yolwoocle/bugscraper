@@ -17,30 +17,28 @@ function BackgroundDots:init(level)
 
 	self.bg_particles = {}	
 	self.bg_particle_col = {COL_VERY_DARK_GRAY, COL_DARK_GRAY}
-	self.bg_colors = {
-		COL_BLACK_BLUE,
-		COL_DARK_GREEN,
-		COL_DARK_RED,
-		COL_LIGHT_BLUE,
-		COL_WHITE,
-		color(0xb55088), -- purple
-		COL_BLACK_BLUE,
-		color(0xfee761), -- lyellow
-		color(0x743f39), -- mid brown
-		color(0xe8b796) --beige
+	self.bg_particle_palettes = {
+		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
+		{COL_DARK_GREEN,  {COL_MID_DARK_GREEN, COL_MID_GREEN}},
+		{COL_DARK_RED,    {COL_LIGHT_RED, COL_PINK}}, --l red + light pink
+		{COL_LIGHT_BLUE,  {COL_MID_BLUE, COL_WHITE}},
+		{COL_WHITE,       {color(0xc0cbdc), color(0x8b9bb4)}}, --gray & dgray
+		{color(0xb55088), {color(0x68386c), color(0x9e2835)}}, --dpurple & dred
+		{COL_BLACK_BLUE,  {COL_LIGHT_RED, COL_ORANGE, COL_LIGHT_YELLOW, color(0x63c74d), COL_LIGHT_BLUE, color(0xb55088)}}, --rainbow
+		{color(0xfee761), {color(0xfeae34), COL_WHITE}}, --orange & white
+		{color(0x743f39), {color(0x3f2832), COL_BLACK_BLUE}}, --orange & white
+		{color(0xe8b796), {color(0xe4a672), color(0xb86f50)}} --midbeige & dbeige (~brown ish)
 	}
-	self.bg_particle_colors = {
-		{COL_VERY_DARK_GRAY, COL_DARK_GRAY},
-		{COL_MID_DARK_GREEN, COL_MID_GREEN},
-		{COL_LIGHT_RED, COL_PINK}, --l red + light pink
-		{COL_MID_BLUE, COL_WHITE},
-		{color(0xc0cbdc), color(0x8b9bb4)}, --gray & dgray
-		{color(0x68386c), color(0x9e2835)}, --dpurple & dred
-		{COL_LIGHT_RED, COL_ORANGE, COL_LIGHT_YELLOW, color(0x63c74d), COL_LIGHT_BLUE, color(0xb55088)}, --rainbow
-		{color(0xfeae34), COL_WHITE}, --orange & white
-		{color(0x3f2832), COL_BLACK_BLUE}, --orange & white
-		{color(0xe4a672), color(0xb86f50)} --midbeige & dbeige (~brown ish)
-	}
+	self.target_bg_palette = self.bg_particle_palettes[1]
+	self.target_clear_color = self.target_bg_palette[1]
+	self.bg_particle_col = self.target_bg_palette[2]
+
+	self.bg_particles = {}	
+	self:init_bg_particles()
+end
+
+function BackgroundDots:init_bg_particles()
+	self.bg_particles = {}	
 	for i=1,60 do
 		local p = self:new_bg_particle()
 		p.x = random_range(0, CANVAS_WIDTH)
@@ -48,16 +46,14 @@ function BackgroundDots:init(level)
 		table.insert(self.bg_particles, p)
 	end
 end
-
 -----------------------------------------------------
 
 function BackgroundDots:update(dt)
 	self:update_background(dt)
 
 	-- BG color gradient
-	local i_target = mod_plus_1(self.bg_color_index, #self.bg_colors)
-	self.clear_color = move_toward_color(self.clear_color, self.bg_colors[i_target], 0.06*dt)
-	self.bg_particle_col = self.bg_particle_colors[i_target]
+	-- self.clear_color = move_toward_color(self.clear_color, self.target_clear_color, 0.06*dt)
+	self.clear_color = lerp_color(self.clear_color, self.target_clear_color, 0.006)
 
 	self:update_bg_particles(dt)
 end
@@ -66,12 +62,32 @@ function BackgroundDots:set_speed(val)
 	self.speed = val
 end
 
-function BackgroundDots:change_bg_color()
-	local wave_n = max(1, self.level.floor + 1)
-	if wave_n % 4 == 0 then
-		self.bg_color_index = mod_plus_1( floor(wave_n / 4) + 1, #self.bg_colors)
-		self.bg_color_progress = 0
+function BackgroundDots:change_clear_color(force_palette)
+	if force_palette then
+		self.target_bg_palette = force_palette
+		self.target_clear_color = force_palette[1]
+		self.bg_particle_col =    force_palette[2]
+	else
+		local wave_n = max(1, self.level.floor + 1)
+		if wave_n % 4 == 0 then
+			self.bg_color_index = mod_plus_1( floor(wave_n / 4) + 1, #self.bg_particle_palettes)
+			self.target_bg_palette = self.bg_particle_palettes[self.bg_color_index]
+			self.target_clear_color = self.target_bg_palette[1]
+			self.bg_particle_col = self.target_bg_palette[2]
+		end
 	end
+	self.bg_color_progress = 0
+
+end
+
+function BackgroundDots:set_clear_color(palette)
+	self.target_bg_palette = palette
+	self.target_clear_color = palette[1]
+	self.clear_color = palette[1]
+	self.bg_particle_col = palette[2]
+
+	self.bg_color_progress = 0
+
 end
 
 function BackgroundDots:new_bg_particle()

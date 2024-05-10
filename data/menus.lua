@@ -521,6 +521,9 @@ local function generate_menus()
         { "NerdOfGamers + partner", func_url("https://ryancavendell.itch.io/")},
         { "Azuras03 (NicolasYT)", function() end},
         { "Lars Loe (MadByte)", function() end},
+        { "Theobosse", function() end},
+        { "Alexis", function() end},
+        { "Binary Sunrise", func_url("https://binarysunrise.dev")},
         { ""},
         { "<<< "..Text:text("menu.credits.special_thanks").." >>>"},
         { "Gouspourd", func_url("https://gouspourd.itch.io/")},
@@ -528,7 +531,7 @@ local function generate_menus()
         { "Louie Chapman", func_url("https://louiechapm.itch.io/") },
         { "Raphaël Marcon", func_url("https://raphytator.itch.io/") },
         { "Indie Game Lyon", func_url("https://www.indiegamelyon.com/")},
-        { "LÖVE Engine", func_url("https://love2d.org/") },
+        { "LÖVE framework", func_url("https://love2d.org/") },
         { ""},
         { "<<< "..Text:text("menu.credits.asset_creators").." >>>"},
         { "Kenney", func_url("https://kenney.nl/")},
@@ -594,14 +597,16 @@ local function generate_menus()
         { StatsMenuItem, Text:text("menu.game_over.floor"), function(self) return concat(game.stats.floor, "/", game.level.max_floor) end },
         -- { StatsMenuItem, Text:text("menu.game_over.max_combo"), function(self) return concat(game.stats.max_combo) end },
         { ""},
-        { --[["🔄 "..]]Text:text("menu.pause.retry"), function() game:new_game() end },
-        { --[["🔚 "..]]Text:text("menu.pause.quit"), quit_game },
+        { "❤ "..Text:text("menu.win.wishlist"), func_url("https://s.team/a/2957130") },
+        { "▶ "..Text:text("menu.win.continue"), function() game:new_game() end },
+        -- { --[["🔚 "..]]Text:text("menu.pause.quit"), quit_game },
         { "" },
+
     }
 
-    if OPERATING_SYSTEM == "Web" or true then
-        table.remove(items, 8)
-    end
+    -- if OPERATING_SYSTEM == "Web" or true the$n
+    --     table.remove(items, 8)
+    -- end
     menus.win = Menu:new(game, items, { 0, 0, 0, 0.95 }, PROMPTS_GAME_OVER)
 
     ------------------------------------------------------------

@@ -1,9 +1,10 @@
 name = "bugscraper"
-default_targets = ["win64"]
+default_targets = ["macos", "win64"]
 build_directory = "export"
 icon_file = "icon.png"
 
 love_files = [
+    "::git-ls-tree::",
     "+*",
     "-*/.*",
     "-./export/*",

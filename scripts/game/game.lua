@@ -329,7 +329,9 @@ function Game:update_actors(dt)
 
 		if not actor.is_removed and actor.is_active then
 			actor:update(dt)
-        	actor:clamp_to_bounds(self.level.cabin_inner_rect)
+			if actor.is_affected_by_bounds then
+				actor:clamp_to_bounds(self.level.cabin_inner_rect)
+			end
 		end
 
 		if actor.is_removed then
@@ -858,9 +860,10 @@ function Game:on_red_button_pressed()
 	self.level:on_red_button_pressed()
 end
 
-function Game:on_exploding_elevator()
+function Game:on_elevator_crashed()
 	self.game_state = GAME_STATE_WIN
 	self.menu_manager:set_can_pause(true)
+	self.level:on_elevator_crashed()
 end
 
 function Game:apply_upgrade(upgrade) 

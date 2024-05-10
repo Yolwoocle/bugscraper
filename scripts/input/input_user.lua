@@ -97,7 +97,7 @@ function InputUser:action_pressed(action)
         result = action_state:is_hold_repeat_pressed()
     end
 
-    if result and is_in_table(UI_ACTIONS, action) then
+    if result and is_in_table(UI_ACTIONS, action) and self.n ~= GLOBAL_INPUT_USER_PLAYER_N then
         Input:set_last_ui_user_n(self.n)
     end
     return result

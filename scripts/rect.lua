@@ -33,4 +33,8 @@ function Rect:scale(val)
     return self
 end
 
+function Rect:is_point_in_inclusive(px, py)
+	return (self.ax <= px and px <= self.bx) and (self.ay <= py and py <= self.by)
+end
+
 return Rect

@@ -68,6 +68,9 @@ function Actor:init_actor(x, y, w, h, spr, args)
 	self.rider = nil
 	self.vehicle = nil
 
+	-- Whether the actor should be teleported within bounds
+	self.is_affected_by_bounds = true
+
 	self.collision_filter = function(item, other)
 		-- By default, do not react to collisions
 		local type = "cross"

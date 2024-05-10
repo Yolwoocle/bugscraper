@@ -794,8 +794,17 @@ end
 function cerp(a,b,t)
 	-- "constant" interpolation?
 	-- 2024 leo here: wtf is this shit
-	if abs(a-b) <= t then    return b    end
+	if math.abs(a-b) <= t then
+		return b
+	end
 	return a + sign0(b-a)*t
+end
+
+function move_toward(from, to, delta)
+    if math.abs(to - from) <= delta then
+        return to
+    end
+	return from + sign(to - from) * delta
 end
 
 function move_toward_color(a, b, t)
@@ -808,12 +817,28 @@ function move_toward_color(a, b, t)
 	return c
 end
 
-function move_toward(from, to, delta)
-    if math.abs(to - from) <= delta then
-        return to
-    else
-        return from + sign(to - from) * delta
-    end
+function move_toward_color_radial(a, b, t)
+	a[4] = a[4] or 1
+	b[4] = b[4] or 1
+	local a_hsv = rgb_to_hsv(unpack(a))
+	local b_hsv = rgb_to_hsv(unpack(b))
+	return hsv_to_rgb(
+		move_toward_angle(a_hsv[1]*pi2, b_hsv[1]*pi2, t) / pi2,
+		move_toward(a_hsv[2], b_hsv[2], t),
+		move_toward(a_hsv[3], b_hsv[3], t),
+		move_toward(a_hsv[4], b_hsv[4], t)
+	)
+end
+
+function move_toward_angle(a, b, t)
+	local epsilon = 0.01
+	a = a % (math.pi*2)
+	b = b % (math.pi*2)
+	if math.abs(b - a) <= t then
+		return b
+	else
+		return a + sign0(shortest_angle_dist(a, b))*t
+	end
 end
 
 function lerp(a,b,t)
@@ -829,6 +854,90 @@ function lerp_color(a,b,t)
 	}
 	return c
 end
+
+function lerp_color_radial(a,b,t)
+	a[4] = a[4] or 1
+	b[4] = b[4] or 1
+	local a_hsv = rgb_to_hsv(unpack(a))
+	local b_hsv = rgb_to_hsv(unpack(b))
+	return hsv_to_rgb(
+		lerp_angle(a_hsv[1]*pi2, b_hsv[1]*pi2, t)/pi2,
+		lerp      (a_hsv[2], b_hsv[2], t),
+		lerp      (a_hsv[3], b_hsv[3], t),
+		lerp      (a_hsv[4], b_hsv[4], t)
+	)
+end
+
+-- http://axonflux.com/handy-rgb-to-hsl-and-rgb-to-hsv-color-model-c
+--[[
+   * Converts an RGB color value to HSV. Conversion formula
+   * adapted from http://en.wikipedia.org/wiki/HSV_color_space.
+   * Assumes r, g, and b are contained in the set [0, 1] and
+   * returns h, s, and v in the set [0, 1].
+   *
+   * @param   Number  r       The red color value
+   * @param   Number  g       The green color value
+   * @param   Number  b       The blue color value
+   * @return  Array           The HSV representation
+]]
+function rgb_to_hsv(r, g, b, a)
+    local max_, min_ = math.max(r, g, b), math.min(r, g, b)
+    local h, s, v
+    v = max_
+  
+    local d = max_ - min_
+    if max_ == 0 then s = 0 else s = d / max_ end
+  
+    if max_ == min_ then
+		h = 0 -- achromatic
+    else
+		if max_ == r then
+		h = (g - b) / d
+		if g < b then h = h + 6 end
+		elseif max_ == g then h = (b - r) / d + 2
+		elseif max_ == b then h = (r - g) / d + 4
+		end
+		h = h / 6
+    end
+  
+    return {h, s, v, a}
+end
+  
+-- http://axonflux.com/handy-rgb-to-hsl-and-rgb-to-hsv-color-model-c
+--[[
+   * Converts an HSV color value to RGB. Conversion formula
+   * adapted from http://en.wikipedia.org/wiki/HSV_color_space.
+   * Assumes h, s, and v are contained in the set [0, 1] and
+   * returns r, g, and b in the set [0, 1].
+   *
+   * @param   Number  h       The hue
+   * @param   Number  s       The saturation
+   * @param   Number  v       The value
+   * @return  Array           The RGB representation
+]]
+function hsv_to_rgb(h, s, v, a)
+	local r, g, b
+
+	local i = math.floor(h * 6);
+	local f = h * 6 - i;
+	local p = v * (1 - s);
+	local q = v * (1 - f * s);
+	local t = v * (1 - (1 - f) * s);
+
+	i = i % 6
+
+	if i == 0 then r, g, b = v, t, p
+	elseif i == 1 then r, g, b = q, v, p
+	elseif i == 2 then r, g, b = p, v, t
+	elseif i == 3 then r, g, b = p, q, v
+	elseif i == 4 then r, g, b = t, p, v
+	elseif i == 5 then r, g, b = v, p, q
+	end
+
+	return {r, g, b, a}
+end
+
+
 
 function wrap_to_pi(a)
 	return (a + math.pi) % (math.pi*2) - math.pi

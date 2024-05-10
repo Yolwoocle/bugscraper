@@ -1,8 +1,11 @@
 return {
     game = {
         combo = "COMBO %d!",
+        demo = "DEMO",
         congratulations = "CONGRATULATIONS! ",
-        win_prompt = "Pause to exit",
+        win_thanks = "Thank you for playing the demo",
+        win_wishlist = "Wishlist on Steam :)",
+        win_prompt = "[Pause to continue]",
     },
     gun = {
         machinegun = "pea gun",
@@ -150,6 +153,8 @@ return {
             continue = "CONTINUE",
         },
         win = {
+            wishlist = "WISHLIST ON STEAM",
+            continue = "CONTINUE",
             title = "CONGRATULATIONS!",
         },
         joystick_removed = {

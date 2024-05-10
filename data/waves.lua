@@ -67,7 +67,7 @@ end
 local waves = {	
 	-- debug_wave(),
 	-- new_cafeteria(),
-	-- [[
+	--[[
 	new_wave({
 		min = 4,
 		max = 6,
@@ -344,7 +344,7 @@ local waves = {
 		min = 1,
 		max = 1,
 		enemies = {
-			{E.ButtonBigGlass, 1}
+			{E.ButtonBigGlass, 1, position = {211, 194}}
 		},
 		music = "off",
 	})

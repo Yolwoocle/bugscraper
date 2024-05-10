@@ -34,11 +34,12 @@ function Level:init(game)
 
 	-- Cabin stats
 	local bw = BLOCK_WIDTH
-	local cabin_ax, cabin_ay = shaft_rect.ax,    shaft_rect.ay
+	local cabin_ax, cabin_ay = shaft_rect.ax,   shaft_rect.ay
 	local cabin_bx, cabin_by = shaft_rect.bx+1, shaft_rect.by+1
+	self:set_bounds(Rect:new(cabin_ax, cabin_ay, cabin_bx, cabin_by))
+
 	local door_ax, door_ay = cabin_ax*BW+154, cabin_ax*BW+122
 	local door_bx, door_by = cabin_ay*BW+261, cabin_ay*BW+207
-	self:set_bounds(Rect:new(cabin_ax, cabin_ay, cabin_bx, cabin_by))
 	self.door_rect = Rect:new(door_ax, door_ay, door_bx, door_by)
 
 	-- Bounding box
@@ -66,7 +67,7 @@ function Level:init(game)
 	self.current_wave = nil
 	
 	self.new_wave_animation_state = "off"
-	self.new_wave_progress = .0
+	self.new_wave_progress = 0.0
 	self.level_speed = 0
 	self.def_level_speed = 400
 	self.elev_x, self.elev_y = 0, 0
@@ -98,6 +99,12 @@ function Level:init(game)
 	self.hole_stencil_radius_speed = 0
 	self.hole_stencil_radius_accel = 500
 	self.hole_stencil_radius_accel_sign = 1
+
+	self.elevator_crashing_sound = sounds.elev_burning.source
+	self.elevator_alarm_sound = sounds.elev_siren.source
+	self.elevator_crash_sound = sounds.elev_crash.source
+
+	self.ending_timer = Timer:new(15)
 end
 
 function Level:update(dt)
@@ -110,6 +117,7 @@ function Level:update(dt)
 	self.elevator:update(dt)
 	
 	self.flash_alpha = max(self.flash_alpha - dt, 0)
+	self:update_ending(dt)
 	
 	self:update_cafeteria(dt)
 end
@@ -267,8 +275,8 @@ function Level:new_wave_buffer_enemies()
 	self.enemy_buffer = wave:spawn(self.door_rect)
 	
 	self:enable_wave_side_effects(wave)
-	if self.background.change_bg_color then
-		self.background:change_bg_color()
+	if self.background.change_clear_color then
+		self.background:change_clear_color()
 	end
 	
 	self:set_current_wave(wave)
@@ -501,7 +509,7 @@ function Level:draw_front(x,y)
 end
 
 function Level:draw_win_screen()
-	if not self.is_on_win_screen then
+	if game.game_state ~= GAME_STATE_WIN then
 		return
 	end
 
@@ -543,6 +551,8 @@ function Level:draw_win_screen()
 	-- 	if k == "max_combo" then key = "max combo" end
 	-- 	table.insert(ta, concat(k,": ",val))
 	-- end
+	table.insert(ta, Text:text("game.win_thanks"))
+	table.insert(ta, Text:text("game.win_wishlist"))
 	table.insert(ta, Text:text("game.win_prompt"))
 
 	for k,v in pairs(ta) do
@@ -558,30 +568,95 @@ end
 function Level:draw_ui()
 	self:draw_win_screen()
 
-	if self.flash_alpha then
+	if self.flash_alpha > 0 then
 		rect_color({1,1,1,self.flash_alpha}, "fill", 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
 	end
 end
 
 function Level:draw_rubble()
-	if not self.show_rubble then
-		return
+	if self.show_rubble then
+		love.graphics.draw(images.cabin_rubble, 0*BW, 11*BW)
 	end
-
-	gfx.draw(images.cabin_rubble, self.cabin_ax, (16-5)*BW)
 end
+
+---------------------------------------------
 
 function Level:on_red_button_pressed()
 	self.is_reversing_elevator = true
+	self.ending_timer:set_duration(10)
+	self.ending_timer:start()
+	self.elevator_crashing_sound:play()
+	self.elevator_alarm_sound:play()
 end
 
-function Level:do_exploding_elevator(dt)
-	local x,y = random_range(self.cabin_ax, self.cabin_bx), 16*BW
-	local mw = CANVAS_WIDTH/2
-	y = 16*BW-8 - max(0, lerp(BW*4-8, -16, abs(mw-x)/mw))
-	local size = random_range(4, 8)
-	Particles:fire(x,y,size, nil, 80, -5)
+function Level:update_ending(dt)
+	if game.game_state == GAME_STATE_ELEVATOR_BURNING then
+		self.level_speed = math.max(self.level_speed - 5, -self.def_level_speed*2)
+		if self.background.change_clear_color then
+			self.background:change_clear_color({COL_ORANGE, {COL_LIGHT_RED, COL_DARK_RED, COL_LIGHT_YELLOW}})
+		end
+		
+		if self.level_speed < 0 then
+			game:screenshake(math.abs(self.level_speed)/200)
+			local r = self.level_speed / self.def_level_speed
+			self.elevator_crashing_sound:setVolume(r)
+			self.elevator_alarm_sound:setVolume(r)
+		end
+
+		if self.ending_timer:update(dt) then
+			game:on_elevator_crashed()
+		end
+		
+	elseif game.game_state == GAME_STATE_WIN then
+		self.level_speed = 0
+		self:update_win_screen()
+	end
 end
+
+function Level:on_elevator_crashed()
+	if self.background.set_clear_color then
+		self.background:set_clear_color({COL_BLACK_BLUE, {COL_VERY_DARK_GRAY, COL_DARK_GRAY}})
+	end
+	if self.background.init_bg_particles then
+		self.background:init_bg_particles()
+	end
+	self.elevator_crashing_sound:stop()
+	self.elevator_alarm_sound:stop()
+	self.elevator_crash_sound:play()
+
+	self.game:screenshake(30)
+	self.world_generator:generate_end_rubble()
+	self.level_speed = 0
+	self:set_bounds(Rect:new(-1, -3, 31, 18))
+	self.flash_alpha = 1.5
+
+	game:kill_all_active_enemies()
+	-- self.game.game_ui:flash()
+
+	self.show_rubble = true
+	self.show_cabin = false
+	self.is_reversing_elevator = false
+end
+
+function Level:update_win_screen(dt)
+	for i = 2, #self.world_generator.end_rubble_slices do
+		local slice = self.world_generator.end_rubble_slices[i]
+		local slice_up = self.world_generator.end_rubble_slices[i+1]
+		for ix = slice.ax, slice.bx do
+			if (random_range(0, 1) <= 0.1) and ((not slice_up) or (slice_up and not slice_up:is_point_in_inclusive(ix, slice.ay-1))) then
+				Particles:fire(ix*BW + random_range(0, BW), slice.ay*BW, 5, nil, nil, -60)
+			end
+		end
+	end 
+end
+
+-- function Level:do_exploding_elevator(dt)
+-- 	local x,y = random_range(self.cabin_ax, self.cabin_bx), 16*BW
+-- 	local mw = CANVAS_WIDTH/2
+-- 	y = 16*BW-8 - max(0, lerp(BW*4-8, -16, abs(mw-x)/mw))
+-- 	local size = random_range(4, 8)
+-- 	Particles:fire(x,y,size, nil, 80, -5)
+-- end
 
 function Level:get_floor()
 	return self.floor
