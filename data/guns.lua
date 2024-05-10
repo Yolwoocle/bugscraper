@@ -133,7 +133,7 @@ function Guns:init()
 		self.sfx = "mushroom_ant_pop"
 		self.sfx_pitch = 1.2
 
-		self.cooldown = 0.03
+		self.cooldown = 0.06
 		self.jetpack_force = 200
 
 		self.bullet_spr = images.bullet_pea

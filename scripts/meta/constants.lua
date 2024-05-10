@@ -13,7 +13,7 @@ local function color(hex)
 	return {r/255, g/255, b/255, 1.0}
 end
 
-BUGSCRAPER_VERSION = "0.4.beta24-05-09"
+BUGSCRAPER_VERSION = "0.4.beta24-05-10"
 
 --------------------------------------------- 
 
