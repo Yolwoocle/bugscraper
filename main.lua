@@ -1,5 +1,5 @@
 require "scripts.util"
-require "lib.error_explorer.error_explorer"
+require "lib.love_error_explorer.error_explorer"
 local Class = require "scripts.meta.class"
 local Game = require "scripts.game.game"
 
