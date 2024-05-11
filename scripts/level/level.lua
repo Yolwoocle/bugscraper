@@ -624,6 +624,7 @@ function Level:on_elevator_crashed()
 	self.elevator_alarm_sound:stop()
 	self.elevator_crash_sound:play()
 
+	self.game.music_player:set_disk("game_over")
 	self.game:screenshake(30)
 	self.world_generator:generate_end_rubble()
 	self.level_speed = 0

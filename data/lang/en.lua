@@ -2,7 +2,7 @@ return {
     game = {
         combo = "COMBO %d!",
         demo = "DEMO",
-        congratulations = "CONGRATULATIONS! ",
+        congratulations = "CONGRATULATIONS!",
         win_thanks = "Thank you for playing the demo",
         win_wishlist = "Wishlist on Steam :)",
         win_prompt = "[Pause to continue]",

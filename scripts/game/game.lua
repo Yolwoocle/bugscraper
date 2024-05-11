@@ -20,6 +20,7 @@ local skins = require "data.skins"
 local sounds = require "data.sounds"
 local utf8 = require "utf8"
 
+require "bugscraper_config"
 require "scripts.meta.constants"
 require "scripts.util"
 require "scripts.meta.post_constants"

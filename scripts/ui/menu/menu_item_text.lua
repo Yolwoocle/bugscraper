@@ -81,9 +81,9 @@ function TextMenuItem:draw_textitem()
 		local h = math.floor(16)
 
 		exec_color(col, function()
-			love.graphics.draw(images.selection_left, x-16, y)
-			love.graphics.draw(images.selection_right, x + w, y)
-			rect_color(col, "fill", x, y, w, h)
+			love.graphics.draw(images.selection_left, math.floor(x-16), math.floor(y))
+			love.graphics.draw(images.selection_right, math.floor(x + w), math.floor(y))
+			rect_color(col, "fill", math.floor(x), math.floor(y), w, h)
 		end)
 	end
 

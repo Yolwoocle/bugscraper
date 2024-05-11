@@ -42,10 +42,12 @@ function GameUI:draw_logo()
 		end
 		gfx.setColor(col)
 		gfx.draw(img, logo_x + ox, game.logo_y + oy)
-		if i == 4 then
-			print_outline(COL_WHITE, COL_ORANGE, Text:text("game.demo"), logo_x + ox + 45, game.logo_y + oy + 19)
-		else
-			-- print_outline(col, col, "DEMO", logo_x + ox + 45, game.logo_y + oy + 19)
+		if DEMO_BUILD then
+			if i == 4 then
+				print_outline(COL_WHITE, COL_BLACK_BLUE, Text:text("game.demo"), logo_x + ox + 90, game.logo_y + oy + 19)
+			else
+				print_outline(col, col, Text:text("game.demo"), logo_x + ox + 90, game.logo_y + oy + 19)
+			end
 		end
 	end
 end

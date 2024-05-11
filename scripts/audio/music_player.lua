@@ -29,6 +29,7 @@ function MusicPlayer:init()
 	self.music_mode = MUSIC_MODE_INGAME
 	self.current_disk = self.disks["intro"]
 	self.current_disk:set_mode(self.music_mode)
+	self.pause_volume = 0.5
 
 	self.fadeout_timer = Timer:new(1.0)
 	self.fadeout_volume = 1.0
@@ -156,7 +157,11 @@ function MusicPlayer:set_fadeout_volume(vol)
 end
 
 function MusicPlayer:get_total_volume()
-	return self.volume * self.fadeout_volume
+	local volume = self.volume * self.fadeout_volume
+	if self.music_mode == MUSIC_MODE_PAUSE then
+		volume = volume * self.pause_volume
+	end
+	return volume
 end
 
 
