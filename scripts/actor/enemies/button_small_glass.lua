@@ -30,7 +30,7 @@ function ButtonSmallGlass:init(x, y)
     self.break_num_particles = 20
     
     self.sound_fracture = "glass_fracture"
-    self.sound_break = "glass_break"
+    self.sound_break = "glass_break_weak"
 
     self:set_image(images.small_button_crack2)
     self:set_size(22, 21)

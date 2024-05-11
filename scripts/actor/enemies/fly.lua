@@ -38,7 +38,10 @@ end
 function Fly:update_fly(dt)
     self:update_enemy(dt)
 
-    if not self.buzz_is_started then  self.buzz_source:play() self.buzz_is_started = true end
+    if not self.buzz_is_started then
+        self.buzz_source:play()
+        self.buzz_is_started = true
+    end
     local spd = dist(0, 0, self.vx, self.vy)
     if spd >= 0.001 then
         self.buzz_source:setVolume(1)

@@ -94,7 +94,7 @@ function Bullet:on_collision(col)
 			local bounce_x = (self.mid_x - col.other.mid_x)
 			local bounce_y = (self.mid_y - col.other.mid_y)
 			local normal_x, normal_y = normalise_vect(bounce_x, bounce_y)
-
+			
 			local new_vel_x, new_vel_y = bounce_vector(self.vx, self.vy, normal_x, normal_y)
 			local spd_slow = 1
 			-- self.friction_x = spd_slow
@@ -103,6 +103,11 @@ function Bullet:on_collision(col)
 			self.vy = new_vel_y * spd_slow
 
 			self.bounce_immunity_timer = self.bounce_immunity_duration
+
+			local ang = math.atan2(new_vel_y, new_vel_x)
+			Particles:bullet_vanish(self.mid_x, self.y, ang + pi/2)
+			Audio:play_var("bullet_bounce_"..random_sample{"1","2"}, 0.2, 1.2)
+			-- Audio:play_var("bullet_bounce", 0.2, 1.5)
 		end
 	end
 	
@@ -110,7 +115,9 @@ function Bullet:on_collision(col)
 end
 
 function Bullet:kill()
-	Particles:smoke(self.x + self.w/2, self.y + self.h/2)
+	-- Audio:play_var("bullet_bounce", 0.2, 1.2)
+	Particles:smoke(self.x + self.w/2, self.y + self.h/2, 4)
+	Particles:bullet_vanish(self.x + self.w/2, self.y + self.h/2, self.spr.rot - pi/2)
 	self:remove()
 end
 

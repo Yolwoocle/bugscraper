@@ -29,11 +29,11 @@ end
 local function debug_wave()
 	return Wave:new({
 		-- roll_type = WAVE_ROLL_TYPE_FIXED,
-		min = 5,
-		max = 5,
+		min = 1,
+		max = 1,
 		enable_stomp_arrow_tutorial = true,
 		enemies = {	
-			-- {E.Dung, 1, position = {240, 200}},
+			{E.Dung, 1, position = {240, 200}},
 			-- {E.FlyingDung, 1, position = {CANVAS_WIDTH/2, 200}},
 			-- {E.Fly, 1},
 			-- {E.VendingMachine, 1},
@@ -51,7 +51,7 @@ local function debug_wave()
 			-- {E.SnailShelled, 1},
 			-- {E.Slug, 1},
 			-- {E.Grasshopper, 1},
-			{E.MushroomAnt, 1},
+			-- {E.MushroomAnt, 1},
 
 			-- {E.ButtonBigGlass, 1, position={CANVAS_WIDTH/2, CANVAS_HEIGHT/2}},
 			
@@ -65,9 +65,9 @@ local function new_wave(params)
 end
 
 local waves = {	
-	-- debug_wave(),
+	debug_wave(),
 	-- new_cafeteria(),
-	--[[
+	-- [[
 	new_wave({
 		min = 4,
 		max = 6,

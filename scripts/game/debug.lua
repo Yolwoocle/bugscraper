@@ -81,6 +81,26 @@ function Debug:init(game)
         ["p"] = {"upgrade", function()
             game:apply_upgrade(upgrades.UpgradeEspresso:new())
         end},
+        ["t"] = {"particle", function()
+            Particles:image(CANVAS_WIDTH/2, CANVAS_HEIGHT/2 + 50, 1, {
+                images.bullet_vanish_1,
+                images.bullet_vanish_2,
+                images.bullet_vanish_3,
+                images.bullet_vanish_4,
+                images.bullet_vanish_5,
+            }, 0, nil, 0, 0, {
+                is_solid = false,
+                rot = 0,
+                vx1 = 0,
+                vx2 = 0,
+                vy1 = 0,
+                vy2 = 0,
+                vr1 = 0,
+                vr2 = 0,
+                life = 0.15,
+                is_animated = true
+            })
+        end},
         ["s"] = {"spawn", function()
             local dung = enemies.SnailShelled:new(CANVAS_WIDTH/2, CANVAS_HEIGHT/2)
             game:new_actor(dung)

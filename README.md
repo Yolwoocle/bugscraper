@@ -21,7 +21,7 @@ Rise to the top of a bug-infested tower by fighting on an elevator. On each floo
 
 
 ## Is there a licence?
-<u>This game is **NOT** <a href="https://en.wikipedia.org/wiki/Open-source_software">open source</a></u>, rather it is [source-accessible](https://en.wikipedia.org/wiki/Source-available_software). Some of the assets I use are incompatible with a traditional open-source licence. **Not having a licence means that by default I reserve all original rights for the game.**  
+<u>This game is **NOT** <a href="https://en.wikipedia.org/wiki/Open-source_software">open source</a></u>, rather it is [source available](https://en.wikipedia.org/wiki/Source-available_software). Some of the assets I use are incompatible with a traditional open-source licence. **Not having a licence means that by default I reserve all original rights for the game.**  
 
 However, I am very lax with what you can do with the source code. Please feel free to reuse, modify, or remix the source code of the game for any non commercial project, as long as you're not directly distributing the code, files, or any executables.
 

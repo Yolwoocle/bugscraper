@@ -585,6 +585,10 @@ local function generate_menus()
         { Text:text("menu.credits.asset_item", "'Insect Bug Smash & Crush'", "EminYILDIRIM", "CC BY 4.0"),     func_url("https://freesound.org/people/EminYILDIRIM/sounds/570767/")},
         { Text:text("menu.credits.asset_item", "'Inhaler  Puff 170427_1464'", "megashroom", "CC0"),            func_url("https://freesound.org/s/390174/")},
         { Text:text("menu.credits.asset_item", "'Poof/Puff'", "JustInvoke", "CC BY 4.0"),                      func_url("https://freesound.org/s/446124/")},
+        { Text:text("menu.credits.asset_item", "'rolling bag'", "Sunejackie", "CC BY 4.0"),                    func_url("https://freesound.org/s/542402/")},
+        -- { Text:text("menu.credits.asset_item", "'Ruler Bounce 3'", "belanhud", "CC0"),                         func_url("https://freesound.org/s/537904/")},
+        { Text:text("menu.credits.asset_item", "'Springboard A'", "lmbubec", "CC0"),                           func_url("https://freesound.org/s/119793/")},
+        { Text:text("menu.credits.asset_item", "'Springboard B'", "lmbubec", "CC0"),                           func_url("https://freesound.org/s/119794/")},
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
 
     local items = {

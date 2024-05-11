@@ -26,6 +26,8 @@ local sfxnames = {
 	gunshot_ring_2 = "gunshot_ring_2.ogg",
 	gunshot_ring_3 = "gunshot_ring_3.ogg",
 	pop_ring = "pop_ring.ogg",
+	bullet_bounce_1 = "bullet_bounce_1.ogg",
+	bullet_bounce_2 = "bullet_bounce_2.ogg",
 
 	hurt =  "hurt.ogg",
 	land =  "land.ogg",
@@ -75,6 +77,7 @@ local sfxnames = {
 	impactglass_light_004 = "impactglass_light_004.ogg",
 
 	glass_fracture = "glass_fracture.ogg", -- CC BY https://freesound.org/people/cmusounddesign/sounds/85168/
+	glass_break_weak = "glass_break_weak.ogg", -- CC BY https://freesound.org/people/cmusounddesign/sounds/85168/
 	glass_break = "glass_break.ogg", 
 	-- CC0  window shatter https://freesound.org/people/avrahamy/sounds/141563/
 	-- + combined & deeper CCBY   glass shatter https://freesound.org/people/cmusounddesign/sounds/85168/
@@ -94,6 +97,8 @@ local sfxnames = {
 	larva_damage2 = "larva_damage2.ogg",
 	larva_damage3 = "larva_damage3.ogg",
 	larva_death = "larva_death.ogg",
+
+	flying_dung_death = "flying_dung_death.ogg",
 
 	fly_buzz = "fly_buzz.ogg",
 
@@ -119,6 +124,8 @@ local sfxnames = {
 	enemy_death_2 = "enemy_death_2.ogg",
 	enemy_stomp_2 = "enemy_stomp_2.ogg",
 	enemy_stomp_3 = "enemy_stomp_3.ogg",
+
+	ball_roll = "ball_roll.ogg",
 
 	snail_shell_crack = "snail_shell_crack.ogg",
 	triple_pop = "triple_pop.ogg",
@@ -157,6 +164,7 @@ sounds.elev_door_close:setVolume(0.3)
 sounds.elev_burning:setLooping(true)
 
 sounds.fly_buzz:setLooping(true)
+sounds.ball_roll:setLooping(true)
 
 for i=0,9 do
 	sounds["footstep0"..tostring(i)]:setVolume(0.2)

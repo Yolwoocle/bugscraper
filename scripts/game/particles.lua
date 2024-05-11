@@ -84,6 +84,12 @@ end
 function ImageParticle:init_image_particle(spr, x,y,s,r, vx,vy,vs,vr, life, g, is_solid)
 	self:init_particle(x,y,s,r, vx,vy,vs,vr, life, g, is_solid)
 	self.spr = spr
+
+	self.is_animated = (type(spr) == "table")
+	if self.is_animated then
+		self.spr_table = spr
+		self.spr = spr[1]
+	end
 	
 	self.spr_w = self.spr:getWidth()
 	self.spr_h = self.spr:getWidth()
@@ -91,6 +97,14 @@ function ImageParticle:init_image_particle(spr, x,y,s,r, vx,vy,vs,vr, life, g, i
 	self.spr_oy = self.spr_h / 2
 	
 	self.is_solid = is_solid
+end
+function ImageParticle:update(dt)
+	self:update_particle(dt)
+
+	if self.is_animated then
+		local frame_i = clamp(math.ceil(#self.spr_table * (1 - self.life/self.max_life)), 1, #self.spr_table)
+		self.spr = self.spr_table[frame_i]
+	end
 end
 function ImageParticle:draw()
 	love.graphics.draw(self.spr, self.x, self.y, self.r, self.s, self.s, self.spr_ox, self.spr_oy)
@@ -498,6 +512,7 @@ function ParticleSystem:flash(x, y)
 	self:add_particle(CircleParticle:new(x, y, r, COL_WHITE, 0, 0, 220, _life))
 end
 
+-- FIXME giant scotch, fix for later
 function ParticleSystem:image(x, y, number, spr, spw_rad, life, vs, g, parms)
 	number = number or 10
 	spw_rad = spw_rad or 8
@@ -518,16 +533,58 @@ function ParticleSystem:image(x, y, number, spr, spw_rad, life, vs, g, parms)
 		local vr = random_neighbor(1)
 		local life = life + random_neighbor(0.5)
 		local g = (g or 1) * 3
+		local is_solid = true
+		local is_animated = false
 
-		if parms and parms.vx1 and parms.vx2 then   vx = random_range(parms.vx1, parms.vx2)   end
-		if parms and parms.vy1 and parms.vy2 then   vy = random_range(parms.vy1, parms.vy2)   end
-
+		if parms and parms.vx1 ~= nil and parms.vx2 ~= nil then
+			vx = random_range(parms.vx1, parms.vx2)
+		end
+		if parms and parms.vy1 ~= nil and parms.vy2 ~= nil then
+			vy = random_range(parms.vy1, parms.vy2)
+		end
+		if parms and parms.vr1 ~= nil and parms.vr2 ~= nil then
+			vr = random_range(parms.vr1, parms.vr2)
+		end
+		if parms and parms.rot ~= nil then
+			rot = parms.rot
+		end
+		if parms and parms.is_solid ~= nil then
+			is_solid = parms.is_solid
+		end
+		if parms and parms.is_animated ~= nil then
+			is_animated = parms.is_animated
+		end
+		if parms and parms.life ~= nil then
+			life = parms.life
+		end
+		
 		local sprite = spr
-		if type(spr) == "table" then
+		if (not is_animated) and type(spr) == "table" then
 			sprite = random_sample(spr)
 		end
-		self:add_particle(ImageParticle:new(sprite , x+dx, y+dy, 1, rot, vx,vy,vs,vr, life, g, true))
+		--spr, x,y,s,r, vx,vy,vs,vr, life, g, is_solid
+		self:add_particle(ImageParticle:new(sprite, x+dx, y+dy, 1, rot, vx,vy,vs,vr, life, g, is_solid))
 	end
+end
+
+-- FIXME: scotch
+function ParticleSystem:bullet_vanish(x, y, rot)
+	Particles:image(x, y, 1, {
+		images.bullet_vanish_1,
+		images.bullet_vanish_2,
+		images.bullet_vanish_3,
+	}, 0, nil, 0, 0, {
+		is_solid = false,
+		rot = rot,
+		vx1 = 0,
+		vx2 = 0,
+		vy1 = 0,
+		vy2 = 0,
+		vr1 = 0,
+		vr2 = 0,
+		life = 0.12,
+		is_animated = true
+	})
 end
 
 function ParticleSystem:stomped_enemy(x, y, spr)

@@ -205,7 +205,7 @@ function Level:set_background(background)
 end
 
 function Level:increment_floor()
-	local pitch = 0.8 + 0.5 * clamp(self.floor / self.max_floor, 0, 3)
+	local pitch = 0.8 + 0.5 * clamp(self.floor / self.max_floor, 0, 2)
 	Audio:play("elev_ding", 0.8, pitch)
 
 	self.floor = self.floor + 1
@@ -624,7 +624,6 @@ function Level:on_elevator_crashed()
 	self.elevator_alarm_sound:stop()
 	self.elevator_crash_sound:play()
 
-	self.game.music_player:set_disk("game_over")
 	self.game:screenshake(30)
 	self.world_generator:generate_end_rubble()
 	self.level_speed = 0
