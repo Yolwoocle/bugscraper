@@ -37,7 +37,7 @@ function UpgradeDisplay:init(x, y)
     self.target_player = nil
     
 	self.sound_damage = "glass_fracture"
-	self.sound_death = "glass_break"
+	self.sound_death = "glass_break_weak"
 
     self.animation_t = 0
     self.is_animation_exiting = false

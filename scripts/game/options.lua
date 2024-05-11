@@ -27,6 +27,7 @@ function OptionsManager:init(game)
 		mouse_visible = false,
 		pause_on_unfocus = ternary(love.system.getOS() == "Web", false, true),
 		screenshake_on = true,
+		show_fps_warning = true,
 
 		button_style_p1 = BUTTON_STYLE_DETECT,
 		button_style_p2 = BUTTON_STYLE_DETECT,

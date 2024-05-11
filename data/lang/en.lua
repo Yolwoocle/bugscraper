@@ -2,6 +2,8 @@ return {
     game = {
         combo = "COMBO %d!",
         demo = "DEMO",
+        fps = "%d FPS",
+        fps_warning = "Low framerate: disabling vsync might help",
         congratulations = "CONGRATULATIONS!",
         win_thanks = "Thank you for playing the demo",
         win_wishlist = "Wishlist on Steam :)",
@@ -136,6 +138,7 @@ return {
                 mouse_visible = "SHOW MOUSE CURSOR",
                 pause_on_unfocus = "PAUSE ON LOST FOCUS",
                 screenshake = "SCREENSHAKE",
+                show_fps_warning = "SHOW LOW FRAMERATE WARNING",
 
             }
         },

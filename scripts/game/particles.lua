@@ -24,6 +24,7 @@ function Particle:init_particle(x,y,s,r, vx,vy,vs,vr, life, g, is_solid)
 	self.life = self.max_life
 
 	self.is_removed = false
+	self.is_back = false
 end
 
 function Particle:update_particle(dt)
@@ -380,9 +381,16 @@ function ParticleSystem:update(dt)
 	end
 end
 
+function ParticleSystem:draw_back()
+	for i,p in pairs(self.particles) do
+		if p.is_back then
+			p:draw()
+		end
+	end
+end
 function ParticleSystem:draw()
 	for i,p in pairs(self.particles) do
-		if not p.is_front then
+		if not p.is_front and not p.is_back then
 			p:draw()
 		end
 	end
@@ -403,11 +411,11 @@ function ParticleSystem:clear()
 	self.particles = {}
 end
 
-function ParticleSystem:smoke_big(x, y)
-	self:smoke(x, y, 15, COL_WHITE, 16, 8, 4)
+function ParticleSystem:smoke_big(x, y, col)
+	self:smoke(x, y, 15, col or COL_WHITE, 16, 8, 4)
 end
 
-function ParticleSystem:smoke(x, y, number, col, spw_rad, size, sizevar, is_front)
+function ParticleSystem:smoke(x, y, number, col, spw_rad, size, sizevar, is_front, is_back)
 	number = number or 10
 	spw_rad = spw_rad or 8
 	size = size or 4
@@ -424,6 +432,7 @@ function ParticleSystem:smoke(x, y, number, col, spw_rad, size, sizevar, is_fron
 		local col = col or {v,v,v,1}
 		local particle = CircleParticle:new(x+dx, y+dy, size+dsize, col, 0, 0, _vr, _life)
 		particle.is_front = is_front
+		particle.is_back = is_back
 		self:add_particle(particle)
 	end
 end
@@ -442,7 +451,7 @@ function ParticleSystem:dust(x, y, col, size, rnd_pos, sizevar)
 end
 
 
-function ParticleSystem:fire(x, y, size, sizevar, velvar, vely)
+function ParticleSystem:fire(x, y, size, sizevar, velvar, vely, is_back)
 	rnd_pos = rnd_pos or 3
 	size = size or 4
 	sizevar = sizevar or 2
@@ -458,7 +467,9 @@ function ParticleSystem:fire(x, y, size, sizevar, velvar, vely)
 	velvar = velvar or 5
 	vely = vely or -2
 	local vy = random_range(vely - velvar, vely)
-	self:add_particle(CircleParticle:new(x+dx, y+dy, size+dsize, col, 0, vy, _vr, _life))
+	local particle = CircleParticle:new(x+dx, y+dy, size+dsize, col, 0, vy, _vr, _life)
+	self:add_particle(particle)
+	particle.is_back = is_back
 end
 
 

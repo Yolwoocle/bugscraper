@@ -117,6 +117,8 @@ function Game:new_game()
 	-- local l = create_actor_centered(Enemies.ButtonGlass, nx, ny)
 	local l = create_actor_centered(Enemies.ButtonSmallGlass, floor(nx), floor(ny))
 	self:new_actor(l)
+	-- local l = create_actor_centered(Enemies.Dummy, floor(nx) - 40, floor(ny))
+	-- self:new_actor(l)
 	
 	-- Exit sign 
 	local exit_x = CANVAS_WIDTH * 0.25
@@ -435,6 +437,8 @@ function Game:draw_game()
 	self:draw_on_layer(LAYER_OBJECTS, function()
 		love.graphics.clear()
 
+		Particles:draw_back()
+
 		-- Draw actors
 		for _,actor in pairs(self.actors) do
 			if not actor.is_player and actor.is_active then
@@ -500,6 +504,7 @@ function Game:draw_game()
 		if self.menu_manager.cur_menu then
 			self.menu_manager:draw()
 		end
+		self.game_ui:draw_front()
 		
 		if self.debug_mode then
 			self.debug:draw()

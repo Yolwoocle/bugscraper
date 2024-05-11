@@ -295,6 +295,20 @@ local function generate_menus()
         end},
         { ""},
         { "<<< "..Text:text("menu.options.game.title").." >>>"},
+        { SliderMenuItem, "🛜 "..Text:text("menu.options.game.screenshake"), function(self, diff)
+            diff = diff or 1
+            self.value = (self.value + diff)
+            if self.value < 0 then self.value = 20 end
+            if self.value > 20 then self.value = 0 end
+            
+            Options:set_screenshake(self.value/20)
+            Audio:play("menu_select", 1.0, 0.8+(self.value/20)*0.4)
+        end, range_table(0,20),
+        function(self)
+            self.value = Options:get("screenshake") * 20
+            self.value_text = concat(floor(100 * self.value / 20), "%")
+        end},
+
         { "🕐 "..Text:text("menu.options.game.timer"), function(self)
             Options:toggle_timer()
         end,
@@ -328,18 +342,13 @@ local function generate_menus()
         --     self.value = Options:get("screenshake_on")
         --     self.value_text = Options:get("screenshake_on") and "✅" or "❎"
         -- end},
-        { SliderMenuItem, "🛜 "..Text:text("menu.options.game.screenshake"), function(self, diff)
-            diff = diff or 1
-            self.value = (self.value + diff)
-            if self.value < 0 then self.value = 20 end
-            if self.value > 20 then self.value = 0 end
-            
-            Options:set_screenshake(self.value/20)
-            Audio:play("menu_select", 1.0, 0.8+(self.value/20)*0.4)
-        end, range_table(0,20),
+        
+        { "⚠ "..Text:text("menu.options.game.show_fps_warning"), function(self, option)
+            Options:toggle("show_fps_warning")
+        end,
         function(self)
-            self.value = Options:get("screenshake") * 20
-            self.value_text = concat(floor(100 * self.value / 20), "%")
+            self.value = Options:get("show_fps_warning")
+            self.value_text = Options:get("show_fps_warning") and "✅" or "❎"
         end},
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
     

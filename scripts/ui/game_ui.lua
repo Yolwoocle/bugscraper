@@ -29,6 +29,12 @@ function GameUI:draw()
 	self:draw_offscreen_indicators()
 end
 
+function GameUI:draw_front()
+	if not self.is_visible then return end
+
+	self:draw_FPS()
+end
+
 function GameUI:draw_logo()
 	for i=1, #LOGO_COLS + 1 do
 		local ox, oy = cos(game.logo_a + i*.4)*8, sin(game.logo_a + i*.4)*8
@@ -103,6 +109,22 @@ function GameUI:draw_timer()
 
 	rect_color({0,0,0,0.5}, "fill", 0, 10, 50, 12)
 	gfx.print(time_to_string(game.time), 8, 8)
+end
+
+function GameUI:draw_FPS()
+	if not Options:get("show_fps_warning") then
+		return
+	end
+	
+	local t = "⚠ "..Text:text("game.fps", love.timer.getFPS())
+	
+	if game.t > 2 and love.timer.getFPS() <= 50 then
+		print_outline(nil, nil, t, CANVAS_WIDTH - get_text_width(t) - 3, 3)
+		if game.menu_manager.cur_menu ~= nil then
+			t = "⚠ "..Text:text("game.fps_warning")
+			print_outline(nil, nil, t, CANVAS_WIDTH - get_text_width(t) - 3, 3+get_text_height())
+		end
+	end
 end
 
 function GameUI:draw_offscreen_indicators()

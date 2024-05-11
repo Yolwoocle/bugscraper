@@ -153,8 +153,8 @@ function Player:init(n, x, y, skin)
 	self.fury_bar = 0.0
 	self.fury_threshold = 2.5
 	self.fury_max = 5.0
-	self.fury_gun_cooldown_multiplier = 0.75
-	self.fury_gun_damage_multiplier = 2.0
+	self.fury_gun_cooldown_multiplier = 0.8
+	self.fury_gun_damage_multiplier = 1.5
 
 	-- Upgrades
 	self.upgrades = {}
@@ -181,7 +181,7 @@ function Player:update(dt)
 	self:move(dt)
 	self:do_wall_sliding(dt)
 	self:do_jumping(dt)
-	self:do_gravity(dt) -- FIXME: ouch, this is already called in update_actor
+	self:do_gravity(dt) -- FIXME: ouch, this is already called in update_actor so there is x2 gravity here
 	self:update_actor(dt)
 	self:do_aiming(dt)
 	self.mid_x = self.x + floor(self.w/2)
@@ -678,7 +678,7 @@ function Player:on_stomp(enemy)
 		spd = spd * 1.3
 	end
 	self.vy = spd
-	self:set_invincibility(0.1)
+	self:set_invincibility(0.15) --0.1
 
 	self.combo = self.combo + 1
 	if self.combo >= 4 then
@@ -790,9 +790,21 @@ function Player:update_combo(dt)
 		self.fury_bar = math.max(self.fury_bar - dt, 0.0)
 	end
 	self.fury_bar = clamp(self.fury_bar, 0.0, self.fury_max)
+
+	local old_fury_active = self.fury_active
 	self.fury_active = (self.fury_bar >= self.fury_threshold)
+
+	if not old_fury_active and self.fury_active then
+		-- Particles:word(self.mid_x, self.mid_y, "FURY", COL_LIGHT_YELLOW)
+		-- Particles:smoke_big(self.mid_x, self.mid_y, random_sample{COL_LIGHT_YELLOW, COL_ORANGE})
+	end
+
 	if self.fury_active then
-		-- Particles:smoke(self.mid_x, self.mid_y, 1, COL_LIGHT_YELLOW, nil, nil, nil, false)
+		-- size, sizevar, velvar, vely, is_back
+		-- Particles:fire(self.mid_x, self.mid_y, 5, nil, nil, -60, true)
+
+		-- number, col, spw_rad, size, sizevar, is_front, is_back
+		Particles:smoke(self.mid_x, self.mid_y, 1, random_sample{COL_LIGHT_YELLOW, COL_ORANGE}, 12, nil, nil, false, true)
 	end
 end
 

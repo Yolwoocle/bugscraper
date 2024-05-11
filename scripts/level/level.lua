@@ -15,6 +15,7 @@ local images = require "data.images"
 local sounds = require "data.sounds"
 local upgrades = require "data.upgrades"
 local waves = require "data.waves"
+local enemies = require "data.enemies"
 local utf8 = require "utf8"
 
 local Level = Class:inherit()
@@ -234,7 +235,7 @@ function Level:new_endless_wave()
 	})
 end
 
-function Level:get_new_wave(wave_n)
+function Level:get_new_wave(wave_n, unclamped_wave_n) --scotch: there shouldn't be unclamped_wave_n
 	local wave = waves[wave_n]
 	if self.game.endless_mode then
 		wave = self:new_endless_wave()
@@ -270,7 +271,7 @@ function Level:new_wave_buffer_enemies()
 
 	-- Spawn a bunch of enemies
 	local wave_n = clamp(self.floor + 1, 1, #waves) -- floor+1 because the floor indicator changes before enemies are spawned
-	local wave = self:get_new_wave(wave_n)
+	local wave = self:get_new_wave(wave_n, self.floor+1)
 	
 	self.enemy_buffer = wave:spawn(self.door_rect)
 	
