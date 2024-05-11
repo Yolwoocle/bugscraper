@@ -469,7 +469,7 @@ function Level:draw()
 		if self.cafeteria_background then
 			self.cafeteria_background:draw()
 		end
-		love.graphics.draw(images.cafeteria, 0, 0)
+		love.graphics.draw(images.cafeteria, -16, -16)
 	else
 		self.background:draw()
 	end

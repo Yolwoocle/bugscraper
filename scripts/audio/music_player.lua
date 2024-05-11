@@ -13,7 +13,7 @@ function MusicPlayer:init()
 		["w1"] =        MusicDisk:new(self, sounds.music_w1_ingame.source, sounds.music_w1_paused.source),
 		["game_over"] = MusicDisk:new(self, sounds.music_game_over.source, sounds.music_game_over.source),
 		["cafeteria"] = MusicDisk:new(self, sounds.music_cafeteria_ingame.source, sounds.music_cafeteria_paused.source),
-		["miniboss"] =  MusicDisk:new(self, sounds.music_miniboss.source, sounds.music_miniboss.source),
+		["miniboss"] =  MusicDisk:new(self, sounds.music_miniboss_ingame.source, sounds.music_miniboss_paused.source),
 	}
 	for name, disk in pairs(self.disks) do
 		disk:set_name(name)
