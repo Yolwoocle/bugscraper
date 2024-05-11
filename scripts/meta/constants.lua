@@ -317,22 +317,6 @@ AXIS_DEADZONE = 0.3
 TRIGGER_DEADZONE = 0.3
 AXIS_ANGLE_MARGIN = 3 * math.pi/8
 UI_AXIS_ANGLE_MARGIN = 2 * math.pi/8
-AXIS_TO_KEY_NAME_MAP = {
-    ["leftx+"] = "leftxpos",
-    ["leftx-"] = "leftxneg",
-    ["lefty+"] = "leftypos",
-    ["lefty-"] = "leftyneg",
-
-    ["rightx+"] = "rightxpos",
-    ["rightx-"] = "rightxneg",
-    ["righty+"] = "rightypos",
-    ["righty-"] = "rightyneg",
-
-    ["triggerleft+"] = "triggerleft",
-    ["triggerleft-"] = "triggerleft",
-    ["triggerright+"] = "triggerright",
-    ["triggerright-"] = "triggerright",
-}
 
 GLOBAL_INPUT_USER_PLAYER_N = -1
 

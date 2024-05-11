@@ -430,6 +430,28 @@ function Level:assign_cafeteria_upgrades()
 	end
 end
 
+function Level:on_upgrade_display_killed(display)
+	for _, actor in pairs(game.actors) do
+		if actor ~= self and actor.name == "upgrade_display" then
+			actor:kill()
+		end
+	end
+
+	local current_disk = game.music_player.current_disk
+	local time = 0.0
+	if current_disk and current_disk.current_source then
+		local current_source = current_disk.current_source
+        time = current_source:tell()
+	end
+	
+	game.music_player:set_disk("cafeteria_empty")
+	if game.music_player.current_disk and game.music_player.current_disk.current_source then
+		local source = game.music_player.current_disk.current_source
+		source:seek(time)
+	end
+
+end
+
 -----------------------------------------------------
 
 function Level:draw_with_hole(draw_func)

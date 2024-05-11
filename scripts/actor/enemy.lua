@@ -157,7 +157,7 @@ function Enemy:on_collision(col, other)
 
 		local is_on_head      = false --(feet_y <= self.y + self.h/2)
 		local is_falling_down = (player.vy > 0.0001)-- and (feet_y <= self.y + self.h*0.75)
-		local recently_landed = (0 < player.frames_since_land) and (player.frames_since_land <= 7)
+		local recently_landed = (0 < player.frames_since_land) and (player.frames_since_land <= 4) --7
 		if self.is_stompable and (is_on_head or is_falling_down or recently_landed) then
 			player.vy = 0
 			player:on_stomp(self)

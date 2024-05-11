@@ -9,11 +9,12 @@ local MusicPlayer = Class:inherit()
 
 function MusicPlayer:init()
 	self.disks = {
-		["intro"] =     MusicDisk:new(self, sounds.music_intro_ingame.source, sounds.music_intro_paused.source),
-		["w1"] =        MusicDisk:new(self, sounds.music_w1_ingame.source, sounds.music_w1_paused.source),
-		["game_over"] = MusicDisk:new(self, sounds.music_game_over.source, sounds.music_game_over.source),
-		["cafeteria"] = MusicDisk:new(self, sounds.music_cafeteria_ingame.source, sounds.music_cafeteria_paused.source),
-		["miniboss"] =  MusicDisk:new(self, sounds.music_miniboss_ingame.source, sounds.music_miniboss_paused.source),
+		["intro"] =           MusicDisk:new(self, sounds.music_intro_ingame.source, sounds.music_intro_paused.source),
+		["w1"] =              MusicDisk:new(self, sounds.music_w1_ingame.source, sounds.music_w1_paused.source),
+		["game_over"] =       MusicDisk:new(self, sounds.music_game_over.source, sounds.music_game_over.source),
+		["cafeteria"] =       MusicDisk:new(self, sounds.music_cafeteria_ingame.source, sounds.music_cafeteria_paused.source),
+		["cafeteria_empty"] = MusicDisk:new(self, sounds.music_cafeteria_empty_ingame.source, sounds.music_cafeteria_paused.source),
+		["miniboss"] =        MusicDisk:new(self, sounds.music_miniboss_ingame.source, sounds.music_miniboss_paused.source),
 	}
 	for name, disk in pairs(self.disks) do
 		disk:set_name(name)

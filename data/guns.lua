@@ -123,7 +123,7 @@ function Guns:init()
 		self.name = "minigun"
 		self:init_gun(user)
 		
-		self.max_ammo = 75
+		self.max_ammo = 50
 		self.max_reload_timer = 1.5
 
 		self.random_angle_offset = 0.5
@@ -134,7 +134,7 @@ function Guns:init()
 		self.sfx_pitch = 1.2
 
 		self.cooldown = 0.06
-		self.jetpack_force = 200
+		self.jetpack_force = 300
 
 		self.bullet_spr = images.bullet_pea
 		self.bul_w = 10

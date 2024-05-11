@@ -849,6 +849,7 @@ function Game:start_game()
 	self.move_logo = true
 	self.game_state = GAME_STATE_PLAYING
 	self.music_player:set_disk("w1")
+	self.level:activate_enemy_buffer()
 	self.level:begin_next_wave_animation()
 
 	self.menu_manager:set_can_pause(true)

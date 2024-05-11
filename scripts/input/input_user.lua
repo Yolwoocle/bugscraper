@@ -150,7 +150,9 @@ function InputUser:is_joystick_down(button, joystick, is_ui_action)
     if Input:is_axis(button.key_name) then
         return self:is_axis_down(button.key_name, joystick, is_ui_action)
     else
-        output = joystick:isGamepadDown(button.key_name)
+        if CONTROLLER_BUTTONS[button.key_name] then
+            output = joystick:isGamepadDown(button.key_name)
+        end
     end
 
     if output then

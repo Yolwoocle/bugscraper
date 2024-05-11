@@ -178,6 +178,7 @@ sounds.music_w1_paused =        new_source("music/music_w1_paused.ogg",        "
 sounds.music_game_over =        new_source("music/music_game_over.ogg",        "stream", {looping = true})
 sounds.music_cafeteria_ingame = new_source("music/music_cafeteria_ingame.ogg", "stream", {looping = true})
 sounds.music_cafeteria_paused = new_source("music/music_cafeteria_paused.ogg", "stream", {looping = true})
+sounds.music_cafeteria_empty_ingame = new_source("music/music_cafeteria_empty_ingame.ogg", "stream", {looping = true})
 sounds.music_miniboss_ingame =  new_source("music/music_miniboss_ingame.ogg",  "stream", {looping = true})
 sounds.music_miniboss_paused =  new_source("music/music_miniboss_paused.ogg",  "stream", {looping = true})
 
