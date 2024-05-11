@@ -3,6 +3,22 @@
 
 --
 ------------------------------------
+-- Old combos
+
+-- (in update_combo)
+	-- Stop combo if landed for more than a few frames
+	if self.frames_since_land > 3 then
+		if self.combo > self.max_combo then
+			self:new_best_combo()
+		end
+		
+		if self.combo >= 4 then
+			-- Particles:word(self.mid_x, self.mid_y, Text:text("game.combo", self.combo), COL_LIGHT_BLUE)
+		end
+		self.combo = 0
+	end
+
+------------------------------------
 -- old timer class
 require "scripts.util"
 local Class = require "scripts.meta.class"

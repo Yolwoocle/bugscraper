@@ -13,8 +13,6 @@ local function color(hex)
 	return {r/255, g/255, b/255, 1.0}
 end
 
-BUGSCRAPER_VERSION = "0.4"
-
 --------------------------------------------- 
 
 -- Graphics
@@ -62,7 +60,7 @@ FONT_CHARACTERS =
     " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz"..
     "{|}~ ¡¢£©®°¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿŒœŸЁАБВГДЕЖЗИЙКЛМНО"..
     "ПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюяё€🔊🔉🔈🎵🎼🔳🔲📺🕐↖🛜▶⏸🔄🔘⬅➡⬆⬇⏏🔫🔚📥👆🔙🗄⌨🎮🎚❤"..
-    "✅❎🐜🔗💡⚠"
+    "✅❎🐜🔗💡⚠🕹🫨"
 
 --------------------------------------------- 
 
@@ -178,6 +176,7 @@ RAW_INPUT_MAP_DEFAULT_EMPTY = {
     ui_reset_keys = {},
     split_keyboard = {},
     leave_game = {},
+    join_game = {},
 
     debug = {}
 }
@@ -187,7 +186,7 @@ RAW_INPUT_MAP_DEFAULT_GLOBAL = {
     right =     {},
     up =        {},
     down =      {},
-    jump =      {"k_c", "k_b", "c_a", "c_b"},
+    jump =      {},
     shoot =     {},
     
     pause =     {},
@@ -200,6 +199,7 @@ RAW_INPUT_MAP_DEFAULT_GLOBAL = {
     ui_reset_keys = {},
     split_keyboard = {"k_return"},
     leave_game = {},
+    join_game = {"k_c", "k_b", "c_a", "c_b"},
 
     debug = {"k_f1", "c_back"},
 }
@@ -222,6 +222,7 @@ RAW_INPUT_MAP_DEFAULT_CONTROLLER = {
     ui_reset_keys = {"c_triggerleft"},
     split_keyboard = {},
     leave_game = {"c_triggerleft"},
+    join_game = {},
 
     debug = {},
 }
@@ -244,6 +245,7 @@ RAW_INPUT_MAP_DEFAULT_KEYBOARD_SOLO = {
     ui_reset_keys = {"k_tab"},
     split_keyboard = {},
     leave_game = {"k_tab"},
+    join_game = {},
 
     debug = {},
 }
@@ -266,6 +268,7 @@ RAW_INPUT_MAP_DEFAULT_SPLIT_KEYBOARD_P1 = {
     ui_reset_keys = {"k_tab"},
     split_keyboard = {},
     leave_game = {"k_tab"},
+    join_game = {},
 
     debug = {},
 }
@@ -288,11 +291,12 @@ RAW_INPUT_MAP_DEFAULT_SPLIT_KEYBOARD_P2 = {
     ui_reset_keys = {"k_o"},
     split_keyboard = {},
     leave_game = {"k_o"},
+    join_game = {},
 
     debug = {},
 }
 
-UI_ACTIONS = {"ui_up", "ui_down", "ui_left", "ui_right", "ui_select", "ui_back", "pause"}
+UI_ACTIONS = {"ui_up", "ui_down", "ui_left", "ui_right", "ui_select", "ui_back", "pause", "join_game"}
 
 AXIS_TABLE = {
     leftxpos =  true,
@@ -313,22 +317,6 @@ AXIS_DEADZONE = 0.3
 TRIGGER_DEADZONE = 0.3
 AXIS_ANGLE_MARGIN = 3 * math.pi/8
 UI_AXIS_ANGLE_MARGIN = 2 * math.pi/8
-AXIS_TO_KEY_NAME_MAP = {
-    ["leftx+"] = "leftxpos",
-    ["leftx-"] = "leftxneg",
-    ["lefty+"] = "leftypos",
-    ["lefty-"] = "leftyneg",
-
-    ["rightx+"] = "rightxpos",
-    ["rightx-"] = "rightxneg",
-    ["righty+"] = "rightypos",
-    ["righty-"] = "rightyneg",
-
-    ["triggerleft+"] = "triggerleft",
-    ["triggerleft-"] = "triggerleft",
-    ["triggerright+"] = "triggerright",
-    ["triggerright-"] = "triggerright",
-}
 
 GLOBAL_INPUT_USER_PLAYER_N = -1
 

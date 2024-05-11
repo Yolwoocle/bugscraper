@@ -26,7 +26,7 @@ function Enemy:init_enemy(x,y, img, w,h)
 	self.is_bouncy_to_bullets = false
 	self.is_immune_to_bullets = false
 
-	self.harmless_frames = 0
+	self.harmless_timer = 0
 
 	self.kill_when_negative_life = true
 	self.max_life = 10
@@ -37,16 +37,16 @@ function Enemy:init_enemy(x,y, img, w,h)
 	self.speed_y = 0
 
 	self.loot = {
-		{nil, 80},
+		{nil, 160},
 		-- {Loot.Ammo, 0, loot_type="ammo", value=20},
-		{Loot.Life, 3, loot_type="life", value=1},
-		{Loot.Gun, 3, loot_type="gun"},
+		{Loot.Life, 6, loot_type="life", value=1},
+		{Loot.Gun, 4, loot_type="gun"},
 	}
 
 	self.is_stompable = true
 	self.is_killed_on_stomp = true
 	self.do_stomp_animation = true
-	self.stomp_height = self.h
+	self.stomp_height = self.h/2
 
 	self.is_pushable = true
 	self.is_knockbackable = true -- Multiplicator when knockback is applied to
@@ -68,6 +68,8 @@ function Enemy:init_enemy(x,y, img, w,h)
 
 	self.target = nil
 
+	self.harmless_timer = 0.0
+
 	self.do_vx_flipping = true
 	self.do_killed_smoke = true
 	-- self.sound_stomp = {"enemy_stomp_2", "enemy_stomp_3"}
@@ -79,7 +81,7 @@ function Enemy:update_enemy(dt)
 	self:update_actor(dt)
 	
 	self:follow_nearest_player(dt)
-	self.harmless_frames = max(self.harmless_frames - dt, 0)
+	self.harmless_timer = max(self.harmless_timer - dt, 0)
 	self.damaged_flash_timer = max(self.damaged_flash_timer - dt, 0)
 	self.spr:set_flip_x(ternary(self.do_vx_flipping, self.vx < 0, false))
 end
@@ -151,9 +153,12 @@ function Enemy:on_collision(col, other)
 		local epsilon = 0.01
 	
 		-- if player.vy > epsilon and self.is_stompable then
-		local recently_landed = 0 < player.frames_since_land and player.frames_since_land <= 7
 		local feet_y = player.y + player.h
-		if self.is_stompable and (feet_y <= self.y + self.stomp_height) and (player.vy > 0.0001 or recently_landed) then
+
+		local is_on_head      = false --(feet_y <= self.y + self.h/2)
+		local is_falling_down = (player.vy > 0.0001)-- and (feet_y <= self.y + self.h*0.75)
+		local recently_landed = (0 < player.frames_since_land) and (player.frames_since_land <= 4) --7
+		if self.is_stompable and (is_on_head or is_falling_down or recently_landed) then
 			player.vy = 0
 			player:on_stomp(self)
 			if self.do_stomp_animation then
@@ -167,7 +172,7 @@ function Enemy:on_collision(col, other)
 
 		else
 			-- Damage player
-			if self.harmless_frames <= 0 then
+			if self.harmless_timer <= 0 then
 				player:do_damage(self.damage, self)
 				self:on_damage_player(player, self.damage)
 			end
@@ -260,7 +265,9 @@ function Enemy:on_death(damager, reason)
 end
 
 function Enemy:on_hit_bullet(bul, col)
-	if self.is_immune_to_bullets then    return    end
+	if self.is_immune_to_bullets then
+		return false
+	end
 	self:do_damage(bul.damage, bul)
 	
 	if self.is_knockbackable then
@@ -268,6 +275,7 @@ function Enemy:on_hit_bullet(bul, col)
 		self.vx = self.vx + cos(ang) * bul.knockback * self.self_knockback_mult
 		self.vy = self.vy + sin(ang) * bul.knockback * self.self_knockback_mult
 	end
+	return true
 end
 
 return Enemy

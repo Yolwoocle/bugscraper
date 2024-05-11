@@ -17,4 +17,13 @@ function Slug:init(x, y)
     self.anim_frames = {images.slug1, images.slug2}
 end
 
+function Slug:update(dt)
+    self:update_enemy(dt)
+    -- self.debug_values[1] = concat("h", self.harmless_timer)
+end
+
+function Slug:draw()
+    self:draw_enemy()
+end
+
 return Slug

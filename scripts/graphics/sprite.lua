@@ -3,7 +3,7 @@ local Class = require "scripts.meta.class"
 
 local Sprite = Class:inherit()
 
-function Sprite:init(image)
+function Sprite:init(image, anchor)
     self.image = image
 
     self.ox = 0
@@ -20,7 +20,7 @@ function Sprite:init(image)
     self.color = COL_WHITE
     self.outline = nil
 
-    self.anchor = SPRITE_ANCHOR_CENTER_BOTTOM
+    self.anchor = anchor or SPRITE_ANCHOR_CENTER_BOTTOM
 end
 
 function Sprite:set_image(image)
@@ -66,6 +66,9 @@ function Sprite:get_y_anchor()
 end
 
 function Sprite:get_anchor_offset(w, h)
+    w = param(w, 0)
+    h = param(h, 0)
+    
 	local spr_w = self.image:getWidth()
 	local spr_h = self.image:getHeight()
     local anchor_x, anchor_y = self:get_x_anchor(), self:get_y_anchor()

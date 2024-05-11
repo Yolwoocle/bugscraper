@@ -87,7 +87,8 @@ function DungBeetle:draw()
     self:draw_enemy()
 
     if self.vehicle then
-        draw_centered(images.dung_beetle_shield, self.mid_x, self.mid_y)
+        draw_centered(images.dung_beetle_shield, self.mid_x, self.mid_y, -self.vehicle.spr.rot)
+        draw_centered(images.dung_beetle_shield_shine, self.mid_x, self.mid_y)
         -- print_outline(nil, nil, tostring(self.anim_frame_len), self.mid_x + 20, self.mid_y)
     end
 end

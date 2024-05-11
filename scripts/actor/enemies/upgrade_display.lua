@@ -37,7 +37,7 @@ function UpgradeDisplay:init(x, y)
     self.target_player = nil
     
 	self.sound_damage = "glass_fracture"
-	self.sound_death = "glass_break"
+	self.sound_death = "glass_break_weak"
 
     self.animation_t = 0
     self.is_animation_exiting = false
@@ -93,12 +93,7 @@ end
 function UpgradeDisplay:apply()
     if self.product then
         game:apply_upgrade(self.product)
-
-        for _, actor in pairs(game.actors) do
-            if actor ~= self and actor.name == "upgrade_display" then
-                actor:kill()
-            end
-        end 
+        game.level:on_upgrade_display_killed(self)
     end
 end
 

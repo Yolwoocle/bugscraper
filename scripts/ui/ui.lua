@@ -58,6 +58,8 @@ function UI:draw_progress_bar(x, y, w, h, val, max_val, col_fill, col_out, col_f
 	h = floor(h)
 	rect_color(col_out, "fill", x, y, w, h)
 
+	val = math.min(val, max_val)
+
 	local prog_w = floor( (w-2) * (val/max_val) )
 	rect_color(col_fill,        "fill", x+1, y+1,   prog_w, h-2)
 	rect_color(col_fill_shadow, "fill", x+1, y+h-2, prog_w, 1)

@@ -44,6 +44,7 @@ function SnailShelled:on_death()
     Particles:image(self.mid_x, self.mid_y, 30, images.snail_shell_fragment, 13, nil, 0, 10)
     local slug = Slug:new(self.x, self.y)
     slug.vy = -200
+    slug.harmless_timer = 0.5
     game:new_actor(slug)
 end
 

@@ -278,16 +278,22 @@ function Loot.Gun:init(x, y, val, vx, vy)
 	self.gun = gun
 	
 	self:init_loot(gun.spr, x, y, 2, 2, val, vx, vy)
+	
+	self.max_life = 15
+	self.life = self.max_life
 end
 
 function Loot.Gun:reset()
 	self:reset_loot()
+	
+	self.max_life = 15
+	self.life = self.max_life
 
 	self.vx = 0
 	self.vy = 0
 
 	self.min_attract_dist = 16
-	self.uncollectable_timer = 0.5
+	self.uncollectable_timer = 1.0
 	
 	self.friction_x = self.default_friction
 	

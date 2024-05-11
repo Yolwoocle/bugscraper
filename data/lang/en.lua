@@ -1,8 +1,13 @@
 return {
     game = {
         combo = "COMBO %d!",
-        congratulations = "CONGRATULATIONS! ",
-        win_prompt = "Pause to exit",
+        demo = "DEMO",
+        fps = "%d FPS",
+        fps_warning = "Low framerate: disabling vsync might help",
+        congratulations = "CONGRATULATIONS!",
+        win_thanks = "Thank you for playing the demo",
+        win_wishlist = "Wishlist on Steam :)",
+        win_prompt = "[Pause to continue]",
     },
     gun = {
         machinegun = "pea gun",
@@ -84,6 +89,11 @@ return {
                     playstation5 = "PlayStation 5",
                     xbox = "Xbox",
                 },
+                deadzone = "JOYSTICK DEADZONE",
+                vibration = "VIBRATION",
+                low_deadzone_warning = "Low values may cause issues",
+                note_deadzone = "Deadzone settings will be applied after leaving this menu",
+
                 gameplay = "Gameplay",
                 interface = "Interface",
                 global = "Global",
@@ -128,6 +138,7 @@ return {
                 mouse_visible = "SHOW MOUSE CURSOR",
                 pause_on_unfocus = "PAUSE ON LOST FOCUS",
                 screenshake = "SCREENSHAKE",
+                show_fps_warning = "SHOW LOW FRAMERATE WARNING",
 
             }
         },
@@ -145,6 +156,8 @@ return {
             continue = "CONTINUE",
         },
         win = {
+            wishlist = "WISHLIST ON STEAM",
+            continue = "CONTINUE",
             title = "CONGRATULATIONS!",
         },
         joystick_removed = {

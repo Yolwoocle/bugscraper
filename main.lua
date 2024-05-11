@@ -1,5 +1,5 @@
 require "scripts.util"
-require "lib.error_explorer.error_explorer"
+require "lib.please_work_error_explorer.error_explorer"
 local Class = require "scripts.meta.class"
 local Game = require "scripts.game.game"
 
@@ -15,25 +15,28 @@ end
 
 local t = 0
 local fixed_dt = 1/60 -- fixed frame delta time
-local frame = 0
+_G_frame = 0
+_G_fixed_frame = 0
 local function fixed_update()
-	frame = frame + 1
+	_G_fixed_frame = _G_fixed_frame + 1
 	game:update(fixed_dt)
 end
+
 
 function love.update(dt)
 	t = t + dt
 	local cap = 1 --If there's lag spike, repeat up to how many frames?
 	local i = 0
-	while t > fixed_dt and cap > 0 do
-		t = t - fixed_dt
+	local update_fixed_dt = fixed_dt
+	while t > update_fixed_dt and cap > 0 do
+		t = t - update_fixed_dt
 		fixed_update()
 		cap = cap - 1
 		i=i+1
 	end
 
 	if game then   game.frame_repeat = i end
-	frame = frame + 1
+	_G_frame = _G_frame + 1
 end
 
 function love.draw()

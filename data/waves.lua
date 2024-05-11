@@ -19,7 +19,6 @@ local function new_cafeteria()
 		max = 1,
 		bounds = RECT_CAFETERIA,
 		enemies = {
-			{E.Dummy, 1, position = {5000, 200}},
 			{E.UpgradeDisplay, 1, position = {488, 192}},
 			{E.UpgradeDisplay, 1, position = {544, 192}},
 			{E.UpgradeDisplay, 1, position = {600, 192}},
@@ -52,7 +51,7 @@ local function debug_wave()
 			-- {E.SnailShelled, 1},
 			-- {E.Slug, 1},
 			-- {E.Grasshopper, 1},
-			-- {E.MushroomAnt, 5},
+			-- {E.MushroomAnt, 1},
 
 			-- {E.ButtonBigGlass, 1, position={CANVAS_WIDTH/2, CANVAS_HEIGHT/2}},
 			
@@ -70,14 +69,13 @@ local waves = {
 	-- new_cafeteria(),
 	-- [[
 	new_wave({
-		music = "w1",
-
 		min = 4,
 		max = 6,
 		enemies = {
 			{E.Larva, 3},
 			{E.Fly, 3},
 		},
+		music = "w1",
 	}),
 
 	
@@ -199,7 +197,6 @@ local waves = {
 			{E.Spider, 4},
 		},
 	}),
-
 
 	new_cafeteria(),
 
@@ -336,18 +333,20 @@ local waves = {
 		max = 1,
 		enemies = {	
 			{E.Dung, 1, position = {240, 200}},			
-		}
+		},
+		music = "miniboss",
 	}),
 	-- }, 4)),
 	--]]
-
+	
 	-- Last wave
 	new_wave({ 
 		min = 1,
 		max = 1,
 		enemies = {
-			{E.ButtonBigGlass, 1}
-		}
+			{E.ButtonBigGlass, 1, position = {211, 194}}
+		},
+		music = "off",
 	})
 }
 

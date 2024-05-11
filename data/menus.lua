@@ -175,8 +175,8 @@ local function generate_menus()
         { "💡 "..Text:text("menu.pause.feedback"), func_set_menu("feedback") },
         { "🔚 "..Text:text("menu.pause.quit"), quit_game },
         { "" },
-        { "[DEBUG] VIEW WAVES", func_set_menu('view_waves' ) },
-        { "[DEBUG] joystick_removed", func_set_menu('joystick_removed' ) },
+        -- { "[DEBUG] VIEW WAVES", func_set_menu('view_waves' ) },
+        -- { "[DEBUG] joystick_removed", func_set_menu('joystick_removed' ) },
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL, draw_elevator_progress)
     if OPERATING_SYSTEM == "Web" then
         -- Disable quitting on web
@@ -295,6 +295,20 @@ local function generate_menus()
         end},
         { ""},
         { "<<< "..Text:text("menu.options.game.title").." >>>"},
+        { SliderMenuItem, "🛜 "..Text:text("menu.options.game.screenshake"), function(self, diff)
+            diff = diff or 1
+            self.value = (self.value + diff)
+            if self.value < 0 then self.value = 20 end
+            if self.value > 20 then self.value = 0 end
+            
+            Options:set_screenshake(self.value/20)
+            Audio:play("menu_select", 1.0, 0.8+(self.value/20)*0.4)
+        end, range_table(0,20),
+        function(self)
+            self.value = Options:get("screenshake") * 20
+            self.value_text = concat(floor(100 * self.value / 20), "%")
+        end},
+
         { "🕐 "..Text:text("menu.options.game.timer"), function(self)
             Options:toggle_timer()
         end,
@@ -328,18 +342,13 @@ local function generate_menus()
         --     self.value = Options:get("screenshake_on")
         --     self.value_text = Options:get("screenshake_on") and "✅" or "❎"
         -- end},
-        { SliderMenuItem, "🛜 "..Text:text("menu.options.game.screenshake"), function(self, diff)
-            diff = diff or 1
-            self.value = (self.value + diff)
-            if self.value < 0 then self.value = 20 end
-            if self.value > 20 then self.value = 0 end
-            
-            Options:set_screenshake(self.value/20)
-            Audio:play("menu_select", 1.0, 0.8+(self.value/20)*0.4)
-        end, range_table(0,20),
+        
+        { "⚠ "..Text:text("menu.options.game.show_fps_warning"), function(self, option)
+            Options:toggle("show_fps_warning")
+        end,
         function(self)
-            self.value = Options:get("screenshake") * 20
-            self.value_text = concat(floor(100 * self.value / 20), "%")
+            self.value = Options:get("show_fps_warning")
+            self.value_text = Options:get("show_fps_warning") and "✅" or "❎"
         end},
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
     
@@ -385,7 +394,8 @@ local function generate_menus()
             { "" },
             { "<<< "..Text:text("menu.options.input_submenu.global").." >>>" },
             { Text:text("menu.options.input_submenu.note_global_keyboard") },
-            { ControlsMenuItem, -1, "global", INPUT_TYPE_KEYBOARD, "jump",           "📥 "..Text:text("input.prompts.join") },
+            { Text:text("menu.options.input_submenu.note_ui_min_button") },
+            { ControlsMenuItem, -1, "global", INPUT_TYPE_KEYBOARD, "join_game",      "📥 "..Text:text("input.prompts.join") },
             { ControlsMenuItem, -1, "global", INPUT_TYPE_KEYBOARD, "split_keyboard", "🗄 "..Text:text("input.prompts.split_keyboard") },
         }, DEFAULT_MENU_BG_COLOR, PROMPTS_CONTROLS)
     end
@@ -419,6 +429,41 @@ local function generate_menus()
                 self.value = Options:get("button_style_p"..tostring(player_n))
                 self.value_text = Text:text("menu.options.input_submenu.controller_button_style_value."..Options:get("button_style_p"..tostring(player_n)))
             end},
+
+            { SliderMenuItem, "🫨 "..Text:text("menu.options.input_submenu.vibration"), function(self, diff)
+                diff = diff or 1
+                self.value = (self.value + diff)
+                if self.value < 0 then self.value = 5 end
+                if self.value > 5 then self.value = 0 end
+                
+                Options:set("vibration_p"..tostring(player_n), self.value/5)
+                Audio:play("menu_select", 1.0, 0.8+(self.value/5)*0.4)
+                Input:vibrate(player_n, 0.4, 1.0)
+            end, range_table(0,5),
+            function(self)
+                local value = Options:get("vibration_p"..tostring(player_n))
+                self.value_text = concat(math.floor(100 * value), "%")
+            end},
+
+            { SliderMenuItem, "🕹 "..Text:text("menu.options.input_submenu.deadzone"), function(self, diff)
+                diff = diff or 1
+                self.value = (self.value + diff)
+                if self.value < 1 then self.value = 19 end
+                if self.value > 19 then self.value = 1 end
+                
+                Options:set_axis_deadzone(player_n, self.value/20)
+                Audio:play("menu_select", 1.0, 0.8+(self.value/20)*0.4)
+            end, range_table(1,19),
+            function(self)
+                self.value = Options:get("axis_deadzone_p"..tostring(player_n)) * 20
+                self.value_text = concat(floor(100 * self.value / 20), "%")
+                
+                self.label_text = "🕹 "..Text:text("menu.options.input_submenu.deadzone")
+                if self.is_selected and self.value <= 4 then
+                    self.label_text = self.label_text.."\n⚠ "..Text:text("menu.options.input_submenu.low_deadzone_warning")
+                end
+            end},
+            { Text:text("menu.options.input_submenu.note_deadzone") },
             { "" },
             { "<<< "..Text:text("menu.options.input_submenu.gameplay").." >>>" },
             { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "left",  "⬅ "..Text:text("input.prompts.left") },
@@ -441,7 +486,8 @@ local function generate_menus()
             { "" },            
             { "<<< "..Text:text("menu.options.input_submenu.global").." >>>" },
             { Text:text("menu.options.input_submenu.note_global_controller") },
-            { ControlsMenuItem, -1, "global", INPUT_TYPE_CONTROLLER, "jump",           "📥 "..Text:text("input.prompts.join") },
+            { Text:text("menu.options.input_submenu.note_ui_min_button") },
+            { ControlsMenuItem, -1, "global", INPUT_TYPE_CONTROLLER, "join_game", "📥 "..Text:text("input.prompts.join") },
 
         }, DEFAULT_MENU_BG_COLOR, PROMPTS_CONTROLS)
     end
@@ -462,7 +508,7 @@ local function generate_menus()
             return time_to_string(game.stats.time)
         end },
         { StatsMenuItem, Text:text("menu.game_over.floor"), function(self) return concat(game.stats.floor, "/", game.level.max_floor) end },
-        { StatsMenuItem, Text:text("menu.game_over.max_combo"), function(self) return concat(game.stats.max_combo) end },
+        -- { StatsMenuItem, Text:text("menu.game_over.max_combo"), function(self) return concat(game.stats.max_combo) end },
         { "" },
         { Text:text("menu.game_over.continue"), function() game:new_game() end },
         { "" },
@@ -484,6 +530,9 @@ local function generate_menus()
         { "NerdOfGamers + partner", func_url("https://ryancavendell.itch.io/")},
         { "Azuras03 (NicolasYT)", function() end},
         { "Lars Loe (MadByte)", function() end},
+        { "Theobosse", function() end},
+        { "Alexis", function() end},
+        { "Binary Sunrise", func_url("https://binarysunrise.dev")},
         { ""},
         { "<<< "..Text:text("menu.credits.special_thanks").." >>>"},
         { "Gouspourd", func_url("https://gouspourd.itch.io/")},
@@ -491,7 +540,7 @@ local function generate_menus()
         { "Louie Chapman", func_url("https://louiechapm.itch.io/") },
         { "Raphaël Marcon", func_url("https://raphytator.itch.io/") },
         { "Indie Game Lyon", func_url("https://www.indiegamelyon.com/")},
-        { "LÖVE Engine", func_url("https://love2d.org/") },
+        { "LÖVE framework", func_url("https://love2d.org/") },
         { ""},
         { "<<< "..Text:text("menu.credits.asset_creators").." >>>"},
         { "Kenney", func_url("https://kenney.nl/")},
@@ -545,6 +594,10 @@ local function generate_menus()
         { Text:text("menu.credits.asset_item", "'Insect Bug Smash & Crush'", "EminYILDIRIM", "CC BY 4.0"),     func_url("https://freesound.org/people/EminYILDIRIM/sounds/570767/")},
         { Text:text("menu.credits.asset_item", "'Inhaler  Puff 170427_1464'", "megashroom", "CC0"),            func_url("https://freesound.org/s/390174/")},
         { Text:text("menu.credits.asset_item", "'Poof/Puff'", "JustInvoke", "CC BY 4.0"),                      func_url("https://freesound.org/s/446124/")},
+        { Text:text("menu.credits.asset_item", "'rolling bag'", "Sunejackie", "CC BY 4.0"),                    func_url("https://freesound.org/s/542402/")},
+        -- { Text:text("menu.credits.asset_item", "'Ruler Bounce 3'", "belanhud", "CC0"),                         func_url("https://freesound.org/s/537904/")},
+        { Text:text("menu.credits.asset_item", "'Springboard A'", "lmbubec", "CC0"),                           func_url("https://freesound.org/s/119793/")},
+        { Text:text("menu.credits.asset_item", "'Springboard B'", "lmbubec", "CC0"),                           func_url("https://freesound.org/s/119794/")},
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
 
     local items = {
@@ -555,16 +608,18 @@ local function generate_menus()
             return time_to_string(game.stats.time)
         end },
         { StatsMenuItem, Text:text("menu.game_over.floor"), function(self) return concat(game.stats.floor, "/", game.level.max_floor) end },
-        { StatsMenuItem, Text:text("menu.game_over.max_combo"), function(self) return concat(game.stats.max_combo) end },
+        -- { StatsMenuItem, Text:text("menu.game_over.max_combo"), function(self) return concat(game.stats.max_combo) end },
         { ""},
-        { --[["🔄 "..]]Text:text("menu.pause.retry"), function() game:new_game() end },
-        { --[["🔚 "..]]Text:text("menu.pause.quit"), quit_game },
+        { "❤ "..Text:text("menu.win.wishlist"), func_url("https://s.team/a/2957130") },
+        { "▶ "..Text:text("menu.win.continue"), function() game:new_game() end },
+        -- { --[["🔚 "..]]Text:text("menu.pause.quit"), quit_game },
         { "" },
+
     }
 
-    if OPERATING_SYSTEM == "Web" or true then
-        table.remove(items, 8)
-    end
+    -- if OPERATING_SYSTEM == "Web" or true the$n
+    --     table.remove(items, 8)
+    -- end
     menus.win = Menu:new(game, items, { 0, 0, 0, 0.95 }, PROMPTS_GAME_OVER)
 
     ------------------------------------------------------------

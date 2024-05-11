@@ -11,7 +11,7 @@ function DummyTarget:init(x, y)
     self.name = "dummy"
     self.follow_player = false
 
-    self.life = 12
+    self.life = 12000
     self.damage = 0
     self.self_knockback_mult = 0.1
 

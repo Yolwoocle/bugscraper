@@ -68,6 +68,9 @@ function Actor:init_actor(x, y, w, h, spr, args)
 	self.rider = nil
 	self.vehicle = nil
 
+	-- Whether the actor should be teleported within bounds
+	self.is_affected_by_bounds = true
+
 	self.collision_filter = function(item, other)
 		-- By default, do not react to collisions
 		local type = "cross"
@@ -87,6 +90,8 @@ function Actor:init_actor(x, y, w, h, spr, args)
 
 		return type
 	end
+
+	self.debug_values = {}
 end
 
 function Actor:set_active(val)
@@ -217,6 +222,14 @@ function Actor:draw_actor(custom_draw)
 
 	if self.spr then
 		self.spr:draw(self.x, self.y, self.w, self.h, custom_draw)
+	end
+
+	if game.debug_mode then
+		local i = 0
+		local th = get_text_height()
+		for _, val in pairs(self.debug_values) do
+			print_outline(nil, nil, tostring(val), self.x + self.w, self.y + i*th)
+		end		 
 	end
 end
 

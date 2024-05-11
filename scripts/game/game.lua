@@ -20,6 +20,7 @@ local skins = require "data.skins"
 local sounds = require "data.sounds"
 local utf8 = require "utf8"
 
+require "bugscraper_config"
 require "scripts.meta.constants"
 require "scripts.util"
 require "scripts.meta.post_constants"
@@ -107,7 +108,6 @@ function Game:new_game()
 	
 	-- Actors
 	self.actor_limit = 100
-	self.enemy_count = 0
 	self.actors = {}
 	self:init_players()
 
@@ -117,6 +117,8 @@ function Game:new_game()
 	-- local l = create_actor_centered(Enemies.ButtonGlass, nx, ny)
 	local l = create_actor_centered(Enemies.ButtonSmallGlass, floor(nx), floor(ny))
 	self:new_actor(l)
+	-- local l = create_actor_centered(Enemies.Dummy, floor(nx) - 40, floor(ny))
+	-- self:new_actor(l)
 	
 	-- Exit sign 
 	local exit_x = CANVAS_WIDTH * 0.25
@@ -298,7 +300,6 @@ function Game:update_main_game(dt)
 	end
 	self.t = self.t + dt
 
-	self:count_enemies()
 	self:listen_for_player_join(dt)
 	
 	self.level:update(dt)
@@ -315,13 +316,14 @@ function Game:update_main_game(dt)
 
 end
 
-function Game:count_enemies()
-	self.enemy_count = 0
+function Game:get_enemy_count()
+	local enemy_count = 0
 	for _, actor in pairs(self.actors) do
-		if actor.counts_as_enemy then
-			self.enemy_count = self.enemy_count + 1
+		if actor.is_active and actor.counts_as_enemy then
+			enemy_count = enemy_count + 1
 		end
 	end
+	return enemy_count
 end
 
 function Game:update_actors(dt)
@@ -330,7 +332,9 @@ function Game:update_actors(dt)
 
 		if not actor.is_removed and actor.is_active then
 			actor:update(dt)
-        	actor:clamp_to_bounds(self.level.cabin_inner_rect)
+			if actor.is_affected_by_bounds then
+				actor:clamp_to_bounds(self.level.cabin_inner_rect)
+			end
 		end
 
 		if actor.is_removed then
@@ -433,6 +437,8 @@ function Game:draw_game()
 	self:draw_on_layer(LAYER_OBJECTS, function()
 		love.graphics.clear()
 
+		Particles:draw_back()
+
 		-- Draw actors
 		for _,actor in pairs(self.actors) do
 			if not actor.is_player and actor.is_active then
@@ -440,7 +446,9 @@ function Game:draw_game()
 			end
 		end
 		for _,p in pairs(self.players) do
-			p:draw()
+			if p.is_active then
+				p:draw()
+			end
 		end
 	
 		Particles:draw()
@@ -451,7 +459,9 @@ function Game:draw_game()
 	self:draw_on_layer(LAYER_HUD, function()
 		love.graphics.clear()
 		for k,actor in pairs(self.actors) do
-			if actor.draw_hud and self.game_ui.is_visible then     actor:draw_hud()    end
+			if actor.is_active and actor.draw_hud and self.game_ui.is_visible then
+				actor:draw_hud()
+			end
 		end
 	end)--, {apply_camera = false})
 	
@@ -474,12 +484,7 @@ function Game:draw_game()
 		self:draw_smoke_canvas()
 		self.level:draw_front()
 
-		Particles:draw_front()
-		
-		rect_color(COL_CYAN,  "line", self.level.door_rect.ax, self.level.door_rect.ay, self.level.door_rect.bx-self.level.door_rect.ax, self.level.door_rect.by-self.level.door_rect.ay)
-		rect_color(COL_RED,   "line", self.level.cabin_rect.ax, self.level.cabin_rect.ay, self.level.cabin_rect.bx-self.level.cabin_rect.ax, self.level.cabin_rect.by-self.level.cabin_rect.ay)
-		rect_color(COL_GREEN, "line", self.level.cabin_inner_rect.ax, self.level.cabin_inner_rect.ay, self.level.cabin_inner_rect.bx-self.level.cabin_inner_rect.ax, self.level.cabin_inner_rect.by-self.level.cabin_inner_rect.ay)
-		
+		Particles:draw_front()		
 	end)
 
 	-----------------------------------------------------
@@ -499,6 +504,7 @@ function Game:draw_game()
 		if self.menu_manager.cur_menu then
 			self.menu_manager:draw()
 		end
+		self.game_ui:draw_front()
 		
 		if self.debug_mode then
 			self.debug:draw()
@@ -557,7 +563,7 @@ end
 function Game:listen_for_player_join(dt)
 	if self.game_state ~= GAME_STATE_WAITING then return end
 
-	if Input:action_pressed_global("jump") then 
+	if Input:action_pressed_global("join_game") then 
 		local global_user = Input:get_global_user()
 		local last_button = global_user.last_pressed_button
 		local input_profile_id = ""
@@ -694,6 +700,14 @@ function Game:update_timer_before_game_over(dt)
 	end
 end
 
+function Game:kill_all_active_enemies()
+	for _, actor in pairs(self.actors) do
+		if actor.is_active and actor.counts_as_enemy then
+			actor:kill()
+		end
+	end
+end
+
 function Game:kill_all_enemies()
 	for _, actor in pairs(self.actors) do
 		if actor.counts_as_enemy then
@@ -766,31 +780,34 @@ function Game:join_game(input_profile_id, joystick)
 
 	Input:new_user(player_n)
 	Input:set_last_ui_user_n(player_n)
-	local new_player = self:new_player(player_n)
+	local new_player = self:new_player(player_n, nil, nil, true)
 	if joystick ~= nil then
 		Input:assign_joystick(player_n, joystick)
 	end
 	Input:assign_input_profile(player_n, input_profile_id)
 
-	if new_player ~= nil then
-		Particles:smoke(new_player.mid_x, new_player.mid_y)
-	end
-
 	return player_n
 end
 
-function Game:new_player(player_n, x, y)
+function Game:new_player(player_n, x, y, put_in_buffer)
 	player_n = player_n or self:find_free_player_number()
 	if player_n == nil then
 		return
 	end
-	local mx = floor(self.level.door_rect.ax)
-	x = param(x, mx + ((player_n-1) / (MAX_NUMBER_OF_PLAYERS-1)) * (self.level.door_rect.bx - self.level.door_rect.ax))
-	y = param(y, CANVAS_HEIGHT - 3*16)
+	local mx = math.floor(self.level.door_rect.ax)
+	-- x = param(x, mx + ((player_n-1) / (MAX_NUMBER_OF_PLAYERS-1)) * (self.level.door_rect.bx - self.level.door_rect.ax))
+	x = param(x, mx + math.floor((self.level.door_rect.bx - self.level.door_rect.ax)/2))
+	y = param(y, CANVAS_HEIGHT - 3*16 + 4)
 
 	local player = Player:new(player_n, x, y, skins[player_n])
 	self.players[player_n] = player
 	self.waves_until_respawn[player_n] = -1
+	if put_in_buffer then
+		player:set_active(false)
+		self.level:buffer_actor(player)
+		self.level.elevator:open_door(1.0)
+	end
+	
 	self:new_actor(player)
 
 	return player
@@ -832,6 +849,8 @@ function Game:start_game()
 	self.move_logo = true
 	self.game_state = GAME_STATE_PLAYING
 	self.music_player:set_disk("w1")
+	self.level:activate_enemy_buffer()
+	self.level:begin_next_wave_animation()
 
 	self.menu_manager:set_can_pause(true)
 	self:set_zoom(1)
@@ -848,9 +867,10 @@ function Game:on_red_button_pressed()
 	self.level:on_red_button_pressed()
 end
 
-function Game:on_exploding_elevator()
+function Game:on_elevator_crashed()
 	self.game_state = GAME_STATE_WIN
 	self.menu_manager:set_can_pause(true)
+	self.level:on_elevator_crashed()
 end
 
 function Game:apply_upgrade(upgrade) 

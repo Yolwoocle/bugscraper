@@ -8,6 +8,9 @@ local images = require "data.images"
 
 local Debug = Class:inherit()
 
+local col_a = {random_range(0, 1), random_range(0, 1), random_range(0, 1), 1}
+local col_b = {random_range(0, 1), random_range(0, 1), random_range(0, 1), 1}
+
 function Debug:init(game)
     self.game = game
 
@@ -16,6 +19,9 @@ function Debug:init(game)
     self.colview_mode = false
     self.info_view = false
     self.joystick_view = false
+    self.bound_view = false
+    self.view_fps = true
+    
     self.instant_end = false
     self.layer_view = false
     self.input_view = false
@@ -53,6 +59,9 @@ function Debug:init(game)
         ["f5"] = {"view input info", function()
             self.input_view = not self.input_view
         end},
+        ["f6"] = {"toggle FPS", function()
+            self.view_fps = not self.view_fps
+        end},
         ["1"] = {"damage P1", func_damage(1)},
         ["2"] = {"damage P2", func_damage(2)},
         ["3"] = {"damage P3", func_damage(3)},
@@ -72,9 +81,32 @@ function Debug:init(game)
         ["p"] = {"upgrade", function()
             game:apply_upgrade(upgrades.UpgradeEspresso:new())
         end},
+        ["t"] = {"particle", function()
+            Particles:image(CANVAS_WIDTH/2, CANVAS_HEIGHT/2 + 50, 1, {
+                images.bullet_vanish_1,
+                images.bullet_vanish_2,
+                images.bullet_vanish_3,
+                images.bullet_vanish_4,
+                images.bullet_vanish_5,
+            }, 0, nil, 0, 0, {
+                is_solid = false,
+                rot = 0,
+                vx1 = 0,
+                vx2 = 0,
+                vy1 = 0,
+                vy2 = 0,
+                vr1 = 0,
+                vr2 = 0,
+                life = 0.15,
+                is_animated = true
+            })
+        end},
         ["s"] = {"spawn", function()
             local dung = enemies.SnailShelled:new(CANVAS_WIDTH/2, CANVAS_HEIGHT/2)
             game:new_actor(dung)
+        end},
+        ["r"] = {"start game", function()
+            game:start_game()
         end},
         
         ["e"] = {"kill all enemies", function()
@@ -93,10 +125,9 @@ function Debug:init(game)
             self.layer_view = not self.layer_view
         end},
         
-        ["c"] = {"set cam target", function()
-            game.camera:set_x_locked(true)
-            game.camera:set_y_locked(true)
-            game.camera:set_target_position(0, 100)
+        ["c"] = {"color lerp test", function()
+            col_a = {random_range(0, 1), random_range(0, 1), random_range(0, 1), 1}
+            col_b = {random_range(0, 1), random_range(0, 1), random_range(0, 1), 1}
         end},
         
         ["b"] = {"toggle cabin view", function()
@@ -224,8 +255,10 @@ function Debug:draw()
         self:draw_input_view()
     end
 
-    local t = concat(love.timer.getFPS(), "FPS")
-    print_outline(nil, nil, t, CANVAS_WIDTH - get_text_width(t), 0)
+    if self.view_fps then
+        local t = concat(love.timer.getFPS(), "FPS")
+        print_outline(nil, nil, t, CANVAS_WIDTH - get_text_width(t), 0)
+    end
 end
 
 function Debug:draw_input_view()
@@ -302,12 +335,14 @@ function Debug:draw_joystick_view_for(joystick, x, y, axis_x, axis_y)
 	-- love.graphics.line(x-r, y-AXIS_DEADZONE*r, x+r, y-AXIS_DEADZONE*r)
 	-- love.graphics.line(x-r, y+AXIS_DEADZONE*r, x+r, y+AXIS_DEADZONE*r)
 	-- love.graphics.setColor(COL_WHITE)
+    local deadzone = Options:get("axis_deadzone_p"..tostring(user_n)) or AXIS_DEADZONE
+
 	love.graphics.setColor(COL_GREEN)
-	love.graphics.circle("line", ox, oy, r*AXIS_DEADZONE)
+	love.graphics.circle("line", ox, oy, r*deadzone)
 	for a = pi/8, pi2, pi/4 do
 		local ax = math.cos(a)
 		local ay = math.sin(a)
-		love.graphics.line(ox + AXIS_DEADZONE*ax*r, oy + AXIS_DEADZONE*ay*r, ox + r*ax, oy + r*ay)
+		love.graphics.line(ox + deadzone*ax*r, oy + deadzone*ay*r, ox + r*ax, oy + r*ay)
 	end
 	love.graphics.setColor(COL_WHITE)
 	
@@ -318,10 +353,10 @@ function Debug:draw_joystick_view_for(joystick, x, y, axis_x, axis_y)
 		return distsqr(j:getAxis(ax), j:getAxis(ay))
 	end
 	
-	local u = Input:get_user(1)
+	local u = Input:get_user(user_n)
 	if u ~= nil then
 		local j = joystick
-		circle_color(COL_RED, "fill", ox + r*j:getAxis(axis_x), oy + r*j:getAxis(axis_y), 1)
+		circle_color(COL_RED, "fill", ox + r*j:getAxis(axis_x), oy + r*j:getAxis(axis_y), 2)
 	
         local val_x = round(j:getAxis(axis_x), 3)
         local val_y = round(j:getAxis(axis_y), 3)
@@ -390,11 +425,12 @@ function Debug:draw_info_view()
 		concat("FPS: ",love.timer.getFPS(), " / frmRpeat: ",self.game.frame_repeat, " / frame: ",frame),
 		concat("LÖVE version: ", string.format("%d.%d.%d - %s", love.getVersion())),
 		concat("game state: ", game.game_state),
+		concat("level.level_speed: ", game.level.level_speed),
 		concat("cam pos:  ", concatsep({game.camera:get_position()})),
 		concat("cam tpos: ", concatsep({game.camera:get_target_position()})),
 		concat("n° of active audio sources: ", love.audio.getActiveSourceCount()),
 		concat("n° of actors: ", #self.game.actors, " / ", self.game.actor_limit),
-		concat("n° of enemies: ", self.game.enemy_count),
+		concat("n° of enemies: ", self.game:get_enemy_count()),
 		concat("n° collision items: ", Collision.world:countItems()),
 		concat("windowed_w: ", Options:get("windowed_width")),
 		concat("windowed_h: ", Options:get("windowed_height")),
@@ -417,6 +453,20 @@ function Debug:draw_info_view()
 
 	self.game.level.world_generator:draw()
 	draw_log()
+    
+    local w = 255
+    -- local col_a = color(0x0c00b8)
+    -- local col_b = color(0xb82609)
+    -- local col_a = color(0xe43b44)
+    -- local col_b = color(0xfee761c)
+    -- rect_color(col_a, "fill", 0, 25, w/2, 25)
+    -- rect_color(col_b, "fill", w/2, 25, w/2, 25)
+    -- for ix=0, w do
+    --     rect_color(lerp_color(col_a, col_b, ix/w), "fill", ix, 50, 1, 25)
+    --     rect_color(lerp_color_radial(col_a, col_b, ix/w), "fill", ix, 75, 1, 25)
+    --     rect_color(move_toward_color(col_a, col_b, ix/w), "fill", ix, 100, 1, 25)
+    --     rect_color(move_toward_color_radial(col_a, col_b, ix/w), "fill", ix, 120, 1, 25)
+    -- end
 end
 
 function Debug:draw_colview()

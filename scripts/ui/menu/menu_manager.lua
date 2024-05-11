@@ -154,8 +154,9 @@ function MenuManager:pause()
 	if self.is_paused then return end
 	if not self.can_pause then return end
 
-	if game.level.is_on_win_screen then --scotch
+	if game.game_state == GAME_STATE_WIN then --scotch
 		self:set_menu("win")
+		self.game.music_player:set_disk("game_over")
 		return
 	end
 

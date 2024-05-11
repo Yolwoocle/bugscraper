@@ -1,10 +1,11 @@
 local Class = require "scripts.meta.class"
 local Actor = require "scripts.actor.actor"
+local Timer = require "scripts.timer"
 local images = require "data.images"
 
 local Bullet = Actor:inherit()
 
-function Bullet:init(gun, player, x, y, w, h, vx, vy)
+function Bullet:init(gun, player, damage, x, y, w, h, vx, vy)
 	local x, y = x-w/2, y-h/2
 	self:init_actor(x, y, w, h, gun.bullet_spr or images.bullet)
 	self.name = "bullet"
@@ -27,16 +28,23 @@ function Bullet:init(gun, player, x, y, w, h, vx, vy)
 
 	self.life = 5
 
-	self.damage = gun.damage
+	self.damage = damage
 	self.knockback = gun.knockback or 500
+	self.harmless_timer = Timer:new(gun.harmless_time or 0.0) 
+	if self.harmless_timer.duration > 0 then
+		self.harmless_timer:start()
+	end
 
 	self.bounce_immunity_timer = 0.0
 	self.bounce_immunity_duration = 0.1
+
+	self.is_affected_by_bounds = false
 end
 
 function Bullet:update(dt)
 	self:update_actor(dt)
 
+	self.harmless_timer:update(dt)
 	self.spr:set_rotation(atan2(self.vy, self.vx))
 
 	self.life = self.life - dt
@@ -54,6 +62,8 @@ end
 
 function Bullet:draw()
 	self:draw_actor()
+
+	-- print_centered_outline(nil, nil, ternary(self.harmless_timer.is_active, "O", "X"), self.x, self.y)
 end
 
 function Bullet:on_collision(col)
@@ -61,13 +71,19 @@ function Bullet:on_collision(col)
 	if col.other == self.player then    return   end
 
 	if col.type ~= "cross" then
+		-- Solid collision
 		local s = "metalfootstep_0"..tostring(love.math.random(0,4))
 		Audio:play_var(s, 0.3, 1, {pitch=0.7, volume=0.5})
 		self:kill()
 	end
-	
+		
+	if self.harmless_timer.is_active then return end
 	if col.other.on_hit_bullet and col.other.is_enemy ~= self.is_enemy_bul then
-		col.other:on_hit_bullet(self, col)
+		local damaged = col.other:on_hit_bullet(self, col)
+		if damaged and self.player and self.player.is_player then
+			self.player:on_my_bullet_hit(self, col.other, col)
+		end
+
 		if col.other.destroy_bullet_on_impact then
 			local s = "metalfootstep_0"..tostring(love.math.random(0,4))
 			Audio:play_var(s, 0.3, 1, {pitch=0.7, volume=0.5})
@@ -78,7 +94,7 @@ function Bullet:on_collision(col)
 			local bounce_x = (self.mid_x - col.other.mid_x)
 			local bounce_y = (self.mid_y - col.other.mid_y)
 			local normal_x, normal_y = normalise_vect(bounce_x, bounce_y)
-
+			
 			local new_vel_x, new_vel_y = bounce_vector(self.vx, self.vy, normal_x, normal_y)
 			local spd_slow = 1
 			-- self.friction_x = spd_slow
@@ -87,6 +103,11 @@ function Bullet:on_collision(col)
 			self.vy = new_vel_y * spd_slow
 
 			self.bounce_immunity_timer = self.bounce_immunity_duration
+
+			local ang = math.atan2(new_vel_y, new_vel_x)
+			Particles:bullet_vanish(self.mid_x, self.y, ang + pi/2)
+			Audio:play_var("bullet_bounce_"..random_sample{"1","2"}, 0.2, 1.2)
+			-- Audio:play_var("bullet_bounce", 0.2, 1.5)
 		end
 	end
 	
@@ -94,7 +115,9 @@ function Bullet:on_collision(col)
 end
 
 function Bullet:kill()
-	Particles:smoke(self.x + self.w/2, self.y + self.h/2)
+	-- Audio:play_var("bullet_bounce", 0.2, 1.2)
+	Particles:smoke(self.x + self.w/2, self.y + self.h/2, 4)
+	Particles:bullet_vanish(self.x + self.w/2, self.y + self.h/2, self.spr.rot - pi/2)
 	self:remove()
 end
 

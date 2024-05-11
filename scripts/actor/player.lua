@@ -42,6 +42,7 @@ function Player:init(n, x, y, skin)
 	self.skin = skin
 	self.spr:set_image(self.skin.spr_idle)
 
+	self.is_grounded = true
 	self.is_walking = false
 	self.squash = 1
 	self.jump_squash = 1
@@ -123,6 +124,7 @@ function Player:init(n, x, y, skin)
 	self.guns = {
 		Guns.Machinegun:new(self),
 		Guns.unlootable.DebugGun:new(self),
+		Guns.unlootable.DebugGunManual:new(self),
 		Guns.Triple:new(self),
 		Guns.Burst:new(self),
 		Guns.Shotgun:new(self),
@@ -148,6 +150,11 @@ function Player:init(n, x, y, skin)
 	-- Combo
 	self.combo = 0
 	self.max_combo = 0
+	self.fury_bar = 0.0
+	self.fury_threshold = 2.5
+	self.fury_max = 5.0
+	self.fury_gun_cooldown_multiplier = 0.8
+	self.fury_gun_damage_multiplier = 1.5
 
 	-- Upgrades
 	self.upgrades = {}
@@ -165,7 +172,6 @@ function Player:init(n, x, y, skin)
 	self.dt = 1
 end
 
-local igun = 1
 function Player:update(dt)
 	self.dt = dt
 	
@@ -175,7 +181,7 @@ function Player:update(dt)
 	self:move(dt)
 	self:do_wall_sliding(dt)
 	self:do_jumping(dt)
-	self:do_gravity(dt) -- FIXME: ouch, this is already called in update_actor
+	self:do_gravity(dt) -- FIXME: ouch, this is already called in update_actor so there is x2 gravity here
 	self:update_actor(dt)
 	self:do_aiming(dt)
 	self.mid_x = self.x + floor(self.w/2)
@@ -199,27 +205,17 @@ function Player:update(dt)
 		self.frames_since_land = 0
 	end
 
-	-- Stop combo if landed for more than a few frames
-	if self.frames_since_land > 3 then
-		if self.combo > self.max_combo then
-			if self.combo > game.max_combo then
-				game.max_combo = self.combo
-			end
-			self.max_combo = self.combo
-		end
-		
-		if self.combo >= 4 then
-			Particles:word(self.mid_x, self.mid_y, Text:text("game.combo", self.combo), COL_LIGHT_BLUE)
-		end
-		self.combo = 0
-	end
+	self:update_combo(dt)
 
 	self.gun:update(dt)
 	self:shoot(dt, false)
 	self:update_gun_pos(dt)
 
-	self.ui_x = lerp(self.ui_x, floor(self.mid_x), 0.2)
-	self.ui_y = lerp(self.ui_y, floor(self.y), 0.2)
+	self.ui_x = lerp(self.ui_x, floor(self.mid_x), 0.1)
+	self.ui_y = lerp(self.ui_y, floor(self.y), 0.1)
+
+	-- self.ui_x = CANVAS_WIDTH/2
+	-- self.ui_y = 50
 
 	--Visuals
 	self:update_visuals()
@@ -228,157 +224,8 @@ function Player:update(dt)
 	end
 end
 
-function Player:draw()
-	if self.is_removed then   return   end
-	if self.is_dead then    return    end
-
-	-- Draw gun
-	self.gun:draw(1, self.dir_x)
-
-	-- Draw self
-	self:draw_player()
-	gfx.setColor(COL_WHITE)
-
-	-- print_outline(nil, nil, tostring(self.jumps), self.x + 20, self.y)
-end
-
-function Player:draw_hud()
-	if self.is_removed or self.is_dead then    return    end
-
-	local ui_x = floor(self.ui_x)
-	local ui_y = floor(self.ui_y) - self.spr.image:getHeight() - 6
-
-	self:draw_life_bar(ui_x, ui_y)
-	self:draw_ammo_bar(ui_x, ui_y)
-
-	if game.game_state == GAME_STATE_WAITING then
-		self:draw_controls()
-	end
-end
-
-function Player:draw_life_bar(ui_x, ui_y)
-	local life = self.life
-	local max_life = self.max_life
-	if self.temporary_life > 0 then
-		life = life + self.temporary_life
-		max_life = max_life + self.temporary_life
-	end
-	ui:draw_icon_bar(ui_x, ui_y, self.life, self.max_life, self.temporary_life, images.heart, images.heart_empty, images.heart_temporary)
-end
-
-function Player:draw_ammo_bar(ui_x, ui_y)
-	local ammo_icon_w = images.ammo:getWidth()
-	local slider_w = 23 * (1 + (self:get_max_ammo_multiplier() - 1)/2)
-	local bar_w = slider_w + ammo_icon_w + 2
-
-	local x = floor(ui_x) - floor(bar_w/2)
-	local y = floor(ui_y) + 8
-	gfx.draw(images.ammo, x, y)
-
-	local text = self.gun.ammo
-	local col_shad = COL_DARK_BLUE
-	local col_fill = COL_MID_BLUE
-	local val, maxval = self.gun.ammo, self.gun:get_max_ammo()
-	if self.gun.is_reloading then
-		text = ""
-		col_fill = COL_WHITE
-		col_shad = COL_LIGHTEST_GRAY
-		val, maxval = self.gun.max_reload_timer - self.gun.reload_timer, self.gun.max_reload_timer
-	end
-
-	-- /!\ Doing calculations like these in draw is a BAD idea! Too bad!
-	self.ui_col_gradient = self.ui_col_gradient * 0.9
-	if self.ui_col_gradient >= 0.02 then
-		col_fill = lerp_color(col_fill, COL_WHITE, self.ui_col_gradient)
-		col_shad = lerp_color(col_fill, COL_LIGHTEST_GRAY, self.ui_col_gradient)
-	end
-
-	ui:draw_progress_bar(x+ammo_icon_w+2, y, slider_w, ammo_icon_w, val, maxval, 
-						col_fill, COL_BLACK_BLUE, col_shad, text)
-end
-
-function Player:get_controls_tutorial_values()
-	if self.is_touching_exit_sign then
-		return {
-			{{"leave_game"}, "input.prompts.leave_game"},
-		}
-	else
-		return {
-			{{"shoot"}, "input.prompts.shoot"},
-			{{"jump"}, "input.prompts.jump"},
-			{{"right", "down", "left", "up"}, "input.prompts.move", Input:get_primary_input_type(self.n) == INPUT_TYPE_KEYBOARD},
-		} 
-	end
-end
-
-function Player:get_controls_text_color(i)
-	local color
-	if Input:get_number_of_users() == 1 then
-		if self.is_touching_exit_sign then
-			color = COL_LIGHT_GREEN
-		else
-			color = LOGO_COLS[i]
-		end
-	else
-		color = self.color_palette[1] 
-	end 
-	return color or COL_WHITE
-end
-
-function Player:draw_controls()
-	local tutorials = self:get_controls_tutorial_values()
-
-	local x = self.ui_x
-	local y = self.ui_y - 32 + self.controls_oy
-	-- local x = (CANVAS_WIDTH * 0.15) + (CANVAS_WIDTH * 0.9) * (self.n-1)/4
-	-- local y = 140
-
-	-- love.graphics.line(x, y, self.ui_x, self.ui_y - 30)
-	for i, tuto in ipairs(tutorials) do
-		y = y - 16
-		local btn_x = x - 2
-
-		local shown_duration = 0.5
-		local actions = tuto[1]
-		local label = Text:text(tuto[2])
-		local show_in_keybaord_form = tuto[3]
-
-		local x_of_second_button = 0
-		if not show_in_keybaord_form then
-			local action_index = math.floor((game.t % (shown_duration * #actions)) / shown_duration) + 1
-			actions = {actions[action_index]}
-		end
-		for i_action = 1, #actions do
-			local action = actions[i_action]
-
-			local icon = Input:get_action_primary_icon(self.n, action)
-			local w = icon:getWidth()
-
-			btn_x = btn_x - w
-			if not (show_in_keybaord_form and i_action == 4) then
-				love.graphics.draw(icon, btn_x, y)
-			end
-
-			if show_in_keybaord_form then
-				if i_action == 2 then
-					x_of_second_button = btn_x
-				elseif i_action == 4 then
-					love.graphics.draw(icon, x_of_second_button, y - 16)
-				end
-			end
-		end
-		
-		local text_color = self:get_controls_text_color(i)
-		print_outline(text_color, COL_BLACK_BLUE, label, x, y)
-	end
-end
-
-function Player:draw_player()
-	self.spr:draw(self.x, self.y - self.walkbounce_oy, self.w, self.h)
-
-	local post_x, post_y = self.spr:get_total_offset_position(self.x, self.y, self.w, self.h)
-	self:post_draw(post_x, post_y)
-end
+------------------------------------------
+--- Life ---
 
 function Player:set_player_n(n)
 	self.n = n
@@ -407,6 +254,103 @@ function Player:add_temporary_life(val)
 	self.temporary_life = self.temporary_life + val
 end
 
+function Player:do_invincibility(dt)
+	self.iframes = max(0, self.iframes - dt)
+
+	self.is_invincible = false
+	if self.iframes > 0 and game.frames_to_skip <= 0 then
+		self.is_invincible = true
+		self.iframe_blink_timer = (self.iframe_blink_timer + dt) % self.iframe_blink_freq
+	end
+end
+
+function Player:set_invincibility(n)
+	self.iframes = math.max(n, self.iframes)
+end
+
+function Player:kill()
+	if self.is_dead then return end
+	
+	game:screenshake(10)
+	game:frameskip(30)
+	Input:vibrate(self.n, 0.6, 0.4)
+
+	if game:get_number_of_alive_players() > 1 then 
+		local fainted_player = Enemies.FaintedPlayer:new(self.x, self.y, self)
+		game:new_actor(fainted_player)
+	else
+		local ox, oy = self.spr:get_total_centered_offset_position(self.x, self.y, self.w, self.h)
+		Particles:dead_player(ox, oy, self.skin.spr_dead, self.color_palette, self.dir_x)
+	end
+
+	self:on_death()
+	game:on_kill(self)
+	
+	self.timer_before_death = self.max_timer_before_death
+	Audio:play("death")
+
+	self.is_dead = true
+	self:remove()
+end
+
+function Player:on_death()
+	
+end
+
+function Player:on_removed()
+	Collision:remove(self.wall_collision_box)
+end
+
+function Player:do_damage(n, source)
+	if self.iframes > 0 then    return false   end
+	if n <= 0 then    return false   end
+
+	if Input:get_number_of_users() == 1 then
+		game:frameskip(8)
+	end
+	game:screenshake(5)
+	Input:vibrate(self.n, 0.3, 0.45)
+	Audio:play("hurt")
+	Particles:word(self.mid_x, self.mid_y, concat("-",n), COL_LIGHT_RED)
+	
+	if self.is_knockbackable and source then
+		self.vx = self.vx + sign(self.mid_x - source.mid_x)*source.knockback
+		self.vy = self.vy - 50
+	end
+
+	local old_temporary_life = self.temporary_life
+	self:subtract_life(n)
+	local temporary_life_diff = old_temporary_life - self.temporary_life
+	if temporary_life_diff > 0 then
+		--                                            x, y, number,     spr,             spw_rad, life, vs, g, parms
+		Particles:image(self.ui_x, self.ui_y - 16, temporary_life_diff, images.particle_leaf, 5, 1.5, 0.6, 0.5)
+	end
+	
+	self:set_invincibility(self.max_iframes)
+	
+	if self.life <= 0 then
+		self.life = 0 
+		self:kill()
+	end
+
+	return true
+end
+
+function Player:subtract_life(n)
+	if self.temporary_life > 0 then
+		self.temporary_life = self.temporary_life - n
+		n = math.max(0, -self.temporary_life)
+		self.temporary_life = math.max(0, self.temporary_life)
+	end
+
+	self.life = self.life - n
+	self.life = math.max(0, self.life)
+end
+
+
+------------------------------------------
+--- Physics ---
+
 function Player:move(dt)
 	-- compute movement dir
 	local dir = {x=0, y=0}
@@ -426,20 +370,6 @@ function Player:move(dt)
 	-- Apply velocity 
 	self.vx = self.vx + dir.x * self.speed * self.speed_mult
 	self.vy = self.vy + dir.y * self.speed * self.speed_mult
-end
-
-function Player:do_invincibility(dt)
-	self.iframes = max(0, self.iframes - dt)
-
-	self.is_invincible = false
-	if self.iframes > 0 and game.frames_to_skip <= 0 then
-		self.is_invincible = true
-		self.iframe_blink_timer = (self.iframe_blink_timer + dt) % self.iframe_blink_freq
-	end
-end
-
-function Player:set_invincibility(n)
-	self.iframes = math.max(n, self.iframes)
 end
 
 function Player:do_wall_sliding(dt)
@@ -586,38 +516,29 @@ function Player:on_leaving_collision()
 	self.coyote_time = self.default_coyote_time
 end
 
-function Player:on_removed()
-	Collision:remove(self.wall_collision_box)
-end
-
-function Player:kill()
-	if self.is_dead then return end
-	
-	game:screenshake(10)
-	game:frameskip(30)
-	Input:vibrate(self.n, 0.6, 0.4)
-
-	if game:get_number_of_alive_players() > 1 then 
-		local fainted_player = Enemies.FaintedPlayer:new(self.x, self.y, self)
-		game:new_actor(fainted_player)
-	else
-		local ox, oy = self.spr:get_total_centered_offset_position(self.x, self.y, self.w, self.h)
-		Particles:dead_player(ox, oy, self.skin.spr_dead, self.color_palette, self.dir_x)
+function Player:on_collision(col, other)
+	if col.type ~= "cross" and col.normal.y == -1 then
+		-- self.jumps = self.max_jumps
 	end
-
-	self:on_death()
-	game:on_kill(self)
-	
-	self.timer_before_death = self.max_timer_before_death
-	Audio:play("death")
-
-	self.is_dead = true
-	self:remove()
 end
 
-function Player:on_death()
-	
+function Player:on_grounded()
+	-- On land
+	local s = "metalfootstep_0"..tostring(love.math.random(0,4))
+	if self.grounded_col and self.grounded_col.other.name == "rubble" then
+		s = "gravel_footstep_"..tostring(love.math.random(1,6))
+	end
+	Audio:play_var(s, 0.3, 1, {pitch=0.5, volume=0.5})
+
+	self.jump_squash = 1.5
+	self.spr:set_image(self.skin.spr_idle)
+	Particles:smoke(self.mid_x, self.y+self.h, 10, COL_WHITE, 8, 4, 2)
+
+	self.air_time = 0
 end
+
+------------------------------------------
+--- Guns ---
 
 function Player:shoot(dt, is_burst)
 	if is_burst == nil then     is_burst = false    end
@@ -698,6 +619,136 @@ function Player:update_gun_pos(dt, lerpval)
 	self.gun.rot = lerp_angle(self.gun.rot, ang, 0.3)
 end
 
+function Player:do_aiming(dt)
+	self.dir_y = 0
+	if Input:action_down(self.n, "up") then      self.dir_y = -1    end
+	if Input:action_down(self.n, "down") then    self.dir_y = 1     end
+end
+
+function Player:equip_gun(gun)
+	self.gun = gun
+	self.gun.user = self
+
+	self:update_gun_pos(1)
+end
+
+function Player:get_max_ammo_multiplier()
+	return self.max_ammo_multiplier
+end
+function Player:set_max_ammo_multiplier(val)
+	self.max_ammo_multiplier = val
+end
+function Player:multiply_max_ammo_multiplier(val)
+	self.max_ammo_multiplier = self.max_ammo_multiplier * val
+end
+
+function Player:set_gun_cooldown_multiplier(val)
+	self.gun_cooldown_multiplier = val
+end
+function Player:multiply_gun_cooldown_multiplier(val)
+	self.gun_cooldown_multiplier = self.gun_cooldown_multiplier * val
+end
+function Player:get_gun_cooldown_multiplier()
+	local value = self.gun_cooldown_multiplier
+	if self.fury_active then 
+		value = value * self.fury_gun_cooldown_multiplier
+	end
+	return value
+end
+
+function Player:get_gun_damage_multiplier()
+	local value = 1.0
+	if self.fury_active then 
+		value = value * self.fury_gun_damage_multiplier
+	end
+	return value
+end
+
+function Player:next_gun()
+	self.gun_number = mod_plus_1(self.gun_number + 1, #self.guns)
+	self:equip_gun(self.guns[self.gun_number])
+end
+
+------------------------------------------
+--- Combat ---
+
+function Player:on_stomp(enemy)
+	local spd = -self.stomp_jump_speed
+	if Input:action_down(self.n, "jump") or self.buffer_jump_timer > 0 then
+		spd = spd * 1.3
+	end
+	self.vy = spd
+	self:set_invincibility(0.15) --0.1
+
+	self.combo = self.combo + 1
+	if self.combo >= 4 then
+		-- Particles:word(self.mid_x, self.mid_y, tostring(self.combo), COL_LIGHT_BLUE)
+	end
+
+	self:add_combo(0.8)
+	
+	-- self.ui_col_gradient = 1
+	-- self.gun.ammo = self.gun.ammo + floor(self.gun.max_ammo*.25)
+	-- self.gun.reload_timer = 0
+end
+
+--- When an enemy bullet hits the player
+function Player:on_hit_bullet(bullet, col)
+	if bullet.player == self then   return   end
+	if self.iframes > 0 then   return   end
+
+	self:do_damage(bullet.damage, bullet)
+	self.vx = self.vx + sign(bullet.vx) * bullet.knockback
+	return true
+end
+
+--- When a bullet the player shot hits an enemy
+function Player:on_my_bullet_hit(bullet, victim, col)
+	-- Why tf would this happen
+	if bullet.player ~= self then   return   end
+
+	self:add_combo(bullet.damage / 7)
+end
+
+------------------------------------------
+--- Upgrades & effects ---
+
+function Player:apply_upgrade(upgrade)
+	upgrade:on_apply(self)
+	if upgrade.type == UPGRADE_TYPE_TEMPORARY or upgrade.type == UPGRADE_TYPE_PERMANENT then
+		table.insert(self.upgrades, upgrade)
+	end
+end
+
+function Player:update_upgrades(dt)
+	for i, upgrade in pairs(self.upgrades) do
+		upgrade:update(dt)
+	end
+end
+
+function Player:apply_effect(effect, duration)
+	effect:apply(self, duration)
+	table.insert(self.effects, effect)
+end
+
+function Player:update_effects(dt)
+	for i=1, #self.effects do 
+		local effect = self.effects[i]
+		effect:update(dt, self)
+	end
+	
+	for i=#self.effects, 1, -1 do 
+		local effect = self.effects[i]
+		if not effect.is_active then
+			table.remove(self.effects, i)
+		end
+	end
+end
+
+
+------------------------------------------
+--- Misc ---
+
 function Player:is_in_poison_cloud()
 	local is_touching, col = self:is_touching_collider(function(col) return col.other.is_poisonous end)
 	if col then
@@ -720,80 +771,60 @@ function Player:update_poison(dt)
 	end
 end
 
-function Player:on_collision(col, other)
-	if col.type ~= "cross" and col.normal.y == -1 then
-		-- self.jumps = self.max_jumps
+function Player:leave_game_if_possible(dt)
+	local is_touching, exit_sign = self:is_touching_collider(function(col) return col.other.is_exit_sign end)
+
+	self.is_touching_exit_sign = is_touching
+	if is_touching then
+		self.controls_oy = lerp(self.controls_oy, -6, 0.3)
+		if Input:action_pressed(self.n, "leave_game") and game.game_state == GAME_STATE_WAITING then
+			exit_sign.other:activate(self)
+		end
+	else
+		self.controls_oy = lerp(self.controls_oy, 0, 0.3)
 	end
 end
 
-function Player:on_stomp(enemy)
-	local spd = -self.stomp_jump_speed
-	if Input:action_down(self.n, "jump") or self.buffer_jump_timer > 0 then
-		spd = spd * 1.3
+function Player:update_combo(dt)
+	if game:get_enemy_count() > 0 and not game.level:is_on_cafeteria() then
+		self.fury_bar = math.max(self.fury_bar - dt, 0.0)
 	end
-	self.vy = spd
-	self:set_invincibility(0.1)
+	self.fury_bar = clamp(self.fury_bar, 0.0, self.fury_max)
 
-	self.combo = self.combo + 1
-	if self.combo >= 4 then
-		Particles:word(self.mid_x, self.mid_y, tostring(self.combo), COL_LIGHT_BLUE)
-	end
-	
-	-- self.ui_col_gradient = 1
-	-- self.gun.ammo = self.gun.ammo + floor(self.gun.max_ammo*.25)
-	-- self.gun.reload_timer = 0
-end
+	local old_fury_active = self.fury_active
+	self.fury_active = (self.fury_bar >= self.fury_threshold)
 
-function Player:do_damage(n, source)
-	if self.iframes > 0 then    return    end
-	if n <= 0 then    return    end
-
-	if Input:get_number_of_users() == 1 then
-		game:frameskip(8)
-	end
-	game:screenshake(5)
-	Input:vibrate(self.n, 0.3, 0.45)
-	Audio:play("hurt")
-	Particles:word(self.mid_x, self.mid_y, concat("-",n), COL_LIGHT_RED)
-	
-	if self.is_knockbackable and source then
-		self.vx = self.vx + sign(self.mid_x - source.mid_x)*source.knockback
-		self.vy = self.vy - 50
+	if not old_fury_active and self.fury_active then
+		-- Particles:word(self.mid_x, self.mid_y, "FURY", COL_LIGHT_YELLOW)
+		-- Particles:smoke_big(self.mid_x, self.mid_y, random_sample{COL_LIGHT_YELLOW, COL_ORANGE})
 	end
 
-	local old_temporary_life = self.temporary_life
-	self:subtract_life(n)
-	local temporary_life_diff = old_temporary_life - self.temporary_life
-	if temporary_life_diff > 0 then
-		--                                            x, y, number,     spr,             spw_rad, life, vs, g, parms
-		Particles:image(self.ui_x, self.ui_y - 16, temporary_life_diff, images.particle_leaf, 5, 1.5, 0.6, 0.5)
-	end
-	
-	self:set_invincibility(self.max_iframes)
-	
-	if self.life <= 0 then
-		self.life = 0 
-		self:kill()
+	if self.fury_active then
+		-- size, sizevar, velvar, vely, is_back
+		-- Particles:fire(self.mid_x, self.mid_y, 5, nil, nil, -60, true)
+
+		-- number, col, spw_rad, size, sizevar, is_front, is_back
+		Particles:smoke(self.mid_x, self.mid_y, 1, random_sample{COL_LIGHT_YELLOW, COL_ORANGE}, 12, nil, nil, false, true)
 	end
 end
 
-function Player:subtract_life(n)
-	if self.temporary_life > 0 then
-		self.temporary_life = self.temporary_life - n
-		n = math.max(0, -self.temporary_life)
-		self.temporary_life = math.max(0, self.temporary_life)
+function Player:add_combo(val)
+	self.fury_bar = self.fury_bar + val
+end
+
+function Player:set_combo(val)
+	self.fury_bar = val
+end
+
+function Player:new_best_combo()
+	if self.combo > game.max_combo then
+		game.max_combo = self.combo
 	end
-
-	self.life = self.life - n
-	self.life = math.max(0, self.life)
+	self.max_combo = self.combo
 end
 
-function Player:on_hit_bullet(bul, col)
-	if bul.player == self then   return   end
-
-	self:do_damage(bul.damage, bul)
-	self.vx = self.vx + sign(bul.vx) * bul.knockback
-end
+-----------------------------------------------------
+--- Visuals ---
 
 function Player:update_visuals()
 	self.jump_squash       = lerp(self.jump_squash,       1, 0.2)
@@ -803,32 +834,181 @@ function Player:update_visuals()
 	self.spr:set_scale(self.squash, 1/self.squash)
 end
 
-function Player:on_grounded()
-	-- On land
-	local s = "metalfootstep_0"..tostring(love.math.random(0,4))
-	if self.grounded_col and self.grounded_col.other.name == "rubble" then
-		s = "gravel_footstep_"..tostring(love.math.random(1,6))
+function Player:draw()
+	if self.is_removed then   return   end
+	if self.is_dead then    return    end
+
+	-- Draw gun
+	self.gun:draw(1, self.dir_x)
+
+	-- Draw self
+	self:draw_player()
+	gfx.setColor(COL_WHITE)
+
+	-- print_outline(nil, nil, tostring(self.jumps), self.x + 20, self.y)
+end
+
+function Player:draw_hud()
+	if self.is_removed or self.is_dead then    return    end
+
+	local ui_x = floor(self.ui_x)
+	local ui_y = floor(self.ui_y) - self.spr.image:getHeight() - 12
+
+	self:draw_life_bar(ui_x, ui_y)
+	self:draw_ammo_bar(ui_x, ui_y)
+
+	if game.game_state == GAME_STATE_WAITING then
+		self:draw_controls()
 	end
-	Audio:play_var(s, 0.3, 1, {pitch=0.5, volume=0.5})
-
-	self.jump_squash = 1.5
-	self.spr:set_image(self.skin.spr_idle)
-	Particles:smoke(self.mid_x, self.y+self.h, 10, COL_WHITE, 8, 4, 2)
-
-	self.air_time = 0
 end
 
-function Player:do_aiming(dt)
-	self.dir_y = 0
-	if Input:action_down(self.n, "up") then      self.dir_y = -1    end
-	if Input:action_down(self.n, "down") then    self.dir_y = 1     end
+function Player:draw_life_bar(ui_x, ui_y)
+	local life = self.life
+	local max_life = self.max_life
+	if self.temporary_life > 0 then
+		life = life + self.temporary_life
+		max_life = max_life + self.temporary_life
+	end
+	ui:draw_icon_bar(ui_x, ui_y, self.life, self.max_life, self.temporary_life, images.heart, images.heart_empty, images.heart_temporary)
 end
 
-function Player:equip_gun(gun)
-	self.gun = gun
-	self.gun.user = self
+function Player:draw_ammo_bar(ui_x, ui_y)
+	local ammo_icon_w = images.ammo:getWidth()
+	local slider_w = 23 * (1 + (self:get_max_ammo_multiplier() - 1)/2)
+	local bar_w = slider_w + ammo_icon_w + 2
 
-	self:update_gun_pos(1)
+	local x = floor(ui_x) - floor(bar_w/2)
+	local y = floor(ui_y) + 8
+	gfx.draw(images.ammo, x, y)
+
+	local text = self.gun.ammo
+	local col_shad = COL_DARK_BLUE
+	local col_fill = COL_MID_BLUE
+	local val, maxval = self.gun.ammo, self.gun:get_max_ammo()
+	if self.gun.is_reloading then
+		text = ""
+		col_fill = COL_WHITE
+		col_shad = COL_LIGHTEST_GRAY
+		val, maxval = self.gun.max_reload_timer - self.gun.reload_timer, self.gun.max_reload_timer
+	end
+
+	-- /!\ Doing calculations like these in draw is a BAD idea! Too bad!
+	self.ui_col_gradient = self.ui_col_gradient * 0.9
+	if self.ui_col_gradient >= 0.02 then
+		col_fill = lerp_color(col_fill, COL_WHITE, self.ui_col_gradient)
+		col_shad = lerp_color(col_fill, COL_LIGHTEST_GRAY, self.ui_col_gradient)
+	end
+
+	-- (x, y, w, h, val, max_val, col_fill, col_out, col_fill_shadow, text, text_col, font);
+	local bar_x = x+ammo_icon_w+2
+	ui:draw_progress_bar(bar_x, y, slider_w, ammo_icon_w, val, maxval, 
+						col_fill, COL_BLACK_BLUE, col_shad, text)
+	
+	local fury_color = ternary(
+		self.fury_active, 
+		ternary(game.t % 0.2 <= 0.1, COL_LIGHT_YELLOW, COL_RED),
+		COL_LIGHT_YELLOW
+	)
+	ui:draw_progress_bar(bar_x, y+ammo_icon_w-1, slider_w, 4, self.fury_bar, self.fury_threshold, 
+						fury_color, COL_BLACK_BLUE, COL_ORANGE)
+
+	-- Fury bar
+	-- print_outline(nil, nil, concat("enms ", game:get_enemy_count()), ui_x + 20, ui_y-15)
+	-- print_outline(nil, nil, concat(round(self.fury_bar, 1)), ui_x-10, ui_y+15)
+	-- rect_color(COL_LIGHT_YELLOW, "fill", ui_x-10, ui_y+15, self.fury_bar*10, 3)
+end
+
+function Player:get_controls_tutorial_values()
+	if self.is_touching_exit_sign then
+		return {
+			{{"leave_game"}, "input.prompts.leave_game"},
+		}
+	else
+		return {
+			{{"shoot"}, "input.prompts.shoot"},
+			{{"jump"}, "input.prompts.jump"},
+			{{"right", "down", "left", "up"}, "input.prompts.move", Input:get_primary_input_type(self.n) == INPUT_TYPE_KEYBOARD},
+		} 
+	end
+end
+
+function Player:get_controls_text_color(i)
+	local color
+	if Input:get_number_of_users() == 1 then
+		if self.is_touching_exit_sign then
+			color = COL_LIGHT_GREEN
+		else
+			color = LOGO_COLS[i]
+		end
+	else
+		color = self.color_palette[1] 
+	end 
+	return color or COL_WHITE
+end
+
+function Player:draw_controls()
+	local tutorials = self:get_controls_tutorial_values()
+
+	local x = self.ui_x
+	local y = self.ui_y - 40 + self.controls_oy
+	-- local x = (CANVAS_WIDTH * 0.15) + (CANVAS_WIDTH * 0.9) * (self.n-1)/4
+	-- local y = 140
+
+	-- love.graphics.line(x, y, self.ui_x, self.ui_y - 30)
+	for i, tuto in ipairs(tutorials) do
+		y = y - 16
+		local btn_x = x - 2
+
+		local shown_duration = 0.5
+		local actions = tuto[1]
+		local label = Text:text(tuto[2])
+		local show_in_keybaord_form = tuto[3]
+
+		local x_of_second_button = 0
+		if not show_in_keybaord_form then
+			local action_index = math.floor((game.t % (shown_duration * #actions)) / shown_duration) + 1
+			actions = {actions[action_index]}
+		end
+		for i_action = 1, #actions do
+			local action = actions[i_action]
+
+			local icon = Input:get_action_primary_icon(self.n, action)
+			local w = icon:getWidth()
+
+			btn_x = btn_x - w
+			if not (show_in_keybaord_form and i_action == 4) then
+				love.graphics.draw(icon, btn_x, y)
+			end
+
+			if show_in_keybaord_form then
+				if i_action == 2 then
+					x_of_second_button = btn_x
+				elseif i_action == 4 then
+					love.graphics.draw(icon, x_of_second_button, y - 16)
+				end
+			end
+		end
+		
+		local text_color = self:get_controls_text_color(i)
+		print_outline(text_color, COL_BLACK_BLUE, label, x, y)
+	end
+end
+
+function Player:draw_player()
+	self.spr:draw(self.x, self.y - self.walkbounce_oy, self.w, self.h)
+
+	local post_x, post_y = self.spr:get_total_offset_position(self.x, self.y, self.w, self.h)
+	self:post_draw(post_x, post_y)
+end
+
+function Player:post_draw(x, y)
+	self:draw_effect_overlays(x, y)
+end
+
+function Player:draw_effect_overlays(x, y)
+	for i, effect in pairs(self.effects) do
+		effect:draw_overlay(x, y)
+	end 
 end
 
 function Player:animate_walk(dt)
@@ -932,87 +1112,5 @@ function Player:do_particles(dt)
 	end
 end
 
-function Player:apply_upgrade(upgrade)
-	upgrade:on_apply(self)
-	if upgrade.type == UPGRADE_TYPE_TEMPORARY or upgrade.type == UPGRADE_TYPE_PERMANENT then
-		table.insert(self.upgrades, upgrade)
-	end
-end
-
-function Player:update_upgrades(dt)
-	for i, upgrade in pairs(self.upgrades) do
-		upgrade:update(dt)
-	end
-end
-
-function Player:leave_game_if_possible(dt)
-	local is_touching, exit_sign = self:is_touching_collider(function(col) return col.other.is_exit_sign end)
-
-	self.is_touching_exit_sign = is_touching
-	if is_touching then
-		self.controls_oy = lerp(self.controls_oy, -6, 0.3)
-		if Input:action_pressed(self.n, "leave_game") and game.game_state == GAME_STATE_WAITING then
-			exit_sign.other:activate(self)
-		end
-	else
-		self.controls_oy = lerp(self.controls_oy, 0, 0.3)
-	end
-end
-
-function Player:next_gun()
-	self.gun_number = mod_plus_1(self.gun_number + 1, #self.guns)
-	self:equip_gun(self.guns[self.gun_number])
-end
-
-
-function Player:apply_effect(effect, duration)
-	effect:apply(self, duration)
-	table.insert(self.effects, effect)
-end
-
-function Player:update_effects(dt)
-	for i=1, #self.effects do 
-		local effect = self.effects[i]
-		effect:update(dt, self)
-	end
-	
-	for i=#self.effects, 1, -1 do 
-		local effect = self.effects[i]
-		if not effect.is_active then
-			table.remove(self.effects, i)
-		end
-	end
-end
-
-function Player:post_draw(x, y)
-	self:draw_effect_overlays(x, y)
-end
-
-function Player:draw_effect_overlays(x, y)
-	for i, effect in pairs(self.effects) do
-		effect:draw_overlay(x, y)
-	end 
-end
-
-function Player:get_max_ammo_multiplier()
-	return self.max_ammo_multiplier
-end
-function Player:set_max_ammo_multiplier(val)
-	self.max_ammo_multiplier = val
-end
-function Player:multiply_max_ammo_multiplier(val)
-	self.max_ammo_multiplier = self.max_ammo_multiplier * val
-end
-
-function Player:set_gun_cooldown_multiplier(val)
-	self.gun_cooldown_multiplier = val
-end
-function Player:multiply_gun_cooldown_multiplier(val)
-	self.gun_cooldown_multiplier = self.gun_cooldown_multiplier * val
-end
-
-function Player:get_gun_cooldown_multiplier()
-	return self.gun_cooldown_multiplier
-end
 
 return Player

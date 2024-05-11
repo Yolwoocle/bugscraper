@@ -38,7 +38,10 @@ end
 function Fly:update_fly(dt)
     self:update_enemy(dt)
 
-    if not self.buzz_is_started then  self.buzz_source:play() self.buzz_is_started = true end
+    if not self.buzz_is_started then
+        self.buzz_source:play()
+        self.buzz_is_started = true
+    end
     local spd = dist(0, 0, self.vx, self.vy)
     if spd >= 0.001 then
         self.buzz_source:setVolume(1)
@@ -48,7 +51,7 @@ function Fly:update_fly(dt)
     -- audio:set_source_position_relative_to_object(self.buzz_source, self)
 end
 
-function Fly:pause_repeating_sounds()
+function Fly:pause_repeating_sounds() --scotch
     self.buzz_source:setVolume(0)
 end
 function Fly:play_repeating_sounds()

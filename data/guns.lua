@@ -123,7 +123,7 @@ function Guns:init()
 		self.name = "minigun"
 		self:init_gun(user)
 		
-		self.max_ammo = 75
+		self.max_ammo = 50
 		self.max_reload_timer = 1.5
 
 		self.random_angle_offset = 0.5
@@ -133,8 +133,8 @@ function Guns:init()
 		self.sfx = "mushroom_ant_pop"
 		self.sfx_pitch = 1.2
 
-		self.cooldown = 0.03
-		self.jetpack_force = 200
+		self.cooldown = 0.06
+		self.jetpack_force = 300
 
 		self.bullet_spr = images.bullet_pea
 		self.bul_w = 10
@@ -222,6 +222,7 @@ function Guns:init()
 		self.max_ammo = 20
 		self.bullet_speed = 100
 		self.random_angle_offset = 0.5
+		self.harmless_time = 0.4
 
 		self.cooldown = 0
 		self.jetpack_force = 340
@@ -245,6 +246,27 @@ function Guns:init()
 		self.recoil_force = 0
 	end
 	function self.unlootable.DebugGun:on_shoot(user)
+		user:heal(1)
+	end
+
+	------
+	self.unlootable.DebugGunManual = Gun:inherit()
+
+	function self.unlootable.DebugGunManual:init(user)
+		self.name = "debug_gun_manual"
+		self:init_gun(user)
+		
+		self.sfx = "shot1"
+		self.damage = 40
+		self.is_auto = false
+		self.spr = images.honey_blob
+		self.max_ammo = math.huge
+		
+		self.cooldown = 0
+		self.jetpack_force = 400
+		self.recoil_force = 0
+	end
+	function self.unlootable.DebugGunManual:on_shoot(user)
 		user:heal(1)
 	end
 end

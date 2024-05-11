@@ -74,6 +74,7 @@ local img_names = {
 	dung_beetle_1 =   "actors/enemies/dung_beetle_1",
 	dung_beetle_2 =   "actors/enemies/dung_beetle_2",
 	dung_beetle_shield = "actors/enemies/dung_beetle_shield",
+	dung_beetle_shield_shine = "actors/enemies/dung_beetle_shield_shine",
 	dung_flying =     "actors/enemies/dung_flying",
 	fly1 =            "actors/enemies/fly1",
 	fly2 =            "actors/enemies/fly2",
@@ -168,6 +169,12 @@ local img_names = {
 	smash_flash =          "particles/smash_flash",
 	particle_leaf =        "particles/particle_leaf",
 
+	bullet_vanish_1 =      "particles/bullet_vanish_1",
+	bullet_vanish_2 =      "particles/bullet_vanish_2",
+	bullet_vanish_3 =      "particles/bullet_vanish_3",
+	bullet_vanish_4 =      "particles/bullet_vanish_4",
+	bullet_vanish_5 =      "particles/bullet_vanish_5",
+
 	-----------------------------------------------------
 	
 	-- level
@@ -221,6 +228,15 @@ local img_names = {
 	upgrade_milk =      "upgrades/upgrade_milk",
 	upgrade_peanut =    "upgrades/upgrade_peanut",
 	
+	-----------------------------------------------------
+
+	-- background
+	bg_city_0 =     "level/city_0",
+	bg_city_1 =     "level/city_1",
+	bg_city_2 =     "level/city_2",
+	bg_city_3 =     "level/city_3",
+	bg_city_shine = "level/city_shine",
+
 	-----------------------------------------------------
 	
 	-- misc

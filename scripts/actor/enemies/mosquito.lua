@@ -115,4 +115,16 @@ function Mosquito:draw()
     -- love.graphics.print(concat(self.attack_target == nil), self.x, self.y-32)
 end
 
+
+function Mosquito:pause_repeating_sounds() --scotch
+    self.buzz_source:setVolume(0)
+end
+function Mosquito:play_repeating_sounds()
+    self.buzz_source:setVolume(1)
+end
+
+function Mosquito:on_death()
+    self.buzz_source:stop()
+end
+
 return Mosquito
