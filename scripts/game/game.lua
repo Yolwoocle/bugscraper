@@ -128,7 +128,7 @@ function Game:new_game()
 	self.camera = Camera:new()
 
 	-- Debugging
-	self.debug_mode = true
+	self.debug_mode = false
 	self.colview_mode = false
 	self.msg_log = {}
 
@@ -893,6 +893,13 @@ end
 function Game:keypressed(key, scancode, isrepeat)
 	if scancode == "space" and self.debug_mode then
 		-- self:screenshot()
+	end
+	if scancode == "f12" and love.keyboard.isDown("lshift") and love.keyboard.isDown("lctrl") then
+		self.debug_mode = true
+		self.notif = "debug mode enabled "
+		self.notif_timer = 3.0
+	
+		-- self.debug
 	end
 
 	if self.menu_manager then

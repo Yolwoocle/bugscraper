@@ -192,6 +192,7 @@ function Debug:init(game)
 end
 
 function Debug:update(dt)
+    if not game.debug_mode then return end
 end
 
 function Debug:debug_action(key, scancode, isrepeat)
@@ -211,6 +212,7 @@ end
 
 function Debug:keypressed(key, scancode, isrepeat)
     if isrepeat then return end
+    if not game.debug_mode then return end
 
     if scancode == "f1"then
         self.is_reading_for_f1_action = true
