@@ -1,4 +1,4 @@
-**NOTE:** if you are just here to obtain a free copy of the game, fair enough, but please consider sharing the game with other people, or [supporting me financially](https://yolwoocle.itch.io/bugscraper) if you can. Thanks! 🙂
+**NOTE:** if you are just here to obtain a free copy of the game, fair enough, but please consider [supporting me financially](https://yolwoocle.itch.io/bugscraper) if you can, or sharing the game with other people. Thanks! 🙂
 <br>
 <div align="center">
   <h1>Bugscraper</h1>
