@@ -314,7 +314,7 @@ AXIS_TABLE = {
 }
 
 AXIS_DEADZONE = 0.3
-TRIGGER_DEADZONE = 0.3
+TRIGGER_DEADZONE = 0.15
 AXIS_ANGLE_MARGIN = 3 * math.pi/8
 UI_AXIS_ANGLE_MARGIN = 2 * math.pi/8
 
@@ -451,12 +451,13 @@ CONTROLLER_BUTTONS = {
     ["dpdown"] = true,
     ["dpleft"] = true,
     ["dpright"] = true,
-    ["misc1"] = true,
-    ["paddle1"] = true,
-    ["paddle2"] = true,
-    ["paddle3"] = true,
-    ["paddle4"] = true,
-    ["touchpad"] = true,
+    -- Only for love 12.0
+    -- ["misc1"] = true,
+    -- ["paddle1"] = true,
+    -- ["paddle2"] = true,
+    -- ["paddle3"] = true,
+    -- ["paddle4"] = true,
+    -- ["touchpad"] = true,
     ["leftxpos"] = true,
     ["leftxneg"] = true,
     ["leftypos"] = true,

@@ -59,7 +59,10 @@ function Debug:init(game)
         ["f5"] = {"view input info", function()
             self.input_view = not self.input_view
         end},
-        ["f6"] = {"toggle FPS", function()
+        -- ["f6"] = {"toggle FPS", function()
+        --     self.view_fps = not self.view_fps
+        -- end},
+        ["f6"] = {"toggle controller state", function()
             self.view_fps = not self.view_fps
         end},
         ["1"] = {"damage P1", func_damage(1)},
@@ -257,7 +260,7 @@ function Debug:draw()
         self:draw_input_view()
     end
 
-    if self.view_fps then
+    if true or self.view_fps then
         local t = concat(love.timer.getFPS(), "FPS")
         print_outline(nil, nil, t, CANVAS_WIDTH - get_text_width(t), 0)
     end
@@ -304,26 +307,29 @@ function Debug:draw_joystick_view()
     local spacing = 70
     local i = 0
     for _, joy in pairs(love.joystick.getJoysticks()) do
-        self:draw_joystick_view_for(joy, i*spacing, 20, 1, 2)
+        self:draw_joystick_view_for(joy, i*spacing, -20, "leftx", "lefty", true)
         i = i + 1
-        self:draw_joystick_view_for(joy, i*spacing, 20, 3, 4)
+        self:draw_joystick_view_for(joy, i*spacing, -20, "rightx", "righty")
         i = i + 1
     end
 end
 
-function Debug:draw_joystick_view_for(joystick, x, y, axis_x, axis_y)
+function Debug:draw_joystick_view_for(joystick, x, y, axis_x, axis_y, is_first)
     local user_n = Input:get_joystick_user_n(joystick)
-    local name = concat(utf8.sub(joystick:getName(), 1, 4), "...", utf8.sub(joystick:getName(), -4, -1))
-	print_outline(COL_WHITE, COL_BLACK_BLUE, name, x+30, y+20)
-	print_outline(COL_WHITE, COL_BLACK_BLUE, concat("(P", user_n, ")"), x+30, y+30)
+    local name = concat(utf8.sub(joystick:getName(), 1, 10), "...", utf8.sub(joystick:getName(), -10, -1))
+    
+    if is_first then
+        print_outline(COL_WHITE, COL_BLACK_BLUE, name, x+30, y+20)
+        print_outline(COL_WHITE, COL_BLACK_BLUE, concat("(Ply '", user_n, "')"), x+30, y+30)
+    end
 
-	print_outline(ternary(Input:action_down(user_n, "left"), COL_GREEN, COL_WHITE),  COL_BLACK_BLUE, ternary(Input:action_down_any_player("left"), "✅", "❎"), x+30, y+60)
-	print_outline(ternary(Input:action_down(user_n, "right"), COL_GREEN, COL_WHITE), COL_BLACK_BLUE, ternary(Input:action_down_any_player("right"), "✅", "❎"), x+70, y+60)
-	print_outline(ternary(Input:action_down(user_n, "up"), COL_GREEN, COL_WHITE),    COL_BLACK_BLUE, ternary(Input:action_down_any_player("up"), "✅", "❎"), x+50, y+40)
-	print_outline(ternary(Input:action_down(user_n, "down"), COL_GREEN, COL_WHITE),  COL_BLACK_BLUE, ternary(Input:action_down_any_player("down"), "✅", "❎"), x+50, y+80)
+	-- print_outline(ternary(Input:action_down(user_n, "left"), COL_GREEN, COL_WHITE),  COL_BLACK_BLUE, ternary(Input:action_down_any_player("left"), "✅", "❎"), x+30, y+60)
+	-- print_outline(ternary(Input:action_down(user_n, "right"), COL_GREEN, COL_WHITE), COL_BLACK_BLUE, ternary(Input:action_down_any_player("right"), "✅", "❎"), x+70, y+60)
+	-- print_outline(ternary(Input:action_down(user_n, "up"), COL_GREEN, COL_WHITE),    COL_BLACK_BLUE, ternary(Input:action_down_any_player("up"), "✅", "❎"), x+50, y+40)
+	-- print_outline(ternary(Input:action_down(user_n, "down"), COL_GREEN, COL_WHITE),  COL_BLACK_BLUE, ternary(Input:action_down_any_player("down"), "✅", "❎"), x+50, y+80)
 	
 	local ox = x+60
-	local oy = y+140
+	local oy = y+80
 	local r = 30
 	love.graphics.setColor(COL_GREEN)
     circle_color({0,0,0,0.5}, "fill", ox, oy, r)
@@ -349,26 +355,62 @@ function Debug:draw_joystick_view_for(joystick, x, y, axis_x, axis_y)
 	love.graphics.setColor(COL_WHITE)
 	
 	local function get_axis_angle(j, ax, ay) 
-		return math.atan2(j:getAxis(ay), j:getAxis(ax))
+		return math.atan2(j:getGamepadAxis(ay), j:getGamepadAxis(ax))
 	end
 	local function get_axis_radius_sqr(j, ax, ay) 
-		return distsqr(j:getAxis(ax), j:getAxis(ay))
+		return distsqr(j:getGamepadAxis(ax), j:getGamepadAxis(ay))
 	end
 	
 	local u = Input:get_user(user_n)
+    local j = joystick
 	if u ~= nil then
-		local j = joystick
-		circle_color(COL_RED, "fill", ox + r*j:getAxis(axis_x), oy + r*j:getAxis(axis_y), 2)
+		circle_color(COL_RED, "fill", ox + r*j:getGamepadAxis(axis_x), oy + r*j:getGamepadAxis(axis_y), 2)
 	
-        local val_x = round(j:getAxis(axis_x), 3)
-        local val_y = round(j:getAxis(axis_y), 3)
-        local val_a = round(get_axis_angle(j, 1, 2), 3)
-        local val_r = round(math.sqrt(get_axis_radius_sqr(j, 1, 2)), 3)
+        local val_x = round(j:getGamepadAxis(axis_x), 3)
+        local val_y = round(j:getGamepadAxis(axis_y), 3)
+        local val_a = round(get_axis_angle(j, axis_x, axis_y), 3)
+        local val_r = round(math.sqrt(get_axis_radius_sqr(j, axis_x, axis_y)), 3)
 		print_outline(COL_WHITE, COL_BLACK_BLUE, "x "..tostring(val_x), ox - 20, oy + 40)
 		print_outline(COL_WHITE, COL_BLACK_BLUE, "y "..tostring(val_y), ox - 20, oy + 50)
 		print_outline(COL_WHITE, COL_BLACK_BLUE, "a "..tostring(val_a), ox - 20, oy + 60)
 		print_outline(COL_WHITE, COL_BLACK_BLUE, "r "..tostring(val_r), ox - 20, oy + 70)
 	end
+
+    if is_first then 
+        local zl = j:getGamepadAxis("triggerleft")
+        local zr = j:getGamepadAxis("triggerright")
+        print_outline(COL_WHITE, COL_BLACK_BLUE, concat("ZL ", zl), ox - 20, oy + 80)
+        print_outline(COL_WHITE, COL_BLACK_BLUE, concat("ZR ", zr), ox - 20, oy + 90)
+    end
+    
+    local keys = ternary(is_first, {
+        "a",
+        "b",
+        "x",
+        "y",
+        "back",
+        "start",
+        "leftstick",
+        "rightstick",
+    },
+    {
+        "leftshoulder",
+        "rightshoulder",
+        "dpup",
+        "dpdown",
+        "dpleft",
+        "dpright",
+        -- "misc1",
+        -- "paddle1",
+        -- "paddle2",
+        -- "paddle3",
+        -- "paddle4",
+        -- "touchpad",
+    })
+    for i, key in ipairs(keys) do
+        local txt = concat(key, " ", ternary(j:isGamepadDown(key), "✅", "❎"))
+        print_outline(COL_WHITE, COL_BLACK_BLUE, txt, ox - 20, oy + 90 + 10*i)
+    end
 end
 
 function Debug:draw_debug_menu()

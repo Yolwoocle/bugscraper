@@ -1,4 +1,4 @@
-name = "bugscraper"
+name = "bugscraper_0.4.dev24-05-12b"
 # default_targets = ["lovejs", "win64", "macos", "appimage"]
 default_targets = ["lovejs"]
 build_directory = "export"
@@ -6,6 +6,7 @@ icon_file = "icon.png"
 
 love_files = [
     "+*",
+    "::git-ls-tree::",
     "-*/.*",
     "-./export/*",
 ]

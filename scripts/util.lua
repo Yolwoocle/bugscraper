@@ -20,6 +20,12 @@ pi = math.pi
 pi2 = 2*math.pi
 inf = math.huge
 
+-- scotch 
+local old_print = love.graphics.print
+function love.graphics.print(text, x, y, ...)
+	return old_print(text, math.floor(x), math.floor(y))
+end
+
 -- huge scotch for love.js compatibility
 -- https://github.com/Davidobot/love.js/issues/92
 local old_newCanvas = love.graphics.newCanvas

@@ -88,7 +88,9 @@ function Game:init()
 end
 
 function Game:new_game()
-	love.audio.stop()
+	if OPERATING_SYSTEM ~= "Web" then -- scotch
+		love.audio.stop()
+	end
 	
 	-- Reset global systems
 	Collision = CollisionManager:new()
@@ -927,6 +929,7 @@ function Game:joystickremoved(joystick)
 	if player_n ~= -1 then 
 		if self.game_state == GAME_STATE_WAITING then
 			self:leave_game(player_n)
+			self.menu_manager:unpause()
 		else
 			self.menu_manager:enable_joystick_wait_mode(joystick)
 		end

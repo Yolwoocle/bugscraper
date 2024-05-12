@@ -175,18 +175,18 @@ function InputUser:is_any_joystick_down(button, is_ui_action)
 end
 
 local axis_functions = {
-    leftxpos =  function(joystick, margin, deadzone) return Input:is_axis_in_angle_range(joystick, 1, 2, deadzone, 0,     margin) end,
-    leftxneg =  function(joystick, margin, deadzone) return Input:is_axis_in_angle_range(joystick, 1, 2, deadzone, pi,    margin) end,
-    leftypos =  function(joystick, margin, deadzone) return Input:is_axis_in_angle_range(joystick, 1, 2, deadzone, pi/2,  margin) end,
-    leftyneg =  function(joystick, margin, deadzone) return Input:is_axis_in_angle_range(joystick, 1, 2, deadzone, -pi/2, margin) end,
+    leftxpos =  function(joystick, margin, deadzone) return Input:is_axis_in_angle_range(joystick, "leftx", "lefty", deadzone, 0,     margin) end,
+    leftxneg =  function(joystick, margin, deadzone) return Input:is_axis_in_angle_range(joystick, "leftx", "lefty", deadzone, pi,    margin) end,
+    leftypos =  function(joystick, margin, deadzone) return Input:is_axis_in_angle_range(joystick, "leftx", "lefty", deadzone, pi/2,  margin) end,
+    leftyneg =  function(joystick, margin, deadzone) return Input:is_axis_in_angle_range(joystick, "leftx", "lefty", deadzone, -pi/2, margin) end,
 
-    rightxpos = function(joystick, margin, deadzone) return Input:is_axis_in_angle_range(joystick, 3, 4, deadzone, 0,     margin) end,
-    rightxneg = function(joystick, margin, deadzone) return Input:is_axis_in_angle_range(joystick, 3, 4, deadzone, pi,    margin) end,
-    rightypos = function(joystick, margin, deadzone) return Input:is_axis_in_angle_range(joystick, 3, 4, deadzone, pi/2,  margin) end,
-    rightyneg = function(joystick, margin, deadzone) return Input:is_axis_in_angle_range(joystick, 3, 4, deadzone, -pi/2, margin) end,
+    rightxpos = function(joystick, margin, deadzone) return Input:is_axis_in_angle_range(joystick, "rightx", "righty", deadzone, 0,     margin) end,
+    rightxneg = function(joystick, margin, deadzone) return Input:is_axis_in_angle_range(joystick, "rightx", "righty", deadzone, pi,    margin) end,
+    rightypos = function(joystick, margin, deadzone) return Input:is_axis_in_angle_range(joystick, "rightx", "righty", deadzone, pi/2,  margin) end,
+    rightyneg = function(joystick, margin, deadzone) return Input:is_axis_in_angle_range(joystick, "rightx", "righty", deadzone, -pi/2, margin) end,
 
-    triggerleft =    function(joystick, margin, deadzone) return joystick:getAxis(5) > -1 + TRIGGER_DEADZONE end,
-    triggerright =   function(joystick, margin, deadzone) return joystick:getAxis(6) > -1 + TRIGGER_DEADZONE end,
+    triggerleft =    function(joystick, margin, deadzone) return joystick:getGamepadAxis("triggerleft") > 0 + TRIGGER_DEADZONE end,
+    triggerright =   function(joystick, margin, deadzone) return joystick:getGamepadAxis("triggerright") > 0 + TRIGGER_DEADZONE end,
 }
 
 function InputUser:is_axis_down(axis_name, joystick, is_ui_axis)

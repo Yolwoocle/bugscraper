@@ -181,7 +181,7 @@ local function generate_menus()
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL, draw_elevator_progress)
     if OPERATING_SYSTEM == "Web" then
         -- Disable quitting on web
-        menus.pause.items[8].is_selectable = false
+        menus.pause.items[9].is_selectable = false
     end
     
     menus.feedback = Menu:new(game, {

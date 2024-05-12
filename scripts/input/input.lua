@@ -183,10 +183,10 @@ function InputManager:axis_to_key_name(axis, value)
 end
 
 function InputManager:get_axis_angle(joystick, axis_x, axis_y) 
-    return math.atan2(joystick:getAxis(axis_y), joystick:getAxis(axis_x))
+    return math.atan2(joystick:getGamepadAxis(axis_y), joystick:getGamepadAxis(axis_x))
 end
 function InputManager:get_axis_radius_sqr(joystick, axis_x, axis_y) 
-    return distsqr(joystick:getAxis(axis_x), joystick:getAxis(axis_y))
+    return distsqr(joystick:getGamepadAxis(axis_x), joystick:getGamepadAxis(axis_y))
 end
 function InputManager:is_axis_in_angle_range(joystick, axis_x, axis_y, deadzone, angle, angle_margin)
     if self:get_axis_radius_sqr(joystick, axis_x, axis_y) < deadzone*deadzone then
