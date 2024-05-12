@@ -1,11 +1,15 @@
 name = "bugscraper"
-default_targets = ["macos", "win64"]
+# default_targets = ["lovejs", "win64", "macos", "appimage"]
+default_targets = ["lovejs"]
 build_directory = "export"
 icon_file = "icon.png"
 
 love_files = [
-    "::git-ls-tree::",
     "+*",
     "-*/.*",
     "-./export/*",
 ]
+
+[lovejs]
+title = "Bugscraper"  # used on the resulting web page
+memory = "40000000"  # starting memory of the webpage (default is 20 MB)

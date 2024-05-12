@@ -55,8 +55,8 @@ function Game:init()
 	end
 	
 	SCREEN_WIDTH, SCREEN_HEIGHT = gfx.getDimensions()
-	love.window.setTitle("Bugscraper")
-	love.window.setIcon(love.image.newImageData("icon.png"))
+	-- love.window.setTitle("Bugscraper")
+	-- love.window.setIcon(love.image.newImageData("icon.png"))
 	gfx.setDefaultFilter("nearest", "nearest")
 	love.graphics.setLineStyle("rough")
 
@@ -394,13 +394,13 @@ function Game:draw_on_layer(layer_id, paint_function, params)
 end
 
 function Game:draw()
-	if OPERATING_SYSTEM == "Web" then
-		gfx.scale(CANVAS_SCALE, CANVAS_SCALE)
-		gfx.translate(0, 0)
-		gfx.clear(0,0,0)
+	-- if OPERATING_SYSTEM == "Web" then
+	-- 	gfx.scale(CANVAS_SCALE, CANVAS_SCALE)
+	-- 	gfx.translate(0, 0)
+	-- 	gfx.clear(0,0,0)
 		
-		self:draw_game()
-	else
+	-- 	self:draw_game()
+	-- else
 		-- Using a canvas for that sweet, resizable pixel art
 		gfx.setCanvas(canvas)
 		gfx.clear(0,0,0)
@@ -412,7 +412,7 @@ function Game:draw()
 		gfx.origin()
 		gfx.scale(1, 1)
 		gfx.draw(canvas, CANVAS_OX, CANVAS_OY, 0, CANVAS_SCALE, CANVAS_SCALE)
-	end
+	-- end
 
 	if self.debug.layer_view then
 		self.debug:draw_layers()
