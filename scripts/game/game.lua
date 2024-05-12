@@ -85,6 +85,7 @@ function Game:init()
 	love.mouse.setVisible(Options:get("mouse_visible"))
 
 	self.is_first_time = Options.is_first_time
+	self.has_seen_controller_warning = false 
 end
 
 function Game:new_game()

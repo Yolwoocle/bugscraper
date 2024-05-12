@@ -63,6 +63,10 @@ function GameUI:draw_version()
 	local x = math.floor(CANVAS_WIDTH - get_text_width(text) - 2)
 	local y = CANVAS_HEIGHT - self.game.logo_y + 16
 	print_outline(COL_DARK_GRAY, nil, text, x, y)
+
+	if OPERATING_SYSTEM == "Web" and not game.has_seen_controller_warning then
+		print_centered_outline(COL_MID_GRAY, COL_BLACK_BLUE, "⚠️ "..Text:text("game.warning_web_controller"), CANVAS_WIDTH/2, y+6)
+	end
 end
 
 function GameUI:draw_join_tutorial()
@@ -81,6 +85,7 @@ function GameUI:draw_join_tutorial()
 	
 	local x = def_x
 	local y = def_y
+
 	print_outline(COL_WHITE, COL_BLACK_BLUE, Text:text("input.prompts.join"), x, y)
 	for i, icon in pairs(icons) do
 		x = x - icon:getWidth() - 2
@@ -161,7 +166,7 @@ end
 
 function GameUI:draw_stomp_arrow()
 	if self.stomp_arrow_target and self.stomp_arrow_target.is_active then
-		draw_centered(images.stomp_arrow, self.stomp_arrow_target.mid_x, self.stomp_arrow_target.y - 12)
+		-- draw_centered(images.stomp_arrow, self.stomp_arrow_target.mid_x, self.stomp_arrow_target.y - 12)
 
 		if self.stomp_arrow_target.is_removed then
 			self:set_stomp_arrow_target(nil)

@@ -511,7 +511,12 @@ local function generate_menus()
         { StatsMenuItem, Text:text("menu.game_over.floor"), function(self) return concat(game.stats.floor, "/", game.level.max_floor) end },
         -- { StatsMenuItem, Text:text("menu.game_over.max_combo"), function(self) return concat(game.stats.max_combo) end },
         { "" },
-        { Text:text("menu.game_over.continue"), function() game:new_game() end },
+        { "▶ "..Text:text("menu.game_over.continue"), function() 
+            -- scotch
+        	game.has_seen_controller_warning = true
+            game:new_game() 
+        end },
+        { "❤ "..Text:text("menu.win.wishlist").." 🔗", func_url("https://s.team/a/2957130") },
         { "" },
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_GAME_OVER, draw_elevator_progress)
 
@@ -612,7 +617,11 @@ local function generate_menus()
         -- { StatsMenuItem, Text:text("menu.game_over.max_combo"), function(self) return concat(game.stats.max_combo) end },
         { ""},
         { "❤ "..Text:text("menu.win.wishlist").." 🔗", func_url("https://s.team/a/2957130") },
-        { "▶ "..Text:text("menu.win.continue"), function() game:new_game() end },
+        { "▶ "..Text:text("menu.win.continue"), function() 
+            --scotch
+        	game.has_seen_controller_warning = true
+            game:new_game() 
+        end },
         -- { --[["🔚 "..]]Text:text("menu.pause.quit"), quit_game },
         { "" },
 

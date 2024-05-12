@@ -8,6 +8,7 @@ return {
         win_thanks = "Thank you for playing the demo",
         win_wishlist = "Wishlist on Steam :)",
         win_prompt = "[Pause to continue]",
+        warning_web_controller = "Some browsers may not have proper controller support"
     },
     gun = {
         machinegun = "pea gun",

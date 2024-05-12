@@ -185,8 +185,8 @@ local axis_functions = {
     rightypos = function(joystick, margin, deadzone) return Input:is_axis_in_angle_range(joystick, "rightx", "righty", deadzone, pi/2,  margin) end,
     rightyneg = function(joystick, margin, deadzone) return Input:is_axis_in_angle_range(joystick, "rightx", "righty", deadzone, -pi/2, margin) end,
 
-    triggerleft =    function(joystick, margin, deadzone) return joystick:getGamepadAxis("triggerleft") > 0 + TRIGGER_DEADZONE end,
-    triggerright =   function(joystick, margin, deadzone) return joystick:getGamepadAxis("triggerright") > 0 + TRIGGER_DEADZONE end,
+    triggerleft =    function(joystick, margin, deadzone) return joystick:getGamepadAxis("triggerleft")  > TRIGGER_DEADZONE end,
+    triggerright =   function(joystick, margin, deadzone) return joystick:getGamepadAxis("triggerright") > TRIGGER_DEADZONE end,
 }
 
 function InputUser:is_axis_down(axis_name, joystick, is_ui_axis)
