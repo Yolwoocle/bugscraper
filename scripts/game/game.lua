@@ -571,18 +571,29 @@ function Game:listen_for_player_join(dt)
 		local input_profile_id = ""
 		local joystick = nil
 
-		local can_add_keyboard_user = ternary(
-			last_button and last_button.type == INPUT_TYPE_KEYBOARD,
-			(Input:get_number_of_users(INPUT_TYPE_KEYBOARD) <= 0),
-			true
-		)
-		if last_button and Input:can_add_user() and can_add_keyboard_user then
+		local can_add_specific_user = true
+		if last_button then 
+			if last_button.type == INPUT_TYPE_KEYBOARD or last_button.type == INPUT_TYPE_MIDI then
+				print_debug(last_button.type, Input:get_number_of_users(last_button.type))
+				can_add_specific_user = Input:get_number_of_users(last_button.type) <= 0
+				for i = 1, MAX_NUMBER_OF_PLAYERS do
+					if Input.users[i] ~= nil then
+						print_debug(i, Input.users[i].input_profile_id, Input.users[i]:get_input_profile():get_primary_input_type(), Input.users[i]:get_primary_input_type() )
+					end
+				end
+			end
+		end
+		
+		if last_button and Input:can_add_user() and can_add_specific_user then
 			if last_button.type == INPUT_TYPE_KEYBOARD then
 				input_profile_id = "keyboard_solo"
 			
 			elseif last_button.type == INPUT_TYPE_CONTROLLER then
 				input_profile_id = "controller"
 				joystick = Input:get_global_user().last_active_joystick
+
+			elseif last_button.type == INPUT_TYPE_MIDI then
+				input_profile_id = "midi"
 			end
 			self:join_game(input_profile_id, joystick)
 		end

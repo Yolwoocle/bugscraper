@@ -7,6 +7,10 @@ gamepadguesser.loadMappings("lib/gamepadguesser")
 
 local InputUser = Class:inherit()
 
+--Corentin
+local midi = require("lib.midi_input_handler.input_midi")
+midi.init_midi()
+
 function InputUser:init(n, input_profile_id, is_global)
     is_global = param(is_global, false)
 
@@ -20,8 +24,7 @@ function InputUser:init(n, input_profile_id, is_global)
     self.joystick = nil
     self.last_active_joystick = nil
     self.last_pressed_button = nil
-    self.primary_input_type = self:get_input_profile():get_primary_input_type()
-
+    
     self.vibration_timer = 0.0
     self.vibration_strength_left  = 0.0
     self.vibration_strength_right = 0.0
@@ -35,7 +38,7 @@ function InputUser:update(dt)
 end
 
 function InputUser:get_primary_input_type()
-    return self.primary_input_type
+    return self:get_input_profile():get_primary_input_type()
 end
 
 function InputUser:set_input_profile_id(profile_id)
@@ -121,6 +124,7 @@ end
 
 function InputUser:is_button_down(button, is_ui_action)
     is_ui_action = param(is_ui_action, false)
+    midi.update_input() --toremove
 
     local is_down = false
     if button.type == INPUT_TYPE_KEYBOARD then
@@ -132,7 +136,13 @@ function InputUser:is_button_down(button, is_ui_action)
         elseif self.is_global then
             is_down = self:is_any_joystick_down(button, is_ui_action)
         end
+--CORENTIN
+    elseif button.type == INPUT_TYPE_MIDI then
+        --midi.update_input()        
+        is_down = midi.is_midi_down(button)
+        --!TODO
     end
+---
     
     if is_down then
         self.last_pressed_button = button

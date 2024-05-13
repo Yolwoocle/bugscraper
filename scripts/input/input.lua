@@ -24,6 +24,7 @@ function InputManager:init()
 	self.default_mapping_keyboard_solo = self:process_input_map(RAW_INPUT_MAP_DEFAULT_KEYBOARD_SOLO)
 	self.default_mapping_split_kb_p1 =   self:process_input_map(RAW_INPUT_MAP_DEFAULT_SPLIT_KEYBOARD_P1)
 	self.default_mapping_split_kb_p2 =   self:process_input_map(RAW_INPUT_MAP_DEFAULT_SPLIT_KEYBOARD_P2)
+	self.default_mapping_midi =          self:process_input_map(RAW_INPUT_MAP_DEFAULT_MIDI)
 
 	self.input_profiles = {
         ["empty"] =             InputProfile:new("empty",             INPUT_TYPE_KEYBOARD, self.default_mapping_empty),
@@ -35,6 +36,7 @@ function InputManager:init()
         ["keyboard_solo"] =     InputProfile:new("keyboard_solo",     INPUT_TYPE_KEYBOARD, self.default_mapping_keyboard_solo),
         ["keyboard_split_p1"] = InputProfile:new("keyboard_split_p1", INPUT_TYPE_KEYBOARD, self.default_mapping_split_kb_p1),
         ["keyboard_split_p2"] = InputProfile:new("keyboard_split_p2", INPUT_TYPE_KEYBOARD, self.default_mapping_split_kb_p2),
+        ["midi"] =              InputProfile:new("midi",              INPUT_TYPE_MIDI, self.default_mapping_midi),
     }
 
     -- Load user-defined controls
@@ -54,7 +56,7 @@ function InputManager:get_number_of_users(input_type)
     local count = 0
     for i = 1, MAX_NUMBER_OF_PLAYERS do
         if self.users[i] ~= nil then
-            if (input_type == nil) or (self.users[i].primary_input_type == input_type) then
+            if (input_type == nil) or (self.users[i]:get_primary_input_type() == input_type) then
                 count = count + 1
             end
         end
@@ -65,7 +67,7 @@ end
 function InputManager:get_primary_input_type(player_n)
     local user = self.users[player_n]
     assert(user ~= nil, concat("user ", player_n, " doesn't exist"))
-    return user.primary_input_type
+    return user:get_primary_input_type()
 end
 
 function InputManager:assign_input_profile(player_n, profile_id)
@@ -74,9 +76,6 @@ function InputManager:assign_input_profile(player_n, profile_id)
 
     if profile_id == "controller" then
         profile_id = concat("controller_", player_n)
-        user.primary_input_type = INPUT_TYPE_CONTROLLER
-    else
-        user.primary_input_type = INPUT_TYPE_KEYBOARD
     end
     user:set_input_profile_id(profile_id)
 end
@@ -424,7 +423,7 @@ function InputManager:split_keyboard()
     local p2 = nil
     for i=1, MAX_NUMBER_OF_PLAYERS do
         local user = self.users[i]
-        if user and user.primary_input_type == INPUT_TYPE_KEYBOARD then
+        if user and user:get_primary_input_type() == INPUT_TYPE_KEYBOARD then
             if p1 == nil then
                 p1 = i
             else
@@ -444,7 +443,7 @@ end
 function InputManager:unsplit_keyboard()
     for i=1, MAX_NUMBER_OF_PLAYERS do
         local user = self.users[i]
-        if user and user.primary_input_type == INPUT_TYPE_KEYBOARD then
+        if user and user:get_primary_input_type() == INPUT_TYPE_KEYBOARD then
             self:assign_input_profile(i, "keyboard_solo")
         end
     end

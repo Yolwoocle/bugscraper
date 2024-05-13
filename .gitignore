@@ -2,3 +2,7 @@
 /.vscode/*
 .vscode/*
 /export/*
+
+
+*.so
+lib/midi_input_handler/target

@@ -135,6 +135,7 @@ MAX_ASSIGNABLE_BUTTONS = 8
 
 INPUT_TYPE_KEYBOARD = "k"
 INPUT_TYPE_CONTROLLER = "c"
+INPUT_TYPE_MIDI = "m"
 
 BUTTON_STYLE_SWITCH = "switch"
 BUTTON_STYLE_PLAYSTATION4 = "playstation4"
@@ -199,7 +200,7 @@ RAW_INPUT_MAP_DEFAULT_GLOBAL = {
     ui_reset_keys = {},
     split_keyboard = {"k_return"},
     leave_game = {},
-    join_game = {"k_c", "k_b", "c_a", "c_b"},
+    join_game = {"k_c", "k_b", "c_a", "c_b", "m_note0_4ch1"},
 
     debug = {"k_f1", "c_back"},
 }
@@ -296,6 +297,31 @@ RAW_INPUT_MAP_DEFAULT_SPLIT_KEYBOARD_P2 = {
     debug = {},
 }
 
+
+--Corentin
+RAW_INPUT_MAP_DEFAULT_MIDI = {
+    left =      {"c_leftxneg", "c_dpleft"},
+    right =     {"c_leftxpos", "c_dpright"},
+    up =        {"c_leftyneg", "c_dpup"},
+    down =      {"c_leftypos", "c_dpdown"},
+    jump =      {"m_note0_4ch1"},--
+    shoot =     {"m_note3_3ch10"},
+    
+    pause =     {"c_start"},
+    ui_select = {"c_a"},
+    ui_back =   {"c_b"},
+    ui_left =   {"c_leftxneg", "c_dpleft"},
+    ui_right =  {"c_leftxpos", "c_dpright"},
+    ui_up =     {"c_leftyneg", "c_dpup"},
+    ui_down =   {"c_leftypos", "c_dpdown"},
+    ui_reset_keys = {"c_triggerleft"},
+    split_keyboard = {},
+    leave_game = {"c_triggerleft"},
+    join_game = {},
+
+    debug = {},
+}
+--
 UI_ACTIONS = {"ui_up", "ui_down", "ui_left", "ui_right", "ui_select", "ui_back", "pause", "join_game"}
 
 AXIS_TABLE = {
