@@ -20,6 +20,10 @@ love_files = [
     "-./makefile",
     "-./makelove_example.toml",
     "-./scripts/_trash.lua",
+
+
+#asesprite file
+    "-*.aseprite"
 ]
 
 [hooks]

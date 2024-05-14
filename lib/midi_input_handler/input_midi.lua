@@ -35,11 +35,11 @@ function midilib.update_input()
 
     for _, value in pairs(inputs) do
         if value.midi_type == "note"then    
-            local key_name = concat("m_note",tostring(value.note) ,"_", tostring(value.oct) ,"ch", tostring(value.channel))
+            local key_name = concat("note",tostring(value.note) ,"_", tostring(value.oct) ,"_", tostring(value.channel))
             print(key_name)
             input_buffer[key_name] = value["velocity"]
         else
-            local key_name = concat("m_",value["midi_type"],"_",tostring(value.key),"ch",tostring(value.channel))
+            local key_name = concat(value["midi_type"],"_",tostring(value.key),"_",tostring(value.channel))
             print(key_name)
             input_buffer[key_name] = value["value"]
         end
@@ -52,15 +52,20 @@ function midilib.init_midi()
 end
 
 function midilib.is_midi_down(button)
-    --print("searching for")
-    --print_table(button)
-    if input_buffer["m_"..button.key_name] == nil or input_buffer["m_"..button.key_name] == 0 then
-        --print("false")
-        
-        return false    
+
+    if button.key_name == "any"then
+        for _, value in pairs(input_buffer) do
+            if value ~= 0 then
+                return true
+            end
+        end
+        return false
+    
     else
-        return true
+        
+        return input_buffer[button.key_name]~=nil and input_buffer[button.key_name] ~= 0
     end
+
 end
 
 return midilib

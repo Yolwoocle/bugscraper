@@ -245,6 +245,21 @@ local img_names = {
 	stomp_arrow = "ui/stomp_arrow",
 	yanis = "yanis",
 
+	-----------------------------------------------------
+
+	btn_m_note0 = "buttons/midi/btn_m_note0",
+	btn_m_note1 = "buttons/midi/btn_m_note1",
+	btn_m_note2 = "buttons/midi/btn_m_note2",
+	btn_m_note3 = "buttons/midi/btn_m_note3",
+	btn_m_note4 = "buttons/midi/btn_m_note4",
+	btn_m_note5 = "buttons/midi/btn_m_note5",
+	btn_m_note6 = "buttons/midi/btn_m_note6",
+	btn_m_note7 = "buttons/midi/btn_m_note7",
+	btn_m_note8 = "buttons/midi/btn_m_note8",
+	btn_m_note9 = "buttons/midi/btn_m_note9",
+	btn_m_note10 = "buttons/midi/btn_m_note10",
+	btn_m_note11 = "buttons/midi/btn_m_note11",
+
 }
 for id, path in pairs(img_names) do
 	images[id] = load_image(path..".png")

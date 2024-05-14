@@ -200,7 +200,7 @@ RAW_INPUT_MAP_DEFAULT_GLOBAL = {
     ui_reset_keys = {},
     split_keyboard = {"k_return"},
     leave_game = {},
-    join_game = {"k_c", "k_b", "c_a", "c_b", "m_note0_4ch1"},
+    join_game = {"k_c", "k_b", "c_a", "c_b", "m_any"},
 
     debug = {"k_f1", "c_back"},
 }
@@ -300,23 +300,23 @@ RAW_INPUT_MAP_DEFAULT_SPLIT_KEYBOARD_P2 = {
 
 --Corentin
 RAW_INPUT_MAP_DEFAULT_MIDI = {
-    left =      {"c_leftxneg", "c_dpleft"},
-    right =     {"c_leftxpos", "c_dpright"},
-    up =        {"c_leftyneg", "c_dpup"},
-    down =      {"c_leftypos", "c_dpdown"},
-    jump =      {"m_note0_4ch1"},--
-    shoot =     {"m_note3_3ch10"},
+    left =      {"m_note0_4_1"},
+    right =     {"m_note4_4_1"},
+    up =        {"m_note3_4_1"},
+    down =      {"m_note2_4_1"},
+    jump =      {"m_note0_5_1"},--
+    shoot =     {"m_note6_5_1"},
     
-    pause =     {"c_start"},
-    ui_select = {"c_a"},
-    ui_back =   {"c_b"},
-    ui_left =   {"c_leftxneg", "c_dpleft"},
-    ui_right =  {"c_leftxpos", "c_dpright"},
-    ui_up =     {"c_leftyneg", "c_dpup"},
-    ui_down =   {"c_leftypos", "c_dpdown"},
-    ui_reset_keys = {"c_triggerleft"},
+    pause =     {"m_note0_6_1"},
+    ui_select = {"m_note0_5_1"},
+    ui_back =   {"m_note6_5_1"},
+    ui_left =   {"m_note0_4_1"},
+    ui_right =  {"m_note4_4_1"},
+    ui_up =     {"m_note3_4_1"},
+    ui_down =   {"m_note2_4_1"},
+    ui_reset_keys = {"m_note4_3_10"},
     split_keyboard = {},
-    leave_game = {"c_triggerleft"},
+    leave_game = {"m_note11_5_1"},
     join_game = {},
 
     debug = {},

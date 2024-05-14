@@ -508,6 +508,25 @@ function InputManager:generate_unknown_key_icon(icon, text)
     return new_canvas
 end
 
+-- Corentin
+function InputManager:generate_midi_key_icon(icon, octave, channel)
+    local old_canvas = love.graphics.getCanvas()
+    local old_font = love.graphics.getFont()
+
+    local new_canvas = love.graphics.newCanvas(icon:getWidth(), icon:getHeight())
+    love.graphics.setFont(FONT_PICO8)
+    love.graphics.setCanvas(new_canvas)
+
+    love.graphics.draw(icon, 0, 0)
+    print_outline(COL_WHITE, COL_BLACK_BLUE, octave, 17, 10)
+    print_outline(COL_WHITE, COL_BLACK_BLUE, channel, 1, 1)
+
+    love.graphics.setCanvas(old_canvas)
+    love.graphics.setFont(old_font)
+    return new_canvas
+end
+--
+
 function InputManager:get_action_primary_icon(player_n, action, brand_override)
     local button = Input:get_primary_button(player_n, action)
     if button == nil then
@@ -528,7 +547,7 @@ function InputManager:get_button_icon(player_n, button, brand_override)
             img = images[image_name]
         end
 
-        if img == nil or img == images.btn_k_unknown then
+        if img == nil then
             return self:generate_unknown_key_icon(images.btn_k_unknown, button.key_name)
         end
 
@@ -537,11 +556,19 @@ function InputManager:get_button_icon(player_n, button, brand_override)
         img = self:get_button_icon_controller(button, brand)
         
         if img == nil then
-            return self:generate_unknown_key_icon(images.btn_c_unknown, button.key_name)
+            return self:generate_unknown_key_icon(images.btn_k_unknown, button.key_name)
         end
         
+-- corentin
+	elseif button.type == INPUT_TYPE_MIDI then
+        local split = split_str(button.key_name, "_")
+        local note_name = split[1]
+        local octave = split[2]
+        local channel = split[3]
+        return self:generate_midi_key_icon(images[concat("btn_m_", note_name)] or images.btn_k_unknown, octave, channel)
+--
 	end
-    return img or self:generate_unknown_key_icon(images.btn_k_unknown, "?")
+    return img or self:generate_unknown_key_icon(images.btn_k_unknown, button.key_name or "?")
 end
 
 function InputManager:get_button_icon_controller(button, brand)

@@ -70,6 +70,7 @@ function Game:init()
 	FONT_7SEG = gfx.newImageFont("fonts/7seg_font.png", " 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 	FONT_MINI = gfx.newFont("fonts/Kenney Mini.ttf", 8)
 	FONT_PAINT = gfx.newFont("fonts/NicoPaint-Regular.ttf", 16)
+	FONT_PICO8 = gfx.newFont("fonts/PICO-8 mono.ttf", 4)
 	gfx.setFont(FONT_REGULAR)
 	
 	-- Audio ===> Moved to OptionsManager
