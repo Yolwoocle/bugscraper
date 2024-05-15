@@ -20,7 +20,7 @@ function Debug:init(game)
     self.info_view = false
     self.joystick_view = false
     self.bound_view = false
-    self.view_fps = true
+    self.view_fps = false
     
     self.instant_end = false
     self.layer_view = false
@@ -59,10 +59,10 @@ function Debug:init(game)
         ["f5"] = {"view input info", function()
             self.input_view = not self.input_view
         end},
-        -- ["f6"] = {"toggle FPS", function()
-        --     self.view_fps = not self.view_fps
-        -- end},
-        ["f6"] = {"toggle controller state", function()
+        ["f6"] = {"toggle UI", function()
+            self.game.game_ui.is_visible = not self.game.game_ui.is_visible
+        end},
+        ["f"] = {"toggle FPS", function()
             self.view_fps = not self.view_fps
         end},
         ["1"] = {"damage P1", func_damage(1)},
@@ -85,24 +85,25 @@ function Debug:init(game)
             game:apply_upgrade(upgrades.UpgradeEspresso:new())
         end},
         ["t"] = {"particle", function()
-            Particles:image(CANVAS_WIDTH/2, CANVAS_HEIGHT/2 + 50, 1, {
-                images.bullet_vanish_1,
-                images.bullet_vanish_2,
-                images.bullet_vanish_3,
-                images.bullet_vanish_4,
-                images.bullet_vanish_5,
-            }, 0, nil, 0, 0, {
-                is_solid = false,
-                rot = 0,
-                vx1 = 0,
-                vx2 = 0,
-                vy1 = 0,
-                vy2 = 0,
-                vr1 = 0,
-                vr2 = 0,
-                life = 0.15,
-                is_animated = true
-            })
+            -- Particles:image(CANVAS_WIDTH/2, CANVAS_HEIGHT/2 + 50, 1, {
+            --     images.bullet_vanish_1,
+            --     images.bullet_vanish_2,
+            --     images.bullet_vanish_3,
+            --     images.bullet_vanish_4,
+            --     images.bullet_vanish_5,
+            -- }, 0, nil, 0, 0, {
+            --     is_solid = false,
+            --     rot = 0,
+            --     vx1 = 0,
+            --     vx2 = 0,
+            --     vy1 = 0,
+            --     vy2 = 0,
+            --     vr1 = 0,
+            --     vr2 = 0,
+            --     life = 0.15,
+            --     is_animated = true
+            -- })
+            Particles:falling_grid(CANVAS_WIDTH/2, CANVAS_HEIGHT/2 + 50)
         end},
         ["s"] = {"spawn", function()
             local dung = enemies.SnailShelled:new(CANVAS_WIDTH/2, CANVAS_HEIGHT/2)
@@ -260,7 +261,7 @@ function Debug:draw()
         self:draw_input_view()
     end
 
-    if true or self.view_fps then
+    if self.view_fps then
         local t = concat(love.timer.getFPS(), "FPS")
         print_outline(nil, nil, t, CANVAS_WIDTH - get_text_width(t), 0)
     end

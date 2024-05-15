@@ -13,6 +13,9 @@ function Wave:init(params)
 	self.min = param(params.min, 1)
 	self.max = param(params.max, 1)
 	self.enemies = param(params.enemies, {})
+	self.level_geometry = param(params.level_geometry, nil)
+	self.elevator_layers = param(params.elevator_layers, {})
+	self.run = param(params.run, nil)
 
 	self.enable_stomp_arrow_tutorial = param(params.enable_stomp_arrow_tutorial, false)
 
@@ -117,6 +120,33 @@ end
 
 function Wave:get_floor_type()
 	return self.floor_type
+end
+
+function Wave:enable_wave_side_effects(level)
+	if self.background then
+		self:set_background(self.background)
+	end
+	if self.music then
+		game.music_player:fade_out(self.music, 1.0)
+	end
+	if self.level_geometry then
+		self.level_geometry:apply(level)
+	end
+	if self.bounds then
+		level:set_bounds(self.bounds)
+	end
+	if self.elevator_layers then
+		for layer, value in pairs(self.elevator_layers) do
+			level.elevator:set_layer(layer, value)
+		end
+	end
+	if self.run then
+		self:run(level)
+	end
+
+	if self.enable_stomp_arrow_tutorial then
+		game.game_ui:set_stomp_arrow_target(level.enemy_buffer[1])
+	end
 end
 
 return Wave

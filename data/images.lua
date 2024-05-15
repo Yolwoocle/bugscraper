@@ -36,10 +36,6 @@ local img_names = {
 	-----------------------------------------------------
 
 	-- test
-	_test_layer0 = "_test_layer0",
-	_test_layer1 = "_test_layer1",
-	_test_layer2 = "_test_layer2",
-	_test_layer3 = "_test_layer3",
 	_test_window = "_test_window",
 	_test_shine = "_test_shine",
 
@@ -191,6 +187,8 @@ local img_names = {
 	cabin_door_right_center = "level/cabin_door_right_center",
 	cabin_door_right_far =    "level/cabin_door_right_far",
 	cabin_rubble =            "level/cabin_rubble",
+	cabin_grid =              "level/cabin_grid",
+	cabin_grid_platform =     "level/cabin_grid_platform",
 
 	cafeteria =               "level/cafeteria",
 
@@ -244,6 +242,7 @@ local img_names = {
 	offscreen_indicator = "ui/offscreen_indicator",
 	stomp_arrow = "ui/stomp_arrow",
 	yanis = "yanis",
+	test = "test",
 
 }
 for id, path in pairs(img_names) do

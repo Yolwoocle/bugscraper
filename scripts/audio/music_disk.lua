@@ -16,6 +16,9 @@ function MusicDisk:init(music_player, music_ingame, music_pause)
     self.current_source = self.sources[MUSIC_MODE_INGAME]
 end
 
+function MusicDisk:update(dt)
+end
+
 function MusicDisk:set_name(name)
     self.name = name
 end
@@ -27,7 +30,7 @@ function MusicDisk:pause()
 end
 
 function MusicDisk:play()
-    if self.current_source ~= nil then    
+    if self.current_source ~= nil then
         self.current_source:play()   
     end
 end

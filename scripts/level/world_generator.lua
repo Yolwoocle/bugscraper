@@ -44,21 +44,21 @@ function WorldGenerator:generate_cabin()
 	-- local bx, by = ax+w, ay+h
 
 	-- cabin
-	self:write_rect(self.shaft_rect, 1)
+	self:write_rect(self.shaft_rect, TILE_METAL)
 	
 	-- chains
 	for iy = 0,self.shaft_rect.ay-1 do
-		map:set_tile(4, iy, 4)
-		map:set_tile(self.shaft_rect.bx-2, iy, 4)
+		map:set_tile(4, iy, TILE_CHAIN)
+		map:set_tile(self.shaft_rect.bx-2, iy, TILE_CHAIN)
 	end
 end
 
 function WorldGenerator:generate_cafeteria()
 	self:reset()
-	self:write_rect(Rect:new(2, 2, 68, 15), 1)
+	self:write_rect(Rect:new(2, 2, 68, 15), TILE_METAL)
 
 	-- table
-	self:write_rect(Rect:new(27, 13, 40, 13), 3)
+	self:write_rect(Rect:new(27, 13, 40, 13), TILE_SEMISOLID)
 end
 
 function WorldGenerator:generate_end_rubble()
@@ -75,24 +75,24 @@ function WorldGenerator:generate_end_rubble()
 	end
 end
 
-function WorldGenerator:write_rect(rect, value)
+function WorldGenerator:write_rect(rect, tile)
 	-- Floor/Ceiling
 	for ix=rect.ax, rect.bx do
-		self.map:set_tile(ix, rect.ay, value)
-		self.map:set_tile(ix, rect.by, value)
+		self.map:set_tile(ix, rect.ay, tile)
+		self.map:set_tile(ix, rect.by, tile)
 	end
 	-- Left/Right walls
 	for iy=rect.ay, rect.by do
-		self.map:set_tile(rect.ax, iy, value)
-		self.map:set_tile(rect.bx, iy, value)
+		self.map:set_tile(rect.ax, iy, tile)
+		self.map:set_tile(rect.bx, iy, tile)
 	end
 end
 
 
-function WorldGenerator:write_rect_fill(ax, ay, bx, by, value)
+function WorldGenerator:write_rect_fill(ax, ay, bx, by, tile)
 	for ix=ax, bx do
 		for iy=ay, by do
-			self.map:set_tile(ix, iy, value)
+			self.map:set_tile(ix, iy, tile)
 		end
 	end
 end
@@ -115,7 +115,5 @@ function WorldGenerator:draw()
 		gfx.draw(self.canvas, 0,0)
 	end
 end
-
-
 
 return WorldGenerator

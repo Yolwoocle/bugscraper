@@ -1,5 +1,6 @@
 require "scripts.util"
 local Class = require "scripts.meta.class"
+local Sprite = require "scripts.graphics.sprite"
 local images = require "data.images"
 local utf8 = require "utf8"
 
@@ -9,10 +10,10 @@ function Particle:init_particle(x,y,s,r, vx,vy,vs,vr, life, g, is_solid)
 	self.x, self.y = x, y
 	self.vx, self.vy = vx or 0, vy or 0
 
-	self.s = s -- size or radius
+	self.s = s or 1.0-- size or radius
 	self.vs = vs or 20
 	
-	self.r = r
+	self.r = r or 0
 	self.vr = vr or 0
 
 	self.gravity = g or 0
@@ -366,6 +367,59 @@ end
 
 ------------------------------------------------------------
 
+local FallingGridParticle = Particle:inherit()
+
+function FallingGridParticle:init(img_side, img_top, x,y)
+	self:init_particle(x,y,s,r, vx,vy,0,vr, 2.5, g, false)
+	self.spr_side = Sprite:new(img_side, SPRITE_ANCHOR_LEFT_BOTTOM)
+	self.spr_top =  Sprite:new(img_top,  SPRITE_ANCHOR_LEFT_BOTTOM)
+
+	self.orig_y = y
+
+	-- self.spr_w = self.spr:getWidth()
+	-- self.spr_h = self.spr:getWidth()
+	-- self.spr_ox = self.spr_w / 2
+	-- self.spr_oy = self.spr_h / 2
+	
+	self.t = 0 
+	self.rot_3d = math.pi/2
+	self.rot_3d_vel = 0 
+	self.rot_3d_acc = -6
+	self.rot_3d_bounce = 0.5
+end
+
+function FallingGridParticle:update(dt)
+	self:update_particle(dt)
+
+	self.t = self.t + dt*4
+	if self.rot_3d > 0 then
+		self.rot_3d_vel = self.rot_3d_vel + self.rot_3d_acc*dt 
+	end
+	self.rot_3d = math.max(0, self.rot_3d + self.rot_3d_vel*dt)
+	
+	if self.rot_3d <= 0 and math.abs(self.rot_3d_vel) >= 0.5 then
+		self.rot_3d_vel = math.abs(self.rot_3d_vel) * self.rot_3d_bounce
+
+		local w = self.spr_side.image:getWidth()
+		for ix = 0, w, 4 do
+			Particles:dust(self.x + ix, self.y)
+		end
+	end
+
+	self.spr_side:set_scale(nil, math.sin(self.rot_3d))
+	self.spr_top:set_scale(nil, math.cos(self.rot_3d))
+	
+	self.y = self.orig_y + math.cos(self.rot_3d) * self.spr_top.image:getHeight()
+end
+
+function FallingGridParticle:draw()
+	self.spr_side:draw(self.x, self.y)
+	self.spr_top:draw(self.x, self.y - math.sin(self.rot_3d) * self.spr_side.image:getHeight())
+	-- love.graphics.line(self.x-32, self.orig_y, self.x+32, self.orig_y)
+end
+
+------------------------------------------------------------
+
 local ParticleSystem = Class:inherit()
 
 function ParticleSystem:init(x,y)
@@ -629,6 +683,10 @@ function ParticleSystem:word(x, y, str, col)
 		Particles:letter(x, y, letter, i*0.05, col)
 		x = x + get_text_width(letter)
 	end
+end
+
+function ParticleSystem:falling_grid(x, y)
+	self:add_particle(FallingGridParticle:new(images.cabin_grid, images.cabin_grid_platform, x, y))
 end
 
 ParticleSystem.text = ParticleSystem.word

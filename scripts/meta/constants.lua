@@ -3,7 +3,7 @@ local function rgb(r,g,b)
 end
 
 local function color(hex)
-    -- thaks to chatgpt :saluting_face:
+    -- thanks to chatgpt
 	if not hex then  return {1, 1, 1}  end
 	assert(type(hex) == "number", "incorrect type for 'hex' ("..type(hex).."), argument given should be number")
 
@@ -42,16 +42,24 @@ SPRITE_ANCHOR_END = "e"
 
 SPRITE_ANCHOR_TOP_LEFT = "ss"
 SPRITE_ANCHOR_CENTER_BOTTOM = "ce"
+SPRITE_ANCHOR_LEFT_BOTTOM = "se"
 SPRITE_ANCHOR_CENTER_CENTER = "cc"
 
 --------------------------------------------- 
 
--- Physics
+-- Physics & map
 BLOCK_WIDTH = 16
 BW = BLOCK_WIDTH
 
 COLLISION_TYPE_SOLID = "solid"
 COLLISION_TYPE_SEMISOLID = "semisolid"
+
+TILE_AIR = 0
+TILE_METAL = 1
+TILE_RUBBLE = 2
+TILE_SEMISOLID = 3
+TILE_CHAIN = 4
+TILE_BORDER = 5
 
 --------------------------------------------- 
 
@@ -131,6 +139,7 @@ GAME_STATE_WIN = "win"
 
 ---------------------------------------------
 
+-- Input
 MAX_ASSIGNABLE_BUTTONS = 8
 
 INPUT_TYPE_KEYBOARD = "k"
@@ -472,12 +481,14 @@ CONTROLLER_BUTTONS = {
 
 --------------------------------------------- 
 
+-- Music
 MUSIC_MODE_OFF = "off"
 MUSIC_MODE_INGAME = "ingame"
 MUSIC_MODE_PAUSE = "pause"
 
 --------------------------------------------- 
 
+-- Upgrade
 UPGRADE_TYPE_TEMPORARY = "temporary"
 UPGRADE_TYPE_INSTANT = "instant"
 UPGRADE_TYPE_PERMANENT = "permanent"
@@ -487,15 +498,15 @@ UPGRADE_TARGET_ALL = "all"
 
 --------------------------------------------- 
 
+-- Wave
 FLOOR_TYPE_NORMAL = "normal"
 FLOOR_TYPE_CAFETERIA = "cafeteria"
-
---------------------------------------------- 
 
 WAVE_ROLL_TYPE_RANDOM = "random"
 WAVE_ROLL_TYPE_FIXED = "fixed"
 
 --------------------------------------------- 
 
--- Go ahead. Change it to 1. I'm not here to stop you
+-- Super secret
+-- Go ahead and figure out what this is. I'm not here to stop you
 SMASH_EASTER_EGG_PROBABILITY = 0.02

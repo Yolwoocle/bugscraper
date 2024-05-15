@@ -86,6 +86,9 @@ function Game:init()
 
 	self.is_first_time = Options.is_first_time
 	self.has_seen_controller_warning = false 
+	self.ui_visible = true
+
+	self.debug_mode = DEBUG_MODE
 end
 
 function Game:new_game()
@@ -131,7 +134,6 @@ function Game:new_game()
 	self.camera = Camera:new()
 
 	-- Debugging
-	self.debug_mode = false
 	self.colview_mode = false
 	self.msg_log = {}
 
@@ -897,10 +899,10 @@ function Game:keypressed(key, scancode, isrepeat)
 	if scancode == "space" and self.debug_mode then
 		-- self:screenshot()
 	end
-	if scancode == "f12" and love.keyboard.isDown("lshift") and love.keyboard.isDown("lctrl") then
+	if scancode == "f12" and (love.keyboard.isDown("lshift") or love.keyboard.isDown("rshift")) and (love.keyboard.isDown("lctrl") or love.keyboard.isDown("rshift")) then
 		self.debug_mode = true
-		self.notif = "debug mode enabled "
-		self.notif_timer = 3.0
+		self.debug.notif = "debug mode enabled"
+		self.debug.notif_timer = 3.0
 	
 		-- self.debug
 	end

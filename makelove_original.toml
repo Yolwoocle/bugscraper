@@ -1,7 +1,6 @@
-name = "bugscraper_0.5.dev24-05-13"
-# default_targets = ["lovejs", "win32", "win64", "macos", "appimage"]
-default_targets = ["win64"]
-# default_targets = ["lovejs"]
+name = "bugscraper_{version}"
+default_targets = ["lovejs", "win32", "win64", "macos", "appimage"]
+# default_targets = ["win32", "win64"]
 build_directory = "export"
 icon_file = "icon.png"
 
@@ -20,15 +19,15 @@ love_files = [
 # Exe metadata is specified as a version string (key) and it's value
 # The values shown here are the ones set by makelove by default (you can overwrite them here)
 # and the values in the comments are the original values in love.exe
-# If you are not doing a versioned build, 0.4 is empty.
+# If you are not doing a versioned build, {version} is empty.
 [windows.exe_metadata]
-FileDescription = "Bugscraper: Rise to the top of a bug-filled tower" # "LÖVE {löve version}"
-FileVersion = "0.4" # "{löve version}"
+FileDescription = "Bugscraper {version}: Rise to the top of a bug-filled tower" # "LÖVE {löve version}"
+FileVersion = "{version}" # "{löve version}"
 CompanyName = "Léo Bernard" # "LÖVE World Domination Inc."
 LegalCopyright = "Copyright © 2024 Léo Bernard" # "Copyright © 2006-2020 LÖVE Development Team" or ""
 ProductName = "Bugscraper" # "LÖVE"
 # ProductVersion = "<same as FileVersion>"
-OriginalFilename = "bugscraper_0.4" # "love.exe"
+OriginalFilename = "bugscraper_{version}" # "love.exe"
 
 
 [macos]
@@ -43,13 +42,13 @@ icon_file = "icon.png"  # or macIcon.icns
 # CFBundleName = "<same as the name from the main config>"
 CFBundleIdentifier = "com.yolwoocle.bugscraper"
 NSHumanReadableCopyright = "Copyright © 2024 Léo Bernard"
-CFBundleShortVersionString = "0.4"
+CFBundleShortVersionString = "{version}"
 
 
 [linux]
 # These values are included in the .desktop file
 [linux.desktop_file_metadata]
-Comment="Bugscraper 0.4: Rise to the top of a bug-filled tower"
+Comment="Bugscraper {version}: Rise to the top of a bug-filled tower"
 Categories="Game;" # Default is "Game;" (semicolon is separator and terminator)
 
 [lovejs]

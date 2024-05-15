@@ -4,7 +4,7 @@ local Timer = require "scripts.timer"
 local Rect = require "scripts.rect"
 local Enemies = require "data.enemies"
 local TileMap = require "scripts.level.tilemap"
-local WorldGenerator = require "scripts.level.worldgenerator"
+local WorldGenerator = require "scripts.level.world_generator"
 local BackgroundDots = require "scripts.level.background.background_dots"
 local BackgroundServers = require "scripts.level.background.background_servers"
 local BackgroundCafeteria = require "scripts.level.background.background_cafeteria"
@@ -42,25 +42,6 @@ function Level:init(game)
 	local door_ax, door_ay = cabin_ax*BW+154, cabin_ax*BW+122
 	local door_bx, door_by = cabin_ay*BW+261, cabin_ay*BW+207
 	self.door_rect = Rect:new(door_ax, door_ay, door_bx, door_by)
-
-	-- Bounding box
-	-- Future Leo: the fuck is this, commented it out
-	-- Don't try to understand, all you have to know is that it puts collision 
-	-- boxes around the elevator shaft
-	-- local map_w = self.map.width * BW
-	-- local map_h = self.map.height * BW
-	-- local box_ax = self.world_generator.box_ax
-	-- local box_ay = self.world_generator.box_ay
-	-- local box_bx = self.world_generator.box_bx
-	-- local box_by = self.world_generator.box_by
-	-- self.boxes = {
-	-- 	{name="box_up",    x = -BW, y = -BW,  w=map_w + 2*BW,     h=BW + box_ay*BW},
-	-- 	{name="box_down",  x = -BW, y = (box_by+1)*BW,  w=map_w + 2*BW,     h=BW*box_ay},
-	-- 	{name="box_left",  x = -BW,  y = -BW,   w=BW + box_ax * BW, h=map_h + 2*BW},
-	-- 	{name="box_right", x = BW*(box_bx+1), y = -BW, w=BW*box_ax, h=map_h + 2*BW},
-	-- }
-	-- for i,box in pairs(self.boxes) do   Collision:add(box)   end
-
 
 	-- Level info
 	self.floor = 0 --Floor n°
@@ -275,40 +256,12 @@ function Level:new_wave_buffer_enemies()
 	
 	self.enemy_buffer = wave:spawn(self.door_rect)
 	
-	self:enable_wave_side_effects(wave)
+	wave:enable_wave_side_effects(self)
 	if self.background.change_clear_color then
 		self.background:change_clear_color()
 	end
 	
 	self:set_current_wave(wave)
-end
-
-function Level:enable_wave_side_effects(wave)
-	self:_load_background(wave)
-	self:_load_music(wave)
-	self:_load_wave_bounds(wave)
-
-	if wave.enable_stomp_arrow_tutorial then
-		game.game_ui:set_stomp_arrow_target(self.enemy_buffer[1])
-	end
-end
-
-function Level:_load_background(wave)
-	if wave.background then
-		self:set_background(wave.background)
-	end
-end
-
-function Level:_load_music(wave)
-	if wave.music then
-		game.music_player:fade_out(wave.music, 1.0)
-	end
-end
-
-function Level:_load_wave_bounds(wave)
-	if wave.bounds then
-		self:set_bounds(wave.bounds)
-	end
 end
 
 function Level:activate_enemy_buffer()
@@ -516,7 +469,7 @@ function Level:draw_front(x,y)
 		self:draw_rubble()
 		
 		if self.show_cabin then
-			gfx.draw(images.cabin_walls, self.cabin_rect.ax, self.cabin_rect.ay)
+			self.elevator:draw_front()
 		end
 	end)
 

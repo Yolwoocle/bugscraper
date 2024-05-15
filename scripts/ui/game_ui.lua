@@ -47,7 +47,7 @@ function GameUI:draw_logo()
 			img = images.logo_noshad
 		end
 		gfx.setColor(col)
-		gfx.draw(img, logo_x + ox, game.logo_y + oy)
+		gfx.draw(img, math.floor(logo_x + ox), math.floor(game.logo_y + oy))
 		if DEMO_BUILD then
 			if i == 4 then
 				print_outline(COL_WHITE, COL_BLACK_BLUE, Text:text("game.demo"), logo_x + ox + 90, game.logo_y + oy + 19)

@@ -13,22 +13,23 @@ local function make_tile(init)
 	return tile
 end
 
+
 function Tiles:init()
 	self.tiles = {}
 	
 	-- Air
-	self.tiles[0] = make_tile(function(self, x, y, w)
+	self.tiles[TILE_AIR] = make_tile(function(self, x, y, w)
 		self:init_tile(x, y, w)
-		self.id = 0
+		self.id = TILE_AIR
 		
 		self.name = "air"
 		self.spr = nil
 	end)
 
 	-- Metal
-	self.tiles[1] = make_tile(function(self, x, y, w)
+	self.tiles[TILE_METAL] = make_tile(function(self, x, y, w)
 		self:init_tile(x, y, w)
-		self.id = 1
+		self.id = TILE_METAL
 		self.name = "metal"
 		self.spr = nil
 		
@@ -39,9 +40,9 @@ function Tiles:init()
 	end)
 
 	-- Rubble
-	self.tiles[2] = make_tile(function(self, x, y, w)
+	self.tiles[TILE_RUBBLE] = make_tile(function(self, x, y, w)
 		self:init_tile(x, y, w)
-		self.id = 2
+		self.id = TILE_RUBBLE
 		self.name = "rubble"
 		self.spr = images.empty
 		
@@ -52,11 +53,11 @@ function Tiles:init()
 	end)
 
 	-- Semi-solid
-	self.tiles[3] = make_tile(function(self, x, y, w)
+	self.tiles[TILE_SEMISOLID] = make_tile(function(self, x, y, w)
 		self:init_tile(x, y, w)
-		self.id = 3
+		self.id = TILE_SEMISOLID
 		self.name = "semisolid"
-		self.spr = images.semisolid
+		-- self.spr = images.semisolid
 		
 		self.collision_info = CollisionInfo:new {
 			type = COLLISION_TYPE_SEMISOLID,
@@ -65,18 +66,18 @@ function Tiles:init()
 	end)
 
 	-- Chain
-	self.tiles[4] = make_tile(function(self, x, y, w)
+	self.tiles[TILE_CHAIN] = make_tile(function(self, x, y, w)
 		self:init_tile(x, y, w)
-		self.id = 4
+		self.id = TILE_CHAIN
 
 		self.name = "chain"
 		self.spr = images.chain
 	end)
 
 	-- Border
-	self.tiles[5] = make_tile(function(self, x, y, w)
+	self.tiles[TILE_BORDER] = make_tile(function(self, x, y, w)
 		self:init_tile(x, y, w)
-		self.id = 5
+		self.id = TILE_BORDER
 
 		self.name = "border"
 		self.spr = images.semisolid
