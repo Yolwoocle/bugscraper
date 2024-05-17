@@ -23,7 +23,7 @@ inf = math.huge
 -- scotch 
 local old_print = love.graphics.print
 function love.graphics.print(text, x, y, ...)
-	return old_print(text, math.floor(x), math.floor(y))
+	return old_print(text, math.floor(x), math.floor(y), ...)
 end
 
 -- huge scotch for love.js compatibility
@@ -1010,22 +1010,6 @@ function angle_in_range(alpha, lower, upper)
     return (alpha - lower) % pi2 <= (upper - lower) % pi2
 end
 
-function get_left_vec(x, y)
-	return y, -x
-end
-
-function get_right_vec(x, y)
-	return -y, x
-end
-
-function get_orthogonal(x, y, dir)
-	if dir < 0 then
-		return get_left_vec(x,y)
-	else
-		return get_right_vec(x,y)
-	end
-end
-
 function create_actor_centered(actor, x, y, ...)
 	local a = actor:new(x, y, ...)
 	local nx = floor(a.x - a.w/2)
@@ -1075,6 +1059,7 @@ function get_right_vec(x, y)
 end
 
 function get_orthogonal(x, y, dir)
+	dir = dir or 1
 	if dir < 0 then
 		return get_left_vec(x,y)
 	else
@@ -1098,4 +1083,16 @@ end
 
 function ease_out_elastic(x)
 	return 1 - (2^(-10*x))*math.cos(2*x)
+end
+
+
+--- Return true if line segments intersect
+--- https://stackoverflow.com/questions/3838329/how-can-i-check-if-two-segments-intersect 
+function segment_intersect(seg1, seg2)
+	local function ccw(ax, ay, bx, by, cx, cy)
+		return (cy - ay) * (bx - ax) > (by - ay) * (cx - ax)
+	end
+    local bool1 = (ccw(seg1.ax, seg1.ay, seg2.ax, seg2.ay, seg2.bx, seg2.by) ~= ccw(seg1.bx, seg1.by, seg2.ax, seg2.ay, seg2.bx, seg2.by)) 
+	local bool2 = (ccw(seg1.ax, seg1.ay, seg1.bx, seg1.by, seg2.ax, seg2.ay) ~= ccw(seg1.ax, seg1.ay, seg1.bx, seg1.by, seg2.bx, seg2.by))
+	return bool1 and bool2
 end

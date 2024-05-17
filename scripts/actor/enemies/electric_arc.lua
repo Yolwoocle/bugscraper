@@ -1,0 +1,120 @@
+require "scripts.util"
+local Enemy = require "scripts.actor.enemy"
+local images = require "data.images"
+local Prop = require "scripts.actor.enemies.prop"
+local Rect = require "scripts.math.rect"
+local Segment = require "scripts.math.segment"
+
+local utf8 = require "utf8"
+
+local ElectricArc = Prop:inherit()
+
+function ElectricArc:init(x, y)
+    self:init_prop(x, y, images.upgrade_jar, 1, 1)
+    self.name = "ElectricArc"
+
+    self.counts_as_enemy = false
+    self.arc_damage = 5
+    self.cooldown = 0.3
+
+    self.segment = Segment:new(x, y, x+50, y-70)
+    self.collides = false
+    self.arc_target = nil
+
+    self.lightning_points = {}
+    self.lightning_min_step = 4
+    self.lightning_max_step = 10
+    self.lightning_jitter_width = 3
+    self.lightning_palette = {
+        COL_LIGHT_YELLOW,
+        COL_ORANGE,
+        COL_YELLOW_ORANGE,
+        COL_WHITE,
+    }
+end
+
+function ElectricArc:set_target(target)
+    self.arc_target = target
+end
+
+function ElectricArc:update(dt)
+    self:update_prop(dt)
+    
+    if self.arc_target then
+        self.segment.bx = self.arc_target.mid_x
+        self.segment.by = self.arc_target.mid_y
+    end
+
+    self:check_for_collisions()
+    self:create_lightning_points()
+end
+
+function ElectricArc:is_my_enemy(actor)
+    return (not actor.is_player) and actor.counts_as_enemy
+end
+
+function ElectricArc:check_for_collisions()
+    self.collides = false
+    for _, a in pairs(game.actors) do
+        if a ~= self and self:is_my_enemy(a) and Rect:new(a.x, a.y, a.x+a.w, a.y+a.h):segment_intersection(self.segment) then
+            local success = a:do_damage(self.arc_damage, self)
+            if success then 
+                self.collides = true
+                a:set_invincibility(self.cooldown)
+            end
+        end
+    end
+end
+
+function ElectricArc:draw()
+    self:draw_prop()
+
+    self:draw_lightning()
+end
+
+function ElectricArc:create_lightning_points()
+    self.lightning_points = {}
+
+    local dir_x, dir_y = self.segment:get_direction()
+    local normal_x, normal_y = get_orthogonal(dir_x, dir_y)
+    local length = self.segment:get_length()
+
+    local t = 0.0
+    local i = 1
+    local last_x, last_y = self.segment.ax, self.segment.ay
+    local color
+    while t < length - self.lightning_max_step and i <= 300 do
+        local step = random_range(self.lightning_min_step, self.lightning_max_step)
+        local jitter_offset = random_neighbor(self.lightning_jitter_width)
+        t = t + step
+        local new_x = self.segment.ax + dir_x*t + normal_x*jitter_offset 
+        local new_y = self.segment.ay + dir_y*t + normal_y*jitter_offset
+        
+        line_color(color, last_x, last_y, new_x, new_y)
+        table.insert(self.lightning_points, {
+            color = random_sample(self.lightning_palette),
+            line_width = random_range(1, 3),
+            segment = Segment:new(last_x, last_y, new_x, new_y)
+        })
+        last_x, last_y = new_x, new_y
+        i = i + 1
+    end
+    table.insert(self.lightning_points, {
+        color = random_sample(self.lightning_palette),
+        line_width = random_range(1, 3),
+        segment = Segment:new(last_x, last_y, self.segment.bx, self.segment.by)
+    })
+end
+
+function ElectricArc:draw_lightning()
+    local old_width = love.graphics.getLineWidth()
+    for i, point in pairs(self.lightning_points) do
+        love.graphics.setLineWidth(point.line_width) 
+        line_color(point.color, point.segment.ax, point.segment.ay, point.segment.bx, point.segment.by)
+        i = i + 1
+    end
+
+    love.graphics.setLineWidth(old_width)
+end
+
+return ElectricArc

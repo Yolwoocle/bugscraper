@@ -15,6 +15,7 @@ local Camera = require "scripts.game.camera"
 local Layer = require "scripts.graphics.layer"
 local TextManager = require "scripts.text"
 local ScreenshotManager = require "scripts.screenshot"
+local upgrades          = require "data.upgrades"
 
 local skins = require "data.skins"
 local sounds = require "data.sounds"
@@ -121,9 +122,11 @@ function Game:new_game()
 	local nx = CANVAS_WIDTH * 0.75
 	local ny = self.level.cabin_inner_rect.by
 	-- local l = create_actor_centered(Enemies.ButtonGlass, nx, ny)
+	-- local l = create_actor_centered(Enemies.ElectricArc, floor(nx), floor(ny))
 	local l = create_actor_centered(Enemies.ButtonSmallGlass, floor(nx), floor(ny))
 	self:new_actor(l)
-	-- local l = create_actor_centered(Enemies.Dummy, floor(nx) - 40, floor(ny))
+	-- local l = create_actor_centered(Enemies.UpgradeDisplay, floor(nx) - 40, floor(ny))
+	-- l:assign_upgrade(upgrades.UpgradeEspresso:new())
 	-- self:new_actor(l)
 	
 	-- Exit sign 

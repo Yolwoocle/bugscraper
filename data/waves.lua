@@ -2,7 +2,7 @@ require "scripts.util"
 local images = require "data.images"
 local backgrounds = require "data.backgrounds"
 
-local Rect = require "scripts.rect"
+local Rect = require "scripts.math.rect"
 local LevelGeometry = require "scripts.level.level_geometry"
 local Wave = require "scripts.level.wave"
 local E = require "data.enemies"
@@ -30,12 +30,13 @@ end
 local function debug_wave()
 	return Wave:new({
 		-- roll_type = WAVE_ROLL_TYPE_FIXED,
-		min = 1,
-		max = 1,
+		min = 10,
+		max = 10,
 		enable_stomp_arrow_tutorial = true,
 		enemies = {	
-			{E.Dung, 1, position = {240, 200}},
+			-- {E.Dung, 1, position = {240, 200}},
 			-- {E.FlyingDung, 1, position = {CANVAS_WIDTH/2, 200}},
+			{E.ChipBug, 1},
 			-- {E.Fly, 1},
 			-- {E.VendingMachine, 1},
 			-- {E.HoneypotAnt, 1},
@@ -351,9 +352,26 @@ local waves = {
 		},
 		music = "miniboss",
 	}),
+	
+	new_cafeteria(),
+	
+	-----------------------------------------------------
+	--- W2: server room
+	-----------------------------------------------------
+
+	new_wave({
+		min = 4,
+		max = 4,
+		enemies = {
+			{E.ChipBug, 3},
+		},
+		background = backgrounds.BackgroundServers:new(),
+		music = "w2",
+	}),
 	-- }, 4)),
 	--]]
 	
+	------------------------------------------
 	-- Last wave
 	new_wave({ 
 		min = 1,

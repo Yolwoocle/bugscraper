@@ -124,7 +124,7 @@ end
 
 function Wave:enable_wave_side_effects(level)
 	if self.background then
-		self:set_background(self.background)
+		level:set_background(self.background)
 	end
 	if self.music then
 		game.music_player:fade_out(self.music, 1.0)

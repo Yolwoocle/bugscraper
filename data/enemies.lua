@@ -33,6 +33,7 @@ local enemies = {
 	Cocoon =           require "scripts.actor.enemies.cocoon",
 	FaintedPlayer =    require "scripts.actor.enemies.fainted_player",
 	
+	ElectricArc =      require "scripts.actor.enemies.electric_arc",
 	VendingMachine =   require "scripts.actor.enemies.vending_machine.vending_machine",
 	PongBall =         require "scripts.actor.enemies.pong_ball",
 }

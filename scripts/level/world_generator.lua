@@ -1,6 +1,6 @@
 require "scripts.util"
 local Class = require "scripts.meta.class"
-local Rect = require "scripts.rect"
+local Rect = require "scripts.math.rect"
 
 local WorldGenerator = Class:inherit()
 

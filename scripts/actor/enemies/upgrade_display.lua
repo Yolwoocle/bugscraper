@@ -1,16 +1,14 @@
 require "scripts.util"
 local Enemy = require "scripts.actor.enemy"
 local images = require "data.images"
-local ButtonSmall = require "scripts.actor.enemies.button_small"
-local EffectSlowness = require "scripts.effect.effect_slowness"
+local Prop = require "scripts.actor.enemies.prop"
 
 local utf8 = require "utf8"
 
-local UpgradeDisplay = Enemy:inherit()
+local UpgradeDisplay = Prop:inherit()
 
-upgradei = 1
 function UpgradeDisplay:init(x, y)
-    self:init_enemy(x, y, images.upgrade_jar, 16, 16)
+    self:init_prop(x, y, images.upgrade_jar, 16, 16)
     self.name = "upgrade_display"
     
     self.product = nil
@@ -20,15 +18,6 @@ function UpgradeDisplay:init(x, y)
     self.life = 10
     self.loot = {}
 
-    self.damage = 0
-    self.gravity = 0
-    self.knockback = 0
-    self.is_pushable = false
-    self.is_knockbackable = false
-    self.is_flying = true
-    self.follow_player = false
-    self.is_stompable = false
-    self.is_killed_on_stomp = false
 	self.destroy_bullet_on_impact = true
 	self.is_immune_to_bullets = false
 
@@ -49,7 +38,7 @@ function UpgradeDisplay:assign_upgrade(upgrade)
 end
 
 function UpgradeDisplay:update(dt)
-    self:update_enemy(dt)
+    self:update_prop(dt)
 
     self.is_focused, self.target_player = self:is_player_in_range()
 
@@ -77,7 +66,7 @@ function UpgradeDisplay:draw()
     if self.product then
         self.product:draw(self.mid_x, self.mid_y)
     end
-	self:draw_enemy()
+	self:draw_prop()
     
     self:draw_product()
 end

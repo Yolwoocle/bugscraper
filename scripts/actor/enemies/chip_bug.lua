@@ -53,7 +53,7 @@ function ChipBug:update_stink_bug(dt)
     self.spr:set_rotation(self.direction * pi/2)
 
     if random_range(0, 1) < 0.02 then
-        Particles:word(self.mid_x, self.mid_y, random_sample{"0", "1"}, random_sample{COL_LIGHT_GREEN, COL_MID_GREEN})
+        -- Particles:word(self.mid_x, self.mid_y, random_sample{"0", "1"}, random_sample{COL_LIGHT_GREEN, COL_MID_GREEN})
     end
 end
 
@@ -68,20 +68,6 @@ function ChipBug:after_collision(col, other)
 
         local new_vx, new_vy = bounce_vector_cardinal(math.cos(self.direction * pi/2), math.sin(self.direction * pi/2), col.normal.x, col.normal.y)
         self.direction = math.floor(math.atan2(new_vy, new_vx) / (pi/2))
-    end
-end
-
-function ChipBug:on_death()
-    for i = 1, random_range_int(3, 5) do
-        local spawn_x = clamp(self.mid_x - 10, game.level.cabin_rect.ax, game.level.cabin_rect.bx - 20)
-        local spawn_y = clamp(self.mid_y - 10, game.level.cabin_rect.ay, game.level.cabin_rect.by - 20)
-        local cloud = PoisonCloud:new(spawn_x, spawn_y)
-
-        local d = random_range(0, pi2)
-        local r = random_range(0, 200)
-        cloud.vx = math.cos(d) * r
-        cloud.vy = math.sin(d) * r
-        game:new_actor(cloud)
     end
 end
 

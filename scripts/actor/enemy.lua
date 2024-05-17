@@ -15,6 +15,9 @@ function Enemy:init_enemy(x,y, img, w,h)
 	w,h = w or 12, h or 12
 	self:init_actor(x, y, w, h, img or images.duck)
 	self.name = "enemy"
+
+	self.invincible_timer = 0.0
+	
 	self.counts_as_enemy = true -- don't count in the enemy counter
 	self.is_being = true 
 	self.is_enemy = true
@@ -81,6 +84,7 @@ function Enemy:update_enemy(dt)
 	self:update_actor(dt)
 	
 	self:follow_nearest_player(dt)
+	self.invincible_timer = max(self.invincible_timer - dt, 0)
 	self.harmless_timer = max(self.harmless_timer - dt, 0)
 	self.damaged_flash_timer = max(self.damaged_flash_timer - dt, 0)
 	self.spr:set_flip_x(ternary(self.do_vx_flipping, self.vx < 0, false))
@@ -194,7 +198,14 @@ end
 
 function Enemy:after_collision(col, other)  end
 
+function Enemy:set_invincibility(duration)
+	self.invincible_timer = math.max(self.invincible_timer, duration)
+end
+
 function Enemy:do_damage(n, damager)
+	if not self.is_active or self.invincible_timer > 0 then
+		return false
+	end
 	self.damaged_flash_timer = self.damaged_flash_max
 	
 	if self.play_sfx then   Audio:play_var(self.sound_damage, 0.3, 1.1)   end
@@ -207,6 +218,7 @@ function Enemy:do_damage(n, damager)
 		end 
 		self:on_negative_life()
 	end
+	return true
 end
 
 function Enemy:on_negative_life()

@@ -85,29 +85,13 @@ function Debug:init(game)
             game:apply_upgrade(upgrades.UpgradeEspresso:new())
         end},
         ["t"] = {"particle", function()
-            -- Particles:image(CANVAS_WIDTH/2, CANVAS_HEIGHT/2 + 50, 1, {
-            --     images.bullet_vanish_1,
-            --     images.bullet_vanish_2,
-            --     images.bullet_vanish_3,
-            --     images.bullet_vanish_4,
-            --     images.bullet_vanish_5,
-            -- }, 0, nil, 0, 0, {
-            --     is_solid = false,
-            --     rot = 0,
-            --     vx1 = 0,
-            --     vx2 = 0,
-            --     vy1 = 0,
-            --     vy2 = 0,
-            --     vr1 = 0,
-            --     vr2 = 0,
-            --     life = 0.15,
-            --     is_animated = true
-            -- })
             Particles:falling_grid(CANVAS_WIDTH/2, CANVAS_HEIGHT/2 + 50)
         end},
         ["s"] = {"spawn", function()
-            local dung = enemies.SnailShelled:new(CANVAS_WIDTH/2, CANVAS_HEIGHT/2)
-            game:new_actor(dung)
+            local arc = enemies.ElectricArc:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.9)
+            print_debug("nil?", game.players[1] == nil)
+            arc:set_target(game.players[1])
+            game:new_actor(arc)
         end},
         ["r"] = {"start game", function()
             game:start_game()

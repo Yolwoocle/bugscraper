@@ -1,7 +1,7 @@
 require "scripts.util"
 local Class = require "scripts.meta.class"
 local Timer = require "scripts.timer"
-local Rect = require "scripts.rect"
+local Rect = require "scripts.math.rect"
 local Enemies = require "data.enemies"
 local TileMap = require "scripts.level.tilemap"
 local WorldGenerator = require "scripts.level.world_generator"
@@ -47,6 +47,7 @@ function Level:init(game)
 	self.floor = 0 --Floor n°
 	self.max_floor = #waves
 	self.current_wave = nil
+	self.next_wave_to_set = nil
 	
 	self.new_wave_animation_state = "off"
 	self.new_wave_progress = 0.0
@@ -72,6 +73,7 @@ function Level:init(game)
 	self.buffer_canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
 	self.cafeteria_animation_state = "off"
 	self.force_next_wave_flag = false
+	self.do_not_spawn_enemies_on_next_wave_flag = false
 
 	self.is_hole_stencil_enabled = true
 	self.hole_stencil_pause_radius = CANVAS_WIDTH
@@ -118,7 +120,14 @@ function Level:check_for_next_wave(dt)
 end
 
 function Level:begin_next_wave_animation()
-	self:new_wave_buffer_enemies()
+	local buffer_enemies = true
+	if self.do_not_spawn_enemies_on_next_wave_flag then
+		self.do_not_spawn_enemies_on_next_wave_flag = false
+		buffer_enemies = false
+	end
+	if buffer_enemies then
+		self:new_wave_buffer_enemies()
+	end
 	self.new_wave_progress = 1.0
 	self.new_wave_animation_state = "slowdown"
 
@@ -308,6 +317,9 @@ function Level:update_cafeteria(dt)
 			game:kill_all_active_enemies()
 			self:end_cafeteria()
 			self.new_wave_progress = math.huge
+			self.force_next_wave_flag = true
+			self.do_not_spawn_enemies_on_next_wave_flag = true
+			self:new_wave_buffer_enemies()
 
 			self.cafeteria_animation_state = "shrink"
 		end
