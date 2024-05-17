@@ -804,7 +804,7 @@ function Player:update_combo(dt)
 		-- Particles:fire(self.mid_x, self.mid_y, 5, nil, nil, -60, true)
 
 		-- number, col, spw_rad, size, sizevar, is_front, is_back
-		Particles:smoke(self.mid_x, self.mid_y, 1, random_sample{COL_LIGHT_YELLOW, COL_ORANGE}, 12, nil, nil, false, true)
+		Particles:smoke(self.mid_x, self.mid_y, 1, random_sample{COL_LIGHT_YELLOW, COL_ORANGE}, 12, nil, nil, PARTICLE_LAYER_BACK)
 	end
 end
 

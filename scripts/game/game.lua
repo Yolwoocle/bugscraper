@@ -166,7 +166,7 @@ function Game:new_game()
 	self.slow_mo_rate = 0
 
 	self.layers = {}
-	self.layers_count = 6
+	self.layers_count = LAYER_COUNT
 	self:init_layers()
 
 	self.draw_shadows = true
@@ -442,7 +442,7 @@ function Game:draw_game()
 	self:draw_on_layer(LAYER_OBJECTS, function()
 		love.graphics.clear()
 
-		Particles:draw_back()
+		Particles:draw_layer(PARTICLE_LAYER_BACK)
 
 		-- Draw actors
 		for _,actor in pairs(self.actors) do
@@ -456,7 +456,12 @@ function Game:draw_game()
 			end
 		end
 	
-		Particles:draw()
+		Particles:draw_layer(PARTICLE_LAYER_NORMAL)
+	end)
+
+	self:draw_on_layer(LAYER_OBJECT_SHADOWLESS, function()
+		love.graphics.clear()
+		Particles:draw_layer(PARTICLE_LAYER_SHADOWLESS)
 	end)
 	
 	---------------------------------------------
@@ -489,7 +494,7 @@ function Game:draw_game()
 		self:draw_smoke_canvas()
 		self.level:draw_front()
 
-		Particles:draw_front()		
+		Particles:draw_layer(PARTICLE_LAYER_FRONT)
 	end)
 
 	-----------------------------------------------------

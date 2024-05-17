@@ -25,7 +25,6 @@ function Particle:init_particle(x,y,s,r, vx,vy,vs,vr, life, g, is_solid)
 	self.life = self.max_life
 
 	self.is_removed = false
-	self.is_back = false
 end
 
 function Particle:update_particle(dt)
@@ -124,8 +123,6 @@ function TextParticle:init(x,y,str,spawn_delay,col)
 	self.vy = -5
 	self.vy2 = 0
 	self.spawn_delay = spawn_delay
-	
-	self.is_front = true
 end
 function TextParticle:update(dt)
 	if self.spawn_delay > 0 then
@@ -225,8 +222,6 @@ function DeadPlayerParticle:update(dt)
 	self.r = lerp(self.r, goal_r, 0.06)
 	self.oy = lerp(self.oy, 40, 0.05)
 
-	self.is_front = true
-	
 	if abs(self.r - goal_r) < 0.1 then
 		game:screenshake(10)
 		Audio:play("explosion")
@@ -254,7 +249,6 @@ function EjectedPlayerParticle:init(spr, x, y, vx, vy)
 	self.spr_oy = self.spr_h / 2
 	
 	self.is_solid = false
-	self.is_front = true
 end
 function EjectedPlayerParticle:update(dt)
 	self:update_particle(dt)
@@ -289,7 +283,6 @@ function SmashedPlayerParticle:init(spr, x, y, vx, vy)
 	self.freeze_duration = 1.0
 
 	self.is_solid = false
-	self.is_front = true
 end
 function SmashedPlayerParticle:update(dt)
 	self:update_particle(dt)
@@ -341,7 +334,6 @@ function SmashFlashParticle:init(x, y, r, col)
 	self.spr_oy = 0
 	
 	self.is_solid = false
-	self.is_front = true
 
 	self.points = {}
 end
@@ -373,6 +365,7 @@ function FallingGridParticle:init(img_side, img_top, x,y)
 	self:init_particle(x,y,s,r, vx,vy,0,vr, 2.5, g, false)
 	self.spr_side = Sprite:new(img_side, SPRITE_ANCHOR_LEFT_BOTTOM)
 	self.spr_top =  Sprite:new(img_top,  SPRITE_ANCHOR_LEFT_BOTTOM)
+	self.spr_top:set_scale(nil, 0)
 
 	self.orig_y = y
 
@@ -423,58 +416,59 @@ end
 local ParticleSystem = Class:inherit()
 
 function ParticleSystem:init(x,y)
-	self.particles = {}
+	self.layers = {}
+	self.layer_count = PARTICLE_LAYER_COUNT
+	for i = 1, self.layer_count do
+		self.layers[i] = {}
+	end
 end
 
-function ParticleSystem:update(dt)
-	for i,p in pairs(self.particles) do
-		p:update(dt)
-		if p.is_removed then
-			table.remove(self.particles, i)
+function ParticleSystem:update(dt) 
+	for _, layer in pairs(self.layers) do
+		for i, p in pairs(layer) do
+			p:update(dt)
+			if p.is_removed then
+				-- OPTI: maybe performance can improved by doing layer[i] = nil instead as it won't 
+				-- shift all items in the table  
+				table.remove(layer, i)
+			end
 		end
 	end
 end
 
-function ParticleSystem:draw_back()
-	for i,p in pairs(self.particles) do
-		if p.is_back then
-			p:draw()
-		end
-	end
-end
-function ParticleSystem:draw()
-	for i,p in pairs(self.particles) do
-		if not p.is_front and not p.is_back then
-			p:draw()
-		end
-	end
-end
-function ParticleSystem:draw_front()
-	for i,p in pairs(self.particles) do
-		if p.is_front then
-			p:draw()
-		end
+function ParticleSystem:draw_layer(layer_id)
+	layer_id = param(layer_id, PARTICLE_LAYER_NORMAL)
+	for i,p in pairs(self.layers[layer_id]) do
+		p:draw()
 	end
 end
 
-function ParticleSystem:add_particle(ptc)
-	table.insert(self.particles, ptc)
+function ParticleSystem:add_particle(ptc, layer_id)
+	layer_id = param(layer_id, PARTICLE_LAYER_NORMAL)
+	assert(self.layers[layer_id] ~= nil, "layer doesn't exist")
+	table.insert(self.layers[layer_id], ptc)
 end
 
-function ParticleSystem:clear()
-	self.particles = {}
+function ParticleSystem:clear(layer_id)
+	if layer_id == nil then
+		for i=1, self.layer_count do
+			self.layers[i] = {}
+		end
+	else
+		self.layers[layer_id] = {}
+	end
 end
 
 function ParticleSystem:smoke_big(x, y, col)
 	self:smoke(x, y, 15, col or COL_WHITE, 16, 8, 4)
 end
 
-function ParticleSystem:smoke(x, y, number, col, spw_rad, size, sizevar, is_front, is_back)
+function ParticleSystem:smoke(x, y, number, col, spw_rad, size, sizevar, layer)
 	number = number or 10
 	spw_rad = spw_rad or 8
 	size = size or 4
 	sizevar = sizevar or 2
-	is_front = param(is_front, true)
+	layer = param(layer, PARTICLE_LAYER_FRONT)
 
 	for i=1,number do
 		local ang = love.math.random() * pi2
@@ -485,9 +479,7 @@ function ParticleSystem:smoke(x, y, number, col, spw_rad, size, sizevar, is_fron
 		local v = random_range(0.6, 1)
 		local col = col or {v,v,v,1}
 		local particle = CircleParticle:new(x+dx, y+dy, size+dsize, col, 0, 0, _vr, _life)
-		particle.is_front = is_front
-		particle.is_back = is_back
-		self:add_particle(particle)
+		self:add_particle(particle, layer)
 	end
 end
 
@@ -505,7 +497,7 @@ function ParticleSystem:dust(x, y, col, size, rnd_pos, sizevar)
 end
 
 
-function ParticleSystem:fire(x, y, size, sizevar, velvar, vely, is_back)
+function ParticleSystem:fire(x, y, size, sizevar, velvar, vely)
 	rnd_pos = rnd_pos or 3
 	size = size or 4
 	sizevar = sizevar or 2
@@ -523,7 +515,6 @@ function ParticleSystem:fire(x, y, size, sizevar, velvar, vely, is_back)
 	local vy = random_range(vely - velvar, vely)
 	local particle = CircleParticle:new(x+dx, y+dy, size+dsize, col, 0, vy, _vr, _life)
 	self:add_particle(particle)
-	particle.is_back = is_back
 end
 
 
@@ -657,19 +648,19 @@ function ParticleSystem:stomped_enemy(x, y, spr)
 end
 
 function ParticleSystem:dead_player(x, y, spr, colors, dir_x)
-	self:add_particle(DeadPlayerParticle:new(x, y, spr, colors, dir_x))
+	self:add_particle(DeadPlayerParticle:new(x, y, spr, colors, dir_x), PARTICLE_LAYER_FRONT)
 end
 
 function ParticleSystem:ejected_player(spr, x, y, vx, vy)
-	self:add_particle(EjectedPlayerParticle:new(spr, x, y, vx or random_range(100, 300), vy or -random_range(400, 600)))
+	self:add_particle(EjectedPlayerParticle:new(spr, x, y, vx or random_range(100, 300), vy or -random_range(400, 600)), PARTICLE_LAYER_FRONT)
 end
 
 function ParticleSystem:smashed_player(spr, x, y, vx, vy)
-	self:add_particle(SmashedPlayerParticle:new(spr, x, y, vx or 400, vy or -random_range(600, 600)))
+	self:add_particle(SmashedPlayerParticle:new(spr, x, y, vx or 400, vy or -random_range(600, 600)), PARTICLE_LAYER_FRONT)
 end
 
 function ParticleSystem:smash_flash(x, y, r, col)
-	self:add_particle(SmashFlashParticle:new(x, y, r, col))
+	self:add_particle(SmashFlashParticle:new(x, y, r, col), PARTICLE_LAYER_FRONT)
 end
 
 function ParticleSystem:letter(x, y, str, spawn_delay, col)
@@ -686,7 +677,7 @@ function ParticleSystem:word(x, y, str, col)
 end
 
 function ParticleSystem:falling_grid(x, y)
-	self:add_particle(FallingGridParticle:new(images.cabin_grid, images.cabin_grid_platform, x, y))
+	self:add_particle(FallingGridParticle:new(images.cabin_grid, images.cabin_grid_platform, x, y), PARTICLE_LAYER_SHADOWLESS)
 end
 
 ParticleSystem.text = ParticleSystem.word
