@@ -17,7 +17,8 @@ end
 function EffectEspresso:update(dt, player)
     self:update_effect(dt)
     
-    Particles:smoke(player.mid_x, player.mid_y, 1, random_sample{COL_MID_BROWN, COL_DARK_BROWN})
+    -- number, col, spw_rad, size, sizevar, layer
+    Particles:smoke(player.mid_x, player.mid_y, 1, random_sample{COL_MID_BROWN, COL_DARK_BROWN}, nil, nil, nil, PARTICLE_LAYER_BACK)
 end
 
 function EffectEspresso:on_finish(player)

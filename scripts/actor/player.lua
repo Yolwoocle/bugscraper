@@ -152,9 +152,12 @@ function Player:init(n, x, y, skin)
 	self.max_combo = 0
 	self.fury_bar = 0.0
 	self.fury_threshold = 2.5
-	self.fury_max = 5.0
+	self.def_fury_max = 5.0
+	self.fury_max = self.def_fury_max
 	self.fury_gun_cooldown_multiplier = 0.8
 	self.fury_gun_damage_multiplier = 1.5
+	self.fury_speed = 1.0
+	self.has_energy_drink = false
 
 	-- Upgrades
 	self.upgrades = {}
@@ -205,7 +208,7 @@ function Player:update(dt)
 		self.frames_since_land = 0
 	end
 
-	self:update_combo(dt)
+	self:update_fury(dt)
 
 	self.gun:update(dt)
 	self:shoot(dt, false)
@@ -222,6 +225,9 @@ function Player:update(dt)
 	if self:is_in_poison_cloud() then
 		Particles:dust(self.mid_x + random_neighbor(7), self.mid_y + random_neighbor(7), random_sample{color(0x3e8948), color(0x265c42), color(0x193c3e)})
 	end
+
+	self.debug_values[1] = concat("max", self.fury_max)
+	self.debug_values[2] = concat("def", self.def_fury_max)
 end
 
 ------------------------------------------
@@ -327,6 +333,7 @@ function Player:do_damage(n, source)
 	end
 	
 	self:set_invincibility(self.max_iframes)
+	self:set_fury(0)
 	
 	if self.life <= 0 then
 		self.life = 0 
@@ -685,7 +692,7 @@ function Player:on_stomp(enemy)
 		-- Particles:word(self.mid_x, self.mid_y, tostring(self.combo), COL_LIGHT_BLUE)
 	end
 
-	self:add_combo(0.8)
+	self:add_fury(0.8)
 	
 	-- self.ui_col_gradient = 1
 	-- self.gun.ammo = self.gun.ammo + floor(self.gun.max_ammo*.25)
@@ -707,7 +714,7 @@ function Player:on_my_bullet_hit(bullet, victim, col)
 	-- Why tf would this happen
 	if bullet.player ~= self then   return   end
 
-	self:add_combo(bullet.damage / 7)
+	self:add_fury(bullet.damage / 7)
 end
 
 ------------------------------------------
@@ -785,9 +792,9 @@ function Player:leave_game_if_possible(dt)
 	end
 end
 
-function Player:update_combo(dt)
+function Player:update_fury(dt)
 	if game:get_enemy_count() > 0 and not game.level:is_on_cafeteria() then
-		self.fury_bar = math.max(self.fury_bar - dt, 0.0)
+		self.fury_bar = math.max(self.fury_bar - dt*self.fury_speed, 0.0)
 	end
 	self.fury_bar = clamp(self.fury_bar, 0.0, self.fury_max)
 
@@ -800,27 +807,28 @@ function Player:update_combo(dt)
 	end
 
 	if self.fury_active then
-		-- size, sizevar, velvar, vely, is_back
-		-- Particles:fire(self.mid_x, self.mid_y, 5, nil, nil, -60, true)
-
+		local fury_colors = ternary(
+			self.has_energy_drink, 
+			{COL_MID_BLUE, COL_DARK_BLUE},
+			{COL_LIGHT_YELLOW, COL_ORANGE}
+		)
 		-- number, col, spw_rad, size, sizevar, is_front, is_back
-		Particles:smoke(self.mid_x, self.mid_y, 1, random_sample{COL_LIGHT_YELLOW, COL_ORANGE}, 12, nil, nil, PARTICLE_LAYER_BACK)
+		Particles:smoke(self.mid_x, self.mid_y, 1, random_sample(fury_colors), 12, nil, nil, PARTICLE_LAYER_BACK)
 	end
 end
 
-function Player:add_combo(val)
+function Player:add_fury(val)
 	self.fury_bar = self.fury_bar + val
 end
 
-function Player:set_combo(val)
+function Player:set_fury(val)
 	self.fury_bar = val
 end
-
-function Player:new_best_combo()
-	if self.combo > game.max_combo then
-		game.max_combo = self.combo
-	end
-	self.max_combo = self.combo
+function Player:add_fury_max(val)
+	self.fury_max = self.fury_max + val
+end
+function Player:multiply_fury_speed(val)
+	self.fury_speed = self.fury_speed * val
 end
 
 -----------------------------------------------------
@@ -903,19 +911,20 @@ function Player:draw_ammo_bar(ui_x, ui_y)
 	local bar_x = x+ammo_icon_w+2
 	ui:draw_progress_bar(bar_x, y, slider_w, ammo_icon_w, val, maxval, 
 						col_fill, COL_BLACK_BLUE, col_shad, text)
-	
-	local fury_color = ternary(
-		self.fury_active, 
-		ternary(game.t % 0.2 <= 0.1, COL_LIGHT_YELLOW, COL_RED),
-		COL_LIGHT_YELLOW
-	)
-	ui:draw_progress_bar(bar_x, y+ammo_icon_w-1, slider_w, 4, self.fury_bar, self.fury_threshold, 
-						fury_color, COL_BLACK_BLUE, COL_ORANGE)
 
+
+	self:draw_fury_bar(bar_x, y+ammo_icon_w-1, slider_w, 4)
+end
+
+function Player:draw_fury_bar(x, y, w, h)
 	-- Fury bar
-	-- print_outline(nil, nil, concat("enms ", game:get_enemy_count()), ui_x + 20, ui_y-15)
-	-- print_outline(nil, nil, concat(round(self.fury_bar, 1)), ui_x-10, ui_y+15)
-	-- rect_color(COL_LIGHT_YELLOW, "fill", ui_x-10, ui_y+15, self.fury_bar*10, 3)
+	local fury_color =  ternary(self.has_energy_drink, COL_MID_BLUE,  COL_LIGHT_YELLOW)
+	local fury_shadow = ternary(self.has_energy_drink, COL_DARK_BLUE, COL_ORANGE)
+	if self.fury_active then
+		fury_color = ternary(game.t % 0.2 <= 0.1, fury_color, COL_WHITE)
+	end
+	
+	ui:draw_progress_bar(x, y, w, h, self.fury_bar, self.fury_threshold, fury_color, COL_BLACK_BLUE, fury_shadow)
 end
 
 function Player:get_controls_tutorial_values()
@@ -999,6 +1008,15 @@ function Player:draw_player()
 
 	local post_x, post_y = self.spr:get_total_offset_position(self.x, self.y, self.w, self.h)
 	self:post_draw(post_x, post_y)
+
+	if game.debug_mode then
+		local i = 0
+		local th = get_text_height()
+		for _, val in pairs(self.debug_values) do
+			print_outline(nil, nil, tostring(val), self.x + self.w, self.y - i*th)
+			i = i + 1
+		end		 
+	end
 end
 
 function Player:post_draw(x, y)

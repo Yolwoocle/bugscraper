@@ -21,21 +21,25 @@ return {
     },
     upgrade = {
         tea = {
-            title = "GREEN TEA",
+            title = "Green Tea",
             description = "+2 temporary ❤",
         },
         espresso = {
-            title = "ESPRESSO",
+            title = "Espresso",
             description = "x2 shooting speed for a minute", 
         },
         milk = {
-            title = "MILK",
+            title = "Milk",
             description = "+1 permanent ❤",
         },
         peanut = {
-            title = "PEANUT",
+            title = "Peanut",
             description = "x2 maximum ammo",
-        }
+        },
+        energy_drink = {
+            title = "Energy Drink",
+            description = "Fury decays slower",
+        },
     },
     input = {
         prompts = {

@@ -11,7 +11,7 @@ function Particle:init_particle(x,y,s,r, vx,vy,vs,vr, life, g, is_solid)
 	self.vx, self.vy = vx or 0, vy or 0
 
 	self.s = s or 1.0-- size or radius
-	self.vs = vs or 20
+	self.vs = vs or 20 
 	
 	self.r = r or 0
 	self.vr = vr or 0
@@ -38,8 +38,8 @@ function Particle:update_particle(dt)
 
 	if self.is_solid then
 		local items, len = Collision.world:queryPoint(self.x, self.y, function(item) 
-			return item.collision_info and item.collision_info.type == COLLISION_TYPE_SOLID
-		end)
+			return (item.collision_info and item.collision_info.type == COLLISION_TYPE_SOLID) or item.is_player
+		end) --FIXME: particles can go through walls bc no checks on the collision vector are made 
 		if len > 0 then
 			self.bounces = self.bounces - 1
 			self.vy = -self.bounce_force - random_neighbor(40)
@@ -413,6 +413,30 @@ end
 
 ------------------------------------------------------------
 
+local SparkParticle = Particle:inherit()
+
+function SparkParticle:init(x,y, life, g, is_solid)
+	local vx, vy = random_neighbor(150), -70 + random_neighbor(15)
+	local g = 10 + random_neighbor(3)
+	self:init_particle(x,y,__s,__r, vx,vy,0,1, life, g, is_solid)
+
+	self.is_solid = false --param(is_solid, true)
+	self.color = random_sample{COL_WHITE, COL_WHITE, COL_WHITE, COL_LIGHT_YELLOW, COL_YELLOW_ORANGE}
+end
+function SparkParticle:update(dt)
+	self:update_particle(dt)
+
+end
+function SparkParticle:draw()
+	local mult = 0.05
+	line_color(self.color, self.x, self.y, self.x + self.vx*mult, self.y + self.vy*mult)
+end
+
+------------------------------------------------------------
+------------------------------------------------------------
+------------------------------------------------------------
+------------------------------------------------------------
+
 local ParticleSystem = Class:inherit()
 
 function ParticleSystem:init(x,y)
@@ -678,6 +702,13 @@ end
 
 function ParticleSystem:falling_grid(x, y)
 	self:add_particle(FallingGridParticle:new(images.cabin_grid, images.cabin_grid_platform, x, y), PARTICLE_LAYER_SHADOWLESS)
+end
+
+function ParticleSystem:spark(x, y)
+	local life = 3 + random_neighbor(0.2)
+	local g = nil
+	local is_solid = false
+	self:add_particle(SparkParticle:new(x,y, life, g, is_solid), PARTICLE_LAYER_FRONT)
 end
 
 ParticleSystem.text = ParticleSystem.word

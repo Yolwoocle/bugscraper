@@ -82,10 +82,12 @@ function Debug:init(game)
             self.game:set_floor(self.game:get_floor() + 1)
         end},
         ["p"] = {"upgrade", function()
-            game:apply_upgrade(upgrades.UpgradeEspresso:new())
+            game:apply_upgrade(upgrades.UpgradeEnergyDrink:new())
         end},
         ["t"] = {"particle", function()
-            Particles:falling_grid(CANVAS_WIDTH/2, CANVAS_HEIGHT/2 + 50)
+            for i = 1, 50 do
+                Particles:spark(CANVAS_WIDTH/2, CANVAS_HEIGHT/2 + 50)
+            end
         end},
         ["s"] = {"spawn", function()
             local arc = enemies.ElectricArc:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.9)

@@ -220,11 +220,12 @@ local img_names = {
 	-----------------------------------------------------
 	
 	-- upgrades
-	upgrade_coffee =    "upgrades/upgrade_coffee",
-	upgrade_tea =       "upgrades/upgrade_tea",
-	upgrade_chocolate = "upgrades/upgrade_chocolate",
-	upgrade_milk =      "upgrades/upgrade_milk",
-	upgrade_peanut =    "upgrades/upgrade_peanut",
+	upgrade_coffee =       "upgrades/upgrade_coffee",
+	upgrade_tea =          "upgrades/upgrade_tea",
+	upgrade_chocolate =    "upgrades/upgrade_chocolate",
+	upgrade_milk =         "upgrades/upgrade_milk",
+	upgrade_peanut =       "upgrades/upgrade_peanut",
+	upgrade_energy_drink = "upgrades/upgrade_energy_drink",
 	
 	-----------------------------------------------------
 

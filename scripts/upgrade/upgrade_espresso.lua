@@ -10,7 +10,7 @@ function UpgradeEspresso:init()
     self:init_upgrade()
     self.sprite = images.upgrade_coffee
 
-    self.color = COL_DARK_BROWN
+    self.color = COL_MID_BROWN
 end
 
 function UpgradeEspresso:update(dt)

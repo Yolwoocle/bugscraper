@@ -20,6 +20,7 @@ function ElectricArc:init(x, y)
     self.segment = Segment:new(x, y, x+50, y-70)
     self.collides = false
     self.arc_target = nil
+    self.hitbox_expand = 2
 
     self.lightning_points = {}
     self.lightning_min_step = 4
@@ -31,6 +32,8 @@ function ElectricArc:init(x, y)
         COL_YELLOW_ORANGE,
         COL_WHITE,
     }
+
+    self.t = 0
 end
 
 function ElectricArc:set_target(target)
@@ -40,6 +43,11 @@ end
 function ElectricArc:update(dt)
     self:update_prop(dt)
     
+    self.t = self.t + dt
+    self:move_to(CANVAS_WIDTH/2 + math.cos(self.t) * 32, CANVAS_HEIGHT/2 + math.sin(self.t) * 32)
+
+    self.segment.ax = self.mid_x
+    self.segment.ay = self.mid_y
     if self.arc_target then
         self.segment.bx = self.arc_target.mid_x
         self.segment.by = self.arc_target.mid_y
@@ -56,11 +64,14 @@ end
 function ElectricArc:check_for_collisions()
     self.collides = false
     for _, a in pairs(game.actors) do
-        if a ~= self and self:is_my_enemy(a) and Rect:new(a.x, a.y, a.x+a.w, a.y+a.h):segment_intersection(self.segment) then
-            local success = a:do_damage(self.arc_damage, self)
-            if success then 
-                self.collides = true
-                a:set_invincibility(self.cooldown)
+        if a ~= self and self:is_my_enemy(a) then
+            local collision = Rect:new(a.x, a.y, a.x+a.w, a.y+a.h):expand(self.hitbox_expand):segment_intersection(self.segment)
+            if collision then
+                local success = a:do_damage(self.arc_damage, self)
+                if success then 
+                    self.collides = true
+                    a:set_invincibility(self.cooldown)
+                end
             end
         end
     end
@@ -82,7 +93,7 @@ function ElectricArc:create_lightning_points()
     local t = 0.0
     local i = 1
     local last_x, last_y = self.segment.ax, self.segment.ay
-    local color
+    local color = random_sample(self.lightning_palette)
     while t < length - self.lightning_max_step and i <= 300 do
         local step = random_range(self.lightning_min_step, self.lightning_max_step)
         local jitter_offset = random_neighbor(self.lightning_jitter_width)
@@ -92,15 +103,19 @@ function ElectricArc:create_lightning_points()
         
         line_color(color, last_x, last_y, new_x, new_y)
         table.insert(self.lightning_points, {
-            color = random_sample(self.lightning_palette),
+            color = color,
             line_width = random_range(1, 3),
             segment = Segment:new(last_x, last_y, new_x, new_y)
         })
+        if random_range(0, 1) < 0.02 then
+            Particles:spark(new_x, new_y)
+        end
+
         last_x, last_y = new_x, new_y
         i = i + 1
     end
     table.insert(self.lightning_points, {
-        color = random_sample(self.lightning_palette),
+        color = color,
         line_width = random_range(1, 3),
         segment = Segment:new(last_x, last_y, self.segment.bx, self.segment.by)
     })

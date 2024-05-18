@@ -114,7 +114,7 @@ end
 function Level:check_for_next_wave(dt)
 	local conditions_for_new_wave = (game.game_state == GAME_STATE_PLAYING) and (#self.enemy_buffer == 0) and (game:get_enemy_count() <= 0)
 	if conditions_for_new_wave or self.force_next_wave_flag then
-		self:begin_next_wave_animation()			
+		self:begin_next_wave_animation()
 		self.force_next_wave_flag = false
 	end
 end
@@ -383,6 +383,7 @@ function Level:assign_cafeteria_upgrades()
 		{upgrades.UpgradeEspresso, 1},
 		{upgrades.UpgradeMilk, 1},
 		{upgrades.UpgradePeanut, 1},
+		{upgrades.UpgradeEnergyDrink, 1000},
 	}
 
 	for _, actor in pairs(self.game.actors) do
