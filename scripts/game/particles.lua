@@ -704,11 +704,14 @@ function ParticleSystem:falling_grid(x, y)
 	self:add_particle(FallingGridParticle:new(images.cabin_grid, images.cabin_grid_platform, x, y), PARTICLE_LAYER_SHADOWLESS)
 end
 
-function ParticleSystem:spark(x, y)
+function ParticleSystem:spark(x, y, amount)
+	amount = param(amount, 1)
 	local life = 3 + random_neighbor(0.2)
 	local g = nil
 	local is_solid = false
-	self:add_particle(SparkParticle:new(x,y, life, g, is_solid), PARTICLE_LAYER_FRONT)
+	for i=1, amount do 
+		self:add_particle(SparkParticle:new(x,y, life, g, is_solid), PARTICLE_LAYER_FRONT)
+	end
 end
 
 ParticleSystem.text = ParticleSystem.word

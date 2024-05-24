@@ -22,6 +22,7 @@ function OptionsManager:init(game)
 		pixel_scale = "auto",
 		windowed_width = CANVAS_WIDTH,
 		windowed_height = CANVAS_HEIGHT,
+		menu_blur = true,
 
 		timer_on = false,
 		mouse_visible = false,

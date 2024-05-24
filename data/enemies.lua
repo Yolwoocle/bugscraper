@@ -18,6 +18,8 @@ local enemies = {
 	FlyingDung =       require "scripts.actor.enemies.flying_dung",
 	Woodlouse =        require "scripts.actor.enemies.woodlouse",
 	ChipBug =          require "scripts.actor.enemies.chip_bug",
+	MetalFly =         require "scripts.actor.enemies.metal_fly",
+	FlyBuddy =         require "scripts.actor.enemies.fly_buddy",
 	
 	PoisonCloud =      require "scripts.actor.enemies.poison_cloud",
 	

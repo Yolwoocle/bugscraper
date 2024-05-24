@@ -208,8 +208,8 @@ local img_names = {
 
 	controls_jetpack = "ui/controls_jetpack",
 
-	selection_left = "ui/selection_left",
-	selection_mid = "ui/selection_mid",
+	selection_left =  "ui/selection_left",
+	selection_mid =   "ui/selection_mid",
 	selection_right = "ui/selection_right",
 
 	-----------------------------------------------------

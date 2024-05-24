@@ -115,7 +115,7 @@ function Elevator:draw_cabin()
 	
 	if self.layers["bg_grid"] then
 		love.graphics.draw(images.cabin_grid, cabin_rect.ax +   16, cabin_rect.ay + 4*16)
-		love.graphics.draw(images.cabin_grid, cabin_rect.bx - 7*16, cabin_rect.ay + 4*16)
+		love.graphics.draw(images.cabin_grid, cabin_rect.ax + 19*16, cabin_rect.ay + 4*16)
 	end
 	
 	self:draw_counter()

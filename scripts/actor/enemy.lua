@@ -28,12 +28,15 @@ function Enemy:init_enemy(x,y, img, w,h)
 	self.destroy_bullet_on_impact = true
 	self.is_bouncy_to_bullets = false
 	self.is_immune_to_bullets = false
+	self.is_immune_to_electricity = false
 
 	self.harmless_timer = 0
 
 	self.kill_when_negative_life = true
 	self.max_life = 10
 	self.life = self.max_life
+	self.is_dead = false
+
 	self.color = COL_BLUE
 	self.speed = 20
 	self.speed_x = self.speed
@@ -250,6 +253,7 @@ function Enemy:kill(damager, reason)
 		end
 	end
 
+	self.is_dead = true
 	game:on_kill(self)
 	self:remove()
 	
@@ -288,6 +292,9 @@ function Enemy:on_hit_bullet(bul, col)
 		self.vy = self.vy + sin(ang) * bul.knockback * self.self_knockback_mult
 	end
 	return true
+end
+
+function Enemy:on_hit_electrictiy()
 end
 
 return Enemy

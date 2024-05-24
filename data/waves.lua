@@ -36,7 +36,8 @@ local function debug_wave()
 		enemies = {	
 			-- {E.Dung, 1, position = {240, 200}},
 			-- {E.FlyingDung, 1, position = {CANVAS_WIDTH/2, 200}},
-			{E.ChipBug, 1},
+			-- {E.ChipBug, 1},
+			{E.MetalFly, 1},
 			-- {E.Fly, 1},
 			-- {E.VendingMachine, 1},
 			-- {E.HoneypotAnt, 1},
@@ -68,7 +69,7 @@ end
 
 local waves = {	
 	-- debug_wave(),
-	new_cafeteria(),
+	-- new_cafeteria(),
 	-- [[
 	new_wave({
 		min = 4,
@@ -78,20 +79,6 @@ local waves = {
 			{E.Fly, 3},
 		},
 		music = "w1",
-		
-		level_geometry = LevelGeometry:new({
-			{rect = Rect:new(3, 8, 8, 8), tile = TILE_SEMISOLID}, 
-			{rect = Rect:new(21, 8, 26, 8), tile = TILE_SEMISOLID}, 
-		}),
-		elevator_layers = {
-			["bg_grid"] = false,
-		},
-		run = function(self, level)
-			local cabin_rect = game.level.cabin_rect
-			Particles:falling_grid(cabin_rect.ax +   16, cabin_rect.ay + 6*16)
-			Particles:falling_grid(cabin_rect.bx - 7*16, cabin_rect.ay + 6*16)
-			level.elevator:start_grid_timer(2.5)
-		end
 	}),
 
 	
@@ -237,6 +224,21 @@ local waves = {
 			{E.SpikedFly, 4},
 			{E.Spider, 4},
 		},
+
+		
+		level_geometry = LevelGeometry:new({
+			{rect = Rect:new(3, 8, 8, 8), tile = TILE_SEMISOLID}, 
+			{rect = Rect:new(21, 8, 26, 8), tile = TILE_SEMISOLID}, 
+		}),
+		elevator_layers = {
+			["bg_grid"] = false,
+		},
+		run = function(self, level)
+			local cabin_rect = game.level.cabin_rect
+			Particles:falling_grid(cabin_rect.ax +   16, cabin_rect.ay + 6*16)
+			Particles:falling_grid(cabin_rect.bx - 7*16, cabin_rect.ay + 6*16)
+			level.elevator:start_grid_timer(2.5)
+		end
 	}),
 
 	new_wave({ 

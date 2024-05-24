@@ -18,7 +18,7 @@ local function func_url(url)
 	end
 end
 
-local DEFAULT_MENU_BG_COLOR = {0, 0, 0, 0.9}
+local DEFAULT_MENU_BG_COLOR = {0, 0, 0, 0.6}
 
 local PROMPTS_NORMAL = {
     {{"ui_select"}, "input.prompts.ui_select"},
@@ -294,6 +294,13 @@ local function generate_menus()
             self.value = Options:get("is_vsync")
             self.value_text = Options:get("is_vsync") and "✅" or "❎"
         end},
+        { "💧 "..Text:text("menu.options.visuals.menu_blur"), function(self)
+            Options:toggle("menu_blur")
+        end,
+        function(self)
+            self.value = Options:get("is_vsync")
+            self.value_text = Options:get("is_vsync") and "✅" or "❎"
+        end},
         { ""},
         { "<<< "..Text:text("menu.options.game.title").." >>>"},
         { SliderMenuItem, "🛜 "..Text:text("menu.options.game.screenshake"), function(self, diff)
@@ -524,7 +531,7 @@ local function generate_menus()
         {"<<<<<<<<< "..Text:text("menu.credits.title").." >>>>>>>>>"},
         { "" },
         { "<<< "..Text:text("menu.credits.game_by").." >>>"},
-        { "Léo Bernard", func_url("https://yolwoocle.github.io/")},
+        { "Léo Bernard", func_url("https://yolwoocle.com/")},
         { "" },
         { "<<< "..Text:text("menu.credits.music_and_sound_design").." >>>"},
         { "OLX", func_url("https://www.youtube.com/@olxdotwav")},
@@ -541,11 +548,13 @@ local function generate_menus()
         { "Binary Sunrise", func_url("https://binarysunrise.dev")},
         { ""},
         { "<<< "..Text:text("menu.credits.special_thanks").." >>>"},
-        { "Gouspourd", func_url("https://gouspourd.itch.io/")},
         { "ArkanYota", func_url("https://github.com/ARKANYOTA")},
-        { "Louie Chapman", func_url("https://louiechapm.itch.io/") },
+        { "Gouspourd", func_url("https://gouspourd.itch.io/")},
         { "Raphaël Marcon", func_url("https://raphytator.itch.io/") },
+        { "Louie Chapman", func_url("https://louiechapm.itch.io/") },
         { "Indie Game Lyon", func_url("https://www.indiegamelyon.com/")},
+        { "Fabien Delpiano", function() end },
+        { "Quentin Picault", function() end},
         { "LÖVE framework", func_url("https://love2d.org/") },
         { ""},
         { "<<< "..Text:text("menu.credits.asset_creators").." >>>"},

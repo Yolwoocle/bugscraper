@@ -6,6 +6,8 @@ local images = require "data.images"
 local Bullet = Actor:inherit()
 
 function Bullet:init(gun, player, damage, x, y, w, h, vx, vy)
+	gun = gun or {}
+
 	local x, y = x-w/2, y-h/2
 	self:init_actor(x, y, w, h, gun.bullet_spr or images.bullet)
 	self.name = "bullet"
@@ -14,7 +16,7 @@ function Bullet:init(gun, player, damage, x, y, w, h, vx, vy)
 	self.is_enemy_bul = player.is_enemy
 	self.is_bullet = true
 
-	self.friction = gun.bullet_friction - random_range(0, gun.random_friction_offset)
+	self.friction = (gun.bullet_friction or 1.0) - random_range(0, (gun.random_friction_offset or 0))
 	self.friction_x = self.friction
 	self.friction_y = self.friction
 	self.gravity = 0
@@ -24,7 +26,7 @@ function Bullet:init(gun, player, damage, x, y, w, h, vx, vy)
 	
 	self.vx = vx or 0
 	self.vy = vy or 0
-	self.speed_floor = gun.speed_floor
+	self.speed_floor = (gun.speed_floor or 3) -- min speed before it despawns
 
 	self.life = 5
 

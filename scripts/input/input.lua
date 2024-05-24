@@ -468,10 +468,8 @@ function InputManager:get_last_ui_player_color()
     if skin == nil then
         return COL_LIGHT_RED
     end
-    if self.last_ui_user_n == 1 then
-        return skin.color_palette[1]
-    end
-    return skin.color_palette[2]
+
+    return skin.menu_color
 end
   
 function InputManager:get_last_ui_user_n()

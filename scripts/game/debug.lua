@@ -90,9 +90,12 @@ function Debug:init(game)
             end
         end},
         ["s"] = {"spawn", function()
-            local arc = enemies.ElectricArc:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.9)
-            print_debug("nil?", game.players[1] == nil)
-            arc:set_target(game.players[1])
+            -- local arc = enemies.ElectricArc:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.9)
+            -- print_debug("nil?", game.players[1] == nil)
+            -- arc:set_arc_target(game.players[1])
+            -- game:new_actor(arc)
+
+            local arc = enemies.FlyBuddy:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.9)
             game:new_actor(arc)
         end},
         ["r"] = {"start game", function()

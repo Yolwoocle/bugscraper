@@ -136,6 +136,7 @@ return {
                     max_whole = "max whole",
                 };
                 vsync = "VERTICAL SYNC",
+                menu_blur = "MENU BLUR",
             },
             game = {
                 title = "Gameplay",

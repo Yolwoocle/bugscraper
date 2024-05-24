@@ -225,9 +225,6 @@ function Player:update(dt)
 	if self:is_in_poison_cloud() then
 		Particles:dust(self.mid_x + random_neighbor(7), self.mid_y + random_neighbor(7), random_sample{color(0x3e8948), color(0x265c42), color(0x193c3e)})
 	end
-
-	self.debug_values[1] = concat("max", self.fury_max)
-	self.debug_values[2] = concat("def", self.def_fury_max)
 end
 
 ------------------------------------------
@@ -921,7 +918,8 @@ function Player:draw_fury_bar(x, y, w, h)
 	local fury_color =  ternary(self.has_energy_drink, COL_MID_BLUE,  COL_LIGHT_YELLOW)
 	local fury_shadow = ternary(self.has_energy_drink, COL_DARK_BLUE, COL_ORANGE)
 	if self.fury_active then
-		fury_color = ternary(game.t % 0.2 <= 0.1, fury_color, COL_WHITE)
+		local flash_color = ternary(self.has_energy_drink, COL_WHITE, COL_RED)
+		fury_color = ternary(game.t % 0.2 <= 0.1, fury_color, flash_color)
 	end
 	
 	ui:draw_progress_bar(x, y, w, h, self.fury_bar, self.fury_threshold, fury_color, COL_BLACK_BLUE, fury_shadow)

@@ -32,7 +32,7 @@ function Gun:init_gun(user)
 	
 	self.knockback = 500
 	
-	self.speed_floor = 3 -- min speed before it despawns
+	self.speed_floor = 3 -- min speed before bullet despawn
 	
 	-- Damage
 	self.damage = 2

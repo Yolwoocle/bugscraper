@@ -20,7 +20,7 @@ CANVAS_WIDTH = 480
 CANVAS_HEIGHT = 270
 SCREENSHOT_SCALE = 4
 
-LAYER_COUNT= 7
+LAYER_COUNT = 8
 
 LAYER_BACKGROUND = 1
 LAYER_SHADOW = 2
@@ -29,6 +29,7 @@ LAYER_OBJECT_SHADOWLESS = 4
 LAYER_FRONT = 5
 LAYER_HUD = 6
 LAYER_UI = 7
+LAYER_MENUS = 8
 
 LAYER_NAMES = {
 	[1] = "LAYER_BACKGROUND",
@@ -38,6 +39,7 @@ LAYER_NAMES = {
 	[5] = "LAYER_FRONT",
 	[6] = "LAYER_HUD",
 	[7] = "LAYER_UI",
+	[8] = "LAYER_MENUS",
 }
 
 SPRITE_ANCHOR_START = "s"
@@ -79,7 +81,7 @@ FONT_CHARACTERS =
     " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz"..
     "{|}~ ¡¢£©®°¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿŒœŸЁАБВГДЕЖЗИЙКЛМНО"..
     "ПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюяё€🔊🔉🔈🎵🎼🔳🔲📺🕐↖🛜▶⏸🔄🔘⬅➡⬆⬇⏏🔫🔚📥👆🔙🗄⌨🎮🎚❤"..
-    "✅❎🐜🔗💡⚠🕹🫨"
+    "✅❎🐜🔗💡⚠🕹🫨💧"
 
 --------------------------------------------- 
 

@@ -16,6 +16,7 @@ local Layer = require "scripts.graphics.layer"
 local TextManager = require "scripts.text"
 local ScreenshotManager = require "scripts.screenshot"
 local upgrades          = require "data.upgrades"
+local shaders           = require "data.shaders"
 
 local skins = require "data.skins"
 local sounds = require "data.sounds"
@@ -201,6 +202,8 @@ function Game:new_game()
 
 	-- UI
 	self.game_ui = GameUI:new(self)
+	self.menu_blur = 1
+	self.max_menu_blur = 3
 
 	self.notif = ""
 	self.notif_timer = 0.0
@@ -271,7 +274,6 @@ function Game:update_screen()
 	CANVAS_OY = math.floor(max(0, (WINDOW_HEIGHT - CANVAS_HEIGHT * CANVAS_SCALE)/2))
 end
 
-local n = 0
 function Game:update(dt)
 	self.frame = self.frame + 1
 
@@ -294,6 +296,10 @@ function Game:update(dt)
 	
 	if not self.menu_manager.cur_menu then
 		self:update_main_game(dt)
+	end
+
+	for i = 1, #self.layers-1 do
+		self.layers[i].blur = Options:get("menu_blur") and (self.menu_manager.cur_menu ~= nil)
 	end
 
 	-- THIS SHOULD BE LAST
@@ -321,7 +327,6 @@ function Game:update_main_game(dt)
 	self:update_debug(dt)
 
 	self.notif_timer = math.max(self.notif_timer - dt, 0)
-
 end
 
 function Game:get_enemy_count()
@@ -419,6 +424,7 @@ function Game:draw()
 		gfx.setCanvas()
 		gfx.origin()
 		gfx.scale(1, 1)
+
 		gfx.draw(canvas, CANVAS_OX, CANVAS_OY, 0, CANVAS_SCALE, CANVAS_SCALE)
 	-- end
 
@@ -512,6 +518,13 @@ function Game:draw_game()
 		if self.debug.colview_mode then
 			self.debug:draw_colview()
 		end
+	end, {apply_camera = false})
+	
+	-----------------------------------------------------
+
+	-- Menus
+	self:draw_on_layer(LAYER_MENUS, function()
+		love.graphics.clear()
 
 		-- Menus
 		if self.menu_manager.cur_menu then

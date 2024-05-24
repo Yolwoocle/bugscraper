@@ -276,21 +276,27 @@ function Actor:set_flying(bool)
 	end
 end
 
-function Actor:do_knockback_from(q, source, ox, oy)
-	if not self.is_knockbackable then    return    end
+function Actor:apply_force(q, force_x, force_y)
+	force_x, force_y = normalize_vect(force_x, force_y)
+	self.vx = self.vx + force_x * q
+	self.vy = self.vy + force_y * q
+end
 
+function Actor:apply_force_from(q, source, ox, oy)
 	ox, oy = ox or 0, oy or 0
 	--if not source then    return    end
 	local knockback_x, knockback_y = normalize_vect(source.x-self.x + ox, source.y-self.y + oy)
-	self:do_knockback(q, -knockback_x, -knockback_y)
+	self:apply_force(q, -knockback_x, -knockback_y)
 end
 
 function Actor:do_knockback(q, force_x, force_y)
 	if not self.is_knockbackable then    return    end
+	self:apply_force(q, force_x, force_y)
+end
 
-	force_x, force_y = normalize_vect(force_x, force_y)
-	self.vx = self.vx + force_x * q
-	self.vy = self.vy + force_y * q
+function Actor:do_knockback_from(q, source, ox, oy)
+	if not self.is_knockbackable then    return    end
+	self:apply_force_from(q, source, ox, oy)
 end
 
 -- When the enemy is buffered for the next wave of enemies
