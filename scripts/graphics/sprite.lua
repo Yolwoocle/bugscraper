@@ -90,7 +90,8 @@ function Sprite:get_anchor_offset(w, h)
         y = h - spr_h / 2
     end
 
-    return math.floor(x * self.sx), math.floor(y * self.sy)
+    -- return math.floor(x * self.sx), math.floor(y * self.sy)
+    return math.floor(x), math.floor(y)
 end
 
 function Sprite:set_color(color)

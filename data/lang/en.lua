@@ -71,7 +71,7 @@ return {
         yes = "YES",
         no = "NO",
         quit = {
-            description = "Are you sure you want to quit the game?"
+            description = "Are you sure you want to quit?"
         },
         pause = {
             title = "PAUSE",
@@ -164,13 +164,13 @@ return {
             kills = "Kills",
             time = "Time",
             floor = "Floor",
-            max_combo = "Max combo",
+            -- max_combo = "Max combo",
             continue = "CONTINUE",
         },
         win = {
+            title = "CONGRATULATIONS!",
             wishlist = "WISHLIST ON STEAM",
             continue = "CONTINUE",
-            title = "CONGRATULATIONS!",
         },
         joystick_removed = {
             title = "CONTROLLER DISCONNECTED",

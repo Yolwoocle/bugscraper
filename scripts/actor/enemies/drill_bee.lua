@@ -7,10 +7,16 @@ local images = require "data.images"
 local DrillBee = Fly:inherit()
 	
 function DrillBee:init(x, y, spr)
-    self:init_fly(x,y, spr or images.drill_bee, 14, 18)
+    self:init_fly(x,y, spr or images.drill_bee, 14, 16)
     self.name = "drill_bee"
     self.is_flying = true
     self.life = 10
+
+    self.img_buried = images.drill_bee_buried
+    self.spr:set_anchor(SPRITE_ANCHOR_CENTER_CENTER)
+
+    self.def_h = self.h
+    self.buried_h = 8
     
     self.destroy_bullet_on_impact = false
     self.is_bouncy_to_bullets = true
@@ -29,16 +35,16 @@ function DrillBee:init(x, y, spr)
     self.gravity = 0
     self.friction_y = self.friction_x
 
-    self.anim_frame_len = 0.05
-    self.anim_frames = {images.drill_bee, images.drill_bee}
-    self.do_squash = false
+    -- self.anim_frame_len = 0.05
+    self.anim_frames = nil
+    self.do_squash = true
 
     self.telegraph_oy = 0
     self.telegraph_timer = Timer:new(0.5)
 
-    self.buzz_source = sounds.fly_buzz.source:clone()
-    self.buzz_source:seek(random_range(0, self.buzz_source:getDuration()))
-    self.buzz_is_started = false
+    -- self.buzz_source = sounds.fly_buzz.source:clone()
+    -- self.buzz_source:seek(random_range(0, self.buzz_source:getDuration()))
+    -- self.buzz_is_started = false
 
     self.t = 0
 end
@@ -54,15 +60,8 @@ function DrillBee:update(dt)
         end
     end
 
-    -- self:update_phase(dt, nearest_player)
+    self:update_phase(dt, nearest_player)
     
-    self.t = self.t + dt
-    self.spr:update_offset(0, 0)
-    self.spr:set_scale(self.t, 1/self.t)
-    -- self.squash = self.t
-    self.vx = 0
-    self.vy = 0
-    -- self.squash = 1 + 0.1*(1/math.abs(self.vy))
     -- self.debug_values[1] = self.phase
 
     self:update_fly(dt)
@@ -74,15 +73,17 @@ function DrillBee:update_phase(dt, nearest_player)
         target_x = nearest_player.x 
     end
     local target_y = self.target_y
+    
     if self.phase == "flying" then
         self.speed_x = self.speed
         self.speed_y = self.speed * 3
         
     elseif self.phase == "telegraph" then
         self.speed_x = 0
-        self.speed_y = 0
-        self.telegraph_oy = move_toward(self.telegraph_oy, -8, 16*dt)
-        self.spr:update_offset(nil, self.telegraph_oy)
+        self.speed_y = self.speed * 0.5
+        -- self.telegraph_oy = move_toward(self.telegraph_oy, -8, 16*dt)
+        target_y = self.target_y - 16
+        
         if self.telegraph_timer:update(dt) then 
             self.phase = "attack"
             self.spr:update_offset(0, 0)
@@ -98,7 +99,8 @@ function DrillBee:update_phase(dt, nearest_player)
     elseif self.phase == "stuck" then
         self.vx = 0
         self.vy = 0
-        self.spr:update_offset(0, 12)
+        self.spr:set_image(self.img_buried)
+        self.spr:update_offset(0, self.buried_h)
     end
 
     self.target = {

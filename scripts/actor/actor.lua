@@ -344,9 +344,9 @@ function Actor:move_to(goal_x,goal_y)
 end
 
 function Actor:set_pos(x, y)
-	self.x = x
-	self.y = y 
-	Collision:update(self, x, y)
+	self.x = self.x or x
+	self.y = self.y or y 
+	Collision:update(self, self.x, self.y)
 end
 
 function Actor:set_rider(actor)

@@ -3,15 +3,6 @@ local images = require "data.images"
 
 return {
 	{
-		spr_idle = images.beetle_1,
-		spr_jump = images.beetle_2,
-		spr_wall_slide = images.beetle_2,
-		spr_dead = images.beetle_dead,
-		spr_head = images.caterpillar_head,
-		color_palette = {color(0x2ce8f5), color(0x0195e9), color(0x9e2835), color(0x3a4466), color(0x262b44)},
-		menu_color = color(0x0195e9), 
-	},
-	{
 		spr_idle = images.ant1,
 		spr_jump = images.ant2,
 		spr_wall_slide = images.ant_wall_slide,
@@ -39,4 +30,13 @@ return {
 		menu_color = color(0xfeae34),
 	},
 	
+	{
+		spr_idle = images.beetle_1,
+		spr_jump = images.beetle_2,
+		spr_wall_slide = images.beetle_2,
+		spr_dead = images.beetle_dead,
+		spr_head = images.caterpillar_head,
+		color_palette = {color(0x2ce8f5), color(0x0195e9), color(0x9e2835), color(0x3a4466), color(0x262b44)},
+		menu_color = color(0x0195e9), 
+	},
 }

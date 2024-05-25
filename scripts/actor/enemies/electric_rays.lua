@@ -56,8 +56,6 @@ function ElectricRays:play_repeating_sounds()
 end
 
 function ElectricRays:on_death()
-    self.buzz_source:stop()
-
     Particles:spark(self.mid_x, self.mid_y, 10)
 end
 

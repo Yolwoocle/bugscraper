@@ -26,10 +26,10 @@ function Enemy:init_enemy(x,y, img, w,h)
 	self.follow_player = true
 
 	self.destroy_bullet_on_impact = true
-	self.is_bouncy_to_bullets = false
 	self.is_immune_to_bullets = false
 	self.is_immune_to_electricity = false
-
+	self.is_bouncy_to_bullets = false
+	
 	self.harmless_timer = 0
 
 	self.kill_when_negative_life = true
