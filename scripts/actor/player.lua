@@ -25,6 +25,10 @@ function Player:init(n, x, y, skin)
 	self.name = concat("player", n)
 	self.player_type = "ant"
 
+	-- Meta
+	self.n = n
+	self.is_enemy = false
+
 	-- Life
 	self.max_life = 4
 	self.life = self.max_life
@@ -32,10 +36,6 @@ function Player:init(n, x, y, skin)
 	
 	-- Death
 	self.is_dead = false
-	
-	-- Meta
-	self.n = n
-	self.is_enemy = false
 	
 	-- Animation
 	self.color_palette = skin.color_palette
@@ -64,8 +64,8 @@ function Player:init(n, x, y, skin)
 	self.speed_mult = 1.0
 
 	-- Jump
-	-- self.max_jumps = 3
-	-- self.jumps = self.max_jumps
+	self.max_jumps = 1
+	self.jumps = self.max_jumps
 	self.jump_speed = 450
 	self.jump_speed_mult = 1.0
 	self.buffer_jump_timer = 0
@@ -99,9 +99,6 @@ function Player:init(n, x, y, skin)
 	-- Visuals
 	self.color = ({COL_RED, COL_GREEN, COL_DARK_RED, COL_YELLOW})[self.n]
 	self.color = self.color or COL_RED
-
-	-- Loot & drops
-	self.min_loot_dist = BLOCK_WIDTH*5
 
 	-- Invicibility
 	self.is_invincible = false
@@ -183,7 +180,7 @@ function Player:update(dt)
 	self:update_effects(dt, self)
 	self:move(dt)
 	self:do_wall_sliding(dt)
-	self:do_jumping(dt)
+	self:update_jumping(dt)
 	self:do_gravity(dt) -- FIXME: ouch, this is already called in update_actor so there is x2 gravity here
 	self:update_actor(dt)
 	self:do_aiming(dt)
@@ -422,7 +419,13 @@ function Player:do_wall_sliding(dt)
 	end
 end
 
-function Player:do_jumping(dt)
+function Player:update_jumping(dt)
+	self.debug_values[1] = concat(self.jumps, "/", self.max_jumps)
+	-- Update number of jumps
+	if self.is_grounded or self.is_wall_sliding then
+		self.jumps = self.max_jumps
+	end 
+
 	-- This buffer is so that you still jump even if you're a few frames behind
 	self.buffer_jump_timer = self.buffer_jump_timer - 1
 	if Input:action_pressed(self.n, "jump") then
@@ -439,14 +442,14 @@ function Player:do_jumping(dt)
 	end
 
 	-- Coyote time
-	--FIXME: if you press jump really fast, you can exploit coyote time and double jump 
+	-- TODO FIXME scotch: if you press jump really fast, you can exploit coyote time and double jump 
 	self.coyote_time = self.coyote_time - 1
 	
 	if self.buffer_jump_timer > 0 then
 		-- Detect nearby walls using a collision box
 		local wall_normal = self:get_nearby_wall()
 
-		if self.is_grounded or self.coyote_time > 0 then 
+		if self.is_grounded or self.coyote_time > 0 or self.jumps > 0 then 
 			-- Regular jump
 			self:jump(dt)
 			self:on_jump()
@@ -492,6 +495,7 @@ function Player:get_nearby_wall()
 end
 
 function Player:jump(dt)
+	self.jumps = math.max(0, self.jumps - 1)
 	self.vy = -self.jump_speed * self.jump_speed_mult
 	
 	Particles:smoke(self.mid_x, self.y+self.h)
@@ -510,6 +514,10 @@ end
 function Player:on_jump()
 	self.buffer_jump_timer = 0
 	self.coyote_time = 0
+end
+
+function Player:add_max_jumps(val)
+	self.max_jumps = self.max_jumps + val
 end
 
 function Player:on_leaving_ground()

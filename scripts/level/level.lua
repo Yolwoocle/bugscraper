@@ -384,6 +384,7 @@ function Level:assign_cafeteria_upgrades()
 		{upgrades.UpgradeMilk, 1},
 		{upgrades.UpgradePeanut, 1},
 		{upgrades.UpgradeEnergyDrink, 1},
+		{upgrades.UpgradeSoda, 1000},
 	}
 
 	for _, actor in pairs(self.game.actors) do
