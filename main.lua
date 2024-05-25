@@ -27,6 +27,7 @@ function love.update(dt)
 	t = t + dt
 	local cap = 1 --If there's lag spike, repeat up to how many frames?
 	local i = 0
+	-- local update_fixed_dt = 1/10
 	local update_fixed_dt = fixed_dt
 	while t > update_fixed_dt and cap > 0 do
 		t = t - update_fixed_dt

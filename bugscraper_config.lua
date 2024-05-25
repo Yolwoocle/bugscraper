@@ -1,3 +1,3 @@
 BUGSCRAPER_VERSION = "0.5.dev24-05-17"
-DEMO_BUILD = true
+DEMO_BUILD = false
 DEBUG_MODE = true

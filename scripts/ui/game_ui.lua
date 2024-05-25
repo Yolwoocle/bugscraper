@@ -27,6 +27,12 @@ function GameUI:draw()
 	self:draw_timer()
 	self:draw_version()
 	self:draw_offscreen_indicators()
+
+	-- local r
+    -- r = game.level.cabin_inner_rect
+    -- rect_color(COL_GREEN, "line", r.ax, r.ay, r.w, r.h)
+	-- r = game.level.cabin_rect
+    -- rect_color(COL_RED, "line", r.ax, r.ay, r.w, r.h)
 end
 
 function GameUI:draw_front()

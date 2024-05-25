@@ -42,9 +42,9 @@ local img_names = {
 	-----------------------------------------------------
 
 	-- players
-	ant2_1 =           "actors/players/ant2_1",
-	ant2_2 =           "actors/players/ant2_2",
-	ant2_dead =        "actors/players/ant2_dead",
+	beetle_1 =           "actors/players/beetle_1",
+	beetle_2 =           "actors/players/beetle_2",
+	beetle_dead =        "actors/players/beetle_dead",
 
 	ant1 =             "actors/players/ant1",
 	ant2 =             "actors/players/ant2",
@@ -72,6 +72,7 @@ local img_names = {
 	dung_beetle_shield = "actors/enemies/dung_beetle_shield",
 	dung_beetle_shield_shine = "actors/enemies/dung_beetle_shield_shine",
 	dung_flying =     "actors/enemies/dung_flying",
+	drill_bee =       "actors/enemies/drill_bee",
 	fly1 =            "actors/enemies/fly1",
 	fly2 =            "actors/enemies/fly2",
 	grasshopper =     "actors/enemies/grasshopper",

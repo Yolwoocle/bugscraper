@@ -69,7 +69,8 @@ function Guns:init()
 		self.sfx_pitch = 1.1
 		self.bullet_spread = 0.2
 		
-		self.is_auto = false
+		-- self.is_auto = false
+		self.is_auto = true
 		self.is_burst = true
 		
 		self.damage = 1.5
@@ -93,7 +94,8 @@ function Guns:init()
 		self.spr = images.gun_shotgun
 		self.sfx = "mushroom_ant_pop"
 		self.sfx_pitch = 0.6
-		self.is_auto = false
+		self.is_auto = true
+		-- self.is_auto = false
 
 		self.damage = 1
 		self.cooldown = 0.4

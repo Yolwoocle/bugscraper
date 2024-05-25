@@ -35,11 +35,26 @@ function ElectricArc:init(x, y)
         COL_WHITE,
     }
 
+    self.particle_probability = 0.005
+
     self.t = 0
 end
 
 function ElectricArc:set_arc_target(target)
     self.arc_target = target
+end
+
+function ElectricArc:set_segment(ax_or_seg, ay, bx, by)
+    local ax = ax_or_seg
+    if type(ax_or_seg) ~= "number" then
+        ax = ax_or_seg.ax
+        ay = ax_or_seg.ay
+        bx = ax_or_seg.bx
+        by = ax_or_seg.by
+    end
+
+    self:set_pos(ax, ay)
+    self.segment:set_bounds(ax, ay, bx, by)
 end
 
 function ElectricArc:update(dt)
@@ -131,7 +146,7 @@ function ElectricArc:create_lightning_points()
             line_width = random_range(1, 3),
             segment = Segment:new(last_x, last_y, new_x, new_y)
         })
-        if random_range(0, 1) < 0.02 then
+        if random_range(0, 1) < self.particle_probability then
             Particles:spark(new_x, new_y)
         end
 

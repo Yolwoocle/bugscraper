@@ -17,6 +17,7 @@ local TextManager = require "scripts.text"
 local ScreenshotManager = require "scripts.screenshot"
 local upgrades          = require "data.upgrades"
 local shaders           = require "data.shaders"
+local images            = require "data.images"
 
 local skins = require "data.skins"
 local sounds = require "data.sounds"
@@ -438,7 +439,8 @@ end
 
 function Game:draw_game()
 	-- local real_camx, real_camy = math.cos(self.t) * 10, math.sin(self.t) * 10;
-	
+	exec_on_canvas(self.smoke_canvas, love.graphics.clear)
+
 	---------------------------------------------
 	
 	self:draw_on_layer(LAYER_BACKGROUND, function()
@@ -554,7 +556,7 @@ function Game:draw_game()
 end
 
 function Game:draw_smoke_canvas()
-	exec_on_canvas(self.smoke_canvas, love.graphics.clear)
+	self.camera:reset_transform()
 
 	-- Used for effects for the stink bugs
 	exec_on_canvas(self.smoke_buffer_canvas, function()
@@ -569,6 +571,7 @@ function Game:draw_smoke_canvas()
 		love.graphics.clear()
 		
 		love.graphics.setColor(0,0,0.1)
+		-- Outline
 		love.graphics.draw(self.smoke_buffer_canvas, -1, 0)
 		love.graphics.draw(self.smoke_buffer_canvas, 1, 0)
 		love.graphics.draw(self.smoke_buffer_canvas, 0, -1)
@@ -580,6 +583,8 @@ function Game:draw_smoke_canvas()
 	love.graphics.setColor(1,1,1,0.5)
 	love.graphics.draw(self.smoke_canvas, 0, 0)
 	love.graphics.setColor(1,1,1,1)
+
+	self.camera:apply_transform()
 end
 
 function Game:set_ui_visible(bool)

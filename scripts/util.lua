@@ -26,7 +26,7 @@ function love.graphics.print(text, x, y, ...)
 	return old_print(text, math.floor(x), math.floor(y), ...)
 end
 
--- huge scotch for love.js compatibility
+-- scotch: gigantic hack for love.js canvas compatibility
 -- https://github.com/Davidobot/love.js/issues/92
 local old_newCanvas = love.graphics.newCanvas
 function love.graphics.newCanvas(width, height, settings)
@@ -661,7 +661,7 @@ end
 
 function random_weighted(li, rng)
 	local sum_w = 0
-	for _,e in pairs(li) do
+	for _,e in ipairs(li) do
 		sum_w = sum_w + e[2]
 	end
 
@@ -1065,6 +1065,31 @@ function get_orthogonal(x, y, dir)
 	else
 		return get_right_vec(x,y)
 	end
+end
+
+local function rectclamp(width, height, lineendx, lineendy)
+	-- https://stackoverflow.com/questions/64245202/clamp-segment-inside-rectangle
+    local endx = lineendx 
+    local endy = lineendy
+    if abs(endx) * height <= abs(endy) * width then --at top or bottom
+        return height / 2 * endx / abs(endy),
+			   (math.abs(1) * sign(endy)) * height / 2
+    else
+        return (math.abs(1) * sign(endx)) * width/2,
+               width/2 * endy / abs(endx)
+	end
+end
+
+--- Returns a vector that forms `angle` with the 0° angle and goes from the center of the rect to its appropriate edge. 
+function get_vector_in_rect_from_angle(angle, rect)
+	local center_x = (rect.bx + rect.ax) / 2
+	local center_y = (rect.by + rect.ay) / 2
+	local w = rect.w
+	local h = rect.h
+	local r = math.max(w, h)
+
+	local outx, outy = rectclamp(w, h, math.cos(angle)*r, math.sin(angle)*r)
+	return center_x, center_y, outx + center_x, outy + center_y
 end
 
 -- https://easings.net/#easeOutBack

@@ -9,8 +9,8 @@ function Fly:init(x, y, spr)
     self:init_fly(x, y)
 end
 
-function Fly:init_fly(x, y, spr)
-    self:init_enemy(x,y, spr or images.fly1)
+function Fly:init_fly(x, y, spr, w, h)
+    self:init_enemy(x,y, spr or images.fly1, w, h)
     self.name = "fly"
     self.is_flying = true
     self.life = 10

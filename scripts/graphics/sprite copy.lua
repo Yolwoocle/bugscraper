@@ -72,6 +72,8 @@ function Sprite:get_anchor_offset(w, h)
 	local spr_w = self.image:getWidth()
 	local spr_h = self.image:getHeight()
     local anchor_x, anchor_y = self:get_x_anchor(), self:get_y_anchor()
+    local overflow_x = spr_w * (self.sx - 1) 
+    local overflow_y = spr_h * (self.sy - 1) 
 
     local x, y
     if anchor_x == SPRITE_ANCHOR_START then
@@ -90,7 +92,7 @@ function Sprite:get_anchor_offset(w, h)
         y = h - spr_h / 2
     end
 
-    return math.floor(x * self.sx), math.floor(y * self.sy)
+    return math.floor(x * self.sx - overflow_x/2), math.floor(y * self.sy - overflow_y/2)
 end
 
 function Sprite:set_color(color)
@@ -151,8 +153,8 @@ function Sprite:draw(x, y, w, h, custom_draw)
     local sprite_ox, sprite_oy = self:get_sprite_offset()
 
     exec_color(self.color, function()
-        draw_func(self.image, x + anchor_ox, y + anchor_oy, self.rot, scale_x, scale_y, sprite_ox, sprite_oy)
-        -- draw_func(self.image, x + anchor_ox, y + anchor_oy, self.rot, scale_x, scale_y, spr_w/2, spr_h)
+        -- draw_func(self.image, x + anchor_ox, y + anchor_oy, self.rot, scale_x, scale_y, sprite_ox, sprite_oy)
+        draw_func(self.image, x + anchor_ox, y + anchor_oy, self.rot, scale_x, scale_y, spr_w/2, spr_h)
     end)
 end
 

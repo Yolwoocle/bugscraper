@@ -496,7 +496,7 @@ function Player:jump(dt)
 	
 	Particles:smoke(self.mid_x, self.y+self.h)
 	Audio:play_var("jump", 0, 1.2)
-	self.jump_squash = 1/4
+	self.jump_squash = 1/3
 end
 
 function Player:wall_jump(normal)
@@ -504,7 +504,7 @@ function Player:wall_jump(normal)
 	self.vy = -self.jump_speed * self.jump_speed_mult
 	
 	Audio:play_var("jump", 0, 1.2)
-	self.jump_squash = 1/4
+	self.jump_squash = 1/3
 end
 
 function Player:on_jump()
@@ -832,7 +832,7 @@ end
 --- Visuals ---
 
 function Player:update_visuals()
-	self.jump_squash       = lerp(self.jump_squash,       1, 0.2)
+	self.jump_squash       = lerp(self.jump_squash,       1, 0.15)
 	self.walkbounce_squash = lerp(self.walkbounce_squash, 1, 0.2)
 	self.squash = self.jump_squash * self.walkbounce_squash
 
@@ -1110,7 +1110,7 @@ function Player:update_sprite(dt)
 		self.spr:set_image(self.skin.spr_wall_slide)
 	end
 	if self.is_walking then
-		if self.walkbounce_y > 4 then
+		if self.walkbounce_y < 4 then
 			self.spr:set_image(self.skin.spr_idle)
 		else
 			self.spr:set_image(self.skin.spr_jump)

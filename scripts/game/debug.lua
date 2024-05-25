@@ -77,10 +77,16 @@ function Debug:init(game)
         ["q"] = {"previous floor",function()
             self.game:set_floor(self.game:get_floor() - 1)
         end},
-
         ["w"] = {"next floor", function()
             self.game:set_floor(self.game:get_floor() + 1)
         end},
+        ["a"] = {"-5 floors",function()
+            self.game:set_floor(self.game:get_floor() - 5)
+        end},
+        ["s"] = {"+5 floors", function()
+            self.game:set_floor(self.game:get_floor() + 5)
+        end},
+
         ["p"] = {"upgrade", function()
             game:apply_upgrade(upgrades.UpgradeEnergyDrink:new())
         end},
@@ -89,13 +95,14 @@ function Debug:init(game)
                 Particles:spark(CANVAS_WIDTH/2, CANVAS_HEIGHT/2 + 50)
             end
         end},
-        ["s"] = {"spawn", function()
+        ["d"] = {"spawn", function()
             -- local arc = enemies.ElectricArc:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.9)
             -- print_debug("nil?", game.players[1] == nil)
             -- arc:set_arc_target(game.players[1])
             -- game:new_actor(arc)
 
-            local arc = enemies.FlyBuddy:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.9)
+            -- local arc = enemies.ElectricRays:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.5)
+            local arc = enemies.DrillBee:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.5)
             game:new_actor(arc)
         end},
         ["r"] = {"start game", function()

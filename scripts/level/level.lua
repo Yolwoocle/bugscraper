@@ -65,7 +65,7 @@ function Level:init(game)
     self.enemy_buffer = {}
 
 	self.elevator = Elevator:new(self)
-	self.background = BackgroundDots:new(self)
+	self.background = BackgroundServers:new(self)
 	self.background:set_def_speed(self.def_level_speed)
 	self.cafeteria_background = BackgroundCafeteria:new(self)
 

@@ -64,6 +64,7 @@ function Enemy:init_enemy(x,y, img, w,h)
 	self.damaged_flash_timer = 0
 	self.damaged_flash_max = 0.07
 
+	self.do_squash = false
 	self.squash = 1
 	self.squash_target = 1
 	
@@ -87,10 +88,21 @@ function Enemy:update_enemy(dt)
 	self:update_actor(dt)
 	
 	self:follow_nearest_player(dt)
+	self:follow_target(dt)
 	self.invincible_timer = max(self.invincible_timer - dt, 0)
 	self.harmless_timer = max(self.harmless_timer - dt, 0)
 	self.damaged_flash_timer = max(self.damaged_flash_timer - dt, 0)
-	self.spr:set_flip_x(ternary(self.do_vx_flipping, self.vx < 0, false))
+
+	-- self.spr:set_flip_x(ternary(self.do_vx_flipping, self.vx < 0, false))
+	self.spr:set_flip_x(false)
+	if self.do_vx_flipping and self.target and math.abs(self.x - self.target.x) >= 4 then
+		self.spr:set_flip_x(self.target.x < self.x)
+	end
+
+	if self.do_squash then
+		self.squash = lerp(self.squash, 1, 0.2)
+		self.spr:set_scale(self.squash, 1/self.squash)
+	end
 end
 function Enemy:update(dt)
 	self:update_enemy(dt)
@@ -110,24 +122,31 @@ function Enemy:get_nearest_player()
 end
 
 function Enemy:follow_nearest_player(dt)
-	self.target = nil
 	if not self.follow_player then
 		return
 	end
-
+	
 	-- Find closest player
+	self.target = nil
 	local nearest_player = self:get_nearest_player()
 	if not nearest_player then
 		return
 	end
 	self.target = nearest_player
-	
-	self.speed_x = self.speed_x or self.speed
-	if self.is_flying then    self.speed_y = self.speed_y or self.speed 
-	else                      self.speed_y = self.speed_y or 0    end 
+end
 
-	self.vx = self.vx + sign0(nearest_player.x - self.x) * self.speed_x
-	self.vy = self.vy + sign0(nearest_player.y - self.y) * self.speed_y
+function Enemy:follow_target(dt)
+	self.speed_x = self.speed_x or self.speed
+	if self.is_flying then
+		self.speed_y = self.speed_y or self.speed 
+	else
+		self.speed_y = self.speed_y or 0
+	end 
+
+	if self.target then
+		self.vx = self.vx + sign0(self.target.x - self.x) * self.speed_x
+		self.vy = self.vy + sign0(self.target.y - self.y) * self.speed_y
+	end
 end
 
 function Enemy:draw_enemy()
@@ -199,7 +218,8 @@ end
 function Enemy:on_damage_player(player, damage)
 end
 
-function Enemy:after_collision(col, other)  end
+function Enemy:after_collision(col, other)
+end
 
 function Enemy:set_invincibility(duration)
 	self.invincible_timer = math.max(self.invincible_timer, duration)

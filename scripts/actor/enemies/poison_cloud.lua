@@ -73,9 +73,8 @@ end
 
 function PoisonCloud:draw()
 	exec_on_canvas(game.smoke_canvas, function() 
-            self:draw_enemy()
-        end
-    )
+        self:draw_enemy()
+    end)
 end
 
 function PoisonCloud:after_collision(col, other)

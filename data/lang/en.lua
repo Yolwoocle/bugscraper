@@ -67,6 +67,12 @@ return {
         },
     },
     menu = {
+        see_more = "see more...",
+        yes = "YES",
+        no = "NO",
+        quit = {
+            description = "Are you sure you want to quit the game?"
+        },
         pause = {
             title = "PAUSE",
             resume = "RESUME",
@@ -186,6 +192,5 @@ return {
         open_source = {
             title = "Open source libraries",
         },
-        see_more = "see more..."
     },
 }

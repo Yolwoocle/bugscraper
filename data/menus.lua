@@ -18,7 +18,7 @@ local function func_url(url)
 	end
 end
 
-local DEFAULT_MENU_BG_COLOR = {0, 0, 0, 0.6}
+local DEFAULT_MENU_BG_COLOR = {0, 0, 0, 0.7}
 
 local PROMPTS_NORMAL = {
     {{"ui_select"}, "input.prompts.ui_select"},
@@ -112,6 +112,15 @@ local function generate_menus()
 
     -- FIXME: This is messy, eamble multiple types of menuitems
     -- This is so goddamn overengineered and needlessly complicated
+    menus.quit = Menu:new(game, {
+        -- { "<<<<<<<<< "..Text:text("menu.quit.title").." >>>>>>>>>" },
+        { "" },
+        { Text:text("menu.quit.description") },
+        { Text:text("menu.no"), function() game.menu_manager:back() end },
+        { Text:text("menu.yes"), quit_game },
+        { "" },
+    }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
+
     menus.title = Menu:new(game, {
         { ">>>> Bugscraper (logo here) <<<<" },
         { "" },
@@ -125,44 +134,7 @@ local function generate_menus()
     menus.view_waves = Menu:new(game, {
         {"waves"},
         {CustomDrawMenuItem, debug_draw_waves},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-    }, DEFAULT_MENU_BG_COLOR, {}, function()
+        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},    }, DEFAULT_MENU_BG_COLOR, {}, function()
     end)
 
     menus.pause = Menu:new(game, {
@@ -174,7 +146,7 @@ local function generate_menus()
         { "❤ "..Text:text("menu.win.wishlist").." 🔗", func_url("https://s.team/a/2957130") },
         { "💡 "..Text:text("menu.pause.feedback"), func_set_menu("feedback") },
         { "❤ "..Text:text("menu.pause.credits"), func_set_menu('credits' ) },
-        { "🔚 "..Text:text("menu.pause.quit"), quit_game },
+        { "🔚 "..Text:text("menu.pause.quit"), func_set_menu('quit') },
         { "" },
         -- { "[DEBUG] VIEW WAVES", func_set_menu('view_waves' ) },
         -- { "[DEBUG] joystick_removed", func_set_menu('joystick_removed' ) },
@@ -550,7 +522,7 @@ local function generate_menus()
         { "<<< "..Text:text("menu.credits.special_thanks").." >>>"},
         { "ArkanYota", func_url("https://github.com/ARKANYOTA")},
         { "Gouspourd", func_url("https://gouspourd.itch.io/")},
-        { "Raphaël Marcon", func_url("https://raphytator.itch.io/") },
+        { "Raphaël Marcon (Raphytator)", func_url("https://raphytator.itch.io/") },
         { "Louie Chapman", func_url("https://louiechapm.itch.io/") },
         { "Indie Game Lyon", func_url("https://www.indiegamelyon.com/")},
         { "Fabien Delpiano", function() end },
