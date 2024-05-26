@@ -29,7 +29,7 @@ function ChipBug:init_fly(x, y, spr)
 
     self.anim_frame_len = 0.05
     self.anim_frames = {images.stink_bug_1, images.stink_bug_1}
-    self.do_vx_flipping = false
+	self.flip_mode = ENEMY_FLIP_MODE_MANUAL
 
     self.spr:set_anchor(SPRITE_ANCHOR_CENTER_CENTER)
     self.sound_death = "stink_bug_death"

@@ -77,7 +77,7 @@ function Enemy:init_enemy(x,y, img, w,h)
 
 	self.harmless_timer = 0.0
 
-	self.do_vx_flipping = true
+	self.flip_mode = ENEMY_FLIP_MODE_XVELOCITY
 	self.do_killed_smoke = true
 	-- self.sound_stomp = {"enemy_stomp_2", "enemy_stomp_3"}
 	--{"crush_bug_1", "crush_bug_2", "crush_bug_3", "crush_bug_4"}
@@ -93,10 +93,14 @@ function Enemy:update_enemy(dt)
 	self.harmless_timer = max(self.harmless_timer - dt, 0)
 	self.damaged_flash_timer = max(self.damaged_flash_timer - dt, 0)
 
-	-- self.spr:set_flip_x(ternary(self.do_vx_flipping, self.vx < 0, false))
-	self.spr:set_flip_x(false)
-	if self.do_vx_flipping and self.target and math.abs(self.x - self.target.x) >= 4 then
-		self.spr:set_flip_x(self.target.x < self.x)
+	if self.flip_mode == ENEMY_FLIP_MODE_TARGET then
+		if self.target and math.abs(self.x - self.target.x) >= 4 then
+			self.spr:set_flip_x(self.target.x < self.x)
+		end
+		
+	elseif self.flip_mode == ENEMY_FLIP_MODE_XVELOCITY then
+		self.spr:set_flip_x(self.vx < 0)
+
 	end
 
 	if self.do_squash then

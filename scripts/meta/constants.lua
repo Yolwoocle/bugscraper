@@ -58,6 +58,11 @@ PARTICLE_LAYER_NORMAL = 2
 PARTICLE_LAYER_SHADOWLESS = 3
 PARTICLE_LAYER_FRONT = 4
 
+-- Enemy flipping mode
+ENEMY_FLIP_MODE_MANUAL = "manual" -- only manual flipping
+ENEMY_FLIP_MODE_XVELOCITY = "xvelocity" -- flipping based on x velocity
+ENEMY_FLIP_MODE_TARGET = "target" -- flipping based on location of the target
+
 --------------------------------------------- 
 
 -- Physics & map
