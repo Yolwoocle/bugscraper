@@ -159,14 +159,23 @@ function GameUI:draw_offscreen_indicator_for(player)
 	local rot = math.atan2(player.mid_y - (y + cam_y), player.mid_x - (x + cam_x))
 	
 	local scale = 0.5
+	exec_color(player.skin.color_palette[3], function()
+		draw_centered(images.offscreen_indicator, x+1, y, rot, scale, scale)
+		draw_centered(images.offscreen_indicator, x-1, y, rot, scale, scale)
+		draw_centered(images.offscreen_indicator, x, y+1, rot, scale, scale)
+		draw_centered(images.offscreen_indicator, x, y-1, rot, scale, scale)
+	end)
 	exec_color(player.skin.color_palette[1], function()
 		draw_centered(images.offscreen_indicator, x, y, rot, scale, scale)
 	end)
 	
-	print_centered_outline(player.skin.color_palette[4], player.skin.color_palette[1], player.n, x, y-14)
+	-- print_centered_outline(player.skin.color_palette[4], player.skin.color_palette[1], player.n, x, y-14)
 	shaders.draw_in_color:sendColor("fillColor", player.skin.color_palette[4])
-	exec_using_shader(shaders.draw_in_color, function()
-		draw_centered(player.skin.spr_idle, x, y, 0, 0.5, 0.5)
+	-- exec_using_shader(shaders.draw_in_color, function()
+	-- 	draw_centered(player.skin.spr_idle, x, y, 0, 0.5, 0.5)
+	-- end)
+	exec_color(player.skin.color_palette[4], function()
+		print_centered(player.skin.icon, x, y)
 	end)
 end
 

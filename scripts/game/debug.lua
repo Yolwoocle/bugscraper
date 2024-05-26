@@ -102,7 +102,8 @@ function Debug:init(game)
             -- game:new_actor(arc)
 
             -- local arc = enemies.ElectricRays:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.5)
-            local arc = enemies.DrillBee:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.5)
+            -- local arc = enemies.DrillBee:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.5);
+            local arc = enemies.Turret:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.5);
             game:new_actor(arc)
         end},
         ["r"] = {"start game", function()

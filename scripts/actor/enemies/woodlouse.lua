@@ -28,6 +28,7 @@ end
 
 function Woodlouse:update(dt)
     self:update_enemy(dt)
+
     self.vx = self.speed * self.walk_dir_x
 end
 

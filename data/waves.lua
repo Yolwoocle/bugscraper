@@ -53,7 +53,7 @@ local function debug_wave()
 			-- {E.ChipBug, 1},
 			-- {E.StinkBug, 1},
 			-- {E.ElectricRays, 1},
-			{E.ElectricRays, 1},
+			-- {E.DrillBee, 1},
 			-- {E.MetalFly, 1},
 			-- {E.Fly, 1},
 			-- {E.VendingMachine, 1},
@@ -71,7 +71,7 @@ local function debug_wave()
 			-- {E.SnailShelled, 1},
 			-- {E.Slug, 1},
 			-- {E.Grasshopper, 1},
-			-- {E.MushroomAnt, 1},
+			{E.MushroomAnt, 1},
 
 			-- {E.ButtonBigGlass, 1, position={CANVAS_WIDTH/2, CANVAS_HEIGHT/2}},
 		}

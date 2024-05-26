@@ -271,6 +271,29 @@ function Guns:init()
 	function self.unlootable.DebugGunManual:on_shoot(user)
 		user:heal(1)
 	end
+
+	-------
+
+	self.unlootable.TurretGun = Gun:inherit()
+
+	function self.unlootable.TurretGun:init(user)
+		self.name = "turret_gun"
+		self:init_gun(user)
+		
+		self.sfx = "mushroom_ant_pop"
+		self.damage = 1.5
+		self.max_ammo = 15
+		self.max_reload_timer = 1.5
+		self.is_auto = true
+		self.spr = images.gun_machinegun
+		self.bullet_spr = images.bullet_blue
+		self.bul_w = 10
+		self.bul_h = 10
+
+		self.bullet_speed = 200
+		self.cooldown = 0.35
+		self.screenshake = 2
+	end
 end
 
 local guns_instance = Guns:new()

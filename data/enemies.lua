@@ -21,6 +21,7 @@ local enemies = {
 	MetalFly =         require "scripts.actor.enemies.metal_fly", --*
 	FlyBuddy =         require "scripts.actor.enemies.fly_buddy", --*
 	DrillBee =         require "scripts.actor.enemies.drill_bee", --*
+	Turret =           require "scripts.actor.enemies.turret", --*
 		
 	Dummy =            require "scripts.actor.enemies.dummy",
 	ButtonBigPressed = require "scripts.actor.enemies.button_big_pressed",

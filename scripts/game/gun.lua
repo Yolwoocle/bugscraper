@@ -210,7 +210,8 @@ function Gun:get_damage(user)
 end
 
 function Gun:get_max_ammo()
-	return self.max_ammo * self.user:get_max_ammo_multiplier()
+	local m = (self.user and self.user.get_max_ammo_multiplier and self.user:get_max_ammo_multiplier()) or 1
+	return self.max_ammo * m
 end
 
 function Gun:do_reloading(dt)

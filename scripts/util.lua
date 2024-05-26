@@ -1121,3 +1121,7 @@ function segment_intersect(seg1, seg2)
 	local bool2 = (ccw(seg1.ax, seg1.ay, seg1.bx, seg1.by, seg2.ax, seg2.ay) ~= ccw(seg1.ax, seg1.ay, seg1.bx, seg1.by, seg2.bx, seg2.by))
 	return bool1 and bool2
 end
+
+function get_direction_vector(ax, ay, bx, by)
+	return normalize_vect(bx - ax, by - ay)
+end
