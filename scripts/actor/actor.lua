@@ -174,6 +174,9 @@ function Actor:update_actor(dt)
 		self:react_to_collision(col)
 		table.insert(self.collisions, col)
 	end
+	if old_grounded ~= self.is_grounded then
+		self:on_grounded_state_change(self.is_grounded)
+	end
 
 	-- Grounding events
 	if not old_grounded and self.is_grounded then
@@ -250,6 +253,9 @@ function Actor:react_to_collision(col)
 			self.grounded_col = col
 		end
 	end
+end
+
+function Actor:on_grounded_state_change(new_state)
 end
 
 function Actor:is_touching_collider(condition)

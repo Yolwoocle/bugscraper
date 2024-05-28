@@ -64,6 +64,7 @@ function Player:init(n, x, y, skin)
 	self.speed_mult = 1.0
 
 	-- Jump
+	self.can_do_midair_jump = false
 	self.max_jumps = 1
 	self.jumps = self.max_jumps
 	self.jump_speed = 450
@@ -144,7 +145,7 @@ function Player:init(n, x, y, skin)
 	self.sfx_wall_slide_volume = 0
 	self.sfx_wall_slide_max_volume = 0.1
 
-	-- Combo
+	-- Combo / fury
 	self.combo = 0
 	self.max_combo = 0
 	self.fury_bar = 0.0
@@ -432,7 +433,7 @@ function Player:update_jumping(dt)
 		self.buffer_jump_timer = 12
 	end
 
-	-- Update air time 
+	-- Update air time (I think that is used to make you jump higher when holding jump)
 	self.air_time = self.air_time + dt
 	if self.is_grounded then self.air_time = 0 end
 	if self.air_time < self.jump_air_time and not self.is_grounded then
@@ -449,11 +450,17 @@ function Player:update_jumping(dt)
 		-- Detect nearby walls using a collision box
 		local wall_normal = self:get_nearby_wall()
 
-		if self.is_grounded or self.coyote_time > 0 or self.jumps > 0 then 
+		if self.is_grounded or self.coyote_time > 0 then 
 			-- Regular jump
 			self:jump(dt)
 			self:on_jump()
-
+			
+		elseif not self.is_grounded and (self.jumps > 0) then 
+			-- Regular jump
+			self:jump(dt)
+			self.jumps = math.max(0, self.jumps - 1)
+			self:on_jump()
+		
 		elseif wall_normal then
 			-- Conditions for a wall jump ("wall kick")
 			local left_jump  = (wall_normal.x == 1) and Input:action_down(self.n, "right")
@@ -467,6 +474,13 @@ function Player:update_jumping(dt)
 			end
 			self:on_jump()
 		end
+	end
+end
+
+function Player:on_grounded_state_change(new_state)
+	-- When player has just left the grounded 
+	if not new_state then
+		self.jumps = math.max(0, self.jumps - 1)
 	end
 end
 
@@ -495,7 +509,6 @@ function Player:get_nearby_wall()
 end
 
 function Player:jump(dt)
-	self.jumps = math.max(0, self.jumps - 1)
 	self.vy = -self.jump_speed * self.jump_speed_mult
 	
 	Particles:smoke(self.mid_x, self.y+self.h)

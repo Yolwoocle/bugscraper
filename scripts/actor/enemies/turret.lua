@@ -11,9 +11,12 @@ function Woodlouse:init(x, y, spr, w, h)
     self.name = "woodlouse"
     self.follow_player = false
 
-    self.life = 10
+    self.life = 60
     self.speed = 0
     self.speed_x = 0
+
+    self.is_stompable = false
+    self.self_knockback_mult = 0
 
     self.gun = guns.unlootable.TurretGun:new(self)
 end

@@ -88,7 +88,7 @@ function Debug:init(game)
         end},
 
         ["p"] = {"upgrade", function()
-            game:apply_upgrade(upgrades.UpgradeEnergyDrink:new())
+            game:apply_upgrade(upgrades.UpgradeSoda:new())
         end},
         ["t"] = {"particle", function()
             for i = 1, 50 do

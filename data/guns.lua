@@ -248,7 +248,9 @@ function Guns:init()
 		self.recoil_force = 0
 	end
 	function self.unlootable.DebugGun:on_shoot(user)
-		user:heal(1)
+		if user.heal then
+			user:heal(1)
+		end
 	end
 
 	------
@@ -281,7 +283,7 @@ function Guns:init()
 		self:init_gun(user)
 		
 		self.sfx = "mushroom_ant_pop"
-		self.damage = 1.5
+		self.damage = 1
 		self.max_ammo = 15
 		self.max_reload_timer = 1.5
 		self.is_auto = true
@@ -290,8 +292,8 @@ function Guns:init()
 		self.bul_w = 10
 		self.bul_h = 10
 
-		self.bullet_speed = 200
-		self.cooldown = 0.35
+		self.bullet_speed = 125-- 200
+		self.cooldown = 0.6--0.35
 		self.screenshake = 2
 	end
 end

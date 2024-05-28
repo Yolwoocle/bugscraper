@@ -21,6 +21,7 @@ end
 function UpgradeSoda:on_apply(player)
     -- player:add_fury_max(self.strength_fury_max)
     player:add_max_jumps(self.strength)
+    -- player.can_do_midair_jump = true
 end
 
 function UpgradeSoda:on_finish(player)
