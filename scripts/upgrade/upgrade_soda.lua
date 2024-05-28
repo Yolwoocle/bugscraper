@@ -7,11 +7,11 @@ local UpgradeSoda = Upgrade:inherit()
 function UpgradeSoda:init()
     self.name = "soda"
     self:init_upgrade()
-    self.sprite = images.upgrade_energy_drink
+    self.sprite = images.upgrade_soda
 
     self.strength = 1
 
-    self.color = COL_BLACK_BLUE
+    self.color = COL_LIGHT_RED
 end
 
 function UpgradeSoda:update(dt)

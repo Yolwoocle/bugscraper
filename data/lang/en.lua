@@ -40,6 +40,10 @@ return {
             title = "Energy Drink",
             description = "Fury decays slower",
         },
+        soda = {
+            title = "Soda",
+            description = "+1 midair jump",
+        },
     },
     input = {
         prompts = {
