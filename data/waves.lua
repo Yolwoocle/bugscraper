@@ -84,12 +84,12 @@ local function new_wave(params)
 end
 
 local waves = {	
-	debug_wave(),
+	-- debug_wave(),
 	-- new_cafeteria(),
 	-- [[
 	new_wave({
-		min = 4,
-		max = 6,
+		min = 3,
+		max = 5,
 		enemies = {
 			{E.Larva, 3},
 			{E.Fly, 3},
@@ -102,7 +102,6 @@ local waves = {
 		-- Woodlouse intro
 		min = 4,
 		max = 6,
-		enable_stomp_arrow_tutorial = true,
 		enemies = {
 			{E.Woodlouse, 2},
 		},
@@ -125,53 +124,11 @@ local waves = {
 		enemies = {
 			{E.Larva, 2},
 			{E.Fly, 2},
-			{E.Slug, 2},
+			{E.Slug, 4},
 		},
 	}),
+
 	
-	new_wave({
-		-- Spider intro
-		min = 4,
-		max = 6,
-		enemies = {
-			{E.Larva, 2},
-			{E.Spider, 4},
-		},
-	}),
-
-	new_wave({
-		min = 6,
-		max = 8,
-		enemies = {
-			{E.Fly, 5},
-			{E.Slug, 2},
-			{E.Spider, 3},
-			{E.Woodlouse, 2},
-		},
-	}),
-
-	new_wave({
-		-- Mosquito intro
-		min = 6,
-		max = 8,
-		enemies = {
-			{E.Fly, 3},
-			{E.Mosquito, 4},
-		},
-	}),
-
-	new_wave({ 
-		min = 6,
-		max = 8,
-		enemies = {
-			{E.Larva, 2},
-			{E.Slug, 5},
-			{E.Fly, 2},
-			{E.Mosquito, 2},
-			{E.Woodlouse, 2},
-		},
-	}),
-
 	new_wave({
 		min = 3,
 		max = 5,
@@ -186,178 +143,138 @@ local waves = {
 		max = 8,
 		enemies = {
 			-- 
-			{E.Mosquito, 3},
 			{E.Fly, 4},
+			{E.Woodlouse, 2},
 			{E.Larva, 4},
 			{E.SnailShelled, 3},
-			{E.Spider, 3},
+			{E.Slug, 2},
 		},
 	}),
-
-	new_wave({ 
-		-- Spiked Fly intro
-		min = 6,
-		max = 8,
-		enemies = {
-			{E.Larva, 1},
-			{E.Fly, 2},
-			{E.Mosquito, 2},
-			{E.SpikedFly, 4},
-		},
-	}),
-
+	
 	new_wave({ 
 		min = 7,
 		max = 9,
 		enemies = {
+			{E.SnailShelled, 4},
+			{E.SpikedFly, 3},
+			{E.Fly, 3},
+		},
+	}),
+
+	new_wave({
+		-- Mushroom ant intro
+		min = 5,
+		max = 5,
+		enemies = {
 			{E.Fly, 2},
-			{E.Mosquito, 4},
+			{E.MushroomAnt, 4},
+		},
+	}),
+
+	new_wave({
+		min = 8,
+		max = 10,
+		enemies = {
+			{E.Fly, 5},
+			{E.Slug, 2},
 			{E.SpikedFly, 4},
-			{E.Spider, 4},
+			{E.Woodlouse, 4},
+			{E.SnailShelled, 4},
 		},
 	}),
 
 	new_cafeteria(),
 
 	new_wave({ 
-		-- Grasshopper intro
-		min = 4,
-		max = 4,
-		enemies = {
-			{E.Grasshopper, 8},
-		},
+		-- Spiked Fly intro
+		min = 6,
+		max = 8,
 		music = "w1",
+
+		enemies = {
+			{E.Larva, 1},
+			{E.Fly, 2},
+			{E.SpikedFly, 4},c
+		},
+	}),
+
+	new_wave({
+		min = 6,
+		max = 8,
+		enemies = {
+			{E.Fly, 2},
+			{E.SpikedFly, 2},
+			{E.MushroomAnt, 4},
+			{E.Slug, 2},
+			{E.SnailShelled, 2},
+		},
+	}),
+
+	new_wave({
+		-- Spider intro
+		min = 4,
+		max = 6,
+		enemies = {
+			{E.Slug, 2},
+			{E.Spider, 4},
+		},
+	}),
+
+	new_wave({
+		min = 6,
+		max = 8,
+		enemies = {
+			{E.Fly, 2},
+			{E.SnailShelled, 2},
+			{E.Spider, 4},
+		},
+	}),
+
+	new_wave({
+		min = 8,
+		max = 9,
+		enemies = {
+			{E.Fly, 2},
+			{E.SpikedFly, 2},
+			{E.SnailShelled, 2},
+			{E.Slug, 2},
+			{E.Spider, 4},
+		},
+	}),
+
+	new_wave({ 
+		-- Stink bug intro
+		min = 5,
+		max = 6,
+		enemies = {
+			{E.StinkBug, 3},
+		},
 	}),
 
 	new_wave({ 
 		min = 7,
 		max = 9,
 		enemies = {
-			{E.Fly, 2},
-			{E.Mosquito, 4},
-			{E.Grasshopper, 8},
-			{E.Woodlouse, 2},
-			{E.SpikedFly, 4},
-			{E.Spider, 4},
-		},
-
-		
-		-- level_geometry = LevelGeometry:new({
-		-- 	{rect = Rect:new(3, 8, 8, 8), tile = TILE_SEMISOLID}, 
-		-- 	{rect = Rect:new(21, 8, 26, 8), tile = TILE_SEMISOLID}, 
-		-- }),
-		-- elevator_layers = {
-		-- 	["bg_grid"] = false,
-		-- },
-		-- run = function(self, level)
-		-- 	local cabin_rect = game.level.cabin_rect
-		-- 	Particles:falling_grid(cabin_rect.ax +   16, cabin_rect.ay + 6*16)
-		-- 	Particles:falling_grid(cabin_rect.bx - 7*16, cabin_rect.ay + 6*16)
-		-- 	level.elevator:start_grid_timer(2.5)
-		-- end
-	}),
-
-	new_wave({ 
-		-- Mushroom Ant intro
-		min = 5,
-		max = 6,
-		enemies = {
-			{E.Fly, 3},
-			{E.Mosquito, 3},
-			{E.MushroomAnt, 3},
-		},
-	}),
-
-
-	new_wave({ 
-		min = 8,
-		max = 10,
-		enemies = {
-			{E.MushroomAnt, 3},
-			{E.Woodlouse, 2},
-			{E.Fly, 1},
-			{E.SpikedFly, 1},
+			{E.SpikedFly, 2},
+			{E.MushroomAnt, 2},
+			{E.SnailShelled, 2},
 			{E.Spider, 2},
+			{E.StinkBug, 4},
 		},
 	}),
 
 	new_wave({ 
-		-- Honeypot ant intro
-		min = 6,
-		max = 8,
-		enemies = {
-			{E.Larva, 3},
-			{E.HoneypotAnt, 6},
-			{E.MushroomAnt, 3},
-			{E.SpikedFly, 3},
-		},
-	}),
-
-	new_wave({ -- 12
-		-- ALL
-		min = 6,
-		max = 8,
-		enemies = {
-			{E.Larva, 4},
-			{E.Fly, 3},
-			{E.SnailShelled, 3},
-			{E.Mosquito, 3},
-			{E.Slug, 2},
-			{E.HoneypotAnt, 2},
-			{E.SpikedFly, 1},
-			{E.Grasshopper, 1},
-			{E.MushroomAnt, 1},
-			{E.Spider, 1},
-		},
-	}),
-
-	-- unpack(duplicate_table({
-	-- ALL BUT HARDER
-	new_wave({
 		min = 8,
 		max = 10,
 		enemies = {
-			{E.Fly, 3},
-			{E.SnailShelled, 3},
+			{E.Fly, 2},
 			{E.Slug, 2},
-			{E.Mosquito, 3},
-			{E.SpikedFly, 1},
-			-- {E.Grasshopper, 1},
-			-- {E.MushroomAnt, 1},
-			-- {E.Spider, 1},
-		},
-	}),
-	new_wave({
-		min = 10,
-		max = 12,
-		enemies = {
-			-- {E.Larva, 4},
-			-- {E.Fly, 3},
-			-- {E.SnailShelled, 3},
-			-- {E.Slug, 2},
-			{E.HoneypotAnt, 2},
-			{E.SpikedFly, 1},
-			{E.Grasshopper, 1},
-			{E.Mosquito, 3},
-			{E.MushroomAnt, 1},
-			{E.Woodlouse, 1},
-			{E.Spider, 1},
-		},
-	}),
-	new_wave({
-		min = 14,
-		max = 16,
-		enemies = {
-			{E.Fly, 3},
-			{E.HoneypotAnt, 2},
-			{E.SnailShelled, 3},
-			{E.Woodlouse, 1},
-			{E.Slug, 2},
-			{E.Mosquito, 3},
-			{E.SpikedFly, 1},
-			{E.Grasshopper, 1},
-			{E.MushroomAnt, 1},
-			{E.Spider, 1},
+			{E.Woodlouse, 2},
+			{E.SpikedFly, 2},
+			{E.MushroomAnt, 2},
+			{E.SnailShelled, 2},
+			{E.Spider, 2},
+			{E.StinkBug, 2},
 		},
 	}),
 

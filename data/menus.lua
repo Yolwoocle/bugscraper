@@ -86,6 +86,7 @@ local function debug_draw_waves(self)
             local e = enemy[1]:new()
             local image = e.spr.image
             e:remove()
+			e:final_remove()
 
             local weight = enemy[2] 
 
@@ -135,8 +136,8 @@ local function generate_menus()
         {"waves"},
         {CustomDrawMenuItem, debug_draw_waves},
         {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},    
-        }, DEFAULT_MENU_BG_COLOR, {}, function()
-    end)
+        }, DEFAULT_MENU_BG_COLOR, {}, function() end
+    )
 
 
     local pause_items = {

@@ -19,7 +19,7 @@ function Dung:init_dung(x, y, spr, w, h)
     self.life = 35
 
     self.friction_x = 0.999
-    self.speed_x = 5
+    self.speed_x = 1
     self.self_knockback_mult = 200
     
     self.is_stompable = false

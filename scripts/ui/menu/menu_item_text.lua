@@ -73,7 +73,7 @@ function TextMenuItem:draw_textitem()
 	-- 	rect_color(col, "fill", x, y, w, h)
 	-- end
 	
-	if self.is_selected then
+	if self.is_selected and self.label_text ~= "" then
 		local col = Input:get_last_ui_player_color()
 		local x = math.floor(self.x - MENU_PADDING - 8)
 		local y = math.floor(self.y + self.oy - 6)
