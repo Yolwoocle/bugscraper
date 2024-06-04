@@ -84,7 +84,7 @@ local function debug_draw_waves(self)
 
         for j, enemy in ipairs(wave.enemies) do
             local e = enemy[1]:new()
-            local image = e.spr
+            local image = e.spr.image
             e:remove()
 
             local weight = enemy[2] 
@@ -134,10 +134,12 @@ local function generate_menus()
     menus.view_waves = Menu:new(game, {
         {"waves"},
         {CustomDrawMenuItem, debug_draw_waves},
-        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},    }, DEFAULT_MENU_BG_COLOR, {}, function()
+        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},    
+        }, DEFAULT_MENU_BG_COLOR, {}, function()
     end)
 
-    menus.pause = Menu:new(game, {
+
+    local pause_items = {
         { "<<<<<<<<< "..Text:text("menu.pause.title").." >>>>>>>>>" },
         { "" },
         { "▶ "..Text:text("menu.pause.resume"), function() game.menu_manager:unpause() end },
@@ -148,14 +150,19 @@ local function generate_menus()
         { "❤ "..Text:text("menu.pause.credits"), func_set_menu('credits' ) },
         { "🔚 "..Text:text("menu.pause.quit"), func_set_menu('quit') },
         { "" },
-        -- { "[DEBUG] VIEW WAVES", func_set_menu('view_waves' ) },
-        -- { "[DEBUG] joystick_removed", func_set_menu('joystick_removed' ) },
-    }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL, draw_elevator_progress)
+    }
     if OPERATING_SYSTEM == "Web" then
         -- Disable quitting on web
         menus.pause.items[9].is_selectable = false
     end
+    if DEBUG_MODE then
+        -- 
+        -- { "[DEBUG] joystick_removed", func_set_menu('joystick_removed' ) },
+        table.insert(pause_items, { "[DEBUG] VIEW WAVES", func_set_menu('view_waves' ) })
+    end
+    menus.pause = Menu:new(game, pause_items, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL, draw_elevator_progress)
     
+
     menus.feedback = Menu:new(game, {
         { "<<<<<<<<< "..Text:text("menu.feedback.title").." >>>>>>>>>" },
         { "" },

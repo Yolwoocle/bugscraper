@@ -103,7 +103,9 @@ function Debug:init(game)
 
             -- local arc = enemies.ElectricRays:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.5)
             -- local arc = enemies.DrillBee:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.5);
-            local arc = enemies.Turret:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.5);
+            local arc = enemies.SnailShelled:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.5);
+            game:new_actor(arc)
+            local arc = enemies.SnailShelledBouncy:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.5);
             game:new_actor(arc)
         end},
         ["r"] = {"start game", function()
@@ -522,6 +524,12 @@ function Debug:draw_colview()
 	end
 
     game.camera:reset_transform()
+    
+    local level = game.level
+    if level then
+        rect_color(COL_RED, "line", level.cabin_rect.x, level.cabin_rect.y, level.cabin_rect.w, level.cabin_rect.h)
+        rect_color(COL_CYAN, "line", level.cabin_inner_rect.x, level.cabin_inner_rect.y, level.cabin_inner_rect.w, level.cabin_inner_rect.h)
+    end
 end
 
 function Debug:draw_layers()

@@ -445,6 +445,9 @@ function bool_to_int(b)
 	return 0
 end
 
+--- func desc
+---@param b boolean The boolean
+---@return direction 1 if b s true, else -1
 function bool_to_dir(b)
 	if type(b) ~= "boolean" then   return b   end
 	if b then    return 1    end
@@ -834,6 +837,14 @@ function dist(ax, ay, bx, by)
 	return sqrt(distsqr(ax, ay, bx, by))
 end
 
+function actor_distance(actor1, actor2)
+	return dist(actor1.x, actor1.y, actor2.x, actor2.y)
+end
+
+function actor_mid_distance(actor1, actor2)
+	return dist(actor1.mid_x, actor1.mid_y, actor2.mid_x, actor2.mid_y)
+end
+
 function cerp(a,b,t)
 	-- "constant" interpolation?
 	-- 2024 leo here: wtf is this shit
@@ -1124,4 +1135,12 @@ end
 
 function get_direction_vector(ax, ay, bx, by)
 	return normalize_vect(bx - ax, by - ay)
+end
+
+function get_direction_vector_between_actors(actor1, actor2)
+	return normalize_vect(actor2.x - actor1.x, actor2.y - actor1.y)
+end
+
+function get_angle_between_actors(actor1, actor2)
+	return math.atan2(actor2.y - actor1.y, actor2.x - actor1.x)
 end

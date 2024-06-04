@@ -125,6 +125,10 @@ end
 function Actor:clamp_to_bounds(rect)
 	local x = clamp(self.x, rect.ax, rect.bx-self.w)
 	local y = clamp(self.y, rect.ay, rect.by-self.h)
+	
+	if self.name == "button_small" then
+		-- print_debug("y", round(self.y), y, "rect", rect.ay, rect.by-self.h, " | ", random_neighbor(1))
+	end
 	self:set_pos(x, y)
 end
 
@@ -350,9 +354,18 @@ function Actor:move_to(goal_x,goal_y)
 end
 
 function Actor:set_pos(x, y)
+	if self.name == "button_small" then
+		-- print_debug("set pos 1 ", x, y, " | ", random_neighbor(1))
+	end
 	self.x = self.x or x
 	self.y = self.y or y 
+	if self.name == "button_small" then
+		-- print_debug("set pos 2 ", x, y, " | ", random_neighbor(1))
+	end
 	Collision:update(self, self.x, self.y)
+	if self.name == "button_small" then
+		-- print_debug("set pos 3 ", x, y, " | ", random_neighbor(1))
+	end
 end
 
 function Actor:set_rider(actor)

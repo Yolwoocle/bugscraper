@@ -923,7 +923,7 @@ end
 
 function Game:keypressed(key, scancode, isrepeat)
 	if scancode == "space" and self.debug_mode then
-		-- self:screenshot()
+		self:screenshot()
 	end
 	if scancode == "f12" and (love.keyboard.isDown("lshift") or love.keyboard.isDown("rshift")) and (love.keyboard.isDown("lctrl") or love.keyboard.isDown("rshift")) then
 		self.debug_mode = true

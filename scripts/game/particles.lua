@@ -63,17 +63,18 @@ end
 
 local CircleParticle = Particle:inherit()
 
-function CircleParticle:init(x,y,s,col, vx,vy,vs, life, g)
+function CircleParticle:init(x,y,s,col, vx,vy,vs, life, g, fill_mode)
 	self:init_particle(x,y,s,0, vx,vy,vs,0, life, g)
 
 	self.col = col or COL_WHITE
+	self.fill_mode = fill_mode or "fill"
 	self.type = "circle"
 end
 function CircleParticle:update(dt)
 	self:update_particle(dt)
 end
 function CircleParticle:draw()
-	circle_color(self.col, "fill", self.x, self.y, self.s)
+	circle_color(self.col, self.fill_mode, self.x, self.y, self.s)
 end
 ------------------------------------------------------------
 
@@ -487,7 +488,7 @@ function ParticleSystem:smoke_big(x, y, col)
 	self:smoke(x, y, 15, col or COL_WHITE, 16, 8, 4)
 end
 
-function ParticleSystem:smoke(x, y, number, col, spw_rad, size, sizevar, layer)
+function ParticleSystem:smoke(x, y, number, col, spw_rad, size, sizevar, layer, fill_mode)
 	number = number or 10
 	spw_rad = spw_rad or 8
 	size = size or 4
@@ -502,7 +503,8 @@ function ParticleSystem:smoke(x, y, number, col, spw_rad, size, sizevar, layer)
 		
 		local v = random_range(0.6, 1)
 		local col = col or {v,v,v,1}
-		local particle = CircleParticle:new(x+dx, y+dy, size+dsize, col, 0, 0, _vr, _life)
+		-- x,y,s,col, vx,vy,vs, life, g, fill_mode
+		local particle = CircleParticle:new(x+dx, y+dy, size+dsize, col, 0, 0, _vs, _vr, _life, fill_mode)
 		self:add_particle(particle, layer)
 	end
 end
@@ -648,12 +650,8 @@ function ParticleSystem:image(x, y, number, spr, spw_rad, life, vs, g, parms)
 end
 
 -- FIXME: scotch
-function ParticleSystem:bullet_vanish(x, y, rot)
-	Particles:image(x, y, 1, {
-		images.bullet_vanish_1,
-		images.bullet_vanish_2,
-		images.bullet_vanish_3,
-	}, 0, nil, 0, 0, {
+function ParticleSystem:static_image(img, x, y, rot)
+	Particles:image(x, y, 1, img, 0, nil, 0, 0, {
 		is_solid = false,
 		rot = rot,
 		vx1 = 0,
@@ -665,6 +663,15 @@ function ParticleSystem:bullet_vanish(x, y, rot)
 		life = 0.12,
 		is_animated = true
 	})
+end
+
+-- FIXME: scotch
+function ParticleSystem:bullet_vanish(x, y, rot)
+	self:static_image({
+		images.bullet_vanish_1,
+		images.bullet_vanish_2,
+		images.bullet_vanish_3,
+	}, x, y, rot)
 end
 
 function ParticleSystem:stomped_enemy(x, y, spr)

@@ -421,7 +421,7 @@ function Player:do_wall_sliding(dt)
 end
 
 function Player:update_jumping(dt)
-	self.debug_values[1] = concat(self.jumps, "/", self.max_jumps)
+	-- self.debug_values[1] = concat(self.jumps, "/", self.max_jumps)
 	-- Update number of jumps
 	if self.is_grounded or self.is_wall_sliding then
 		self.jumps = self.max_jumps
@@ -454,12 +454,6 @@ function Player:update_jumping(dt)
 			-- Regular jump
 			self:jump(dt)
 			self:on_jump()
-			
-		elseif not self.is_grounded and (self.jumps > 0) then 
-			-- Regular jump
-			self:jump(dt)
-			self.jumps = math.max(0, self.jumps - 1)
-			self:on_jump()
 		
 		elseif wall_normal then
 			-- Conditions for a wall jump ("wall kick")
@@ -473,6 +467,15 @@ function Player:update_jumping(dt)
 				self:wall_jump(wall_normal)
 			end
 			self:on_jump()
+				
+		elseif not self.is_grounded and (self.jumps > 0) then 
+			-- Midair jump
+			self:jump(dt, 1.2)
+			self.jumps = math.max(0, self.jumps - 1)
+			self:on_jump()
+			
+			-- :smoke      (x,          y,            number, col, spw_rad, size, sizevar, layer, fill_mode)
+			Particles:smoke(self.mid_x, self.y+self.h, nil,   nil, nil,     nil,  nil,     nil, "line")
 		end
 	end
 end
@@ -508,8 +511,8 @@ function Player:get_nearby_wall()
 	return false
 end
 
-function Player:jump(dt)
-	self.vy = -self.jump_speed * self.jump_speed_mult
+function Player:jump(dt, multiplier)
+	self.vy = -self.jump_speed * self.jump_speed_mult * (multiplier or 1)
 	
 	Particles:smoke(self.mid_x, self.y+self.h)
 	Audio:play_var("jump", 0, 1.2)

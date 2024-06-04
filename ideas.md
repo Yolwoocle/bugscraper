@@ -33,3 +33,7 @@ I don't know the english name but how about two "gendarme" sticking together but
 You can think enemy type (shooter, chaser, tank, etc..) and they're variations: shoots one bullets, many bullets, bullets on death, explode on death, etc..
 
 You can also think about the player's reaction you want to create: prioritizing certain target, forcing movement, etc
+
+---------------
+
+⚠️ IMPORTANT: The legacy files have been kept for preservation purposes to the previous purchasers of the game only. For the latest version, please download the 0.4 version or the demos on the page for the game.
