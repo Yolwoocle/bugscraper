@@ -96,7 +96,7 @@ function ExitSign:draw()
     end
     
     local final_spring_y = math.floor(self.y + self.h + 5 - self.spring_y)
-    local max_spring_y = math.floor(self.y + self.h + 8)
+    local max_spring_y = math.floor(self.y + self.h + 6) -- Value to clamp the y value to (to prevent intersection w/ floor)
     local spring_height = images.spring:getHeight()
 
     for iy = final_spring_y, max_spring_y - spring_height, spring_height do

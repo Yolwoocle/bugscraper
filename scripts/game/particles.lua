@@ -324,6 +324,9 @@ function SmashFlashParticle:init(x, y, r, col)
 	self.spr = images.smash_flash
 	self.col = col
 
+	self.ox = 0
+	self.oy = 0
+
 	self.sx = 1
 	self.sy = 1
 	self.flip_y = false
