@@ -592,13 +592,6 @@ function Game:listen_for_player_join(dt)
 			--Corentin
 			if last_button.type == INPUT_TYPE_MIDI and self.menu_manager and self.menu_manager.menus and not has_midi_created then
 
-				print("[DEBUG :\n")
-				for k,v in pairs(self.menu_manager:get_menu("options_input").items) do
-					print_table(v)
-				end
-
-				print("]\n------^^^------\n")
-
 				self.menu_manager:get_menu("options_input"):add_items({
 					{""},
 					{"<<< "..Text:text("menu.options.input_submenu.midi").." >>>"},
