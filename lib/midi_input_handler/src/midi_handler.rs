@@ -160,7 +160,7 @@ pub fn init() -> Receiver<MidiInputPressed> {
 
         //conection
         let ports_nb = midi_input.port_count();
-        println!("{} ports avalaibles", ports_nb);
+        println!("[rust] {} ports avalaibles", ports_nb);
 
         let mut connections: Vec<Connection> =
             init_all_connections(&midi_input, &sender);

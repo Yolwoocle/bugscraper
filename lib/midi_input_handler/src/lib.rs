@@ -39,6 +39,9 @@ fn lib_midi_input_handler_libmidi_input_handler(lua: &Lua) -> LuaResult<LuaTable
 
 #[mlua::lua_module]
 fn lua_init(lua: &Lua) -> LuaResult<LuaTable> {
+    
+    println!("[rust] running on {}-{}-{} ",std::env::consts::ARCH,std::env::consts::FAMILY,std::env::consts::OS);
+
     let exports = lua.create_table()?;
     exports.set("print_rust", lua.create_function(lua_print_rust)?)?;
     exports.set("init_midi", lua.create_function(lua_init_midi)?)?;

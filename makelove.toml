@@ -31,8 +31,11 @@ prebuild = [
 	"make all_release",
 ]
 
-[archive_files]
-"lib.midi_input_handler.libmidi_input_handler.so" = "libmidi_input_handler.so"
+postbuild = [
+    "mkdir ./export/appimage/lib/midi_input_handler",
+    #"cp ./lib/midi_input_handler/target/release ",
+    "echo DONE"
+]
 
 [windows]
 [windows.archive_files]
@@ -42,10 +45,7 @@ shared_libraries = [
 ]
 
 [appimage]
-[appimage.hooks]
-prebuild = [
-    "echo --------------------------------------------------------------------------------------------------------------------------------"
-]
+
 artifacts = "appimage" 
 [lovejs]
 title = "Bugscraper"  # used on the resulting web page
