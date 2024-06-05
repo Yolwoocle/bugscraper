@@ -6,15 +6,17 @@
 * -- Corentin Vaillant                  *
 * * * * * * * * * * * * * * * * * * * *]] 
 
+--TODO  CACHE IMAGE CANVAS
+
 require "scripts.util"
 
-
+local libmidi
 if pcall(require,"libmidi_input_handler") then
     print("compile mode !")
-    midi = require("libmidi_input_handler")
+    libmidi = require("libmidi_input_handler")
 else
     print("interpreted mode !")
-    midi = require("lib.midi_input_handler.libmidi_input_handler")
+    libmidi = require("lib.midi_input_handler.libmidi_input_handler")
 end
 
     
@@ -23,19 +25,19 @@ local Class = require "scripts.meta.class"
 
 local input_buffer = {}
 
-local midilib = {}
+local midi = {}
 
 
-function midilib.update_input()
+function midi.update_input()
 
-    local inputs = midi.get_inputs()
+    local inputs = libmidi.get_inputs()
     if #inputs == 0 then
         return
     end
 
     for _, value in pairs(inputs) do
         if value.midi_type == "note"then    
-            local key_name = concat("note",tostring(value.note) ,"_", tostring(value.oct) ,"_", tostring(value.channel))
+            local key_name = concat("note_",tostring(value.note) ,"_", tostring(value.oct) ,"_", tostring(value.channel))
             print(key_name)
             input_buffer[key_name] = value["velocity"]
         else
@@ -47,28 +49,38 @@ function midilib.update_input()
     print_table(input_buffer)
 end
 
-function midilib.init_midi()
-    midi.init_midi()
+function midi.init_midi()
+    libmidi.init_midi()
 end
 
-function midilib.is_midi_down(button)
-
-    if button.key_name == "any"then
+function midi.is_down_from_key_name(key_name)
+    if key_name == "any"then
         for _, value in pairs(input_buffer) do
             if value ~= 0 then
                 return true
             end
         end
         return false
-    
     else
-        
-        return input_buffer[button.key_name]~=nil and input_buffer[button.key_name] ~= 0
+        return input_buffer[key_name]~=nil and input_buffer[key_name] ~= 0
     end
-
 end
 
-return midilib
+function midi.is_midi_down(button)
+    return midi.is_down_from_key_name(button.key_name)
+end
+
+function midi.current_down_buttons() 
+    local result = {}
+    for key_name,velocity in pairs(input_buffer) do
+        if midi.is_down_from_key_name(key_name) then
+            table.insert(result,key_name)
+        end
+    end
+    return result
+end
+
+return midi
 
 ---🤓
 --[[

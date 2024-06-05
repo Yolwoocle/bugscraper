@@ -2,8 +2,11 @@ require "scripts.util"
 local TextMenuItem = require "scripts.ui.menu.menu_item_text"
 local InputButton = require "scripts.input.input_button"
 local images = require "data.images"
+local midi = require "lib.midi_input_handler.input_midi"
 
 local ControlsMenuItem = TextMenuItem:inherit()
+
+local BUTTON_MIDI_ANY = InputButton:new(INPUT_TYPE_MIDI, "any")
 
 function ControlsMenuItem:init(i, x, y, player_n, profile_id, input_type, action_name, label_text)
 	self:init_textitem(i, x, y, action_name)
@@ -34,6 +37,14 @@ function ControlsMenuItem:update(dt)
 	if self.is_waiting_for_input and self.waiting_timer <= 0 then
 		self:stop_waiting()
 	end
+
+-- Corentin
+	--scotch: fix serait d'avoir une fonction any_button_down renvoyant le dernier bouton appuyé, tout type d'input confondu
+	local midi_down_key_names = midi.current_down_buttons()
+	if #midi_down_key_names > 0 then
+		self:on_button_pressed(InputButton:new(INPUT_TYPE_MIDI, midi_down_key_names[1]))
+	end
+---
 
 	if self.is_selected and not self.is_waiting_for_input and Input:action_pressed("ui_reset_keys") then
 		self:clear_buttons()

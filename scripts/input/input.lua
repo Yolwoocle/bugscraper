@@ -486,6 +486,8 @@ function InputManager:is_allowed_button(button)
         return KEY_CONSTANT_TO_IMAGE_NAME[button.key_name] ~= nil
     elseif button.type == INPUT_TYPE_CONTROLLER then
         return CONTROLLER_BUTTONS[button.key_name] ~= nil
+    elseif button.type == INPUT_TYPE_MIDI then
+        return true
     end
     return false
 end
@@ -509,19 +511,22 @@ function InputManager:generate_unknown_key_icon(icon, text)
 end
 
 -- Corentin
-function InputManager:generate_midi_key_icon(icon, octave, channel)
-    local old_canvas = love.graphics.getCanvas()
+function InputManager:generate_midi_key_icon(midi_type,arg1, arg2, arg3)
     local old_font = love.graphics.getFont()
+    local image = ({
+        note = images["btn_m_note_"..tostring(arg1)],
+        knob = images.btn_m_knob,
+        joystickx = images["btn_m_joystickx"],--!! todo imazg
+        joysticky = images["btn_m_joysticky"],
+    })[midi_type] or images.btn_k_unknown
 
-    local new_canvas = love.graphics.newCanvas(icon:getWidth(), icon:getHeight())
+    local new_canvas = love.graphics.newCanvas(image:getWidth(), image:getHeight())
     love.graphics.setFont(FONT_PICO8)
-    love.graphics.setCanvas(new_canvas)
-
-    love.graphics.draw(icon, 0, 0)
-    print_outline(COL_WHITE, COL_BLACK_BLUE, octave, 17, 10)
-    print_outline(COL_WHITE, COL_BLACK_BLUE, channel, 1, 1)
-
-    love.graphics.setCanvas(old_canvas)
+    exec_on_canvas(new_canvas, function()
+        love.graphics.draw(image, 0, 0)
+        print_outline(COL_WHITE, COL_BLACK_BLUE, tostring(arg2), 17, 10)
+        print_outline(COL_WHITE, COL_BLACK_BLUE, tostring(arg3), 1, 1)
+    end)
     love.graphics.setFont(old_font)
     return new_canvas
 end
@@ -537,6 +542,7 @@ function InputManager:get_action_primary_icon(player_n, action, brand_override)
 end
 
 function InputManager:get_button_icon(player_n, button, brand_override)
+    -- TODO: reset camera transform
     button = button or {}
 
     local img = nil
@@ -562,10 +568,10 @@ function InputManager:get_button_icon(player_n, button, brand_override)
 -- corentin
 	elseif button.type == INPUT_TYPE_MIDI then
         local split = split_str(button.key_name, "_")
-        local note_name = split[1]
-        local octave = split[2]
-        local channel = split[3]
-        return self:generate_midi_key_icon(images[concat("btn_m_", note_name)] or images.btn_k_unknown, octave, channel)
+        
+        local midi_type = split[1]
+
+        return self:generate_midi_key_icon(midi_type, split[2], split[3], split[4])
 --
 	end
     return img or self:generate_unknown_key_icon(images.btn_k_unknown, button.key_name or "?")

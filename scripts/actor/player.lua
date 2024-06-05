@@ -170,6 +170,7 @@ function Player:init(n, x, y, skin)
 
 	-- Debug 
 	self.dt = 1
+
 end
 
 function Player:update(dt)

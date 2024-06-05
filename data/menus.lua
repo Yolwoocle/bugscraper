@@ -493,6 +493,45 @@ local function generate_menus()
         }, DEFAULT_MENU_BG_COLOR, PROMPTS_CONTROLS)
     end
     
+
+--Corentin
+
+local function create_midi_controls_menu(title, input_profile_id)
+    return Menu:new(game, {
+        { "<<<<<<<<< "..title.." >>>>>>>>>" },
+        { "" },
+        { "🔄 "..Text:text("menu.options.input_submenu.reset_controls"), function() Input:reset_controls(input_profile_id, INPUT_TYPE_MIDI) end },
+        { "" },
+        { "<<< "..Text:text("menu.options.input_submenu.gameplay").." >>>" },
+        { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_MIDI, "left",  "⬅ "..Text:text("input.prompts.left") },
+        { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_MIDI, "right", "➡ "..Text:text("input.prompts.right") },
+        { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_MIDI, "up",    "⬆ "..Text:text("input.prompts.up") },
+        { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_MIDI, "down",  "⬇ "..Text:text("input.prompts.down") },
+        { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_MIDI, "jump",  "⏏ "..Text:text("input.prompts.jump") },
+        { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_MIDI, "shoot", "🔫 "..Text:text("input.prompts.shoot") },
+        { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_MIDI, "leave_game", "🔚 "..Text:text("input.prompts.leave_game") },
+        { "" },
+        { "<<< "..Text:text("menu.options.input_submenu.interface").." >>>" },
+        { Text:text("menu.options.input_submenu.note_ui_min_button") },
+        { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_MIDI, "ui_left",    "⬅ "..Text:text("input.prompts.ui_left")},
+        { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_MIDI, "ui_right",   "➡ "..Text:text("input.prompts.ui_right")},
+        { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_MIDI, "ui_up",      "⬆ "..Text:text("input.prompts.ui_up")},
+        { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_MIDI, "ui_down",    "⬇ "..Text:text("input.prompts.ui_down")},
+        { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_MIDI, "ui_select",  "👆 "..Text:text("input.prompts.ui_select")},
+        { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_MIDI, "ui_back",    "🔙 "..Text:text("input.prompts.ui_back")},
+        { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_MIDI, "pause",      "⏸ "..Text:text("input.prompts.pause") },
+        { "" },
+        { "<<< "..Text:text("menu.options.input_submenu.global").." >>>" },
+        { Text:text("menu.options.input_submenu.note_global_keyboard") },
+        { Text:text("menu.options.input_submenu.note_ui_min_button") },
+        { ControlsMenuItem, -1, "global", INPUT_TYPE_MIDI, "join_game",      "📥 "..Text:text("input.prompts.join") },
+        { ControlsMenuItem, -1, "global", INPUT_TYPE_MIDI, "split_keyboard", "🗄 "..Text:text("input.prompts.split_keyboard") },
+    }, DEFAULT_MENU_BG_COLOR, PROMPTS_CONTROLS)
+end
+
+---
+
+
     menus.controls_keyboard_solo =     create_keyboard_controls_menu(Text:text("menu.options.input_submenu.keyboard_solo"), "keyboard_solo")
     menus.controls_keyboard_split_p1 = create_keyboard_controls_menu(Text:text("menu.options.input_submenu.keyboard_p1"), "keyboard_split_p1")
     menus.controls_keyboard_split_p2 = create_keyboard_controls_menu(Text:text("menu.options.input_submenu.keyboard_p2"), "keyboard_split_p2")
@@ -500,6 +539,9 @@ local function generate_menus()
     menus.controls_controller_p2 =     create_controller_controls_menu(Text:text("menu.options.input_submenu.controller_p2"), "controller_2", 2)
     menus.controls_controller_p3 =     create_controller_controls_menu(Text:text("menu.options.input_submenu.controller_p3"), "controller_3", 3)
     menus.controls_controller_p4 =     create_controller_controls_menu(Text:text("menu.options.input_submenu.controller_p4"), "controller_4", 4)
+--Corentin
+    menus.controls_midi =              create_midi_controls_menu(Text:text("menu.options.input_submenu.midi_button"), "midi")
+---
 
     menus.game_over = Menu:new(game, {
         {"<<<<<<<<< "..Text:text("menu.game_over.title").." >>>>>>>>>"},

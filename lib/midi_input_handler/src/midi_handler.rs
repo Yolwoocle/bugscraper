@@ -108,7 +108,7 @@ fn callback(_timestamp: u64, data: &[u8], sender: &mut Sender<MidiInputPressed>)
             // #[cfg(debug_assertions)]
             // println!("pitch bend : ({x},{y}) on channel : {channel:?}");
             let axis = MidiValue {
-                value: -(y as i16) * 2,
+                value: (y as i16) - 64,
 
                 key: 0,
                 channel,
@@ -145,13 +145,6 @@ fn callback(_timestamp: u64, data: &[u8], sender: &mut Sender<MidiInputPressed>)
         }
 
         _ => {
-            // #[cfg(debug_assertions)]
-            // println!("unknow message received ! data : {:?}", data);
-            // let mut val: u16 = 0;
-            // for (i, n) in (0_u8..).zip(data.iter()) {
-            //     val += (*n as u16) << (8 * i);
-            // }
-            // sender.send(MidiInputPressed::Unknown(val)).unwrap(); //TODO HANDLE UNWRAP !!
             () //do nothing in case of an unknown input
         }
     }

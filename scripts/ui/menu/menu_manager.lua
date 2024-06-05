@@ -55,6 +55,10 @@ function MenuManager:update(dt)
 	self.joystick_wait_cooldown = math.max(self.joystick_wait_cooldown - dt, 0.0)
 end
 
+function MenuManager:get_menu(name)
+	return self.menus[name]
+end
+
 function MenuManager:update_current_menu(dt)
 	-- Navigate up and down
 	if Input:action_pressed("ui_up") then

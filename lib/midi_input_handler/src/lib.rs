@@ -79,8 +79,10 @@ fn lua_init_midi(_lua: &Lua, _: ()) -> LuaResult<()> {
 
 //renvoie les inputs du buffer
 fn lua_get_inputs(lua: &Lua, _: ()) -> LuaResult<LuaTable> {
-    // TODO: handle panic
-    let receiver = RECEIVER.get().unwrap();
+    let receiver = match RECEIVER.get(){
+        Some(rec)=> rec,
+        _ => return Err(LuaError::RuntimeError("cannot receive from receiver in lib.rs".to_string()))
+    };
 
     let buffer_table = lua.create_table()?;
 
@@ -107,13 +109,13 @@ fn midi_input_to_table<'a>(lua: &'a Lua, input: &'a MidiInputPressed) -> LuaResu
             input_table.set("channel", note.get_channel_num())?;
         }
         MidiInputPressed::JoystickX(midi_val) => {
-            midival_into_table(&input_table, midi_val, "JoystickX".to_string())?
+            midival_into_table(&input_table, midi_val, "joystickx".to_string())?
         }
         MidiInputPressed::JoystickY(midi_val) => {
-            midival_into_table(&input_table, midi_val, "JoystickY".to_string())?
+            midival_into_table(&input_table, midi_val, "joysticky".to_string())?
         }
         MidiInputPressed::Knob(midi_val) => {
-            midival_into_table(&input_table, midi_val, "Knob".to_string())?
+            midival_into_table(&input_table, midi_val, "knob".to_string())?
         }
         MidiInputPressed::Unknown(midi_val) => {
             input_table.set("midi_type", "unknown")?;

@@ -113,6 +113,9 @@ return {
                 controller_p2 = "CONTROLLER (Player 2)",
                 controller_p3 = "CONTROLLER (Player 3)",
                 controller_p4 = "CONTROLLER (Player 4)",
+
+                midi = "Midi keyboard",
+                midi_button = "MIDI KEYBOARD",
             },
             audio = {
                 title = "Audio",

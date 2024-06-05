@@ -59,7 +59,7 @@ COLLISION_TYPE_SEMISOLID = "semisolid"
 FONT_CHARACTERS = 
     " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz"..
     "{|}~ ¡¢£©®°¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿŒœŸЁАБВГДЕЖЗИЙКЛМНО"..
-    "ПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюяё€🔊🔉🔈🎵🎼🔳🔲📺🕐↖🛜▶⏸🔄🔘⬅➡⬆⬇⏏🔫🔚📥👆🔙🗄⌨🎮🎚❤"..
+    "ПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюяё€🔊🔉🔈🎵🎼🔳🔲📺🕐↖🛜▶⏸🔄🔘⬅➡⬆⬇⏏🔫🔚📥👆🔙🗄⌨🎮🎹🎚❤"..
     "✅❎🐜🔗💡⚠🕹🫨"
 
 --------------------------------------------- 
@@ -300,23 +300,23 @@ RAW_INPUT_MAP_DEFAULT_SPLIT_KEYBOARD_P2 = {
 
 --Corentin
 RAW_INPUT_MAP_DEFAULT_MIDI = {
-    left =      {"m_note0_4_1"},
-    right =     {"m_note4_4_1"},
-    up =        {"m_note3_4_1"},
-    down =      {"m_note2_4_1"},
-    jump =      {"m_note0_5_1"},--
-    shoot =     {"m_note6_5_1"},
+    left =      {"m_note_0_4_1"},
+    right =     {"m_note_4_4_1"},
+    up =        {"m_note_3_4_1"},
+    down =      {"m_note_2_4_1"},
+    jump =      {"m_note_0_5_1"},--
+    shoot =     {"m_note_6_5_1"},
     
-    pause =     {"m_note0_6_1"},
-    ui_select = {"m_note0_5_1"},
-    ui_back =   {"m_note6_5_1"},
-    ui_left =   {"m_note0_4_1"},
-    ui_right =  {"m_note4_4_1"},
-    ui_up =     {"m_note3_4_1"},
-    ui_down =   {"m_note2_4_1"},
-    ui_reset_keys = {"m_note4_3_10"},
+    pause =     {"m_note_0_6_1"},
+    ui_select = {"m_note_0_5_1"},
+    ui_back =   {"m_note_6_5_1"},
+    ui_left =   {"m_note_0_4_1"},
+    ui_right =  {"m_note_4_4_1"},
+    ui_up =     {"m_note_3_4_1"},
+    ui_down =   {"m_note_2_4_1"},
+    ui_reset_keys = {"m_note_4_3_10"},
     split_keyboard = {},
-    leave_game = {"m_note11_5_1"},
+    leave_game = {"m_note_11_5_1"},
     join_game = {},
 
     debug = {},

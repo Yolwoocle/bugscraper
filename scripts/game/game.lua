@@ -583,6 +583,18 @@ function Game:listen_for_player_join(dt)
 					end
 				end
 			end
+
+			--Corentin
+			if last_button.type == INPUT_TYPE_MIDI and self.menu_manager and self.menu_manager.menus then
+				self.menu_manager:get_menu("options_input"):add_items({
+					{""},
+					{"<<< "..Text:text("menu.options.input_submenu.midi").." >>>"},
+					{"🎹 "..Text:text("menu.options.input_submenu.midi"), function()
+						self.menu_manager:set_menu("controls_midi")
+					end},
+				})	
+			end
+			---
 		end
 		
 		if last_button and Input:can_add_user() and can_add_specific_user then

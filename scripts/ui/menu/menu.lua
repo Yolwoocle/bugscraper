@@ -7,19 +7,6 @@ local Menu = Class:inherit()
 function Menu:init(game, items, bg_color, prompts, extra_draw)
 	self.items = {}
 	self.is_menu = true
-	
-	local th = get_text_height() + 2
-	self.height = (#items - 1) * th
-
-	for i, parms in pairs(items) do
-		local parm1 = parms[1]
-		if type(parm1) == "string" then
-			self.items[i] = TextMenuItem:new(i, CANVAS_WIDTH / 2, (i - 1) * th, unpack(parms))
-		else
-			local class = table.remove(parms, 1)
-			self.items[i] = class:new(i, CANVAS_WIDTH / 2, (i - 1) * th, unpack(parms))
-		end
-	end
 
 	self.bg_color = bg_color or { 1, 1, 1, 0 }
 	self.padding_y = 50
@@ -27,17 +14,44 @@ function Menu:init(game, items, bg_color, prompts, extra_draw)
 	self.prompts = prompts or {}
 	self.second_layer = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
 
+	self.extra_draw = extra_draw or function() end
+
+	self.unprocessed_items = items --scotch
+	self:process_items(items)
+
+	self.scroll_position = self.def_y
+	self.target_scroll_position = self.def_y
+end
+
+function Menu:add_items(items)
+	for _, item in pairs(items) do
+		table.insert(self.unprocessed_items, item)
+	end
+	self:process_items(self.unprocessed_items)
+end
+
+function Menu:process_items(items)
+	local th = get_text_height() + 2
+	self.item_height = th
+
+	for i, parms in pairs(items) do
+		local parm1 = parms[1]
+		if type(parm1) == "string" then
+			self.items[i] = TextMenuItem:new(i, CANVAS_WIDTH / 2, (i - 1) * self.item_height, unpack(parms))
+		else
+			local class = parm1
+			self.items[i] = class:new(i, CANVAS_WIDTH / 2, (i - 1) * self.item_height, unpack(parms, 2))
+		end
+	end
+
+	self.height = (#items - 1) * th
+
 	self.is_scrollable = self.height > (CANVAS_HEIGHT - self.padding_y)
 	if self.is_scrollable then
 		self.def_y = -self.padding_y
 	else
 		self.def_y = -CANVAS_HEIGHT / 2 + self.height / 2
 	end
-
-	self.scroll_position = self.def_y
-	self.target_scroll_position = self.def_y
-
-	self.extra_draw = extra_draw or function() end
 end
 
 function Menu:update(dt)

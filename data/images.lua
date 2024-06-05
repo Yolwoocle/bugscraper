@@ -247,18 +247,19 @@ local img_names = {
 
 	-----------------------------------------------------
 
-	btn_m_note0 = "buttons/midi/btn_m_note0",
-	btn_m_note1 = "buttons/midi/btn_m_note1",
-	btn_m_note2 = "buttons/midi/btn_m_note2",
-	btn_m_note3 = "buttons/midi/btn_m_note3",
-	btn_m_note4 = "buttons/midi/btn_m_note4",
-	btn_m_note5 = "buttons/midi/btn_m_note5",
-	btn_m_note6 = "buttons/midi/btn_m_note6",
-	btn_m_note7 = "buttons/midi/btn_m_note7",
-	btn_m_note8 = "buttons/midi/btn_m_note8",
-	btn_m_note9 = "buttons/midi/btn_m_note9",
-	btn_m_note10 = "buttons/midi/btn_m_note10",
-	btn_m_note11 = "buttons/midi/btn_m_note11",
+	btn_m_note_0 =  "buttons/midi/btn_m_note_0",
+	btn_m_note_1 =  "buttons/midi/btn_m_note_1",
+	btn_m_note_2 =  "buttons/midi/btn_m_note_2",
+	btn_m_note_3 =  "buttons/midi/btn_m_note_3",
+	btn_m_note_4 =  "buttons/midi/btn_m_note_4",
+	btn_m_note_5 =  "buttons/midi/btn_m_note_5",
+	btn_m_note_6 =  "buttons/midi/btn_m_note_6",
+	btn_m_note_7 =  "buttons/midi/btn_m_note_7",
+	btn_m_note_8 =  "buttons/midi/btn_m_note_8",
+	btn_m_note_9 =  "buttons/midi/btn_m_note_9",
+	btn_m_note_10 = "buttons/midi/btn_m_note_10",
+	btn_m_note_11 = "buttons/midi/btn_m_note_11",
+	btn_m_knob =   "buttons/midi/btn_m_knob",
 
 }
 for id, path in pairs(img_names) do
