@@ -93,20 +93,14 @@ fn callback(_timestamp: u64, data: &[u8], sender: &mut Sender<MidiInputPressed>)
     match message {
         MidiMessage::NoteOn(channel, key) => {
             let note: Note = Note::from(key, channel);
-            #[cfg(debug_assertions)]
-            println!("{} on channel : {channel:?} ", note.to_string());
             sender.send(MidiInputPressed::Note(note)).expect("corresponding receiver has already been deallocated (callback)");
         }
         MidiMessage::NoteOff(channel, key) => {
             let note: Note = Note::from(key, channel);
-            // #[cfg(debug_assertions)]
-            // println!("{} on channel : {channel:?} ", note.to_string());
             sender.send(MidiInputPressed::Note(note)).expect("corresponding receiver has already been deallocated (callback)");
         }
 
         MidiMessage::PitchBend(channel, _x, y) => {
-            // #[cfg(debug_assertions)]
-            // println!("pitch bend : ({x},{y}) on channel : {channel:?}");
             let axis = MidiValue {
                 value: (y as i16) - 64,
 
@@ -117,11 +111,6 @@ fn callback(_timestamp: u64, data: &[u8], sender: &mut Sender<MidiInputPressed>)
         }
 
         MidiMessage::PolyKeyPressure(channel, key) => {
-            // #[cfg(debug_assertions)]
-            // println!(
-            //     "polykey pressure : ({:?}) on channel : {channel:?}",
-            //     key.key
-            // );
             let axis = MidiValue {
                 value: key.value as i16,
                 key: key.key,
@@ -131,11 +120,6 @@ fn callback(_timestamp: u64, data: &[u8], sender: &mut Sender<MidiInputPressed>)
         }
 
         MidiMessage::ControlChange(channel, controle) => {
-            // #[cfg(debug_assertions)]
-            // println!(
-            //     "control change : ({:?}) -> ({:?}) on channel : {channel:?}",
-            //     controle.control, controle.value
-            // );
             let knob = MidiValue {
                 value: i16::from(controle.value),
                 key: controle.control,
@@ -144,7 +128,20 @@ fn callback(_timestamp: u64, data: &[u8], sender: &mut Sender<MidiInputPressed>)
             sender.send(MidiInputPressed::Knob(knob)).expect("corresponding receiver has already been deallocated (callback)");
         }
 
-        _ => {
+        MidiMessage::SysEx(sys_ex)=>{
+            
+            println!("[DEBUG] sys ex message :{sys_ex:?}");
+        }
+
+        MidiMessage::ProgramChange(channel,value )=>{
+            println!("[DEBUG] programe change :{value} at channel :{channel:?}");
+        }
+
+        MidiMessage::ChannelPressure(channel,value )=>{
+            println!("[DEBUG] channel pressure :{value} at channel :{channel:?}");
+        }
+
+        MidiMessage::Invalid => {
             () //do nothing in case of an unknown input
         }
     }

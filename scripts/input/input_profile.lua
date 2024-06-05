@@ -6,7 +6,7 @@ local InputProfile = Class:inherit()
 function InputProfile:init(profile_id, primary_input_type, mappings)
     self.profile_id = profile_id
     self.primary_input_type = primary_input_type
-    print_debug("crzeate", profile_id, primary_input_type)
+    
 
     self.default_mappings = copy_table(mappings)
     self.mappings = copy_table(mappings)

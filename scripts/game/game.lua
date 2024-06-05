@@ -27,6 +27,10 @@ require "scripts.meta.post_constants"
 
 local Game = Class:inherit()
 
+--Corentin
+local has_midi_created =false
+--
+
 function Game:init()
 	-- Global singletons
 	Text = TextManager:new()
@@ -575,17 +579,26 @@ function Game:listen_for_player_join(dt)
 		local can_add_specific_user = true
 		if last_button then 
 			if last_button.type == INPUT_TYPE_KEYBOARD or last_button.type == INPUT_TYPE_MIDI then
-				print_debug(last_button.type, Input:get_number_of_users(last_button.type))
 				can_add_specific_user = Input:get_number_of_users(last_button.type) <= 0
-				for i = 1, MAX_NUMBER_OF_PLAYERS do
-					if Input.users[i] ~= nil then
-						print_debug(i, Input.users[i].input_profile_id, Input.users[i]:get_input_profile():get_primary_input_type(), Input.users[i]:get_primary_input_type() )
-					end
-				end
+---Corentin
+				-- for i = 1, MAX_NUMBER_OF_PLAYERS do
+				-- 	if Input.users[i] ~= nil then
+				-- 		print_debug(i, Input.users[i].input_profile_id, Input.users[i]:get_input_profile():get_primary_input_type(), Input.users[i]:get_primary_input_type() )
+				-- 	end
+				-- end
+---				
 			end
 
 			--Corentin
-			if last_button.type == INPUT_TYPE_MIDI and self.menu_manager and self.menu_manager.menus then
+			if last_button.type == INPUT_TYPE_MIDI and self.menu_manager and self.menu_manager.menus and not has_midi_created then
+
+				print("[DEBUG :\n")
+				for k,v in pairs(self.menu_manager:get_menu("options_input").items) do
+					print_table(v)
+				end
+
+				print("]\n------^^^------\n")
+
 				self.menu_manager:get_menu("options_input"):add_items({
 					{""},
 					{"<<< "..Text:text("menu.options.input_submenu.midi").." >>>"},
@@ -593,6 +606,8 @@ function Game:listen_for_player_join(dt)
 						self.menu_manager:set_menu("controls_midi")
 					end},
 				})	
+
+				has_midi_created = true
 			end
 			---
 		end

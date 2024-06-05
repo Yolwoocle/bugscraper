@@ -38,15 +38,15 @@ function midi.update_input()
     for _, value in pairs(inputs) do
         if value.midi_type == "note"then    
             local key_name = concat("note_",tostring(value.note) ,"_", tostring(value.oct) ,"_", tostring(value.channel))
-            print(key_name)
+            --print(key_name)
             input_buffer[key_name] = value["velocity"]
         else
             local key_name = concat(value["midi_type"],"_",tostring(value.key),"_",tostring(value.channel))
-            print(key_name)
+            --print(key_name)
             input_buffer[key_name] = value["value"]
         end
     end
-    print_table(input_buffer)
+    --print_table(input_buffer)
 end
 
 function midi.init_midi()
