@@ -116,14 +116,21 @@ end
 
 local TextParticle = Particle:inherit()
 
-function TextParticle:init(x,y,str,spawn_delay,col)
+function TextParticle:init(x,y,str,spawn_delay,col, stay_time, text_scale, outline_color)
 	self:init_particle(x,y,s,r, vx,vy,vs,vr, life, g, is_solid)
 	self.str = str
+	self.text_scale = text_scale or 1
+
+	self.spawn_y = y
 
 	self.col_in = col
+	self.col_out = outline_color
 	self.vy = -5
 	self.vy2 = 0
 	self.spawn_delay = spawn_delay
+	self.stay_timer = stay_time or 0.1
+
+	self.min_oy = -50
 end
 function TextParticle:update(dt)
 	if self.spawn_delay > 0 then
@@ -135,10 +142,15 @@ function TextParticle:update(dt)
 	self.y = self.y + self.vy
 	
 	if abs(self.vy) <= 0.005 then
-		self.vy2 = self.vy2 - dt*2
-		self.y = self.y + self.vy2
+		self.stay_timer = math.max(0, self.stay_timer-dt)
+
+		if self.stay_timer <= 0 then
+			self.vy2 = self.vy2 - dt*2
+			self.y = self.y + self.vy2
+		end		
 	end
-	if abs(self.vy) <= 0.001 then
+
+	if self.y <= self.spawn_y + self.min_oy then
 		self.is_removed = true
 	end
 end
@@ -149,8 +161,9 @@ function TextParticle:draw()
 
 	local col = COL_WHITE
 	if self.col_in then col = self.col_in end
-	print_outline(col, COL_BLACK_BLUE, self.str, self.x, self.y)
+	print_outline(col, self.col_out or COL_BLACK_BLUE, self.str, self.x, self.y, nil, nil, self.text_scale)
 end
+
 
 
 ------------------------------------------------------------
@@ -697,16 +710,19 @@ function ParticleSystem:smash_flash(x, y, r, col)
 	self:add_particle(SmashFlashParticle:new(x, y, r, col), PARTICLE_LAYER_FRONT)
 end
 
-function ParticleSystem:letter(x, y, str, spawn_delay, col)
-	self:add_particle(TextParticle:new(x, y, str, spawn_delay, col))
+function ParticleSystem:letter(x, y, str, spawn_delay, col, stay_time, text_scale, outline_color)
+	self:add_particle(TextParticle:new(x, y, str, spawn_delay, col, stay_time, text_scale, outline_color))
 end
 
-function ParticleSystem:word(x, y, str, col)
-	local x = x - get_text_width(str)/2
+function ParticleSystem:word(x, y, str, col, stay_time, text_scale, outline_color)
+	stay_time = param(stay_time, 0)
+	text_scale = param(text_scale, 1)
+
+	local x = x - (text_scale * get_text_width(str))/2
 	for i=1, #str do
 		local letter = utf8.sub(str, i,i)
-		Particles:letter(x, y, letter, i*0.05, col)
-		x = x + get_text_width(letter)
+		Particles:letter(x, y, letter, i*0.05, col, stay_time, text_scale, outline_color)
+		x = x + get_text_width(letter) * text_scale
 	end
 end
 

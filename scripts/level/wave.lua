@@ -17,6 +17,14 @@ function Wave:init(params)
 	self.elevator_layers = param(params.elevator_layers, {})
 	self.run = param(params.run, nil)
 
+	self.title = param(params.title, nil)
+	self.title_x = param(params.title_x, CANVAS_WIDTH/2)
+	self.title_y = param(params.title_y, CANVAS_HEIGHT/2)
+	self.title_color = param(params.title_color, COL_BLACK_BLUE)
+	self.title_stay_time = param(params.title_stay_time, 3)
+	self.title_scale = param(params.title_scale, 2)
+	self.title_outline_color = param(params.title_outline_color, COL_WHITE)
+
 	self.enable_stomp_arrow_tutorial = param(params.enable_stomp_arrow_tutorial, false)
 
 	self.background = param(params.background, nil)
@@ -120,6 +128,12 @@ end
 
 function Wave:get_floor_type()
 	return self.floor_type
+end
+
+function Wave:show_title()
+	if self.title then
+		Particles:word(self.title_x, self.title_y, self.title, self.title_color, self.title_stay_time, self.title_scale, self.title_outline_color)
+	end
 end
 
 function Wave:enable_wave_side_effects(level)

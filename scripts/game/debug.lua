@@ -91,8 +91,9 @@ function Debug:init(game)
             game:apply_upgrade(upgrades.UpgradeSoda:new())
         end},
         ["t"] = {"particle", function()
+            Particles:word(CANVAS_WIDTH/2, CANVAS_HEIGHT/2+100, "HELLO!!", COL_WHITE, 1)
             for i = 1, 50 do
-                Particles:spark(CANVAS_WIDTH/2, CANVAS_HEIGHT/2 + 50)
+                -- Particles:spark(CANVAS_WIDTH/2, CANVAS_HEIGHT/2 + 50)
             end
         end},
         ["d"] = {"spawn", function()
@@ -103,9 +104,7 @@ function Debug:init(game)
 
             -- local arc = enemies.ElectricRays:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.5)
             -- local arc = enemies.DrillBee:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.5);
-            local arc = enemies.SnailShelled:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.5);
-            game:new_actor(arc)
-            local arc = enemies.SnailShelledBouncy:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.5);
+            local arc = enemies.Centipede:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.5, 15);
             game:new_actor(arc)
         end},
         ["r"] = {"start game", function()

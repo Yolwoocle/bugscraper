@@ -65,7 +65,7 @@ function Level:init(game)
     self.enemy_buffer = {}
 
 	self.elevator = Elevator:new(self)
-	self.background = BackgroundServers:new(self)
+	self.background = BackgroundDots:new(self)
 	self.background:set_def_speed(self.def_level_speed)
 	self.cafeteria_background = BackgroundCafeteria:new(self)
 
@@ -147,6 +147,7 @@ function Level:update_elevator_progress(dt)
 
 		if self.new_wave_progress <= 0 then
 			self.elevator:open_door(ternary(self:is_on_cafeteria(), nil, 1.4))
+			self.current_wave:show_title()
 			self:increment_floor()
 			self.new_wave_progress = 1.0
 			self.new_wave_animation_state = "opening"
@@ -384,7 +385,7 @@ function Level:assign_cafeteria_upgrades()
 		{upgrades.UpgradeMilk, 1},
 		{upgrades.UpgradePeanut, 1},
 		{upgrades.UpgradeEnergyDrink, 1},
-		{upgrades.UpgradeSoda, 1000},
+		{upgrades.UpgradeSoda, 1},
 	}
 
 	for _, actor in pairs(self.game.actors) do

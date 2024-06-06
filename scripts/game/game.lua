@@ -1,3 +1,6 @@
+local TextManager = require "scripts.text"
+Text = TextManager:new()
+
 local Class = require "scripts.meta.class"
 local CollisionManager = require "scripts.physics.collision"
 local Player = require "scripts.actor.player"
@@ -13,7 +16,6 @@ local GameUI = require "scripts.ui.game_ui"
 local Debug = require "scripts.game.debug"
 local Camera = require "scripts.game.camera"
 local Layer = require "scripts.graphics.layer"
-local TextManager = require "scripts.text"
 local ScreenshotManager = require "scripts.screenshot"
 local upgrades          = require "data.upgrades"
 local shaders           = require "data.shaders"
@@ -32,7 +34,6 @@ local Game = Class:inherit()
 
 function Game:init()
 	-- Global singletons
-	Text = TextManager:new()
 	Input = InputManager:new(self)
 	Options = OptionsManager:new(self)
 	Collision = CollisionManager:new()

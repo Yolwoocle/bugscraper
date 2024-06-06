@@ -9,6 +9,13 @@ return {
         win_wishlist = "Wishlist on Steam :)",
         win_prompt = "[Pause to continue]",
         warning_web_controller = "Some browsers may not have proper controller support"
+
+    },
+    level = {
+        short_world_prefix = "W%s", -- Example in english: "W1", stands for "World 1"
+
+        world_1 = "The offices",
+        world_2 = "The server room",
     },
     gun = {
         machinegun = "pea gun",
@@ -38,7 +45,7 @@ return {
         },
         energy_drink = {
             title = "Energy Drink",
-            description = "Fury decays slower",
+            description = "Fury bar decays slower",
         },
         soda = {
             title = "Soda",

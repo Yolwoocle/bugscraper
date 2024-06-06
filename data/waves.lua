@@ -83,6 +83,10 @@ local function new_wave(params)
 	return Wave:new(params)
 end
 
+local function get_world_name(n)
+	return string.format("%s - %s", Text:text("level.short_world_prefix", tostring(n)), Text:text("level.world_"..tostring(n)))
+end
+
 local waves = {	
 	-- debug_wave(),
 	-- new_cafeteria(),
@@ -95,6 +99,9 @@ local waves = {
 			{E.Fly, 3},
 		},
 		music = "w1",
+
+		title = get_world_name("1"),
+		title_color = COL_MID_BLUE,
 	}),
 
 	
@@ -143,9 +150,9 @@ local waves = {
 		max = 8,
 		enemies = {
 			-- 
+			{E.Larva, 4},
 			{E.Fly, 4},
 			{E.Woodlouse, 2},
-			{E.Larva, 4},
 			{E.SnailShelled, 3},
 			{E.Slug, 2},
 		},
@@ -163,8 +170,7 @@ local waves = {
 
 	new_wave({
 		-- Mushroom ant intro
-		min = 5,
-		max = 5,
+		roll_type = WAVE_ROLL_TYPE_FIXED,
 		enemies = {
 			{E.Fly, 2},
 			{E.MushroomAnt, 4},
@@ -194,7 +200,7 @@ local waves = {
 		enemies = {
 			{E.Larva, 1},
 			{E.Fly, 2},
-			{E.SpikedFly, 4},c
+			{E.SpikedFly, 4},
 		},
 	}),
 
@@ -202,6 +208,7 @@ local waves = {
 		min = 6,
 		max = 8,
 		enemies = {
+			{E.Larva, 1},
 			{E.Fly, 2},
 			{E.SpikedFly, 2},
 			{E.MushroomAnt, 4},
@@ -212,9 +219,10 @@ local waves = {
 
 	new_wave({
 		-- Spider intro
-		min = 4,
-		max = 6,
+		min = 6,
+		max = 8,
 		enemies = {
+			{E.Larva, 1},
 			{E.Slug, 2},
 			{E.Spider, 4},
 		},
@@ -255,6 +263,7 @@ local waves = {
 		min = 7,
 		max = 9,
 		enemies = {
+			{E.Larva, 1},
 			{E.SpikedFly, 2},
 			{E.MushroomAnt, 2},
 			{E.SnailShelled, 2},
@@ -303,6 +312,9 @@ local waves = {
 		},
 		background = backgrounds.BackgroundServers:new(),
 		music = "w2",
+
+		title = get_world_name("2"),
+		title_color = COL_MID_GREEN,
 	}),
 	-- }, 4)),
 	--]]

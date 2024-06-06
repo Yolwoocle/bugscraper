@@ -11,7 +11,7 @@ function ChipBug:init(x, y, spr)
 end
 
 function ChipBug:init_fly(x, y, spr)
-    self:init_enemy(x,y, spr or images.stink_bug_1)
+    self:init_enemy(x,y, spr or images.chip_bug_1)
     self.name = "chip_bug"
     self.is_flying = true
     self.life = 10
@@ -27,8 +27,8 @@ function ChipBug:init_fly(x, y, spr)
     self.gravity = 0
     self.friction_y = self.friction_x
 
-    self.anim_frame_len = 0.05
-    self.anim_frames = {images.stink_bug_1, images.stink_bug_1}
+    self.anim_frame_len = 0.2
+    self.anim_frames = {images.chip_bug_1, images.chip_bug_2, images.chip_bug_3, images.chip_bug_2}
 	self.flip_mode = ENEMY_FLIP_MODE_MANUAL
 
     self.spr:set_anchor(SPRITE_ANCHOR_CENTER_CENTER)
