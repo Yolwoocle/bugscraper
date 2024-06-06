@@ -354,18 +354,10 @@ function Actor:move_to(goal_x,goal_y)
 end
 
 function Actor:set_pos(x, y)
-	if self.name == "button_small" then
-		-- print_debug("set pos 1 ", x, y, " | ", random_neighbor(1))
-	end
-	self.x = self.x or x
-	self.y = self.y or y 
-	if self.name == "button_small" then
-		-- print_debug("set pos 2 ", x, y, " | ", random_neighbor(1))
-	end
+	self.x = x or self.x
+	self.y = y or self.y 
+
 	Collision:update(self, self.x, self.y)
-	if self.name == "button_small" then
-		-- print_debug("set pos 3 ", x, y, " | ", random_neighbor(1))
-	end
 end
 
 function Actor:set_rider(actor)

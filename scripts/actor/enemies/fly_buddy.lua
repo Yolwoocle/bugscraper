@@ -21,7 +21,6 @@ function FlyBuddy:init(x, y, is_child)
     -- self.buzz_source:setPitch(1.5)
 
     self.is_immune_to_electricity = true
-    self.is_electrified = false
     self.is_stompable = false
     self.buddy_distance = 8*16
 
@@ -48,37 +47,42 @@ function FlyBuddy:update(dt)
         Particles:spark(self.mid_x, self.mid_y, 1)
     end
     
+    self:remove_dead_parent_or_child()
+
+    print_debug("t", self.child, self.electric_arc)
     if self.child and self.electric_arc then
-        self.electric_arc:set_pos(self.mid_x, self.mid_y)
-    end
-    
-    if self.child and self.child.is_dead then
-        self.child = nil
-    end
-    if self.parent and self.parent.is_dead then
-        self.parent = nil
+        self.electric_arc:set_segment(
+            self.mid_x, self.mid_y,
+            self.child.mid_x, self.child.mid_y
+        )
     end
     
     if self.electric_arc and self.child == nil and self.parent == nil then
         self.electric_arc:kill()
     end
-
+    
+    self.debug_values[1] = ternary(self.child ~= nil, "parent", "child")
     -- if (self.parent and self.parent.is_dead) or (self.child and self.child.is_dead) then
-    --     self:kill()
-    -- end
-
+        --     self:kill()
+        -- end
+        
     local buddy = param(self.parent, param(self.child, nil))
     if buddy and dist(buddy.mid_x, buddy.mid_y, self.mid_x, self.mid_y) <= self.buddy_distance then
         self:apply_force_from(5, buddy)
     end
 end
 
+function FlyBuddy:remove_dead_parent_or_child()
+    if self.child and self.child.is_dead then
+        self.child = nil
+    end
+    if self.parent and self.parent.is_dead then
+        self.parent = nil
+    end
+end
+    
 function FlyBuddy:draw()
 	self:draw_enemy()
-end
-
-function FlyBuddy:on_hit_electrictiy()
-    self.is_electrified = true
 end
 
 function FlyBuddy:pause_repeating_sounds() --scotch

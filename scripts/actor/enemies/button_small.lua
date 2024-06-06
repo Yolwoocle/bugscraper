@@ -32,8 +32,6 @@ end
 function ButtonSmall:update_button_small(dt)
     self:update_enemy(dt)
 
-    self.debug_values[1] = self.is_affected_by_bounds
-
     if self.is_pressed then
         self.pressed_disappear_timer = self.pressed_disappear_timer - dt
         if self.pressed_disappear_timer <= 0 then
