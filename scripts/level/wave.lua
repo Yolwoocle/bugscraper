@@ -97,14 +97,6 @@ function Wave:spawn(rect)
 		
 		local enemy_instance = enemy_class:new(position[1], position[2], unpack(args))
 
-		-- Center enemy
-		-- enemy_instance:set_pos(
-		-- 	floor(enemy_instance.x - enemy_instance.w/2),
-		-- 	floor(enemy_instance.y - enemy_instance.h/2)
-		-- )
-		-- If button is summoned, last wave happened
-		-- self.game:on_button_glass_spawn(enemy_instance)
-		
 		-- Prevent collisions with floor
 		if enemy_instance.y + enemy_instance.h > rect.by then
 			enemy_instance:set_pos(enemy_instance.x, rect.by - enemy_instance.h)
@@ -112,14 +104,21 @@ function Wave:spawn(rect)
 
 		game:new_actor(enemy_instance)
 		
-		local cur_enemy = enemy_instance
+		-- Passengers / riders
+		local cur_rider = enemy_instance
 		local limit = 10
-		while cur_enemy ~= nil and limit >= 0 do
-			table.insert(spawned_enemies, cur_enemy)
-			cur_enemy:set_active(false)
-
-			cur_enemy = cur_enemy.rider
+		while cur_rider ~= nil and limit >= 0 do
+			table.insert(spawned_enemies, cur_rider)
+			cur_rider:set_active(false)
+			
+			cur_rider = cur_rider.rider
 			limit = limit - 1
+		end
+		
+		-- Extra spawned enemies
+		for _, extra_enemy in pairs(enemy_instance.spawned_actors or {}) do
+			table.insert(spawned_enemies, extra_enemy)
+			extra_enemy:set_active(false)
 		end
 	end
 	

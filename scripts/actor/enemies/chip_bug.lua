@@ -1,5 +1,6 @@
 require "scripts.util"
 local Enemy = require "scripts.actor.enemy"
+local Timer = require "scripts.timer"
 local PoisonCloud = require "scripts.actor.enemies.poison_cloud"
 local sounds = require "data.sounds"
 local images = require "data.images"
@@ -32,8 +33,10 @@ function ChipBug:init_fly(x, y, spr)
 	self.flip_mode = ENEMY_FLIP_MODE_MANUAL
 
     self.spr:set_anchor(SPRITE_ANCHOR_CENTER_CENTER)
-    self.sound_death = "stink_bug_death"
-    self.sound_stomp = "stink_bug_death"
+    self.min_walk_duration = 0.3
+    self.max_walk_duration = 1.0
+    self.turn_timer = Timer:new(self:get_random_walk_duration())
+    self.turn_timer:start()
 end
 
 function ChipBug:update(dt)
@@ -43,7 +46,10 @@ end
 function ChipBug:update_stink_bug(dt)
     self:update_enemy(dt)
 
-    if random_range(0, 1) < 0.02 then
+    if self.turn_timer:update(dt) then
+        self.turn_timer:set_duration(self:get_random_walk_duration())
+        self.turn_timer:start()
+
         self.direction = (self.direction + random_sample({-1, 1})) % 4
     end
     
@@ -55,6 +61,10 @@ function ChipBug:update_stink_bug(dt)
     if random_range(0, 1) < 0.02 then
         -- Particles:word(self.mid_x, self.mid_y, random_sample{"0", "1"}, random_sample{COL_LIGHT_GREEN, COL_MID_GREEN})
     end
+end
+
+function ChipBug:get_random_walk_duration()
+    return random_range(self.min_walk_duration, self.max_walk_duration)
 end
 
 function ChipBug:draw()

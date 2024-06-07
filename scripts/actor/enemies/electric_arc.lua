@@ -119,8 +119,6 @@ end
 function ElectricArc:draw()
     self:draw_prop()
 
-    circle_color(COL_RED, "fill", self.segment.ax, self.segment.ay, 32)
-    circle_color(COL_CYAN, "fill", self.segment.bx, self.segment.by, 32)
     self:draw_lightning()
 end
 

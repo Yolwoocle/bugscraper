@@ -35,9 +35,20 @@ function Fly:update(dt)
     self:update_fly(dt)
 end
 
+function Fly:disable_buzzing()
+    self.buzz_source = nil
+    self.buzz_is_started = false
+end
+
 function Fly:update_fly(dt)
     self:update_enemy(dt)
+    if self.buzz_source then
+        self:update_buzz(dt)
+    end
+    -- audio:set_source_position_relative_to_object(self.buzz_source, self)
+end
 
+function Fly:update_buzz(dt)
     if not self.buzz_is_started then
         self.buzz_source:play()
         self.buzz_is_started = true
@@ -48,18 +59,23 @@ function Fly:update_fly(dt)
     else
         self.buzz_source:setVolume(0)
     end
-    -- audio:set_source_position_relative_to_object(self.buzz_source, self)
 end
 
 function Fly:pause_repeating_sounds() --scotch
-    self.buzz_source:setVolume(0)
+    if self.buzz_source then
+        self.buzz_source:setVolume(0)
+    end
 end
 function Fly:play_repeating_sounds()
-    self.buzz_source:setVolume(1)
+    if self.buzz_source then
+        self.buzz_source:setVolume(1)
+    end 
 end
 
 function Fly:on_death()
-    self.buzz_source:stop()
+    if self.buzz_source then
+        self.buzz_source:stop()
+    end
 end
 
 return Fly

@@ -43,7 +43,6 @@ function MusicDiskWeb:pause()
 end
 
 function MusicDiskWeb:play()
-    print_debug("play")
     for source_mode, source in pairs(self.sources) do 
         source:play()
         if source_mode == self.music_mode then

@@ -44,8 +44,8 @@ function WorldGenerator:generate_cabin()
 	-- local bx, by = ax+w, ay+h
 
 	-- cabin
-	-- self:write_rect(self.shaft_rect, TILE_METAL)
-	self:write_rect(Rect:new(self.shaft_rect.ax, self.shaft_rect.by, self.shaft_rect.bx, self.shaft_rect.by), TILE_METAL)
+	self:write_rect(self.shaft_rect, TILE_METAL)
+	-- self:write_rect(Rect:new(self.shaft_rect.ax, self.shaft_rect.by, self.shaft_rect.bx, self.shaft_rect.by), TILE_METAL)
 	
 	-- chains
 	for iy = 0,self.shaft_rect.ay-1 do

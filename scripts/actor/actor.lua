@@ -91,6 +91,9 @@ function Actor:init_actor(x, y, w, h, spr, args)
 		return type
 	end
 
+	-- If an actor spawns other enemies, it should put them into this table
+	self.spawned_actors = {}
+
 	self.debug_values = {}
 end
 

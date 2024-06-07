@@ -683,11 +683,13 @@ function Game:set_music_volume(vol)
 	self.music_player:set_volume(vol)
 end
 
-function Game:new_actor(actor)
+function Game:new_actor(actor, buffer_enemy)
 	if #self.actors >= self.actor_limit then
 		actor:remove()
+		actor:final_remove()
 		return
 	end
+
 	table.insert(self.actors, actor)
 end
 

@@ -140,7 +140,6 @@ function ControlsMenuItem:gamepadaxis(joystick, axis, value)
 	local user_n = ternary(Input:get_user(self.player_n) == nil, Input:get_joystick_user_n(joystick), self.player_n)
 
 	local key_name = Input:axis_to_key_name(axis, value)
-	print_debug(axis)
 	if Input:is_axis_down(user_n, key_name) then
 		self:on_button_pressed(InputButton:new(INPUT_TYPE_CONTROLLER, key_name))
 	end

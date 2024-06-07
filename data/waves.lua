@@ -305,10 +305,10 @@ local waves = {
 
 	-- Floor 25
 	new_wave({
-		min = 4,
-		max = 4,
+		min = 1,
+		max = 1,
 		enemies = {
-			{E.ChipBug, 3},
+			{E.FlyBuddy, 3},
 		},
 		background = backgrounds.BackgroundServers:new(),
 		music = "w2",
