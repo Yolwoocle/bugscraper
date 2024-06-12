@@ -329,6 +329,7 @@ function Level:update_cafeteria(dt)
 		self:update_hole_stencil(dt)
 		if self.hole_stencil_radius <= 0 then
 			game.camera:set_position(0, 0)
+			game.camera:set_target_offset(0, 0)
 
 			self.is_hole_stencil_enabled = false
 			self.new_wave_progress = 0.0
@@ -413,6 +414,7 @@ function Level:on_upgrade_display_killed(display)
 	end
 	
 	game.music_player:set_disk("cafeteria_empty")
+	game.camera:set_target_offset(-64, 0)
 	if game.music_player.current_disk and game.music_player.current_disk.current_source then
 		local source = game.music_player.current_disk.current_source
 		source:seek(time)

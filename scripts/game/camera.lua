@@ -18,6 +18,8 @@ function Camera:init()
     self.min_y, self.max_y = 0, CANVAS_HEIGHT
     self.target_x = 0.0
     self.target_y = 0.0
+    self.target_ox = 0.0
+    self.target_oy = 0.0
 
     self.follow_speed = 5
     self.max_speed = 200
@@ -42,9 +44,10 @@ function Camera:update(dt)
 end
 
 function Camera:follow_target(dt)
-    local speed = math.min(dist(self.x, self.y, self.target_x, self.target_y) * self.follow_speed, self.max_speed)
-    self.x = move_toward(self.x, self.target_x, speed * dt)
-    self.y = move_toward(self.y, self.target_y, speed * dt)
+    local tx, ty = self.target_x + self.target_ox, self.target_y + self.target_oy
+    local speed = math.min(dist(self.x, self.y, tx, ty) * self.follow_speed, self.max_speed)
+    self.x = move_toward(self.x, tx, speed * dt)
+    self.y = move_toward(self.y, ty, speed * dt)
 end
 
 function Camera:clamp_camera_position(dt)
@@ -128,6 +131,15 @@ function Camera:set_target_position(x, y)
     self.target_y = y
 end
 
+function Camera:get_target_offset()
+    return self.target_ox, self.target_oy
+end
+
+function Camera:set_target_offset(x, y)
+    self.target_ox = x
+    self.target_oy = y
+end
+
 function Camera:get_position()
     return self.x, self.y
 end
@@ -152,6 +164,8 @@ function Camera:reset()
 
     self.ox = 0
     self.oy = 0
+    self.target_ox = 0
+    self.target_oy = 0
 
     self.rot = 0
     self.zoom = 1

@@ -397,6 +397,38 @@ local waves = {
 			{E.FlyBuddy, 1},
 		}
 	}),
+	
+	new_wave({
+		min = 3,
+		max = 4,
+		enemies = {
+			{E.Fly, 2},
+			{E.MetalFly, 4},
+			{E.StinkBug, 4},
+			{E.ChipBug, 4},
+
+		},
+		fixed_enemies = {
+			{E.FlyBuddy, 1},
+		}
+	}),
+		
+	new_wave({
+		min = 6,
+		max = 8,
+		enemies = {
+			{E.Fly, 2},
+			{E.SpikedFly, 2},
+			{E.MetalFly, 2},
+			{E.StinkBug, 2},
+			{E.ChipBug, 2},
+		},
+		fixed_enemies = {
+			{E.FlyBuddy, 1},
+		}
+	}),
+
+	new_cafeteria(),
 
 	--]]
 	
