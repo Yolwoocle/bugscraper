@@ -12,7 +12,7 @@ function FlyBuddy:init(x, y, is_child)
 
     self:init_fly(x,y, images.fly_buddy_1, 18, 24)
     self.name = "fly_buddy"
-    self.life = 15
+    self.life = 10
 
     self.anim_frame_len = 0.05
     self.anim_frames = {images.fly_buddy_1, images.fly_buddy_2}
@@ -32,7 +32,7 @@ function FlyBuddy:init(x, y, is_child)
         self.electric_arc = arc
         game:new_actor(arc)
         
-        local child = FlyBuddy:new(self.x + 50, self.y, true)
+        local child = FlyBuddy:new(self.x, self.y, true)
         game:new_actor(child)
         self.child = child
         child.parent = self
@@ -44,6 +44,11 @@ function FlyBuddy:init(x, y, is_child)
         table.insert(self.spawned_actors, arc)
         table.insert(self.spawned_actors, child)
     end
+
+	-- self.sound_damage = "glass_fracture"
+	self.sound_damage = {"impactglass_light_001", "impactglass_light_002", "impactglass_light_003", "impactglass_light_004"}
+	self.sound_death = "glass_break_weak"
+	self.sound_stomp = "glass_break_weak"
 
     self:disable_buzzing()
 end
@@ -86,6 +91,11 @@ function FlyBuddy:remove_dead_parent_or_child()
     if self.parent and self.parent.is_dead then
         self.parent = nil
     end
+end
+
+function FlyBuddy:on_death(damager, reason)
+    Particles:image(self.mid_x, self.mid_y, 16, images.glass_shard, self.h)
+    Particles:spark(self.mid_x, self.mid_y, 20)
 end
     
 function FlyBuddy:draw()

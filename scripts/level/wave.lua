@@ -13,6 +13,7 @@ function Wave:init(params)
 	self.min = param(params.min, 1)
 	self.max = param(params.max, 1)
 	self.enemies = param(params.enemies, {})
+	self.fixed_enemies = param(params.fixed_enemies, {})
 	self.level_geometry = param(params.level_geometry, nil)
 	self.elevator_layers = param(params.elevator_layers, {})
 	self.run = param(params.run, nil)
@@ -38,12 +39,13 @@ function Wave:roll()
 	end
 end
 
-function Wave:roll_random()
+function Wave:roll_random(enemies)
+	enemies = param(enemies, self.enemies)
 	local number_of_enemies = love.math.random(self.min, self.max)
 
 	local output = {}
 	for i=1, number_of_enemies do
-		local _, enemy_table = random_weighted(self.enemies)
+		local _, enemy_table = random_weighted(enemies)
 		table.insert(output, {
 			enemy_class = enemy_table[1],
 			args = {},
@@ -54,10 +56,11 @@ function Wave:roll_random()
 	return output
 end
 
-function Wave:roll_fixed()
+function Wave:roll_fixed(enemies)
+	enemies = param(enemies, self.enemies)
 	local output = {}
-	for i=1, #self.enemies do
-		local enemy_table = self.enemies[i]
+	for i=1, #enemies do
+		local enemy_table = enemies[i]
 		for j=1, enemy_table[2] do
 			table.insert(output, {
 				enemy_class = enemy_table[1],
@@ -84,9 +87,19 @@ function Wave:add_cocoons(enemy_classes)
 end
 
 function Wave:spawn(rect)
-	local enemy_classes = self:roll()
-
 	local spawned_enemies = {}
+
+	self:spawn_roll(rect, self:roll(), spawned_enemies)
+	if self.fixed_enemies then
+		self:spawn_roll(rect, self:roll_fixed(self.fixed_enemies), spawned_enemies)
+	end
+
+	return spawned_enemies
+end
+
+function Wave:spawn_roll(rect, roll, spawned_enemies)
+	local enemy_classes = roll
+
 	for i=1, #enemy_classes do
 		local x = love.math.random(rect.ax + 16, rect.bx - 16)
 		local y = love.math.random(rect.ay + 16, rect.by - 16)
@@ -121,7 +134,7 @@ function Wave:spawn(rect)
 			extra_enemy:set_active(false)
 		end
 	end
-	
+
 	return spawned_enemies
 end
 

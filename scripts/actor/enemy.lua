@@ -261,7 +261,6 @@ end
 
 function Enemy:kill(damager, reason)
 	if self.is_removed then
-		print(concat("/!\\:", self.name, "(", self, ") was killed while destroyed"))
 		return
 	end
 	self.death_reason = reason or ""

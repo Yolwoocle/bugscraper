@@ -18,6 +18,7 @@ end
 -- Graphics
 CANVAS_WIDTH = 480
 CANVAS_HEIGHT = 270
+CANVAS_CENTER = {CANVAS_WIDTH/2, CANVAS_HEIGHT/2}
 SCREENSHOT_SCALE = 4
 
 LAYER_COUNT = 8
@@ -520,6 +521,12 @@ FLOOR_TYPE_CAFETERIA = "cafeteria"
 
 WAVE_ROLL_TYPE_RANDOM = "random"
 WAVE_ROLL_TYPE_FIXED = "fixed"
+
+--------------------------------------------- 
+
+-- Misc
+LIGHNING_COORDINATE_MODE_CARTESIAN = "cartesian" -- x, y 
+LIGHNING_COORDINATE_MODE_POLAR = "polar" -- radius, angle
 
 --------------------------------------------- 
 

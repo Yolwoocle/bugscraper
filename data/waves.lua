@@ -303,20 +303,101 @@ local waves = {
 	--- W2: server room
 	-----------------------------------------------------
 
-	-- Floor 25
+	-- Floor 20
 	new_wave({
-		min = 1,
-		max = 1,
+		roll_type = WAVE_ROLL_TYPE_FIXED,
 		enemies = {
-			{E.FlyBuddy, 3},
+			{E.Fly, 3},
+			{E.FlyBuddy, 1},
 		},
 		background = backgrounds.BackgroundServers:new(),
-		music = "w2",
+		music = "w1",
 
 		title = get_world_name("2"),
 		title_color = COL_MID_GREEN,
 	}),
-	-- }, 4)),
+
+	new_wave({
+		min = 5,
+		max = 5,
+		enemies = {
+			{E.Fly, 2},
+			{E.SpikedFly, 2},
+			{E.FlyBuddy, 1},
+		},
+	}),
+
+	new_wave({
+		min = 5,
+		max = 7,
+		enemies = {
+			{E.ChipBug, 2},
+			{E.SpikedFly, 2},
+		},
+	}),
+
+	new_wave({
+		min = 5,
+		max = 7,
+		enemies = {
+			{E.Slug, 2},
+			{E.StinkBug, 2},
+			{E.ChipBug, 2},
+			{E.FlyBuddy, 1},
+		},
+	}),
+
+	new_wave({
+		level_geometry = LevelGeometry:new({
+			{rect = Rect:new(3, 8, 8, 8), tile = TILE_SEMISOLID}, 
+			{rect = Rect:new(21, 8, 26, 8), tile = TILE_SEMISOLID}, 
+		}),
+		elevator_layers = {
+			["bg_grid"] = false,
+		},
+		run = function(self, level)
+			local cabin_rect = game.level.cabin_rect
+			Particles:falling_grid(cabin_rect.ax +   16, cabin_rect.ay + 6*16)
+			Particles:falling_grid(cabin_rect.bx - 7*16, cabin_rect.ay + 6*16)
+			level.elevator:start_grid_timer(2.5)
+		end,
+
+		min = 4,
+		max = 6,
+		enemies = {
+			{E.Fly, 2},
+			{E.ChipBug, 2},
+		},
+
+		fixed_enemies = {
+			{E.ElectricRays, 1, position = {CANVAS_WIDTH/2 - 16, CANVAS_HEIGHT/2 - 16}},
+		},
+	}),
+	
+	new_wave({
+		min = 5,
+		max = 6,
+		enemies = {
+			{E.Slug, 4},
+			{E.StinkBug, 4},
+			{E.ChipBug, 4},
+		},
+		fixed_enemies = {
+			{E.FlyBuddy, 1},
+		}
+	}),
+	
+	new_wave({
+		min = 3,
+		max = 4,
+		enemies = {
+			{E.MetalFly, 4},
+		},
+		fixed_enemies = {
+			{E.FlyBuddy, 1},
+		}
+	}),
+
 	--]]
 	
 	-----------------------------------------------------

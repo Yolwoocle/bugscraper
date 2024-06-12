@@ -380,9 +380,11 @@ local FallingGridParticle = Particle:inherit()
 
 function FallingGridParticle:init(img_side, img_top, x,y)
 	self:init_particle(x,y,s,r, vx,vy,0,vr, 2.5, g, false)
-	self.spr_side = Sprite:new(img_side, SPRITE_ANCHOR_LEFT_BOTTOM)
-	self.spr_top =  Sprite:new(img_top,  SPRITE_ANCHOR_LEFT_BOTTOM)
-	self.spr_top:set_scale(nil, 0)
+	-- self.spr_side = Sprite:new(img_side, SPRITE_ANCHOR_LEFT_BOTTOM)
+	-- self.spr_top =  Sprite:new(img_top,  SPRITE_ANCHOR_LEFT_BOTTOM)
+	self.img_side = img_side
+	self.img_top =  img_top
+	-- self.spr_top:set_scale(nil, 0)
 
 	self.orig_y = y
 
@@ -410,21 +412,25 @@ function FallingGridParticle:update(dt)
 	if self.rot_3d <= 0 and math.abs(self.rot_3d_vel) >= 0.5 then
 		self.rot_3d_vel = math.abs(self.rot_3d_vel) * self.rot_3d_bounce
 
-		local w = self.spr_side.image:getWidth()
+		local w = self.img_side:getWidth()
 		for ix = 0, w, 4 do
-			Particles:dust(self.x + ix, self.y)
+			Particles:dust(self.x + ix, self.y + self.img_top:getHeight())
 		end
 	end
 
-	self.spr_side:set_scale(nil, math.sin(self.rot_3d))
-	self.spr_top:set_scale(nil, math.cos(self.rot_3d))
-	
-	self.y = self.orig_y + math.cos(self.rot_3d) * self.spr_top.image:getHeight()
+	self.y = self.orig_y - math.sin(self.rot_3d) * self.img_side:getHeight()
 end
 
 function FallingGridParticle:draw()
-	self.spr_side:draw(self.x, self.y)
-	self.spr_top:draw(self.x, self.y - math.sin(self.rot_3d) * self.spr_side.image:getHeight())
+	local h_side = self.img_side:getHeight()
+	local h_top =  self.img_top:getHeight()
+	local scale_side = math.sin(self.rot_3d)
+	local scale_top = math.cos(self.rot_3d)
+
+	local oy = math.cos(self.rot_3d) * self.img_top:getHeight()
+
+	love.graphics.draw(self.img_side, self.x, self.y + oy, 0, 1, scale_side)
+	love.graphics.draw(self.img_top,  self.x, self.y, 0, 1, scale_top)
 	-- love.graphics.line(self.x-32, self.orig_y, self.x+32, self.orig_y)
 end
 
@@ -434,6 +440,7 @@ local SparkParticle = Particle:inherit()
 
 function SparkParticle:init(x,y, life, g, is_solid)
 	local vx, vy = random_neighbor(150), -70 + random_neighbor(15)
+	local life = life or 1
 	local g = 10 + random_neighbor(3)
 	self:init_particle(x,y,__s,__r, vx,vy,0,1, life, g, is_solid)
 
@@ -475,6 +482,14 @@ function ParticleSystem:update(dt)
 			end
 		end
 	end
+end
+
+function ParticleSystem:get_number_of_particles()
+	local n = 0
+	for _, layer in pairs(self.layers) do
+		n = n + #layer
+	end
+	return n
 end
 
 function ParticleSystem:draw_layer(layer_id)
@@ -732,7 +747,7 @@ end
 
 function ParticleSystem:spark(x, y, amount)
 	amount = param(amount, 1)
-	local life = 3 + random_neighbor(0.2)
+	local life = 1 + random_neighbor(0.2)
 	local g = nil
 	local is_solid = false
 	for i=1, amount do 

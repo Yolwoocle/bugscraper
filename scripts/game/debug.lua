@@ -91,7 +91,12 @@ function Debug:init(game)
             game:apply_upgrade(upgrades.UpgradeSoda:new())
         end},
         ["t"] = {"particle", function()
-            Particles:word(CANVAS_WIDTH/2, CANVAS_HEIGHT/2+100, "HELLO!!", COL_WHITE, 1)
+			local cabin_rect = game.level.cabin_rect
+        
+			Particles:falling_grid(cabin_rect.ax +   16, cabin_rect.ay + 6*16)
+			Particles:falling_grid(cabin_rect.bx - 7*16, cabin_rect.ay + 6*16)
+            
+            -- Particles:word(CANVAS_WIDTH/2, CANVAS_HEIGHT/2+100, "HELLO!!", COL_WHITE, 1)
             for i = 1, 50 do
                 -- Particles:spark(CANVAS_WIDTH/2, CANVAS_HEIGHT/2 + 50)
             end
@@ -104,7 +109,14 @@ function Debug:init(game)
 
             -- local arc = enemies.ElectricRays:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.5)
             -- local arc = enemies.DrillBee:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.5);
-            local arc = enemies.FlyBuddy:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.5);
+            -- local arc = enemies.FlyBuddy:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.5);
+            -- game:new_actor(arc)
+
+            local arc = enemies.MetalFly:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.5);
+            game:new_actor(arc)
+
+            local arc = enemies.ElectricArc:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.5);
+            arc:set_segment(CANVAS_WIDTH*0.8, CANVAS_HEIGHT/2, CANVAS_WIDTH/2, CANVAS_HEIGHT)
             game:new_actor(arc)
         end},
         ["r"] = {"start game", function()
@@ -468,12 +480,11 @@ function Debug:draw_info_view()
 		concat("FPS: ",love.timer.getFPS(), " / frmRpeat: ",self.game.frame_repeat, " / frame: ",frame),
 		concat("LÖVE version: ", string.format("%d.%d.%d - %s", love.getVersion())),
 		concat("game state: ", game.game_state),
-		concat("level.level_speed: ", game.level.level_speed),
-		concat("cam pos:  ", concatsep({game.camera:get_position()})),
-		concat("cam tpos: ", concatsep({game.camera:get_target_position()})),
+		concat("memory used ", collectgarbage("count")),
 		concat("n° of active audio sources: ", love.audio.getActiveSourceCount()),
 		concat("n° of actors: ", #self.game.actors, " / ", self.game.actor_limit),
 		concat("n° of enemies: ", self.game:get_enemy_count()),
+		concat("n° of particles: ", Particles:get_number_of_particles()),
 		concat("n° collision items: ", Collision.world:countItems()),
 		concat("windowed_w: ", Options:get("windowed_width")),
 		concat("windowed_h: ", Options:get("windowed_height")),

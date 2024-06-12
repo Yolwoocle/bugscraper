@@ -9,11 +9,11 @@ local enemies = {
 	Slug =             require "scripts.actor.enemies.slug",
 	Spider =           require "scripts.actor.enemies.spider",
 	StinkBug =         require "scripts.actor.enemies.stink_bug", --*
+	SnailShelled =     require "scripts.actor.enemies.snail_shelled", 
 	Dung =             require "scripts.actor.enemies.dung",
 	DungBeetle =       require "scripts.actor.enemies.dung_beetle",
 	FlyingDung =       require "scripts.actor.enemies.flying_dung",
 	
-	SnailShelled =     require "scripts.actor.enemies.snail_shelled", 
 	SnailShelledBouncy = require "scripts.actor.enemies.snail_shelled_bouncy", 
 	Grasshopper =      require "scripts.actor.enemies.grasshopper", 
 	ChipBug =          require "scripts.actor.enemies.chip_bug", --* 

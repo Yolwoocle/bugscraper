@@ -164,7 +164,7 @@ function Player:init(n, x, y, skin)
 	self.effects = {}
 	self.poison_cloud = nil
 	self.poison_timer = 0.0
-	self.poison_damage_time = 1.5
+	self.poison_damage_time = 1.0
 
 	-- Exiting 
 	self.is_touching_exit_sign = false
