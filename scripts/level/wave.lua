@@ -42,6 +42,9 @@ end
 function Wave:roll_random(enemies)
 	enemies = param(enemies, self.enemies)
 	local number_of_enemies = love.math.random(self.min, self.max)
+	if number_of_enemies == 0 then
+		return {}
+	end
 
 	local output = {}
 	for i=1, number_of_enemies do

@@ -62,6 +62,10 @@ function Debug:init(game)
         ["f6"] = {"toggle UI", function()
             self.game.game_ui.is_visible = not self.game.game_ui.is_visible
         end},
+        ["f7"] = {"toggle speedup", function()
+            _G_t = 0
+            _G_do_fixed_framerate = not _G_do_fixed_framerate
+        end},
         ["f"] = {"toggle FPS", function()
             self.view_fps = not self.view_fps
         end},
@@ -87,15 +91,16 @@ function Debug:init(game)
             self.game:set_floor(self.game:get_floor() + 5)
         end},
 
-        ["p"] = {"upgrade", function()
+        ["u"] = {"upgrade", function()
             game:apply_upgrade(upgrades.UpgradeSoda:new())
         end},
         ["t"] = {"particle", function()
 			local cabin_rect = game.level.cabin_rect
         
-			Particles:falling_grid(cabin_rect.ax +   16, cabin_rect.ay + 6*16)
-			Particles:falling_grid(cabin_rect.bx - 7*16, cabin_rect.ay + 6*16)
-            
+            local cabin_rect = game.level.cabin_rect
+			Particles:falling_grid_side(cabin_rect.ax +   16, cabin_rect.ay + 6*16 + 8)
+			Particles:falling_grid_side(cabin_rect.bx - 7*16, cabin_rect.ay + 6*16 + 8)
+
             -- Particles:word(CANVAS_WIDTH/2, CANVAS_HEIGHT/2+100, "HELLO!!", COL_WHITE, 1)
             for i = 1, 50 do
                 -- Particles:spark(CANVAS_WIDTH/2, CANVAS_HEIGHT/2 + 50)
@@ -131,8 +136,13 @@ function Debug:init(game)
             end
         end},
         
-        ["i"] = {"toggle instant end", function()
-            self.instant_end = not self.instant_end
+        -- ["i"] = {"toggle instant end", function()
+        --     self.instant_end = not self.instant_end
+        -- end},
+        ["i"] = {"toggle god mode", function()
+            for _, player in pairs(game.players) do
+                player.debug_god_mode = not player.debug_god_mode
+            end
         end},
         
         ["y"] = {"toggle layer view", function()
@@ -532,14 +542,14 @@ function Debug:draw_colview()
 		rect_color({0,1,0,.2},"fill", x, y, w, h)
 		rect_color({0,1,0,.5},"line", x, y, w, h)
 	end
-
-    game.camera:reset_transform()
-    
     local level = game.level
     if level then
         rect_color(COL_RED, "line", level.cabin_rect.x, level.cabin_rect.y, level.cabin_rect.w, level.cabin_rect.h)
         rect_color(COL_CYAN, "line", level.cabin_inner_rect.x, level.cabin_inner_rect.y, level.cabin_inner_rect.w, level.cabin_inner_rect.h)
     end
+
+    game.camera:reset_transform()
+    
 end
 
 function Debug:draw_layers()

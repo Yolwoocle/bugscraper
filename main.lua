@@ -13,8 +13,8 @@ function love.load(arg)
 	game = Game:new()
 end
 
-local t = 0
 local fixed_dt = 1/60 -- fixed frame delta time
+_G_t = 0
 _G_frame = 0
 _G_fixed_frame = 0
 local function fixed_update()
@@ -22,15 +22,16 @@ local function fixed_update()
 	game:update(fixed_dt)
 end
 
+_G_do_fixed_framerate = true
 
 function love.update(dt)
-	t = t + dt
+	_G_t = _G_t + dt
 	local cap = 1 --If there's lag spike, repeat up to how many frames?
 	local i = 0
 	local update_fixed_dt = fixed_dt
 	-- local update_fixed_dt = 1/30
-	while t > update_fixed_dt and cap > 0 do
-		t = t - update_fixed_dt
+	while (not _G_do_fixed_framerate or _G_t > update_fixed_dt) and cap > 0 do
+		_G_t = _G_t - update_fixed_dt
 		fixed_update()
 		cap = cap - 1
 		i=i+1

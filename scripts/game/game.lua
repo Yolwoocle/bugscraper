@@ -322,10 +322,10 @@ function Game:update_main_game(dt)
 
 	self:update_timer_before_game_over(dt)
 
-	-- Particles
 	Particles:update(dt)
 	self:update_actors(dt)
 	self:update_logo(dt)
+	self:update_camera_offset(dt)
 	self:update_debug(dt)
 
 	self.notif_timer = math.max(self.notif_timer - dt, 0)
@@ -369,6 +369,23 @@ function Game:update_logo(dt)
 		self.jetpack_tutorial_y = lerp(self.jetpack_tutorial_y, 70, 0.1)
 	else
 		self.jetpack_tutorial_y = lerp(self.jetpack_tutorial_y, -30, 0.1)
+	end
+end
+
+function Game:update_camera_offset(dt)
+	-- 52 
+	local found = false
+	for _, player in pairs(self.players) do
+		if player.mid_x > (self.level.world_generator.cafeteria_rect.bx - 9) * BW then
+			found = true
+			break
+		end
+	end
+
+	if found then
+		self.camera:set_target_offset(500, 0)
+	else
+		self.camera:set_target_offset(0, 0)
 	end
 end
 

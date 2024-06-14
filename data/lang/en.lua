@@ -1,7 +1,7 @@
 return {
     game = {
         combo = "COMBO %d!",
-        demo = "DEMO",
+        demo = "DEMO", -- Chip added to the game logo to indicate that this version is a demo
         fps = "%d FPS",
         fps_warning = "Low framerate: disabling vsync might help",
         congratulations = "CONGRATULATIONS!",

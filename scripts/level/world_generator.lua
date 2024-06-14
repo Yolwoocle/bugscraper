@@ -18,6 +18,8 @@ function WorldGenerator:init(map)
 		Rect:new(16, 12, 17, 12),
 	}
 
+	self.cafeteria_rect = Rect:new(2, 2, 52, 15)
+	self.cafeteria_table_rect = Rect:new(27, 13, 40, 13)
 	-- 16, 17
 	-- 10, 22
 	-- 7, 23
@@ -56,10 +58,10 @@ end
 
 function WorldGenerator:generate_cafeteria()
 	self:reset()
-	self:write_rect(Rect:new(2, 2, 68, 15), TILE_METAL)
+	self:write_rect(self.cafeteria_rect, TILE_METAL)
 
 	-- table
-	self:write_rect(Rect:new(27, 13, 40, 13), TILE_SEMISOLID)
+	self:write_rect(self.cafeteria_table_rect, TILE_SEMISOLID)
 end
 
 function WorldGenerator:generate_end_rubble()

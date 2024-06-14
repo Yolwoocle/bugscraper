@@ -745,6 +745,10 @@ function ParticleSystem:falling_grid(x, y)
 	self:add_particle(FallingGridParticle:new(images.cabin_grid, images.cabin_grid_platform, x, y), PARTICLE_LAYER_SHADOWLESS)
 end
 
+function ParticleSystem:falling_grid_side(x, y)
+	self:add_particle(FallingGridParticle:new(images.cabin_grid_platform, images.cabin_grid, x, y), PARTICLE_LAYER_SHADOWLESS)
+end
+
 function ParticleSystem:spark(x, y, amount)
 	amount = param(amount, 1)
 	local life = 1 + random_neighbor(0.2)

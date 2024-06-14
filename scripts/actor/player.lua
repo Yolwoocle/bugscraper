@@ -169,6 +169,8 @@ function Player:init(n, x, y, skin)
 	-- Exiting 
 	self.is_touching_exit_sign = false
 
+	self.debug_god_mode = false
+
 	-- Debug 
 	self.dt = 1
 end
@@ -303,8 +305,9 @@ function Player:on_removed()
 end
 
 function Player:do_damage(n, source)
+	if self.debug_god_mode then return false   end
 	if self.iframes > 0 then    return false   end
-	if n <= 0 then    return false   end
+	if n <= 0 then              return false   end
 
 	if Input:get_number_of_users() == 1 then
 		game:frameskip(8)
@@ -376,12 +379,14 @@ end
 
 function Player:do_wall_sliding(dt)
 	-- Check if wall sliding
+	local old_is_walled = self.is_walled
 	self.is_wall_sliding = false
 	self.is_walled = false
 
 	self.sfx_wall_slide_volume = lerp(self.sfx_wall_slide_volume, 0, 0.3)
 	self.sfx_wall_slide:setVolume(self.sfx_wall_slide_volume)
 
+	-- Update wall variables
 	if self.wall_col then
 		local col_normal = self.wall_col.normal
 		local is_walled = (col_normal.y == 0)
@@ -395,7 +400,11 @@ function Player:do_wall_sliding(dt)
 		self.is_walled = is_walled
 	end
 
-	
+	-- Reduce jumps if leave wall 
+	if old_is_walled and not self.is_walled then
+		self.jumps = math.max(0, self.jumps-1)
+	end
+
 	-- Perform wall sliding
 	if self.is_wall_sliding then
 		-- Orient player opposite if wall sliding
@@ -1037,7 +1046,11 @@ function Player:draw_player()
 		for _, val in pairs(self.debug_values) do
 			print_outline(nil, nil, tostring(val), self.x + self.w, self.y - i*th)
 			i = i + 1
-		end		 
+		end
+	end
+
+	if self.debug_god_mode then
+		print_outline(nil, nil, "god", self.x, self.y - 16)
 	end
 end
 

@@ -1,6 +1,7 @@
 require "scripts.util"
 local images = require "data.images"
 local backgrounds = require "data.backgrounds"
+local enemies = require "data.enemies"
 
 local Rect = require "scripts.math.rect"
 local LevelGeometry = require "scripts.level.level_geometry"
@@ -8,13 +9,14 @@ local Wave = require "scripts.level.wave"
 local E = require "data.enemies"
 
 RECT_ELEVATOR = Rect:new(2, 2, 28, 16)
-RECT_CAFETERIA = Rect:new(2, 2, 69, 16)
+RECT_CAFETERIA = Rect:new(2, 2, 53, 16)
 
-local function new_cafeteria()
+local function new_cafeteria(run_func)
 	return Wave:new({
 		floor_type = FLOOR_TYPE_CAFETERIA,
 		roll_type = WAVE_ROLL_TYPE_FIXED,
 		music = "cafeteria",
+		run = run_func,
 		
 		min = 1,
 		max = 1,
@@ -311,7 +313,7 @@ local waves = {
 			{E.FlyBuddy, 1},
 		},
 		background = backgrounds.BackgroundServers:new(),
-		music = "w1",
+		music = "w2",
 
 		title = get_world_name("2"),
 		title_color = COL_MID_GREEN,
@@ -356,6 +358,8 @@ local waves = {
 			["bg_grid"] = false,
 		},
 		run = function(self, level)
+			game:screenshake(10)
+
 			local cabin_rect = game.level.cabin_rect
 			Particles:falling_grid(cabin_rect.ax +   16, cabin_rect.ay + 6*16)
 			Particles:falling_grid(cabin_rect.bx - 7*16, cabin_rect.ay + 6*16)
@@ -404,9 +408,7 @@ local waves = {
 		enemies = {
 			{E.Fly, 2},
 			{E.MetalFly, 4},
-			{E.StinkBug, 4},
 			{E.ChipBug, 4},
-
 		},
 		fixed_enemies = {
 			{E.FlyBuddy, 1},
@@ -414,21 +416,46 @@ local waves = {
 	}),
 		
 	new_wave({
-		min = 6,
-		max = 8,
+		min = 5,
+		max = 6,
 		enemies = {
-			{E.Fly, 2},
 			{E.SpikedFly, 2},
-			{E.MetalFly, 2},
 			{E.StinkBug, 2},
-			{E.ChipBug, 2},
 		},
 		fixed_enemies = {
 			{E.FlyBuddy, 1},
 		}
 	}),
 
-	new_cafeteria(),
+	new_cafeteria(function()
+		for _, actor in pairs(game.actors) do
+			if actor.name == "electric_rays" then
+				actor:kill()
+			end
+		end
+	end),
+
+	new_wave({
+		min = 4,
+		max = 5,
+		enemies = {
+			{E.MetalFly, 2},
+		},
+		
+		elevator_layers = {
+			["bg_grid"] = false,
+			["fg_grid"] = false,
+		},
+
+		run = function(self, level)
+			for _, player in pairs(game.players) do
+				local arc = enemies.ElectricArc:new(CANVAS_WIDTH*0.5, CANVAS_HEIGHT*0.5)
+				arc:set_arc_target(player)
+				game:new_actor(arc)
+			end
+		end,
+		music = "w2",
+	}),
 
 	--]]
 	

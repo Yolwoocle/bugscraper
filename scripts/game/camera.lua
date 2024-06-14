@@ -14,7 +14,7 @@ function Camera:init()
     self.w = CANVAS_WIDTH
     self.h = CANVAS_HEIGHT
 
-    self.min_x, self.max_x = 0, 640
+    self.min_x, self.max_x = 0, 640 + 3*16
     self.min_y, self.max_y = 0, CANVAS_HEIGHT
     self.target_x = 0.0
     self.target_y = 0.0
@@ -22,7 +22,7 @@ function Camera:init()
     self.target_oy = 0.0
 
     self.follow_speed = 5
-    self.max_speed = 200
+    self.max_speed = 300
 
     self.screenshake_q = 0.0
 	self.screenshake_speed = 20
@@ -44,7 +44,8 @@ function Camera:update(dt)
 end
 
 function Camera:follow_target(dt)
-    local tx, ty = self.target_x + self.target_ox, self.target_y + self.target_oy
+    local tx = clamp(self.target_x + self.target_ox, self.min_x, self.max_x)
+    local ty = clamp(self.target_y + self.target_oy, self.min_y, self.max_y)
     local speed = math.min(dist(self.x, self.y, tx, ty) * self.follow_speed, self.max_speed)
     self.x = move_toward(self.x, tx, speed * dt)
     self.y = move_toward(self.y, ty, speed * dt)
