@@ -1,40 +1,37 @@
 require "scripts.util"
-local Enemy = require "scripts.actor.enemy"
-local images = require "data.images"
-local skins = require "data.skins"
 local images = require "data.images"
 local Prop = require "scripts.actor.enemies.prop"
-local Rect = require "scripts.math.rect"
-local Segment = require "scripts.math.segment"
+local guns = require "data.guns"
 
 local utf8 = require "utf8"
 
 local Explosion = Prop:inherit()
 
-function Explosion:init(x, y)
+function Explosion:init(x, y, radius)
     self:init_prop(x, y, images.empty, 1, 1)
     self.name = "explosion"
 
     self.explosion_damage = 1
+    self.radius = radius or 32
+
+    self.do_killed_smoke = false
+    self.gun = guns.unlootable.ExplosionGun:new(self, self.radius, self.explosion_damage)
 end
 
 function Explosion:update(dt)
     self:update_prop(dt)
-end
 
---- Returns whether an actor is considered an enemy or not. 
-function Explosion:is_my_enemy(actor)
-    if not actor.is_actor then
-        return false
+    if not self.is_dead then
+        self.gun:shoot(dt, self, self.mid_x, self.mid_y, math.cos(0), math.sin(0))
+        for i=1, 3 do
+            Particles:smoke_big(self.x, self.y, nil, self.radius)
+        end
+        self:kill()      
     end
-    if self.arc_target then
-        return self.arc_target.is_enemy ~= actor.is_enemy
-    end
-    return actor.is_player
 end
 
 function Explosion:draw()
-    self:draw_prop()
+    -- self:draw_prop()
 end
 
 return Explosion

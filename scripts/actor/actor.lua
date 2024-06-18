@@ -350,7 +350,7 @@ function Actor:final_remove()
 	self:on_removed()
 end
 
-function Actor:move_to(goal_x,goal_y)
+function Actor:move_to(goal_x, goal_y)
 	local actual_x, actual_y, cols, len = Collision:move(self, goal_x, goal_y)
 	self.x = actual_x
 	self.y = actual_y

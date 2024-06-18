@@ -136,6 +136,7 @@ local function generate_menus()
         {"waves"},
         {CustomDrawMenuItem, debug_draw_waves},
         {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},    
+        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},    
         }, DEFAULT_MENU_BG_COLOR, {}, function() end
     )
 
@@ -278,8 +279,8 @@ local function generate_menus()
             Options:toggle("menu_blur")
         end,
         function(self)
-            self.value = Options:get("is_vsync")
-            self.value_text = Options:get("is_vsync") and "✅" or "❎"
+            self.value = Options:get("menu_blur")
+            self.value_text = Options:get("menu_blur") and "✅" or "❎"
         end},
         { ""},
         { "<<< "..Text:text("menu.options.game.title").." >>>"},

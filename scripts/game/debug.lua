@@ -117,12 +117,19 @@ function Debug:init(game)
             -- local arc = enemies.FlyBuddy:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.5);
             -- game:new_actor(arc)
 
-            local arc = enemies.MetalFly:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.5);
-            game:new_actor(arc)
+            -- for _, player in pairs(game.players) do
+			-- 	local arc = enemies.ElectricArc:new(CANVAS_WIDTH*0.5, CANVAS_HEIGHT*0.5)
+			-- 	arc:set_arc_target(player)
+			-- 	arc.arc_damage = 2.5
+			-- 	game:new_actor(arc)
+			-- end
 
-            local arc = enemies.ElectricArc:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.5);
-            arc:set_segment(CANVAS_WIDTH*0.8, CANVAS_HEIGHT/2, CANVAS_WIDTH/2, CANVAS_HEIGHT)
-            game:new_actor(arc)
+            local arc = enemies.ExplodingFly:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8);
+            game:new_actor(arc);
+
+            -- local arc = enemies.ElectricArc:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.5)
+            -- arc:set_segment(CANVAS_WIDTH*0.8, CANVAS_HEIGHT/2, CANVAS_WIDTH/2, CANVAS_HEIGHT)
+            -- game:new_actor(arc)
         end},
         ["r"] = {"start game", function()
             game:start_game()
@@ -206,6 +213,9 @@ function Debug:init(game)
             local cam_x, cam_y = self.game:get_camera_position()
             self.game:set_camera_position(cam_x, cam_y + 8)
         end},
+        ["space"] = {"screenshot", function()
+		    game:screenshot()
+        end}
     }
 
     self.action_keys = {}
@@ -282,7 +292,7 @@ function Debug:draw()
     end
 
     if self.view_fps then
-        local t = concat(love.timer.getFPS(), "FPS")
+        local t = concat(love.timer.getFPS(), "FPS\n")
         print_outline(nil, nil, t, CANVAS_WIDTH - get_text_width(t), 0)
     end
 end

@@ -24,6 +24,7 @@ local enemies = {
 	Centipede =        require "scripts.actor.enemies.centipede", --*
 	ElectricArc =      require "scripts.actor.enemies.electric_arc", -- *
 	ElectricRays =     require "scripts.actor.enemies.electric_rays", --*
+	ExplodingFly =     require "scripts.actor.enemies.exploding_fly", --*
 	
 	MushroomAnt =      require "scripts.actor.enemies.mushroom_ant",
 	
@@ -44,6 +45,7 @@ local enemies = {
 
 	PoisonCloud =      require "scripts.actor.enemies.poison_cloud",
 	PongBall =         require "scripts.actor.enemies.pong_ball",
+	Explosion =        require "scripts.actor.enemies.explosion",
 }
 
 return enemies

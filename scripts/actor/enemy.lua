@@ -63,6 +63,7 @@ function Enemy:init_enemy(x,y, img, w,h)
 
 	self.damaged_flash_timer = 0
 	self.damaged_flash_max = 0.07
+	self.flash_white = false
 
 	self.do_squash = false
 	self.squash = 1
@@ -79,6 +80,8 @@ function Enemy:init_enemy(x,y, img, w,h)
 
 	self.flip_mode = ENEMY_FLIP_MODE_XVELOCITY
 	self.do_killed_smoke = true
+
+	self.gun = nil
 	-- self.sound_stomp = {"enemy_stomp_2", "enemy_stomp_3"}
 	--{"crush_bug_1", "crush_bug_2", "crush_bug_3", "crush_bug_4"}
 end
@@ -91,7 +94,6 @@ function Enemy:update_enemy(dt)
 	self:follow_target(dt)
 	self.invincible_timer = max(self.invincible_timer - dt, 0)
 	self.harmless_timer = max(self.harmless_timer - dt, 0)
-	self.damaged_flash_timer = max(self.damaged_flash_timer - dt, 0)
 
 	if self.flip_mode == ENEMY_FLIP_MODE_TARGET then
 		if self.target and math.abs(self.x - self.target.x) >= 4 then
@@ -103,6 +105,8 @@ function Enemy:update_enemy(dt)
 
 	end
 
+	self:update_flash(dt)
+	
 	if self.do_squash then
 		self.squash = lerp(self.squash, 1, 0.2)
 		self.spr:set_scale(self.squash, 1/self.squash)
@@ -110,6 +114,10 @@ function Enemy:update_enemy(dt)
 end
 function Enemy:update(dt)
 	self:update_enemy(dt)
+end
+
+function Enemy:update_flash(dt)
+	self.damaged_flash_timer = max(self.damaged_flash_timer - dt, 0)
 end
 
 function Enemy:get_nearest_player()
@@ -154,7 +162,7 @@ function Enemy:follow_target(dt)
 end
 
 function Enemy:draw_enemy()
-	local f = (self.damaged_flash_timer > 0) and draw_white
+	local f = (self.flash_white or self.damaged_flash_timer > 0) and draw_white
 	self:draw_actor(f)
 
 	if game.debug.info_view then

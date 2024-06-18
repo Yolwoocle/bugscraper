@@ -7,12 +7,13 @@ local Prop = require "scripts.actor.enemies.prop"
 local Rect = require "scripts.math.rect"
 local Segment = require "scripts.math.segment"
 local Lightning = require "scripts.graphics.lightning"
+local Timer = require "scripts.timer"
 
 local utf8 = require "utf8"
 
 local ElectricArc = Prop:inherit()
 
-function ElectricArc:init(x, y, is_active)
+function ElectricArc:init(x, y, is_active, activation_delay)
     self:init_prop(x, y, images.empty, 1, 1)
     self.name = "electric_arc"
 
@@ -23,18 +24,29 @@ function ElectricArc:init(x, y, is_active)
     self.segment = Segment:new(x, y, x+50, y-70)
     self.collides = false
     self.arc_target = nil
+    self.arc_target_player_n = nil
     self.hitbox_expand = 2
 
     self.lightning = Lightning:new()
-
+    
+    self.is_immune_to_electricity = true
     self.is_arc_active = param(is_active, true)
     self.particle_probability = 0.005
+
+    self.activation_timer = Timer:new(activation_delay or 0)
+    if activation_delay then
+        self.activation_timer:start()
+    end
+    self.disable_timer = Timer:new()
 
     self.t = 0
 end
 
 function ElectricArc:set_arc_target(target)
     self.arc_target = target
+    if target.is_player then
+        self.arc_target_player_n = target.n
+    end
 end
 
 function ElectricArc:set_arc_active(active)
@@ -61,6 +73,17 @@ end
 function ElectricArc:update(dt)
     self:update_prop(dt)
 
+    -- Timers
+    if self.activation_timer:update(dt) then
+        self.is_arc_active = true
+    end
+    if self.disable_timer:update(dt) then
+        self:kill()
+    end
+
+    self:update_target(dt)
+
+    -- Update segment
     self.segment.ax = self.mid_x
     self.segment.ay = self.mid_y
     if self.arc_target then
@@ -83,6 +106,25 @@ function ElectricArc:update(dt)
     end
 end
 
+function ElectricArc:update_target(dt)
+    if self.arc_target then
+        if (self.arc_target.is_dead or self.arc_target.is_removed) then
+            self.is_arc_active = false
+            self.arc_target = nil
+        end
+    else
+        if self.arc_target_player_n ~= nil then
+            for _, player in pairs(game.players) do
+                if (not player.is_dead and not player.is_removed) and player.n == self.arc_target_player_n then
+                    self.is_arc_active = true
+                    self.arc_target = player
+                    break
+                end
+            end
+        end
+    end
+end
+
 --- Returns whether an actor is considered an enemy or not. 
 function ElectricArc:is_my_enemy(actor)
     if not actor.is_actor then
@@ -97,7 +139,7 @@ end
 function ElectricArc:check_for_collisions()
     self.collides = false
     for _, a in pairs(game.actors) do
-        if a ~= self then
+        if a ~= self and a.is_active then
             local collision = Rect:new(a.x, a.y, a.x+a.w, a.y+a.h):expand(self.hitbox_expand):segment_intersection(self.segment)
             if collision then
                 self:collide_with_actor(a)
@@ -121,6 +163,12 @@ function ElectricArc:collide_with_actor(a)
         self.collides = true
         a:set_invincibility(self.cooldown)
     end
+end
+
+function ElectricArc:start_disable_timer(duration)
+    self.disable_timer:set_duration(duration)
+    self.disable_timer:start()
+    self.is_arc_active = false
 end
 
 function ElectricArc:draw()

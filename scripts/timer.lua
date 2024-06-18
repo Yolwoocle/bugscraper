@@ -46,7 +46,10 @@ function Timer:set_duration(val)
     self.duration = val
 end
 
-function Timer:start()
+function Timer:start(duration)
+    if duration then
+        self:set_duration(duration)
+    end
     self.is_active = true
     self.time = self.duration
 end

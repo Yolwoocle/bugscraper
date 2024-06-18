@@ -26,6 +26,7 @@ function Gun:init_gun(user)
 	self.bullet_number = 1
 	self.bullet_spread = 0.2
 	self.bullet_friction = 1
+	self.bullet_life = 5
 	self.random_angle_offset = 0.1
 	self.random_speed_offset = 40
 	self.random_friction_offset = 0
@@ -72,6 +73,7 @@ function Gun:init_gun(user)
 	self.sfx_pitch_var = 1.15
 	self.sfx_pitch = 1
 	
+	self.do_particles = true
 	self.screenshake = 0
 end
 
@@ -137,13 +139,15 @@ function Gun:shoot(dt, player, x, y, dx, dy, is_burst)
 	if self.sfx2 then
 		Audio:play_var(self.sfx2, 0.2, 1.2, {pitch=self.sfx_pitch})
 	end
-	Particles:image(x , y, 1, images.bullet_casing, 4, nil, nil, nil, {
-		vx1 = -dx * 40,
-		vx2 = -dx * 100,
+	if self.do_particles then
+		Particles:image(x , y, 1, images.bullet_casing, 4, nil, nil, nil, {
+			vx1 = -dx * 40,
+			vx2 = -dx * 100,
 
-		vy1 = -40,
-		vy2 = -80,
-	})
+			vy1 = -40,
+			vy2 = -80,
+		})
+	end
 
 	if is_first_fire then 
 		local m = 1
@@ -173,7 +177,9 @@ function Gun:shoot(dt, player, x, y, dx, dy, is_burst)
 		-- If only fire 1 bullet 
 		local ang = ang + random_neighbor(self.random_angle_offset)
 		dx, dy = cos(ang), sin(ang)
-		Particles:flash(x, y)
+		if self.do_particles then
+			Particles:flash(x, y)
+		end
 		self:fire_bullet(dt, player, x, y, self.bul_w, self.bul_h, dx, dy)
 	else
 		-- If fire multiple bullets
@@ -184,7 +190,9 @@ function Gun:shoot(dt, player, x, y, dx, dy, is_burst)
 			local a = ang-self.bullet_spread + i*step + rand_o
 			local dx = cos(a)
 			local dy = sin(a)
-			Particles:flash(x, y)
+			if self.do_particles then
+				Particles:flash(x, y)
+			end
 			self:fire_bullet(dt, player, x, y, self.bul_w, self.bul_h, dx, dy)
 		end
 	end
@@ -244,7 +252,12 @@ function Gun:fire_bullet(dt, user, x, y, bul_w, bul_h, dx, dy)
 	local spd = self.bullet_speed + random_neighbor(self.random_speed_offset)
 	local spd_x = dx * spd
 	local spd_y = dy * spd 
-	game:new_actor(Bullet:new(self, user, self:get_damage(user), x, y, bul_w, bul_h, spd_x, spd_y))
+	local bullet = Bullet:new(self, user, self:get_damage(user), x, y, bul_w, bul_h, spd_x, spd_y, {
+		life = self.bullet_life,
+		range = self.bullet_range,
+		do_particles = self.do_particles,
+	})
+	game:new_actor(bullet)
 end
 
 function Gun:add_ammo(quantity)

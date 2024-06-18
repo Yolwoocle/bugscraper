@@ -69,8 +69,7 @@ function Guns:init()
 		self.sfx_pitch = 1.1
 		self.bullet_spread = 0.2
 		
-		-- self.is_auto = false
-		self.is_auto = true
+		self.is_auto = false
 		self.is_burst = true
 		
 		self.damage = 1.5
@@ -94,8 +93,7 @@ function Guns:init()
 		self.spr = images.gun_shotgun
 		self.sfx = "mushroom_ant_pop"
 		self.sfx_pitch = 0.6
-		self.is_auto = true
-		-- self.is_auto = false
+		self.is_auto = false
 
 		self.damage = 1
 		self.cooldown = 0.4
@@ -295,6 +293,47 @@ function Guns:init()
 		self.bullet_speed = 125-- 200
 		self.cooldown = 0.6--0.35
 		self.screenshake = 2
+	end
+
+	-------
+
+	self.unlootable.ExplosionGun = Gun:inherit()
+
+	function self.unlootable.ExplosionGun:init(user, radius, damage)
+		self.name = "turret_gun"
+		self:init_gun(user)
+		
+		-- self.sfx = "mushroom_ant_pop"
+		self.damage = damage or 1
+		self.max_ammo = math.huge
+		self.cooldown = 0
+
+		self.bullet_number = 24
+		self.bullet_spread = pi2
+		self.bullet_range = radius or 32
+		-- self.bullet_friction = 0.9
+		self.random_angle_offset = 0
+
+		self.random_angle_offset = 0
+		self.is_auto = true
+		self.spr = images.gun_ring
+		self.sfx_volume = 1
+		self.sfx_pitch = 1.4
+		
+		self.cooldown = 0.5
+		self.jetpack_force = 1000
+		
+		self.bullet_spr = images.empty
+		self.bul_w = 10
+		self.bul_h = 10
+
+		self.screenshake = 4
+		self.do_particles = false
+		
+		self.bullet_speed = 300
+		self.random_speed_offset = 0
+		self.cooldown = 0.6
+		-- self.screenshake = 2
 	end
 end
 

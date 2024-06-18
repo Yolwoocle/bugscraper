@@ -7,6 +7,8 @@ local images = require "data.images"
 local Centipede = Enemy:inherit()
 	
 function Centipede:init(x, y, length, parent)
+    length = length or 10
+
     self:init_enemy(x,y, images.stink_bug_1, 10, 10)
     self.name = "centipede"
     self.is_flying = true

@@ -28,6 +28,7 @@ function FaintedPlayer:init(x, y, player)
     
     self.knockback = 0
     
+    self.is_immune_to_electricity = true
     self.is_stompable = false
     self.do_stomp_animation = false
     self.stompable_cooldown_timer = Timer:new(0.5)

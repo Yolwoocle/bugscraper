@@ -83,4 +83,10 @@ function ElectricRays:on_death()
     end
 end
 
+function ElectricRays:start_disable_timer(duration)
+    for i = 1, self.n_rays do
+        self.rays[i]:start_disable_timer(duration)
+    end
+end
+
 return ElectricRays

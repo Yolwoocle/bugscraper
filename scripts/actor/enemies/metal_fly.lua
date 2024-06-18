@@ -17,7 +17,7 @@ local PHASE_TELEGRAPH_DURATION = 0.4
 function MetalFly:init(x, y)
     self:init_fly(x,y, images.metal_mosquito_1, 14, 14)
     self.name = "metal_fly"
-    self.life = 5
+    self.life = 10
 
     self.anim_frame_len = 0.05
     self.anim_frames = {images.metal_mosquito_1, images.metal_mosquito_2}
@@ -28,10 +28,11 @@ function MetalFly:init(x, y)
     self.is_immune_to_electricity = true
     self.is_electrified = false
 
-    self.lightning_radius = 12
+    self.lightning_radius = 8
     self.lightning = Lightning:new({
         min_step_size = 0.4,
         max_step_size = 0.8,
+        jitter_width = 5,
         coordinate_mode = LIGHNING_COORDINATE_MODE_POLAR,
     })
 

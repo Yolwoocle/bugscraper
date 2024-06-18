@@ -515,8 +515,8 @@ function ParticleSystem:clear(layer_id)
 	end
 end
 
-function ParticleSystem:smoke_big(x, y, col)
-	self:smoke(x, y, 15, col or COL_WHITE, 16, 8, 4)
+function ParticleSystem:smoke_big(x, y, col, rad)
+	self:smoke(x, y, 15, col or COL_WHITE, rad or 16, 8, 4)
 end
 
 function ParticleSystem:smoke(x, y, number, col, spw_rad, size, sizevar, layer, fill_mode)

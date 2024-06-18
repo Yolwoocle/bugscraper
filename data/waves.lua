@@ -434,12 +434,39 @@ local waves = {
 			end
 		end
 	end),
+	
+	new_wave({
+		min = 3,
+		max = 4,
+		enemies = {
+			{E.Grasshopper, 2},
+		},
+	}),
+	
+	new_wave({
+		min = 5,
+		max = 6,
+		enemies = {
+			{E.Grasshopper, 2},
+			{E.Spider, 2}, 
+			{E.Slug, 2}, 
+		},
+	}),
+	
+	new_wave({
+		min = 5,
+		max = 6,
+		enemies = {
+			{E.Grasshopper, 2},
+		},
+	}),
 
 	new_wave({
 		min = 4,
 		max = 5,
 		enemies = {
-			{E.MetalFly, 2},
+			{E.ChipBug, 2},
+			{E.StinkBug, 2},
 		},
 		
 		elevator_layers = {
@@ -451,10 +478,72 @@ local waves = {
 			for _, player in pairs(game.players) do
 				local arc = enemies.ElectricArc:new(CANVAS_WIDTH*0.5, CANVAS_HEIGHT*0.5)
 				arc:set_arc_target(player)
+				arc.arc_damage = 2.5
 				game:new_actor(arc)
 			end
 		end,
 		music = "w2",
+	}),
+
+	new_wave({
+		min = 5,
+		max = 6,
+
+		enemies = {
+			{E.ChipBug, 2},
+		},
+	}),
+
+	new_wave({
+		min = 6,
+		max = 7,
+
+		enemies = {
+			{E.SnailShelled, 2},
+			{E.Fly, 2},
+			{E.SpikedFly, 2},
+		},
+	}),
+
+	new_wave({
+		min = 7,
+		max = 9,
+
+		enemies = {
+			{E.Spider, 20},
+			{E.MetalFly, 20},
+			{E.FlyBuddy, 5}
+		},
+	}),
+
+	new_wave({
+		min = 6,
+		max = 7,
+
+		enemies = {
+			{E.Spider, 2},
+			{E.Fly, 2},
+			{E.SpikedFly, 2},
+			{E.ChipBug, 2},
+			{E.StinkBug, 2},
+		},
+	}),
+
+	
+	new_wave({
+		min = 1,
+		max = 1,
+
+		enemies = {
+			{E.Turret, 2},
+		},
+		run = function(self, level)
+			for _, actor in pairs(game.actors) do
+				if actor.name == "electric_arc" then
+					actor:start_disable_timer(1)
+				end
+			end
+		end
 	}),
 
 	--]]

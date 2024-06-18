@@ -4,9 +4,9 @@ local sounds = require "data.sounds"
 local guns = require "data.guns"
 local images = require "data.images"
 
-local Woodlouse = Enemy:inherit()
+local Turret = Enemy:inherit()
 
-function Woodlouse:init(x, y, spr, w, h)
+function Turret:init(x, y, spr, w, h)
     self:init_enemy(x,y, spr or images.woodlouse_1, w or 20, h or 14)
     self.name = "woodlouse"
     self.follow_player = false
@@ -21,7 +21,7 @@ function Woodlouse:init(x, y, spr, w, h)
     self.gun = guns.unlootable.TurretGun:new(self)
 end
 
-function Woodlouse:update(dt)
+function Turret:update(dt)
     self:update_enemy(dt)
 
     self.gun:update(dt)
@@ -33,9 +33,9 @@ function Woodlouse:update(dt)
     end
 end
 
-function Woodlouse:after_collision(col, other)
+function Turret:after_collision(col, other)
     if col.type ~= "cross" then
     end
 end
 
-return Woodlouse
+return Turret

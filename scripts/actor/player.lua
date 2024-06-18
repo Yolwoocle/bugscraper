@@ -155,6 +155,8 @@ function Player:init(n, x, y, skin)
 	self.fury_gun_cooldown_multiplier = 0.8
 	self.fury_gun_damage_multiplier = 1.5
 	self.fury_speed = 1.0
+	self.fury_stomp_value = 0.8 -- How much is added to the fury bar when stomping an enemy
+	self.fury_bullet_damage_value_multiplier = 1/6  -- Percentage of the bullet damage that is added to the fury bar when hitting an enemy 
 	self.has_energy_drink = false
 
 	-- Upgrades
@@ -722,7 +724,7 @@ function Player:on_stomp(enemy)
 		-- Particles:word(self.mid_x, self.mid_y, tostring(self.combo), COL_LIGHT_BLUE)
 	end
 
-	self:add_fury(0.8)
+	self:add_fury(self.fury_stomp_value)
 	
 	-- self.ui_col_gradient = 1
 	-- self.gun.ammo = self.gun.ammo + floor(self.gun.max_ammo*.25)
@@ -744,7 +746,7 @@ function Player:on_my_bullet_hit(bullet, victim, col)
 	-- Why tf would this happen
 	if bullet.player ~= self then   return   end
 
-	self:add_fury(bullet.damage / 7)
+	self:add_fury(bullet.damage * self.fury_bullet_damage_value_multiplier)
 end
 
 ------------------------------------------

@@ -373,7 +373,6 @@ function Game:update_logo(dt)
 end
 
 function Game:update_camera_offset(dt)
-	-- 52 
 	local found = false
 	for _, player in pairs(self.players) do
 		if player.mid_x > (self.level.world_generator.cafeteria_rect.bx - 9) * BW then
@@ -942,9 +941,6 @@ end
 -----------------------------------------------------
 
 function Game:keypressed(key, scancode, isrepeat)
-	if scancode == "space" and self.debug_mode then
-		self:screenshot()
-	end
 	if scancode == "f12" and (love.keyboard.isDown("lshift") or love.keyboard.isDown("rshift")) and (love.keyboard.isDown("lctrl") or love.keyboard.isDown("rshift")) then
 		self.debug_mode = true
 		self.debug.notif = "debug mode enabled"

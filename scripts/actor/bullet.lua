@@ -5,8 +5,9 @@ local images = require "data.images"
 
 local Bullet = Actor:inherit()
 
-function Bullet:init(gun, player, damage, x, y, w, h, vx, vy)
+function Bullet:init(gun, player, damage, x, y, w, h, vx, vy, args)
 	gun = gun or {}
+	args = args or {}
 
 	local x, y = x-w/2, y-h/2
 	self:init_actor(x, y, w, h, gun.bullet_spr or images.bullet)
@@ -28,7 +29,11 @@ function Bullet:init(gun, player, damage, x, y, w, h, vx, vy)
 	self.vy = vy or 0
 	self.speed_floor = (gun.speed_floor or 3) -- min speed before it despawns
 
-	self.life = 5
+	self.start_x = x
+	self.start_y = y
+	self.life = args.life or 5
+	self.range = args.range or math.huge
+	self.do_particles = param(args.do_particles, true)
 
 	self.damage = damage
 	self.knockback = gun.knockback or 500
@@ -41,6 +46,14 @@ function Bullet:init(gun, player, damage, x, y, w, h, vx, vy)
 	self.bounce_immunity_duration = 0.1
 
 	self.is_affected_by_bounds = false
+
+	local old_filter = self.collision_filter
+	self.collision_filter = function(item, other)
+		if other.is_bullet then
+			return false
+		end
+		return old_filter(item, other)
+	end
 end
 
 function Bullet:update(dt)
@@ -56,6 +69,9 @@ function Bullet:update(dt)
 
 	local v_sq = distsqr(self.vx, self.vy)
 	if v_sq <= self.speed_floor then
+		self:kill()
+	end 
+	if distsqr(self.start_x, self.start_y, self.x, self.y) > self.range * self.range then
 		self:kill()
 	end 
 
@@ -107,7 +123,9 @@ function Bullet:on_collision(col)
 			self.bounce_immunity_timer = self.bounce_immunity_duration
 
 			local ang = math.atan2(new_vel_y, new_vel_x)
-			Particles:bullet_vanish(self.mid_x, self.y, ang + pi/2)
+			if self.do_particles then
+				Particles:bullet_vanish(self.mid_x, self.y, ang + pi/2)
+			end
 			Audio:play_var("bullet_bounce_"..random_sample{"1","2"}, 0.2, 1.2)
 			-- Audio:play_var("bullet_bounce", 0.2, 1.5)
 		end
@@ -118,8 +136,10 @@ end
 
 function Bullet:kill()
 	-- Audio:play_var("bullet_bounce", 0.2, 1.2)
-	Particles:smoke(self.x + self.w/2, self.y + self.h/2, 4)
-	Particles:bullet_vanish(self.x + self.w/2, self.y + self.h/2, self.spr.rot - pi/2)
+	if self.do_particles then
+		Particles:smoke(self.x + self.w/2, self.y + self.h/2, 4)
+		Particles:bullet_vanish(self.x + self.w/2, self.y + self.h/2, self.spr.rot - pi/2)
+	end
 	self:remove()
 end
 
