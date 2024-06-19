@@ -31,6 +31,8 @@ function Gun:init_gun(user)
 	self.random_speed_offset = 40
 	self.random_friction_offset = 0
 	
+	self.shoot_offset_x = nil
+
 	self.knockback = 500
 	
 	self.speed_floor = 3 -- min speed before bullet despawn
@@ -103,10 +105,7 @@ function Gun:draw(flip_x, flip_y, rot)
 	local ox, oy = floor(self.spr:getWidth()/2), floor(self.spr:getHeight()/2)
 	flip_x, flip_y = bool_to_dir(flip_x), bool_to_dir(flip_y)
 
-	gfx.draw(self.spr, floor(self.x), floor(self.y), self.rot, flip_x, flip_y, ox, oy)
-	-- gfx.print(concat("cooldown_timer", self.cooldown_timer), self.x, self.y-64)
-	-- gfx.print(concat("burst_count", self.burst_count), self.x, self.y-64+16)
-	-- gfx.print(concat("burst_counter", self.burst_counter), self.x, self.y-64+32)
+	love.graphics.draw(self.spr, floor(self.x), floor(self.y), self.rot, flip_x, flip_y, ox, oy)
 end
 
 function Gun:shoot(dt, player, x, y, dx, dy, is_burst)
@@ -164,7 +163,7 @@ function Gun:shoot(dt, player, x, y, dx, dy, is_burst)
 	self.original_natural_recharge_ammo = self.ammo
 
 	local ang = atan2(dy, dx)
-	local gunw = max(0, self.spr:getWidth() - 8)
+	local gunw = self.shoot_offset_x or max(0, self.spr:getWidth() - 8)
 	local x = floor(x + cos(ang) * gunw)
 	local y = floor(y + sin(ang) * gunw)
 
@@ -246,6 +245,8 @@ end
 function Gun:reload()
 	self.is_reloading = true
 	self.reload_timer = self.max_reload_timer
+
+	self.burst_counter = 0
 end
 
 function Gun:fire_bullet(dt, user, x, y, bul_w, bul_h, dx, dy)

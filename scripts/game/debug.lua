@@ -124,8 +124,11 @@ function Debug:init(game)
 			-- 	game:new_actor(arc)
 			-- end
 
-            local arc = enemies.ExplodingFly:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8);
-            game:new_actor(arc);
+            -- local arc = enemies.Centipede:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8, 15)
+            -- game:new_actor(arc)
+
+            local arc = enemies.Explosion:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8, 32)
+            game:new_actor(arc)
 
             -- local arc = enemies.ElectricArc:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.5)
             -- arc:set_segment(CANVAS_WIDTH*0.8, CANVAS_HEIGHT/2, CANVAS_WIDTH/2, CANVAS_HEIGHT)

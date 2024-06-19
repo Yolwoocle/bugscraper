@@ -543,13 +543,15 @@ local function generate_menus()
         { "somepx", func_url("https://somepx.itch.io/")},
         { "emhuo", func_url("https://emhuo.itch.io/")},
         { "freesound.org ["..Text:text("menu.see_more").."]", func_set_menu("credits_sounds")},
-        { "Open source libraries ["..Text:text("menu.see_more").."]", func_set_menu("open_source")},
+        { "Open source assets ["..Text:text("menu.see_more").."]", func_set_menu("open_source")},
         { ""},
         { "<< "..Text:text("menu.credits.licenses").." >>"},
         { "CC0", func_url("https://creativecommons.org/publicdomain/zero/1.0/")},
         { "CC BY 3.0", func_url("https://creativecommons.org/licenses/by/3.0/")},          
         { "CC BY 4.0", func_url("https://creativecommons.org/licenses/by/4.0/")},
         { "MIT", func_url("https://opensource.org/license/mit")},
+        { "Zlib", func_url("https://www.zlib.net/zlib_license.html")},
+        { "OFL-1.1", func_url("https://spdx.org/licenses/OFL-1.1.html")},
         { ""},
         { "🐜❤"},
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
@@ -561,6 +563,8 @@ local function generate_menus()
         { Text:text("menu.credits.asset_item", "'GamepadGuesser'", "idbrii", "MIT"), func_url("https://github.com/idbrii/love-gamepadguesser/tree/main")};
         { Text:text("menu.credits.asset_item", "'bump.lua'", "kikito", "MIT"), func_url("https://github.com/kikito/bump.lua")};
         { Text:text("menu.credits.asset_item", "'love-error-explorer'", "snowkittykira", "MIT"), func_url("https://github.com/snowkittykira/love-error-explorer")};
+        { Text:text("menu.credits.asset_item", "'batteries'", "1bardesign", "Zlib"), func_url("https://github.com/1bardesign/batteries")};
+        { Text:text("menu.credits.asset_item", "'Fira Code'", "The Fira Code Project Authors", "OFL-1.1"), func_url("https://github.com/tonsky/FiraCode/")};
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
 
     menus.credits_sounds = Menu:new(game, {

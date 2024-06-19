@@ -427,6 +427,7 @@ local waves = {
 		}
 	}),
 
+	-- Cafeteria
 	new_cafeteria(function()
 		for _, actor in pairs(game.actors) do
 			if actor.name == "electric_rays" then
@@ -434,6 +435,7 @@ local waves = {
 			end
 		end
 	end),
+	------------
 	
 	new_wave({
 		min = 3,
@@ -441,6 +443,7 @@ local waves = {
 		enemies = {
 			{E.Grasshopper, 2},
 		},
+		music = "w2",
 	}),
 	
 	new_wave({
@@ -457,8 +460,22 @@ local waves = {
 		min = 5,
 		max = 6,
 		enemies = {
-			{E.Grasshopper, 2},
+			{E.Fly, 2},
+			{E.ExplodingFly, 2},
 		},
+	}),
+	
+	new_wave({
+		min = 5,
+		max = 6,
+		enemies = {
+			{E.Grasshopper, 2},
+			{E.Spider, 2}, 
+			{E.SpikedFly, 2}, 
+		},
+		fixed_enemies = {
+			{E.FlyBuddy, 1}
+		}
 	}),
 
 	new_wave({
@@ -467,11 +484,6 @@ local waves = {
 		enemies = {
 			{E.ChipBug, 2},
 			{E.StinkBug, 2},
-		},
-		
-		elevator_layers = {
-			["bg_grid"] = false,
-			["fg_grid"] = false,
 		},
 
 		run = function(self, level)
@@ -482,16 +494,6 @@ local waves = {
 				game:new_actor(arc)
 			end
 		end,
-		music = "w2",
-	}),
-
-	new_wave({
-		min = 5,
-		max = 6,
-
-		enemies = {
-			{E.ChipBug, 2},
-		},
 	}),
 
 	new_wave({

@@ -299,7 +299,7 @@ function Guns:init()
 
 	self.unlootable.ExplosionGun = Gun:inherit()
 
-	function self.unlootable.ExplosionGun:init(user, radius, damage)
+	function self.unlootable.ExplosionGun:init(user, radius, damage, resolution)
 		self.name = "turret_gun"
 		self:init_gun(user)
 		
@@ -308,7 +308,7 @@ function Guns:init()
 		self.max_ammo = math.huge
 		self.cooldown = 0
 
-		self.bullet_number = 24
+		self.bullet_number = resolution or 24
 		self.bullet_spread = pi2
 		self.bullet_range = radius or 32
 		-- self.bullet_friction = 0.9
@@ -330,9 +330,11 @@ function Guns:init()
 		self.screenshake = 4
 		self.do_particles = false
 		
-		self.bullet_speed = 300
+		self.bullet_speed = 250
 		self.random_speed_offset = 0
 		self.cooldown = 0.6
+
+		self.shoot_offset_x = 0
 		-- self.screenshake = 2
 	end
 end

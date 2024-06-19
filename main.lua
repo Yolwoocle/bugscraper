@@ -1,5 +1,7 @@
 require "scripts.util"
-require "lib.please_work_error_explorer.error_explorer"
+require "lib.please_work_error_explorer.error_explorer" {
+	source_font = love.graphics.newFont("fonts/FiraCode-Regular.ttf", 12)
+}
 local Class = require "scripts.meta.class"
 local Game = require "scripts.game.game"
 
