@@ -3,6 +3,204 @@
 
 --
 ------------------------------------
+-- Twitter video explosins
+
+
+["kp1"] = {"intro", function()
+	local x, y = CANVAS_WIDTH*0.5, CANVAS_HEIGHT*0.5
+	if self.removeme_i == 0 then
+		self.removeme_i = 1
+		Particles:text(x, y-42, "How I made this explosion effect", nil, 2, nil, nil, 0.01)
+		return
+	end
+	self.removeme_i = (self.removeme_i + 1) % 3
+
+	local arc = enemies.Explosion:new(x, y, 32)
+	game:new_actor(arc)
+end},
+
+["kp2"] = {"dust", function()
+	local x, y = CANVAS_WIDTH*0.5, CANVAS_HEIGHT*0.5
+	if self.removeme_i == 0 then
+		self.removeme_i = 1
+		Particles:text(x, y-42, "First, some shrinking circles", nil, 2, nil, nil, 0.01)
+		return
+	end
+	self.removeme_i = (self.removeme_i + 1) % 4
+	
+	local x, y = CANVAS_WIDTH*0.5, CANVAS_HEIGHT*0.5
+	local gradient = {
+		type = "gradient",
+		COL_WHITE, COL_YELLOW, COL_ORANGE, COL_DARK_RED, COL_DARK_GRAY, COL_BLACK_BLUE
+	}
+	Particles:smoke_big(x, y, gradient, 0, 1, {
+		vx = 0, 
+		vx_variation = 20, 
+		vy = -50, 
+		vy_variation = 10,
+		-- min_spawn_delay = min_spawn_delay or 0,
+		-- max_spawn_delay = max_spawn_delay or 0.2,
+	})
+end},
+
+["kp3"] = {"smoke", function()
+	local x, y = CANVAS_WIDTH*0.5, CANVAS_HEIGHT*0.5
+	if self.removeme_i == 0 then
+		self.removeme_i = 1
+		Particles:text(x, y-42, "Offset them in space and time", nil, 2, nil, nil, 0.01)
+		return
+	end
+	self.removeme_i = (self.removeme_i + 1) % 3
+
+  
+	local x, y = CANVAS_WIDTH*0.5, CANVAS_HEIGHT*0.5
+	local gradient = {
+		type = "gradient",
+		COL_WHITE, COL_YELLOW, COL_ORANGE, COL_DARK_RED, COL_DARK_GRAY, COL_BLACK_BLUE
+	}
+	Particles:smoke_big(x, y, gradient, 32+16, 200, {
+		vx = 0, 
+		vx_variation = 20, 
+		vy = -50, 
+		vy_variation = 10,
+		min_spawn_delay = 0,
+		max_spawn_delay = 0.2,
+	})
+end},
+
+["kp4"] = {"back smoke", function()
+	local x, y = CANVAS_WIDTH*0.5, CANVAS_HEIGHT*0.5
+	if self.removeme_i == 0 then
+		self.removeme_i = 1
+		Particles:text(x, y-42, "Add some black smoke afterwards", nil, 2, nil, nil, 0.01)
+		return
+	end
+	self.removeme_i = (self.removeme_i + 1) % 3
+	
+
+	local x, y = CANVAS_WIDTH*0.5, CANVAS_HEIGHT*0.5
+	local radius = 32+16
+	local function explosion_layer(col, rad, quantity, min_spawn_delay, max_spawn_delay)
+		Particles:smoke_big(x, y, col, rad, quantity, {
+			vx = 0, 
+			vx_variation = 20, 
+			vy = -50, 
+			vy_variation = 10,
+			min_spawn_delay = min_spawn_delay or 0,
+			max_spawn_delay = max_spawn_delay or 0.2,
+		})
+	end
+
+	local gradient = {
+		type = "gradient",
+		COL_WHITE, COL_YELLOW, COL_ORANGE, COL_DARK_RED, COL_DARK_GRAY, COL_BLACK_BLUE
+	}
+	explosion_layer({type = "gradient", COL_DARK_GRAY},  radius, 100, 0.2, 0.4)
+	explosion_layer({type = "gradient", COL_BLACK_BLUE}, radius, 100, 0.2, 0.4)
+
+	explosion_layer(gradient, radius,     200)
+	-- explosion_layer(gradient, radius,     80)
+	-- explosion_layer(gradient, radius*0.9, 60)
+	-- explosion_layer(gradient, radius*0.8, 30)
+	-- explosion_layer(gradient, radius*0.7, 20)
+	-- explosion_layer(gradient, radius*0.6, 15)
+end},
+
+["kp5"] = {"debris", function()
+	local x, y = CANVAS_WIDTH*0.5, CANVAS_HEIGHT*0.5
+	if self.removeme_i == 0 then
+		self.removeme_i = 1
+		Particles:text(x, y-42, "Add some flying debris", nil, 2, nil, nil, 0.01)
+		return
+	end
+	self.removeme_i = (self.removeme_i + 1) % 3
+	
+	local x, y = CANVAS_WIDTH*0.5, CANVAS_HEIGHT*0.5
+	local radius = 32+16
+	local function explosion_layer(col, rad, quantity, min_spawn_delay, max_spawn_delay)
+		Particles:smoke_big(x, y, col, rad, quantity, {
+			vx = 0, 
+			vx_variation = 20, 
+			vy = -50, 
+			vy_variation = 10,
+			min_spawn_delay = min_spawn_delay or 0,
+			max_spawn_delay = max_spawn_delay or 0.2,
+		})
+	end
+
+	local gradient = {
+		type = "gradient",
+		COL_WHITE, COL_YELLOW, COL_ORANGE, COL_DARK_RED, COL_DARK_GRAY, COL_BLACK_BLUE
+	}
+	explosion_layer({type = "gradient", COL_DARK_GRAY},  radius, 100, 0.2, 0.4)
+	explosion_layer({type = "gradient", COL_BLACK_BLUE}, radius, 100, 0.2, 0.4)
+
+	explosion_layer(gradient, radius,     200)
+	-- explosion_layer(gradient, radius,     80)
+	-- explosion_layer(gradient, radius*0.9, 60)
+	-- explosion_layer(gradient, radius*0.8, 30)
+	-- explosion_layer(gradient, radius*0.7, 20)
+	-- explosion_layer(gradient, radius*0.6, 15)
+
+	Particles:image(x, y, 5, images.bullet_casing, 4, nil, nil, nil, {
+		vx1 = -150,
+		vx2 = 150,
+
+		vy1 = 80,
+		vy2 = -200,
+	})
+
+	Particles:image(x , y, 5, images.white_dust, 4, nil, nil, nil, {
+		vx1 = -150,
+		vx2 = 150,
+
+		vy1 = 80,
+		vy2 = -200,
+	})
+end},
+
+["kp6"] = {"flash", function()
+	local x, y = CANVAS_WIDTH*0.5, CANVAS_HEIGHT*0.5
+	if self.removeme_i == 0 then
+		self.removeme_i = 1
+		Particles:text(x, y-42, "Add a white flash", nil, 2, nil, nil, 0.01)
+		return
+	end
+	self.removeme_i = (self.removeme_i + 1) % 4
+	
+	local x, y = CANVAS_WIDTH*0.5, CANVAS_HEIGHT*0.5
+	Particles:static_image(images.explosion_flash, x, y)
+end},
+
+["kp7"] = {"screenshake", function()
+	local x, y = CANVAS_WIDTH*0.5, CANVAS_HEIGHT*0.5
+	if self.removeme_i == 0 then
+		self.removeme_i = 1
+		Particles:text(x, y-42, "Add some screenshake", nil, 2, nil, nil, 0.01)
+		return
+	end
+	self.removeme_i = (self.removeme_i + 1) % 2
+	
+	local x, y = CANVAS_WIDTH*0.5, CANVAS_HEIGHT*0.5
+	local arc = enemies.Explosion:new(x, y, 32)
+	game:new_actor(arc)
+end},
+
+["kp8"] = {"done text", function()
+	local x, y = CANVAS_WIDTH*0.5, CANVAS_HEIGHT*0.5
+	self.removeme_i = 1
+	Particles:text(x, y-42, "Done!", nil, 2, nil, nil, 0.01)
+end},
+
+["kp9"] = {"boom", function()
+	local x, y = CANVAS_WIDTH*0.5, CANVAS_HEIGHT*0.5
+	local arc = enemies.Explosion:new(x, y, 32)
+	game:new_actor(arc)
+end},
+}
+
+
+------------------------------------
 -- Old combos
 
 -- (in update_combo)

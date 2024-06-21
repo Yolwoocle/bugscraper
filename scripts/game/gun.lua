@@ -71,6 +71,7 @@ function Gun:init_gun(user)
 	self.jetpack_force = self.default_jetpack_force
 	
 	-- Sounds
+	self.play_sfx = true
 	self.sfx = "shot1"
 	self.sfx_pitch_var = 1.15
 	self.sfx_pitch = 1
@@ -134,9 +135,11 @@ function Gun:shoot(dt, player, x, y, dx, dy, is_burst)
 	
 	-- Now, FIRE!!
 	-- SFX & Particles
-	Audio:play_var(self.sfx, 0.2, 1.2, {pitch=self.sfx_pitch})
-	if self.sfx2 then
-		Audio:play_var(self.sfx2, 0.2, 1.2, {pitch=self.sfx_pitch})
+	if self.play_sfx then
+		Audio:play_var(self.sfx, 0.2, 1.2, {pitch=self.sfx_pitch})
+		if self.sfx2 then
+			Audio:play_var(self.sfx2, 0.2, 1.2, {pitch=self.sfx_pitch})
+		end
 	end
 	if self.do_particles then
 		Particles:image(x , y, 1, images.bullet_casing, 4, nil, nil, nil, {
@@ -167,7 +170,22 @@ function Gun:shoot(dt, player, x, y, dx, dy, is_burst)
 	local x = floor(x + cos(ang) * gunw)
 	local y = floor(y + sin(ang) * gunw)
 
-	-- Update Burst timer
+	-- Update Burst
+	self:update_burst(dt, player, x, y, dx, dy, ang)
+
+	self:on_shoot(player)
+
+	-- Reload if ammo is 0
+	if self.ammo == 0 and not self.is_reloading then
+		self:reload()
+	end
+
+	return true
+end
+function Gun:on_shoot(player)
+end
+
+function Gun:update_burst(dt, player, x, y, dx, dy, ang)
 	if self.is_burst then
 		self.burst_counter = self.burst_counter - 1
 	end
@@ -195,17 +213,6 @@ function Gun:shoot(dt, player, x, y, dx, dy, is_burst)
 			self:fire_bullet(dt, player, x, y, self.bul_w, self.bul_h, dx, dy)
 		end
 	end
-
-	self:on_shoot(player)
-
-	-- Reload if ammo is 0
-	if self.ammo == 0 and not self.is_reloading then
-		self:reload()
-	end
-
-	return true
-end
-function Gun:on_shoot(player)
 end
 
 function Gun:get_damage(user)
@@ -257,6 +264,7 @@ function Gun:fire_bullet(dt, user, x, y, bul_w, bul_h, dx, dy)
 		life = self.bullet_life,
 		range = self.bullet_range,
 		do_particles = self.do_particles,
+		play_sfx = self.play_sfx
 	})
 	game:new_actor(bullet)
 end

@@ -33,7 +33,9 @@ function Bullet:init(gun, player, damage, x, y, w, h, vx, vy, args)
 	self.start_y = y
 	self.life = args.life or 5
 	self.range = args.range or math.huge
+
 	self.do_particles = param(args.do_particles, true)
+	self.play_sfx = param(args.play_sfx, true)
 
 	self.damage = damage
 	self.knockback = gun.knockback or 500
@@ -91,7 +93,9 @@ function Bullet:on_collision(col)
 	if col.type ~= "cross" then
 		-- Solid collision
 		local s = "metalfootstep_0"..tostring(love.math.random(0,4))
-		Audio:play_var(s, 0.3, 1, {pitch=0.7, volume=0.5})
+		if self.play_sfx then
+			Audio:play_var(s, 0.3, 1, {pitch=0.7, volume=0.5})
+		end
 		self:kill()
 	end
 		
@@ -104,7 +108,9 @@ function Bullet:on_collision(col)
 
 		if col.other.destroy_bullet_on_impact then
 			local s = "metalfootstep_0"..tostring(love.math.random(0,4))
-			Audio:play_var(s, 0.3, 1, {pitch=0.7, volume=0.5})
+			if self.play_sfx then
+				Audio:play_var(s, 0.3, 1, {pitch=0.7, volume=0.5})
+			end
 			self:kill()
 		end
 
@@ -126,7 +132,9 @@ function Bullet:on_collision(col)
 			if self.do_particles then
 				Particles:bullet_vanish(self.mid_x, self.y, ang + pi/2)
 			end
-			Audio:play_var("bullet_bounce_"..random_sample{"1","2"}, 0.2, 1.2)
+			if self.play_sfx then
+				Audio:play_var("bullet_bounce_"..random_sample{"1","2"}, 0.2, 1.2)
+			end
 			-- Audio:play_var("bullet_bounce", 0.2, 1.5)
 		end
 	end

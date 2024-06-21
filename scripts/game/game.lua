@@ -88,6 +88,7 @@ function Game:init()
 	self.menu_manager = MenuManager:new(self)
 	love.mouse.setVisible(Options:get("mouse_visible"))
 
+	self.is_game_ui_visible = true
 	self.is_first_time = Options.is_first_time
 	self.has_seen_controller_warning = false 
 	self.ui_visible = true
@@ -203,7 +204,7 @@ function Game:new_game()
 	self.max_timer_before_game_over = 3.3
 
 	-- UI
-	self.game_ui = GameUI:new(self)
+	self.game_ui = GameUI:new(self, self.is_game_ui_visible)
 	self.menu_blur = 1
 	self.max_menu_blur = 3
 

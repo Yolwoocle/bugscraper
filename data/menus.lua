@@ -160,7 +160,7 @@ local function generate_menus()
     if DEBUG_MODE then
         -- 
         -- { "[DEBUG] joystick_removed", func_set_menu('joystick_removed' ) },
-        table.insert(pause_items, { "[DEBUG] VIEW WAVES", func_set_menu('view_waves' ) })
+        -- table.insert(pause_items, { "[DEBUG] VIEW WAVES", func_set_menu('view_waves' ) })c
     end
     menus.pause = Menu:new(game, pause_items, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL, draw_elevator_progress)
     

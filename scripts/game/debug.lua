@@ -46,6 +46,8 @@ function Debug:init(game)
             end
         end
     end 
+
+    self.removeme_i = 0
     self.actions = {
         ["f2"] = {"toggle collision view mode", function()
             self.colview_mode = not self.colview_mode
@@ -61,6 +63,7 @@ function Debug:init(game)
         end},
         ["f6"] = {"toggle UI", function()
             self.game.game_ui.is_visible = not self.game.game_ui.is_visible
+            self.game.is_game_ui_visible = not self.game.is_game_ui_visible
         end},
         ["f7"] = {"toggle speedup", function()
             _G_t = 0
@@ -98,8 +101,8 @@ function Debug:init(game)
 			local cabin_rect = game.level.cabin_rect
         
             local cabin_rect = game.level.cabin_rect
-			Particles:falling_grid_side(cabin_rect.ax +   16, cabin_rect.ay + 6*16 + 8)
-			Particles:falling_grid_side(cabin_rect.bx - 7*16, cabin_rect.ay + 6*16 + 8)
+			Particles:falling_grid(cabin_rect.ax +   16,      cabin_rect.ay + 6*16 + 0*8)
+			Particles:falling_grid(cabin_rect.bx - 7*16, cabin_rect.ay + 6*16 + 0*8)
 
             -- Particles:word(CANVAS_WIDTH/2, CANVAS_HEIGHT/2+100, "HELLO!!", COL_WHITE, 1)
             for i = 1, 50 do
@@ -129,6 +132,12 @@ function Debug:init(game)
 
             local arc = enemies.Explosion:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8, 32)
             game:new_actor(arc)
+
+            -- local arc = enemies.ExplodingFly:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8)
+            -- game:new_actor(arc)
+
+            -- local arc = enemies.Grasshopper:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8)
+            -- game:new_actor(arc)
 
             -- local arc = enemies.ElectricArc:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.5)
             -- arc:set_segment(CANVAS_WIDTH*0.8, CANVAS_HEIGHT/2, CANVAS_WIDTH/2, CANVAS_HEIGHT)
@@ -200,27 +209,27 @@ function Debug:init(game)
             self.game:set_zoom(self.game:get_zoom() + 0.1)
         end},
         
-        ["left"] = {"move camera left", function()
-            local cam_x, cam_y = self.game:get_camera_position()
-            self.game:set_camera_position(cam_x - 8, cam_y)
-        end},
-        ["right"] = {"move camera right", function()
-            local cam_x, cam_y = self.game:get_camera_position()
-            self.game:set_camera_position(cam_x + 8, cam_y)
-        end},
-        ["up"] = {"move camera up", function()
-            local cam_x, cam_y = self.game:get_camera_position()
-            self.game:set_camera_position(cam_x, cam_y - 8)
-        end},
-        ["down"] = {"move camera down", function()
-            local cam_x, cam_y = self.game:get_camera_position()
-            self.game:set_camera_position(cam_x, cam_y + 8)
-        end},
+        -- ["left"] = {"move camera left", function()
+        --     local cam_x, cam_y = self.game:get_camera_position()
+        --     self.game:set_camera_position(cam_x - 8, cam_y)
+        -- end},
+        -- ["right"] = {"move camera right", function()
+        --     local cam_x, cam_y = self.game:get_camera_position()
+        --     self.game:set_camera_position(cam_x + 8, cam_y)
+        -- end},
+        -- ["up"] = {"move camera up", function()
+        --     local cam_x, cam_y = self.game:get_camera_position()
+        --     self.game:set_camera_position(cam_x, cam_y - 8)
+        -- end},
+        -- ["down"] = {"move camera down", function()
+        --     local cam_x, cam_y = self.game:get_camera_position()
+        --     self.game:set_camera_position(cam_x, cam_y + 8)
+        -- end},
         ["space"] = {"screenshot", function()
 		    game:screenshot()
-        end}
+        end},
     }
-
+    
     self.action_keys = {}
     for k, v in pairs(self.actions) do
         table.insert(self.action_keys, k)

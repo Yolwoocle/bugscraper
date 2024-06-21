@@ -21,12 +21,16 @@ function Grasshopper:init(x, y)
 
     self.gravity = self.gravity * 0.5
 
-    self.jump_speed = 300
+    -- self.jump_speed = 300
+    self.jump_speed = 200
 end
 
 function Grasshopper:update(dt)
     self:update_enemy(dt)
     self.vx = self.speed * self.walk_dir_x
+
+    local squash =  1 + clamp(math.abs(self.vy) / 500, 0, 2)
+    self.spr:set_scale(1/squash, squash)
 end
 
 function Grasshopper:draw()
@@ -37,6 +41,8 @@ function Grasshopper:after_collision(col, other)
     if col.type ~= "cross"  then
         if col.normal.y == 0 then
             self.walk_dir_x = col.normal.x
+        elseif col.normal.x == 0 then
+            self:on_grounded()
         end
     end
 end

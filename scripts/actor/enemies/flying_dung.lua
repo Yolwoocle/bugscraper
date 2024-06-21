@@ -29,6 +29,7 @@ function FlyingDung:init_flying_dung(x, y, spawner)
     self.is_pushable = false
     self.is_bouncy_to_bullets = false
     self.destroy_bullet_on_impact = true
+    self.do_stomp_animation = false
 
     self.is_stompable = true
     self.is_killed_on_stomp = false

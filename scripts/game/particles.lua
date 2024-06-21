@@ -11,6 +11,7 @@ function Particle:init_particle(x,y,s,r, vx,vy,vs,vr, life, g, is_solid)
 	self.vx, self.vy = vx or 0, vy or 0
 
 	self.s = s or 1.0-- size or radius
+	self.original_s = self.s
 	self.vs = vs or 20 
 	
 	self.r = r or 0
@@ -63,17 +64,42 @@ end
 
 local CircleParticle = Particle:inherit()
 
-function CircleParticle:init(x,y,s,col, vx,vy,vs, life, g, fill_mode)
+
+function CircleParticle:init(x,y,s,palette, vx,vy,vs, life, g, fill_mode, params)
+	params = params or {}
 	self:init_particle(x,y,s,0, vx,vy,vs,0, life, g)
 
-	self.col = col or COL_WHITE
+	self.palette = palette or COL_WHITE
+	if not self.palette.type then
+		self.col = palette
+	elseif self.palette.type == "gradient" then
+		self.col = self.palette[1]
+	end
 	self.fill_mode = fill_mode or "fill"
 	self.type = "circle"
+
+	self.spawn_delay = param(params.spawn_delay, 0)
+	self.spawn_timer = 0
+	if self.spawn_delay > 0 then
+		self.spawn_timer = self.spawn_delay
+	end
 end
 function CircleParticle:update(dt)
+	self.spawn_timer = math.max(0, self.spawn_timer - dt)
+	if self.spawn_timer > 0 then
+		return
+	end
+
 	self:update_particle(dt)
+	
+	if self.palette.type == "gradient" then
+		self.col = self.palette[math.floor(#self.palette * (1 - self.s/self.original_s)) + 1]
+	end
 end
 function CircleParticle:draw()
+	if self.spawn_timer > 0 then
+		return
+	end
 	circle_color(self.col, self.fill_mode, self.x, self.y, self.s)
 end
 ------------------------------------------------------------
@@ -398,6 +424,7 @@ function FallingGridParticle:init(img_side, img_top, x,y)
 	self.rot_3d_vel = 0 
 	self.rot_3d_acc = -6
 	self.rot_3d_bounce = 0.5
+	self.bounce_vel_threshold = 3
 end
 
 function FallingGridParticle:update(dt)
@@ -409,7 +436,7 @@ function FallingGridParticle:update(dt)
 	end
 	self.rot_3d = math.max(0, self.rot_3d + self.rot_3d_vel*dt)
 	
-	if self.rot_3d <= 0 and math.abs(self.rot_3d_vel) >= 0.5 then
+	if self.rot_3d <= 0 and math.abs(self.rot_3d_vel) >= self.bounce_vel_threshold then
 		self.rot_3d_vel = math.abs(self.rot_3d_vel) * self.rot_3d_bounce
 
 		local w = self.img_side:getWidth()
@@ -515,16 +542,66 @@ function ParticleSystem:clear(layer_id)
 	end
 end
 
-function ParticleSystem:smoke_big(x, y, col, rad)
-	self:smoke(x, y, 15, col or COL_WHITE, rad or 16, 8, 4)
+function ParticleSystem:explosion(x, y, radius)
+	local function explosion_layer(col, rad, quantity, min_spawn_delay, max_spawn_delay)
+		self:smoke_big(x, y, col, rad, quantity, {
+			vx = 0, 
+			vx_variation = 20, 
+			vy = -50, 
+			vy_variation = 10,
+			min_spawn_delay = min_spawn_delay or 0,
+			max_spawn_delay = max_spawn_delay or 0.2,
+		})
+	end
+
+	local gradient = {
+		type = "gradient",
+		COL_WHITE, COL_YELLOW, COL_ORANGE, COL_DARK_RED, COL_DARK_GRAY, COL_BLACK_BLUE
+	}
+	explosion_layer({type = "gradient", COL_DARK_GRAY},  radius, 100, 0.2, 0.4)
+	explosion_layer({type = "gradient", COL_BLACK_BLUE}, radius, 100, 0.2, 0.4)
+
+	explosion_layer(gradient, radius,     200)
+	-- explosion_layer(gradient, radius,     80)
+	-- explosion_layer(gradient, radius*0.9, 60)
+	-- explosion_layer(gradient, radius*0.8, 30)
+	-- explosion_layer(gradient, radius*0.7, 20)
+	-- explosion_layer(gradient, radius*0.6, 15)
+
+	Particles:image(x, y, 5, images.bullet_casing, 4, nil, nil, nil, {
+		vx1 = -150,
+		vx2 = 150,
+
+		vy1 = 80,
+		vy2 = -200,
+	})
+
+	Particles:image(x , y, 5, images.white_dust, 4, nil, nil, nil, {
+		vx1 = -150,
+		vx2 = 150,
+
+		vy1 = 80,
+		vy2 = -200,
+	})
+	
+	Particles:static_image(images.explosion_flash, x, y)
+	-- x, y, number, col, spw_rad, size, sizevar, layer, fill_mode, params
 end
 
-function ParticleSystem:smoke(x, y, number, col, spw_rad, size, sizevar, layer, fill_mode)
-	number = number or 10
-	spw_rad = spw_rad or 8
-	size = size or 4
-	sizevar = sizevar or 2
+function ParticleSystem:smoke_big(x, y, col, rad, quantity, params)
+	self:smoke(x, y, quantity or 15, col or COL_WHITE, rad or 16, 8, 4, nil, nil, params)
+end
+
+function ParticleSystem:smoke(x, y, number, col, spw_rad, size, sizevar, layer, fill_mode, params)
+	params = params or {}
+
+	number = param(number, 10)
+	spw_rad = param(spw_rad, 8)
+	size = param(size, 4)
+	sizevar = param(sizevar, 2)
 	layer = param(layer, PARTICLE_LAYER_FRONT)
+	local min_spawn_delay = param(params.min_spawn_delay, 0)
+	local max_spawn_delay = param(params.max_spawn_delay, 0)
 
 	for i=1,number do
 		local ang = love.math.random() * pi2
@@ -534,8 +611,14 @@ function ParticleSystem:smoke(x, y, number, col, spw_rad, size, sizevar, layer, 
 		
 		local v = random_range(0.6, 1)
 		local col = col or {v,v,v,1}
+
+		local vx = param(params.vx, 0) + random_neighbor(param(params.vx_variation, 0))
+		local vy = param(params.vy, 0) + random_neighbor(param(params.vy_variation, 0))
+		
 		-- x,y,s,col, vx,vy,vs, life, g, fill_mode
-		local particle = CircleParticle:new(x+dx, y+dy, size+dsize, col, 0, 0, _vs, _vr, _life, fill_mode)
+		local particle = CircleParticle:new(x+dx, y+dy, size+dsize, col, vx, vy, _vs, _vr, _life, fill_mode, {
+			spawn_delay = random_range(min_spawn_delay, max_spawn_delay),
+		})
 		self:add_particle(particle, layer)
 	end
 end
@@ -681,7 +764,7 @@ function ParticleSystem:image(x, y, number, spr, spw_rad, life, vs, g, parms)
 end
 
 -- FIXME: scotch
-function ParticleSystem:static_image(img, x, y, rot)
+function ParticleSystem:static_image(img, x, y, rot, life)
 	Particles:image(x, y, 1, img, 0, nil, 0, 0, {
 		is_solid = false,
 		rot = rot,
@@ -691,7 +774,7 @@ function ParticleSystem:static_image(img, x, y, rot)
 		vy2 = 0,
 		vr1 = 0,
 		vr2 = 0,
-		life = 0.12,
+		life = life or 0.12,
 		is_animated = true
 	})
 end
@@ -729,14 +812,14 @@ function ParticleSystem:letter(x, y, str, spawn_delay, col, stay_time, text_scal
 	self:add_particle(TextParticle:new(x, y, str, spawn_delay, col, stay_time, text_scale, outline_color))
 end
 
-function ParticleSystem:word(x, y, str, col, stay_time, text_scale, outline_color)
+function ParticleSystem:word(x, y, str, col, stay_time, text_scale, outline_color, letter_time_spacing)
 	stay_time = param(stay_time, 0)
 	text_scale = param(text_scale, 1)
 
 	local x = x - (text_scale * get_text_width(str))/2
 	for i=1, #str do
 		local letter = utf8.sub(str, i,i)
-		Particles:letter(x, y, letter, i*0.05, col, stay_time, text_scale, outline_color)
+		Particles:letter(x, y, letter, i*(letter_time_spacing or 0.05), col, stay_time, text_scale, outline_color)
 		x = x + get_text_width(letter) * text_scale
 	end
 end

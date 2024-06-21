@@ -19,7 +19,7 @@ local function load_image_table(name, n, w, h)
 	if not n then  error("number of images `n` not defined")  end
 	local t = {}
 	for i=1,n do 
-		t[i] = load_image(name..tostr(i))
+		t[i] = load_image(name..tostring(i)..".png")
 	end
 	t.w = w
 	t.h = h
@@ -164,6 +164,7 @@ local img_names = {
 	honey_fragment_2 =     "particles/honey_fragment_2",
 	dummy_fragment_1 =     "particles/dummy_fragment_1",
 	dummy_fragment_2 =     "particles/dummy_fragment_2",
+	explosion_flash =      "particles/explosion_flash",
 	glass_shard =          "particles/glass_shard",
 	snail_shell_fragment = "particles/snail_shell_fragment",
 	snail_shell_bouncy_fragment = "particles/snail_shell_bouncy_fragment",
@@ -175,6 +176,7 @@ local img_names = {
 	button_fragment_5 =    "particles/button_fragment_5",
 	smash_flash =          "particles/smash_flash",
 	particle_leaf =        "particles/particle_leaf",
+	white_dust =           "particles/white_dust",
 
 	bullet_vanish_1 =      "particles/bullet_vanish_1",
 	bullet_vanish_2 =      "particles/bullet_vanish_2",
@@ -257,6 +259,9 @@ local img_names = {
 	yanis = "yanis",
 	test = "test",
 
+	_test_fly_big_1 = "_test_fly_big_1",
+	_test_fly_big_2 = "_test_fly_big_2",
+
 }
 for id, path in pairs(img_names) do
 	images[id] = load_image(path..".png")
@@ -269,6 +274,8 @@ images.button_fragments = {
 	images.button_fragment_4,
 	images.button_fragment_5,
 }
+
+images._test_anim_explosion = load_image_table("_test_explosion_", 14)
 
 -----------------------------------------------------
 -- Input buttons

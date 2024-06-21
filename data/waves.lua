@@ -175,7 +175,7 @@ local waves = {
 		roll_type = WAVE_ROLL_TYPE_FIXED,
 		enemies = {
 			{E.Fly, 2},
-			{E.MushroomAnt, 4},
+			{E.ExplodingFly, 4},
 		},
 	}),
 
@@ -213,7 +213,7 @@ local waves = {
 			{E.Larva, 1},
 			{E.Fly, 2},
 			{E.SpikedFly, 2},
-			{E.MushroomAnt, 4},
+			{E.ExplodingFly, 4},
 			{E.Slug, 2},
 			{E.SnailShelled, 2},
 		},
@@ -267,7 +267,7 @@ local waves = {
 		enemies = {
 			{E.Larva, 1},
 			{E.SpikedFly, 2},
-			{E.MushroomAnt, 2},
+			{E.ExplodingFly, 2},
 			{E.SnailShelled, 2},
 			{E.Spider, 2},
 			{E.StinkBug, 4},
@@ -282,7 +282,7 @@ local waves = {
 			{E.Slug, 2},
 			{E.Woodlouse, 2},
 			{E.SpikedFly, 2},
-			{E.MushroomAnt, 2},
+			{E.ExplodingFly, 2},
 			{E.SnailShelled, 2},
 			{E.Spider, 2},
 			{E.StinkBug, 2},
@@ -463,6 +463,9 @@ local waves = {
 			{E.Fly, 2},
 			{E.ExplodingFly, 2},
 		},
+		fixed_enemies = {
+			{E.FlyBuddy, 2}
+		}
 	}),
 	
 	new_wave({

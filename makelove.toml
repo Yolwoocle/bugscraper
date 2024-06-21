@@ -1,4 +1,4 @@
-name = "bugscraper_0.5.dev24-06-12"
+name = "bugscraper_0.5.dev24-06-20"
 # default_targets = ["lovejs", "win32", "win64", "macos", "appimage"]
 default_targets = ["win64"]
 # default_targets = ["lovejs"]
@@ -22,7 +22,7 @@ love_files = [
 # and the values in the comments are the original values in love.exe
 # If you are not doing a versioned build, 0.4 is empty.
 [windows.exe_metadata]
-FileDescription = "Bugscraper: Rise to the top of a bug-filled tower" # "LÖVE {löve version}"
+FileDescription = "Bugscraper 0.5.dev24-06-20: Rise to the top of a bug-filled tower" # "LÖVE {löve version}"
 FileVersion = "0.5" # "{löve version}"
 CompanyName = "Léo Bernard" # "LÖVE World Domination Inc."
 LegalCopyright = "Copyright © 2024 Léo Bernard" # "Copyright © 2006-2020 LÖVE Development Team" or ""
@@ -49,7 +49,7 @@ CFBundleShortVersionString = "0.5"
 [linux]
 # These values are included in the .desktop file
 [linux.desktop_file_metadata]
-Comment="Bugscraper 0.5.dev24-06-12: Rise to the top of a bug-filled tower"
+Comment="Bugscraper 0.5.dev24-06-20: Rise to the top of a bug-filled tower"
 Categories="Game;" # Default is "Game;" (semicolon is separator and terminator)
 
 [lovejs]

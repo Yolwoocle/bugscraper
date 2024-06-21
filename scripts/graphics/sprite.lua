@@ -104,7 +104,7 @@ function Sprite:set_outline(color, type)
     else
         self.outline = {
             color = color,
-            type = type,
+            type = type, -- "round" or "square"
         }
     end
 end
@@ -138,9 +138,7 @@ function Sprite:draw(x, y, w, h, custom_draw)
     if custom_draw then
         draw_func = custom_draw 
     end
-    if self.outline then
-        draw_func = function(...) draw_with_outline(self.outline.color, self.outline.type, ...) end
-    end
+    
     
 	local spr_w = self.image:getWidth()
 	local spr_h = self.image:getHeight()
@@ -152,6 +150,9 @@ function Sprite:draw(x, y, w, h, custom_draw)
     local sprite_ox, sprite_oy = self:get_sprite_offset()
 
     exec_color(self.color, function()
+        if self.outline then
+            draw_with_outline(self.outline.color, self.outline.type, self.image, x + anchor_ox, y + anchor_oy, self.rot, scale_x, scale_y, sprite_ox, sprite_oy)
+        end
         draw_func(self.image, x + anchor_ox, y + anchor_oy, self.rot, scale_x, scale_y, sprite_ox, sprite_oy)
         -- draw_func(self.image, x + anchor_ox, y + anchor_oy, self.rot, scale_x, scale_y, spr_w/2, spr_h)
     end)

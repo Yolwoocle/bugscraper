@@ -319,6 +319,7 @@ function Guns:init()
 		self.spr = images.gun_ring
 		self.sfx_volume = 1
 		self.sfx_pitch = 1.4
+		self.play_sfx = false
 		
 		self.cooldown = 0.5
 		self.jetpack_force = 1000

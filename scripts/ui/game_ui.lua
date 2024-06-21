@@ -5,10 +5,10 @@ local shaders = require "data.shaders"
 
 local GameUI = Class:inherit()
 
-function GameUI:init(game)
+function GameUI:init(game, is_visible)
 	self.game = game
 
-    self.is_visible = true
+    self.is_visible = param(is_visible, true)
 	self.stomp_arrow_target = nil
 end
 
