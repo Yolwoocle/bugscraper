@@ -427,6 +427,7 @@ local waves = {
 		}
 	}),
 
+	------------
 	-- Cafeteria
 	new_cafeteria(function()
 		for _, actor in pairs(game.actors) do
@@ -442,6 +443,9 @@ local waves = {
 		max = 4,
 		enemies = {
 			{E.Grasshopper, 2},
+		},
+		elevator_layers = {
+			["bg_grid"] = false,
 		},
 		music = "w2",
 	}),

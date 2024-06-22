@@ -76,4 +76,25 @@ shaders.blur_shader = love.graphics.newShader[[
 	}
 ]]
 
+-----------------------------------------------------
+
+-- Palette swap, thanks to Keyslam on the LÖVE discord server
+local test = [[
+uniform float palette_index;
+uniform Image palette;
+
+vec4 effect( vec4 color, Image tex, vec2 texture_coords, vec2 screen_coords )
+{
+    vec4 index = Texel(tex, texture_coords);
+
+    if (index.a == 0)
+      discard;
+
+    vec4 pixel = Texel(palette, vec2(index.x, palette_index));
+    
+    return pixel;
+}
+]]
+
+
 return shaders

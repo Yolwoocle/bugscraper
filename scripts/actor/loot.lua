@@ -279,7 +279,7 @@ function Loot.Gun:init(x, y, val, vx, vy)
 	
 	self:init_loot(gun.spr, x, y, 2, 2, val, vx, vy)
 	
-	self.max_life = 15
+	self.max_life = 8
 	self.life = self.max_life
 end
 

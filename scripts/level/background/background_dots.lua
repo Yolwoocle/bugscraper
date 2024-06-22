@@ -1,5 +1,6 @@
 local Class = require "scripts.meta.class"
 local Background = require "scripts.level.background.background"
+local images     = require "data.images"
 
 local BackgroundDots = Background:inherit()
 
@@ -92,7 +93,12 @@ end
 
 function BackgroundDots:new_bg_particle()
 	local o = {}
-	o.x = love.math.random(0, CANVAS_WIDTH)
+	o.type = "rect"
+	-- if random_range(0, 1) < 0.05 then
+	-- 	o.type = "image"
+	-- 	o.img = images._test_bg_image_1
+	-- end
+	o.x = love.math.random(-12, CANVAS_WIDTH)
 	o.w = love.math.random(2, 12)
 	o.h = love.math.random(8, 64)
 	
@@ -118,23 +124,14 @@ end
 
 function BackgroundDots:update_bg_particles(dt)
 	-- Background lines
-	for i,o in pairs(self.bg_particles) do
+	for i=1, #self.bg_particles do
+		local o = self.bg_particles[i]
 		o.y = o.y + dt*self.speed*o.spd
 		
 		local del_cond = (self.speed>=0 and o.y > CANVAS_HEIGHT) or (self.speed<0 and o.y < -CANVAS_HEIGHT) 
 		if del_cond then
 			local p = self:new_bg_particle()
-			-- o = p
-			-- ^^^^^ WHY DOES THIS NOT. WORK. I'm going crazy
-			o.x = p.x
-			o.y = p.y
-			o.w = p.w
-			o.h = p.h
-			o.col = p.col
-			o.spd = p.spd
-			o.oy = p.oy
-			o.oh = p.oh
-			o.rnd_pi = p.rnd_pi
+			self.bg_particles[i] = p
 		end
 
 		-- Size corresponds to elevator speed
@@ -171,11 +168,19 @@ function BackgroundDots:draw()
 	-- end
 
 	for i,o in pairs(self.bg_particles) do
+		self:draw_particle(o)
+	end
+end
+
+function BackgroundDots:draw_particle(o)
+	if o.type == "rect" then
 		local y = o.y + o.oy
 		local mult = 1 - clamp(abs(self.speed / 100), 0, 1)
 		local sin_oy = mult * sin(game.t + o.rnd_pi) * o.oh * o.h 
 		
 		rect_color(o.col, "fill", o.x, o.y + o.oy + sin_oy, o.w, o.h * o.oh)
+	elseif o.type == "image" then
+		draw_centered(o.img, o.x, o.y)
 	end
 end
 
