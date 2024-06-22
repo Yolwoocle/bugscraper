@@ -14,8 +14,10 @@ function Bullet:init(gun, player, damage, x, y, w, h, vx, vy, args)
 	self.name = "bullet"
 	self.gun = gun
 	self.player = player
-	self.is_enemy_bul = player.is_enemy
 	self.is_bullet = true
+
+	--target_type: what kind of enemy the bullet can target: "player", "enemy", "everyone"
+	self.target_type = args.target_type or ternary(player.is_enemy, "player", "enemy") 
 
 	self.friction = (gun.bullet_friction or 1.0) - random_range(0, (gun.random_friction_offset or 0))
 	self.friction_x = self.friction
@@ -38,6 +40,7 @@ function Bullet:init(gun, player, damage, x, y, w, h, vx, vy, args)
 	self.play_sfx = param(args.play_sfx, true)
 
 	self.damage = damage
+	self.override_enemy_damage = args.override_enemy_damage -- Damage value that overrides the `damage` 
 	self.knockback = gun.knockback or 500
 	self.harmless_timer = Timer:new(gun.harmless_time or 0.0) 
 	if self.harmless_timer.duration > 0 then
@@ -86,8 +89,22 @@ function Bullet:draw()
 	-- print_centered_outline(nil, nil, ternary(self.harmless_timer.is_active, "O", "X"), self.x, self.y)
 end
 
+function Bullet:is_actor_my_enemy(actor)
+	if not actor.is_actor then
+		return false
+	end
+
+	if self.target_type == "player" then
+		return not actor.is_enemy
+	elseif self.target_type == "enemy" then
+		return actor.is_enemy
+	elseif self.target_type == "everyone" then
+		return true
+	end
+end
+
 function Bullet:on_collision(col)
-	if self.is_removed then    return    end
+	if self.is_removed then             return   end
 	if col.other == self.player then    return   end
 
 	if col.type ~= "cross" then
@@ -100,7 +117,7 @@ function Bullet:on_collision(col)
 	end
 		
 	if self.harmless_timer.is_active then return end
-	if col.other.on_hit_bullet and col.other.is_enemy ~= self.is_enemy_bul then
+	if col.other.on_hit_bullet and self:is_actor_my_enemy(col.other) then
 		local damaged = col.other:on_hit_bullet(self, col)
 		if damaged and self.player and self.player.is_player then
 			self.player:on_my_bullet_hit(self, col.other, col)

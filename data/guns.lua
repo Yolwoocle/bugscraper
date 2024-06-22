@@ -324,9 +324,11 @@ function Guns:init()
 		self.cooldown = 0.5
 		self.jetpack_force = 1000
 		
+		self.override_enemy_damage = 6
 		self.bullet_spr = images.empty
 		self.bul_w = 10
 		self.bul_h = 10
+		self.bullet_target_type = "everyone"
 
 		self.screenshake = 4
 		self.do_particles = false

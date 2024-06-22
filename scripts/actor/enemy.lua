@@ -315,7 +315,7 @@ function Enemy:on_hit_bullet(bul, col)
 	if self.is_immune_to_bullets then
 		return false
 	end
-	self:do_damage(bul.damage, bul)
+	self:do_damage(bul.override_enemy_damage or bul.damage, bul)
 	
 	if self.is_knockbackable then
 		local ang = atan2(bul.vy, bul.vx)

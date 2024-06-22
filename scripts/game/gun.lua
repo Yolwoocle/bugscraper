@@ -30,6 +30,7 @@ function Gun:init_gun(user)
 	self.random_angle_offset = 0.1
 	self.random_speed_offset = 40
 	self.random_friction_offset = 0
+	self.bullet_target_type = "default"
 	
 	self.shoot_offset_x = nil
 
@@ -215,14 +216,6 @@ function Gun:update_burst(dt, player, x, y, dx, dy, ang)
 	end
 end
 
-function Gun:get_damage(user)
-	local value = self.damage
-	if user and user.is_player then
-		value = value * user:get_gun_damage_multiplier()
-	end
-	return value
-end
-
 function Gun:get_max_ammo()
 	local m = (self.user and self.user.get_max_ammo_multiplier and self.user:get_max_ammo_multiplier()) or 1
 	return self.max_ammo * m
@@ -264,9 +257,19 @@ function Gun:fire_bullet(dt, user, x, y, bul_w, bul_h, dx, dy)
 		life = self.bullet_life,
 		range = self.bullet_range,
 		do_particles = self.do_particles,
-		play_sfx = self.play_sfx
+		play_sfx = self.play_sfx,
+		target_type = ternary(self.bullet_target_type == "default", nil, self.bullet_target_type),
+		override_enemy_damage = self.override_enemy_damage,
 	})
 	game:new_actor(bullet)
+end
+
+function Gun:get_damage(user)
+	local value = self.damage
+	if user and user.is_player then
+		value = value * user:get_gun_damage_multiplier()
+	end
+	return value
 end
 
 function Gun:add_ammo(quantity)
