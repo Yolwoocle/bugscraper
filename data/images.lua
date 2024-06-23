@@ -263,6 +263,7 @@ local img_names = {
 	_test_fly_big_2 = "_test_fly_big_2",
 
 	_test_bg_image_1 = "_test_bg_image_1",
+	_test_bg_image_2 = "_test_bg_image_2",
 
 }
 for id, path in pairs(img_names) do

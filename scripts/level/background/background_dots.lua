@@ -11,6 +11,7 @@ function BackgroundDots:init(level)
 	self.def_speed = 10 --TODO
 
 	self.bg_color_index = 1
+	self.number_of_particles = 60
 	
 	self.show_bg_particles = true
 	self.def_bg_col = COL_BLACK_BLUE
@@ -40,7 +41,7 @@ end
 
 function BackgroundDots:init_bg_particles()
 	self.bg_particles = {}	
-	for i=1,60 do
+	for i=1,self.number_of_particles do
 		local p = self:new_bg_particle()
 		p.x = random_range(0, CANVAS_WIDTH)
 		p.y = random_range(0, CANVAS_HEIGHT)
@@ -93,14 +94,19 @@ end
 
 function BackgroundDots:new_bg_particle()
 	local o = {}
-	o.type = "rect"
-	-- if random_range(0, 1) < 0.05 then
-	-- 	o.type = "image"
-	-- 	o.img = images._test_bg_image_1
-	-- end
-	o.x = love.math.random(-12, CANVAS_WIDTH)
-	o.w = love.math.random(2, 12)
-	o.h = love.math.random(8, 64)
+	if random_range(0, 1) < 0.05 then
+		o.type = "image"
+		o.img = images["_test_bg_image_"..tostring(random_range_int(1, 2))]
+		
+		o.w = o.img:getWidth()
+		o.h = o.img:getHeight()
+	else
+		o.type = "rect"
+
+		o.w = love.math.random(2, 12)
+		o.h = love.math.random(8, 64)
+	end
+	o.x = love.math.random(-o.w, CANVAS_WIDTH)
 	
 	if self.speed >= 0 then
 		o.y = -o.h - love.math.random(0, CANVAS_HEIGHT)
@@ -128,7 +134,7 @@ function BackgroundDots:update_bg_particles(dt)
 		local o = self.bg_particles[i]
 		o.y = o.y + dt*self.speed*o.spd
 		
-		local del_cond = (self.speed>=0 and o.y > CANVAS_HEIGHT) or (self.speed<0 and o.y < -CANVAS_HEIGHT) 
+		local del_cond = (self.speed>=0 and o.y > CANVAS_HEIGHT + o.h) or (self.speed<0 and o.y - o.h < -CANVAS_HEIGHT) 
 		if del_cond then
 			local p = self:new_bg_particle()
 			self.bg_particles[i] = p

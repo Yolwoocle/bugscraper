@@ -161,8 +161,12 @@ function Enemy:follow_target(dt)
 	end
 end
 
+function Enemy:is_flashing_white()
+	return (self.flash_white or self.damaged_flash_timer > 0)
+end
+
 function Enemy:draw_enemy()
-	local f = (self.flash_white or self.damaged_flash_timer > 0) and draw_white
+	local f = self:is_flashing_white() and draw_white
 	self:draw_actor(f)
 
 	if game.debug.info_view then
