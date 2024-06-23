@@ -4,6 +4,7 @@ local InputUser = require "scripts.input.input_user"
 local InputProfile = require "scripts.input.input_profile"
 local images = require "data.images"
 local skins = require "data.skins"
+local utf8 = require "utf8"
 
 local InputManager = Class:inherit()
 
@@ -225,16 +226,18 @@ end
 function InputManager:gamepadreleased(joystick, buttoncode)
 end
 
-function InputManager:is_keyboard_button_in_list_down(buttons)
-    for _, button in pairs(buttons) do
-		if love.keyboard.isScancodeDown(button.key_name) then
-			return true
-		end
-	end
-	return false
+function InputManager:is_button_mouse(button)
+    return string.sub(button.key_name, 1, 5) == "mouse"
 end
 
 function InputManager:is_keyboard_down(button)
+    if self:is_button_mouse(button) then
+        local button_n = tonumber(string.sub(button.key_name, 6, -1))
+        if not button_n then
+            return false
+        end
+        return love.mouse.isDown(button_n)
+    end
     return love.keyboard.isScancodeDown(button.key_name)
 end
 
@@ -521,7 +524,13 @@ function InputManager:get_button_icon(player_n, button, brand_override)
 
     local img = nil
     if button.type == INPUT_TYPE_KEYBOARD then
-		local key_constant = love.keyboard.getKeyFromScancode(button.key_name)
+        local key_constant
+        if self:is_button_mouse(button) then
+            key_constant = button.key_name
+        else
+            key_constant = love.keyboard.getKeyFromScancode(button.key_name)
+        end
+
         local image_name = KEY_CONSTANT_TO_IMAGE_NAME[key_constant]
 		if image_name ~= nil then
             img = images[image_name]

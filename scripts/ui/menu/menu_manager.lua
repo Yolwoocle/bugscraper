@@ -264,6 +264,18 @@ function MenuManager:gamepadaxis(joystick, axis, value)
 	self.sel_item:gamepadaxis(joystick, axis, value)
 end
 
+function MenuManager:mousepressed(x, y, button, istouch, presses)
+	if self.sel_item == nil then return end
+	if self.sel_item.mousepressed == nil then return end
+	self.sel_item:mousepressed(x, y, button, istouch, presses)
+end
+
+function MenuManager:mousereleased(x, y, button, istouch, presses)
+	if self.sel_item == nil then return end
+	if self.sel_item.mousereleased == nil then return end
+	self.sel_item:mousereleased(x, y, button, istouch, presses)
+end
+
 ---------------------------------------------
 
 function MenuManager:enable_joystick_wait_mode(joystick)

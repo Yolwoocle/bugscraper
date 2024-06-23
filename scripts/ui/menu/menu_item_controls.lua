@@ -145,6 +145,10 @@ function ControlsMenuItem:gamepadaxis(joystick, axis, value)
 	end
 end
 
+function ControlsMenuItem:mousepressed(x, y, button, istouch, presses)
+	self:on_button_pressed(InputButton:new(INPUT_TYPE_KEYBOARD, "mouse"..tostring(button)))
+end
+
 function ControlsMenuItem:stop_waiting()
 	self.is_waiting_for_input = false
 	Input:set_standby_mode(false)

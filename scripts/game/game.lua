@@ -1000,6 +1000,16 @@ function Game:gamepadaxis(joystick, axis, value)
 	if self.debug then          self.debug:gamepadaxis(joystick, axis, value)    end
 end
 
+function Game:mousepressed(x, y, button, istouch, presses)
+	-- Input:mousepressed(joystick, axis, value)
+	if self.menu_manager then   self.menu_manager:mousepressed(x, y, button, istouch, presses)   end
+end
+
+function Game:mousereleased(x, y, button, istouch, presses)
+	-- Input:mousereleased(joystick, axis, value)
+	if self.menu_manager then   self.menu_manager:mousereleased(x, y, button, istouch, presses)   end
+end
+
 function Game:focus(f)
 	if f then
 	else

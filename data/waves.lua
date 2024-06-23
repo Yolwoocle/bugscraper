@@ -94,7 +94,7 @@ local waves = {
 	-- new_cafeteria(),
 	-- [[
 	new_wave({
-		min = 3,
+		min = 5,
 		max = 5,
 		enemies = {
 			{E.Larva, 3},

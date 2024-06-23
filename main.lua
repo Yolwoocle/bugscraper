@@ -77,7 +77,11 @@ function love.keyreleased(key, scancode)
 end
 
 function love.mousepressed(x, y, button, istouch, presses)
-	if game.mousepressed then   game:mousepressed(x, y, button)   end
+	if game.mousepressed then   game:mousepressed(x, y, button, istouch, presses)   end
+end
+
+function love.mousereleased(x, y, button, istouch, presses)
+	if game.mousereleased then   game:mousereleased(x, y, button, istouch, presses)   end
 end
 
 function love.joystickadded(joystick)

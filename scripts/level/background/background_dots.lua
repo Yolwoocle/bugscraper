@@ -94,7 +94,7 @@ end
 
 function BackgroundDots:new_bg_particle()
 	local o = {}
-	if random_range(0, 1) < 0.05 then
+	if false and random_range(0, 1) < 0.05 then --removeme remove "false and"
 		o.type = "image"
 		o.img = images["_test_bg_image_"..tostring(random_range_int(1, 2))]
 		

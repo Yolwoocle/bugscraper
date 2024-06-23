@@ -460,6 +460,16 @@ KEY_CONSTANT_TO_IMAGE_NAME = {
 	["kpenter"] = "btn_k_kpenter",
 	["kp="] = "btn_k_kpequals",
 	["escape"] = "btn_k_escape",
+
+	["mouse1"] = "btn_k_mouse1",
+	["mouse2"] = "btn_k_mouse2",
+	["mouse3"] = "btn_k_mouse3",
+	["mouse4"] = "btn_k_mouse4",
+	["mouse5"] = "btn_k_mouse5",
+	["mouse6"] = "btn_k_mouse6",
+	["mouse7"] = "btn_k_mouse7",
+	["mouse8"] = "btn_k_mouse8",
+	["mouse9"] = "btn_k_mouse9",
 }
 
 CONTROLLER_BUTTONS = {

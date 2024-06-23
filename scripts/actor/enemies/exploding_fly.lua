@@ -17,6 +17,7 @@ function ExplodingFly:init(x, y, spr)
     self.kill_when_negative_life = false
     self.is_killed_on_stomp = false
     self.do_stomp_animation = false
+    self.counts_as_enemy = true
 
     self.explosion_radius = 16 * 3
     self.weight = 0 -- ranges from 0 to 1, dictates how much y velocity is weighed down
@@ -52,6 +53,7 @@ function ExplodingFly:init(x, y, spr)
                 self.is_immune_to_bullets = true
                 self.is_stompable = false
                 self.destroy_bullet_on_impact = false
+                self.counts_as_enemy = false -- FIXME: check if this affects the "kills" stat
                 self.speed = 0
                 self.speed_x = 0
                 self.speed_y = 0
