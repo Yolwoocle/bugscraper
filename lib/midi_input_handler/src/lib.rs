@@ -24,6 +24,10 @@ fn libmidi_input_handler(lua: &Lua) -> LuaResult<LuaTable> {
     lua_init(lua)
 }
 #[mlua::lua_module]
+fn midi_input_handler(lua: &Lua) -> LuaResult<LuaTable> {
+    lua_init(lua)
+}
+#[mlua::lua_module]
 fn target_debug_libmidi_input_handler(lua: &Lua) -> LuaResult<LuaTable> {
     lua_init(lua)
 }

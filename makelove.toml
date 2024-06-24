@@ -33,7 +33,7 @@ prebuild = [
 
 postbuild = [
     "cp ./lib/midi_input_handler/libmidi_input_handler.so  ./export/appimage/libmidi_input_handler.so",
-    "echo '<== DONE ==>'"
+    "echo '\n<== DONE ==>\n'"
 ]
 
 [windows]

@@ -25,8 +25,8 @@ endif
 
 
 debug:
-	@echo "building for $(TARGET_OS)"
-	cargo build --target $(TARGET_BUILD) --release
+	@echo "$(RED)<==building for $(TARGET)==> $(NC)"
+	cargo build --target $(TARGET_BUILD)
 	@if [ -f "$(LIBNAME).$(EXT)" ]; then rm "$(LIBNAME).$(EXT)"; fi
 	cp ./target/$(TARGET_BUILD)/release/$(LIBNAME).$(EXT) ./ -i 
 
@@ -36,10 +36,6 @@ release:
 	@if [ -f "$(LIBNAME).$(EXT)" ]; then rm "$(LIBNAME).$(EXT)"; fi
 	mv ./target/$(TARGET_BUILD)/release/$(LIBNAME).$(EXT) ./ -i 
 
-
-run :
-	make debug
-	lua ./main.lua
 
 clean :
 	cargo clean
