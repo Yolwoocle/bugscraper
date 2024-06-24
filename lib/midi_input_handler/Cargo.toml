@@ -13,8 +13,7 @@ authors = ["Corentin Vaillant"]
 crate-type = ["cdylib"]
 
 [dependencies]
-lazy_static = "1.4.0"
 midi-control = "0.2.2"
 midir = "0.10.0"
-mlua = { version = "0.9.7", features = ["luajit", "module"] }
+mlua = { version = "0.9.9", features = ["luajit", "module"] }
 

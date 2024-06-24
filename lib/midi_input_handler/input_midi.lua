@@ -12,14 +12,20 @@ require "scripts.util"
 
 local libmidi
 if pcall(require,"libmidi_input_handler") then
-    print("compile mode !")
+    print("compile mode unix !")
     libmidi = require("libmidi_input_handler")
-else
+
+elseif pcall(require,"midi_input_handler") then
+    print("compile mode window !")
+    libmidi = require("midi_input_handler")
+elseif pcall(require,"lib.midi_input_handler.libmidi_input_handler") then
     print("interpreted mode !")
     libmidi = require("lib.midi_input_handler.libmidi_input_handler")
+else
+    print("/!\\could not load midi/!\\")
+    libmidi = require("midi_input_handler")
 end
 
-    
 
 local Class = require "scripts.meta.class"
 

@@ -1,5 +1,5 @@
 name = "bugscraper_0.4_midi_dev"
-default_targets =["appimage" ]#["win64", "appimage","macos,"]
+default_targets =["appimage", "win64" ]#["win64", "appimage","macos,"]
 build_directory = "export"
 icon_file = "icon.png"
 keep_game_directory = false
@@ -32,21 +32,21 @@ prebuild = [
 ]
 
 postbuild = [
-    "mkdir ./export/appimage/lib/midi_input_handler",
-    #"cp ./lib/midi_input_handler/target/release ",
-    "echo DONE"
+    "cp ./lib/midi_input_handler/libmidi_input_handler.so  ./export/appimage/libmidi_input_handler.so",
+    "echo '<== DONE ==>'"
 ]
 
 [windows]
 [windows.archive_files]
-[win32]
+[win64]
 shared_libraries = [
-	"./lib/midi_input_handler/libmidi_input_handler.dll",
+	"./lib/midi_input_handler/midi_input_handler.dll",
 ]
 
 [appimage]
 
 artifacts = "appimage" 
+
 [lovejs]
 title = "Bugscraper"  # used on the resulting web page
 memory = "40000000"  # starting memory of the webpage (default is 20 MB)

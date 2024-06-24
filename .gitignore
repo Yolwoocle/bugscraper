@@ -3,6 +3,6 @@
 .vscode/*
 /export/*
 
-
+*.dll
 *.so
 lib/midi_input_handler/target

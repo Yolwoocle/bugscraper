@@ -17,6 +17,7 @@ else ifeq ($(TARGET),Darwin)
 else ifeq ($(TARGET),Windows_NT)
     EXT := dll
 	TARGET_BUILD := x86_64-pc-windows-gnu
+	LIBNAME := midi_input_handler
 else
     $(error Unsupported target OS: $(TARGET))
 endif
@@ -25,9 +26,9 @@ endif
 
 debug:
 	@echo "building for $(TARGET_OS)"
-	cargo build --target $(TARGET_BUILD)
+	cargo build --target $(TARGET_BUILD) --release
 	@if [ -f "$(LIBNAME).$(EXT)" ]; then rm "$(LIBNAME).$(EXT)"; fi
-	cp ./target/$(TARGET_BUILD)/debug/$(LIBNAME).$(EXT) ./ -i 
+	cp ./target/$(TARGET_BUILD)/release/$(LIBNAME).$(EXT) ./ -i 
 
 release:
 	@echo "$(RED)<==building for $(TARGET)==> $(NC)"
