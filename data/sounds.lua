@@ -175,6 +175,8 @@ sounds.music_intro_ingame =     new_source("music/music_intro_ingame.ogg",     "
 sounds.music_intro_paused =     new_source("music/music_intro_paused.ogg",     "stream", {looping = true})
 sounds.music_w1_ingame =        new_source("music/music_w1_ingame.ogg",        "stream", {looping = true})
 sounds.music_w1_paused =        new_source("music/music_w1_paused.ogg",        "stream", {looping = true})
+sounds.music_w2_ingame =        new_source("music/music_w2_ingame.mp3",        "stream", {looping = true})
+sounds.music_w2_paused =        new_source("music/music_w2_paused.mp3",        "stream", {looping = true})
 sounds.music_game_over =        new_source("music/music_game_over.ogg",        "stream", {looping = true})
 sounds.music_cafeteria_ingame = new_source("music/music_cafeteria_ingame.ogg", "stream", {looping = true})
 sounds.music_cafeteria_paused = new_source("music/music_cafeteria_paused.ogg", "stream", {looping = true})
@@ -204,7 +206,9 @@ for k, snd in pairs(sounds) do
 		snd,
 		snd:getPitch(),
 		snd:getVolume(),
-		snd:isLooping()
+		{
+			looping = snd:isLooping(),
+		}
 	)
 end
 

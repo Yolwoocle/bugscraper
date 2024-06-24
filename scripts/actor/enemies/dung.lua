@@ -35,9 +35,8 @@ function Dung:init_dung(x, y, spr, w, h)
     -- self.anim_frames = {images.larva1, images.larva2}
     -- self.audio_delay = love.math.random(0.3, 1)
 
-    self.roll_source = sounds.ball_roll.source:clone()
-    self.roll_source:setVolume(0)
-    self.roll_source:play()
+    self:add_constant_sound("ball_roll", "ball_roll")
+    self:set_constant_sound_volume("ball_roll", 0)
 end
 
 function Dung:update(dt)
@@ -55,7 +54,7 @@ function Dung:update_dung_beetle(dt)
     end
     
     Particles:dust(self.mid_x, self.y + self.h)
-    self.roll_source:setVolume(math.abs(self.vx) / 400)
+    self:set_constant_sound_volume(math.abs(self.vx) / 400)
     -- self.debug_values[1] = math.abs(self.vx)
 
 
@@ -100,18 +99,6 @@ function Dung:follow_nearest_player(dt)
 
 	self.vx = self.vx + sign0(nearest_player.x - self.x) * self.speed_x * 0.3
 	self.vy = self.vy + sign0(nearest_player.y - self.y) * self.speed_y * 0.3
-end
-
-
-function Dung:pause_repeating_sounds()
-    self.roll_source:setVolume(0)
-end
-function Dung:play_repeating_sounds()
-    self.roll_source:setVolume(1)
-end
-
-function Dung:on_death()
-    self.roll_source:stop()
 end
 
 return Dung

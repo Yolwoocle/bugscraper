@@ -94,6 +94,8 @@ function Actor:init_actor(x, y, w, h, spr, args)
 	-- If an actor spawns other enemies, it should put them into this table
 	self.spawned_actors = {}
 
+	self.constant_sounds = {}
+
 	self.debug_values = {}
 end
 
@@ -347,6 +349,7 @@ end
 
 function Actor:final_remove()
 	Collision:remove(self)
+	self:stop_constant_sounds()
 	self:on_removed()
 end
 
@@ -375,6 +378,80 @@ end
 
 function Actor:remove_rider()
 	self.rider = nil
+end
+
+function Actor:add_constant_sound(name, sound_name, play, volume, pitch, params)
+	play = param(play, true)
+
+	local sound = Audio:get_sound(sound_name)
+	if not sound then
+		return
+	end
+
+	local new_sound = sound:clone(volume, pitch, params)
+	self.constant_sounds[name] = new_sound
+	if play then
+		new_sound:play()
+	end
+end
+
+function Actor:get_constant_sound(name)
+	return self.constant_sounds[name]
+end
+
+function Actor:set_constant_sound_volume(name, volume)
+	local sound = self:get_constant_sound(name)
+	if not sound then return end
+
+	sound:set_volume(volume)
+	-- sound
+end
+
+function Actor:remove_constant_sound(name)
+	self.constant_sounds[name] = nil
+end
+
+function Actor:pause_constant_sound(name)
+	local sound = self:get_constant_sound(name)
+	if not sound then return end
+	sound:pause()
+end
+
+function Actor:resume_constant_sound(name)
+	local sound = self:get_constant_sound(name)
+	if not sound then return end
+	sound:resume()
+end
+
+function Actor:stop_constant_sound(name)
+	local sound = self:get_constant_sound(name)
+	if not sound then return end
+	sound:stop()
+end
+
+function Actor:play_constant_sound(name)
+	local sound = self:get_constant_sound(name)
+	if not sound then return end
+	sound:play()
+end
+
+
+function Actor:pause_constant_sounds()
+	for sound_name, sound in pairs(self.constant_sounds) do
+		self:pause_constant_sound(sound_name)
+	end
+end
+
+function Actor:resume_constant_sounds()
+	for sound_name, sound in pairs(self.constant_sounds) do
+		self:resume_constant_sound(sound_name)
+	end
+end
+
+function Actor:stop_constant_sounds()
+	for sound_name, sound in pairs(self.constant_sounds) do
+		self:stop_constant_sound(sound_name)
+	end
 end
 
 return Actor

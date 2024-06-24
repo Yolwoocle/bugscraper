@@ -668,17 +668,11 @@ function Game:on_unpause()
 end
 
 function Game:pause_repeating_sounds()
-	-- THIS is SO stupid. We should have a system that stores all sounds instead
-	-- of doing this manually.
-
 	self.sfx_elevator_bg:pause()
-	for k,p in pairs(self.players) do
-		p.sfx_wall_slide:setVolume(0)
-	end
 	for k,a in pairs(self.actors) do
-		if a.pause_repeating_sounds then
-			a:pause_repeating_sounds()
-		end
+		a:pause_constant_sounds()
+		-- if a.pause_repeating_sounds then
+		-- end
 	end
 end
 function Game:on_button_glass_spawn(button)
@@ -690,9 +684,7 @@ function Game:on_unmenu()
 	self.sfx_elevator_bg:play()
 	
 	for k,a in pairs(self.actors) do
-		if a.play_repeating_sounds then
-			a:play_repeating_sounds()
-		end
+		a:resume_constant_sounds()
 	end
 end
 

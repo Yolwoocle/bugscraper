@@ -8,11 +8,10 @@ local AudioManager = Class:inherit()
 function AudioManager:init()
 end
 
-function AudioManager:update()
-	
+function AudioManager:update(dt)
 end
 
-function AudioManager:play(snd, volume, pitch, object)
+function AudioManager:play(snd, volume, pitch)
     -- Formalize inputs
     local sndname = snd
     if type(snd) == "table" then
@@ -22,26 +21,25 @@ function AudioManager:play(snd, volume, pitch, object)
     pitch = pitch or 1
     
     if not Options:get("sound_on") then  return  end
-    if sounds[sndname] == nil then   return   end
-
-    local snd_table = sounds[sndname]
 	
-	for i, s in ipairs(snd_table) do
-		if not s:isPlaying() then
-			local source = s
-			source:setVolume(volume * snd_table.volume)
-			source:setPitch(pitch   * snd_table.pitch)
-			source:play()
+    local sound = self:get_sound(sndname)
+    if sound == nil then   return   end
+	
+	-- for i, s in ipairs(snd_table) do
+	-- 	if not s:isPlaying() then
+	-- 		local source = s
+	-- 		source:setVolume(volume * snd_table.volume)
+	-- 		source:setPitch(pitch   * snd_table.pitch)
+	-- 		source:play()
 
-			return
-		end
-	end
+	-- 		return
+	-- 	end
+	-- end
 
-	local new_source = snd_table.source:clone()
-	table.insert(snd_table, new_source)
-	new_source:setVolume(volume * snd_table.volume)
-	new_source:setPitch(pitch   * snd_table.pitch)
-	new_source:play()
+	local new_sound = sound:clone()
+	new_sound:set_volume(volume * sound.volume)
+	new_sound:set_pitch(pitch * sound.pitch)
+	new_sound:play()
 end
 
 function AudioManager:play_pitch(snd, pitch, object)
@@ -110,6 +108,10 @@ function AudioManager:set_source_position_relative_to_object(source, obj)
 		mult * (obj.x - CANVAS_WIDTH*.5) / (CANVAS_WIDTH),
 		mult * (obj.y - CANVAS_HEIGHT*.5) / (CANVAS_HEIGHT)
 	)
+end
+
+function AudioManager:get_sound(name)
+	return sounds[name]
 end
 
 return AudioManager

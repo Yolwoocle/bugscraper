@@ -140,8 +140,9 @@ function Player:init(n, x, y, skin)
 	self.controls_oy = 0
 
 	-- SFX
-	self.sfx_wall_slide = sounds.sliding_wall_metal.source
-	self.sfx_wall_slide:play()
+	self:add_constant_sound("sfx_wall_slide", "sliding_wall_metal")
+	self:set_constant_sound_volume("sfx_wall_slide", 0)
+	-- self.sfx_wall_slide:play()
 	self.sfx_wall_slide_volume = 0
 	self.sfx_wall_slide_max_volume = 0.1
 
@@ -386,7 +387,7 @@ function Player:do_wall_sliding(dt)
 	self.is_walled = false
 
 	self.sfx_wall_slide_volume = lerp(self.sfx_wall_slide_volume, 0, 0.3)
-	self.sfx_wall_slide:setVolume(self.sfx_wall_slide_volume)
+	self:set_constant_sound_volume("sfx_wall_slide", self.sfx_wall_slide_volume)
 
 	-- Update wall variables
 	if self.wall_col then
@@ -425,7 +426,7 @@ function Player:do_wall_sliding(dt)
 
 		-- SFX
 		self.sfx_wall_slide_volume = lerp(self.sfx_wall_slide_volume, self.sfx_wall_slide_max_volume, 0.3)
-		self.sfx_wall_slide:setVolume(self.sfx_wall_slide_volume)
+		self:set_constant_sound_volume("sfx_wall_slide", self.sfx_wall_slide_volume)
 	else
 		self.gravity = self.default_gravity
 	end

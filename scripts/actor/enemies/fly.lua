@@ -26,8 +26,9 @@ function Fly:init_fly(x, y, spr, w, h)
     self.anim_frame_len = 0.05
     self.anim_frames = {images.fly1, images.fly2}
 
-    self.buzz_source = sounds.fly_buzz.source:clone()
-    self.buzz_source:seek(random_range(0, self.buzz_source:getDuration()))
+    self:add_constant_sound("buzz", "fly_buzz", false)
+    -- self.buzz_source:seek(random_range(0, self.buzz_source:getDuration())) --!! todo
+    self.is_buzz_enabled = true
     self.buzz_is_started = false
 end
 
@@ -36,45 +37,25 @@ function Fly:update(dt)
 end
 
 function Fly:disable_buzzing()
-    self.buzz_source = nil
-    self.buzz_is_started = false
+    self.is_buzz_enabled = false
+    self:stop_constant_sound("buzz")
 end
 
 function Fly:update_fly(dt)
     self:update_enemy(dt)
-    if self.buzz_source then
-        self:update_buzz(dt)
-    end
+    self:update_buzz(dt)
     -- audio:set_source_position_relative_to_object(self.buzz_source, self)
 end
 
 function Fly:update_buzz(dt)
-    if not self.buzz_is_started then
-        self.buzz_source:play()
-        self.buzz_is_started = true
+    if self.is_buzz_enabled and not self.buzz_is_started then
+        self:play_constant_sound("buzz")
     end
     local spd = dist(0, 0, self.vx, self.vy)
     if spd >= 0.001 then
-        self.buzz_source:setVolume(1)
+        self:set_constant_sound_volume("buzz", 1)
     else
-        self.buzz_source:setVolume(0)
-    end
-end
-
-function Fly:pause_repeating_sounds() --scotch
-    if self.buzz_source then
-        self.buzz_source:setVolume(0)
-    end
-end
-function Fly:play_repeating_sounds()
-    if self.buzz_source then
-        self.buzz_source:setVolume(1)
-    end 
-end
-
-function Fly:on_death()
-    if self.buzz_source then
-        self.buzz_source:stop()
+        self:set_constant_sound_volume("buzz", 0)
     end
 end
 

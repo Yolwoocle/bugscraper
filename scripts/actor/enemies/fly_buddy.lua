@@ -17,9 +17,6 @@ function FlyBuddy:init(x, y, is_child)
     self.anim_frame_len = 0.05
     self.anim_frames = {images.fly_buddy_1, images.fly_buddy_2}
 
-    -- self.buzz_source = sounds.fly_buzz.source:clone()
-    -- self.buzz_source:setPitch(1.5)
-
     self.is_immune_to_electricity = true
     self.is_stompable = false
     self.buddy_distance = 5*16

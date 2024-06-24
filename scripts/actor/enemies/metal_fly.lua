@@ -22,9 +22,6 @@ function MetalFly:init(x, y)
     self.anim_frame_len = 0.05
     self.anim_frames = {images.metal_mosquito_1, images.metal_mosquito_2}
 
-    self.buzz_source = sounds.fly_buzz.source:clone()
-    self.buzz_source:setPitch(1.5)
-
     self.is_immune_to_electricity = true
     self.is_electrified = false
 
