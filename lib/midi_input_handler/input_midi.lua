@@ -23,7 +23,6 @@ elseif pcall(require,"lib.midi_input_handler.libmidi_input_handler") then
     libmidi = require("lib.midi_input_handler.libmidi_input_handler")
 else
     print("/!\\could not load midi/!\\")
-    libmidi = require("midi_input_handler")
 end
 
 
