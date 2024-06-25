@@ -66,7 +66,7 @@ function Game:init()
 
 	self:update_screen()
 
-	canvas = gfx.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
+	main_canvas = gfx.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
 
 	-- Load fonts
 	-- FONT_REGULAR = gfx.newFont("fonts/Hardpixel.otf", 20)
@@ -426,26 +426,18 @@ function Game:draw_on_layer(layer_id, paint_function, params)
 end
 
 function Game:draw()
-	-- if OPERATING_SYSTEM == "Web" then
-	-- 	gfx.scale(CANVAS_SCALE, CANVAS_SCALE)
-	-- 	gfx.translate(0, 0)
-	-- 	gfx.clear(0,0,0)
-		
-	-- 	self:draw_game()
-	-- else
-		-- Using a canvas for that sweet, resizable pixel art
-		gfx.setCanvas(canvas)
-		gfx.clear(0,0,0)
-		gfx.translate(0, 0)
-		
-		self:draw_game()
-		
-		gfx.setCanvas()
-		gfx.origin()
-		gfx.scale(1, 1)
+	-- Using a canvas for that sweet, resizable pixel art
+	gfx.setCanvas(main_canvas)
+	gfx.clear(0,0,0)
+	gfx.translate(0, 0)
+	
+	self:draw_game()
+	
+	gfx.setCanvas()
+	gfx.origin()
+	gfx.scale(1, 1)
 
-		gfx.draw(canvas, CANVAS_OX, CANVAS_OY, 0, CANVAS_SCALE, CANVAS_SCALE)
-	-- end
+	gfx.draw(main_canvas, CANVAS_OX, CANVAS_OY, 0, CANVAS_SCALE, CANVAS_SCALE)
 
 	if self.debug.layer_view then
 		self.debug:draw_layers()

@@ -15,6 +15,7 @@ function MusicPlayer:init()
 		["intro"] =           disk_class:new(self, sounds.music_intro_ingame.source, sounds.music_intro_paused.source),
 		["w1"] =              disk_class:new(self, sounds.music_w1_ingame.source, sounds.music_w1_paused.source),
 		["w2"] =              disk_class:new(self, sounds.music_w2_ingame.source, sounds.music_w2_paused.source),
+		["w3"] =              disk_class:new(self, sounds.music_w1_ingame.source, sounds.music_w1_paused.source),
 		
 		["game_over"] =       disk_class:new(self, sounds.music_game_over.source, sounds.music_game_over.source),
 		["cafeteria"] =       disk_class:new(self, sounds.music_cafeteria_ingame.source, sounds.music_cafeteria_paused.source),
@@ -26,7 +27,7 @@ function MusicPlayer:init()
 	end
 
 	-- self.music_source    = sounds.music_galaxy_trip[1] 
-	-- self.sfx_elevator_bg = sounds.elevator_bg[1]
+	-- self.sfx_elevator_bg = sounds.elevator _bg[1]
 	-- self.sfx_elevator_bg_volume     = self.sfx_elevator_bg:getVolume()
 	-- self.sfx_elevator_bg_def_volume = self.sfx_elevator_bg:getVolume()
 	
@@ -82,7 +83,7 @@ function MusicPlayer:set_disk(disk_name)
 	
 	local disk = self.disks[disk_name]
 	if disk == nil then
-		error("MusicPlayer:set_disk: the disk'"..tostring(disk_name).."' doesn't exist")
+		error("MusicPlayer:set_disk: the disk '"..tostring(disk_name).."' doesn't exist")
 	end
 	if self.current_disk and disk_name == self.current_disk.name then 
 		return 

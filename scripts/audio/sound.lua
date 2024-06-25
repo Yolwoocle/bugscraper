@@ -65,6 +65,15 @@ function Sound:stop()
 	self.source:stop()
 end
 
+function Sound:seek(time)
+    self.is_paused = false
+	self.source:seek(time)
+end
+
+function Sound:get_duration()
+	return self.source:getDuration()
+end
+
 -- ---@param offset number
 -- ---@param unit "seconds"|"samples"
 -- function Sound:seek(offset, unit)

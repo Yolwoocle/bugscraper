@@ -16,6 +16,7 @@ return {
 
         world_1 = "The offices",
         world_2 = "The server room",
+        world_3 = "The beehive",
     },
     gun = {
         machinegun = "pea gun",

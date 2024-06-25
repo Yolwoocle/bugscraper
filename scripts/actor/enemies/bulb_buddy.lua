@@ -5,20 +5,22 @@ local ElectricArc = require "scripts.actor.enemies.electric_arc"
 local sounds = require "data.sounds"
 local images = require "data.images"
 
-local FlyBuddy = Fly:inherit()
+local BulbBuddy = Fly:inherit()
 
-function FlyBuddy:init(x, y, is_child)
+function BulbBuddy:init(x, y, is_child)
     is_child = param(is_child, false)
 
-    self:init_fly(x,y, images.fly_buddy_1, 18, 24)
-    self.name = "fly_buddy"
+    self:init_fly(x,y, images.bulb_buddy_1, 18, 24)
+    self.name = "bulb_buddy"
     self.life = 10
 
     self.anim_frame_len = 0.05
-    self.anim_frames = {images.fly_buddy_1, images.fly_buddy_2}
+    self.anim_frames = {images.bulb_buddy_1, images.bulb_buddy_2}
 
+    self.direction = 0
+    -- self.follow_player = false
     self.is_immune_to_electricity = true
-    self.is_stompable = false
+    self.is_stompable = true
     self.buddy_distance = 5*16
 
     self.arc_ox = 0
@@ -29,7 +31,7 @@ function FlyBuddy:init(x, y, is_child)
         self.electric_arc = arc
         game:new_actor(arc)
         
-        local child = FlyBuddy:new(self.x, self.y, true)
+        local child = BulbBuddy:new(self.x, self.y, true)
         game:new_actor(child)
         self.child = child
         child.parent = self
@@ -50,8 +52,14 @@ function FlyBuddy:init(x, y, is_child)
     self:disable_buzzing()
 end
 
-function FlyBuddy:update(dt)
+function BulbBuddy:update(dt)
     self:update_fly(dt)
+
+
+    -- self.direction = self.direction + random_sample({-1, 1}) * dt * 3
+    
+	-- self.vx = self.vx + math.cos(self.direction) * self.speed
+	-- self.vy = self.vy + math.sin(self.direction) * self.speed
 
     if random_range(0, 1) < 0.05 then
         Particles:spark(self.mid_x, self.mid_y, 1)
@@ -81,7 +89,7 @@ function FlyBuddy:update(dt)
     end
 end
 
-function FlyBuddy:remove_dead_parent_or_child()
+function BulbBuddy:remove_dead_parent_or_child()
     if self.child and self.child.is_dead then
         self.child = nil
     end
@@ -90,13 +98,25 @@ function FlyBuddy:remove_dead_parent_or_child()
     end
 end
 
-function FlyBuddy:on_death(damager, reason)
+function BulbBuddy:on_death(damager, reason)
     Particles:image(self.mid_x, self.mid_y, 16, images.glass_shard, self.h)
     Particles:spark(self.mid_x, self.mid_y, 20)
 end
     
-function FlyBuddy:draw()
+function BulbBuddy:draw()
 	self:draw_enemy()
 end
 
-return FlyBuddy
+
+
+function BulbBuddy:after_collision(col, other)
+    -- Pong-like bounce
+    if col.type ~= "cross" then
+        -- Particles:smoke(col.touch.x, col.touch.y)
+
+        local new_vx, new_vy = bounce_vector_cardinal(math.cos(self.direction), math.sin(self.direction), col.normal.x, col.normal.y)
+        self.direction = math.atan2(new_vy, new_vx)
+    end
+end
+
+return BulbBuddy

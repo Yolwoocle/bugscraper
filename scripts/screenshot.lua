@@ -9,14 +9,6 @@ function ScreenshotManager:init()
 	self.buffer_canvas = love.graphics.newCanvas(CANVAS_WIDTH * SCREENSHOT_SCALE, CANVAS_HEIGHT * SCREENSHOT_SCALE)
 end
 
-
-local function time_diff(name, func)
-	local start = love.timer.getTime( )
-	func()
-	local result = love.timer.getTime() - start
-	-- print_debug(string.format("Measure '%s': %.4f ms", name, result * 1000 ))
-	return result
-end
 function ScreenshotManager:screenshot()
 	-- Average time measured for 100 screenshots:
 	-- - canvas draw:       0.0758 ms
@@ -28,21 +20,23 @@ function ScreenshotManager:screenshot()
 	
 	love.graphics.setCanvas(self.buffer_canvas)
 	love.graphics.clear()
-	love.graphics.draw(canvas, 0, 0, 0, SCREENSHOT_SCALE)
+	love.graphics.draw(main_canvas, 0, 0, 0, SCREENSHOT_SCALE)
 	love.graphics.setCanvas()
 	
-	local imgdata = self.buffer_canvas:newImageData()
-	local imgpng = imgdata:encode("png", filename)
-	
+	local imgdata, imgpng = save_canvas_as_file(self.buffer_canvas, filename, "png")
 	local filepath = love.filesystem.getSaveDirectory().."/"..filename
-
-	-- notification = "Screenshot path pasted to clipboard"
-	-- love.system.setClipboardText(filepath)
-	-- print(notification)
 
 	return filename, filepath, imgdata, imgpng
 end
 
+
+local function time_diff(name, func)
+	local start = love.timer.getTime( )
+	func()
+	local result = love.timer.getTime() - start
+	print_debug(string.format("Measure '%s': %.4f ms", name, result * 1000 ))
+	return result
+end
 
 function ScreenshotManager:screenshot_measure()
 	local n = 100
@@ -61,7 +55,7 @@ function ScreenshotManager:screenshot_measure()
 		t1 = t1 + time_diff("canvas draw", function()
 			love.graphics.setCanvas(self.buffer_canvas)
 			love.graphics.clear()
-			love.graphics.draw(canvas, 0, 0, 0, SCREENSHOT_SCALE)
+			love.graphics.draw(main_canvas, 0, 0, 0, SCREENSHOT_SCALE)
 			love.graphics.setCanvas()
 		end)/n
 	

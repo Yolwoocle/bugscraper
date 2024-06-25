@@ -5,6 +5,7 @@ local ControlsMenuItem = require "scripts.ui.menu.menu_item_controls"
 local CustomDrawMenuItem = require "scripts.ui.menu.menu_item_custom_draw"
 local waves = require "data.waves"
 local Enemies = require "data.enemies"
+local debug_draw_waves = require "scripts.debug.draw_waves"
 
 local function func_set_menu(menu)
 	return function()
@@ -63,45 +64,6 @@ local function draw_elevator_progress()
     local text = concat(game:get_floor(), "/", game.level.max_floor)
     local text_y = clamp(y2 - (game:get_floor()/n_floors) * h, y1, y2)
     love.graphics.print(text, x1- get_text_width(text) - 5, text_y- get_text_height(text)/2-2)
-end
-
-
-local function debug_draw_waves(self)
-    local x = self.x - CANVAS_WIDTH/2
-    local y = self.y
-    local slot_w = 25
-    local slot_h = 10
-    for i, wave in ipairs(waves) do
-        love.graphics.print(concat("W", i, " ",wave.min, "-", wave.max), x, y)
-        x = x + 50
-
-        local total_w = slot_w * (wave.min + wave.max)/2
-        love.graphics.rectangle("fill", x, y, total_w, 10)
-        local weight_sum = 0
-        for j, enemy in ipairs(wave.enemies) do
-            weight_sum = weight_sum + enemy[2]
-        end
-
-        for j, enemy in ipairs(wave.enemies) do
-            local e = enemy[1]:new()
-            local image = e.spr.image
-            e:remove()
-			e:final_remove()
-
-            local weight = enemy[2] 
-
-            love.graphics.setColor(DEBUG_IMAGE_TO_COL[image] or ternary(j % 2 == 0, COL_WHITE, COL_RED))
-            local w = total_w * (weight/weight_sum)
-            love.graphics.rectangle("fill", x, y, w, 10)
-            love.graphics.setColor(COL_WHITE)
-
-            love.graphics.draw(image, x, y, 0, 0.8, 0.8)
-            print_outline(COL_WHITE, COL_BLACK_BLUE, concat(weight), x, y)
-            x = x + w
-        end
-        x = self.x - CANVAS_WIDTH/2
-        y = y + 24
-    end
 end
 
 -----------------------------------------------------
@@ -164,7 +126,6 @@ local function generate_menus()
     end
     menus.pause = Menu:new(game, pause_items, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL, draw_elevator_progress)
     
-
     menus.feedback = Menu:new(game, {
         { "<<<<<<<<< "..Text:text("menu.feedback.title").." >>>>>>>>>" },
         { "" },
@@ -527,6 +488,8 @@ local function generate_menus()
         { "Theobosse", function() end},
         { "Alexis", function() end},
         { "Binary Sunrise", func_url("https://binarysunrise.dev")},
+        { "AnnaWorldEater", function() end},
+        { "Sylvain Fraresso", function() end},
         { ""},
         { "<<< "..Text:text("menu.credits.special_thanks").." >>>"},
         { "ArkanYota", func_url("https://github.com/ARKANYOTA")},

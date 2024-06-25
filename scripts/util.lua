@@ -1144,3 +1144,10 @@ end
 function get_angle_between_actors(actor1, actor2)
 	return math.atan2(actor2.y - actor1.y, actor2.x - actor1.x)
 end
+
+function save_canvas_as_file(canvas, filename, encoding_format)
+	local imgdata = canvas:newImageData()
+	local imgpng = imgdata:encode("png", filename)
+
+	return imgdata, imgpng
+end

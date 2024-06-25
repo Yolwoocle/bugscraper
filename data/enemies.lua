@@ -18,13 +18,14 @@ local enemies = {
 	Grasshopper =      require "scripts.actor.enemies.grasshopper", 
 	ChipBug =          require "scripts.actor.enemies.chip_bug", --* 
 	MetalFly =         require "scripts.actor.enemies.metal_fly", --*
-	FlyBuddy =         require "scripts.actor.enemies.fly_buddy", --*
+	BulbBuddy =        require "scripts.actor.enemies.bulb_buddy", --*
 	DrillBee =         require "scripts.actor.enemies.drill_bee", --*
 	Turret =           require "scripts.actor.enemies.turret", --*
 	Centipede =        require "scripts.actor.enemies.centipede", --*
 	ElectricArc =      require "scripts.actor.enemies.electric_arc", -- *
 	ElectricRays =     require "scripts.actor.enemies.electric_rays", --*
 	ExplodingFly =     require "scripts.actor.enemies.exploding_fly", --*
+	BigBug =           require "scripts.actor.enemies.big_bug", --*
 	
 	MushroomAnt =      require "scripts.actor.enemies.mushroom_ant",
 	

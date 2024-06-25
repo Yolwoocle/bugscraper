@@ -53,6 +53,7 @@ function Enemy:init_enemy(x,y, img, w,h)
 	self.is_killed_on_stomp = true
 	self.do_stomp_animation = true
 	self.stomp_height = self.h/2
+	self.stomps = 1
 
 	self.is_pushable = true
 	self.is_knockbackable = true -- Multiplicator when knockback is applied to
@@ -203,13 +204,17 @@ function Enemy:on_collision(col, other)
 		if self.is_stompable and (is_on_head or is_falling_down or recently_landed) then
 			player.vy = 0
 			player:on_stomp(self)
-			if self.do_stomp_animation then
-				local ox, oy = self.spr:get_total_centered_offset_position(self.x, self.y, self.w, self.h)
-				Particles:stomped_enemy(self.mid_x, self.y+self.h, self.spr.image)
-			end
-			self:on_stomped(player)
-			if self.is_killed_on_stomp then
-				self:kill(player, "stomped")
+			
+			self.stomps = self.stomps - 1
+			if self.stomps <= 0 then
+				if self.do_stomp_animation then
+					local ox, oy = self.spr:get_total_centered_offset_position(self.x, self.y, self.w, self.h)
+					Particles:stomped_enemy(self.mid_x, self.y+self.h, self.spr.image)
+				end
+				self:on_stomped(player)
+				if self.is_killed_on_stomp then
+					self:kill(player, "stomped")
+				end
 			end
 
 		else

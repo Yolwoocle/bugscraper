@@ -19,10 +19,8 @@ function UpgradeMilk:update(dt)
 end
 
 function UpgradeMilk:on_apply(player)
-    for _, p in pairs(game.players) do
-        p:add_max_life(self.strength)
-        p:heal(self.strength)
-    end 
+    player:add_max_life(self.strength)
+    player:heal(self.strength)
 end
 
 function UpgradeMilk:on_finish(player)

@@ -310,7 +310,7 @@ local waves = {
 		roll_type = WAVE_ROLL_TYPE_FIXED,
 		enemies = {
 			{E.Fly, 3},
-			{E.FlyBuddy, 1},
+			{E.BulbBuddy, 1},
 		},
 		background = backgrounds.BackgroundServers:new(),
 		music = "w2",
@@ -325,7 +325,7 @@ local waves = {
 		enemies = {
 			{E.Fly, 2},
 			{E.SpikedFly, 2},
-			{E.FlyBuddy, 1},
+			{E.BulbBuddy, 1},
 		},
 	}),
 
@@ -345,7 +345,7 @@ local waves = {
 			{E.Slug, 2},
 			{E.StinkBug, 2},
 			{E.ChipBug, 2},
-			{E.FlyBuddy, 1},
+			{E.BulbBuddy, 1},
 		},
 	}),
 
@@ -387,7 +387,7 @@ local waves = {
 			{E.ChipBug, 4},
 		},
 		fixed_enemies = {
-			{E.FlyBuddy, 1},
+			{E.BulbBuddy, 1},
 		}
 	}),
 	
@@ -398,7 +398,7 @@ local waves = {
 			{E.MetalFly, 4},
 		},
 		fixed_enemies = {
-			{E.FlyBuddy, 1},
+			{E.BulbBuddy, 1},
 		}
 	}),
 	
@@ -411,7 +411,7 @@ local waves = {
 			{E.ChipBug, 4},
 		},
 		fixed_enemies = {
-			{E.FlyBuddy, 1},
+			{E.BulbBuddy, 1},
 		}
 	}),
 		
@@ -423,7 +423,7 @@ local waves = {
 			{E.StinkBug, 2},
 		},
 		fixed_enemies = {
-			{E.FlyBuddy, 1},
+			{E.BulbBuddy, 1},
 		}
 	}),
 
@@ -446,6 +446,7 @@ local waves = {
 		},
 		elevator_layers = {
 			["bg_grid"] = false,
+			["fg_grid"] = false,
 		},
 		music = "w2",
 	}),
@@ -468,7 +469,7 @@ local waves = {
 			{E.ExplodingFly, 2},
 		},
 		fixed_enemies = {
-			{E.FlyBuddy, 2}
+			{E.BulbBuddy, 2}
 		}
 	}),
 	
@@ -481,7 +482,7 @@ local waves = {
 			{E.SpikedFly, 2}, 
 		},
 		fixed_enemies = {
-			{E.FlyBuddy, 1}
+			{E.BulbBuddy, 1}
 		}
 	}),
 
@@ -521,7 +522,7 @@ local waves = {
 		enemies = {
 			{E.Spider, 20},
 			{E.MetalFly, 20},
-			{E.FlyBuddy, 5}
+			{E.BulbBuddy, 5}
 		},
 	}),
 
@@ -553,6 +554,36 @@ local waves = {
 				end
 			end
 		end
+	}),
+
+	------
+	-- Cafeteria
+	new_cafeteria(function()
+		-- for _, actor in pairs(game.actors) do
+		-- 	if actor.name == "electric_rays" then
+		-- 		actor:kill()
+		-- 	end
+		-- end
+	end),
+	------
+
+	-----------------------------------------------------
+	--- W3: beehive
+	-----------------------------------------------------
+
+	new_wave({
+		min = 1,
+		max = 1,
+
+		enemies = {
+			{E.DrillBee, 2},
+		},
+
+		background = backgrounds.BackgroundBeehive:new(),
+		music = "w3",
+
+		title = get_world_name("3"),
+		title_color = COL_YELLOW_ORANGE,
 	}),
 
 	--]]

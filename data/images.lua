@@ -64,6 +64,9 @@ local img_names = {
 	duck =             "actors/players/duck",
 
 	-- enemies
+	big_bug_1 =          "actors/enemies/big_bug_1",
+	bulb_buddy_1 =       "actors/enemies/bulb_buddy_1",
+	bulb_buddy_2 =       "actors/enemies/bulb_buddy_2",
 	chip_bug_1 =         "actors/enemies/chip_bug_1",
 	chip_bug_2 =         "actors/enemies/chip_bug_2",
 	chip_bug_3 =         "actors/enemies/chip_bug_3",
@@ -79,8 +82,6 @@ local img_names = {
 	drill_bee_buried =   "actors/enemies/drill_bee_buried",
 	fly1 =               "actors/enemies/fly1",
 	fly2 =               "actors/enemies/fly2",
-	fly_buddy_1 =        "actors/enemies/fly_buddy_1",
-	fly_buddy_2 =        "actors/enemies/fly_buddy_2",
 	grasshopper =        "actors/enemies/grasshopper",
 	honeypot_ant1 =      "actors/enemies/honeypot_ant1",
 	honeypot_ant2 =      "actors/enemies/honeypot_ant2",

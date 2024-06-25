@@ -43,10 +43,6 @@ function DrillBee:init(x, y, spr)
     self.anim_frames = nil
     self.do_squash = true
 
-    -- self.buzz_source = sounds.fly_buzz.source:clone()
-    -- self.buzz_source:seek(random_range(0, self.buzz_source:getDuration()))
-    -- self.buzz_is_started = false
-
     self.t = 0
 end
 

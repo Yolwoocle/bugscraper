@@ -69,15 +69,4 @@ function MetalFly:on_hit_electrictiy()
     self.is_electrified = true
 end
 
-function MetalFly:pause_repeating_sounds() --scotch
-    self.buzz_source:setVolume(0)
-end
-function MetalFly:play_repeating_sounds()
-    self.buzz_source:setVolume(1)
-end
-
-function MetalFly:on_death()
-    self.buzz_source:stop()
-end
-
 return MetalFly

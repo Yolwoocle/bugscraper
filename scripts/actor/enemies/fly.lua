@@ -27,7 +27,7 @@ function Fly:init_fly(x, y, spr, w, h)
     self.anim_frames = {images.fly1, images.fly2}
 
     self:add_constant_sound("buzz", "fly_buzz", false)
-    -- self.buzz_source:seek(random_range(0, self.buzz_source:getDuration())) --!! todo
+    self:seek_constant_sound("buzz", random_range(0, self:get_constant_sound("buzz"):get_duration())) 
     self.is_buzz_enabled = true
     self.buzz_is_started = false
 end
@@ -44,7 +44,6 @@ end
 function Fly:update_fly(dt)
     self:update_enemy(dt)
     self:update_buzz(dt)
-    -- audio:set_source_position_relative_to_object(self.buzz_source, self)
 end
 
 function Fly:update_buzz(dt)

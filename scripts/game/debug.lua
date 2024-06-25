@@ -5,6 +5,7 @@ local upgrades = require "data.upgrades"
 local enemies = require "data.enemies"
 local utf8 = require "utf8"
 local images = require "data.images"
+local debug_draw_waves = require "scripts.debug.draw_waves"
 
 local Debug = Class:inherit()
 
@@ -87,11 +88,11 @@ function Debug:init(game)
         ["w"] = {"next floor", function()
             self.game:set_floor(self.game:get_floor() + 1)
         end},
-        ["a"] = {"-5 floors",function()
-            self.game:set_floor(self.game:get_floor() - 5)
+        ["a"] = {"-10 floors",function()
+            self.game:set_floor(self.game:get_floor() - 10)
         end},
-        ["s"] = {"+5 floors", function()
-            self.game:set_floor(self.game:get_floor() + 5)
+        ["s"] = {"+10 floors", function()
+            self.game:set_floor(self.game:get_floor() + 10)
         end},
 
         ["u"] = {"upgrade", function()
@@ -133,11 +134,11 @@ function Debug:init(game)
             -- local arc = enemies.Explosion:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8, 32)
             -- game:new_actor(arc)
 
-            -- local arc = enemies.Fly:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8)
-            -- game:new_actor(arc)
-
-            local arc = enemies.ExplodingFly:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8)
+            local arc = enemies.BigBug:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8)
             game:new_actor(arc)
+
+            -- local arc = enemies.ExplodingFly:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8)
+            -- game:new_actor(arc)
 
             -- local arc = enemies.Fly:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8)
             -- game:new_actor(arc)
@@ -172,11 +173,6 @@ function Debug:init(game)
         
         ["y"] = {"toggle layer view", function()
             self.layer_view = not self.layer_view
-        end},
-        
-        ["c"] = {"color lerp test", function()
-            col_a = {random_range(0, 1), random_range(0, 1), random_range(0, 1), 1}
-            col_b = {random_range(0, 1), random_range(0, 1), random_range(0, 1), 1}
         end},
         
         ["b"] = {"toggle cabin view", function()
@@ -234,6 +230,16 @@ function Debug:init(game)
         ["space"] = {"screenshot", function()
 		    game:screenshot()
         end},
+
+        ["kpenter"] = {"draw waves", function()
+            local canvas_ = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT * 10)
+            local old_canvas = love.graphics.getCanvas()
+            love.graphics.setCanvas(canvas_)
+            love.graphics.clear(COL_BLACK)
+            debug_draw_waves({x=CANVAS_CENTER[1], y=0})
+            love.graphics.setCanvas(old_canvas)
+            save_canvas_as_file(canvas_, os.date('bugscraper_waves_%Y-%m-%d_%H-%M-%S.png'), "png")
+        end}
     }
     
     self.action_keys = {}

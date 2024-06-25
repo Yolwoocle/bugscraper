@@ -435,6 +435,12 @@ function Actor:play_constant_sound(name)
 	sound:play()
 end
 
+function Actor:seek_constant_sound(name, time)
+	local sound = self:get_constant_sound(name)
+	if not sound then return end
+	sound:seek(time)
+end
+
 
 function Actor:pause_constant_sounds()
 	for sound_name, sound in pairs(self.constant_sounds) do
