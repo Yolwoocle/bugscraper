@@ -51,6 +51,7 @@ function Bullet:init(gun, player, damage, x, y, w, h, vx, vy, args)
 	self.bounce_immunity_duration = 0.1
 
 	self.is_affected_by_bounds = false
+	self.is_explosion = param(args.is_explosion, false)
 
 	local old_filter = self.collision_filter
 	self.collision_filter = function(item, other)
@@ -91,6 +92,9 @@ end
 
 function Bullet:is_actor_my_enemy(actor)
 	if not actor.is_actor then
+		return false
+	end
+	if self.is_explosion and actor.is_immune_to_explosions then
 		return false
 	end
 

@@ -76,6 +76,8 @@ local sfxnames = {
 	impactglass_light_003 = "impactglass_light_003.ogg",
 	impactglass_light_004 = "impactglass_light_004.ogg",
 
+	metal_impact = "metal_impact.ogg",
+
 	glass_fracture = "glass_fracture.ogg", -- CC BY https://freesound.org/people/cmusounddesign/sounds/85168/
 	glass_break_weak = "glass_break_weak.ogg", -- CC BY https://freesound.org/people/cmusounddesign/sounds/85168/
 	glass_break = "glass_break.ogg", 
@@ -136,6 +138,10 @@ local sfxnames = {
 	crush_bug_4 = "crush_bug_4.ogg",
 
 	stink_bug_death = "stink_bug_death.ogg",
+
+	chipper_telegraph = "chipper_telegraph.ogg",
+
+	---------
 
 	jump_short = "jump_short.ogg",
 

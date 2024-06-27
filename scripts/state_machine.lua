@@ -26,6 +26,7 @@
 	TODO: consider coroutine friendliness
 ]]
 
+--- @class StateMachine
 local class = require "scripts.meta.class"
 
 local state_machine = class:inherit()

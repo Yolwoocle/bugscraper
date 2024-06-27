@@ -131,14 +131,20 @@ function Debug:init(game)
             -- local arc = enemies.Centipede:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8, 15)
             -- game:new_actor(arc)
 
+            -- local arc = enemies.ElectricRays:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8, 3)
+            -- game:new_actor(arc)
+
             -- local arc = enemies.Explosion:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8, 32)
             -- game:new_actor(arc)
 
-            local arc = enemies.BigBug:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8)
-            game:new_actor(arc)
-
-            -- local arc = enemies.ExplodingFly:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8)
+            -- local arc = enemies.Chipper:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8)
             -- game:new_actor(arc)
+
+            -- local arc = enemies.BigBug:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8)
+            -- game:new_actor(arc)
+
+            local arc = enemies.ExplodingFly:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8)
+            game:new_actor(arc)
 
             -- local arc = enemies.Fly:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8)
             -- game:new_actor(arc)

@@ -760,6 +760,10 @@ end
 
 function Game:game_over()
 	self.menu_manager:set_menu("game_over")
+	-- for _, a in pairs(self.actors) do
+	-- 	a:remove()
+	-- 	a:final_remove()
+	-- end
 end
 
 function Game:do_win()
@@ -820,7 +824,7 @@ function Game:join_game(input_profile_id, joystick)
 		Input:assign_joystick(player_n, joystick)
 	end
 	Input:assign_input_profile(player_n, input_profile_id)
-
+	
 	return player_n
 end
 

@@ -33,10 +33,10 @@ Attempts
 ---------------------------------------------------------
 
 * ~~Allow mouse buttons to be bind~~
+* ~~Tirer = aimerait pouvoir viser avec souris / stick droit~~
 * If you put yourself in bottom right corner, explosive flies only attack you by the front
 * Turret: lots of bullets end up on the floor + unmoving = boring
     * > le combat pourrait être sympa mais il bouge pas du centre de la salle et malheureusement la moitié de ses tirs se cassent instantanément contre le sol quand tu es toi aussi au sol, du coup je l'ai juste battu en restant dans un coin et en sautant occasionnellement pour éviter un tir (il faudrait peut-être restreindre l'angle des tirs pour éviter qu'il bourre le sol)
-* ~~Tirer = aimerait pouvoir viser avec souris / stick droit~~
 * Récupérer des armes est chiant (tu collectes en boucle)
 * raspberry shotgun = trop OP
 * Spawn kill araignées est très hazardeux (fixer détection de stomp)

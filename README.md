@@ -25,7 +25,7 @@ Rise to the top of a bug-infested tower by fighting on an elevator. On each floo
 
 However, I am very lax with what you can do with the source code. Please feel free to reuse, modify, or remix the source code of the game for any non-commercial project, as long as you're not directly distributing the code, assets, or any executables.
 
-If it does not fit that description please [contact me first](https://yolwoocle.com/about) (I'll probably say yes!).   
+If it does not fit that description please [contact me first](https://yolwoocle.com/about). I'll probably say yes! I don't bite :).   
 
 <div align="center">
   🐛🐛🐛🐛🐛

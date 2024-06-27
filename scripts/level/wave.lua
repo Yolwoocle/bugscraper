@@ -51,7 +51,7 @@ function Wave:roll_random(enemies)
 		local _, enemy_table = random_weighted(enemies)
 		table.insert(output, {
 			enemy_class = enemy_table[1],
-			args = {},
+			args = enemy_table.args or {},
 			position = enemy_table.position,
 		})
 	end
@@ -67,7 +67,7 @@ function Wave:roll_fixed(enemies)
 		for j=1, enemy_table[2] do
 			table.insert(output, {
 				enemy_class = enemy_table[1],
-				args = {},
+				args = enemy_table.args or {},
 				position = enemy_table.position,
 			})
 		end

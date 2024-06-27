@@ -32,6 +32,10 @@ function Sprite:update_offset(ox, oy)
     self.oy = oy or self.oy
 end
 
+function Sprite:get_rotation()
+    return self.rot
+end
+
 function Sprite:set_rotation(rot)
     self.rot = rot
 end

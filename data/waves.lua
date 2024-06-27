@@ -52,7 +52,7 @@ local function debug_wave()
 		enemies = {	
 			-- {E.Dung, 1, position = {240, 200}},
 			-- {E.FlyingDung, 1, position = {CANVAS_WIDTH/2, 200}},
-			-- {E.ChipBug, 1},
+			-- {E.Chipper, 1},
 			-- {E.StinkBug, 1},
 			-- {E.ElectricRays, 1},
 			-- {E.DrillBee, 1},
@@ -324,7 +324,6 @@ local waves = {
 		max = 5,
 		enemies = {
 			{E.Fly, 2},
-			{E.SpikedFly, 2},
 			{E.BulbBuddy, 1},
 		},
 	}),
@@ -333,7 +332,7 @@ local waves = {
 		min = 5,
 		max = 7,
 		enemies = {
-			{E.ChipBug, 2},
+			{E.Chipper, 2},
 			{E.SpikedFly, 2},
 		},
 	}),
@@ -344,7 +343,7 @@ local waves = {
 		enemies = {
 			{E.Slug, 2},
 			{E.StinkBug, 2},
-			{E.ChipBug, 2},
+			{E.Chipper, 2},
 			{E.BulbBuddy, 1},
 		},
 	}),
@@ -370,7 +369,7 @@ local waves = {
 		max = 6,
 		enemies = {
 			{E.Fly, 2},
-			{E.ChipBug, 2},
+			{E.Chipper, 2},
 		},
 
 		fixed_enemies = {
@@ -384,7 +383,7 @@ local waves = {
 		enemies = {
 			{E.Slug, 4},
 			{E.StinkBug, 4},
-			{E.ChipBug, 4},
+			{E.Chipper, 4},
 		},
 		fixed_enemies = {
 			{E.BulbBuddy, 1},
@@ -408,7 +407,7 @@ local waves = {
 		enemies = {
 			{E.Fly, 2},
 			{E.MetalFly, 4},
-			{E.ChipBug, 4},
+			{E.Chipper, 4},
 		},
 		fixed_enemies = {
 			{E.BulbBuddy, 1},
@@ -448,7 +447,18 @@ local waves = {
 			["bg_grid"] = false,
 			["fg_grid"] = false,
 		},
+		
+		fixed_enemies = {
+			{E.ElectricRays, 1, position = {CANVAS_WIDTH/2 - 16, CANVAS_HEIGHT/2}, args = {2}},
+		},
 		music = "w2",
+
+		run = function(...)
+			local test = function(a, b, c, d) 
+				print_debug("a =",a, "b =", b, "c =", c, "d =", d)
+			end
+			test(1, 2, unpack({3, 4}))
+		end,
 	}),
 	
 	new_wave({
@@ -490,7 +500,7 @@ local waves = {
 		min = 4,
 		max = 5,
 		enemies = {
-			{E.ChipBug, 2},
+			{E.Chipper, 2},
 			{E.StinkBug, 2},
 		},
 
@@ -534,7 +544,7 @@ local waves = {
 			{E.Spider, 2},
 			{E.Fly, 2},
 			{E.SpikedFly, 2},
-			{E.ChipBug, 2},
+			{E.Chipper, 2},
 			{E.StinkBug, 2},
 		},
 	}),

@@ -6,11 +6,11 @@ local StateMachine = require "scripts.state_machine"
 local sounds = require "data.sounds"
 local images = require "data.images"
 
-local ExplodingFly = Fly:inherit()
+local Boomshroom = Fly:inherit()
 	
-function ExplodingFly:init(x, y, spr)
-    self:init_fly(x,y, spr, 14, 16)
-    self.name = "exploding_fly"
+function Boomshroom:init(x, y)
+    self:init_fly(x,y, images.boomshroom_1, 14, 16)
+    self.name = "boomshroom"
     self.max_life = 15
     self.life = self.max_life
     
@@ -32,19 +32,25 @@ function ExplodingFly:init(x, y, spr)
     self.follow_player = false
     self.direction = random_range(0, pi2)
 
+    self.anim_frames = nil
+
     self.dead_scale = 1.5
-    self.spr:set_color(COL_GREEN)
+    -- self.spr:set_color(COL_GREEN)
+    self.sprites = {images.boomshroom_1, images.boomshroom_2, images.boomshroom_3, images.boomshroom_4, images.boomshroom_5, images.boomshroom_6, images.boomshroom_7, images.boomshroom_8}
+    self.spr:set_anchor(SPRITE_ANCHOR_CENTER_CENTER)
 
     self.state_machine = StateMachine:new({
         normal = {
             update = function(state, dt)
                 self.weight = 1 - self.life/self.max_life
-                local s = 1 + self.weight*(self.dead_scale - 1)
-                self:set_sprite_scale(s)
+                -- local s = 1 + self.weight*(self.dead_scale - 1)
+                -- self:set_sprite_scale(s)
 
                 self.direction = self.direction + random_sample({-1, 1}) * dt * 3
                 self.vx = self.vx + math.cos(self.direction) * self.speed
                 self.vy = self.vy + math.sin(self.direction) * self.speed + self.weight * self.weight_vy_multiplier
+
+                self.spr:set_image(self.sprites[clamp(math.ceil(#self.sprites * (1 - self.life / self.max_life)), 1, #self.sprites)])
             end
         }, 
             
@@ -60,10 +66,12 @@ function ExplodingFly:init(x, y, spr)
                 self.damage = 0
                 self.weight = 1
                 
-                self:set_sprite_scale(self.dead_scale)
+                -- self:set_sprite_scale(self.dead_scale)
 
                 self.exploding_timer:start()
                 self.flash_timer:start(0.5)
+
+                self.spr:set_image(self.sprites[#self.sprites])
             end,
             update = function(state, dt)
                 if self.flash_timer:update(dt) then
@@ -86,7 +94,7 @@ function ExplodingFly:init(x, y, spr)
                 local time = self.exploding_timer:get_time()
                 local duration = self.exploding_timer:get_duration()
                 if time <= duration * 0.5 then
-                    local s = self.dead_scale + (1 - time/(duration*0.5)) * 0.5
+                    local s = 1 + (1 - time/(duration*0.5)) * 0.5
                     self:set_sprite_scale(s)
                 end
             end
@@ -96,7 +104,7 @@ function ExplodingFly:init(x, y, spr)
     self.t = 0
 end
 
-function ExplodingFly:after_collision(col, other)
+function Boomshroom:after_collision(col, other)
     -- Pong-like bounce
     if col.type ~= "cross" then
         -- Particles:smoke(col.touch.x, col.touch.y)
@@ -106,27 +114,27 @@ function ExplodingFly:after_collision(col, other)
     end
 end
 
-function ExplodingFly:update(dt)
+function Boomshroom:update(dt)
     self:update_fly(dt)
     self.t = self.t + dt
     
     self.state_machine:update(dt)
 end
 
-function ExplodingFly:on_negative_life()
+function Boomshroom:on_negative_life()
     self:start_exploding()
 end
 
-function ExplodingFly:on_stomped()
+function Boomshroom:on_stomped()
     self:start_exploding()
 end
 
-function ExplodingFly:start_exploding()
+function Boomshroom:start_exploding()
     self.state_machine:set_state("exploding")
 end
 
-function ExplodingFly:set_sprite_scale(s)
+function Boomshroom:set_sprite_scale(s)
     self.spr:set_scale(s, s)
 end
 
-return ExplodingFly
+return Boomshroom

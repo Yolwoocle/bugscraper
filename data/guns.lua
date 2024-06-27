@@ -300,7 +300,7 @@ function Guns:init()
 	self.unlootable.ExplosionGun = Gun:inherit()
 
 	function self.unlootable.ExplosionGun:init(user, radius, damage, resolution)
-		self.name = "turret_gun"
+		self.name = "explosion_gun"
 		self:init_gun(user)
 		
 		-- self.sfx = "mushroom_ant_pop"
@@ -338,6 +338,8 @@ function Guns:init()
 		self.cooldown = 0.6
 
 		self.shoot_offset_x = 0
+
+		self.is_explosion = true
 		-- self.screenshake = 2
 	end
 end

@@ -721,6 +721,7 @@ function Player:on_stomp(enemy)
 	self:set_invincibility(0.15) --0.1
 
 	self.combo = self.combo + 1
+	
 	-- if self.combo >= 4 then
 	-- 	Particles:word(self.mid_x, self.mid_y, tostring(self.combo), COL_LIGHT_BLUE)
 	-- end

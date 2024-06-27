@@ -16,7 +16,7 @@ local enemies = {
 	
 	SnailShelledBouncy = require "scripts.actor.enemies.snail_shelled_bouncy", 
 	Grasshopper =      require "scripts.actor.enemies.grasshopper", 
-	ChipBug =          require "scripts.actor.enemies.chip_bug", --* 
+	Chipper =          require "scripts.actor.enemies.chipper", --* 
 	MetalFly =         require "scripts.actor.enemies.metal_fly", --*
 	BulbBuddy =        require "scripts.actor.enemies.bulb_buddy", --*
 	DrillBee =         require "scripts.actor.enemies.drill_bee", --*

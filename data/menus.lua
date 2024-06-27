@@ -490,6 +490,7 @@ local function generate_menus()
         { "Binary Sunrise", func_url("https://binarysunrise.dev")},
         { "AnnaWorldEater", function() end},
         { "Sylvain Fraresso", function() end},
+        { "Tom Le Ber", function() end},
         { ""},
         { "<<< "..Text:text("menu.credits.special_thanks").." >>>"},
         { "ArkanYota", func_url("https://github.com/ARKANYOTA")},
@@ -561,6 +562,8 @@ local function generate_menus()
         -- { Text:text("menu.credits.asset_item", "'Ruler Bounce 3'", "belanhud", "CC0"),                         func_url("https://freesound.org/s/537904/")},
         { Text:text("menu.credits.asset_item", "'Springboard A'", "lmbubec", "CC0"),                           func_url("https://freesound.org/s/119793/")},
         { Text:text("menu.credits.asset_item", "'Springboard B'", "lmbubec", "CC0"),                           func_url("https://freesound.org/s/119794/")},
+        { Text:text("menu.credits.asset_item", "'80s alarm'", "tim.kahn", "CC BY 4.0"),                        func_url("https://freesound.org/s/83280/")},
+        -- todo add https://freesound.org/people/jorickhoofd/sounds/160077/
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
 
     local items = {

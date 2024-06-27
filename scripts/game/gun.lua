@@ -79,6 +79,8 @@ function Gun:init_gun(user)
 	
 	self.do_particles = true
 	self.screenshake = 0
+
+	self.is_explosion = false
 end
 
 function Gun:update(dt)
@@ -260,6 +262,7 @@ function Gun:fire_bullet(dt, user, x, y, bul_w, bul_h, dx, dy)
 		play_sfx = self.play_sfx,
 		target_type = ternary(self.bullet_target_type == "default", nil, self.bullet_target_type),
 		override_enemy_damage = self.override_enemy_damage,
+		is_explosion = self.is_explosion,
 	})
 	game:new_actor(bullet)
 end
