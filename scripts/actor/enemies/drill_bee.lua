@@ -1,6 +1,7 @@
 require "scripts.util"
 local Fly = require "scripts.actor.enemies.fly"
 local Timer = require "scripts.timer"
+local StateMachine = require "scripts.state_machine"
 local sounds = require "data.sounds"
 local images = require "data.images"
 
@@ -23,16 +24,17 @@ function DrillBee:init(x, y, spr)
     self.friction_x = 0.8
     self.friction_y = 0.8
 
-    self.target_y = game.level.cabin_rect.ay + BW*4
+    self.def_target_y = game.level.cabin_rect.ay + BW*4
     self.attack_radius = 16
-    self.phase = "flying"
 
     self.gravity = 0
     self.friction_y = self.friction_x
+    self.def_friction_y = self.friction_y
 
     self.telegraph_oy = 16
     self.telegraph_timer = Timer:new(0.5)
-    self.stuck_timer = Timer:new(5.0)
+    -- self.stuck_timer = Timer:new(5.0)
+    self.stuck_timer = Timer:new(1.0)
     
     self.img_normal = images.drill_bee
     self.img_stuck = images.drill_bee_buried
@@ -42,6 +44,57 @@ function DrillBee:init(x, y, spr)
     -- self.anim_frame_len = 0.05
     self.anim_frames = nil
     self.do_squash = true
+    
+    self.state_machine = StateMachine:new({
+        flying = {
+            enter = function(state)
+                self.spr:set_image(self.img_normal)
+                self.spr:update_offset(0, 0)
+
+                self.friction_y = self.def_friction_y
+            end,
+            update = function(state, dt)
+                self.speed_x = self.speed
+                self.speed_y = self.speed * 3
+            end
+        }, 
+            
+        telegraph = {
+            update = function(state, dt)
+                self.speed_x = 0
+                self.speed_y = self.speed * 0.5
+                self.target_y = self.def_target_y - self.telegraph_oy
+                if self.telegraph_timer:update(dt) then 
+                    self.state_machine:set_state("attack")
+                end
+            end,
+        },
+    
+        attack = {
+            enter = function(state)
+                self.spr:update_offset(0, 0)
+            end,
+            update = function(state, dt)
+                self.speed_x = 0
+                self.speed_y = self.speed * 4
+                self.friction_y = 1
+                self.squash = clamp(1/math.abs(self.vy*0.01), 0.5, 1)
+                self.target_y = game.level.cabin_rect.by
+            end,
+        },
+
+        stuck = {
+            update = function(state, dt)
+                self.vx = 0
+                self.vy = 0
+                self.spr:set_image(self.img_stuck)
+                self.spr:update_offset(0, self.stuck_spr_oy)
+                if self.stuck_timer:update(dt) then
+                    self.state_machine:set_state("flying")
+                end
+            end,
+        },
+    }, "flying")
 
     self.t = 0
 end
@@ -49,9 +102,9 @@ end
 
 function DrillBee:update(dt)
     local nearest_player = self:get_nearest_player()
-    if nearest_player and self.phase == "flying" then
+    if nearest_player and self.state_machine.current_state_name == "flying" then
         if math.abs(self.x - nearest_player.x) <= self.attack_radius then
-            self.phase = "telegraph"
+            self.state_machine:set_state("telegraph")
             self.telegraph_timer:start()
         end
     end
@@ -64,55 +117,24 @@ function DrillBee:update(dt)
 end
 
 function DrillBee:update_phase(dt, nearest_player)
-    local target_x 
+    self.target_x = nil 
     if nearest_player then
-        target_x = nearest_player.x 
+        self.target_x = nearest_player.x 
     end
-    local target_y = self.target_y
+    self.target_y = self.def_target_y
     
-    if self.phase == "flying" then
-        self.speed_x = self.speed
-        self.speed_y = self.speed * 3
-        
-    elseif self.phase == "telegraph" then
-        self.speed_x = 0
-        self.speed_y = self.speed * 0.5
-        target_y = self.target_y - self.telegraph_oy
-        
-        if self.telegraph_timer:update(dt) then 
-            self.phase = "attack"
-            self.spr:update_offset(0, 0)
-        end
-
-    elseif self.phase == "attack" then
-        self.speed_x = 0
-        self.speed_y = self.speed * 4
-        self.friction_y = 1
-        self.squash = clamp(1/math.abs(self.vy*0.01), 0.5, 1)
-        target_y = game.level.cabin_rect.by
-
-    elseif self.phase == "stuck" then
-        self.vx = 0
-        self.vy = 0
-        self.spr:set_image(self.img_stuck)
-        self.spr:update_offset(0, self.stuck_spr_oy)
-        if self.stuck_timer:update(dt) then
-            self.phase = "flying"
-            self.spr:set_image(self.img_normal)
-            self.spr:update_offset(0, 0)
-        end
-    end
+    self.state_machine:update(dt)
 
     self.target = {
-        x = target_x or self.x,
-        y = target_y,
+        x = self.target_x or self.x,
+        y = self.target_y,
     }
 end
 
 function DrillBee:after_collision(col, other)
     if col.type ~= "cross" then
-        if self.phase == "attack" then--and col.normal.y == -1 then
-            self.phase = "stuck"
+        if self.state_machine.current_state_name == "attack" then--and col.normal.y == -1 then
+            self.state_machine:set_state("stuck")
             self.stuck_timer:start()
             self.squash = 2
         end

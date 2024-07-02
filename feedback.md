@@ -34,6 +34,8 @@ Attempts
 
 * ~~Allow mouse buttons to be bind~~
 * ~~Tirer = aimerait pouvoir viser avec souris / stick droit~~
+* ~~chip bug pas giga intéressante~~
+    * > la puce electronique pas hyper intéressante et elle fait quasi jamais de dégat, peut etre faudrait mettre un truc style une petite explosion electrique quand elle meurt pour que tu la stompes (l'explosion te touches pas quand tu stomp) mais pas que tu la mitraille de trop pres 
 * If you put yourself in bottom right corner, explosive flies only attack you by the front
 * Turret: lots of bullets end up on the floor + unmoving = boring
     * > le combat pourrait être sympa mais il bouge pas du centre de la salle et malheureusement la moitié de ses tirs se cassent instantanément contre le sol quand tu es toi aussi au sol, du coup je l'ai juste battu en restant dans un coin et en sautant occasionnellement pour éviter un tir (il faudrait peut-être restreindre l'angle des tirs pour éviter qu'il bourre le sol)
@@ -54,8 +56,6 @@ Attempts
     > Ou alors récompenser les joueurs qui ne prennent pas de dégâts
     > Un power up supplémentaire à la fin du monde ou un truc comme ça
 * drops non liés à la performance 
-* chip bug pas giga intéressante 
-    * > la puce electronique pas hyper intéressante et elle fait quasi jamais de dégat, peut etre faudrait mettre un truc style une petite explosion electrique quand elle meurt pour que tu la stompes (l'explosion te touches pas quand tu stomp) mais pas que tu la mitraille de trop pres 
 * Furie ne booste pas le stomping
 * on ne devrait pas pouvoir drop une arme qu'on a déjà en mains
 * le nombre d'ennemis ne scale pas avec le nombre de joueurs
@@ -69,3 +69,5 @@ Attempts
     * > Il y a un truc que j'ai pas fait remonter mais je pense que c'est important, les armes sont diversifiées et c'est cool mais je pense qu'il faudrait mieux équilibrer les armes. En gros en l'état certaines armes sont complétement outclassed par d'autres, elles différent plus par leur efficacité que par leur usage ce qui ne me semble pas être l'objectif initial
     * > Par exemple, le shotgun devrait avoir une portée plus réduite encore car, même s'il est moins efficace de loin, ça reste décent et pas très équilibré quand on voit son efficacité incroyable à bout portant
     * > c'est principalement une question de chiffres je pense, les armes actuelles ont des bons designs
+* @Léo, sur ton jeu, un mob m'a drop une arme qui était la même que celle que j'avais en main.
+J'avais le "pea gun", et un mob a drop le "pea gun". C'est normal ?

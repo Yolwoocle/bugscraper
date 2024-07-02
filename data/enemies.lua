@@ -8,7 +8,7 @@ local enemies = {
 	Mosquito =         require "scripts.actor.enemies.mosquito",
 	Slug =             require "scripts.actor.enemies.slug",
 	Spider =           require "scripts.actor.enemies.spider",
-	StinkBug =         require "scripts.actor.enemies.stink_bug", --*
+	StinkBug =         require "scripts.actor.enemies.stink_bug",
 	SnailShelled =     require "scripts.actor.enemies.snail_shelled", 
 	Dung =             require "scripts.actor.enemies.dung",
 	DungBeetle =       require "scripts.actor.enemies.dung_beetle",
@@ -16,16 +16,17 @@ local enemies = {
 	
 	SnailShelledBouncy = require "scripts.actor.enemies.snail_shelled_bouncy", 
 	Grasshopper =      require "scripts.actor.enemies.grasshopper", 
-	Chipper =          require "scripts.actor.enemies.chipper", --* 
-	MetalFly =         require "scripts.actor.enemies.metal_fly", --*
-	BulbBuddy =        require "scripts.actor.enemies.bulb_buddy", --*
+	Chipper =          require "scripts.actor.enemies.chipper",  
+	MetalFly =         require "scripts.actor.enemies.metal_fly",
+	BulbBuddy =        require "scripts.actor.enemies.bulb_buddy", 
 	DrillBee =         require "scripts.actor.enemies.drill_bee", --*
 	Turret =           require "scripts.actor.enemies.turret", --*
 	Centipede =        require "scripts.actor.enemies.centipede", --*
-	ElectricArc =      require "scripts.actor.enemies.electric_arc", -- *
-	ElectricRays =     require "scripts.actor.enemies.electric_rays", --*
-	ExplodingFly =     require "scripts.actor.enemies.exploding_fly", --*
+	ElectricArc =      require "scripts.actor.enemies.electric_arc", 
+	ElectricRays =     require "scripts.actor.enemies.electric_rays", 
+	Boomshroom =       require "scripts.actor.enemies.boomshroom", 
 	BigBug =           require "scripts.actor.enemies.big_bug", --*
+	W2boss =           require "scripts.actor.enemies.W2boss", --*
 	
 	MushroomAnt =      require "scripts.actor.enemies.mushroom_ant",
 	

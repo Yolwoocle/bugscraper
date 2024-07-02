@@ -48,7 +48,7 @@ function Chipper:init_fly(x, y, spr)
     self.telegraph_timer = Timer:new(0.5)
     self.telegraph_source = Audio:get_sound("chipper_telegraph"):clone()
     self.attack_speed = 100
-    self.post_attack_timer = Timer:new(1.0)
+    self.post_attack_timer = Timer:new(0.5)
 
     self.state_machine = StateMachine:new({
         wander = {
@@ -188,7 +188,7 @@ function Chipper:after_collision(col, other)
     if col.type ~= "cross" then
         -- Particles:smoke(col.touch.x, col.touch.y)
 
-        local new_vx, new_vy = bounce_vector_cardinal(math.cos(self.direction * pi/2), math.sin(self.direction * pi/2), col.normal.x, col.normal.y)
+        local new_vx, new_vy = bounce_vector_cardinal(-math.cos(self.direction * pi/2), -math.sin(self.direction * pi/2), col.normal.x, col.normal.y)
         self.direction = math.floor(math.atan2(new_vy, new_vx) / (pi/2))
 
         if self.state_machine:in_state("attack") then

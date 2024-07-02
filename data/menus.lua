@@ -500,6 +500,7 @@ local function generate_menus()
         { "Indie Game Lyon", func_url("https://www.indiegamelyon.com/")},
         { "Fabien Delpiano", function() end },
         { "Quentin Picault", function() end},
+        { "Goyome", function() end},
         { "LÖVE framework", func_url("https://love2d.org/") },
         { ""},
         { "<<< "..Text:text("menu.credits.asset_creators").." >>>"},

@@ -60,7 +60,7 @@ end
 function Spider:draw()
     self:draw_enemy()
     if self.is_on_ceiling then
-        line_color(COL_WHITE, self.mid_x, self.y, self.mid_x - self.vx*self.dt*3, self.ceiling_y)
+        line_color({1, 1, 1, 0.7}, self.mid_x, self.y, self.mid_x - self.vx*self.dt*3, self.ceiling_y)
     end
 end
 

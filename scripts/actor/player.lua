@@ -123,6 +123,7 @@ function Player:init(n, x, y, skin)
 		Guns.Machinegun:new(self),
 		Guns.unlootable.DebugGun:new(self),
 		Guns.unlootable.DebugGunManual:new(self),
+		Guns.unlootable.ExplosionGun:new(self),
 		Guns.Triple:new(self),
 		Guns.Burst:new(self),
 		Guns.Shotgun:new(self),

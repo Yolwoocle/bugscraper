@@ -70,6 +70,9 @@ function Debug:init(game)
             _G_t = 0
             _G_do_fixed_framerate = not _G_do_fixed_framerate
         end},
+        ["h"] = {"toggle help menu", function()
+            self.debug_menu = not self.debug_menu
+        end},
         ["f"] = {"toggle FPS", function()
             self.view_fps = not self.view_fps
         end},
@@ -143,11 +146,11 @@ function Debug:init(game)
             -- local arc = enemies.BigBug:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8)
             -- game:new_actor(arc)
 
-            local arc = enemies.ExplodingFly:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8)
-            game:new_actor(arc)
-
-            -- local arc = enemies.Fly:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8)
+            -- local arc = enemies.W2boss:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8)
             -- game:new_actor(arc)
+
+            local arc = enemies.DrillBee:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8)
+            game:new_actor(arc)
 
             -- local arc = enemies.Grasshopper:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8)
             -- game:new_actor(arc)
@@ -237,7 +240,7 @@ function Debug:init(game)
 		    game:screenshot()
         end},
 
-        ["kpenter"] = {"draw waves", function()
+        ["m"] = {"wave info to file", function()
             local canvas_ = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT * 10)
             local old_canvas = love.graphics.getCanvas()
             love.graphics.setCanvas(canvas_)
@@ -291,7 +294,6 @@ end
 
 function Debug:keyreleased(key, scancode, isrepeat)
     if scancode == "f1" and self.is_reading_for_f1_action then
-        self.debug_menu = not self.debug_menu
         self.is_reading_for_f1_action = false
     end
 end

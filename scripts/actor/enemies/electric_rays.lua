@@ -27,8 +27,36 @@ function ElectricRays:init(x, y, n_rays, activation_delay)
 	-- self.destroy_bullet_on_impact = true
 	-- self.is_immune_to_bullets = false
 
-    self.activation_timer = Timer:new(activation_delay or 2)
-    self.activation_timer:start()
+    self.activation_timer = Timer:new(activation_delay or 0)
+    if activation_delay and activation_delay > 0 then
+        self:start_activation_timer()
+    else
+        self:set_state("active")
+    end
+end
+
+function ElectricRays:start_activation_timer(time)
+    self.activation_timer:start(time)
+    self:set_state("telegraph")
+end
+
+function ElectricRays:set_state(state)
+    self.state = state
+    if state == "disabled" then
+        for _, ray in pairs(self.rays) do
+            ray:set_active(false)
+        end
+    elseif state == "telegraph" then
+        for _, ray in pairs(self.rays) do
+            ray:set_active(true)
+            ray:set_arc_active(false)
+        end
+    elseif state == "active" then
+        for _, ray in pairs(self.rays) do
+            ray:set_active(true)
+            ray:set_arc_active(true)
+        end
+    end
 end
 
 function ElectricRays:update(dt)
@@ -41,9 +69,7 @@ function ElectricRays:update(dt)
     
     -- Enable rays after some time
     if self.activation_timer:update(dt) then
-        for _, ray in pairs(self.rays) do
-            ray:set_arc_active(true)
-        end
+        self:set_state("active")
     end
 
     self.angle = (self.angle + self.angle_speed * dt)
@@ -52,7 +78,7 @@ function ElectricRays:update(dt)
         local ray = self.rays[i+1]
         ray:set_segment(ax, ay, bx, by)
 
-        if ray.is_arc_active then
+        if ray.is_arc_active and self.state == "active" then
             Particles:dust(bx, by)
             if random_range(0, 1) < 0.1 then
                 Particles:spark(bx, by)

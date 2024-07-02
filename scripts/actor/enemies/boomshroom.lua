@@ -36,8 +36,10 @@ function Boomshroom:init(x, y)
 
     self.dead_scale = 1.5
     -- self.spr:set_color(COL_GREEN)
-    self.sprites = {images.boomshroom_1, images.boomshroom_2, images.boomshroom_3, images.boomshroom_4, images.boomshroom_5, images.boomshroom_6, images.boomshroom_7, images.boomshroom_8}
+    self.sprites = {images.boomshroom_1, images.boomshroom_2, images.boomshroom_3, images.boomshroom_4, images.boomshroom_5, images.boomshroom_6, images.boomshroom_8}
     self.spr:set_anchor(SPRITE_ANCHOR_CENTER_CENTER)
+
+    self:disable_buzzing()
 
     self.state_machine = StateMachine:new({
         normal = {

@@ -12,11 +12,19 @@ RECT_ELEVATOR = Rect:new(2, 2, 28, 16)
 RECT_CAFETERIA = Rect:new(2, 2, 53, 16)
 
 local function new_cafeteria(run_func)
+	run_func = run_func or function(...) end
 	return Wave:new({
 		floor_type = FLOOR_TYPE_CAFETERIA,
 		roll_type = WAVE_ROLL_TYPE_FIXED,
 		music = "cafeteria",
-		run = run_func,
+		run = function(self, level)
+			for _, actor in pairs(game.actors) do
+				if actor.name == "poison_cloud" then
+					actor.lifespan = 1
+				end
+			end
+			run_func(self, level)
+		end,
 		
 		min = 1,
 		max = 1,
@@ -175,7 +183,7 @@ local waves = {
 		roll_type = WAVE_ROLL_TYPE_FIXED,
 		enemies = {
 			{E.Fly, 2},
-			{E.ExplodingFly, 4},
+			{E.Boomshroom, 4},
 		},
 	}),
 
@@ -213,7 +221,7 @@ local waves = {
 			{E.Larva, 1},
 			{E.Fly, 2},
 			{E.SpikedFly, 2},
-			{E.ExplodingFly, 4},
+			{E.Boomshroom, 4},
 			{E.Slug, 2},
 			{E.SnailShelled, 2},
 		},
@@ -267,7 +275,7 @@ local waves = {
 		enemies = {
 			{E.Larva, 1},
 			{E.SpikedFly, 2},
-			{E.ExplodingFly, 2},
+			{E.Boomshroom, 2},
 			{E.SnailShelled, 2},
 			{E.Spider, 2},
 			{E.StinkBug, 4},
@@ -282,7 +290,7 @@ local waves = {
 			{E.Slug, 2},
 			{E.Woodlouse, 2},
 			{E.SpikedFly, 2},
-			{E.ExplodingFly, 2},
+			{E.Boomshroom, 2},
 			{E.SnailShelled, 2},
 			{E.Spider, 2},
 			{E.StinkBug, 2},
@@ -307,10 +315,10 @@ local waves = {
 
 	-- Floor 20
 	new_wave({
-		roll_type = WAVE_ROLL_TYPE_FIXED,
+		min = 6,
+		max = 6, 
 		enemies = {
-			{E.Fly, 3},
-			{E.BulbBuddy, 1},
+			{E.Chipper, 1},
 		},
 		background = backgrounds.BackgroundServers:new(),
 		music = "w2",
@@ -323,17 +331,11 @@ local waves = {
 		min = 5,
 		max = 5,
 		enemies = {
+			{E.Woodlouse, 2},
 			{E.Fly, 2},
-			{E.BulbBuddy, 1},
 		},
-	}),
-
-	new_wave({
-		min = 5,
-		max = 7,
-		enemies = {
-			{E.Chipper, 2},
-			{E.SpikedFly, 2},
+		fixed_enemies = {
+			{E.BulbBuddy, 1},
 		},
 	}),
 
@@ -345,6 +347,16 @@ local waves = {
 			{E.StinkBug, 2},
 			{E.Chipper, 2},
 			{E.BulbBuddy, 1},
+		},
+	}),
+	
+	new_wave({
+		min = 6,
+		max = 6,
+		enemies = {
+			{E.Grasshopper, 2},
+			{E.SnailShelled, 2},
+			{E.Woodlouse, 2},
 		},
 	}),
 
@@ -364,6 +376,10 @@ local waves = {
 			Particles:falling_grid(cabin_rect.bx - 7*16, cabin_rect.ay + 6*16)
 			level.elevator:start_grid_timer(2.5)
 		end,
+		
+		fixed_enemies = {
+			{E.ElectricRays, 1, position = {CANVAS_WIDTH/2 - 16, CANVAS_HEIGHT/2 - 16}, args = {1, 2}},
+		},
 
 		min = 4,
 		max = 6,
@@ -371,12 +387,19 @@ local waves = {
 			{E.Fly, 2},
 			{E.Chipper, 2},
 		},
-
-		fixed_enemies = {
-			{E.ElectricRays, 1, position = {CANVAS_WIDTH/2 - 16, CANVAS_HEIGHT/2 - 16}},
-		},
 	}),
 	
+	new_wave({
+		min = 3,
+		max = 4,
+		enemies = {
+			{E.MetalFly, 4},
+		},
+		fixed_enemies = {
+			{E.BulbBuddy, 1},
+		}
+	}),
+
 	new_wave({
 		min = 5,
 		max = 6,
@@ -384,6 +407,7 @@ local waves = {
 			{E.Slug, 4},
 			{E.StinkBug, 4},
 			{E.Chipper, 4},
+			{E.Grasshopper, 2},
 		},
 		fixed_enemies = {
 			{E.BulbBuddy, 1},
@@ -391,23 +415,13 @@ local waves = {
 	}),
 	
 	new_wave({
-		min = 3,
-		max = 4,
-		enemies = {
-			{E.MetalFly, 4},
-		},
-		fixed_enemies = {
-			{E.BulbBuddy, 1},
-		}
-	}),
-	
-	new_wave({
-		min = 3,
-		max = 4,
+		min = 6,
+		max = 7,
 		enemies = {
 			{E.Fly, 2},
 			{E.MetalFly, 4},
 			{E.Chipper, 4},
+			{E.Grasshopper, 2},
 		},
 		fixed_enemies = {
 			{E.BulbBuddy, 1},
@@ -438,10 +452,10 @@ local waves = {
 	------------
 	
 	new_wave({
-		min = 3,
-		max = 4,
+		min = 4,
+		max = 5,
 		enemies = {
-			{E.Grasshopper, 2},
+			{E.SnailShelledBouncy, 2},
 		},
 		elevator_layers = {
 			["bg_grid"] = false,
@@ -449,16 +463,10 @@ local waves = {
 		},
 		
 		fixed_enemies = {
-			{E.ElectricRays, 1, position = {CANVAS_WIDTH/2 - 16, CANVAS_HEIGHT/2}, args = {2}},
+			{E.ElectricRays, 1, position = {CANVAS_WIDTH/2 - 16, CANVAS_HEIGHT/2 - 16}, args = {1, 2}},
+			-- {E.ElectricRays, 1, position = {CANVAS_WIDTH/2 - 16, CANVAS_HEIGHT/2}, args = {2}},
 		},
 		music = "w2",
-
-		run = function(...)
-			local test = function(a, b, c, d) 
-				print_debug("a =",a, "b =", b, "c =", c, "d =", d)
-			end
-			test(1, 2, unpack({3, 4}))
-		end,
 	}),
 	
 	new_wave({
@@ -466,8 +474,8 @@ local waves = {
 		max = 6,
 		enemies = {
 			{E.Grasshopper, 2},
-			{E.Spider, 2}, 
-			{E.Slug, 2}, 
+			{E.StinkBug, 2},
+			{E.SnailShelledBouncy, 2},
 		},
 	}),
 	
@@ -475,8 +483,9 @@ local waves = {
 		min = 5,
 		max = 6,
 		enemies = {
+			{E.SnailShelledBouncy, 2},
 			{E.Fly, 2},
-			{E.ExplodingFly, 2},
+			{E.Boomshroom, 2},
 		},
 		fixed_enemies = {
 			{E.BulbBuddy, 2}
@@ -486,10 +495,10 @@ local waves = {
 	new_wave({
 		min = 5,
 		max = 6,
+			{E.SnailShelledBouncy, 2},
 		enemies = {
+			{E.Boomshroom, 2},
 			{E.Grasshopper, 2},
-			{E.Spider, 2}, 
-			{E.SpikedFly, 2}, 
 		},
 		fixed_enemies = {
 			{E.BulbBuddy, 1}
@@ -504,14 +513,14 @@ local waves = {
 			{E.StinkBug, 2},
 		},
 
-		run = function(self, level)
-			for _, player in pairs(game.players) do
-				local arc = enemies.ElectricArc:new(CANVAS_WIDTH*0.5, CANVAS_HEIGHT*0.5)
-				arc:set_arc_target(player)
-				arc.arc_damage = 2.5
-				game:new_actor(arc)
-			end
-		end,
+		-- run = function(self, level)
+		-- 	for _, player in pairs(game.players) do
+		-- 		local arc = enemies.ElectricArc:new(CANVAS_WIDTH*0.5, CANVAS_HEIGHT*0.5)
+		-- 		arc:set_arc_target(player)
+		-- 		arc.arc_damage = 2.5
+		-- 		game:new_actor(arc)
+		-- 	end
+		-- end,
 	}),
 
 	new_wave({
@@ -547,6 +556,7 @@ local waves = {
 			{E.Chipper, 2},
 			{E.StinkBug, 2},
 		},
+
 	}),
 
 	
@@ -555,7 +565,7 @@ local waves = {
 		max = 1,
 
 		enemies = {
-			{E.Turret, 2},
+			{E.W2boss, 2},
 		},
 		run = function(self, level)
 			for _, actor in pairs(game.actors) do
@@ -563,7 +573,9 @@ local waves = {
 					actor:start_disable_timer(1)
 				end
 			end
-		end
+		end,
+
+		music = "miniboss",
 	}),
 
 	------

@@ -1,4 +1,4 @@
-name = "bugscraper_0.5.dev24-06-23"
+name = "bugscraper_0.5.dev24-06-28"
 # default_targets = ["lovejs", "win32", "win64", "macos", "appimage"]
 default_targets = ["win64"]
 # default_targets = ["lovejs"]

@@ -18,9 +18,10 @@ function BulbBuddy:init(x, y, is_child)
     self.anim_frames = {images.bulb_buddy_1, images.bulb_buddy_2}
 
     self.direction = 0
-    -- self.follow_player = false
+    self.follow_player = false
     self.is_immune_to_electricity = true
     self.is_stompable = true
+    self.do_stomp_animation = false
     self.buddy_distance = 5*16
 
     self.arc_ox = 0
@@ -56,10 +57,10 @@ function BulbBuddy:update(dt)
     self:update_fly(dt)
 
 
-    -- self.direction = self.direction + random_sample({-1, 1}) * dt * 3
+    self.direction = self.direction + random_sample({-1, 1}) * dt * 3
     
-	-- self.vx = self.vx + math.cos(self.direction) * self.speed
-	-- self.vy = self.vy + math.sin(self.direction) * self.speed
+	self.vx = self.vx + math.cos(self.direction) * self.speed
+	self.vy = self.vy + math.sin(self.direction) * self.speed
 
     if random_range(0, 1) < 0.05 then
         Particles:spark(self.mid_x, self.mid_y, 1)

@@ -1151,3 +1151,8 @@ function save_canvas_as_file(canvas, filename, encoding_format)
 
 	return imgdata, imgpng
 end
+
+function vec_approx_equal(vec1, vec2) 
+	local epsilon = 0.00001
+	return math.abs(vec1.x - vec2.x) < epsilon and math.abs(vec1.y - vec2.y) < epsilon
+end
