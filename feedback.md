@@ -83,7 +83,6 @@ J'avais le "pea gun", et un mob a drop le "pea gun". C'est normal ?
 
 
 * Cafet multi : texte que un seul à la fois
-* Cafet multi pan caméra virer 
 * Coeurs thé non transmis multi
 * Garder armes après resu
 * Jaune pas visible menus
