@@ -71,3 +71,30 @@ Attempts
     * > c'est principalement une question de chiffres je pense, les armes actuelles ont des bons designs
 * @Léo, sur ton jeu, un mob m'a drop une arme qui était la même que celle que j'avais en main.
 J'avais le "pea gun", et un mob a drop le "pea gun". C'est normal ?
+
+-------------------------------------
+
+* J'ai limpressoin que y a des moments où la hitzone se declenche pas, jsuis supposé mourir et jmeurs pas mdrr
+* L'arme apparaît pour quelques frames au dessus du panneau zone non fumeur là qd tu spawn
+* Je me permets de te suggérer de donner un moyen de dessendre des semi-solides genre quand tu input bas+jump
+* Le boss du floor 19 je crois que tu peux le cheese un peu trop facilement en restant accroché au mur x)
+* Les gouttes de miel ont des collisions avec les ennemis et ça donne des trucs chelous
+* En terme de balance, je pense que x2 ammo pour la peanut c'est trop, tu te retrouves avec assez d'ammo pour clear tout le monde et garder la fury tout le long, encore plus si t'as l'energy drink
+
+
+* Cafet multi : texte que un seul à la fois
+* Cafet multi pan caméra virer 
+* Coeurs thé non transmis multi
+* Garder armes après resu
+* Jaune pas visible menus
+* Pas assez coeurs multigaire que seulement stomp cocoons
+* Bug cal après Easter egg
+* Inf ammo lors d'un résu
+* Résu ne conserve pas les armes et uogrades
+* Peanut est exponentielle 
+* Coeurs sont pas immédiatement attirés
+* Pas assez armes en multi 
+* Slow down slugs in mid air
+* Résu les joueurs en cafet
+* Retour haptique de verre biuton
+

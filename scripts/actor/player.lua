@@ -313,9 +313,9 @@ function Player:do_damage(n, source)
 	if self.iframes > 0 then    return false   end
 	if n <= 0 then              return false   end
 
-	if Input:get_number_of_users() == 1 then
+	-- if Input:get_number_of_users() == 1 then
 		game:frameskip(8)
-	end
+	-- end
 	game:screenshake(5)
 	Input:vibrate(self.n, 0.3, 0.45)
 	Audio:play("hurt")

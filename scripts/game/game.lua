@@ -374,15 +374,17 @@ function Game:update_logo(dt)
 end
 
 function Game:update_camera_offset(dt)
-	local found = false
+	-- Cafeteria camera pan on the right edge
+
+	local all_players_on_the_right = ternary(#self.players == 0, false, true)
 	for _, player in pairs(self.players) do
-		if player.mid_x > (self.level.world_generator.cafeteria_rect.bx - 9) * BW then
-			found = true
+		if player.mid_x < (self.level.world_generator.cafeteria_rect.bx - 9) * BW then
+			all_players_on_the_right = false
 			break
 		end
 	end
 
-	if found then
+	if all_players_on_the_right then
 		self.camera:set_target_offset(500, 0)
 	else
 		self.camera:set_target_offset(0, 0)
