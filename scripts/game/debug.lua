@@ -6,6 +6,8 @@ local enemies = require "data.enemies"
 local utf8 = require "utf8"
 local images = require "data.images"
 local debug_draw_waves = require "scripts.debug.draw_waves"
+local Segment = require "scripts.math.segment"
+local Rect = require "scripts.math.rect"
 
 local Debug = Class:inherit()
 
@@ -146,11 +148,11 @@ function Debug:init(game)
             -- local arc = enemies.BigBug:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8)
             -- game:new_actor(arc)
 
-            -- local arc = enemies.W2boss:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8)
-            -- game:new_actor(arc)
-
-            local arc = enemies.DrillBee:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8)
+            local arc = enemies.ElectricRays:new(CANVAS_WIDTH*random_range(0, 1), CANVAS_HEIGHT*random_range(0, 1), 5)
             game:new_actor(arc)
+
+            -- local arc = enemies.DrillBee:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8)
+            -- game:new_actor(arc)
 
             -- local arc = enemies.Grasshopper:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8)
             -- game:new_actor(arc)
@@ -560,7 +562,9 @@ function Debug:draw_info_view()
 	self.game.level.world_generator:draw()
 	draw_log()
     
-    local w = 255
+    self:test_info_view()
+    
+    -- local w = 255
     -- local col_a = color(0x0c00b8)
     -- local col_b = color(0xb82609)
     -- local col_a = color(0xe43b44)
@@ -575,6 +579,35 @@ function Debug:draw_info_view()
     -- end
 end
 
+local test_ang = 0
+local test_rect = Rect:new(
+    CANVAS_CENTER[1] - 26*3, CANVAS_CENTER[2] - 13*3, 
+    CANVAS_CENTER[1] - 4*3, CANVAS_CENTER[2] + 20*3
+)
+
+function Debug:test_info_view()
+    -- love.graphics.clear(COL_BLACK_BLUE)
+
+    local mx, my = love.mouse.getPosition()
+    mx, my = mx/3, my/3
+    local ax, ay, bx, by = get_vector_in_rect_from_angle(mx, my, test_ang, test_rect)
+    circle_color(COL_GREEN, "fill", mx, my, 2.5)
+    rect_color(COL_RED, "line", test_rect.x, test_rect.y, test_rect.w, test_rect.h)
+    if ax then
+        line_color(COL_GREEN, ax, ay, bx, by)
+    end
+    test_ang = test_ang + 0.01
+
+    -- local mx, my = love.mouse.getPosition()
+    -- local seg1 = Segment:new(50, 50, mx/3, my/3)
+    -- local seg2 = Segment:new(30, 70, 10, 10)
+    -- line_color(COL_RED, seg1.ax, seg1.ay, seg1.bx, seg1.by)
+    -- line_color(COL_RED, seg2.ax, seg2.ay, seg2.bx, seg2.by)
+    -- local pt = segment_intersect_point(seg1, seg2)
+    -- if pt then
+    --     circle_color(COL_CYAN, "fill", pt.x, pt.y, 4)
+    -- end
+end
 function Debug:draw_colview()
     game.camera:apply_transform()
     

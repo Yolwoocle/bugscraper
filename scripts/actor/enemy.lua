@@ -54,6 +54,7 @@ function Enemy:init_enemy(x,y, img, w,h)
 	self.do_stomp_animation = true
 	self.stomp_height = self.h/2
 	self.stomps = 1
+	self.damage_on_stomp = 0
 
 	self.is_pushable = true
 	self.is_knockbackable = true -- Multiplicator when knockback is applied to
@@ -202,20 +203,7 @@ function Enemy:on_collision(col, other)
 		local is_falling_down = (player.vy > 0.0001)-- and (feet_y <= self.y + self.h*0.75)
 		local recently_landed = (0 < player.frames_since_land) and (player.frames_since_land <= 4) --7
 		if self.is_stompable and (is_on_head or is_falling_down or recently_landed) then
-			player.vy = 0
-			player:on_stomp(self)
-			
-			self.stomps = self.stomps - 1
-			if self.stomps <= 0 then
-				if self.do_stomp_animation then
-					local ox, oy = self.spr:get_total_centered_offset_position(self.x, self.y, self.w, self.h)
-					Particles:stomped_enemy(self.mid_x, self.y+self.h, self.spr.image)
-				end
-				self:on_stomped(player)
-				if self.is_killed_on_stomp then
-					self:kill(player, "stomped")
-				end
-			end
+			self:react_to_stomp(player)
 
 		else
 			-- Damage player
@@ -234,6 +222,26 @@ function Enemy:on_collision(col, other)
 	end
 
 	self:after_collision(col, col.other)
+end
+
+function Enemy:react_to_stomp(player)
+	player.vy = 0
+	player:on_stomp(self)
+	
+	self.stomps = self.stomps - 1
+	if self.damage_on_stomp > 0 then
+		self:do_damage(self.damage_on_stomp, player)
+	end
+	if self.stomps <= 0 then
+		if self.do_stomp_animation then
+			local ox, oy = self.spr:get_total_centered_offset_position(self.x, self.y, self.w, self.h)
+			Particles:stomped_enemy(self.mid_x, self.y+self.h, self.spr.image)
+		end
+		self:on_stomped(player)
+		if self.is_killed_on_stomp then
+			self:kill(player, "stomped")
+		end
+	end
 end
 
 function Enemy:on_damage_player(player, damage)

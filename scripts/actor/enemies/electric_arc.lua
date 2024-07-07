@@ -140,7 +140,7 @@ function ElectricArc:check_for_collisions()
     self.collides = false
     for _, a in pairs(game.actors) do
         if a ~= self and a.is_active then
-            local collision = Rect:new(a.x, a.y, a.x+a.w, a.y+a.h):expand(self.hitbox_expand):segment_intersection(self.segment)
+            local collision = a:get_rect(self.hitbox_expand):segment_intersection(self.segment)
             if collision then
                 self:collide_with_actor(a)
             end

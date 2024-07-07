@@ -594,11 +594,13 @@ local waves = {
 	-----------------------------------------------------
 
 	new_wave({
-		min = 1,
-		max = 1,
+		min = 5,
+		max = 5,
 
 		enemies = {
 			{E.DrillBee, 2},
+			{E.Mosquito, 2},
+			{E.HoneypotAnt, 2},
 		},
 
 		background = backgrounds.BackgroundBeehive:new(),
@@ -607,6 +609,7 @@ local waves = {
 		title = get_world_name("3"),
 		title_color = COL_YELLOW_ORANGE,
 	}),
+
 
 	--]]
 	

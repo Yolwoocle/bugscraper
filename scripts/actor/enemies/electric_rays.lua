@@ -10,7 +10,7 @@ local images = require "data.images"
 local ElectricRays = Prop:inherit()
 
 function ElectricRays:init(x, y, n_rays, activation_delay)
-    self:init_prop(x,y, images.empty, 32, 32)
+    self:init_prop(x,y, images.empty, 1, 1)
     self.name = "electric_rays"
     
     self.max_life = 100
@@ -74,9 +74,11 @@ function ElectricRays:update(dt)
 
     self.angle = (self.angle + self.angle_speed * dt)
     for i = 0, self.n_rays - 1 do
-        local ax, ay, bx, by = get_vector_in_rect_from_angle(self.angle + i * (pi2 / self.n_rays), game.level.cabin_inner_rect)
+        local ax, ay, bx, by = get_vector_in_rect_from_angle(self.x, self.y, self.angle + i * (pi2 / self.n_rays), game.level.cabin_inner_rect)
         local ray = self.rays[i+1]
-        ray:set_segment(ax, ay, bx, by)
+        if ax then
+            ray:set_segment(ax, ay, bx, by)
+        end
 
         if ray.is_arc_active and self.state == "active" then
             Particles:dust(bx, by)

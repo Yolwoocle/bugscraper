@@ -83,6 +83,10 @@ function Elevator:draw(enemy_buffer, wave_progress)
 	for i,e in pairs(enemy_buffer) do
 		e:draw()
 	end
+	-- local r = self.door_animation_timer.time / self.door_animation_timer.duration
+	-- local col = self.level.background.clear_color
+	-- rect_color({col[1], col[2], col[3], r}, "fill", self.level.door_rect.x, self.level.door_rect.y, self.level.door_rect.w, self.level.door_rect.h)
+	-- print_outline(nil,nil,round(self.door_animation_timer.time / self.door_animation_timer.duration, 3), CANVAS_CENTER[1], CANVAS_CENTER[2])
 	
 	if self.layers["cabin"] then
 		self:draw_cabin()

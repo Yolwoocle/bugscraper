@@ -1,5 +1,6 @@
 local Class = require "scripts.meta.class"
 local Sprite = require "scripts.graphics.sprite"
+local Rect = require "scripts.math.rect"
 
 local Actor = Class:inherit()
 
@@ -101,6 +102,12 @@ end
 
 function Actor:set_active(val)
 	self.is_active = val
+end
+
+function Actor:get_rect(expand_value)
+	local expand_value = expand_value or 0
+	return Rect:new(self.x, self.y, self.x+self.w, self.y+self.h):expand(expand_value)
+	-- :segment_intersection(self.segment)
 end
 
 function Actor:set_image(image)

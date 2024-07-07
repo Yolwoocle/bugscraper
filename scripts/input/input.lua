@@ -724,4 +724,10 @@ function InputManager:vibrate(user_n, duration, strength_left, strength_right)
     user:vibrate(duration, strength_left, strength_right)
 end
 
+function InputManager:vibrate_all(duration, strength_left, strength_right)
+    for _, user in pairs(self.users) do
+        user:vibrate(duration, strength_left, strength_right)
+    end
+end
+
 return InputManager

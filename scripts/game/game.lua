@@ -1,4 +1,5 @@
 local TextManager = require "scripts.text"
+local backgrounds = require "data.backgrounds"
 Text = TextManager:new()
 
 local Class = require "scripts.meta.class"
@@ -125,13 +126,19 @@ function Game:new_game()
 	-- Start button
 	local nx = CANVAS_WIDTH * 0.75
 	local ny = self.level.cabin_inner_rect.by
-	-- local l = create_actor_centered(Enemies.ButtonGlass, nx, ny)
-	-- local l = create_actor_centered(Enemies.ElectricArc, floor(nx), floor(ny))
-	local l = create_actor_centered(Enemies.ButtonSmallGlass, floor(nx), floor(ny))
+	local l
+	l = create_actor_centered(Enemies.ButtonSmallGlass, floor(nx), floor(ny))
 	self:new_actor(l)
-	-- local l = create_actor_centered(Enemies.UpgradeDisplay, floor(nx) - 40, floor(ny))
-	-- l:assign_upgrade(upgrades.UpgradeEspresso:new())
-	-- self:new_actor(l)
+	
+	l = create_actor_centered(Enemies.ButtonSmall, floor(nx + 32), floor(ny))
+	l.spr.color = COL_GREEN
+	l.on_press = function(button)
+		self.level:set_background(backgrounds.BackgroundServers:new())
+		self:set_floor(38)
+		self:start_game()
+		self.pressed_disappear_timer = 0.5
+	end
+	self:new_actor(l)
 	
 	-- Exit sign 
 	local exit_x = CANVAS_WIDTH * 0.25

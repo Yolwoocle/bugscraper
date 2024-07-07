@@ -29,7 +29,12 @@ return {
 		spr_dead = images.bee_dead,
 		spr_head = images.caterpillar_head,
 		color_palette = {color(0xfee761), color(0xfeae34), color(0x743f39), color(0x3f2832), color(0xc0cbdc), color(0x9e2835)},
-		menu_color = color(0xfeae34),
+		-- menu_color = color(0xfee761),
+		-- menu_color = color(0xfeae34),
+		menu_color = color(0x743f39),
+		-- menu_color = color(0x3f2832),
+		-- menu_color = color(0xc0cbdc),
+		-- menu_color = color(0x9e2835),
 		icon = "🐝",
 	},
 	

@@ -413,6 +413,7 @@ local function generate_menus()
                     self.label_text = self.label_text.."\n⚠ "..Text:text("menu.options.input_submenu.low_deadzone_warning")
                 end
             end},
+            { "" },
             { Text:text("menu.options.input_submenu.note_deadzone") },
             { "" },
             { "<<< "..Text:text("menu.options.input_submenu.gameplay").." >>>" },

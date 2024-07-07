@@ -21,8 +21,8 @@ function Grasshopper:init(x, y)
 
     self.gravity = self.gravity * 0.5
 
-    -- self.jump_speed = 300
-    self.jump_speed = 200
+    self.jump_speed = 300
+    -- self.jump_speed = 200
 end
 
 function Grasshopper:update(dt)

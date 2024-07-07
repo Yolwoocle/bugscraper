@@ -1078,29 +1078,104 @@ function get_orthogonal(x, y, dir)
 	end
 end
 
-local function rectclamp(width, height, lineendx, lineendy)
-	-- https://stackoverflow.com/questions/64245202/clamp-segment-inside-rectangle
-    local endx = lineendx 
-    local endy = lineendy
-    if abs(endx) * height <= abs(endy) * width then --at top or bottom
-        return height / 2 * endx / abs(endy),
-			   (math.abs(1) * sign(endy)) * height / 2
-    else
-        return (math.abs(1) * sign(endx)) * width/2,
-               width/2 * endy / abs(endx)
+function vec_cross(ax, ay, bx, by)
+    return ax*by - ay*bx
+end
+
+-- https://stackoverflow.com/questions/42892862/how-do-i-find-the-point-at-which-two-line-segments-are-intersecting-in-javascrip
+function segment_intersect_point(seg1, seg2)
+	local x1, y1, x2, y2 = seg1.ax, seg1.ay, seg1.bx, seg1.by 
+	local x3, y3, x4, y4 = seg2.ax, seg2.ay, seg2.bx, seg2.by
+    local a_dx = x2 - x1
+    local a_dy = y2 - y1
+    local b_dx = x4 - x3
+    local b_dy = y4 - y3
+    local s = (-a_dy * (x1 - x3) + a_dx * (y1 - y3)) / (-b_dx * a_dy + a_dx * b_dy)
+    local t = ( b_dx * (y1 - y3) - b_dy * (x1 - x3)) / (-b_dx * a_dy + a_dx * b_dy)
+    return ternary(
+		(s >= 0 and s <= 1 and t >= 0 and t <= 1),
+		{x = x1 + t * a_dx, y = y1 + t * a_dy}, 
+		nil
+	)
+end
+
+-- --- Returns a vector that forms `angle` with the 0° angle and goes from the center of the rect to its appropriate edge. 
+-- function get_vector_in_rect_from_angle(angle, rect)
+-- 	local center_x = (rect.bx + rect.ax) / 2
+-- 	local center_y = (rect.by + rect.ay) / 2
+-- 	local w = rect.w
+-- 	local h = rect.h
+-- 	local r = math.max(w, h)
+
+-- 	local outx, outy = rectclamp(w, h, math.cos(angle)*r, math.sin(angle)*r)
+-- 	return center_x, center_y, outx + center_x, outy + center_y
+-- end
+
+function clamp_segment_to_rectangle(seg, rect)
+	local function segment(ax, ay, bx, by)
+		return {
+			ax = ax,
+			ay = ay,
+			bx = bx,
+			by = by,
+		}
+	end
+
+	local rect_edges = {
+		segment(rect.ax, rect.ay, rect.bx, rect.ay),
+		segment(rect.ax, rect.ay, rect.ax, rect.by),
+		segment(rect.bx, rect.ay, rect.bx, rect.by),
+		segment(rect.ax, rect.by, rect.bx, rect.by),
+	}
+
+	local points = {}
+	for _, rect_edge in pairs(rect_edges) do
+		local pt = segment_intersect_point(rect_edge, seg)
+		if pt then
+			table.insert(points, pt)
+		end
+	end
+	
+	local p1_in = is_point_in_rect(rect, seg.ax, seg.ay)
+	local p2_in = is_point_in_rect(rect, seg.bx, seg.by)
+	if p1_in and p2_in then
+		return seg.ax, seg.ay, seg.bx, seg.by
+	end
+
+	if #points >= 2 then
+		-- I don't know in what edge case there would be more than 2 points, but if it happens they're ignored 
+		return points[1].x, points[1].y, points[2].x, points[2].y
+	elseif #points == 1 then
+		if not p1_in and not p2_in then
+			return points[1].x, points[1].y, points[1].x, points[1].y
+		elseif p1_in then
+			return seg.ax, seg.ay, points[1].x, points[1].y
+		elseif p2_in then
+			return seg.bx, seg.by, points[1].x, points[1].y
+		end
+	elseif #points == 0 then		 
+		return nil
+
 	end
 end
 
---- Returns a vector that forms `angle` with the 0° angle and goes from the center of the rect to its appropriate edge. 
-function get_vector_in_rect_from_angle(angle, rect)
-	local center_x = (rect.bx + rect.ax) / 2
-	local center_y = (rect.by + rect.ay) / 2
-	local w = rect.w
-	local h = rect.h
-	local r = math.max(w, h)
+--- Returns a vector that forms `angle` with the 0° angle and goes from (x, y) to its appropriate edge. 
+function get_vector_in_rect_from_angle(x, y, angle, rect)
+	local r = math.max(rect.w, rect.h) + 100
+	local function segment(ax, ay, bx, by)
+		return {
+			ax = ax,
+			ay = ay,
+			bx = bx,
+			by = by,
+		}
+	end
+	function is_point_in_rect(rect, px, py)
+		return (rect.ax <= px and px <= rect.bx) and (rect.ay <= py and py <= rect.by)
+	end
 
-	local outx, outy = rectclamp(w, h, math.cos(angle)*r, math.sin(angle)*r)
-	return center_x, center_y, outx + center_x, outy + center_y
+	local seg = segment(x, y, x + math.cos(angle) * r, y + math.sin(angle) * r)
+	return clamp_segment_to_rectangle(seg, rect)
 end
 
 -- https://easings.net/#easeOutBack
@@ -1131,6 +1206,32 @@ function segment_intersect(seg1, seg2)
     local bool1 = (ccw(seg1.ax, seg1.ay, seg2.ax, seg2.ay, seg2.bx, seg2.by) ~= ccw(seg1.bx, seg1.by, seg2.ax, seg2.ay, seg2.bx, seg2.by)) 
 	local bool2 = (ccw(seg1.ax, seg1.ay, seg1.bx, seg1.by, seg2.ax, seg2.ay) ~= ccw(seg1.ax, seg1.ay, seg1.bx, seg1.by, seg2.bx, seg2.by))
 	return bool1 and bool2
+end
+
+--- https://stackoverflow.com/questions/20677795/how-do-i-compute-the-intersection-point-of-two-lines
+function line_intersection(line1, line2)
+    -- xdiff = (line1[0][0] - line1[1][0], line2[0][0] - line2[1][0])
+    -- ydiff = (line1[0][1] - line1[1][1], line2[0][1] - line2[1][1])
+    local xdiff = {line1.ax - line1.bx, line2.ax - line2.bx}
+    local ydiff = {line1.ay - line1.by, line2.ay - line2.by}
+
+    local function det(a, b)
+        return a[0] * b[1] - a[1] * b[0]
+	end		
+
+    local div = det(xdiff, ydiff)
+    if div == 0 then
+		return nil
+       	-- raise Exception('lines do not intersect')
+	end
+
+    local d = {
+		det({line1.ax, line1.ay}, {line1.bx, line1.by}), 
+		det({line2.ax, line2.ay}, {line2.bx, line2.by})
+	}
+    local x = det(d, xdiff) / div
+    local y = det(d, ydiff) / div
+    return x, y
 end
 
 function get_direction_vector(ax, ay, bx, by)

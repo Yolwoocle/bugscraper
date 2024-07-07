@@ -82,12 +82,9 @@ J'avais le "pea gun", et un mob a drop le "pea gun". C'est normal ?
 * En terme de balance, je pense que x2 ammo pour la peanut c'est trop, tu te retrouves avec assez d'ammo pour clear tout le monde et garder la fury tout le long, encore plus si t'as l'energy drink
 
 
-* Cafet multi : texte que un seul à la fois
 * Coeurs thé non transmis multi
 * Garder armes après resu
-* Jaune pas visible menus
-* Pas assez coeurs multigaire que seulement stomp cocoons
-* Bug cal après Easter egg
+* Pas assez coeurs multijoueur que seulement stomp cocoons
 * Inf ammo lors d'un résu
 * Résu ne conserve pas les armes et uogrades
 * Peanut est exponentielle 

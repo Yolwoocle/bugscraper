@@ -153,7 +153,7 @@ return {
                     auto = "auto",
                     max_whole = "max whole",
                 };
-                vsync = "VERTICAL SYNC",
+                vsync = "VERTICAL SYNCHRONIZATION",
                 menu_blur = "MENU BLUR",
             },
             game = {
