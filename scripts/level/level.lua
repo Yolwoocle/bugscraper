@@ -347,7 +347,7 @@ function Level:can_exit_cafeteria()
 	end
 
 	for _, p in pairs(game.players) do
-		if not is_point_in_rect(p.mid_x, p.mid_y, self.door_rect.ax, self.door_rect.ay, self.door_rect.bx, self.door_rect.by) then
+		if not is_point_in_rect(p.mid_x, p.mid_y, self.door_rect) then
 			return false
 		end		
 	end
@@ -472,7 +472,7 @@ function Level:draw()
 			self.background:draw()
 		end
 		self.map:draw()
-	
+		
 		if self.show_cabin then
 			self.elevator:draw(self.enemy_buffer, self.new_wave_progress)
 		end

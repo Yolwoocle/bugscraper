@@ -102,8 +102,8 @@ end
 
 function DrillBee:update(dt)
     local nearest_player = self:get_nearest_player()
-    if nearest_player and self.state_machine.current_state_name == "flying" then
-        if math.abs(self.x - nearest_player.x) <= self.attack_radius then
+    if self.state_machine.current_state_name == "flying" and nearest_player then
+        if nearest_player.y > self.y + self.h and math.abs(self.mid_x - nearest_player.mid_x) <= self.attack_radius then
             self.state_machine:set_state("telegraph")
             self.telegraph_timer:start()
         end

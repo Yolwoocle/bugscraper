@@ -130,8 +130,8 @@ function round_if_near_zero(val, thr)
 	return thr
 end
 
-function is_point_in_rect(px, py, ax, ay, bx, by)
-	return (ax <= px and px <= bx) and (ay <= py and py <= by)
+function is_point_in_rect(px, py, rect)
+	return (rect.ax <= px and px <= rect.bx) and (rect.ay <= py and py <= rect.by)
 end
 
 -- function copy_table(tab)
@@ -1136,8 +1136,8 @@ function clamp_segment_to_rectangle(seg, rect)
 		end
 	end
 	
-	local p1_in = is_point_in_rect(rect, seg.ax, seg.ay)
-	local p2_in = is_point_in_rect(rect, seg.bx, seg.by)
+	local p1_in = is_point_in_rect(seg.ax, seg.ay, rect)
+	local p2_in = is_point_in_rect(seg.bx, seg.by, rect)
 	if p1_in and p2_in then
 		return seg.ax, seg.ay, seg.bx, seg.by
 	end
@@ -1169,9 +1169,6 @@ function get_vector_in_rect_from_angle(x, y, angle, rect)
 			bx = bx,
 			by = by,
 		}
-	end
-	function is_point_in_rect(rect, px, py)
-		return (rect.ax <= px and px <= rect.bx) and (rect.ay <= py and py <= rect.by)
 	end
 
 	local seg = segment(x, y, x + math.cos(angle) * r, y + math.sin(angle) * r)
