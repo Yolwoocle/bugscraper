@@ -18,6 +18,7 @@ local Debug = require "scripts.game.debug"
 local Camera = require "scripts.game.camera"
 local Layer = require "scripts.graphics.layer"
 local ScreenshotManager = require "scripts.screenshot"
+local QueuedPlayer = require "scripts.game.queued_player"
 local upgrades          = require "data.upgrades"
 local shaders           = require "data.shaders"
 local images            = require "data.images"
@@ -115,6 +116,7 @@ function Game:new_game()
 	for i = 1, MAX_NUMBER_OF_PLAYERS do 
 		self.waves_until_respawn[i] = -1
 	end
+	self.queued_players = {}
 
 	self.level = Level:new(self)
 	
@@ -130,15 +132,15 @@ function Game:new_game()
 	l = create_actor_centered(Enemies.ButtonSmallGlass, floor(nx), floor(ny))
 	self:new_actor(l)
 	
-	l = create_actor_centered(Enemies.ButtonSmall, floor(nx + 32), floor(ny))
-	l.spr.color = COL_GREEN
-	l.on_press = function(button)
-		self.level:set_background(backgrounds.BackgroundServers:new())
-		self:set_floor(38)
-		self:start_game()
-		self.pressed_disappear_timer = 0.5
-	end
-	self:new_actor(l)
+	-- l = create_actor_centered(Enemies.ButtonSmall, floor(nx + 32), floor(ny))
+	-- l.spr.color = COL_GREEN
+	-- l.on_press = function(button)
+	-- 	self.level:set_background(backgrounds.BackgroundServers:new())
+	-- 	self:set_floor(38)
+	-- 	self:start_game()
+	-- 	self.pressed_disappear_timer = 0.5
+	-- end
+	-- self:new_actor(l)
 	
 	-- Exit sign 
 	local exit_x = CANVAS_WIDTH * 0.25
@@ -217,6 +219,8 @@ function Game:new_game()
 
 	self.notif = ""
 	self.notif_timer = 0.0
+
+	self:update_skin_choices()
 
 	Options:update_sound_on()
 end
@@ -330,6 +334,8 @@ function Game:update_main_game(dt)
 
 	self:update_timer_before_game_over(dt)
 
+	self:update_skin_choices()
+	self:update_queued_players(dt)
 	Particles:update(dt)
 	self:update_actors(dt)
 	self:update_logo(dt)
@@ -535,6 +541,7 @@ function Game:draw_game()
 
 		love.graphics.draw(self.front_canvas, 0, 0)
 		self.game_ui:draw()
+		self:draw_queued_players()
 		self.level:draw_ui()
 		if self.debug.colview_mode then
 			self.debug:draw_colview()
@@ -632,17 +639,17 @@ function Game:listen_for_player_join(dt)
 				input_profile_id = "controller"
 				joystick = Input:get_global_user().last_active_joystick
 			end
-			self:join_game(input_profile_id, joystick)
+			self:queue_join_game(input_profile_id, joystick)
 		end
 	end
 
 	if Input:action_pressed_global("split_keyboard") then
 		if Input:get_number_of_users(INPUT_TYPE_KEYBOARD) == 1 then
-			self:join_game("keyboard_solo")
+			self:queue_join_game("keyboard_solo")
 			Input:split_keyboard()
 
-		elseif Input:get_number_of_users(INPUT_TYPE_KEYBOARD) == 2 then
-			self:unsplit_keyboard_and_kick_second_player()
+		-- elseif Input:get_number_of_users(INPUT_TYPE_KEYBOARD) == 2 then
+		-- 	self:unsplit_keyboard_and_kick_second_player()
 		end
 	end
 end
@@ -808,14 +815,14 @@ end
 
 function Game:find_free_player_number()
 	for i = 1, MAX_NUMBER_OF_PLAYERS do
-		if self.players[i] == nil then
+		if Input.users[i] == nil then
 			return i
 		end
 	end
 	return nil
 end
 
-function Game:join_game(input_profile_id, joystick)
+function Game:queue_join_game(input_profile_id, joystick)
 	-- FIXME ça marche pas quand tu join avec manette puis que tu join sur clavier
 	local player_n = self:find_free_player_number()
 	if player_n == nil then
@@ -828,13 +835,26 @@ function Game:join_game(input_profile_id, joystick)
 
 	Input:new_user(player_n)
 	Input:set_last_ui_user_n(player_n)
-	local new_player = self:new_player(player_n, nil, nil, true)
 	if joystick ~= nil then
 		Input:assign_joystick(player_n, joystick)
 	end
 	Input:assign_input_profile(player_n, input_profile_id)
-	
+
+	table.insert(self.queued_players, QueuedPlayer:new(player_n, input_profile_id, joystick))
+
 	return player_n
+end
+
+function Game:join_game(player_n)
+	local player = self:new_player(player_n, nil, nil, true)
+
+	if player then
+		self.skin_choices[player.skin.id] = false
+	end
+
+	for _, queued_player in pairs(self.queued_players) do
+		queued_player:on_other_joined(player)
+	end
 end
 
 function Game:new_player(player_n, x, y, put_in_buffer)
@@ -847,7 +867,7 @@ function Game:new_player(player_n, x, y, put_in_buffer)
 	x = param(x, mx + math.floor((self.level.door_rect.bx - self.level.door_rect.ax)/2))
 	y = param(y, CANVAS_HEIGHT - 3*16 + 4)
 
-	local player = Player:new(player_n, x, y, skins[player_n])
+	local player = Player:new(player_n, x, y, Input:get_user(player_n):get_skin() or skins[1])
 	self.players[player_n] = player
 	self.waves_until_respawn[player_n] = -1
 	if put_in_buffer then
@@ -875,6 +895,35 @@ function Game:leave_game(player_n)
 	Input:remove_user(player_n)
 	if profile_id == "keyboard_split_p1" or profile_id == "keyboard_split_p2" then
 		Input:unsplit_keyboard()
+	end
+end
+
+function Game:update_queued_players(dt)
+	for _, queued_player in pairs(self.queued_players) do
+		queued_player:update(dt)
+	end
+
+	for key, queued_player in pairs(self.queued_players) do
+		if queued_player.is_removed then
+			self.queued_players[key] = nil
+		end
+	end
+end
+
+function Game:draw_queued_players()
+	local n = 0
+	for _, queued_player in pairs(self.queued_players) do
+		n = n + 1
+	end
+	
+	local spacing = 32
+	local width = 64
+
+	local x = (CANVAS_WIDTH - (n-1) * width) / 2
+	local y = CANVAS_HEIGHT * 0.75
+	for _, queued_player in pairs(self.queued_players) do
+		queued_player:draw(x, y)
+		x = x + width
 	end
 end
 
@@ -1031,6 +1080,16 @@ end
 
 function Game:reset_slow_mo(q)
 	self.slow_mo_rate = 0
+end
+
+function Game:update_skin_choices()
+	self.skin_choices = {}
+	for i=1, #skins do
+		self.skin_choices[i] = true
+	end
+	for i, player in pairs(self.players) do
+		self.skin_choices[player.skin.id] = false
+	end
 end
 
 return Game

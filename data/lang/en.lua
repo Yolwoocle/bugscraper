@@ -27,6 +27,16 @@ return {
         ring = "big berry",
         mushroom_cannon = "mushroom cannon",
     },
+    player = {
+        name = {
+            -- No reason to change these except if they clash with something specific to the translated language or culture 
+            mio = "mio",
+            cap = "cap",
+            zia = "zia",
+            tok = "tok",
+            rico = "rico",
+        }
+    },
     upgrade = {
         tea = {
             title = "Green Tea",

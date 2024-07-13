@@ -55,6 +55,10 @@ local img_names = {
 	bee_1 =            "actors/players/bee_1",
 	bee_2 =            "actors/players/bee_2",
 	bee_dead =         "actors/players/bee_dead",
+
+	rabbit_1 =         "actors/players/rabbit_1",
+	rabbit_2 =         "actors/players/rabbit_2",
+	rabbit_dead =      "actors/players/rabbit_dead",
 	
 	caterpillar_1 =    "actors/players/caterpillar_1",
 	caterpillar_2 =    "actors/players/caterpillar_2",

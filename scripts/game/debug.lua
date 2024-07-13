@@ -142,14 +142,14 @@ function Debug:init(game)
             -- local arc = enemies.Explosion:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8, 32)
             -- game:new_actor(arc)
 
-            -- local arc = enemies.Chipper:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8)
-            -- game:new_actor(arc)
+            local arc = enemies.DrillBee:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8)
+            game:new_actor(arc)
 
             -- local arc = enemies.BigBug:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8)
             -- game:new_actor(arc)
 
-            local arc = enemies.ElectricRays:new(CANVAS_WIDTH*random_range(0, 1), CANVAS_HEIGHT*random_range(0, 1), 5)
-            game:new_actor(arc)
+            -- local arc = enemies.ElectricRays:new(CANVAS_WIDTH*random_range(0, 1), CANVAS_HEIGHT*random_range(0, 1), 5)
+            -- game:new_actor(arc)
 
             -- local arc = enemies.DrillBee:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8)
             -- game:new_actor(arc)
@@ -250,6 +250,10 @@ function Debug:init(game)
             debug_draw_waves({x=CANVAS_CENTER[1], y=0})
             love.graphics.setCanvas(old_canvas)
             save_canvas_as_file(canvas_, os.date('bugscraper_waves_%Y-%m-%d_%H-%M-%S.png'), "png")
+        end},
+
+        ["n"] = {"toggle frame-by-frame", function()
+            _G_frame_by_frame_mode = not _G_frame_by_frame_mode
         end}
     }
     
@@ -509,7 +513,7 @@ function Debug:draw_info_view()
 
 	local users_str = "users: "	
 	for k, player in pairs(Input.users) do
-		users_str = concat(users_str, "{", k, ":", player.n, "}, ")
+		users_str = concat(users_str, "{", k, ":", player.n, "(", player.input_profile_id, ")", "}, ")
 	end
 	
 	local joystick_user_str = "joysticks_to_users: "	
@@ -527,6 +531,12 @@ function Debug:draw_info_view()
 		wave_resp_str = concat(wave_resp_str, "{", i, ":", self.game.waves_until_respawn[i], "}, ")
 	end
 
+    local queued_players_str = "{"
+	for k, player in pairs(game.queued_players) do
+		queued_players_str = concat(queued_players_str, player.player_n, ": ", param(player.is_pressed, "nil"), ", ")
+	end
+    queued_players_str = queued_players_str.."}"
+
 	
 	-- Print debug info
 	local txt_h = get_text_height(" ")
@@ -540,8 +550,6 @@ function Debug:draw_info_view()
 		concat("n° of enemies: ", self.game:get_enemy_count()),
 		concat("n° of particles: ", Particles:get_number_of_particles()),
 		concat("n° collision items: ", Collision.world:countItems()),
-		concat("windowed_w: ", Options:get("windowed_width")),
-		concat("windowed_h: ", Options:get("windowed_height")),
 		concat("real_wave_n ", self.game.debug2),
 		concat("number_of_alive_players ", self.game:get_number_of_alive_players()),
 		concat("menu_stack ", #self.game.menu_manager.menu_stack),
@@ -550,6 +558,7 @@ function Debug:draw_info_view()
 		joystick_user_str,
 		joystick_str,
 		wave_resp_str, 
+        concat("queued_players ", queued_players_str),
 		"",
 	}
 
@@ -562,7 +571,7 @@ function Debug:draw_info_view()
 	self.game.level.world_generator:draw()
 	draw_log()
     
-    self:test_info_view()
+    -- self:test_info_view()
     
     -- local w = 255
     -- local col_a = color(0x0c00b8)

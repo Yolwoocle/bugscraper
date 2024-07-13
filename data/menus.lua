@@ -321,7 +321,10 @@ local function generate_menus()
         return Menu:new(game, {
             { "<<<<<<<<< "..title.." >>>>>>>>>" },
             { "" },
-            { "🔄 "..Text:text("menu.options.input_submenu.reset_controls"), function() Input:reset_controls(input_profile_id, INPUT_TYPE_KEYBOARD) end },
+            { "🔄 "..Text:text("menu.options.input_submenu.reset_controls"), function()
+                Input:reset_controls(input_profile_id, INPUT_TYPE_KEYBOARD) 
+                Input:reset_controls("global", INPUT_TYPE_KEYBOARD) 
+            end },
             { "" },
             { "<<< "..Text:text("menu.options.input_submenu.gameplay").." >>>" },
             { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_KEYBOARD, "left",  "⬅ "..Text:text("input.prompts.left") },
@@ -368,7 +371,10 @@ local function generate_menus()
                 end
             end},
             { "" },
-            { "🔄 "..Text:text("menu.options.input_submenu.reset_controls"), function() Input:reset_controls(input_profile_id, INPUT_TYPE_CONTROLLER) end },
+            { "🔄 "..Text:text("menu.options.input_submenu.reset_controls"), function() 
+                Input:reset_controls(input_profile_id, INPUT_TYPE_CONTROLLER) 
+                Input:reset_controls("global", INPUT_TYPE_KEYBOARD) 
+            end },
             { SliderMenuItem, "🔘 "..Text:text("menu.options.input_submenu.controller_button_style"), function(self, diff)
                 diff = diff or 1
                 self:next_value(diff)
