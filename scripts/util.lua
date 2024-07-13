@@ -1078,8 +1078,8 @@ function get_orthogonal(x, y, dir)
 	end
 end
 
-function vec_cross(ax, ay, bx, by)
-    return ax*by - ay*bx
+function vec_cross(ax, ay, az, bx, by, bz)
+	return ay*bz - az*by, az*bx - ax*bz, ax*by - ay*bx
 end
 
 -- https://stackoverflow.com/questions/42892862/how-do-i-find-the-point-at-which-two-line-segments-are-intersecting-in-javascrip
