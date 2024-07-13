@@ -35,7 +35,6 @@ function Boomshroom:init(x, y)
     self.anim_frames = nil
 
     self.dead_scale = 1.5
-    -- self.spr:set_color(COL_GREEN)
     self.sprites = {images.boomshroom_1, images.boomshroom_2, images.boomshroom_3, images.boomshroom_4, images.boomshroom_5, images.boomshroom_6, images.boomshroom_8}
     self.spr:set_anchor(SPRITE_ANCHOR_CENTER_CENTER)
 
@@ -45,8 +44,6 @@ function Boomshroom:init(x, y)
         normal = {
             update = function(state, dt)
                 self.weight = 1 - self.life/self.max_life
-                -- local s = 1 + self.weight*(self.dead_scale - 1)
-                -- self:set_sprite_scale(s)
 
                 self.direction = self.direction + random_sample({-1, 1}) * dt * 3
                 self.vx = self.vx + math.cos(self.direction) * self.speed
@@ -66,9 +63,7 @@ function Boomshroom:init(x, y)
                 self.speed_x = 0
                 self.speed_y = 0
                 self.damage = 0
-                self.weight = 1
-                
-                -- self:set_sprite_scale(self.dead_scale)
+                self.weight = 1                
 
                 self.exploding_timer:start()
                 self.flash_timer:start(0.5)
@@ -98,6 +93,8 @@ function Boomshroom:init(x, y)
                 if time <= duration * 0.5 then
                     local s = 1 + (1 - time/(duration*0.5)) * 0.5
                     self:set_sprite_scale(s)
+                else
+                    self:set_sprite_scale(1)
                 end
             end
         }
@@ -107,10 +104,7 @@ function Boomshroom:init(x, y)
 end
 
 function Boomshroom:after_collision(col, other)
-    -- Pong-like bounce
     if col.type ~= "cross" then
-        -- Particles:smoke(col.touch.x, col.touch.y)
-
         local new_vx, new_vy = bounce_vector_cardinal(math.cos(self.direction), math.sin(self.direction), col.normal.x, col.normal.y)
         self.direction = math.atan2(new_vy, new_vx)
     end
@@ -119,7 +113,7 @@ end
 function Boomshroom:update(dt)
     self:update_fly(dt)
     self.t = self.t + dt
-    
+
     self.state_machine:update(dt)
 end
 

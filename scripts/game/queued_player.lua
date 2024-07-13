@@ -105,7 +105,11 @@ function QueuedPlayer:increment_selection(diff)
     end
     self.squash = 1.5
     self.selection_ox = diff * 10
-    self.left_prompt_ox = diff * 4
+    if diff >= 0 then
+        self.right_prompt_ox = diff * 4
+    else
+        self.left_prompt_ox = diff * 4
+    end
 end
 
 return QueuedPlayer
