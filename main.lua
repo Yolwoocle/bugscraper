@@ -19,7 +19,15 @@ local fixed_dt = 1/60 -- fixed frame delta time
 _G_t = 0
 _G_frame = 0
 _G_fixed_frame = 0
+_G_frame_by_frame_mode = false
+local _frame_by_frame_mode_advance_flag = false
 local function fixed_update()
+	if _G_frame_by_frame_mode and not _frame_by_frame_mode_advance_flag then
+		return
+	else
+		_frame_by_frame_mode_advance_flag = false
+	end
+
 	_G_fixed_frame = _G_fixed_frame + 1
 	game:update(fixed_dt)
 end
@@ -67,6 +75,12 @@ function love.keypressed(key, scancode, isrepeat)
 
 	elseif key == "return" and (love.keyboard.isDown("lalt") or love.keyboard.isDown("ralt")) then
 		if Options then   Options:toggle_fullscreen()    end
+	
+	elseif scancode == "f9" then
+		if _G_frame_by_frame_mode then
+			_frame_by_frame_mode_advance_flag = true
+		end
+
 	end
 
 	if game.keypressed then  game:keypressed(key, scancode, isrepeat)  end

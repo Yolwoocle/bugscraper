@@ -25,6 +25,9 @@ function InputUser:init(n, input_profile_id, is_global)
     self.vibration_timer = 0.0
     self.vibration_strength_left  = 0.0
     self.vibration_strength_right = 0.0
+
+    -- Game specifics
+    self.skin = nil
 end
 
 function InputUser:update(dt)
@@ -269,6 +272,14 @@ function InputUser:update_vibration(dt)
     end
     
     self.vibration_timer = math.max(self.vibration_timer - dt, 0.0)
+end
+
+function InputUser:set_skin(skin)
+    self.skin = skin
+end
+
+function InputUser:get_skin()
+    return self.skin
 end
 
 return InputUser

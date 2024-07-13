@@ -373,8 +373,8 @@ function print_centered_outline(col_in, col_out, text, x, y, thick, rot, sx, sy,
 	sx = sx or 1
 	sy = sy or sx
 	local font   = love.graphics.getFont()
-	local text_w = font:getWidth(text)
-	local text_h = font:getHeight()
+	local text_w = font:getWidth(text) * sx
+	local text_h = font:getHeight() * sy
 	print_outline(col_in, col_out, text, x-text_w/2, y-text_h/2, thick, rot, sx, sy, ...)
 end
 

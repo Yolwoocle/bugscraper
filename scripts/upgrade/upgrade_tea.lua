@@ -9,7 +9,7 @@ function UpgradeTea:init()
     self.name = "tea"
     self:init_upgrade()
     self.sprite = images.upgrade_tea
-    self.number_of_hearts = 2
+    self.number_of_hearts = 3
 
     self.color = COL_MID_GREEN
 end

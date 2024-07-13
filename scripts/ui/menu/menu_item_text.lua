@@ -96,18 +96,21 @@ function TextMenuItem:draw_textitem()
 	gfx.setColor(1, 1, 1, 1)
 end
 
+-- this is awful. please ffs change it
 function TextMenuItem:get_leftjustified_text_draw_function()
+	local col = Input:get_last_ui_player_color()
 	local draw_func = ternary(self.is_selected,
-		function(...) print_ycentered_outline(COL_WHITE, Input:get_last_ui_player_color(), ...) end,
+		function(...) print_ycentered_outline(nil, col, ...) end,
 		function(...) print_ycentered(...) end
 	)
 
 	return draw_func
 end
 
-function TextMenuItem:draw_withoutvalue()
+function TextMenuItem:draw_withoutvalue(text_color)
+	local col = Input:get_last_ui_player_color()
 	local draw_func = ternary(self.is_selected,
-		function(...) print_centered_outline(COL_WHITE, Input:get_last_ui_player_color(), ...) end,
+		function(...) print_centered_outline(text_color, col, ...) end,
 		function(...) print_centered(...) end
 	)
 

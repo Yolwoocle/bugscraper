@@ -40,7 +40,7 @@ function FaintedPlayer:init(x, y, player)
     self.is_knockbackable = false
     self.loot = {}
     
-    local skin = skins[self.player_n]
+    local skin = player.skin
     self.spr:set_outline(skin.color_palette[1], "round")
 
     -- self.sound_damage = {"cloth1", "cloth2", "cloth3"}

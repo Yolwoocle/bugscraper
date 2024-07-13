@@ -1,7 +1,6 @@
 require "scripts.util"
 local Enemy = require "scripts.actor.enemy"
 local images = require "data.images"
-local skins = require "data.skins"
 local images = require "data.images"
 local Class = require "scripts.meta.class"
 local Rect = require "scripts.math.rect"

@@ -223,7 +223,7 @@ RAW_INPUT_MAP_DEFAULT_GLOBAL = {
     ui_up =     {},
     ui_down =   {},
     ui_reset_keys = {},
-    split_keyboard = {"k_return"},
+    split_keyboard = {"k_y"},
     leave_game = {},
     join_game = {"k_c", "k_b", "c_a", "c_b"},
 
