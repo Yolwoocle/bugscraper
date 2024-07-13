@@ -27,6 +27,7 @@ local enemies = {
 	Boomshroom =       require "scripts.actor.enemies.boomshroom", 
 	BigBug =           require "scripts.actor.enemies.big_bug", --*
 	W2boss =           require "scripts.actor.enemies.w2boss", --*
+	HoneycombFootball = require "scripts.actor.enemies.honeycomb_football", --*
 	
 	MushroomAnt =      require "scripts.actor.enemies.mushroom_ant",
 	

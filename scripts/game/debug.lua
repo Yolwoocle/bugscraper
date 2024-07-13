@@ -8,6 +8,9 @@ local images = require "data.images"
 local debug_draw_waves = require "scripts.debug.draw_waves"
 local Segment = require "scripts.math.segment"
 local Rect = require "scripts.math.rect"
+local Renderer3D = require "scripts.graphics.3d.renderer_3d"
+local Object3D  = require "scripts.graphics.3d.object_3d"
+local truncated_ico = require "data.models.truncated_ico"
 
 local Debug = Class:inherit()
 
@@ -142,7 +145,7 @@ function Debug:init(game)
             -- local arc = enemies.Explosion:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8, 32)
             -- game:new_actor(arc)
 
-            local arc = enemies.DrillBee:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8)
+            local arc = enemies.HoneycombFootball:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8)
             game:new_actor(arc)
 
             -- local arc = enemies.BigBug:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8)
@@ -571,7 +574,7 @@ function Debug:draw_info_view()
 	self.game.level.world_generator:draw()
 	draw_log()
     
-    -- self:test_info_view()
+    self:test_info_view_3d_renderer()
     
     -- local w = 255
     -- local col_a = color(0x0c00b8)
@@ -588,13 +591,26 @@ function Debug:draw_info_view()
     -- end
 end
 
+local renderer = Renderer3D:new(Object3D:new(truncated_ico))
+renderer.object.scale.x = 24
+renderer.object.scale.y = 24
+renderer.object.scale.z = 24
+renderer.object.position.x = 200
+renderer.object.position.y = 200
+function Debug:test_info_view_3d_renderer()
+    renderer.object.rotation.x = renderer.object.rotation.x + 1/400
+
+    renderer:update()
+    renderer:draw()
+end
+
 local test_ang = 0
 local test_rect = Rect:new(
     CANVAS_CENTER[1] - 26*3, CANVAS_CENTER[2] - 13*3, 
     CANVAS_CENTER[1] - 4*3, CANVAS_CENTER[2] + 20*3
 )
 
-function Debug:test_info_view()
+function Debug:test_info_view_crop_line()
     -- love.graphics.clear(COL_BLACK_BLUE)
 
     local mx, my = love.mouse.getPosition()
