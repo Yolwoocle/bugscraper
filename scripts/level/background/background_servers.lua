@@ -77,6 +77,13 @@ function BackgroundServers:init_edges()
 	self.server_rows = {}
 
 	local padding = CANVAS_WIDTH/2
+	local all_edges = {}
+
+	local function insert_new_edge(row, edge)
+		edge.row = row
+		table.insert(all_edges, edge)
+		table.insert(row.edges, edge)
+	end
 
 	local i = 1
 	for iy = self.row_min_y, self.edge_max_y, self.row_height do
@@ -88,38 +95,56 @@ function BackgroundServers:init_edges()
 		local x_left =  math.floor( padding)
 		local x_right = math.floor(-padding)
 		local y = math.floor(iy)
-		table.insert(row.edges, new_edge( -- left horizontal edge
+		insert_new_edge(row, new_edge( -- left horizontal edge
 			new_vec3(x_left, 0, 1),
 			new_vec3(x_left, 0, self.max_z),
 			self.edge_color
 		))
-		table.insert(row.edges, new_edge( -- right horizontal edge
+		insert_new_edge(row, new_edge( -- right horizontal edge
 			new_vec3(x_right, 0, 1),
 			new_vec3(x_right, 0, self.max_z),
 			self.edge_color
 		))
 
 		for iz = 1, self.max_z, self.column_width do
-			table.insert(row.edges, new_edge( -- left vertical edge
+			insert_new_edge(row, new_edge( -- left vertical edge
 				new_vec3(x_left, 0, iz),
 				new_vec3(x_left, self.row_height, iz),
 				self.edge_color
 			))
-			table.insert(row.edges, new_edge( -- right vertical edge
+			insert_new_edge(row, new_edge( -- right vertical edge
 				new_vec3(x_right, 0, iz),
 				new_vec3(x_right, self.row_height, iz),
 				self.edge_color
 			))
 		end
 		for j = 1, 10 do
-			table.insert(row.edges, new_point(
+			insert_new_edge(row, new_point(
 				new_vec3(random_range(x_left, x_right), random_range(0, self.row_height), random_range(1, self.max_z)),
 				5, COL_WHITE
 			))
 		end
+
 		table.insert(self.server_rows, row)
 		i = i + 1
 	end
+
+	table.sort(all_edges, function(a, b) 
+		local az, bz
+		if a.type == "edge" then
+			az = math.huge
+		else
+			az = a.pos.z
+		end
+		if b.type == "edge" then
+			bz = math.huge
+		else
+			bz = b.pos.z
+		end
+		return az > bz
+	end)
+
+	self.all_edges = all_edges
 end
 
 -----------------------------------------------------
@@ -147,15 +172,12 @@ end
 function BackgroundServers:draw()
 	self:draw_background()
 
-	local ox, oy = CANVAS_WIDTH/2, CANVAS_HEIGHT/2
+	for i, edge in ipairs(self.all_edges) do
+		local row_y = edge.row.y
 
-	for i, row in pairs(self.server_rows) do
-		local row_y = row.y
-		for j, edge in pairs(row.edges) do
-			love.graphics.setColor(edge.color)
-			edge:draw(self.fov, 0, row_y)
-			love.graphics.setColor(1,1,1,1)
-		end
+		love.graphics.setColor(edge.color)
+		edge:draw(self.fov, 0, row_y)
+		love.graphics.setColor(1,1,1,1)
 	end
 
 	-- print_outline(nil, nil, tostring(self.row_min_y), CANVAS_HEIGHT/2, 0)

@@ -39,7 +39,7 @@ function ButtonBig:draw()
     self:draw_enemy()
 end
 
-function ButtonBig:on_stomped(damager)
+function ButtonBig:on_stomp_killed(damager)
     game:screenshake(10)
     game:on_red_button_pressed()
     Audio:play("button_press")

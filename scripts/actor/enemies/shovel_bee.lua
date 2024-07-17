@@ -9,7 +9,7 @@ local ShovelBee = Fly:inherit()
 	
 function ShovelBee:init(x, y, spr)
     self:init_fly(x,y, spr or images.shovel_bee, 14, 16)
-    self.name = "drill_bee"
+    self.name = "shovel_bee"
     self.is_flying = true
     self.life = 10
     
@@ -85,7 +85,13 @@ function ShovelBee:init(x, y, spr)
 
         stuck = {
             update = function(state, dt)
-                self.collision_info.enabled = false
+                self.vx = 0
+                self.vy = 0
+                self.spr:set_image(self.img_stuck)
+                self.spr:update_offset(0, self.stuck_spr_oy)
+                if self.stuck_timer:update(dt) then
+                    self.state_machine:set_state("flying")
+                end
             end,
         },
     }, "flying")
@@ -105,8 +111,7 @@ function ShovelBee:update(dt)
 
     self:update_phase(dt, nearest_player)
     
-    self.debug_values[1] = self.state_machine.current_state_name
-    self.debug_values[2] = self.collision_info.enabled
+    -- self.debug_values[1] = self.phase
     
     self:update_fly(dt)
 end

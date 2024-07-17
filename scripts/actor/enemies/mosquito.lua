@@ -13,7 +13,7 @@ local PHASE_ATTACK = "attack"
 local PHASE_TELEGRAPH_DURATION = 0.4
 
 function Mosquito:init(x, y)
-    self:init_fly(x,y, images.mosquito1)
+    self:init_fly(x,y, images.mosquito1, 12, 16)
     self.name = "mosquito"
     self.life = 5
 
@@ -30,6 +30,8 @@ function Mosquito:init(x, y)
 
     self.buzz_source = sounds.fly_buzz.source:clone()
     self.buzz_source:setPitch(1.5)
+
+    self.spr:set_anchor(SPRITE_ANCHOR_CENTER_CENTER)
 
     self.t = 0
 end

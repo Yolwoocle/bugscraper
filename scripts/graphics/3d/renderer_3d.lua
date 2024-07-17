@@ -7,6 +7,9 @@ local Renderer3D = Class:inherit()
 
 function Renderer3D:init(object)
 	self.object = object or {}
+
+	self.lighting_palette = {color(0xf77622), color(0xfeae34), color(0xfee761), color(0xfee761), COL_WHITE}
+    self.line_color = COL_BLACK
 end
 
 function Renderer3D:update(dt)
@@ -20,9 +23,8 @@ end
 function Renderer3D:get_shading_color(normal)
 	local camera_vec = Vec3(0, 0, 1)
 	local dot = math.abs(normal:dot(camera_vec))
-	-- local palette = {color(0x743f39), color(0xf77622), color(0xfeae34), color(0xfee761), COL_WHITE}
-	local palette = {color(0xf77622), color(0xfeae34), color(0xfee761), color(0xfee761), COL_WHITE}
-	local col = (palette)[clamp(round(dot * #palette), 1, #palette)]
+	local palette = self.lighting_palette 
+	local col = palette[clamp(round(dot * #palette), 1, #palette)]
 	return col
 end
 
@@ -56,7 +58,7 @@ function Renderer3D:draw()
 
 	end
 
-	exec_color(COL_BLACK_BLUE, function()
+	exec_color(self.line_color, function()
 		for _, face in pairs(projected_faces) do
 			for i=1, #face-2, 2 do
 				love.graphics.line(face[i], face[i+1], face[i+2], face[i+3])

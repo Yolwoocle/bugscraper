@@ -5,8 +5,8 @@ local images = require "data.images"
 
 local Fly = Enemy:inherit()
 	
-function Fly:init(x, y, spr)
-    self:init_fly(x, y)
+function Fly:init(x, y, spr, w, h)
+    self:init_fly(x, y, spr, w, h)
 end
 
 function Fly:init_fly(x, y, spr, w, h)

@@ -81,6 +81,10 @@ function Gun:init_gun(user)
 	self.screenshake = 0
 
 	self.is_explosion = false
+
+	self.bullet_model = nil
+	self.object_3d_rot_speed = 0
+	self.object_3d_scale = 1
 end
 
 function Gun:update(dt)
@@ -255,6 +259,10 @@ function Gun:fire_bullet(dt, user, x, y, bul_w, bul_h, dx, dy)
 	local spd = self.bullet_speed + random_neighbor(self.random_speed_offset)
 	local spd_x = dx * spd
 	local spd_y = dy * spd 
+	local rot_3d_speed = self.object_3d_rot_speed
+	if type(rot_3d_speed) == "table" and #rot_3d_speed >= 2 then
+		rot_3d_speed = random_range(rot_3d_speed[1], rot_3d_speed[2])
+	end
 	local bullet = Bullet:new(self, user, self:get_damage(user), x, y, bul_w, bul_h, spd_x, spd_y, {
 		life = self.bullet_life,
 		range = self.bullet_range,
@@ -263,6 +271,9 @@ function Gun:fire_bullet(dt, user, x, y, bul_w, bul_h, dx, dy)
 		target_type = ternary(self.bullet_target_type == "default", nil, self.bullet_target_type),
 		override_enemy_damage = self.override_enemy_damage,
 		is_explosion = self.is_explosion,
+		bullet_model = self.bullet_model,
+		object_3d_rot_speed = rot_3d_speed,
+		object_3d_scale = self.object_3d_scale
 	})
 	game:new_actor(bullet)
 end

@@ -40,7 +40,7 @@ function ButtonSmall:update_button_small(dt)
     end
 end
 
-function ButtonSmall:on_stomped(damager)
+function ButtonSmall:on_stomp_killed(damager)
     game:screenshake(5)
     Audio:play("button_press")
     

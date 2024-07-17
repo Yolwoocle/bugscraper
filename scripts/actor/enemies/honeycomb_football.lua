@@ -1,23 +1,20 @@
 require "scripts.util"
-local Enemy = require "scripts.actor.enemy"
-local sounds = require "data.sounds"
 local images = require "data.images"
+local guns   = require "data.guns"
 
 local truncated_ico = require "data.models.truncated_ico"
 local Renderer3D = require "scripts.graphics.3d.renderer_3d"
 local Object3D = require "scripts.graphics.3d.object_3d"
-local Guns = require "data.guns"
 local Slug = require "scripts.actor.enemies.slug"
 local PongBall = require "scripts.actor.enemies.pong_ball"
+local StateMachine = require "scripts.state_machine"
+local Timer = require "scripts.timer"
+local Explosion = require "scripts.actor.enemies.explosion"
 
 local HoneycombFootball = PongBall:inherit()
 
 function HoneycombFootball:init(x, y, spr)
-    self:init_snail_shelled(x, y, spr)
-end
-
-function HoneycombFootball:init_snail_shelled(x, y, spr)
-    self:init_pong_ball(x,y, spr or images.snail_shell_bouncy, 32, 32)
+    self:init_pong_ball(x,y, spr, 32, 32)
     self.name = "honeycomb_football"
 
     self.is_flying = true
@@ -31,12 +28,99 @@ function HoneycombFootball:init_snail_shelled(x, y, spr)
     self.sound_death = "snail_shell_crack"
     self.sound_stomp = "snail_shell_crack"
 
+    self.stomps = 5
+    self.damage_on_stomp = 0.1
+    self.is_killed_on_stomp = false
+
+    self.def_ball_scale = 24
     self.renderer = Renderer3D:new(Object3D:new(truncated_ico))
-    self.renderer.object.scale.x = 24
-    self.renderer.object.scale.y = 24
-    self.renderer.object.scale.z = 24
+    self.renderer.object.scale:sset(self.def_ball_scale)
     self.renderer.object.position.x = 200
     self.renderer.object.position.y = 200
+	self.ball_lighting_palette = {color(0xf77622), color(0xfeae34), color(0xfee761), color(0xfee761), COL_WHITE}
+
+    self.exploding_timer = Timer:new(2.0)
+    self.flash_timer = Timer:new(0.5)
+
+    self.unstompable_timer = Timer:new(0.5, {
+        on_apply = function(timer)
+            self.is_stompable = false
+            self.damage = 0
+        end,
+        on_timeout = function(timer)
+            self.is_stompable = true
+            self.damage = 1
+        end,
+    })
+
+    self.gun = guns.unlootable.HoneycombFootballGun:new(self)
+
+    self.state_machine = StateMachine:new({
+        normal = {
+            update = function(state, dt)
+            end
+        },
+        slowdown = {
+            enter = function(state)
+                self.is_stompable = false 
+                self.damage = 0
+            end,
+            update = function(state, dt)
+                self.pong_speed = move_toward(self.pong_speed, 0, 200*dt)
+                if dist(self.vx, self.vy) <= 1 then
+                    self.state_machine:set_state("exploding")
+                end
+
+            end
+        },
+        exploding = {
+            enter = function(state)
+                self.pong_speed = 0
+                self.vx = 0
+                self.vy = 0
+
+                self.exploding_timer:start()
+                self.flash_timer:start(0.5)
+                self.speed = 0
+                self.speed_x = 0
+                self.speed_y = 0
+                self.damage = 0
+                self.weight = 1       
+                
+                self.exploding_rot_speed = 0
+
+                self.exploding_timer:start()
+                self.flash_timer:start(0.5)
+            end,
+            update = function(state, dt)
+                self.exploding_rot_speed = self.exploding_rot_speed + 5*dt
+                self.renderer.object.rotation.x = self.renderer.object.rotation.x + self.exploding_rot_speed*dt
+                self.renderer.object.rotation.y = self.renderer.object.rotation.y + self.exploding_rot_speed*dt
+
+                if self.flash_timer:update(dt) then
+                    self.flash_white = not self.flash_white
+                    if self.flash_white then
+                        local d = math.max(0.05, self.flash_timer:get_duration() * 0.3)
+                        self.flash_timer:set_duration(d)
+                    end
+                    self.flash_timer:start()
+                end
+
+                if self.exploding_timer:update(dt) then
+                    local explosion = Explosion:new(self.mid_x, self.mid_y, self.explosion_radius)
+                    game:new_actor(explosion)
+                    self:kill()
+                end
+
+                local time = self.exploding_timer:get_time()
+                local duration = self.exploding_timer:get_duration()
+                if time <= duration * 0.5 then
+                    local s = 1 + (1 - time/(duration*0.5)) * 0.3
+                    self.renderer.object.scale:sset(self.def_ball_scale * s)
+                end
+            end,
+        }
+    }, "normal")
 end
 
 function HoneycombFootball:update(dt)
@@ -45,26 +129,49 @@ end
 function HoneycombFootball:update_snail_shelled(dt)
     self:update_pong_ball(dt)
 
-    self.renderer.object.rotation.x = self.renderer.object.rotation.x + 1*dt
-    self.renderer.object.rotation.y = self.renderer.object.rotation.y + 1*dt
+    -- Particles:dust(self.mid_x + random_neighbor(self.w/4), self.mid_y + random_neighbor(self.h/4))
+
+
+    self.renderer.object.rotation.x = self.renderer.object.rotation.x + (self.vx / 50)*dt
+    self.renderer.object.rotation.y = self.renderer.object.rotation.y + (self.vy / 50)*dt
     self.renderer.object.position.x = self.mid_x
     self.renderer.object.position.y = self.mid_y
 
+    self.unstompable_timer:update(dt)
+
+    self.state_machine:update(dt)
+    if self:is_flashing_white() then
+        self.renderer.lighting_palette = {COL_WHITE}
+        self.renderer.line_color = COL_WHITE
+    else
+        self.renderer.lighting_palette = self.ball_lighting_palette
+        self.renderer.line_color = COL_BLACK_BLUE
+    end
     self.renderer:update(dt)
+
+    -- self.debug_values[1] = self.state_machine.current_state_name
+    -- self.debug_values[2] = self.is_stompable
+end
+
+function HoneycombFootball:on_stomped()
+    self.pong_speed = self.pong_speed + 60
+
+    self.unstompable_timer:start()
 end
 
 function HoneycombFootball:draw()
     self:draw_pong_ball()
-
     self.renderer:draw()
 end
 
 function HoneycombFootball:on_death()
     Particles:image(self.mid_x, self.mid_y, 30, images.snail_shell_bouncy_fragment, 13, nil, 0, 10)
-    local slug = Slug:new(self.x, self.y)
-    slug.vy = -200
-    slug.harmless_timer = 0.5
-    game:new_actor(slug)
+
+    self.gun:shoot(0, self, self.mid_x, self.mid_y, math.cos(0), math.sin(0))
+end
+
+function HoneycombFootball:on_stomp_killed()
+    self.state_machine:set_state("slowdown")
 end
 
 return HoneycombFootball

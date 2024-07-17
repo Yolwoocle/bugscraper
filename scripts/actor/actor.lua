@@ -1,6 +1,7 @@
 local Class = require "scripts.meta.class"
 local Sprite = require "scripts.graphics.sprite"
 local Rect = require "scripts.math.rect"
+local CollisionInfo = require "scripts.physics.collision_info"
 
 local Actor = Class:inherit()
 
@@ -76,13 +77,19 @@ function Actor:init_actor(x, y, w, h, spr, args)
 		-- By default, do not react to collisions
 		local type = "cross"
 
+		if not self.collision_info.enabled then
+			return false
+		end
+
 		if other.is_active ~= nil and not other.is_active then 
 			return false
 		end
 
 		if other.collision_info then
 			local collision_info = other.collision_info
-			if collision_info.type == COLLISION_TYPE_SOLID then
+			if not collision_info.enabled then
+				return false
+			elseif collision_info.type == COLLISION_TYPE_SOLID then
 				type = "slide"
 			elseif collision_info.type == COLLISION_TYPE_SEMISOLID then
 				type = ternary((self.y + self.h <= other.y) and (self.vy >= 0), "slide", "cross")
@@ -154,6 +161,10 @@ function Actor:update()
 end
 
 function Actor:add_collision()
+	self.collision_info = CollisionInfo:new {
+        type = COLLISION_TYPE_NONSOLID,
+        is_slidable = true,
+    }
 	Collision:add(self, self.x, self.y, self.w, self.h)
 end
 

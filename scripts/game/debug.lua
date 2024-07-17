@@ -11,6 +11,7 @@ local Rect = require "scripts.math.rect"
 local Renderer3D = require "scripts.graphics.3d.renderer_3d"
 local Object3D  = require "scripts.graphics.3d.object_3d"
 local truncated_ico = require "data.models.truncated_ico"
+local honeycomb_panel = require "data.models.honeycomb_panel"
 
 local Debug = Class:inherit()
 
@@ -125,7 +126,7 @@ function Debug:init(game)
             -- game:new_actor(arc)
 
             -- local arc = enemies.ElectricRays:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.5)
-            -- local arc = enemies.DrillBee:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.5);
+            -- local arc = enemies.ShovelBee:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.5);
             -- local arc = enemies.FlyBuddy:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.5);
             -- game:new_actor(arc)
 
@@ -145,7 +146,7 @@ function Debug:init(game)
             -- local arc = enemies.Explosion:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8, 32)
             -- game:new_actor(arc)
 
-            local arc = enemies.HoneycombFootball:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8)
+            local arc = enemies.DrillBee:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8)
             game:new_actor(arc)
 
             -- local arc = enemies.BigBug:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8)
@@ -154,7 +155,7 @@ function Debug:init(game)
             -- local arc = enemies.ElectricRays:new(CANVAS_WIDTH*random_range(0, 1), CANVAS_HEIGHT*random_range(0, 1), 5)
             -- game:new_actor(arc)
 
-            -- local arc = enemies.DrillBee:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8)
+            -- local arc = enemies.ShovelBee:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8)
             -- game:new_actor(arc)
 
             -- local arc = enemies.Grasshopper:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8)
@@ -591,12 +592,13 @@ function Debug:draw_info_view()
     -- end
 end
 
-local renderer = Renderer3D:new(Object3D:new(truncated_ico))
+local renderer = Renderer3D:new(Object3D:new(honeycomb_panel))
 renderer.object.scale.x = 24
 renderer.object.scale.y = 24
 renderer.object.scale.z = 24
 renderer.object.position.x = 200
 renderer.object.position.y = 200
+renderer.object.position.z = 20
 function Debug:test_info_view_3d_renderer()
     renderer.object.rotation.x = renderer.object.rotation.x + 1/400
 

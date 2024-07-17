@@ -66,7 +66,7 @@ function FlyingDung:on_negative_life()
     self:begin_targeting()
 end
 
-function FlyingDung:on_stomped(damager)
+function FlyingDung:on_stomp_killed(damager)
     self:begin_targeting()
 end
 

@@ -3,10 +3,13 @@ local Class = require "scripts.meta.class"
 
 local Timer = Class:inherit()
 
-function Timer:init(duration)
+function Timer:init(duration, args)
+    args = args or {}
+    
     self.duration = duration
     self.time = duration
-    -- self.on_timeout = on_timeout
+    self.on_apply = args.on_apply
+    self.on_timeout = args.on_timeout
 
     self.is_active = false
     self:reset()
@@ -24,6 +27,9 @@ function Timer:update(dt)
 
     self.time = math.max(self.time - dt, 0.0)
     if self.time <= 0 then
+        if self.on_timeout then
+            self:on_timeout()
+        end
         self:stop()
         return true
     end
@@ -52,6 +58,9 @@ function Timer:start(duration)
     end
     self.is_active = true
     self.time = self.duration
+    if self.on_apply then
+        self:on_apply()
+    end
 end
 
 function Timer:stop()

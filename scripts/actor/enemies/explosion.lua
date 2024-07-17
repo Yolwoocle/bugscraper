@@ -25,7 +25,7 @@ function Explosion:update(dt)
     self:update_prop(dt)
 
     if not self.is_dead then
-        self.gun:shoot(dt, self, self.mid_x, self.mid_y, math.cos(0), math.sin(0))
+        self.gun:shoot(0, self, self.mid_x, self.mid_y, math.cos(0), math.sin(0))
         game:screenshake(self.screenshake)
         game:frameskip(5)
         Audio:play("explosion")

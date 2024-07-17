@@ -121,7 +121,7 @@ function Boomshroom:on_negative_life()
     self:start_exploding()
 end
 
-function Boomshroom:on_stomped()
+function Boomshroom:on_stomp_killed()
     self:start_exploding()
 end
 

@@ -3,6 +3,8 @@ local Class = require "scripts.meta.class"
 local Gun = require "scripts.game.gun"
 local images = require "data.images"
 local sounds = require "data.sounds"
+local Model = require "scripts.graphics.3d.model"
+local honeycomb_panel = require "data.models.honeycomb_panel"
 
 local Guns = Class:inherit()
 
@@ -316,7 +318,7 @@ function Guns:init()
 
 		self.random_angle_offset = 0
 		self.is_auto = true
-		self.spr = images.gun_ring
+		self.spr = images.boomshroom_1
 		self.sfx_volume = 1
 		self.sfx_pitch = 1.4
 		self.play_sfx = false
@@ -341,6 +343,45 @@ function Guns:init()
 
 		self.is_explosion = true
 		-- self.screenshake = 2
+	end
+
+	----------------
+
+	
+	self.unlootable.HoneycombFootballGun = Gun:inherit()
+
+	function self.unlootable.HoneycombFootballGun:init(user)
+		self.name = "honeycomb_football_gun"
+		self:init_gun(user)
+		
+		self.max_ammo = 8
+		self.max_reload_timer = 1.3
+		self.bullet_number = 24
+		self.bullet_speed = 125
+		self.bullet_spread = pi2
+		self.random_angle_offset = 0
+
+		self.random_angle_offset = 0
+		self.damage = 1
+		self.is_auto = true
+		self.spr = images.shovel_bee
+		self.sfx = {"gunshot_ring_1", "gunshot_ring_2", "gunshot_ring_3"}
+		self.sfx2 = "pop_ring"
+		self.sfx_volume = 1
+		self.sfx_pitch = 1.4
+		
+		self.cooldown = 0.5
+		self.jetpack_force = 1000
+		
+		self.bullet_spr = images.empty
+		self.bul_w = 10
+		self.bul_h = 10
+
+		self.screenshake = 4
+
+		self.bullet_model = honeycomb_panel
+		self.object_3d_rot_speed = {4, 6}
+		self.object_3d_scale = 10
 	end
 end
 

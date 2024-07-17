@@ -8,12 +8,12 @@ local Slug = require "scripts.actor.enemies.slug"
 
 local PongBall = Enemy:inherit()
 
-function PongBall:init(x, y, spr)
-    self:init_pong_ball(x, y, spr)
+function PongBall:init(x, y, spr, w, h)
+    self:init_pong_ball(x, y, spr, w, h)
 end
 
-function PongBall:init_pong_ball(x, y, spr)
-    self:init_enemy(x,y, spr or images.snail_shell, 16, 16)
+function PongBall:init_pong_ball(x, y, spr, w, h)
+    self:init_enemy(x,y, spr or images.snail_shell, w or 16, h or 16)
     self.name = "pong_ball"
     self.is_flying = true
     self.follow_player = false
@@ -31,11 +31,11 @@ function PongBall:init_pong_ball(x, y, spr)
 end
 
 function PongBall:init_pong(speed)
-    local dir = (pi/4 + pi/2 * love.math.random(0,3)) % pi2
+    self.pong_direction = (pi/4 + pi/2 * love.math.random(0,3)) % pi2
     self.is_ponging = true
     self.pong_speed = speed or 100
-    self.pong_vx = cos(dir) * self.pong_speed
-    self.pong_vy = sin(dir) * self.pong_speed
+    self.pong_vx = cos(self.pong_direction) * self.pong_speed
+    self.pong_vy = sin(self.pong_direction) * self.pong_speed
 end
 
 function PongBall:update(dt)
@@ -47,6 +47,9 @@ function PongBall:update_pong_ball(dt)
     self.spr:set_rotation(self.spr.rot + self.rot_speed * dt)
 
     if self.is_ponging then
+        self.pong_vx = math.cos(self.pong_direction) * self.pong_speed
+        self.pong_vy = math.sin(self.pong_direction) * self.pong_speed
+        
         self.vx = (self.pong_vx or 0)
         self.vy = (self.pong_vy or 0)
     end
@@ -64,7 +67,8 @@ function PongBall:after_collision_pong_ball(col, other)
             Audio:play_var(s, 0.3, 1.1, {pitch=0.8, volume=0.5})
             Particles:smoke(col.touch.x, col.touch.y)
 
-            self.pong_vx, self.pong_vy = bounce_vector_cardinal(self.pong_vx, self.pong_vy, col.normal.x, col.normal.y)
+            local dx, dy = bounce_vector_cardinal(math.cos(self.pong_direction), math.sin(self.pong_direction), col.normal.x, col.normal.y)
+            self.pong_direction = math.atan2(dy, dx)
         end
     end
 end

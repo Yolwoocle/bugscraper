@@ -124,11 +124,13 @@ function Player:init(n, x, y, skin)
 		Guns.unlootable.DebugGun:new(self),
 		Guns.unlootable.DebugGunManual:new(self),
 		Guns.unlootable.ExplosionGun:new(self),
+		Guns.unlootable.HoneycombFootballGun:new(self),
 		Guns.Triple:new(self),
 		Guns.Burst:new(self),
 		Guns.Shotgun:new(self),
 		Guns.Minigun:new(self),
 		Guns.MushroomCannon:new(self),
+		Guns.Ring:new(self),
 	}
 	self.gun_number = 1
 

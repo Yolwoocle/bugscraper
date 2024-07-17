@@ -2,6 +2,9 @@ local Class = require "scripts.meta.class"
 local Actor = require "scripts.actor.actor"
 local Timer = require "scripts.timer"
 local images = require "data.images"
+local Renderer3D = require "scripts.graphics.3d.renderer_3d"
+local Object3D = require "scripts.graphics.3d.object_3d"
+local honeycomb_panel = require "data.models.honeycomb_panel"
 
 local Bullet = Actor:inherit()
 
@@ -60,6 +63,13 @@ function Bullet:init(gun, player, damage, x, y, w, h, vx, vy, args)
 		end
 		return old_filter(item, other)
 	end
+
+	self.bullet_model = param(args.bullet_model, nil)
+	if self.bullet_model then
+		self.object_3d_scale = param(args.object_3d_scale, 1)
+		self.object_3d_rot_speed = param(args.object_3d_rot_speed, 1)
+		self.renderer_3d = Renderer3D:new(Object3D:new(self.bullet_model))
+	end
 end
 
 function Bullet:update(dt)
@@ -82,10 +92,27 @@ function Bullet:update(dt)
 	end 
 
 	self.bounce_immunity_timer = math.max(0.0, self.bounce_immunity_timer - dt)
+
+	if self.renderer_3d then
+		self.renderer_3d.object.position.x = self.mid_x
+		self.renderer_3d.object.position.y = self.mid_y
+		self.renderer_3d.object.position.z = 1
+		self.renderer_3d.object.scale:sset(self.object_3d_scale)
+		self.renderer_3d.object.rotation:sset(
+			self.renderer_3d.object.rotation.x + self.object_3d_rot_speed * dt,
+			0,
+			math.atan2(self.vy, self.vx) + pi/2
+		)
+		self.renderer_3d:update(dt)
+	end
 end
 
 function Bullet:draw()
 	self:draw_actor()
+	
+	if self.renderer_3d then
+		self.renderer_3d:draw()
+	end
 
 	-- print_centered_outline(nil, nil, ternary(self.harmless_timer.is_active, "O", "X"), self.x, self.y)
 end

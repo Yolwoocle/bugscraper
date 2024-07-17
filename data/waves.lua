@@ -57,33 +57,8 @@ local function debug_wave()
 			Particles:falling_grid(cabin_rect.bx - 7*16, cabin_rect.ay + 6*16)
 			level.elevator:start_grid_timer(2.5)
 		end,
-		enemies = {	
-			-- {E.Dung, 1, position = {240, 200}},
-			-- {E.FlyingDung, 1, position = {CANVAS_WIDTH/2, 200}},
-			-- {E.Chipper, 1},
-			-- {E.StinkBug, 1},
-			-- {E.ElectricRays, 1},
-			-- {E.DrillBee, 1},
-			-- {E.MetalFly, 1},
-			-- {E.Fly, 1},
-			-- {E.VendingMachine, 1},
-			-- {E.HoneypotAnt, 1},
-			-- {E.FlyingDung, 1},
-			-- {E.SnailShelled, 1},
-			-- {E.PoisonCloud, 1},
-			-- {E.SnailShelled, 1},
-			-- {E.Fly, 1},
-			-- {E.Mosquito, 1},
-			-- {E.HoneypotAnt, 1},
-			-- {E.Larva, 1},
-			-- {E.Fly, 1},
-			-- {E.SpikedFly, 1},
-			-- {E.SnailShelled, 1},
-			-- {E.Slug, 1},
-			-- {E.Grasshopper, 1},
+		enemies = {
 			{E.MushroomAnt, 1},
-
-			-- {E.ButtonBigGlass, 1, position={CANVAS_WIDTH/2, CANVAS_HEIGHT/2}},
 		}
 	})
 end
@@ -378,7 +353,7 @@ local waves = {
 		end,
 		
 		fixed_enemies = {
-			{E.ElectricRays, 1, position = {CANVAS_WIDTH/2 - 16, CANVAS_HEIGHT/2 - 16}, args = {1, 2}},
+			{E.ElectricRays, 1, position = {CANVAS_WIDTH/2, CANVAS_HEIGHT/2 + 8}, args = {1, 2}},
 		},
 
 		min = 4,
@@ -463,8 +438,7 @@ local waves = {
 		},
 		
 		fixed_enemies = {
-			{E.ElectricRays, 1, position = {CANVAS_WIDTH/2 - 16, CANVAS_HEIGHT/2 - 16}, args = {1, 2}},
-			-- {E.ElectricRays, 1, position = {CANVAS_WIDTH/2 - 16, CANVAS_HEIGHT/2}, args = {2}},
+			{E.ElectricRays, 1, position = {CANVAS_WIDTH/2, CANVAS_HEIGHT/2 + 8}, args = {1, 2}},
 		},
 		music = "w2",
 	}),
@@ -594,13 +568,12 @@ local waves = {
 	-----------------------------------------------------
 
 	new_wave({
-		min = 5,
-		max = 5,
+		min = 6,
+		max = 7,
 
 		enemies = {
-			{E.DrillBee, 2},
+			{E.Larva, 2},
 			{E.Mosquito, 2},
-			{E.HoneypotAnt, 2},
 		},
 
 		background = backgrounds.BackgroundBeehive:new(),
@@ -610,6 +583,16 @@ local waves = {
 		title_color = COL_YELLOW_ORANGE,
 	}),
 
+	new_wave({
+		min = 5,
+		max = 7,
+
+		enemies = {
+			{E.Larva, 2},
+			{E.Mosquito, 2},
+			{E.ShovelBee, 4},
+		},
+	}),
 
 	--]]
 	
