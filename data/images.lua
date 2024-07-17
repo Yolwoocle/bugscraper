@@ -283,6 +283,8 @@ local img_names = {
 	_test_bg_image_1 = "_test_bg_image_1",
 	_test_bg_image_2 = "_test_bg_image_2",
 
+	_tuto_arrow = "_tuto_arrow",
+
 }
 for id, path in pairs(img_names) do
 	images[id] = load_image(path..".png")

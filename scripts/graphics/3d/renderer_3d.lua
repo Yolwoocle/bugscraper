@@ -10,6 +10,12 @@ function Renderer3D:init(object)
 
 	self.lighting_palette = {color(0xf77622), color(0xfeae34), color(0xfee761), color(0xfee761), COL_WHITE}
     self.line_color = COL_BLACK
+	self.back_line_color = COL_LIGHT_GRAY
+
+	self.backface_culling = true
+	self.show_vertices = false
+	self.show_vertex_position = false
+	self.visible = true
 end
 
 function Renderer3D:update(dt)
@@ -29,6 +35,9 @@ function Renderer3D:get_shading_color(normal)
 end
 
 function Renderer3D:draw()
+	if not self.visible then
+		return
+	end
 	local camera_vec = Vec3(0, 0, 1)
 	local projected_faces = {}
 	for i_face = 1, #self.object.model.faces do
@@ -36,13 +45,14 @@ function Renderer3D:draw()
 		local projected_face = {}
 		local normal = self.object:get_face_normal(i_face)
 		local dot = normal:dot(camera_vec)
-		if dot < 0 then
+
+		projected_face.dot = dot
+		if not self.backface_culling or dot < 0 then
 			for i_point = 1, #face do
 				local vertex = self.object.transformed_vertices[face[i_point]]
 				local projected_vertex = self:project_vertex(vertex)
 				table.insert(projected_face, projected_vertex.x)
 				table.insert(projected_face, projected_vertex.y)
-	
 			end
 	
 			exec_color(self:get_shading_color(normal), function()
@@ -51,21 +61,30 @@ function Renderer3D:draw()
 			table.insert(projected_faces, projected_face)
 		end
 
-		
 		-- local n1 = self:project_vertex(self.object.transformed_vertices[face[1]])
 		-- local n2 = self:project_vertex(self.object.transformed_vertices[face[1]]:vadd(normal))
 		-- line_color(COL_WHITE, n1.x, n1.y, n2.x, n2.y)
-
 	end
 
-	exec_color(self.line_color, function()
-		for _, face in pairs(projected_faces) do
+	table.sort(projected_faces, function(face1, face2)
+		return face1.dot > face2.dot
+	end)
+
+	for _, face in pairs(projected_faces) do
+		local color = self.line_color
+		if face.dot > 0 then
+			color = self.back_line_color
+		end
+		exec_color(color, function()
 			for i=1, #face-2, 2 do
 				love.graphics.line(face[i], face[i+1], face[i+2], face[i+3])
+				if self.show_vertices then
+					love.graphics.circle("fill", face[i], face[i+1], 2.5)
+				end
 			end
 			love.graphics.line(face[1], face[2], face[#face-1], face[#face])
-		end
-	end)
+		end)
+	end
 end
 
 return Renderer3D

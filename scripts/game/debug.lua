@@ -12,6 +12,10 @@ local Renderer3D = require "scripts.graphics.3d.renderer_3d"
 local Object3D  = require "scripts.graphics.3d.object_3d"
 local truncated_ico = require "data.models.truncated_ico"
 local honeycomb_panel = require "data.models.honeycomb_panel"
+local backgrounds     = require "data.backgrounds"
+local StateMachine = require "scripts.state_machine"
+local vec3         = require "lib.batteries.vec3"
+local Timer = require "scripts.timer"
 
 local Debug = Class:inherit()
 
@@ -258,6 +262,10 @@ function Debug:init(game)
 
         ["n"] = {"toggle frame-by-frame", function()
             _G_frame_by_frame_mode = not _G_frame_by_frame_mode
+        end},
+
+        ["o"] = {"", function()
+            self:tuto_next()
         end}
     }
     
@@ -270,6 +278,8 @@ end
 
 function Debug:update(dt)
     if not game.debug_mode then return end
+    self:update_input_view(1/60)    
+
 end
 
 function Debug:debug_action(key, scancode, isrepeat)
@@ -336,18 +346,6 @@ function Debug:draw()
     if self.view_fps then
         local t = concat(love.timer.getFPS(), "FPS\n")
         print_outline(nil, nil, t, CANVAS_WIDTH - get_text_width(t), 0)
-    end
-end
-
-function Debug:draw_input_view()
-    local spacing = 70
-    local x = 0
-    for i = 1, MAX_NUMBER_OF_PLAYERS do
-        local u = Input:get_user(i)
-        if u then
-            self:draw_input_view_for(u, x)
-            x = x + spacing
-        end
     end
 end
 
@@ -573,68 +571,165 @@ function Debug:draw_info_view()
 	end
 
 	self.game.level.world_generator:draw()
-	draw_log()
-    
-    self:test_info_view_3d_renderer()
-    
-    -- local w = 255
-    -- local col_a = color(0x0c00b8)
-    -- local col_b = color(0xb82609)
-    -- local col_a = color(0xe43b44)
-    -- local col_b = color(0xfee761c)
-    -- rect_color(col_a, "fill", 0, 25, w/2, 25)
-    -- rect_color(col_b, "fill", w/2, 25, w/2, 25)
-    -- for ix=0, w do
-    --     rect_color(lerp_color(col_a, col_b, ix/w), "fill", ix, 50, 1, 25)
-    --     rect_color(lerp_color_radial(col_a, col_b, ix/w), "fill", ix, 75, 1, 25)
-    --     rect_color(move_toward_color(col_a, col_b, ix/w), "fill", ix, 100, 1, 25)
-    --     rect_color(move_toward_color_radial(col_a, col_b, ix/w), "fill", ix, 120, 1, 25)
-    -- end
+	draw_log() 
 end
 
-local renderer = Renderer3D:new(Object3D:new(honeycomb_panel))
-renderer.object.scale.x = 24
-renderer.object.scale.y = 24
-renderer.object.scale.z = 24
-renderer.object.position.x = 200
-renderer.object.position.y = 200
-renderer.object.position.z = 20
-function Debug:test_info_view_3d_renderer()
-    renderer.object.rotation.x = renderer.object.rotation.x + 1/400
+----------------------------------------------------------------------------------------------------------
 
-    renderer:update()
-    renderer:draw()
-end
+local state_timer = Timer:new(3.0)
 
-local test_ang = 0
-local test_rect = Rect:new(
-    CANVAS_CENTER[1] - 26*3, CANVAS_CENTER[2] - 13*3, 
-    CANVAS_CENTER[1] - 4*3, CANVAS_CENTER[2] + 20*3
-)
+local function tuto_text(str, ox, oy, duration)
+    local lines = {}
+    local split = split_str(str, " ")
+    local max_line_len = 250
+    local cur_line = ""
+    local h = 0
+    for i = 1, #split - 1 do
+        local word = split[i]
+        local next_cur_line = cur_line.." "..word
+        if get_text_width(next_cur_line) > max_line_len then
+            table.insert(lines, cur_line)
+            h = h + get_text_height()
+            cur_line = word
+        else
+            cur_line = next_cur_line
+        end
+    end 
+    table.insert(lines, cur_line.." "..split[#split])
+    h = h + get_text_height()
+    -- assert(false, table_to_str(lines))
 
-function Debug:test_info_view_crop_line()
-    -- love.graphics.clear(COL_BLACK_BLUE)
-
-    local mx, my = love.mouse.getPosition()
-    mx, my = mx/3, my/3
-    local ax, ay, bx, by = get_vector_in_rect_from_angle(mx, my, test_ang, test_rect)
-    circle_color(COL_GREEN, "fill", mx, my, 2.5)
-    rect_color(COL_RED, "line", test_rect.x, test_rect.y, test_rect.w, test_rect.h)
-    if ax then
-        line_color(COL_GREEN, ax, ay, bx, by)
+    ox = ox or 0
+    oy = oy or 0
+    duration = duration or state_timer.duration - 1.5
+    local y = CANVAS_CENTER[2] - 32 + oy - h/2
+    for _, line in pairs(lines) do
+        Particles:word(CANVAS_CENTER[1] + ox, y, line, nil, duration or 3, nil, nil, 1/60)
+        y = y + 16
     end
-    test_ang = test_ang + 0.01
-
-    -- local mx, my = love.mouse.getPosition()
-    -- local seg1 = Segment:new(50, 50, mx/3, my/3)
-    -- local seg2 = Segment:new(30, 70, 10, 10)
-    -- line_color(COL_RED, seg1.ax, seg1.ay, seg1.bx, seg1.by)
-    -- line_color(COL_RED, seg2.ax, seg2.ay, seg2.bx, seg2.by)
-    -- local pt = segment_intersect_point(seg1, seg2)
-    -- if pt then
-    --     circle_color(COL_CYAN, "fill", pt.x, pt.y, 4)
-    -- end
 end
+
+
+local renderer = Renderer3D:new(Object3D:new(truncated_ico))
+renderer.object:set_scale(vec3(0, 0, 0))
+renderer.object.position.x = CANVAS_CENTER[1]
+renderer.object.position.y = CANVAS_CENTER[2]
+renderer.object.position.z = 20
+
+local renderer_2 = Renderer3D:new(Object3D:new(truncated_ico))
+renderer_2.object:set_scale(vec3(35, 35, 35))
+renderer_2.visible = false
+renderer_2.show_vertices = true
+
+local background_servers = backgrounds.BackgroundServers:new()
+background_servers.speed = 50 * 5
+
+local tuto_arrow_scale = 0
+
+local vertex_list_scroll_y = 0 
+
+local tuto_state_machine = StateMachine:new({
+    ["1"] = {
+        enter = function(state)
+            renderer.object.scale:sset(0)
+
+            renderer.object.position.x = CANVAS_CENTER[1]
+            renderer.object.position.y = CANVAS_CENTER[2]
+            renderer.object.position.z = 20
+            renderer_2.visible = false
+        end
+    },
+    ["2"] = {
+        enter = function(state)
+            state_timer:start(3.0)
+
+            renderer.object:set_target_scale(vec3(35, 35, 35))
+            tuto_text("How do computers display 3D objects?")
+        end,
+        update = function(state, dt)
+            renderer.object.rotation:saddi(1/30, 1/30, 0)
+        end
+    },
+    ["3"] = {
+        enter = function(state)
+            state_timer:start(8.0)
+            renderer.visible = false
+            renderer_2.visible = true
+            renderer_2.object:set_position(renderer.object.position)
+            renderer_2.lighting_palette = {{1, 1, 1, 0}}
+            renderer_2.line_color = COL_WHITE
+            renderer_2.backface_culling = false
+
+            -- renderer.object:set_target_position(vec3(CANVAS_CENTER[1] + 60, CANVAS_CENTER[2] + 20, 0))
+            renderer_2.object:set_position(vec3(CANVAS_CENTER[1], CANVAS_CENTER[2] + 20, 0))
+            renderer_2.object:set_target_position(vec3(CANVAS_CENTER[1] + 60, CANVAS_CENTER[2] + 20, 0))
+            tuto_text([[Rasterization is the process of converting numbers reprsenting 3D points to shapes on a flat screen.]])
+
+            tuto_arrow_scale = 0
+        end,
+        update = function(state, dt)
+            tuto_arrow_scale = lerp(tuto_arrow_scale, 1, 0.2)
+            renderer.object.rotation:saddi(1/30, 1/30, 0)
+            renderer_2.object.rotation:vset(renderer.object.rotation:copy())
+
+            vertex_list_scroll_y = vertex_list_scroll_y - 8 * dt
+        end,
+        draw = function(state)
+            local x = CANVAS_CENTER[1] - 120
+            local y = CANVAS_CENTER[2] + 20 - 50
+            local h = 100
+            local i = 1
+            for iy = y - h/2 + vertex_list_scroll_y, y + h, 16 do
+                if iy > y and iy < y + h then
+                    local vertex = renderer.object.model.vertices[i]
+                    local v = 1 - math.abs((iy - (y + h/2)) / (h/2))
+                    print_outline({1, 1, 1, v}, COL_DARK_GREEN, string.format("{%.1f, %.1f, %.1f}", vertex.x, vertex.y, vertex.z), x, iy)
+                end
+                i = i + 1
+            end
+        end
+    }
+}, "1")
+
+function Debug:tuto_next()
+    if tuto_state_machine then
+        state_timer:stop()
+        local s = tonumber(tuto_state_machine.current_state_name) + 1
+        if tuto_state_machine.states[tostring(s)] == nil then
+            s = 1
+        end
+        tuto_state_machine:set_state(tostring(s))
+    end
+end
+
+function Debug:update_input_view(dt)
+    background_servers:update(1/60)
+    tuto_state_machine:update(dt)
+    renderer:update(dt)
+    renderer_2:update(dt)
+
+    if state_timer:update(dt) then
+        self:tuto_next()
+    end
+end
+
+function Debug:draw_input_view()
+    background_servers:draw()
+    
+    Particles:draw_layer(PARTICLE_LAYER_BACK)
+    Particles:draw_layer(PARTICLE_LAYER_NORMAL)
+    Particles:draw_layer(PARTICLE_LAYER_SHADOWLESS)
+    
+    draw_centered(images._tuto_arrow, CANVAS_CENTER[1], CANVAS_CENTER[2] + 20, 0, tuto_arrow_scale)
+
+    renderer_2:draw()
+    renderer:draw()
+    tuto_state_machine:draw()
+end
+
+----------------------------------------------------------------------------------------------------------
+
+
 function Debug:draw_colview()
     game.camera:apply_transform()
     
@@ -653,6 +748,7 @@ function Debug:draw_colview()
     game.camera:reset_transform()
     
 end
+
 
 function Debug:draw_layers()
     local x = 0

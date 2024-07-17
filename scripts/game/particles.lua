@@ -187,6 +187,7 @@ function TextParticle:draw()
 
 	local col = COL_WHITE
 	if self.col_in then col = self.col_in end
+	-- print_outline(col, self.col_out or COL_BLACK_BLUE, self.str, self.x, self.y+1, nil, nil, self.text_scale)
 	print_outline(col, self.col_out or COL_BLACK_BLUE, self.str, self.x, self.y, nil, nil, self.text_scale)
 end
 

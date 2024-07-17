@@ -10,11 +10,37 @@ function Object3D:init(model, x, y, z)
     self.rotation = Vec3(0, 0, 0)
 	self.scale = Vec3(1, 1, 1)
 
+    self.anim_damp = 0.1
+    self.target_scale = self.scale
+    self.target_position = self.position
+
     self.model = model or Model:new()
     self.transformed_vertices = {}
     for i=1, #self.model.vertices do
         self.transformed_vertices[i] = self.model.vertices[i]:copy()
     end
+end
+
+function Object3D:set_target_scale(scale)
+    self.target_scale = scale:copy()
+end
+
+function Object3D:set_target_position(position)
+    self.target_position = position:copy()
+end
+
+function Object3D:set_scale(scale)
+    self.target_scale = scale:copy()
+    self.scale = scale:copy()
+end
+
+function Object3D:set_rotation(rotation)
+    self.rotation = rotation:copy()
+end
+
+function Object3D:set_position(position)
+    self.target_position = position:copy()
+    self.position = position:copy()
 end
 
 function Object3D:get_transformed_vertex(i_vertex)
@@ -64,6 +90,9 @@ function Object3D:apply_rotation_z(angle)
 end
 
 function Object3D:apply_transform()
+    self.scale:vset((self.target_scale:vsub(self.scale)):smul(self.anim_damp):vadd(self.scale))
+    self.position:vset((self.target_position:vsub(self.position)):smul(self.anim_damp):vadd(self.position))
+
     self:reset_transform()
     self:apply_rotation_to_vertices()
     for i=1, #self.transformed_vertices do
