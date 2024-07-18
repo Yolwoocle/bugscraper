@@ -60,6 +60,7 @@ function Rect:is_point_in_inclusive(px, py)
 	return (self.ax <= px and px <= self.bx) and (self.ay <= py and py <= self.by)
 end
 
+--- Returns whether the rectangle intersects a segment
 function Rect:segment_intersection(segment)
     local bool1 = segment_intersect(segment, Segment:new(self.ax, self.ay, self.bx, self.ay))
     local bool2 = segment_intersect(segment, Segment:new(self.ax, self.ay, self.ax, self.by))
@@ -68,7 +69,7 @@ function Rect:segment_intersection(segment)
     return bool1 or bool2 or bool3 or bool4 or self:is_point_in_inclusive(segment.ax, segment.ay) or self:is_point_in_inclusive(segment.bx, segment.by)
 end
 
--- Check if two rectangles collide
+--- Check if two rectangles collide
 function Rect:rectangle_intersection(other)
     -- https://stackoverflow.com/questions/13390333/two-rectangles-intersection
 

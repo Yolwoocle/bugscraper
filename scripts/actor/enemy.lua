@@ -92,7 +92,7 @@ function Enemy:update_enemy(dt)
 	-- if not self.is_active then    return    end
 	self:update_actor(dt)
 	
-	self:follow_nearest_player(dt)
+	self:assign_target_as_nearest_player(dt)
 	self:follow_target(dt)
 	self.invincible_timer = max(self.invincible_timer - dt, 0)
 	self.harmless_timer = max(self.harmless_timer - dt, 0)
@@ -135,7 +135,7 @@ function Enemy:get_nearest_player()
 	return nearest_player
 end
 
-function Enemy:follow_nearest_player(dt)
+function Enemy:assign_target_as_nearest_player(dt)
 	if not self.follow_player then
 		return
 	end

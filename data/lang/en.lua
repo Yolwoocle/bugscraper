@@ -1,12 +1,11 @@
 return {
     game = {
-        combo = "COMBO %d!",
         demo = "DEMO", -- Chip added to the game logo to indicate that this version is a demo
         fps = "%d FPS",
-        fps_warning = "Low framerate: disabling vsync might help",
+        fps_warning = "Low framerate: disabling vertical sync might help",
         congratulations = "CONGRATULATIONS!",
         win_thanks = "Thank you for playing the demo",
-        win_wishlist = "Wishlist on Steam :)",
+        win_wishlist = "Wishlist on Steam :)", -- "Wishlist" is a verb
         win_prompt = "[Pause to continue]",
         warning_web_controller = "Some browsers may not have proper controller support"
 
@@ -14,11 +13,13 @@ return {
     level = {
         short_world_prefix = "W%s", -- Example in english: "W1", stands for "World 1"
 
+        -- World names
         world_1 = "The offices",
         world_2 = "The server room",
         world_3 = "The beehive",
     },
     gun = {
+        -- Gun names
         machinegun = "pea gun",
         triple = "triple pepper",
         burst = "pollen burst",
@@ -29,7 +30,8 @@ return {
     },
     player = {
         name = {
-            -- No reason to change these except if they clash with something specific to the translated language or culture 
+            -- Player names
+            -- No reason to change these during translation, except if they clash with something specific to the language/culture 
             mio = "mio",
             cap = "cap",
             zia = "zia",
@@ -191,7 +193,7 @@ return {
         },
         win = {
             title = "CONGRATULATIONS!",
-            wishlist = "WISHLIST ON STEAM",
+            wishlist = "WISHLIST ON STEAM", -- "wishlist" is a verb
             continue = "CONTINUE",
         },
         joystick_removed = {
@@ -209,7 +211,7 @@ return {
             asset_creators = "Asset creators",
             licenses = "Asset & library licenses",
 
-            asset_item = "%s by %s / %s", -- "THING by CREATOR / LICENCE"
+            asset_item = "%s by %s / %s", -- "ASSET_NAME by CREATOR / LICENCE"
         },
         open_source = {
             title = "Open source libraries",

@@ -146,7 +146,11 @@ function Debug:init(game)
             -- local arc = enemies.Explosion:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8, 32)
             -- game:new_actor(arc)
 
-            local arc = enemies.DrillBee:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8)
+            -- local arc = enemies.DrillBee:new(CANVAS_WIDTH*0.3, CANVAS_HEIGHT*0.8)
+            -- arc.direction = -pi - 0.1
+            -- game:new_actor(arc)
+            
+            local arc = enemies.HoneycombFootball:new(CANVAS_WIDTH*0.3, CANVAS_HEIGHT*0.8)
             game:new_actor(arc)
 
             -- local arc = enemies.BigBug:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8)
@@ -575,7 +579,7 @@ function Debug:draw_info_view()
 	self.game.level.world_generator:draw()
 	draw_log()
     
-    self:test_info_view_3d_renderer()
+    -- self:test_info_view_3d_renderer()
     
     -- local w = 255
     -- local col_a = color(0x0c00b8)

@@ -415,7 +415,7 @@ local waves = {
 		}
 	}),
 
-	------------
+	------------------------------------------------
 	-- Cafeteria
 	new_cafeteria(function()
 		for _, actor in pairs(game.actors) do
@@ -424,7 +424,7 @@ local waves = {
 			end
 		end
 	end),
-	------------
+	------------------------------------------------
 	
 	new_wave({
 		min = 4,
@@ -593,6 +593,59 @@ local waves = {
 			{E.ShovelBee, 4},
 		},
 	}),
+
+	new_wave({
+		min = 8,
+		max = 9,
+
+		enemies = {
+			{E.Larva, 2},
+			{E.Mosquito, 2},
+			{E.Boomshroom, 4},
+		},
+	}),
+
+	new_wave({
+		min = 4,
+		max = 4,
+
+		enemies = {
+			{E.DrillBee, 2},
+		},
+	}),
+
+	new_wave({
+		min = 8,
+		max = 8,
+
+		enemies = {
+			{E.Mosquito, 4},
+			{E.Boomshroom, 4},
+			{E.DrillBee, 1},
+		},
+	}),
+	
+	new_wave({
+		min = 1,
+		max = 1,
+
+		enemies = {
+			{E.HoneycombFootball, 2},
+		},
+	}),
+
+	new_wave({
+		min = 8,
+		max = 8,
+
+		enemies = {
+			{E.DrillBee, 1},
+			{E.Mosquito, 3},
+			{E.ShovelBee, 2},
+			{E.Larva, 2},
+		},
+	}),
+
 
 	--]]
 	

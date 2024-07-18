@@ -93,8 +93,7 @@ local img_names = {
 	dung_beetle_shield = "actors/enemies/dung_beetle_shield",
 	dung_beetle_shield_shine = "actors/enemies/dung_beetle_shield_shine",
 	dung_flying =        "actors/enemies/dung_flying",
-	shovel_bee =         "actors/enemies/shovel_bee",
-	shovel_bee_buried =  "actors/enemies/shovel_bee_buried",
+	drill_bee =          "actors/enemies/drill_bee",
 	fly1 =               "actors/enemies/fly1",
 	fly2 =               "actors/enemies/fly2",
 	grasshopper =        "actors/enemies/grasshopper",
@@ -108,6 +107,8 @@ local img_names = {
 	metal_mosquito_2 =   "actors/enemies/metal_mosquito_2",
 	mosquito1 =          "actors/enemies/mosquito1",
 	mosquito2 =          "actors/enemies/mosquito2",
+	shovel_bee =         "actors/enemies/shovel_bee",
+	shovel_bee_buried =  "actors/enemies/shovel_bee_buried",
 	slug1 =              "actors/enemies/slug1",
 	slug2 =              "actors/enemies/slug2",
 	snail_open =         "actors/enemies/snail_open",
@@ -275,14 +276,9 @@ local img_names = {
 	offscreen_indicator = "ui/offscreen_indicator",
 	stomp_arrow = "ui/stomp_arrow",
 	yanis = "yanis",
-	test = "test",
-
-	_test_fly_big_1 = "_test_fly_big_1",
-	_test_fly_big_2 = "_test_fly_big_2",
 
 	_test_bg_image_1 = "_test_bg_image_1",
 	_test_bg_image_2 = "_test_bg_image_2",
-
 }
 for id, path in pairs(img_names) do
 	images[id] = load_image(path..".png")
