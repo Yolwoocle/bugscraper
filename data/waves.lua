@@ -619,20 +619,22 @@ local waves = {
 		max = 8,
 
 		enemies = {
+			{E.Larva, 4},
 			{E.Mosquito, 4},
 			{E.Boomshroom, 4},
-			{E.DrillBee, 1},
+			{E.DrillBee, 2},
 		},
 	}),
-	
+		
 	new_wave({
 		min = 1,
 		max = 1,
 
 		enemies = {
-			{E.HoneycombFootball, 2},
+			{E.Mosquito, 4},
+			
 		},
-	}),
+	}), 
 
 	new_wave({
 		min = 8,
@@ -646,6 +648,15 @@ local waves = {
 		},
 	}),
 
+		
+	new_wave({
+		min = 1,
+		max = 1,
+
+		enemies = {
+			{E.HoneycombFootball, 2},
+		},
+	}), 
 
 	--]]
 	

@@ -150,7 +150,7 @@ function Debug:init(game)
             -- arc.direction = -pi - 0.1
             -- game:new_actor(arc)
             
-            local arc = enemies.HoneycombFootball:new(CANVAS_WIDTH*0.3, CANVAS_HEIGHT*0.8)
+            local arc = enemies.Turret:new(CANVAS_WIDTH*0.5, CANVAS_HEIGHT*0.5)
             game:new_actor(arc)
 
             -- local arc = enemies.BigBug:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8)

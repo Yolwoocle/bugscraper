@@ -8,11 +8,17 @@ function Timer:init(duration, args)
     
     self.duration = duration
     self.time = duration
-    self.on_apply = args.on_apply
-    self.on_timeout = args.on_timeout
+    self:apply_args(args)
 
     self.is_active = false
     self:reset()
+end
+
+function Timer:apply_args(args)
+    args = args or {}
+    
+    self.on_apply = args.on_apply
+    self.on_timeout = args.on_timeout
 end
 
 function Timer:reset()
@@ -52,10 +58,12 @@ function Timer:set_duration(val)
     self.duration = val
 end
 
-function Timer:start(duration)
+function Timer:start(duration, args)
     if duration then
         self:set_duration(duration)
     end
+    self:apply_args(args)
+    
     self.is_active = true
     self.time = self.duration
     if self.on_apply then

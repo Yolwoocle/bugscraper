@@ -39,6 +39,8 @@ function FaintedPlayer:init(x, y, player)
     self.is_pushable = false
     self.is_knockbackable = false
     self.loot = {}
+
+    self.gun = player.gun
     
     local skin = player.skin
     self.spr:set_outline(skin.color_palette[1], "round")
@@ -81,6 +83,11 @@ function FaintedPlayer:on_death(damager, reason)
         Particles:word(new_player.mid_x,  new_player.mid_y - 16,  concat("+", player_life), COL_LIGHT_RED)    
         Particles:word(reviver.mid_x, reviver.mid_y - 16, concat("-", reviver.life - reviver_life), COL_LIGHT_RED)    
         new_player:set_life(player_life)
+        for _, upgrade in pairs(game.upgrades) do
+		    new_player:apply_upgrade(upgrade)
+        end
+        new_player:equip_gun(self.gun)
+
         reviver:set_life(reviver_life)
     end
 end

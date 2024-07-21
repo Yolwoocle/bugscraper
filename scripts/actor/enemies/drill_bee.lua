@@ -30,6 +30,8 @@ function DrillBee:init(x, y, spr)
     self.friction_y = self.friction_x
     self.def_friction_y = self.friction_y
     
+    self.sound_death = nil
+
     self.spr:set_anchor(SPRITE_ANCHOR_CENTER_CENTER)
 
     self.stuck_spr_oy = 8
@@ -39,7 +41,8 @@ function DrillBee:init(x, y, spr)
 
     self.direction = random_range(0, pi2)
     self.angle_speed = 0.5
-
+    
+    self.telegraph_timer = Timer:new(0.3)
     self.burrow_timer = Timer:new(0.05)
 
     self.state_machine = StateMachine:new({
@@ -59,7 +62,7 @@ function DrillBee:init(x, y, spr)
             
                 local detected, player = self:detect_player_in_range()
                 if player then
-                    self.state_machine:set_state("attack")
+                    self.state_machine:set_state("telegraph")
                     self.drill_target_player = player
                     self.direction = math.atan2(self.drill_target_player.mid_y - self.mid_y, self.drill_target_player.mid_x - self.mid_x)
                 end
@@ -71,6 +74,21 @@ function DrillBee:init(x, y, spr)
                 end
             end,
         },
+        telegraph = {
+            enter = function(state)
+                self.speed = 0
+
+                self.telegraph_timer:start(nil, {
+                    on_timeout = function(timer)
+                        self.state_machine:set_state("attack")
+                    end
+                })
+            end,
+            update = function(state, dt)
+                self.spr:update_offset(random_neighbor(5), random_neighbor(5))
+                self.telegraph_timer:update(dt)
+            end,
+        },
         attack = {
             enter = function(state)
                 self.affected_by_walls = true
@@ -80,17 +98,18 @@ function DrillBee:init(x, y, spr)
                 Particles:dust(self.mid_x, self.mid_y)
 
                 if not Rect:new(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT):expand(256, 256):rectangle_intersection(self:get_rect()) then
-                    local axis = random_sample{"x", "y"}
-                    local x, y
-                    if axis == "x" then
-                        x = random_sample{0, 1} * CANVAS_WIDTH 
-                        y = random_range(0, CANVAS_HEIGHT) 
-                    else
-                        x = random_range(0, CANVAS_WIDTH)
-                        y = random_sample{0, 1} * CANVAS_HEIGHT 
-                    end
-                    self:set_pos(x, y)
-                    self.direction = math.atan2(CANVAS_CENTER[2] - y, CANVAS_CENTER[1] - x) + random_neighbor(pi/8)
+                    self:kill()
+                    -- local axis = random_sample{"x", "y"}
+                    -- local x, y
+                    -- if axis == "x" then
+                    --     x = random_sample{0, 1} * CANVAS_WIDTH 
+                    --     y = random_range(0, CANVAS_HEIGHT) 
+                    -- else
+                    --     x = random_range(0, CANVAS_WIDTH)
+                    --     y = random_sample{0, 1} * CANVAS_HEIGHT 
+                    -- end
+                    -- self:set_pos(x, y)
+                    -- self.direction = math.atan2(CANVAS_CENTER[2] - y, CANVAS_CENTER[1] - x) + random_neighbor(pi/8)
                 end
             end,
             after_collision = function(state, col)
@@ -109,14 +128,14 @@ function DrillBee:init(x, y, spr)
         burrow = {
             enter = function(state)
                 self.affected_by_walls = false
-                self.speed = 20
+                self.speed = 40
 
                 self.burrow_timer:start(0.05)
             end,
             update = function(state, dt)
                 -- Particles:image(self.mid_x, self.mid_y, 1, images.bullet_casing)
                 self.direction = self.direction % pi2
-                self.is_stompable = not (1.25 * pi <= self.direction and self.direction <= 1.75 * pi)
+                -- self.is_stompable = not (1.25 * pi <= self.direction and self.direction <= 1.75 * pi)
                 -- self.debug_values[1] = self.is_stompable
 
                 if self.burrow_timer:update(dt) then

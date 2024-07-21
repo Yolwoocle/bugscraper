@@ -220,6 +220,7 @@ function Game:new_game()
 	self.notif = ""
 	self.notif_timer = 0.0
 
+	self.upgrades = {}
 	self:update_skin_choices()
 
 	Options:update_sound_on()
@@ -971,6 +972,7 @@ function Game:on_elevator_crashed()
 end
 
 function Game:apply_upgrade(upgrade) 
+	table.insert(self.upgrades, upgrade)
 	for i, player in pairs(self.players) do
 		player:apply_upgrade(upgrade)
 	end

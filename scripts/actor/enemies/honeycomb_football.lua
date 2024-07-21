@@ -131,7 +131,6 @@ function HoneycombFootball:update_snail_shelled(dt)
 
     -- Particles:dust(self.mid_x + random_neighbor(self.w/4), self.mid_y + random_neighbor(self.h/4))
 
-
     self.renderer.object.rotation.x = self.renderer.object.rotation.x + (self.vx / 50)*dt
     self.renderer.object.rotation.y = self.renderer.object.rotation.y + (self.vy / 50)*dt
     self.renderer.object.position.x = self.mid_x
@@ -167,7 +166,8 @@ end
 function HoneycombFootball:on_death()
     Particles:image(self.mid_x, self.mid_y, 30, images.snail_shell_bouncy_fragment, 13, nil, 0, 10)
 
-    self.gun:shoot(0, self, self.mid_x, self.mid_y, math.cos(0), math.sin(0))
+    local a = random_range(0, pi2)
+    self.gun:shoot(0, self, self.mid_x, self.mid_y, math.cos(a), math.sin(a))
 end
 
 function HoneycombFootball:on_stomp_killed()
