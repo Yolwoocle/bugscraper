@@ -335,6 +335,7 @@ function Game:update_main_game(dt)
 
 	self:update_timer_before_game_over(dt)
 
+	self.game_ui:update(dt)
 	self:update_skin_choices()
 	self:update_queued_players(dt)
 	Particles:update(dt)

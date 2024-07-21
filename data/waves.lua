@@ -441,6 +441,8 @@ local waves = {
 			{E.ElectricRays, 1, position = {CANVAS_WIDTH/2, CANVAS_HEIGHT/2 + 8}, args = {1, 2}},
 		},
 		music = "w2",
+
+		floating_text = "🎓 "..string.upper(Text:text("input.prompts.jetpack")),
 	}),
 	
 	new_wave({

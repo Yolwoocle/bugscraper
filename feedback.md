@@ -39,13 +39,13 @@ Attempts
 * ~~If you put yourself in bottom right corner, explosive flies only attack you by the front~~
 * ~~Turret: lots of bullets end up on the floor + unmoving = boring~~
     * > le combat pourrait être sympa mais il bouge pas du centre de la salle et malheureusement la moitié de ses tirs se cassent instantanément contre le sol quand tu es toi aussi au sol, du coup je l'ai juste battu en restant dans un coin et en sautant occasionnellement pour éviter un tir (il faudrait peut-être restreindre l'angle des tirs pour éviter qu'il bourre le sol)
-* Récupérer des armes est chiant (tu collectes en boucle)
-* raspberry shotgun = trop OP
-* Spawn kill araignées est très hazardeux (fixer détection de stomp)
+* ~~raspberry shotgun = trop OP~~
+* ~~Récupérer des armes est chiant (tu collectes en boucle)~~
+* ~~progression de la difficulté pas notable au M2~~
+    * > progression on voit pas vraiment une montée notable de la difficulté, en gros je suis arrivée qu'au niveau 28 et ça m'a fait rager pas parce que les ennemis étaient durs mais parce qu'il faut bien timer le saut pour sauter au dessus du rayon laser (jsp si c'est fait expres), je pense aussi que ça pourrait etre intéressant d'avoir un choix de la difficulté dans les options et peut etre plus de boss
+* ~~Spawn kill araignées est très hazardeux (fixer détection de stomp)~~
 * Les ennemis qui spawnent et leur quantité affectent beaucoup ton temps -> pas fou pour les speedrunners
 * upgrades : exagérer les différences pour rendre ça plus lisible (ex couleurs plus vives) pour mieux identifier du premier coup d'oeil
-* progression de la difficulté pas notable au M2
-    * > progression on voit pas vraiment une montée notable de la difficulté, en gros je suis arrivée qu'au niveau 28 et ça m'a fait rager pas parce que les ennemis étaient durs mais parce qu'il faut bien timer le saut pour sauter au dessus du rayon laser (jsp si c'est fait expres), je pense aussi que ça pourrait etre intéressant d'avoir un choix de la difficulté dans les options et peut etre plus de boss
 * saut pour passer au dessus du laser trop difficile (sans jetpack) (trop chaud quand t'as pas le double jump)
 * les "upgrades" qu'il y a tous les 10 niveaux ne sont pas assez remarquables tho (dans le sens où avoir 1 pv max boooon) 
 * j'ai pas compris l'utilité du laser autour de toi

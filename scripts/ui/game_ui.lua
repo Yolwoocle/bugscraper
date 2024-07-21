@@ -10,9 +10,27 @@ function GameUI:init(game, is_visible)
 
     self.is_visible = param(is_visible, true)
 	self.stomp_arrow_target = nil
+
+	self.floating_text = ""
+	self.floating_text_y = -50
+	self.floating_text_target_y = -100
 end
 
 function GameUI:update(dt)
+	self:update_floating_text(dt)
+end
+
+function GameUI:update_floating_text(dt)
+	self.floating_text_y = lerp(self.floating_text_y, self.floating_text_target_y, 0.05)
+end
+
+function GameUI:enable_floating_text(text)
+	self.floating_text = text
+	self.floating_text_target_y = 80
+end
+
+function GameUI:disable_floating_text()
+	self.floating_text_target_y = -50
 end
 
 function GameUI:set_visible(bool)
@@ -27,6 +45,7 @@ function GameUI:draw()
 	self:draw_timer()
 	self:draw_version()
 	self:draw_offscreen_indicators()
+	self:draw_floating_text()
 
 	-- local r
     -- r = game.level.cabin_inner_rect
@@ -195,6 +214,12 @@ function GameUI:set_stomp_arrow_target(target)
 		return
 	end
 	self.stomp_arrow_target = target
+end
+
+function GameUI:draw_floating_text()
+	if #self.floating_text > 0 then
+		print_centered_outline(nil, nil, self.floating_text, CANVAS_WIDTH/2, self.floating_text_y)
+	end
 end
 
 return GameUI

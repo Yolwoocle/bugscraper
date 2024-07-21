@@ -74,7 +74,7 @@ return {
             down = "Down",
             jump = "Jump",
             shoot = "Shoot",
-            leave_game = "Leave",
+            leave_game = "Leave", 
 
             ui_left = "Menu left",
             ui_right = "Menu right",
@@ -88,6 +88,8 @@ return {
             join = "Join",
             split_keyboard = "Split keyboard",
             unsplit_keyboard = "Unsplit keyboard",
+
+            jetpack = "Jetpack",
         },
     },
     menu = {

@@ -26,6 +26,8 @@ function Wave:init(params)
 	self.title_scale = param(params.title_scale, 2)
 	self.title_outline_color = param(params.title_outline_color, COL_WHITE)
 
+	self.floating_text = param(params.floating_text, nil)
+
 	self.enable_stomp_arrow_tutorial = param(params.enable_stomp_arrow_tutorial, false)
 
 	self.background = param(params.background, nil)
@@ -175,6 +177,12 @@ function Wave:enable_wave_side_effects(level)
 
 	if self.enable_stomp_arrow_tutorial then
 		game.game_ui:set_stomp_arrow_target(level.enemy_buffer[1])
+	end
+
+	if self.floating_text then
+		game.game_ui:enable_floating_text(self.floating_text)
+	else
+		game.game_ui:disable_floating_text()
 	end
 end
 
