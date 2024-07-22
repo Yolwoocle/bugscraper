@@ -169,9 +169,6 @@ end
 
 function BackgroundDots:draw()
 	self:draw_background()
-	-- if not self.show_bg_particles then
-	-- 	return 
-	-- end
 
 	for i,o in pairs(self.bg_particles) do
 		self:draw_particle(o)

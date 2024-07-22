@@ -757,8 +757,10 @@ end
 ------------------------------------------
 --- Upgrades & effects ---
 
-function Player:apply_upgrade(upgrade)
-	upgrade:on_apply(self)
+function Player:apply_upgrade(upgrade, is_revive)
+	is_revive = param(is_revive, false)
+	
+	upgrade:apply(self, is_revive)
 	if upgrade.type == UPGRADE_TYPE_TEMPORARY or upgrade.type == UPGRADE_TYPE_PERMANENT then
 		table.insert(self.upgrades, upgrade)
 	end

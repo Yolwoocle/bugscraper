@@ -17,7 +17,7 @@ function UpgradePeanut:update(dt)
     self:update_upgrade(dt)
 end
 
-function UpgradePeanut:on_apply(player)
+function UpgradePeanut:apply_permanent(player)
     player:multiply_max_ammo_multiplier(self.strength)
 end
 

@@ -17,7 +17,7 @@ function UpgradeEspresso:update(dt)
     self:update_upgrade(dt)
 end
 
-function UpgradeEspresso:on_apply(player)
+function UpgradeEspresso:apply_instant(player)
     player:apply_effect(EffectCoffee:new(), 60)
 end
 

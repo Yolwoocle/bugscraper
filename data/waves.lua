@@ -629,12 +629,12 @@ local waves = {
 	}),
 		
 	new_wave({
-		min = 1,
-		max = 1,
+		min = 6,
+		max = 6,
 
 		enemies = {
 			{E.Mosquito, 4},
-			
+			{E.HoneypotAnt, 4},
 		},
 	}), 
 
@@ -645,6 +645,21 @@ local waves = {
 		enemies = {
 			{E.DrillBee, 1},
 			{E.Mosquito, 3},
+			{E.HoneypotAnt, 2},
+			{E.ShovelBee, 2},
+			{E.Larva, 2},
+		},
+	}),
+
+	new_wave({
+		min = 10,
+		max = 10,
+
+		enemies = {
+			{E.SnailShelled, 1},
+			{E.DrillBee, 1},
+			{E.Mosquito, 3},
+			{E.HoneypotAnt, 2},
 			{E.ShovelBee, 2},
 			{E.Larva, 2},
 		},
@@ -659,6 +674,9 @@ local waves = {
 			{E.HoneycombFootball, 2},
 		},
 	}), 
+
+	new_cafeteria(function()
+	end),
 
 	--]]
 	

@@ -490,16 +490,6 @@ function Level:draw_front(x,y)
 			self.elevator:draw_front()
 		end
 	end)
-
-	-- print_outline(nil, nil, concat("is cafet ",self:is_on_cafeteria()), game.camera.x, 0)
-	-- print_outline(nil, nil, concat("door_animation_state ",self.door_animation_state), game.camera.x, 10)
-	-- print_outline(nil, nil, concat("cafeteria_animation_state ",self.cafeteria_animation_state), game.camera.x, 20)
-	-- print_outline(nil, nil, concat("enemy_count ", game.enemy_count), game.camera.x, 30)
-	-- print_outline(nil, nil, tostring(self.is_hole_stencil_enabled), game.camera.x, 110)
-	-- print_outline(nil, nil, tostring(self.hole_stencil_radius), game.camera.x, 120)
-	-- print_outline(nil, nil, tostring(self.background), game.camera.x, 130)
-	-- print_outline(nil, nil, tostring(self.door_animation), 100, 110)
-
 end
 
 function Level:draw_win_screen()
@@ -537,14 +527,6 @@ function Level:draw_win_screen()
 	-- Win stats
 	local iy = 0
 	local ta = {}
-	-- for k,v in pairs(self.game.stats) do
-	-- 	local val = v
-	-- 	local key = k
-	-- 	if k == "time" then val = time_to_string(v) end
-	-- 	if k == "floor" then val = concat(v, " / ", self.game.elevator.max_floor) end
-	-- 	if k == "max_combo" then key = "max combo" end
-	-- 	table.insert(ta, concat(k,": ",val))
-	-- end
 	table.insert(ta, Text:text("game.win_thanks"))
 	table.insert(ta, Text:text("game.win_wishlist"))
 	table.insert(ta, Text:text("game.win_prompt"))

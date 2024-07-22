@@ -18,8 +18,11 @@ function UpgradeMilk:update(dt)
     self:update_upgrade(dt)
 end
 
-function UpgradeMilk:on_apply(player)
+function UpgradeMilk:apply_permanent(player)
     player:add_max_life(self.strength)
+end
+
+function UpgradeMilk:apply_instant(player)
     player:heal(self.strength)
 end
 
