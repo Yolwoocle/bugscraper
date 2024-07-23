@@ -44,21 +44,21 @@ Attempts
 * ~~progression de la difficulté pas notable au M2~~
     * > progression on voit pas vraiment une montée notable de la difficulté, en gros je suis arrivée qu'au niveau 28 et ça m'a fait rager pas parce que les ennemis étaient durs mais parce qu'il faut bien timer le saut pour sauter au dessus du rayon laser (jsp si c'est fait expres), je pense aussi que ça pourrait etre intéressant d'avoir un choix de la difficulté dans les options et peut etre plus de boss
 * ~~Spawn kill araignées est très hazardeux (fixer détection de stomp)~~
-* Les ennemis qui spawnent et leur quantité affectent beaucoup ton temps -> pas fou pour les speedrunners
-* upgrades : exagérer les différences pour rendre ça plus lisible (ex couleurs plus vives) pour mieux identifier du premier coup d'oeil
-* saut pour passer au dessus du laser trop difficile (sans jetpack) (trop chaud quand t'as pas le double jump)
-* les "upgrades" qu'il y a tous les 10 niveaux ne sont pas assez remarquables tho (dans le sens où avoir 1 pv max boooon) 
-* j'ai pas compris l'utilité du laser autour de toi
-* stomping est la partie la plus fun du jeu : "je pense faudrait un power-up qui te permet de stomp tout le monde pour varier un peu le style de jeu (et juste le stomping c'est fun et ça demande un peu de skill imo)"
+* ~~Les ennemis qui spawnent et leur quantité affectent beaucoup ton temps -> pas fou pour les speedrunners~~
+* ~~upgrades : exagérer les différences pour rendre ça plus lisible (ex couleurs plus vives) pour mieux identifier du premier coup d'oeil~~
+* ~~saut pour passer au dessus du laser trop difficile (sans jetpack) (trop chaud quand t'as pas le double jump)~~
+* ~~les "upgrades" qu'il y a tous les 10 niveaux ne sont pas assez remarquables tho (dans le sens où avoir 1 pv max boooon)~~ 
+* ~~j'ai pas compris l'utilité du laser autour de toi~~
+* ~~stomping est la partie la plus fun du jeu : "je pense faudrait un power-up qui te permet de stomp tout le monde pour varier un peu le style de jeu (et juste le stomping c'est fun et ça demande un peu de skill imo)"~~
     * moins d'ennemis te forcer à leur tirer dessus 
-* incentive pour ne pas prendre des dégâts : cœurs abondants 
+* ~~incentive pour ne pas prendre des dégâts : cœurs abondants ~~
     * > Ce serait intéressant d'avoir un incentive pour ne pas prendre de coups, les cœurs sont abondants et parfois c'est rentable de juste sauter sur les mouches bleues et prendre des dégâts pour pouvoir pour stomp les trucs verts qui explosent qui y sont superposés avant de shoot les mouches, ça ne devrait pas être le cas de mon point de vue
     > Ou alors récompenser les joueurs qui ne prennent pas de dégâts
     > Un power up supplémentaire à la fin du monde ou un truc comme ça
-* drops non liés à la performance 
-* Furie ne booste pas le stomping
-* on ne devrait pas pouvoir drop une arme qu'on a déjà en mains
-* le nombre d'ennemis ne scale pas avec le nombre de joueurs
+* ~~drops non liés à la performance~~ 
+* ~~Furie ne booste pas le stomping~~
+* ~~on ne devrait pas pouvoir drop une arme qu'on a déjà en mains~~
+* ~~le nombre d'ennemis ne scale pas avec le nombre de joueurs~~
 * les plus longs c'est vraiment de 20 à 30, 
     * le reste la plupart se fait en entre 3 et 8 secondes
     * dépendant du nombres de mouche bleue en particulier
@@ -73,6 +73,7 @@ Attempts
 J'avais le "pea gun", et un mob a drop le "pea gun". C'est normal ?
 
 -------------------------------------
+A rajouter au Trello: (en haut = déjà géré)
 
 * J'ai limpressoin que y a des moments où la hitzone se declenche pas, jsuis supposé mourir et jmeurs pas mdrr
 * L'arme apparaît pour quelques frames au dessus du panneau zone non fumeur là qd tu spawn

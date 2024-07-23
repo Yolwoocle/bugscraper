@@ -13,13 +13,18 @@ function Slug:init(x, y)
 
     self.gravity = self.default_gravity * 0.5
 
+    self.def_speed_x = self.speed_x
+
     self.anim_frame_len = 0.4
     self.anim_frames = {images.slug1, images.slug2}
 end
 
 function Slug:update(dt)
     self:update_enemy(dt)
-    -- self.debug_values[1] = concat("h", self.harmless_timer)
+
+    self.speed_x = ternary(self.is_grounded, self.def_speed_x, self.def_speed_x * 0.5)
+    self.debug_values[1] = concat("x", self.speed_x)
+    self.debug_values[2] = concat("s", self.speed)
 end
 
 function Slug:draw()
