@@ -150,8 +150,12 @@ function Debug:init(game)
             -- arc.direction = -pi - 0.1
             -- game:new_actor(arc)
             
-            local arc = enemies.Turret:new(CANVAS_WIDTH*0.5, CANVAS_HEIGHT*0.5)
-            game:new_actor(arc)
+            local j = 0
+            for i = 3, CANVAS_WIDTH/16 - 3 do
+                local arc = enemies.TimedSpikes:new(i * BW, CANVAS_HEIGHT*0.85, 2, 0.5, 0.5, j*0.2)
+                game:new_actor(arc)
+                j = j + 1
+            end
 
             -- local arc = enemies.BigBug:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8)
             -- game:new_actor(arc)

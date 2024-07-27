@@ -4,6 +4,8 @@ local Larva = require "scripts.actor.enemies.larva"
 local sounds = require "data.sounds"
 local images = require "data.images"
 local DungBeetle = require "scripts.actor.enemies.dung_beetle"
+local StateMachine = require "scripts.state_machine"
+local Timer = require "scripts.timer"
 
 local Dung = Enemy:inherit()
 	
@@ -35,44 +37,64 @@ function Dung:init_dung(x, y, spr, w, h)
     -- self.anim_frames = {images.larva1, images.larva2}
     -- self.audio_delay = love.math.random(0.3, 1)
 
+    self.jump_timer = Timer:new(5, { 
+    })
+    -- self.jump_timer:start()
+    self.jump_speed = 600
+    self.jump_flag = false
+
+    self.state_machine = StateMachine:new({
+        chase = {
+            update = function(state, dt)
+                
+            end,
+        },
+        jump = {
+            update = function(state, dt)
+                
+            end,
+        }
+    }, "jump")
+
     self:add_constant_sound("ball_roll", "ball_roll")
     self:set_constant_sound_volume("ball_roll", 0)
 end
 
 function Dung:update(dt)
-    self:update_dung_beetle(dt)
+    self:update_dung(dt)
 end
-function Dung:update_dung_beetle(dt)
+function Dung:update_dung(dt)
+    self.state_machine:update(dt)
+    
+    if self.jump_timer:update(dt) then
+        self.jump_timer:start(random_range(2, 6))
+        self:jump()
+    end
+
+    if self.jump_flag then
+        self.vy = -self.jump_speed
+        self.jump_flag = false
+    end
+
     self:update_enemy(dt)
 
     self.spr:set_rotation(self.spr.rot + self.vx * self.rot_mult * dt)
-    
+
     if self.rider == nil then
         local beetle = DungBeetle:new(self.x, self.y - 30)
         game:new_actor(beetle)
         self:set_rider(beetle)
     end
     
-    Particles:dust(self.mid_x, self.y + self.h)
+    if self.is_grounded and math.abs(self.vx) > 20 then
+        Particles:dust(self.mid_x, self.y + self.h)
+    end
     self:set_constant_sound_volume(math.abs(self.vx) / 400)
-    -- self.debug_values[1] = math.abs(self.vx)
-
-
-    -- self.vx = self.speed * self.walk_dir_x
-    
-    -- self.audio_delay = self.audio_delay - dt
-    -- if self.audio_delay <= 0 then
-    -- 	self.audio_delay = love.math.random(0.3, 1.5)
-    -- 	audio:play({
-    -- 		"larva_damage1",
-    -- 		"larva_damage2",
-    -- 		"larva_damage3",
-    -- 		"larva_death"
-    -- 	})
-    -- end
 end
 
 function Dung:after_collision(col, other)
+    self.state_machine:_call("after_collision", col)
+
     if col.type ~= "cross" then
         if col.normal.y == 0 then
             self.vx = col.normal.x * math.abs(self.vx)
@@ -98,7 +120,11 @@ function Dung:follow_nearest_player(dt)
 	else                      self.speed_y = self.speed_y or 0    end 
 
 	self.vx = self.vx + sign0(nearest_player.x - self.x) * self.speed_x * 0.3
-	self.vy = self.vy + sign0(nearest_player.y - self.y) * self.speed_y * 0.3
+	-- self.vy = self.vy + sign0(nearest_player.y - self.y) * self.speed_y * 0.3
+end
+
+function Dung:jump()
+    self.jump_flag = true
 end
 
 return Dung

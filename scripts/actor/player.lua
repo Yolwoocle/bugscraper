@@ -184,9 +184,8 @@ end
 function Player:update(dt)
 	self.dt = dt
 	
-	-- Movement
 	self:update_upgrades(dt)
-	self:update_effects(dt, self)
+	self:update_effects(dt)
 	self:move(dt)
 	self:do_wall_sliding(dt)
 	self:update_jumping(dt)

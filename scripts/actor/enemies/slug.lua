@@ -23,8 +23,6 @@ function Slug:update(dt)
     self:update_enemy(dt)
 
     self.speed_x = ternary(self.is_grounded, self.def_speed_x, self.def_speed_x * 0.5)
-    self.debug_values[1] = concat("x", self.speed_x)
-    self.debug_values[2] = concat("s", self.speed)
 end
 
 function Slug:draw()
