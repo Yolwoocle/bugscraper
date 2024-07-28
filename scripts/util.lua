@@ -813,6 +813,20 @@ function line_color(col, ax, ay, bx, by, ...)
 	love.graphics.setColor(1,1,1,1)
 end
 
+function arrow_color_radial(col, x, y, a, r)
+	arrow_color(col, x, y, math.cos(a) * r, math.sin(a) * r)
+end
+
+function arrow_color(col, x, y, dx, dy)
+	line_color(col, x, y, x+dx, y+dy)
+	local a = atan2(dy, dx)
+	local a_arrow1 = a + pi + pi/4
+	local a_arrow2 = a + pi - pi/4
+	local r = 4
+	line_color(col, x+dx, y+dy, x+dx + math.cos(a_arrow1)*r, y+dy + math.sin(a_arrow1)*r)
+	line_color(col, x+dx, y+dy, x+dx + math.cos(a_arrow2)*r, y+dy + math.sin(a_arrow2)*r)
+end
+
 function noise(...)
 	local v = love.math.noise(...)
 	return v*2 - 1

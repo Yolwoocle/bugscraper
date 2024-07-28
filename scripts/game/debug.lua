@@ -146,16 +146,15 @@ function Debug:init(game)
             -- local arc = enemies.Explosion:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8, 32)
             -- game:new_actor(arc)
 
-            -- local arc = enemies.DrillBee:new(CANVAS_WIDTH*0.3, CANVAS_HEIGHT*0.8)
-            -- arc.direction = -pi - 0.1
-            -- game:new_actor(arc)
+            local arc = enemies.Grasshopper:new(CANVAS_WIDTH*0.6, CANVAS_HEIGHT*0.8)
+            game:new_actor(arc)
             
-            local j = 0
-            for i = 3, CANVAS_WIDTH/16 - 3 do
-                local arc = enemies.TimedSpikes:new(i * BW, CANVAS_HEIGHT*0.85, nil, nil, nil, j*0.2)
-                game:new_actor(arc)
-                j = j + 1
-            end
+            -- local j = 0
+            -- for i = 3, CANVAS_WIDTH/16 - 3 do
+            --     local arc = enemies.TimedSpikes:new(i * BW, CANVAS_HEIGHT*0.85, nil, nil, nil, j*0.2)
+            --     game:new_actor(arc)
+            --     j = j + 1
+            -- end
 
             -- local arc = enemies.BigBug:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8)
             -- game:new_actor(arc)

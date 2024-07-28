@@ -97,6 +97,7 @@ local img_names = {
 	fly1 =                     "actors/enemies/fly1",
 	fly2 =                     "actors/enemies/fly2",
 	grasshopper =              "actors/enemies/grasshopper",
+	grasshopper_fall =         "actors/enemies/grasshopper_fall",
 	honeypot_ant1 =            "actors/enemies/honeypot_ant1",
 	honeypot_ant2 =            "actors/enemies/honeypot_ant2",
 	honeypot_liquid =          "actors/enemies/honeypot_liquid",
@@ -122,9 +123,6 @@ local img_names = {
 	stink_bug_1 =              "actors/enemies/stink_bug_1",
 	timed_spikes_base =        "actors/enemies/timed_spikes_base",
 	timed_spikes_spikes =      "actors/enemies/timed_spikes_spikes",
-	timed_spikes_off =         "actors/enemies/timed_spikes_off",
-	timed_spikes_telegraph =   "actors/enemies/timed_spikes_telegraph",
-	timed_spikes_on =          "actors/enemies/timed_spikes_on",
 	woodlouse_1 =              "actors/enemies/woodlouse_1",
 	woodlouse_2 =              "actors/enemies/woodlouse_2",
 

@@ -4,6 +4,7 @@ local sounds = require "data.sounds"
 local images = require "data.images"
 
 local Grasshopper = Enemy:inherit()
+_test_i = 0
 
 function Grasshopper:init(x, y)
     self:init_enemy(x,y, images.grasshopper, 12, 12)
@@ -21,20 +22,41 @@ function Grasshopper:init(x, y)
 
     self.gravity = self.gravity * 0.5
 
+    self.squash_target = 1
+    self.squash = 1
+
     self.jump_speed = 300
     -- self.jump_speed = 200
+
+    self.removeme_test_i = _test_i
+    self.removeme_graph = {}
+    _test_i = _test_i + 1
 end
 
 function Grasshopper:update(dt)
     self:update_enemy(dt)
     self.vx = self.speed * self.walk_dir_x
 
-    local squash =  1 + clamp(math.abs(self.vy) / 500, 0, 2)
-    self.spr:set_scale(1/squash, squash)
+    local squash = 1 + sqr(clamp(math.abs(self.vy) / 300, 0, 2))
+    self.squash_target = squash
+    self.squash = lerp(self.squash, self.squash_target, 0.2)
+
+    self.spr:set_scale(1/self.squash, self.squash)
+    self.spr:set_image(ternary(math.abs(self.vy) > 150, images.grasshopper, images.grasshopper_fall))
 end
 
-function Grasshopper:draw()
+function Grasshopper:draw()    
+    love.graphics.push()
+    
+    -- Courtesy of @clemapfel on Discord
+    local rot = math.atan2(self.vy, self.vx)
+    love.graphics.translate(self.mid_x, self.mid_y)
+    love.graphics.shear(math.tan(rot) * 0.1, 0)
+    love.graphics.translate(-self.mid_x, -self.mid_y)
+
     self:draw_enemy()
+
+    love.graphics.pop() 
 end
 
 function Grasshopper:after_collision(col, other)
@@ -48,6 +70,7 @@ function Grasshopper:after_collision(col, other)
 end
 
 function Grasshopper:on_grounded()
+    self.squash = 0.7
     self.vy = -self.jump_speed
     Audio:play_var("jump_short", 0.2, 1.2, {pitch=0.4})
 end
