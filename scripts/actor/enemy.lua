@@ -171,7 +171,7 @@ function Enemy:draw_enemy()
 	local f = self:is_flashing_white() and draw_white
 	self:draw_actor(f)
 
-	if game.debug.info_view then
+	if game.debug.colview_mode then
 		gfx.draw(images.heart, self.x-7 -2+16, self.y-16)
 		print_outline(COL_WHITE, COL_DARK_BLUE, self.life, self.x+16, self.y-16-2)
 	end
@@ -201,7 +201,7 @@ function Enemy:on_collision(col, other)
 
 		local is_on_head      = false --(feet_y <= self.y + self.h/2)
 		local is_falling_down = (player.vy > 0.0001)-- and (feet_y <= self.y + self.h*0.75)
-		local recently_landed = (0 < player.frames_since_land) and (player.frames_since_land <= 4) --7
+		local recently_landed = (0 < player.frames_since_land) and (player.frames_since_land <= 6) --7
 		if self.is_stompable and (is_on_head or is_falling_down or recently_landed) then
 			self:react_to_stomp(player)
 

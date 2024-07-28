@@ -64,12 +64,21 @@ local function debug_wave()
 end
 
 local function new_wave(params)
-	params.bounds = RECT_ELEVATOR
+	params.bounds = params.bounds or RECT_ELEVATOR
 	return Wave:new(params)
 end
 
 local function get_world_name(n)
 	return string.format("%s - %s", Text:text("level.short_world_prefix", tostring(n)), Text:text("level.world_"..tostring(n)))
+end
+
+local function spawn_timed_spikes()
+	local j = 0
+	for i = 3, CANVAS_WIDTH/16 - 3 do
+		local arc = enemies.TimedSpikes:new(i * BW, CANVAS_HEIGHT*0.85, 2, 0.5, 0.5, j*0.2)
+		game:new_actor(arc)
+		j = j + 1
+	end
 end
 
 local waves = {	
@@ -601,10 +610,15 @@ local waves = {
 		max = 9,
 
 		enemies = {
-			{E.Larva, 2},
 			{E.Mosquito, 2},
+			{E.Larva, 1},
+			{E.Slug, 1},
 			{E.Boomshroom, 4},
 		},
+
+		run = function(self, level)
+			spawn_timed_spikes()
+		end,
 	}),
 
 	new_wave({

@@ -152,7 +152,7 @@ function Debug:init(game)
             
             local j = 0
             for i = 3, CANVAS_WIDTH/16 - 3 do
-                local arc = enemies.TimedSpikes:new(i * BW, CANVAS_HEIGHT*0.85, 2, 0.5, 0.5, j*0.2)
+                local arc = enemies.TimedSpikes:new(i * BW, CANVAS_HEIGHT*0.85, nil, nil, nil, j*0.2)
                 game:new_actor(arc)
                 j = j + 1
             end
