@@ -23,6 +23,7 @@ function OptionsManager:init(game)
 		windowed_width = CANVAS_WIDTH,
 		windowed_height = CANVAS_HEIGHT,
 		menu_blur = true,
+		background_speed = 1.0,
 
 		timer_on = false,
 		mouse_visible = false,

@@ -243,7 +243,24 @@ local function generate_menus()
             self.value = Options:get("menu_blur")
             self.value_text = Options:get("menu_blur") and "✅" or "❎"
         end},
+        { SliderMenuItem, "🌄 "..Text:text("menu.options.visuals.background_speed"), function(self, diff)
+            diff = diff or 1
+            self.value = (self.value + diff)
+            if self.value < 0 then self.value = 20 end
+            if self.value > 20 then self.value = 0 end
+            
+            Options:set("background_speed", self.value/20)
+            Audio:play("menu_select", 1, 0.8+(self.value/20)*0.4)
+        end, range_table(0,20),
+        function(self)
+            self.value = Options:get("background_speed") * 20
+            self.value_text = concat(floor(100 * self.value / 20), "%")
+        end},
+
+
         { ""},
+
+
         { "<<< "..Text:text("menu.options.game.title").." >>>"},
         { SliderMenuItem, "🛜 "..Text:text("menu.options.game.screenshake"), function(self, diff)
             diff = diff or 1
@@ -276,7 +293,7 @@ local function generate_menus()
             self.value_text = Options:get("mouse_visible") and "✅" or "❎"
         end},
         
-        { "⏸ "..Text:text("menu.options.game.pause_on_unfocus"), function(self)
+        { "🛅 "..Text:text("menu.options.game.pause_on_unfocus"), function(self)
             Options:toggle_pause_on_unfocus()
         end,
         function(self)

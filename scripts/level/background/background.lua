@@ -22,6 +22,9 @@ end
 function Background:update_background(dt)
 end
 
+function Background:get_speed()
+	return self.speed * Options:get("background_speed")
+end
 function Background:set_speed(val)
 	self.speed = val
 end

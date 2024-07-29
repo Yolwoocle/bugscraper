@@ -108,7 +108,7 @@ function BackgroundDots:new_bg_particle()
 	end
 	o.x = love.math.random(-o.w, CANVAS_WIDTH)
 	
-	if self.speed >= 0 then
+	if self:get_speed() >= 0 then
 		o.y = -o.h - love.math.random(0, CANVAS_HEIGHT)
 	else
 		o.y = CANVAS_HEIGHT + o.h + love.math.random(0, CANVAS_HEIGHT)
@@ -132,22 +132,22 @@ function BackgroundDots:update_bg_particles(dt)
 	-- Background lines
 	for i=1, #self.bg_particles do
 		local o = self.bg_particles[i]
-		o.y = o.y + dt*self.speed*o.spd
+		o.y = o.y + dt*self:get_speed()*o.spd
 		
-		local del_cond = (self.speed>=0 and o.y > CANVAS_HEIGHT + o.h) or (self.speed<0 and o.y - o.h < -CANVAS_HEIGHT) 
+		local del_cond = (self:get_speed()>=0 and o.y > CANVAS_HEIGHT + o.h) or (self:get_speed()<0 and o.y - o.h < -CANVAS_HEIGHT) 
 		if del_cond then
 			local p = self:new_bg_particle()
 			self.bg_particles[i] = p
 		end
 
 		-- Size corresponds to elevator speed
-		o.oh = max(o.w/o.h, abs(self.speed) / self.def_speed)
+		o.oh = max(o.w/o.h, abs(self:get_speed()) / self.def_speed)
 		o.oy = .5 * o.h * o.oh
 	end
 end
 
 function BackgroundDots:shift_to_red(speed_cap)
-	local p = self.speed / speed_cap
+	local p = self:get_speed() / speed_cap
 	self.clear_color = lerp_color(self.bg_colors[#self.bg_colors], color(0xff7722), p)
 	-- self.bg_particle_col = self.bg_particle_colors[#self.bg_particle_colors]
 	local r = self.clear_color[1]
@@ -178,7 +178,7 @@ end
 function BackgroundDots:draw_particle(o)
 	if o.type == "rect" then
 		local y = o.y + o.oy
-		local mult = 1 - clamp(abs(self.speed / 100), 0, 1)
+		local mult = 1 - clamp(abs(self:get_speed() / 100), 0, 1)
 		local sin_oy = mult * sin(game.t + o.rnd_pi) * o.oh * o.h 
 		
 		rect_color(o.col, "fill", o.x, o.y + o.oy + sin_oy, o.w, o.h * o.oh)

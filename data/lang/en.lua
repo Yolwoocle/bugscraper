@@ -166,9 +166,10 @@ return {
                 pixel_scale_value = {
                     auto = "auto",
                     max_whole = "max whole",
-                };
+                },
                 vsync = "VERTICAL SYNCHRONIZATION",
-                menu_blur = "MENU BLUR",
+                menu_blur = "MENU BACKGROUND BLUR",
+                background_speed = "BACKGROUND SPEED",
             },
             game = {
                 title = "Gameplay",

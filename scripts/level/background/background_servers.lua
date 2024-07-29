@@ -152,7 +152,7 @@ end
 function BackgroundServers:update(dt)
 	self:update_background(dt)
 
-	local speed = self.speed * dt * 0.5
+	local speed = self:get_speed() * dt * 0.5
 
 	self.row_min_y = self.row_min_y + speed
 	for _, row in pairs(self.server_rows) do
