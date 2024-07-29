@@ -9,7 +9,7 @@ local FlyingDung = require "scripts.actor.enemies.flying_dung"
 local Turret = Enemy:inherit()
 
 function Turret:init(x, y, spr, w, h)
-    self:init_enemy(x,y, spr or images.spiked_fly, w or 20, h or 14)
+    self:init_enemy(x,y, spr or images.bardella, w or 20, h or 14)
     self.name = "woodlouse"
     self.follow_player = false
 
@@ -68,6 +68,10 @@ function Turret:update(dt)
     if self.target then
         local dx, dy = get_direction_vector(self.mid_x, self.mid_y, self.target.mid_x, self.target.mid_y)
         self.gun:shoot(dt, self, self.mid_x, self.mid_y, dx, dy)
+    end
+
+    if random_range(0, 1) < 1/50 then
+        Audio:play_var("immigration", 0.2, 1.5)
     end
 end
 

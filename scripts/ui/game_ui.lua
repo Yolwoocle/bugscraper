@@ -40,10 +40,10 @@ end
 function GameUI:draw()
 	if not self.is_visible then return end
 	self:draw_stomp_arrow()
-	self:draw_logo()
-	self:draw_join_tutorial()
-	self:draw_timer()
-	self:draw_version()
+	-- self:draw_logo()
+	-- self:draw_join_tutorial()
+	-- self:draw_timer()
+	-- self:draw_version()
 	self:draw_offscreen_indicators()
 	self:draw_floating_text()
 

@@ -995,6 +995,7 @@ function Player:get_controls_text_color(i)
 end
 
 function Player:draw_controls()
+	if true then return end
 	local tutorials = self:get_controls_tutorial_values()
 
 	local x = self.ui_x

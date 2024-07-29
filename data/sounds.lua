@@ -147,6 +147,7 @@ local sfxnames = {
 
 	exit_sign_activate = "exit_sign_activate.ogg",
 	smash_easter_egg = "smash_easter_egg.mp3",
+	immigration = "immigration.ogg",
 }
 
 for key, name in pairs(sfxnames) do

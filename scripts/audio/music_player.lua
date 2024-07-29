@@ -12,7 +12,7 @@ function MusicPlayer:init()
 	local disk_class = ternary(OPERATING_SYSTEM == "Web", MusicDiskWeb, MusicDisk)
 	-- local disk_class = MusicDiskWeb
 	self.disks = {
-		["intro"] =           disk_class:new(self, sounds.music_intro_ingame.source, sounds.music_intro_paused.source),
+		["intro"] =           disk_class:new(self, sounds.music_w1_ingame.source, sounds.music_w1_paused.source),
 		["w1"] =              disk_class:new(self, sounds.music_w1_ingame.source, sounds.music_w1_paused.source),
 		["w2"] =              disk_class:new(self, sounds.music_w2_ingame.source, sounds.music_w2_paused.source),
 		["w3"] =              disk_class:new(self, sounds.music_w1_ingame.source, sounds.music_w1_paused.source),

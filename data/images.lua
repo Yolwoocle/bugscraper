@@ -282,6 +282,8 @@ local img_names = {
 
 	_test_bg_image_1 = "_test_bg_image_1",
 	_test_bg_image_2 = "_test_bg_image_2",
+
+	bardella = "actors/enemies/bardella",
 }
 for id, path in pairs(img_names) do
 	images[id] = load_image(path..".png")

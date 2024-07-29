@@ -146,7 +146,7 @@ function Debug:init(game)
             -- local arc = enemies.Explosion:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8, 32)
             -- game:new_actor(arc)
 
-            local arc = enemies.Grasshopper:new(CANVAS_WIDTH*0.6, CANVAS_HEIGHT*0.8)
+            local arc = enemies.Turret:new(CANVAS_WIDTH*0.5, CANVAS_HEIGHT*0.5)
             game:new_actor(arc)
             
             -- local j = 0
