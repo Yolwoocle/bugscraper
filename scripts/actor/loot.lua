@@ -273,9 +273,13 @@ end
 
 Loot.Gun = Loot:inherit()
 
-function Loot.Gun:init(x, y, val, vx, vy)
-	local gun = Guns:get_random_gun()
-	self.gun = gun
+function Loot.Gun:init(x, y, val, vx, vy, gun)
+	if gun then
+		self.gun = gun
+	else
+		gun = Guns:get_random_gun()
+		self.gun = gun
+	end
 	
 	self:init_loot(gun.spr, x, y, 2, 2, val, vx, vy)
 	

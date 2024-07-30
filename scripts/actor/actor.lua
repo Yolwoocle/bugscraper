@@ -136,9 +136,10 @@ function Actor:update_sprite_position()
 	-- self.spr:update_offset(ox, oy)
 end
 
-function Actor:set_size(w, h)
+function Actor:set_dimensions(w, h)
 	self.w = w or self.w
 	self.h = h or self.h
+	Collision:update(self, self.x, self.y, self.w, self.h)
 end
 
 function Actor:center_actor()

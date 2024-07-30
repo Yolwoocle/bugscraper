@@ -120,57 +120,8 @@ function Debug:init(game)
             end
         end},
         ["d"] = {"spawn", function()
-            -- local arc = enemies.ElectricArc:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.9)
-            -- print_debug("nil?", game.players[1] == nil)
-            -- arc:set_arc_target(game.players[1])
-            -- game:new_actor(arc)
-
-            -- local arc = enemies.ElectricRays:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.5)
-            -- local arc = enemies.ShovelBee:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.5);
-            -- local arc = enemies.FlyBuddy:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.5);
-            -- game:new_actor(arc)
-
-            -- for _, player in pairs(game.players) do
-			-- 	local arc = enemies.ElectricArc:new(CANVAS_WIDTH*0.5, CANVAS_HEIGHT*0.5)
-			-- 	arc:set_arc_target(player)
-			-- 	arc.arc_damage = 2.5
-			-- 	game:new_actor(arc)
-			-- end
-
-            -- local arc = enemies.Centipede:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8, 15)
-            -- game:new_actor(arc)
-
-            -- local arc = enemies.ElectricRays:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8, 3)
-            -- game:new_actor(arc)
-
-            -- local arc = enemies.Explosion:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8, 32)
-            -- game:new_actor(arc)
-
-            local arc = enemies.Grasshopper:new(CANVAS_WIDTH*0.6, CANVAS_HEIGHT*0.8)
-            game:new_actor(arc)
-            
-            -- local j = 0
-            -- for i = 3, CANVAS_WIDTH/16 - 3 do
-            --     local arc = enemies.TimedSpikes:new(i * BW, CANVAS_HEIGHT*0.85, nil, nil, nil, j*0.2)
-            --     game:new_actor(arc)
-            --     j = j + 1
-            -- end
-
-            -- local arc = enemies.BigBug:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8)
-            -- game:new_actor(arc)
-
-            -- local arc = enemies.ElectricRays:new(CANVAS_WIDTH*random_range(0, 1), CANVAS_HEIGHT*random_range(0, 1), 5)
-            -- game:new_actor(arc)
-
-            -- local arc = enemies.ShovelBee:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8)
-            -- game:new_actor(arc)
-
-            -- local arc = enemies.Grasshopper:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.8)
-            -- game:new_actor(arc)
-
-            -- local arc = enemies.ElectricArc:new(CANVAS_WIDTH/2, CANVAS_HEIGHT*0.5)
-            -- arc:set_segment(CANVAS_WIDTH*0.8, CANVAS_HEIGHT/2, CANVAS_WIDTH/2, CANVAS_HEIGHT)
-            -- game:new_actor(arc)
+            local arc = enemies.GunDisplay:new(CANVAS_WIDTH*0.6, CANVAS_HEIGHT*0.8)
+            game:new_actor(arc)            
         end},
         ["r"] = {"start game", function()
             game:start_game()

@@ -553,6 +553,7 @@ local function generate_menus()
         { Text:text("menu.credits.asset_item", "'bump.lua'", "kikito", "MIT"), func_url("https://github.com/kikito/bump.lua")};
         { Text:text("menu.credits.asset_item", "'love-error-explorer'", "snowkittykira", "MIT"), func_url("https://github.com/snowkittykira/love-error-explorer")};
         { Text:text("menu.credits.asset_item", "'batteries'", "1bardesign", "Zlib"), func_url("https://github.com/1bardesign/batteries")};
+        { Text:text("menu.credits.asset_item", "'mlib'", "davisdude", "Zlib"), func_url("https://github.com/davisdude/mlib")};
         { Text:text("menu.credits.asset_item", "'Fira Code'", "The Fira Code Project Authors", "OFL-1.1"), func_url("https://github.com/tonsky/FiraCode/")};
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
 

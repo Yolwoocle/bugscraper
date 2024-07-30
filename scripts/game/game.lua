@@ -902,7 +902,7 @@ end
 
 function Game:update_queued_players(dt)
 	for _, queued_player in pairs(self.queued_players) do
-		queued_player:update(dt)
+		queued_player:update(dt, self.queued_players)
 	end
 
 	for key, queued_player in pairs(self.queued_players) do

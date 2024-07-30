@@ -814,17 +814,21 @@ function line_color(col, ax, ay, bx, by, ...)
 end
 
 function arrow_color_radial(col, x, y, a, r)
-	arrow_color(col, x, y, math.cos(a) * r, math.sin(a) * r)
+	arrow_color_relative(col, x, y, math.cos(a) * r, math.sin(a) * r)
 end
 
-function arrow_color(col, x, y, dx, dy)
-	line_color(col, x, y, x+dx, y+dy)
-	local a = atan2(dy, dx)
+function arrow_color_relative(col, x, y, dx, dy)
+	arrow_color(col, x, y, x + dx, y + dy)
+end
+
+function arrow_color(col, ax, ay, bx, by)
+	line_color(col, ax, ay, bx, by)
+	local a = atan2(by - ay, bx - ax)
 	local a_arrow1 = a + pi + pi/4
 	local a_arrow2 = a + pi - pi/4
 	local r = 4
-	line_color(col, x+dx, y+dy, x+dx + math.cos(a_arrow1)*r, y+dy + math.sin(a_arrow1)*r)
-	line_color(col, x+dx, y+dy, x+dx + math.cos(a_arrow2)*r, y+dy + math.sin(a_arrow2)*r)
+	line_color(col, bx, by, bx + math.cos(a_arrow1)*r, by + math.sin(a_arrow1)*r)
+	line_color(col, bx, by, bx + math.cos(a_arrow2)*r, by + math.sin(a_arrow2)*r)
 end
 
 function noise(...)

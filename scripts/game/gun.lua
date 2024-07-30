@@ -105,7 +105,9 @@ function Gun:update(dt)
 		self.burst_delay_timer = self.burst_delay
 
 		-- Force shoot
-		self.user:shoot(dt, true)
+		if self.user then
+			self.user:shoot(dt, true)
+		end
 	end
 end
 

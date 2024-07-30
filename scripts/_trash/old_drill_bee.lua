@@ -6,7 +6,6 @@ local Segment = require "scripts.math.segment"
 local Rect = require "scripts.math.rect"
 local sounds = require "data.sounds"
 local images = require "data.images"
-local Explosion = require "scripts.actor.enemies.explosion"
 
 local DrillBee = Fly:inherit()
 	
@@ -41,7 +40,7 @@ function DrillBee:init(x, y, spr)
     self.do_squash = true
 
     self.direction = random_range(0, pi2)
-    self.angle_speed = 0.8
+    self.angle_speed = 0.5
     
     self.telegraph_timer = Timer:new(0.3)
     self.burrow_timer = Timer:new(0.05)
@@ -100,13 +99,53 @@ function DrillBee:init(x, y, spr)
 
                 if not Rect:new(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT):expand(256, 256):rectangle_intersection(self:get_rect()) then
                     self:kill()
+                    -- local axis = random_sample{"x", "y"}
+                    -- local x, y
+                    -- if axis == "x" then
+                    --     x = random_sample{0, 1} * CANVAS_WIDTH 
+                    --     y = random_range(0, CANVAS_HEIGHT) 
+                    -- else
+                    --     x = random_range(0, CANVAS_WIDTH)
+                    --     y = random_sample{0, 1} * CANVAS_HEIGHT 
+                    -- end
+                    -- self:set_pos(x, y)
+                    -- self.direction = math.atan2(CANVAS_CENTER[2] - y, CANVAS_CENTER[1] - x) + random_neighbor(pi/8)
                 end
             end,
             after_collision = function(state, col)
                 if col.other.collision_info and col.other.collision_info.type == COLLISION_TYPE_SOLID then
-                    local explosion = Explosion:new(self.mid_x, self.mid_y, self.explosion_radius)
-                    game:new_actor(explosion)
-                    self:kill()
+                    self.state_machine:set_state("burrow")
+                    self.drill_normal = col.normal
+                    local pivot_direction = math.atan2(self.drill_normal.y, self.drill_normal.x)
+                    local diff = ((self.direction - pivot_direction) % pi2) - pi
+                    print_debug(diff / pi)
+
+                    local clamped_diff = clamp(diff, -pi/4, pi/4)
+                    self.direction = pivot_direction + clamped_diff + pi 
+                end
+            end,
+        },
+        burrow = {
+            enter = function(state)
+                self.affected_by_walls = false
+                self.speed = 40
+
+                self.burrow_timer:start(0.05)
+            end,
+            update = function(state, dt)
+                -- Particles:image(self.mid_x, self.mid_y, 1, images.bullet_casing)
+                self.direction = self.direction % pi2
+                -- self.is_stompable = not (1.25 * pi <= self.direction and self.direction <= 1.75 * pi)
+                -- self.debug_values[1] = self.is_stompable
+
+                if self.burrow_timer:update(dt) then
+                    self.state_machine:set_state("attack")
+                end
+            end,
+            after_collision = function(state, col)
+                if col.other.collision_info and col.other.collision_info.type == COLLISION_TYPE_SOLID then
+                    self.is_touching_wall = true
+                    self.burrow_timer:start(0.05)
                 end
             end,
         },

@@ -10,31 +10,34 @@ local enemies = {
 	Spider =             require "scripts.actor.enemies.spider",
 	StinkBug =           require "scripts.actor.enemies.stink_bug",
 	SnailShelled =       require "scripts.actor.enemies.snail_shelled", 
+	Boomshroom =         require "scripts.actor.enemies.boomshroom", 
 	Dung =               require "scripts.actor.enemies.dung",
 	DungBeetle =         require "scripts.actor.enemies.dung_beetle",
 	FlyingDung =         require "scripts.actor.enemies.flying_dung",
 	
+	ElectricArc =        require "scripts.actor.enemies.electric_arc", 
+	ElectricRays =       require "scripts.actor.enemies.electric_rays", 
 	SnailShelledBouncy = require "scripts.actor.enemies.snail_shelled_bouncy", 
 	Grasshopper =        require "scripts.actor.enemies.grasshopper", 
 	Chipper =            require "scripts.actor.enemies.chipper",  
 	MetalFly =           require "scripts.actor.enemies.metal_fly",
 	BulbBuddy =          require "scripts.actor.enemies.bulb_buddy", 
+	SwitchBug =          require "scripts.actor.enemies.switch_bug", --*
+	W2boss =             require "scripts.actor.enemies.w2boss", --*
+
 	ShovelBee =          require "scripts.actor.enemies.shovel_bee", --*
 	DrillBee =           require "scripts.actor.enemies.drill_bee", --*
+	HoneycombFootball =  require "scripts.actor.enemies.honeycomb_football", --*
+	TimedSpikes =        require "scripts.actor.enemies.timed_spikes", --*
+	HoneypotAnt =        require "scripts.actor.enemies.honeypot_ant",
+
 	Turret =             require "scripts.actor.enemies.turret", --*
 	Centipede =          require "scripts.actor.enemies.centipede", --*
-	ElectricArc =        require "scripts.actor.enemies.electric_arc", 
-	ElectricRays =       require "scripts.actor.enemies.electric_rays", 
-	Boomshroom =         require "scripts.actor.enemies.boomshroom", 
 	BigBug =             require "scripts.actor.enemies.big_bug", --*
-	W2boss =             require "scripts.actor.enemies.w2boss", --*
-	HoneycombFootball =  require "scripts.actor.enemies.honeycomb_football", --*
+	Slime =              require "scripts.actor.enemies.slime", --*
+	Frog  =              require "scripts.actor.enemies.frog", --*
 
-	TimedSpikes =        require "scripts.actor.enemies.timed_spikes", --*
-	
-	MushroomAnt =        require "scripts.actor.enemies.mushroom_ant",
-	
-	HoneypotAnt =        require "scripts.actor.enemies.honeypot_ant",
+	MushroomAnt =        require "scripts.actor.enemies.mushroom_ant",	
 	
 	Dummy =              require "scripts.actor.enemies.dummy",
 	ButtonBigPressed =   require "scripts.actor.enemies.button_big_pressed",
@@ -44,6 +47,7 @@ local enemies = {
 	ButtonSmall =        require "scripts.actor.enemies.button_small",
 	ExitSign =           require "scripts.actor.enemies.exit_sign",
 	UpgradeDisplay =     require "scripts.actor.enemies.upgrade_display",
+	GunDisplay =         require "scripts.actor.enemies.gun_display",
 	VendingMachine =     require "scripts.actor.enemies.vending_machine.vending_machine",
 	
 	Cocoon =             require "scripts.actor.enemies.cocoon",

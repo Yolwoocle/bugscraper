@@ -606,22 +606,6 @@ local waves = {
 	}),
 
 	new_wave({
-		min = 8,
-		max = 9,
-
-		enemies = {
-			{E.Mosquito, 2},
-			{E.Larva, 1},
-			{E.Slug, 1},
-			{E.Boomshroom, 4},
-		},
-
-		run = function(self, level)
-			spawn_timed_spikes()
-		end,
-	}),
-
-	new_wave({
 		min = 4,
 		max = 4,
 
@@ -688,9 +672,24 @@ local waves = {
 			{E.HoneycombFootball, 2},
 		},
 	}), 
-
+	
 	new_cafeteria(function()
 	end),
+		
+	new_wave({
+		min = 1,
+		max = 1,
+
+		enemies = {
+			{E.HoneycombFootball, 2},
+		},
+		
+		music = "w2",
+
+		run = function(self, level)
+			spawn_timed_spikes()
+		end,
+	}), 
 
 	--]]
 	
