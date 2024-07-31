@@ -73,8 +73,8 @@ function Sprite:get_anchor_offset(w, h)
     w = param(w, 0)
     h = param(h, 0)
     
-	local spr_w = self.image:getWidth()
-	local spr_h = self.image:getHeight()
+	local spr_w = self.image:getWidth() * self.sx
+	local spr_h = self.image:getHeight() * self.sy
     local anchor_x, anchor_y = self:get_x_anchor(), self:get_y_anchor()
 
     local x, y

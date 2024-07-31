@@ -49,7 +49,8 @@ function Boomshroom:init(x, y)
                 self.vx = self.vx + math.cos(self.direction) * self.speed
                 self.vy = self.vy + math.sin(self.direction) * self.speed + self.weight * self.weight_vy_multiplier
 
-                self.spr:set_image(self.sprites[clamp(math.ceil(#self.sprites * (1 - self.life / self.max_life)), 1, #self.sprites)])
+                -- You don't need to understand this.
+                self.spr:set_image(self.sprites[clamp(math.ceil((#self.sprites-1) * (1 - self.life / self.max_life)), 1, #self.sprites - 1)])
             end
         }, 
             

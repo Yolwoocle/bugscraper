@@ -19,9 +19,11 @@ local Camera = require "scripts.game.camera"
 local Layer = require "scripts.graphics.layer"
 local ScreenshotManager = require "scripts.screenshot"
 local QueuedPlayer = require "scripts.game.queued_player"
-local upgrades          = require "data.upgrades"
-local shaders           = require "data.shaders"
-local images            = require "data.images"
+local GunDisplay = require "scripts.actor.enemies.gun_display"
+local guns = require "data.guns"
+local upgrades = require "data.upgrades"
+local shaders = require "data.shaders"
+local images = require "data.images"
 
 local skins = require "data.skins"
 local sounds = require "data.sounds"
@@ -984,6 +986,12 @@ function Game:screenshot()
 	self.notif = "screenshot "..filename
 	self.notif_timer = 3.0
 	-- Particles:word(CANVAS_WIDTH/2, CANVAS_HEIGHT/2)
+end
+
+-- SCOTCH!!!
+function Game:new_gun_display(x, y)
+	local gun = guns:get_random_gun()
+	return GunDisplay:new(x, y, gun)
 end
 
 -----------------------------------------------------

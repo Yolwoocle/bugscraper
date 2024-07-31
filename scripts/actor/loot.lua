@@ -103,11 +103,6 @@ function Loot:update_loot(dt)
 	
 	self.spr:set_color(ternary(self.blink_is_shown, COL_WHITE, {1,1,1, 0.2}))
 
-	-- if outside bounds
-	-- if self.x <= 0 or self.x > CANVAS_WIDTH or self.y <= 0 or self.y > CANVAS_HEIGHT then
-	-- 	self:set_pos(CANVAS_WIDTH/2, CANVAS_HEIGHT/2)
-	-- end
-
 	if self.life < 0 then
 		Particles:smoke(self.mid_x, self.mid_y - 8)
 		self:remove()
@@ -125,7 +120,7 @@ end
 --- Used in find_close_player to find the player that the loot should be attracted to. 
 --- Returns the score assigned to the given player. For example, if the 
 --- loot should be attracted to the closest player, this value should be the distance 
---- to the player). The lower the score, the better that candidate is.
+--- to the player). The *LOWER* the score, the better that candidate is.
 --- @return function score_func The score function assigned to that player.
 function Loot:get_player_score_function()
 	return function(player)
@@ -343,8 +338,5 @@ function Loot.Gun:update(dt)
 		self.spr:set_color{1, 1, 1, 0.2}
 	end
 end
-
--- function Loot.Gun:draw(fx, fy, custom_draw)
--- end
 
 return Loot

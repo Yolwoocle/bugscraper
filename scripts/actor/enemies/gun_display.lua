@@ -3,25 +3,29 @@ local Enemy = require "scripts.actor.enemy"
 local images = require "data.images"
 local Prop = require "scripts.actor.enemies.prop"
 local Loot = require "scripts.actor.loot"
+local Sprite = require "scripts.graphics.sprite"
 local guns = require "data.guns"
 
 local utf8 = require "utf8"
 
 local GunDisplay = Prop:inherit()
 
-function GunDisplay:init(x, y)
-    self:init_prop(x, y, images.upgrade_jar, 16, 16)
+function GunDisplay:init(x, y, gun)
+    self:init_prop(x, y, images.gun_display, 16, 16)
     self.name = "gun_display"
     
-    self.gun = guns.Triple:new(nil)
+    self.gun = gun or guns.Triple:new(nil)
+	self.counts_as_enemy = false
 
-    self.life = 10
+    self.life = 20
+
+    self.dissapear_life = 10
     self.loot = {}
 
     self.gravity = self.default_gravity
     self.is_flying = false
 
-    self.is_pushable = true
+    self.is_pushable = false
     self.is_knockbackable = true
 
     self.is_stompable = true
@@ -39,8 +43,22 @@ function GunDisplay:init(x, y)
     self.friction_x = 0.9
     self.self_knockback_mult = 0.7
     
-	self.sound_damage = "glass_fracture"
+    self.rot_mult = 0.06
+
+	self.sound_damage = {"impactglass_light_001", "impactglass_light_002", "impactglass_light_003", "impactglass_light_004"}
 	self.sound_death = "glass_break_weak"
+
+    self.max_dissapear_life = 10
+    self.dissapear_life = self.max_dissapear_life
+
+	self.max_blink_timer = 0.1
+	self.blink_timer = self.max_blink_timer
+	self.blink_is_shown = true
+
+    self.spr.rot = random_range(0, pi*2)
+    self.spr:set_scale(0.5, 0.5)
+
+    self.gun_spr = Sprite:new(self.gun.spr)
 end
 
 function GunDisplay:assign_upgrade(upgrade)
@@ -50,13 +68,46 @@ end
 function GunDisplay:update(dt)
     self:update_prop(dt)
 
-    self.gun.x = self.x
-    self.gun.y = self.y
+    -- scotch
+    if self.buffer_vx then
+        self.vx = self.buffer_vx
+        self.buffer_vx = nil
+    end
+
+    local r = (self.spr.rot + self.vx * self.rot_mult * dt)
+    self.spr:set_rotation(r)
+    self.gun_spr:set_rotation(r)
+
+    self.gun.x = self.mid_x
+    self.gun.y = self.mid_y
+    self.gun.rot = self.spr.rot
+    
+    -- Copy pasted from Loot. Is this a bad coding habit? Too bad.
+    self.dissapear_life = self.dissapear_life - dt
+	if self.dissapear_life < self.max_dissapear_life * 0.5 then
+		self.blink_timer = self.blink_timer - dt
+		
+		if self.blink_timer < 0 then
+			local val = self.max_blink_timer
+			if self.dissapear_life < self.max_dissapear_life * 0.25 then
+				val = self.max_blink_timer * .5
+			end
+			self.blink_timer = val
+			self.blink_is_shown = not self.blink_is_shown
+		end
+	end 
+	self.spr:set_color(ternary(self.blink_is_shown, COL_WHITE, {1,1,1, 0.5}))
+	self.gun_spr:set_color(ternary(self.blink_is_shown, COL_WHITE, {1,1,1, 0.5}))
+
+    if self.dissapear_life < 0 then
+        self:remove()
+    end
 end
 
 function GunDisplay:draw()
-    if self.gun then
-        self.gun:draw()
+    if self.gun and self.blink_is_shown then
+        -- self.gun:draw()
+        self.gun_spr:draw(self.x, self.y, self.w, self.h, self:is_flashing_white() and draw_white)
     end
 	self:draw_prop() 
 end
@@ -71,10 +122,12 @@ end
 function GunDisplay:after_collision(col, other)
     -- Pong-like bounce
     if col.type ~= "cross" and col.normal.y == 0 then
-        -- local dx, dy = bounce_vector_cardinal(self.vx, self.vy, col.normal.x, col.normal.y)
-        self.vx = col.normal.x * math.abs(self.vx)
-        -- self.vy = dy
+        self.buffer_vx = col.normal.x * math.abs(self.vx)
     end
+end
+
+function GunDisplay:on_stomped(stomper)
+    self:apply_force_from(500 * self.self_knockback_mult, stomper)
 end
 
 return GunDisplay
