@@ -120,7 +120,7 @@ function Debug:init(game)
             end
         end},
         ["d"] = {"spawn", function()
-            local arc = enemies.GunDisplay:new(CANVAS_WIDTH*0.6, CANVAS_HEIGHT*0.8)
+            local arc = enemies.Fly:new(CANVAS_WIDTH*0.6, CANVAS_HEIGHT*0.8)
             game:new_actor(arc)            
         end},
         ["r"] = {"start game", function()
