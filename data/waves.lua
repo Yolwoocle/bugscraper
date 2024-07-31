@@ -74,9 +74,9 @@ end
 
 local function spawn_timed_spikes()
 	local j = 0
-	for i = 3, CANVAS_WIDTH/16 - 3 do
-		local arc = enemies.TimedSpikes:new(i * BW, CANVAS_HEIGHT*0.85, 2, 0.5, 0.5, j*0.2)
-		game:new_actor(arc)
+	for i = 3, CANVAS_WIDTH/16 - 4 do
+		local spikes = enemies.TimedSpikes:new(i * BW, CANVAS_HEIGHT*0.85, 4, 1, 0.5, j*0.2)
+		game:new_actor(spikes)
 		j = j + 1
 	end
 end
@@ -292,9 +292,128 @@ local waves = {
 	}),
 	
 	new_cafeteria(),
+
+	-----------------------------------------------------
+	--- W2: beehive
+	-----------------------------------------------------
+
+	new_wave({
+		min = 6,
+		max = 7,
+
+		enemies = {
+			{E.Larva, 2},
+			{E.Mosquito, 2},
+		},
+
+		background = backgrounds.BackgroundBeehive:new(),
+		music = "w2",
+
+		title = get_world_name("2"),
+		title_color = COL_YELLOW_ORANGE,
+	}),
+
+	new_wave({
+		min = 5,
+		max = 7,
+
+		enemies = {
+			{E.Larva, 2},
+			{E.Mosquito, 2},
+			{E.ShovelBee, 4},
+		},
+	}),
+
+	new_wave({
+		min = 4,
+		max = 4,
+
+		enemies = {
+			{E.DrillBee, 2},
+		},
+	}),
+
+	new_wave({
+		min = 8,
+		max = 8,
+
+		enemies = {
+			{E.Larva, 4},
+			{E.Mosquito, 4},
+			{E.Boomshroom, 4},
+			{E.DrillBee, 2},
+		},
+	}),
+		
+	new_wave({
+		min = 6,
+		max = 6,
+
+		enemies = {
+			{E.Mosquito, 4},
+			{E.HoneypotAnt, 4},
+		},
+	}), 
+
+	new_wave({
+		min = 8,
+		max = 8,
+
+		enemies = {
+			{E.DrillBee, 1},
+			{E.Mosquito, 3},
+			{E.HoneypotAnt, 2},
+			{E.ShovelBee, 2},
+			{E.Larva, 2},
+		},
+	}),
+
+	new_wave({
+		min = 10,
+		max = 10,
+
+		enemies = {
+			{E.SnailShelled, 1},
+			{E.DrillBee, 1},
+			{E.Mosquito, 3},
+			{E.HoneypotAnt, 2},
+			{E.ShovelBee, 2},
+			{E.Larva, 2},
+		},
+	}),
+
+		
+	new_wave({
+		min = 1,
+		max = 1,
+
+		enemies = {
+			{E.HoneycombFootball, 2},
+		},
+	}), 
+	
+	new_cafeteria(function()
+	end),
+		
+	new_wave({
+		min = 1,
+		max = 1,
+
+		enemies = {
+			{E.HoneycombFootball, 2},
+		},
+		
+		music = "w2",
+
+		run = function(self, level)
+			spawn_timed_spikes()
+		end,
+	}), 
+
+
 	
 	-----------------------------------------------------
-	--- W2: server room
+	--- W3: server room
 	-----------------------------------------------------
 
 	-- Floor 20
@@ -307,7 +426,7 @@ local waves = {
 		background = backgrounds.BackgroundServers:new(),
 		music = "w2",
 
-		title = get_world_name("2"),
+		title = get_world_name("3"),
 		title_color = COL_MID_GREEN,
 	}),
 
@@ -573,123 +692,6 @@ local waves = {
 		-- end
 	end),
 	------
-
-	-----------------------------------------------------
-	--- W3: beehive
-	-----------------------------------------------------
-
-	new_wave({
-		min = 6,
-		max = 7,
-
-		enemies = {
-			{E.Larva, 2},
-			{E.Mosquito, 2},
-		},
-
-		background = backgrounds.BackgroundBeehive:new(),
-		music = "w3",
-
-		title = get_world_name("3"),
-		title_color = COL_YELLOW_ORANGE,
-	}),
-
-	new_wave({
-		min = 5,
-		max = 7,
-
-		enemies = {
-			{E.Larva, 2},
-			{E.Mosquito, 2},
-			{E.ShovelBee, 4},
-		},
-	}),
-
-	new_wave({
-		min = 4,
-		max = 4,
-
-		enemies = {
-			{E.DrillBee, 2},
-		},
-	}),
-
-	new_wave({
-		min = 8,
-		max = 8,
-
-		enemies = {
-			{E.Larva, 4},
-			{E.Mosquito, 4},
-			{E.Boomshroom, 4},
-			{E.DrillBee, 2},
-		},
-	}),
-		
-	new_wave({
-		min = 6,
-		max = 6,
-
-		enemies = {
-			{E.Mosquito, 4},
-			{E.HoneypotAnt, 4},
-		},
-	}), 
-
-	new_wave({
-		min = 8,
-		max = 8,
-
-		enemies = {
-			{E.DrillBee, 1},
-			{E.Mosquito, 3},
-			{E.HoneypotAnt, 2},
-			{E.ShovelBee, 2},
-			{E.Larva, 2},
-		},
-	}),
-
-	new_wave({
-		min = 10,
-		max = 10,
-
-		enemies = {
-			{E.SnailShelled, 1},
-			{E.DrillBee, 1},
-			{E.Mosquito, 3},
-			{E.HoneypotAnt, 2},
-			{E.ShovelBee, 2},
-			{E.Larva, 2},
-		},
-	}),
-
-		
-	new_wave({
-		min = 1,
-		max = 1,
-
-		enemies = {
-			{E.HoneycombFootball, 2},
-		},
-	}), 
-	
-	new_cafeteria(function()
-	end),
-		
-	new_wave({
-		min = 1,
-		max = 1,
-
-		enemies = {
-			{E.HoneycombFootball, 2},
-		},
-		
-		music = "w2",
-
-		run = function(self, level)
-			spawn_timed_spikes()
-		end,
-	}), 
 
 	--]]
 	

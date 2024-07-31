@@ -320,18 +320,22 @@ function Player:do_damage(n, source)
 	game:screenshake(5)
 	Input:vibrate(self.n, 0.3, 0.45)
 	Audio:play("hurt")
-	Particles:word(self.mid_x, self.mid_y, concat("-",n), COL_LIGHT_RED)
+	-- Particles:word(self.mid_x, self.mid_y, concat("-",n), COL_LIGHT_RED)
 	
 	if self.is_knockbackable and source then
 		self.vx = self.vx + sign(self.mid_x - source.mid_x)*source.knockback
 		self.vy = self.vy - 50
 	end
 
+	local old_life = self.life
 	local old_temporary_life = self.temporary_life
 	self:subtract_life(n)
+	local permanent_life_diff = old_life - self.life
 	local temporary_life_diff = old_temporary_life - self.temporary_life
+	if permanent_life_diff > 0 then
+		Particles:image(self.ui_x, self.ui_y - 16, permanent_life_diff, images.heart, 5, 2, 0.2, 1.0)
+	end
 	if temporary_life_diff > 0 then
-		--                                            x, y, number,     spr,             spw_rad, life, vs, g, parms
 		Particles:image(self.ui_x, self.ui_y - 16, temporary_life_diff, images.particle_leaf, 5, 1.5, 0.6, 0.5)
 	end
 	

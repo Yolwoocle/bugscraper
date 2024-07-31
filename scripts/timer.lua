@@ -6,7 +6,7 @@ local Timer = Class:inherit()
 function Timer:init(duration, args)
     args = args or {}
     
-    self.duration = duration
+    self:set_duration(duration)
     self.time = duration
     self:apply_args(args)
 
@@ -54,13 +54,20 @@ function Timer:get_duration()
     return self.duration
 end
 
-function Timer:set_duration(val)
-    self.duration = val
+function Timer:set_duration(duration) 
+    if type(duration) == "table" and #duration >= 2 then
+        self.duration_range = duration
+    else
+        self.duration = duration
+    end
 end
 
 function Timer:start(duration, args)
     if duration then
         self:set_duration(duration)
+    end
+    if self.duration_range then
+        self.duration = random_range(self.duration_range[1], self.duration_range[2])
     end
     self:apply_args(args)
     

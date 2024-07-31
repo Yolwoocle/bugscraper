@@ -15,8 +15,8 @@ return {
 
         -- World names
         world_1 = "The offices",
-        world_2 = "The server room",
-        world_3 = "The beehive",
+        world_2 = "The beehive",
+        world_3 = "The server room",
     },
     gun = {
         -- Gun names
@@ -31,12 +31,13 @@ return {
     player = {
         name = {
             -- Player names
-            -- No reason to change these during translation, except if they clash with something specific to the language/culture 
-            mio = "mio",
-            cap = "cap",
-            zia = "zia",
-            tok = "tok",
-            rico = "rico",
+            -- No reason to change these during translation, except if they clash with something 
+            -- specific to the language/culture (notify me if it is the case)
+            mio = "Mio",
+            cap = "Cap",
+            zia = "Zia",
+            tok = "Tok",
+            rico = "Rico",
         }
     },
     upgrade = {

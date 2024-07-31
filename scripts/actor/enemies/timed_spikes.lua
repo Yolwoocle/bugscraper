@@ -16,9 +16,9 @@ function TimedSpikes:init(x, y, duration_off, duration_telegraph, duration_on, s
     
     self.state_order = {
         -- 2, 0.5, 0.5
-        {"off", duration_off or 2},
-        {"telegraph", duration_telegraph or 1},
-        {"on", duration_on or 0.5},
+        {"off", duration_off or 4},
+        {"telegraph", duration_telegraph or 2},
+        {"on", duration_on or 1},
     }
 
     self.spike_y = -16
@@ -60,7 +60,7 @@ function TimedSpikes:init(x, y, duration_off, duration_telegraph, duration_on, s
         off = {
             enter = function(state)
                 self.damage = 0
-                self.spike_target_y = 12
+                self.spike_target_y = 13
                 self.spike_sprite.color = {0.5,0.5,0.5}
             end, 
         },

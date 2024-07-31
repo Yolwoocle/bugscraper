@@ -36,6 +36,8 @@ local enemies = {
 	BigBug =             require "scripts.actor.enemies.big_bug", --*
 	Slime =              require "scripts.actor.enemies.slime", --*
 	Frog  =              require "scripts.actor.enemies.frog", --*
+	LarvaSpawner =       require "scripts.actor.enemies.larva_spawner", --*
+	Chipper360 =         require "scripts.actor.enemies.chipper_360", --*
 
 	MushroomAnt =        require "scripts.actor.enemies.mushroom_ant",	
 	

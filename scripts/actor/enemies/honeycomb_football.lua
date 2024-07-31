@@ -129,8 +129,6 @@ end
 function HoneycombFootball:update_snail_shelled(dt)
     self:update_pong_ball(dt)
 
-    -- Particles:dust(self.mid_x + random_neighbor(self.w/4), self.mid_y + random_neighbor(self.h/4))
-
     self.renderer.object.rotation.x = self.renderer.object.rotation.x + (self.vx / 50)*dt
     self.renderer.object.rotation.y = self.renderer.object.rotation.y + (self.vy / 50)*dt
     self.renderer.object.position.x = self.mid_x
@@ -147,9 +145,6 @@ function HoneycombFootball:update_snail_shelled(dt)
         self.renderer.line_color = COL_BLACK_BLUE
     end
     self.renderer:update(dt)
-
-    -- self.debug_values[1] = self.state_machine.current_state_name
-    -- self.debug_values[2] = self.is_stompable
 end
 
 function HoneycombFootball:on_stomped()
