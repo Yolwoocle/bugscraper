@@ -1,5 +1,18 @@
 require "scripts.meta.constants"
 
+function love.graphics.setShader(...)
+end
+
+function love.graphics.getShader(...)
+end
+
+function love.graphics.newShader(...)
+	return {
+		send = function()
+		end,
+	}
+end
+
 local shaders = {}
 
 local shader_code = [[
