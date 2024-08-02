@@ -10,18 +10,16 @@ local guns  = require "data.guns"
 local Chipper360 = Enemy:inherit()
 
 function Chipper360:init(x, y)
-    self:init_enemy(x,y, images.chipper_1, 24, 24)
+    self:init_enemy(x,y, images.chipper_1, 12, 12)
     self.name = "todo_changeme"
 
     -- Parameters 
-    self.life = 30
+    self.life = 12
     self.is_flying = true
     self.gravity = 0
     self.follow_player = false
     self.self_knockback_mult = 0
-    -- self.is_stompable = false
-    self.stomps = math.huge
-    self.damage_on_stomp = 3
+    -- self.stomps = 1
     self.friction_y = self.friction_x
 
     -- Animation
@@ -29,7 +27,6 @@ function Chipper360:init(x, y)
     self.anim_frames = {images.chipper_1, images.chipper_2, images.chipper_3, images.chipper_2}
     self.normal_anim_frames = {images.chipper_1, images.chipper_2, images.chipper_3, images.chipper_2}
     self.attack_anim_frames = {images.chipper_attack_1, images.chipper_attack_2, images.chipper_attack_3, images.chipper_attack_2}
-    self.spr:set_scale(2, 2)
 	self.flip_mode = ENEMY_FLIP_MODE_MANUAL
     self.spr:set_anchor(SPRITE_ANCHOR_CENTER_CENTER)
     
@@ -177,7 +174,7 @@ function Chipper360:update(dt)
     self.spr:set_rotation(lerp_angle(self.spr:get_rotation(), self.direction, 0.2))
     self.state_machine:update(dt)
 
-    self.debug_values[2] = concat(self.life,"❤")
+    -- self.debug_values[2] = concat(self.life,"❤")
 end
 
 

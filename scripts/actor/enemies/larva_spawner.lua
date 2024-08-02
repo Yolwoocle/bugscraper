@@ -30,8 +30,9 @@ function LarvaSpawner:update(dt)
     self:update_enemy(dt)
     
     if self.spawn_larva_timer:update(dt) then
-        local flying_dung = Larva:new(self.mid_x, self.mid_y)
-        game:new_actor(flying_dung)
+        local larva = Larva:new(self.mid_x, self.mid_y)
+        larva.loot = {}
+        game:new_actor(larva)
 
         self.spawn_larva_timer:start()
     end

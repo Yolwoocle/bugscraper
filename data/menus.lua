@@ -55,7 +55,9 @@ local function draw_elevator_progress()
         local y = y2 - (i/n_floors) * h
         local sep_x = x1 - sep_w/2
         local sep_y = round(y - sep_w/2)
-        love.graphics.rectangle("fill", sep_x, sep_y, sep_w, sep_w)
+        if i%5 == 0 then
+            love.graphics.rectangle("fill", sep_x, sep_y, sep_w, sep_w)
+        end
         if i == game:get_floor() then
             love.graphics.rectangle("line", sep_x-2, sep_y-1, sep_w+3, sep_w+3)
         end

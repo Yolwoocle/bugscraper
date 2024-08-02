@@ -129,21 +129,38 @@ function Game:new_game()
 	self:init_players()
 
 	-- Start button
-	local nx = CANVAS_WIDTH * 0.75
+	-- local nx = CANVAS_WIDTH * 0.75
+	local nx = CANVAS_WIDTH * 0.6
 	local ny = self.level.cabin_inner_rect.by
-	local l
-	l = create_actor_centered(Enemies.ButtonSmallGlass, floor(nx), floor(ny))
+	local l = create_actor_centered(Enemies.ButtonSmallGlass, floor(nx), floor(ny))
+	l.debug_values[1] = "W1"
 	self:new_actor(l)
 	
-	-- l = create_actor_centered(Enemies.ButtonSmall, floor(nx + 32), floor(ny))
-	-- l.spr.color = COL_GREEN
-	-- l.on_press = function(button)
-	-- 	self.level:set_background(backgrounds.BackgroundServers:new())
-	-- 	self:set_floor(38)
-	-- 	self:start_game()
-	-- 	self.pressed_disappear_timer = 0.5
-	-- end
-	-- self:new_actor(l)
+	do 
+		local l = create_actor_centered(Enemies.ButtonSmall, CANVAS_WIDTH*0.7, floor(ny))
+		l.spr.color = COL_BLACK
+		l.debug_values[1] = "W2"
+		l.on_press = function(button)
+			-- self.level:set_background(backgrounds.BackgroundServers:new())
+			self:set_floor(20)
+			self:start_game()
+			self.pressed_disappear_timer = 0.5
+		end
+		self:new_actor(l)
+	end
+	
+	do 
+		local b = create_actor_centered(Enemies.ButtonSmall, CANVAS_WIDTH*0.8, floor(ny))
+		b.spr.color = COL_GREEN
+		b.debug_values[1] = "W3"
+		b.on_press = function(button)
+			-- self.level:set_background(backgrounds.BackgroundServers:new())
+			self:set_floor(40)
+			self:start_game()
+			self.pressed_disappear_timer = 0.5
+		end
+		self:new_actor(b)
+	end
 	
 	-- Exit sign 
 	local exit_x = CANVAS_WIDTH * 0.25
@@ -1025,6 +1042,14 @@ end
 function Game:play_cutscene(cutscene)
 	self.cutscene = cutscene
 	self.cutscene:play()
+end
+
+function Game:kill_actors_with_name(name)
+	for _, actor in pairs(game.actors) do
+		if actor.name == name then
+			actor:kill()
+		end
+	end
 end
 
 -----------------------------------------------------

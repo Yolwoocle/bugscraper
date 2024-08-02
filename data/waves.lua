@@ -329,7 +329,7 @@ local waves = {
 		max = 4,
 
 		enemies = {
-			{E.DrillBee, 2},
+			{E.Chipper360, 2},
 		},
 	}),
 
@@ -341,7 +341,7 @@ local waves = {
 			{E.Larva, 4},
 			{E.Mosquito, 4},
 			{E.Boomshroom, 4},
-			{E.DrillBee, 2},
+			{E.Chipper360, 2},
 		},
 	}),
 		
@@ -361,25 +361,22 @@ local waves = {
 
 		enemies = {
 			{E.Mosquito, 4},
-			{E.Larva, 4},
-		},
-		fixed_enemies = {
-			{E.Chipper360, 1},
+			{E.Chipper360, 3},
 		},
 	}), 
-
+	
 	new_wave({
-		min = 8,
-		max = 8,
+		min = 6,
+		max = 6,
 
 		enemies = {
-			{E.DrillBee, 1},
 			{E.Mosquito, 3},
-			{E.HoneypotAnt, 2},
-			{E.ShovelBee, 2},
-			{E.Larva, 2},
+			{E.HoneypotAnt, 4},
 		},
-	}),
+		fixed_enemies = {
+			{E.LarvaSpawner, 1},
+		}
+	}), 
 
 	new_wave({
 		min = 10,
@@ -387,9 +384,8 @@ local waves = {
 
 		enemies = {
 			{E.SnailShelled, 1},
-			{E.DrillBee, 1},
 			{E.Mosquito, 3},
-			{E.HoneypotAnt, 2},
+			{E.HoneypotAnt, 1},
 			{E.ShovelBee, 2},
 			{E.Larva, 2},
 		},
@@ -408,11 +404,12 @@ local waves = {
 	new_cafeteria(),
 		
 	new_wave({
-		min = 1,
-		max = 1,
+		min = 5,
+		max = 5,
 
 		enemies = {
-			{E.HoneycombFootball, 2},
+			{E.Mosquito, 3},
+			{E.Larva, 3},
 		},
 		
 		music = "w2",
@@ -421,8 +418,111 @@ local waves = {
 			spawn_timed_spikes()
 		end,
 	}), 
+		
+	new_wave({
+		min = 6,
+		max = 6,
 
+		enemies = {
+			{E.Mosquito, 3},
+			{E.Larva, 3},
+			{E.HoneypotAnt, 2},
+			{E.Fly, 2},
+		},		
+	}), 
+		
+	new_wave({
+		min = 7,
+		max = 7,
 
+		enemies = {
+			{E.Mosquito, 3},
+			{E.Larva, 3},
+			{E.HoneypotAnt, 2},
+			{E.Fly, 2},
+		},
+		fixed_enemies = {
+			{E.LarvaSpawner, 1},
+		},
+	}), 
+		
+	new_wave({
+		min = 4,
+		max = 4,
+
+		enemies = {
+			{E.DrillBee, 3},
+		},
+	}), 
+		
+	new_wave({
+		min = 6,
+		max = 6,
+
+		enemies = {
+			{E.Mosquito, 20},
+			{E.ShovelBee, 10},
+			{E.Boomshroom, 20},
+			{E.DrillBee, 30},
+		},
+	}), 
+		
+	new_wave({
+		min = 8,
+		max = 8,
+
+		enemies = {
+			{E.Larva, 3},
+			{E.Mosquito, 3},
+			{E.HoneypotAnt, 3},
+		},
+		fixed_enemies = {
+			{E.LarvaSpawner, 1},
+		},
+	}), 
+
+	
+	new_wave({
+		min = 7,
+		max = 7,
+
+		enemies = {
+			{E.Mosquito, 3},
+			{E.ShovelBee, 3},
+			{E.DrillBee, 3},
+		},
+	}), 
+
+	
+	new_wave({
+		min = 9,
+		max = 9,
+
+		enemies = {
+			{E.Larva, 3},
+			{E.Mosquito, 3},
+			{E.ShovelBee, 3},
+			{E.DrillBee, 3},
+			{E.HoneypotAnt, 3},
+			{E.Boomshroom, 3},
+		},
+	}), 
+
+	new_wave({
+		-- roll_type = WAVE_ROLL_TYPE_FIXED,
+		min = 1,
+		max = 1,
+		enemies = {	
+			{E.Dung, 1, position = {240, 200}},			
+		},
+		music = "miniboss",
+
+		cutscene = TODO THIS,
+	}),
+
+	new_cafeteria(function()
+		game:kill_actors_with_name("timed_spikes") 
+	end),
 	
 	-----------------------------------------------------
 	--- W3: server room
@@ -573,11 +673,7 @@ local waves = {
 	------------------------------------------------
 	-- Cafeteria
 	new_cafeteria(function()
-		for _, actor in pairs(game.actors) do
-			if actor.name == "electric_rays" then
-				actor:kill()
-			end
-		end
+		game:kill_actors_with_name("electric_rays") 
 	end),
 	------------------------------------------------
 	

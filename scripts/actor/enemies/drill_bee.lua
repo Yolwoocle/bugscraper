@@ -64,7 +64,7 @@ function DrillBee:init(x, y, spr)
                 self.spr.rot = self.direction - pi/2
                 self.no_attack_timer:update(dt)
             
-                self.debug_values[1] = self.no_attack_timer.is_active
+                -- self.debug_values[1] = self.no_attack_timer.is_active
 
                 local detected, player = self:detect_player_in_range()
                 if player and (not self.no_attack_timer.is_active) then
