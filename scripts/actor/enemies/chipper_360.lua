@@ -2,7 +2,6 @@ require "scripts.util"
 local Enemy = require "scripts.actor.enemy"
 local sounds = require "data.sounds"
 local images = require "data.images"
-local ElectricRays = require "scripts.actor.enemies.electric_rays"
 local StateMachine = require "scripts.state_machine"
 local Timer = require "scripts.timer"
 local Segment = require "scripts.math.segment"
@@ -22,7 +21,7 @@ function Chipper360:init(x, y)
     self.self_knockback_mult = 0
     -- self.is_stompable = false
     self.stomps = math.huge
-    self.damage_on_stomp = 2
+    self.damage_on_stomp = 3
     self.friction_y = self.friction_x
 
     -- Animation
@@ -41,15 +40,6 @@ function Chipper360:init(x, y)
     self.player_detection_range = 256
     self.player_detection_width = 16
     
-    --- Rays
-    self.rays_telegraph_duration = 1.0
-    self.rays_stay_duration = 1.5
-    self.rays = ElectricRays:new(self.mid_x, self.mid_y, 9)
-    self.rays.angle_speed = 0.2
-    game:new_actor(self.rays)
-    self.rays:set_state("disabled")
-    self.rays_activated_timer = Timer:new(3.0)
-    
     --- Telegraph
     self.telegraph_timer = Timer:new(0.5)
     self.telegraph_source = Audio:get_sound("chipper_telegraph"):clone()
@@ -57,27 +47,23 @@ function Chipper360:init(x, y)
     
     --- Attack
     self.attack_speed = 100
-    self.attack_bounces = 12
+    self.attack_bounces = 5
     self.attack_bounces_counter = self.attack_bounces
     
     --- Post-attack
     self.post_attack_timer = Timer:new(0.5)
 
     self.direction = random_range(0, pi*2)
-    self.direction_speed = random_sample({-1, 1}) * 3
+    self.direction_speed = random_sample{-1, 1} * 3
 
     self.state_machine = StateMachine:new({
         wander = {
             enter = function(state)
                 self.anim_frames = self.normal_anim_frames
-                self.wander_no_attack_timer:start()
+                self.wander_no_attack_timer:start(1.0)
                 self.wander_spawn_timer:start()
-                self.rays:set_state("disabled")
             end,
             update = function(state, dt)
-                self.rays:set_pos(self.mid_x, self.mid_y)
-                self.rays:set_state("disabled")
-
                 self.direction_speed = random_sample({-1, 1}) * 3
                 if random_range(0, 1) < 1/10 then
                     self.direction_speed = -self.direction_speed
@@ -94,6 +80,11 @@ function Chipper360:init(x, y)
                     end
                 end
             end,
+            after_collision = function(state, col)
+                if col.type ~= "cross" then
+                    self.wander_no_attack_timer:start(0.5)
+                end
+            end
         },
         telegraph = {
             enter = function(state) 
@@ -159,13 +150,15 @@ function Chipper360:init(x, y)
             end,
         },
     }, "wander")
-
-    self.rays:set_state("disabled")
-
 end
 
 function Chipper360:detect_player_in_range()
-    local detection_segment = Segment:new(self.mid_x, self.mid_y, self.mid_x + math.cos(self.direction)*600, self.mid_y + math.sin(self.direction)*600)
+    local dx, dy = math.cos(self.direction), math.sin(self.direction)
+    local detection_segment = Segment:new(
+        self.mid_x + dx*self.player_detection_width, 
+        self.mid_y + dy*self.player_detection_width, 
+        self.mid_x + dx*600, 
+        self.mid_y + dy*600)
     self.detection_segment = detection_segment
 
     for _, p in pairs(game.players) do
@@ -181,7 +174,7 @@ function Chipper360:update(dt)
     self:update_enemy(dt)
 
     self.direction = self.direction + self.direction_speed*dt
-    self.spr:set_rotation(self.direction)
+    self.spr:set_rotation(lerp_angle(self.spr:get_rotation(), self.direction, 0.2))
     self.state_machine:update(dt)
 
     self.debug_values[2] = concat(self.life,"❤")
@@ -198,6 +191,11 @@ end
 
 function Chipper360:draw()
     self:draw_enemy()
+
+    if game.debug.colview_mode and self.detection_segment then
+        line_color(COL_RED, self.detection_segment.ax, self.detection_segment.ay, self.detection_segment.bx, self.detection_segment.by)
+        rect_color(COL_RED, "line", self.detection_segment.ax - self.player_detection_width/2, self.detection_segment.ay - self.player_detection_width/2, self.player_detection_width, self.player_detection_width)
+    end
 end
 
 return Chipper360

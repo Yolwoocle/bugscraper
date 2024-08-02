@@ -354,6 +354,19 @@ local waves = {
 			{E.HoneypotAnt, 4},
 		},
 	}), 
+	
+	new_wave({
+		min = 6,
+		max = 6,
+
+		enemies = {
+			{E.Mosquito, 4},
+			{E.Larva, 4},
+		},
+		fixed_enemies = {
+			{E.Chipper360, 1},
+		},
+	}), 
 
 	new_wave({
 		min = 8,
@@ -392,8 +405,7 @@ local waves = {
 		},
 	}), 
 	
-	new_cafeteria(function()
-	end),
+	new_cafeteria(),
 		
 	new_wave({
 		min = 1,
@@ -481,8 +493,15 @@ local waves = {
 		end,
 		
 		fixed_enemies = {
-			{E.ElectricRays, 1, position = {CANVAS_WIDTH/2, CANVAS_HEIGHT/2 + 8}, args = {1, 2}},
+			{E.ElectricRays, 1, position = {CANVAS_WIDTH/2, CANVAS_HEIGHT/2 + 8}, args = {{
+					n_rays = 1, 
+					activation_delay = 2, 
+					init_angle = pi/2,
+					angle_speed = 0,
+				}}
+			},
 		},
+		floating_text = "🎓 "..string.upper(Text:text("input.prompts.jetpack")),
 
 		min = 4,
 		max = 6,
@@ -500,7 +519,15 @@ local waves = {
 		},
 		fixed_enemies = {
 			{E.BulbBuddy, 1},
-		}
+		},
+
+		run = function(self, level)
+			for _, enemy in pairs(game.actors) do
+				if enemy.name == "electric_rays" then
+					enemy.angle_speed = 0.5
+				end
+			end
+		end,
 	}),
 
 	new_wave({
@@ -566,7 +593,12 @@ local waves = {
 		},
 		
 		fixed_enemies = {
-			{E.ElectricRays, 1, position = {CANVAS_WIDTH/2, CANVAS_HEIGHT/2 + 8}, args = {1, 2}},
+			{E.ElectricRays, 1, position = {CANVAS_WIDTH/2, CANVAS_HEIGHT/2 + 8}, args = {
+				{
+					n_rays = 1, 
+					activation_delay = 2,
+				}
+			}},
 		},
 		music = "w2",
 

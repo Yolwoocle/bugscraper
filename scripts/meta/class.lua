@@ -4,6 +4,7 @@ Class.__index = Class
 function Class:inherit()
     local Subclass = {}
     Subclass.__index = Subclass
+    Subclass.super = self
     setmetatable(Subclass, self)
     return Subclass
 end

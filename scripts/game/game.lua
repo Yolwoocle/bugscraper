@@ -17,6 +17,7 @@ local GameUI = require "scripts.ui.game_ui"
 local Debug = require "scripts.game.debug"
 local Camera = require "scripts.game.camera"
 local Layer = require "scripts.graphics.layer"
+local LightLayer = require "scripts.graphics.light_layer"
 local ScreenshotManager = require "scripts.screenshot"
 local QueuedPlayer = require "scripts.game.queued_player"
 local GunDisplay = require "scripts.actor.enemies.gun_display"
@@ -187,6 +188,7 @@ function Game:new_game()
 	self.layers_count = LAYER_COUNT
 	self:init_layers()
 
+	self.is_light_on = true
 	self.draw_shadows = true
 	self.shadow_ox = 1
 	self.shadow_oy = 2
@@ -207,7 +209,9 @@ function Game:new_game()
 	-- self.music_source:setVolume(options:get("music_volume"))
 	self.sfx_elevator_bg:setVolume(0)
 	self.sfx_elevator_bg:play()
-	self.time_before_music = math.huge
+
+	-- Cutscenes
+	self.cutscene = nil
 
 	self.game_state = GAME_STATE_WAITING
 	self.endless_mode = false
@@ -231,7 +235,13 @@ end
 function Game:init_layers()
 	self.layers = {}
 	for i = 1, self.layers_count do
-		table.insert(self.layers, Layer:new(CANVAS_WIDTH, CANVAS_HEIGHT))
+		local layer 
+		if i == LAYER_LIGHT then
+			layer = LightLayer:new(CANVAS_WIDTH, CANVAS_HEIGHT)
+		else
+			layer = Layer:new(CANVAS_WIDTH, CANVAS_HEIGHT)
+		end
+		table.insert(self.layers, layer)
 	end
 end
 
@@ -345,6 +355,12 @@ function Game:update_main_game(dt)
 	self:update_logo(dt)
 	self:update_camera_offset(dt)
 	self:update_debug(dt)
+	if self.cutscene then
+		self.cutscene:update(dt)
+		if not self.cutscene.is_playing then
+			self.cutscene = nil
+		end
+	end
 
 	self.notif_timer = math.max(self.notif_timer - dt, 0)
 end
@@ -513,7 +529,7 @@ function Game:draw_game()
 				actor:draw_hud()
 			end
 		end
-	end)--, {apply_camera = false})
+	end)
 	
 	---------------------------------------------
 
@@ -535,6 +551,15 @@ function Game:draw_game()
 		self.level:draw_front()
 
 		Particles:draw_layer(PARTICLE_LAYER_FRONT)
+	end)
+
+	-----------------------------------------------------
+	
+	self:draw_on_layer(LAYER_LIGHT, function()
+		-- love.graphics.clear({0, 0, 0, 0.85})
+		local c = copy_table(COL_BLACK_BLUE)
+		c[4] = 0.85 
+		rect_color(c, "fill", -CANVAS_WIDTH, -CANVAS_HEIGHT, CANVAS_WIDTH*3, CANVAS_HEIGHT*3)
 	end)
 
 	-----------------------------------------------------
@@ -574,7 +599,10 @@ function Game:draw_game()
 	love.graphics.origin()
 	love.graphics.scale(1)
 	for i = 1, #self.layers do
-		self.layers[i]:draw(0, 0)
+		local layer = self.layers[i]
+		if (not layer.is_light_layer) or (layer.is_light_layer and not self.is_light_on) then
+			self.layers[i]:draw(0, 0)
+		end
 	end
 
 	--'Memory used (in kB): ' .. collectgarbage('count')
@@ -992,6 +1020,11 @@ end
 function Game:new_gun_display(x, y)
 	local gun = guns:get_random_gun()
 	return GunDisplay:new(x, y, gun)
+end
+
+function Game:play_cutscene(cutscene)
+	self.cutscene = cutscene
+	self.cutscene:play()
 end
 
 -----------------------------------------------------

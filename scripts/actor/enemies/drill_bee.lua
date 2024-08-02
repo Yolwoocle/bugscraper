@@ -45,6 +45,7 @@ function DrillBee:init(x, y, spr)
     
     self.telegraph_timer = Timer:new(0.3)
     self.burrow_timer = Timer:new(0.05)
+    self.no_attack_timer = Timer:new(1.0)
 
     self.state_machine = StateMachine:new({
         wander = {
@@ -52,6 +53,7 @@ function DrillBee:init(x, y, spr)
                 self.affected_by_walls = true
                 self.drill_target_player = self:get_random_player()
                 self.speed = 50
+                self.no_attack_timer:start()
             end,
             update = function(state, dt)
                 if self.drill_target_player then
@@ -60,9 +62,12 @@ function DrillBee:init(x, y, spr)
                 end
             
                 self.spr.rot = self.direction - pi/2
+                self.no_attack_timer:update(dt)
             
+                self.debug_values[1] = self.no_attack_timer.is_active
+
                 local detected, player = self:detect_player_in_range()
-                if player then
+                if player and (not self.no_attack_timer.is_active) then
                     self.state_machine:set_state("telegraph")
                     self.drill_target_player = player
                     self.direction = math.atan2(self.drill_target_player.mid_y - self.mid_y, self.drill_target_player.mid_x - self.mid_x)

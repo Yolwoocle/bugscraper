@@ -97,7 +97,7 @@ function Enemy:update_enemy(dt)
 	self.harmless_timer = max(self.harmless_timer - dt, 0)
 
 	if self.flip_mode == ENEMY_FLIP_MODE_TARGET then
-		if self.target and math.abs(self.x - self.target.x) >= 4 then
+		if self.target and math.abs(self.x - self.target.x) >= 10 then
 			self.spr:set_flip_x(self.target.x < self.x)
 		end
 		

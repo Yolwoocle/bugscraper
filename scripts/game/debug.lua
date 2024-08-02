@@ -12,6 +12,15 @@ local Renderer3D = require "scripts.graphics.3d.renderer_3d"
 local Object3D  = require "scripts.graphics.3d.object_3d"
 local truncated_ico = require "data.models.truncated_ico"
 local honeycomb_panel = require "data.models.honeycomb_panel"
+local Segment         = require "scripts.math.segment"
+local Rect            = require "scripts.math.rect"
+local Cutscene = require "scripts.game.cutscene"
+local Scene = require "scripts.game.scene"
+
+local Animal = require "scripts.game.removeme_animal"
+local Cat = require "scripts.game.removeme_cat"
+local Siberian = require "scripts.game.removeme_siberian"
+
 
 local Debug = Class:inherit()
 
@@ -216,7 +225,36 @@ function Debug:init(game)
 
         ["n"] = {"toggle frame-by-frame", function()
             _G_frame_by_frame_mode = not _G_frame_by_frame_mode
-        end}
+        end}, 
+
+        ["c"] = {"cutscene", function()
+            game:play_cutscene(Cutscene:new{
+                Scene:new({
+                    duration = 1,
+                    enter = function(scene)
+                        game.is_light_on = false
+                    end,
+                }),
+                Scene:new({
+                    duration = 0.3,
+                    enter = function(scene)
+                        game.layers[LAYER_LIGHT].lights[1].is_active = true
+                    end,
+                }),
+                Scene:new({
+                    duration = 0.3,
+                    enter = function(scene)
+                        game.layers[LAYER_LIGHT].lights[2].is_active = true
+                    end,
+                }),
+                Scene:new({
+                    duration = 0.3,
+                    enter = function(scene)
+                        game.layers[LAYER_LIGHT].lights[3].is_active = true
+                    end,
+                }),
+            })
+        end}, 
     }
     
     self.action_keys = {}
@@ -343,6 +381,9 @@ function Debug:draw_joystick_view()
         self:draw_joystick_view_for(joy, i*spacing, -20, "rightx", "righty")
         i = i + 1
     end
+
+    self:test_lighting()
+
 end
 
 function Debug:draw_joystick_view_for(joystick, x, y, axis_x, axis_y, is_first)
@@ -512,9 +553,7 @@ function Debug:draw_info_view()
 		concat("n° of enemies: ", self.game:get_enemy_count()),
 		concat("n° of particles: ", Particles:get_number_of_particles()),
 		concat("n° collision items: ", Collision.world:countItems()),
-		concat("real_wave_n ", self.game.debug2),
 		concat("number_of_alive_players ", self.game:get_number_of_alive_players()),
-		concat("menu_stack ", #self.game.menu_manager.menu_stack),
 		players_str,
 		users_str,
 		joystick_user_str,
@@ -593,6 +632,70 @@ function Debug:test_info_view_crop_line()
     --     circle_color(COL_CYAN, "fill", pt.x, pt.y, 4)
     -- end
 end
+
+removeme_t = 0
+function Debug:test_lighting()
+    local normal_canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
+    
+    removeme_t = removeme_t + 1/60 
+
+    exec_on_canvas({normal_canvas, stencil=true}, function()
+		game.camera:reset_transform()
+		love.graphics.clear()
+        
+        love.graphics.stencil(function()
+            love.graphics.clear()
+
+            local rect = Rect:new(-4000, -16, 4000, game.level.cabin_inner_rect.by + 3)
+
+            local function new_light(x, y, angle, spread)
+                return {
+                    x = x, 
+                    y = y, 
+                    angle = angle,
+                    spread = spread,
+                    rect = rect,
+
+                    get_segments = function(self)
+                        local s1 = Segment:new(self.x, self.y, self.x + math.cos(self.angle + self.spread) * 800, self.y + math.sin(self.angle + self.spread) * 800)
+                        local s2 = Segment:new(self.x, self.y, self.x + math.cos(self.angle - self.spread) * 800, self.y + math.sin(self.angle - self.spread) * 800)
+                        return Segment:new(clamp_segment_to_rectangle(s1, self.rect)), Segment:new(clamp_segment_to_rectangle(s2, self.rect))
+                    end,
+
+                    draw = function(self)
+                        local s1, s2 = self:get_segments(self.rect)
+                        if s1 and s2 then
+                            love.graphics.polygon("fill", s1.ax, s1.ay, s1.bx, s1.by, s2.bx, s2.by, s2.ax, s2.ay)
+                        end
+                    end,
+                }
+            end
+
+            local lights = {
+                new_light(CANVAS_WIDTH/2,     -32, pi*0.5, pi*0.1),
+                new_light(500,                -32, pi*0.7, pi*0.05),
+                new_light(CANVAS_WIDTH - 500, -32, pi*0.3, pi*0.05),
+            }
+
+            local i = 1
+            for _, l in pairs(lights) do
+                if 3 + i*0.4 < removeme_t then
+                    l:draw()
+                end
+                i = i + 1
+            end
+        end, "replace")
+        love.graphics.setStencilTest("less", 1)
+		
+        rect_color({0, 0, 0, 0.85}, "fill", 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
+		
+		love.graphics.setStencilTest()
+		game.camera:apply_transform()
+	end)
+
+    love.graphics.draw(normal_canvas)
+end
+
 function Debug:draw_colview()
     game.camera:apply_transform()
     

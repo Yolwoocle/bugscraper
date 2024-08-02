@@ -162,7 +162,7 @@ function Actor:update_mid_position()
 	self.mid_y = self.y + self.h/2
 end
 
-function Actor:update()
+function Actor:update(dt)
 	error("update not implemented")
 end
 

@@ -9,16 +9,18 @@ local images = require "data.images"
 
 local ElectricRays = Prop:inherit()
 
-function ElectricRays:init(x, y, n_rays, activation_delay)
+function ElectricRays:init(x, y, args)
+    args = args or {}
+
     self:init_prop(x,y, images.empty, 1, 1)
     self.name = "electric_rays"
     
     self.max_life = 100
     self.life = self.max_life
     
-    self.angle = random_range(0, math.pi*2)
-    self.angle_speed = 0.5
-    self.n_rays = n_rays or 1
+    self.angle = args.init_angle or random_range(0, math.pi*2)
+    self.angle_speed = args.angle_speed or 0.5
+    self.n_rays = args.n_rays or 1
     self.rays = {}
     
     self.counts_as_enemy = false
@@ -27,8 +29,8 @@ function ElectricRays:init(x, y, n_rays, activation_delay)
 	-- self.destroy_bullet_on_impact = true
 	-- self.is_immune_to_bullets = false
 
-    self.activation_timer = Timer:new(activation_delay or 0)
-    if activation_delay and activation_delay > 0 then
+    self.activation_timer = Timer:new(args.activation_delay or 0)
+    if args.activation_delay and args.activation_delay > 0 then
         self:start_activation_timer()
     else
         self:set_state("active")

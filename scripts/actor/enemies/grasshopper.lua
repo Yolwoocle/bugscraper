@@ -29,8 +29,6 @@ function Grasshopper:init(x, y)
 
     self.jump_speed = 300
     -- self.jump_speed = 200
-
-    self.removeme_graph = {}
 end
 
 function Grasshopper:update(dt)
