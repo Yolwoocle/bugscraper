@@ -22,7 +22,7 @@ function Motherboard:init(x, y)
 
     -- Parameters 
     self.follow_player = false
-    self.life = 800
+    self.life = 400
     self.self_knockback_mult = 0
     self.is_pushable = false
     self.is_stompable = false
@@ -39,7 +39,7 @@ function Motherboard:init(x, y)
 
     self.state_timer = Timer:new(0)
     self.ray_timer = Timer:new(1.0)
-    self.spawn_timer = Timer:new({2.0, 4.0})
+    self.spawn_timer = Timer:new({0.5, 1.5})
     self.new_button_timer = Timer:new(1.5)
     self.max_chippers = 6
     self.dung_damage = 20
@@ -59,8 +59,9 @@ function Motherboard:init(x, y)
                 self.ray_timer:start()
                 self.spawn_timer:start()
 
-                self.ray_cycles_left = 7
-
+                -- self.ray_cycles_left = 7
+                self.ray_cycles_left = 3 --changeme
+                
                 self:set_bouncy(true)
             end,
             exit = function(state)
@@ -128,7 +129,8 @@ function Motherboard:init(x, y)
                     table.insert(self.wave_enemies, chipper)
                 end
 
-                self.state_timer:start(20.0)
+                -- self.state_timer:start(20.0)
+                self.state_timer:start(8.0)
                 self.button_side = random_neighbor(1)
                 
                 self:set_bouncy(true)
@@ -153,7 +155,8 @@ function Motherboard:init(x, y)
         },
         bullets = {
             enter = function(state)
-                self.state_timer:start(15.0)
+                -- self.state_timer:start(15.0)
+                self.state_timer:start(5.0)
                 self.gun_target = self:get_random_player()
 
                 self:set_bouncy(false)
@@ -194,7 +197,7 @@ function Motherboard:update(dt)
 end
 
 function Motherboard:on_motherboard_button_pressed(button)
-    self.button_side = -self.button_side 
+    self.button_side = random_neighbor(1)
     self.new_button_timer:start()
 end
 
