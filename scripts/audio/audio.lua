@@ -63,6 +63,8 @@ end
 function AudioManager:play_var(snd, vol_var, pitch_var, parms)
 	parms = parms or {}
 	var = var or 0.2
+	vol_var = vol_var or 0
+	pitch_var = pitch_var or 1
 	local def_vol = parms.volume or 1
 	local volume = random_range(def_vol-vol_var, def_vol)
 	local pitch = random_range(1/pitch_var, pitch_var) * (parms.pitch or 1)

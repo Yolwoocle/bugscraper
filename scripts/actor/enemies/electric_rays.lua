@@ -30,6 +30,7 @@ function ElectricRays:init(x, y, args)
 	-- self.is_immune_to_bullets = false
 
     self.activation_timer = Timer:new(args.activation_delay or 0)
+    self.spawn_state = args.spawn_state
     if args.activation_delay and args.activation_delay > 0 then
         self:start_activation_timer()
     else
@@ -67,6 +68,9 @@ function ElectricRays:update(dt)
     -- Spawn rays
     if not self.rays_spawned then
         self:spawn_rays()
+        if self.spawn_state then
+            self:set_state(self.spawn_state)
+        end 
     end 
     
     -- Enable rays after some time

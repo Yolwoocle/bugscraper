@@ -6,7 +6,7 @@ local images = require "data.images"
 local BackgroundCafeteria = Background:inherit()
 
 function BackgroundCafeteria:init(level)
-	self:init_background(level)
+	self.super.init(self, level)
 
 	self.clear_color = COL_BLACK_BLUE
 	self.t = 0
@@ -23,13 +23,13 @@ function BackgroundCafeteria:init(level)
 end
 
 function BackgroundCafeteria:update(dt)
-	self:update_background(dt)
+	self.super.update(self, dt)
 end
 
 -----------------------------------------------------
 
 function BackgroundCafeteria:draw()
-	self:draw_background()
+	self.super.draw(self)
 
 	local cam_x, cam_y = game.camera:get_real_position()
 	cam_x = math.floor(cam_x)

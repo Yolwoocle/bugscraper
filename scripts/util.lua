@@ -79,8 +79,6 @@ function normalize_vect(x, y)
 	if x==0 and y==0 then  return 1,0  end
 	local d = sqrt(x*x + y*y)
 	return x/d, y/d
-	-- local a = math.atan2(y, x)
-	-- return math.cos(a), math.sin(a)
 end
 normalise_vect = normalize_vect
 
@@ -662,6 +660,25 @@ function random_str(a, b)
 	return tostring(love.math.random(a,b))
 end
 
+--- Selects a random element from a weighted list.
+--- 
+--- This function takes a list of elements where each element is a table containing a value and its corresponding weight.
+--- It returns a randomly selected element based on its weight, using the provided random number generator (RNG) if given,
+--- otherwise using the default RNG.
+---
+--- @param li table A list of tables where each table contains two elements: the value and its weight (e.g., {{value1, weight1}, {value2, weight2}, ...}).
+--- @param rng? userdata (optional) A random number generator object. If not provided, the default random number generator is used.
+--- 
+--- @return any, table, number value The randomly selected value, the selected table, and the index of the selected element in the original list.
+--- 
+--- @raise If the random selection is out of range, an assertion error is raised.
+--- 
+--- @example
+--- local li = {{'a', 10}, {'b', 30}, {'c', 60}}
+--- local value, element, index = random_weighted(li)
+--- print(value)  -- might print 'a', 'b', or 'c' based on their weights
+--- print(element)  -- prints the selected table, e.g., {'b', 30}
+--- print(index)  -- prints the index of the selected element, e.g., 2
 function random_weighted(li, rng)
 	local sum_w = 0
 	for _,e in ipairs(li) do
@@ -1257,7 +1274,10 @@ function get_direction_vector_between_actors(actor1, actor2)
 	return normalize_vect(actor2.x - actor1.x, actor2.y - actor1.y)
 end
 
-function get_angle_between_actors(actor1, actor2)
+function get_angle_between_actors(actor1, actor2, use_mid)
+	if use_mid then
+		return math.atan2(actor2.mid_y - actor1.mid_y, actor2.mid_x - actor1.mid_x)
+	end 
 	return math.atan2(actor2.y - actor1.y, actor2.x - actor1.x)
 end
 

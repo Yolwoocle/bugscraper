@@ -113,7 +113,7 @@ function FlyingDung:after_collision(col, other)
 end
 
 function FlyingDung:hit_target(target)
-    if target.name == "dung_beetle" then
+    if target.on_hit_flying_dung then
         target:on_hit_flying_dung(self)
     end
     game:screenshake(6)

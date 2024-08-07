@@ -591,7 +591,8 @@ local function generate_menus()
         { Text:text("menu.credits.asset_item", "'Springboard A'", "lmbubec", "CC0"),                           func_url("https://freesound.org/s/119793/")},
         { Text:text("menu.credits.asset_item", "'Springboard B'", "lmbubec", "CC0"),                           func_url("https://freesound.org/s/119794/")},
         { Text:text("menu.credits.asset_item", "'80s alarm'", "tim.kahn", "CC BY 4.0"),                        func_url("https://freesound.org/s/83280/")},
-        -- todo add https://freesound.org/people/jorickhoofd/sounds/160077/
+        { Text:text("menu.credits.asset_item", "'Metal container impact firm'", "jorickhoofd", "CC BY 4.0"),   func_url("https://freesound.org/s/160077/")},
+        { Text:text("menu.credits.asset_item", "'Roller blind circuit breaker'", "newlocknew", "CC BY 4.0"),   func_url("https://freesound.org/s/583451/")},
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
 
     local items = {

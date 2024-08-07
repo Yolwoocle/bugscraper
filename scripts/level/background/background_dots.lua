@@ -5,7 +5,7 @@ local images     = require "data.images"
 local BackgroundDots = Background:inherit()
 
 function BackgroundDots:init(level)
-	self:init_background(level)
+	self.super.init(self, level)
 
 	self.speed = 0
 	self.def_speed = 10 --TODO
@@ -51,7 +51,7 @@ end
 -----------------------------------------------------
 
 function BackgroundDots:update(dt)
-	self:update_background(dt)
+	self.super.update(self, dt)
 
 	-- BG color gradient
 	-- self.clear_color = move_toward_color(self.clear_color, self.target_clear_color, 0.06*dt)
@@ -168,7 +168,7 @@ end
 -----------------------------------------------------
 
 function BackgroundDots:draw()
-	self:draw_background()
+	self.super.draw(self)
 
 	for i,o in pairs(self.bg_particles) do
 		self:draw_particle(o)

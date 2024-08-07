@@ -13,6 +13,7 @@ function Actor:init_actor(x, y, w, h, spr, args)
 	self.is_active = true
 	self.x = x or 0
 	self.y = y or 0
+	self.z = 0
 	self.w = w or 32
 	self.h = h or 32
 

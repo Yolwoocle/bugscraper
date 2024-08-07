@@ -1,5 +1,6 @@
 local TextManager = require "scripts.text"
 local backgrounds = require "data.backgrounds"
+local LightWorld = require "scripts.graphics.light_world"
 Text = TextManager:new()
 
 local Class = require "scripts.meta.class"
@@ -138,7 +139,7 @@ function Game:new_game()
 	
 	do 
 		local l = create_actor_centered(Enemies.ButtonSmall, CANVAS_WIDTH*0.7, floor(ny))
-		l.spr.color = COL_BLACK
+		l.spr.color = COL_GREEN
 		l.debug_values[1] = "W2"
 		l.on_press = function(button)
 			-- self.level:set_background(backgrounds.BackgroundServers:new())
@@ -151,7 +152,7 @@ function Game:new_game()
 	
 	do 
 		local b = create_actor_centered(Enemies.ButtonSmall, CANVAS_WIDTH*0.8, floor(ny))
-		b.spr.color = COL_GREEN
+		b.spr.color = COL_BLACK
 		b.debug_values[1] = "W3"
 		b.on_press = function(button)
 			-- self.level:set_background(backgrounds.BackgroundServers:new())
@@ -200,6 +201,8 @@ function Game:new_game()
 
 	self.frames_to_skip = 0
 	self.slow_mo_rate = 0
+
+	self.light_world = LightWorld:new()
 
 	self.layers = {}
 	self.layers_count = LAYER_COUNT
@@ -254,7 +257,7 @@ function Game:init_layers()
 	for i = 1, self.layers_count do
 		local layer 
 		if i == LAYER_LIGHT then
-			layer = LightLayer:new(CANVAS_WIDTH, CANVAS_HEIGHT)
+			layer = LightLayer:new(CANVAS_WIDTH, CANVAS_HEIGHT, self.light_world)
 		else
 			layer = Layer:new(CANVAS_WIDTH, CANVAS_HEIGHT)
 		end
@@ -378,6 +381,7 @@ function Game:update_main_game(dt)
 			self.cutscene = nil
 		end
 	end
+	self.light_world:update(dt)
 
 	self.notif_timer = math.max(self.notif_timer - dt, 0)
 end
@@ -393,6 +397,11 @@ function Game:get_enemy_count()
 end
 
 function Game:update_actors(dt)
+	if self.sort_actors_flag then
+		table.sort(self.actors, function(a, b) return a.z > b.z end)
+		self.sort_actors_flag = false
+	end
+
 	for i = #self.actors, 1, -1 do
 		local actor = self.actors[i]
 
@@ -575,7 +584,7 @@ function Game:draw_game()
 	self:draw_on_layer(LAYER_LIGHT, function()
 		-- love.graphics.clear({0, 0, 0, 0.85})
 		local c = copy_table(COL_BLACK_BLUE)
-		c[4] = 0.85 
+		c[4] = self.light_world.darkness_intensity 
 		rect_color(c, "fill", -CANVAS_WIDTH, -CANVAS_HEIGHT, CANVAS_WIDTH*3, CANVAS_HEIGHT*3)
 	end)
 
@@ -756,6 +765,7 @@ function Game:new_actor(actor, buffer_enemy)
 		return
 	end
 
+	self.sort_actors_flag = true
 	table.insert(self.actors, actor)
 end
 

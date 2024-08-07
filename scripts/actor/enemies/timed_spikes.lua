@@ -14,6 +14,7 @@ function TimedSpikes:init(x, y, duration_off, duration_telegraph, duration_on, s
     self:init_prop(x, y, images.timed_spikes_base, 14, 14)
     self.name = "timed_spikes_base"
     
+    self.z = 2
     self.state_order = {
         -- 2, 0.5, 0.5
         {"off", duration_off or 4},

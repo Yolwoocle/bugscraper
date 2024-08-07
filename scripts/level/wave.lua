@@ -27,6 +27,7 @@ function Wave:init(params)
 	self.title_outline_color = param(params.title_outline_color, COL_WHITE)
 
 	self.floating_text = param(params.floating_text, nil)
+	self.cutscene = param(params.cutscene, nil)
 
 	self.enable_stomp_arrow_tutorial = param(params.enable_stomp_arrow_tutorial, false)
 
@@ -183,6 +184,10 @@ function Wave:enable_wave_side_effects(level)
 		game.game_ui:enable_floating_text(self.floating_text)
 	else
 		game.game_ui:disable_floating_text()
+	end
+
+	if self.cutscene then
+		game:play_cutscene(self.cutscene)
 	end
 end
 

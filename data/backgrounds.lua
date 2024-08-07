@@ -4,4 +4,5 @@ return {
     BackgroundServers =   require("scripts.level.background.background_servers"),
     BackgroundCafeteria = require("scripts.level.background.background_cafeteria"),
     BackgroundBeehive =   require("scripts.level.background.background_beehive"),
+    BackgroundFinal =     require("scripts.level.background.background_final"),
 }

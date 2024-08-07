@@ -2,7 +2,7 @@ local Class = require "scripts.meta.class"
 
 local Background = Class:inherit()
 
-function Background:init_background(level)
+function Background:init(level)
 	self.level = level
 	self.clear_color = COL_BLACK
 
@@ -16,10 +16,6 @@ end
 -----------------------------------------------------
 
 function Background:update(dt)
-	self:update_background(dt)
-end
-
-function Background:update_background(dt)
 end
 
 function Background:get_speed()
@@ -35,9 +31,6 @@ end
 -----------------------------------------------------
 
 function Background:draw()
-end
-
-function Background:draw_background()
 	love.graphics.clear(self.clear_color)
 end
 

@@ -2,6 +2,10 @@ require "scripts.util"
 local images = require "data.images"
 local backgrounds = require "data.backgrounds"
 local enemies = require "data.enemies"
+local Cutscene= require "scripts.game.cutscene"
+local Scene   = require "scripts.game.scene"
+local Light   = require "scripts.graphics.light"
+local cutscenes = require "data.cutscenes"
 
 local Rect = require "scripts.math.rect"
 local LevelGeometry = require "scripts.level.level_geometry"
@@ -293,240 +297,11 @@ local waves = {
 	
 	new_cafeteria(),
 
-	-----------------------------------------------------
-	--- W2: beehive
-	-----------------------------------------------------
-
-	new_wave({
-		min = 6,
-		max = 7,
-
-		enemies = {
-			{E.Larva, 2},
-			{E.Mosquito, 2},
-		},
-
-		background = backgrounds.BackgroundBeehive:new(),
-		music = "w2",
-
-		title = get_world_name("2"),
-		title_color = COL_YELLOW_ORANGE,
-	}),
-
-	new_wave({
-		min = 5,
-		max = 7,
-
-		enemies = {
-			{E.Larva, 2},
-			{E.Mosquito, 2},
-			{E.ShovelBee, 4},
-		},
-	}),
-
-	new_wave({
-		min = 4,
-		max = 4,
-
-		enemies = {
-			{E.Chipper360, 2},
-		},
-	}),
-
-	new_wave({
-		min = 8,
-		max = 8,
-
-		enemies = {
-			{E.Larva, 4},
-			{E.Mosquito, 4},
-			{E.Boomshroom, 4},
-			{E.Chipper360, 2},
-		},
-	}),
-		
-	new_wave({
-		min = 6,
-		max = 6,
-
-		enemies = {
-			{E.Mosquito, 4},
-			{E.HoneypotAnt, 4},
-		},
-	}), 
-	
-	new_wave({
-		min = 6,
-		max = 6,
-
-		enemies = {
-			{E.Mosquito, 4},
-			{E.Chipper360, 3},
-		},
-	}), 
-	
-	new_wave({
-		min = 6,
-		max = 6,
-
-		enemies = {
-			{E.Mosquito, 3},
-			{E.HoneypotAnt, 4},
-		},
-		fixed_enemies = {
-			{E.LarvaSpawner, 1},
-		}
-	}), 
-
-	new_wave({
-		min = 10,
-		max = 10,
-
-		enemies = {
-			{E.SnailShelled, 1},
-			{E.Mosquito, 3},
-			{E.HoneypotAnt, 1},
-			{E.ShovelBee, 2},
-			{E.Larva, 2},
-		},
-	}),
-
-		
-	new_wave({
-		min = 1,
-		max = 1,
-
-		enemies = {
-			{E.HoneycombFootball, 2},
-		},
-	}), 
-	
-	new_cafeteria(),
-		
-	new_wave({
-		min = 5,
-		max = 5,
-
-		enemies = {
-			{E.Mosquito, 3},
-			{E.Larva, 3},
-		},
-		
-		music = "w2",
-
-		run = function(self, level)
-			spawn_timed_spikes()
-		end,
-	}), 
-		
-	new_wave({
-		min = 6,
-		max = 6,
-
-		enemies = {
-			{E.Mosquito, 3},
-			{E.Larva, 3},
-			{E.HoneypotAnt, 2},
-			{E.Fly, 2},
-		},		
-	}), 
-		
-	new_wave({
-		min = 7,
-		max = 7,
-
-		enemies = {
-			{E.Mosquito, 3},
-			{E.Larva, 3},
-			{E.HoneypotAnt, 2},
-			{E.Fly, 2},
-		},
-		fixed_enemies = {
-			{E.LarvaSpawner, 1},
-		},
-	}), 
-		
-	new_wave({
-		min = 4,
-		max = 4,
-
-		enemies = {
-			{E.DrillBee, 3},
-		},
-	}), 
-		
-	new_wave({
-		min = 6,
-		max = 6,
-
-		enemies = {
-			{E.Mosquito, 20},
-			{E.ShovelBee, 10},
-			{E.Boomshroom, 20},
-			{E.DrillBee, 30},
-		},
-	}), 
-		
-	new_wave({
-		min = 8,
-		max = 8,
-
-		enemies = {
-			{E.Larva, 3},
-			{E.Mosquito, 3},
-			{E.HoneypotAnt, 3},
-		},
-		fixed_enemies = {
-			{E.LarvaSpawner, 1},
-		},
-	}), 
-
-	
-	new_wave({
-		min = 7,
-		max = 7,
-
-		enemies = {
-			{E.Mosquito, 3},
-			{E.ShovelBee, 3},
-			{E.DrillBee, 3},
-		},
-	}), 
-
-	
-	new_wave({
-		min = 9,
-		max = 9,
-
-		enemies = {
-			{E.Larva, 3},
-			{E.Mosquito, 3},
-			{E.ShovelBee, 3},
-			{E.DrillBee, 3},
-			{E.HoneypotAnt, 3},
-			{E.Boomshroom, 3},
-		},
-	}), 
-
-	new_wave({
-		-- roll_type = WAVE_ROLL_TYPE_FIXED,
-		min = 1,
-		max = 1,
-		enemies = {	
-			{E.Dung, 1, position = {240, 200}},			
-		},
-		music = "miniboss",
-
-		cutscene = TODO THIS,
-	}),
-
-	new_cafeteria(function()
-		game:kill_actors_with_name("timed_spikes") 
-	end),
-	
-	-----------------------------------------------------
-	--- W3: server room
-	-----------------------------------------------------
+	----------------------------------------------------------------------------------------------------------
+	----------------------------------------------------------------------------------------------------------
+	--- W2: server room
+	----------------------------------------------------------------------------------------------------------
+	----------------------------------------------------------------------------------------------------------
 
 	-- Floor 20
 	new_wave({
@@ -538,7 +313,7 @@ local waves = {
 		background = backgrounds.BackgroundServers:new(),
 		music = "w2",
 
-		title = get_world_name("3"),
+		title = get_world_name("2"),
 		title_color = COL_MID_GREEN,
 	}),
 
@@ -805,9 +580,24 @@ local waves = {
 					actor:start_disable_timer(1)
 				end
 			end
+			game:screenshake(10)
+
+			local cabin_rect = game.level.cabin_rect
+			Particles:falling_grid(cabin_rect.ax +   16, cabin_rect.ay + 6*16)
+			Particles:falling_grid(cabin_rect.bx - 7*16, cabin_rect.ay + 6*16)
+			level.elevator:start_grid_timer(2.5)
 		end,
 
 		music = "miniboss",
+
+		-- removeme
+		level_geometry = LevelGeometry:new({
+			{rect = Rect:new(3, 8, 8, 8), tile = TILE_SEMISOLID}, 
+			{rect = Rect:new(21, 8, 26, 8), tile = TILE_SEMISOLID}, 
+		}),
+		elevator_layers = {
+			["bg_grid"] = false,
+		},
 	}),
 
 	------
@@ -819,6 +609,243 @@ local waves = {
 		-- 	end
 		-- end
 	end),
+	
+	
+	----------------------------------------------------------------------------------------------------------
+	----------------------------------------------------------------------------------------------------------
+	--- W3: beehive
+	----------------------------------------------------------------------------------------------------------
+	----------------------------------------------------------------------------------------------------------
+
+	
+	new_wave({
+		min = 6,
+		max = 7,
+
+		enemies = {
+			{E.Larva, 2},
+			{E.Mosquito, 2},
+		},
+
+		background = backgrounds.BackgroundBeehive:new(),
+		music = "w1",
+
+		title = get_world_name("3"),
+		title_color = COL_YELLOW_ORANGE,
+	}),
+
+	new_wave({
+		min = 5,
+		max = 7,
+
+		enemies = {
+			{E.Larva, 2},
+			{E.Mosquito, 2},
+			{E.ShovelBee, 4},
+		},
+	}),
+
+	new_wave({
+		min = 4,
+		max = 4,
+
+		enemies = {
+			{E.Chipper360, 2},
+		},
+	}),
+
+	new_wave({
+		min = 8,
+		max = 8,
+
+		enemies = {
+			{E.Larva, 4},
+			{E.Mosquito, 4},
+			{E.Boomshroom, 4},
+			{E.Chipper360, 2},
+		},
+	}),
+		
+	new_wave({
+		min = 6,
+		max = 6,
+
+		enemies = {
+			{E.Mosquito, 4},
+			{E.HoneypotAnt, 4},
+		},
+	}), 
+	
+	new_wave({
+		min = 6,
+		max = 6,
+
+		enemies = {
+			{E.Mosquito, 4},
+			{E.Chipper360, 3},
+		},
+	}), 
+	
+	new_wave({
+		min = 6,
+		max = 6,
+
+		enemies = {
+			{E.Mosquito, 3},
+			{E.HoneypotAnt, 4},
+			{E.ShovelBee, 3},
+		},
+		fixed_enemies = {
+			{E.LarvaSpawner, 1},
+		}
+	}), 
+
+	new_wave({
+		min = 10,
+		max = 10,
+
+		enemies = {
+			{E.SnailShelled, 1},
+			{E.Mosquito, 3},
+			{E.HoneypotAnt, 1},
+			{E.ShovelBee, 2},
+			{E.Larva, 2},
+		},
+	}),
+
+		
+	new_wave({
+		min = 1,
+		max = 1,
+
+		enemies = {
+			{E.HoneycombFootball, 2},
+		},
+	}), 
+	
+	new_cafeteria(),
+		
+	new_wave({
+		min = 5,
+		max = 5,
+
+		enemies = {
+			{E.Mosquito, 3},
+			{E.Larva, 3},
+		},
+		
+		music = "w2",
+
+		run = function(self, level)
+			spawn_timed_spikes()
+		end,
+	}), 
+		
+	new_wave({
+		min = 6,
+		max = 6,
+
+		enemies = {
+			{E.Mosquito, 3},
+			{E.Larva, 3},
+			{E.HoneypotAnt, 2},
+			{E.Fly, 2},
+		},		
+	}), 
+		
+	new_wave({
+		min = 7,
+		max = 7,
+
+		enemies = {
+			{E.Mosquito, 3},
+			{E.Larva, 3},
+			{E.HoneypotAnt, 2},
+			{E.Fly, 2},
+		},
+		fixed_enemies = {
+			{E.LarvaSpawner, 1},
+		},
+	}), 
+		
+	new_wave({
+		min = 4,
+		max = 4,
+
+		enemies = {
+			{E.DrillBee, 3},
+		},
+	}), 
+		
+	new_wave({
+		min = 6,
+		max = 6,
+
+		enemies = {
+			{E.Mosquito, 20},
+			{E.ShovelBee, 10},
+			{E.Boomshroom, 20},
+			{E.DrillBee, 30},
+		},
+	}), 
+		
+	new_wave({
+		min = 8,
+		max = 8,
+
+		enemies = {
+			{E.Larva, 3},
+			{E.Mosquito, 3},
+			{E.HoneypotAnt, 3},
+		},
+		fixed_enemies = {
+			{E.LarvaSpawner, 1},
+		},
+	}), 
+
+	
+	new_wave({
+		min = 7,
+		max = 7,
+
+		enemies = {
+			{E.Mosquito, 3},
+			{E.ShovelBee, 3},
+			{E.DrillBee, 3},
+		},
+	}), 
+
+	
+	new_wave({
+		min = 9,
+		max = 9,
+
+		enemies = {
+			{E.Larva, 3},
+			{E.Mosquito, 3},
+			{E.ShovelBee, 3},
+			{E.DrillBee, 3},
+			{E.HoneypotAnt, 3},
+			{E.Boomshroom, 3},
+		},
+	}), 
+
+	new_wave({
+		-- roll_type = WAVE_ROLL_TYPE_FIXED,
+		min = 1,
+		max = 1,
+		enemies = {	
+			{E.Dung, 1, position = {240, 200}},			
+		},
+		music = "miniboss",
+
+		cutscene = cutscenes.boss_enter,
+	}),
+
+	new_cafeteria(function()
+		game:kill_actors_with_name("timed_spikes") 
+	end),
+
 	------
 
 	--]]

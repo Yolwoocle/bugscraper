@@ -141,12 +141,18 @@ local sfxnames = {
 
 	chipper_telegraph = "chipper_telegraph.ogg",
 
+	spotlight_1 = "spotlight_1.ogg",
+	spotlight_2 = "spotlight_2.ogg",
+	spotlight_3 = "spotlight_3.ogg",
+
 	---------
 
 	jump_short = "jump_short.ogg",
 
 	exit_sign_activate = "exit_sign_activate.ogg",
 	smash_easter_egg = "smash_easter_egg.mp3",
+
+	empty = "empty.ogg",
 }
 
 for key, name in pairs(sfxnames) do

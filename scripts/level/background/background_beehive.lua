@@ -5,7 +5,7 @@ local images     = require "data.images"
 local BackgroundBeehive = Background:inherit()
 
 function BackgroundBeehive:init(level)
-	self:init_background(level)
+	self.super.init(self, level)
 
 	self.speed = 0
 	self.def_speed = 10 --TODO
@@ -71,7 +71,7 @@ end
 -----------------------------------------------------
 
 function BackgroundBeehive:update(dt)
-	self:update_background(dt)
+	self.super.update(self, dt)
 
 	-- BG color gradient
 	-- self.clear_color = move_toward_color(self.clear_color, self.target_clear_color, 0.06*dt)
@@ -188,10 +188,7 @@ end
 -----------------------------------------------------
 
 function BackgroundBeehive:draw()
-	self:draw_background()
-	-- if not self.show_bg_particles then
-	-- 	return 
-	-- end
+	self.super.draw(self)
 
 	for i,o in pairs(self.bg_particles) do
 		self:draw_particle(o)

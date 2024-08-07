@@ -90,8 +90,8 @@ function ElectricArc:update(dt)
         self.segment.by = self.arc_target.mid_y
     end
 
-    self.lightning.min_line_width = ternary(self.is_arc_active, 1, 0.2)
-    self.lightning.max_line_width = ternary(self.is_arc_active, 3, 1)
+    self.lightning.min_line_width = ternary(self.is_arc_active, 1, 0.1)
+    self.lightning.max_line_width = ternary(self.is_arc_active, 3, 0.5)
     self.lightning:generate(self.segment)
 
     for _, seg in pairs(self.lightning.segments) do 
@@ -164,10 +164,15 @@ function ElectricArc:collide_with_actor(a)
     end
 end
 
-function ElectricArc:start_disable_timer(duration)
-    self.disable_timer:set_duration(duration)
-    self.disable_timer:start()
-    self.is_arc_active = false
+function ElectricArc:start_disable_timer(duration, arc_activation)
+    arc_activation = param(arc_activation, false)
+
+    self.disable_timer:start(duration)
+    self.is_arc_active = arc_activation
+end
+
+function ElectricArc:start_activation_timer(duration)
+    self.activation_timer:start(duration)
 end
 
 function ElectricArc:draw()

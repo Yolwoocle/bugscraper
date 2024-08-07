@@ -133,17 +133,6 @@ function DrillBee:detect_player_in_range()
     return false
 end
 
-function DrillBee:get_random_player()
-    local players = {}
-    for _, player in pairs(game.players) do
-        table.insert(players, player)
-    end
-
-    if #players == 0 then
-        return nil
-    end
-    return random_sample(players)
-end
 
 function DrillBee:update(dt)
     self.is_touching_wall = false

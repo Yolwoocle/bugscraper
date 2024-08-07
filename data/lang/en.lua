@@ -15,8 +15,8 @@ return {
 
         -- World names
         world_1 = "The offices",
-        world_2 = "The beehive",
-        world_3 = "The server room",
+        world_2 = "The server room",
+        world_3 = "The beehive",
     },
     gun = {
         -- Gun names

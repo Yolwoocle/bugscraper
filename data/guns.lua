@@ -276,6 +276,117 @@ function Guns:init()
 
 	-------
 
+	self.unlootable.W2BossGun = Gun:inherit()
+
+	function self.unlootable.W2BossGun:init(user)
+		self.name = "w2_boss_gun"
+		self:init_gun(user)
+		
+		self.sfx = "mushroom_ant_pop"
+		self.damage = 1
+		self.max_ammo = math.huge
+		self.max_reload_timer = 1.5
+		self.is_auto = true
+		self.spr = images.gun_machinegun
+		self.bullet_spr = images.bullet_blue
+		self.bul_w = 10
+		self.bul_h = 10
+
+		self.bullet_speed = 125-- 200
+		self.cooldown = 0.4
+		-- self.screenshake = 2
+	end
+
+	-------
+
+	self.unlootable.W2BossTurretGun = Gun:inherit()
+
+	function self.unlootable.W2BossTurretGun:init(user)
+		self.name = "w2_boss_turret_gun"
+		self:init_gun(user)
+		
+		self.sfx = "mushroom_ant_pop"
+		self.damage = 1
+		self.max_ammo = math.huge
+		self.max_reload_timer = 1.5
+		self.is_auto = true
+		self.spr = images.gun_machinegun
+		self.bullet_spr = images.bullet_blue
+		self.bul_w = 10
+		self.bul_h = 10
+
+		-- self.random_angle_offset = pi/2
+
+		self.bullet_speed = 125-- 200
+		self.cooldown = 0.4
+		-- self.screenshake = 2
+	end
+
+	-----
+
+	self.unlootable.W2boss8bullets = Gun:inherit()
+
+	function self.unlootable.W2boss8bullets:init(user)
+		self.name = "ring"
+		self:init_gun(user)
+		
+		self.max_ammo = 8
+		self.max_reload_timer = 1.3
+		self.bullet_number = 8
+		self.bullet_spread = pi2
+		self.random_angle_offset = 0
+
+		self.random_angle_offset = 0
+		self.damage = 2
+		self.is_auto = true
+		self.spr = images.gun_ring
+		self.sfx = {"gunshot_ring_1", "gunshot_ring_2", "gunshot_ring_3"}
+		self.sfx2 = "pop_ring"
+		self.sfx_volume = 1
+		self.sfx_pitch = 1.4
+		
+		self.cooldown = 0.5
+		self.jetpack_force = 1000
+		self.bullet_speed = 125-- 200
+		
+		self.bullet_spr = images.bullet_ring
+		self.bul_w = 10
+		self.bul_h = 10
+
+		self.screenshake = 4
+	end
+
+	--------
+
+	self.unlootable.W2BossBurst = Gun:inherit()
+
+	function self.unlootable.W2BossBurst:init(user)
+		self.name = "burst"
+		self:init_gun(user)
+
+		self.spr = images.gun_burst
+		self.sfx = "mushroom_ant_pop"
+		self.sfx_pitch = 1.1
+		self.bullet_spread = 0.1
+		
+		self.is_auto = false
+		self.is_burst = true
+		
+		self.damage = 1
+		self.cooldown = 0.05
+		self.max_ammo = 5
+		self.max_reload_timer = 0.3
+		self.random_speed_offset = 10
+		self.random_angle_offset = 0.005
+		-- self.burst_delay = 0.05
+		
+		self.bullet_speed = 140
+
+		self.screenshake = 1.5
+	end
+
+	-------
+
 	self.unlootable.TurretGun = Gun:inherit()
 
 	function self.unlootable.TurretGun:init(user)
@@ -301,7 +412,9 @@ function Guns:init()
 
 	self.unlootable.ExplosionGun = Gun:inherit()
 
-	function self.unlootable.ExplosionGun:init(user, radius, damage, resolution)
+	function self.unlootable.ExplosionGun:init(user, radius, damage, resolution, args)
+		args = args or {} 
+
 		self.name = "explosion_gun"
 		self:init_gun(user)
 		
@@ -326,7 +439,7 @@ function Guns:init()
 		self.cooldown = 0.5
 		self.jetpack_force = 1000
 		
-		self.override_enemy_damage = 6
+		self.override_enemy_damage = args.override_enemy_damage or 6
 		self.bullet_spr = images.empty
 		self.bul_w = 10
 		self.bul_h = 10

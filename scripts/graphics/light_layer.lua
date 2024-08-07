@@ -7,7 +7,7 @@ local Layer = require "scripts.graphics.layer"
 
 local LightLayer = Layer:inherit()
 
-function LightLayer:init(width, height)
+function LightLayer:init(width, height, light_world)
     self.is_light_layer = true
     self.width = width
     self.height = height
@@ -16,12 +16,10 @@ function LightLayer:init(width, height)
     self.blur = false
     self.blur_radius = 2
 
-    self.bounds = Rect:new(-4000, -16, 4000, 15*16 + 3)
-    self.lights = {
-        Light:new(CANVAS_WIDTH/2,     -32, pi*0.5, pi*0.1,  800, self.bounds, false),
-        Light:new(500,                -32, pi*0.7, pi*0.05, 800, self.bounds, false),
-        Light:new(CANVAS_WIDTH - 500, -32, pi*0.3, pi*0.05, 800, self.bounds, false),
-    }
+    self.light_world = light_world
+end
+
+function LightLayer:update_lights(dt)
 end
 
 function LightLayer:paint(paint_function, params)
@@ -39,9 +37,7 @@ function LightLayer:paint(paint_function, params)
 		love.graphics.clear()
         
         love.graphics.stencil(function()
-            for _, light in pairs(self.lights) do
-                light:draw()
-            end
+            self.light_world:paint()
         end, "replace")
         love.graphics.setStencilTest("less", 1)
 		

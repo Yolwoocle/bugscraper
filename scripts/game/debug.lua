@@ -15,6 +15,7 @@ local honeycomb_panel = require "data.models.honeycomb_panel"
 local Segment         = require "scripts.math.segment"
 local Rect            = require "scripts.math.rect"
 local Cutscene = require "scripts.game.cutscene"
+local cutscenes = require "data.cutscenes"
 local Scene = require "scripts.game.scene"
 
 local Animal = require "scripts.game.removeme_animal"
@@ -41,6 +42,7 @@ function Debug:init(game)
     self.instant_end = false
     self.layer_view = false
     self.input_view = false
+    self.title_junk = true
 
     self.notification_message = ""
     self.notification_timer = 0.0
@@ -113,8 +115,8 @@ function Debug:init(game)
             self.game:set_floor(self.game:get_floor() + 10)
         end},
 
-        ["u"] = {"upgrade", function()
-            game:apply_upgrade(upgrades.UpgradeSoda:new())
+        ["u"] = {"toggle title junk ui", function()
+            self.title_junk = not self.title_junk
         end},
         ["t"] = {"particle", function()
 			local cabin_rect = game.level.cabin_rect
@@ -129,7 +131,7 @@ function Debug:init(game)
             end
         end},
         ["d"] = {"spawn", function()
-            local arc = enemies.Chipper360:new(CANVAS_WIDTH*0.6, CANVAS_HEIGHT*0.8)
+            local arc = enemies.Motherboard:new(3*16, 3*16 + 4)
             game:new_actor(arc)            
         end},
         ["r"] = {"start game", function()
@@ -228,32 +230,7 @@ function Debug:init(game)
         end}, 
 
         ["c"] = {"cutscene", function()
-            game:play_cutscene(Cutscene:new{
-                Scene:new({
-                    duration = 1,
-                    enter = function(scene)
-                        game.is_light_on = false
-                    end,
-                }),
-                Scene:new({
-                    duration = 0.3,
-                    enter = function(scene)
-                        game.layers[LAYER_LIGHT].lights[1].is_active = true
-                    end,
-                }),
-                Scene:new({
-                    duration = 0.3,
-                    enter = function(scene)
-                        game.layers[LAYER_LIGHT].lights[2].is_active = true
-                    end,
-                }),
-                Scene:new({
-                    duration = 0.3,
-                    enter = function(scene)
-                        game.layers[LAYER_LIGHT].lights[3].is_active = true
-                    end,
-                }),
-            })
+            game:play_cutscene(cutscenes.boss_enter)
         end}, 
     }
     
@@ -560,6 +537,7 @@ function Debug:draw_info_view()
 		joystick_str,
 		wave_resp_str, 
         concat("queued_players ", queued_players_str),
+        concat("level_speed ", game.level.level_speed),
 		"",
 	}
 

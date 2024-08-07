@@ -12,7 +12,7 @@ local W2boss = Enemy:inherit()
 
 function W2boss:init(x, y)
     self:init_enemy(x,y, images.chipper_1, 32, 32)
-    self.name = "todo_changeme"  --removeme(dont actually)
+    self.name = "todo_changeme"
 
     -- Parameters 
     self.life = 300
@@ -36,23 +36,23 @@ function W2boss:init(x, y)
     
     -- States
     --- Wander
-    -- self.wander_timer = Timer:new({5.0, 8.0})
-    self.wander_timer = Timer:new(1)
+    self.wander_no_attack_timer = Timer:new(1.0)
     self.wander_spawn_timer = Timer:new(3.0)
     self.player_detection_range = 256
     self.player_detection_width = 16
+    self.wander_rays_timer = Timer:new(0.0)
     
     --- Rays
     self.rays_telegraph_duration = 1.0
     self.rays_stay_duration = 1.5
     self.rays = ElectricRays:new(self.mid_x, self.mid_y, {
-        n_rays = 9,
-        angle_speed = 0,
+        n_rays = 9
     })
-    self.rays:set_state("disabled")
+    self.rays.angle_speed = 0.2
     game:new_actor(self.rays)
+    self.rays:set_state("disabled")
     self.rays_activated_timer = Timer:new(3.0)
-
+    
     --- Telegraph
     self.telegraph_timer = Timer:new(0.5)
     self.telegraph_source = Audio:get_sound("chipper_telegraph"):clone()
@@ -69,34 +69,20 @@ function W2boss:init(x, y)
     self.direction = random_range(0, pi*2)
     self.direction_speed = random_sample({-1, 1}) * 3
 
-    self.gun = guns.unlootable.W2BossGun:new(self)
-    self.gun8 = guns.unlootable.W2boss8bullets:new(self)
-
     self.state_machine = StateMachine:new({
         wander = {
             enter = function(state)
                 self.anim_frames = self.normal_anim_frames
+                self.wander_no_attack_timer:start()
                 self.wander_spawn_timer:start()
-                self.wander_timer:start()
-                self.gun_target = self:get_random_player()
-
                 self.rays:set_state("disabled")
+            
+                self.wander_rays_timer:start(random_range(1.0, 5.0))
             end,
             update = function(state, dt)
                 self.rays:set_pos(self.mid_x, self.mid_y)
                 self.rays:set_state("disabled")
 
-                -- Shoot bullets
-                self.gun:update(dt)
-                if self.gun_target then
-                    local dx, dy = get_direction_vector(self.mid_x, self.mid_y, self.gun_target.mid_x, self.gun_target.mid_y)
-                    self.gun:shoot(dt, self, self.mid_x, self.mid_y, dx, dy)
-                end
-
-                local a = random_range(0, pi*2)
-                self.gun:shoot(dt, self, self.mid_x, self.mid_y, math.cos(a), math.sin(a))
-
-                -- Movement
                 self.direction_speed = random_sample({-1, 1}) * 3
                 if random_range(0, 1) < 1/10 then
                     self.direction_speed = -self.direction_speed
@@ -105,14 +91,16 @@ function W2boss:init(x, y)
                 self.vx = self.vx + math.cos(self.direction) * self.speed
                 self.vy = self.vy + math.sin(self.direction) * self.speed
                 
-                -- State management
-                if self.wander_timer:update(dt) then
-                    local r = random_sample{1, 2}
-                    self.state_machine:set_state("telegraph")
-                    -- if r == 1 then
-                    --     self.state_machine:set_state("rays")
-                    -- else
-                    -- end
+                self.wander_no_attack_timer:update(dt)
+                if not self.wander_no_attack_timer.is_active then
+                    local detected = self:detect_player_in_range()
+                    if detected then
+                        self.state_machine:set_state("telegraph")
+                    end
+                end
+
+                if self.wander_rays_timer:update(dt) then
+                    self.state_machine:set_state("rays")
                 end
             end,
         },
@@ -125,16 +113,8 @@ function W2boss:init(x, y)
                 self.rays:start_activation_timer(self.rays_telegraph_duration)
                 self.rays.angle = random_range(0, pi*2)
                 self.rays_activated_timer:start(self.rays_telegraph_duration + self.rays_stay_duration)
-
-                -- self.ray_target = self:get_random_player()
             end,
             update = function(state, dt)
-                if self.rays.state == "telegraph" then
-                    self.rays.angle_speed = 0.1
-                else
-                    -- self.rays.angle_speed = 0
-                end
-                
                 if self.rays_activated_timer:update(dt) then
                     self.rays:set_state("disabled")
                     self.state_machine:set_state("wander")
@@ -150,11 +130,6 @@ function W2boss:init(x, y)
                 self.anim_frames = self.attack_anim_frames
                 self.telegraph_timer:start()
                 self.telegraph_source:play()
-
-                local player = self:get_random_player()
-                if player then
-                    self.direction = math.atan2(player.mid_y - self.mid_y, player.mid_x - self.mid_x)
-                end
             end,
             update = function(state, dt)
                 if self.telegraph_timer:update(dt) then
@@ -171,8 +146,6 @@ function W2boss:init(x, y)
                 local a = self.direction
                 self.vx = self.vx + math.cos(a) * self.attack_speed
                 self.vy = self.vy + math.sin(a) * self.attack_speed
-
-                self.gun8:update(dt)
 
                 Particles:dust(self.mid_x, self.mid_y)
                 Particles:static_image(random_sample{images.particle_bit_zero, images.particle_bit_one}, self.mid_x, self.mid_y, 0, 0.25)
@@ -248,10 +221,6 @@ function W2boss:after_collision(col, other)
     if col.type ~= "cross" then
         local new_vx, new_vy = bounce_vector_cardinal(math.cos(self.direction), math.sin(self.direction), col.normal.x, col.normal.y)
         self.direction = math.atan2(new_vy, new_vx)
-
-        local a = random_range(0, pi2)
-        local dx, dy = math.cos(a), math.sin(a)
-        self.gun8:shoot(0, self, self.mid_x, self.mid_y, dx, dy)
     end
 end
 

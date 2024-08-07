@@ -348,6 +348,25 @@ function Enemy:on_hit_bullet(bul, col)
 	return true
 end
 
+function Enemy:get_random_player()
+    local players = {}
+    for _, player in pairs(game.players) do
+        table.insert(players, player)
+    end
+
+    if #players == 0 then
+        return nil
+    end
+    return random_sample(players)
+end
+
+function Enemy:set_bouncy(bool)
+    self.destroy_bullet_on_impact = not bool
+    self.is_bouncy_to_bullets = bool
+    self.is_immune_to_bullets = bool
+end
+
+
 function Enemy:on_hit_electrictiy()
 end
 

@@ -58,6 +58,12 @@ function Dung:init_dung(x, y, spr, w, h)
 
     self:add_constant_sound("ball_roll", "ball_roll")
     self:set_constant_sound_volume("ball_roll", 0)
+
+    local beetle = DungBeetle:new(self.x, self.y - 16)
+    game:new_actor(beetle)
+    self:set_rider(beetle)
+
+    self.z = 1
 end
 
 function Dung:update(dt)
@@ -80,11 +86,8 @@ function Dung:update_dung(dt)
 
     self.spr:set_rotation(self.spr.rot + self.vx * self.rot_mult * dt)
 
-    if self.rider == nil then
-        local beetle = DungBeetle:new(self.x, self.y - 30)
-        game:new_actor(beetle)
-        self:set_rider(beetle)
-    end
+    -- if self.rider == nil then
+    -- end
     
     if self.is_grounded and math.abs(self.vx) > 20 then
         Particles:dust(self.mid_x, self.y + self.h)

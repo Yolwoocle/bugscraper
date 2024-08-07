@@ -69,6 +69,7 @@ local img_names = {
 
 	-- enemies
 	big_bug_1 =                "actors/enemies/big_bug_1",
+	big_ceiling_guy =          "actors/enemies/big_ceiling_guy",
 	boomshroom_1 =             "actors/enemies/boomshroom_1",
 	boomshroom_2 =             "actors/enemies/boomshroom_2",
 	boomshroom_3 =             "actors/enemies/boomshroom_3",
@@ -104,10 +105,12 @@ local img_names = {
 	larva =                    "actors/enemies/larva",
 	larva1 =                   "actors/enemies/larva1",
 	larva2 =                   "actors/enemies/larva2",
+	larva_spawner =            "actors/enemies/larva_spawner",
 	metal_mosquito_1 =         "actors/enemies/metal_mosquito_1",
 	metal_mosquito_2 =         "actors/enemies/metal_mosquito_2",
 	mosquito1 =                "actors/enemies/mosquito1",
 	mosquito2 =                "actors/enemies/mosquito2",
+	motherboard_button =       "actors/enemies/motherboard_button",
 	mushroom_ant1 =            "actors/enemies/mushroom_ant1",
 	mushroom_ant2 =            "actors/enemies/mushroom_ant2",
 	shovel_bee =               "actors/enemies/shovel_bee",
@@ -295,8 +298,6 @@ images.button_fragments = {
 	images.button_fragment_4,
 	images.button_fragment_5,
 }
-
-images._test_anim_explosion = load_image_table("_test_explosion_", 14)
 
 -----------------------------------------------------
 -- Input buttons

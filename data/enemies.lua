@@ -37,7 +37,10 @@ local enemies = {
 	Centipede =          require "scripts.actor.enemies.centipede", --*
 	BigBug =             require "scripts.actor.enemies.big_bug", --*
 	Slime =              require "scripts.actor.enemies.slime", --*
-	Frog  =              require "scripts.actor.enemies.frog", --*
+	Frog =               require "scripts.actor.enemies.frog", --*
+	Motherboard =        require "scripts.actor.enemies.motherboard", --*
+	BigChipper360 =      require "scripts.actor.enemies.big_chipper_360", --*
+	MotherboardButton =  require "scripts.actor.enemies.motherboard_button", --*
 
 	MushroomAnt =        require "scripts.actor.enemies.mushroom_ant",	
 	

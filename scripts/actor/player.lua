@@ -587,7 +587,8 @@ end
 --- Guns ---
 
 function Player:shoot(dt, is_burst)
-	if is_burst == nil then     is_burst = false    end
+	is_burst = param(is_burst, false)
+	
 	-- Update aiming direction
 	local dx, dy = self.dir_x, self.dir_y
 	local aim_horizontal = (Input:action_down(self.n, "left") or Input:action_down(self.n, "right"))
@@ -999,6 +1000,10 @@ function Player:get_controls_text_color(i)
 end
 
 function Player:draw_controls()
+	if game.debug and not game.debug.title_junk then
+		return 
+	end
+
 	local tutorials = self:get_controls_tutorial_values()
 
 	local x = self.ui_x

@@ -4,9 +4,10 @@ local Background = require "scripts.level.background.background"
 local BackgroundServers = Background:inherit()
 
 function BackgroundServers:init(level)
-	self:init_background(level)
+	self.super.init(self, level)
 
-	self.clear_color = COL_DARK_GREEN
+	-- self.clear_color = COL_DARK_GREEN
+	self.clear_color = COL_BLACK_BLUE
 	self.edge_color = COL_LIGHT_GREEN
 	self.t = 0
 
@@ -150,7 +151,7 @@ end
 -----------------------------------------------------
 
 function BackgroundServers:update(dt)
-	self:update_background(dt)
+	self.super.update(self, dt)
 
 	local speed = self:get_speed() * dt * 0.5
 
@@ -170,7 +171,7 @@ end
 -----------------------------------------------------
 
 function BackgroundServers:draw()
-	self:draw_background()
+	self.super.draw(self)
 
 	for i, edge in ipairs(self.all_edges) do
 		local row_y = edge.row.y

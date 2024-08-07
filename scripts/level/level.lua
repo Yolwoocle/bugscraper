@@ -5,10 +5,9 @@ local Rect = require "scripts.math.rect"
 local Enemies = require "data.enemies"
 local TileMap = require "scripts.level.tilemap"
 local WorldGenerator = require "scripts.level.world_generator"
-local BackgroundPlain = require "scripts.level.background.background_plain"
-local BackgroundDots = require "scripts.level.background.background_dots"
-local BackgroundServers = require "scripts.level.background.background_servers"
 local BackgroundCafeteria = require "scripts.level.background.background_cafeteria"
+local BackgroundFinal = require "scripts.level.background.background_final"
+local BackgroundDots = require "scripts.level.background.background_dots"
 local Elevator = require "scripts.level.elevator"
 local Wave = require "scripts.level.wave"
 
@@ -129,7 +128,7 @@ function Level:begin_next_wave_animation()
 	if buffer_enemies then
 		self:new_wave_buffer_enemies()
 	end
-	self.new_wave_progress = 1.0
+	self.new_wave_progress = self.slowdown_timer_override or 1.0
 	self.new_wave_animation_state = "slowdown"
 
 	if self:is_on_cafeteria() then
