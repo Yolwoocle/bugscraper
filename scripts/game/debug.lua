@@ -18,11 +18,6 @@ local Cutscene = require "scripts.game.cutscene"
 local cutscenes = require "data.cutscenes"
 local Scene = require "scripts.game.scene"
 
-local Animal = require "scripts.game.removeme_animal"
-local Cat = require "scripts.game.removeme_cat"
-local Siberian = require "scripts.game.removeme_siberian"
-
-
 local Debug = Class:inherit()
 
 local col_a = {random_range(0, 1), random_range(0, 1), random_range(0, 1), 1}

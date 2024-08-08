@@ -13,43 +13,67 @@ local BigChipper360 = require "scripts.actor.enemies.big_chipper_360"
 local MotherboardButton = require "scripts.actor.enemies.motherboard_button"
 local FlyingDung       = require "scripts.actor.enemies.flying_dung"
 local MetalFly        = require "scripts.actor.enemies.metal_fly"
+local AnimatedSprite = require "scripts.graphics.animated_sprite"
 
 local Motherboard = Enemy:inherit()
 
 function Motherboard:init(x, y)
     self:init_enemy(x,y, images.big_ceiling_guy, 24*16, 4)
-    self.name = "todo_changeme"  --removeme(dont actually)
+    self.name = "motherboard" 
 
     -- Parameters 
     self.follow_player = false
-    self.life = 400
+    self.life = 500
     self.self_knockback_mult = 0
     self.is_pushable = false
     self.is_stompable = false
     self.gravity = 0
 
+    self.is_front = true
+
     self.is_affected_by_bounds = false
 
-    self.rays = ElectricRays:new(self.mid_x, self.y + self.h + 16, {
+    -- rays and arcs
+    self.rays = ElectricRays:new(self.mid_x, self.y + self.h + 24, {
         angle_speed = 0.2,
         n_rays = 7,
         spawn_state = "disabled",
     })
     game:new_actor(self.rays)
+    self.decorative_arc = ElectricArc:new(0, 0)
+    self.decorative_arc.arc_damage = 0
+    self.decorative_arc:set_segment(self.x, self.y + self.h, self.x + self.w, self.y + self.h)
+    game:new_actor(self.decorative_arc)
 
+    -- timers
     self.state_timer = Timer:new(0)
     self.ray_timer = Timer:new(1.0)
     self.spawn_timer = Timer:new({0.5, 1.5})
     self.new_button_timer = Timer:new(1.5)
+
+    -- numbers
     self.max_chippers = 6
     self.dung_damage = 20
+
+    -- guns
     self.burst_gun = guns.unlootable.W2BossBurst:new(self)
     self.turret_gun = guns.unlootable.W2BossTurretGun:new(self)
+
+    -- plugs
+    self.plug_offset = self.h - 9
+    self.sprite_plug_rays = AnimatedSprite:new({
+        images.motherboard_plug_rays_1,
+        images.motherboard_plug_rays_2,
+    }, SPRITE_ANCHOR_CENTER_TOP, {frame_duration = 0.05})
+
+    -- enemies
     self.enemy_mix = {
         {Chipper, 2},
         {MetalFly, 1},
         {FlyingDung, 2},
     }
+    self.wave_enemies = {}
+
     self.state_machine = StateMachine:new({
         rays = {
             enter = function(state)
@@ -59,8 +83,7 @@ function Motherboard:init(x, y)
                 self.ray_timer:start()
                 self.spawn_timer:start()
 
-                -- self.ray_cycles_left = 7
-                self.ray_cycles_left = 3 --changeme
+                self.ray_cycles_left = 7
                 
                 self:set_bouncy(true)
             end,
@@ -73,6 +96,7 @@ function Motherboard:init(x, y)
             end,
             update = function(state, dt)
                 local cabin_rect = game.level.cabin_inner_rect
+                self.sprite_plug_rays:update(dt)
 
                 -- Update rays
                 if self.ray_timer:update(dt) then
@@ -119,6 +143,9 @@ function Motherboard:init(x, y)
                     end
                 end
             end,
+            draw = function()
+                self.sprite_plug_rays:draw(self.mid_x, self.y + self.plug_offset, 0, 0)
+            end,
         },
         charging = {
             enter = function(state)
@@ -129,8 +156,7 @@ function Motherboard:init(x, y)
                     table.insert(self.wave_enemies, chipper)
                 end
 
-                -- self.state_timer:start(20.0)
-                self.state_timer:start(8.0)
+                self.state_timer:start(20.0)
                 self.button_side = random_neighbor(1)
                 
                 self:set_bouncy(true)
@@ -155,8 +181,7 @@ function Motherboard:init(x, y)
         },
         bullets = {
             enter = function(state)
-                -- self.state_timer:start(15.0)
-                self.state_timer:start(5.0)
+                self.state_timer:start(15.0)
                 self.gun_target = self:get_random_player()
 
                 self:set_bouncy(false)
@@ -183,7 +208,7 @@ function Motherboard:init(x, y)
                 end
             end,
         } 
-    }, "charging")
+    }, "rays")
 end
 
 function Motherboard:on_hit_flying_dung(dung)
@@ -210,7 +235,19 @@ end
 function Motherboard:draw()
     self:draw_enemy()
 
-    print_centered_outline(nil, nil, concat(self.life, "❤"), self.mid_x, self.y + self.h + 16)
+    self.state_machine:draw()
+    print_centered_outline(nil, nil, concat(self.life, "❤"), self.mid_x + 64, self.y + self.h + 16)
+end
+
+function Motherboard:on_death()
+    if self.wave_enemies then
+        for _, e in pairs(self.wave_enemies) do
+            e:kill()
+        end
+    end
+
+    self.rays:remove()
+    self.decorative_arc:remove()
 end
 
 return Motherboard

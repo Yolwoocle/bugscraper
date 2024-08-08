@@ -3,7 +3,8 @@ local Class = require "scripts.meta.class"
 
 local Sprite = Class:inherit()
 
-function Sprite:init(image, anchor)
+function Sprite:init(image, anchor, params)
+    params = params or {}
     self.image = image
 
     self.ox = 0

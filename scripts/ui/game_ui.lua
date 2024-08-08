@@ -152,10 +152,10 @@ function GameUI:draw_FPS()
 	
 	if game.t > 2 and love.timer.getFPS() <= 50 then
 		print_outline(nil, nil, t, CANVAS_WIDTH - get_text_width(t) - 3, 3)
-		if game.menu_manager.cur_menu ~= nil then
-			t = "⚠ "..Text:text("game.fps_warning")
-			print_outline(nil, nil, t, CANVAS_WIDTH - get_text_width(t) - 3, 3+get_text_height())
-		end
+		-- if game.menu_manager.cur_menu ~= nil then
+		-- 	t = "⚠ "..Text:text("game.fps_warning")
+		-- 	print_outline(nil, nil, t, CANVAS_WIDTH - get_text_width(t) - 3, 3+get_text_height())
+		-- end
 	end
 end
 

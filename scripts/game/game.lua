@@ -575,6 +575,12 @@ function Game:draw_game()
 
 		self:draw_smoke_canvas()
 		self.level:draw_front()
+		
+		for _,actor in pairs(self.actors) do
+			if actor.is_active and actor.is_front then
+				actor:draw()
+			end
+		end
 
 		Particles:draw_layer(PARTICLE_LAYER_FRONT)
 	end)

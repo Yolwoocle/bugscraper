@@ -75,6 +75,13 @@ function FlyingDung:begin_targeting()
     self.is_ponging = false
     Audio:play_var("flying_dung_death", 0, 1.2)
 
+    self.is_pushable = false
+    self.is_stompable = false
+    self.is_bouncy_to_bullets = false
+    self.destroy_bullet_on_impact = false
+    self.do_stomp_animation = false
+    self.damage = 0
+
     if self.spawner then
         self:target_spawner()
         self.self_knockback_mult = 0

@@ -580,24 +580,9 @@ local waves = {
 					actor:start_disable_timer(1)
 				end
 			end
-			game:screenshake(10)
-
-			local cabin_rect = game.level.cabin_rect
-			Particles:falling_grid(cabin_rect.ax +   16, cabin_rect.ay + 6*16)
-			Particles:falling_grid(cabin_rect.bx - 7*16, cabin_rect.ay + 6*16)
-			level.elevator:start_grid_timer(2.5)
 		end,
 
 		music = "miniboss",
-
-		-- removeme
-		level_geometry = LevelGeometry:new({
-			{rect = Rect:new(3, 8, 8, 8), tile = TILE_SEMISOLID}, 
-			{rect = Rect:new(21, 8, 26, 8), tile = TILE_SEMISOLID}, 
-		}),
-		elevator_layers = {
-			["bg_grid"] = false,
-		},
 	}),
 
 	------

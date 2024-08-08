@@ -129,6 +129,8 @@ local img_names = {
 	woodlouse_1 =              "actors/enemies/woodlouse_1",
 	woodlouse_2 =              "actors/enemies/woodlouse_2",
 
+	motherboard_plug_rays_1 =  "actors/enemies/motherboard_plug_rays_1",
+	motherboard_plug_rays_2 =  "actors/enemies/motherboard_plug_rays_2",
 	poison_cloud =       "actors/enemies/poison_cloud_1",
 
 	upgrade_jar =            "actors/enemies/upgrade_jar",

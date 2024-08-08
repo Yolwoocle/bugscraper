@@ -30,7 +30,8 @@ function ElectricArc:init(x, y, is_active, activation_delay)
     
     self.is_immune_to_electricity = true
     self.is_arc_active = param(is_active, true)
-    self.particle_probability = 0.005
+    -- self.particle_probability = 0.005
+    self.particle_probability = 0.001
 
     self.activation_timer = Timer:new(activation_delay or 0)
     if activation_delay then
