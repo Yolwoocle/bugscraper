@@ -1,5 +1,6 @@
 require "scripts.util"
 local Class = require "scripts.meta.class"
+local images= require "data.images"
 
 local UI = Class:inherit()
 
@@ -30,6 +31,10 @@ function UI:draw_icon_bar(x, y, val, max_val, val_extra, img_full, img_empty, im
 	-- Draw a bar in this style:
 	-- ♥️ ♥️ ♥️ ♥️ ♡ ♡ ♡ 
 	margin = margin or 0
+	val_extra = val_extra or 0
+	-- img_full = img_full or images.empty
+	-- img_empty = img_empty or images.empty
+	img_extra = img_extra or images.empty
 
 	local total = math.max(val + val_extra, max_val)
 

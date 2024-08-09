@@ -572,7 +572,7 @@ local waves = {
 		max = 1,
 
 		enemies = {
-			{E.W2boss, 2},
+			{E.Motherboard, 1, position = {3*16, 3*16 + 4}},
 		},
 		run = function(self, level)
 			for _, actor in pairs(game.actors) do

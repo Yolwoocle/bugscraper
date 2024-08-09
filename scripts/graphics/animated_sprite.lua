@@ -1,7 +1,7 @@
 require "scripts.util"
 local Sprite = require "scripts.graphics.sprite"
 local Timer = require "scripts.timer"
-local images= require "data.images"
+local images = require "data.images"
 
 local AnimatedSprite = Sprite:inherit()
 
@@ -17,6 +17,10 @@ end
 
 function AnimatedSprite:set_animation(animation)
     self.animation = animation
+    self.frame_i = 1
+
+    self.frame_timer:start()
+    self:update_frame_sprite()
 end
 
 function AnimatedSprite:update_frame_sprite()

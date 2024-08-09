@@ -13,6 +13,7 @@ function Explosion:init(x, y, radius, resolution, screenshake, args)
     self:init_prop(x, y, images.empty, 1, 1)
     self.name = "explosion"
 
+    self.use_gun = param(args.use_gun, true)
     self.explosion_damage = param(args.explosion_damage, 1)
     self.override_enemy_damage = param(args.override_enemy_damage, 6)
     self.radius = radius or 32
@@ -30,7 +31,9 @@ function Explosion:update(dt)
     self:update_prop(dt)
 
     if not self.is_dead then
-        self.gun:shoot(0, self, self.mid_x, self.mid_y, math.cos(0), math.sin(0))
+        if self.use_gun then
+            self.gun:shoot(0, self, self.mid_x, self.mid_y, math.cos(0), math.sin(0))
+        end
         game:screenshake(self.screenshake)
         game:frameskip(5)
         Audio:play("explosion")

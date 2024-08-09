@@ -31,7 +31,7 @@ end
 
 
 function HoneypotLiquid:on_damage_player(player, damage)
-	player:apply_effect(EffectSlowness:new(), random_range(5.0, 10.0))
+	player:apply_effect(EffectSlowness:new(), 4.0)
     self:kill()
 end
 

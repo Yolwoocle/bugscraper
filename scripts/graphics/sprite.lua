@@ -21,7 +21,12 @@ function Sprite:init(image, anchor, params)
     self.color = COL_WHITE
     self.outline = nil
 
+    self.is_visible = true
     self.anchor = anchor or SPRITE_ANCHOR_CENTER_BOTTOM
+end
+
+function Sprite:set_visible(val)
+    self.is_visible = val
 end
 
 function Sprite:set_image(image)
@@ -139,6 +144,10 @@ function Sprite:get_sprite_offset()
 end
 
 function Sprite:draw(x, y, w, h, custom_draw)
+    if not self.is_visible then
+        return
+    end
+
     local draw_func = love.graphics.draw
     if custom_draw then
         draw_func = custom_draw 

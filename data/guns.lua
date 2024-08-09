@@ -307,8 +307,7 @@ function Guns:init()
 		
 		self.sfx = "mushroom_ant_pop"
 		self.damage = 1
-		self.max_ammo = math.huge
-		self.max_reload_timer = 1.5
+		self.max_ammo = 5
 		self.is_auto = true
 		self.spr = images.gun_machinegun
 		self.bullet_spr = images.bullet_blue
@@ -319,6 +318,8 @@ function Guns:init()
 
 		self.bullet_speed = 125-- 200
 		self.cooldown = 0.4
+		self.max_reload_timer = 1.5
+
 		-- self.screenshake = 2
 	end
 
@@ -375,8 +376,8 @@ function Guns:init()
 		self.damage = 1
 		self.cooldown = 0.05
 		self.max_ammo = 5
-		self.max_reload_timer = 0.3
-		self.random_speed_offset = 10
+		self.max_reload_timer = 0.7
+		self.random_speed_offset = 0
 		self.random_angle_offset = 0.005
 		-- self.burst_delay = 0.05
 		
