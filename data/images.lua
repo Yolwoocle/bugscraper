@@ -135,6 +135,7 @@ local img_names = {
 	motherboard_plug_rays_1 =  "actors/enemies/motherboard_plug_rays_1",
 	motherboard_plug_rays_2 =  "actors/enemies/motherboard_plug_rays_2",
 	motherboard_plug_bullets = "actors/enemies/motherboard_plug_bullets",
+	motherboard_shield =       "actors/enemies/motherboard_shield",
 	poison_cloud =             "actors/enemies/poison_cloud_1",
 
 	upgrade_jar =              "actors/enemies/upgrade_jar",

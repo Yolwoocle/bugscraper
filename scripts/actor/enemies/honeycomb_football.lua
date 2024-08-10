@@ -107,7 +107,7 @@ function HoneycombFootball:init(x, y, spr)
                 end
 
                 if self.exploding_timer:update(dt) then
-                    local explosion = Explosion:new(self.mid_x, self.mid_y, self.explosion_radius)
+                    local explosion = Explosion:new(self.mid_x, self.mid_y, {radius = self.explosion_radius})
                     game:new_actor(explosion)
                     self:kill()
                 end

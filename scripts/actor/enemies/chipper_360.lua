@@ -43,6 +43,7 @@ function Chipper360:init(x, y)
     self.telegraph_source:set_pitch(0.7)
     
     --- Attack
+    self.force_charge_flag = false
     self.attack_speed = 100
     self.attack_bounces = 5
     self.attack_bounces_counter = self.attack_bounces
@@ -59,6 +60,7 @@ function Chipper360:init(x, y)
                 self.anim_frames = self.normal_anim_frames
                 self.wander_no_attack_timer:start(1.0)
                 self.wander_spawn_timer:start()
+                self:enter_wander()
             end,
             update = function(state, dt)
                 self.direction_speed = random_sample({-1, 1}) * 3
@@ -72,7 +74,8 @@ function Chipper360:init(x, y)
                 self.wander_no_attack_timer:update(dt)
                 if not self.wander_no_attack_timer.is_active then
                     local detected = self:detect_player_in_range()
-                    if detected then
+                    if detected or self.force_charge_flag then
+                        self.force_charge_flag = false
                         self.state_machine:set_state("telegraph")
                     end
                 end
@@ -147,6 +150,9 @@ function Chipper360:init(x, y)
             end,
         },
     }, "wander")
+end
+
+function Chipper360:enter_wander()
 end
 
 function Chipper360:detect_player_in_range()

@@ -43,9 +43,10 @@ function MotherboardButton:after_collision(col, other)
 
         col.other:apply_force_from(2000, {x = col.other.x, y = self.y})
 
-        game:new_actor(Explosion:new(self.mid_x, self.mid_y, nil, nil, nil, {
+        game:new_actor(Explosion:new(self.mid_x, self.mid_y, {
             explosion_damage = 0,
             override_enemy_damage = 0,
+            use_gun = false,
         }))
     end
 end

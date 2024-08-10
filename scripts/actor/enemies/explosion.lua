@@ -7,7 +7,8 @@ local utf8 = require "utf8"
 
 local Explosion = Prop:inherit()
 
-function Explosion:init(x, y, radius, resolution, screenshake, args)
+function Explosion:init(x, y, args)
+    -- radius, resolution, screenshake
     args = args or {}
 
     self:init_prop(x, y, images.empty, 1, 1)
@@ -16,9 +17,9 @@ function Explosion:init(x, y, radius, resolution, screenshake, args)
     self.use_gun = param(args.use_gun, true)
     self.explosion_damage = param(args.explosion_damage, 1)
     self.override_enemy_damage = param(args.override_enemy_damage, 6)
-    self.radius = radius or 32
-    self.resolution = resolution or 32
-    self.screenshake = screenshake or 8
+    self.radius = param(args.radius, 32)
+    self.resolution = param(args.resolution, 32)
+    self.screenshake = param(args.screenshake, 8)
 
     self.do_killed_smoke = false
 	self.play_sfx = false

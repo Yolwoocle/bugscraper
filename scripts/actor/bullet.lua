@@ -163,11 +163,19 @@ function Bullet:on_collision(col)
 		end
 
 		if col.other.is_bouncy_to_bullets and self.bounce_immunity_timer <= 0 then
-			local bounce_x = (self.mid_x - col.other.mid_x)
-			local bounce_y = (self.mid_y - col.other.mid_y)
-			local normal_x, normal_y = normalise_vect(bounce_x, bounce_y)
 			
-			local new_vel_x, new_vel_y = bounce_vector(self.vx, self.vy, normal_x, normal_y)
+			local new_vel_x, new_vel_y 
+			if col.other.bullet_bounce_mode == BULLET_BOUNCE_MODE_RADIAL then
+				local bounce_x = (self.mid_x - col.other.mid_x)
+				local bounce_y = (self.mid_y - col.other.mid_y)
+				local normal_x, normal_y = normalise_vect(bounce_x, bounce_y)
+
+				new_vel_x, new_vel_y = bounce_vector(self.vx, self.vy, normal_x, normal_y)
+				
+			elseif col.other.bullet_bounce_mode == BULLET_BOUNCE_MODE_NORMAL then
+				new_vel_x, new_vel_y = bounce_vector(self.vx, self.vy, col.normal.x, col.normal.y)
+				
+			end
 			local spd_slow = 1
 			-- self.friction_x = spd_slow
 			-- self.friction_y = spd_slow
@@ -183,6 +191,8 @@ function Bullet:on_collision(col)
 			if self.play_sfx then
 				Audio:play_var("bullet_bounce_"..random_sample{"1","2"}, 0.2, 1.2)
 			end
+
+			col.other:on_bullet_bounced(self, col)
 			-- Audio:play_var("bullet_bounce", 0.2, 1.5)
 		end
 	end

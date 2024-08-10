@@ -84,19 +84,19 @@ function Sprite:get_anchor_offset(w, h)
     local anchor_x, anchor_y = self:get_x_anchor(), self:get_y_anchor()
 
     local x, y
-    if anchor_x == SPRITE_ANCHOR_START then
+    if anchor_x == SPRITE_ANCHOR_AXIS_START then
         x = spr_w / 2
-    elseif anchor_x == SPRITE_ANCHOR_CENTER then
+    elseif anchor_x == SPRITE_ANCHOR_AXIS_CENTER then
         x = w / 2
-    elseif anchor_x == SPRITE_ANCHOR_END then
+    elseif anchor_x == SPRITE_ANCHOR_AXIS_END then
         x = w - spr_w / 2
     end
 
-    if anchor_y == SPRITE_ANCHOR_START then
+    if anchor_y == SPRITE_ANCHOR_AXIS_START then
         y = spr_h / 2
-    elseif anchor_y == SPRITE_ANCHOR_CENTER then
+    elseif anchor_y == SPRITE_ANCHOR_AXIS_CENTER then
         y = h / 2
-    elseif anchor_y == SPRITE_ANCHOR_END then
+    elseif anchor_y == SPRITE_ANCHOR_AXIS_END then
         y = h - spr_h / 2
     end
 

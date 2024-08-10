@@ -29,6 +29,7 @@ function Enemy:init_enemy(x,y, img, w,h)
 	self.is_immune_to_bullets = false
 	self.is_immune_to_electricity = false
 	self.is_bouncy_to_bullets = false
+	self.bullet_bounce_mode = BULLET_BOUNCE_MODE_RADIAL
 	
 	self.harmless_timer = 0
 
@@ -368,6 +369,9 @@ end
 
 
 function Enemy:on_hit_electrictiy()
+end
+
+function Enemy:on_bullet_bounced(bullet, col)
 end
 
 return Enemy

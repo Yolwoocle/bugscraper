@@ -16,6 +16,7 @@ local Fly = require "scripts.actor.enemies.fly"
 local AnimatedSprite = require "scripts.graphics.animated_sprite"
 local UI = require "scripts.ui.ui"
 local Explosion = require "scripts.actor.enemies.explosion"
+local Sprite    = require "scripts.graphics.sprite"
 
 local Motherboard = Enemy:inherit()
 
@@ -27,13 +28,14 @@ function Motherboard:init(x, y)
 
     -- Parameters 
     self.follow_player = false
-    self.max_life = 5--00
+    self.max_life = 500
     self.life = self.max_life
     self.self_knockback_mult = 0
     self.is_pushable = false
     self.is_stompable = false
     self.gravity = 0
     self.kill_when_negative_life = false
+    self.bullet_bounce_mode = BULLET_BOUNCE_MODE_NORMAL
 
     self.is_front = true
 
@@ -68,6 +70,9 @@ function Motherboard:init(x, y)
         images.motherboard_plug_rays_1,
         images.motherboard_plug_rays_2,
     }, SPRITE_ANCHOR_CENTER_TOP, {frame_duration = 0.05})
+
+    -- shield
+    self.shield_sprite = Sprite:new(images.motherboard_shield, SPRITE_ANCHOR_CENTER_TOP)
 
     -- enemies
     self.max_chippers = 6
@@ -158,7 +163,7 @@ function Motherboard:init(x, y)
                 end
 
                 self.state_timer:start(20.0 * removeme_timer_mult)
-                self.button_side = random_neighbor(1)
+                self:randomize_button_position()
                 
                 self:set_bouncy(true)
                 self:spawn_button()
@@ -253,11 +258,12 @@ function Motherboard:init(x, y)
                 self.dying_timer:start()
                 self.explosion_timer:start()
 
+                self.kill_on_next_frame= false
                 self.is_immune_to_bullets = true
             end,
             update = function(state, dt)
                 if self.explosion_timer:update(dt) then
-                    local explosion = Explosion:new(random_range(self.x, self.x + self.w), random_range(self.y - 42, self.y+self.h))
+                    local explosion = Explosion:new(random_range(self.x, self.x + self.w), random_range(self.y - 42, self.y+self.h), {use_gun = false})
                     explosion.is_front = true
                     game:new_actor(explosion)
                     self.explosion_timer:start()
@@ -268,10 +274,16 @@ function Motherboard:init(x, y)
                 end
 
                 if self.dying_timer:update(dt) then
+                    self.kill_on_next_frame = true
+                    game:frameskip(10)
+                end
+
+                if self.kill_on_next_frame then
+                    self.kill_on_next_frame = false    
                     self:kill()
 
                     for r = 0, 1, 0.1 do
-                        local explosion = Explosion:new(self.x + self.w*r, random_range(self.y - 42, self.y+self.h))
+                        local explosion = Explosion:new(self.x + self.w*r, random_range(self.y - 42, self.y+self.h), {use_gun = false})
                         explosion.is_front = true
                         game:new_actor(explosion)
                     end
@@ -280,9 +292,15 @@ function Motherboard:init(x, y)
                 self.spr:update_offset(random_neighbor(5), random_neighbor(5))
             end
         }
-    }, "bullets")
+    })
 
-    self:transition_to_next_state("bullets")
+    self:transition_to_next_state("charging")
+end
+
+function Motherboard:set_bouncy(val)
+    self.super.set_bouncy(self, val)
+
+    self.shield_sprite:set_visible(val)
 end
 
 function Motherboard:transition_to_next_state(state)
@@ -322,21 +340,34 @@ function Motherboard:update(dt)
             end
         end
     end
+
+    self.shield_sprite:set_scale(nil, lerp(self.shield_sprite.sy, 1, 0.05))
+end
+
+function Motherboard:randomize_button_position()
+    self.button_position = random_sample {
+        {-5*BW, 0},
+        {2*BW, 0},
+        {-11*BW, -6},
+        {8*BW, -6},
+    }
 end
 
 function Motherboard:on_motherboard_button_pressed(button)
-    self.button_side = random_neighbor(1)
+    self:randomize_button_position()
     self.new_button_timer:start()
 end
 
 function Motherboard:spawn_button()
-    local button = MotherboardButton:new(self.mid_x + self.button_side * 8*BW, self.y + self.h, self)
+    local button = MotherboardButton:new(self.mid_x + self.button_position[1], self.y + self.button_position[2], self)
     game:new_actor(button)
     table.insert(self.wave_enemies, button)
 end
 
 function Motherboard:draw()
     self:draw_enemy()
+    local x, y = self.x + 193 + self.spr.ox, self.y - 19 + self.spr.oy
+    UI:draw_icon_bar(x, y, 7 * (self.life/self.max_life), 7, 0, images.motherboard_led_on, images.motherboard_led_off, nil, 1)
 
     if self.gun_directions then
         for gun_name, gun_params in pairs(self.gun_directions) do
@@ -347,8 +378,7 @@ function Motherboard:draw()
     self.state_machine:draw()
     self.plug_sprite:draw(self.mid_x, self.y + self.plug_y + self.plug_offset, 0, 0)
 
-    local x, y = self.x + 193 + self.spr.ox, self.y - 19 + self.spr.oy
-    UI:draw_icon_bar(x, y, 7 * (self.life/self.max_life), 7, 0, images.motherboard_led_on, images.motherboard_led_off, nil, 1)
+    self.shield_sprite:draw(self.mid_x, self.y - 6, 0, 0)
 end
 
 function Motherboard:on_death()
@@ -365,6 +395,10 @@ function Motherboard:on_negative_life()
     if self.state_machine.current_state_name ~= "dying" then
         self.state_machine:set_state("dying")
     end
+end
+
+function Motherboard:on_bullet_bounced(bullet, col)
+    self.shield_sprite:set_scale(nil, 1.5)
 end
 
 return Motherboard

@@ -109,7 +109,7 @@ function DrillBee:init(x, y, spr)
             end,
             after_collision = function(state, col)
                 if col.other.collision_info and col.other.collision_info.type == COLLISION_TYPE_SOLID then
-                    local explosion = Explosion:new(self.mid_x, self.mid_y, self.explosion_radius)
+                    local explosion = Explosion:new(self.mid_x, self.mid_y, {radius = self.explosion_radius})
                     game:new_actor(explosion)
                     self:kill()
                 end
