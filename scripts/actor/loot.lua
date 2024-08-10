@@ -314,11 +314,11 @@ function Loot.Gun:on_collect(player)
 	Particles:word(self.mid_x, self.mid_y, string.upper(self.gun.display_name or self.gun.name), COL_LIGHT_YELLOW)
 	self:reset()
 	
-	local new_loot = Loot.Gun:new(self.x, self.y, self.value, 0, 0)
-	new_loot.life = old_life
-	new_loot.gun = old_gun
-	new_loot:set_image(old_gun.spr)
-	game:new_actor(new_loot)
+	-- local new_loot = Loot.Gun:new(self.x, self.y, self.value, 0, 0)
+	-- new_loot.life = old_life
+	-- new_loot.gun = old_gun
+	-- new_loot:set_image(old_gun.spr)
+	-- game:new_actor(new_loot)
 
 	-- self.uncollectable_timer = 1.0
 	-- self:remove()

@@ -378,7 +378,7 @@ function Motherboard:draw()
     self.state_machine:draw()
     self.plug_sprite:draw(self.mid_x, self.y + self.plug_y + self.plug_offset, 0, 0)
 
-    self.shield_sprite:draw(self.mid_x, self.y - 6, 0, 0)
+    -- self.shield_sprite:draw(self.mid_x, self.y - 6, 0, 0)
 end
 
 function Motherboard:on_death()

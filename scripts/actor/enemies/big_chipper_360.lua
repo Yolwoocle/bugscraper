@@ -18,22 +18,14 @@ function BigChipper360:init(x, y)
     self.attack_bounces = 8
     self.life = 40
     self.is_stompable = false
-
-    self.force_charge_timer = Timer:new(4.0)
 end
 
 function BigChipper360:update(dt)
     self.super.update(self, dt)
-
-    if self.force_charge_timer:update(dt) then
-        self.force_charge_flag = true
-    end
 end
 
 function BigChipper360:enter_wander()
     self.super.enter_wander(self)
-
-    self.force_charge_timer:start()
 end
 
 function BigChipper360:detect_player_in_range()

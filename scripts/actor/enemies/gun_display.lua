@@ -19,7 +19,7 @@ function GunDisplay:init(x, y, gun)
 
     self.life = 15
 
-    self.dissapear_life = 10
+    self.dissapear_life = 14
     self.loot = {}
 
     self.gravity = self.default_gravity
@@ -31,7 +31,7 @@ function GunDisplay:init(x, y, gun)
     self.is_stompable = true
     self.is_killed_on_stomp = false
     self.stomps = 500
-    self.damage_on_stomp = 3
+    self.damage_on_stomp = 5
 
 	self.destroy_bullet_on_impact = true
 	self.is_immune_to_bullets = false

@@ -126,7 +126,7 @@ function Debug:init(game)
             end
         end},
         ["d"] = {"spawn", function()
-            local arc = enemies.Motherboard:new(3*16, 3*16 + 4)
+            local arc = enemies.Dung:new(3*16, 3*16 + 4)
             game:new_actor(arc)            
         end},
         ["r"] = {"start game", function()
