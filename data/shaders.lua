@@ -38,6 +38,13 @@ shaders.dark_blue_shader = love.graphics.newShader(string.format([[
 	}
 ]], COL_BLACK_BLUE[1]/255, COL_BLACK_BLUE[2]/255, COL_BLACK_BLUE[3]/255))
 
+shaders.multiply_color = love.graphics.newShader[[
+	uniform vec4 multColor;
+	vec4 effect(vec4 color, Image texture, vec2 textureCoords, vec2 screenCoords){
+		return Texel(texture, textureCoords) * multColor;
+	}
+]]
+
 shaders.lighten = love.graphics.newShader[[
 	vec4 effect(vec4 color, Image texture, vec2 textureCoords, vec2 screenCoords){
 		return Texel(texture, textureCoords) * vec4(1.8, 1.8, 1.8, 0.3);

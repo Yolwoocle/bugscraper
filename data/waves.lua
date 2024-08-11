@@ -829,6 +829,8 @@ local waves = {
 
 	new_cafeteria(function()
 		game:kill_actors_with_name("timed_spikes") 
+
+		game.is_light_on = true
 	end),
 
 	------

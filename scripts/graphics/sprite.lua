@@ -20,6 +20,7 @@ function Sprite:init(image, anchor, params)
 
     self.color = COL_WHITE
     self.outline = nil
+    self.shader = nil
 
     self.is_visible = true
     self.anchor = anchor or SPRITE_ANCHOR_CENTER_BOTTOM
@@ -153,7 +154,6 @@ function Sprite:draw(x, y, w, h, custom_draw)
         draw_func = custom_draw 
     end
     
-    
 	local spr_w = self.image:getWidth()
 	local spr_h = self.image:getHeight()
 
@@ -163,6 +163,11 @@ function Sprite:draw(x, y, w, h, custom_draw)
     local anchor_ox, anchor_oy = self:get_anchor_offset(w, h)
     local sprite_ox, sprite_oy = self:get_sprite_offset()
 
+    local old_shader
+    if self.shader then
+        old_shader = love.graphics.getShader()
+        love.graphics.setShader(self.shader)
+    end
     exec_color(self.color, function()
         if self.outline then
             draw_with_outline(self.outline.color, self.outline.type, self.image, x + anchor_ox, y + anchor_oy, self.rot, scale_x, scale_y, sprite_ox, sprite_oy)
@@ -170,6 +175,9 @@ function Sprite:draw(x, y, w, h, custom_draw)
         draw_func(self.image, x + anchor_ox, y + anchor_oy, self.rot, scale_x, scale_y, sprite_ox, sprite_oy)
         -- draw_func(self.image, x + anchor_ox, y + anchor_oy, self.rot, scale_x, scale_y, spr_w/2, spr_h)
     end)
+    if self.shader then
+        love.graphics.setShader(old_shader)
+    end
 end
 
 return Sprite

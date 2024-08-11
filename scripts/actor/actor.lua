@@ -70,6 +70,8 @@ function Actor:init_actor(x, y, w, h, spr, args)
 	-- Rider
 	self.rider = nil
 	self.vehicle = nil
+	self.rider_ox = 0
+	self.rider_oy = 0
 
 	-- Whether the actor should be teleported within bounds
 	self.is_affected_by_bounds = true
@@ -244,7 +246,7 @@ function Actor:update_actor(dt)
 		self.rider = nil
 	end
 	if self.rider then
-        self.rider:move_to(self.x, self.y - self.rider.h)
+        self.rider:move_to(self.x + self.rider_ox, self.y - self.rider.h + self.rider_oy)
 		self.rider.vx = 0
 		self.rider.vy = 0
     end
@@ -254,11 +256,11 @@ function Actor:draw()
 	error("draw not implemented")
 end
 
-function Actor:draw_actor(custom_draw)
+function Actor:draw_actor()
 	if self.is_removed then   return   end
 
 	if self.spr then
-		self.spr:draw(self.x, self.y, self.w, self.h, custom_draw)
+		self.spr:draw(self.x, self.y, self.w, self.h)
 	end
 
 	if game.debug_mode then

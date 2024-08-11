@@ -4,6 +4,7 @@ local Actor = require "scripts.actor.actor"
 local Loot = require "scripts.actor.loot"
 local images = require "data.images"
 local sounds = require "data.sounds"
+local shaders= require "data.shaders"
 
 local Enemy = Actor:inherit()
 
@@ -66,6 +67,7 @@ function Enemy:init_enemy(x,y, img, w,h)
 	self.damaged_flash_timer = 0
 	self.damaged_flash_max = 0.07
 	self.flash_white = false
+	self.flash_white_shader = shaders.white_shader
 
 	self.do_squash = false
 	self.squash = 1
@@ -118,8 +120,18 @@ function Enemy:update(dt)
 	self:update_enemy(dt)
 end
 
+function Enemy:get_flash_white_shader()
+	return self.flash_white_shader
+end
+
 function Enemy:update_flash(dt)
 	self.damaged_flash_timer = max(self.damaged_flash_timer - dt, 0)
+
+	if self:is_flashing_white() then
+		self.spr.shader = self:get_flash_white_shader()
+	else
+		self.spr.shader = nil
+	end
 end
 
 function Enemy:get_nearest_player()
@@ -168,8 +180,7 @@ function Enemy:is_flashing_white()
 end
 
 function Enemy:draw_enemy()
-	local f = self:is_flashing_white() and draw_white
-	self:draw_actor(f)
+	self:draw_actor()
 
 	if game.debug.colview_mode then
 		gfx.draw(images.heart, self.x-7 -2+16, self.y-16)

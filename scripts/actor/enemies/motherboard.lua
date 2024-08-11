@@ -17,6 +17,7 @@ local AnimatedSprite = require "scripts.graphics.animated_sprite"
 local UI = require "scripts.ui.ui"
 local Explosion = require "scripts.actor.enemies.explosion"
 local Sprite    = require "scripts.graphics.sprite"
+local shaders   = require "data.shaders"
 
 local Motherboard = Enemy:inherit()
 
@@ -36,10 +37,11 @@ function Motherboard:init(x, y)
     self.gravity = 0
     self.kill_when_negative_life = false
     self.bullet_bounce_mode = BULLET_BOUNCE_MODE_NORMAL
-
     self.is_front = true
-
     self.is_affected_by_bounds = false
+
+    -- graphics
+    self.flash_white_shader = shaders.multiply_color
 
     -- rays and arcs
     self.rays = ElectricRays:new(self.mid_x, self.y + self.h + 24, {
@@ -294,7 +296,12 @@ function Motherboard:init(x, y)
         }
     })
 
-    self:transition_to_next_state("charging")
+    self:transition_to_next_state("bullets")
+end
+
+function Motherboard:get_flash_white_shader()
+	self.flash_white_shader:send("multColor", {3, 3, 3, 1})
+	return self.flash_white_shader
 end
 
 function Motherboard:set_bouncy(val)
@@ -307,15 +314,14 @@ function Motherboard:transition_to_next_state(state)
     self.next_state = state
     self.state_machine:set_state("transition")
 
+    self.plug_sprite:set_visible(true)
     if state == "rays" then
         self.plug_sprite:set_animation({
             images.motherboard_plug_rays_1,
             images.motherboard_plug_rays_2,
         })
     elseif state == "charging" then
-        self.plug_sprite:set_animation({
-            images.motherboard_plug_bullets,
-        })
+        self.plug_sprite:set_visible(false)
     elseif state == "bullets" then
         self.plug_sprite:set_animation({
             images.motherboard_plug_bullets,
@@ -378,7 +384,7 @@ function Motherboard:draw()
     self.state_machine:draw()
     self.plug_sprite:draw(self.mid_x, self.y + self.plug_y + self.plug_offset, 0, 0)
 
-    -- self.shield_sprite:draw(self.mid_x, self.y - 6, 0, 0)
+    self.shield_sprite:draw(self.mid_x, self.y - 6, 0, 0)
 end
 
 function Motherboard:on_death()

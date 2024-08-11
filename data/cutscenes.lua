@@ -53,9 +53,9 @@ cutscenes.boss_enter = Cutscene:new {
     }),
     Scene:new({
         enter = function(scene)
-            -- game.level.slowdown_timer_override = nil
-            -- game.level.opening_door_timer_override = nil
-            -- game.level.opened_door_timer_override = nil
+            game.level.slowdown_timer_override = nil
+            game.level.opening_door_timer_override = nil
+            game.level.opened_door_timer_override = nil
             
             local light_settings = {
                 ["left"] = {1, pi/12},

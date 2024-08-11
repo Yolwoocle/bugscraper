@@ -130,38 +130,10 @@ function Game:new_game()
 	self:init_players()
 
 	-- Start button
-	-- local nx = CANVAS_WIDTH * 0.75
-	local nx = CANVAS_WIDTH * 0.6
+	local nx = CANVAS_WIDTH * 0.75
 	local ny = self.level.cabin_inner_rect.by
 	local l = create_actor_centered(Enemies.ButtonSmallGlass, floor(nx), floor(ny))
-	l.debug_values[1] = "W1"
 	self:new_actor(l)
-	
-	do 
-		local l = create_actor_centered(Enemies.ButtonSmall, CANVAS_WIDTH*0.7, floor(ny))
-		l.spr.color = COL_GREEN
-		l.debug_values[1] = "W2"
-		l.on_press = function(button)
-			-- self.level:set_background(backgrounds.BackgroundServers:new())
-			self:set_floor(20)
-			self:start_game()
-			self.pressed_disappear_timer = 0.5
-		end
-		self:new_actor(l)
-	end
-	
-	do 
-		local b = create_actor_centered(Enemies.ButtonSmall, CANVAS_WIDTH*0.8, floor(ny))
-		b.spr.color = COL_BLACK
-		b.debug_values[1] = "W3"
-		b.on_press = function(button)
-			-- self.level:set_background(backgrounds.BackgroundServers:new())
-			self:set_floor(40)
-			self:start_game()
-			self.pressed_disappear_timer = 0.5
-		end
-		self:new_actor(b)
-	end
 	
 	-- Exit sign 
 	local exit_x = CANVAS_WIDTH * 0.25

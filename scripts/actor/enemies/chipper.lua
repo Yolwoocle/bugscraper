@@ -183,16 +183,29 @@ function Chipper:draw()
     end
 end
 
+function Chipper:is_collision_normal_to_direction(normal)
+    self.removeme_normal = normal
+    local dir = self.direction % 4
+    return (
+        (dir == 0 and normal.x == -1 and normal.y == 0) or
+        (dir == 1 and normal.x == 0  and normal.y == -1) or
+        (dir == 2 and normal.x == 1  and normal.y == 0) or
+        (dir == 3 and normal.x == 0  and normal.y == 1)
+    )
+end
+
 function Chipper:after_collision(col, other)
     -- Pong-like bounce
     if col.type ~= "cross" then
         -- Particles:smoke(col.touch.x, col.touch.y)
 
-        local new_vx, new_vy = bounce_vector_cardinal(-math.cos(self.direction * pi/2), -math.sin(self.direction * pi/2), col.normal.x, col.normal.y)
-        self.direction = math.floor(math.atan2(new_vy, new_vx) / (pi/2))
-
-        if self.state_machine:in_state("attack") then
+        if self.state_machine:in_state("attack") and self:is_collision_normal_to_direction(col.normal) then
             self.state_machine:set_state("post_attack")
+        end
+
+        if self.state_machine:in_state("wander") then
+            local new_vx, new_vy = bounce_vector_cardinal(-math.cos(self.direction * pi/2), -math.sin(self.direction * pi/2), col.normal.x, col.normal.y)
+            self.direction = math.floor(math.atan2(new_vy, new_vx) / (pi/2))
         end
     end
 end
