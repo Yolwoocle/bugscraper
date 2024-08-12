@@ -3,6 +3,30 @@
 
 --
 ------------------------------------
+
+
+-- Sprite
+
+local r = self.standby_timer.time / self.standby_timer.duration
+if r > 0.5 then
+	self.spr:set_visible(false)
+	self.spike_sprite:set_visible(false)
+	return
+else
+	self.spr:set_visible(true)
+	self.spike_sprite:set_visible(true)
+end
+
+local s = clamp(1 - (r*2), 0, 1)
+if self.orientation == 0 or self.orientation == 2 then
+	self.spr:set_scale(1, s)
+	self.spike_sprite:set_scale(1, s)
+else
+	self.spr:set_scale(1, s)
+	self.spike_sprite:set_scale(1, s)
+end
+
+---------------------------------
 -- Twitter video explosins
 
 

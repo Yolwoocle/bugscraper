@@ -126,8 +126,15 @@ function Debug:init(game)
             end
         end},
         ["d"] = {"spawn", function()
-            local arc = enemies.Dung:new(3*16, 3*16 + 4)
+            local arc = enemies.BeeBoss:new(CANVAS_CENTER[1], CANVAS_CENTER[2])
             game:new_actor(arc)            
+        end},
+        ["o"] = {"spike offset", function() 
+            for _, actor in pairs(game.actors) do
+                if actor.name == "timed_spikes" then
+                    actor:set_time_offset(-dist(actor.mid_x, actor.mid_y, CANVAS_CENTER[1], CANVAS_CENTER[2]) * 0.01 + 3)
+                end
+            end
         end},
         ["r"] = {"start game", function()
             game:start_game()

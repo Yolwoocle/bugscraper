@@ -2,7 +2,6 @@ return {
     game = {
         demo = "DEMO", -- Chip added to the game logo to indicate that this version is a demo
         fps = "%d FPS",
-        fps_warning = "Low framerate: disabling vertical sync might help",
         congratulations = "CONGRATULATIONS!",
         win_thanks = "Thank you for playing the demo",
         win_wishlist = "Wishlist on Steam :)", -- "Wishlist" is a verb
@@ -15,8 +14,9 @@ return {
 
         -- World names
         world_1 = "The offices",
-        world_2 = "The server room",
-        world_3 = "The beehive",
+        world_2 = "The beehive",
+        world_3 = "The server room",
+        world_4 = "The final climb",
     },
     gun = {
         -- Gun names

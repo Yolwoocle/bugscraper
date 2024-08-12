@@ -267,7 +267,7 @@ function Actor:draw_actor()
 		local i = 0
 		local th = get_text_height()
 		for _, val in pairs(self.debug_values) do
-			print_outline(nil, nil, tostring(val), self.x + self.w, self.y - i*th)
+			print_outline(nil, nil, tostring(val), self.x, self.y - i*th)
 			i = i + 1
 		end		 
 	end

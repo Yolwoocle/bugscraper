@@ -42,7 +42,9 @@ local enemies = {
 	BigChipper360 =      require "scripts.actor.enemies.big_chipper_360", --*
 	MotherboardButton =  require "scripts.actor.enemies.motherboard_button", --*
 
-	MushroomAnt =        require "scripts.actor.enemies.mushroom_ant",	
+	MushroomAnt =        require "scripts.actor.enemies.mushroom_ant",
+
+	BeeBoss =            require "scripts.actor.enemies.bee_boss", --*
 	
 	Dummy =              require "scripts.actor.enemies.dummy",
 	ButtonBigPressed =   require "scripts.actor.enemies.button_big_pressed",

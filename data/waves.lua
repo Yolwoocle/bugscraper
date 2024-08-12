@@ -78,8 +78,9 @@ end
 
 local function spawn_timed_spikes()
 	local j = 0
-	for i = 3, CANVAS_WIDTH/16 - 4 do
-		local spikes = enemies.TimedSpikes:new(i * BW, CANVAS_HEIGHT*0.85, 4, 1, 0.5, j*0.2)
+	for ix = 3, CANVAS_WIDTH/16 - 4 do
+		local spikes = enemies.TimedSpikes:new(ix * BW, CANVAS_HEIGHT*0.85, 4, 1, 0.5, j*0.2)
+		spikes.z = 3 - j/100
 		game:new_actor(spikes)
 		j = j + 1
 	end
@@ -297,308 +298,11 @@ local waves = {
 	
 	new_cafeteria(),
 
-	----------------------------------------------------------------------------------------------------------
-	----------------------------------------------------------------------------------------------------------
-	--- W2: server room
-	----------------------------------------------------------------------------------------------------------
-	----------------------------------------------------------------------------------------------------------
-
-	-- Floor 20
-	new_wave({
-		min = 6,
-		max = 6, 
-		enemies = {
-			{E.Chipper, 1},
-		},
-		background = backgrounds.BackgroundServers:new(),
-		music = "w2",
-
-		title = get_world_name("2"),
-		title_color = COL_MID_GREEN,
-	}),
-
-	new_wave({
-		min = 5,
-		max = 5,
-		enemies = {
-			{E.Woodlouse, 2},
-			{E.Fly, 2},
-		},
-		fixed_enemies = {
-			{E.BulbBuddy, 1},
-		},
-	}),
-
-	new_wave({
-		min = 5,
-		max = 7,
-		enemies = {
-			{E.Slug, 2},
-			{E.StinkBug, 2},
-			{E.Chipper, 2},
-			{E.BulbBuddy, 1},
-		},
-	}),
-	
-	new_wave({
-		min = 6,
-		max = 6,
-		enemies = {
-			{E.Grasshopper, 2},
-			{E.SnailShelled, 2},
-			{E.Woodlouse, 2},
-		},
-	}),
-
-	new_wave({
-		level_geometry = LevelGeometry:new({
-			{rect = Rect:new(3, 8, 8, 8), tile = TILE_SEMISOLID}, 
-			{rect = Rect:new(21, 8, 26, 8), tile = TILE_SEMISOLID}, 
-		}),
-		elevator_layers = {
-			["bg_grid"] = false,
-		},
-		run = function(self, level)
-			game:screenshake(10)
-
-			local cabin_rect = game.level.cabin_rect
-			Particles:falling_grid(cabin_rect.ax +   16, cabin_rect.ay + 6*16)
-			Particles:falling_grid(cabin_rect.bx - 7*16, cabin_rect.ay + 6*16)
-			level.elevator:start_grid_timer(2.5)
-		end,
-		
-		fixed_enemies = {
-			{E.ElectricRays, 1, position = {CANVAS_WIDTH/2, CANVAS_HEIGHT/2 + 8}, args = {{
-					n_rays = 1, 
-					activation_delay = 2, 
-					init_angle = pi/2,
-					angle_speed = 0,
-				}}
-			},
-		},
-		floating_text = "🎓 "..string.upper(Text:text("input.prompts.jetpack")),
-
-		min = 4,
-		max = 6,
-		enemies = {
-			{E.Fly, 2},
-			{E.Chipper, 2},
-		},
-	}),
-	
-	new_wave({
-		min = 3,
-		max = 4,
-		enemies = {
-			{E.MetalFly, 4},
-		},
-		fixed_enemies = {
-			{E.BulbBuddy, 1},
-		},
-
-		run = function(self, level)
-			for _, enemy in pairs(game.actors) do
-				if enemy.name == "electric_rays" then
-					enemy.angle_speed = 0.5
-				end
-			end
-		end,
-	}),
-
-	new_wave({
-		min = 5,
-		max = 6,
-		enemies = {
-			{E.Slug, 4},
-			{E.StinkBug, 4},
-			{E.Chipper, 4},
-			{E.Grasshopper, 2},
-		},
-		fixed_enemies = {
-			{E.BulbBuddy, 1},
-		}
-	}),
-	
-	new_wave({
-		min = 6,
-		max = 7,
-		enemies = {
-			{E.Fly, 2},
-			{E.MetalFly, 4},
-			{E.Chipper, 4},
-			{E.Grasshopper, 2},
-		},
-		fixed_enemies = {
-			{E.BulbBuddy, 1},
-		}
-	}),
-		
-	new_wave({
-		min = 5,
-		max = 6,
-		enemies = {
-			{E.SpikedFly, 2},
-			{E.StinkBug, 2},
-		},
-		fixed_enemies = {
-			{E.BulbBuddy, 1},
-		}
-	}),
-
-	------------------------------------------------
-	-- Cafeteria
-	new_cafeteria(function()
-		game:kill_actors_with_name("electric_rays") 
-	end),
-	------------------------------------------------
-	
-	new_wave({
-		min = 4,
-		max = 5,
-		enemies = {
-			{E.SnailShelledBouncy, 2},
-		},
-		elevator_layers = {
-			["bg_grid"] = false,
-			["fg_grid"] = false,
-		},
-		
-		fixed_enemies = {
-			{E.ElectricRays, 1, position = {CANVAS_WIDTH/2, CANVAS_HEIGHT/2 + 8}, args = {
-				{
-					n_rays = 1, 
-					activation_delay = 2,
-				}
-			}},
-		},
-		music = "w2",
-
-		floating_text = "🎓 "..string.upper(Text:text("input.prompts.jetpack")),
-	}),
-	
-	new_wave({
-		min = 5,
-		max = 6,
-		enemies = {
-			{E.Grasshopper, 2},
-			{E.StinkBug, 2},
-			{E.SnailShelledBouncy, 2},
-		},
-	}),
-	
-	new_wave({
-		min = 5,
-		max = 6,
-		enemies = {
-			{E.SnailShelledBouncy, 2},
-			{E.Fly, 2},
-			{E.Boomshroom, 2},
-		},
-		fixed_enemies = {
-			{E.BulbBuddy, 2}
-		}
-	}),
-	
-	new_wave({
-		min = 5,
-		max = 6,
-			{E.SnailShelledBouncy, 2},
-		enemies = {
-			{E.Boomshroom, 2},
-			{E.Grasshopper, 2},
-		},
-		fixed_enemies = {
-			{E.BulbBuddy, 1}
-		}
-	}),
-
-	new_wave({
-		min = 4,
-		max = 5,
-		enemies = {
-			{E.Chipper, 2},
-			{E.StinkBug, 2},
-		},
-
-		-- run = function(self, level)
-		-- 	for _, player in pairs(game.players) do
-		-- 		local arc = enemies.ElectricArc:new(CANVAS_WIDTH*0.5, CANVAS_HEIGHT*0.5)
-		-- 		arc:set_arc_target(player)
-		-- 		arc.arc_damage = 2.5
-		-- 		game:new_actor(arc)
-		-- 	end
-		-- end,
-	}),
-
-	new_wave({
-		min = 6,
-		max = 7,
-
-		enemies = {
-			{E.SnailShelled, 2},
-			{E.Fly, 2},
-			{E.SpikedFly, 2},
-		},
-	}),
-
-	new_wave({
-		min = 7,
-		max = 9,
-
-		enemies = {
-			{E.Spider, 20},
-			{E.MetalFly, 20},
-			{E.BulbBuddy, 5}
-		},
-	}),
-
-	new_wave({
-		min = 6,
-		max = 7,
-
-		enemies = {
-			{E.Spider, 2},
-			{E.Fly, 2},
-			{E.SpikedFly, 2},
-			{E.Chipper, 2},
-			{E.StinkBug, 2},
-		},
-
-	}),
-
-	
-	new_wave({
-		min = 1,
-		max = 1,
-
-		enemies = {
-			{E.Motherboard, 1, position = {3*16, 3*16 + 4}},
-		},
-		run = function(self, level)
-			for _, actor in pairs(game.actors) do
-				if actor.name == "electric_arc" then
-					actor:start_disable_timer(1)
-				end
-			end
-		end,
-
-		music = "miniboss",
-	}),
-
-	------
-	-- Cafeteria
-	new_cafeteria(function()
-		-- for _, actor in pairs(game.actors) do
-		-- 	if actor.name == "electric_rays" then
-		-- 		actor:kill()
-		-- 	end
-		-- end
-	end),
 	
 	
 	----------------------------------------------------------------------------------------------------------
 	----------------------------------------------------------------------------------------------------------
-	--- W3: beehive
+	--- W2: beehive
 	----------------------------------------------------------------------------------------------------------
 	----------------------------------------------------------------------------------------------------------
 
@@ -615,7 +319,7 @@ local waves = {
 		background = backgrounds.BackgroundBeehive:new(),
 		music = "w1",
 
-		title = get_world_name("3"),
+		title = get_world_name("2"),
 		title_color = COL_YELLOW_ORANGE,
 	}),
 
@@ -820,9 +524,17 @@ local waves = {
 		min = 1,
 		max = 1,
 		enemies = {	
-			{E.Dung, 1, position = {240, 200}},			
+			{E.BeeBoss, 1, position = {240, 200}},
 		},
 		music = "miniboss",
+
+		run = function(self, level)
+			for _, actor in pairs(level.game.actors) do
+				if actor.name == "timed_spikes" then
+					actor:remove()
+				end
+			end
+		end,
 
 		cutscene = cutscenes.boss_enter,
 	}),
@@ -835,6 +547,331 @@ local waves = {
 
 	------
 
+	----------------------------------------------------------------------------------------------------------
+	----------------------------------------------------------------------------------------------------------
+	--- W3: server room
+	----------------------------------------------------------------------------------------------------------
+	----------------------------------------------------------------------------------------------------------
+
+	-- Floor 20
+	new_wave({
+		min = 6,
+		max = 6, 
+		enemies = {
+			{E.Chipper, 1},
+		},
+		background = backgrounds.BackgroundServers:new(),
+		music = "w2",
+
+		title = get_world_name("3"),
+		title_color = COL_MID_GREEN,
+	}),
+
+	new_wave({
+		min = 5,
+		max = 5,
+		enemies = {
+			{E.Woodlouse, 2},
+			{E.Fly, 2},
+		},
+		fixed_enemies = {
+			{E.BulbBuddy, 1},
+		},
+	}),
+
+	new_wave({
+		min = 5,
+		max = 7,
+		enemies = {
+			{E.Slug, 2},
+			{E.StinkBug, 2},
+			{E.Chipper, 2},
+			{E.BulbBuddy, 1},
+		},
+	}),
+	
+	new_wave({
+		min = 6,
+		max = 6,
+		enemies = {
+			{E.Grasshopper, 2},
+			{E.SnailShelled, 2},
+			{E.Woodlouse, 2},
+		},
+	}),
+
+	new_wave({
+		level_geometry = LevelGeometry:new({
+			{rect = Rect:new(3, 8, 8, 8), tile = TILE_SEMISOLID}, 
+			{rect = Rect:new(21, 8, 26, 8), tile = TILE_SEMISOLID}, 
+		}),
+		elevator_layers = {
+			["bg_grid"] = false,
+		},
+		run = function(self, level)
+			game:screenshake(10)
+
+			local cabin_rect = game.level.cabin_rect
+			Particles:falling_grid(cabin_rect.ax +   16, cabin_rect.ay + 6*16)
+			Particles:falling_grid(cabin_rect.bx - 7*16, cabin_rect.ay + 6*16)
+			level.elevator:start_grid_timer(2.5)
+		end,
+		
+		fixed_enemies = {
+			{E.ElectricRays, 1, position = {CANVAS_WIDTH/2, CANVAS_HEIGHT/2 + 8}, args = {{
+					n_rays = 1, 
+					activation_delay = 2, 
+					init_angle = pi/2,
+					angle_speed = 0,
+				}}
+			},
+		},
+		floating_text = "🎓 "..string.upper(Text:text("input.prompts.jetpack")),
+
+		min = 4,
+		max = 6,
+		enemies = {
+			{E.Fly, 2},
+			{E.Chipper, 2},
+		},
+	}),
+	
+	new_wave({
+		min = 3,
+		max = 4,
+		enemies = {
+			{E.MetalFly, 4},
+		},
+		fixed_enemies = {
+			{E.BulbBuddy, 1},
+		},
+
+		run = function(self, level)
+			for _, enemy in pairs(game.actors) do
+				if enemy.name == "electric_rays" then
+					enemy.angle_speed = 0.3
+				end
+			end
+		end,
+	}),
+
+	new_wave({
+		min = 5,
+		max = 6,
+		enemies = {
+			{E.Slug, 4},
+			{E.StinkBug, 4},
+			{E.Chipper, 4},
+			{E.Grasshopper, 2},
+		},
+		fixed_enemies = {
+			{E.BulbBuddy, 1},
+		}
+	}),
+	
+	new_wave({
+		min = 6,
+		max = 7,
+		enemies = {
+			{E.Fly, 2},
+			{E.MetalFly, 4},
+			{E.Chipper, 4},
+			{E.Grasshopper, 2},
+		},
+		fixed_enemies = {
+			{E.BulbBuddy, 1},
+		}
+	}),
+		
+	new_wave({
+		min = 5,
+		max = 6,
+		enemies = {
+			{E.SpikedFly, 2},
+			{E.StinkBug, 2},
+		},
+		fixed_enemies = {
+			{E.BulbBuddy, 1},
+		}
+	}),
+
+	------------------------------------------------
+	-- Cafeteria
+	new_cafeteria(function()
+		game:kill_actors_with_name("electric_rays") 
+	end),
+	------------------------------------------------
+	
+	new_wave({
+		min = 4,
+		max = 5,
+		enemies = {
+			{E.SnailShelledBouncy, 2},
+		},
+		elevator_layers = {
+			["bg_grid"] = false,
+			["fg_grid"] = false,
+		},
+		
+		fixed_enemies = {
+			{E.ElectricRays, 1, position = {CANVAS_WIDTH/2, CANVAS_HEIGHT/2 + 8}, args = {
+				{
+					n_rays = 1, 
+					activation_delay = 2,
+					angle_speed = 0.3,
+				}
+			}},
+		},
+		music = "w2",
+
+		floating_text = "🎓 "..string.upper(Text:text("input.prompts.jetpack")),
+	}),
+	
+	new_wave({
+		min = 5,
+		max = 6,
+		enemies = {
+			{E.Grasshopper, 2},
+			{E.StinkBug, 2},
+			{E.SnailShelledBouncy, 2},
+		},
+	}),
+	
+	new_wave({
+		min = 5,
+		max = 6,
+		enemies = {
+			{E.SnailShelledBouncy, 2},
+			{E.Fly, 2},
+			{E.Boomshroom, 2},
+		},
+		fixed_enemies = {
+			{E.BulbBuddy, 2}
+		}
+	}),
+	
+	new_wave({
+		min = 5,
+		max = 6,
+			{E.SnailShelledBouncy, 2},
+		enemies = {
+			{E.Boomshroom, 2},
+			{E.Grasshopper, 2},
+		},
+		fixed_enemies = {
+			{E.BulbBuddy, 1}
+		}
+	}),
+
+	new_wave({
+		min = 4,
+		max = 5,
+		enemies = {
+			{E.Chipper, 2},
+			{E.StinkBug, 2},
+		},
+
+		-- run = function(self, level)
+		-- 	for _, player in pairs(game.players) do
+		-- 		local arc = enemies.ElectricArc:new(CANVAS_WIDTH*0.5, CANVAS_HEIGHT*0.5)
+		-- 		arc:set_arc_target(player)
+		-- 		arc.arc_damage = 2.5
+		-- 		game:new_actor(arc)
+		-- 	end
+		-- end,
+	}),
+
+	new_wave({
+		min = 6,
+		max = 7,
+
+		enemies = {
+			{E.SnailShelled, 2},
+			{E.Fly, 2},
+			{E.SpikedFly, 2},
+		},
+	}),
+
+	new_wave({
+		min = 7,
+		max = 9,
+
+		enemies = {
+			{E.Spider, 20},
+			{E.MetalFly, 20},
+			{E.BulbBuddy, 5}
+		},
+	}),
+
+	new_wave({
+		min = 6,
+		max = 7,
+
+		enemies = {
+			{E.Spider, 2},
+			{E.Fly, 2},
+			{E.SpikedFly, 2},
+			{E.Chipper, 2},
+			{E.StinkBug, 2},
+		},
+
+	}),
+
+	
+	new_wave({
+		min = 1,
+		max = 1,
+
+		enemies = {
+			{E.Motherboard, 1, position = {3*16, 3*16 + 4}},
+		},
+		run = function(self, level)
+			for _, actor in pairs(game.actors) do
+				if actor.name == "electric_arc" then
+					actor:start_disable_timer(1)
+				end
+			end
+		end,
+
+		music = "miniboss",
+	}),
+
+	------
+	-- Cafeteria
+	new_cafeteria(function()
+		-- for _, actor in pairs(game.actors) do
+		-- 	if actor.name == "electric_rays" then
+		-- 		actor:kill()
+		-- 	end
+		-- end
+	end),
+
+
+	----------------------------------------------------------------------------------------------------------
+	----------------------------------------------------------------------------------------------------------
+	--- W4: the final climb
+	----------------------------------------------------------------------------------------------------------
+	----------------------------------------------------------------------------------------------------------
+
+	new_wave({
+		min = 6,
+		max = 7,
+
+		enemies = {
+			{E.Spider, 2},
+			{E.Fly, 2},
+			{E.SpikedFly, 2},
+			{E.Chipper, 2},
+			{E.StinkBug, 2},
+		},
+
+		background = backgrounds.BackgroundFinal:new(),
+		music = "w1",
+
+		title = get_world_name("4"),
+		title_color = COL_LIGHT_BLUE,
+	}),
+	
 	--]]
 	
 	-----------------------------------------------------

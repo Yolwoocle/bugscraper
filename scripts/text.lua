@@ -44,7 +44,6 @@ function TextManager:unpack(tab)
     end 
     
     explore(tab, "")
-    love.system.setClipboardText(s)
     return output
 end
 

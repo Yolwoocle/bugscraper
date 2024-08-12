@@ -21,10 +21,16 @@ function Light:init(x, y, params)
     self.oscillation_angle_value = 0
 
     self.is_active = param(params.is_active, true)
+
+    self.target = nil
 end
 
 function Light:update(dt)
-    if self.oscillation_enabled then
+    if self.target then
+        local a = math.atan2(self.target.mid_y - self.position.y, self.target.mid_x - self.position.x)
+        self.angle = a
+        
+    elseif self.oscillation_enabled then
         self.oscillation_angle_value = self.oscillation_angle_value + self.oscillation_speed * dt
         self.oscillation_angle_offset = math.sin(self.oscillation_angle_value) * self.oscillation_amplitude
     end

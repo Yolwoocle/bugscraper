@@ -68,6 +68,17 @@ cutscenes.boss_enter = Cutscene:new {
                 light.oscillation_speed = light_settings[name][1]
                 light.oscillation_amplitude = light_settings[name][2]
             end
+
+            local boss
+            for _, actor in pairs(game.actors) do
+                if actor.name == "bee_boss" then
+                    boss = actor
+                    break
+                end
+            end
+            if boss then
+                game.light_world.lights.center.target = boss
+            end
         end,
     }),
     Scene:new({

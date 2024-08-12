@@ -14,12 +14,12 @@ function BackgroundCafeteria:init(level)
 	self.speed = 0
 
 	self.layers = {
-		{sprite = Sprite:new(images.bg_city_0, SPRITE_ANCHOR_TOP_LEFT), y = 0,  z = math.huge},
-		{sprite = Sprite:new(images.bg_city_1, SPRITE_ANCHOR_TOP_LEFT), y = 16, z = 16},
-		{sprite = Sprite:new(images.bg_city_2, SPRITE_ANCHOR_TOP_LEFT), y = 32, z = 8},
-		{sprite = Sprite:new(images.bg_city_3, SPRITE_ANCHOR_TOP_LEFT), y = 64, z = 4},
+		{sprite = Sprite:new(images.bg_city_0, SPRITE_ANCHOR_LEFT_TOP), y = 0,  z = math.huge},
+		{sprite = Sprite:new(images.bg_city_1, SPRITE_ANCHOR_LEFT_TOP), y = 16, z = 16},
+		{sprite = Sprite:new(images.bg_city_2, SPRITE_ANCHOR_LEFT_TOP), y = 32, z = 8},
+		{sprite = Sprite:new(images.bg_city_3, SPRITE_ANCHOR_LEFT_TOP), y = 64, z = 4},
 	}
-	self.shine_sprite = Sprite:new(images.bg_city_shine, SPRITE_ANCHOR_TOP_LEFT)
+	self.shine_sprite = Sprite:new(images.bg_city_shine, SPRITE_ANCHOR_LEFT_TOP)
 end
 
 function BackgroundCafeteria:update(dt)
