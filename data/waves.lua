@@ -317,7 +317,7 @@ local waves = {
 		},
 
 		background = backgrounds.BackgroundBeehive:new(),
-		music = "w1",
+		music = "w2",
 
 		title = get_world_name("2"),
 		title_color = COL_YELLOW_ORANGE,
@@ -412,7 +412,9 @@ local waves = {
 		},
 	}), 
 	
+	---------------------------------------------
 	new_cafeteria(),
+	---------------------------------------------
 		
 	new_wave({
 		min = 5,
@@ -561,7 +563,7 @@ local waves = {
 			{E.Chipper, 1},
 		},
 		background = backgrounds.BackgroundServers:new(),
-		music = "w2",
+		music = "w3",
 
 		title = get_world_name("3"),
 		title_color = COL_MID_GREEN,
@@ -722,7 +724,7 @@ local waves = {
 				}
 			}},
 		},
-		music = "w2",
+		music = "w3",
 
 		floating_text = "🎓 "..string.upper(Text:text("input.prompts.jetpack")),
 	}),
@@ -854,22 +856,236 @@ local waves = {
 	----------------------------------------------------------------------------------------------------------
 
 	new_wave({
-		min = 6,
-		max = 7,
+		min = 8,
+		max = 8,
 
 		enemies = {
-			{E.Spider, 2},
+			{E.Larva, 2},
+			{E.Fly, 2},
+			{E.Slug, 2},
+		},
+
+		background = backgrounds.BackgroundFinal:new(),
+		music = "w4",
+
+		title = get_world_name("4"),
+		title_color = COL_LIGHT_BLUE,
+		title_outline_color = COL_DARK_BLUE,
+
+		elevator_layers = {
+			["cabin"] = false,
+			["bg_grid"] = false,
+		},
+		run = function(self, level)
+		end,
+	}),
+	
+
+	new_wave({
+		min = 9,
+		max = 9,
+
+		enemies = {
 			{E.Fly, 2},
 			{E.SpikedFly, 2},
+			{E.Woodlouse, 2},
+		},
+	}),
+	
+
+	new_wave({
+		min = 11,
+		max = 11,
+
+		enemies = {
+			{E.Woodlouse, 20},
+			{E.SpikedFly, 20},
+			{E.SnailShelled, 20},
+			{E.Boomshroom, 15},
+		},
+	}),
+	
+
+	new_wave({
+		min = 12,
+		max = 13,
+
+		enemies = {
+			{E.StinkBug, 2},
+			{E.Spider, 2},
+			{E.SnailShelled, 2},
+			{E.Boomshroom, 2},
+		},
+	}),
+
+	new_wave({
+		min = 13,
+		max = 14,
+
+		enemies = {
+			{E.Larva, 2},
+			{E.Fly, 2},
+			{E.Woodlouse, 2},
+			{E.SpikedFly, 2},
+			{E.Boomshroom, 2},
+			{E.SnailShelled, 2},
+			{E.Spider, 2},
+		},
+	}),
+
+	-- W2 recap
+
+	new_wave({
+		min = 8,
+		max = 9,
+
+		enemies = {
+			{E.Larva, 2},
+			{E.Mosquito, 2},
+			{E.ShovelBee, 2},
+		},
+
+		run = function(wave, level)
+			spawn_timed_spikes()
+		end,
+	}),
+
+	new_wave({
+		min = 9,
+		max = 10,
+
+		enemies = {
+			{E.Larva, 2},
+			{E.Mosquito, 2},
+			{E.Chipper360, 2},
+		},
+	}),
+
+	new_wave({
+		min = 11,
+		max = 12,
+
+		enemies = {
+			{E.Mosquito, 2},
+			{E.HoneypotAnt, 2},
+			{E.DrillBee, 2},
+		},
+		fixed_enemies = {
+			{E.LarvaSpawner, 1},
+		}
+	}),
+
+	new_wave({
+		min = 11,
+		max = 12,
+
+		enemies = {
+			{E.HoneypotAnt, 2},
+			{E.DrillBee, 2},
+			{E.ShovelBee, 2},
+			{E.Chipper360, 2},
+			{E.Mosquito, 2},
+		},
+	}),
+
+	new_wave({
+		min = 11,
+		max = 12,
+
+		enemies = {
+			{E.Larva, 2},
+			{E.Mosquito, 2},
+			{E.ShovelBee, 2},
+			{E.HoneypotAnt, 2},
+			{E.DrillBee, 2},
+			{E.Chipper360, 2},
+		},
+		
+		fixed_enemies = {
+			{E.HoneycombFootball, 1},
+			{E.LarvaSpawner, 1},
+		}
+	}),
+
+	-- W3 recap
+
+	new_wave({
+		min = 12,
+		max = 12,
+		
+		enemies = {
+			{E.Chipper, 2},
+		},
+
+		fixed_enemies = {
+			{E.ElectricRays, 1, position = {CANVAS_WIDTH/2, CANVAS_HEIGHT/2 + 8}, args = {
+				{
+					n_rays = 1, 
+					activation_delay = 2,
+					angle_speed = 0.3,
+				}
+			}},
+		},
+		
+		run = function(wave, level)
+			game:kill_actors_with_name("timed_spikes") 
+		end
+	}),
+
+	new_wave({
+		min = 14,
+		max = 14,
+		
+		enemies = {
 			{E.Chipper, 2},
 			{E.StinkBug, 2},
 		},
 
-		background = backgrounds.BackgroundFinal:new(),
-		music = "w1",
+		fixed_enemies = {
+			{E.BulbBuddy, 1},
+		}
+	}),
 
-		title = get_world_name("4"),
-		title_color = COL_LIGHT_BLUE,
+	new_wave({
+		min = 14,
+		max = 14,
+		
+		enemies = {
+			{E.Chipper, 2},
+			{E.StinkBug, 2},
+			{E.Grasshopper, 2},
+			{E.Fly, 2},
+		},
+
+		fixed_enemies = {
+			{E.BulbBuddy, 1},
+		},
+	}),
+
+	new_wave({
+		min = 16,
+		max = 16,
+		
+		enemies = {
+			{E.SnailShelledBouncy, 2},
+			{E.Fly, 2},
+			{E.Spider, 2},
+		},
+	}),
+
+	new_wave({
+		min = 16,
+		max = 16,
+		
+		enemies = {
+			{E.Chipper, 2},
+			{E.BulbBuddy, 2},
+			{E.StinkBug, 2},
+			{E.SnailShelledBouncy, 2},
+			{E.MetalFly, 2},
+			{E.Grasshopper, 2},
+			{E.Spider, 2},
+		},
 	}),
 	
 	--]]

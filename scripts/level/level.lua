@@ -43,6 +43,8 @@ function Level:init(game)
 	local door_bx, door_by = cabin_ay*BW+261, cabin_ay*BW+207
 	self.door_rect = Rect:new(door_ax, door_ay, door_bx, door_by)
 
+	self.kill_zone = Rect:new(-400000, -400000, 400000, CANVAS_HEIGHT+BW)
+
 	-- Level info
 	self.floor = 0 --Floor n°
 	self.max_floor = #waves

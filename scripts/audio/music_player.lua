@@ -14,8 +14,9 @@ function MusicPlayer:init()
 	self.disks = {
 		["intro"] =           disk_class:new(self, sounds.music_intro_ingame.source, sounds.music_intro_paused.source),
 		["w1"] =              disk_class:new(self, sounds.music_w1_ingame.source, sounds.music_w1_paused.source),
-		["w2"] =              disk_class:new(self, sounds.music_w2_ingame.source, sounds.music_w2_paused.source),
-		["w3"] =              disk_class:new(self, sounds.music_w1_ingame.source, sounds.music_w1_paused.source),
+		["w2"] =              disk_class:new(self, sounds.music_w1_ingame.source, sounds.music_w1_paused.source),
+		["w3"] =              disk_class:new(self, sounds.music_w3_ingame.source, sounds.music_w3_paused.source),
+		["w4"] =              disk_class:new(self, sounds.music_w1_ingame.source, sounds.music_w1_paused.source),
 		
 		["game_over"] =       disk_class:new(self, sounds.music_game_over.source, sounds.music_game_over.source),
 		["cafeteria"] =       disk_class:new(self, sounds.music_cafeteria_ingame.source, sounds.music_cafeteria_paused.source),

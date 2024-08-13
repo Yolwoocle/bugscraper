@@ -161,6 +161,8 @@ function Game:new_game()
 		self.menu_manager:set_menu()
 	end
 
+	self.apply_bounds_clamping = true
+
 	self.stats = {
 		floor = 0,
 		kills = 0,
@@ -379,8 +381,12 @@ function Game:update_actors(dt)
 
 		if not actor.is_removed and actor.is_active then
 			actor:update(dt)
-			if actor.is_affected_by_bounds then
+			if actor.is_affected_by_bounds and self.apply_bounds_clamping then
 				actor:clamp_to_bounds(self.level.cabin_inner_rect)
+			end
+			
+			if not self.level.kill_zone:is_point_in_inclusive(actor.mid_x, actor.mid_y) then
+				actor:kill()
 			end
 		end
 

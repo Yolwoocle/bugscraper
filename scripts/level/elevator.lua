@@ -75,6 +75,7 @@ end
 ---------------------------------------------
 
 function Elevator:draw(enemy_buffer, wave_progress)
+	-- Door
 	local x, y = self.level.door_rect.ax, self.level.door_rect.ay
 	local w, h = self.level.door_rect.bx - self.level.door_rect.ax+1, self.level.door_rect.by - self.level.door_rect.ay+1
 	rect_color(self.level.background.clear_color, "fill", x, y, w, h);

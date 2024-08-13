@@ -17,7 +17,7 @@ function BeeBoss:init(x, y)
 
     -- Parameters 
     self.def_friction_y = self.friction_y
-    self.life = 200
+    self.life = 150
     self.is_flying = true
     self.gravity = 0
     self.attack_radius = 16
@@ -31,6 +31,7 @@ function BeeBoss:init(x, y)
     self.follow_player = false
     self.self_knockback_mult = 0
     self.stomps = math.huge
+    self.is_stompable = false
     self.damage_on_stomp = 5
     self.friction_y = self.friction_x
     self.def_target_y = game.level.cabin_rect.ay + BW*4
@@ -118,7 +119,11 @@ function BeeBoss:init(x, y)
         thwomp_flying = {
             enter = function(state)
                 self.friction_y = self.def_friction_y
+                
                 self.thwomp_target = self:get_random_player()
+                self.thwomp_target_x = {
+                    mid_x = random_range(game.level.cabin_inner_rect.ax + 16, game.level.cabin_inner_rect.bx - 16)
+                }
                 self.vy = 0
 
             end,

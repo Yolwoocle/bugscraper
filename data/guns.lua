@@ -307,7 +307,7 @@ function Guns:init()
 		
 		self.sfx = "mushroom_ant_pop"
 		self.damage = 1
-		self.max_ammo = 5
+		self.max_ammo = math.huge
 		self.is_auto = true
 		self.spr = images.gun_machinegun
 		self.bullet_spr = images.bullet_blue
