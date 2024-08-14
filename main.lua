@@ -2,7 +2,6 @@ require "scripts.util"
 require "lib.please_work_error_explorer.error_explorer" {
 	source_font = love.graphics.newFont("fonts/FiraCode-Regular.ttf", 12)
 }
-local Class = require "scripts.meta.class"
 local Game = require "scripts.game.game"
 
 -- LÖVE uses Luajit 2.1 which is based on Lua 5.1 but has some additions (like goto)
@@ -55,8 +54,6 @@ function love.draw()
 	game:draw()
 end
 
--- CAPTURING_GIF = false
--- gif_n = 0
 function love.keypressed(key, scancode, isrepeat)
 	if key == "f5" then
 		if love.keyboard.isDown("lshift") then
@@ -67,11 +64,6 @@ function love.keypressed(key, scancode, isrepeat)
 		if love.keyboard.isDown("lshift") then
 			love.event.quit()
 		end
-	-- elseif key == "f7" then
-	-- 	love.graphics.captureScreenshot(os.time() .. ".png")
-	-- elseif key == "f8" then
-	-- 	CAPTURING_GIF = not CAPTURING_GIF
-	-- 	gif_n = gif_n + 1
 
 	elseif key == "return" and (love.keyboard.isDown("lalt") or love.keyboard.isDown("ralt")) then
 		if Options then   Options:toggle_fullscreen()    end

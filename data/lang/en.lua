@@ -1,4 +1,16 @@
 return {
+    discord = { -- Text used for Discord rich presence
+        state = {
+            solo = "Playing solo",
+            local_multiplayer = "Local multiplayer",
+        },
+        details = {
+            waiting = "In lobby",
+            playing = "In game (floor %d/%d)",
+            dying = "Defeated (floor %d/%d)",
+            win = "Victory screen",
+        },
+    },
     game = {
         demo = "DEMO", -- Chip added to the game logo to indicate that this version is a demo
         fps = "%d FPS",

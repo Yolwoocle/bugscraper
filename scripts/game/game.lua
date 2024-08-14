@@ -22,11 +22,13 @@ local LightLayer = require "scripts.graphics.light_layer"
 local ScreenshotManager = require "scripts.screenshot"
 local QueuedPlayer = require "scripts.game.queued_player"
 local GunDisplay = require "scripts.actor.enemies.gun_display"
+
+local DiscordPresence = require "scripts.meta.discord_presence"
+
 local guns = require "data.guns"
 local upgrades = require "data.upgrades"
 local shaders = require "data.shaders"
 local images = require "data.images"
-
 local skins = require "data.skins"
 local sounds = require "data.sounds"
 local utf8 = require "utf8"
@@ -98,6 +100,8 @@ function Game:init()
 	self.is_first_time = Options.is_first_time
 	self.has_seen_controller_warning = false 
 	self.ui_visible = true
+
+	self.discord_presence = DiscordPresence
 
 	self.debug_mode = DEBUG_MODE
 end
@@ -323,6 +327,8 @@ function Game:update(dt)
 		self.layers[i].blur = Options:get("menu_blur") and (self.menu_manager.cur_menu ~= nil)
 	end
 
+	self.discord_presence:update(dt)
+
 	-- THIS SHOULD BE LAST
 	Input:update_last_input_state(dt)
 end
@@ -358,6 +364,10 @@ function Game:update_main_game(dt)
 	self.light_world:update(dt)
 
 	self.notif_timer = math.max(self.notif_timer - dt, 0)
+end
+
+function Game:quit()
+	self.discord_presence:quit()
 end
 
 function Game:get_enemy_count()

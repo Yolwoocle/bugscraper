@@ -129,7 +129,7 @@ function Guns:init()
 		self.max_reload_timer = 1.5
 
 		self.random_angle_offset = 0.5
-		self.damage = 1.5
+		self.damage = 2.5
 		self.is_auto = true
 		self.spr = images.gun_minigun
 		self.sfx = "mushroom_ant_pop"
