@@ -8,6 +8,7 @@ if pcall(function()
 end) then
 	import_success = true
 else
+	print("DiscordRPC: error during import")
 	import_success = false
 end
 
@@ -38,25 +39,35 @@ local DiscordPresence = Class:inherit()
 ]]
 
 function DiscordPresence:init()
-	self.is_enabled = import_success
+	self.is_enabled = false
+	self.import_success = import_success
 
-	if not self.is_enabled then
+	if not self.import_success then
+		self.is_enabled = false
 		print("DiscordRPC: error during import")
 		return
 	end
 
+	self:enable()
+end
+
+function DiscordPresence:enable()
 	local now = os.time(os.date("*t"))
 	self.presence = {
-        startTimestamp = now,
+		startTimestamp = now,
 		largeImageKey = "icon_1024x1024",
 		largeImageText = "Bugscraper",
-
+		
         partySize = 0,
         partyMax = MAX_NUMBER_OF_PLAYERS,
     }
 	self.next_presence_update = 0
+	
+	-- discordRPC.initialize(discordAppId, true) --TODO remake
+end
 
-	discordRPC.initialize(discordAppId, true)
+function DiscordPresence:disable()
+	-- discordRPC.shutdown() --TODO remake
 end
 
 function DiscordPresence:update(dt)
@@ -84,31 +95,38 @@ function DiscordPresence:update(dt)
 	end
 
 	if self.next_presence_update < love.timer.getTime() then
-        discordRPC.updatePresence(self.presence)
+        -- discordRPC.updatePresence(self.presence) --TODO remake
         self.next_presence_update = love.timer.getTime() + 3.0
     end
-    discordRPC.runCallbacks()
+    -- discordRPC.runCallbacks() --TODO remake
 end
 
 function DiscordPresence:quit()
-	discordRPC.shutdown()
+	if not self.is_enabled then
+		return
+	end
+
+	self:disable()
 end
 
 function DiscordPresence:ready(user_id, username, discriminator, avatar)
+	self.is_enabled = true
 	print(string.format("Discord RPC: ready (user_id %s, username %s, discriminator %s, avatar %s)", user_id, username, discriminator, avatar))
 end
 
 function DiscordPresence:disconnected(error_code, message)
+	self.is_enabled = false
     print(string.format("Discord: disconnected (error_code %d: %s)", error_code, message))
 end
 
-function DiscordPresence.errored(error_code, message)
+function DiscordPresence:errored(error_code, message)
     print(string.format("Discord: error (error_code %d: %s)", error_code, message))
 end
 
 local discord_instance = DiscordPresence:new()
 
 if not import_success then
+
 	return discord_instance
 end
 
@@ -116,17 +134,18 @@ end
 -- DiscordRPC Callbacks
 -------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-function discordRPC.ready(userId, username, discriminator, avatar)
-    discord_instance:ready(userId, username, discriminator, avatar)
-end
+--TODO remake
+-- function discordRPC.ready(userId, username, discriminator, avatar)
+--     discord_instance:ready(userId, username, discriminator, avatar)
+-- end
 
-function discordRPC.disconnected(errorCode, message)
-	discord_instance:disconnected(errorCode, message)
-end
+-- function discordRPC.disconnected(errorCode, message)
+-- 	discord_instance:disconnected(errorCode, message)
+-- end
 
-function discordRPC.errored(errorCode, message)
-	discord_instance:errored(errorCode, message)
-end
+-- function discordRPC.errored(errorCode, message)
+-- 	discord_instance:errored(errorCode, message)
+-- end
 
 return discord_instance
 

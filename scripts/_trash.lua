@@ -3,6 +3,283 @@
 
 --
 ------------------------------------
+-- Old demo waves
+
+local demo_waves = {	
+	new_wave({
+		min = 4,
+		max = 6,
+		enemies = {
+			{E.Larva, 3},
+			{E.Fly, 3},
+		},
+		music = "w1",
+
+		title = get_world_name("1"),
+		title_color = COL_MID_BLUE,
+	}),
+
+	
+	new_wave({
+		-- Woodlouse intro
+		min = 4,
+		max = 6,
+		enable_stomp_arrow_tutorial = true,
+		enemies = {
+			{E.Woodlouse, 2},
+		},
+	}),
+
+	new_wave({
+		min = 4,
+		max = 6,
+		enemies = {
+			{E.Larva, 2},
+			{E.Fly, 3},
+			{E.Woodlouse, 2},
+		},
+	}),
+
+	new_wave({
+		-- Slug intro
+		min = 4,
+		max = 6,
+		enemies = {
+			{E.Larva, 2},
+			{E.Fly, 2},
+			{E.Slug, 2},
+		},
+	}),
+	
+	new_wave({
+		-- Spider intro
+		min = 4,
+		max = 6,
+		enemies = {
+			{E.Larva, 2},
+			{E.Spider, 4},
+		},
+	}),
+
+	new_wave({
+		min = 6,
+		max = 8,
+		enemies = {
+			{E.Fly, 5},
+			{E.Slug, 2},
+			{E.Spider, 3},
+			{E.Woodlouse, 2},
+		},
+	}),
+
+	new_wave({
+		-- Mosquito intro
+		min = 6,
+		max = 8,
+		enemies = {
+			{E.Fly, 3},
+			{E.Mosquito, 4},
+		},
+	}),
+
+	new_wave({ 
+		min = 6,
+		max = 8,
+		enemies = {
+			{E.Larva, 2},
+			{E.Slug, 5},
+			{E.Fly, 2},
+			{E.Mosquito, 2},
+			{E.Woodlouse, 2},
+		},
+	}),
+
+	new_wave({
+		min = 3,
+		max = 5,
+		enemies = {
+			-- Shelled Snail intro
+			{E.SnailShelled, 3},
+		},
+	}),
+
+	new_wave({
+		min = 6,
+		max = 8,
+		enemies = {
+			-- 
+			{E.Mosquito, 3},
+			{E.Fly, 4},
+			{E.Larva, 4},
+			{E.SnailShelled, 3},
+			{E.Spider, 3},
+		},
+	}),
+
+	new_wave({ 
+		-- Spiked Fly intro
+		min = 6,
+		max = 8,
+		enemies = {
+			{E.Larva, 1},
+			{E.Fly, 2},
+			{E.Mosquito, 2},
+			{E.SpikedFly, 4},
+		},
+	}),
+
+	new_wave({ 
+		min = 7,
+		max = 9,
+		enemies = {
+			{E.Fly, 2},
+			{E.Mosquito, 4},
+			{E.SpikedFly, 4},
+			{E.Spider, 4},
+		},
+	}),
+
+	new_cafeteria(),
+
+	new_wave({ 
+		-- Grasshopper intro
+		min = 4,
+		max = 4,
+		enemies = {
+			{E.Grasshopper, 8},
+		},
+		music = "w1",
+	}),
+
+	new_wave({ 
+		min = 7,
+		max = 9,
+		enemies = {
+			{E.Fly, 2},
+			{E.Mosquito, 4},
+			{E.Grasshopper, 8},
+			{E.Woodlouse, 2},
+			{E.SpikedFly, 4},
+			{E.Spider, 4},
+		},
+	}),
+
+	new_wave({ 
+		-- Mushroom Ant intro
+		min = 5,
+		max = 6,
+		enemies = {
+			{E.Fly, 3},
+			{E.Mosquito, 3},
+			{E.MushroomAnt, 3},
+		},
+	}),
+
+
+	new_wave({ 
+		min = 8,
+		max = 10,
+		enemies = {
+			{E.MushroomAnt, 3},
+			{E.Woodlouse, 2},
+			{E.Fly, 1},
+			{E.SpikedFly, 1},
+			{E.Spider, 2},
+		},
+	}),
+
+	new_wave({ 
+		-- Honeypot ant intro
+		min = 6,
+		max = 8,
+		enemies = {
+			{E.Larva, 3},
+			{E.HoneypotAnt, 6},
+			{E.MushroomAnt, 3},
+			{E.SpikedFly, 3},
+		},
+	}),
+
+	new_wave({ -- 12
+		-- ALL
+		min = 12,
+		max = 12,
+		enemies = {
+			{E.Larva, 4},
+			{E.Fly, 3},
+			{E.SnailShelled, 3},
+			{E.Mosquito, 3},
+			{E.Slug, 2},
+			{E.HoneypotAnt, 2},
+			{E.SpikedFly, 1},
+			{E.Grasshopper, 1},
+			{E.MushroomAnt, 1},
+			{E.Spider, 1},
+		},
+	}),
+
+	new_wave({
+		min = 14,
+		max = 16,
+		enemies = {
+			{E.Fly, 3},
+			{E.HoneypotAnt, 2},
+			{E.SnailShelled, 3},
+			{E.Woodlouse, 1},
+			{E.Slug, 2},
+			{E.Mosquito, 3},
+			{E.SpikedFly, 1},
+			{E.Grasshopper, 1},
+			{E.MushroomAnt, 1},
+			{E.Spider, 1},
+		},
+	}),
+
+	new_wave({
+		-- roll_type = WAVE_ROLL_TYPE_FIXED,
+		min = 1,
+		max = 1,
+		enemies = {	
+			{E.Dung, 1, position = {240, 200}},			
+		},
+		music = "miniboss",
+	}),
+	
+	-- Last wave
+	new_wave({ 
+		min = 1,
+		max = 1,
+		enemies = {
+			{E.ButtonBigGlass, 1, position = {211, 194}}
+		},
+		music = "off",
+	})
+}
+
+
+
+------------------------------------
+--- Old love.update function
+--- 
+
+function love.update(dt)
+	_G_t = _G_t + dt
+	local cap = 1 --If there's lag spike, repeat up to how many frames?
+	local i = 0
+	local update_fixed_dt = fixed_dt
+	-- local update_fixed_dt = 1/30
+	while (not _G_do_fixed_framerate or _G_t > update_fixed_dt) and cap > 0 do
+		_G_t = _G_t - update_fixed_dt
+		fixed_update()
+		cap = cap - 1
+		i=i+1
+	end
+
+	if game then   game.frame_repeat = i end
+	_G_frame = _G_frame + 1
+end
+
+------------------------------------
 
 
 -- Sprite

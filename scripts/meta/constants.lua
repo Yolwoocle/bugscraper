@@ -186,7 +186,7 @@ BUTTON_STYLE_DETECT = "detect"
 BUTTON_STYLES = {
 	BUTTON_STYLE_SWITCH,
 	BUTTON_STYLE_PLAYSTATION4,
-	BUTTON_STYLE_PLAYSTATION5,CANVAS_WIDTH, CANVAS_HEIGHT
+	BUTTON_STYLE_PLAYSTATION5,
 	BUTTON_STYLE_XBOX,
 	BUTTON_STYLE_DETECT,
 }
@@ -326,10 +326,10 @@ RAW_INPUT_MAP_DEFAULT_SPLIT_KEYBOARD_P2 = {
     pause =     {"k_escape", "k_p"},
     ui_select = {"k_l", "k_return"},
     ui_back =   {"k_;", "k_backspace"},
-    ui_left =   {"k_h", "k_left"},
-    ui_right =  {"k_k", "k_right"},
-    ui_up =     {"k_u", "k_up"},
-    ui_down =   {"k_j", "k_down"},
+    ui_left =   {"k_left"},
+    ui_right =  {"k_right"},
+    ui_up =     {"k_up"},
+    ui_down =   {"k_down"},
     ui_reset_keys = {"k_o"},
     split_keyboard = {},
     leave_game = {"k_o"},

@@ -19,6 +19,7 @@ _G_t = 0
 _G_frame = 0
 _G_fixed_frame = 0
 _G_frame_by_frame_mode = false
+local max_frame_buffer_duration = fixed_dt * 2
 local _frame_by_frame_mode_advance_flag = false
 local function fixed_update()
 	if _G_frame_by_frame_mode and not _frame_by_frame_mode_advance_flag then
@@ -34,7 +35,7 @@ end
 _G_do_fixed_framerate = true
 
 function love.update(dt)
-	_G_t = _G_t + dt
+	_G_t = math.min(_G_t + dt, max_frame_buffer_duration)
 	local cap = 1 --If there's lag spike, repeat up to how many frames?
 	local i = 0
 	local update_fixed_dt = fixed_dt

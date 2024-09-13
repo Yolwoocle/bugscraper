@@ -16,7 +16,7 @@ return {
         fps = "%d FPS",
         congratulations = "CONGRATULATIONS!",
         win_thanks = "Thank you for playing the demo",
-        win_wishlist = "Wishlist on Steam :)", -- "Wishlist" is a verb
+        win_wishlist = "Wishlist the game on Steam :)", -- "Wishlist" is a verb
         win_prompt = "[Pause to continue]",
         warning_web_controller = "Some browsers may not have proper controller support"
 

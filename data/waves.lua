@@ -1105,15 +1105,40 @@ local waves = {
 	})
 }
 
-local demo_waves = {	
+
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+
+
+local demo_waves = {
 	new_wave({
-		min = 4,
-		max = 6,
+		min = 5,
+		max = 5,
 		enemies = {
 			{E.Larva, 3},
 			{E.Fly, 3},
 		},
 		music = "w1",
+
+		title = get_world_name("1"),
+		title_color = COL_MID_BLUE,
 	}),
 
 	
@@ -1121,7 +1146,6 @@ local demo_waves = {
 		-- Woodlouse intro
 		min = 4,
 		max = 6,
-		enable_stomp_arrow_tutorial = true,
 		enemies = {
 			{E.Woodlouse, 2},
 		},
@@ -1144,53 +1168,11 @@ local demo_waves = {
 		enemies = {
 			{E.Larva, 2},
 			{E.Fly, 2},
-			{E.Slug, 2},
+			{E.Slug, 4},
 		},
 	}),
+
 	
-	new_wave({
-		-- Spider intro
-		min = 4,
-		max = 6,
-		enemies = {
-			{E.Larva, 2},
-			{E.Spider, 4},
-		},
-	}),
-
-	new_wave({
-		min = 6,
-		max = 8,
-		enemies = {
-			{E.Fly, 5},
-			{E.Slug, 2},
-			{E.Spider, 3},
-			{E.Woodlouse, 2},
-		},
-	}),
-
-	new_wave({
-		-- Mosquito intro
-		min = 6,
-		max = 8,
-		enemies = {
-			{E.Fly, 3},
-			{E.Mosquito, 4},
-		},
-	}),
-
-	new_wave({ 
-		min = 6,
-		max = 8,
-		enemies = {
-			{E.Larva, 2},
-			{E.Slug, 5},
-			{E.Fly, 2},
-			{E.Mosquito, 2},
-			{E.Woodlouse, 2},
-		},
-	}),
-
 	new_wave({
 		min = 3,
 		max = 5,
@@ -1205,163 +1187,140 @@ local demo_waves = {
 		max = 8,
 		enemies = {
 			-- 
-			{E.Mosquito, 3},
-			{E.Fly, 4},
 			{E.Larva, 4},
+			{E.Fly, 4},
+			{E.Woodlouse, 2},
 			{E.SnailShelled, 3},
-			{E.Spider, 3},
+			{E.Slug, 2},
 		},
 	}),
-
-	new_wave({ 
-		-- Spiked Fly intro
-		min = 6,
-		max = 8,
-		enemies = {
-			{E.Larva, 1},
-			{E.Fly, 2},
-			{E.Mosquito, 2},
-			{E.SpikedFly, 4},
-		},
-	}),
-
+	
 	new_wave({ 
 		min = 7,
 		max = 9,
 		enemies = {
+			{E.SnailShelled, 4},
+			{E.SpikedFly, 3},
+			{E.Fly, 3},
+		},
+	}),
+
+	new_wave({
+		-- Mushroom ant intro
+		roll_type = WAVE_ROLL_TYPE_FIXED,
+		enemies = {
 			{E.Fly, 2},
-			{E.Mosquito, 4},
+			{E.Boomshroom, 4},
+		},
+	}),
+
+	new_wave({
+		min = 8,
+		max = 10,
+		enemies = {
+			{E.Fly, 5},
+			{E.Slug, 2},
 			{E.SpikedFly, 4},
-			{E.Spider, 4},
+			{E.Woodlouse, 4},
+			{E.SnailShelled, 4},
 		},
 	}),
 
 	new_cafeteria(),
 
 	new_wave({ 
-		-- Grasshopper intro
-		min = 4,
-		max = 4,
-		enemies = {
-			{E.Grasshopper, 8},
-		},
+		-- Spiked Fly intro
+		min = 6,
+		max = 8,
 		music = "w1",
+
+		enemies = {
+			{E.Larva, 1},
+			{E.Fly, 2},
+			{E.SpikedFly, 4},
+		},
+	}),
+
+	new_wave({
+		min = 6,
+		max = 8,
+		enemies = {
+			{E.Larva, 1},
+			{E.Fly, 2},
+			{E.SpikedFly, 2},
+			{E.Boomshroom, 4},
+			{E.Slug, 2},
+			{E.SnailShelled, 2},
+		},
+	}),
+
+	new_wave({
+		-- Spider intro
+		min = 6,
+		max = 8,
+		enemies = {
+			{E.Larva, 1},
+			{E.Slug, 2},
+			{E.Spider, 4},
+		},
+	}),
+
+	new_wave({
+		min = 6,
+		max = 8,
+		enemies = {
+			{E.Fly, 2},
+			{E.SnailShelled, 2},
+			{E.Spider, 4},
+		},
+	}),
+
+	new_wave({
+		min = 8,
+		max = 9,
+		enemies = {
+			{E.Fly, 2},
+			{E.SpikedFly, 2},
+			{E.SnailShelled, 2},
+			{E.Slug, 2},
+			{E.Spider, 4},
+		},
+	}),
+
+	new_wave({ 
+		-- Stink bug intro
+		min = 5,
+		max = 6,
+		enemies = {
+			{E.StinkBug, 3},
+		},
 	}),
 
 	new_wave({ 
 		min = 7,
 		max = 9,
 		enemies = {
-			{E.Fly, 2},
-			{E.Mosquito, 4},
-			{E.Grasshopper, 8},
-			{E.Woodlouse, 2},
-			{E.SpikedFly, 4},
-			{E.Spider, 4},
-		},
-	}),
-
-	new_wave({ 
-		-- Mushroom Ant intro
-		min = 5,
-		max = 6,
-		enemies = {
-			{E.Fly, 3},
-			{E.Mosquito, 3},
-			{E.MushroomAnt, 3},
-		},
-	}),
-
-
-	new_wave({ 
-		min = 8,
-		max = 10,
-		enemies = {
-			{E.MushroomAnt, 3},
-			{E.Woodlouse, 2},
-			{E.Fly, 1},
-			{E.SpikedFly, 1},
+			{E.Larva, 1},
+			{E.SpikedFly, 2},
+			{E.Boomshroom, 2},
+			{E.SnailShelled, 2},
 			{E.Spider, 2},
+			{E.StinkBug, 4},
 		},
 	}),
 
 	new_wave({ 
-		-- Honeypot ant intro
-		min = 6,
-		max = 8,
-		enemies = {
-			{E.Larva, 3},
-			{E.HoneypotAnt, 6},
-			{E.MushroomAnt, 3},
-			{E.SpikedFly, 3},
-		},
-	}),
-
-	new_wave({ -- 12
-		-- ALL
-		min = 6,
-		max = 8,
-		enemies = {
-			{E.Larva, 4},
-			{E.Fly, 3},
-			{E.SnailShelled, 3},
-			{E.Mosquito, 3},
-			{E.Slug, 2},
-			{E.HoneypotAnt, 2},
-			{E.SpikedFly, 1},
-			{E.Grasshopper, 1},
-			{E.MushroomAnt, 1},
-			{E.Spider, 1},
-		},
-	}),
-
-	-- unpack(duplicate_table({
-	-- ALL BUT HARDER
-	new_wave({
 		min = 8,
 		max = 10,
 		enemies = {
-			{E.Fly, 3},
-			{E.SnailShelled, 3},
+			{E.Fly, 2},
 			{E.Slug, 2},
-			{E.Mosquito, 3},
-			{E.SpikedFly, 1},
-			-- {E.Grasshopper, 1},
-			-- {E.MushroomAnt, 1},
-			-- {E.Spider, 1},
-		},
-	}),
-	new_wave({
-		min = 10,
-		max = 12,
-		enemies = {
-			-- {E.Larva, 4},
-			-- {E.Fly, 3},
-			-- {E.SnailShelled, 3},
-			-- {E.Slug, 2},
-			{E.HoneypotAnt, 2},
-			{E.SpikedFly, 1},
-			{E.Grasshopper, 1},
-			{E.Mosquito, 3},
-			{E.MushroomAnt, 1},
-			{E.Woodlouse, 1},
-			{E.Spider, 1},
-		},
-	}),
-	new_wave({
-		min = 14,
-		max = 16,
-		enemies = {
-			{E.Fly, 3},
-			{E.HoneypotAnt, 2},
-			{E.SnailShelled, 3},
-			{E.Woodlouse, 1},
-			{E.Slug, 2},
-			{E.Mosquito, 3},
-			{E.SpikedFly, 1},
-			{E.Grasshopper, 1},
-			{E.MushroomAnt, 1},
-			{E.Spider, 1},
+			{E.Woodlouse, 2},
+			{E.SpikedFly, 2},
+			{E.Boomshroom, 2},
+			{E.SnailShelled, 2},
+			{E.Spider, 2},
+			{E.StinkBug, 2},
 		},
 	}),
 
@@ -1374,16 +1333,6 @@ local demo_waves = {
 		},
 		music = "miniboss",
 	}),
-	
-	-- Last wave
-	new_wave({ 
-		min = 1,
-		max = 1,
-		enemies = {
-			{E.ButtonBigGlass, 1, position = {211, 194}}
-		},
-		music = "off",
-	})
 }
 
 local function sanity_check_waves()
