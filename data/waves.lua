@@ -1,10 +1,6 @@
 require "scripts.util"
-local images = require "data.images"
 local backgrounds = require "data.backgrounds"
 local enemies = require "data.enemies"
-local Cutscene= require "scripts.game.cutscene"
-local Scene   = require "scripts.game.scene"
-local Light   = require "scripts.graphics.light"
 local cutscenes = require "data.cutscenes"
 
 local Rect = require "scripts.math.rect"

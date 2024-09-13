@@ -2,14 +2,21 @@
 
 by kira
 
-version 0.0.5
+version 0.0.9
 
 an interactive error screen for the love2d game engine.
 
 on error, shows the stack, local variables, and the
 source code when available.
 
+the newest version should be available
+[here](https://github.com/snowkittykira/love-error-explorer).
+
 ## usage
+
+```lua
+require 'error_explorer'
+```
 
 include `error_explorer.lua` in your project and
 `require` it somewhere near the start of your program
@@ -39,12 +46,28 @@ require 'error_explorer' {
   -- it's safer to remove this when distributing)
   open_editor = function (filename, line)
     -- for example using neovim remote
-    io.popen ('nvr ' .. filename .. ' +' .. line)
+    io.popen ('nvr --nostart ' .. filename .. ' +' .. line)
   end,
 }
 ```
 
 ## version history
+
+version 0.0.9:
+
+- don't error when message is too long to fit on-screen
+
+version 0.0.8:
+
+- control-c to copy the error and traceback
+
+version 0.0.7:
+
+- collapse multiline variable values to one line
+
+version 0.0.6:
+
+- fix issue when the mouse module isn't available
 
 version 0.0.5:
 
