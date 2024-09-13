@@ -10,8 +10,10 @@ function BackgroundDots:init(level)
 	self.speed = 0
 	self.def_speed = 10 --TODO
 
+	self.particle_creation_index = 0
 	self.bg_color_index = 1
-	self.number_of_particles = 60
+	self.number_of_particles = 40
+	self.image_probability = 0.4
 	
 	self.show_bg_particles = true
 	self.def_bg_col = COL_BLACK_BLUE
@@ -20,6 +22,26 @@ function BackgroundDots:init(level)
 	self.bg_particles = {}	
 	self.bg_particle_col = {COL_VERY_DARK_GRAY, COL_DARK_GRAY}
 	self.bg_particle_palettes = {
+		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
+		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
+		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
+		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
+		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
+		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
+		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
+		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
+		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
+		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
+		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
+		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
+		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
+		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
+		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
+		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
+		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
+		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
+		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
+		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
 		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
 		{COL_DARK_GREEN,  {COL_MID_DARK_GREEN, COL_MID_GREEN}},
 		{COL_DARK_RED,    {COL_LIGHT_RED, COL_PINK}}, --l red + light pink
@@ -30,6 +52,15 @@ function BackgroundDots:init(level)
 		{color(0xfee761), {color(0xfeae34), COL_WHITE}}, --orange & white
 		{color(0x743f39), {color(0x3f2832), COL_BLACK_BLUE}}, --orange & white
 		{color(0xe8b796), {color(0xe4a672), color(0xb86f50)}} --midbeige & dbeige (~brown ish)
+	}
+	self.image_weights = {
+		{images.bg_element_w1_01, 50},
+		{images.bg_element_w1_02, 20},
+		{images.bg_element_w1_03, 20},
+		{images.bg_element_w1_04, 30},
+		{images.bg_element_w1_05, 30},
+		{images.bg_element_w1_06, 30},
+		{images.bg_element_w1_07, 20},
 	}
 	self.target_bg_palette = self.bg_particle_palettes[1]
 	self.target_clear_color = self.target_bg_palette[1]
@@ -88,23 +119,31 @@ function BackgroundDots:set_clear_color(palette)
 	self.clear_color = palette[1]
 	self.bg_particle_col = palette[2]
 
-	self.bg_color_progress = 0
+	self.bg_color_progress = 0 
 
 end
 
 function BackgroundDots:new_bg_particle()
 	local o = {}
-	if false and random_range(0, 1) < 0.05 then --removeme remove "false and"
+	if self.speed >= 0 and random_range(0, 1) < self.image_probability then
 		o.type = "image"
-		o.img = images["_test_bg_image_"..tostring(random_range_int(1, 2))]
+		local value, _, _ = random_weighted(self.image_weights)
+		o.img = value
 		
 		o.w = o.img:getWidth()
 		o.h = o.img:getHeight()
+		o.spd = 0.5
+		o.z = 1
+		
 	else
 		o.type = "rect"
-
-		o.w = love.math.random(2, 12)
+		
+		-- o.w = love.math.random(2, 12)
+		o.w = love.math.random(2, 8)
 		o.h = love.math.random(8, 64)
+		o.spd = random_range(0.5, 1.5)
+		o.z = 0
+
 	end
 	o.x = love.math.random(-o.w, CANVAS_WIDTH)
 	
@@ -118,13 +157,15 @@ function BackgroundDots:new_bg_particle()
 	if self.bg_particle_col then
 		o.col = random_sample(self.bg_particle_col)
 	end
-	o.spd = random_range(0.5, 1.5)
 
 	o.oy = 0
 	o.oh = 1
 
 	o.t = 0
 	o.rnd_pi = random_neighbor(math.pi)
+
+	o.creation_index = self.particle_creation_index + 1
+	self.particle_creation_index = self.particle_creation_index + 1
 	return o
 end
 
@@ -144,6 +185,14 @@ function BackgroundDots:update_bg_particles(dt)
 		o.oh = max(o.w/o.h, abs(self:get_speed()) / self.def_speed)
 		o.oy = .5 * o.h * o.oh
 	end
+
+	table.sort(self.bg_particles, function(a, b) 
+		-- TODO prevent z-fighting by using creation order if both z values are equal
+		if a.z == b.z then
+			return a.creation_index > b.creation_index
+		end
+		return a.z > b.z 
+	end)
 end
 
 function BackgroundDots:shift_to_red(speed_cap)

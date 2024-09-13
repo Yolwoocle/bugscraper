@@ -1,15 +1,17 @@
-name = "bugscraper_0.5.dev24-08-15b"
+name = "bugscraper_demo_0.5.dev24-09-13"
 # default_targets = ["lovejs", "win32", "win64", "macos", "appimage"]
 default_targets = ["win64"]
-# default_targets = ["lovejs"]
 build_directory = "export"
 icon_file = "icon.png"
 
 love_files = [
+    "::git-ls-tree::",
     "+*",
     "-*/.*",
     "-./export/*",
-    "-./discord-rpc.dll"
+    "-./discord-rpc.dll",
+    "-./steam_api64.dll",
+    "-./luasteam.dll",
 ]
 
 
@@ -17,7 +19,9 @@ love_files = [
 # The files specified here will be added in addition to the ones specified on top level.
 # All specified files will simply be added to the .zip archive.
 [windows.archive_files]
-"discord-rpc.dll" = "discord-rpc.dll"
+# "discord-rpc.dll" = "discord-rpc.dll"
+"steam_api64.dll" = "steam_api64.dll"
+"luasteam.dll" = "luasteam.dll"
 
 # Exe metadata is specified as a version string (key) and it's value
 # The values shown here are the ones set by makelove by default (you can overwrite them here)

@@ -283,6 +283,14 @@ local img_names = {
 	bg_city_3 =     "level/city_3",
 	bg_city_shine = "level/city_shine",
 
+	bg_element_w1_01 = "level/background/bg_element_w1_01",
+	bg_element_w1_02 = "level/background/bg_element_w1_02",
+	bg_element_w1_03 = "level/background/bg_element_w1_03",
+	bg_element_w1_04 = "level/background/bg_element_w1_04",
+	bg_element_w1_05 = "level/background/bg_element_w1_05",
+	bg_element_w1_06 = "level/background/bg_element_w1_06",
+	bg_element_w1_07 = "level/background/bg_element_w1_07",
+
 	-----------------------------------------------------
 	
 	-- misc
@@ -290,9 +298,6 @@ local img_names = {
 	offscreen_indicator = "ui/offscreen_indicator",
 	stomp_arrow = "ui/stomp_arrow",
 	yanis = "yanis",
-
-	_test_bg_image_1 = "_test_bg_image_1",
-	_test_bg_image_2 = "_test_bg_image_2",
 }
 for id, path in pairs(img_names) do
 	images[id] = load_image(path..".png")

@@ -321,11 +321,11 @@ RAW_INPUT_MAP_DEFAULT_SPLIT_KEYBOARD_P2 = {
     up =        {"k_up"},--"k_u"
     down =      {"k_down"},--"k_j"
     jump =      {"k_l"},
-    shoot =     {"k_;"},
+    shoot =     {"k_k"},
     
     pause =     {"k_escape", "k_p"},
     ui_select = {"k_l", "k_return"},
-    ui_back =   {"k_;", "k_backspace"},
+    ui_back =   {"k_k", "k_backspace"},
     ui_left =   {"k_left"},
     ui_right =  {"k_right"},
     ui_up =     {"k_up"},

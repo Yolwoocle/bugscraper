@@ -909,6 +909,9 @@ function Player:draw_hud()
 	self:draw_ammo_bar(ui_x, ui_y)
 
 	if game.game_state == GAME_STATE_WAITING then
+		if Input:get_number_of_users() > 1 then
+			print_centered_outline(self.color_palette[1], nil, Text:text("player.abbreviation", self.n), ui_x, ui_y- 8)
+		end
 		self:draw_controls()
 	end
 end
@@ -1007,7 +1010,7 @@ function Player:draw_controls()
 	local tutorials = self:get_controls_tutorial_values()
 
 	local x = self.ui_x
-	local y = self.ui_y - 40 + self.controls_oy
+	local y = self.ui_y - 45 + self.controls_oy
 	-- local x = (CANVAS_WIDTH * 0.15) + (CANVAS_WIDTH * 0.9) * (self.n-1)/4
 	-- local y = 140
 

@@ -1329,6 +1329,17 @@ local demo_waves = {
 		},
 		music = "miniboss",
 	}),
+
+	
+	-- Last wave
+	new_wave({ 
+		min = 1,
+		max = 1,
+		enemies = {
+			{E.ButtonBigGlass, 1, position = {211, 194}}
+		},
+		music = "off",
+	})
 }
 
 local function sanity_check_waves()

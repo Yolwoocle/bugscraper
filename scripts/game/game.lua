@@ -386,7 +386,12 @@ end
 
 function Game:update_actors(dt)
 	if self.sort_actors_flag then
-		table.sort(self.actors, function(a, b) return a.z > b.z end)
+		table.sort(self.actors, function(a, b) 
+			if a.z == b.z then
+				return a.creation_index > b.creation_index
+			end 
+			return a.z > b.z 
+		end)
 		self.sort_actors_flag = false
 	end
 

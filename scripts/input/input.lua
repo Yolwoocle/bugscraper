@@ -640,7 +640,7 @@ function InputManager:load_controls()
                 local new_buttons = {}
                 for _, keycode in pairs(keycode_table) do
                     local button = self:keycode_to_button(keycode)
-                    if button ~= nil then
+                    if button ~= nil and self:is_allowed_button(button) then
                         table.insert(new_buttons, button)
                     end
                 end

@@ -430,10 +430,6 @@ local function generate_menus()
                 end
             end},
             { "" },
-            { "🔄 "..Text:text("menu.options.input_submenu.reset_controls"), function() 
-                Input:reset_controls(input_profile_id, INPUT_TYPE_CONTROLLER) 
-                Input:reset_controls("global", INPUT_TYPE_KEYBOARD) 
-            end },
             { SliderMenuItem, "🔘 "..Text:text("menu.options.input_submenu.controller_button_style"), function(self, diff)
                 diff = diff or 1
                 self:next_value(diff)
@@ -481,6 +477,10 @@ local function generate_menus()
             { "" },
             { Text:text("menu.options.input_submenu.note_deadzone") },
             { "" },
+            { "🔄 "..Text:text("menu.options.input_submenu.reset_controls"), function() 
+                Input:reset_controls(input_profile_id, INPUT_TYPE_CONTROLLER) 
+                Input:reset_controls("global", INPUT_TYPE_KEYBOARD) 
+            end },
             { "<<< "..Text:text("menu.options.input_submenu.gameplay").." >>>" },
             { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "left",  "⬅ "..Text:text("input.prompts.left") },
             { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "right", "➡ "..Text:text("input.prompts.right") },
