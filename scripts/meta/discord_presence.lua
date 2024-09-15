@@ -6,6 +6,7 @@ if pcall(function()
 	discordRPC = require("lib.discordRPC.discordRPC")
 	discordAppId = require("lib.discordRPC.applicationId")
 end) then
+	print("DiscordRPC: successfully loaded")
 	import_success = true
 else
 	print("DiscordRPC: error during import")
@@ -63,11 +64,11 @@ function DiscordPresence:enable()
     }
 	self.next_presence_update = 0
 	
-	-- discordRPC.initialize(discordAppId, true) --TODO remake
+	discordRPC.initialize(discordAppId, true) --TODO remake
 end
 
 function DiscordPresence:disable()
-	-- discordRPC.shutdown() --TODO remake
+	discordRPC.shutdown() --TODO remake
 end
 
 function DiscordPresence:update(dt)
@@ -95,10 +96,10 @@ function DiscordPresence:update(dt)
 	end
 
 	if self.next_presence_update < love.timer.getTime() then
-        -- discordRPC.updatePresence(self.presence) --TODO remake
+        discordRPC.updatePresence(self.presence) --TODO remake
         self.next_presence_update = love.timer.getTime() + 3.0
     end
-    -- discordRPC.runCallbacks() --TODO remake
+    discordRPC.runCallbacks() --TODO remake
 end
 
 function DiscordPresence:quit()
@@ -135,17 +136,17 @@ end
 -------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 --TODO remake
--- function discordRPC.ready(userId, username, discriminator, avatar)
---     discord_instance:ready(userId, username, discriminator, avatar)
--- end
+function discordRPC.ready(userId, username, discriminator, avatar)
+    discord_instance:ready(userId, username, discriminator, avatar)
+end
 
--- function discordRPC.disconnected(errorCode, message)
--- 	discord_instance:disconnected(errorCode, message)
--- end
+function discordRPC.disconnected(errorCode, message)
+	discord_instance:disconnected(errorCode, message)
+end
 
--- function discordRPC.errored(errorCode, message)
--- 	discord_instance:errored(errorCode, message)
--- end
+function discordRPC.errored(errorCode, message)
+	discord_instance:errored(errorCode, message)
+end
 
 return discord_instance
 

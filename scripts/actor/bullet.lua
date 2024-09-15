@@ -18,6 +18,7 @@ function Bullet:init(gun, player, damage, x, y, w, h, vx, vy, args)
 	self.gun = gun
 	self.player = player
 	self.is_bullet = true
+	self.z = -1
 
 	--target_type: what kind of enemy the bullet can target: "player", "enemy", "everyone"
 	self.target_type = args.target_type or ternary(player.is_enemy, "player", "enemy") 
@@ -205,6 +206,9 @@ function Bullet:kill()
 	if self.do_particles then
 		Particles:smoke(self.x + self.w/2, self.y + self.h/2, 4)
 		Particles:bullet_vanish(self.x + self.w/2, self.y + self.h/2, self.spr.rot - pi/2)
+
+		-- local dx, dy = normalize_vect(self.vx, self.vy)
+		-- Particles:star_splash_small(self.mid_x + dx * 8, self.mid_y + dy * 8)
 	end
 	self:remove()
 end

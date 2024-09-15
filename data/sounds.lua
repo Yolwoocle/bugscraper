@@ -146,6 +146,7 @@ local sfxnames = {
 	spotlight_3 = "spotlight_3.ogg",
 
 	---------
+	stomp2 = "stomp2.ogg", --removeme todo rename this
 
 	jump_short = "jump_short.ogg",
 

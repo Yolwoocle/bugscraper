@@ -138,7 +138,7 @@ function GunDisplay:after_collision(col, other)
         end
 
         if math.abs(s) > 30 then
-            Audio:play(self.sound_damage, clamp(math.abs(s) / 200, 0.3, 1), 0.7)
+            Audio:play(self.sound_damage, clamp(math.abs(s) / 200, 0.3, 0.6), 0.7)
         end
     end
 end

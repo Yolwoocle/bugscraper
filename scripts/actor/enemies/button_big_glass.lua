@@ -60,9 +60,9 @@ function ButtonBigGlass:init_button_big_glass(x, y)
 
     self.sound_fracture = "glass_fracture"
     self.sound_break = "glass_break"
-    self.volume_fracture = 0.5
+    self.volume_fracture = 0.3
     -- self.pitch_fracture = 0.5
-    self.volume_break = 0.5
+    self.volume_break = 0.3
     -- self.pitch_break = 0.5
 end
 
@@ -88,7 +88,7 @@ function ButtonBigGlass:on_damage(n, old_life)
 
     local sndname = "impactglass_light_00"..random_str(1,4)
     local pitch = random_range(1/1.1, 1.1) - 0.5*self.life/self.max_life
-    Audio:play(sndname, random_range(1-0.2, 1), pitch)
+    Audio:play(sndname, random_range(0.2, 0.4), pitch)
     
     if old_state ~= new_state then
         self.break_state = new_state

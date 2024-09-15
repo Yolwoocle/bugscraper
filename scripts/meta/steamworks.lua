@@ -1,9 +1,10 @@
 require "scripts.util"
+local creq = require "lib.creq.creq"
 local Class = require "scripts.meta.class"
 local Steam
 local import_success
 if pcall(function()
-	Steam = require("luasteam")
+	Steam = require "luasteam"
 end) then
 	import_success = true
 else

@@ -53,7 +53,7 @@ end
 function ButtonBig:on_death(damager, reason)
     if reason ~= "stomped" then
         game:screenshake(15)
-        Audio:play("glass_fracture", nil, 0.2)
+        Audio:play("glass_fracture", 0.7, 0.2)
         game:enable_endless_mode()
         -- particles:image(self.mid_x, self.mid_y, 100, images.glass_shard, self.h)
         Particles:image(self.mid_x, self.mid_y, 300, images.button_fragments, self.h, 6, 0.05, 0)

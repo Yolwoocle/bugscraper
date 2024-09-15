@@ -55,8 +55,8 @@ function BackgroundDots:init(level)
 	}
 	self.image_weights = {
 		{images.bg_element_w1_01, 50},
-		{images.bg_element_w1_02, 20},
-		{images.bg_element_w1_03, 20},
+		{images.bg_element_w1_02, 2},
+		{images.bg_element_w1_03, 2},
 		{images.bg_element_w1_04, 30},
 		{images.bg_element_w1_05, 30},
 		{images.bg_element_w1_06, 30},

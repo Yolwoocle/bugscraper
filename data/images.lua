@@ -217,6 +217,20 @@ local img_names = {
 	bullet_vanish_4 =      "particles/bullet_vanish_4",
 	bullet_vanish_5 =      "particles/bullet_vanish_5",
 
+	star_splash_1 = "particles/star_splash_1",
+	star_splash_2 = "particles/star_splash_2",
+	star_splash_3 = "particles/star_splash_3",
+	star_splash_4 = "particles/star_splash_4",
+	star_splash_5 = "particles/star_splash_5",
+
+	star_splash_small_1 = "particles/star_splash_small_1",
+	star_splash_small_2 = "particles/star_splash_small_2",
+	star_splash_small_3 = "particles/star_splash_small_3",
+
+	jump_dust_kick_1 = "particles/jump_dust_kick_1",
+	jump_dust_kick_2 = "particles/jump_dust_kick_2",
+	jump_dust_kick_3 = "particles/jump_dust_kick_3",
+
 	-----------------------------------------------------
 	
 	-- level
