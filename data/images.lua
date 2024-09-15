@@ -217,6 +217,20 @@ local img_names = {
 	bullet_vanish_4 =      "particles/bullet_vanish_4",
 	bullet_vanish_5 =      "particles/bullet_vanish_5",
 
+	star_splash_1 = "particles/star_splash_1",
+	star_splash_2 = "particles/star_splash_2",
+	star_splash_3 = "particles/star_splash_3",
+	star_splash_4 = "particles/star_splash_4",
+	star_splash_5 = "particles/star_splash_5",
+
+	star_splash_small_1 = "particles/star_splash_small_1",
+	star_splash_small_2 = "particles/star_splash_small_2",
+	star_splash_small_3 = "particles/star_splash_small_3",
+
+	jump_dust_kick_1 = "particles/jump_dust_kick_1",
+	jump_dust_kick_2 = "particles/jump_dust_kick_2",
+	jump_dust_kick_3 = "particles/jump_dust_kick_3",
+
 	-----------------------------------------------------
 	
 	-- level
@@ -283,6 +297,14 @@ local img_names = {
 	bg_city_3 =     "level/city_3",
 	bg_city_shine = "level/city_shine",
 
+	bg_element_w1_01 = "level/background/bg_element_w1_01",
+	bg_element_w1_02 = "level/background/bg_element_w1_02",
+	bg_element_w1_03 = "level/background/bg_element_w1_03",
+	bg_element_w1_04 = "level/background/bg_element_w1_04",
+	bg_element_w1_05 = "level/background/bg_element_w1_05",
+	bg_element_w1_06 = "level/background/bg_element_w1_06",
+	bg_element_w1_07 = "level/background/bg_element_w1_07",
+
 	-----------------------------------------------------
 	
 	-- misc
@@ -290,9 +312,6 @@ local img_names = {
 	offscreen_indicator = "ui/offscreen_indicator",
 	stomp_arrow = "ui/stomp_arrow",
 	yanis = "yanis",
-
-	_test_bg_image_1 = "_test_bg_image_1",
-	_test_bg_image_2 = "_test_bg_image_2",
 }
 for id, path in pairs(img_names) do
 	images[id] = load_image(path..".png")

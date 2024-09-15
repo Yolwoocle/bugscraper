@@ -50,7 +50,8 @@ return {
             zia = "Zia",
             tok = "Tok",
             rico = "Rico",
-        }
+        },
+        abbreviation = "P%d", -- Short appreviation to denote players by their number. Example: in english, "P1" means "Player 1", in french "J1" means "Joueur 1".
     },
     upgrade = {
         tea = {

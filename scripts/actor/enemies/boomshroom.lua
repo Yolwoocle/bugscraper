@@ -70,6 +70,7 @@ function Boomshroom:init(x, y)
                 self.flash_timer:start(0.5)
 
                 self.spr:set_image(self.sprites[#self.sprites])
+                Audio:play("stomp2")
             end,
             update = function(state, dt)
                 if self.flash_timer:update(dt) then

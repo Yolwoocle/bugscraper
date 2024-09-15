@@ -206,18 +206,21 @@ function Level:increment_floor()
 end
 
 function Level:new_endless_wave()
-	local min = 8
-	local max = 16
+	local min = 12
+	local max = 25
 	return Wave:new({
 		min = min,
 		max = max,
 		music = "w1",
 		enemies = {
 			{Enemies.Larva, random_range(1,6)},
+			{Enemies.Woodlouse, random_range(1,6)},
 			{Enemies.Fly, random_range(1,6)},
 			{Enemies.Slug, random_range(1,6)},
 			{Enemies.Mosquito, random_range(1, 6)},
 
+			{Enemies.StinkBug, random_range(1,4)},
+			{Enemies.Boomshroom, random_range(1,4)},
 			{Enemies.SnailShelled, random_range(1,4)},
 			{Enemies.HoneypotAnt, random_range(1,4)},
 			{Enemies.SpikedFly, random_range(1,4)},

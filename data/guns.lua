@@ -516,6 +516,15 @@ function Guns:get_all_guns()
 	return all_guns
 end
 
+function Guns:get_current_used_gun()
+	
+	for _, p in pairs(game.players) do
+		if p.gun then
+			return p.gun.name
+		end
+	end
+end
+
 function Guns:get_random_gun(user)
 	local gun = random_sample(all_guns) or self.Machinegun
 	local inst = gun:new(user)

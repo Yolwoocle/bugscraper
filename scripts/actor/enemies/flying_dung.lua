@@ -80,6 +80,8 @@ function FlyingDung:begin_targeting()
     self.is_bouncy_to_bullets = false
     self.destroy_bullet_on_impact = false
     self.do_stomp_animation = false
+	self.is_immune_to_bullets = true
+
     self.damage = 0
 
     if self.spawner then

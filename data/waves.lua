@@ -1,10 +1,6 @@
 require "scripts.util"
-local images = require "data.images"
 local backgrounds = require "data.backgrounds"
 local enemies = require "data.enemies"
-local Cutscene= require "scripts.game.cutscene"
-local Scene   = require "scripts.game.scene"
-local Light   = require "scripts.graphics.light"
 local cutscenes = require "data.cutscenes"
 
 local Rect = require "scripts.math.rect"
@@ -1333,6 +1329,17 @@ local demo_waves = {
 		},
 		music = "miniboss",
 	}),
+
+	
+	-- Last wave
+	new_wave({ 
+		min = 1,
+		max = 1,
+		enemies = {
+			{E.ButtonBigGlass, 1, position = {211, 194}}
+		},
+		music = "off",
+	})
 }
 
 local function sanity_check_waves()

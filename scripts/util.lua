@@ -674,11 +674,13 @@ end
 --- @raise If the random selection is out of range, an assertion error is raised.
 --- 
 --- @example
+--- ```
 --- local li = {{'a', 10}, {'b', 30}, {'c', 60}}
 --- local value, element, index = random_weighted(li)
 --- print(value)  -- might print 'a', 'b', or 'c' based on their weights
 --- print(element)  -- prints the selected table, e.g., {'b', 30}
 --- print(index)  -- prints the index of the selected element, e.g., 2
+--- ```
 function random_weighted(li, rng)
 	local sum_w = 0
 	for _,e in ipairs(li) do

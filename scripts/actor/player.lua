@@ -158,9 +158,9 @@ function Player:init(n, x, y, skin)
 	self.fury_max = self.def_fury_max
 	self.fury_gun_cooldown_multiplier = 0.8
 	self.fury_gun_damage_multiplier = 1.5
-	self.fury_speed = 1.0
+	self.fury_speed = 0.9
 	self.fury_stomp_value = 0.8 -- How much is added to the fury bar when stomping an enemy
-	self.fury_bullet_damage_value_multiplier = 1/6  -- Percentage of the bullet damage that is added to the fury bar when hitting an enemy 
+	self.fury_bullet_damage_value_multiplier = 0.18  -- Percentage of the bullet damage that is added to the fury bar when hitting an enemy 
 	self.has_energy_drink = false
 
 	-- Upgrades
@@ -533,6 +533,8 @@ function Player:jump(dt, multiplier)
 	self.vy = -self.jump_speed * self.jump_speed_mult * (multiplier or 1)
 	
 	Particles:smoke(self.mid_x, self.y+self.h)
+	-- Particles:jump_dust_kick(self.mid_x, self.y+self.h - 12, 0)
+	Particles:jump_dust_kick(self.mid_x, self.y+self.h - 12, math.atan2(self.vy, self.vx) + pi/2)
 	Audio:play_var("jump", 0, 1.2)
 	self.jump_squash = 1/3
 end
@@ -541,6 +543,7 @@ function Player:wall_jump(normal)
 	self.vx = normal.x * self.wall_jump_kick_speed
 	self.vy = -self.jump_speed * self.jump_speed_mult
 	
+	Particles:jump_dust_kick(self.mid_x, self.y+self.h - 12, math.atan2(self.vy, self.vx) + pi/2)
 	Audio:play_var("jump", 0, 1.2)
 	self.jump_squash = 1/3
 end
@@ -836,8 +839,13 @@ function Player:leave_game_if_possible(dt)
 end
 
 function Player:update_fury(dt)
+	local final_fury_speed = self.fury_speed
+	if not self.is_grounded then
+		final_fury_speed = final_fury_speed * 0.5
+	end
+
 	if game:get_enemy_count() > 0 and not game.level:is_on_cafeteria() then
-		self.fury_bar = math.max(self.fury_bar - dt*self.fury_speed, 0.0)
+		self.fury_bar = math.max(self.fury_bar - dt*final_fury_speed, 0.0)
 	end
 	self.fury_bar = clamp(self.fury_bar, 0.0, self.fury_max)
 
@@ -909,6 +917,9 @@ function Player:draw_hud()
 	self:draw_ammo_bar(ui_x, ui_y)
 
 	if game.game_state == GAME_STATE_WAITING then
+		if Input:get_number_of_users() > 1 then
+			print_centered_outline(self.color_palette[1], nil, Text:text("player.abbreviation", self.n), ui_x, ui_y- 8)
+		end
 		self:draw_controls()
 	end
 end
@@ -1007,7 +1018,7 @@ function Player:draw_controls()
 	local tutorials = self:get_controls_tutorial_values()
 
 	local x = self.ui_x
-	local y = self.ui_y - 40 + self.controls_oy
+	local y = self.ui_y - 45 + self.controls_oy
 	-- local x = (CANVAS_WIDTH * 0.15) + (CANVAS_WIDTH * 0.9) * (self.n-1)/4
 	-- local y = 140
 

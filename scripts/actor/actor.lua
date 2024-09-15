@@ -4,10 +4,14 @@ local Rect = require "scripts.math.rect"
 local CollisionInfo = require "scripts.physics.collision_info"
 
 local Actor = Class:inherit()
+local creation_index = 0
 
 function Actor:init_actor(x, y, w, h, spr, args)
 	if not args then   args = {}   end
 	if args.add_collision == nil then   args.add_collision = true   end
+
+	self.creation_index = creation_index
+	creation_index = creation_index + 1
 
 	self.is_actor = true
 	self.is_active = true

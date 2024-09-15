@@ -42,6 +42,7 @@ function GunDisplay:init(x, y, gun)
 
     self.friction_x = 0.9
     self.self_knockback_mult = 0.7
+    self.vertical_bounce_multiplier = 0.8
     
     self.rot_mult = 0.06
 
@@ -72,6 +73,11 @@ function GunDisplay:update(dt)
     if self.buffer_vx then
         self.vx = self.buffer_vx
         self.buffer_vx = nil
+    end
+    -- scotch
+    if self.buffer_vy then
+        self.vy = self.buffer_vy
+        self.buffer_vy = nil
     end
 
     local r = (self.spr.rot + self.vx * self.rot_mult * dt)
@@ -120,9 +126,20 @@ function GunDisplay:on_death(damager, reason)
 end
 
 function GunDisplay:after_collision(col, other)
-    -- Pong-like bounce
-    if col.type ~= "cross" and col.normal.y == 0 then
-        self.buffer_vx = col.normal.x * math.abs(self.vx)
+    if col.type ~= "cross" then
+        local s = 0
+        if col.normal.y == 0 then
+            self.buffer_vx = col.normal.x * math.abs(self.vx)
+            s = math.abs(self.buffer_vx)
+        end
+        if col.normal.x == 0 then
+            self.buffer_vy = col.normal.y * math.abs(self.vy) * self.vertical_bounce_multiplier
+            s = math.abs(self.buffer_vy)
+        end
+
+        if math.abs(s) > 30 then
+            Audio:play(self.sound_damage, clamp(math.abs(s) / 200, 0.3, 0.6), 0.7)
+        end
     end
 end
 

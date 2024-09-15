@@ -220,7 +220,8 @@ function StompedEnemyParticle:update(dt)
 
 	if abs(self.squash_target - self.squash) <= 0.01 then
 		self.is_removed = true
-		Particles:smoke(self.x, self.y)
+		-- number, col, spw_rad, size, sizevar, layer, fill_mode, params
+		Particles:smoke(self.x, self.y, 24, nil, 10)
 	end
 end
 function StompedEnemyParticle:draw()
@@ -731,6 +732,7 @@ function ParticleSystem:image(x, y, number, spr, spw_rad, life, vs, g, parms)
 		local g = (g or 1) * 3
 		local is_solid = true
 		local is_animated = false
+		local scale = 1
 
 		if parms and parms.vx1 ~= nil and parms.vx2 ~= nil then
 			vx = random_range(parms.vx1, parms.vx2)
@@ -753,18 +755,21 @@ function ParticleSystem:image(x, y, number, spr, spw_rad, life, vs, g, parms)
 		if parms and parms.life ~= nil then
 			life = parms.life
 		end
+		if parms and parms.scale ~= nil then
+			scame = parms.scale
+		end
 		
 		local sprite = spr
 		if (not is_animated) and type(spr) == "table" then
 			sprite = random_sample(spr)
 		end
 		--spr, x,y,s,r, vx,vy,vs,vr, life, g, is_solid
-		self:add_particle(ImageParticle:new(sprite, x+dx, y+dy, 1, rot, vx,vy,vs,vr, life, g, is_solid))
+		self:add_particle(ImageParticle:new(sprite, x+dx, y+dy, scale, rot, vx,vy,vs,vr, life, g, is_solid))
 	end
 end
 
 -- FIXME: scotch
-function ParticleSystem:static_image(img, x, y, rot, life)
+function ParticleSystem:static_image(img, x, y, rot, life, scale)
 	Particles:image(x, y, 1, img, 0, nil, 0, 0, {
 		is_solid = false,
 		rot = rot,
@@ -775,7 +780,8 @@ function ParticleSystem:static_image(img, x, y, rot, life)
 		vr1 = 0,
 		vr2 = 0,
 		life = life or 0.12,
-		is_animated = true
+		is_animated = true,
+		scale = scale,
 	})
 end
 
@@ -786,6 +792,33 @@ function ParticleSystem:bullet_vanish(x, y, rot)
 		images.bullet_vanish_2,
 		images.bullet_vanish_3,
 	}, x, y, rot)
+end
+
+-- FIXME: scotch
+function ParticleSystem:star_splash(x, y)
+	self:static_image({
+		images.star_splash_1,
+		images.star_splash_2,
+		images.star_splash_3,
+	}, x, y, 0, 0.08)
+end
+
+-- FIXME: scotch
+function ParticleSystem:star_splash_small(x, y)
+	self:static_image({
+		images.star_splash_small_1,
+		images.star_splash_small_2,
+		images.star_splash_small_3,
+	}, x, y, 0, 0.08)
+end
+
+-- FIXME: scotch
+function ParticleSystem:jump_dust_kick(x, y, rot)
+	self:static_image({
+		images.jump_dust_kick_1,
+		images.jump_dust_kick_2,
+		images.jump_dust_kick_3,
+	}, x, y, rot, 0.08)
 end
 
 function ParticleSystem:stomped_enemy(x, y, spr)

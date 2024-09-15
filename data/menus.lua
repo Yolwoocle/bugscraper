@@ -116,46 +116,46 @@ local function generate_menus()
         { "❤ "..Text:text("menu.pause.credits"), func_set_menu('credits' ) },
         { "🔚 "..Text:text("menu.pause.quit"), func_set_menu('quit') },
         { "" },
-        { "[DEBUG] Skip to world 2", function()
-            for k,e in pairs(game.actors) do
-                if e.is_enemy then
-                    e:kill()
-                end
-            end
-            game:set_floor(20)
-			game:start_game()
-            game.menu_manager:unpause()
-        end },
-        { "[DEBUG] Skip to world 2 boss", function()
-            for k,e in pairs(game.actors) do
-                if e.is_enemy then
-                    e:kill()
-                end
-            end
-            game:set_floor(38)
-			game:start_game()
-            game.menu_manager:unpause()
-        end },
-        { "[DEBUG] Skip to world 3", function()
-            for k,e in pairs(game.actors) do
-                if e.is_enemy then
-                    e:kill()
-                end
-            end
-            game:set_floor(40)
-			game:start_game()
-            game.menu_manager:unpause()
-        end },
-        { "[DEBUG] Skip to world 3 boss", function()
-            for k,e in pairs(game.actors) do
-                if e.is_enemy then
-                    e:kill()
-                end
-            end
-            game:set_floor(58)
-			game:start_game()
-            game.menu_manager:unpause()
-        end },
+        -- { "[DEBUG] Skip to world 2", function()
+        --     for k,e in pairs(game.actors) do
+        --         if e.is_enemy then
+        --             e:kill()
+        --         end
+        --     end
+        --     game:set_floor(20)
+		-- 	game:start_game()
+        --     game.menu_manager:unpause()
+        -- end },
+        -- { "[DEBUG] Skip to world 2 boss", function()
+        --     for k,e in pairs(game.actors) do
+        --         if e.is_enemy then
+        --             e:kill()
+        --         end
+        --     end
+        --     game:set_floor(38)
+		-- 	game:start_game()
+        --     game.menu_manager:unpause()
+        -- end },
+        -- { "[DEBUG] Skip to world 3", function()
+        --     for k,e in pairs(game.actors) do
+        --         if e.is_enemy then
+        --             e:kill()
+        --         end
+        --     end
+        --     game:set_floor(40)
+		-- 	game:start_game()
+        --     game.menu_manager:unpause()
+        -- end },
+        -- { "[DEBUG] Skip to world 3 boss", function()
+        --     for k,e in pairs(game.actors) do
+        --         if e.is_enemy then
+        --             e:kill()
+        --         end
+        --     end
+        --     game:set_floor(58)
+		-- 	game:start_game()
+        --     game.menu_manager:unpause()
+        -- end },
     }
     if OPERATING_SYSTEM == "Web" then
         -- Disable quitting on web
@@ -430,10 +430,6 @@ local function generate_menus()
                 end
             end},
             { "" },
-            { "🔄 "..Text:text("menu.options.input_submenu.reset_controls"), function() 
-                Input:reset_controls(input_profile_id, INPUT_TYPE_CONTROLLER) 
-                Input:reset_controls("global", INPUT_TYPE_KEYBOARD) 
-            end },
             { SliderMenuItem, "🔘 "..Text:text("menu.options.input_submenu.controller_button_style"), function(self, diff)
                 diff = diff or 1
                 self:next_value(diff)
@@ -481,6 +477,10 @@ local function generate_menus()
             { "" },
             { Text:text("menu.options.input_submenu.note_deadzone") },
             { "" },
+            { "🔄 "..Text:text("menu.options.input_submenu.reset_controls"), function() 
+                Input:reset_controls(input_profile_id, INPUT_TYPE_CONTROLLER) 
+                Input:reset_controls("global", INPUT_TYPE_KEYBOARD) 
+            end },
             { "<<< "..Text:text("menu.options.input_submenu.gameplay").." >>>" },
             { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "left",  "⬅ "..Text:text("input.prompts.left") },
             { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "right", "➡ "..Text:text("input.prompts.right") },
@@ -659,7 +659,7 @@ local function generate_menus()
     -- if OPERATING_SYSTEM == "Web" or true the$n
     --     table.remove(items, 8)
     -- end
-    menus.win = Menu:new(game, items, { 0, 0, 0, 0.95 }, PROMPTS_GAME_OVER)
+    menus.win = Menu:new(game, items, { 0, 0, 0, 0.85 }, PROMPTS_GAME_OVER)
 
     ------------------------------------------------------------
 

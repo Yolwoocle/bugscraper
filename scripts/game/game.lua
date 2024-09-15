@@ -24,6 +24,7 @@ local QueuedPlayer = require "scripts.game.queued_player"
 local GunDisplay = require "scripts.actor.enemies.gun_display"
 
 local DiscordPresence = require "scripts.meta.discord_presence"
+local Steamworks = require "scripts.meta.steamworks"
 
 local guns = require "data.guns"
 local upgrades = require "data.upgrades"
@@ -102,6 +103,7 @@ function Game:init()
 	self.ui_visible = true
 
 	self.discord_presence = DiscordPresence
+	self.steamworks = Steamworks
 
 	self.debug_mode = DEBUG_MODE
 end
@@ -328,6 +330,7 @@ function Game:update(dt)
 	end
 
 	self.discord_presence:update(dt)
+	self.steamworks:update(dt)
 
 	-- THIS SHOULD BE LAST
 	Input:update_last_input_state(dt)
@@ -368,6 +371,7 @@ end
 
 function Game:quit()
 	self.discord_presence:quit()
+	self.steamworks:quit()
 end
 
 function Game:get_enemy_count()
@@ -382,7 +386,12 @@ end
 
 function Game:update_actors(dt)
 	if self.sort_actors_flag then
-		table.sort(self.actors, function(a, b) return a.z > b.z end)
+		table.sort(self.actors, function(a, b) 
+			if a.z == b.z then
+				return a.creation_index > b.creation_index
+			end 
+			return a.z > b.z 
+		end)
 		self.sort_actors_flag = false
 	end
 

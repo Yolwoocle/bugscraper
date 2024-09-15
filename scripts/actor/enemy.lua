@@ -75,8 +75,8 @@ function Enemy:init_enemy(x,y, img, w,h)
 	
 	self.play_sfx = true
 	self.sound_damage = "enemy_damage"
-	self.sound_death = "enemy_death_1"
-	self.sound_stomp = "enemy_death_1"
+	self.sound_death = "stomp2"
+	self.sound_stomp = "stomp2"
 
 	self.target = nil
 
@@ -308,6 +308,7 @@ function Enemy:kill(damager, reason)
 
 	if self.do_killed_smoke then
 		Particles:smoke(self.mid_x, self.mid_y)
+		Particles:star_splash(self.mid_x, self.mid_y)
 	end
 	if self.play_sfx then
 		if reason == "stomped" then
