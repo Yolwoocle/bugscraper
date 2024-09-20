@@ -591,6 +591,7 @@ function InputManager:keycode_to_button(keycode)
     return nil
 end
 
+
 function InputManager:process_input_map(raw_input_map)
     local new_map = {}
     for action, keys in pairs(raw_input_map) do
@@ -605,6 +606,75 @@ function InputManager:process_input_map(raw_input_map)
     return new_map
 end
 
+
+function InputManager:load_control_file(profile_id, profile)
+    print("profile_id ", profile_id)
+    local filename = concat("inputprofile_",profile_id,".txt")
+
+    -- Check if file exists
+    local file_exists = love.filesystem.getInfo(filename)
+    if not file_exists then
+        print(filename, "does not exist, so creating it")
+        self:update_controls_file(profile_id)
+        return
+    end
+
+    local file = love.filesystem.newFile(filename)
+    file:open("r")
+
+    local new_mappings = copy_table(profile:get_mappings())
+
+    -- Read file contents
+    local text, size = file:read()
+    if not text then
+        print(concat("Error reading ",filename,": size = ",size))
+    end
+    local lines = split_str(text, "\n") -- Split lines
+
+    if #lines == 0 then 
+        print(string.format("Error reading %s: file is empty, updating it", filename))
+        file:close()
+        
+        self:update_controls_file(profile_id)
+        return
+    end
+    
+    -- Verify correct file version
+    local tab = split_str(lines[1], ":")
+    if tab[1] ~= "$version" or tab[2] ~= INPUT_FILE_FORMAT_VERSION then
+        print(string.format("Error reading %s: line 1 is ' %s ' (current file version = %s), updating file and deleting previous bindings", filename, lines[1], INPUT_FILE_FORMAT_VERSION))
+        file:close()
+    
+        self:update_controls_file(profile_id)
+        return
+    end
+
+    -- Load bindings
+    for iline = 2, #lines do
+        local line = lines[iline]
+        local tab = split_str(line, ":")
+        local action_name = tab[1]
+        local keycodes = tab[2] or ""
+        local keycode_table = split_str(keycodes, " ")
+
+        -- Load the buttons
+        local new_buttons = {}
+        for _, keycode in pairs(keycode_table) do
+            local button = self:keycode_to_button(keycode)
+            if button ~= nil and self:is_allowed_button(button) then
+                table.insert(new_buttons, button)
+            end
+        end
+        new_mappings[action_name] = new_buttons
+    end
+
+    file:close()
+
+    profile:set_mappings(new_mappings)
+    self:update_controls_file(profile_id) 
+end
+
+
 function InputManager:load_controls()
 	if love.filesystem.getInfo == nil then
 		print("/!\\ WARNING: love.filesystem.getInfo doesn't exist. Either running on web or LÖVE version is incorrect. Loading controls for players aborted, so custom keybinds will not be loaded.")
@@ -612,70 +682,10 @@ function InputManager:load_controls()
 	end
 
 	for profile_id, profile in pairs(self.input_profiles) do
-		local filename = concat("inputprofile_",profile_id,".txt")
-
-		-- Check if file exists
-		local file_exists = love.filesystem.getInfo(filename)
-		if not file_exists then
-			print(filename, "does not exist, so creating it")
-			self:update_controls_file(profile_id)
-            return
-        end
-
-        local file = love.filesystem.newFile(filename)
-        file:open("r")
-
-        local new_mappings = copy_table(profile:get_mappings())
-
-        -- Read file contents
-        local text, size = file:read()
-        if not text then
-            print(concat("Error reading ",filename,": size = ",size))
-        end
-        local lines = split_str(text, "\n") -- Split lines
-    
-        if #lines == 0 then 
-            print(string.format("Error reading %s: file is empty, updating it", filename))
-            file:close()
-            
-            self:update_controls_file(profile_id)
-            return
-        end
-        
-        -- Verify correct file version
-        local tab = split_str(lines[1], ":")
-        if tab[1] ~= "$version" or tab[2] ~= INPUT_FILE_FORMAT_VERSION then
-            print(string.format("Error reading %s: line 1 is ' %s ' (current file version = %s), updating file and deleting previous bindings", filename, lines[1], INPUT_FILE_FORMAT_VERSION))
-            file:close()
-        
-            self:update_controls_file(profile_id)
-            return
-        end
-
-        -- Load bindings
-        for iline = 2, #lines do
-            local line = lines[iline]
-            local tab = split_str(line, ":")
-            local action_name = tab[1]
-            local keycodes = tab[2] or ""
-            local keycode_table = split_str(keycodes, " ")
-
-            local new_buttons = {}
-            for _, keycode in pairs(keycode_table) do
-                local button = self:keycode_to_button(keycode)
-                if button ~= nil and self:is_allowed_button(button) then
-                    table.insert(new_buttons, button)
-                end
-            end
-            new_mappings[action_name] = new_buttons
-        end
-
-        file:close()
-
-        self.input_profiles[profile_id]:set_mappings(new_mappings)
-        self:update_controls_file(profile_id) 
+        self:load_control_file(profile_id, profile)
 	end
 end
+
 
 function InputManager:buttons_to_keycodes(buttons)
     local keycodes = {}
@@ -685,11 +695,13 @@ function InputManager:buttons_to_keycodes(buttons)
     return keycodes
 end
 
+
 function InputManager:update_all_controls_files()
 	for profile_id, profile in pairs(self.input_profiles) do
         self:update_controls_file(profile_id)
     end
 end
+
 
 function InputManager:update_controls_file(profile_id)
     local filename = concat("inputprofile_",profile_id,".txt")
@@ -698,11 +710,14 @@ function InputManager:update_controls_file(profile_id)
     controlsfile:open("w")
 
     controlsfile:write(string.format("$version:%s\n", INPUT_FILE_FORMAT_VERSION))
-    for action_name, buttons in pairs(self.input_profiles[profile_id]:get_mappings()) do
+    local profile = self.input_profiles[profile_id]
+    for action_name, buttons in pairs(profile:get_mappings()) do
         local keycodes = self:buttons_to_keycodes(buttons)
         local keycodes_string = concatsep(keycodes," ")
 
-        controlsfile:write(concat(action_name, ":", keycodes_string, "\n"))
+        controlsfile:write(concat(
+            action_name, ":", keycodes_string, "\n"
+        ))
     end
 
     controlsfile:close()

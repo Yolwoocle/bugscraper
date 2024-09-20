@@ -23,35 +23,14 @@ function BackgroundDots:init(level)
 	self.bg_particle_col = {COL_VERY_DARK_GRAY, COL_DARK_GRAY}
 	self.bg_particle_palettes = {
 		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
-		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
-		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
-		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
-		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
-		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
-		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
-		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
-		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
-		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
-		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
-		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
-		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
-		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
-		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
-		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
-		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
-		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
-		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
-		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
-		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
-		{COL_DARK_GREEN,  {COL_MID_DARK_GREEN, COL_MID_GREEN}},
-		{COL_DARK_RED,    {COL_LIGHT_RED, COL_PINK}}, --l red + light pink
-		{COL_LIGHT_BLUE,  {COL_MID_BLUE, COL_WHITE}},
-		{COL_WHITE,       {color(0xc0cbdc), color(0x8b9bb4)}}, --gray & dgray
-		{color(0xb55088), {color(0x68386c), color(0x9e2835)}}, --dpurple & dred
-		{COL_BLACK_BLUE,  {COL_LIGHT_RED, COL_ORANGE, COL_LIGHT_YELLOW, color(0x63c74d), COL_LIGHT_BLUE, color(0xb55088)}}, --rainbow
-		{color(0xfee761), {color(0xfeae34), COL_WHITE}}, --orange & white
-		{color(0x743f39), {color(0x3f2832), COL_BLACK_BLUE}}, --orange & white
-		{color(0xe8b796), {color(0xe4a672), color(0xb86f50)}} --midbeige & dbeige (~brown ish)
+		-- {COL_DARK_RED,    {COL_LIGHT_RED, COL_PINK}}, --l red + light pink
+		-- {COL_LIGHT_BLUE,  {COL_MID_BLUE, COL_WHITE}},
+		-- {COL_WHITE,       {color(0xc0cbdc), color(0x8b9bb4)}}, --gray & dgray
+		-- {color(0xb55088), {color(0x68386c), color(0x9e2835)}}, --dpurple & dred
+		-- {COL_BLACK_BLUE,  {COL_LIGHT_RED, COL_ORANGE, COL_LIGHT_YELLOW, color(0x63c74d), COL_LIGHT_BLUE, color(0xb55088)}}, --rainbow
+		-- {color(0xfee761), {color(0xfeae34), COL_WHITE}}, --orange & white
+		-- {color(0x743f39), {color(0x3f2832), COL_BLACK_BLUE}}, --orange & white
+		-- {color(0xe8b796), {color(0xe4a672), color(0xb86f50)}} --midbeige & dbeige (~brown ish)
 	}
 	self.image_weights = {
 		{images.bg_element_w1_01, 50},

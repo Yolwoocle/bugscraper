@@ -24,7 +24,7 @@ end
 
 function ControlsMenuItem:update(dt)
 	self:update_textitem(dt)
-
+	
 	self.value_text = "[ERROR]"
 
 	self.value = self:get_buttons()
