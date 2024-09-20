@@ -9,6 +9,12 @@ function InputProfile:init(profile_id, primary_input_type, mappings)
 
     self.default_mappings = copy_table(mappings)
     self.mappings = copy_table(mappings)
+    -- self.metadata = {}
+    -- for key, _ in pairs(self.default_mappings) do
+    --     self.metadata[key] = {
+    --         modified = false-- random_sample{true, false},
+    --     }
+    -- end
 end
 
 function InputProfile:set_mappings(mappings)
@@ -51,5 +57,9 @@ end
 function InputProfile:get_primary_input_type()
     return self.primary_input_type
 end
+
+-- function InputProfile:get_metadata(action)
+--     return self.metadata[action]
+-- end
 
 return InputProfile
