@@ -509,14 +509,33 @@ function InputManager:generate_unknown_key_icon(icon, text)
     love.graphics.setCanvas(old_canvas)
     return new_canvas
 end
+--! do the same as me for your generate_unknown_key_icon @Yolwoocle
 
 -- Corentin
+local generated_midi_images ={} -- table contening new generated images
+
+--return the image needed if already in the table, generate and instance it in the table in the other case
+function InputManager:get_generated_midi_key_icon(name)
+    if (generated_midi_images[name] ~= nil)then
+        return generated_midi_images[name]
+    end
+    local split = split_str(name, "_")
+        
+    local midi_type = split[1]
+
+    generated_midi_images[name] = self:generate_midi_key_icon(midi_type, split[2], split[3], split[4])
+    return generated_midi_images[name]
+    
+end
+
+--generate a midi key image
 function InputManager:generate_midi_key_icon(midi_type,arg1, arg2, arg3)
+    print_debug("generated an image with args :".."_"..midi_type.."_"..arg1.."_"..arg2.."_"..arg3)
     local old_font = love.graphics.getFont()
     local image = ({
         note = images["btn_m_note_"..tostring(arg1)],
         knob = images.btn_m_knob,
-        joystickx = images["btn_m_joystickx"],--!! todo imazg
+        joystickx = images["btn_m_joystickx"],
         joysticky = images["btn_m_joysticky"],
     })[midi_type] or images.btn_k_unknown
 
@@ -573,11 +592,8 @@ function InputManager:get_button_icon(player_n, button, brand_override)
         
 -- corentin
 	elseif button.type == INPUT_TYPE_MIDI then
-        local split = split_str(button.key_name, "_")
-        
-        local midi_type = split[1]
-
-        return self:generate_midi_key_icon(midi_type, split[2], split[3], split[4])
+     
+        return self:get_generated_midi_key_icon(button.key_name)
 --
 	end
     return img or self:generate_unknown_key_icon(images.btn_k_unknown, button.key_name or "?")

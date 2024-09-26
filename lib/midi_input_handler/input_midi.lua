@@ -12,7 +12,7 @@ require "scripts.util"
 
 local libmidi
 
-function undefined_function()
+local function undefined_function()
     return nil
 end
 local midi = {
