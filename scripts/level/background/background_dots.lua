@@ -1,15 +1,19 @@
 local Class = require "scripts.meta.class"
 local Background = require "scripts.level.background.background"
+local images     = require "data.images"
 
 local BackgroundDots = Background:inherit()
 
 function BackgroundDots:init(level)
-	self:init_background(level)
+	self.super.init(self, level)
 
 	self.speed = 0
 	self.def_speed = 10 --TODO
 
+	self.particle_creation_index = 0
 	self.bg_color_index = 1
+	self.number_of_particles = 40
+	self.image_probability = 0.4
 	
 	self.show_bg_particles = true
 	self.def_bg_col = COL_BLACK_BLUE
@@ -18,6 +22,26 @@ function BackgroundDots:init(level)
 	self.bg_particles = {}	
 	self.bg_particle_col = {COL_VERY_DARK_GRAY, COL_DARK_GRAY}
 	self.bg_particle_palettes = {
+		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
+		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
+		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
+		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
+		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
+		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
+		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
+		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
+		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
+		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
+		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
+		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
+		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
+		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
+		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
+		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
+		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
+		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
+		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
+		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
 		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
 		{COL_DARK_GREEN,  {COL_MID_DARK_GREEN, COL_MID_GREEN}},
 		{COL_DARK_RED,    {COL_LIGHT_RED, COL_PINK}}, --l red + light pink
@@ -29,6 +53,15 @@ function BackgroundDots:init(level)
 		{color(0x743f39), {color(0x3f2832), COL_BLACK_BLUE}}, --orange & white
 		{color(0xe8b796), {color(0xe4a672), color(0xb86f50)}} --midbeige & dbeige (~brown ish)
 	}
+	self.image_weights = {
+		{images.bg_element_w1_01, 50},
+		{images.bg_element_w1_02, 2},
+		{images.bg_element_w1_03, 2},
+		{images.bg_element_w1_04, 30},
+		{images.bg_element_w1_05, 30},
+		{images.bg_element_w1_06, 30},
+		{images.bg_element_w1_07, 20},
+	}
 	self.target_bg_palette = self.bg_particle_palettes[1]
 	self.target_clear_color = self.target_bg_palette[1]
 	self.bg_particle_col = self.target_bg_palette[2]
@@ -39,7 +72,7 @@ end
 
 function BackgroundDots:init_bg_particles()
 	self.bg_particles = {}	
-	for i=1,60 do
+	for i=1,self.number_of_particles do
 		local p = self:new_bg_particle()
 		p.x = random_range(0, CANVAS_WIDTH)
 		p.y = random_range(0, CANVAS_HEIGHT)
@@ -49,7 +82,7 @@ end
 -----------------------------------------------------
 
 function BackgroundDots:update(dt)
-	self:update_background(dt)
+	self.super.update(self, dt)
 
 	-- BG color gradient
 	-- self.clear_color = move_toward_color(self.clear_color, self.target_clear_color, 0.06*dt)
@@ -86,17 +119,35 @@ function BackgroundDots:set_clear_color(palette)
 	self.clear_color = palette[1]
 	self.bg_particle_col = palette[2]
 
-	self.bg_color_progress = 0
+	self.bg_color_progress = 0 
 
 end
 
 function BackgroundDots:new_bg_particle()
 	local o = {}
-	o.x = love.math.random(0, CANVAS_WIDTH)
-	o.w = love.math.random(2, 12)
-	o.h = love.math.random(8, 64)
+	if self.speed >= 0 and random_range(0, 1) < self.image_probability then
+		o.type = "image"
+		local value, _, _ = random_weighted(self.image_weights)
+		o.img = value
+		
+		o.w = o.img:getWidth()
+		o.h = o.img:getHeight()
+		o.spd = 0.5
+		o.z = 1
+		
+	else
+		o.type = "rect"
+		
+		-- o.w = love.math.random(2, 12)
+		o.w = love.math.random(2, 8)
+		o.h = love.math.random(8, 64)
+		o.spd = random_range(0.5, 1.5)
+		o.z = 0
+
+	end
+	o.x = love.math.random(-o.w, CANVAS_WIDTH)
 	
-	if self.speed >= 0 then
+	if self:get_speed() >= 0 then
 		o.y = -o.h - love.math.random(0, CANVAS_HEIGHT)
 	else
 		o.y = CANVAS_HEIGHT + o.h + love.math.random(0, CANVAS_HEIGHT)
@@ -106,45 +157,46 @@ function BackgroundDots:new_bg_particle()
 	if self.bg_particle_col then
 		o.col = random_sample(self.bg_particle_col)
 	end
-	o.spd = random_range(0.5, 1.5)
 
 	o.oy = 0
 	o.oh = 1
 
 	o.t = 0
 	o.rnd_pi = random_neighbor(math.pi)
+
+	o.creation_index = self.particle_creation_index + 1
+	self.particle_creation_index = self.particle_creation_index + 1
 	return o
 end
 
 function BackgroundDots:update_bg_particles(dt)
 	-- Background lines
-	for i,o in pairs(self.bg_particles) do
-		o.y = o.y + dt*self.speed*o.spd
+	for i=1, #self.bg_particles do
+		local o = self.bg_particles[i]
+		o.y = o.y + dt*self:get_speed()*o.spd
 		
-		local del_cond = (self.speed>=0 and o.y > CANVAS_HEIGHT) or (self.speed<0 and o.y < -CANVAS_HEIGHT) 
+		local del_cond = (self:get_speed()>=0 and o.y > CANVAS_HEIGHT + o.h) or (self:get_speed()<0 and o.y - o.h < -CANVAS_HEIGHT) 
 		if del_cond then
 			local p = self:new_bg_particle()
-			-- o = p
-			-- ^^^^^ WHY DOES THIS NOT. WORK. I'm going crazy
-			o.x = p.x
-			o.y = p.y
-			o.w = p.w
-			o.h = p.h
-			o.col = p.col
-			o.spd = p.spd
-			o.oy = p.oy
-			o.oh = p.oh
-			o.rnd_pi = p.rnd_pi
+			self.bg_particles[i] = p
 		end
 
 		-- Size corresponds to elevator speed
-		o.oh = max(o.w/o.h, abs(self.speed) / self.def_speed)
+		o.oh = max(o.w/o.h, abs(self:get_speed()) / self.def_speed)
 		o.oy = .5 * o.h * o.oh
 	end
+
+	table.sort(self.bg_particles, function(a, b) 
+		-- TODO prevent z-fighting by using creation order if both z values are equal
+		if a.z == b.z then
+			return a.creation_index > b.creation_index
+		end
+		return a.z > b.z 
+	end)
 end
 
 function BackgroundDots:shift_to_red(speed_cap)
-	local p = self.speed / speed_cap
+	local p = self:get_speed() / speed_cap
 	self.clear_color = lerp_color(self.bg_colors[#self.bg_colors], color(0xff7722), p)
 	-- self.bg_particle_col = self.bg_particle_colors[#self.bg_particle_colors]
 	local r = self.clear_color[1]
@@ -165,17 +217,22 @@ end
 -----------------------------------------------------
 
 function BackgroundDots:draw()
-	self:draw_background()
-	-- if not self.show_bg_particles then
-	-- 	return 
-	-- end
+	self.super.draw(self)
 
 	for i,o in pairs(self.bg_particles) do
+		self:draw_particle(o)
+	end
+end
+
+function BackgroundDots:draw_particle(o)
+	if o.type == "rect" then
 		local y = o.y + o.oy
-		local mult = 1 - clamp(abs(self.speed / 100), 0, 1)
+		local mult = 1 - clamp(abs(self:get_speed() / 100), 0, 1)
 		local sin_oy = mult * sin(game.t + o.rnd_pi) * o.oh * o.h 
 		
 		rect_color(o.col, "fill", o.x, o.y + o.oy + sin_oy, o.w, o.h * o.oh)
+	elseif o.type == "image" then
+		draw_centered(o.img, o.x, o.y)
 	end
 end
 

@@ -30,7 +30,7 @@ end
 function love.load()
     discordRPC.initialize(appId, true)
     local now = os.time(os.date("*t"))
-    presence = {
+    discord_presence = {
         state = "Looking to Play",
         details = "1v1 (Ranked)",
         startTimestamp = now,
@@ -42,13 +42,13 @@ function love.load()
         spectateSecret = "spectate secret",
     }
 
-    nextPresenceUpdate = 0
+    discord_next_presence_update = 0
 end
 
 function love.update()
-    if nextPresenceUpdate < love.timer.getTime() then
-        discordRPC.updatePresence(presence)
-        nextPresenceUpdate = love.timer.getTime() + 2.0
+    if discord_next_presence_update < love.timer.getTime() then
+        discordRPC.updatePresence(discord_presence)
+        discord_next_presence_update = love.timer.getTime() + 2.0
     end
     discordRPC.runCallbacks()
 end

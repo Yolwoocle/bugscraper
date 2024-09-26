@@ -25,6 +25,10 @@ function Player:init(n, x, y, skin)
 	self.name = concat("player", n)
 	self.player_type = "ant"
 
+	-- Meta
+	self.n = n
+	self.is_enemy = false
+
 	-- Life
 	self.max_life = 4
 	self.life = self.max_life
@@ -32,10 +36,6 @@ function Player:init(n, x, y, skin)
 	
 	-- Death
 	self.is_dead = false
-	
-	-- Meta
-	self.n = n
-	self.is_enemy = false
 	
 	-- Animation
 	self.color_palette = skin.color_palette
@@ -64,8 +64,9 @@ function Player:init(n, x, y, skin)
 	self.speed_mult = 1.0
 
 	-- Jump
-	-- self.max_jumps = 3
-	-- self.jumps = self.max_jumps
+	self.can_do_midair_jump = false
+	self.max_jumps = 1
+	self.jumps = self.max_jumps
 	self.jump_speed = 450
 	self.jump_speed_mult = 1.0
 	self.buffer_jump_timer = 0
@@ -100,9 +101,6 @@ function Player:init(n, x, y, skin)
 	self.color = ({COL_RED, COL_GREEN, COL_DARK_RED, COL_YELLOW})[self.n]
 	self.color = self.color or COL_RED
 
-	-- Loot & drops
-	self.min_loot_dist = BLOCK_WIDTH*5
-
 	-- Invicibility
 	self.is_invincible = false
 	self.iframes = 0
@@ -125,11 +123,14 @@ function Player:init(n, x, y, skin)
 		Guns.Machinegun:new(self),
 		Guns.unlootable.DebugGun:new(self),
 		Guns.unlootable.DebugGunManual:new(self),
+		Guns.unlootable.ExplosionGun:new(self),
+		Guns.unlootable.HoneycombFootballGun:new(self),
 		Guns.Triple:new(self),
 		Guns.Burst:new(self),
 		Guns.Shotgun:new(self),
 		Guns.Minigun:new(self),
 		Guns.MushroomCannon:new(self),
+		Guns.Ring:new(self),
 	}
 	self.gun_number = 1
 
@@ -142,19 +143,25 @@ function Player:init(n, x, y, skin)
 	self.controls_oy = 0
 
 	-- SFX
-	self.sfx_wall_slide = sounds.sliding_wall_metal.source
-	self.sfx_wall_slide:play()
+	self:add_constant_sound("sfx_wall_slide", "sliding_wall_metal")
+	self:set_constant_sound_volume("sfx_wall_slide", 0)
+	-- self.sfx_wall_slide:play()
 	self.sfx_wall_slide_volume = 0
 	self.sfx_wall_slide_max_volume = 0.1
 
-	-- Combo
+	-- Combo / fury
 	self.combo = 0
 	self.max_combo = 0
 	self.fury_bar = 0.0
 	self.fury_threshold = 2.5
-	self.fury_max = 5.0
+	self.def_fury_max = 5.0
+	self.fury_max = self.def_fury_max
 	self.fury_gun_cooldown_multiplier = 0.8
 	self.fury_gun_damage_multiplier = 1.5
+	self.fury_speed = 0.9
+	self.fury_stomp_value = 0.8 -- How much is added to the fury bar when stomping an enemy
+	self.fury_bullet_damage_value_multiplier = 0.18  -- Percentage of the bullet damage that is added to the fury bar when hitting an enemy 
+	self.has_energy_drink = false
 
 	-- Upgrades
 	self.upgrades = {}
@@ -163,10 +170,12 @@ function Player:init(n, x, y, skin)
 	self.effects = {}
 	self.poison_cloud = nil
 	self.poison_timer = 0.0
-	self.poison_damage_time = 1.5
+	self.poison_damage_time = 1.0
 
 	-- Exiting 
 	self.is_touching_exit_sign = false
+
+	self.debug_god_mode = false
 
 	-- Debug 
 	self.dt = 1
@@ -176,12 +185,11 @@ end
 function Player:update(dt)
 	self.dt = dt
 	
-	-- Movement
 	self:update_upgrades(dt)
-	self:update_effects(dt, self)
+	self:update_effects(dt)
 	self:move(dt)
 	self:do_wall_sliding(dt)
-	self:do_jumping(dt)
+	self:update_jumping(dt)
 	self:do_gravity(dt) -- FIXME: ouch, this is already called in update_actor so there is x2 gravity here
 	self:update_actor(dt)
 	self:do_aiming(dt)
@@ -206,7 +214,7 @@ function Player:update(dt)
 		self.frames_since_land = 0
 	end
 
-	self:update_combo(dt)
+	self:update_fury(dt)
 
 	self.gun:update(dt)
 	self:shoot(dt, false)
@@ -303,31 +311,37 @@ function Player:on_removed()
 end
 
 function Player:do_damage(n, source)
+	if self.debug_god_mode then return false   end
 	if self.iframes > 0 then    return false   end
-	if n <= 0 then    return false   end
+	if n <= 0 then              return false   end
 
-	if Input:get_number_of_users() == 1 then
+	-- if Input:get_number_of_users() == 1 then
 		game:frameskip(8)
-	end
+	-- end
 	game:screenshake(5)
 	Input:vibrate(self.n, 0.3, 0.45)
 	Audio:play("hurt")
-	Particles:word(self.mid_x, self.mid_y, concat("-",n), COL_LIGHT_RED)
+	-- Particles:word(self.mid_x, self.mid_y, concat("-",n), COL_LIGHT_RED)
 	
 	if self.is_knockbackable and source then
 		self.vx = self.vx + sign(self.mid_x - source.mid_x)*source.knockback
 		self.vy = self.vy - 50
 	end
 
+	local old_life = self.life
 	local old_temporary_life = self.temporary_life
 	self:subtract_life(n)
+	local permanent_life_diff = old_life - self.life
 	local temporary_life_diff = old_temporary_life - self.temporary_life
+	if permanent_life_diff > 0 then
+		Particles:image(self.ui_x, self.ui_y - 16, permanent_life_diff, images.heart, 5, 2, 0.2, 1.0)
+	end
 	if temporary_life_diff > 0 then
-		--                                            x, y, number,     spr,             spw_rad, life, vs, g, parms
 		Particles:image(self.ui_x, self.ui_y - 16, temporary_life_diff, images.particle_leaf, 5, 1.5, 0.6, 0.5)
 	end
 	
 	self:set_invincibility(self.max_iframes)
+	self:set_fury(0)
 	
 	if self.life <= 0 then
 		self.life = 0 
@@ -375,12 +389,14 @@ end
 
 function Player:do_wall_sliding(dt)
 	-- Check if wall sliding
+	local old_is_walled = self.is_walled
 	self.is_wall_sliding = false
 	self.is_walled = false
 
 	self.sfx_wall_slide_volume = lerp(self.sfx_wall_slide_volume, 0, 0.3)
-	self.sfx_wall_slide:setVolume(self.sfx_wall_slide_volume)
+	self:set_constant_sound_volume("sfx_wall_slide", self.sfx_wall_slide_volume)
 
+	-- Update wall variables
 	if self.wall_col then
 		local col_normal = self.wall_col.normal
 		local is_walled = (col_normal.y == 0)
@@ -394,7 +410,11 @@ function Player:do_wall_sliding(dt)
 		self.is_walled = is_walled
 	end
 
-	
+	-- Reduce jumps if leave wall 
+	if old_is_walled and not self.is_walled then
+		self.jumps = math.max(0, self.jumps-1)
+	end
+
 	-- Perform wall sliding
 	if self.is_wall_sliding then
 		-- Orient player opposite if wall sliding
@@ -413,20 +433,26 @@ function Player:do_wall_sliding(dt)
 
 		-- SFX
 		self.sfx_wall_slide_volume = lerp(self.sfx_wall_slide_volume, self.sfx_wall_slide_max_volume, 0.3)
-		self.sfx_wall_slide:setVolume(self.sfx_wall_slide_volume)
+		self:set_constant_sound_volume("sfx_wall_slide", self.sfx_wall_slide_volume)
 	else
 		self.gravity = self.default_gravity
 	end
 end
 
-function Player:do_jumping(dt)
+function Player:update_jumping(dt)
+	-- self.debug_values[1] = concat(self.jumps, "/", self.max_jumps)
+	-- Update number of jumps
+	if self.is_grounded or self.is_wall_sliding then
+		self.jumps = self.max_jumps
+	end 
+
 	-- This buffer is so that you still jump even if you're a few frames behind
 	self.buffer_jump_timer = self.buffer_jump_timer - 1
 	if Input:action_pressed(self.n, "jump") then
 		self.buffer_jump_timer = 12
 	end
 
-	-- Update air time 
+	-- Update air time (I think that is used to make you jump higher when holding jump)
 	self.air_time = self.air_time + dt
 	if self.is_grounded then self.air_time = 0 end
 	if self.air_time < self.jump_air_time and not self.is_grounded then
@@ -436,7 +462,7 @@ function Player:do_jumping(dt)
 	end
 
 	-- Coyote time
-	--FIXME: if you press jump really fast, you can exploit coyote time and double jump 
+	-- TODO FIXME scotch: if you press jump really fast, you can exploit coyote time and double jump 
 	self.coyote_time = self.coyote_time - 1
 	
 	if self.buffer_jump_timer > 0 then
@@ -447,7 +473,7 @@ function Player:do_jumping(dt)
 			-- Regular jump
 			self:jump(dt)
 			self:on_jump()
-
+		
 		elseif wall_normal then
 			-- Conditions for a wall jump ("wall kick")
 			local left_jump  = (wall_normal.x == 1) and Input:action_down(self.n, "right")
@@ -460,7 +486,23 @@ function Player:do_jumping(dt)
 				self:wall_jump(wall_normal)
 			end
 			self:on_jump()
+				
+		elseif not self.is_grounded and (self.jumps > 0) then 
+			-- Midair jump
+			self:jump(dt, 1.2)
+			self.jumps = math.max(0, self.jumps - 1)
+			self:on_jump()
+			
+			-- :smoke      (x,          y,            number, col, spw_rad, size, sizevar, layer, fill_mode)
+			Particles:smoke(self.mid_x, self.y+self.h, nil,   nil, nil,     nil,  nil,     nil, "line")
 		end
+	end
+end
+
+function Player:on_grounded_state_change(new_state)
+	-- When player has just left the grounded 
+	if not new_state then
+		self.jumps = math.max(0, self.jumps - 1)
 	end
 end
 
@@ -488,25 +530,32 @@ function Player:get_nearby_wall()
 	return false
 end
 
-function Player:jump(dt)
-	self.vy = -self.jump_speed * self.jump_speed_mult
+function Player:jump(dt, multiplier)
+	self.vy = -self.jump_speed * self.jump_speed_mult * (multiplier or 1)
 	
 	Particles:smoke(self.mid_x, self.y+self.h)
+	-- Particles:jump_dust_kick(self.mid_x, self.y+self.h - 12, 0)
+	Particles:jump_dust_kick(self.mid_x, self.y+self.h - 12, math.atan2(self.vy, self.vx) + pi/2)
 	Audio:play_var("jump", 0, 1.2)
-	self.jump_squash = 1/4
+	self.jump_squash = 1/3
 end
 
 function Player:wall_jump(normal)
 	self.vx = normal.x * self.wall_jump_kick_speed
 	self.vy = -self.jump_speed * self.jump_speed_mult
 	
+	Particles:jump_dust_kick(self.mid_x, self.y+self.h - 12, math.atan2(self.vy, self.vx) + pi/2)
 	Audio:play_var("jump", 0, 1.2)
-	self.jump_squash = 1/4
+	self.jump_squash = 1/3
 end
 
 function Player:on_jump()
 	self.buffer_jump_timer = 0
 	self.coyote_time = 0
+end
+
+function Player:add_max_jumps(val)
+	self.max_jumps = self.max_jumps + val
 end
 
 function Player:on_leaving_ground()
@@ -542,7 +591,8 @@ end
 --- Guns ---
 
 function Player:shoot(dt, is_burst)
-	if is_burst == nil then     is_burst = false    end
+	is_burst = param(is_burst, false)
+	
 	-- Update aiming direction
 	local dx, dy = self.dir_x, self.dir_y
 	local aim_horizontal = (Input:action_down(self.n, "left") or Input:action_down(self.n, "right"))
@@ -682,11 +732,12 @@ function Player:on_stomp(enemy)
 	self:set_invincibility(0.15) --0.1
 
 	self.combo = self.combo + 1
-	if self.combo >= 4 then
-		-- Particles:word(self.mid_x, self.mid_y, tostring(self.combo), COL_LIGHT_BLUE)
-	end
+	
+	-- if self.combo >= 4 then
+	-- 	Particles:word(self.mid_x, self.mid_y, tostring(self.combo), COL_LIGHT_BLUE)
+	-- end
 
-	self:add_combo(0.8)
+	self:add_fury(self.fury_stomp_value)
 	
 	-- self.ui_col_gradient = 1
 	-- self.gun.ammo = self.gun.ammo + floor(self.gun.max_ammo*.25)
@@ -708,14 +759,16 @@ function Player:on_my_bullet_hit(bullet, victim, col)
 	-- Why tf would this happen
 	if bullet.player ~= self then   return   end
 
-	self:add_combo(bullet.damage / 7)
+	self:add_fury(bullet.damage * self.fury_bullet_damage_value_multiplier)
 end
 
 ------------------------------------------
 --- Upgrades & effects ---
 
-function Player:apply_upgrade(upgrade)
-	upgrade:on_apply(self)
+function Player:apply_upgrade(upgrade, is_revive)
+	is_revive = param(is_revive, false)
+	
+	upgrade:apply(self, is_revive)
 	if upgrade.type == UPGRADE_TYPE_TEMPORARY or upgrade.type == UPGRADE_TYPE_PERMANENT then
 		table.insert(self.upgrades, upgrade)
 	end
@@ -786,9 +839,14 @@ function Player:leave_game_if_possible(dt)
 	end
 end
 
-function Player:update_combo(dt)
+function Player:update_fury(dt)
+	local final_fury_speed = self.fury_speed
+	if not self.is_grounded then
+		final_fury_speed = final_fury_speed * 0.5
+	end
+
 	if game:get_enemy_count() > 0 and not game.level:is_on_cafeteria() then
-		self.fury_bar = math.max(self.fury_bar - dt, 0.0)
+		self.fury_bar = math.max(self.fury_bar - dt*final_fury_speed, 0.0)
 	end
 	self.fury_bar = clamp(self.fury_bar, 0.0, self.fury_max)
 
@@ -801,34 +859,35 @@ function Player:update_combo(dt)
 	end
 
 	if self.fury_active then
-		-- size, sizevar, velvar, vely, is_back
-		-- Particles:fire(self.mid_x, self.mid_y, 5, nil, nil, -60, true)
-
+		local fury_colors = ternary(
+			self.has_energy_drink, 
+			{COL_MID_BLUE, COL_DARK_BLUE},
+			{COL_LIGHT_YELLOW, COL_ORANGE}
+		)
 		-- number, col, spw_rad, size, sizevar, is_front, is_back
-		Particles:smoke(self.mid_x, self.mid_y, 1, random_sample{COL_LIGHT_YELLOW, COL_ORANGE}, 12, nil, nil, false, true)
+		Particles:smoke(self.mid_x, self.mid_y, 1, random_sample(fury_colors), 12, nil, nil, PARTICLE_LAYER_BACK)
 	end
 end
 
-function Player:add_combo(val)
+function Player:add_fury(val)
 	self.fury_bar = self.fury_bar + val
 end
 
-function Player:set_combo(val)
+function Player:set_fury(val)
 	self.fury_bar = val
 end
-
-function Player:new_best_combo()
-	if self.combo > game.max_combo then
-		game.max_combo = self.combo
-	end
-	self.max_combo = self.combo
+function Player:add_fury_max(val)
+	self.fury_max = self.fury_max + val
+end
+function Player:multiply_fury_speed(val)
+	self.fury_speed = self.fury_speed * val
 end
 
 -----------------------------------------------------
 --- Visuals ---
 
 function Player:update_visuals()
-	self.jump_squash       = lerp(self.jump_squash,       1, 0.2)
+	self.jump_squash       = lerp(self.jump_squash,       1, 0.15)
 	self.walkbounce_squash = lerp(self.walkbounce_squash, 1, 0.2)
 	self.squash = self.jump_squash * self.walkbounce_squash
 
@@ -859,6 +918,9 @@ function Player:draw_hud()
 	self:draw_ammo_bar(ui_x, ui_y)
 
 	if game.game_state == GAME_STATE_WAITING then
+		if Input:get_number_of_users() > 1 then
+			print_centered_outline(self.color_palette[1], nil, Text:text("player.abbreviation", self.n), ui_x, ui_y- 8)
+		end
 		self:draw_controls()
 	end
 end
@@ -904,19 +966,21 @@ function Player:draw_ammo_bar(ui_x, ui_y)
 	local bar_x = x+ammo_icon_w+2
 	ui:draw_progress_bar(bar_x, y, slider_w, ammo_icon_w, val, maxval, 
 						col_fill, COL_BLACK_BLUE, col_shad, text)
-	
-	local fury_color = ternary(
-		self.fury_active, 
-		ternary(game.t % 0.2 <= 0.1, COL_LIGHT_YELLOW, COL_RED),
-		COL_LIGHT_YELLOW
-	)
-	ui:draw_progress_bar(bar_x, y+ammo_icon_w-1, slider_w, 4, self.fury_bar, self.fury_threshold, 
-						fury_color, COL_BLACK_BLUE, COL_ORANGE)
 
+
+	self:draw_fury_bar(bar_x, y+ammo_icon_w-1, slider_w, 4)
+end
+
+function Player:draw_fury_bar(x, y, w, h)
 	-- Fury bar
-	-- print_outline(nil, nil, concat("enms ", game:get_enemy_count()), ui_x + 20, ui_y-15)
-	-- print_outline(nil, nil, concat(round(self.fury_bar, 1)), ui_x-10, ui_y+15)
-	-- rect_color(COL_LIGHT_YELLOW, "fill", ui_x-10, ui_y+15, self.fury_bar*10, 3)
+	local fury_color =  ternary(self.has_energy_drink, COL_MID_BLUE,  COL_LIGHT_YELLOW)
+	local fury_shadow = ternary(self.has_energy_drink, COL_DARK_BLUE, COL_ORANGE)
+	if self.fury_active then
+		local flash_color = ternary(self.has_energy_drink, COL_WHITE, COL_RED)
+		fury_color = ternary(game.t % 0.2 <= 0.1, fury_color, flash_color)
+	end
+	
+	ui:draw_progress_bar(x, y, w, h, self.fury_bar, self.fury_threshold, fury_color, COL_BLACK_BLUE, fury_shadow)
 end
 
 function Player:get_controls_tutorial_values()
@@ -948,10 +1012,14 @@ function Player:get_controls_text_color(i)
 end
 
 function Player:draw_controls()
+	if game.debug and not game.debug.title_junk then
+		return 
+	end
+
 	local tutorials = self:get_controls_tutorial_values()
 
 	local x = self.ui_x
-	local y = self.ui_y - 40 + self.controls_oy
+	local y = self.ui_y - 45 + self.controls_oy
 	-- local x = (CANVAS_WIDTH * 0.15) + (CANVAS_WIDTH * 0.9) * (self.n-1)/4
 	-- local y = 140
 
@@ -1000,6 +1068,19 @@ function Player:draw_player()
 
 	local post_x, post_y = self.spr:get_total_offset_position(self.x, self.y, self.w, self.h)
 	self:post_draw(post_x, post_y)
+
+	if game.debug_mode then
+		local i = 0
+		local th = get_text_height()
+		for _, val in pairs(self.debug_values) do
+			print_outline(nil, nil, tostring(val), self.x + self.w, self.y - i*th)
+			i = i + 1
+		end
+	end
+
+	if self.debug_god_mode then
+		print_outline(nil, nil, "god", self.x, self.y - 16)
+	end
 end
 
 function Player:post_draw(x, y)
@@ -1095,7 +1176,7 @@ function Player:update_sprite(dt)
 		self.spr:set_image(self.skin.spr_wall_slide)
 	end
 	if self.is_walking then
-		if self.walkbounce_y > 4 then
+		if self.walkbounce_y < 4 then
 			self.spr:set_image(self.skin.spr_idle)
 		else
 			self.spr:set_image(self.skin.spr_jump)

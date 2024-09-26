@@ -1,40 +1,30 @@
 require "scripts.util"
 local Enemy = require "scripts.actor.enemy"
 local images = require "data.images"
-local ButtonSmall = require "scripts.actor.enemies.button_small"
-local EffectSlowness = require "scripts.effect.effect_slowness"
+local Prop = require "scripts.actor.enemies.prop"
 
 local utf8 = require "utf8"
 
-local UpgradeDisplay = Enemy:inherit()
+local UpgradeDisplay = Prop:inherit()
 
-upgradei = 1
 function UpgradeDisplay:init(x, y)
-    self:init_enemy(x, y, images.upgrade_jar, 16, 16)
+    self:init_prop(x, y, images.upgrade_jar, 16, 16)
     self.name = "upgrade_display"
     
     self.product = nil
     -- self:select_random_product()
+    self.has_player_in_range = false
     self.is_focused = false
     
     self.life = 10
     self.loot = {}
 
-    self.damage = 0
-    self.gravity = 0
-    self.knockback = 0
-    self.is_pushable = false
-    self.is_knockbackable = false
-    self.is_flying = true
-    self.follow_player = false
-    self.is_stompable = false
-    self.is_killed_on_stomp = false
 	self.destroy_bullet_on_impact = true
 	self.is_immune_to_bullets = false
 
     self.player_detection_range_x = 26
     self.player_detection_range_y = 64
-    self.target_player = nil
+    self.target_players = {}
     
 	self.sound_damage = "glass_fracture"
 	self.sound_death = "glass_break_weak"
@@ -49,9 +39,9 @@ function UpgradeDisplay:assign_upgrade(upgrade)
 end
 
 function UpgradeDisplay:update(dt)
-    self:update_enemy(dt)
+    self:update_prop(dt)
 
-    self.is_focused, self.target_player = self:is_player_in_range()
+    self:update_focus(dt)
 
     if self.is_focused then
         self.animation_t = clamp(self.animation_t + dt*2, 0, 1)
@@ -62,22 +52,58 @@ function UpgradeDisplay:update(dt)
     end
 end
 
+function UpgradeDisplay:has_new_target_player(players)
+    if #self.target_players == 0 then
+        return true
+    end
+    if #players > #self.target_players then
+        return true
+    end
+    return false
+end
+
+function UpgradeDisplay:update_focus(dt)
+    local in_range, players = self:is_player_in_range()
+    local has_new_target = self:has_new_target_player(players)
+    if not in_range then
+        self.is_focused = false
+        
+    elseif (not self.has_player_in_range and in_range) or has_new_target then
+        self.is_focused = true
+        for _, enemy in pairs(game.actors) do
+            if self ~= enemy and enemy.name == "upgrade_display" then
+                enemy:set_focused(false)
+            end
+        end
+    end
+    
+    self.has_player_in_range = in_range 
+    self.target_players = players
+end
+
+function UpgradeDisplay:set_focused(value)
+    self.is_focused = value
+end
+
 function UpgradeDisplay:is_player_in_range()
+    local found = false
+    local players = {}
 	for _, ply in pairs(game.players) do
 		local dx = math.abs(self.mid_x - ply.mid_x)
 		local dy = math.abs(self.mid_y - ply.mid_y)
 		if (dx <= self.player_detection_range_x) and (dy <= self.player_detection_range_y) then
-            return true, ply
+            found = true
+            table.insert(players, ply)
 		end
 	end
-    return false, nil
+    return found, players
 end
 
 function UpgradeDisplay:draw()
     if self.product then
         self.product:draw(self.mid_x, self.mid_y)
     end
-	self:draw_enemy()
+	self:draw_prop()
     
     self:draw_product()
 end

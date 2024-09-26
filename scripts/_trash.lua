@@ -3,6 +3,505 @@
 
 --
 ------------------------------------
+-- Old demo waves
+
+local demo_waves = {	
+	new_wave({
+		min = 4,
+		max = 6,
+		enemies = {
+			{E.Larva, 3},
+			{E.Fly, 3},
+		},
+		music = "w1",
+
+		title = get_world_name("1"),
+		title_color = COL_MID_BLUE,
+	}),
+
+	
+	new_wave({
+		-- Woodlouse intro
+		min = 4,
+		max = 6,
+		enable_stomp_arrow_tutorial = true,
+		enemies = {
+			{E.Woodlouse, 2},
+		},
+	}),
+
+	new_wave({
+		min = 4,
+		max = 6,
+		enemies = {
+			{E.Larva, 2},
+			{E.Fly, 3},
+			{E.Woodlouse, 2},
+		},
+	}),
+
+	new_wave({
+		-- Slug intro
+		min = 4,
+		max = 6,
+		enemies = {
+			{E.Larva, 2},
+			{E.Fly, 2},
+			{E.Slug, 2},
+		},
+	}),
+	
+	new_wave({
+		-- Spider intro
+		min = 4,
+		max = 6,
+		enemies = {
+			{E.Larva, 2},
+			{E.Spider, 4},
+		},
+	}),
+
+	new_wave({
+		min = 6,
+		max = 8,
+		enemies = {
+			{E.Fly, 5},
+			{E.Slug, 2},
+			{E.Spider, 3},
+			{E.Woodlouse, 2},
+		},
+	}),
+
+	new_wave({
+		-- Mosquito intro
+		min = 6,
+		max = 8,
+		enemies = {
+			{E.Fly, 3},
+			{E.Mosquito, 4},
+		},
+	}),
+
+	new_wave({ 
+		min = 6,
+		max = 8,
+		enemies = {
+			{E.Larva, 2},
+			{E.Slug, 5},
+			{E.Fly, 2},
+			{E.Mosquito, 2},
+			{E.Woodlouse, 2},
+		},
+	}),
+
+	new_wave({
+		min = 3,
+		max = 5,
+		enemies = {
+			-- Shelled Snail intro
+			{E.SnailShelled, 3},
+		},
+	}),
+
+	new_wave({
+		min = 6,
+		max = 8,
+		enemies = {
+			-- 
+			{E.Mosquito, 3},
+			{E.Fly, 4},
+			{E.Larva, 4},
+			{E.SnailShelled, 3},
+			{E.Spider, 3},
+		},
+	}),
+
+	new_wave({ 
+		-- Spiked Fly intro
+		min = 6,
+		max = 8,
+		enemies = {
+			{E.Larva, 1},
+			{E.Fly, 2},
+			{E.Mosquito, 2},
+			{E.SpikedFly, 4},
+		},
+	}),
+
+	new_wave({ 
+		min = 7,
+		max = 9,
+		enemies = {
+			{E.Fly, 2},
+			{E.Mosquito, 4},
+			{E.SpikedFly, 4},
+			{E.Spider, 4},
+		},
+	}),
+
+	new_cafeteria(),
+
+	new_wave({ 
+		-- Grasshopper intro
+		min = 4,
+		max = 4,
+		enemies = {
+			{E.Grasshopper, 8},
+		},
+		music = "w1",
+	}),
+
+	new_wave({ 
+		min = 7,
+		max = 9,
+		enemies = {
+			{E.Fly, 2},
+			{E.Mosquito, 4},
+			{E.Grasshopper, 8},
+			{E.Woodlouse, 2},
+			{E.SpikedFly, 4},
+			{E.Spider, 4},
+		},
+	}),
+
+	new_wave({ 
+		-- Mushroom Ant intro
+		min = 5,
+		max = 6,
+		enemies = {
+			{E.Fly, 3},
+			{E.Mosquito, 3},
+			{E.MushroomAnt, 3},
+		},
+	}),
+
+
+	new_wave({ 
+		min = 8,
+		max = 10,
+		enemies = {
+			{E.MushroomAnt, 3},
+			{E.Woodlouse, 2},
+			{E.Fly, 1},
+			{E.SpikedFly, 1},
+			{E.Spider, 2},
+		},
+	}),
+
+	new_wave({ 
+		-- Honeypot ant intro
+		min = 6,
+		max = 8,
+		enemies = {
+			{E.Larva, 3},
+			{E.HoneypotAnt, 6},
+			{E.MushroomAnt, 3},
+			{E.SpikedFly, 3},
+		},
+	}),
+
+	new_wave({ -- 12
+		-- ALL
+		min = 12,
+		max = 12,
+		enemies = {
+			{E.Larva, 4},
+			{E.Fly, 3},
+			{E.SnailShelled, 3},
+			{E.Mosquito, 3},
+			{E.Slug, 2},
+			{E.HoneypotAnt, 2},
+			{E.SpikedFly, 1},
+			{E.Grasshopper, 1},
+			{E.MushroomAnt, 1},
+			{E.Spider, 1},
+		},
+	}),
+
+	new_wave({
+		min = 14,
+		max = 16,
+		enemies = {
+			{E.Fly, 3},
+			{E.HoneypotAnt, 2},
+			{E.SnailShelled, 3},
+			{E.Woodlouse, 1},
+			{E.Slug, 2},
+			{E.Mosquito, 3},
+			{E.SpikedFly, 1},
+			{E.Grasshopper, 1},
+			{E.MushroomAnt, 1},
+			{E.Spider, 1},
+		},
+	}),
+
+	new_wave({
+		-- roll_type = WAVE_ROLL_TYPE_FIXED,
+		min = 1,
+		max = 1,
+		enemies = {	
+			{E.Dung, 1, position = {240, 200}},			
+		},
+		music = "miniboss",
+	}),
+	
+	-- Last wave
+	new_wave({ 
+		min = 1,
+		max = 1,
+		enemies = {
+			{E.ButtonBigGlass, 1, position = {211, 194}}
+		},
+		music = "off",
+	})
+}
+
+
+
+------------------------------------
+--- Old love.update function
+--- 
+
+function love.update(dt)
+	_G_t = _G_t + dt
+	local cap = 1 --If there's lag spike, repeat up to how many frames?
+	local i = 0
+	local update_fixed_dt = fixed_dt
+	-- local update_fixed_dt = 1/30
+	while (not _G_do_fixed_framerate or _G_t > update_fixed_dt) and cap > 0 do
+		_G_t = _G_t - update_fixed_dt
+		fixed_update()
+		cap = cap - 1
+		i=i+1
+	end
+
+	if game then   game.frame_repeat = i end
+	_G_frame = _G_frame + 1
+end
+
+------------------------------------
+
+
+-- Sprite
+
+local r = self.standby_timer.time / self.standby_timer.duration
+if r > 0.5 then
+	self.spr:set_visible(false)
+	self.spike_sprite:set_visible(false)
+	return
+else
+	self.spr:set_visible(true)
+	self.spike_sprite:set_visible(true)
+end
+
+local s = clamp(1 - (r*2), 0, 1)
+if self.orientation == 0 or self.orientation == 2 then
+	self.spr:set_scale(1, s)
+	self.spike_sprite:set_scale(1, s)
+else
+	self.spr:set_scale(1, s)
+	self.spike_sprite:set_scale(1, s)
+end
+
+---------------------------------
+-- Twitter video explosins
+
+
+["kp1"] = {"intro", function()
+	local x, y = CANVAS_WIDTH*0.5, CANVAS_HEIGHT*0.5
+	if self.removeme_i == 0 then
+		self.removeme_i = 1
+		Particles:text(x, y-42, "How I made this explosion effect", nil, 2, nil, nil, 0.01)
+		return
+	end
+	self.removeme_i = (self.removeme_i + 1) % 3
+
+	local arc = enemies.Explosion:new(x, y, 32)
+	game:new_actor(arc)
+end},
+
+["kp2"] = {"dust", function()
+	local x, y = CANVAS_WIDTH*0.5, CANVAS_HEIGHT*0.5
+	if self.removeme_i == 0 then
+		self.removeme_i = 1
+		Particles:text(x, y-42, "First, some shrinking circles", nil, 2, nil, nil, 0.01)
+		return
+	end
+	self.removeme_i = (self.removeme_i + 1) % 4
+	
+	local x, y = CANVAS_WIDTH*0.5, CANVAS_HEIGHT*0.5
+	local gradient = {
+		type = "gradient",
+		COL_WHITE, COL_YELLOW, COL_ORANGE, COL_DARK_RED, COL_DARK_GRAY, COL_BLACK_BLUE
+	}
+	Particles:smoke_big(x, y, gradient, 0, 1, {
+		vx = 0, 
+		vx_variation = 20, 
+		vy = -50, 
+		vy_variation = 10,
+		-- min_spawn_delay = min_spawn_delay or 0,
+		-- max_spawn_delay = max_spawn_delay or 0.2,
+	})
+end},
+
+["kp3"] = {"smoke", function()
+	local x, y = CANVAS_WIDTH*0.5, CANVAS_HEIGHT*0.5
+	if self.removeme_i == 0 then
+		self.removeme_i = 1
+		Particles:text(x, y-42, "Offset them in space and time", nil, 2, nil, nil, 0.01)
+		return
+	end
+	self.removeme_i = (self.removeme_i + 1) % 3
+
+  
+	local x, y = CANVAS_WIDTH*0.5, CANVAS_HEIGHT*0.5
+	local gradient = {
+		type = "gradient",
+		COL_WHITE, COL_YELLOW, COL_ORANGE, COL_DARK_RED, COL_DARK_GRAY, COL_BLACK_BLUE
+	}
+	Particles:smoke_big(x, y, gradient, 32+16, 200, {
+		vx = 0, 
+		vx_variation = 20, 
+		vy = -50, 
+		vy_variation = 10,
+		min_spawn_delay = 0,
+		max_spawn_delay = 0.2,
+	})
+end},
+
+["kp4"] = {"back smoke", function()
+	local x, y = CANVAS_WIDTH*0.5, CANVAS_HEIGHT*0.5
+	if self.removeme_i == 0 then
+		self.removeme_i = 1
+		Particles:text(x, y-42, "Add some black smoke afterwards", nil, 2, nil, nil, 0.01)
+		return
+	end
+	self.removeme_i = (self.removeme_i + 1) % 3
+	
+
+	local x, y = CANVAS_WIDTH*0.5, CANVAS_HEIGHT*0.5
+	local radius = 32+16
+	local function explosion_layer(col, rad, quantity, min_spawn_delay, max_spawn_delay)
+		Particles:smoke_big(x, y, col, rad, quantity, {
+			vx = 0, 
+			vx_variation = 20, 
+			vy = -50, 
+			vy_variation = 10,
+			min_spawn_delay = min_spawn_delay or 0,
+			max_spawn_delay = max_spawn_delay or 0.2,
+		})
+	end
+
+	local gradient = {
+		type = "gradient",
+		COL_WHITE, COL_YELLOW, COL_ORANGE, COL_DARK_RED, COL_DARK_GRAY, COL_BLACK_BLUE
+	}
+	explosion_layer({type = "gradient", COL_DARK_GRAY},  radius, 100, 0.2, 0.4)
+	explosion_layer({type = "gradient", COL_BLACK_BLUE}, radius, 100, 0.2, 0.4)
+
+	explosion_layer(gradient, radius,     200)
+	-- explosion_layer(gradient, radius,     80)
+	-- explosion_layer(gradient, radius*0.9, 60)
+	-- explosion_layer(gradient, radius*0.8, 30)
+	-- explosion_layer(gradient, radius*0.7, 20)
+	-- explosion_layer(gradient, radius*0.6, 15)
+end},
+
+["kp5"] = {"debris", function()
+	local x, y = CANVAS_WIDTH*0.5, CANVAS_HEIGHT*0.5
+	if self.removeme_i == 0 then
+		self.removeme_i = 1
+		Particles:text(x, y-42, "Add some flying debris", nil, 2, nil, nil, 0.01)
+		return
+	end
+	self.removeme_i = (self.removeme_i + 1) % 3
+	
+	local x, y = CANVAS_WIDTH*0.5, CANVAS_HEIGHT*0.5
+	local radius = 32+16
+	local function explosion_layer(col, rad, quantity, min_spawn_delay, max_spawn_delay)
+		Particles:smoke_big(x, y, col, rad, quantity, {
+			vx = 0, 
+			vx_variation = 20, 
+			vy = -50, 
+			vy_variation = 10,
+			min_spawn_delay = min_spawn_delay or 0,
+			max_spawn_delay = max_spawn_delay or 0.2,
+		})
+	end
+
+	local gradient = {
+		type = "gradient",
+		COL_WHITE, COL_YELLOW, COL_ORANGE, COL_DARK_RED, COL_DARK_GRAY, COL_BLACK_BLUE
+	}
+	explosion_layer({type = "gradient", COL_DARK_GRAY},  radius, 100, 0.2, 0.4)
+	explosion_layer({type = "gradient", COL_BLACK_BLUE}, radius, 100, 0.2, 0.4)
+
+	explosion_layer(gradient, radius,     200)
+	-- explosion_layer(gradient, radius,     80)
+	-- explosion_layer(gradient, radius*0.9, 60)
+	-- explosion_layer(gradient, radius*0.8, 30)
+	-- explosion_layer(gradient, radius*0.7, 20)
+	-- explosion_layer(gradient, radius*0.6, 15)
+
+	Particles:image(x, y, 5, images.bullet_casing, 4, nil, nil, nil, {
+		vx1 = -150,
+		vx2 = 150,
+
+		vy1 = 80,
+		vy2 = -200,
+	})
+
+	Particles:image(x , y, 5, images.white_dust, 4, nil, nil, nil, {
+		vx1 = -150,
+		vx2 = 150,
+
+		vy1 = 80,
+		vy2 = -200,
+	})
+end},
+
+["kp6"] = {"flash", function()
+	local x, y = CANVAS_WIDTH*0.5, CANVAS_HEIGHT*0.5
+	if self.removeme_i == 0 then
+		self.removeme_i = 1
+		Particles:text(x, y-42, "Add a white flash", nil, 2, nil, nil, 0.01)
+		return
+	end
+	self.removeme_i = (self.removeme_i + 1) % 4
+	
+	local x, y = CANVAS_WIDTH*0.5, CANVAS_HEIGHT*0.5
+	Particles:static_image(images.explosion_flash, x, y)
+end},
+
+["kp7"] = {"screenshake", function()
+	local x, y = CANVAS_WIDTH*0.5, CANVAS_HEIGHT*0.5
+	if self.removeme_i == 0 then
+		self.removeme_i = 1
+		Particles:text(x, y-42, "Add some screenshake", nil, 2, nil, nil, 0.01)
+		return
+	end
+	self.removeme_i = (self.removeme_i + 1) % 2
+	
+	local x, y = CANVAS_WIDTH*0.5, CANVAS_HEIGHT*0.5
+	local arc = enemies.Explosion:new(x, y, 32)
+	game:new_actor(arc)
+end},
+
+["kp8"] = {"done text", function()
+	local x, y = CANVAS_WIDTH*0.5, CANVAS_HEIGHT*0.5
+	self.removeme_i = 1
+	Particles:text(x, y-42, "Done!", nil, 2, nil, nil, 0.01)
+end},
+
+["kp9"] = {"boom", function()
+	local x, y = CANVAS_WIDTH*0.5, CANVAS_HEIGHT*0.5
+	local arc = enemies.Explosion:new(x, y, 32)
+	game:new_actor(arc)
+end},
+}
+
+
+------------------------------------
 -- Old combos
 
 -- (in update_combo)

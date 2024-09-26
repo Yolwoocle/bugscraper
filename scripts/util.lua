@@ -23,10 +23,10 @@ inf = math.huge
 -- scotch 
 local old_print = love.graphics.print
 function love.graphics.print(text, x, y, ...)
-	return old_print(text, math.floor(x), math.floor(y))
+	return old_print(text, math.floor(x), math.floor(y), ...)
 end
 
--- huge scotch for love.js compatibility
+-- scotch: gigantic hack for love.js canvas compatibility
 -- https://github.com/Davidobot/love.js/issues/92
 local old_newCanvas = love.graphics.newCanvas
 function love.graphics.newCanvas(width, height, settings)
@@ -79,8 +79,6 @@ function normalize_vect(x, y)
 	if x==0 and y==0 then  return 1,0  end
 	local d = sqrt(x*x + y*y)
 	return x/d, y/d
-	-- local a = math.atan2(y, x)
-	-- return math.cos(a), math.sin(a)
 end
 normalise_vect = normalize_vect
 
@@ -130,8 +128,8 @@ function round_if_near_zero(val, thr)
 	return thr
 end
 
-function is_point_in_rect(px, py, ax, ay, bx, by)
-	return (ax <= px and px <= bx) and (ay <= py and py <= by)
+function is_point_in_rect(px, py, rect)
+	return (rect.ax <= px and px <= rect.bx) and (rect.ay <= py and py <= rect.by)
 end
 
 -- function copy_table(tab)
@@ -373,8 +371,8 @@ function print_centered_outline(col_in, col_out, text, x, y, thick, rot, sx, sy,
 	sx = sx or 1
 	sy = sy or sx
 	local font   = love.graphics.getFont()
-	local text_w = font:getWidth(text)
-	local text_h = font:getHeight()
+	local text_w = font:getWidth(text) * sx
+	local text_h = font:getHeight() * sy
 	print_outline(col_in, col_out, text, x-text_w/2, y-text_h/2, thick, rot, sx, sy, ...)
 end
 
@@ -445,6 +443,9 @@ function bool_to_int(b)
 	return 0
 end
 
+--- func desc
+---@param b boolean The boolean
+---@return direction 1 if b s true, else -1
 function bool_to_dir(b)
 	if type(b) ~= "boolean" then   return b   end
 	if b then    return 1    end
@@ -659,9 +660,30 @@ function random_str(a, b)
 	return tostring(love.math.random(a,b))
 end
 
+--- Selects a random element from a weighted list.
+--- 
+--- This function takes a list of elements where each element is a table containing a value and its corresponding weight.
+--- It returns a randomly selected element based on its weight, using the provided random number generator (RNG) if given,
+--- otherwise using the default RNG.
+---
+--- @param li table A list of tables where each table contains two elements: the value and its weight (e.g., {{value1, weight1}, {value2, weight2}, ...}).
+--- @param rng? userdata (optional) A random number generator object. If not provided, the default random number generator is used.
+--- 
+--- @return any, table, number value The randomly selected value, the selected table, and the index of the selected element in the original list.
+--- 
+--- @raise If the random selection is out of range, an assertion error is raised.
+--- 
+--- @example
+--- ```
+--- local li = {{'a', 10}, {'b', 30}, {'c', 60}}
+--- local value, element, index = random_weighted(li)
+--- print(value)  -- might print 'a', 'b', or 'c' based on their weights
+--- print(element)  -- prints the selected table, e.g., {'b', 30}
+--- print(index)  -- prints the index of the selected element, e.g., 2
+--- ```
 function random_weighted(li, rng)
 	local sum_w = 0
-	for _,e in pairs(li) do
+	for _,e in ipairs(li) do
 		sum_w = sum_w + e[2]
 	end
 
@@ -810,6 +832,24 @@ function line_color(col, ax, ay, bx, by, ...)
 	love.graphics.setColor(1,1,1,1)
 end
 
+function arrow_color_radial(col, x, y, a, r)
+	arrow_color_relative(col, x, y, math.cos(a) * r, math.sin(a) * r)
+end
+
+function arrow_color_relative(col, x, y, dx, dy)
+	arrow_color(col, x, y, x + dx, y + dy)
+end
+
+function arrow_color(col, ax, ay, bx, by)
+	line_color(col, ax, ay, bx, by)
+	local a = atan2(by - ay, bx - ax)
+	local a_arrow1 = a + pi + pi/4
+	local a_arrow2 = a + pi - pi/4
+	local r = 4
+	line_color(col, bx, by, bx + math.cos(a_arrow1)*r, by + math.sin(a_arrow1)*r)
+	line_color(col, bx, by, bx + math.cos(a_arrow2)*r, by + math.sin(a_arrow2)*r)
+end
+
 function noise(...)
 	local v = love.math.noise(...)
 	return v*2 - 1
@@ -832,6 +872,14 @@ end
 
 function dist(ax, ay, bx, by)
 	return sqrt(distsqr(ax, ay, bx, by))
+end
+
+function actor_distance(actor1, actor2)
+	return dist(actor1.x, actor1.y, actor2.x, actor2.y)
+end
+
+function actor_mid_distance(actor1, actor2)
+	return dist(actor1.mid_x, actor1.mid_y, actor2.mid_x, actor2.mid_y)
 end
 
 function cerp(a,b,t)
@@ -1010,22 +1058,6 @@ function angle_in_range(alpha, lower, upper)
     return (alpha - lower) % pi2 <= (upper - lower) % pi2
 end
 
-function get_left_vec(x, y)
-	return y, -x
-end
-
-function get_right_vec(x, y)
-	return -y, x
-end
-
-function get_orthogonal(x, y, dir)
-	if dir < 0 then
-		return get_left_vec(x,y)
-	else
-		return get_right_vec(x,y)
-	end
-end
-
 function create_actor_centered(actor, x, y, ...)
 	local a = actor:new(x, y, ...)
 	local nx = floor(a.x - a.w/2)
@@ -1075,11 +1107,109 @@ function get_right_vec(x, y)
 end
 
 function get_orthogonal(x, y, dir)
+	dir = dir or 1
 	if dir < 0 then
 		return get_left_vec(x,y)
 	else
 		return get_right_vec(x,y)
 	end
+end
+
+function vec_cross(ax, ay, az, bx, by, bz)
+	return ay*bz - az*by, az*bx - ax*bz, ax*by - ay*bx
+end
+
+-- https://stackoverflow.com/questions/42892862/how-do-i-find-the-point-at-which-two-line-segments-are-intersecting-in-javascrip
+function segment_intersect_point(seg1, seg2)
+	local x1, y1, x2, y2 = seg1.ax, seg1.ay, seg1.bx, seg1.by 
+	local x3, y3, x4, y4 = seg2.ax, seg2.ay, seg2.bx, seg2.by
+    local a_dx = x2 - x1
+    local a_dy = y2 - y1
+    local b_dx = x4 - x3
+    local b_dy = y4 - y3
+    local s = (-a_dy * (x1 - x3) + a_dx * (y1 - y3)) / (-b_dx * a_dy + a_dx * b_dy)
+    local t = ( b_dx * (y1 - y3) - b_dy * (x1 - x3)) / (-b_dx * a_dy + a_dx * b_dy)
+    return ternary(
+		(s >= 0 and s <= 1 and t >= 0 and t <= 1),
+		{x = x1 + t * a_dx, y = y1 + t * a_dy}, 
+		nil
+	)
+end
+
+-- --- Returns a vector that forms `angle` with the 0° angle and goes from the center of the rect to its appropriate edge. 
+-- function get_vector_in_rect_from_angle(angle, rect)
+-- 	local center_x = (rect.bx + rect.ax) / 2
+-- 	local center_y = (rect.by + rect.ay) / 2
+-- 	local w = rect.w
+-- 	local h = rect.h
+-- 	local r = math.max(w, h)
+
+-- 	local outx, outy = rectclamp(w, h, math.cos(angle)*r, math.sin(angle)*r)
+-- 	return center_x, center_y, outx + center_x, outy + center_y
+-- end
+
+function clamp_segment_to_rectangle(seg, rect)
+	local function segment(ax, ay, bx, by)
+		return {
+			ax = ax,
+			ay = ay,
+			bx = bx,
+			by = by,
+		}
+	end
+
+	local rect_edges = {
+		segment(rect.ax, rect.ay, rect.bx, rect.ay),
+		segment(rect.ax, rect.ay, rect.ax, rect.by),
+		segment(rect.bx, rect.ay, rect.bx, rect.by),
+		segment(rect.ax, rect.by, rect.bx, rect.by),
+	}
+
+	local points = {}
+	for _, rect_edge in pairs(rect_edges) do
+		local pt = segment_intersect_point(rect_edge, seg)
+		if pt then
+			table.insert(points, pt)
+		end
+	end
+	
+	local p1_in = is_point_in_rect(seg.ax, seg.ay, rect)
+	local p2_in = is_point_in_rect(seg.bx, seg.by, rect)
+	if p1_in and p2_in then
+		return seg.ax, seg.ay, seg.bx, seg.by
+	end
+
+	if #points >= 2 then
+		-- I don't know in what edge case there would be more than 2 points, but if it happens they're ignored 
+		return points[1].x, points[1].y, points[2].x, points[2].y
+	elseif #points == 1 then
+		if not p1_in and not p2_in then
+			return points[1].x, points[1].y, points[1].x, points[1].y
+		elseif p1_in then
+			return seg.ax, seg.ay, points[1].x, points[1].y
+		elseif p2_in then
+			return seg.bx, seg.by, points[1].x, points[1].y
+		end
+	elseif #points == 0 then		 
+		return nil
+
+	end
+end
+
+--- Returns a vector that forms `angle` with the 0° angle and goes from (x, y) to its appropriate edge. 
+function get_vector_in_rect_from_angle(x, y, angle, rect)
+	local r = math.max(rect.w, rect.h) + 100
+	local function segment(ax, ay, bx, by)
+		return {
+			ax = ax,
+			ay = ay,
+			bx = bx,
+			by = by,
+		}
+	end
+
+	local seg = segment(x, y, x + math.cos(angle) * r, y + math.sin(angle) * r)
+	return clamp_segment_to_rectangle(seg, rect)
 end
 
 -- https://easings.net/#easeOutBack
@@ -1098,4 +1228,69 @@ end
 
 function ease_out_elastic(x)
 	return 1 - (2^(-10*x))*math.cos(2*x)
+end
+
+
+--- Return true if line segments intersect
+--- https://stackoverflow.com/questions/3838329/how-can-i-check-if-two-segments-intersect 
+function segment_intersect(seg1, seg2)
+	local function ccw(ax, ay, bx, by, cx, cy)
+		return (cy - ay) * (bx - ax) > (by - ay) * (cx - ax)
+	end
+    local bool1 = (ccw(seg1.ax, seg1.ay, seg2.ax, seg2.ay, seg2.bx, seg2.by) ~= ccw(seg1.bx, seg1.by, seg2.ax, seg2.ay, seg2.bx, seg2.by)) 
+	local bool2 = (ccw(seg1.ax, seg1.ay, seg1.bx, seg1.by, seg2.ax, seg2.ay) ~= ccw(seg1.ax, seg1.ay, seg1.bx, seg1.by, seg2.bx, seg2.by))
+	return bool1 and bool2
+end
+
+--- https://stackoverflow.com/questions/20677795/how-do-i-compute-the-intersection-point-of-two-lines
+function line_intersection(line1, line2)
+    -- xdiff = (line1[0][0] - line1[1][0], line2[0][0] - line2[1][0])
+    -- ydiff = (line1[0][1] - line1[1][1], line2[0][1] - line2[1][1])
+    local xdiff = {line1.ax - line1.bx, line2.ax - line2.bx}
+    local ydiff = {line1.ay - line1.by, line2.ay - line2.by}
+
+    local function det(a, b)
+        return a[0] * b[1] - a[1] * b[0]
+	end		
+
+    local div = det(xdiff, ydiff)
+    if div == 0 then
+		return nil
+       	-- raise Exception('lines do not intersect')
+	end
+
+    local d = {
+		det({line1.ax, line1.ay}, {line1.bx, line1.by}), 
+		det({line2.ax, line2.ay}, {line2.bx, line2.by})
+	}
+    local x = det(d, xdiff) / div
+    local y = det(d, ydiff) / div
+    return x, y
+end
+
+function get_direction_vector(ax, ay, bx, by)
+	return normalize_vect(bx - ax, by - ay)
+end
+
+function get_direction_vector_between_actors(actor1, actor2)
+	return normalize_vect(actor2.x - actor1.x, actor2.y - actor1.y)
+end
+
+function get_angle_between_actors(actor1, actor2, use_mid)
+	if use_mid then
+		return math.atan2(actor2.mid_y - actor1.mid_y, actor2.mid_x - actor1.mid_x)
+	end 
+	return math.atan2(actor2.y - actor1.y, actor2.x - actor1.x)
+end
+
+function save_canvas_as_file(canvas, filename, encoding_format)
+	local imgdata = canvas:newImageData()
+	local imgpng = imgdata:encode("png", filename)
+
+	return imgdata, imgpng
+end
+
+function vec_approx_equal(vec1, vec2) 
+	local epsilon = 0.00001
+	return math.abs(vec1.x - vec2.x) < epsilon and math.abs(vec1.y - vec2.y) < epsilon
 end

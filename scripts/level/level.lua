@@ -1,13 +1,13 @@
 require "scripts.util"
 local Class = require "scripts.meta.class"
 local Timer = require "scripts.timer"
-local Rect = require "scripts.rect"
+local Rect = require "scripts.math.rect"
 local Enemies = require "data.enemies"
 local TileMap = require "scripts.level.tilemap"
-local WorldGenerator = require "scripts.level.worldgenerator"
-local BackgroundDots = require "scripts.level.background.background_dots"
-local BackgroundServers = require "scripts.level.background.background_servers"
+local WorldGenerator = require "scripts.level.world_generator"
 local BackgroundCafeteria = require "scripts.level.background.background_cafeteria"
+local BackgroundFinal = require "scripts.level.background.background_final"
+local BackgroundDots = require "scripts.level.background.background_dots"
 local Elevator = require "scripts.level.elevator"
 local Wave = require "scripts.level.wave"
 
@@ -43,29 +43,13 @@ function Level:init(game)
 	local door_bx, door_by = cabin_ay*BW+261, cabin_ay*BW+207
 	self.door_rect = Rect:new(door_ax, door_ay, door_bx, door_by)
 
-	-- Bounding box
-	-- Future Leo: the fuck is this, commented it out
-	-- Don't try to understand, all you have to know is that it puts collision 
-	-- boxes around the elevator shaft
-	-- local map_w = self.map.width * BW
-	-- local map_h = self.map.height * BW
-	-- local box_ax = self.world_generator.box_ax
-	-- local box_ay = self.world_generator.box_ay
-	-- local box_bx = self.world_generator.box_bx
-	-- local box_by = self.world_generator.box_by
-	-- self.boxes = {
-	-- 	{name="box_up",    x = -BW, y = -BW,  w=map_w + 2*BW,     h=BW + box_ay*BW},
-	-- 	{name="box_down",  x = -BW, y = (box_by+1)*BW,  w=map_w + 2*BW,     h=BW*box_ay},
-	-- 	{name="box_left",  x = -BW,  y = -BW,   w=BW + box_ax * BW, h=map_h + 2*BW},
-	-- 	{name="box_right", x = BW*(box_bx+1), y = -BW, w=BW*box_ax, h=map_h + 2*BW},
-	-- }
-	-- for i,box in pairs(self.boxes) do   Collision:add(box)   end
-
+	self.kill_zone = Rect:new(-400000, -400000, 400000, CANVAS_HEIGHT+BW)
 
 	-- Level info
 	self.floor = 0 --Floor n°
 	self.max_floor = #waves
 	self.current_wave = nil
+	self.next_wave_to_set = nil
 	
 	self.new_wave_animation_state = "off"
 	self.new_wave_progress = 0.0
@@ -91,6 +75,7 @@ function Level:init(game)
 	self.buffer_canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
 	self.cafeteria_animation_state = "off"
 	self.force_next_wave_flag = false
+	self.do_not_spawn_enemies_on_next_wave_flag = false
 
 	self.is_hole_stencil_enabled = true
 	self.hole_stencil_pause_radius = CANVAS_WIDTH
@@ -131,14 +116,21 @@ end
 function Level:check_for_next_wave(dt)
 	local conditions_for_new_wave = (game.game_state == GAME_STATE_PLAYING) and (#self.enemy_buffer == 0) and (game:get_enemy_count() <= 0)
 	if conditions_for_new_wave or self.force_next_wave_flag then
-		self:begin_next_wave_animation()			
+		self:begin_next_wave_animation()
 		self.force_next_wave_flag = false
 	end
 end
 
 function Level:begin_next_wave_animation()
-	self:new_wave_buffer_enemies()
-	self.new_wave_progress = 1.0
+	local buffer_enemies = true
+	if self.do_not_spawn_enemies_on_next_wave_flag then
+		self.do_not_spawn_enemies_on_next_wave_flag = false
+		buffer_enemies = false
+	end
+	if buffer_enemies then
+		self:new_wave_buffer_enemies()
+	end
+	self.new_wave_progress = self.slowdown_timer_override or 1.0
 	self.new_wave_animation_state = "slowdown"
 
 	if self:is_on_cafeteria() then
@@ -157,6 +149,7 @@ function Level:update_elevator_progress(dt)
 
 		if self.new_wave_progress <= 0 then
 			self.elevator:open_door(ternary(self:is_on_cafeteria(), nil, 1.4))
+			self.current_wave:show_title()
 			self:increment_floor()
 			self.new_wave_progress = 1.0
 			self.new_wave_animation_state = "opening"
@@ -213,18 +206,21 @@ function Level:increment_floor()
 end
 
 function Level:new_endless_wave()
-	local min = 8
-	local max = 16
+	local min = 12
+	local max = 25
 	return Wave:new({
 		min = min,
 		max = max,
 		music = "w1",
 		enemies = {
 			{Enemies.Larva, random_range(1,6)},
+			{Enemies.Woodlouse, random_range(1,6)},
 			{Enemies.Fly, random_range(1,6)},
 			{Enemies.Slug, random_range(1,6)},
 			{Enemies.Mosquito, random_range(1, 6)},
 
+			{Enemies.StinkBug, random_range(1,4)},
+			{Enemies.Boomshroom, random_range(1,4)},
 			{Enemies.SnailShelled, random_range(1,4)},
 			{Enemies.HoneypotAnt, random_range(1,4)},
 			{Enemies.SpikedFly, random_range(1,4)},
@@ -275,40 +271,12 @@ function Level:new_wave_buffer_enemies()
 	
 	self.enemy_buffer = wave:spawn(self.door_rect)
 	
-	self:enable_wave_side_effects(wave)
+	wave:enable_wave_side_effects(self)
 	if self.background.change_clear_color then
 		self.background:change_clear_color()
 	end
 	
 	self:set_current_wave(wave)
-end
-
-function Level:enable_wave_side_effects(wave)
-	self:_load_background(wave)
-	self:_load_music(wave)
-	self:_load_wave_bounds(wave)
-
-	if wave.enable_stomp_arrow_tutorial then
-		game.game_ui:set_stomp_arrow_target(self.enemy_buffer[1])
-	end
-end
-
-function Level:_load_background(wave)
-	if wave.background then
-		self:set_background(wave.background)
-	end
-end
-
-function Level:_load_music(wave)
-	if wave.music then
-		game.music_player:fade_out(wave.music, 1.0)
-	end
-end
-
-function Level:_load_wave_bounds(wave)
-	if wave.bounds then
-		self:set_bounds(wave.bounds)
-	end
 end
 
 function Level:activate_enemy_buffer()
@@ -355,6 +323,9 @@ function Level:update_cafeteria(dt)
 			game:kill_all_active_enemies()
 			self:end_cafeteria()
 			self.new_wave_progress = math.huge
+			self.force_next_wave_flag = true
+			self.do_not_spawn_enemies_on_next_wave_flag = true
+			self:new_wave_buffer_enemies()
 
 			self.cafeteria_animation_state = "shrink"
 		end
@@ -363,6 +334,7 @@ function Level:update_cafeteria(dt)
 		self:update_hole_stencil(dt)
 		if self.hole_stencil_radius <= 0 then
 			game.camera:set_position(0, 0)
+			game.camera:set_target_offset(0, 0)
 
 			self.is_hole_stencil_enabled = false
 			self.new_wave_progress = 0.0
@@ -379,7 +351,7 @@ function Level:can_exit_cafeteria()
 	end
 
 	for _, p in pairs(game.players) do
-		if not is_point_in_rect(p.mid_x, p.mid_y, self.door_rect.ax, self.door_rect.ay, self.door_rect.bx, self.door_rect.by) then
+		if not is_point_in_rect(p.mid_x, p.mid_y, self.door_rect) then
 			return false
 		end		
 	end
@@ -418,6 +390,8 @@ function Level:assign_cafeteria_upgrades()
 		{upgrades.UpgradeEspresso, 1},
 		{upgrades.UpgradeMilk, 1},
 		{upgrades.UpgradePeanut, 1},
+		{upgrades.UpgradeEnergyDrink, 1},
+		{upgrades.UpgradeSoda, 1},
 	}
 
 	for _, actor in pairs(self.game.actors) do
@@ -445,6 +419,7 @@ function Level:on_upgrade_display_killed(display)
 	end
 	
 	game.music_player:set_disk("cafeteria_empty")
+	game.camera:set_target_offset(-64, 0)
 	if game.music_player.current_disk and game.music_player.current_disk.current_source then
 		local source = game.music_player.current_disk.current_source
 		source:seek(time)
@@ -501,7 +476,7 @@ function Level:draw()
 			self.background:draw()
 		end
 		self.map:draw()
-	
+		
 		if self.show_cabin then
 			self.elevator:draw(self.enemy_buffer, self.new_wave_progress)
 		end
@@ -516,19 +491,9 @@ function Level:draw_front(x,y)
 		self:draw_rubble()
 		
 		if self.show_cabin then
-			gfx.draw(images.cabin_walls, self.cabin_rect.ax, self.cabin_rect.ay)
+			self.elevator:draw_front()
 		end
 	end)
-
-	-- print_outline(nil, nil, concat("is cafet ",self:is_on_cafeteria()), game.camera.x, 0)
-	-- print_outline(nil, nil, concat("door_animation_state ",self.door_animation_state), game.camera.x, 10)
-	-- print_outline(nil, nil, concat("cafeteria_animation_state ",self.cafeteria_animation_state), game.camera.x, 20)
-	-- print_outline(nil, nil, concat("enemy_count ", game.enemy_count), game.camera.x, 30)
-	-- print_outline(nil, nil, tostring(self.is_hole_stencil_enabled), game.camera.x, 110)
-	-- print_outline(nil, nil, tostring(self.hole_stencil_radius), game.camera.x, 120)
-	-- print_outline(nil, nil, tostring(self.background), game.camera.x, 130)
-	-- print_outline(nil, nil, tostring(self.door_animation), 100, 110)
-
 end
 
 function Level:draw_win_screen()
@@ -566,14 +531,6 @@ function Level:draw_win_screen()
 	-- Win stats
 	local iy = 0
 	local ta = {}
-	-- for k,v in pairs(self.game.stats) do
-	-- 	local val = v
-	-- 	local key = k
-	-- 	if k == "time" then val = time_to_string(v) end
-	-- 	if k == "floor" then val = concat(v, " / ", self.game.elevator.max_floor) end
-	-- 	if k == "max_combo" then key = "max combo" end
-	-- 	table.insert(ta, concat(k,": ",val))
-	-- end
 	table.insert(ta, Text:text("game.win_thanks"))
 	table.insert(ta, Text:text("game.win_wishlist"))
 	table.insert(ta, Text:text("game.win_prompt"))

@@ -5,6 +5,7 @@ local ControlsMenuItem = require "scripts.ui.menu.menu_item_controls"
 local CustomDrawMenuItem = require "scripts.ui.menu.menu_item_custom_draw"
 local waves = require "data.waves"
 local Enemies = require "data.enemies"
+local debug_draw_waves = require "scripts.debug.draw_waves"
 
 local function func_set_menu(menu)
 	return function()
@@ -18,7 +19,7 @@ local function func_url(url)
 	end
 end
 
-local DEFAULT_MENU_BG_COLOR = {0, 0, 0, 0.9}
+local DEFAULT_MENU_BG_COLOR = {0, 0, 0, 0.7}
 
 local PROMPTS_NORMAL = {
     {{"ui_select"}, "input.prompts.ui_select"},
@@ -54,7 +55,9 @@ local function draw_elevator_progress()
         local y = y2 - (i/n_floors) * h
         local sep_x = x1 - sep_w/2
         local sep_y = round(y - sep_w/2)
-        love.graphics.rectangle("fill", sep_x, sep_y, sep_w, sep_w)
+        if i%5 == 0 then
+            love.graphics.rectangle("fill", sep_x, sep_y, sep_w, sep_w)
+        end
         if i == game:get_floor() then
             love.graphics.rectangle("line", sep_x-2, sep_y-1, sep_w+3, sep_w+3)
         end
@@ -63,44 +66,6 @@ local function draw_elevator_progress()
     local text = concat(game:get_floor(), "/", game.level.max_floor)
     local text_y = clamp(y2 - (game:get_floor()/n_floors) * h, y1, y2)
     love.graphics.print(text, x1- get_text_width(text) - 5, text_y- get_text_height(text)/2-2)
-end
-
-
-local function debug_draw_waves(self)
-    local x = self.x - CANVAS_WIDTH/2
-    local y = self.y
-    local slot_w = 25
-    local slot_h = 10
-    for i, wave in ipairs(waves) do
-        love.graphics.print(concat("W", i, " ",wave.min, "-", wave.max), x, y)
-        x = x + 50
-
-        local total_w = slot_w * (wave.min + wave.max)/2
-        love.graphics.rectangle("fill", x, y, total_w, 10)
-        local weight_sum = 0
-        for j, enemy in ipairs(wave.enemies) do
-            weight_sum = weight_sum + enemy[2]
-        end
-
-        for j, enemy in ipairs(wave.enemies) do
-            local e = enemy[1]:new()
-            local image = e.spr
-            e:remove()
-
-            local weight = enemy[2] 
-
-            love.graphics.setColor(DEBUG_IMAGE_TO_COL[image] or ternary(j % 2 == 0, COL_WHITE, COL_RED))
-            local w = total_w * (weight/weight_sum)
-            love.graphics.rectangle("fill", x, y, w, 10)
-            love.graphics.setColor(COL_WHITE)
-
-            love.graphics.draw(image, x, y, 0, 0.8, 0.8)
-            print_outline(COL_WHITE, COL_BLACK_BLUE, concat(weight), x, y)
-            x = x + w
-        end
-        x = self.x - CANVAS_WIDTH/2
-        y = y + 24
-    end
 end
 
 -----------------------------------------------------
@@ -112,6 +77,15 @@ local function generate_menus()
 
     -- FIXME: This is messy, eamble multiple types of menuitems
     -- This is so goddamn overengineered and needlessly complicated
+    menus.quit = Menu:new(game, {
+        -- { "<<<<<<<<< "..Text:text("menu.quit.title").." >>>>>>>>>" },
+        { "" },
+        { Text:text("menu.quit.description") },
+        { Text:text("menu.no"), function() game.menu_manager:back() end },
+        { Text:text("menu.yes"), quit_game },
+        { "" },
+    }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
+
     menus.title = Menu:new(game, {
         { ">>>> Bugscraper (logo here) <<<<" },
         { "" },
@@ -125,47 +99,13 @@ local function generate_menus()
     menus.view_waves = Menu:new(game, {
         {"waves"},
         {CustomDrawMenuItem, debug_draw_waves},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-        {"", function() end},
-    }, DEFAULT_MENU_BG_COLOR, {}, function()
-    end)
+        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},    
+        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},        {"", function() end},    
+        }, DEFAULT_MENU_BG_COLOR, {}, function() end
+    )
 
-    menus.pause = Menu:new(game, {
+
+    local pause_items = {
         { "<<<<<<<<< "..Text:text("menu.pause.title").." >>>>>>>>>" },
         { "" },
         { "▶ "..Text:text("menu.pause.resume"), function() game.menu_manager:unpause() end },
@@ -174,15 +114,59 @@ local function generate_menus()
         { "❤ "..Text:text("menu.win.wishlist").." 🔗", func_url("https://s.team/a/2957130") },
         { "💡 "..Text:text("menu.pause.feedback"), func_set_menu("feedback") },
         { "❤ "..Text:text("menu.pause.credits"), func_set_menu('credits' ) },
-        { "🔚 "..Text:text("menu.pause.quit"), quit_game },
+        { "🔚 "..Text:text("menu.pause.quit"), func_set_menu('quit') },
         { "" },
-        -- { "[DEBUG] VIEW WAVES", func_set_menu('view_waves' ) },
-        -- { "[DEBUG] joystick_removed", func_set_menu('joystick_removed' ) },
-    }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL, draw_elevator_progress)
+        -- { "[DEBUG] Skip to world 2", function()
+        --     for k,e in pairs(game.actors) do
+        --         if e.is_enemy then
+        --             e:kill()
+        --         end
+        --     end
+        --     game:set_floor(20)
+		-- 	game:start_game()
+        --     game.menu_manager:unpause()
+        -- end },
+        -- { "[DEBUG] Skip to world 2 boss", function()
+        --     for k,e in pairs(game.actors) do
+        --         if e.is_enemy then
+        --             e:kill()
+        --         end
+        --     end
+        --     game:set_floor(38)
+		-- 	game:start_game()
+        --     game.menu_manager:unpause()
+        -- end },
+        -- { "[DEBUG] Skip to world 3", function()
+        --     for k,e in pairs(game.actors) do
+        --         if e.is_enemy then
+        --             e:kill()
+        --         end
+        --     end
+        --     game:set_floor(40)
+		-- 	game:start_game()
+        --     game.menu_manager:unpause()
+        -- end },
+        -- { "[DEBUG] Skip to world 3 boss", function()
+        --     for k,e in pairs(game.actors) do
+        --         if e.is_enemy then
+        --             e:kill()
+        --         end
+        --     end
+        --     game:set_floor(58)
+		-- 	game:start_game()
+        --     game.menu_manager:unpause()
+        -- end },
+    }
     if OPERATING_SYSTEM == "Web" then
         -- Disable quitting on web
         menus.pause.items[9].is_selectable = false
     end
+    if DEBUG_MODE then
+        -- 
+        -- { "[DEBUG] joystick_removed", func_set_menu('joystick_removed' ) },
+        -- table.insert(pause_items, { "[DEBUG] VIEW WAVES", func_set_menu('view_waves' ) })c
+    end
+    menus.pause = Menu:new(game, pause_items, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL, draw_elevator_progress)
     
     menus.feedback = Menu:new(game, {
         { "<<<<<<<<< "..Text:text("menu.feedback.title").." >>>>>>>>>" },
@@ -294,7 +278,31 @@ local function generate_menus()
             self.value = Options:get("is_vsync")
             self.value_text = Options:get("is_vsync") and "✅" or "❎"
         end},
+        { "💧 "..Text:text("menu.options.visuals.menu_blur"), function(self)
+            Options:toggle("menu_blur")
+        end,
+        function(self)
+            self.value = Options:get("menu_blur")
+            self.value_text = Options:get("menu_blur") and "✅" or "❎"
+        end},
+        { SliderMenuItem, "🌄 "..Text:text("menu.options.visuals.background_speed"), function(self, diff)
+            diff = diff or 1
+            self.value = (self.value + diff)
+            if self.value < 0 then self.value = 20 end
+            if self.value > 20 then self.value = 0 end
+            
+            Options:set("background_speed", self.value/20)
+            Audio:play("menu_select", 1, 0.8+(self.value/20)*0.4)
+        end, range_table(0,20),
+        function(self)
+            self.value = Options:get("background_speed") * 20
+            self.value_text = concat(floor(100 * self.value / 20), "%")
+        end},
+
+
         { ""},
+
+
         { "<<< "..Text:text("menu.options.game.title").." >>>"},
         { SliderMenuItem, "🛜 "..Text:text("menu.options.game.screenshake"), function(self, diff)
             diff = diff or 1
@@ -327,7 +335,7 @@ local function generate_menus()
             self.value_text = Options:get("mouse_visible") and "✅" or "❎"
         end},
         
-        { "⏸ "..Text:text("menu.options.game.pause_on_unfocus"), function(self)
+        { "🛅 "..Text:text("menu.options.game.pause_on_unfocus"), function(self)
             Options:toggle_pause_on_unfocus()
         end,
         function(self)
@@ -372,7 +380,10 @@ local function generate_menus()
         return Menu:new(game, {
             { "<<<<<<<<< "..title.." >>>>>>>>>" },
             { "" },
-            { "🔄 "..Text:text("menu.options.input_submenu.reset_controls"), function() Input:reset_controls(input_profile_id, INPUT_TYPE_KEYBOARD) end },
+            { "🔄 "..Text:text("menu.options.input_submenu.reset_controls"), function()
+                Input:reset_controls(input_profile_id, INPUT_TYPE_KEYBOARD) 
+                Input:reset_controls("global", INPUT_TYPE_KEYBOARD) 
+            end },
             { "" },
             { "<<< "..Text:text("menu.options.input_submenu.gameplay").." >>>" },
             { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_KEYBOARD, "left",  "⬅ "..Text:text("input.prompts.left") },
@@ -419,7 +430,6 @@ local function generate_menus()
                 end
             end},
             { "" },
-            { "🔄 "..Text:text("menu.options.input_submenu.reset_controls"), function() Input:reset_controls(input_profile_id, INPUT_TYPE_CONTROLLER) end },
             { SliderMenuItem, "🔘 "..Text:text("menu.options.input_submenu.controller_button_style"), function(self, diff)
                 diff = diff or 1
                 self:next_value(diff)
@@ -464,8 +474,13 @@ local function generate_menus()
                     self.label_text = self.label_text.."\n⚠ "..Text:text("menu.options.input_submenu.low_deadzone_warning")
                 end
             end},
+            { "" },
             { Text:text("menu.options.input_submenu.note_deadzone") },
             { "" },
+            { "🔄 "..Text:text("menu.options.input_submenu.reset_controls"), function() 
+                Input:reset_controls(input_profile_id, INPUT_TYPE_CONTROLLER) 
+                Input:reset_controls("global", INPUT_TYPE_KEYBOARD) 
+            end },
             { "<<< "..Text:text("menu.options.input_submenu.gameplay").." >>>" },
             { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "left",  "⬅ "..Text:text("input.prompts.left") },
             { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "right", "➡ "..Text:text("input.prompts.right") },
@@ -553,7 +568,12 @@ end
         { StatsMenuItem, Text:text("menu.game_over.floor"), function(self) return concat(game.stats.floor, "/", game.level.max_floor) end },
         -- { StatsMenuItem, Text:text("menu.game_over.max_combo"), function(self) return concat(game.stats.max_combo) end },
         { "" },
-        { Text:text("menu.game_over.continue"), function() game:new_game() end },
+        { "▶ "..Text:text("menu.game_over.continue"), function() 
+            -- scotch
+        	game.has_seen_controller_warning = true
+            game:new_game() 
+        end },
+        { "❤ "..Text:text("menu.win.wishlist").." 🔗", func_url("https://s.team/a/2957130") },
         { "" },
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_GAME_OVER, draw_elevator_progress)
 
@@ -561,7 +581,7 @@ end
         {"<<<<<<<<< "..Text:text("menu.credits.title").." >>>>>>>>>"},
         { "" },
         { "<<< "..Text:text("menu.credits.game_by").." >>>"},
-        { "Léo Bernard", func_url("https://yolwoocle.github.io/")},
+        { "Léo Bernard", func_url("https://yolwoocle.com/")},
         { "" },
         { "<<< "..Text:text("menu.credits.music_and_sound_design").." >>>"},
         { "OLX", func_url("https://www.youtube.com/@olxdotwav")},
@@ -576,13 +596,19 @@ end
         { "Theobosse", function() end},
         { "Alexis", function() end},
         { "Binary Sunrise", func_url("https://binarysunrise.dev")},
+        { "AnnaWorldEater", function() end},
+        { "Sylvain Fraresso", function() end},
+        { "Tom Le Ber", function() end},
         { ""},
         { "<<< "..Text:text("menu.credits.special_thanks").." >>>"},
-        { "Gouspourd", func_url("https://gouspourd.itch.io/")},
         { "ArkanYota", func_url("https://github.com/ARKANYOTA")},
+        { "Gouspourd", func_url("https://gouspourd.itch.io/")},
+        { "Raphaël Marcon (Raphytator)", func_url("https://raphytator.itch.io/") },
         { "Louie Chapman", func_url("https://louiechapm.itch.io/") },
-        { "Raphaël Marcon", func_url("https://raphytator.itch.io/") },
         { "Indie Game Lyon", func_url("https://www.indiegamelyon.com/")},
+        { "Fabien Delpiano", function() end },
+        { "Quentin Picault", function() end},
+        { "Goyome", function() end},
         { "LÖVE framework", func_url("https://love2d.org/") },
         { ""},
         { "<<< "..Text:text("menu.credits.asset_creators").." >>>"},
@@ -590,13 +616,15 @@ end
         { "somepx", func_url("https://somepx.itch.io/")},
         { "emhuo", func_url("https://emhuo.itch.io/")},
         { "freesound.org ["..Text:text("menu.see_more").."]", func_set_menu("credits_sounds")},
-        { "Open source libraries ["..Text:text("menu.see_more").."]", func_set_menu("open_source")},
+        { "Open source assets ["..Text:text("menu.see_more").."]", func_set_menu("open_source")},
         { ""},
         { "<< "..Text:text("menu.credits.licenses").." >>"},
         { "CC0", func_url("https://creativecommons.org/publicdomain/zero/1.0/")},
         { "CC BY 3.0", func_url("https://creativecommons.org/licenses/by/3.0/")},          
         { "CC BY 4.0", func_url("https://creativecommons.org/licenses/by/4.0/")},
         { "MIT", func_url("https://opensource.org/license/mit")},
+        { "Zlib", func_url("https://www.zlib.net/zlib_license.html")},
+        { "OFL-1.1", func_url("https://spdx.org/licenses/OFL-1.1.html")},
         { ""},
         { "🐜❤"},
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
@@ -608,6 +636,9 @@ end
         { Text:text("menu.credits.asset_item", "'GamepadGuesser'", "idbrii", "MIT"), func_url("https://github.com/idbrii/love-gamepadguesser/tree/main")};
         { Text:text("menu.credits.asset_item", "'bump.lua'", "kikito", "MIT"), func_url("https://github.com/kikito/bump.lua")};
         { Text:text("menu.credits.asset_item", "'love-error-explorer'", "snowkittykira", "MIT"), func_url("https://github.com/snowkittykira/love-error-explorer")};
+        { Text:text("menu.credits.asset_item", "'batteries'", "1bardesign", "Zlib"), func_url("https://github.com/1bardesign/batteries")};
+        { Text:text("menu.credits.asset_item", "'mlib'", "davisdude", "Zlib"), func_url("https://github.com/davisdude/mlib")};
+        { Text:text("menu.credits.asset_item", "'Fira Code'", "The Fira Code Project Authors", "OFL-1.1"), func_url("https://github.com/tonsky/FiraCode/")};
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
 
     menus.credits_sounds = Menu:new(game, {
@@ -641,6 +672,9 @@ end
         -- { Text:text("menu.credits.asset_item", "'Ruler Bounce 3'", "belanhud", "CC0"),                         func_url("https://freesound.org/s/537904/")},
         { Text:text("menu.credits.asset_item", "'Springboard A'", "lmbubec", "CC0"),                           func_url("https://freesound.org/s/119793/")},
         { Text:text("menu.credits.asset_item", "'Springboard B'", "lmbubec", "CC0"),                           func_url("https://freesound.org/s/119794/")},
+        { Text:text("menu.credits.asset_item", "'80s alarm'", "tim.kahn", "CC BY 4.0"),                        func_url("https://freesound.org/s/83280/")},
+        { Text:text("menu.credits.asset_item", "'Metal container impact firm'", "jorickhoofd", "CC BY 4.0"),   func_url("https://freesound.org/s/160077/")},
+        { Text:text("menu.credits.asset_item", "'Roller blind circuit breaker'", "newlocknew", "CC BY 4.0"),   func_url("https://freesound.org/s/583451/")},
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
 
     local items = {
@@ -654,7 +688,11 @@ end
         -- { StatsMenuItem, Text:text("menu.game_over.max_combo"), function(self) return concat(game.stats.max_combo) end },
         { ""},
         { "❤ "..Text:text("menu.win.wishlist").." 🔗", func_url("https://s.team/a/2957130") },
-        { "▶ "..Text:text("menu.win.continue"), function() game:new_game() end },
+        { "▶ "..Text:text("menu.win.continue"), function() 
+            --scotch
+        	game.has_seen_controller_warning = true
+            game:new_game() 
+        end },
         -- { --[["🔚 "..]]Text:text("menu.pause.quit"), quit_game },
         { "" },
 
@@ -663,7 +701,7 @@ end
     -- if OPERATING_SYSTEM == "Web" or true the$n
     --     table.remove(items, 8)
     -- end
-    menus.win = Menu:new(game, items, { 0, 0, 0, 0.95 }, PROMPTS_GAME_OVER)
+    menus.win = Menu:new(game, items, { 0, 0, 0, 0.85 }, PROMPTS_GAME_OVER)
 
     ------------------------------------------------------------
 

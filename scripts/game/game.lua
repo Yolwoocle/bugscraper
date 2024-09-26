@@ -1,3 +1,8 @@
+local TextManager = require "scripts.text"
+local backgrounds = require "data.backgrounds"
+local LightWorld = require "scripts.graphics.light_world"
+Text = TextManager:new()
+
 local Class = require "scripts.meta.class"
 local CollisionManager = require "scripts.physics.collision"
 local Player = require "scripts.actor.player"
@@ -13,9 +18,18 @@ local GameUI = require "scripts.ui.game_ui"
 local Debug = require "scripts.game.debug"
 local Camera = require "scripts.game.camera"
 local Layer = require "scripts.graphics.layer"
-local TextManager = require "scripts.text"
+local LightLayer = require "scripts.graphics.light_layer"
 local ScreenshotManager = require "scripts.screenshot"
+local QueuedPlayer = require "scripts.game.queued_player"
+local GunDisplay = require "scripts.actor.enemies.gun_display"
 
+local DiscordPresence = require "scripts.meta.discord_presence"
+local Steamworks = require "scripts.meta.steamworks"
+
+local guns = require "data.guns"
+local upgrades = require "data.upgrades"
+local shaders = require "data.shaders"
+local images = require "data.images"
 local skins = require "data.skins"
 local sounds = require "data.sounds"
 local utf8 = require "utf8"
@@ -33,7 +47,6 @@ local has_midi_created =false
 
 function Game:init()
 	-- Global singletons
-	Text = TextManager:new()
 	Input = InputManager:new(self)
 	Options = OptionsManager:new(self)
 	Collision = CollisionManager:new()
@@ -66,7 +79,7 @@ function Game:init()
 
 	self:update_screen()
 
-	canvas = gfx.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
+	main_canvas = gfx.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
 
 	-- Load fonts
 	-- FONT_REGULAR = gfx.newFont("fonts/Hardpixel.otf", 20)
@@ -89,7 +102,15 @@ function Game:init()
 	self.menu_manager = MenuManager:new(self)
 	love.mouse.setVisible(Options:get("mouse_visible"))
 
+	self.is_game_ui_visible = true
 	self.is_first_time = Options.is_first_time
+	self.has_seen_controller_warning = false 
+	self.ui_visible = true
+
+	self.discord_presence = DiscordPresence
+	self.steamworks = Steamworks
+
+	self.debug_mode = DEBUG_MODE
 end
 
 function Game:new_game()
@@ -110,6 +131,7 @@ function Game:new_game()
 	for i = 1, MAX_NUMBER_OF_PLAYERS do 
 		self.waves_until_respawn[i] = -1
 	end
+	self.queued_players = {}
 
 	self.level = Level:new(self)
 	
@@ -121,11 +143,8 @@ function Game:new_game()
 	-- Start button
 	local nx = CANVAS_WIDTH * 0.75
 	local ny = self.level.cabin_inner_rect.by
-	-- local l = create_actor_centered(Enemies.ButtonGlass, nx, ny)
 	local l = create_actor_centered(Enemies.ButtonSmallGlass, floor(nx), floor(ny))
 	self:new_actor(l)
-	-- local l = create_actor_centered(Enemies.Dummy, floor(nx) - 40, floor(ny))
-	-- self:new_actor(l)
 	
 	-- Exit sign 
 	local exit_x = CANVAS_WIDTH * 0.25
@@ -135,7 +154,6 @@ function Game:new_game()
 	self.camera = Camera:new()
 
 	-- Debugging
-	self.debug_mode = false
 	self.colview_mode = false
 	self.msg_log = {}
 
@@ -154,6 +172,8 @@ function Game:new_game()
 		self.menu_manager:set_menu()
 	end
 
+	self.apply_bounds_clamping = true
+
 	self.stats = {
 		floor = 0,
 		kills = 0,
@@ -167,10 +187,13 @@ function Game:new_game()
 	self.frames_to_skip = 0
 	self.slow_mo_rate = 0
 
+	self.light_world = LightWorld:new()
+
 	self.layers = {}
-	self.layers_count = 6
+	self.layers_count = LAYER_COUNT
 	self:init_layers()
 
+	self.is_light_on = true
 	self.draw_shadows = true
 	self.shadow_ox = 1
 	self.shadow_oy = 2
@@ -191,7 +214,9 @@ function Game:new_game()
 	-- self.music_source:setVolume(options:get("music_volume"))
 	self.sfx_elevator_bg:setVolume(0)
 	self.sfx_elevator_bg:play()
-	self.time_before_music = math.huge
+
+	-- Cutscenes
+	self.cutscene = nil
 
 	self.game_state = GAME_STATE_WAITING
 	self.endless_mode = false
@@ -199,10 +224,15 @@ function Game:new_game()
 	self.max_timer_before_game_over = 3.3
 
 	-- UI
-	self.game_ui = GameUI:new(self)
+	self.game_ui = GameUI:new(self, self.is_game_ui_visible)
+	self.menu_blur = 1
+	self.max_menu_blur = 3
 
 	self.notif = ""
 	self.notif_timer = 0.0
+
+	self.upgrades = {}
+	self:update_skin_choices()
 
 	Options:update_sound_on()
 end
@@ -210,7 +240,13 @@ end
 function Game:init_layers()
 	self.layers = {}
 	for i = 1, self.layers_count do
-		table.insert(self.layers, Layer:new(CANVAS_WIDTH, CANVAS_HEIGHT))
+		local layer 
+		if i == LAYER_LIGHT then
+			layer = LightLayer:new(CANVAS_WIDTH, CANVAS_HEIGHT, self.light_world)
+		else
+			layer = Layer:new(CANVAS_WIDTH, CANVAS_HEIGHT)
+		end
+		table.insert(self.layers, layer)
 	end
 end
 
@@ -270,7 +306,6 @@ function Game:update_screen()
 	CANVAS_OY = math.floor(max(0, (WINDOW_HEIGHT - CANVAS_HEIGHT * CANVAS_SCALE)/2))
 end
 
-local n = 0
 function Game:update(dt)
 	self.frame = self.frame + 1
 
@@ -295,6 +330,13 @@ function Game:update(dt)
 		self:update_main_game(dt)
 	end
 
+	for i = 1, #self.layers-1 do
+		self.layers[i].blur = Options:get("menu_blur") and (self.menu_manager.cur_menu ~= nil)
+	end
+
+	self.discord_presence:update(dt)
+	self.steamworks:update(dt)
+
 	-- THIS SHOULD BE LAST
 	Input:update_last_input_state(dt)
 end
@@ -313,14 +355,28 @@ function Game:update_main_game(dt)
 
 	self:update_timer_before_game_over(dt)
 
-	-- Particles
+	self.game_ui:update(dt)
+	self:update_skin_choices()
+	self:update_queued_players(dt)
 	Particles:update(dt)
 	self:update_actors(dt)
 	self:update_logo(dt)
+	self:update_camera_offset(dt)
 	self:update_debug(dt)
+	if self.cutscene then
+		self.cutscene:update(dt)
+		if not self.cutscene.is_playing then
+			self.cutscene = nil
+		end
+	end
+	self.light_world:update(dt)
 
 	self.notif_timer = math.max(self.notif_timer - dt, 0)
+end
 
+function Game:quit()
+	self.discord_presence:quit()
+	self.steamworks:quit()
 end
 
 function Game:get_enemy_count()
@@ -334,13 +390,27 @@ function Game:get_enemy_count()
 end
 
 function Game:update_actors(dt)
+	if self.sort_actors_flag then
+		table.sort(self.actors, function(a, b) 
+			if a.z == b.z then
+				return a.creation_index > b.creation_index
+			end 
+			return a.z > b.z 
+		end)
+		self.sort_actors_flag = false
+	end
+
 	for i = #self.actors, 1, -1 do
 		local actor = self.actors[i]
 
 		if not actor.is_removed and actor.is_active then
 			actor:update(dt)
-			if actor.is_affected_by_bounds then
+			if actor.is_affected_by_bounds and self.apply_bounds_clamping then
 				actor:clamp_to_bounds(self.level.cabin_inner_rect)
+			end
+			
+			if not self.level.kill_zone:is_point_in_inclusive(actor.mid_x, actor.mid_y) then
+				actor:kill()
 			end
 		end
 
@@ -361,6 +431,24 @@ function Game:update_logo(dt)
 		self.jetpack_tutorial_y = lerp(self.jetpack_tutorial_y, 70, 0.1)
 	else
 		self.jetpack_tutorial_y = lerp(self.jetpack_tutorial_y, -30, 0.1)
+	end
+end
+
+function Game:update_camera_offset(dt)
+	-- Cafeteria camera pan on the right edge
+
+	local all_players_on_the_right = ternary(#self.players == 0, false, true)
+	for _, player in pairs(self.players) do
+		if player.mid_x < (self.level.world_generator.cafeteria_rect.bx - 9) * BW then
+			all_players_on_the_right = false
+			break
+		end
+	end
+
+	if all_players_on_the_right then
+		self.camera:set_target_offset(500, 0)
+	else
+		self.camera:set_target_offset(0, 0)
 	end
 end
 
@@ -401,25 +489,18 @@ function Game:draw_on_layer(layer_id, paint_function, params)
 end
 
 function Game:draw()
-	-- if OPERATING_SYSTEM == "Web" then
-	-- 	gfx.scale(CANVAS_SCALE, CANVAS_SCALE)
-	-- 	gfx.translate(0, 0)
-	-- 	gfx.clear(0,0,0)
-		
-	-- 	self:draw_game()
-	-- else
-		-- Using a canvas for that sweet, resizable pixel art
-		gfx.setCanvas(canvas)
-		gfx.clear(0,0,0)
-		gfx.translate(0, 0)
-		
-		self:draw_game()
-		
-		gfx.setCanvas()
-		gfx.origin()
-		gfx.scale(1, 1)
-		gfx.draw(canvas, CANVAS_OX, CANVAS_OY, 0, CANVAS_SCALE, CANVAS_SCALE)
-	-- end
+	-- Using a canvas for that sweet, resizable pixel art
+	gfx.setCanvas(main_canvas)
+	gfx.clear(0,0,0)
+	gfx.translate(0, 0)
+	
+	self:draw_game()
+	
+	gfx.setCanvas()
+	gfx.origin()
+	gfx.scale(1, 1)
+
+	gfx.draw(main_canvas, CANVAS_OX, CANVAS_OY, 0, CANVAS_SCALE, CANVAS_SCALE)
 
 	if self.debug.layer_view then
 		self.debug:draw_layers()
@@ -431,7 +512,8 @@ end
 
 function Game:draw_game()
 	-- local real_camx, real_camy = math.cos(self.t) * 10, math.sin(self.t) * 10;
-	
+	exec_on_canvas(self.smoke_canvas, love.graphics.clear)
+
 	---------------------------------------------
 	
 	self:draw_on_layer(LAYER_BACKGROUND, function()
@@ -444,7 +526,7 @@ function Game:draw_game()
 	self:draw_on_layer(LAYER_OBJECTS, function()
 		love.graphics.clear()
 
-		Particles:draw_back()
+		Particles:draw_layer(PARTICLE_LAYER_BACK)
 
 		-- Draw actors
 		for _,actor in pairs(self.actors) do
@@ -458,7 +540,12 @@ function Game:draw_game()
 			end
 		end
 	
-		Particles:draw()
+		Particles:draw_layer(PARTICLE_LAYER_NORMAL)
+	end)
+
+	self:draw_on_layer(LAYER_OBJECT_SHADOWLESS, function()
+		love.graphics.clear()
+		Particles:draw_layer(PARTICLE_LAYER_SHADOWLESS)
 	end)
 	
 	---------------------------------------------
@@ -470,7 +557,7 @@ function Game:draw_game()
 				actor:draw_hud()
 			end
 		end
-	end)--, {apply_camera = false})
+	end)
 	
 	---------------------------------------------
 
@@ -490,8 +577,23 @@ function Game:draw_game()
 
 		self:draw_smoke_canvas()
 		self.level:draw_front()
+		
+		for _,actor in pairs(self.actors) do
+			if actor.is_active and actor.is_front then
+				actor:draw()
+			end
+		end
 
-		Particles:draw_front()		
+		Particles:draw_layer(PARTICLE_LAYER_FRONT)
+	end)
+
+	-----------------------------------------------------
+	
+	self:draw_on_layer(LAYER_LIGHT, function()
+		-- love.graphics.clear({0, 0, 0, 0.85})
+		local c = copy_table(COL_BLACK_BLUE)
+		c[4] = self.light_world.darkness_intensity 
+		rect_color(c, "fill", -CANVAS_WIDTH, -CANVAS_HEIGHT, CANVAS_WIDTH*3, CANVAS_HEIGHT*3)
 	end)
 
 	-----------------------------------------------------
@@ -502,10 +604,18 @@ function Game:draw_game()
 
 		love.graphics.draw(self.front_canvas, 0, 0)
 		self.game_ui:draw()
+		self:draw_queued_players()
 		self.level:draw_ui()
 		if self.debug.colview_mode then
 			self.debug:draw_colview()
 		end
+	end, {apply_camera = false})
+	
+	-----------------------------------------------------
+
+	-- Menus
+	self:draw_on_layer(LAYER_MENUS, function()
+		love.graphics.clear()
 
 		-- Menus
 		if self.menu_manager.cur_menu then
@@ -523,7 +633,10 @@ function Game:draw_game()
 	love.graphics.origin()
 	love.graphics.scale(1)
 	for i = 1, #self.layers do
-		self.layers[i]:draw(0, 0)
+		local layer = self.layers[i]
+		if (not layer.is_light_layer) or (layer.is_light_layer and not self.is_light_on) then
+			self.layers[i]:draw(0, 0)
+		end
 	end
 
 	--'Memory used (in kB): ' .. collectgarbage('count')
@@ -535,7 +648,7 @@ function Game:draw_game()
 end
 
 function Game:draw_smoke_canvas()
-	exec_on_canvas(self.smoke_canvas, love.graphics.clear)
+	self.camera:reset_transform()
 
 	-- Used for effects for the stink bugs
 	exec_on_canvas(self.smoke_buffer_canvas, function()
@@ -550,6 +663,7 @@ function Game:draw_smoke_canvas()
 		love.graphics.clear()
 		
 		love.graphics.setColor(0,0,0.1)
+		-- Outline
 		love.graphics.draw(self.smoke_buffer_canvas, -1, 0)
 		love.graphics.draw(self.smoke_buffer_canvas, 1, 0)
 		love.graphics.draw(self.smoke_buffer_canvas, 0, -1)
@@ -561,6 +675,8 @@ function Game:draw_smoke_canvas()
 	love.graphics.setColor(1,1,1,0.5)
 	love.graphics.draw(self.smoke_canvas, 0, 0)
 	love.graphics.setColor(1,1,1,1)
+
+	self.camera:apply_transform()
 end
 
 function Game:set_ui_visible(bool)
@@ -616,17 +732,17 @@ function Game:listen_for_player_join(dt)
 			elseif last_button.type == INPUT_TYPE_MIDI then
 				input_profile_id = "midi"
 			end
-			self:join_game(input_profile_id, joystick)
+			self:queue_join_game(input_profile_id, joystick)
 		end
 	end
 
 	if Input:action_pressed_global("split_keyboard") then
 		if Input:get_number_of_users(INPUT_TYPE_KEYBOARD) == 1 then
-			self:join_game("keyboard_solo")
+			self:queue_join_game("keyboard_solo")
 			Input:split_keyboard()
 
-		elseif Input:get_number_of_users(INPUT_TYPE_KEYBOARD) == 2 then
-			self:unsplit_keyboard_and_kick_second_player()
+		-- elseif Input:get_number_of_users(INPUT_TYPE_KEYBOARD) == 2 then
+		-- 	self:unsplit_keyboard_and_kick_second_player()
 		end
 	end
 end
@@ -653,17 +769,11 @@ function Game:on_unpause()
 end
 
 function Game:pause_repeating_sounds()
-	-- THIS is SO stupid. We should have a system that stores all sounds instead
-	-- of doing this manually.
-
 	self.sfx_elevator_bg:pause()
-	for k,p in pairs(self.players) do
-		p.sfx_wall_slide:setVolume(0)
-	end
 	for k,a in pairs(self.actors) do
-		if a.pause_repeating_sounds then
-			a:pause_repeating_sounds()
-		end
+		a:pause_constant_sounds()
+		-- if a.pause_repeating_sounds then
+		-- end
 	end
 end
 function Game:on_button_glass_spawn(button)
@@ -675,9 +785,7 @@ function Game:on_unmenu()
 	self.sfx_elevator_bg:play()
 	
 	for k,a in pairs(self.actors) do
-		if a.play_repeating_sounds then
-			a:play_repeating_sounds()
-		end
+		a:resume_constant_sounds()
 	end
 end
 
@@ -685,11 +793,14 @@ function Game:set_music_volume(vol)
 	self.music_player:set_volume(vol)
 end
 
-function Game:new_actor(actor)
+function Game:new_actor(actor, buffer_enemy)
 	if #self.actors >= self.actor_limit then
 		actor:remove()
+		actor:final_remove()
 		return
 	end
+
+	self.sort_actors_flag = true
 	table.insert(self.actors, actor)
 end
 
@@ -759,6 +870,10 @@ end
 
 function Game:game_over()
 	self.menu_manager:set_menu("game_over")
+	-- for _, a in pairs(self.actors) do
+	-- 	a:remove()
+	-- 	a:final_remove()
+	-- end
 end
 
 function Game:do_win()
@@ -794,14 +909,14 @@ end
 
 function Game:find_free_player_number()
 	for i = 1, MAX_NUMBER_OF_PLAYERS do
-		if self.players[i] == nil then
+		if Input.users[i] == nil then
 			return i
 		end
 	end
 	return nil
 end
 
-function Game:join_game(input_profile_id, joystick)
+function Game:queue_join_game(input_profile_id, joystick)
 	-- FIXME ça marche pas quand tu join avec manette puis que tu join sur clavier
 	local player_n = self:find_free_player_number()
 	if player_n == nil then
@@ -814,13 +929,26 @@ function Game:join_game(input_profile_id, joystick)
 
 	Input:new_user(player_n)
 	Input:set_last_ui_user_n(player_n)
-	local new_player = self:new_player(player_n, nil, nil, true)
 	if joystick ~= nil then
 		Input:assign_joystick(player_n, joystick)
 	end
 	Input:assign_input_profile(player_n, input_profile_id)
 
+	table.insert(self.queued_players, QueuedPlayer:new(player_n, input_profile_id, joystick))
+
 	return player_n
+end
+
+function Game:join_game(player_n)
+	local player = self:new_player(player_n, nil, nil, true)
+
+	if player then
+		self.skin_choices[player.skin.id] = false
+	end
+
+	for _, queued_player in pairs(self.queued_players) do
+		queued_player:on_other_joined(player)
+	end
 end
 
 function Game:new_player(player_n, x, y, put_in_buffer)
@@ -833,7 +961,7 @@ function Game:new_player(player_n, x, y, put_in_buffer)
 	x = param(x, mx + math.floor((self.level.door_rect.bx - self.level.door_rect.ax)/2))
 	y = param(y, CANVAS_HEIGHT - 3*16 + 4)
 
-	local player = Player:new(player_n, x, y, skins[player_n])
+	local player = Player:new(player_n, x, y, Input:get_user(player_n):get_skin() or skins[1])
 	self.players[player_n] = player
 	self.waves_until_respawn[player_n] = -1
 	if put_in_buffer then
@@ -861,6 +989,35 @@ function Game:leave_game(player_n)
 	Input:remove_user(player_n)
 	if profile_id == "keyboard_split_p1" or profile_id == "keyboard_split_p2" then
 		Input:unsplit_keyboard()
+	end
+end
+
+function Game:update_queued_players(dt)
+	for _, queued_player in pairs(self.queued_players) do
+		queued_player:update(dt, self.queued_players)
+	end
+
+	for key, queued_player in pairs(self.queued_players) do
+		if queued_player.is_removed then
+			self.queued_players[key] = nil
+		end
+	end
+end
+
+function Game:draw_queued_players()
+	local n = 0
+	for _, queued_player in pairs(self.queued_players) do
+		n = n + 1
+	end
+	
+	local spacing = 32
+	local width = 64
+
+	local x = (CANVAS_WIDTH - (n-1) * width) / 2
+	local y = CANVAS_HEIGHT * 0.75
+	for _, queued_player in pairs(self.queued_players) do
+		queued_player:draw(x, y)
+		x = x + width
 	end
 end
 
@@ -908,6 +1065,7 @@ function Game:on_elevator_crashed()
 end
 
 function Game:apply_upgrade(upgrade) 
+	table.insert(self.upgrades, upgrade)
 	for i, player in pairs(self.players) do
 		player:apply_upgrade(upgrade)
 	end
@@ -920,18 +1078,34 @@ function Game:screenshot()
 	-- Particles:word(CANVAS_WIDTH/2, CANVAS_HEIGHT/2)
 end
 
+-- SCOTCH!!!
+function Game:new_gun_display(x, y)
+	local gun = guns:get_random_gun()
+	return GunDisplay:new(x, y, gun)
+end
+
+function Game:play_cutscene(cutscene)
+	self.cutscene = cutscene
+	self.cutscene:play()
+end
+
+function Game:kill_actors_with_name(name)
+	for _, actor in pairs(game.actors) do
+		if actor.name == name then
+			actor:kill()
+		end
+	end
+end
+
 -----------------------------------------------------
 -----------------------------------------------------
 -----------------------------------------------------
 
 function Game:keypressed(key, scancode, isrepeat)
-	if scancode == "space" and self.debug_mode then
-		-- self:screenshot()
-	end
-	if scancode == "f12" and love.keyboard.isDown("lshift") and love.keyboard.isDown("lctrl") then
+	if scancode == "f12" and (love.keyboard.isDown("lshift") or love.keyboard.isDown("rshift")) and (love.keyboard.isDown("lctrl") or love.keyboard.isDown("rshift")) then
 		self.debug_mode = true
-		self.notif = "debug mode enabled "
-		self.notif_timer = 3.0
+		self.debug.notif = "debug mode enabled"
+		self.debug.notif_timer = 3.0
 	
 		-- self.debug
 	end
@@ -986,6 +1160,16 @@ function Game:gamepadaxis(joystick, axis, value)
 	if self.debug then          self.debug:gamepadaxis(joystick, axis, value)    end
 end
 
+function Game:mousepressed(x, y, button, istouch, presses)
+	-- Input:mousepressed(joystick, axis, value)
+	if self.menu_manager then   self.menu_manager:mousepressed(x, y, button, istouch, presses)   end
+end
+
+function Game:mousereleased(x, y, button, istouch, presses)
+	-- Input:mousereleased(joystick, axis, value)
+	if self.menu_manager then   self.menu_manager:mousereleased(x, y, button, istouch, presses)   end
+end
+
 function Game:focus(f)
 	if f then
 	else
@@ -1010,6 +1194,16 @@ end
 
 function Game:reset_slow_mo(q)
 	self.slow_mo_rate = 0
+end
+
+function Game:update_skin_choices()
+	self.skin_choices = {}
+	for i=1, #skins do
+		self.skin_choices[i] = true
+	end
+	for i, player in pairs(self.players) do
+		self.skin_choices[player.skin.id] = false
+	end
 end
 
 return Game

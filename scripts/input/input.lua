@@ -4,6 +4,7 @@ local InputUser = require "scripts.input.input_user"
 local InputProfile = require "scripts.input.input_profile"
 local images = require "data.images"
 local skins = require "data.skins"
+local utf8 = require "utf8"
 
 local InputManager = Class:inherit()
 
@@ -224,16 +225,18 @@ end
 function InputManager:gamepadreleased(joystick, buttoncode)
 end
 
-function InputManager:is_keyboard_button_in_list_down(buttons)
-    for _, button in pairs(buttons) do
-		if love.keyboard.isScancodeDown(button.key_name) then
-			return true
-		end
-	end
-	return false
+function InputManager:is_button_mouse(button)
+    return string.sub(button.key_name, 1, 5) == "mouse"
 end
 
 function InputManager:is_keyboard_down(button)
+    if self:is_button_mouse(button) then
+        local button_n = tonumber(string.sub(button.key_name, 6, -1))
+        if not button_n then
+            return false
+        end
+        return love.mouse.isDown(button_n)
+    end
     return love.keyboard.isScancodeDown(button.key_name)
 end
 
@@ -463,14 +466,11 @@ function InputManager:get_button_style(player_n)
 end
 
 function InputManager:get_last_ui_player_color()
-    local skin = skins[self.last_ui_user_n]
-    if skin == nil then
-        return COL_LIGHT_RED
+    local user = Input:get_user(self.last_ui_user_n)
+    if user and user:get_skin() then
+        return user:get_skin().menu_color, user:get_skin().text_color or COL_WHITE
     end
-    if self.last_ui_user_n == 1 then
-        return skin.color_palette[1]
-    end
-    return skin.color_palette[2]
+    return COL_LIGHT_RED, COL_WHITE
 end
   
 function InputManager:get_last_ui_user_n()
@@ -547,7 +547,13 @@ function InputManager:get_button_icon(player_n, button, brand_override)
 
     local img = nil
     if button.type == INPUT_TYPE_KEYBOARD then
-		local key_constant = love.keyboard.getKeyFromScancode(button.key_name)
+        local key_constant
+        if self:is_button_mouse(button) then
+            key_constant = button.key_name
+        else
+            key_constant = love.keyboard.getKeyFromScancode(button.key_name)
+        end
+
         local image_name = KEY_CONSTANT_TO_IMAGE_NAME[key_constant]
 		if image_name ~= nil then
             img = images[image_name]
@@ -645,38 +651,61 @@ function InputManager:load_controls()
 		if not file_exists then
 			print(filename, "does not exist, so creating it")
 			self:update_controls_file(profile_id)
-        else
-            local file = love.filesystem.newFile(filename)
-            file:open("r")
+            return
+        end
+
+        local file = love.filesystem.newFile(filename)
+        file:open("r")
+
+        local new_mappings = copy_table(profile:get_mappings())
+
+        -- Read file contents
+        local text, size = file:read()
+        if not text then
+            print(concat("Error reading ",filename,": size = ",size))
+        end
+        local lines = split_str(text, "\n") -- Split lines
     
-            local new_mappings = copy_table(profile:get_mappings())
-    
-            -- Read file contents
-            local text, size = file:read()
-            if not text then    print(concat("Error reading ",filename,": ",size))    end
-            local lines = split_str(text, "\n") -- Split lines
-        
-            for iline = 1, #lines do
-                local line = lines[iline]
-                local tab = split_str(line, ":")
-                local action_name = tab[1]
-                local keycodes = tab[2] or ""
-                local keycode_table = split_str(keycodes, " ")
-    
-                local new_buttons = {}
-                for _, keycode in pairs(keycode_table) do
-                    local button = self:keycode_to_button(keycode)
-                    if button ~= nil then
-                        table.insert(new_buttons, button)
-                    end
-                end
-                new_mappings[action_name] = new_buttons
-            end
-    
+        if #lines == 0 then 
+            print(string.format("Error reading %s: file is empty, updating it", filename))
             file:close()
-    
-            self.input_profiles[profile_id]:set_mappings(new_mappings)
-		end
+            
+            self:update_controls_file(profile_id)
+            return
+        end
+        
+        -- Verify correct file version
+        local tab = split_str(lines[1], ":")
+        if tab[1] ~= "$version" or tab[2] ~= INPUT_FILE_FORMAT_VERSION then
+            print(string.format("Error reading %s: line 1 is ' %s ' (current file version = %s), updating file and deleting previous bindings", filename, lines[1], INPUT_FILE_FORMAT_VERSION))
+            file:close()
+        
+            self:update_controls_file(profile_id)
+            return
+        end
+
+        -- Load bindings
+        for iline = 2, #lines do
+            local line = lines[iline]
+            local tab = split_str(line, ":")
+            local action_name = tab[1]
+            local keycodes = tab[2] or ""
+            local keycode_table = split_str(keycodes, " ")
+
+            local new_buttons = {}
+            for _, keycode in pairs(keycode_table) do
+                local button = self:keycode_to_button(keycode)
+                if button ~= nil and self:is_allowed_button(button) then
+                    table.insert(new_buttons, button)
+                end
+            end
+            new_mappings[action_name] = new_buttons
+        end
+
+        file:close()
+
+        self.input_profiles[profile_id]:set_mappings(new_mappings)
+        self:update_controls_file(profile_id) 
 	end
 end
 
@@ -700,6 +729,7 @@ function InputManager:update_controls_file(profile_id)
     print(concat("Creating or updating ", filename, " file"))
     controlsfile:open("w")
 
+    controlsfile:write(string.format("$version:%s\n", INPUT_FILE_FORMAT_VERSION))
     for action_name, buttons in pairs(self.input_profiles[profile_id]:get_mappings()) do
         local keycodes = self:buttons_to_keycodes(buttons)
         local keycodes_string = concatsep(keycodes," ")
@@ -747,6 +777,12 @@ function InputManager:vibrate(user_n, duration, strength_left, strength_right)
     local user = self:get_user(user_n)
     if user == nil then return end
     user:vibrate(duration, strength_left, strength_right)
+end
+
+function InputManager:vibrate_all(duration, strength_left, strength_right)
+    for _, user in pairs(self.users) do
+        user:vibrate(duration, strength_left, strength_right)
+    end
 end
 
 return InputManager

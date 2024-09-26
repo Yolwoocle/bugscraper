@@ -5,12 +5,12 @@ local images = require "data.images"
 
 local Fly = Enemy:inherit()
 	
-function Fly:init(x, y, spr)
-    self:init_fly(x, y)
+function Fly:init(x, y, spr, w, h)
+    self:init_fly(x, y, spr, w, h)
 end
 
-function Fly:init_fly(x, y, spr)
-    self:init_enemy(x,y, spr or images.fly1)
+function Fly:init_fly(x, y, spr, w, h)
+    self:init_enemy(x,y, spr or images.fly1, w, h)
     self.name = "fly"
     self.is_flying = true
     self.life = 10
@@ -26,8 +26,9 @@ function Fly:init_fly(x, y, spr)
     self.anim_frame_len = 0.05
     self.anim_frames = {images.fly1, images.fly2}
 
-    self.buzz_source = sounds.fly_buzz.source:clone()
-    self.buzz_source:seek(random_range(0, self.buzz_source:getDuration()))
+    self:add_constant_sound("buzz", "fly_buzz", false)
+    self:seek_constant_sound("buzz", random_range(0, self:get_constant_sound("buzz"):get_duration())) 
+    self.is_buzz_enabled = true
     self.buzz_is_started = false
 end
 
@@ -35,31 +36,26 @@ function Fly:update(dt)
     self:update_fly(dt)
 end
 
+function Fly:disable_buzzing()
+    self.is_buzz_enabled = false
+    self:stop_constant_sound("buzz")
+end
+
 function Fly:update_fly(dt)
     self:update_enemy(dt)
+    self:update_buzz(dt)
+end
 
-    if not self.buzz_is_started then
-        self.buzz_source:play()
-        self.buzz_is_started = true
+function Fly:update_buzz(dt)
+    if self.is_buzz_enabled and not self.buzz_is_started then
+        self:play_constant_sound("buzz")
     end
     local spd = dist(0, 0, self.vx, self.vy)
     if spd >= 0.001 then
-        self.buzz_source:setVolume(1)
+        self:set_constant_sound_volume("buzz", 1)
     else
-        self.buzz_source:setVolume(0)
+        self:set_constant_sound_volume("buzz", 0)
     end
-    -- audio:set_source_position_relative_to_object(self.buzz_source, self)
-end
-
-function Fly:pause_repeating_sounds() --scotch
-    self.buzz_source:setVolume(0)
-end
-function Fly:play_repeating_sounds()
-    self.buzz_source:setVolume(1)
-end
-
-function Fly:on_death()
-    self.buzz_source:stop()
 end
 
 return Fly

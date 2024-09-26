@@ -29,6 +29,7 @@ function FlyingDung:init_flying_dung(x, y, spawner)
     self.is_pushable = false
     self.is_bouncy_to_bullets = false
     self.destroy_bullet_on_impact = true
+    self.do_stomp_animation = false
 
     self.is_stompable = true
     self.is_killed_on_stomp = false
@@ -65,7 +66,7 @@ function FlyingDung:on_negative_life()
     self:begin_targeting()
 end
 
-function FlyingDung:on_stomped(damager)
+function FlyingDung:on_stomp_killed(damager)
     self:begin_targeting()
 end
 
@@ -73,6 +74,15 @@ function FlyingDung:begin_targeting()
     self.state = "targeting"
     self.is_ponging = false
     Audio:play_var("flying_dung_death", 0, 1.2)
+
+    self.is_pushable = false
+    self.is_stompable = false
+    self.is_bouncy_to_bullets = false
+    self.destroy_bullet_on_impact = false
+    self.do_stomp_animation = false
+	self.is_immune_to_bullets = true
+
+    self.damage = 0
 
     if self.spawner then
         self:target_spawner()
@@ -112,7 +122,7 @@ function FlyingDung:after_collision(col, other)
 end
 
 function FlyingDung:hit_target(target)
-    if target.name == "dung_beetle" then
+    if target.on_hit_flying_dung then
         target:on_hit_flying_dung(self)
     end
     game:screenshake(6)

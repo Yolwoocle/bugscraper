@@ -25,7 +25,21 @@ end
 function Upgrade:update_upgrade(dt)
 end
 
-function Upgrade:on_apply(player)
+function Upgrade:apply(player, is_revive)
+    self:apply_permanent(player, is_revive)
+    if not is_revive then
+        self:apply_instant(player)
+        self:play_effects(player)
+    end
+end
+
+function Upgrade:apply_permanent(player, is_revive)
+end
+
+function Upgrade:apply_instant(player)
+end
+
+function Upgrade:play_effects(player)
 end
 
 function Upgrade:on_finish(player)

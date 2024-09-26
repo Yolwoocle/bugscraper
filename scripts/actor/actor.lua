@@ -1,16 +1,23 @@
 local Class = require "scripts.meta.class"
 local Sprite = require "scripts.graphics.sprite"
+local Rect = require "scripts.math.rect"
+local CollisionInfo = require "scripts.physics.collision_info"
 
 local Actor = Class:inherit()
+local creation_index = 0
 
 function Actor:init_actor(x, y, w, h, spr, args)
 	if not args then   args = {}   end
 	if args.add_collision == nil then   args.add_collision = true   end
 
+	self.creation_index = creation_index
+	creation_index = creation_index + 1
+
 	self.is_actor = true
 	self.is_active = true
 	self.x = x or 0
 	self.y = y or 0
+	self.z = 0
 	self.w = w or 32
 	self.h = h or 32
 
@@ -67,13 +74,20 @@ function Actor:init_actor(x, y, w, h, spr, args)
 	-- Rider
 	self.rider = nil
 	self.vehicle = nil
+	self.rider_ox = 0
+	self.rider_oy = 0
 
 	-- Whether the actor should be teleported within bounds
 	self.is_affected_by_bounds = true
+	self.affected_by_walls = true
 
 	self.collision_filter = function(item, other)
 		-- By default, do not react to collisions
 		local type = "cross"
+
+		if not self.collision_info.enabled then
+			return false
+		end
 
 		if other.is_active ~= nil and not other.is_active then 
 			return false
@@ -81,8 +95,14 @@ function Actor:init_actor(x, y, w, h, spr, args)
 
 		if other.collision_info then
 			local collision_info = other.collision_info
-			if collision_info.type == COLLISION_TYPE_SOLID then
-				type = "slide"
+			if not collision_info.enabled then
+				return false
+			elseif collision_info.type == COLLISION_TYPE_SOLID then
+				if not self.affected_by_walls then
+					type = "cross"
+				else
+					type = "slide"
+				end
 			elseif collision_info.type == COLLISION_TYPE_SEMISOLID then
 				type = ternary((self.y + self.h <= other.y) and (self.vy >= 0), "slide", "cross")
 			end
@@ -91,11 +111,22 @@ function Actor:init_actor(x, y, w, h, spr, args)
 		return type
 	end
 
+	-- If an actor spawns other enemies, it should put them into this table
+	self.spawned_actors = {}
+
+	self.constant_sounds = {}
+
 	self.debug_values = {}
 end
 
 function Actor:set_active(val)
 	self.is_active = val
+end
+
+function Actor:get_rect(expand_value)
+	local expand_value = expand_value or 0
+	return Rect:new(self.x, self.y, self.x+self.w, self.y+self.h):expand(expand_value)
+	-- :segment_intersection(self.segment)
 end
 
 function Actor:set_image(image)
@@ -112,9 +143,10 @@ function Actor:update_sprite_position()
 	-- self.spr:update_offset(ox, oy)
 end
 
-function Actor:set_size(w, h)
+function Actor:set_dimensions(w, h)
 	self.w = w or self.w
 	self.h = h or self.h
+	Collision:update(self, self.x, self.y, self.w, self.h)
 end
 
 function Actor:center_actor()
@@ -125,6 +157,10 @@ end
 function Actor:clamp_to_bounds(rect)
 	local x = clamp(self.x, rect.ax, rect.bx-self.w)
 	local y = clamp(self.y, rect.ay, rect.by-self.h)
+	
+	if self.name == "button_small" then
+		-- print_debug("y", round(self.y), y, "rect", rect.ay, rect.by-self.h, " | ", random_neighbor(1))
+	end
 	self:set_pos(x, y)
 end
 
@@ -133,11 +169,15 @@ function Actor:update_mid_position()
 	self.mid_y = self.y + self.h/2
 end
 
-function Actor:update()
+function Actor:update(dt)
 	error("update not implemented")
 end
 
 function Actor:add_collision()
+	self.collision_info = CollisionInfo:new {
+        type = COLLISION_TYPE_NONSOLID,
+        is_slidable = true,
+    }
 	Collision:add(self, self.x, self.y, self.w, self.h)
 end
 
@@ -174,6 +214,9 @@ function Actor:update_actor(dt)
 		self:react_to_collision(col)
 		table.insert(self.collisions, col)
 	end
+	if old_grounded ~= self.is_grounded then
+		self:on_grounded_state_change(self.is_grounded)
+	end
 
 	-- Grounding events
 	if not old_grounded and self.is_grounded then
@@ -207,7 +250,7 @@ function Actor:update_actor(dt)
 		self.rider = nil
 	end
 	if self.rider then
-        self.rider:move_to(self.x, self.y - self.rider.h)
+        self.rider:move_to(self.x + self.rider_ox, self.y - self.rider.h + self.rider_oy)
 		self.rider.vx = 0
 		self.rider.vy = 0
     end
@@ -217,18 +260,19 @@ function Actor:draw()
 	error("draw not implemented")
 end
 
-function Actor:draw_actor(custom_draw)
+function Actor:draw_actor()
 	if self.is_removed then   return   end
 
 	if self.spr then
-		self.spr:draw(self.x, self.y, self.w, self.h, custom_draw)
+		self.spr:draw(self.x, self.y, self.w, self.h)
 	end
 
 	if game.debug_mode then
 		local i = 0
 		local th = get_text_height()
 		for _, val in pairs(self.debug_values) do
-			print_outline(nil, nil, tostring(val), self.x + self.w, self.y + i*th)
+			print_outline(nil, nil, tostring(val), self.x, self.y - i*th)
+			i = i + 1
 		end		 
 	end
 end
@@ -249,6 +293,9 @@ function Actor:react_to_collision(col)
 			self.grounded_col = col
 		end
 	end
+end
+
+function Actor:on_grounded_state_change(new_state)
 end
 
 function Actor:is_touching_collider(condition)
@@ -275,21 +322,27 @@ function Actor:set_flying(bool)
 	end
 end
 
-function Actor:do_knockback_from(q, source, ox, oy)
-	if not self.is_knockbackable then    return    end
+function Actor:apply_force(q, force_x, force_y)
+	force_x, force_y = normalize_vect(force_x, force_y)
+	self.vx = self.vx + force_x * q
+	self.vy = self.vy + force_y * q
+end
 
+function Actor:apply_force_from(q, source, ox, oy)
 	ox, oy = ox or 0, oy or 0
 	--if not source then    return    end
 	local knockback_x, knockback_y = normalize_vect(source.x-self.x + ox, source.y-self.y + oy)
-	self:do_knockback(q, -knockback_x, -knockback_y)
+	self:apply_force(q, -knockback_x, -knockback_y)
 end
 
 function Actor:do_knockback(q, force_x, force_y)
 	if not self.is_knockbackable then    return    end
+	self:apply_force(q, force_x, force_y)
+end
 
-	force_x, force_y = normalize_vect(force_x, force_y)
-	self.vx = self.vx + force_x * q
-	self.vy = self.vy + force_y * q
+function Actor:do_knockback_from(q, source, ox, oy)
+	if not self.is_knockbackable then    return    end
+	self:apply_force_from(q, source, ox, oy)
 end
 
 -- When the enemy is buffered for the next wave of enemies
@@ -327,19 +380,21 @@ end
 
 function Actor:final_remove()
 	Collision:remove(self)
+	self:stop_constant_sounds()
 	self:on_removed()
 end
 
-function Actor:move_to(goal_x,goal_y)
+function Actor:move_to(goal_x, goal_y)
 	local actual_x, actual_y, cols, len = Collision:move(self, goal_x, goal_y)
 	self.x = actual_x
 	self.y = actual_y
 end
 
 function Actor:set_pos(x, y)
-	self.x = x
-	self.y = y 
-	Collision:update(self, x, y)
+	self.x = x or self.x
+	self.y = y or self.y 
+
+	Collision:update(self, self.x, self.y)
 end
 
 function Actor:set_rider(actor)
@@ -354,6 +409,86 @@ end
 
 function Actor:remove_rider()
 	self.rider = nil
+end
+
+function Actor:add_constant_sound(name, sound_name, play, volume, pitch, params)
+	play = param(play, true)
+
+	local sound = Audio:get_sound(sound_name)
+	if not sound then
+		return
+	end
+
+	local new_sound = sound:clone(volume, pitch, params)
+	self.constant_sounds[name] = new_sound
+	if play then
+		new_sound:play()
+	end
+end
+
+function Actor:get_constant_sound(name)
+	return self.constant_sounds[name]
+end
+
+function Actor:set_constant_sound_volume(name, volume)
+	local sound = self:get_constant_sound(name)
+	if not sound then return end
+
+	sound:set_volume(volume)
+	-- sound
+end
+
+function Actor:remove_constant_sound(name)
+	self.constant_sounds[name] = nil
+end
+
+function Actor:pause_constant_sound(name)
+	local sound = self:get_constant_sound(name)
+	if not sound then return end
+	sound:pause()
+end
+
+function Actor:resume_constant_sound(name)
+	local sound = self:get_constant_sound(name)
+	if not sound then return end
+	sound:resume()
+end
+
+function Actor:stop_constant_sound(name)
+	local sound = self:get_constant_sound(name)
+	if not sound then return end
+	sound:stop()
+end
+
+function Actor:play_constant_sound(name)
+	local sound = self:get_constant_sound(name)
+	if not sound then return end
+	sound:play()
+end
+
+function Actor:seek_constant_sound(name, time)
+	local sound = self:get_constant_sound(name)
+	if not sound then return end
+	sound:seek(time)
+end
+
+
+function Actor:pause_constant_sounds()
+	for sound_name, sound in pairs(self.constant_sounds) do
+		self:pause_constant_sound(sound_name)
+	end
+end
+
+function Actor:resume_constant_sounds()
+	for sound_name, sound in pairs(self.constant_sounds) do
+		self:resume_constant_sound(sound_name)
+	end
+end
+
+function Actor:stop_constant_sounds()
+	for sound_name, sound in pairs(self.constant_sounds) do
+		self:stop_constant_sound(sound_name)
+	end
 end
 
 return Actor

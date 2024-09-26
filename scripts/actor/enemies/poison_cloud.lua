@@ -29,6 +29,7 @@ function PoisonCloud:init_fly(x, y, spr)
     self.spr:set_anchor(SPRITE_ANCHOR_CENTER_CENTER)
 
     self.is_poisonous = true
+    self.is_immune_to_electricity = true
     
     self.speed = 0
     self.gravity = 0
@@ -73,9 +74,8 @@ end
 
 function PoisonCloud:draw()
 	exec_on_canvas(game.smoke_canvas, function() 
-            self:draw_enemy()
-        end
-    )
+        self:draw_enemy()
+    end)
 end
 
 function PoisonCloud:after_collision(col, other)

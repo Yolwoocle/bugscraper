@@ -17,9 +17,6 @@ function HoneypotLiquid:init(x, y)
     self.is_immune_to_bullets = true
     
     self.loot = {}
-
-    -- self.anim_frame_len = 0.4
-    -- self.anim_frames = {images.slug1, images.slug2}
 end
 
 function HoneypotLiquid:after_collision(col, other)
@@ -29,17 +26,12 @@ function HoneypotLiquid:after_collision(col, other)
 end
 
 function HoneypotLiquid:on_death()
-    Particles:image(self.mid_x, self.mid_y, 15, {images.honey_fragment_1, images.honey_fragment_2}, 13, nil, 0, 10)
-    
-    -- Particles:image(self.mid_x, self.mid_y, 30, images.snail_shell_fragment, 13, nil, 0, 10)
-    -- local slug = Slug:new(self.x, self.y)
-    -- slug.vy = -200
-    -- game:new_actor(slug)
+    Particles:image(self.mid_x, self.mid_y, 15, {images.honey_fragment_1, images.honey_fragment_2}, 13, nil, 0, 10) 
 end
 
 
 function HoneypotLiquid:on_damage_player(player, damage)
-	player:apply_effect(EffectSlowness:new(), random_range(5.0, 10.0))
+	player:apply_effect(EffectSlowness:new(), 4.0)
     self:kill()
 end
 

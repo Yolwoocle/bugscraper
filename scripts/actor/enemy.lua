@@ -4,6 +4,7 @@ local Actor = require "scripts.actor.actor"
 local Loot = require "scripts.actor.loot"
 local images = require "data.images"
 local sounds = require "data.sounds"
+local shaders= require "data.shaders"
 
 local Enemy = Actor:inherit()
 
@@ -15,6 +16,9 @@ function Enemy:init_enemy(x,y, img, w,h)
 	w,h = w or 12, h or 12
 	self:init_actor(x, y, w, h, img or images.duck)
 	self.name = "enemy"
+
+	self.invincible_timer = 0.0
+	
 	self.counts_as_enemy = true -- don't count in the enemy counter
 	self.is_being = true 
 	self.is_enemy = true
@@ -23,14 +27,18 @@ function Enemy:init_enemy(x,y, img, w,h)
 	self.follow_player = true
 
 	self.destroy_bullet_on_impact = true
-	self.is_bouncy_to_bullets = false
 	self.is_immune_to_bullets = false
-
+	self.is_immune_to_electricity = false
+	self.is_bouncy_to_bullets = false
+	self.bullet_bounce_mode = BULLET_BOUNCE_MODE_RADIAL
+	
 	self.harmless_timer = 0
 
 	self.kill_when_negative_life = true
 	self.max_life = 10
 	self.life = self.max_life
+	self.is_dead = false
+
 	self.color = COL_BLUE
 	self.speed = 20
 	self.speed_x = self.speed
@@ -38,7 +46,6 @@ function Enemy:init_enemy(x,y, img, w,h)
 
 	self.loot = {
 		{nil, 160},
-		-- {Loot.Ammo, 0, loot_type="ammo", value=20},
 		{Loot.Life, 6, loot_type="life", value=1},
 		{Loot.Gun, 4, loot_type="gun"},
 	}
@@ -47,6 +54,8 @@ function Enemy:init_enemy(x,y, img, w,h)
 	self.is_killed_on_stomp = true
 	self.do_stomp_animation = true
 	self.stomp_height = self.h/2
+	self.stomps = 1
+	self.damage_on_stomp = 0
 
 	self.is_pushable = true
 	self.is_knockbackable = true -- Multiplicator when knockback is applied to
@@ -57,21 +66,26 @@ function Enemy:init_enemy(x,y, img, w,h)
 
 	self.damaged_flash_timer = 0
 	self.damaged_flash_max = 0.07
+	self.flash_white = false
+	self.flash_white_shader = shaders.white_shader
 
+	self.do_squash = false
 	self.squash = 1
 	self.squash_target = 1
 	
 	self.play_sfx = true
 	self.sound_damage = "enemy_damage"
-	self.sound_death = "enemy_death_1"
-	self.sound_stomp = "enemy_death_1"
+	self.sound_death = "stomp2"
+	self.sound_stomp = "stomp2"
 
 	self.target = nil
 
 	self.harmless_timer = 0.0
 
-	self.do_vx_flipping = true
+	self.flip_mode = ENEMY_FLIP_MODE_XVELOCITY
 	self.do_killed_smoke = true
+
+	self.gun = nil
 	-- self.sound_stomp = {"enemy_stomp_2", "enemy_stomp_3"}
 	--{"crush_bug_1", "crush_bug_2", "crush_bug_3", "crush_bug_4"}
 end
@@ -80,13 +94,44 @@ function Enemy:update_enemy(dt)
 	-- if not self.is_active then    return    end
 	self:update_actor(dt)
 	
-	self:follow_nearest_player(dt)
+	self:assign_target_as_nearest_player(dt)
+	self:follow_target(dt)
+	self.invincible_timer = max(self.invincible_timer - dt, 0)
 	self.harmless_timer = max(self.harmless_timer - dt, 0)
-	self.damaged_flash_timer = max(self.damaged_flash_timer - dt, 0)
-	self.spr:set_flip_x(ternary(self.do_vx_flipping, self.vx < 0, false))
+
+	if self.flip_mode == ENEMY_FLIP_MODE_TARGET then
+		if self.target and math.abs(self.x - self.target.x) >= 20 then
+			self.spr:set_flip_x(self.target.x < self.x)
+		end
+		
+	elseif self.flip_mode == ENEMY_FLIP_MODE_XVELOCITY then
+		self.spr:set_flip_x(self.vx < 0)
+
+	end
+
+	self:update_flash(dt)
+	
+	if self.do_squash then
+		self.squash = lerp(self.squash, 1, 0.2)
+		self.spr:set_scale(self.squash, 1/self.squash)
+	end
 end
 function Enemy:update(dt)
 	self:update_enemy(dt)
+end
+
+function Enemy:get_flash_white_shader()
+	return self.flash_white_shader
+end
+
+function Enemy:update_flash(dt)
+	self.damaged_flash_timer = max(self.damaged_flash_timer - dt, 0)
+
+	if self:is_flashing_white() then
+		self.spr.shader = self:get_flash_white_shader()
+	else
+		self.spr.shader = nil
+	end
 end
 
 function Enemy:get_nearest_player()
@@ -102,32 +147,42 @@ function Enemy:get_nearest_player()
 	return nearest_player
 end
 
-function Enemy:follow_nearest_player(dt)
-	self.target = nil
+function Enemy:assign_target_as_nearest_player(dt)
 	if not self.follow_player then
 		return
 	end
-
+	
 	-- Find closest player
+	self.target = nil
 	local nearest_player = self:get_nearest_player()
 	if not nearest_player then
 		return
 	end
 	self.target = nearest_player
-	
-	self.speed_x = self.speed_x or self.speed
-	if self.is_flying then    self.speed_y = self.speed_y or self.speed 
-	else                      self.speed_y = self.speed_y or 0    end 
+end
 
-	self.vx = self.vx + sign0(nearest_player.x - self.x) * self.speed_x
-	self.vy = self.vy + sign0(nearest_player.y - self.y) * self.speed_y
+function Enemy:follow_target(dt)
+	self.speed_x = self.speed_x or self.speed
+	if self.is_flying then
+		self.speed_y = self.speed_y or self.speed 
+	else
+		self.speed_y = self.speed_y or 0
+	end 
+
+	if self.target then
+		self.vx = self.vx + sign0(self.target.x - self.x) * self.speed_x
+		self.vy = self.vy + sign0(self.target.y - self.y) * self.speed_y
+	end
+end
+
+function Enemy:is_flashing_white()
+	return (self.flash_white or self.damaged_flash_timer > 0)
 end
 
 function Enemy:draw_enemy()
-	local f = (self.damaged_flash_timer > 0) and draw_white
-	self:draw_actor(f)
+	self:draw_actor()
 
-	if game.debug.info_view then
+	if game.debug.colview_mode then
 		gfx.draw(images.heart, self.x-7 -2+16, self.y-16)
 		print_outline(COL_WHITE, COL_DARK_BLUE, self.life, self.x+16, self.y-16-2)
 	end
@@ -157,18 +212,9 @@ function Enemy:on_collision(col, other)
 
 		local is_on_head      = false --(feet_y <= self.y + self.h/2)
 		local is_falling_down = (player.vy > 0.0001)-- and (feet_y <= self.y + self.h*0.75)
-		local recently_landed = (0 < player.frames_since_land) and (player.frames_since_land <= 4) --7
+		local recently_landed = (0 < player.frames_since_land) and (player.frames_since_land <= 6) --7
 		if self.is_stompable and (is_on_head or is_falling_down or recently_landed) then
-			player.vy = 0
-			player:on_stomp(self)
-			if self.do_stomp_animation then
-				local ox, oy = self.spr:get_total_centered_offset_position(self.x, self.y, self.w, self.h)
-				Particles:stomped_enemy(self.mid_x, self.y+self.h, self.spr.image)
-			end
-			self:on_stomped(player)
-			if self.is_killed_on_stomp then
-				self:kill(player, "stomped")
-			end
+			self:react_to_stomp(player)
 
 		else
 			-- Damage player
@@ -189,12 +235,41 @@ function Enemy:on_collision(col, other)
 	self:after_collision(col, col.other)
 end
 
+function Enemy:react_to_stomp(player)
+	player.vy = 0
+	player:on_stomp(self)
+	
+	self.stomps = self.stomps - 1
+	if self.damage_on_stomp > 0 then
+		self:do_damage(self.damage_on_stomp, player)
+	end
+	self:on_stomped(player)
+	if self.stomps <= 0 then
+		if self.do_stomp_animation then
+			local ox, oy = self.spr:get_total_centered_offset_position(self.x, self.y, self.w, self.h)
+			Particles:stomped_enemy(self.mid_x, self.y+self.h, self.spr.image)
+		end
+		self:on_stomp_killed(player)
+		if self.is_killed_on_stomp then
+			self:kill(player, "stomped")
+		end
+	end
+end
+
 function Enemy:on_damage_player(player, damage)
 end
 
-function Enemy:after_collision(col, other)  end
+function Enemy:after_collision(col, other)
+end
+
+function Enemy:set_invincibility(duration)
+	self.invincible_timer = math.max(self.invincible_timer, duration)
+end
 
 function Enemy:do_damage(n, damager)
+	if not self.is_active or self.invincible_timer > 0 then
+		return false
+	end
 	self.damaged_flash_timer = self.damaged_flash_max
 	
 	if self.play_sfx then   Audio:play_var(self.sound_damage, 0.3, 1.1)   end
@@ -207,6 +282,7 @@ function Enemy:do_damage(n, damager)
 		end 
 		self:on_negative_life()
 	end
+	return true
 end
 
 function Enemy:on_negative_life()
@@ -220,15 +296,19 @@ function Enemy:on_stomped(damager)
 
 end
 
+function Enemy:on_stomp_killed(damager)
+
+end
+
 function Enemy:kill(damager, reason)
 	if self.is_removed then
-		print(concat("/!\\:", self.name, "(", self, ") was killed while destroyed"))
 		return
 	end
 	self.death_reason = reason or ""
 
 	if self.do_killed_smoke then
 		Particles:smoke(self.mid_x, self.mid_y)
+		Particles:star_splash(self.mid_x, self.mid_y)
 	end
 	if self.play_sfx then
 		if reason == "stomped" then
@@ -238,6 +318,7 @@ function Enemy:kill(damager, reason)
 		end
 	end
 
+	self.is_dead = true
 	game:on_kill(self)
 	self:remove()
 	
@@ -253,8 +334,10 @@ function Enemy:drop_loot()
 	local vx = random_neighbor(300)
 	local vy = random_range(-200, -500)
 	local loot_type = parms.loot_type
-	if loot_type == "ammo" or loot_type == "life" or loot_type == "gun" then
+	if loot_type == "ammo" or loot_type == "life" then
 		instance = loot:new(self.mid_x, self.mid_y, parms.value, vx, vy)
+	elseif loot_type == "gun" then
+		instance = game:new_gun_display(self.mid_x, self.mid_y)
 	end 
 
 	game:new_actor(instance)
@@ -268,7 +351,7 @@ function Enemy:on_hit_bullet(bul, col)
 	if self.is_immune_to_bullets then
 		return false
 	end
-	self:do_damage(bul.damage, bul)
+	self:do_damage(bul.override_enemy_damage or bul.damage, bul)
 	
 	if self.is_knockbackable then
 		local ang = atan2(bul.vy, bul.vx)
@@ -276,6 +359,31 @@ function Enemy:on_hit_bullet(bul, col)
 		self.vy = self.vy + sin(ang) * bul.knockback * self.self_knockback_mult
 	end
 	return true
+end
+
+function Enemy:get_random_player()
+    local players = {}
+    for _, player in pairs(game.players) do
+        table.insert(players, player)
+    end
+
+    if #players == 0 then
+        return nil
+    end
+    return random_sample(players)
+end
+
+function Enemy:set_bouncy(bool)
+    self.destroy_bullet_on_impact = not bool
+    self.is_bouncy_to_bullets = bool
+    self.is_immune_to_bullets = bool
+end
+
+
+function Enemy:on_hit_electrictiy()
+end
+
+function Enemy:on_bullet_bounced(bullet, col)
 end
 
 return Enemy

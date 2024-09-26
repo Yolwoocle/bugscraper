@@ -28,6 +28,9 @@ function InputUser:init(n, input_profile_id, is_global)
     self.vibration_timer = 0.0
     self.vibration_strength_left  = 0.0
     self.vibration_strength_right = 0.0
+
+    -- Game specifics
+    self.skin = nil
 end
 
 function InputUser:update(dt)
@@ -195,8 +198,8 @@ local axis_functions = {
     rightypos = function(joystick, margin, deadzone) return Input:is_axis_in_angle_range(joystick, "rightx", "righty", deadzone, pi/2,  margin) end,
     rightyneg = function(joystick, margin, deadzone) return Input:is_axis_in_angle_range(joystick, "rightx", "righty", deadzone, -pi/2, margin) end,
 
-    triggerleft =    function(joystick, margin, deadzone) return joystick:getGamepadAxis("triggerleft") > 0 + TRIGGER_DEADZONE end,
-    triggerright =   function(joystick, margin, deadzone) return joystick:getGamepadAxis("triggerright") > 0 + TRIGGER_DEADZONE end,
+    triggerleft =    function(joystick, margin, deadzone) return joystick:getGamepadAxis("triggerleft")  > TRIGGER_DEADZONE end,
+    triggerright =   function(joystick, margin, deadzone) return joystick:getGamepadAxis("triggerright") > TRIGGER_DEADZONE end,
 }
 
 function InputUser:is_axis_down(axis_name, joystick, is_ui_axis)
@@ -279,6 +282,14 @@ function InputUser:update_vibration(dt)
     end
     
     self.vibration_timer = math.max(self.vibration_timer - dt, 0.0)
+end
+
+function InputUser:set_skin(skin)
+    self.skin = skin
+end
+
+function InputUser:get_skin()
+    return self.skin
 end
 
 return InputUser

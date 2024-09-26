@@ -1,6 +1,7 @@
 require "scripts.util"
-require "lib.please_work_error_explorer.error_explorer"
-local Class = require "scripts.meta.class"
+require "lib.please_work_error_explorer.error_explorer" {
+	source_font = love.graphics.newFont("fonts/FiraCode-Regular.ttf", 12)
+}
 local Game = require "scripts.game.game"
 
 -- LÖVE uses Luajit 2.1 which is based on Lua 5.1 but has some additions (like goto)
@@ -13,23 +14,34 @@ function love.load(arg)
 	game = Game:new()
 end
 
-local t = 0
 local fixed_dt = 1/60 -- fixed frame delta time
+_G_t = 0
 _G_frame = 0
 _G_fixed_frame = 0
+_G_frame_by_frame_mode = false
+local max_frame_buffer_duration = fixed_dt * 2
+local _frame_by_frame_mode_advance_flag = false
 local function fixed_update()
+	if _G_frame_by_frame_mode and not _frame_by_frame_mode_advance_flag then
+		return
+	else
+		_frame_by_frame_mode_advance_flag = false
+	end
+
 	_G_fixed_frame = _G_fixed_frame + 1
 	game:update(fixed_dt)
 end
 
+_G_do_fixed_framerate = true
 
 function love.update(dt)
-	t = t + dt
+	_G_t = math.min(_G_t + dt, max_frame_buffer_duration)
 	local cap = 1 --If there's lag spike, repeat up to how many frames?
 	local i = 0
 	local update_fixed_dt = fixed_dt
-	while t > update_fixed_dt and cap > 0 do
-		t = t - update_fixed_dt
+	-- local update_fixed_dt = 1/30
+	while (not _G_do_fixed_framerate or _G_t > update_fixed_dt) and cap > 0 do
+		_G_t = _G_t - update_fixed_dt
 		fixed_update()
 		cap = cap - 1
 		i=i+1
@@ -43,8 +55,6 @@ function love.draw()
 	game:draw()
 end
 
--- CAPTURING_GIF = false
--- gif_n = 0
 function love.keypressed(key, scancode, isrepeat)
 	if key == "f5" then
 		if love.keyboard.isDown("lshift") then
@@ -55,14 +65,15 @@ function love.keypressed(key, scancode, isrepeat)
 		if love.keyboard.isDown("lshift") then
 			love.event.quit()
 		end
-	-- elseif key == "f7" then
-	-- 	love.graphics.captureScreenshot(os.time() .. ".png")
-	-- elseif key == "f8" then
-	-- 	CAPTURING_GIF = not CAPTURING_GIF
-	-- 	gif_n = gif_n + 1
 
 	elseif key == "return" and (love.keyboard.isDown("lalt") or love.keyboard.isDown("ralt")) then
 		if Options then   Options:toggle_fullscreen()    end
+	
+	elseif scancode == "f9" then
+		if _G_frame_by_frame_mode then
+			_frame_by_frame_mode_advance_flag = true
+		end
+
 	end
 
 	if game.keypressed then  game:keypressed(key, scancode, isrepeat)  end
@@ -73,7 +84,11 @@ function love.keyreleased(key, scancode)
 end
 
 function love.mousepressed(x, y, button, istouch, presses)
-	if game.mousepressed then   game:mousepressed(x, y, button)   end
+	if game.mousepressed then   game:mousepressed(x, y, button, istouch, presses)   end
+end
+
+function love.mousereleased(x, y, button, istouch, presses)
+	if game.mousereleased then   game:mousereleased(x, y, button, istouch, presses)   end
 end
 
 function love.joystickadded(joystick)

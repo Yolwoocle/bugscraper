@@ -29,6 +29,7 @@ end
 ---@param tab any
 ---@return table unpacked
 function TextManager:unpack(tab)
+    local s = ""
     local output = {}
     local function explore(t, path)
         for k, v in pairs(t) do
@@ -37,10 +38,11 @@ function TextManager:unpack(tab)
                 explore(v, newkey..".")
             else
                 output[newkey] = v
+                s = s..v.."\n"
             end
         end
     end 
-
+    
     explore(tab, "")
     return output
 end

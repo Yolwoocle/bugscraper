@@ -151,10 +151,13 @@ function ControlsMenuItem:gamepadaxis(joystick, axis, value)
 	local user_n = ternary(Input:get_user(self.player_n) == nil, Input:get_joystick_user_n(joystick), self.player_n)
 
 	local key_name = Input:axis_to_key_name(axis, value)
-	print_debug(axis)
 	if Input:is_axis_down(user_n, key_name) then
 		self:on_button_pressed(InputButton:new(INPUT_TYPE_CONTROLLER, key_name))
 	end
+end
+
+function ControlsMenuItem:mousepressed(x, y, button, istouch, presses)
+	self:on_button_pressed(InputButton:new(INPUT_TYPE_KEYBOARD, "mouse"..tostring(button)))
 end
 
 function ControlsMenuItem:stop_waiting()
@@ -202,13 +205,18 @@ function ControlsMenuItem:clear_buttons()
 	if is_in_table(UI_ACTIONS, self.action_name) then
 		local button = nil
 		local default_buttons = self:get_profile():get_default_mappings()[self.action_name] or {}
-		for _, default_button in pairs(default_buttons) do
-			if default_button.type == self.input_type then
-				button = default_button
+		-- Find the last button used and add it to the new bindings
+		-- for _, default_button in pairs(default_buttons) do
+		for i = #old_buttons, 1, -1 do
+			local old_button = old_buttons[i]
+			if old_button.type == self.input_type then
+				button = old_button
 				break
 			end
 		end
-		if button then   table.insert(new_bindings, button)   end
+		if button then
+			table.insert(new_bindings, button)
+		end
 	end
 	Input:set_action_buttons(self.profile_id, self.action_name, new_bindings)
 end

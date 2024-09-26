@@ -2,14 +2,21 @@
 --
 -- by kira
 --
--- version 0.0.5
+-- version 0.0.9
 --
 -- an interactive error screen for the love2d game engine.
 --
 -- on error, shows the stack, local variables, and the
 -- source code when available.
 --
+-- the newest version should be available
+-- [here](https://github.com/snowkittykira/love-error-explorer).
+--
 -- ## usage
+--
+-- ```lua
+-- require 'error_explorer'
+-- ```
 --
 -- include `error_explorer.lua` in your project and
 -- `require` it somewhere near the start of your program
@@ -39,12 +46,28 @@
 --   -- it's safer to remove this when distributing)
 --   open_editor = function (filename, line)
 --     -- for example using neovim remote
---     io.popen ('nvr ' .. filename .. ' +' .. line)
+--     io.popen ('nvr --nostart ' .. filename .. ' +' .. line)
 --   end,
 -- }
 -- ```
 --
 -- ## version history
+--
+-- version 0.0.9:
+--
+-- - don't error when message is too long to fit on-screen
+--
+-- version 0.0.8:
+--
+-- - control-c to copy the error and traceback
+--
+-- version 0.0.7:
+--
+-- - collapse multiline variable values to one line
+--
+-- version 0.0.6:
+--
+-- - fix issue when the mouse module isn't available
 --
 -- version 0.0.5:
 --
@@ -119,7 +142,7 @@ local function shorten (str)
   if #result < #str then
     result = result .. '...'
   end
-  result = result:gsub ('\n', ' ')
+  result = result:gsub ('\n', '\\n')
   return result
 end
 
@@ -244,7 +267,8 @@ local function handle_error (msg)
 	msg = tostring (msg)
 
   -- print error
-	print (debug.traceback ("Error: " .. msg, 5))
+	local full_message = debug.traceback ("Error: " .. msg, 5)
+  print (full_message)
 
   local stack_info = get_stack_info ()
   if print_stack_variables_to_terminal then
@@ -391,6 +415,11 @@ local function handle_error (msg)
       stack_scroll = math.max (current_stack_index - (#stack_info - stack_max_scroll), stack_scroll)
       refresh_source ()
     end
+    if key == 'c' and love.keyboard.isDown ('lctrl', 'rctrl') then
+      if love.system then
+        love.system.setClipboardText (full_message)
+      end
+    end
   end
 
   local function mousepressed ()
@@ -450,14 +479,17 @@ local function handle_error (msg)
     local H = love.graphics.getHeight ()
     local P = 50
 
-    local mx, my = love.mouse.getPosition ()
+    local mx, my = -1, -1 
+    if love.mouse then
+      mx, my = love.mouse.getPosition ()
+    end
     local over_section = false
     local sx, sy, sw, sh
     local x, y
 
     local function section (new_sx, new_sy, new_sw, new_sh)
       sx, sy = new_sx, new_sy
-      sw, sh = new_sw, new_sh
+      sw, sh = math.max (0, new_sw), math.max (0, new_sh)
       x, y = sx, sy
       over_section =
         mx >= sx and mx < sx + sw and
@@ -564,7 +596,7 @@ local function handle_error (msg)
       local y_before = y
       print_horizontal (indent .. shorten(safe_tostring (variable.key)), hovered and c_bright or c_mid)
       print_horizontal (': ', variable == last_hovered_variable and c_bright or c_dark)
-      print_line (safe_tostring(variable.value))
+      print_line (shorten (safe_tostring (variable.value)))
 
       if over_section and type (variable.value) == 'table' then
         if mx >= 0 and mx < W/2 and my >= y_before and my < y then

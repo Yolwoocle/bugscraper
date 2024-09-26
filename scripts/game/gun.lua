@@ -26,13 +26,17 @@ function Gun:init_gun(user)
 	self.bullet_number = 1
 	self.bullet_spread = 0.2
 	self.bullet_friction = 1
+	self.bullet_life = 5
 	self.random_angle_offset = 0.1
 	self.random_speed_offset = 40
 	self.random_friction_offset = 0
+	self.bullet_target_type = "default"
 	
+	self.shoot_offset_x = nil
+
 	self.knockback = 500
 	
-	self.speed_floor = 3 -- min speed before it despawns
+	self.speed_floor = 3 -- min speed before bullet despawn
 	
 	-- Damage
 	self.damage = 2
@@ -68,11 +72,19 @@ function Gun:init_gun(user)
 	self.jetpack_force = self.default_jetpack_force
 	
 	-- Sounds
+	self.play_sfx = true
 	self.sfx = "shot1"
 	self.sfx_pitch_var = 1.15
 	self.sfx_pitch = 1
 	
+	self.do_particles = true
 	self.screenshake = 0
+
+	self.is_explosion = false
+
+	self.bullet_model = nil
+	self.object_3d_rot_speed = 0
+	self.object_3d_scale = 1
 end
 
 function Gun:update(dt)
@@ -93,7 +105,9 @@ function Gun:update(dt)
 		self.burst_delay_timer = self.burst_delay
 
 		-- Force shoot
-		self.user:shoot(dt, true)
+		if self.user then
+			self.user:shoot(dt, true)
+		end
 	end
 end
 
@@ -101,10 +115,7 @@ function Gun:draw(flip_x, flip_y, rot)
 	local ox, oy = floor(self.spr:getWidth()/2), floor(self.spr:getHeight()/2)
 	flip_x, flip_y = bool_to_dir(flip_x), bool_to_dir(flip_y)
 
-	gfx.draw(self.spr, floor(self.x), floor(self.y), self.rot, flip_x, flip_y, ox, oy)
-	-- gfx.print(concat("cooldown_timer", self.cooldown_timer), self.x, self.y-64)
-	-- gfx.print(concat("burst_count", self.burst_count), self.x, self.y-64+16)
-	-- gfx.print(concat("burst_counter", self.burst_counter), self.x, self.y-64+32)
+	love.graphics.draw(self.spr, floor(self.x), floor(self.y), self.rot, flip_x, flip_y, ox, oy)
 end
 
 function Gun:shoot(dt, player, x, y, dx, dy, is_burst)
@@ -133,17 +144,21 @@ function Gun:shoot(dt, player, x, y, dx, dy, is_burst)
 	
 	-- Now, FIRE!!
 	-- SFX & Particles
-	Audio:play_var(self.sfx, 0.2, 1.2, {pitch=self.sfx_pitch})
-	if self.sfx2 then
-		Audio:play_var(self.sfx2, 0.2, 1.2, {pitch=self.sfx_pitch})
+	if self.play_sfx then
+		Audio:play_var(self.sfx, 0.2, 1.2, {pitch=self.sfx_pitch})
+		if self.sfx2 then
+			Audio:play_var(self.sfx2, 0.2, 1.2, {pitch=self.sfx_pitch})
+		end
 	end
-	Particles:image(x , y, 1, images.bullet_casing, 4, nil, nil, nil, {
-		vx1 = -dx * 40,
-		vx2 = -dx * 100,
+	if self.do_particles then
+		Particles:image(x , y, 1, images.bullet_casing, 4, nil, nil, nil, {
+			vx1 = -dx * 40,
+			vx2 = -dx * 100,
 
-		vy1 = -40,
-		vy2 = -80,
-	})
+			vy1 = -40,
+			vy2 = -80,
+		})
+	end
 
 	if is_first_fire then 
 		local m = 1
@@ -160,34 +175,12 @@ function Gun:shoot(dt, player, x, y, dx, dy, is_burst)
 	self.original_natural_recharge_ammo = self.ammo
 
 	local ang = atan2(dy, dx)
-	local gunw = max(0, self.spr:getWidth() - 8)
+	local gunw = self.shoot_offset_x or max(0, self.spr:getWidth() - 8)
 	local x = floor(x + cos(ang) * gunw)
 	local y = floor(y + sin(ang) * gunw)
 
-	-- Update Burst timer
-	if self.is_burst then
-		self.burst_counter = self.burst_counter - 1
-	end
-
-	if self.bullet_number == 1 then
-		-- If only fire 1 bullet 
-		local ang = ang + random_neighbor(self.random_angle_offset)
-		dx, dy = cos(ang), sin(ang)
-		Particles:flash(x, y)
-		self:fire_bullet(dt, player, x, y, self.bul_w, self.bul_h, dx, dy)
-	else
-		-- If fire multiple bullets
-		local step = (self.bullet_spread*2) / (self.bullet_number-1)
-		for i = 0, self.bullet_number-1 do
-			-- Compute fire angle
-			local rand_o = random_neighbor(self.random_angle_offset)
-			local a = ang-self.bullet_spread + i*step + rand_o
-			local dx = cos(a)
-			local dy = sin(a)
-			Particles:flash(x, y)
-			self:fire_bullet(dt, player, x, y, self.bul_w, self.bul_h, dx, dy)
-		end
-	end
+	-- Update Burst
+	self:update_burst(dt, player, x, y, dx, dy, ang)
 
 	self:on_shoot(player)
 
@@ -201,16 +194,39 @@ end
 function Gun:on_shoot(player)
 end
 
-function Gun:get_damage(user)
-	local value = self.damage
-	if user and user.is_player then
-		value = value * user:get_gun_damage_multiplier()
+function Gun:update_burst(dt, player, x, y, dx, dy, ang)
+	if self.is_burst then
+		self.burst_counter = self.burst_counter - 1
 	end
-	return value
+
+	if self.bullet_number == 1 then
+		-- If only fire 1 bullet 
+		local ang = ang + random_neighbor(self.random_angle_offset)
+		dx, dy = cos(ang), sin(ang)
+		if self.do_particles then
+			Particles:flash(x, y)
+		end
+		self:fire_bullet(dt, player, x, y, self.bul_w, self.bul_h, dx, dy)
+	else
+		-- If fire multiple bullets
+		local step = (self.bullet_spread*2) / (self.bullet_number-1)
+		for i = 0, self.bullet_number-1 do
+			-- Compute fire angle
+			local rand_o = random_neighbor(self.random_angle_offset)
+			local a = ang-self.bullet_spread + i*step + rand_o
+			local dx = cos(a)
+			local dy = sin(a)
+			if self.do_particles then
+				Particles:flash(x, y)
+			end
+			self:fire_bullet(dt, player, x, y, self.bul_w, self.bul_h, dx, dy)
+		end
+	end
 end
 
 function Gun:get_max_ammo()
-	return self.max_ammo * self.user:get_max_ammo_multiplier()
+	local m = (self.user and self.user.get_max_ammo_multiplier and self.user:get_max_ammo_multiplier()) or 1
+	return self.max_ammo * m
 end
 
 function Gun:do_reloading(dt)
@@ -237,13 +253,39 @@ end
 function Gun:reload()
 	self.is_reloading = true
 	self.reload_timer = self.max_reload_timer
+
+	self.burst_counter = 0
 end
 
 function Gun:fire_bullet(dt, user, x, y, bul_w, bul_h, dx, dy)
 	local spd = self.bullet_speed + random_neighbor(self.random_speed_offset)
 	local spd_x = dx * spd
 	local spd_y = dy * spd 
-	game:new_actor(Bullet:new(self, user, self:get_damage(user), x, y, bul_w, bul_h, spd_x, spd_y))
+	local rot_3d_speed = self.object_3d_rot_speed
+	if type(rot_3d_speed) == "table" and #rot_3d_speed >= 2 then
+		rot_3d_speed = random_range(rot_3d_speed[1], rot_3d_speed[2])
+	end
+	local bullet = Bullet:new(self, user, self:get_damage(user), x, y, bul_w, bul_h, spd_x, spd_y, {
+		life = self.bullet_life,
+		range = self.bullet_range,
+		do_particles = self.do_particles,
+		play_sfx = self.play_sfx,
+		target_type = ternary(self.bullet_target_type == "default", nil, self.bullet_target_type),
+		override_enemy_damage = self.override_enemy_damage,
+		is_explosion = self.is_explosion,
+		bullet_model = self.bullet_model,
+		object_3d_rot_speed = rot_3d_speed,
+		object_3d_scale = self.object_3d_scale
+	})
+	game:new_actor(bullet)
+end
+
+function Gun:get_damage(user)
+	local value = self.damage
+	if user and user.is_player then
+		value = value * user:get_gun_damage_multiplier()
+	end
+	return value
 end
 
 function Gun:add_ammo(quantity)

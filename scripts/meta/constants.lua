@@ -3,7 +3,7 @@ local function rgb(r,g,b)
 end
 
 local function color(hex)
-    -- thaks to chatgpt :saluting_face:
+    -- thanks to chatgpt
 	if not hex then  return {1, 1, 1}  end
 	assert(type(hex) == "number", "incorrect type for 'hex' ("..type(hex).."), argument given should be number")
 
@@ -18,40 +18,83 @@ end
 -- Graphics
 CANVAS_WIDTH = 480
 CANVAS_HEIGHT = 270
+CANVAS_CENTER = {CANVAS_WIDTH/2, CANVAS_HEIGHT/2}
 SCREENSHOT_SCALE = 4
+
+LAYER_COUNT = 9
 
 LAYER_BACKGROUND = 1
 LAYER_SHADOW = 2
 LAYER_OBJECTS = 3
-LAYER_FRONT = 4
-LAYER_HUD = 5
-LAYER_UI = 6
+LAYER_OBJECT_SHADOWLESS = 4
+LAYER_FRONT = 5
+LAYER_LIGHT = 6
+LAYER_HUD = 7
+LAYER_UI = 8
+LAYER_MENUS = 9
 
 LAYER_NAMES = {
 	[1] = "LAYER_BACKGROUND",
 	[2] = "LAYER_SHADOW",
 	[3] = "LAYER_OBJECTS",
-	[4] = "LAYER_FRONT",
-	[5] = "LAYER_HUD",
-	[6] = "LAYER_UI",
+	[4] = "LAYER_OBJECT_SHADOWLESS",
+	[5] = "LAYER_FRONT",
+    [6] = "LAYER_LIGHT",
+	[7] = "LAYER_HUD",
+	[8] = "LAYER_UI",
+	[9] = "LAYER_MENUS",
 }
 
-SPRITE_ANCHOR_START = "s"
-SPRITE_ANCHOR_CENTER = "c"
-SPRITE_ANCHOR_END = "e"
+SPRITE_ANCHOR_AXIS_START = "s"
+SPRITE_ANCHOR_AXIS_CENTER = "c"
+SPRITE_ANCHOR_AXIS_END = "e"
 
-SPRITE_ANCHOR_TOP_LEFT = "ss"
-SPRITE_ANCHOR_CENTER_BOTTOM = "ce"
+SPRITE_ANCHOR_LEFT_TOP = "ss"
+SPRITE_ANCHOR_LEFT_CENTER = "sc"
+SPRITE_ANCHOR_LEFT_BOTTOM = "se"
+SPRITE_ANCHOR_CENTER_TOP = "cs"
 SPRITE_ANCHOR_CENTER_CENTER = "cc"
+SPRITE_ANCHOR_CENTER_BOTTOM = "ce"
+SPRITE_ANCHOR_RIGHT_TOP = "es"
+SPRITE_ANCHOR_RIGHT_CENTER = "ec"
+SPRITE_ANCHOR_RIGHT_BOTTOM = "ee"
+
+PARTICLE_LAYER_COUNT = 4
+
+PARTICLE_LAYER_BACK = 1
+PARTICLE_LAYER_NORMAL = 2
+PARTICLE_LAYER_SHADOWLESS = 3
+PARTICLE_LAYER_FRONT = 4
+
+-- Enemy flipping mode
+ENEMY_FLIP_MODE_MANUAL = "manual" -- only manual flipping
+ENEMY_FLIP_MODE_XVELOCITY = "xvelocity" -- flipping based on x velocity
+ENEMY_FLIP_MODE_TARGET = "target" -- flipping based on location of the target
 
 --------------------------------------------- 
 
--- Physics
+-- Physics & map
 BLOCK_WIDTH = 16
 BW = BLOCK_WIDTH
 
 COLLISION_TYPE_SOLID = "solid"
 COLLISION_TYPE_SEMISOLID = "semisolid"
+COLLISION_TYPE_NONSOLID = "nonsolid"
+
+TILE_AIR = 0
+TILE_METAL = 1
+TILE_RUBBLE = 2
+TILE_SEMISOLID = 3
+TILE_CHAIN = 4
+TILE_BORDER = 5
+
+BULLET_BOUNCE_MODE_RADIAL = "radial"
+BULLET_BOUNCE_MODE_NORMAL = "normal"
+
+--------------------------------------------- 
+
+TIMED_SPIKES_TIMING_MODE_TEMPORAL = "temporal" -- Spikes timing depend on time
+TIMED_SPIKES_TIMING_MODE_MANUAL = "manual" -- Spikes timing are manual
 
 --------------------------------------------- 
 
@@ -60,7 +103,7 @@ FONT_CHARACTERS =
     " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz"..
     "{|}~ ¡¢£©®°¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿŒœŸЁАБВГДЕЖЗИЙКЛМНО"..
     "ПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюяё€🔊🔉🔈🎵🎼🔳🔲📺🕐↖🛜▶⏸🔄🔘⬅➡⬆⬇⏏🔫🔚📥👆🔙🗄⌨🎮🎹🎚❤"..
-    "✅❎🐜🔗💡⚠🕹🫨"
+    "✅❎🔗💡⚠🕹🫨💧🐜🐛🐝🪲🎓🌄🛅"
 
 --------------------------------------------- 
 
@@ -101,11 +144,9 @@ COL_MID_GREEN = color(0x3e8948)
 COL_MID_DARK_GREEN = color(0x265c42)
 COL_DARK_GREEN = color(0x193c3e)
 
-COL_SKY = rgb(104, 174, 212)
-
-COL_BLACK_BLUE = rgb(24, 20, 37)
-COL_DARK_BLUE = rgb(18, 78, 137)
-COL_MID_BLUE = rgb(0, 149, 233)
+COL_BLACK_BLUE = color(0x181425)
+COL_DARK_BLUE = color(0x124e89)
+COL_MID_BLUE = color(0x0095e9)
 COL_LIGHT_BLUE = color(0x2ce8f5)
 
 COL_DARK_PURPLE = rgb(104, 56, 108)
@@ -131,6 +172,7 @@ GAME_STATE_WIN = "win"
 
 ---------------------------------------------
 
+-- Input
 MAX_ASSIGNABLE_BUTTONS = 8
 
 INPUT_TYPE_KEYBOARD = "k"
@@ -198,7 +240,7 @@ RAW_INPUT_MAP_DEFAULT_GLOBAL = {
     ui_up =     {},
     ui_down =   {},
     ui_reset_keys = {},
-    split_keyboard = {"k_return"},
+    split_keyboard = {"k_y"},
     leave_game = {},
     join_game = {"k_c", "k_b", "c_a", "c_b", "m_any"},
 
@@ -280,15 +322,15 @@ RAW_INPUT_MAP_DEFAULT_SPLIT_KEYBOARD_P2 = {
     up =        {"k_up"},--"k_u"
     down =      {"k_down"},--"k_j"
     jump =      {"k_l"},
-    shoot =     {"k_;"},
+    shoot =     {"k_k"},
     
     pause =     {"k_escape", "k_p"},
     ui_select = {"k_l", "k_return"},
-    ui_back =   {"k_;", "k_backspace"},
-    ui_left =   {"k_h", "k_left"},
-    ui_right =  {"k_k", "k_right"},
-    ui_up =     {"k_u", "k_up"},
-    ui_down =   {"k_j", "k_down"},
+    ui_back =   {"k_k", "k_backspace"},
+    ui_left =   {"k_left"},
+    ui_right =  {"k_right"},
+    ui_up =     {"k_up"},
+    ui_down =   {"k_down"},
     ui_reset_keys = {"k_o"},
     split_keyboard = {},
     leave_game = {"k_o"},
@@ -460,6 +502,16 @@ KEY_CONSTANT_TO_IMAGE_NAME = {
 	["kpenter"] = "btn_k_kpenter",
 	["kp="] = "btn_k_kpequals",
 	["escape"] = "btn_k_escape",
+
+	["mouse1"] = "btn_k_mouse1",
+	["mouse2"] = "btn_k_mouse2",
+	["mouse3"] = "btn_k_mouse3",
+	["mouse4"] = "btn_k_mouse4",
+	["mouse5"] = "btn_k_mouse5",
+	["mouse6"] = "btn_k_mouse6",
+	["mouse7"] = "btn_k_mouse7",
+	["mouse8"] = "btn_k_mouse8",
+	["mouse9"] = "btn_k_mouse9",
 }
 
 CONTROLLER_BUTTONS = {
@@ -498,12 +550,14 @@ CONTROLLER_BUTTONS = {
 
 --------------------------------------------- 
 
+-- Music
 MUSIC_MODE_OFF = "off"
 MUSIC_MODE_INGAME = "ingame"
 MUSIC_MODE_PAUSE = "pause"
 
 --------------------------------------------- 
 
+-- Upgrade
 UPGRADE_TYPE_TEMPORARY = "temporary"
 UPGRADE_TYPE_INSTANT = "instant"
 UPGRADE_TYPE_PERMANENT = "permanent"
@@ -513,15 +567,21 @@ UPGRADE_TARGET_ALL = "all"
 
 --------------------------------------------- 
 
+-- Wave
 FLOOR_TYPE_NORMAL = "normal"
 FLOOR_TYPE_CAFETERIA = "cafeteria"
-
---------------------------------------------- 
 
 WAVE_ROLL_TYPE_RANDOM = "random"
 WAVE_ROLL_TYPE_FIXED = "fixed"
 
 --------------------------------------------- 
 
--- Go ahead. Change it to 1. I'm not here to stop you
+-- Misc
+LIGHNING_COORDINATE_MODE_CARTESIAN = "cartesian" -- x, y 
+LIGHNING_COORDINATE_MODE_POLAR = "polar" -- radius, angle
+
+--------------------------------------------- 
+
+-- Super secret
+-- Go ahead and figure out what this is. I'm not here to stop you
 SMASH_EASTER_EGG_PROBABILITY = 0.02

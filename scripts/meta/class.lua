@@ -5,6 +5,7 @@ function Class:inherit()
     local Subclass = {}
     Subclass.__index = Subclass
     setmetatable(Subclass, self)
+    Subclass.super = self
     return Subclass
 end
 

@@ -1,6 +1,7 @@
 require "scripts.util"
 local Class = require "scripts.meta.class"
 local MusicDisk = require "scripts.audio.music_disk"
+local MusicDiskWeb = require "scripts.audio.music_disk_web"
 local Timer = require "scripts.timer"
 
 local sounds = require "data.sounds"
@@ -8,20 +9,26 @@ local sounds = require "data.sounds"
 local MusicPlayer = Class:inherit()
 
 function MusicPlayer:init()
+	local disk_class = ternary(OPERATING_SYSTEM == "Web", MusicDiskWeb, MusicDisk)
+	-- local disk_class = MusicDiskWeb
 	self.disks = {
-		["intro"] =           MusicDisk:new(self, sounds.music_intro_ingame.source, sounds.music_intro_paused.source),
-		["w1"] =              MusicDisk:new(self, sounds.music_w1_ingame.source, sounds.music_w1_paused.source),
-		["game_over"] =       MusicDisk:new(self, sounds.music_game_over.source, sounds.music_game_over.source),
-		["cafeteria"] =       MusicDisk:new(self, sounds.music_cafeteria_ingame.source, sounds.music_cafeteria_paused.source),
-		["cafeteria_empty"] = MusicDisk:new(self, sounds.music_cafeteria_empty_ingame.source, sounds.music_cafeteria_paused.source),
-		["miniboss"] =        MusicDisk:new(self, sounds.music_miniboss_ingame.source, sounds.music_miniboss_paused.source),
+		["intro"] =           disk_class:new(self, sounds.music_intro_ingame.source, sounds.music_intro_paused.source),
+		["w1"] =              disk_class:new(self, sounds.music_w1_ingame.source, sounds.music_w1_paused.source),
+		["w2"] =              disk_class:new(self, sounds.music_w1_ingame.source, sounds.music_w1_paused.source),
+		["w3"] =              disk_class:new(self, sounds.music_w3_ingame.source, sounds.music_w3_paused.source),
+		["w4"] =              disk_class:new(self, sounds.music_w1_ingame.source, sounds.music_w1_paused.source),
+		
+		["game_over"] =       disk_class:new(self, sounds.music_game_over.source, sounds.music_game_over.source),
+		["cafeteria"] =       disk_class:new(self, sounds.music_cafeteria_ingame.source, sounds.music_cafeteria_paused.source),
+		["cafeteria_empty"] = disk_class:new(self, sounds.music_cafeteria_empty_ingame.source, sounds.music_cafeteria_paused.source),
+		["miniboss"] =        disk_class:new(self, sounds.music_miniboss_ingame.source, sounds.music_miniboss_paused.source),
 	}
 	for name, disk in pairs(self.disks) do
 		disk:set_name(name)
 	end
 
 	-- self.music_source    = sounds.music_galaxy_trip[1] 
-	-- self.sfx_elevator_bg = sounds.elevator_bg[1]
+	-- self.sfx_elevator_bg = sounds.elevator _bg[1]
 	-- self.sfx_elevator_bg_volume     = self.sfx_elevator_bg:getVolume()
 	-- self.sfx_elevator_bg_def_volume = self.sfx_elevator_bg:getVolume()
 	
@@ -47,6 +54,7 @@ end
 function MusicPlayer:update(dt)
 	if self.current_disk ~= nil then
 		self.current_disk:set_volume(self:get_total_volume())
+		self.current_disk:update(dt)
 		
 		if not Options:get("play_music_on_pause_menu") and self.music_mode == MUSIC_MODE_PAUSE then
 			self.current_disk:set_volume(0)
@@ -76,7 +84,7 @@ function MusicPlayer:set_disk(disk_name)
 	
 	local disk = self.disks[disk_name]
 	if disk == nil then
-		error("MusicPlayer:set_disk: the disk'"..tostring(disk_name).."' doesn't exist")
+		error("MusicPlayer:set_disk: the disk '"..tostring(disk_name).."' doesn't exist")
 	end
 	if self.current_disk and disk_name == self.current_disk.name then 
 		return 
@@ -87,6 +95,9 @@ function MusicPlayer:set_disk(disk_name)
 	end
 	
 	self.current_disk = disk
+	if self.current_disk then
+		self:set_music_mode(self.music_mode)
+	end
 	self:play()
 end
 

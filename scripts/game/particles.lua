@@ -1,5 +1,6 @@
 require "scripts.util"
 local Class = require "scripts.meta.class"
+local Sprite = require "scripts.graphics.sprite"
 local images = require "data.images"
 local utf8 = require "utf8"
 
@@ -9,10 +10,11 @@ function Particle:init_particle(x,y,s,r, vx,vy,vs,vr, life, g, is_solid)
 	self.x, self.y = x, y
 	self.vx, self.vy = vx or 0, vy or 0
 
-	self.s = s -- size or radius
-	self.vs = vs or 20
+	self.s = s or 1.0-- size or radius
+	self.original_s = self.s
+	self.vs = vs or 20 
 	
-	self.r = r
+	self.r = r or 0
 	self.vr = vr or 0
 
 	self.gravity = g or 0
@@ -24,7 +26,6 @@ function Particle:init_particle(x,y,s,r, vx,vy,vs,vr, life, g, is_solid)
 	self.life = self.max_life
 
 	self.is_removed = false
-	self.is_back = false
 end
 
 function Particle:update_particle(dt)
@@ -38,8 +39,8 @@ function Particle:update_particle(dt)
 
 	if self.is_solid then
 		local items, len = Collision.world:queryPoint(self.x, self.y, function(item) 
-			return item.collision_info and item.collision_info.type == COLLISION_TYPE_SOLID
-		end)
+			return (item.collision_info and item.collision_info.type == COLLISION_TYPE_SOLID) or item.is_player
+		end) --FIXME: particles can go through walls bc no checks on the collision vector are made 
 		if len > 0 then
 			self.bounces = self.bounces - 1
 			self.vy = -self.bounce_force - random_neighbor(40)
@@ -63,17 +64,43 @@ end
 
 local CircleParticle = Particle:inherit()
 
-function CircleParticle:init(x,y,s,col, vx,vy,vs, life, g)
+
+function CircleParticle:init(x,y,s,palette, vx,vy,vs, life, g, fill_mode, params)
+	params = params or {}
 	self:init_particle(x,y,s,0, vx,vy,vs,0, life, g)
 
-	self.col = col or COL_WHITE
+	self.palette = palette or COL_WHITE
+	if not self.palette.type then
+		self.col = palette
+	elseif self.palette.type == "gradient" then
+		self.col = self.palette[1]
+	end
+	self.fill_mode = fill_mode or "fill"
 	self.type = "circle"
+
+	self.spawn_delay = param(params.spawn_delay, 0)
+	self.spawn_timer = 0
+	if self.spawn_delay > 0 then
+		self.spawn_timer = self.spawn_delay
+	end
 end
 function CircleParticle:update(dt)
+	self.spawn_timer = math.max(0, self.spawn_timer - dt)
+	if self.spawn_timer > 0 then
+		return
+	end
+
 	self:update_particle(dt)
+	
+	if self.palette.type == "gradient" then
+		self.col = self.palette[math.floor(#self.palette * (1 - self.s/self.original_s)) + 1]
+	end
 end
 function CircleParticle:draw()
-	circle_color(self.col, "fill", self.x, self.y, self.s)
+	if self.spawn_timer > 0 then
+		return
+	end
+	circle_color(self.col, self.fill_mode, self.x, self.y, self.s)
 end
 ------------------------------------------------------------
 
@@ -115,16 +142,21 @@ end
 
 local TextParticle = Particle:inherit()
 
-function TextParticle:init(x,y,str,spawn_delay,col)
+function TextParticle:init(x,y,str,spawn_delay,col, stay_time, text_scale, outline_color)
 	self:init_particle(x,y,s,r, vx,vy,vs,vr, life, g, is_solid)
 	self.str = str
+	self.text_scale = text_scale or 1
+
+	self.spawn_y = y
 
 	self.col_in = col
+	self.col_out = outline_color
 	self.vy = -5
 	self.vy2 = 0
 	self.spawn_delay = spawn_delay
-	
-	self.is_front = true
+	self.stay_timer = stay_time or 0.1
+
+	self.min_oy = -50
 end
 function TextParticle:update(dt)
 	if self.spawn_delay > 0 then
@@ -136,10 +168,15 @@ function TextParticle:update(dt)
 	self.y = self.y + self.vy
 	
 	if abs(self.vy) <= 0.005 then
-		self.vy2 = self.vy2 - dt*2
-		self.y = self.y + self.vy2
+		self.stay_timer = math.max(0, self.stay_timer-dt)
+
+		if self.stay_timer <= 0 then
+			self.vy2 = self.vy2 - dt*2
+			self.y = self.y + self.vy2
+		end		
 	end
-	if abs(self.vy) <= 0.001 then
+
+	if self.y <= self.spawn_y + self.min_oy then
 		self.is_removed = true
 	end
 end
@@ -150,8 +187,9 @@ function TextParticle:draw()
 
 	local col = COL_WHITE
 	if self.col_in then col = self.col_in end
-	print_outline(col, COL_BLACK_BLUE, self.str, self.x, self.y)
+	print_outline(col, self.col_out or COL_BLACK_BLUE, self.str, self.x, self.y, nil, nil, self.text_scale)
 end
+
 
 
 ------------------------------------------------------------
@@ -182,7 +220,8 @@ function StompedEnemyParticle:update(dt)
 
 	if abs(self.squash_target - self.squash) <= 0.01 then
 		self.is_removed = true
-		Particles:smoke(self.x, self.y)
+		-- number, col, spw_rad, size, sizevar, layer, fill_mode, params
+		Particles:smoke(self.x, self.y, 24, nil, 10)
 	end
 end
 function StompedEnemyParticle:draw()
@@ -224,8 +263,6 @@ function DeadPlayerParticle:update(dt)
 	self.r = lerp(self.r, goal_r, 0.06)
 	self.oy = lerp(self.oy, 40, 0.05)
 
-	self.is_front = true
-	
 	if abs(self.r - goal_r) < 0.1 then
 		game:screenshake(10)
 		Audio:play("explosion")
@@ -253,7 +290,6 @@ function EjectedPlayerParticle:init(spr, x, y, vx, vy)
 	self.spr_oy = self.spr_h / 2
 	
 	self.is_solid = false
-	self.is_front = true
 end
 function EjectedPlayerParticle:update(dt)
 	self:update_particle(dt)
@@ -288,7 +324,6 @@ function SmashedPlayerParticle:init(spr, x, y, vx, vy)
 	self.freeze_duration = 1.0
 
 	self.is_solid = false
-	self.is_front = true
 end
 function SmashedPlayerParticle:update(dt)
 	self:update_particle(dt)
@@ -329,6 +364,9 @@ function SmashFlashParticle:init(x, y, r, col)
 	self.spr = images.smash_flash
 	self.col = col
 
+	self.ox = 0
+	self.oy = 0
+
 	self.sx = 1
 	self.sy = 1
 	self.flip_y = false
@@ -340,7 +378,6 @@ function SmashFlashParticle:init(x, y, r, col)
 	self.spr_oy = 0
 	
 	self.is_solid = false
-	self.is_front = true
 
 	self.points = {}
 end
@@ -366,61 +403,206 @@ end
 
 ------------------------------------------------------------
 
+local FallingGridParticle = Particle:inherit()
+
+function FallingGridParticle:init(img_side, img_top, x,y)
+	self:init_particle(x,y,s,r, vx,vy,0,vr, 2.5, g, false)
+	-- self.spr_side = Sprite:new(img_side, SPRITE_ANCHOR_LEFT_BOTTOM)
+	-- self.spr_top =  Sprite:new(img_top,  SPRITE_ANCHOR_LEFT_BOTTOM)
+	self.img_side = img_side
+	self.img_top =  img_top
+	-- self.spr_top:set_scale(nil, 0)
+
+	self.orig_y = y
+
+	-- self.spr_w = self.spr:getWidth()
+	-- self.spr_h = self.spr:getWidth()
+	-- self.spr_ox = self.spr_w / 2
+	-- self.spr_oy = self.spr_h / 2
+	
+	self.t = 0 
+	self.rot_3d = math.pi/2
+	self.rot_3d_vel = 0 
+	self.rot_3d_acc = -6
+	self.rot_3d_bounce = 0.5
+	self.bounce_vel_threshold = 3
+end
+
+function FallingGridParticle:update(dt)
+	self:update_particle(dt)
+
+	self.t = self.t + dt*4
+	if self.rot_3d > 0 then
+		self.rot_3d_vel = self.rot_3d_vel + self.rot_3d_acc*dt 
+	end
+	self.rot_3d = math.max(0, self.rot_3d + self.rot_3d_vel*dt)
+	
+	if self.rot_3d <= 0 and math.abs(self.rot_3d_vel) >= self.bounce_vel_threshold then
+		self.rot_3d_vel = math.abs(self.rot_3d_vel) * self.rot_3d_bounce
+
+		local w = self.img_side:getWidth()
+		for ix = 0, w, 4 do
+			Particles:dust(self.x + ix, self.y + self.img_top:getHeight())
+		end
+	end
+
+	self.y = self.orig_y - math.sin(self.rot_3d) * self.img_side:getHeight()
+end
+
+function FallingGridParticle:draw()
+	local h_side = self.img_side:getHeight()
+	local h_top =  self.img_top:getHeight()
+	local scale_side = math.sin(self.rot_3d)
+	local scale_top = math.cos(self.rot_3d)
+
+	local oy = math.cos(self.rot_3d) * self.img_top:getHeight()
+
+	love.graphics.draw(self.img_side, self.x, self.y + oy, 0, 1, scale_side)
+	love.graphics.draw(self.img_top,  self.x, self.y, 0, 1, scale_top)
+	-- love.graphics.line(self.x-32, self.orig_y, self.x+32, self.orig_y)
+end
+
+------------------------------------------------------------
+
+local SparkParticle = Particle:inherit()
+
+function SparkParticle:init(x,y, life, g, is_solid)
+	local vx, vy = random_neighbor(150), -70 + random_neighbor(15)
+	local life = life or 1
+	local g = 10 + random_neighbor(3)
+	self:init_particle(x,y,__s,__r, vx,vy,0,1, life, g, is_solid)
+
+	self.is_solid = false --param(is_solid, true)
+	self.color = random_sample{COL_WHITE, COL_WHITE, COL_WHITE, COL_LIGHT_YELLOW, COL_YELLOW_ORANGE}
+end
+function SparkParticle:update(dt)
+	self:update_particle(dt)
+
+end
+function SparkParticle:draw()
+	local mult = 0.05
+	line_color(self.color, self.x, self.y, self.x + self.vx*mult, self.y + self.vy*mult)
+end
+
+------------------------------------------------------------
+------------------------------------------------------------
+------------------------------------------------------------
+------------------------------------------------------------
+
 local ParticleSystem = Class:inherit()
 
 function ParticleSystem:init(x,y)
-	self.particles = {}
+	self.layers = {}
+	self.layer_count = PARTICLE_LAYER_COUNT
+	for i = 1, self.layer_count do
+		self.layers[i] = {}
+	end
 end
 
-function ParticleSystem:update(dt)
-	for i,p in pairs(self.particles) do
-		p:update(dt)
-		if p.is_removed then
-			table.remove(self.particles, i)
+function ParticleSystem:update(dt) 
+	for _, layer in pairs(self.layers) do
+		for i, p in pairs(layer) do
+			p:update(dt)
+			if p.is_removed then
+				-- OPTI: maybe performance can improved by doing layer[i] = nil instead as it won't 
+				-- shift all items in the table  
+				table.remove(layer, i)
+			end
 		end
 	end
 end
 
-function ParticleSystem:draw_back()
-	for i,p in pairs(self.particles) do
-		if p.is_back then
-			p:draw()
-		end
+function ParticleSystem:get_number_of_particles()
+	local n = 0
+	for _, layer in pairs(self.layers) do
+		n = n + #layer
 	end
+	return n
 end
-function ParticleSystem:draw()
-	for i,p in pairs(self.particles) do
-		if not p.is_front and not p.is_back then
-			p:draw()
-		end
-	end
-end
-function ParticleSystem:draw_front()
-	for i,p in pairs(self.particles) do
-		if p.is_front then
-			p:draw()
-		end
+
+function ParticleSystem:draw_layer(layer_id)
+	layer_id = param(layer_id, PARTICLE_LAYER_NORMAL)
+	for i,p in pairs(self.layers[layer_id]) do
+		p:draw()
 	end
 end
 
-function ParticleSystem:add_particle(ptc)
-	table.insert(self.particles, ptc)
+function ParticleSystem:add_particle(ptc, layer_id)
+	layer_id = param(layer_id, PARTICLE_LAYER_NORMAL)
+	assert(self.layers[layer_id] ~= nil, "layer doesn't exist")
+	table.insert(self.layers[layer_id], ptc)
 end
 
-function ParticleSystem:clear()
-	self.particles = {}
+function ParticleSystem:clear(layer_id)
+	if layer_id == nil then
+		for i=1, self.layer_count do
+			self.layers[i] = {}
+		end
+	else
+		self.layers[layer_id] = {}
+	end
 end
 
-function ParticleSystem:smoke_big(x, y, col)
-	self:smoke(x, y, 15, col or COL_WHITE, 16, 8, 4)
+function ParticleSystem:explosion(x, y, radius)
+	local function explosion_layer(col, rad, quantity, min_spawn_delay, max_spawn_delay)
+		self:smoke_big(x, y, col, rad, quantity, {
+			vx = 0, 
+			vx_variation = 20, 
+			vy = -50, 
+			vy_variation = 10,
+			min_spawn_delay = min_spawn_delay or 0,
+			max_spawn_delay = max_spawn_delay or 0.2,
+		})
+	end
+
+	local gradient = {
+		type = "gradient",
+		COL_WHITE, COL_YELLOW, COL_ORANGE, COL_DARK_RED, COL_DARK_GRAY, COL_BLACK_BLUE
+	}
+	explosion_layer({type = "gradient", COL_DARK_GRAY},  radius, 100, 0.2, 0.4)
+	explosion_layer({type = "gradient", COL_BLACK_BLUE}, radius, 100, 0.2, 0.4)
+
+	explosion_layer(gradient, radius,     200)
+	-- explosion_layer(gradient, radius,     80)
+	-- explosion_layer(gradient, radius*0.9, 60)
+	-- explosion_layer(gradient, radius*0.8, 30)
+	-- explosion_layer(gradient, radius*0.7, 20)
+	-- explosion_layer(gradient, radius*0.6, 15)
+
+	Particles:image(x, y, 5, images.bullet_casing, 4, nil, nil, nil, {
+		vx1 = -150,
+		vx2 = 150,
+
+		vy1 = 80,
+		vy2 = -200,
+	})
+
+	Particles:image(x , y, 5, images.white_dust, 4, nil, nil, nil, {
+		vx1 = -150,
+		vx2 = 150,
+
+		vy1 = 80,
+		vy2 = -200,
+	})
+	
+	Particles:static_image(images.explosion_flash, x, y)
+	-- x, y, number, col, spw_rad, size, sizevar, layer, fill_mode, params
 end
 
-function ParticleSystem:smoke(x, y, number, col, spw_rad, size, sizevar, is_front, is_back)
-	number = number or 10
-	spw_rad = spw_rad or 8
-	size = size or 4
-	sizevar = sizevar or 2
-	is_front = param(is_front, true)
+function ParticleSystem:smoke_big(x, y, col, rad, quantity, params)
+	self:smoke(x, y, quantity or 15, col or COL_WHITE, rad or 16, 8, 4, nil, nil, params)
+end
+
+function ParticleSystem:smoke(x, y, number, col, spw_rad, size, sizevar, layer, fill_mode, params)
+	params = params or {}
+
+	number = param(number, 10)
+	spw_rad = param(spw_rad, 8)
+	size = param(size, 4)
+	sizevar = param(sizevar, 2)
+	layer = param(layer, PARTICLE_LAYER_FRONT)
+	local min_spawn_delay = param(params.min_spawn_delay, 0)
+	local max_spawn_delay = param(params.max_spawn_delay, 0)
 
 	for i=1,number do
 		local ang = love.math.random() * pi2
@@ -430,10 +612,15 @@ function ParticleSystem:smoke(x, y, number, col, spw_rad, size, sizevar, is_fron
 		
 		local v = random_range(0.6, 1)
 		local col = col or {v,v,v,1}
-		local particle = CircleParticle:new(x+dx, y+dy, size+dsize, col, 0, 0, _vr, _life)
-		particle.is_front = is_front
-		particle.is_back = is_back
-		self:add_particle(particle)
+
+		local vx = param(params.vx, 0) + random_neighbor(param(params.vx_variation, 0))
+		local vy = param(params.vy, 0) + random_neighbor(param(params.vy_variation, 0))
+		
+		-- x,y,s,col, vx,vy,vs, life, g, fill_mode
+		local particle = CircleParticle:new(x+dx, y+dy, size+dsize, col, vx, vy, _vs, _vr, _life, fill_mode, {
+			spawn_delay = random_range(min_spawn_delay, max_spawn_delay),
+		})
+		self:add_particle(particle, layer)
 	end
 end
 
@@ -451,7 +638,7 @@ function ParticleSystem:dust(x, y, col, size, rnd_pos, sizevar)
 end
 
 
-function ParticleSystem:fire(x, y, size, sizevar, velvar, vely, is_back)
+function ParticleSystem:fire(x, y, size, sizevar, velvar, vely)
 	rnd_pos = rnd_pos or 3
 	size = size or 4
 	sizevar = sizevar or 2
@@ -469,7 +656,6 @@ function ParticleSystem:fire(x, y, size, sizevar, velvar, vely, is_back)
 	local vy = random_range(vely - velvar, vely)
 	local particle = CircleParticle:new(x+dx, y+dy, size+dsize, col, 0, vy, _vr, _life)
 	self:add_particle(particle)
-	particle.is_back = is_back
 end
 
 
@@ -546,6 +732,7 @@ function ParticleSystem:image(x, y, number, spr, spw_rad, life, vs, g, parms)
 		local g = (g or 1) * 3
 		local is_solid = true
 		local is_animated = false
+		local scale = 1
 
 		if parms and parms.vx1 ~= nil and parms.vx2 ~= nil then
 			vx = random_range(parms.vx1, parms.vx2)
@@ -568,23 +755,22 @@ function ParticleSystem:image(x, y, number, spr, spw_rad, life, vs, g, parms)
 		if parms and parms.life ~= nil then
 			life = parms.life
 		end
+		if parms and parms.scale ~= nil then
+			scame = parms.scale
+		end
 		
 		local sprite = spr
 		if (not is_animated) and type(spr) == "table" then
 			sprite = random_sample(spr)
 		end
 		--spr, x,y,s,r, vx,vy,vs,vr, life, g, is_solid
-		self:add_particle(ImageParticle:new(sprite, x+dx, y+dy, 1, rot, vx,vy,vs,vr, life, g, is_solid))
+		self:add_particle(ImageParticle:new(sprite, x+dx, y+dy, scale, rot, vx,vy,vs,vr, life, g, is_solid))
 	end
 end
 
 -- FIXME: scotch
-function ParticleSystem:bullet_vanish(x, y, rot)
-	Particles:image(x, y, 1, {
-		images.bullet_vanish_1,
-		images.bullet_vanish_2,
-		images.bullet_vanish_3,
-	}, 0, nil, 0, 0, {
+function ParticleSystem:static_image(img, x, y, rot, life, scale)
+	Particles:image(x, y, 1, img, 0, nil, 0, 0, {
 		is_solid = false,
 		rot = rot,
 		vx1 = 0,
@@ -593,9 +779,46 @@ function ParticleSystem:bullet_vanish(x, y, rot)
 		vy2 = 0,
 		vr1 = 0,
 		vr2 = 0,
-		life = 0.12,
-		is_animated = true
+		life = life or 0.12,
+		is_animated = true,
+		scale = scale,
 	})
+end
+
+-- FIXME: scotch
+function ParticleSystem:bullet_vanish(x, y, rot)
+	self:static_image({
+		images.bullet_vanish_1,
+		images.bullet_vanish_2,
+		images.bullet_vanish_3,
+	}, x, y, rot)
+end
+
+-- FIXME: scotch
+function ParticleSystem:star_splash(x, y)
+	self:static_image({
+		images.star_splash_1,
+		images.star_splash_2,
+		images.star_splash_3,
+	}, x, y, 0, 0.08)
+end
+
+-- FIXME: scotch
+function ParticleSystem:star_splash_small(x, y)
+	self:static_image({
+		images.star_splash_small_1,
+		images.star_splash_small_2,
+		images.star_splash_small_3,
+	}, x, y, 0, 0.08)
+end
+
+-- FIXME: scotch
+function ParticleSystem:jump_dust_kick(x, y, rot)
+	self:static_image({
+		images.jump_dust_kick_1,
+		images.jump_dust_kick_2,
+		images.jump_dust_kick_3,
+	}, x, y, rot, 0.08)
 end
 
 function ParticleSystem:stomped_enemy(x, y, spr)
@@ -603,31 +826,52 @@ function ParticleSystem:stomped_enemy(x, y, spr)
 end
 
 function ParticleSystem:dead_player(x, y, spr, colors, dir_x)
-	self:add_particle(DeadPlayerParticle:new(x, y, spr, colors, dir_x))
+	self:add_particle(DeadPlayerParticle:new(x, y, spr, colors, dir_x), PARTICLE_LAYER_FRONT)
 end
 
 function ParticleSystem:ejected_player(spr, x, y, vx, vy)
-	self:add_particle(EjectedPlayerParticle:new(spr, x, y, vx or random_range(100, 300), vy or -random_range(400, 600)))
+	self:add_particle(EjectedPlayerParticle:new(spr, x, y, vx or random_range(100, 300), vy or -random_range(400, 600)), PARTICLE_LAYER_FRONT)
 end
 
 function ParticleSystem:smashed_player(spr, x, y, vx, vy)
-	self:add_particle(SmashedPlayerParticle:new(spr, x, y, vx or 400, vy or -random_range(600, 600)))
+	self:add_particle(SmashedPlayerParticle:new(spr, x, y, vx or 400, vy or -random_range(600, 600)), PARTICLE_LAYER_FRONT)
 end
 
 function ParticleSystem:smash_flash(x, y, r, col)
-	self:add_particle(SmashFlashParticle:new(x, y, r, col))
+	self:add_particle(SmashFlashParticle:new(x, y, r, col), PARTICLE_LAYER_FRONT)
 end
 
-function ParticleSystem:letter(x, y, str, spawn_delay, col)
-	self:add_particle(TextParticle:new(x, y, str, spawn_delay, col))
+function ParticleSystem:letter(x, y, str, spawn_delay, col, stay_time, text_scale, outline_color)
+	self:add_particle(TextParticle:new(x, y, str, spawn_delay, col, stay_time, text_scale, outline_color))
 end
 
-function ParticleSystem:word(x, y, str, col)
-	local x = x - get_text_width(str)/2
+function ParticleSystem:word(x, y, str, col, stay_time, text_scale, outline_color, letter_time_spacing)
+	stay_time = param(stay_time, 0)
+	text_scale = param(text_scale, 1)
+
+	local x = x - (text_scale * get_text_width(str))/2
 	for i=1, #str do
 		local letter = utf8.sub(str, i,i)
-		Particles:letter(x, y, letter, i*0.05, col)
-		x = x + get_text_width(letter)
+		Particles:letter(x, y, letter, i*(letter_time_spacing or 0.05), col, stay_time, text_scale, outline_color)
+		x = x + get_text_width(letter) * text_scale
+	end
+end
+
+function ParticleSystem:falling_grid(x, y)
+	self:add_particle(FallingGridParticle:new(images.cabin_grid, images.cabin_grid_platform, x, y), PARTICLE_LAYER_SHADOWLESS)
+end
+
+function ParticleSystem:falling_grid_side(x, y)
+	self:add_particle(FallingGridParticle:new(images.cabin_grid_platform, images.cabin_grid, x, y), PARTICLE_LAYER_SHADOWLESS)
+end
+
+function ParticleSystem:spark(x, y, amount)
+	amount = param(amount, 1)
+	local life = 1 + random_neighbor(0.2)
+	local g = nil
+	local is_solid = false
+	for i=1, amount do 
+		self:add_particle(SparkParticle:new(x,y, life, g, is_solid), PARTICLE_LAYER_FRONT)
 	end
 end
 

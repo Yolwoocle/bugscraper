@@ -1,5 +1,6 @@
-name = "bugscraper_0.4_midi_dev"
-default_targets =["appimage", "win64" ]#["win64", "appimage","macos,"]
+name = "bugscraper_demo_0.5.dev24-09-15"
+# default_targets = ["lovejs", "win32", "win64", "macos", "appimage"]
+default_targets = ["win64", "macos"]
 build_directory = "export"
 icon_file = "icon.png"
 keep_game_directory = false
@@ -8,44 +9,64 @@ love_files = [
     "+*",
     "-*/.*",
     "-./export/*",
+    "-./dyn/*",
 
-#midi input source code
-    "-./lib/midi_input_handler/src/*",
-    "-./lib/midi_input_handler/target/*",
-    "-./lib/midi_input_handler/Cargo.lock",
-    "-./lib/midi_input_handler/Cargo.toml",
-    "-./lib/midi_input_handler/makefile",
-
-#other files
-    "-./makefile",
-    "-./makelove_example.toml",
-    "-./scripts/_trash.lua",
-
-
-#asesprite file
-    "-*.aseprite"
+    "-./luasteam.dll",
+    "-./steam_api64.dll",
 ]
 
-[hooks]
-prebuild = [
-	"make all_release",
-]
-
-postbuild = [
-    "cp ./lib/midi_input_handler/libmidi_input_handler.so  ./export/appimage/libmidi_input_handler.so",
-    "echo '\n<== DONE ==>\n'"
-]
 
 [windows]
+# The files specified here will be added in addition to the ones specified on top level.
+# All specified files will simply be added to the .zip archive.
 [windows.archive_files]
-[win64]
-shared_libraries = [
-	"./lib/midi_input_handler/midi_input_handler.dll",
-]
+"steam_appid.txt" = "steam_appid.txt"
+"luasteam.dll" = "luasteam.dll"
+"steam_api64.dll" = "steam_api64.dll"
 
-[appimage]
+# Exe metadata is specified as a version string (key) and it's value
+# The values shown here are the ones set by makelove by default (you can overwrite them here)
+# and the values in the comments are the original values in love.exe
+# If you are not doing a versioned build, 0.4 is empty.
+[windows.exe_metadata]
+FileDescription = "Bugscraper: Rise to the top of a bug-filled tower" # "LÖVE {löve version}"
+FileVersion = "0.5" # "{löve version}"
+CompanyName = "Léo Bernard" # "LÖVE World Domination Inc."
+LegalCopyright = "Copyright © 2024 Léo Bernard" # "Copyright © 2006-2020 LÖVE Development Team" or ""
+ProductName = "Bugscraper" # "LÖVE"
+# ProductVersion = "<same as FileVersion>"
+OriginalFilename = "bugscraper" # "love.exe"
 
-artifacts = "appimage" 
+
+[macos]
+# optionally, you can include a mac-specific icon, if not mac will use the same icon as other targets
+icon_file = "icon.png"  # or macIcon.icns
+
+# The files specified here will be added in addition to the ones specified on top level.
+# All specified files will be copied to the <name>/Contents/Resources/ directory of the .app file.
+[macos.archive_files]
+"steam_appid.txt" = "steam_appid.txt"
+"dyn/osx/luasteam.so" = "luasteam.so"
+"dyn/osx/libsteam_api.dylib" = "libsteam_api.dylib"
+
+
+[macos.app_metadata]
+# CFBundleName = "<same as the name from the main config>"
+CFBundleIdentifier = "com.yolwoocle.bugscraper"
+NSHumanReadableCopyright = "Copyright © 2024 Léo Bernard"
+CFBundleShortVersionString = "0.5"
+
+
+[linux]
+# [linux.archive_files]
+# "steam_appid.txt" = "steam_appid.txt"
+# "luasteam.so" = "luasteam_linux64.so"
+# "libsteam_api.so" = "libsteam_api_linux64.so"
+
+# These values are included in the .desktop file
+[linux.desktop_file_metadata]
+Comment="Bugscraper: Rise to the top of a bug-filled tower"
+Categories="Game;" # Default is "Game;" (semicolon is separator and terminator)
 
 [lovejs]
 title = "Bugscraper"  # used on the resulting web page

@@ -76,6 +76,8 @@ local sfxnames = {
 	impactglass_light_003 = "impactglass_light_003.ogg",
 	impactglass_light_004 = "impactglass_light_004.ogg",
 
+	metal_impact = "metal_impact.ogg",
+
 	glass_fracture = "glass_fracture.ogg", -- CC BY https://freesound.org/people/cmusounddesign/sounds/85168/
 	glass_break_weak = "glass_break_weak.ogg", -- CC BY https://freesound.org/people/cmusounddesign/sounds/85168/
 	glass_break = "glass_break.ogg", 
@@ -137,10 +139,21 @@ local sfxnames = {
 
 	stink_bug_death = "stink_bug_death.ogg",
 
+	chipper_telegraph = "chipper_telegraph.ogg",
+
+	spotlight_1 = "spotlight_1.ogg",
+	spotlight_2 = "spotlight_2.ogg",
+	spotlight_3 = "spotlight_3.ogg",
+
+	---------
+	stomp2 = "stomp2.ogg", --removeme todo rename this
+
 	jump_short = "jump_short.ogg",
 
 	exit_sign_activate = "exit_sign_activate.ogg",
 	smash_easter_egg = "smash_easter_egg.mp3",
+
+	empty = "empty.ogg",
 }
 
 for key, name in pairs(sfxnames) do
@@ -175,6 +188,8 @@ sounds.music_intro_ingame =     new_source("music/music_intro_ingame.ogg",     "
 sounds.music_intro_paused =     new_source("music/music_intro_paused.ogg",     "stream", {looping = true})
 sounds.music_w1_ingame =        new_source("music/music_w1_ingame.ogg",        "stream", {looping = true})
 sounds.music_w1_paused =        new_source("music/music_w1_paused.ogg",        "stream", {looping = true})
+sounds.music_w3_ingame =        new_source("music/music_w3_ingame.mp3",        "stream", {looping = true})
+sounds.music_w3_paused =        new_source("music/music_w3_paused.mp3",        "stream", {looping = true})
 sounds.music_game_over =        new_source("music/music_game_over.ogg",        "stream", {looping = true})
 sounds.music_cafeteria_ingame = new_source("music/music_cafeteria_ingame.ogg", "stream", {looping = true})
 sounds.music_cafeteria_paused = new_source("music/music_cafeteria_paused.ogg", "stream", {looping = true})
@@ -204,7 +219,9 @@ for k, snd in pairs(sounds) do
 		snd,
 		snd:getPitch(),
 		snd:getVolume(),
-		snd:isLooping()
+		{
+			looping = snd:isLooping(),
+		}
 	)
 end
 

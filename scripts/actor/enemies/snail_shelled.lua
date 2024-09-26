@@ -21,9 +21,9 @@ function SnailShelled:init_snail_shelled(x, y, spr)
     self.follow_player = false
     self.do_stomp_animation = false
 
-    self.destroy_bullet_on_impact = false
-    self.is_bouncy_to_bullets = true
-    self.is_immune_to_bullets = true
+    -- self.destroy_bullet_on_impact = false
+    -- self.is_bouncy_to_bullets = true
+    -- self.is_immune_to_bullets = true
 
     self.sound_death = "snail_shell_crack"
     self.sound_stomp = "snail_shell_crack"

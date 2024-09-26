@@ -3,13 +3,22 @@ local Class = require "scripts.meta.class"
 
 local Timer = Class:inherit()
 
-function Timer:init(duration)
-    self.duration = duration
+function Timer:init(duration, args)
+    args = args or {}
+    
+    self:set_duration(duration)
     self.time = duration
-    -- self.on_timeout = on_timeout
+    self:apply_args(args)
 
     self.is_active = false
     self:reset()
+end
+
+function Timer:apply_args(args)
+    args = args or {}
+    
+    self.on_apply = args.on_apply
+    self.on_timeout = args.on_timeout
 end
 
 function Timer:reset()
@@ -24,6 +33,9 @@ function Timer:update(dt)
 
     self.time = math.max(self.time - dt, 0.0)
     if self.time <= 0 then
+        if self.on_timeout then
+            self:on_timeout()
+        end
         self:stop()
         return true
     end
@@ -42,13 +54,28 @@ function Timer:get_duration()
     return self.duration
 end
 
-function Timer:set_duration(val)
-    self.duration = val
+function Timer:set_duration(duration) 
+    if type(duration) == "table" and #duration >= 2 then
+        self.duration_range = duration
+    else
+        self.duration = duration
+    end
 end
 
-function Timer:start()
+function Timer:start(duration, args)
+    if duration then
+        self:set_duration(duration)
+    end
+    if self.duration_range then
+        self.duration = random_range(self.duration_range[1], self.duration_range[2])
+    end
+    self:apply_args(args)
+    
     self.is_active = true
     self.time = self.duration
+    if self.on_apply then
+        self:on_apply()
+    end
 end
 
 function Timer:stop()

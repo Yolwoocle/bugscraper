@@ -5,6 +5,18 @@ local upgrades = require "data.upgrades"
 local enemies = require "data.enemies"
 local utf8 = require "utf8"
 local images = require "data.images"
+local debug_draw_waves = require "scripts.debug.draw_waves"
+local Segment = require "scripts.math.segment"
+local Rect = require "scripts.math.rect"
+local Renderer3D = require "scripts.graphics.3d.renderer_3d"
+local Object3D  = require "scripts.graphics.3d.object_3d"
+local truncated_ico = require "data.models.truncated_ico"
+local honeycomb_panel = require "data.models.honeycomb_panel"
+local Segment         = require "scripts.math.segment"
+local Rect            = require "scripts.math.rect"
+local Cutscene = require "scripts.game.cutscene"
+local cutscenes = require "data.cutscenes"
+local Scene = require "scripts.game.scene"
 
 local Debug = Class:inherit()
 
@@ -20,11 +32,12 @@ function Debug:init(game)
     self.info_view = false
     self.joystick_view = false
     self.bound_view = false
-    self.view_fps = true
+    self.view_fps = false
     
     self.instant_end = false
     self.layer_view = false
     self.input_view = false
+    self.title_junk = true
 
     self.notification_message = ""
     self.notification_timer = 0.0
@@ -46,6 +59,8 @@ function Debug:init(game)
             end
         end
     end 
+
+    self.removeme_i = 0
     self.actions = {
         ["f2"] = {"toggle collision view mode", function()
             self.colview_mode = not self.colview_mode
@@ -59,10 +74,18 @@ function Debug:init(game)
         ["f5"] = {"view input info", function()
             self.input_view = not self.input_view
         end},
-        -- ["f6"] = {"toggle FPS", function()
-        --     self.view_fps = not self.view_fps
-        -- end},
-        ["f6"] = {"toggle controller state", function()
+        ["f6"] = {"toggle UI", function()
+            self.game.game_ui.is_visible = not self.game.game_ui.is_visible
+            self.game.is_game_ui_visible = not self.game.is_game_ui_visible
+        end},
+        ["f7"] = {"toggle speedup", function()
+            _G_t = 0
+            _G_do_fixed_framerate = not _G_do_fixed_framerate
+        end},
+        ["h"] = {"toggle help menu", function()
+            self.debug_menu = not self.debug_menu
+        end},
+        ["f"] = {"toggle FPS", function()
             self.view_fps = not self.view_fps
         end},
         ["1"] = {"damage P1", func_damage(1)},
@@ -77,36 +100,41 @@ function Debug:init(game)
         ["q"] = {"previous floor",function()
             self.game:set_floor(self.game:get_floor() - 1)
         end},
-
         ["w"] = {"next floor", function()
             self.game:set_floor(self.game:get_floor() + 1)
         end},
-        ["p"] = {"upgrade", function()
-            game:apply_upgrade(upgrades.UpgradeEspresso:new())
+        ["a"] = {"-10 floors",function()
+            self.game:set_floor(self.game:get_floor() - 10)
+        end},
+        ["s"] = {"+10 floors", function()
+            self.game:set_floor(self.game:get_floor() + 10)
+        end},
+
+        ["u"] = {"toggle title junk ui", function()
+            self.title_junk = not self.title_junk
         end},
         ["t"] = {"particle", function()
-            Particles:image(CANVAS_WIDTH/2, CANVAS_HEIGHT/2 + 50, 1, {
-                images.bullet_vanish_1,
-                images.bullet_vanish_2,
-                images.bullet_vanish_3,
-                images.bullet_vanish_4,
-                images.bullet_vanish_5,
-            }, 0, nil, 0, 0, {
-                is_solid = false,
-                rot = 0,
-                vx1 = 0,
-                vx2 = 0,
-                vy1 = 0,
-                vy2 = 0,
-                vr1 = 0,
-                vr2 = 0,
-                life = 0.15,
-                is_animated = true
-            })
+			local cabin_rect = game.level.cabin_rect
+        
+            local cabin_rect = game.level.cabin_rect
+			Particles:falling_grid(cabin_rect.ax +   16,      cabin_rect.ay + 6*16 + 0*8)
+			Particles:falling_grid(cabin_rect.bx - 7*16, cabin_rect.ay + 6*16 + 0*8)
+
+            -- Particles:word(CANVAS_WIDTH/2, CANVAS_HEIGHT/2+100, "HELLO!!", COL_WHITE, 1)
+            for i = 1, 50 do
+                -- Particles:spark(CANVAS_WIDTH/2, CANVAS_HEIGHT/2 + 50)
+            end
         end},
-        ["s"] = {"spawn", function()
-            local dung = enemies.SnailShelled:new(CANVAS_WIDTH/2, CANVAS_HEIGHT/2)
-            game:new_actor(dung)
+        ["d"] = {"spawn", function()
+            local arc = enemies.Mosquito:new(CANVAS_CENTER[1], CANVAS_CENTER[2])
+            game:new_actor(arc)            
+        end},
+        ["o"] = {"spike offset", function() 
+            for _, actor in pairs(game.actors) do
+                if actor.name == "timed_spikes" then
+                    actor:set_time_offset(-dist(actor.mid_x, actor.mid_y, CANVAS_CENTER[1], CANVAS_CENTER[2]) * 0.01 + 3)
+                end
+            end
         end},
         ["r"] = {"start game", function()
             game:start_game()
@@ -120,17 +148,17 @@ function Debug:init(game)
             end
         end},
         
-        ["i"] = {"toggle instant end", function()
-            self.instant_end = not self.instant_end
+        -- ["i"] = {"toggle instant end", function()
+        --     self.instant_end = not self.instant_end
+        -- end},
+        ["i"] = {"toggle god mode", function()
+            for _, player in pairs(game.players) do
+                player.debug_god_mode = not player.debug_god_mode
+            end
         end},
         
         ["y"] = {"toggle layer view", function()
             self.layer_view = not self.layer_view
-        end},
-        
-        ["c"] = {"color lerp test", function()
-            col_a = {random_range(0, 1), random_range(0, 1), random_range(0, 1), 1}
-            col_b = {random_range(0, 1), random_range(0, 1), random_range(0, 1), 1}
         end},
         
         ["b"] = {"toggle cabin view", function()
@@ -169,24 +197,45 @@ function Debug:init(game)
             self.game:set_zoom(self.game:get_zoom() + 0.1)
         end},
         
-        ["left"] = {"move camera left", function()
-            local cam_x, cam_y = self.game:get_camera_position()
-            self.game:set_camera_position(cam_x - 8, cam_y)
+        -- ["left"] = {"move camera left", function()
+        --     local cam_x, cam_y = self.game:get_camera_position()
+        --     self.game:set_camera_position(cam_x - 8, cam_y)
+        -- end},
+        -- ["right"] = {"move camera right", function()
+        --     local cam_x, cam_y = self.game:get_camera_position()
+        --     self.game:set_camera_position(cam_x + 8, cam_y)
+        -- end},
+        -- ["up"] = {"move camera up", function()
+        --     local cam_x, cam_y = self.game:get_camera_position()
+        --     self.game:set_camera_position(cam_x, cam_y - 8)
+        -- end},
+        -- ["down"] = {"move camera down", function()
+        --     local cam_x, cam_y = self.game:get_camera_position()
+        --     self.game:set_camera_position(cam_x, cam_y + 8)
+        -- end},
+        ["space"] = {"screenshot", function()
+		    game:screenshot()
         end},
-        ["right"] = {"move camera right", function()
-            local cam_x, cam_y = self.game:get_camera_position()
-            self.game:set_camera_position(cam_x + 8, cam_y)
-        end},
-        ["up"] = {"move camera up", function()
-            local cam_x, cam_y = self.game:get_camera_position()
-            self.game:set_camera_position(cam_x, cam_y - 8)
-        end},
-        ["down"] = {"move camera down", function()
-            local cam_x, cam_y = self.game:get_camera_position()
-            self.game:set_camera_position(cam_x, cam_y + 8)
-        end},
-    }
 
+        ["m"] = {"wave info to file", function()
+            local canvas_ = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT * 10)
+            local old_canvas = love.graphics.getCanvas()
+            love.graphics.setCanvas(canvas_)
+            love.graphics.clear(COL_BLACK)
+            debug_draw_waves({x=CANVAS_CENTER[1], y=0})
+            love.graphics.setCanvas(old_canvas)
+            save_canvas_as_file(canvas_, os.date('bugscraper_waves_%Y-%m-%d_%H-%M-%S.png'), "png")
+        end},
+
+        ["n"] = {"toggle frame-by-frame", function()
+            _G_frame_by_frame_mode = not _G_frame_by_frame_mode
+        end}, 
+
+        ["c"] = {"cutscene", function()
+            game:play_cutscene(cutscenes.boss_enter)
+        end}, 
+    }
+    
     self.action_keys = {}
     for k, v in pairs(self.actions) do
         table.insert(self.action_keys, k)
@@ -230,7 +279,6 @@ end
 
 function Debug:keyreleased(key, scancode, isrepeat)
     if scancode == "f1" and self.is_reading_for_f1_action then
-        self.debug_menu = not self.debug_menu
         self.is_reading_for_f1_action = false
     end
 end
@@ -260,8 +308,8 @@ function Debug:draw()
         self:draw_input_view()
     end
 
-    if true or self.view_fps then
-        local t = concat(love.timer.getFPS(), "FPS")
+    if self.view_fps then
+        local t = concat(love.timer.getFPS(), "FPS\n")
         print_outline(nil, nil, t, CANVAS_WIDTH - get_text_width(t), 0)
     end
 end
@@ -312,6 +360,9 @@ function Debug:draw_joystick_view()
         self:draw_joystick_view_for(joy, i*spacing, -20, "rightx", "righty")
         i = i + 1
     end
+
+    self:test_lighting()
+
 end
 
 function Debug:draw_joystick_view_for(joystick, x, y, axis_x, axis_y, is_first)
@@ -444,7 +495,7 @@ function Debug:draw_info_view()
 
 	local users_str = "users: "	
 	for k, player in pairs(Input.users) do
-		users_str = concat(users_str, "{", k, ":", player.n, "}, ")
+		users_str = concat(users_str, "{", k, ":", player.n, "(", player.input_profile_id, ")", "}, ")
 	end
 	
 	local joystick_user_str = "joysticks_to_users: "	
@@ -462,6 +513,12 @@ function Debug:draw_info_view()
 		wave_resp_str = concat(wave_resp_str, "{", i, ":", self.game.waves_until_respawn[i], "}, ")
 	end
 
+    local queued_players_str = "{"
+	for k, player in pairs(game.queued_players) do
+		queued_players_str = concat(queued_players_str, player.player_n, ": ", param(player.is_pressed, "nil"), ", ")
+	end
+    queued_players_str = queued_players_str.."}"
+
 	
 	-- Print debug info
 	local txt_h = get_text_height(" ")
@@ -469,23 +526,20 @@ function Debug:draw_info_view()
 		concat("FPS: ",love.timer.getFPS(), " / frmRpeat: ",self.game.frame_repeat, " / frame: ",frame),
 		concat("LÖVE version: ", string.format("%d.%d.%d - %s", love.getVersion())),
 		concat("game state: ", game.game_state),
-		concat("level.level_speed: ", game.level.level_speed),
-		concat("cam pos:  ", concatsep({game.camera:get_position()})),
-		concat("cam tpos: ", concatsep({game.camera:get_target_position()})),
+		concat("memory used ", collectgarbage("count")),
 		concat("n° of active audio sources: ", love.audio.getActiveSourceCount()),
 		concat("n° of actors: ", #self.game.actors, " / ", self.game.actor_limit),
 		concat("n° of enemies: ", self.game:get_enemy_count()),
+		concat("n° of particles: ", Particles:get_number_of_particles()),
 		concat("n° collision items: ", Collision.world:countItems()),
-		concat("windowed_w: ", Options:get("windowed_width")),
-		concat("windowed_h: ", Options:get("windowed_height")),
-		concat("real_wave_n ", self.game.debug2),
 		concat("number_of_alive_players ", self.game:get_number_of_alive_players()),
-		concat("menu_stack ", #self.game.menu_manager.menu_stack),
 		players_str,
 		users_str,
 		joystick_user_str,
 		joystick_str,
 		wave_resp_str, 
+        concat("queued_players ", queued_players_str),
+        concat("level_speed ", game.level.level_speed),
 		"",
 	}
 
@@ -498,7 +552,9 @@ function Debug:draw_info_view()
 	self.game.level.world_generator:draw()
 	draw_log()
     
-    local w = 255
+    -- self:test_info_view_3d_renderer()
+    
+    -- local w = 255
     -- local col_a = color(0x0c00b8)
     -- local col_b = color(0xb82609)
     -- local col_a = color(0xe43b44)
@@ -513,6 +569,113 @@ function Debug:draw_info_view()
     -- end
 end
 
+local renderer = Renderer3D:new(Object3D:new(honeycomb_panel))
+renderer.object.scale.x = 24
+renderer.object.scale.y = 24
+renderer.object.scale.z = 24
+renderer.object.position.x = 200
+renderer.object.position.y = 200
+renderer.object.position.z = 20
+function Debug:test_info_view_3d_renderer()
+    renderer.object.rotation.x = renderer.object.rotation.x + 1/400
+
+    renderer:update()
+    renderer:draw()
+end
+
+local test_ang = 0
+local test_rect = Rect:new(
+    CANVAS_CENTER[1] - 26*3, CANVAS_CENTER[2] - 13*3, 
+    CANVAS_CENTER[1] - 4*3, CANVAS_CENTER[2] + 20*3
+)
+
+function Debug:test_info_view_crop_line()
+    -- love.graphics.clear(COL_BLACK_BLUE)
+
+    local mx, my = love.mouse.getPosition()
+    mx, my = mx/3, my/3
+    local ax, ay, bx, by = get_vector_in_rect_from_angle(mx, my, test_ang, test_rect)
+    circle_color(COL_GREEN, "fill", mx, my, 2.5)
+    rect_color(COL_RED, "line", test_rect.x, test_rect.y, test_rect.w, test_rect.h)
+    if ax then
+        line_color(COL_GREEN, ax, ay, bx, by)
+    end
+    test_ang = test_ang + 0.01
+
+    -- local mx, my = love.mouse.getPosition()
+    -- local seg1 = Segment:new(50, 50, mx/3, my/3)
+    -- local seg2 = Segment:new(30, 70, 10, 10)
+    -- line_color(COL_RED, seg1.ax, seg1.ay, seg1.bx, seg1.by)
+    -- line_color(COL_RED, seg2.ax, seg2.ay, seg2.bx, seg2.by)
+    -- local pt = segment_intersect_point(seg1, seg2)
+    -- if pt then
+    --     circle_color(COL_CYAN, "fill", pt.x, pt.y, 4)
+    -- end
+end
+
+removeme_t = 0
+function Debug:test_lighting()
+    local normal_canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
+    
+    removeme_t = removeme_t + 1/60 
+
+    exec_on_canvas({normal_canvas, stencil=true}, function()
+		game.camera:reset_transform()
+		love.graphics.clear()
+        
+        love.graphics.stencil(function()
+            love.graphics.clear()
+
+            local rect = Rect:new(-4000, -16, 4000, game.level.cabin_inner_rect.by + 3)
+
+            local function new_light(x, y, angle, spread)
+                return {
+                    x = x, 
+                    y = y, 
+                    angle = angle,
+                    spread = spread,
+                    rect = rect,
+
+                    get_segments = function(self)
+                        local s1 = Segment:new(self.x, self.y, self.x + math.cos(self.angle + self.spread) * 800, self.y + math.sin(self.angle + self.spread) * 800)
+                        local s2 = Segment:new(self.x, self.y, self.x + math.cos(self.angle - self.spread) * 800, self.y + math.sin(self.angle - self.spread) * 800)
+                        return Segment:new(clamp_segment_to_rectangle(s1, self.rect)), Segment:new(clamp_segment_to_rectangle(s2, self.rect))
+                    end,
+
+                    draw = function(self)
+                        local s1, s2 = self:get_segments(self.rect)
+                        if s1 and s2 then
+                            love.graphics.polygon("fill", s1.ax, s1.ay, s1.bx, s1.by, s2.bx, s2.by, s2.ax, s2.ay)
+                        end
+                    end,
+                }
+            end
+
+            local lights = {
+                new_light(CANVAS_WIDTH/2,     -32, pi*0.5, pi*0.1),
+                new_light(500,                -32, pi*0.7, pi*0.05),
+                new_light(CANVAS_WIDTH - 500, -32, pi*0.3, pi*0.05),
+            }
+
+            local i = 1
+            for _, l in pairs(lights) do
+                if 3 + i*0.4 < removeme_t then
+                    l:draw()
+                end
+                i = i + 1
+            end
+        end, "replace")
+        love.graphics.setStencilTest("less", 1)
+		
+        rect_color({0, 0, 0, 0.85}, "fill", 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
+		
+		love.graphics.setStencilTest()
+		game.camera:apply_transform()
+	end)
+
+    love.graphics.draw(normal_canvas)
+end
+
 function Debug:draw_colview()
     game.camera:apply_transform()
     
@@ -522,8 +685,14 @@ function Debug:draw_colview()
 		rect_color({0,1,0,.2},"fill", x, y, w, h)
 		rect_color({0,1,0,.5},"line", x, y, w, h)
 	end
+    local level = game.level
+    if level then
+        rect_color(COL_RED, "line", level.cabin_rect.x, level.cabin_rect.y, level.cabin_rect.w, level.cabin_rect.h)
+        rect_color(COL_CYAN, "line", level.cabin_inner_rect.x, level.cabin_inner_rect.y, level.cabin_inner_rect.w, level.cabin_inner_rect.h)
+    end
 
     game.camera:reset_transform()
+    
 end
 
 function Debug:draw_layers()
