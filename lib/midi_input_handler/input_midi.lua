@@ -11,18 +11,30 @@
 require "scripts.util"
 
 local libmidi
+
+function undefined_function()
+    return nil
+end
+local midi = {
+    update_input = undefined_function,
+    init_midi = undefined_function,
+    is_down_from_key_name = undefined_function,
+    is_midi_down = undefined_function,
+    current_down_buttons = undefined_function
+}
+
 if pcall(require,"libmidi_input_handler") then
     print("compile mode unix !")
     libmidi = require("libmidi_input_handler")
-
 elseif pcall(require,"midi_input_handler") then
-    print("compile mode window !")
+    print("compiled mode window !")
     libmidi = require("midi_input_handler")
 elseif pcall(require,"lib.midi_input_handler.libmidi_input_handler") then
     print("interpreted mode !")
     libmidi = require("lib.midi_input_handler.libmidi_input_handler")
 else
     print("/!\\could not load midi/!\\")
+    return midi
 end
 
 
@@ -30,7 +42,6 @@ local Class = require "scripts.meta.class"
 
 local input_buffer = {}
 
-local midi = {}
 
 
 function midi.update_input()

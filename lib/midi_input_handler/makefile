@@ -28,7 +28,7 @@ debug:
 	@echo "$(RED)<==building for $(TARGET)==> $(NC)"
 	cargo build --target $(TARGET_BUILD)
 	@if [ -f "$(LIBNAME).$(EXT)" ]; then rm "$(LIBNAME).$(EXT)"; fi
-	cp ./target/$(TARGET_BUILD)/release/$(LIBNAME).$(EXT) ./ -i 
+	cp ./target/$(TARGET_BUILD)/debug/$(LIBNAME).$(EXT) ./ -i 
 
 release:
 	@echo "$(RED)<==building for $(TARGET)==> $(NC)"
