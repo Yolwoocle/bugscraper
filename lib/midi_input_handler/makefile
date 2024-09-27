@@ -11,12 +11,15 @@ endif
 ifeq ($(TARGET),Linux)
     EXT := so
 	TARGET_BUILD := x86_64-unknown-linux-gnu
+	TARGET_TOOLCHAIN := +stable-x86_64-unknown-linux-gnu 
 else ifeq ($(TARGET),Darwin)
     EXT := dylib
 	TARGET_BUILD := x86_64-apple-darwin
 else ifeq ($(TARGET),Windows_NT)
     EXT := dll
 	TARGET_BUILD := x86_64-pc-windows-gnu
+	TARGET_TOOLCHAIN := 
+	#+stable-x86_64-pc-windows-gnu
 	LIBNAME := midi_input_handler
 else
     $(error Unsupported target OS: $(TARGET))
@@ -26,13 +29,13 @@ endif
 
 debug:
 	@echo "$(RED)<==building for $(TARGET)==> $(NC)"
-	cargo build --target $(TARGET_BUILD)
+	cargo $(TARGET_TOOLCHAIN) build --target $(TARGET_BUILD)
 	@if [ -f "$(LIBNAME).$(EXT)" ]; then rm "$(LIBNAME).$(EXT)"; fi
 	cp ./target/$(TARGET_BUILD)/debug/$(LIBNAME).$(EXT) ./ -i 
 
 release:
 	@echo "$(RED)<==building for $(TARGET)==> $(NC)"
-	cargo build --release --target $(TARGET_BUILD)
+	cargo $(TARGET_TOOLCHAIN) build --release --target $(TARGET_BUILD)
 	@if [ -f "$(LIBNAME).$(EXT)" ]; then rm "$(LIBNAME).$(EXT)"; fi
 	mv ./target/$(TARGET_BUILD)/release/$(LIBNAME).$(EXT) ./ -i 
 

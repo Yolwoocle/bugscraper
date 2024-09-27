@@ -56,6 +56,12 @@ There is some custom libraries to build if you want to use them (the game work f
 If you have building issue, you can check on the midir rust crate instruction, or on the mlua crate building instrucion.  
 On windows you need a lua5x.dll to build.
 
+To build the windows target from linux or wsl you need to have the `x86_64-pc-windows-gnu` target and `gcc-mingw` installed, you can do install this with this command (on debian) :
+```sh
+rustup target add x86_64-pc-windows-gnu
+sudo apt-get install gcc-mingw-w64-x86-64 
+```
+
 <div align="center">
   🪰🪰🪰🪰🪰
 </div>  

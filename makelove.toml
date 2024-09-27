@@ -1,6 +1,6 @@
-name = "bugscraper_demo_0.5.dev24-09-15"
+name = "bugscraper_demo_0.5.dev24-09-15+midi"
 # default_targets = ["lovejs", "win32", "win64", "macos", "appimage"]
-default_targets = ["win64", "macos"]
+default_targets = ["appimage","win64", "macos"]
 build_directory = "export"
 icon_file = "icon.png"
 keep_game_directory = false
@@ -14,6 +14,13 @@ love_files = [
     "-./luasteam.dll",
     "-./steam_api64.dll",
 ]
+
+[hooks]
+prebuild = ["make all_release"]
+
+[archive_files]
+"lib/midi_input_handler/libmidi_input_handler.so" = "lib/midi_input_handler/libmidi_input_handler.so"
+"lib/midi_input_handler/midi_input_handler.dll" = "lib/midi_input_handler/midi_input_handler.dll"
 
 
 [windows]
@@ -67,6 +74,9 @@ CFBundleShortVersionString = "0.5"
 [linux.desktop_file_metadata]
 Comment="Bugscraper: Rise to the top of a bug-filled tower"
 Categories="Game;" # Default is "Game;" (semicolon is separator and terminator)
+
+[appimage]
+shared_libraries = ["lib/midi_input_handler/libmidi_input_handler.so"]
 
 [lovejs]
 title = "Bugscraper"  # used on the resulting web page
