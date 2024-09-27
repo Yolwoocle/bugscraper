@@ -49,3 +49,13 @@ For any questions you can [contact me](https://yolwoocle.com/about) (on Discord 
   🐝🐝🐝🐝🐝
 </div>  
 
+
+## Building 
+
+There is some custom libraries to build if you want to use them (the game work fine without). To build it you need to have cargo, alsa and make, for the moment it compile and works on Linux (debian), but I don't know if it works on windows or mac (it should, but the test has not been made yet).  
+If you have building issue, you can check on the midir rust crate instruction, or on the mlua crate building instrucion.  
+On windows you need a lua5x.dll to build.
+
+<div align="center">
+  🪰🪰🪰🪰🪰
+</div>  
