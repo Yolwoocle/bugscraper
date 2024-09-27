@@ -493,6 +493,25 @@ function InputManager:is_allowed_button(button)
 end
 
 -----------------------------------------------------
+local generated_unknown_key_icon={}
+
+function InputManager:get_generated_unknown_key_icon(icon, button)
+    button = button or {}
+    local key_code, key_name = "?", "?"
+    if button.get_keycode then
+        key_code = button:get_keycode()
+        key_name = button.key_name
+    end
+
+    if (generated_unknown_key_icon[key_code] ~= nil) then
+        return generated_unknown_key_icon[key_code]
+    end
+
+    generated_unknown_key_icon[key_code] = InputManager:generate_unknown_key_icon(icon, key_name)
+    return generated_unknown_key_icon[key_code]
+    
+end
+
 
 function InputManager:generate_unknown_key_icon(icon, text)
     local old_canvas = love.graphics.getCanvas()
@@ -537,7 +556,7 @@ function InputManager:generate_midi_key_icon(midi_type,arg1, arg2, arg3)
         arg3 = ""
     end
 
-    print_debug("generated an image with args :"..midi_type.."_"..arg1.."_"..arg2.."_"..arg3)
+    print_debug("generated an image with args :"..midi_type.."_"..tostring(arg1).."_"..tostring(arg2).."_"..tostring(arg3))
     local old_font = love.graphics.getFont()
     local image = ({
         note = images["btn_m_note_"..tostring(arg1)],
@@ -586,7 +605,7 @@ function InputManager:get_button_icon(player_n, button, brand_override)
         end
 
         if img == nil then
-            return self:generate_unknown_key_icon(images.btn_k_unknown, button.key_name)
+            return self:get_generated_unknown_key_icon(images.btn_k_unknown, button)
         end
 
     elseif button.type == INPUT_TYPE_CONTROLLER then
@@ -594,7 +613,7 @@ function InputManager:get_button_icon(player_n, button, brand_override)
         img = self:get_button_icon_controller(button, brand)
         
         if img == nil then
-            return self:generate_unknown_key_icon(images.btn_k_unknown, button.key_name)
+            return self:get_generated_unknown_key_icon(images.btn_k_unknown, button)
         end
         
 -- corentin
@@ -603,7 +622,7 @@ function InputManager:get_button_icon(player_n, button, brand_override)
         return self:get_generated_midi_key_icon(button.key_name)
 --
 	end
-    return img or self:generate_unknown_key_icon(images.btn_k_unknown, button.key_name or "?")
+    return img or self:get_generated_unknown_key_icon(images.btn_k_unknown, button)
 end
 
 function InputManager:get_button_icon_controller(button, brand)
@@ -611,7 +630,7 @@ function InputManager:get_button_icon_controller(button, brand)
     assert(button.type == INPUT_TYPE_CONTROLLER, "input type is not controller")
 
     local image_name = string.format("btn_c_%s_%s", brand, button.key_name)
-    return images[image_name] or self:generate_unknown_key_icon(images.btn_c_unknown, button.key_name)
+    return images[image_name] or self:get_generated_unknown_key_icon(images.btn_c_unknown, button)
 end
 
 function InputManager:draw_input_prompt(player_n, actions, label, label_color, x, y)
