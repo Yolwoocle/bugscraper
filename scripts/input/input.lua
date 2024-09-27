@@ -516,6 +516,7 @@ local generated_midi_images ={} -- table contening new generated images
 
 --return the image needed if already in the table, generate and instance it in the table in the other case
 function InputManager:get_generated_midi_key_icon(name)
+    
     if (generated_midi_images[name] ~= nil)then
         return generated_midi_images[name]
     end
@@ -530,7 +531,13 @@ end
 
 --generate a midi key image
 function InputManager:generate_midi_key_icon(midi_type,arg1, arg2, arg3)
-    print_debug("generated an image with args :".."_"..midi_type.."_"..arg1.."_"..arg2.."_"..arg3)
+    if (midi_type == "any")then
+        arg1 = ""
+        arg2 = ""
+        arg3 = ""
+    end
+
+    print_debug("generated an image with args :"..midi_type.."_"..arg1.."_"..arg2.."_"..arg3)
     local old_font = love.graphics.getFont()
     local image = ({
         note = images["btn_m_note_"..tostring(arg1)],
