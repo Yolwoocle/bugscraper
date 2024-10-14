@@ -12,6 +12,8 @@ love_files = [
 
     "-./luasteam.dll",
     "-./steam_api64.dll",
+
+    "-./data/waves_fullgame.lua",
 ]
 
 
@@ -29,7 +31,7 @@ love_files = [
 # If you are not doing a versioned build, 0.4 is empty.
 [windows.exe_metadata]
 FileDescription = "Bugscraper: Rise to the top of a bug-filled tower" # "LÖVE {löve version}"
-FileVersion = "0.5" # "{löve version}"
+FileVersion = "0.5.1" # "{löve version}"
 CompanyName = "Léo Bernard" # "LÖVE World Domination Inc."
 LegalCopyright = "Copyright © 2024 Léo Bernard" # "Copyright © 2006-2020 LÖVE Development Team" or ""
 ProductName = "Bugscraper" # "LÖVE"
@@ -53,7 +55,7 @@ icon_file = "icon.png"  # or macIcon.icns
 # CFBundleName = "<same as the name from the main config>"
 CFBundleIdentifier = "com.yolwoocle.bugscraper"
 NSHumanReadableCopyright = "Copyright © 2024 Léo Bernard"
-CFBundleShortVersionString = "0.5"
+CFBundleShortVersionString = "0.5.1"
 
 
 [linux]

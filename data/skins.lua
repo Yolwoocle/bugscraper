@@ -56,7 +56,7 @@ local skins = {
 		spr_dead = images.rabbit_dead,
 		color_palette = {COL_WHITE, COL_LIGHTEST_GRAY, COL_MID_GRAY, COL_DARK_GRAY, COL_BLACK_BLUE},
 		menu_color = COL_MID_GRAY, 
-		icon = "🪲",
+		icon = "🐰",
 		text_key = "rico",
 	},
 }

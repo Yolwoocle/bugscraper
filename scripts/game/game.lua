@@ -121,6 +121,14 @@ function Game:new_game()
 	self.t = 0
 	self.frame = 0
 
+	-- Remove old queued players
+	if self.queued_players then
+		for _, queued_player in pairs(self.queued_players) do
+			Input:remove_user(queued_player.player_n)
+		end
+	end
+		
+
 	-- Players
 	self.waves_until_respawn = {}
 	for i = 1, MAX_NUMBER_OF_PLAYERS do 
@@ -724,6 +732,7 @@ function Game:unsplit_keyboard_and_kick_second_player()
 end
 
 function Game:on_menu()
+	print("ON MENU")
 	self.music_player:on_menu()
 	self:pause_repeating_sounds()
 end

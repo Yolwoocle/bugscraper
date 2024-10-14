@@ -124,7 +124,7 @@ function GameUI:draw_join_tutorial()
 	
 	x = def_x
 	y = y + 16
-	if number_of_keyboard_users >= 1 then
+	if number_of_keyboard_users == 1 then
 		local icon_split_kb = Input:get_button_icon(1, Input:get_input_profile("global"):get_primary_button("split_keyboard"))
 		local split_label = ternary(number_of_keyboard_users == 1, Text:text("input.prompts.split_keyboard"), Text:text("input.prompts.unsplit_keyboard"))
 

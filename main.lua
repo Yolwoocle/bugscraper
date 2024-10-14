@@ -3,6 +3,7 @@ require "lib.please_work_error_explorer.error_explorer" {
 	source_font = love.graphics.newFont("fonts/FiraCode-Regular.ttf", 12)
 }
 local Game = require "scripts.game.game"
+local Measure = require "scripts.debug.measure"
 
 -- LÖVE uses Luajit 2.1 which is based on Lua 5.1 but has some additions (like goto)
 
@@ -21,6 +22,8 @@ _G_fixed_frame = 0
 _G_frame_by_frame_mode = false
 local max_frame_buffer_duration = fixed_dt * 2
 local _frame_by_frame_mode_advance_flag = false
+
+local measure_update = Measure:new(10000)
 local function fixed_update()
 	if _G_frame_by_frame_mode and not _frame_by_frame_mode_advance_flag then
 		return
@@ -29,7 +32,13 @@ local function fixed_update()
 	end
 
 	_G_fixed_frame = _G_fixed_frame + 1
+
 	game:update(fixed_dt)
+	-- local d = measure_update:tick(function()
+	-- end, 40)
+	-- if d then
+	-- 	print_debug("MEASURE update =", d*10e6, "us")
+	-- end
 end
 
 _G_do_fixed_framerate = true
@@ -51,8 +60,14 @@ function love.update(dt)
 	_G_frame = _G_frame + 1
 end
 
+local measure_draw = Measure:new(10000)
 function love.draw()
 	game:draw()
+	-- local d = measure_draw:tick(function()
+	-- end, 40)
+	-- if d then
+	-- 	print_debug("MEASURE draw =", d*10e6, "us")
+	-- end
 end
 
 function love.keypressed(key, scancode, isrepeat)
@@ -142,7 +157,7 @@ function print(...)
 	old_print(...)
 	
 	local text = concatsep({...}, " ")
-	table.insert(msg_log, text)
+	-- table.insert(msg_log, text)
 	-- print_log_file:write(concat(os.date("%c", os.time())," | ",text,"\n"))
 	
 	if #msg_log > max_msg_log then

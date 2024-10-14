@@ -121,6 +121,9 @@ return {
             credits = "CREDITS",
             feedback = "FEEDBACK",
             quit = "QUIT",
+            website = "OFFICIAL WEBSITE",
+            discord = "JOIN ON DISCORD",
+            twitter = "FOLLOW ON TWITTER (💩)", --poop emoji visually shows as the "𝕏" logo in-game
         },
         options = {
             title = "OPTIONS",

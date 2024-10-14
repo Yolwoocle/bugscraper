@@ -144,6 +144,10 @@ end
 
 function Dung:detect_stationary_player(dt)
     for _, player in pairs(game.players) do
+        if not self.player_stationary_counters[player.n] then
+            self.player_stationary_counters[player.n] = 0    
+        end
+
         if is_between(player.mid_x, self.mid_x - self.player_stationary_detect_range, self.mid_x + self.player_stationary_detect_range) then
             self.player_stationary_counters[player.n] = self.player_stationary_counters[player.n] + dt
         else

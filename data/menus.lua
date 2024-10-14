@@ -106,16 +106,20 @@ local function generate_menus()
 
 
     local pause_items = {
+        { "" },
         { "<<<<<<<<< "..Text:text("menu.pause.title").." >>>>>>>>>" },
         { "" },
         { "▶ "..Text:text("menu.pause.resume"), function() game.menu_manager:unpause() end },
         { "🔄 "..Text:text("menu.pause.retry"), function() game:new_game() end },
         { "🎚 "..Text:text("menu.pause.options"), func_set_menu('options') },
-        { "❤ "..Text:text("menu.win.wishlist").." 🔗", func_url("https://s.team/a/2957130") },
         { "💡 "..Text:text("menu.pause.feedback"), func_set_menu("feedback") },
         { "❤ "..Text:text("menu.pause.credits"), func_set_menu('credits' ) },
         { "🔚 "..Text:text("menu.pause.quit"), func_set_menu('quit') },
         { "" },
+        { "❤ "..Text:text("menu.win.wishlist").." 🔗", func_url("steam://advertise/2957130/") },
+        { "📺 "..Text:text("menu.pause.website").." 🔗", func_url("https://bugscraper.net/") },
+        { "😈 "..Text:text("menu.pause.discord").." 🔗", func_url("https://discord.gg/BAMMwMn2m5") },
+        { "🐦 "..Text:text("menu.pause.twitter").." 🔗", func_url("https://x.com/yolwoocle_") },
         -- { "[DEBUG] Skip to world 2", function()
         --     for k,e in pairs(game.actors) do
         --         if e.is_enemy then
@@ -531,7 +535,7 @@ local function generate_menus()
         	game.has_seen_controller_warning = true
             game:new_game() 
         end },
-        { "❤ "..Text:text("menu.win.wishlist").." 🔗", func_url("https://s.team/a/2957130") },
+        { "❤ "..Text:text("menu.win.wishlist").." 🔗", func_url("steam://advertise/2957130/") },
         { "" },
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_GAME_OVER, draw_elevator_progress)
 
@@ -539,10 +543,10 @@ local function generate_menus()
         {"<<<<<<<<< "..Text:text("menu.credits.title").." >>>>>>>>>"},
         { "" },
         { "<<< "..Text:text("menu.credits.game_by").." >>>"},
-        { "Léo Bernard", func_url("https://yolwoocle.com/")},
+        { "Yolwoocle (Léo Bernard) 🔗", func_url("https://yolwoocle.com/")},
         { "" },
         { "<<< "..Text:text("menu.credits.music_and_sound_design").." >>>"},
-        { "OLX", function() end}, -- func_url("https://www.youtube.com/@olxdotwav")},
+        { "OLX 🔗", function() func_url("https://www.youtube.com/@olxdotwav") end},
         -- { "'Galaxy Trip' by Raphaël Marcon / CC BY 4.0", func_url("https://raphytator.itch.io/")},
         { ""},
         { "<<< "..Text:text("menu.credits.playtesting").." >>>"},
@@ -558,6 +562,7 @@ local function generate_menus()
         { "Sylvain Fraresso", function() end},
         { "Tom Le Ber", function() end},
         { "NotGoyome", function() end},
+        { "Lucas Froehlinger 😎", function() end},
         { ""},
         { "<<< "..Text:text("menu.credits.special_thanks").." >>>"},
         { "ArkanYota", function() end}, --func_url("https://github.com/ARKANYOTA")},
@@ -567,7 +572,7 @@ local function generate_menus()
         { "Indie Game Lyon", function() end}, -- func_url("https://www.indiegamelyon.com/")},
         { "Fabien Delpiano", function() end },
         { "Quentin Picault", function() end},
-        { "Goyome", function() end},
+        { "NotGoyome", function() end},
         { "LÖVE framework", function() end}, -- func_url("https://love2d.org/") },
         { ""},
         { "<<< "..Text:text("menu.credits.asset_creators").." >>>"},
@@ -578,14 +583,14 @@ local function generate_menus()
         { "Open source assets ["..Text:text("menu.see_more").."]", func_set_menu("open_source")},
         { ""},
         { "<< "..Text:text("menu.credits.licenses").." >>"},
-        { "CC0", func_url("https://creativecommons.org/publicdomain/zero/1.0/")},
-        { "CC BY 3.0", func_url("https://creativecommons.org/licenses/by/3.0/")},          
-        { "CC BY 4.0", func_url("https://creativecommons.org/licenses/by/4.0/")},
-        { "MIT", func_url("https://opensource.org/license/mit")},
-        { "Zlib", func_url("https://www.zlib.net/zlib_license.html")},
-        { "OFL-1.1", func_url("https://spdx.org/licenses/OFL-1.1.html")},
+        { "CC0 🔗", func_url("https://creativecommons.org/publicdomain/zero/1.0/")},
+        { "CC BY 3.0 🔗", func_url("https://creativecommons.org/licenses/by/3.0/")},          
+        { "CC BY 4.0 🔗", func_url("https://creativecommons.org/licenses/by/4.0/")},
+        { "MIT 🔗", func_url("https://opensource.org/license/mit")},
+        { "Zlib 🔗", func_url("https://www.zlib.net/zlib_license.html")},
+        { "OFL-1.1 🔗", func_url("https://spdx.org/licenses/OFL-1.1.html")},
         { ""},
-        { "🐜❤"},
+        { random_sample({"🐜", "🐛", "🐝", "🪲", "🐰"}) .. "❤"},
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
 
     menus.open_source = Menu:new(game, {
@@ -646,7 +651,8 @@ local function generate_menus()
         { StatsMenuItem, Text:text("menu.game_over.floor"), function(self) return concat(game.stats.floor, "/", game.level.max_floor) end },
         -- { StatsMenuItem, Text:text("menu.game_over.max_combo"), function(self) return concat(game.stats.max_combo) end },
         { ""},
-        { "❤ "..Text:text("menu.win.wishlist").." 🔗", func_url("https://s.team/a/2957130") },
+        -- { "❤ "..Text:text("menu.win.wishlist").." 🔗", func_url("https://s.team/a/2957130") },
+        { "❤ "..Text:text("menu.win.wishlist").." 🔗", func_url("steam://advertise/2957130/") },
         { "▶ "..Text:text("menu.win.continue"), function() 
             --scotch
         	game.has_seen_controller_warning = true

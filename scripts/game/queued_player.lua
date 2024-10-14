@@ -33,9 +33,11 @@ function QueuedPlayer:update(dt, queued_players)
 
     if Input:action_pressed(self.player_n, "ui_left") then
         self:increment_selection(-1)
+    	Audio:play_var("menu_hover", 0.2, 1)
     end
     if Input:action_pressed(self.player_n, "ui_right") then
         self:increment_selection(1)
+        Audio:play_var("menu_hover", 0.2, 1)
     end
 
     self.squash = move_toward(self.squash, 1, 5*dt)
