@@ -131,8 +131,4 @@ function Boomshroom:start_exploding()
     self.state_machine:set_state("exploding")
 end
 
-function Boomshroom:set_sprite_scale(s)
-    self.spr:set_scale(s, s)
-end
-
 return Boomshroom

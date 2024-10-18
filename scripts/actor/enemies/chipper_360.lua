@@ -10,7 +10,7 @@ local guns  = require "data.guns"
 local Chipper360 = Enemy:inherit()
 
 function Chipper360:init(x, y)
-    self:init_enemy(x,y, images.chipper_1, 12, 12)
+    self:init_enemy(x,y, images.chipper_360, 12, 12)
     self.name = "todo_changeme"
 
     -- Parameters 
@@ -24,18 +24,18 @@ function Chipper360:init(x, y)
 
     -- Animation
     self.anim_frame_len = 0.2
-    self.anim_frames = {images.chipper_1, images.chipper_2, images.chipper_3, images.chipper_2}
-    self.normal_anim_frames = {images.chipper_1, images.chipper_2, images.chipper_3, images.chipper_2}
-    self.attack_anim_frames = {images.chipper_attack_1, images.chipper_attack_2, images.chipper_attack_3, images.chipper_attack_2}
+    self.anim_frames = {images.chipper_360}
+    self.normal_anim_frames = {images.chipper_360}
+    self.attack_anim_frames = {images.chipper_360_activated}
 	self.flip_mode = ENEMY_FLIP_MODE_MANUAL
     self.spr:set_anchor(SPRITE_ANCHOR_CENTER_CENTER)
     
     -- States
     --- Wander
-    self.wander_no_attack_timer = Timer:new(1.0)
+    self.wander_no_attack_timer = Timer:new(0.5)
     self.wander_spawn_timer = Timer:new(3.0)
     self.player_detection_range = 256
-    self.player_detection_width = 16
+    self.player_detection_width = 32
     
     --- Telegraph
     self.telegraph_timer = Timer:new(0.5)
@@ -44,7 +44,7 @@ function Chipper360:init(x, y)
     
     --- Attack
     self.force_charge_flag = false
-    self.attack_speed = 100
+    self.attack_speed = 70
     self.attack_bounces = 5
     self.attack_bounces_counter = self.attack_bounces
     
@@ -53,6 +53,9 @@ function Chipper360:init(x, y)
 
     self.direction = random_range(0, pi*2)
     self.direction_speed = random_sample{-1, 1} * 3
+
+    self.s = 1
+    self.target_s = 1
 
     self.state_machine = StateMachine:new({
         wander = {
@@ -95,6 +98,9 @@ function Chipper360:init(x, y)
                 self.anim_frames = self.attack_anim_frames
                 self.telegraph_timer:start()
                 self.telegraph_source:play()
+
+                self.s = 2
+                self.target_s = 1
             end,
             update = function(state, dt)
                 if self.telegraph_timer:update(dt) then
@@ -113,7 +119,7 @@ function Chipper360:init(x, y)
                 self.vy = self.vy + math.sin(a) * self.attack_speed
 
                 Particles:dust(self.mid_x, self.mid_y)
-                Particles:static_image(random_sample{images.particle_bit_zero, images.particle_bit_one}, self.mid_x, self.mid_y, 0, 0.25)
+                -- Particles:static_image(random_sample{images.particle_bit_zero, images.particle_bit_one}, self.mid_x, self.mid_y, 0, 0.25)
             end,
             after_collision = function(state, col)
                 if col.type == "cross" then
@@ -138,6 +144,9 @@ function Chipper360:init(x, y)
 				Audio:play_var("bullet_bounce_"..random_sample{"1","2"}, 0.2, 1.2)
                 Audio:play_var("metal_impact", 0, 1)
                 -- local s = "metalfootstep_0"..tostring(love.sume=0.5})
+
+                self.s = 2
+                self.target_s = 1
 
             end,
             update = function(state, dt)
@@ -179,6 +188,9 @@ function Chipper360:update(dt)
     self.direction = self.direction + self.direction_speed*dt
     self.spr:set_rotation(lerp_angle(self.spr:get_rotation(), self.direction, 0.2))
     self.state_machine:update(dt)
+
+    self.s = lerp(self.s, self.target_s, 0.3)
+    self:set_sprite_scale(self.s)
 
     -- self.debug_values[2] = concat(self.life,"❤")
 end

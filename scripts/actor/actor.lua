@@ -491,4 +491,9 @@ function Actor:stop_constant_sounds()
 	end
 end
 
+
+function Actor:set_sprite_scale(s)
+    self.spr:set_scale(s, s)
+end
+
 return Actor
