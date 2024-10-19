@@ -69,9 +69,14 @@ function Motherboard:init(x, y)
     self.plug_y = self.h - 9
     self.plug_offset = 0
     self.plug_sprite = AnimatedSprite:new({
-        images.motherboard_plug_rays_1,
-        images.motherboard_plug_rays_2,
-    }, SPRITE_ANCHOR_CENTER_TOP, {frame_duration = 0.05})
+        rays = {{
+            images.motherboard_plug_rays_1,
+            images.motherboard_plug_rays_2,
+        }, 0.05}, 
+        bullets = {{
+            images.motherboard_plug_bullets,
+        }, 0.05}, 
+    }, "rays", SPRITE_ANCHOR_CENTER_TOP, {frame_duration = 0.05})
 
     -- shield
     self.shield_sprite = Sprite:new(images.motherboard_shield, SPRITE_ANCHOR_CENTER_TOP)
@@ -316,16 +321,11 @@ function Motherboard:transition_to_next_state(state)
 
     self.plug_sprite:set_visible(true)
     if state == "rays" then
-        self.plug_sprite:set_animation({
-            images.motherboard_plug_rays_1,
-            images.motherboard_plug_rays_2,
-        })
+        self.plug_sprite:set_animation("rays")
     elseif state == "charging" then
         self.plug_sprite:set_visible(false)
     elseif state == "bullets" then
-        self.plug_sprite:set_animation({
-            images.motherboard_plug_bullets,
-        })
+        self.plug_sprite:set_animation("bullets")
     end
 end
 
