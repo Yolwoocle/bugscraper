@@ -5,6 +5,7 @@ local images = require "data.images"
 local StateMachine = require "scripts.state_machine"
 local Timer = require "scripts.timer"
 local Segment = require "scripts.math.segment"
+local AnimatedSprite = require "scripts.graphics.animated_sprite"
 local guns  = require "data.guns"
 
 local Beellet = Enemy:inherit()
@@ -24,9 +25,10 @@ function Beellet:init(x, y)
 
     -- Animation
     self.anim_frame_len = 0.2
-    self.anim_frames = {images.beelet_1}
-    self.normal_anim_frames = {images.beelet_1}
-    self.attack_anim_frames = {images.beelet_activated_1}
+    self.spr = AnimatedSprite:new({
+        normal = {{images.beelet_1}, 0.2},
+        attack = {{images.beelet_activated_1, images.beelet_activated_2}, 0.1},
+    }, "normal", SPRITE_ANCHOR_CENTER_CENTER) 
 	self.flip_mode = ENEMY_FLIP_MODE_MANUAL
     self.spr:set_anchor(SPRITE_ANCHOR_CENTER_CENTER)
     
@@ -60,7 +62,7 @@ function Beellet:init(x, y)
     self.state_machine = StateMachine:new({
         wander = {
             enter = function(state)
-                self.anim_frames = self.normal_anim_frames
+                self.spr:set_animation("normal")
                 self.wander_no_attack_timer:start(1.0)
                 self.wander_spawn_timer:start()
                 self:enter_wander()
@@ -95,7 +97,7 @@ function Beellet:init(x, y)
                 self.vy = 0
                 self.direction_speed = 0
 
-                self.anim_frames = self.attack_anim_frames
+                self.spr:set_animation("attack")
                 self.telegraph_timer:start()
                 self.telegraph_source:play()
 
@@ -110,10 +112,17 @@ function Beellet:init(x, y)
         },
         attack = {
             enter = function()
-                self.anim_frames = self.attack_anim_frames
+                self.spr:set_animation("attack")
                 self.attack_bounces_counter = self.attack_bounces
+
+                self.size_t = 0.0
             end,
             update = function(state, dt)
+                self.size_t = self.size_t + dt * 20
+                local s = 1 + math.sin(self.size_t) * 0.2 
+                self.s = s
+                self.target_s = s
+
                 local a = self.direction
                 self.vx = self.vx + math.cos(a) * self.attack_speed
                 self.vy = self.vy + math.sin(a) * self.attack_speed
@@ -137,7 +146,8 @@ function Beellet:init(x, y)
         },
         post_attack = {
             enter = function(state)
-                self.anim_frames = self.normal_anim_frames
+                self.spr:set_animation("normal")
+
                 self.post_attack_timer:start()
                 self.telegraph_source:stop()
             
