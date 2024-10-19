@@ -17,7 +17,7 @@ function BeeBoss:init(x, y)
 
     -- Parameters 
     self.def_friction_y = self.friction_y
-    self.life = 150
+    self.life = 200
     self.is_flying = true
     self.gravity = 0
     self.attack_radius = 16
@@ -63,6 +63,19 @@ function BeeBoss:init(x, y)
                 self.state_machine:set_state("thwomp")
             end,
         },
+
+        random = {
+            enter = function(state)
+            end,
+            update = function(state, dt)
+                local possible_states = {
+                    "spinning_spikes",
+                    "thwomp",
+                    "timing",
+                }
+                self.state_machine:set_state(random_sample(possible_states))
+            end,
+        },
         spinning_spikes = {
             enter = function(state)
                 self.follow_player = false
@@ -76,7 +89,7 @@ function BeeBoss:init(x, y)
                     spike:force_off()
                     spike:freeze()
                 end
-                self:set_spikes_pattern_spinning(0.3)
+                self:set_spikes_pattern_spinning(0.3, 5)
 
                 self.dir_x = random_sample{-1, 1}
             end,
@@ -92,11 +105,7 @@ function BeeBoss:init(x, y)
                 end
 
                 if self.state_timer:update(dt) then
-                    local possible_states = {
-                        "thwomp",
-                        "timing",
-                    }
-                    self.state_machine:set_state(random_sample(possible_states))
+                    self.state_machine:set_state("random")
                 end
             end,
         },
@@ -109,7 +118,7 @@ function BeeBoss:init(x, y)
                     spike:freeze()
                 end
 
-                self.stomps_counter = 2--changeme random_range_int(4, 6)
+                self.stomps_counter = random_range_int(3, 3)
             end,
             update = function(state, dt)
                 self.state_machine:set_state("thwomp_rise")
@@ -140,7 +149,7 @@ function BeeBoss:init(x, y)
                 end
 
                 if self.stomps_counter <= 0 then
-                    self.state_machine:set_state("spinning_spikes")
+                    self.state_machine:set_state("random")
                 end
             end
         }, 
@@ -209,7 +218,7 @@ function BeeBoss:init(x, y)
             end,
             update = function(state, dt)
                 if self.state_timer:update(dt) then
-                    self.state_machine:set_state("spinning_spikes")
+                    self.state_machine:set_state("random")
                 end
             end,
         },
@@ -265,11 +274,11 @@ function BeeBoss:set_spikes_pattern_timing()
     end
 end
 
-function BeeBoss:set_spikes_pattern_spinning(time_offset)
+function BeeBoss:set_spikes_pattern_spinning(time_offset, number_of_waves)
     local t_total = self.spikes[1]:get_cycle_total_time()
     for _, spike in pairs(self.spikes) do
         -- spike:set_time_offset()
-        spike:standby(spike.spike_i * (t_total/68)*2 + time_offset, 1.5)
+        spike:standby(spike.spike_i * (t_total/68)*number_of_waves + time_offset, 1.5)
     end
 end
 

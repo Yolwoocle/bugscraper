@@ -16,6 +16,7 @@ end
 -----------------------------------------------------
 
 function Background:update(dt)
+	print(concat("update frame ", _G_fixed_frame))
 end
 
 function Background:get_speed()

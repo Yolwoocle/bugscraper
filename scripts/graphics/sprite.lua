@@ -31,7 +31,6 @@ function Sprite:set_visible(val)
 end
 
 function Sprite:set_image(image)
-    print("SET IMAGE ", image)
     self.image = image
 end
 

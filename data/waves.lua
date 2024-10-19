@@ -37,32 +37,6 @@ local function new_cafeteria(run_func)
 	})
 end
 
-local function debug_wave()
-	return Wave:new({
-		-- roll_type = WAVE_ROLL_TYPE_FIXED,
-		min = 1,
-		max = 1,
-		enable_stomp_arrow_tutorial = true,
-
-		level_geometry = LevelGeometry:new({
-			{ rect = Rect:new(3, 8, 8, 8),   tile = TILE_SEMISOLID },
-			{ rect = Rect:new(21, 8, 26, 8), tile = TILE_SEMISOLID },
-		}),
-		elevator_layers = {
-			["bg_grid"] = false,
-		},
-		run = function(self, level)
-			local cabin_rect = game.level.cabin_rect
-			Particles:falling_grid(cabin_rect.ax + 16, cabin_rect.ay + 6 * 16)
-			Particles:falling_grid(cabin_rect.bx - 7 * 16, cabin_rect.ay + 6 * 16)
-			level.elevator:start_grid_timer(2.5)
-		end,
-		enemies = {
-			{ E.MushroomAnt, 1 },
-		}
-	})
-end
-
 local function new_wave(params)
 	params.bounds = params.bounds or RECT_ELEVATOR
 	return Wave:new(params)
@@ -83,10 +57,33 @@ local function spawn_timed_spikes()
 	end
 end
 
+local function debug_wave()
+	return new_wave({
+		-- roll_type = WAVE_ROLL_TYPE_FIXED,
+		min = 1,
+		max = 1,
+		enemies = {
+			{ E.BeeBoss, 1, position = { 240, 200 } },
+		},
+		music = "miniboss",
+
+		run = function(self, level)
+			for _, actor in pairs(level.game.actors) do
+				if actor.name == "timed_spikes" then
+					actor:remove()
+				end
+			end
+		end,
+
+		cutscene = cutscenes.boss_enter,
+	})
+end
+
 local waves = {
-	-- debug_wave(),
+	debug_wave(),
 	-- new_cafeteria(),
 	-- [[
+	
 	new_wave({
 		min = 5,
 		max = 5,
