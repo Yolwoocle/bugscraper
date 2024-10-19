@@ -7,11 +7,11 @@ local Timer = require "scripts.timer"
 local Segment = require "scripts.math.segment"
 local guns  = require "data.guns"
 
-local Chipper360 = Enemy:inherit()
+local Beellet = Enemy:inherit()
 
-function Chipper360:init(x, y)
-    self:init_enemy(x,y, images.chipper_360, 12, 12)
-    self.name = "todo_changeme"
+function Beellet:init(x, y)
+    self:init_enemy(x,y, images.beelet_1, 12, 12)
+    self.name = "beelet"
 
     -- Parameters 
     self.life = 12
@@ -24,9 +24,9 @@ function Chipper360:init(x, y)
 
     -- Animation
     self.anim_frame_len = 0.2
-    self.anim_frames = {images.chipper_360}
-    self.normal_anim_frames = {images.chipper_360}
-    self.attack_anim_frames = {images.chipper_360_activated}
+    self.anim_frames = {images.beelet_1}
+    self.normal_anim_frames = {images.beelet_1}
+    self.attack_anim_frames = {images.beelet_activated_1}
 	self.flip_mode = ENEMY_FLIP_MODE_MANUAL
     self.spr:set_anchor(SPRITE_ANCHOR_CENTER_CENTER)
     
@@ -161,10 +161,10 @@ function Chipper360:init(x, y)
     }, "wander")
 end
 
-function Chipper360:enter_wander()
+function Beellet:enter_wander()
 end
 
-function Chipper360:detect_player_in_range()
+function Beellet:detect_player_in_range()
     local dx, dy = math.cos(self.direction), math.sin(self.direction)
     local detection_segment = Segment:new(
         self.mid_x + dx*self.player_detection_width, 
@@ -182,7 +182,7 @@ function Chipper360:detect_player_in_range()
     return false
 end
 
-function Chipper360:update(dt)
+function Beellet:update(dt)
     self:update_enemy(dt)
 
     self.direction = self.direction + self.direction_speed*dt
@@ -196,7 +196,7 @@ function Chipper360:update(dt)
 end
 
 
-function Chipper360:after_collision(col, other)
+function Beellet:after_collision(col, other)
     self.state_machine:_call("after_collision", col)
     if col.type ~= "cross" then
         local new_vx, new_vy = bounce_vector_cardinal(math.cos(self.direction), math.sin(self.direction), col.normal.x, col.normal.y)
@@ -204,7 +204,7 @@ function Chipper360:after_collision(col, other)
     end
 end
 
-function Chipper360:draw()
+function Beellet:draw()
     self:draw_enemy()
 
     if game.debug.colview_mode and self.detection_segment then
@@ -213,4 +213,4 @@ function Chipper360:draw()
     end
 end
 
-return Chipper360
+return Beellet

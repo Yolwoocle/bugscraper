@@ -9,7 +9,7 @@ local Segment = require "scripts.math.segment"
 local guns = require "data.guns"
 local ElectricArc = require "scripts.actor.enemies.electric_arc"
 local Chipper = require "scripts.actor.enemies.chipper"
-local BigChipper360 = require "scripts.actor.enemies.big_chipper_360"
+local BigBeelet = require "scripts.actor.enemies.big_beelet"
 local MotherboardButton = require "scripts.actor.enemies.motherboard_button"
 local FlyingDung = require "scripts.actor.enemies.flying_dung"
 local Fly = require "scripts.actor.enemies.fly"
@@ -159,7 +159,7 @@ function Motherboard:init(x, y)
             enter = function(state)
                 self.wave_enemies = {}
                 for i=1, 1 do
-                    local chipper = BigChipper360:new(self.mid_x, self.y + self.h + 16)
+                    local chipper = BigBeelet:new(self.mid_x, self.y + self.h + 16)
                     game:new_actor(chipper)
                     table.insert(self.wave_enemies, chipper)
                 end

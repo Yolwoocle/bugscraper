@@ -336,7 +336,7 @@ local waves = {
 		max = 4,
 
 		enemies = {
-			{ E.Chipper360, 2 },
+			{ E.Beelet, 2 },
 		},
 	}),
 
@@ -348,7 +348,7 @@ local waves = {
 			{ E.Larva,      4 },
 			{ E.Mosquito,   4 },
 			{ E.Boomshroom, 4 },
-			{ E.Chipper360, 2 },
+			{ E.Beelet, 2 },
 		},
 	}),
 
@@ -368,7 +368,7 @@ local waves = {
 
 		enemies = {
 			{ E.Mosquito,   4 },
-			{ E.Chipper360, 3 },
+			{ E.Beelet, 3 },
 		},
 	}),
 
@@ -963,7 +963,7 @@ local waves = {
 		enemies = {
 			{ E.Larva,      2 },
 			{ E.Mosquito,   2 },
-			{ E.Chipper360, 2 },
+			{ E.Beelet, 2 },
 		},
 	}),
 
@@ -989,7 +989,7 @@ local waves = {
 			{ E.HoneypotAnt, 2 },
 			{ E.DrillBee,    2 },
 			{ E.ShovelBee,   2 },
-			{ E.Chipper360,  2 },
+			{ E.Beelet,  2 },
 			{ E.Mosquito,    2 },
 		},
 	}),
@@ -1004,7 +1004,7 @@ local waves = {
 			{ E.ShovelBee,   2 },
 			{ E.HoneypotAnt, 2 },
 			{ E.DrillBee,    2 },
-			{ E.Chipper360,  2 },
+			{ E.Beelet,  2 },
 		},
 
 		fixed_enemies = {

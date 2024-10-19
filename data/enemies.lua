@@ -25,11 +25,11 @@ local enemies = {
 	SwitchBug =          require "scripts.actor.enemies.switch_bug", --*
 	W2boss =             require "scripts.actor.enemies.w2boss", --*
 
+	Beelet =             require "scripts.actor.enemies.beelet", 
 	ShovelBee =          require "scripts.actor.enemies.shovel_bee", 
 	DrillBee =           require "scripts.actor.enemies.drill_bee", 
 	HoneycombFootball =  require "scripts.actor.enemies.honeycomb_football", 
 	HoneypotAnt =        require "scripts.actor.enemies.honeypot_ant",
-	Chipper360 =         require "scripts.actor.enemies.chipper_360", 
 	TimedSpikes =        require "scripts.actor.enemies.timed_spikes",
 	LarvaSpawner =       require "scripts.actor.enemies.larva_spawner", --*
 
@@ -39,7 +39,7 @@ local enemies = {
 	Slime =              require "scripts.actor.enemies.slime", --*
 	Frog =               require "scripts.actor.enemies.frog", --*
 	Motherboard =        require "scripts.actor.enemies.motherboard", --*
-	BigChipper360 =      require "scripts.actor.enemies.big_chipper_360", --*
+	BigBeelet =          require "scripts.actor.enemies.big_beelet", --*
 	MotherboardButton =  require "scripts.actor.enemies.motherboard_button", --*
 
 	MushroomAnt =        require "scripts.actor.enemies.mushroom_ant",

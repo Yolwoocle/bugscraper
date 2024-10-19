@@ -234,7 +234,7 @@ new_wave({
     max = 4,
 
     enemies = {
-        {E.Chipper360, 2},
+        {E.Beelet, 2},
     },
 }),
 
@@ -246,7 +246,7 @@ new_wave({
         {E.Larva, 4},
         {E.Mosquito, 4},
         {E.Boomshroom, 4},
-        {E.Chipper360, 2},
+        {E.Beelet, 2},
     },
 }),
     
@@ -266,7 +266,7 @@ new_wave({
 
     enemies = {
         {E.Mosquito, 4},
-        {E.Chipper360, 3},
+        {E.Beelet, 3},
     },
 }), 
 
@@ -852,7 +852,7 @@ new_wave({
     enemies = {
         {E.Larva, 2},
         {E.Mosquito, 2},
-        {E.Chipper360, 2},
+        {E.Beelet, 2},
     },
 }),
 
@@ -878,7 +878,7 @@ new_wave({
         {E.HoneypotAnt, 2},
         {E.DrillBee, 2},
         {E.ShovelBee, 2},
-        {E.Chipper360, 2},
+        {E.Beelet, 2},
         {E.Mosquito, 2},
     },
 }),
@@ -893,7 +893,7 @@ new_wave({
         {E.ShovelBee, 2},
         {E.HoneypotAnt, 2},
         {E.DrillBee, 2},
-        {E.Chipper360, 2},
+        {E.Beelet, 2},
     },
     
     fixed_enemies = {
