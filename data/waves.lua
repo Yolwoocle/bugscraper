@@ -59,28 +59,26 @@ end
 
 local function debug_wave()
 	return new_wave({
-		-- roll_type = WAVE_ROLL_TYPE_FIXED,
 		min = 1,
 		max = 1,
-		enemies = {
-			{ E.BeeBoss, 1, position = { 240, 200 } },
-		},
-		music = "miniboss",
 
+		enemies = {
+			{ E.Motherboard, 1, position = { 3 * 16, 3 * 16 + 4 } },
+		},
 		run = function(self, level)
-			for _, actor in pairs(level.game.actors) do
-				if actor.name == "timed_spikes" then
-					actor:remove()
+			for _, actor in pairs(game.actors) do
+				if actor.name == "electric_arc" then
+					actor:start_disable_timer(1)
 				end
 			end
 		end,
 
-		cutscene = cutscenes.boss_enter,
+		music = "miniboss",
 	})
 end
 
 local waves = {
-	-- debug_wave(),
+	debug_wave(),
 	-- new_cafeteria(),
 	-- [[
 	

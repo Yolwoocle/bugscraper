@@ -219,8 +219,10 @@ function Enemy:on_collision(col, other)
 		else
 			-- Damage player
 			if self.harmless_timer <= 0 then
-				player:do_damage(self.damage, self)
-				self:on_damage_player(player, self.damage)
+				local success = player:do_damage(self.damage, self)
+				if success then
+					self:on_damage_player(player, self.damage)
+				end
 			end
 		end
 		
