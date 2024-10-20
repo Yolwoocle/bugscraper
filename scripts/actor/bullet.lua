@@ -69,7 +69,7 @@ function Bullet:init(gun, player, damage, x, y, w, h, vx, vy, args)
 	if self.bullet_model then
 		self.object_3d_scale = param(args.object_3d_scale, 1)
 		self.object_3d_rot_speed = param(args.object_3d_rot_speed, 1)
-		self.renderer_3d = Renderer3D:new(Object3D:new(self.bullet_model))
+		self.renderer_3d = Renderer3D:new({Object3D:new(self.bullet_model)})
 	end
 end
 

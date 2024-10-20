@@ -5,6 +5,7 @@ local Rect = require "scripts.math.rect"
 local Enemies = require "data.enemies"
 local TileMap = require "scripts.level.tilemap"
 local WorldGenerator = require "scripts.level.world_generator"
+local BackgroundTest3D = require "scripts.level.background.background_test3d"
 local BackgroundBeehive = require "scripts.level.background.background_beehive"
 local BackgroundCafeteria = require "scripts.level.background.background_cafeteria"
 local BackgroundFinal = require "scripts.level.background.background_final"
@@ -68,6 +69,7 @@ function Level:init(game)
     self.enemy_buffer = {}
 
 	self.elevator = Elevator:new(self)
+	-- self.background = BackgroundTest3D:new(self)
 	self.background = BackgroundDots:new(self)
 	self.background:set_def_speed(self.def_level_speed)
 	self.cafeteria_background = BackgroundCafeteria:new(self)

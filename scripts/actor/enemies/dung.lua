@@ -6,6 +6,7 @@ local images = require "data.images"
 local DungBeetle = require "scripts.actor.enemies.dung_beetle"
 local StateMachine = require "scripts.state_machine"
 local Timer = require "scripts.timer"
+local DungProjectile = require "scripts.actor.enemies.dung_projectile"
 
 local Dung = Enemy:inherit()
 	
@@ -18,7 +19,7 @@ function Dung:init_dung(x, y, spr, w, h)
     self.name = "dung"
     self.follow_player = false
     
-    self.life = 50
+    self.life = 150
 
     self.friction_x = 0.999
     self.speed_x = 1
@@ -42,47 +43,108 @@ function Dung:init_dung(x, y, spr, w, h)
     -- self.anim_frames = {images.larva1, images.larva2}
     -- self.audio_delay = love.math.random(0.3, 1)
 
-    self.jump_timer = Timer:new(5, { 
-    })
-    self.jump_timer:start()
-    self.jump_speed = 600
+    self.state_timer = Timer:new(1)
+    
+    self.jump_speed = 500
     self.jump_flag = false
 
     self.state_machine = StateMachine:new({
-        chase = {
+        random = {
             enter = function(state)
-                self.chase_target = self:get_random_player()
             end,
             update = function(state, dt)
-                if self.chase_target then
-                    self.vx = self.vx + sign0(self.chase_target.x - self.x) * self.speed_x
-                end
-                self:detect_stationary_player(dt)
-                
+                return random_sample {
+                    "chase", "bunny_hopping_telegraph", "throw_projectile"
+                }
             end,
         },
-        telegraph_jump = {
+        chase = {
             enter = function(state)
-                self.telegraph_timer = Timer:new(1.0)
-                self.telegraph_timer:start()
+                self.friction_x = 0.999
+                self.speed_x = 1
+                self.bounce_restitution = 0.4
 
-                print_debug("wow")
+                self.chase_target = self:get_random_player()
+                self.state_timer:start(random_range(4.0, 6.0))
             end,
             update = function(state, dt)
-                self.spr:update_offset(random_neighbor(5), random_neighbor(5))
-                self.rider.spr:update_offset(random_neighbor(5), random_neighbor(5))
+                self:chase_player(dt)
 
-                if self.telegraph_timer:update(dt) then
-                    self.state_machine:set_state("chase")
+                if self.state_timer:update(dt) then
+                    return "random"
+                end
+            end,
+        },
+        bunny_hopping_telegraph = {
+            enter = function(state)
+                -- self.spr:update_offset(random_neighbor(5), random_neighbor(5))
+                -- self.rider.spr:update_offset(random_neighbor(5), random_neighbor(5))
+                self.speed_x = 0
+                self.state_timer:start(1.0)
+            end,
+            update = function(state, dt)
+                self.spr:update_offset(random_neighbor(3), random_neighbor(3))
+                self.rider.spr:update_offset(random_neighbor(3), random_neighbor(3))
+
+                if self.state_timer:update(dt) then
+                    return "bunny_hopping"
+                end
+            end
+        },
+        bunny_hopping = {
+            enter = function(state)
+                self.friction_x = 0.999
+                self.speed_x = 2
+                self.bounce_restitution = 0.5
+                
+                self.chase_target = self:get_random_player()
+                self.state_timer:start(random_range(4.0, 7.0))
+            end,
+            update = function(state, dt)
+                self:chase_player(dt)
+
+                if self.is_grounded then
+                    self:jump()
+                end
+
+                if self.state_timer:update(dt) then
+                    return "chase"
                 end
             end,
             exit = function(state)
                 self.spr:update_offset(0, 0)
                 self.rider.spr:update_offset(0, 0)
-                self:jump()
+            end,
+            after_collision = function(state, col)
+                if col.type ~= "cross" then
+                    game:screenshake(4)
+                end
             end
+        },
+        throw_projectile = {
+            enter = function(state)
+                self.friction_x = 0.7
+                self.speed_x = 0
+                self.bounce_restitution = 0.5
+                
+                self.state_timer:start(random_range(3.0, 5.0))
+                self.projectile_timer = Timer:new(0.25)
+                self.projectile_timer:start()
+            end,
+            update = function(state, dt)
+                if self.projectile_timer:update(dt) then
+                    local projectile = DungProjectile:new(self.rider.mid_x, self.rider.mid_y)
+                    game:new_actor(projectile)
+                    self.projectile_timer:start()
+                end
+
+                if self.state_timer:update(dt) then
+                    return "chase"
+                end
+            end,
+        
         }
-    }, "chase")
+    }, "throw_projectile")
 
     self:add_constant_sound("ball_roll", "ball_roll")
     self:set_constant_sound_volume("ball_roll", 0)
@@ -125,6 +187,12 @@ function Dung:update_dung(dt)
         Particles:dust(self.mid_x, self.y + self.h)
     end
     self:set_constant_sound_volume(math.abs(self.vx) / 400)
+end
+
+function Dung:chase_player(dt)
+    if self.chase_target then
+        self.vx = self.vx + sign0(self.chase_target.x - self.x) * self.speed_x
+    end
 end
 
 function Dung:after_collision(col, other)
@@ -179,7 +247,7 @@ function Dung:draw()
         -- print_centered_outline(nil, nil, s, player.mid_x, player.y - 8)
     end
 
-    if self.telegraph_timer then
+    if self.state_timer then
         -- print_centered_outline(nil, nil, concat(self.telegraph_timer.time), self.mid_x, self.y - 32)
     end
 end

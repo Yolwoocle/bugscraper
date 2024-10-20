@@ -5,19 +5,31 @@ local Vec3 = require "lib.batteries.vec3"
 
 local Renderer3D = Class:inherit()
 
-function Renderer3D:init(object)
-	self.object = object or {}
+function Renderer3D:init(objects, params)
+	params = params or {}
 
+	self.objects = objects or {}
+
+	self.orthographic = param(params.orthographic, true)
+	self.wireframe = param(params.wireframe, false)
+	self.fov = param(params.fov, 60)
+	self.render_offset = Vec2(unpack(param(params.render_offset, {CANVAS_WIDTH/2, CANVAS_HEIGHT/2})))
 	self.lighting_palette = {color(0xf77622), color(0xfeae34), color(0xfee761), color(0xfee761), COL_WHITE}
     self.line_color = COL_BLACK
 end
 
 function Renderer3D:update(dt)
-	self.object:apply_transform()
+	for _, object in pairs(self.objects) do
+		object:apply_transform()
+	end
 end
 
 function Renderer3D:project_vertex(vertex)
-	return Vec2(vertex.x, vertex.y)
+	if self.orthographic then
+		return self.render_offset + Vec2(vertex.x, vertex.y)
+	else
+		return self.render_offset + self.fov * Vec2(vertex.x, vertex.y) / vertex.z
+	end
 end
 
 function Renderer3D:get_shading_color(normal)
@@ -29,26 +41,34 @@ function Renderer3D:get_shading_color(normal)
 end
 
 function Renderer3D:draw()
+	for _, object in pairs(self.objects) do
+		self:draw_object(object)
+	end
+end
+
+function Renderer3D:draw_object(object)
 	local camera_vec = Vec3(0, 0, 1)
 	local projected_faces = {}
-	for i_face = 1, #self.object.model.faces do
-		local face = self.object.model.faces[i_face]
+	for i_face = 1, #object.model.faces do
+		local face = object.model.faces[i_face]
 		local projected_face = {}
-		local normal = self.object:get_face_normal(i_face)
+		local normal = object:get_face_normal(i_face)
 		local dot = normal:dot(camera_vec)
 		if dot < 0 then
 			for i_point = 1, #face do
-				local vertex = self.object.transformed_vertices[face[i_point]]
+				local vertex = object.transformed_vertices[face[i_point]]
 				local projected_vertex = self:project_vertex(vertex)
 				table.insert(projected_face, projected_vertex.x)
 				table.insert(projected_face, projected_vertex.y)
 	
 			end
 	
-			exec_color(self:get_shading_color(normal), function()
-				love.graphics.polygon("fill", projected_face)
-			end)
-			table.insert(projected_faces, projected_face)
+			if not self.wireframe then
+				exec_color(self:get_shading_color(normal), function()
+					love.graphics.polygon("fill", projected_face)
+				end)
+			end
+			table.insert(projected_faces, projected_face) -- TODO FIXME: there is a lot of repetition 
 		end
 
 		

@@ -33,7 +33,7 @@ function HoneycombFootball:init(x, y, spr)
     self.is_killed_on_stomp = false
 
     self.def_ball_scale = 24
-    self.renderer = Renderer3D:new(Object3D:new(truncated_ico))
+    self.renderer = Renderer3D:new({Object3D:new(truncated_ico)})
     self.renderer.object.scale:sset(self.def_ball_scale)
     self.renderer.object.position.x = 200
     self.renderer.object.position.y = 200

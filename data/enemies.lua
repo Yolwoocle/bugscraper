@@ -13,6 +13,7 @@ local enemies = {
 	Boomshroom =         require "scripts.actor.enemies.boomshroom", 
 	Dung =               require "scripts.actor.enemies.dung",
 	DungBeetle =         require "scripts.actor.enemies.dung_beetle",
+	DungProjectile =     require "scripts.actor.enemies.dung_projectile",
 	FlyingDung =         require "scripts.actor.enemies.flying_dung",
 	
 	ElectricArc =        require "scripts.actor.enemies.electric_arc", 

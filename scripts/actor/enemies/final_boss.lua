@@ -9,11 +9,11 @@ local Segment = require "scripts.math.segment"
 local guns  = require "data.guns"
 local TimedSpikes = require "scripts.actor.enemies.timed_spikes"
 
-local BeeBoss = Enemy:inherit()
+local FinalBoss = Enemy:inherit()
 
-function BeeBoss:init(x, y)
+function FinalBoss:init(x, y)
     self:init_enemy(x,y, images.mosquito1, 32, 32)
-    self.name = "bee_boss"  --removeme(dont actually)
+    self.name = "final_boss"
 
     -- Parameters 
     self.def_friction_y = self.friction_y
@@ -69,50 +69,11 @@ function BeeBoss:init(x, y)
             end,
             update = function(state, dt)
                 local possible_states = {
-                    "spinning_spikes",
                     "thwomp",
-                    "timing",
                 }
-                return random_sample(possible_states)
+                self.state_machine:set_state(random_sample(possible_states))
             end,
         },
-        spinning_spikes = {
-            enter = function(state)
-                self.follow_player = false
-                self.sin_x_value = 0
-                self.sin_y_value = 0
-
-                self.state_timer:start(6)
-                
-                for _, spike in pairs(self.spikes) do
-                    spike.timing_mode = TIMED_SPIKES_TIMING_MODE_TEMPORAL
-                    spike:force_off()
-                    spike:freeze()
-                end
-                self:set_spikes_pattern_spinning(0.3, 5)
-
-                self.dir_x = random_sample{-1, 1}
-            end,
-            update = function(state, dt)
-                self.sin_y_value = self.sin_y_value + dt * 7
-                self.vy = math.cos(self.sin_y_value) * self.speed
-                self.vx = self.dir_x * self.speed
-
-                if self.mid_x > game.level.cabin_inner_rect.bx - 32 then
-                    self.dir_x = -1
-                elseif self.mid_x < game.level.cabin_inner_rect.ax + 32 then
-                    self.dir_x = 1
-                end
-
-                if self.state_timer:update(dt) then 
-                    return random_sample {
-                        "thwomp",
-                        "timing",
-                    }
-                end
-            end,
-        },
-
         thwomp = {
             enter = function(state)
                 for _, spike in pairs(self.spikes) do
@@ -206,33 +167,10 @@ function BeeBoss:init(x, y)
             end,
         },
 
-        timing = {
-            enter = function(state)
-                self.vx = 0
-                self.vy = 0
-                self:set_spikes_pattern_timing()
-
-                local spike = self.spikes[1]
-                local t = 7
-                if spike then
-                    t = spike:get_cycle_total_time()
-                end
-                self.state_timer:start(t * 1--[[4 changeme]])
-            end,
-            update = function(state, dt)
-                if self.state_timer:update(dt) then
-                    self.state_machine:set_state("random")
-                end
-            end,
-        },
     }, "standby")
-
-    -- timing
-    -- thwomp_flying
-    -- spinning_spikes
 end
 
-function BeeBoss:after_collision(col, other)
+function FinalBoss:after_collision(col, other)ko
     if col.type ~= "cross" then
         if self.state_machine.current_state_name == "thwomp_attack" then--and col.normal.y == -1 then
             self.state_machine:_call("after_collision", col)
@@ -240,7 +178,7 @@ function BeeBoss:after_collision(col, other)
     end
 end
 
-function BeeBoss:update(dt)
+function FinalBoss:update(dt)
     self:update_enemy(dt)
 
     self.state_machine:update(dt)
@@ -249,13 +187,13 @@ function BeeBoss:update(dt)
     self.debug_values[2] = concat(self.life,"❤")
 end
 
-function BeeBoss:draw()
+function FinalBoss:draw()
     self:draw_enemy()
 
     rect_color(COL_RED, "line", self.x, self.y, self.w, self.h)
 end
 
-function BeeBoss:set_spike_waves()
+function FinalBoss:set_spike_waves()
     local function dist_func(source, spike)
         return 3 - 0.01 * dist(source.mid_x, source.mid_y, spike.mid_x, spike.mid_y)
     end
@@ -268,7 +206,7 @@ function BeeBoss:set_spike_waves()
     end
 end
 
-function BeeBoss:set_spikes_pattern_timing()
+function FinalBoss:set_spikes_pattern_timing()
     for _, spike in pairs(self.spikes) do
         spike.timing_mode = TIMED_SPIKES_TIMING_MODE_TEMPORAL
         spike:force_off()
@@ -277,7 +215,7 @@ function BeeBoss:set_spikes_pattern_timing()
     end
 end
 
-function BeeBoss:set_spikes_pattern_spinning(time_offset, number_of_waves)
+function FinalBoss:set_spikes_pattern_spinning(time_offset, number_of_waves)
     local t_total = self.spikes[1]:get_cycle_total_time()
     for _, spike in pairs(self.spikes) do
         -- spike:set_time_offset()
@@ -285,7 +223,7 @@ function BeeBoss:set_spikes_pattern_spinning(time_offset, number_of_waves)
     end
 end
 
-function BeeBoss:spawn_spikes()
+function FinalBoss:spawn_spikes()
     self.spikes = {}
 
     local j = 0
@@ -347,4 +285,4 @@ function BeeBoss:spawn_spikes()
 end
 
 
-return BeeBoss
+return FinalBoss

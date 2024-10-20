@@ -126,7 +126,7 @@ function Debug:init(game)
             end
         end},
         ["d"] = {"spawn", function()
-            local arc = enemies.Mosquito:new(CANVAS_CENTER[1], CANVAS_CENTER[2])
+            local arc = enemies.DungProjectile:new(CANVAS_CENTER[1], CANVAS_CENTER[2])
             game:new_actor(arc)            
         end},
         ["o"] = {"spike offset", function() 
@@ -569,18 +569,7 @@ function Debug:draw_info_view()
     -- end
 end
 
-local renderer = Renderer3D:new(Object3D:new(honeycomb_panel))
-renderer.object.scale.x = 24
-renderer.object.scale.y = 24
-renderer.object.scale.z = 24
-renderer.object.position.x = 200
-renderer.object.position.y = 200
-renderer.object.position.z = 20
 function Debug:test_info_view_3d_renderer()
-    renderer.object.rotation.x = renderer.object.rotation.x + 1/400
-
-    renderer:update()
-    renderer:draw()
 end
 
 local test_ang = 0

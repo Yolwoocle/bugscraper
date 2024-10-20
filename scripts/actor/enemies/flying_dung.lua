@@ -30,8 +30,11 @@ function FlyingDung:init_flying_dung(x, y, spawner)
     self.is_bouncy_to_bullets = false
     self.destroy_bullet_on_impact = true
     self.do_stomp_animation = false
-
-    self.is_stompable = true
+    
+    self.is_stompable = random_range(0, 1) >= 0.2
+    if not self.is_stompable then
+        self:set_image(images.dung_flying_spiked)
+    end
     self.is_killed_on_stomp = false
     self.kill_when_negative_life = false
 

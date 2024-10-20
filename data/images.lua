@@ -42,9 +42,9 @@ local img_names = {
 	-----------------------------------------------------
 
 	-- players
-	beetle_1 =           "actors/players/beetle_1",
-	beetle_2 =           "actors/players/beetle_2",
-	beetle_dead =        "actors/players/beetle_dead",
+	beetle_1 =         "actors/players/beetle_1",
+	beetle_2 =         "actors/players/beetle_2",
+	beetle_dead =      "actors/players/beetle_dead",
 
 	ant1 =             "actors/players/ant1",
 	ant2 =             "actors/players/ant2",
@@ -96,6 +96,8 @@ local img_names = {
 	dung_beetle_shield =       "actors/enemies/dung_beetle_shield",
 	dung_beetle_shield_shine = "actors/enemies/dung_beetle_shield_shine",
 	dung_flying =              "actors/enemies/dung_flying",
+	dung_flying_spiked =       "actors/enemies/dung_flying_spiked",
+	dung_projectile =          "actors/enemies/dung_projectile",
 	drill_bee =                "actors/enemies/drill_bee",
 	fly1 =                     "actors/enemies/fly1",
 	fly2 =                     "actors/enemies/fly2",
@@ -220,27 +222,27 @@ local img_names = {
 	bullet_vanish_4 =      "particles/bullet_vanish_4",
 	bullet_vanish_5 =      "particles/bullet_vanish_5",
 
-	star_splash_1 = "particles/star_splash_1",
-	star_splash_2 = "particles/star_splash_2",
-	star_splash_3 = "particles/star_splash_3",
-	star_splash_4 = "particles/star_splash_4",
-	star_splash_5 = "particles/star_splash_5",
+	star_splash_1 =        "particles/star_splash_1",
+	star_splash_2 =        "particles/star_splash_2",
+	star_splash_3 =        "particles/star_splash_3",
+	star_splash_4 =        "particles/star_splash_4",
+	star_splash_5 =        "particles/star_splash_5",
 
-	star_splash_small_1 = "particles/star_splash_small_1",
-	star_splash_small_2 = "particles/star_splash_small_2",
-	star_splash_small_3 = "particles/star_splash_small_3",
+	star_splash_small_1 =  "particles/star_splash_small_1",
+	star_splash_small_2 =  "particles/star_splash_small_2",
+	star_splash_small_3 =  "particles/star_splash_small_3",
 
-	jump_dust_kick_1 = "particles/jump_dust_kick_1",
-	jump_dust_kick_2 = "particles/jump_dust_kick_2",
-	jump_dust_kick_3 = "particles/jump_dust_kick_3",
+	jump_dust_kick_1 =     "particles/jump_dust_kick_1",
+	jump_dust_kick_2 =     "particles/jump_dust_kick_2",
+	jump_dust_kick_3 =     "particles/jump_dust_kick_3",
 
 	-----------------------------------------------------
 	
 	-- level
-	metal =     "level/metal",
-	chain =     "level/chain",
-	semisolid = "level/semisolid",
-	bg_plate =  "level/bg_plate",
+	metal =                   "level/metal",
+	chain =                   "level/chain",
+	semisolid =               "level/semisolid",
+	bg_plate =                "level/bg_plate",
 
 	cabin_bg =                "level/cabin_bg",
 	cabin_bg_ambient_occlusion = "level/cabin_bg_ambient_occlusion",
