@@ -95,12 +95,12 @@ function Bullet:update(dt)
 	self.bounce_immunity_timer = math.max(0.0, self.bounce_immunity_timer - dt)
 
 	if self.renderer_3d then
-		self.renderer_3d.object.position.x = self.mid_x
-		self.renderer_3d.object.position.y = self.mid_y
-		self.renderer_3d.object.position.z = 1
-		self.renderer_3d.object.scale:sset(self.object_3d_scale)
-		self.renderer_3d.object.rotation:sset(
-			self.renderer_3d.object.rotation.x + self.object_3d_rot_speed * dt,
+		self.renderer_3d.objects[1].position.x = self.mid_x
+		self.renderer_3d.objects[1].position.y = self.mid_y
+		self.renderer_3d.objects[1].position.z = 1
+		self.renderer_3d.objects[1].scale:sset(self.object_3d_scale)
+		self.renderer_3d.objects[1].rotation:sset(
+			self.renderer_3d.objects[1].rotation.x + self.object_3d_rot_speed * dt,
 			0,
 			math.atan2(self.vy, self.vx) + pi/2
 		)

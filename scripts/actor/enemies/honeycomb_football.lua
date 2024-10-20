@@ -33,10 +33,11 @@ function HoneycombFootball:init(x, y, spr)
     self.is_killed_on_stomp = false
 
     self.def_ball_scale = 24
-    self.renderer = Renderer3D:new({Object3D:new(truncated_ico)})
-    self.renderer.object.scale:sset(self.def_ball_scale)
-    self.renderer.object.position.x = 200
-    self.renderer.object.position.y = 200
+    self.object_3d = Object3D:new(truncated_ico)
+    self.renderer = Renderer3D:new({self.object_3d})
+    self.object_3d.scale:sset(self.def_ball_scale)
+    self.object_3d.position.x = 200
+    self.object_3d.position.y = 200
 	self.ball_lighting_palette = {color(0xf77622), color(0xfeae34), color(0xfee761), color(0xfee761), COL_WHITE}
 
     self.exploding_timer = Timer:new(2.0)
@@ -94,8 +95,8 @@ function HoneycombFootball:init(x, y, spr)
             end,
             update = function(state, dt)
                 self.exploding_rot_speed = self.exploding_rot_speed + 5*dt
-                self.renderer.object.rotation.x = self.renderer.object.rotation.x + self.exploding_rot_speed*dt
-                self.renderer.object.rotation.y = self.renderer.object.rotation.y + self.exploding_rot_speed*dt
+                self.object_3d.rotation.x = self.object_3d.rotation.x + self.exploding_rot_speed*dt
+                self.object_3d.rotation.y = self.object_3d.rotation.y + self.exploding_rot_speed*dt
 
                 if self.flash_timer:update(dt) then
                     self.flash_white = not self.flash_white
@@ -116,7 +117,7 @@ function HoneycombFootball:init(x, y, spr)
                 local duration = self.exploding_timer:get_duration()
                 if time <= duration * 0.5 then
                     local s = 1 + (1 - time/(duration*0.5)) * 0.3
-                    self.renderer.object.scale:sset(self.def_ball_scale * s)
+                    self.object_3d.scale:sset(self.def_ball_scale * s)
                 end
             end,
         }
@@ -129,10 +130,10 @@ end
 function HoneycombFootball:update_snail_shelled(dt)
     self:update_pong_ball(dt)
 
-    self.renderer.object.rotation.x = self.renderer.object.rotation.x + (self.vx / 50)*dt
-    self.renderer.object.rotation.y = self.renderer.object.rotation.y + (self.vy / 50)*dt
-    self.renderer.object.position.x = self.mid_x
-    self.renderer.object.position.y = self.mid_y
+    self.object_3d.rotation.x = self.object_3d.rotation.x + (self.vx / 50)*dt
+    self.object_3d.rotation.y = self.object_3d.rotation.y + (self.vy / 50)*dt
+    self.object_3d.position.x = self.mid_x
+    self.object_3d.position.y = self.mid_y
 
     self.unstompable_timer:update(dt)
 

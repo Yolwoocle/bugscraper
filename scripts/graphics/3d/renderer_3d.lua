@@ -13,7 +13,12 @@ function Renderer3D:init(objects, params)
 	self.orthographic = param(params.orthographic, true)
 	self.wireframe = param(params.wireframe, false)
 	self.fov = param(params.fov, 60)
-	self.render_offset = Vec2(unpack(param(params.render_offset, {CANVAS_WIDTH/2, CANVAS_HEIGHT/2})))
+
+	if self.orthographic then
+		self.render_offset = Vec2(0, 0)
+	else
+		self.render_offset = Vec2(unpack(param(params.render_offset, {CANVAS_WIDTH/2, CANVAS_HEIGHT/2})))
+	end
 	self.lighting_palette = {color(0xf77622), color(0xfeae34), color(0xfee761), color(0xfee761), COL_WHITE}
     self.line_color = COL_BLACK
 end

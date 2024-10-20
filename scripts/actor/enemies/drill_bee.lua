@@ -43,6 +43,8 @@ function DrillBee:init(x, y, spr)
     self.direction = random_range(0, pi2)
     self.angle_speed = 0.8
     
+    self.player_detection_width = 32
+
     self.telegraph_timer = Timer:new(0.3)
     self.burrow_timer = Timer:new(0.05)
     self.no_attack_timer = Timer:new(1.0)
