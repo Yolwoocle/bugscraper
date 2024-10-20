@@ -33,8 +33,8 @@ local enemies = {
 	HoneypotAnt =        require "scripts.actor.enemies.honeypot_ant",
 	TimedSpikes =        require "scripts.actor.enemies.timed_spikes",
 	LarvaSpawner =       require "scripts.actor.enemies.larva_spawner", --*
+	FlyingSpawner =      require "scripts.actor.enemies.flying_spawner", --*
 
-	Turret =             require "scripts.actor.enemies.turret", --*
 	Centipede =          require "scripts.actor.enemies.centipede", --*
 	BigBug =             require "scripts.actor.enemies.big_bug", --*
 	Slime =              require "scripts.actor.enemies.slime", --*

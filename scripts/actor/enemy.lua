@@ -8,6 +8,10 @@ local shaders= require "data.shaders"
 
 local Enemy = Actor:inherit()
 
+function Enemy:init(x,y, img, w,h)
+	self:init_enemy(x,y, img, w,h)
+end
+
 function Enemy:init_enemy(x,y, img, w,h)
 	-- TODO: abstract enemies and players into a single "being" class
 	-- "Being" means players, enemies, etc, but not bullets, etc

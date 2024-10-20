@@ -21,6 +21,10 @@ function AnimatedSprite:init(animations, default, anchor, params)
     self.frame_i = param(params.start_frame, 1)
     self.frame_timer = Timer:new(param(params.frame_duration or 1))
     self.frame_timer:start()
+
+    if default then
+        self:set_animation(default)
+    end
 end
 
 function AnimatedSprite:set_animation(animation_name)

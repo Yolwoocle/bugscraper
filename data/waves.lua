@@ -377,7 +377,7 @@ local waves = {
 			{ E.ShovelBee,   3 },
 		},
 		fixed_enemies = {
-			{ E.LarvaSpawner, 1 },
+			{ E.FlyingSpawner, 1 },
 		}
 	}),
 
@@ -447,7 +447,7 @@ local waves = {
 			{ E.Fly,         2 },
 		},
 		fixed_enemies = {
-			{ E.LarvaSpawner, 1 },
+			{ E.FlyingSpawner, 1 },
 		},
 	}),
 
@@ -482,7 +482,7 @@ local waves = {
 			{ E.HoneypotAnt, 3 },
 		},
 		fixed_enemies = {
-			{ E.LarvaSpawner, 1 },
+			{ E.FlyingSpawner, 1 },
 		},
 	}),
 
@@ -972,7 +972,7 @@ local waves = {
 			{ E.DrillBee,    2 },
 		},
 		fixed_enemies = {
-			{ E.LarvaSpawner, 1 },
+			{ E.FlyingSpawner, 1 },
 		}
 	}),
 
@@ -1004,7 +1004,7 @@ local waves = {
 
 		fixed_enemies = {
 			{ E.HoneycombFootball, 1 },
-			{ E.LarvaSpawner,      1 },
+			{ E.FlyingSpawner,      1 },
 		}
 	}),
 
