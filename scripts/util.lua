@@ -1149,6 +1149,8 @@ end
 -- end
 
 function clamp_segment_to_rectangle(seg, rect)
+	assert(seg ~= nil, "Segment not defined")
+	assert(rect ~= nil, "Rect not defined")
 	local function segment(ax, ay, bx, by)
 		return {
 			ax = ax,

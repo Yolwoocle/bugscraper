@@ -19,7 +19,7 @@ function Dung:init_dung(x, y, spr, w, h)
     self.name = "dung"
     self.follow_player = false
     
-    self.life = 150
+    self.life = 100
 
     self.friction_x = 0.999
     self.speed_x = 1
@@ -94,7 +94,7 @@ function Dung:init_dung(x, y, spr, w, h)
         bunny_hopping = {
             enter = function(state)
                 self.friction_x = 0.999
-                self.speed_x = 2
+                self.speed_x = 1.5
                 self.bounce_restitution = 0.5
                 
                 self.chase_target = self:get_random_player()
@@ -108,7 +108,7 @@ function Dung:init_dung(x, y, spr, w, h)
                 end
 
                 if self.state_timer:update(dt) then
-                    return "chase"
+                    return "random"
                 end
             end,
             exit = function(state)
@@ -139,12 +139,11 @@ function Dung:init_dung(x, y, spr, w, h)
                 end
 
                 if self.state_timer:update(dt) then
-                    return "chase"
+                    return "random"
                 end
             end,
-        
         }
-    }, "throw_projectile")
+    }, "chase")
 
     self:add_constant_sound("ball_roll", "ball_roll")
     self:set_constant_sound_volume("ball_roll", 0)

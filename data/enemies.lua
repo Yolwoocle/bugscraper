@@ -18,6 +18,7 @@ local enemies = {
 	
 	ElectricArc =        require "scripts.actor.enemies.electric_arc", 
 	ElectricRays =       require "scripts.actor.enemies.electric_rays", 
+	ElectricBullet =     require "scripts.actor.enemies.electric_bullet", 
 	SnailShelledBouncy = require "scripts.actor.enemies.snail_shelled_bouncy", 
 	Grasshopper =        require "scripts.actor.enemies.grasshopper", 
 	Chipper =            require "scripts.actor.enemies.chipper",  

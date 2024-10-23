@@ -78,7 +78,7 @@ local function debug_wave()
 end
 
 local waves = {
-	debug_wave(),
+	-- debug_wave(),
 	-- new_cafeteria(),
 	-- [[
 	

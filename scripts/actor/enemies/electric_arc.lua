@@ -20,14 +20,19 @@ function ElectricArc:init(x, y, is_active, activation_delay)
     self.arc_damage = 1
     self.cooldown = 0.3
 
-    self.segment = Segment:new(x, y, x+50, y-70)
+    self.is_pushable = false
+    self.is_knockbackable = false
+    self.affected_by_walls = false
+    self.affected_by_bounds = false
+
+    self.segment = Segment:new(x, y, x + 50, y - 70)
     self.collides = false
     self.arc_target = nil
     self.arc_target_player_n = nil
     self.hitbox_expand = 2
 
     self.lightning = Lightning:new()
-    
+
     self.is_immune_to_electricity = true
     self.is_arc_active = param(is_active, true)
     -- self.particle_probability = 0.005
@@ -55,7 +60,7 @@ end
 
 function ElectricArc:set_segment(ax_or_seg, ay, bx, by)
     if self.is_removed then
-        return 
+        return
     end
 
     local ax = ax_or_seg
@@ -82,20 +87,10 @@ function ElectricArc:update(dt)
     end
 
     self:update_target(dt)
+    self:update_segment(dt)
+    self:update_lightning(dt)
 
-    -- Update segment
-    self.segment.ax = self.mid_x
-    self.segment.ay = self.mid_y
-    if self.arc_target then
-        self.segment.bx = self.arc_target.mid_x
-        self.segment.by = self.arc_target.mid_y
-    end
-
-    self.lightning.min_line_width = ternary(self.is_arc_active, 1, 0.1)
-    self.lightning.max_line_width = ternary(self.is_arc_active, 3, 0.5)
-    self.lightning:generate(self.segment)
-
-    for _, seg in pairs(self.lightning.segments) do 
+    for _, seg in pairs(self.lightning.segments) do
         if self.is_arc_active and random_range(0, 1) < self.particle_probability then
             Particles:spark(seg.segment.bx, seg.segment.by)
         end
@@ -104,6 +99,22 @@ function ElectricArc:update(dt)
     if self.is_arc_active then
         self:check_for_collisions()
     end
+end
+
+function ElectricArc:update_segment(dt)
+    self.segment.ax = self.x
+    self.segment.ay = self.y
+    if self.arc_target then
+        self.segment.bx = self.arc_target.mid_x
+        self.segment.by = self.arc_target.mid_y
+    end
+end
+
+function ElectricArc:update_lightning(dt)
+    self.lightning.min_line_width = ternary(self.is_arc_active, 1, 0.1)
+    self.lightning.max_line_width = ternary(self.is_arc_active, 3, 0.5)
+
+    self.lightning:generate(self.segment)
 end
 
 function ElectricArc:update_target(dt)
@@ -125,7 +136,7 @@ function ElectricArc:update_target(dt)
     end
 end
 
---- Returns whether an actor is considered an enemy or not. 
+--- Returns whether an actor is considered an enemy or not.
 function ElectricArc:is_my_enemy(actor)
     if not actor.is_actor then
         return false
@@ -154,12 +165,12 @@ function ElectricArc:collide_with_actor(a)
     end
 
     -- Sanity checks
-    if a.is_immune_to_electricity then    return    end
-    if not self:is_my_enemy(a) then       return    end
-    if not a.do_damage then               return    end
+    if a.is_immune_to_electricity then return end
+    if not self:is_my_enemy(a) then return end
+    if not a.do_damage then return end
 
     local success = a:do_damage(self.arc_damage, self)
-    if success then 
+    if success then
         self.collides = true
         a:set_invincibility(self.cooldown)
     end
