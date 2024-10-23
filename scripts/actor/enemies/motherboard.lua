@@ -372,7 +372,7 @@ function Motherboard:init(x, y)
         }
     })
 
-    self:transition_to_next_state("rays")
+    self:transition_to_next_state("moving_walls")
 end
 
 function Motherboard:get_flash_white_shader()

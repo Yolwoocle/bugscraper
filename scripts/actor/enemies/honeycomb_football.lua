@@ -122,14 +122,19 @@ function HoneycombFootball:init(x, y, spr)
             end,
         }
     }, "normal")
+
+    self:update_renderer(0)
 end
 
 function HoneycombFootball:update(dt)
-    self:update_snail_shelled(dt)
-end
-function HoneycombFootball:update_snail_shelled(dt)
-    self:update_pong_ball(dt)
+    self.super.update(self, dt)
 
+    self:update_renderer(dt)
+    
+    self.state_machine:update(dt)
+end
+
+function HoneycombFootball:update_renderer(dt)
     self.object_3d.rotation.x = self.object_3d.rotation.x + (self.vx / 50)*dt
     self.object_3d.rotation.y = self.object_3d.rotation.y + (self.vy / 50)*dt
     self.object_3d.position.x = self.mid_x
@@ -137,7 +142,6 @@ function HoneycombFootball:update_snail_shelled(dt)
 
     self.unstompable_timer:update(dt)
 
-    self.state_machine:update(dt)
     if self:is_flashing_white() then
         self.renderer.lighting_palette = {COL_WHITE}
         self.renderer.line_color = COL_WHITE
