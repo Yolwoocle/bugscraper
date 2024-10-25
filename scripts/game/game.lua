@@ -122,19 +122,13 @@ function Game:new_game()
 	self.frame = 0
 
 	-- Remove old queued players
-	if self.queued_players then
-		for _, queued_player in pairs(self.queued_players) do
-			Input:remove_user(queued_player.player_n)
-		end
-	end
+	self:remove_queued_players()
 		
-
 	-- Players
 	self.waves_until_respawn = {}
 	for i = 1, MAX_NUMBER_OF_PLAYERS do 
 		self.waves_until_respawn[i] = -1
 	end
-	self.queued_players = {}
 
 	self.level = Level:new(self)
 	
@@ -723,6 +717,15 @@ function Game:listen_for_player_join(dt)
 	end
 end
 
+function Game:remove_queued_players()
+	if self.queued_players then
+		for _, queued_player in pairs(self.queued_players) do
+			Input:remove_user(queued_player.player_n)
+		end
+	end
+	self.queued_players = {}
+end
+
 function Game:unsplit_keyboard_and_kick_second_player()
 	local second_user = Input:get_users(INPUT_TYPE_KEYBOARD)[2]
 	if second_user == nil then return end
@@ -1019,6 +1022,7 @@ function Game:start_game()
 	self.music_player:set_disk("w1")
 	self.level:activate_enemy_buffer()
 	self.level:begin_next_wave_animation()
+	self:remove_queued_players()
 
 	self.menu_manager:set_can_pause(true)
 	self:set_zoom(1)

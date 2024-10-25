@@ -74,6 +74,10 @@ function QueuedPlayer:on_confirm()
     Input:get_user(self.player_n):set_skin(self.selection)
 
     game:join_game(self.player_n)
+    self:remove()
+end
+
+function QueuedPlayer:remove()
     self.is_removed = true
 end
 
