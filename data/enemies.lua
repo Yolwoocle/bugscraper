@@ -16,25 +16,26 @@ local enemies = {
 	DungProjectile =     require "scripts.actor.enemies.dung_projectile",
 	FlyingDung =         require "scripts.actor.enemies.flying_dung",
 	
-	ElectricArc =        require "scripts.actor.enemies.electric_arc", 
-	ElectricRays =       require "scripts.actor.enemies.electric_rays", 
-	ElectricBullet =     require "scripts.actor.enemies.electric_bullet", 
-	SnailShelledBouncy = require "scripts.actor.enemies.snail_shelled_bouncy", 
-	Grasshopper =        require "scripts.actor.enemies.grasshopper", 
-	Chipper =            require "scripts.actor.enemies.chipper",  
-	MetalFly =           require "scripts.actor.enemies.metal_fly",
-	BulbBuddy =          require "scripts.actor.enemies.bulb_buddy", 
-	SwitchBug =          require "scripts.actor.enemies.switch_bug", --*
-	W2boss =             require "scripts.actor.enemies.w2boss", --*
-
 	Beelet =             require "scripts.actor.enemies.beelet", 
 	ShovelBee =          require "scripts.actor.enemies.shovel_bee", 
 	DrillBee =           require "scripts.actor.enemies.drill_bee", 
 	HoneycombFootball =  require "scripts.actor.enemies.honeycomb_football", 
 	HoneypotAnt =        require "scripts.actor.enemies.honeypot_ant",
 	TimedSpikes =        require "scripts.actor.enemies.timed_spikes",
+	FlyingSpawner =      require "scripts.actor.enemies.flying_spawner",
 	LarvaSpawner =       require "scripts.actor.enemies.larva_spawner", --*
-	FlyingSpawner =      require "scripts.actor.enemies.flying_spawner", --*
+
+	ElectricArc =        require "scripts.actor.enemies.electric_arc", 
+	ElectricRays =       require "scripts.actor.enemies.electric_rays", 
+	ElectricBullet =     require "scripts.actor.enemies.electric_bullet", 
+	SnailShelledBouncy = require "scripts.actor.enemies.snail_shelled_bouncy", 
+	Grasshopper =        require "scripts.actor.enemies.grasshopper", 
+	Chipper =            require "scripts.actor.enemies.chipper",  
+	ChipperMinion =      require "scripts.actor.enemies.chipper_minion",  
+	MetalFly =           require "scripts.actor.enemies.metal_fly",
+	BulbBuddy =          require "scripts.actor.enemies.bulb_buddy", 
+	SwitchBug =          require "scripts.actor.enemies.switch_bug", --*
+	W2boss =             require "scripts.actor.enemies.w2boss", --*
 
 	Centipede =          require "scripts.actor.enemies.centipede", --*
 	BigBug =             require "scripts.actor.enemies.big_bug", --*

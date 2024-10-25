@@ -8,16 +8,20 @@ local images = require "data.images"
 
 local ChipperMinion = Chipper:inherit()
 	
-function ChipperMinion:init_fly(x, y, spr)
+function ChipperMinion:init(x, y, spr, direction)
     self.super.init(self, x,y, spr or images.chipper_1)
     self.name = "chipper_minion"
+    self.direction = direction or random_sample {0, 2}
+    self.target_rot = self.direction * pi/2
+    self.spr:set_rotation(self.target_rot)
+
+    self.wander_no_attack_timer:stop()
+    self.turn_timer:stop()
+
+    self.loot = {}
 end
 
 function ChipperMinion:update(dt)
-    self.super.update(self, dt)
-end
-
-function ChipperMinion:update_stink_bug(dt)
     self.super.update(self, dt)
 end
 
@@ -35,16 +39,7 @@ end
 
 function ChipperMinion:after_collision(col, other)
     if col.type ~= "cross" then
-        -- Particles:smoke(col.touch.x, col.touch.y)
-
-        if self.state_machine:in_state("attack") and self:is_collision_normal_to_direction(col.normal) then
-            self.state_machine:set_state("post_attack")
-        end
-
-        if self.state_machine:in_state("wander") then
-            local new_vx, new_vy = bounce_vector_cardinal(-math.cos(self.direction * pi/2), -math.sin(self.direction * pi/2), col.normal.x, col.normal.y)
-            self.direction = math.floor(math.atan2(new_vy, new_vx) / (pi/2))
-        end
+        self:kill()
     end
 end
 
