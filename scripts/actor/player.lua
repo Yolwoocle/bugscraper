@@ -116,7 +116,7 @@ function Player:init(n, x, y, skin)
 	self.gun_cooldown_multiplier = 1.0
 	self.max_ammo_multiplier = 1.0
 	
-	self:equip_gun(Guns.Machinegun:new())
+	self:equip_gun(Guns.unlootable.Machinegun:new())
 	-- self:equip_gun(Guns.unlootable.DebugGun:new())
 	-- FOR DEBUGGING
 	self.guns = {

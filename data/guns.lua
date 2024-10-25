@@ -9,9 +9,9 @@ local honeycomb_panel = require "data.models.honeycomb_panel"
 local Guns = Class:inherit()
 
 function Guns:init()
-	self.Machinegun = Gun:inherit()
+	self.unlootable.Machinegun = Gun:inherit()
 
-	function self.Machinegun:init(user)
+	function self.unlootable.Machinegun:init(user)
 		self.name = "machinegun"
 		self:init_gun(user)
 		
@@ -526,7 +526,7 @@ function Guns:get_current_used_gun()
 end
 
 function Guns:get_random_gun(user)
-	local gun = random_sample(all_guns) or self.Machinegun
+	local gun = random_sample(all_guns) or self.unlootable.Machinegun
 	local inst = gun:new(user)
 	
 	if game:get_floor() <= 5 then
