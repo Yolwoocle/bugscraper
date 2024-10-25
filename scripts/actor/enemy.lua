@@ -92,6 +92,12 @@ function Enemy:init_enemy(x,y, img, w,h)
 	self.gun = nil
 	-- self.sound_stomp = {"enemy_stomp_2", "enemy_stomp_3"}
 	--{"crush_bug_1", "crush_bug_2", "crush_bug_3", "crush_bug_4"}
+
+	self.has_run_ready = false
+end
+
+function Enemy:ready()
+	self:ajust_loot_probabilities()
 end
 
 function Enemy:update_enemy(dt)
@@ -196,6 +202,8 @@ function Enemy:draw()
 	self:draw_enemy()
 end
 
+
+--- Called when bump.lua collides with an object.
 function Enemy:on_collision(col, other)
 	if self.is_removed then return end
 
@@ -241,6 +249,7 @@ function Enemy:on_collision(col, other)
 	self:after_collision(col, col.other)
 end
 
+--- React to a player stomping on the enemy.
 function Enemy:react_to_stomp(player)
 	player.vy = 0
 	player:on_stomp(self)
@@ -262,16 +271,12 @@ function Enemy:react_to_stomp(player)
 	end
 end
 
-function Enemy:on_damage_player(player, damage)
-end
-
-function Enemy:after_collision(col, other)
-end
-
+--- Makes the enemy invincible for `duration`.  
 function Enemy:set_invincibility(duration)
 	self.invincible_timer = math.max(self.invincible_timer, duration)
 end
 
+--- Deal damage to the enemy.
 function Enemy:do_damage(n, damager)
 	if not self.is_active or self.invincible_timer > 0 then
 		return false
@@ -291,21 +296,8 @@ function Enemy:do_damage(n, damager)
 	return true
 end
 
-function Enemy:on_negative_life()
-end
 
-function Enemy:on_damage()
-
-end
-
-function Enemy:on_stomped(damager)
-
-end
-
-function Enemy:on_stomp_killed(damager)
-
-end
-
+--- Kills the enemy
 function Enemy:kill(damager, reason)
 	if self.is_removed then
 		return
@@ -332,9 +324,27 @@ function Enemy:kill(damager, reason)
 	self:on_death(damager, reason)
 end
 
+--- Ajusts loot table according to the number of players
+function Enemy:ajust_loot_probabilities()
+	if Input:get_number_of_users() == 1 then
+		return
+	end
+
+	for _, item in pairs(self.loot) do
+		if item[1] ~= nil then
+			print_debug("removeme_multiplayer_loot_probability_multiplier =", Options:get("removeme_multiplayer_loot_probability_multiplier"))
+			local p = item[2] * (1 + Options:get("removeme_multiplayer_loot_probability_multiplier") * (Input:get_number_of_users() - 1))
+			item[2] = p 
+		end
+	end
+end
+
+--- Drops the loot from the enemy
 function Enemy:drop_loot()
 	local loot, parms = random_weighted(self.loot)
-	if not loot then            return    end
+	if not loot then
+		return		
+	end
 	
 	local instance
 	local vx = random_neighbor(300)
@@ -349,10 +359,7 @@ function Enemy:drop_loot()
 	game:new_actor(instance)
 end
 
-function Enemy:on_death(damager, reason)
-	
-end
-
+--- Function called when a bullet hits the enemy 
 function Enemy:on_hit_bullet(bul, col)
 	if self.is_immune_to_bullets then
 		return false
@@ -367,6 +374,7 @@ function Enemy:on_hit_bullet(bul, col)
 	return true
 end
 
+--- Returns a random alive player
 function Enemy:get_random_player()
     local players = {}
     for _, player in pairs(game.players) do
@@ -379,17 +387,50 @@ function Enemy:get_random_player()
     return random_sample(players)
 end
 
+--- Sets the enemy's property defining whether it is bouncy or not
 function Enemy:set_bouncy(bool)
     self.destroy_bullet_on_impact = not bool
     self.is_bouncy_to_bullets = bool
     self.is_immune_to_bullets = bool
 end
 
-
+--- (Abstract) Called when the enemy touches an electric ray
 function Enemy:on_hit_electrictiy()
 end
 
+--- (Abstract) Called when a bullet bounces off the enemy
 function Enemy:on_bullet_bounced(bullet, col)
+end
+
+--- (Abstract) Called when the enemy dies
+function Enemy:on_death(damager, reason)
+end
+
+--- (Abstract) Called when the enemy's life is less than, or equal to 0 
+function Enemy:on_negative_life()
+end
+
+--- (Abstract) Called when the enemy is damaged
+function Enemy:on_damage()
+end
+
+--- (Abstract) Called when the enemy is stomped, but but necessarily stomp-killed
+function Enemy:on_stomped(damager)
+end
+
+--- (Abstract) Called when the enemy is killed by stomping it
+function Enemy:on_stomp_killed(damager)
+end
+
+
+--- (Abstract) Called when the enemy damages a player.
+function Enemy:on_damage_player(player, damage)
+end
+
+--- (Abstract) Called after a collision.  
+--- `col`: information about the collision, specified by bump.lua,  
+--- `other`: the collision object that was collided with. 
+function Enemy:after_collision(col, other)
 end
 
 return Enemy

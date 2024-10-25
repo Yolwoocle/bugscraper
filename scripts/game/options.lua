@@ -47,6 +47,7 @@ function OptionsManager:init(game)
 		vibration_p4 = 1.0,
 
 		has_seen_stomp_tutorial = false,
+		removeme_multiplayer_loot_probability_multiplier = 0.5,
 	}
 	self.options = copy_table(self.default_options)
 

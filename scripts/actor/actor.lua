@@ -117,6 +117,12 @@ function Actor:init_actor(x, y, w, h, spr, args)
 	self.constant_sounds = {}
 
 	self.debug_values = {}
+
+	self.has_run_ready = false
+end
+
+--- (Abstract) Function ran on the first frame the enemy's update function is called
+function Actor:ready()
 end
 
 function Actor:set_active(val)
@@ -190,6 +196,12 @@ end
 
 function Actor:update_actor(dt)
 	if self.is_removed then return end
+
+	if not self.has_run_ready then
+		self.has_run_ready = true
+		self:ready()
+	end 
+
 	self:do_gravity(dt)
 
 	-- apply friction
