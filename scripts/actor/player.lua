@@ -120,7 +120,7 @@ function Player:init(n, x, y, skin)
 	-- self:equip_gun(Guns.unlootable.DebugGun:new())
 	-- FOR DEBUGGING
 	self.guns = {
-		Guns.Machinegun:new(self),
+		Guns.unlootable.Machinegun:new(self),
 		Guns.unlootable.DebugGun:new(self),
 		Guns.unlootable.DebugGunManual:new(self),
 		Guns.unlootable.ExplosionGun:new(self),

@@ -9,6 +9,8 @@ local honeycomb_panel = require "data.models.honeycomb_panel"
 local Guns = Class:inherit()
 
 function Guns:init()
+	self.unlootable = {}
+	
 	self.unlootable.Machinegun = Gun:inherit()
 
 	function self.unlootable.Machinegun:init(user)
@@ -206,8 +208,6 @@ function Guns:init()
 	end
 
 	-----
-
-	self.unlootable = {}
 
 	self.unlootable.MushroomAntGun = Gun:inherit()
 

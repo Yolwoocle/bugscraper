@@ -246,7 +246,7 @@ function BeeBoss:update(dt)
     self.state_machine:update(dt)
 
     -- self.debug_values[1] = concat(self.state_machine.current_state_name)
-    self.debug_values[2] = concat(self.life,"❤")
+    -- self.debug_values[2] = concat(self.life,"❤")
 end
 
 function BeeBoss:draw()
