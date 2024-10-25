@@ -821,23 +821,23 @@ local waves = {
 	}),
 
 
-	new_wave({
-		min = 1,
-		max = 1,
+	-- new_wave({
+	-- 	min = 1,
+	-- 	max = 1,
 
-		enemies = {
-			{ E.Motherboard, 1, position = { 3 * 16, 3 * 16 + 4 } },
-		},
-		run = function(self, level)
-			for _, actor in pairs(game.actors) do
-				if actor.name == "electric_arc" then
-					actor:start_disable_timer(1)
-				end
-			end
-		end,
+	-- 	enemies = {
+	-- 		{ E.Motherboard, 1, position = { 3 * 16, 3 * 16 + 4 } },
+	-- 	},
+	-- 	run = function(self, level)
+	-- 		for _, actor in pairs(game.actors) do
+	-- 			if actor.name == "electric_arc" then
+	-- 				actor:start_disable_timer(1)
+	-- 			end
+	-- 		end
+	-- 	end,
 
-		music = "miniboss",
-	}),
+	-- 	music = "miniboss",
+	-- }),
 
 	------
 	-- Cafeteria
@@ -850,264 +850,267 @@ local waves = {
 	end),
 
 
-	----------------------------------------------------------------------------------------------------------
-	----------------------------------------------------------------------------------------------------------
-	--- W4: the final climb
-	----------------------------------------------------------------------------------------------------------
-	----------------------------------------------------------------------------------------------------------
+	-- ----------------------------------------------------------------------------------------------------------
+	-- ----------------------------------------------------------------------------------------------------------
+	-- --- W4: the final climb
+	-- ----------------------------------------------------------------------------------------------------------
+	-- ----------------------------------------------------------------------------------------------------------
 
-	new_wave({
-		min = 8,
-		max = 8,
+	-- new_wave({
+	-- 	min = 8,
+	-- 	max = 8,
 
-		enemies = {
-			{ E.Larva, 2 },
-			{ E.Fly,   2 },
-			{ E.Slug,  2 },
-		},
+	-- 	enemies = {
+	-- 		{ E.Larva, 2 },
+	-- 		{ E.Fly,   2 },
+	-- 		{ E.Slug,  2 },
+	-- 	},
 
-		background = backgrounds.BackgroundFinal:new(),
-		music = "w4",
+	-- 	background = backgrounds.BackgroundFinal:new(),
+	-- 	music = "w4",
 
-		title = get_world_name("4"),
-		title_color = COL_LIGHT_BLUE,
-		title_outline_color = COL_DARK_BLUE,
+	-- 	title = get_world_name("4"),
+	-- 	title_color = COL_LIGHT_BLUE,
+	-- 	title_outline_color = COL_DARK_BLUE,
 
-		elevator_layers = {
-			["cabin"] = false,
-			["bg_grid"] = false,
-		},
-		run = function(self, level)
-		end,
-	}),
-
-
-	new_wave({
-		min = 9,
-		max = 9,
-
-		enemies = {
-			{ E.Fly,       2 },
-			{ E.SpikedFly, 2 },
-			{ E.Woodlouse, 2 },
-		},
-	}),
+	-- 	elevator_layers = {
+	-- 		["cabin"] = false,
+	-- 		["bg_grid"] = false,
+	-- 	},
+	-- 	run = function(self, level)
+	-- 	end,
+	-- }),
 
 
-	new_wave({
-		min = 11,
-		max = 11,
+	-- new_wave({
+	-- 	min = 9,
+	-- 	max = 9,
 
-		enemies = {
-			{ E.Woodlouse,    20 },
-			{ E.SpikedFly,    20 },
-			{ E.SnailShelled, 20 },
-			{ E.Boomshroom,   15 },
-		},
-	}),
+	-- 	enemies = {
+	-- 		{ E.Fly,       2 },
+	-- 		{ E.SpikedFly, 2 },
+	-- 		{ E.Woodlouse, 2 },
+	-- 	},
+	-- }),
 
 
-	new_wave({
-		min = 12,
-		max = 13,
+	-- new_wave({
+	-- 	min = 11,
+	-- 	max = 11,
 
-		enemies = {
-			{ E.StinkBug,     2 },
-			{ E.Spider,       2 },
-			{ E.SnailShelled, 2 },
-			{ E.Boomshroom,   2 },
-		},
-	}),
+	-- 	enemies = {
+	-- 		{ E.Woodlouse,    20 },
+	-- 		{ E.SpikedFly,    20 },
+	-- 		{ E.SnailShelled, 20 },
+	-- 		{ E.Boomshroom,   15 },
+	-- 	},
+	-- }),
 
-	new_wave({
-		min = 13,
-		max = 14,
 
-		enemies = {
-			{ E.Larva,        2 },
-			{ E.Fly,          2 },
-			{ E.Woodlouse,    2 },
-			{ E.SpikedFly,    2 },
-			{ E.Boomshroom,   2 },
-			{ E.SnailShelled, 2 },
-			{ E.Spider,       2 },
-		},
-	}),
+	-- new_wave({
+	-- 	min = 12,
+	-- 	max = 13,
 
-	-- W2 recap
+	-- 	enemies = {
+	-- 		{ E.StinkBug,     2 },
+	-- 		{ E.Spider,       2 },
+	-- 		{ E.SnailShelled, 2 },
+	-- 		{ E.Boomshroom,   2 },
+	-- 	},
+	-- }),
 
-	new_wave({
-		min = 8,
-		max = 9,
+	-- new_wave({
+	-- 	min = 13,
+	-- 	max = 14,
 
-		enemies = {
-			{ E.Larva,     2 },
-			{ E.Mosquito,  2 },
-			{ E.ShovelBee, 2 },
-		},
+	-- 	enemies = {
+	-- 		{ E.Larva,        2 },
+	-- 		{ E.Fly,          2 },
+	-- 		{ E.Woodlouse,    2 },
+	-- 		{ E.SpikedFly,    2 },
+	-- 		{ E.Boomshroom,   2 },
+	-- 		{ E.SnailShelled, 2 },
+	-- 		{ E.Spider,       2 },
+	-- 	},
+	-- }),
 
-		run = function(wave, level)
-			spawn_timed_spikes()
-		end,
-	}),
+	-- -- W2 recap
 
-	new_wave({
-		min = 9,
-		max = 10,
+	-- new_wave({
+	-- 	min = 8,
+	-- 	max = 9,
 
-		enemies = {
-			{ E.Larva,      2 },
-			{ E.Mosquito,   2 },
-			{ E.Beelet, 2 },
-		},
-	}),
+	-- 	enemies = {
+	-- 		{ E.Larva,     2 },
+	-- 		{ E.Mosquito,  2 },
+	-- 		{ E.ShovelBee, 2 },
+	-- 	},
 
-	new_wave({
-		min = 11,
-		max = 12,
+	-- 	run = function(wave, level)
+	-- 		spawn_timed_spikes()
+	-- 	end,
+	-- }),
 
-		enemies = {
-			{ E.Mosquito,    2 },
-			{ E.HoneypotAnt, 2 },
-			{ E.DrillBee,    2 },
-		},
-		fixed_enemies = {
-			{ E.FlyingSpawner, 1 },
-		}
-	}),
+	-- new_wave({
+	-- 	min = 9,
+	-- 	max = 10,
 
-	new_wave({
-		min = 11,
-		max = 12,
+	-- 	enemies = {
+	-- 		{ E.Larva,      2 },
+	-- 		{ E.Mosquito,   2 },
+	-- 		{ E.Beelet, 2 },
+	-- 	},
+	-- }),
 
-		enemies = {
-			{ E.HoneypotAnt, 2 },
-			{ E.DrillBee,    2 },
-			{ E.ShovelBee,   2 },
-			{ E.Beelet,  2 },
-			{ E.Mosquito,    2 },
-		},
-	}),
+	-- new_wave({
+	-- 	min = 11,
+	-- 	max = 12,
 
-	new_wave({
-		min = 11,
-		max = 12,
+	-- 	enemies = {
+	-- 		{ E.Mosquito,    2 },
+	-- 		{ E.HoneypotAnt, 2 },
+	-- 		{ E.DrillBee,    2 },
+	-- 	},
+	-- 	fixed_enemies = {
+	-- 		{ E.FlyingSpawner, 1 },
+	-- 	}
+	-- }),
 
-		enemies = {
-			{ E.Larva,       2 },
-			{ E.Mosquito,    2 },
-			{ E.ShovelBee,   2 },
-			{ E.HoneypotAnt, 2 },
-			{ E.DrillBee,    2 },
-			{ E.Beelet,  2 },
-		},
+	-- new_wave({
+	-- 	min = 11,
+	-- 	max = 12,
 
-		fixed_enemies = {
-			{ E.HoneycombFootball, 1 },
-			{ E.FlyingSpawner,      1 },
-		}
-	}),
+	-- 	enemies = {
+	-- 		{ E.HoneypotAnt, 2 },
+	-- 		{ E.DrillBee,    2 },
+	-- 		{ E.ShovelBee,   2 },
+	-- 		{ E.Beelet,  2 },
+	-- 		{ E.Mosquito,    2 },
+	-- 	},
+	-- }),
 
-	-- W3 recap
+	-- new_wave({
+	-- 	min = 11,
+	-- 	max = 12,
 
-	new_wave({
-		min = 12,
-		max = 12,
+	-- 	enemies = {
+	-- 		{ E.Larva,       2 },
+	-- 		{ E.Mosquito,    2 },
+	-- 		{ E.ShovelBee,   2 },
+	-- 		{ E.HoneypotAnt, 2 },
+	-- 		{ E.DrillBee,    2 },
+	-- 		{ E.Beelet,  2 },
+	-- 	},
 
-		enemies = {
-			{ E.Chipper, 2 },
-		},
+	-- 	fixed_enemies = {
+	-- 		{ E.HoneycombFootball, 1 },
+	-- 		{ E.FlyingSpawner,      1 },
+	-- 	}
+	-- }),
 
-		fixed_enemies = {
-			{
-				E.ElectricRays,
-				1,
-				position = { CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + 8 },
-				args = {
-					{
-						n_rays = 1,
-						activation_delay = 2,
-						angle_speed = 0.3,
-					}
-				}
-			},
-		},
+	-- -- W3 recap
 
-		run = function(wave, level)
-			game:kill_actors_with_name("timed_spikes")
-		end
-	}),
+	-- new_wave({
+	-- 	min = 12,
+	-- 	max = 12,
 
-	new_wave({
-		min = 14,
-		max = 14,
+	-- 	enemies = {
+	-- 		{ E.Chipper, 2 },
+	-- 	},
 
-		enemies = {
-			{ E.Chipper,  2 },
-			{ E.StinkBug, 2 },
-		},
+	-- 	fixed_enemies = {
+	-- 		{
+	-- 			E.ElectricRays,
+	-- 			1,
+	-- 			position = { CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + 8 },
+	-- 			args = {
+	-- 				{
+	-- 					n_rays = 1,
+	-- 					activation_delay = 2,
+	-- 					angle_speed = 0.3,
+	-- 				}
+	-- 			}
+	-- 		},
+	-- 	},
 
-		fixed_enemies = {
-			{ E.BulbBuddy, 1 },
-		}
-	}),
+	-- 	run = function(wave, level)
+	-- 		game:kill_actors_with_name("timed_spikes")
+	-- 	end
+	-- }),
 
-	new_wave({
-		min = 14,
-		max = 14,
+	-- new_wave({
+	-- 	min = 14,
+	-- 	max = 14,
 
-		enemies = {
-			{ E.Chipper,     2 },
-			{ E.StinkBug,    2 },
-			{ E.Grasshopper, 2 },
-			{ E.Fly,         2 },
-		},
+	-- 	enemies = {
+	-- 		{ E.Chipper,  2 },
+	-- 		{ E.StinkBug, 2 },
+	-- 	},
 
-		fixed_enemies = {
-			{ E.BulbBuddy, 1 },
-		},
-	}),
+	-- 	fixed_enemies = {
+	-- 		{ E.BulbBuddy, 1 },
+	-- 	}
+	-- }),
 
-	new_wave({
-		min = 16,
-		max = 16,
+	-- new_wave({
+	-- 	min = 14,
+	-- 	max = 14,
 
-		enemies = {
-			{ E.SnailShelledBouncy, 2 },
-			{ E.Fly,                2 },
-			{ E.Spider,             2 },
-		},
-	}),
+	-- 	enemies = {
+	-- 		{ E.Chipper,     2 },
+	-- 		{ E.StinkBug,    2 },
+	-- 		{ E.Grasshopper, 2 },
+	-- 		{ E.Fly,         2 },
+	-- 	},
 
-	new_wave({
-		min = 16,
-		max = 16,
+	-- 	fixed_enemies = {
+	-- 		{ E.BulbBuddy, 1 },
+	-- 	},
+	-- }),
 
-		enemies = {
-			{ E.Chipper,            2 },
-			{ E.BulbBuddy,          2 },
-			{ E.StinkBug,           2 },
-			{ E.SnailShelledBouncy, 2 },
-			{ E.MetalFly,           2 },
-			{ E.Grasshopper,        2 },
-			{ E.Spider,             2 },
-		},
-	}),
+	-- new_wave({
+	-- 	min = 16,
+	-- 	max = 16,
 
-	--]]
+	-- 	enemies = {
+	-- 		{ E.SnailShelledBouncy, 2 },
+	-- 		{ E.Fly,                2 },
+	-- 		{ E.Spider,             2 },
+	-- 	},
+	-- }),
 
-	-----------------------------------------------------
-	--- Last wave
-	-----------------------------------------------------
+	-- new_wave({
+	-- 	min = 16,
+	-- 	max = 16,
+
+	-- 	enemies = {
+	-- 		{ E.Chipper,            2 },
+	-- 		{ E.BulbBuddy,          2 },
+	-- 		{ E.StinkBug,           2 },
+	-- 		{ E.SnailShelledBouncy, 2 },
+	-- 		{ E.MetalFly,           2 },
+	-- 		{ E.Grasshopper,        2 },
+	-- 		{ E.Spider,             2 },
+	-- 	},
+	-- }),
+
+	-- --]]
+
+	-- -----------------------------------------------------
+	-- --- Last wave
+	-- -----------------------------------------------------
 
 	-- Last wave
 	new_wave({
+		background = backgrounds.BackgroundFinalOccilan:new(),
 		min = 1,
 		max = 1,
 		enemies = {
 			{ E.ButtonBigGlass, 1, position = { 211, 194 } }
 		},
 		music = "off",
+
+		title = "J'ai pas fini de faire le boss :(",
 	})
 }
 
