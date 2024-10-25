@@ -23,6 +23,7 @@ function BackgroundDots:init(level)
 	self.bg_particle_col = {COL_VERY_DARK_GRAY, COL_DARK_GRAY}
 	self.bg_particle_palettes = {
 		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
+
 		-- {COL_DARK_RED,    {COL_LIGHT_RED, COL_PINK}}, --l red + light pink
 		-- {COL_LIGHT_BLUE,  {COL_MID_BLUE, COL_WHITE}},
 		-- {COL_WHITE,       {color(0xc0cbdc), color(0x8b9bb4)}}, --gray & dgray

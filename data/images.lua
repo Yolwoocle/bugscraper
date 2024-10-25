@@ -46,6 +46,8 @@ local img_names = {
 	beetle_2 =         "actors/players/beetle_2",
 	beetle_dead =      "actors/players/beetle_dead",
 
+	leo =              "actors/players/leo",
+
 	ant1 =             "actors/players/ant1",
 	ant2 =             "actors/players/ant2",
 	ant_wall_slide =   "actors/players/ant_wall_slide",
@@ -68,6 +70,8 @@ local img_names = {
 	duck =             "actors/players/duck",
 
 	-- enemies
+	bee_boss_1 =               "actors/enemies/bee_boss_1",
+	bee_boss_2 =               "actors/enemies/bee_boss_2",
 	big_bug_1 =                "actors/enemies/big_bug_1",
 	boomshroom_1 =             "actors/enemies/boomshroom_1",
 	boomshroom_2 =             "actors/enemies/boomshroom_2",

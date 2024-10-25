@@ -34,7 +34,7 @@ function FlyingSpawner:init(x, y, spr, w, h)
         rise = {
             update = function(state, dt)
                 self.vy = sign(self.target_y - self.mid_y) * self.target_follow_speed_y
-                if math.abs(self.mid_y - self.target_y) < 8 then
+                if math.abs(self.mid_y - self.target_y) < 16 then
                     return "normal"
                 end
             end,
@@ -44,7 +44,6 @@ function FlyingSpawner:init(x, y, spr, w, h)
                 self.spawn_larva_timer:start()
             end,
             update = function(state, dt)
-                if true then return end
                 if (#self.larvae + #self.larva_projectiles < self.max_larvae) and not self.spawn_larva_timer.is_active then
                     self.spawn_larva_timer:start()
                 end

@@ -12,7 +12,7 @@ local TimedSpikes = require "scripts.actor.enemies.timed_spikes"
 local BeeBoss = Enemy:inherit()
 
 function BeeBoss:init(x, y)
-    self:init_enemy(x,y, images.mosquito1, 32, 32)
+    self:init_enemy(x,y, images.bee_boss_1, 32, 32)
     self.name = "bee_boss"  --removeme(dont actually)
 
     -- Parameters 
@@ -39,7 +39,7 @@ function BeeBoss:init(x, y)
 
     -- Animation
     self.anim_frame_len = 0.05
-    self.anim_frames = {images.mosquito1, images.mosquito2}
+    self.anim_frames = {images.bee_boss_1, images.bee_boss_2}
 
     -- Timers
     self.telegraph_timer = Timer:new(0.5)
@@ -252,7 +252,7 @@ end
 function BeeBoss:draw()
     self:draw_enemy()
 
-    rect_color(COL_RED, "line", self.x, self.y, self.w, self.h)
+    -- rect_color(COL_RED, "line", self.x, self.y, self.w, self.h)
 end
 
 function BeeBoss:set_spike_waves()

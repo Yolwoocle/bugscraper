@@ -14,11 +14,11 @@ function BackgroundBeehive:init(level)
 	self.number_of_particles = 60
 	
 	self.show_bg_particles = true
-	self.def_bg_col = COL_BLACK_BLUE
+	self.def_bg_col = color(0xfee761)
 	self.clear_color = self.def_bg_col
 
 	self.bg_particles = {}	
-	self.bg_particle_col = {COL_VERY_DARK_GRAY, COL_DARK_GRAY}
+	self.bg_particle_col = {color(0xfeae34), COL_WHITE}
 	self.bg_particle_palettes = {
 		{color(0xfee761), {color(0xfeae34), COL_WHITE}}, --orange & white
 		{color(0xfee761), {color(0xfeae34), COL_WHITE}}, --orange & white

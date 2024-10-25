@@ -73,7 +73,7 @@ function Chipper:init_fly(x, y, spr)
                 if not self.wander_no_attack_timer.is_active then
                     local detected = self:detect_player_in_range()
                     if detected then
-                        self.state_machine:set_state("telegraph")
+                        return "telegraph"
                     end
                 end
                 -- self.state_machine:set_state("exploding")
@@ -195,10 +195,7 @@ function Chipper:is_collision_normal_to_direction(normal)
 end
 
 function Chipper:after_collision(col, other)
-    -- Pong-like bounce
     if col.type ~= "cross" then
-        -- Particles:smoke(col.touch.x, col.touch.y)
-
         if self.state_machine:in_state("attack") and self:is_collision_normal_to_direction(col.normal) then
             self.state_machine:set_state("post_attack")
         end
