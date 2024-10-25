@@ -286,8 +286,7 @@ function MenuManager:enable_joystick_wait_mode(joystick)
 end
 
 function MenuManager:disable_joystick_wait_mode()
-	self:unpause()
-	self:set_menu()
+	self:back()
 	self.joystick_wait_mode = false
 	self.joystick_wait_set = {}
 end
