@@ -32,6 +32,30 @@ function Guns:init()
 		self.screenshake = 2
 	end
 
+	--
+
+	
+	self.Machinegun = Gun:inherit()
+
+	function self.Machinegun:init(user)
+		self.name = "machinegun"
+		self:init_gun(user)
+		
+		self.sfx = "mushroom_ant_pop"
+		self.damage = 1.5
+		self.max_ammo = 25
+		self.max_reload_timer = 1.5
+		self.is_auto = true
+		self.spr = images.gun_machinegun
+		self.bullet_spr = images.bullet_pea
+		self.bul_w = 10
+		self.bul_h = 10
+
+		self.cooldown = 0.1
+		self.jetpack_force = 440
+		self.screenshake = 2
+	end
+
 	-------
 
 	self.Triple = Gun:inherit()
