@@ -23,6 +23,12 @@ local function new_cafeteria(run_func)
 					actor.lifespan = 1
 				end
 			end
+
+			for _, actor in pairs(game.actors) do
+                if actor.name == "fainted_player" then
+                    actor:revive()
+                end
+            end
 			run_func(self, level)
 		end,
 

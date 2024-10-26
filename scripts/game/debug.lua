@@ -82,8 +82,12 @@ function Debug:init(game)
             _G_t = 0
             _G_do_fixed_framerate = not _G_do_fixed_framerate
         end},
-        ["h"] = {"toggle help menu", function()
-            self.debug_menu = not self.debug_menu
+        ["v"] = {"revive cocoons", function()
+            for _, actor in pairs(game.actors) do
+                if actor.name == "fainted_player" then
+                    actor:revive()
+                end
+            end
         end},
         ["f"] = {"toggle FPS", function()
             self.view_fps = not self.view_fps
@@ -108,6 +112,9 @@ function Debug:init(game)
         end},
         ["s"] = {"+10 floors", function()
             self.game:set_floor(self.game:get_floor() + 10)
+        end},
+        ["h"] = {"toggle title junk ui", function()
+            self.title_junk = not self.title_junk
         end},
 
         ["u"] = {"toggle title junk ui", function()

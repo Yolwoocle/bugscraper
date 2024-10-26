@@ -59,21 +59,35 @@ function FaintedPlayer:update(dt)
 end
 
 function FaintedPlayer:on_death(damager, reason)
+    if self.is_dead then
+        return
+    end
+    
+    self:revive(damager)
+end
+
+function FaintedPlayer:revive(damager)
     Particles:image(self.mid_x, self.mid_y, 20, {images.cocoon_fragment_1, images.cocoon_fragment_2}, self.w, nil, nil, 0.5)
     
     local reviver
-    if damager.is_player then
+    if damager and damager.is_player then
         reviver = damager
-    elseif damager.is_bullet then
+    elseif damager and damager.is_bullet then
         reviver = damager.player
+    elseif damager == nil then
+        reviver = damager
     else
         return
     end
 
     local new_player = game:new_player(self.player_n, self.x, self.y)
     new_player:set_invincibility(new_player.max_iframes)
-
-    if reviver.is_player then
+    new_player:equip_gun(self.gun)
+    for _, upgrade in pairs(game.upgrades) do
+        new_player:apply_upgrade(upgrade, true)
+    end
+    
+    if reviver and reviver.is_player then
         local l = math.floor(reviver.life/2)
         local player_life, reviver_life = l, reviver.life - l
         if reviver.life <= 1 then
@@ -83,13 +97,17 @@ function FaintedPlayer:on_death(damager, reason)
         Particles:word(new_player.mid_x,  new_player.mid_y - 16,  concat("+", player_life), COL_LIGHT_RED)    
         Particles:word(reviver.mid_x, reviver.mid_y - 16, concat("-", reviver.life - reviver_life), COL_LIGHT_RED)    
         new_player:set_life(player_life)
-        for _, upgrade in pairs(game.upgrades) do
-		    new_player:apply_upgrade(upgrade, true)
-        end
-        new_player:equip_gun(self.gun)
-
         reviver:set_life(reviver_life)
+
+    elseif reviver == nil then
+        new_player:set_life(1)
+
     end
+
+    if not self.is_dead then
+        self:kill()
+    end
+    
 end
 
 function FaintedPlayer:draw()
