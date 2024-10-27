@@ -172,7 +172,7 @@ GAME_STATE_WIN = "win"
 
 -- Ajusts probability of dropping loot:
 -- For non-empty fields in enemies' loot tables, new_probablity = probablity * (1 + this_value * (number_of_players - 1))
-MULTIPLAYER_LOOT_PROBABILITY_MULTIPLIER = 0.5 
+MULTIPLAYER_LOOT_PROBABILITY_MULTIPLIER = 1.0
 
 ---------------------------------------------
 

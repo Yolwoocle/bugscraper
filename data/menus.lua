@@ -364,21 +364,6 @@ local function generate_menus()
             self.value = Options:get("show_fps_warning")
             self.value_text = Options:get("show_fps_warning") and "✅" or "❎"
         end},
-
-        { "" },
-        { SliderMenuItem, "[DEBUG] MULTIPLAYER_LOOT_PROB", function(self, diff)
-            diff = diff or 1
-            self.value = (self.value + diff)
-            if self.value < 0 then self.value = 20 end
-            if self.value > 20 then self.value = 0 end
-            
-            Options:set("removeme_multiplayer_loot_probability_multiplier", self.value/10)
-            Audio:play("menu_select", nil, 0.8+(self.value/10)*0.4)
-        end, range_table(0,20),
-        function(self)
-            self.value = Options:get("removeme_multiplayer_loot_probability_multiplier") * 10
-            self.value_text = concat(floor(100 * self.value / 10), "%")
-        end},
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
     
     menus.options_input = Menu:new(game, {

@@ -332,7 +332,7 @@ function Enemy:ajust_loot_probabilities()
 
 	for _, item in pairs(self.loot) do
 		if item[1] ~= nil then
-			local p = item[2] * (1 + Options:get("removeme_multiplayer_loot_probability_multiplier") * (Input:get_number_of_users() - 1))
+			local p = item[2] * (1 + MULTIPLAYER_LOOT_PROBABILITY_MULTIPLIER * (Input:get_number_of_users() - 1))
 			item[2] = p 
 		end
 	end
