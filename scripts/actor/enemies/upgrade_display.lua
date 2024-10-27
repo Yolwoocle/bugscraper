@@ -15,7 +15,10 @@ function UpgradeDisplay:init(x, y)
     -- self:select_random_product()
     self.has_player_in_range = false
     self.is_focused = false
-    
+    self.is_stompable = true
+    self.is_killed_on_stomp = true
+    self.do_stomp_animation = false
+
     self.life = 10
     self.loot = {}
 
@@ -111,7 +114,8 @@ end
 function UpgradeDisplay:on_death(damager, reason)
     game:screenshake(5)
     Particles:image(self.mid_x, self.mid_y, 10, images.glass_shard, self.h)
-    if damager and damager.name == "bullet" then
+
+    if (damager and damager.name == "bullet") or (reason == "stomped") then
         self:apply()
     end
 end
@@ -120,6 +124,8 @@ function UpgradeDisplay:apply()
     if self.product then
         game:apply_upgrade(self.product)
         game.level:on_upgrade_display_killed(self)
+        
+        Particles:collected_upgrade(self.mid_x, self.mid_y, self.product.sprite, self.product.color)
     end
 end
 

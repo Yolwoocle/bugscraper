@@ -6,6 +6,10 @@ local utf8 = require "utf8"
 
 local Particle = Class:inherit()
 
+function Particle:init(x,y,s,r, vx,vy,vs,vr, life, g, is_solid)
+	self:init_particle(x,y,s,r, vx,vy,vs,vr, life, g, is_solid)
+end
+
 function Particle:init_particle(x,y,s,r, vx,vy,vs,vr, life, g, is_solid)
 	self.x, self.y = x, y
 	self.vx, self.vy = vx or 0, vy or 0
@@ -48,7 +52,7 @@ function Particle:update_particle(dt)
 	end
 
 	if self.s <= 0 or self.life <= 0 then
-		self.is_removed = true
+		self:remove()
 	end
 end
 function Particle:update(dt)
@@ -58,6 +62,9 @@ function Particle:draw()
 end
 function Particle:remove()
 	self.is_removed = true
+	self:on_removed()
+end
+function Particle:on_removed()
 end
 
 -----------
@@ -140,25 +147,22 @@ end
 
 ------------------------------------------------------------
 
-local TextParticle = Particle:inherit()
+local RiseAndLingerParticle = Particle:inherit()
 
-function TextParticle:init(x,y,str,spawn_delay,col, stay_time, text_scale, outline_color)
-	self:init_particle(x,y,s,r, vx,vy,vs,vr, life, g, is_solid)
-	self.str = str
-	self.text_scale = text_scale or 1
+function RiseAndLingerParticle:init(x,y, spawn_delay, stay_time)
+	RiseAndLingerParticle.super.init(self, x,y,s,r, vx,vy,vs,vr, life, g, is_solid)
 
 	self.spawn_y = y
 
-	self.col_in = col
-	self.col_out = outline_color
 	self.vy = -5
 	self.vy2 = 0
-	self.spawn_delay = spawn_delay
+	self.spawn_delay = spawn_delay or 0.0
 	self.stay_timer = stay_time or 0.1
 
 	self.min_oy = -50
 end
-function TextParticle:update(dt)
+
+function RiseAndLingerParticle:update(dt)
 	if self.spawn_delay > 0 then
 		self.spawn_delay = self.spawn_delay - dt
 		return
@@ -177,9 +181,27 @@ function TextParticle:update(dt)
 	end
 
 	if self.y <= self.spawn_y + self.min_oy then
-		self.is_removed = true
+		self:remove()
 	end
 end
+
+------------------------------------------------------------
+
+
+local TextParticle = RiseAndLingerParticle:inherit()
+
+function TextParticle:init(x,y,str,spawn_delay, col, stay_time, text_scale, outline_color)
+	TextParticle.super.init(self, x,y, spawn_delay, stay_time)
+	self.str = str
+	self.text_scale = text_scale or 1
+
+	self.col_in = col
+	self.col_out = outline_color
+end
+function TextParticle:update(dt)
+	TextParticle.super.update(self, dt)
+end
+
 function TextParticle:draw()
 	if self.spawn_delay > 0 then
 		return
@@ -188,6 +210,57 @@ function TextParticle:draw()
 	local col = COL_WHITE
 	if self.col_in then col = self.col_in end
 	print_outline(col, self.col_out or COL_BLACK_BLUE, self.str, self.x, self.y, nil, nil, self.text_scale)
+end
+
+------------------------------------------------------------
+
+
+local RisingImageParticle = RiseAndLingerParticle:inherit()
+
+function RisingImageParticle:init(x, y, image, scale, spawn_delay, stay_time)
+	RisingImageParticle.super.init(self, x,y, spawn_delay, stay_time)
+	self.image = image
+	self.scale = scale or 1
+	self.rot = 0.0
+end
+function RisingImageParticle:update(dt)
+	RisingImageParticle.super.update(self, dt)
+end
+
+function RisingImageParticle:draw()
+	if self.spawn_delay > 0 then
+		return
+	end
+
+	draw_centered(self.image, self.x, self.y, self.rot, self.scale, self.scale)
+end
+
+------------------------------------------------------------
+
+local CollectedUpgradeParticle = RisingImageParticle:inherit()
+
+function CollectedUpgradeParticle:init(x, y, image, color, scale, spawn_delay, stay_time)
+	CollectedUpgradeParticle.super.init(self, x,y, image, scale, spawn_delay, stay_time)
+
+	self.color = color or COL_WHITE
+	self.rot = 0.0
+end
+
+function CollectedUpgradeParticle:update(dt)
+	CollectedUpgradeParticle.super.update(self, dt)
+end
+
+function CollectedUpgradeParticle:draw()
+	if self.spawn_delay > 0 then
+		return
+	end
+	
+	draw_centered(self.image, self.x, self.y, 0, self.scale, self.scale)
+end
+
+function CollectedUpgradeParticle:on_removed()
+	-- function ParticleSystem:smoke(x, y, number, col, spw_rad, size, sizevar, layer, fill_mode, params)
+	Particles:smoke(self.x, self.y, 30, nil, 16)
 end
 
 
@@ -219,7 +292,7 @@ function StompedEnemyParticle:update(dt)
 	self.sy = (1/self.squash) * 0.5
 
 	if abs(self.squash_target - self.squash) <= 0.01 then
-		self.is_removed = true
+		self:remove()
 		-- number, col, spw_rad, size, sizevar, layer, fill_mode, params
 		Particles:smoke(self.x, self.y, 24, nil, 10)
 	end
@@ -267,7 +340,7 @@ function DeadPlayerParticle:update(dt)
 		game:screenshake(10)
 		Audio:play("explosion")
 		Particles:splash(self.x, self.y - self.oy, 40, {COL_LIGHT_YELLOW, COL_ORANGE, COL_LIGHT_RED, COL_WHITE})
-		self.is_removed = true
+		self:remove()
 	end
 end
 function DeadPlayerParticle:draw()
@@ -873,6 +946,14 @@ function ParticleSystem:spark(x, y, amount)
 	for i=1, amount do 
 		self:add_particle(SparkParticle:new(x,y, life, g, is_solid), PARTICLE_LAYER_FRONT)
 	end
+end
+
+function ParticleSystem:rising_image(x, y, image, scale, spawn_delay, stay_time)
+	self:add_particle(RisingImageParticle:new(x, y, image, scale, spawn_delay, stay_time))
+end
+
+function ParticleSystem:collected_upgrade(x, y, image, scale, spawn_delay, stay_time)
+	self:add_particle(CollectedUpgradeParticle:new(x, y, image, scale, spawn_delay, stay_time))
 end
 
 ParticleSystem.text = ParticleSystem.word
