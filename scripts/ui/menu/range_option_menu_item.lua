@@ -25,9 +25,23 @@ function SliderOptionMenuItem:init(i, x, y, text, property_name, range, step, te
 	self.step = step
 	self.property_name = property_name
 
+	self.discrete_range = {0, self:real_to_discrete(self.range[2])}
+
 	self.text_formatter = function(value)
 		return string.format("< %s >", text_formatter(value))
 	end
+end
+
+function SliderOptionMenuItem:real_to_discrete(real_value)
+	return round((real_value - self.range[1]) / self.step)
+end
+
+function SliderOptionMenuItem:discrete_to_real(discrete_value)
+	return lerp(self.range[1], self.range[2], discrete_value / self.discrete_range[2])
+end
+
+function SliderOptionMenuItem:round_value(real_value)
+	return self:discrete_to_real(self:real_to_discrete(real_value))
 end
 
 function SliderOptionMenuItem:update(dt)
@@ -45,7 +59,7 @@ function SliderOptionMenuItem:on_click(diff)
 	diff = diff or 1
 	self.ox = sign(diff) * 6 
 	
-	self.value = self.value + diff * self.step
+	self.value = self:round_value(self.value + diff * self.step)
 	if self.value < self.range[1] then self.value = self.range[2] end
 	if self.value > self.range[2] then self.value = self.range[1] end
 
