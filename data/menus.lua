@@ -315,15 +315,15 @@ local function generate_menus()
                 end
             },
             { RangeOptionMenuItem, "🕹 {menu.options.input_submenu.deadzone}",
-                "axis_deadzone_p" .. tostring(player_n), {0.0, 0.95}, 0.05, "%", nil, --fixer çapas de t=message warning et parfois 24% 
+                "axis_deadzone_p" .. tostring(player_n), {0.0, 0.95}, 0.05, "%", 
                 function(self)
-                    self:set_label_text("🕹 {menu.options.input_submenu.deadzone}")
-                    if self.is_selected and self.value <= 4 then
-                        self:set_label_text(self.label_text .. "\n⚠ {menu.options.input_submenu.low_deadzone_warning}")
+                    if self.is_selected and self.value < 0.3 then
+                        self:set_annotation("⚠ {menu.options.input_submenu.low_deadzone_warning}")
+                    else
+                        self.annotation = nil
                     end
                 end
             },
-            { "" },
             { Text:text("menu.options.input_submenu.note_deadzone") },
             { "" },
             { "🔄 " .. Text:text("menu.options.input_submenu.reset_controls"), function()

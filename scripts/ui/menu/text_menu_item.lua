@@ -43,6 +43,10 @@ function TextMenuItem:init_textitem(i, x, y, text, on_click, update_value)
 	-- end
 end
 
+function TextMenuItem:set_annotation(text)
+	self.annotation = Text:parse_string(text)
+end
+
 function TextMenuItem:set_label_text(text)
 	self.label_text = Text:parse_string(text)
 end
@@ -88,26 +92,34 @@ function TextMenuItem:draw_textitem()
 		local x = math.floor(MENU_PADDING)
 		local y = math.floor(self.y + self.oy - 6)
 		local w = math.floor(CANVAS_WIDTH - MENU_PADDING*2)
-		local h = math.floor(16)
+		local h = 16
 
 		draw_3_slice(images.selection_left, images.selection_right, col, x, y, w, h)
 	end
 	
-	self:draw_annotation()
-	
 	if type(self.value) == "nil" then
-		self:draw_withoutvalue()
+		self:draw_without_value()
 	else
-		self:draw_withvalue()
+		self:draw_with_value()
 	end
 	
 	gfx.setColor(1, 1, 1, 1)
+
+	self:draw_annotation()
 end
 
 function TextMenuItem:draw_annotation()
 	if self.is_selected and self.annotation then
+		local x = math.floor(MENU_PADDING)
+		local y = math.floor(self.y + self.oy - 6 + 24)
+		local w = math.floor(CANVAS_WIDTH - MENU_PADDING*2)
+		local h = math.floor(16)
 
-		-- self.annotation
+		draw_3_slice(images.selection_left, images.selection_right, COL_WHITE, x, y, w, h)
+		draw_centered(images.bubble_tip, x + w/2, y - images.bubble_tip:getHeight()/2)
+
+		print_centered_outline(COL_BLACK_BLUE, COL_WHITE, self.annotation, x + w/2, y + h/2)
+
 	end
 end
 
@@ -122,7 +134,7 @@ function TextMenuItem:get_leftjustified_text_draw_function()
 	return draw_func
 end
 
-function TextMenuItem:draw_withoutvalue(text_color)
+function TextMenuItem:draw_without_value(text_color)
 	local col = Input:get_last_ui_player_color()
 	local draw_func = ternary(self.is_selected,
 		function(...) print_centered_outline(text_color, col, ...) end,
@@ -135,7 +147,7 @@ function TextMenuItem:draw_withoutvalue(text_color)
 	print_centered(self.label_text, self.x, self.y + self.oy)
 end
 
-function TextMenuItem:draw_withvalue()
+function TextMenuItem:draw_with_value()
 	local draw_func = self:get_leftjustified_text_draw_function()
 
 	if not self.is_selectable then
