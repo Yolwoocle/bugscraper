@@ -2,7 +2,7 @@ require "scripts.util"
 local Class = require "scripts.meta.class"
 
 local MenuItem = Class:inherit()
-function MenuItem:init_menuitem(i, x, y)
+function MenuItem:init(i, x, y)
 	self.i = i
 	self.x = x
 	self.y = y
@@ -13,9 +13,6 @@ function MenuItem:init_menuitem(i, x, y)
 end
 
 function MenuItem:update(dt)
-	self:update_menuitem(dt)
-end
-function MenuItem:update_menuitem(dt)
 
 end
 

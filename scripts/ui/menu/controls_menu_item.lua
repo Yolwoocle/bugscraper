@@ -6,7 +6,7 @@ local images = require "data.images"
 local ControlsMenuItem = TextMenuItem:inherit()
 
 function ControlsMenuItem:init(i, x, y, player_n, profile_id, input_type, action_name, label_text)
-	self:init_textitem(i, x, y, action_name)
+	ControlsMenuItem.super.init(self, i, x, y, action_name)
 
 	self.player_n = player_n
 	self:set_label_text(label_text or action_name)
@@ -23,7 +23,7 @@ function ControlsMenuItem:init(i, x, y, player_n, profile_id, input_type, action
 end
 
 function ControlsMenuItem:update(dt)
-	self:update_textitem(dt)
+	ControlsMenuItem.super.update(self, dt)
 	
 	self:set_value_text("[ERROR]")
 

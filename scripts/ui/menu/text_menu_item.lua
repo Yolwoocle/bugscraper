@@ -3,20 +3,8 @@ local images   = require "data.images"
 
 local TextMenuItem = MenuItem:inherit()
 
--- Split into SelectableMenuItem ? Am I becoming a Java dev now?
--- THIS IS A MESS, *HELP*
--- AAAAAAAAAAAAAAAAAAAAAAAAAAAAA
--- Should do:
--- MenuItem
--- -> TextMenuItem
--- -> SelectableMenuItem
---   -> ToggleMenuItem
---   -> SliderMenuItem
 function TextMenuItem:init(i, x, y, text, on_click, update_value)
-	self:init_textitem(i, x, y, text, on_click, update_value)
-end
-function TextMenuItem:init_textitem(i, x, y, text, on_click, update_value)
-	self:init_menuitem(i, x, y)
+	TextMenuItem.super.init(self, i, x, y)
 
 	self.ox = 0
 	self.oy = 0
@@ -56,10 +44,7 @@ function TextMenuItem:set_value_text(text)
 end
 
 function TextMenuItem:update(dt)
-	self:update_textitem(dt)
-end
-function TextMenuItem:update_textitem(dt)
-	self:update_menuitem()
+	TextMenuItem.super.update(self, dt)
 	self.update_value(self)
 	-- self.label_text = random_neighbor(3)
 
