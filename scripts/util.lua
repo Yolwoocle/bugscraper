@@ -342,6 +342,14 @@ function print_ycentered(text, x, y, rot, sx, sy, ...)
 	love.graphics.print(text, x, y-text_h/2, rot, sx, sy, ...)
 end
 
+function draw_3_slice(img_left, img_right, col, x, y, w, h)
+	exec_color(col, function()
+		love.graphics.draw(img_left,  math.floor(x),                            math.floor(y))
+		love.graphics.draw(img_right, math.floor(x + w - img_right:getWidth()), math.floor(y))
+		rect_color(col, "fill", math.floor(x + img_left:getWidth()), math.floor(y), w - img_left:getWidth() - img_right:getWidth(), h)
+	end)
+end
+
 -- Thanks to steVeRoll: https://www.reddit.com/r/love2d/comments/h84gwo/how_to_make_a_colored_sprite_white/
 function draw_white(drawable, x, y, r, sx, sy, ox, oy, kx, ky)
 	-- drawable, x, y, r, sx, sy, ox, oy, kx, ky

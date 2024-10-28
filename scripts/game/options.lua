@@ -47,7 +47,44 @@ function OptionsManager:init(game)
 		vibration_p4 = 1.0,
 
 		has_seen_stomp_tutorial = false,
-		removeme_multiplayer_loot_probability_multiplier = 0.5,
+
+		removeme_test_option = 0.5,
+	}
+	self.setters = {
+		sound_on = function(value) 
+			if value then
+				love.audio.setVolume(self:get("volume"))
+			else
+				love.audio.setVolume(0)
+			end
+		end,
+		volume = function(value) 
+			love.audio.setVolume(value)
+		end,
+		music_volume = function(value)
+			game:set_music_volume(value)
+		end,
+		play_music_on_pause_menu = function(value)
+			if value then
+                game.music_player:play() --TODO test this
+            end
+		end,
+
+		is_fullscreen = function(value)
+			game:update_fullscreen(value)
+		end,
+		pixel_scale = function(value)		
+			if not game then 
+				return	
+			end
+			game:update_screen()
+		end,
+		is_vsync = function(value)
+			love.window.setVSync(value)
+		end,
+		mouse_visible = function(value)
+            love.mouse.setVisible(value)
+		end,
 	}
 	self.options = copy_table(self.default_options)
 
@@ -114,6 +151,9 @@ end
 
 function OptionsManager:set(name, val)
 	self.options[name] = val
+	if self.setters[name] then
+		self.setters[name](val)
+	end
 	self:update_options_file()
 end
 
@@ -122,66 +162,14 @@ function OptionsManager:toggle(name)
 	self:update_options_file()
 end
 
+function OptionsManager:update_volume()
+	love.audio.setVolume(self:get("sound_on") and self:get("volume") or 0.0)
+end
+
+
 -----------------------------------------------------
 
-function OptionsManager:toggle_fullscreen()
-	-- local success = love.graphics.toggleFullscreen( )
-	self:toggle("is_fullscreen")
-	local is_fullscreen = self:get("is_fullscreen")
-	game:update_fullscreen(is_fullscreen)
-end
-
-function OptionsManager:set_pixel_scale(scale)
-	if not game then  return  end
-	self:set("pixel_scale", scale)
-	game:update_screen()
-end
-
-function OptionsManager:toggle_vsync()
-	self:toggle("is_vsync")
-	love.window.setVSync(self:get("is_vsync"))
-end
-
-
-function OptionsManager:toggle_sound()
-	-- TODO: move from bool to a number (0-1), customisable in settings
-	self:toggle("sound_on")
-	self:update_sound_on()
-end
-
-function OptionsManager:update_sound_on()
-	if self:get("sound_on") then
-		self:set_volume(self:get("volume"))
-	else
-		love.audio.setVolume(0)
-	end
-end
-
-function OptionsManager:set_screenshake(n)
-	self:set("screenshake", n)
-end
-
-function OptionsManager:set_volume(n)
-	self:set("volume", n)
-	love.audio.setVolume( self:get("volume") )
-end
-
-function OptionsManager:set_music_volume(n)
-	self:set("music_volume", n)
-	game:set_music_volume( self:get("music_volume") )
-end
-
-function OptionsManager:toggle_timer()
-	self:toggle("timer_on")
-end
-
-function OptionsManager:toggle_mouse_visible()
-	self:toggle("mouse_visible")
-end
-
-function OptionsManager:toggle_pause_on_unfocus()
-	self:toggle("pause_on_unfocus")
-end
+-- DEPRACATED
 
 function OptionsManager:toggle_screenshake()
 	self:toggle("screenshake_on")
@@ -189,10 +177,6 @@ end
 
 function OptionsManager:toggle_background_noise()
 	self:toggle("disable_background_noise")
-end
-
-function OptionsManager:toggle_play_music_on_pause_menu()
-	self:toggle("play_music_on_pause_menu")
 end
 
 function OptionsManager:on_quit()

@@ -17,6 +17,7 @@ local Rect            = require "scripts.math.rect"
 local Cutscene = require "scripts.game.cutscene"
 local cutscenes = require "data.cutscenes"
 local Scene = require "scripts.game.scene"
+local Class = require "scripts.meta.class"
 
 local Debug = Class:inherit()
 
@@ -82,12 +83,8 @@ function Debug:init(game)
             _G_t = 0
             _G_do_fixed_framerate = not _G_do_fixed_framerate
         end},
-        ["v"] = {"revive cocoons", function()
-            for _, actor in pairs(game.actors) do
-                if actor.name == "fainted_player" then
-                    actor:revive()
-                end
-            end
+        ["v"] = {"__jackofalltrades", function()
+        
         end},
         ["f"] = {"toggle FPS", function()
             self.view_fps = not self.view_fps

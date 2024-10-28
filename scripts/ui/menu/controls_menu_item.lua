@@ -1,5 +1,5 @@
 require "scripts.util"
-local TextMenuItem = require "scripts.ui.menu.menu_item_text"
+local TextMenuItem = require "scripts.ui.menu.text_menu_item"
 local InputButton = require "scripts.input.input_button"
 local images = require "data.images"
 
@@ -9,7 +9,7 @@ function ControlsMenuItem:init(i, x, y, player_n, profile_id, input_type, action
 	self:init_textitem(i, x, y, action_name)
 
 	self.player_n = player_n
-	self.label_text = label_text or action_name
+	self:set_label_text(label_text or action_name)
 	self.profile_id = profile_id
 	self.input_type = input_type
 	self.action_name = action_name
@@ -25,11 +25,11 @@ end
 function ControlsMenuItem:update(dt)
 	self:update_textitem(dt)
 	
-	self.value_text = "[ERROR]"
+	self:set_value_text("[ERROR]")
 
 	self.value = self:get_buttons()
-	self.value_text = ""
-
+	self:set_value_text("")
+	
 	self.waiting_timer = max(0.0, self.waiting_timer - dt)
 	if self.is_waiting_for_input and self.waiting_timer <= 0 then
 		self:stop_waiting()
@@ -42,7 +42,8 @@ function ControlsMenuItem:update(dt)
 end
 
 function ControlsMenuItem:draw_value_text()
-	local right_bound = self.x + MENU_PADDING + self.ox
+	-- local right_bound = self.x + MENU_PADDING + self.ox
+	local right_bound = CANVAS_WIDTH - MENU_PADDING + self.ox - 16
 	local y = math.floor(self.y + self.oy + 2)
 
 	local draw_func = self:get_leftjustified_text_draw_function()

@@ -157,7 +157,7 @@ LOGO_COLS = {COL_LIGHT_YELLOW, COL_LIGHT_BLUE, COL_LIGHT_RED}
 ---------------------------------------------
 
 -- Ui
-MENU_PADDING = CANVAS_WIDTH * 0.25
+MENU_PADDING = CANVAS_WIDTH * 0.18
 
 ---------------------------------------------
 
@@ -172,7 +172,7 @@ GAME_STATE_WIN = "win"
 
 -- Ajusts probability of dropping loot:
 -- For non-empty fields in enemies' loot tables, new_probablity = probablity * (1 + this_value * (number_of_players - 1))
-MULTIPLAYER_LOOT_PROBABILITY_MULTIPLIER = 0.5 
+MULTIPLAYER_LOOT_PROBABILITY_MULTIPLIER = 1.0
 
 ---------------------------------------------
 
