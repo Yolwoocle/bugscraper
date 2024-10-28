@@ -71,4 +71,16 @@ function TextManager:text_fallback(code, fallback, ...)
     return self:text(code, ...)
 end
 
+
+function TextManager:parse_string(text)
+    text = text:gsub("{lbrace}", "\1"):gsub("{rbrace}", "\2")
+    
+    text = text:gsub("{(.-)}", function(key)
+        return self:text(key)
+    end)
+
+    text = text:gsub("\1", "{"):gsub("\2", "}")
+    return text
+end
+
 return TextManager

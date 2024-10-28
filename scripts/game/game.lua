@@ -89,7 +89,7 @@ function Game:init()
 	-- self.volume = options:get("volume")
 	-- self.sound_on = options:get("sound_on")
 
-	Options:set_volume(Options:get("volume"))
+	Options:set("volume", Options:get("volume"))
 	
 	self:new_game()
 	
@@ -231,7 +231,7 @@ function Game:new_game()
 	self.upgrades = {}
 	self:update_skin_choices()
 
-	Options:update_sound_on()
+	Options:update_volume()
 end
 
 function Game:init_layers()

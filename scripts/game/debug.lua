@@ -84,23 +84,7 @@ function Debug:init(game)
             _G_do_fixed_framerate = not _G_do_fixed_framerate
         end},
         ["v"] = {"__jackofalltrades", function()
-            local Animal = Class:inherit()
-            function Animal:init(name)
-                self.name = name
-            end
-
-            local Dog = Animal:inherit()
-            function Dog:init(name, bone)
-                self.super.init(self, name)
-                self.bone = bone
-            end
-
-            local Pug = Dog:inherit()
-            function Pug:init(name, bone)
-                self.super.init(self, name, bone)
-            end
-
-            local pug = Pug:new("rex", "big bone")
+        
         end},
         ["f"] = {"toggle FPS", function()
             self.view_fps = not self.view_fps

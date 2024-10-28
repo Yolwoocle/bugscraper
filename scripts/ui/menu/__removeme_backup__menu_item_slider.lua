@@ -1,20 +1,20 @@
-local TextMenuItem = require "scripts.ui.menu.menu_item_text"
+local TextMenuItem = require "scripts.ui.menu.text_menu_item"
 
 local SliderMenuItem = TextMenuItem:inherit()
 
 function SliderMenuItem:init(i, x, y, text, on_click, values, update_value)
-	self:init_textitem(i, x, y)
+	self:init_textitem(i, x, y, text)
 
 	self.ox = 0
 	self.oy = 0
 	self.text = text or ""
-	self.label_text = self.text
-	self.value_text = ""
+	self:set_label_text(self.text)
+	self:set_value_text("")
 
 	self.values = values
 	self.value_index = 1
 	self.value = values[1]
-	self.value_text = tostring(self.value)
+	self:set_value_text(tostring(self.value))
 
 	self.on_click = on_click
 	self.is_selectable = true
@@ -29,7 +29,7 @@ function SliderMenuItem:update(dt)
 	self.update_value(self)
 
 	if type(self.value) ~= "nil" then
-		self.value_text = concat("< ", self.value_text, " >")
+		self:set_value_text(concat("< ", self.value_text, " >"))
 	else
 		self.text = self.label_text
 	end

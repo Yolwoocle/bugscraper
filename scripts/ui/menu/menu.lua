@@ -1,6 +1,6 @@
 require "scripts.util"
 local Class = require "scripts.meta.class"
-local TextMenuItem = require "scripts.ui.menu.menu_item_text"
+local TextMenuItem = require "scripts.ui.menu.text_menu_item"
 
 local Menu = Class:inherit()
 

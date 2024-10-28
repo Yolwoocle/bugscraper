@@ -1,4 +1,4 @@
-local TextMenuItem = require "scripts.ui.menu.menu_item_text"
+local TextMenuItem = require "scripts.ui.menu.text_menu_item"
 
 local StatsMenuItem = TextMenuItem:inherit()
 
@@ -11,7 +11,7 @@ end
 function StatsMenuItem:update(dt)
 	self:update_textitem(dt)
 	self.value = self:get_value()
-	self.value_text = tostring(self.value)
+	self:set_value_text(tostring(self.value))
 end
 
 return StatsMenuItem

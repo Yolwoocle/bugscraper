@@ -20,8 +20,8 @@ function TextMenuItem:init_textitem(i, x, y, text, on_click, update_value)
 
 	self.ox = 0
 	self.oy = 0
-	self.label_text = text
-	self.value_text = ""
+	self:set_label_text(Text:parse_string(text))
+	self:set_value_text("")
 
 	self.value = nil
 	self.type = "text"
@@ -39,6 +39,14 @@ function TextMenuItem:init_textitem(i, x, y, text, on_click, update_value)
 	-- if default_val ~= nil then
 	-- 	self:update_value(default_val)
 	-- end
+end
+
+function TextMenuItem:set_label_text(text)
+	self.label_text = Text:parse_string(text)
+end
+
+function TextMenuItem:set_value_text(text)
+	self.value_text = Text:parse_string(text)
 end
 
 function TextMenuItem:update(dt)

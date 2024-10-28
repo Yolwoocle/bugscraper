@@ -1,7 +1,9 @@
 local Menu = require "scripts.ui.menu.menu"
-local SliderMenuItem = require "scripts.ui.menu.menu_item_slider"
+local SliderMenuItem = require "scripts.ui.menu.__removeme_backup__menu_item_slider"
+local RangeOptionMenuItem = require "scripts.ui.menu.range_option_menu_item"
+local BoolOptionMenuItem = require "scripts.ui.menu.bool_option_menu_item"
 local StatsMenuItem = require "scripts.ui.menu.menu_item_stats"
-local ControlsMenuItem = require "scripts.ui.menu.menu_item_controls"
+local ControlsMenuItem = require "scripts.ui.menu.controls_menu_item"
 local CustomDrawMenuItem = require "scripts.ui.menu.menu_item_custom_draw"
 local waves = require "data.waves"
 local Enemies = require "data.enemies"
@@ -106,6 +108,7 @@ local function generate_menus()
 
 
     local pause_items = {
+        { "🎚 [DEBUG] Options 2", func_set_menu('new_options') },
         { "" },
         { "<<<<<<<<< "..Text:text("menu.pause.title").." >>>>>>>>>" },
         { "" },
@@ -161,6 +164,9 @@ local function generate_menus()
 			game:start_game()
             game.menu_manager:unpause()
         end },
+
+        { RangeOptionMenuItem, "TEST", "removeme_test_option", {0.2, 1.4}, 0.1 },
+
     }
     if OPERATING_SYSTEM == "Web" then
         -- Disable quitting on web
@@ -175,87 +181,49 @@ local function generate_menus()
     
     menus.feedback = Menu:new(game, {
         { "<<<<<<<<< "..Text:text("menu.feedback.title").." >>>>>>>>>" },
-        { "" },
+        { "" }, -- pinnnnn
         { Text:text("menu.feedback.bugs"), func_url("https://github.com/Yolwoocle/bugscraper/issues")},
         { Text:text("menu.feedback.features"), func_url("https://github.com/Yolwoocle/bugscraper/issues")},
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL, draw_elevator_progress)
 
-    menus.options = Menu:new(game, {
-        { "<<<<<<<<< "..Text:text("menu.options.title").." >>>>>>>>>" },
-        { "" },
-        { "<<< "..Text:text("menu.options.input.title").." >>>" },
-        { "🔘 "..Text:text("menu.options.input.input"), func_set_menu("options_input")},
-        { ""},
-        { "<<< "..Text:text("menu.options.audio.title").." >>>" },
-        { "🔊 "..Text:text("menu.options.audio.sound"), function(self, option)
-            Options:toggle_sound()
-        end,
-        function(self)
-            self.value = Options:get("sound_on")
-            self.value_text = Options:get("sound_on") and "✅" or "❎"
-        end},
-        { SliderMenuItem, "🔉 "..Text:text("menu.options.audio.volume"), function(self, diff)
-            diff = diff or 1
-            self.value = (self.value + diff)
-            if self.value < 0 then self.value = 20 end
-            if self.value > 20 then self.value = 0 end
-            
-            Options:set_volume(self.value/20)
-            Audio:play("menu_select", nil, 0.8+(self.value/20)*0.4)
-        end, range_table(0,20),
-        function(self)
-            self.value = Options:get("volume") * 20
-            self.value_text = concat(floor(100 * self.value / 20), "%")
-
-            self.is_selectable = Options:get("sound_on")
-        end},
-        { SliderMenuItem, "🎵 "..Text:text("menu.options.audio.music_volume"), function(self, diff)
-            diff = diff or 1
-            self.value = (self.value + diff)
-            if self.value < 0 then self.value = 20 end
-            if self.value > 20 then self.value = 0 end
-            
-            Options:set_music_volume(self.value/20)
-            Audio:play("menu_select", (self.value/20), 0.8+(self.value/20)*0.4)
-        end, range_table(0,20),
-        function(self)
-            self.value = Options:get("music_volume") * 20
-            self.value_text = concat(floor(100 * self.value / 20), "%")
-
-            self.is_selectable = Options:get("sound_on")
-        end},
-        { "🎼 "..Text:text("menu.options.audio.music_pause_menu"), function(self, option)
-            Options:toggle_play_music_on_pause_menu()
-            if Options:get("play_music_on_pause_menu") then
-                game.music_player:play()
-            end
-        end,
-        function(self)
-            self.value = Options:get("play_music_on_pause_menu")
-            self.value_text = Options:get("play_music_on_pause_menu") and "✅" or "❎"
-            self.is_selectable = Options:get("sound_on")
-        end},
-        -- { "🔈 "..Text:text("menu.options.audio.background_sounds"), function(self, option)
-        --     Options:toggle_background_noise()
-        -- end,
-        -- function(self)
-        --     self.value = Options:get("disable_background_noise")
-        --     self.value_text = (not Options:get("disable_background_noise")) and "✅" or "❎"
-        --     self.is_selectable = Options:get("sound_on")
-        -- end},
+    menus.new_options = Menu:new(game, {
+        {"<<<<<<<<< [DEBUG] Options >>>>>>>>>"},
         {""},
-
-        -- {"MUSIC: [ON/OFF]", function(self)
-        -- 	game:toggle_sound()
-        -- end},
-        { "<<< "..Text:text("menu.options.visuals.title").." >>>"},
-        { "🔳 "..Text:text("menu.options.visuals.fullscreen"), function(self)
-            Options:toggle_fullscreen()
-        end,
-        function(self)
-            self.value = Options:get("is_fullscreen")
-            self.value_text = Options:get("is_fullscreen") and "✅" or "❎"
+        {"<<< {menu.options.input.title} >>>"},
+        {"🔘 {menu.options.input.input}", func_set_menu("options_input")},
+        {""},
+        {"<<< {menu.options.audio.title} >>>"},
+        {BoolOptionMenuItem, "🔊 {menu.options.audio.sound}", "sound_on"},
+        {RangeOptionMenuItem, "🔉 {menu.options.audio.volume}", "volume", {0.0, 1.0}, 0.05, "%", function(self)
+            self.is_selectable = Options:get("sound_on")
+        end}, 
+        {RangeOptionMenuItem, "🎵 {menu.options.audio.music_volume}", "music_volume", {0.0, 1.0}, 0.05, "%", function(self)
+            self.is_selectable = Options:get("sound_on")
+        end}, 
+        {BoolOptionMenuItem, "🎼 {menu.options.audio.music_pause_menu}", "play_music_on_pause_menu", function(self)
+            self.is_selectable = Options:get("sound_on")
         end},
+        {""},
+        {"<<< {menu.options.visuals.title} >>>"},
+        {BoolOptionMenuItem, "🔳 {menu.options.visuals.fullscreen}", "is_fullscreen"},
+        -- {EnumOptionMenuItem, "🔲 {menu.options.visuals.pixel_scale}", "pixel_scale", {"auto", "max_whole", 1, 2, 3, 4, 5, 6}, 
+        --     function(value) 
+        --         if type(value) == "string" then
+        --             return tostring(Text:text("menu.options.visuals.pixel_scale_value."..value))
+        --         else
+        --             return tostring(value)
+        --         end
+        --     end,
+        --     function(self)
+        --         if OPERATING_SYSTEM == "Web" then
+        --             self.is_selectable = false
+        --         end
+        --     end
+        -- },
+
+    }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
+    
+    menus.options = Menu:new(game, {
 
         { SliderMenuItem, "🔲 "..Text:text("menu.options.visuals.pixel_scale"), function(self, diff)
             diff = diff or 1
@@ -273,7 +241,6 @@ local function generate_menus()
                 self.value_text = tostring(self.value)
             end
 
-            if OPERATING_SYSTEM == "Web" then  self.is_selectable = false  end
         end},
 
         { "📺 "..Text:text("menu.options.visuals.vsync"), function(self)
@@ -424,14 +391,14 @@ local function generate_menus()
             function(self) 
                 local user = Input:get_user(player_n)
                 if user == nil then  
-                    self.label_text = Text:text("menu.options.input_submenu.subtitle_no_player", player_n)
+                    self:set_label_text(Text:text("menu.options.input_submenu.subtitle_no_player", player_n))
                     return
                 end
                 local joystick = user.joystick
                 if joystick ~= nil then
-                    self.label_text = "🎮 "..joystick:getName()
+                    self:set_label_text("🎮 "..joystick:getName())
                 else
-                    self.label_text = Text:text("menu.options.input_submenu.subtitle_no_controller")
+                    self:set_label_text(Text:text("menu.options.input_submenu.subtitle_no_controller"))
                 end
             end},
             { "" },
@@ -474,9 +441,9 @@ local function generate_menus()
                 self.value = Options:get("axis_deadzone_p"..tostring(player_n)) * 20
                 self.value_text = concat(floor(100 * self.value / 20), "%")
                 
-                self.label_text = "🕹 "..Text:text("menu.options.input_submenu.deadzone")
+                self:set_label_text("🕹 "..Text:text("menu.options.input_submenu.deadzone"))
                 if self.is_selected and self.value <= 4 then
-                    self.label_text = self.label_text.."\n⚠ "..Text:text("menu.options.input_submenu.low_deadzone_warning")
+                    self:set_label_text(self.label_text.."\n⚠ "..Text:text("menu.options.input_submenu.low_deadzone_warning"))
                 end
             end},
             { "" },
@@ -574,6 +541,7 @@ local function generate_menus()
         { "Fabien Delpiano", function() end },
         { "Quentin Picault", function() end},
         { "NotGoyome", function() end},
+        { "Toulouse Game Dev", function() end}, -- func_url("https://www.indiegamelyon.com/")},
         { "LÖVE framework", function() end}, -- func_url("https://love2d.org/") },
         { ""},
         { "<<< "..Text:text("menu.credits.asset_creators").." >>>"},
@@ -689,7 +657,7 @@ local function generate_menus()
                 s = s.."🎮 "..Text:text("menu.joystick_removed.item", value[1], value[2]).."\n"
             end
 
-            self.label_text = s
+            self:set_label_text(s)
             --..concat("\n", game.menu_manager.joystick_wait_cooldown, " (", game.menu_manager.joystick_wait_mode, ")")
         end,
         },
