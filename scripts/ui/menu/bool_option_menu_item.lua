@@ -22,7 +22,7 @@ end
 
 function BoolOptionMenuItem:on_click()
 	self:set_value_and_option(not self.value)
-	-- Audio:play("menu_select")
+	Audio:play("menu_select")
 end
 
 

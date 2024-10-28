@@ -72,7 +72,19 @@ function OptionsManager:init(game)
 
 		is_fullscreen = function(value)
 			game:update_fullscreen(value)
-		end
+		end,
+		pixel_scale = function(value)		
+			if not game then 
+				return	
+			end
+			game:update_screen()
+		end,
+		is_vsync = function(value)
+			love.window.setVSync(value)
+		end,
+		mouse_visible = function(value)
+            love.mouse.setVisible(value)
+		end,
 	}
 	self.options = copy_table(self.default_options)
 
@@ -158,34 +170,6 @@ end
 -----------------------------------------------------
 
 -- DEPRACATED
-function OptionsManager:set_pixel_scale(scale)
-	if not game then  return  end
-	self:set("pixel_scale", scale)
-	game:update_screen()
-end
-
--- DEPRACATED
-function OptionsManager:toggle_vsync()
-	self:toggle("is_vsync")
-	love.window.setVSync(self:get("is_vsync"))
-end
-
--- DEPRACATED
-function OptionsManager:set_screenshake(n)
-	self:set("screenshake", n)
-end
-
-function OptionsManager:toggle_timer()
-	self:toggle("timer_on")
-end
-
-function OptionsManager:toggle_mouse_visible()
-	self:toggle("mouse_visible")
-end
-
-function OptionsManager:toggle_pause_on_unfocus()
-	self:toggle("pause_on_unfocus")
-end
 
 function OptionsManager:toggle_screenshake()
 	self:toggle("screenshake_on")

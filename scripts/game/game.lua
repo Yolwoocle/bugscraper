@@ -287,14 +287,19 @@ function Game:update_screen()
 	local auto_scale = math.min(screen_sx, screen_sy)
 
 	local scale = auto_scale
-	if type(pixel_scale_mode) == "number" then
-		scale = math.min(pixel_scale_mode, auto_scale)
-
-	elseif pixel_scale_mode == "auto" then
+	
+	if pixel_scale_mode == "auto" then
 		scale = auto_scale
 		
 	elseif pixel_scale_mode == "max_whole" then
 		scale = math.floor(auto_scale)
+
+	elseif type(tonumber(pixel_scale_mode)) == "number" then
+		scale = math.min(tonumber(pixel_scale_mode), auto_scale)
+
+	else
+		print("Game.update_screen: WARNING: pixel scale mode has invalid value: '"..tostring(pixel_scale_mode).."'")
+
 	end
 
 	CANVAS_SCALE = scale

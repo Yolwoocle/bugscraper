@@ -7,16 +7,20 @@ local default_formatters = {
 		return tostring(value) 
 	end,
 	["%"] = function(value)
-		return string.format("%d%%", value * 100) 
+		return string.format("%d%%", round(value * 100)) 
 	end
 }
 
-function SliderOptionMenuItem:init(i, x, y, text, property_name, range, step, text_formatter, additional_update)	
+function SliderOptionMenuItem:init(i, x, y, text, property_name, range, step, text_formatter, additional_update, additional_on_click)	
 	if type(text_formatter) == "nil" then
 		text_formatter = default_formatters["default"]
 
 	elseif type(text_formatter) == "string" then
 		text_formatter = default_formatters[text_formatter] or default_formatters["default"]
+
+	elseif type(text_formatter) ~= "function" then
+		error("Invalid type for text_formatter: "..type(text_formatter))
+		
 	end
 
 	SliderOptionMenuItem.super.init(self, i, x, y, text, property_name, additional_update)
@@ -30,14 +34,19 @@ function SliderOptionMenuItem:init(i, x, y, text, property_name, range, step, te
 	self.text_formatter = function(value)
 		return string.format("< %s >", text_formatter(value))
 	end
+	self.additional_on_click = additional_on_click
 end
 
 function SliderOptionMenuItem:real_to_discrete(real_value)
-	return round((real_value - self.range[1]) / self.step)
+	local ret = round((real_value - self.range[1]) / self.step)
+	print_debug("Real ", real_value, " -> ", ret)
+	return ret
 end
 
 function SliderOptionMenuItem:discrete_to_real(discrete_value)
-	return lerp(self.range[1], self.range[2], discrete_value / self.discrete_range[2])
+	local ret = lerp(self.range[1], self.range[2], discrete_value / self.discrete_range[2])
+	print_debug("Discr ", discrete_value, " -> ", ret)
+	return ret
 end
 
 function SliderOptionMenuItem:round_value(real_value)
@@ -67,6 +76,9 @@ function SliderOptionMenuItem:on_click(diff)
 
 	local ratio = (self.value - self.range[1]) / (self.range[2] - self.range[1])
 	Audio:play("menu_select", nil, 0.8 + ratio*0.4)
+	if self.additional_on_click then
+		self:additional_on_click()
+	end
 
 	-- + sound preview for music & sfx
 end

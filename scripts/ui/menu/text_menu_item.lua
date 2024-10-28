@@ -36,6 +36,8 @@ function TextMenuItem:init_textitem(i, x, y, text, on_click, update_value)
 	-- Custom update value function
 	self.update_value = update_value or function(_) end
 
+	self.annotation = nil
+
 	-- if default_val ~= nil then
 	-- 	self:update_value(default_val)
 	-- end
@@ -83,18 +85,16 @@ function TextMenuItem:draw_textitem()
 	
 	if self.is_selected and self.label_text ~= "" then
 		local col = Input:get_last_ui_player_color()
-		local x = math.floor(self.x - MENU_PADDING - 8)
+		local x = math.floor(MENU_PADDING)
 		local y = math.floor(self.y + self.oy - 6)
-		local w = math.floor(MENU_PADDING*2 + 16)
+		local w = math.floor(CANVAS_WIDTH - MENU_PADDING*2)
 		local h = math.floor(16)
 
-		exec_color(col, function()
-			love.graphics.draw(images.selection_left, math.floor(x-16), math.floor(y))
-			love.graphics.draw(images.selection_right, math.floor(x + w), math.floor(y))
-			rect_color(col, "fill", math.floor(x), math.floor(y), w, h)
-		end)
+		draw_3_slice(images.selection_left, images.selection_right, col, x, y, w, h)
 	end
-
+	
+	self:draw_annotation()
+	
 	if type(self.value) == "nil" then
 		self:draw_withoutvalue()
 	else
@@ -102,6 +102,13 @@ function TextMenuItem:draw_textitem()
 	end
 	
 	gfx.setColor(1, 1, 1, 1)
+end
+
+function TextMenuItem:draw_annotation()
+	if self.is_selected and self.annotation then
+
+		-- self.annotation
+	end
 end
 
 -- this is awful. please ffs change it
@@ -134,7 +141,8 @@ function TextMenuItem:draw_withvalue()
 	if not self.is_selectable then
 		gfx.setColor(COL_MID_GRAY)
 	end
-	draw_func(self.label_text, self.x - MENU_PADDING, self.y + self.oy)
+	-- draw_func(self.label_text, self.x + MENU_PADDING, self.y + self.oy)
+	draw_func(self.label_text, MENU_PADDING + 16, self.y + self.oy)
 
 	self:draw_value_text()
 end
@@ -143,7 +151,7 @@ function TextMenuItem:draw_value_text()
 	local draw_func = self:get_leftjustified_text_draw_function()
 	local value_text_width = get_text_width(self.value_text)
 	
-	draw_func(self.value_text, self.x + CANVAS_WIDTH*0.25 - value_text_width + self.ox, self.y + self.oy)
+	draw_func(self.value_text, CANVAS_WIDTH - MENU_PADDING - value_text_width - 16 + self.ox, self.y + self.oy)
 end
 
 function TextMenuItem:set_selected(val, diff)
@@ -154,8 +162,6 @@ function TextMenuItem:set_selected(val, diff)
 end
 
 function TextMenuItem:after_click()
-	Options:update_options_file()
-	Audio:play("menu_select")
 	self.oy = -4
 end
 

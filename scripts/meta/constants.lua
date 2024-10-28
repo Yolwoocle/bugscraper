@@ -157,7 +157,7 @@ LOGO_COLS = {COL_LIGHT_YELLOW, COL_LIGHT_BLUE, COL_LIGHT_RED}
 ---------------------------------------------
 
 -- Ui
-MENU_PADDING = CANVAS_WIDTH * 0.25
+MENU_PADDING = CANVAS_WIDTH * 0.18
 
 ---------------------------------------------
 
