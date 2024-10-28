@@ -118,51 +118,51 @@ local function generate_menus()
         { "❤ " .. Text:text("menu.pause.credits"), func_set_menu('credits') },
         { "🔚 " .. Text:text("menu.pause.quit"), func_set_menu('quit') },
         { "" },
-        -- { "❤ " .. Text:text("menu.win.wishlist") .. " 🔗", func_url("steam://advertise/2957130/") },
+        { "❤ " .. Text:text("menu.win.wishlist") .. " 🔗", func_url("steam://advertise/2957130/") },
         -- { "📺 " .. Text:text("menu.pause.website") .. " 🔗", func_url("https://bugscraper.net/") },
         { "😈 " .. Text:text("menu.pause.discord") .. " 🔗", func_url("https://discord.gg/BAMMwMn2m5") },
         -- { "🐦 " .. Text:text("menu.pause.twitter") .. " 🔗", func_url("https://x.com/yolwoocle_") },
-        -- { "" },
-        -- { "[DEBUG] Skip to world 2", function()
-        --     for k, e in pairs(game.actors) do
-        --         if e.is_enemy then
-        --             e:kill()
-        --         end
-        --     end
-        --     game:set_floor(20)
-        --     game:start_game()
-        --     game.menu_manager:unpause()
-        -- end },
-        -- { "[DEBUG] Skip to world 2 boss", function()
-        --     for k, e in pairs(game.actors) do
-        --         if e.is_enemy then
-        --             e:kill()
-        --         end
-        --     end
-        --     game:set_floor(38)
-        --     game:start_game()
-        --     game.menu_manager:unpause()
-        -- end },
-        -- { "[DEBUG] Skip to world 3", function()
-        --     for k, e in pairs(game.actors) do
-        --         if e.is_enemy then
-        --             e:kill()
-        --         end
-        --     end
-        --     game:set_floor(40)
-        --     game:start_game()
-        --     game.menu_manager:unpause()
-        -- end },
-        -- { "[DEBUG] Skip to world 3 boss", function()
-        --     for k, e in pairs(game.actors) do
-        --         if e.is_enemy then
-        --             e:kill()
-        --         end
-        --     end
-        --     game:set_floor(58)
-        --     game:start_game()
-        --     game.menu_manager:unpause()
-        -- end },
+        { "" },
+        { "[DEBUG] Skip to world 2", function()
+            for k, e in pairs(game.actors) do
+                if e.is_enemy then
+                    e:kill()
+                end
+            end
+            game:set_floor(20)
+            game:start_game()
+            game.menu_manager:unpause()
+        end },
+        { "[DEBUG] Skip to world 2 boss", function()
+            for k, e in pairs(game.actors) do
+                if e.is_enemy then
+                    e:kill()
+                end
+            end
+            game:set_floor(38)
+            game:start_game()
+            game.menu_manager:unpause()
+        end },
+        { "[DEBUG] Skip to world 3", function()
+            for k, e in pairs(game.actors) do
+                if e.is_enemy then
+                    e:kill()
+                end
+            end
+            game:set_floor(40)
+            game:start_game()
+            game.menu_manager:unpause()
+        end },
+        { "[DEBUG] Skip to world 3 boss", function()
+            for k, e in pairs(game.actors) do
+                if e.is_enemy then
+                    e:kill()
+                end
+            end
+            game:set_floor(58)
+            game:start_game()
+            game.menu_manager:unpause()
+        end },
     }
     if OPERATING_SYSTEM == "Web" then
         -- Disable quitting on web
