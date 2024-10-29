@@ -33,7 +33,7 @@ function Motherboard:init(x, y)
 
     -- Parameters
     self.follow_player = false
-    self.max_life = 250
+    self.max_life = 350
     self.life = self.max_life
     self.self_knockback_mult = 0
     self.is_pushable = false
@@ -233,8 +233,12 @@ function Motherboard:init(x, y)
             enter = function(state)
                 self.hard_mode = true
 
-                self.state_timer:start(4.0)
+                self.state_timer:start(2.0)
                 self.spr.color = {1.0, 0.4, 0.4}
+
+                self.new_button_timer:stop()
+                self.button:kill()
+                self.button = nil
 
                 game:frameskip(10)
             end,
@@ -249,6 +253,8 @@ function Motherboard:init(x, y)
             exit = function(state)
                 self.spr.color = COL_WHITE
                 self.spr:update_offset(0, 0)
+
+                self.new_button_timer:start()
             end
         },
 
@@ -261,7 +267,9 @@ function Motherboard:init(x, y)
                 self.dying_timer:start()
                 self.explosion_timer:start()
 
+                self.new_button_timer:stop()
                 self.button:remove()
+                self.button = nil
 
                 self.kill_on_next_frame = false
                 self.is_immune_to_bullets = true
@@ -416,11 +424,10 @@ function Motherboard:draw()
 
     self.state_machine:draw()
     self.plug_sprite:draw(self.mid_x, self.y + self.plug_y + self.plug_offset, 0, 0)
-
-    self.shield_sprite:draw(self.mid_x, self.y - 6, 0, 0)
+    -- self.shield_sprite:draw(self.mid_x, self.y - 6, 0, 0)
 
     if DEBUG_MODE then
-        print_outline(nil, nil, self.state_machine.current_state_name, self.x, self.y + 128)
+        -- print_outline(nil, nil, self.state_machine.current_state_name, self.x, self.y + 128)
     end
 end
 

@@ -10,7 +10,7 @@ function QueuedPlayer:init(player_n, input_profile_id, joystick)
     self.input_profile_id = input_profile_id
     self.joystick = joystick
 
-    self.selection_n = player_n
+    self.selection_n = self:find_first_free_skin(player_n, diff)
     self.selection = skins[self.selection_n]
     self.squash = 1
     self.selection_ox = 0
@@ -129,14 +129,23 @@ function QueuedPlayer:on_other_joined(player)
     end
 end
 
-function QueuedPlayer:increment_selection(diff)
+function QueuedPlayer:find_first_free_skin(start, diff)
+    diff = diff or 1
+
+    local skin_n = start
     for i=1, #skins do
-        self.selection_n = mod_plus_1(self.selection_n + diff, #skins)
-        if game.skin_choices[self.selection_n] then
-            self.selection = skins[self.selection_n]
-            break
+        if game.skin_choices[skin_n] then
+            return skin_n
         end
+        skin_n = mod_plus_1(skin_n + diff, #skins)
     end
+    return start
+end
+
+function QueuedPlayer:increment_selection(diff)
+    self.selection_n = self:find_first_free_skin(mod_plus_1(self.selection_n + diff, #skins), diff)
+    self.selection = skins[self.selection_n]
+
     self.squash = 1.5
     self.selection_ox = diff * 10
     if diff >= 0 then
