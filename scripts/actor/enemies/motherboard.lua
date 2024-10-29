@@ -9,6 +9,8 @@ local Timer             = require "scripts.timer"
 local Segment           = require "scripts.math.segment"
 local guns              = require "data.guns"
 local ElectricArc       = require "scripts.actor.enemies.electric_arc"
+local ChipperMinion     = require "scripts.actor.enemies.chipper_minion"
+local Pendulum          = require "scripts.actor.enemies.pendulum"
 local Chipper           = require "scripts.actor.enemies.chipper"
 local BigBeelet         = require "scripts.actor.enemies.big_beelet"
 local MotherboardButton = require "scripts.actor.enemies.motherboard_button"
@@ -31,7 +33,7 @@ function Motherboard:init(x, y)
 
     -- Parameters
     self.follow_player = false
-    self.max_life = 500
+    self.max_life = 250
     self.life = self.max_life
     self.self_knockback_mult = 0
     self.is_pushable = false
@@ -58,7 +60,7 @@ function Motherboard:init(x, y)
     self.state_timer = Timer:new(0)
     self.ray_timer = Timer:new(1.0)
     self.spawn_timer = Timer:new({ 0.5, 1.5 })
-    self.new_button_timer = Timer:new(1.5)
+    self.new_button_timer = Timer:new(1.0)
 
     -- state management
     self.next_state = nil
@@ -94,164 +96,120 @@ function Motherboard:init(x, y)
     }
     self.wave_enemies = {}
 
+    self.hard_mode = false
+
     local removeme_timer_mult = 1 --0.1
     self.state_machine = StateMachine:new({
-        shoot_lasers = {
+        chippers = {
             enter = function(state)
-                self.lasers = {}
-                self.laser_speed_range = {120, 200}
+                local bounds = game.level.cabin_inner_rect
+                self.chippers = {}
 
-                for i = 1, self.laser_count do
-                    local laser = ElectricBullet:new(0, 0, i)
-                    laser.remove_on_exit_bounds = false
-                    game:new_actor(laser)
-                    
-                    self:set_random_arc_segment(laser)
-                    table.insert(self.lasers, laser)
+                local oy = 16 + random_range_int(0, 1) * 32
+                for _, info in pairs({
+                    { x = bounds.ax,      y = bounds.ay,      direction = 0 },
+                    { x = bounds.bx - 12, y = bounds.ay + 32, direction = 2 } }
+                ) do
+                    local iy = info.y - oy
+                    while iy < bounds.by do
+                        if iy >= bounds.ay then
+                            local chipper = ChipperMinion:new(info.x, iy, info.direction, ternary(self.hard_mode, 150, 100))
+                            table.insert(self.chippers, chipper)
+                            game:new_actor(chipper)
+                        end
+                        iy = iy + 64
+                    end
+                end
+
+                self.state_timer:start(2.0)
+            end,
+
+            update = function(state, dt)
+                if self.state_timer:update(dt) then
+                    self:transition_to_random_state()
+                end
+            end
+        },
+
+        pendulum = {
+            enter = function(state)
+                local bounds = game.level.cabin_inner_rect
+                local n = ternary(self.hard_mode, 2, 1)
+
+                local rand = random_range_int(0, 1)
+
+                self.pendulums = {}
+                for i = 1, n do
+                    -- x, y, angle_range, radius, swing_speed, initial_angle_t
+                    local p = Pendulum:new((bounds.ax + bounds.bx) / 2, bounds.ay, nil,
+                        ternary(i == 1, 200, 150),
+                        ternary(self.hard_mode, 2.5, 2),
+                        ternary(i == 1, rand * pi, (1 - rand) * pi)
+                    )
+                    game:new_actor(p)
+                    table.insert(self.pendulums, p)
                 end
 
                 self.state_timer:start(random_range(4.0, 8.0) * removeme_timer_mult)
             end,
-
             update = function(state, dt)
+                if self.state_timer:update(dt) then
+                    self:transition_to_random_state()
+                end
+            end,
+            exit = function(state)
+                for _, p in pairs(self.pendulums) do
+                    p:remove()
+                end
+                self.pendulums = {}
+            end,
+        },
+
+        big_chipper = {
+            enter = function(state)
                 local bounds = game.level.cabin_inner_rect
-
-                for i_arc = 1, #self.lasers do
-                    local arc = self.lasers[i_arc]
-                    if not arc.is_active then
-                        self:set_random_arc_segment(arc)
-                    end
+                local n = ternary(self.hard_mode, 4, 2)
+                self.big_chippers = {}
+                for _ = 1, n do
+                    local chipper = BigBeelet:new((bounds.ax + bounds.bx) / 2, bounds.ay)
+                    table.insert(self.big_chippers, chipper)
+                    game:new_actor(chipper)
                 end
 
-                if self.state_timer:update(dt) then
-                    self:transition_to_random_state()
-                end
-            end,
-
-            exit = function(state)
-                for i_wall = #self.lasers, 1, -1 do
-                    local wall = self.lasers[i_wall]
-                    wall.remove_on_exit_bounds = true
-                end
-            end,
-        },
-
-        rays = {
-            enter = function(state)
-                self.wave_enemies = {}
-                self:set_bouncy(true)
-
-                self.ray_timer:start()
-                self.spawn_timer:start()
-
-                self.ray_cycles_left = random_range_int(3, 5) * removeme_timer_mult
-            end,
-            exit = function(state)
-                self.rays:set_state("disabled")
-
-                for i = 1, #self.wave_enemies do
-                    self.wave_enemies[i]:kill()
-                end
-            end,
-            update = function(state, dt)
-                local cabin_rect = game.level.cabin_inner_rect
-                self.plug_sprite:update(dt)
-
-                -- Update rays
-                if self.ray_timer:update(dt) then
-                    self.rays:set_state(({
-                        disabled = "telegraph",
-                        telegraph = "active",
-                        active = "disabled",
-                    })[self.rays.state])
-                    self.ray_timer:start(1.0)
-
-                    if self.rays.state == "disabled" then
-                        self.ray_cycles_left = self.ray_cycles_left - 1
-                        if self.ray_cycles_left <= 0 then
-                            self:transition_to_random_state()
-                        end
-                    end
-                end
-
-                -- Spawn enemies
-                if self.spawn_timer:update(dt) then
-                    if #self.wave_enemies < self.max_chippers then
-                        local x0 = random_range(cabin_rect.ax + 16, cabin_rect.bx - 16)
-                        local y0 = self.y + self.h + 16
-                        local enemy_class = random_weighted(self.enemy_mix)
-
-                        local enemy
-                        if enemy_class == FlyingDung then
-                            enemy = enemy_class:new(x0, y0, self)
-                        else
-                            enemy = enemy_class:new(x0, y0)
-                        end
-                        game:new_actor(enemy)
-
-                        table.insert(self.wave_enemies, enemy)
-                    end
-
-                    self.spawn_timer:start()
-                end
-
-                -- Remove dead enemies
-                for i = #self.wave_enemies, 1, -1 do
-                    if self.wave_enemies[i].is_dead then
-                        table.remove(self.wave_enemies, i)
-                    end
-                end
-            end,
-        },
-
-        bullets = {
-            enter = function(state)
-                self.state_timer:start(random_range(6.0, 9.0) * removeme_timer_mult)
-                self.gun_target = self:get_random_player()
-
-                self:set_bouncy(false)
-                self.show_gun_barrels = true
-                self.gun_directions = {
-                    turret = {
-                        a = 0,
-                    },
-                    burst = {
-                        a = 0,
-                    },
-                }
-            end,
-            exit = function(state)
-                self.show_gun_barrels = false
-                self.gun_directions = nil
+                self.state_timer:start(random_range(4.0, 8.0) * removeme_timer_mult)
             end,
             update = function(state, dt)
                 if self.state_timer:update(dt) then
                     self:transition_to_random_state()
                 end
-
-                self.turret_gun:update(dt)
-                self.burst_gun:update(dt)
-
-                if not self.gun_directions then
-                    return
-                end
-
-                if self.gun_target then
-                    self.gun_directions.turret.a = get_angle_between_actors(self, self.gun_target, true)
-                    local dx, dy = math.cos(self.gun_directions.turret.a), math.sin(self.gun_directions.turret.a)
-                    self.turret_gun:shoot(dt, self, self.mid_x, self.mid_y + self.plug_gun_offset, dx, dy)
-                end
-
-                if not self.burst_gun.is_reloading and self.burst_gun.ammo == self.burst_gun.max_ammo then
-                    local a = random_range(0, pi)
-                    self.gun_directions.burst.a = a
-                    self.burst_dirx, self.burst_diry = math.cos(a), math.sin(a)
-                end
-                if self.burst_dirx then
-                    self.burst_gun:shoot(dt, self, self.mid_x, self.mid_y + self.plug_gun_offset, self.burst_dirx,
-                        self.burst_diry)
-                end
             end,
+            exit = function(state)
+                for _, c in pairs(self.big_chippers) do
+                    c:kill()
+                end
+            end
+        },
+
+        ray_lasers = {
+            enter = function(state)
+                self.state_timer:start(random_range(4.0, 4.0) * removeme_timer_mult)
+            end,
+            update = function(state, dt)
+                if self.state_timer:update(dt) then
+                    self:transition_to_random_state()
+                end
+            end
+        },
+
+        _template = {
+            enter = function(state)
+                self.state_timer:start(random_range(4.0, 8.0) * removeme_timer_mult)
+            end,
+            update = function(state, dt)
+                if self.state_timer:update(dt) then
+                    self:transition_to_random_state()
+                end
+            end
         },
 
         transition = {
@@ -270,6 +228,30 @@ function Motherboard:init(x, y)
                 end
             end,
         },
+
+        mid_transition = {
+            enter = function(state)
+                self.hard_mode = true
+
+                self.state_timer:start(4.0)
+                self.spr.color = {1.0, 0.4, 0.4}
+
+                game:frameskip(10)
+            end,
+
+            update = function(state, dt)
+                self.spr:update_offset(random_neighbor(5), random_neighbor(5))
+                if self.state_timer:update(dt) then
+                    self:transition_to_random_state()
+                end
+            end,
+
+            exit = function(state)
+                self.spr.color = COL_WHITE
+                self.spr:update_offset(0, 0)
+            end
+        },
+
         dying = {
             enter = function(state)
                 self.plug_sprite.is_visible = false
@@ -284,6 +266,7 @@ function Motherboard:init(x, y)
                 self.kill_on_next_frame = false
                 self.is_immune_to_bullets = true
             end,
+
             update = function(state, dt)
                 if self.explosion_timer:update(dt) then
                     local explosion = Explosion:new(random_range(self.x, self.x + self.w),
@@ -319,28 +302,12 @@ function Motherboard:init(x, y)
         }
     })
 
-    self:transition_to_random_state("random")
+    self:transition_to_random_state()
 
     self:randomize_button_position()
 
     self:set_bouncy(true)
     self:spawn_button()
-end
-
-function Motherboard:set_random_arc_segment(laser)
-    local bounds = game.level.cabin_inner_rect
-
-    local random_x = random_range(bounds.ax, bounds.bx)
-    local random_y = random_range(0, CANVAS_HEIGHT)
-    local length = random_range(32, 64)
-    local random_a = pi/2 + random_neighbor(pi/3)
-    local laser_x, laser_y = random_x, bounds.ay - random_y - length
-    local speed = random_range(unpack(self.laser_speed_range))
-
-    laser:set_properties(laser_x, laser_y, random_a, length, speed, Rect:new(bounds.ax, bounds.ay - CANVAS_HEIGHT*2, bounds.bx, bounds.by))
-    laser:set_active(true)
-
-    return laser
 end
 
 function Motherboard:get_flash_white_shader()
@@ -354,29 +321,29 @@ function Motherboard:set_bouncy(val)
     self.shield_sprite:set_visible(val)
 end
 
-function Motherboard:transition_to_random_state()
-    local state 
-    local i = 0
-    while i < 10 and not state or state == self.state_machine.current_state_name do
-        state = random_sample {
-            "rays",
-            "shoot_lasers",
-            "bullets"
-        }
-        i = i + 1
+function Motherboard:transition_to_random_state(force_state)
+    local state = force_state
+    if not state then
+        local i = 0
+        while i < 10 and (not state or state == self.state_machine.current_state_name) do
+            state = random_sample {
+                "chippers",
+                "pendulum",
+                "big_chipper",
+            }
+            i = i + 1
+        end
     end
 
     self.next_state = state
     self.state_machine:set_state("transition")
-    self.plug_sprite:set_visible(true)
-
-    if state == "rays" then
-        self.plug_sprite:set_animation("rays")
-    elseif state == "shoot_lasers" then
-        self.plug_sprite:set_visible(false)
-    elseif state == "bullets" then
-        self.plug_sprite:set_animation("bullets")
-    end
+    self.plug_sprite:set_visible(false)
+    -- if state == "rays" then
+    --     self.plug_sprite:set_animation("rays")
+    -- elseif state == "shoot_lasers" then
+    -- elseif state == "bullets" then
+    --     self.plug_sprite:set_animation("bullets")
+    -- end
 end
 
 function Motherboard:on_hit_flying_dung(dung)
@@ -400,9 +367,13 @@ function Motherboard:update(dt)
 
     self:update_random_button(dt)
 
+    if not self.has_done_midpoint_animation and self.life <= self.max_life / 2 then
+        self.has_done_midpoint_animation = true
+        self:transition_to_random_state("mid_transition")
+    end
+
     self.shield_sprite:set_scale(nil, lerp(self.shield_sprite.sy, 1, 0.05))
 end
-
 
 function Motherboard:spawn_button()
     local button = MotherboardButton:new(self.mid_x + self.button_position[1], self.y + self.button_position[2], self)
@@ -429,7 +400,6 @@ function Motherboard:on_motherboard_button_pressed(button)
     self:randomize_button_position()
     self.new_button_timer:start()
 end
-
 
 function Motherboard:draw()
     self:draw_enemy()

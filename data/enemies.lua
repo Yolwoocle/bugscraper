@@ -32,6 +32,7 @@ local enemies = {
 	Grasshopper =        require "scripts.actor.enemies.grasshopper", 
 	Chipper =            require "scripts.actor.enemies.chipper",  
 	ChipperMinion =      require "scripts.actor.enemies.chipper_minion",  
+	Pendulum =           require "scripts.actor.enemies.pendulum",  
 	MetalFly =           require "scripts.actor.enemies.metal_fly",
 	BulbBuddy =          require "scripts.actor.enemies.bulb_buddy", 
 	SwitchBug =          require "scripts.actor.enemies.switch_bug", --*

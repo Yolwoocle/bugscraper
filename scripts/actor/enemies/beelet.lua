@@ -58,6 +58,7 @@ function Beellet:init(x, y)
 
     self.s = 1
     self.target_s = 1
+    self.base_scale = 1
 
     self.state_machine = StateMachine:new({
         wander = {
@@ -200,7 +201,7 @@ function Beellet:update(dt)
     self.state_machine:update(dt)
 
     self.s = lerp(self.s, self.target_s, 0.3)
-    self:set_sprite_scale(self.s)
+    self:set_sprite_scale(self.s * self.base_scale)
 
     -- self.debug_values[2] = concat(self.life,"❤")
 end

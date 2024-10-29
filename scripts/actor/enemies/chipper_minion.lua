@@ -8,8 +8,8 @@ local images = require "data.images"
 
 local ChipperMinion = Chipper:inherit()
 	
-function ChipperMinion:init(x, y, spr, direction)
-    self.super.init(self, x,y, spr or images.chipper_1)
+function ChipperMinion:init(x, y, direction, attack_speed)
+    ChipperMinion.super.init(self, x,y, spr or images.chipper_1)
     self.name = "chipper_minion"
     self.direction = direction or random_sample {0, 2}
     self.target_rot = self.direction * pi/2
@@ -17,6 +17,10 @@ function ChipperMinion:init(x, y, spr, direction)
 
     self.wander_no_attack_timer:stop()
     self.turn_timer:stop()
+
+    if attack_speed then
+        self.attack_speed = attack_speed
+    end
 
     self.loot = {}
 end

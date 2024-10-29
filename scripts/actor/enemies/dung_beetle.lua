@@ -98,8 +98,9 @@ function DungBeetle:on_hit_flying_dung(flying_dung)
     
     self:do_damage(5, flying_dung)
     if self.vehicle and self.vehicle.state_machine.current_state_name ~= "bunny_hopping" then
-		-- self.vehicle:do_knockback(self.vehicle.self_knockback_mult, flying_dung.vx, math.max(0, flying_dung.vy))
-		self.vehicle:do_knockback(self.vehicle.self_knockback_mult, sign(flying_dung.vx) * 20, 0)
+        if sign(self.vehicle.vx) == -sign(flying_dung.vx) then
+            self.vehicle:do_knockback(self.vehicle.self_knockback_mult, sign(flying_dung.vx) * 20, 0)
+        end
         self.vehicle:do_damage(5, flying_dung)
     end
 end

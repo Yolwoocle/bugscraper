@@ -644,7 +644,7 @@ function random_neighbor(n)
 	return love.math.random()*2*n - n
 end
 
---- Returns an INTEGER between in the range [a, b[. (a included, b excluded)
+--- Returns an INTEGER between in the range [a, b]. (a included, b included)
 ---@param a number
 ---@param b number
 function random_range_int(a, b)
