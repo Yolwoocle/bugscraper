@@ -26,9 +26,10 @@ function FlyingSpawner:init(x, y, spr, w, h)
     self.larva_projectiles = {}
     self.larvae = {}
     self.max_larvae = 6
+    self.death_larva_range = {3, 5}
 
     self.target_y = (game.level.cabin_inner_rect.ay + game.level.cabin_inner_rect.by) / 2
-    self.target_follow_speed_y = 20
+    self.target_follow_speed_y = 60
 
     self.state_machine = StateMachine:new({
         rise = {
@@ -79,8 +80,15 @@ end
 
 function FlyingSpawner:update(dt)
     self.super.update(self, dt)
-
+    
     self.state_machine:update(dt)
+end
+
+function FlyingSpawner:on_death()
+    for i = 1, random_range(self.death_larva_range[1], self.death_larva_range[2]) do
+        local larva_projectile = LarvaProjectile:new(self.mid_x, self.mid_y)
+        game:new_actor(larva_projectile)
+    end
 end
 
 return FlyingSpawner

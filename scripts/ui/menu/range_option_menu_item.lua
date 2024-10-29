@@ -38,15 +38,11 @@ function SliderOptionMenuItem:init(i, x, y, text, property_name, range, step, te
 end
 
 function SliderOptionMenuItem:real_to_discrete(real_value)
-	local ret = round((real_value - self.range[1]) / self.step)
-	print_debug("Real ", real_value, " -> ", ret)
-	return ret
+	return round((real_value - self.range[1]) / self.step)
 end
 
 function SliderOptionMenuItem:discrete_to_real(discrete_value)
-	local ret = lerp(self.range[1], self.range[2], discrete_value / self.discrete_range[2])
-	print_debug("Discr ", discrete_value, " -> ", ret)
-	return ret
+	return lerp(self.range[1], self.range[2], discrete_value / self.discrete_range[2])
 end
 
 function SliderOptionMenuItem:round_value(real_value)

@@ -41,6 +41,7 @@ function Motherboard:init(x, y)
     self.bullet_bounce_mode = BULLET_BOUNCE_MODE_NORMAL
     self.is_front = true
     self.is_affected_by_bounds = false
+    self.laser_count = 15
 
     -- graphics
     self.flash_white_shader = shaders.multiply_color
@@ -95,72 +96,48 @@ function Motherboard:init(x, y)
 
     local removeme_timer_mult = 1 --0.1
     self.state_machine = StateMachine:new({
-        random = {
-            update = function(state, dt)
-                return random_sample {
-                    "moving_walls",
-                    "bullets",
-                    "rays",
-                }
-            end
-        },
         
-        moving_walls = {
+
+        shoot_lasers = {
             enter = function(state)
-                local bounds = game.level.cabin_inner_rect
+                self.lasers = {}
+                self.laser_speed_range = {120, 200}
 
-                self.moving_walls = {}
-                self.moving_wall_speed_range = {120, 200}
-                self.set_random_arc_segment = function(self, arc)
-                    local random_x = random_range(bounds.ax, bounds.bx)
-                    local random_y = random_range(0, CANVAS_HEIGHT)
-                    local length = random_range(32, 64)
-                    local random_a = pi/2 + random_neighbor(pi/3)
-                    local arc_x, arc_y = random_x, bounds.ay - random_y - length
-                    local speed = random_range(unpack(self.moving_wall_speed_range))
-
-                    arc:set_properties(arc_x, arc_y, random_a, length, speed, Rect:new(bounds.ax, bounds.ay - CANVAS_HEIGHT*2, bounds.bx, bounds.by))
-                    arc:set_active(true)
-
-                    return arc
-                end
-
-                for i = 1, 14 do
-                    local arc = ElectricBullet:new(0, 0, i)
-                    arc.remove_on_exit_bounds = false
-                    game:new_actor(arc)
+                for i = 1, self.laser_count do
+                    local laser = ElectricBullet:new(0, 0, i)
+                    laser.remove_on_exit_bounds = false
+                    game:new_actor(laser)
                     
-                    self:set_random_arc_segment(arc)
-                    table.insert(self.moving_walls, arc)
+                    self:set_random_arc_segment(laser)
+                    table.insert(self.lasers, laser)
                 end
 
-                self.state_timer:start(random_range(4.0, 8.0))
+                self.state_timer:start(random_range(4.0, 8.0) * removeme_timer_mult)
             end,
 
             update = function(state, dt)
                 local bounds = game.level.cabin_inner_rect
 
-                for i_arc = 1, #self.moving_walls do
-                    local arc = self.moving_walls[i_arc]
+                for i_arc = 1, #self.lasers do
+                    local arc = self.lasers[i_arc]
                     if not arc.is_active then
                         self:set_random_arc_segment(arc)
                     end
                 end
 
                 if self.state_timer:update(dt) then
-                    return "random"
+                    self:transition_to_random_state()
                 end
             end,
 
             exit = function(state)
-                for i_wall = #self.moving_walls, 1, -1 do
-                    local wall = self.moving_walls[i_wall]
+                for i_wall = #self.lasers, 1, -1 do
+                    local wall = self.lasers[i_wall]
                     wall.remove_on_exit_bounds = true
-                    -- wall:remove()
-                    -- table.remove(self.moving_walls, i_wall)
                 end
             end,
         },
+
         rays = {
             enter = function(state)
                 self.wave_enemies = {}
@@ -169,7 +146,7 @@ function Motherboard:init(x, y)
                 self.ray_timer:start()
                 self.spawn_timer:start()
 
-                self.ray_cycles_left = 7 * removeme_timer_mult
+                self.ray_cycles_left = random_range_int(3, 5) * removeme_timer_mult
             end,
             exit = function(state)
                 self.rays:set_state("disabled")
@@ -194,7 +171,7 @@ function Motherboard:init(x, y)
                     if self.rays.state == "disabled" then
                         self.ray_cycles_left = self.ray_cycles_left - 1
                         if self.ray_cycles_left <= 0 then
-                            self:transition_to_next_state("charging")
+                            self:transition_to_random_state()
                         end
                     end
                 end
@@ -228,41 +205,10 @@ function Motherboard:init(x, y)
                 end
             end,
         },
-        charging = {
-            enter = function(state)
-                self.wave_enemies = {}
-                for i = 1, 1 do
-                    local chipper = BigBeelet:new(self.mid_x, self.y + self.h + 16)
-                    game:new_actor(chipper)
-                    table.insert(self.wave_enemies, chipper)
-                end
 
-                self.state_timer:start(20.0 * removeme_timer_mult)
-                self:randomize_button_position()
-
-                self:set_bouncy(true)
-                self:spawn_button()
-            end,
-            update = function(state, dt)
-                if self.state_timer:update(dt) then
-                    self:transition_to_next_state("bullets")
-                end
-
-                if self.new_button_timer:update(dt) then
-                    self:spawn_button()
-                end
-            end,
-            exit = function(state)
-                for _, e in pairs(self.wave_enemies) do
-                    if not e.is_dead then
-                        e:kill()
-                    end
-                end
-            end
-        },
         bullets = {
             enter = function(state)
-                self.state_timer:start(15.0 * removeme_timer_mult)
+                self.state_timer:start(random_range(6.0, 9.0) * removeme_timer_mult)
                 self.gun_target = self:get_random_player()
 
                 self:set_bouncy(false)
@@ -282,7 +228,7 @@ function Motherboard:init(x, y)
             end,
             update = function(state, dt)
                 if self.state_timer:update(dt) then
-                    self:transition_to_next_state("rays")
+                    self:transition_to_random_state()
                 end
 
                 self.turret_gun:update(dt)
@@ -309,6 +255,7 @@ function Motherboard:init(x, y)
                 end
             end,
         },
+
         transition = {
             enter = function(state)
                 self.plug_offset = 16
@@ -333,6 +280,8 @@ function Motherboard:init(x, y)
                 self.explosion_timer = Timer:new(0.3)
                 self.dying_timer:start()
                 self.explosion_timer:start()
+
+                self.button:remove()
 
                 self.kill_on_next_frame = false
                 self.is_immune_to_bullets = true
@@ -372,7 +321,28 @@ function Motherboard:init(x, y)
         }
     })
 
-    self:transition_to_next_state("moving_walls")
+    self:transition_to_random_state("random")
+
+    self:randomize_button_position()
+
+    self:set_bouncy(true)
+    self:spawn_button()
+end
+
+function Motherboard:set_random_arc_segment(laser)
+    local bounds = game.level.cabin_inner_rect
+
+    local random_x = random_range(bounds.ax, bounds.bx)
+    local random_y = random_range(0, CANVAS_HEIGHT)
+    local length = random_range(32, 64)
+    local random_a = pi/2 + random_neighbor(pi/3)
+    local laser_x, laser_y = random_x, bounds.ay - random_y - length
+    local speed = random_range(unpack(self.laser_speed_range))
+
+    laser:set_properties(laser_x, laser_y, random_a, length, speed, Rect:new(bounds.ax, bounds.ay - CANVAS_HEIGHT*2, bounds.bx, bounds.by))
+    laser:set_active(true)
+
+    return laser
 end
 
 function Motherboard:get_flash_white_shader()
@@ -386,14 +356,25 @@ function Motherboard:set_bouncy(val)
     self.shield_sprite:set_visible(val)
 end
 
-function Motherboard:transition_to_next_state(state)
+function Motherboard:transition_to_random_state()
+    local state 
+    local i = 0
+    while i < 10 and not state or state == self.state_machine.current_state_name do
+        state = random_sample {
+            "rays",
+            "shoot_lasers",
+            "bullets"
+        }
+        i = i + 1
+    end
+
     self.next_state = state
     self.state_machine:set_state("transition")
-
     self.plug_sprite:set_visible(true)
+
     if state == "rays" then
         self.plug_sprite:set_animation("rays")
-    elseif state == "charging" then
+    elseif state == "shoot_lasers" then
         self.plug_sprite:set_visible(false)
     elseif state == "bullets" then
         self.plug_sprite:set_animation("bullets")
@@ -419,7 +400,16 @@ function Motherboard:update(dt)
         end
     end
 
+    self:update_random_button(dt)
+
     self.shield_sprite:set_scale(nil, lerp(self.shield_sprite.sy, 1, 0.05))
+end
+
+
+function Motherboard:spawn_button()
+    local button = MotherboardButton:new(self.mid_x + self.button_position[1], self.y + self.button_position[2], self)
+    game:new_actor(button)
+    self.button = button
 end
 
 function Motherboard:randomize_button_position()
@@ -431,16 +421,17 @@ function Motherboard:randomize_button_position()
     }
 end
 
+function Motherboard:update_random_button(dt)
+    if self.new_button_timer:update(dt) then
+        self:spawn_button()
+    end
+end
+
 function Motherboard:on_motherboard_button_pressed(button)
     self:randomize_button_position()
     self.new_button_timer:start()
 end
 
-function Motherboard:spawn_button()
-    local button = MotherboardButton:new(self.mid_x + self.button_position[1], self.y + self.button_position[2], self)
-    game:new_actor(button)
-    table.insert(self.wave_enemies, button)
-end
 
 function Motherboard:draw()
     self:draw_enemy()
@@ -459,6 +450,10 @@ function Motherboard:draw()
     self.plug_sprite:draw(self.mid_x, self.y + self.plug_y + self.plug_offset, 0, 0)
 
     self.shield_sprite:draw(self.mid_x, self.y - 6, 0, 0)
+
+    if DEBUG_MODE then
+        print_outline(nil, nil, self.state_machine.current_state_name, self.x, self.y + 128)
+    end
 end
 
 function Motherboard:on_death()

@@ -209,29 +209,6 @@ function Dung:jump()
     self.jump_flag = true
 end
 
-function Dung:detect_stationary_player(dt)
-    for _, player in pairs(game.players) do
-        if not self.player_stationary_counters[player.n] then
-            self.player_stationary_counters[player.n] = 0    
-        end
-
-        if is_between(player.mid_x, self.mid_x - self.player_stationary_detect_range, self.mid_x + self.player_stationary_detect_range) then
-            self.player_stationary_counters[player.n] = self.player_stationary_counters[player.n] + dt
-        else
-            self.player_stationary_counters[player.n] = 0
-        end
-    end
-
-    
-    for n, value in pairs(self.player_stationary_counters) do
-        if value > self.stationary_max_time then
-            for n, _ in pairs(self.player_stationary_counters) do
-                self.player_stationary_counters[n] = 0
-            end
-            self.state_machine:set_state("telegraph_jump")
-        end
-    end
-end
 
 function Dung:draw()
     self:draw_enemy()
