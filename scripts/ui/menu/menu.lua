@@ -22,6 +22,7 @@ function Menu:init(game, items, bg_color, prompts, extra_draw)
 	end
 
 	self.bg_color = bg_color or { 1, 1, 1, 0 }
+	self.blur_enabled = true
 	self.padding_y = 50
 
 	self.prompts = prompts or {}
@@ -64,6 +65,9 @@ function Menu:draw()
 	end
 	self:draw_prompts()
 	if self.extra_draw then self.extra_draw() end
+end
+
+function Menu:on_set()
 end
 
 function Menu:set_target_scroll_position(value)

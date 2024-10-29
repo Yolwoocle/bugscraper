@@ -125,6 +125,7 @@ function MenuManager:set_menu(menu, is_back)
 	-- Update selection to first selectable
 	local sel, found = self:find_selectable_from(1, 1)
 	self:set_selection(sel)
+	self.cur_menu:on_set()
 	self.cur_menu:update(0)
 
 	-- Reset game screenshake
@@ -140,6 +141,7 @@ function MenuManager:update_menu_unpausing()
 	if self.buffer_unpause then
 		self.buffer_unpause = false
 		self.cur_menu = nil
+		self.cur_menu_name = nil
 		self.menu_stack = {}
 		game:on_unmenu()
 	end

@@ -4,7 +4,19 @@ local Light = require "scripts.graphics.light"
 
 local cutscenes = {}
 
-cutscenes.boss_enter = Cutscene:new {
+cutscenes.dung_boss_enter = Cutscene:new {
+    Scene:new({
+        duration = 2.0,
+    }),
+    Scene:new({
+        duration = 1.5,
+        enter = function(scene)
+            game.menu_manager:set_menu("boss_intro")
+        end,
+    }),
+}
+
+cutscenes.bee_boss_enter = Cutscene:new {
     Scene:new({
         duration = 1.5,
         enter = function(scene)

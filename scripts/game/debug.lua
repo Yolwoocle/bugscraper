@@ -84,7 +84,7 @@ function Debug:init(game)
             _G_do_fixed_framerate = not _G_do_fixed_framerate
         end},
         ["v"] = {"__jackofalltrades", function()
-        
+            game.menu_manager:set_menu("boss_intro")
         end},
         ["f"] = {"toggle FPS", function()
             self.view_fps = not self.view_fps
@@ -544,6 +544,8 @@ function Debug:draw_info_view()
 		wave_resp_str, 
         concat("queued_players ", queued_players_str),
         concat("level_speed ", game.level.level_speed),
+        concat("menu_stack ", #game.menu_manager.menu_stack),
+        concat("cur_menu_name ", game.menu_manager.cur_menu_name),
 		"",
 	}
 

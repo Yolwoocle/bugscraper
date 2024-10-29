@@ -333,7 +333,7 @@ function Game:update(dt)
 	end
 
 	for i = 1, #self.layers-1 do
-		self.layers[i].blur = Options:get("menu_blur") and (self.menu_manager.cur_menu ~= nil)
+		self.layers[i].blur = Options:get("menu_blur") and (self.menu_manager.cur_menu ~= nil) and (self.menu_manager.cur_menu.blur_enabled)
 	end
 
 	self.discord_presence:update(dt)

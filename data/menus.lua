@@ -1,4 +1,5 @@
 local Menu = require "scripts.ui.menu.menu"
+local BossIntroMenu = require "scripts.ui.menu.boss_intro_menu"
 local RangeOptionMenuItem = require "scripts.ui.menu.range_option_menu_item"
 local BoolOptionMenuItem = require "scripts.ui.menu.bool_option_menu_item"
 local EnumOptionMenuItem = require "scripts.ui.menu.enum_option_menu_item"
@@ -8,6 +9,7 @@ local CustomDrawMenuItem = require "scripts.ui.menu.menu_item_custom_draw"
 local waves = require "data.waves"
 local Enemies = require "data.enemies"
 local debug_draw_waves = require "scripts.debug.draw_waves"
+local images           = require "data.images"
 
 local function func_set_menu(menu)
     return function()
@@ -77,14 +79,11 @@ end
 local function generate_menus()
     local menus = {}
 
-    -- FIXME: This is messy, eamble multiple types of menuitems
-    -- This is so goddamn overengineered and needlessly complicated
     menus.quit = Menu:new(game, {
-        -- { "<<<<<<<<< "..Text:text("menu.quit.title").." >>>>>>>>>" },
         { "" },
-        { Text:text("menu.quit.description") },
-        { Text:text("menu.no"),              function() game.menu_manager:back() end },
-        { Text:text("menu.yes"),             quit_game },
+        { "{menu.quit.description}" },
+        { "{menu.no}",              function() game.menu_manager:back() end },
+        { "{menu.yes}",             quit_game },
         { "" },
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
 
@@ -98,6 +97,15 @@ local function generate_menus()
         { "" },
     }, DEFAULT_MENU_BG_COLOR)
 
+    menus.boss_intro = BossIntroMenu:new(game, {38/255, 43/255, 68/255, 0.8}, "Dung Manager", {
+        {image = images.boss_intro_dung_layer5, z_mult = 0.3},
+        {image = images.boss_intro_dung_layer4, z_mult = 0.5},
+        {image = images.boss_intro_dung_layer3, z_mult = 0.7},
+        {image = images.boss_intro_dung_layer2, z_mult = 0.9},
+        {image = images.boss_intro_dung_layer1, z_mult = 1.4},
+        {image = images.boss_intro_dung_layer0, z_mult = 1.5},
+    })
+
     menus.view_waves = Menu:new(game, {
         { "waves" },
         { CustomDrawMenuItem, debug_draw_waves },
@@ -108,6 +116,7 @@ local function generate_menus()
 
 
     local pause_items = {
+        { "🎚 BOSS INTRO", func_set_menu('boss_intro') },
         { "" },
         { "<<<<<<<<< " .. Text:text("menu.pause.title") .. " >>>>>>>>>" },
         { "" },

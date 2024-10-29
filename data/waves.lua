@@ -292,6 +292,7 @@ local waves = {
 			{ E.Dung, 1, position = { 240, 200 } },
 		},
 		music = "miniboss",
+		cutscene = cutscenes.dung_boss_enter,
 	}),
 
 	new_cafeteria(),
@@ -536,7 +537,7 @@ local waves = {
 			end
 		end,
 
-		cutscene = cutscenes.boss_enter,
+		cutscene = cutscenes.bee_boss_enter,
 	}),
 
 	new_cafeteria(function()

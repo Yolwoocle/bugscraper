@@ -285,6 +285,20 @@ local img_names = {
 	selection_right = "ui/selection_right",
 	bubble_tip =      "ui/bubble_tip",
 
+	-- ui
+	rays = "ui/rays",
+	offscreen_indicator = "ui/offscreen_indicator",
+	stomp_arrow = "ui/stomp_arrow",
+
+	sawtooth_separator = "ui/sawtooth_separator",
+
+	boss_intro_dung_layer0 = "ui/boss_intro/boss_intro_dung_layer0",
+	boss_intro_dung_layer1 = "ui/boss_intro/boss_intro_dung_layer1",
+	boss_intro_dung_layer2 = "ui/boss_intro/boss_intro_dung_layer2",
+	boss_intro_dung_layer3 = "ui/boss_intro/boss_intro_dung_layer3",
+	boss_intro_dung_layer4 = "ui/boss_intro/boss_intro_dung_layer4",
+	boss_intro_dung_layer5 = "ui/boss_intro/boss_intro_dung_layer5",
+
 	-----------------------------------------------------
 	
 	-- effects
@@ -321,9 +335,6 @@ local img_names = {
 	-----------------------------------------------------
 	
 	-- misc
-	rays = "ui/rays",
-	offscreen_indicator = "ui/offscreen_indicator",
-	stomp_arrow = "ui/stomp_arrow",
 	yanis = "yanis",
 }
 for id, path in pairs(img_names) do
