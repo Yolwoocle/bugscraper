@@ -32,12 +32,12 @@ function BossIntroMenu:init_boss_intro()
 
 	self.title_padding = 16
 	
-	self.layers_scroll = CANVAS_WIDTH
-	self.layers_scroll_enter_speed = 1500
+	self.layers_scroll = CANVAS_WIDTH * 2.5
+	self.layers_scroll_enter_speed = 2500
 	self.layers_scroll_linger_speed = 32
 	self.layers_scroll_exit_speed = 2500
 	self.layers_scroll_speed = self.layers_scroll_enter_speed
-	self.layers_linger_zone = 32
+	self.layers_linger_zone = 36
 end
 
 function BossIntroMenu:update(dt)
