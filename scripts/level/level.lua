@@ -54,7 +54,7 @@ function Level:init(game)
 	self.current_wave = nil
 	self.next_wave_to_set = nil
 	
-	self.new_wave_animation_state = "off"
+	self.new_wave_animation_state_machine = self:get_new_wave_animation_state_machine()
 	self.new_wave_progress = 0.0
 	self.level_speed = 0
 	self.def_level_speed = 400
@@ -137,61 +137,88 @@ function Level:begin_next_wave_animation()
 		self:new_wave_buffer_enemies()
 	end
 	self.new_wave_progress = self.slowdown_timer_override or 1.0
-	self.new_wave_animation_state = "slowdown"
+	self.new_wave_animation_state_machine:set_state("slowdown")
 
 	if self:is_on_cafeteria() then
 		self:begin_cafeteria()
 	end
 end
 
+
+function Level:get_new_wave_animation_state_machine()
+	return StateMachine:new({
+		off = {
+			enter = function(state)
+				self.new_wave_progress = 0.0
+			end,
+			update = function(state, dt)
+				self:check_for_next_wave(dt)
+			end,
+		},
+		slowdown = {	
+			update = function(state, dt)
+				self.level_speed = max(0, self.level_speed - 18)
+		
+				if self.new_wave_progress <= 0 then
+					return "opening"
+				end
+			end
+		},
+		opening = {
+			enter = function(state)
+				self.elevator:open_door(ternary(self:is_on_cafeteria(), nil, 1.4))
+				self.current_wave:show_title()
+				self:increment_floor()
+				self.new_wave_progress = 1.0
+			end,
+			update = function(state, dt)
+				if self.new_wave_progress <= 0 then
+					self.new_wave_progress = 0.4
+					self:activate_enemy_buffer()
+					return "on"
+				end
+			end,
+		},
+		on = {
+			update = function(state, dt)
+				local condition_normal = (not self:is_on_cafeteria() and self.new_wave_progress <= 0) 
+				if condition_normal then
+					return "closing"
+				end
+			end,
+		},
+		closing = {
+			enter = function(state)
+				self.new_wave_progress = 1.0
+				self.elevator:close_door()
+			end,
+			update = function(state, dt)
+				if self.new_wave_progress <= 0 then
+					return "speedup"
+				end
+			end,
+		},
+		speedup = {
+			enter = function(state)
+				self.new_wave_progress = 1.0
+			end,
+			update = function(state, dt)
+				self.level_speed = min(self.level_speed + 10, self.def_level_speed)
+		
+				if self.new_wave_progress <= 0 then
+					return "off"
+				end
+			end,
+		}
+	}, "off")
+end
+
+
 function Level:update_elevator_progress(dt)
 	self.new_wave_progress = math.max(0, self.new_wave_progress - dt)
-	
-	if self.new_wave_animation_state == "off" then
-		self:check_for_next_wave(dt)
-		
-	elseif self.new_wave_animation_state == "slowdown" then
-		self.level_speed = max(0, self.level_speed - 18)
-
-		if self.new_wave_progress <= 0 then
-			self.elevator:open_door(ternary(self:is_on_cafeteria(), nil, 1.4))
-			self.current_wave:show_title()
-			self:increment_floor()
-			self.new_wave_progress = 1.0
-			self.new_wave_animation_state = "opening"
-		end
-
-	elseif self.new_wave_animation_state == "opening" then		
-		if self.new_wave_progress <= 0 then
-			self.new_wave_progress = 0.4
-			self.new_wave_animation_state = "on"
-			self:activate_enemy_buffer()
-		end
-		
-	elseif self.new_wave_animation_state == "on" then
-		local condition_normal = (not self:is_on_cafeteria() and self.new_wave_progress <= 0) 
-		if condition_normal then
-			self.new_wave_progress = 1.0
-			self.elevator:close_door()
-			self.new_wave_animation_state = "closing"
-		end
-	
-	elseif self.new_wave_animation_state == "closing" then
-		if self.new_wave_progress <= 0 then
-			self.new_wave_animation_state = "speedup"
-			self.new_wave_progress = 1.0
-		end
-	
-	elseif self.new_wave_animation_state == "speedup" then
-		self.level_speed = min(self.level_speed + 10, self.def_level_speed)
-
-		if self.new_wave_progress <= 0 then
-			self.new_wave_animation_state = "off"
-			self.new_wave_progress = 0.0
-		end
-
-	end
+	self.new_wave_animation_state_machine:update(dt)
 end
+
 
 function Level:on_door_close()
 	if game.game_state == GAME_STATE_WAITING then
@@ -405,7 +432,7 @@ function Level:end_cafeteria()
 	self.hole_stencil_radius_accel_sign = -1
 	self.new_wave_progress = 1.0
 	self.elevator:close_door()
-	self.new_wave_animation_state = "closing"
+	self.new_wave_animation_state_machine:set_state("closing")
 
 	game.camera:set_x_locked(true)
 	game.camera:set_y_locked(true)
