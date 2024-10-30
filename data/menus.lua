@@ -1,15 +1,15 @@
-local Menu = require "scripts.ui.menu.menu"
-local BossIntroMenu = require "scripts.ui.menu.boss_intro_menu"
+local Menu                = require "scripts.ui.menu.menu"
+local BossIntroMenu       = require "scripts.ui.menu.boss_intro_menu"
 local RangeOptionMenuItem = require "scripts.ui.menu.range_option_menu_item"
-local BoolOptionMenuItem = require "scripts.ui.menu.bool_option_menu_item"
-local EnumOptionMenuItem = require "scripts.ui.menu.enum_option_menu_item"
-local StatsMenuItem = require "scripts.ui.menu.menu_item_stats"
-local ControlsMenuItem = require "scripts.ui.menu.controls_menu_item"
-local CustomDrawMenuItem = require "scripts.ui.menu.menu_item_custom_draw"
-local waves = require "data.waves"
-local Enemies = require "data.enemies"
-local debug_draw_waves = require "scripts.debug.draw_waves"
-local images           = require "data.images"
+local BoolOptionMenuItem  = require "scripts.ui.menu.bool_option_menu_item"
+local EnumOptionMenuItem  = require "scripts.ui.menu.enum_option_menu_item"
+local StatsMenuItem       = require "scripts.ui.menu.menu_item_stats"
+local ControlsMenuItem    = require "scripts.ui.menu.controls_menu_item"
+local CustomDrawMenuItem  = require "scripts.ui.menu.menu_item_custom_draw"
+local waves               = require "data.waves"
+local Enemies             = require "data.enemies"
+local debug_draw_waves    = require "scripts.debug.draw_waves"
+local images              = require "data.images"
 
 local function func_set_menu(menu)
     return function()
@@ -97,13 +97,13 @@ local function generate_menus()
         { "" },
     }, DEFAULT_MENU_BG_COLOR)
 
-    menus.boss_intro = BossIntroMenu:new(game, {38/255, 43/255, 68/255, 0.8}, "Dung Manager", {
-        {image = images.boss_intro_dung_layer5, z_mult = 0.3},
-        {image = images.boss_intro_dung_layer4, z_mult = 0.5},
-        {image = images.boss_intro_dung_layer3, z_mult = 0.7},
-        {image = images.boss_intro_dung_layer2, z_mult = 0.9},
-        {image = images.boss_intro_dung_layer1, z_mult = 1.4},
-        {image = images.boss_intro_dung_layer0, z_mult = 1.5},
+    menus.boss_intro = BossIntroMenu:new(game, { 38 / 255, 43 / 255, 68 / 255, 0.8 }, "Dung Manager", {
+        { image = images.boss_intro_dung_layer5, z_mult = 0.3 },
+        { image = images.boss_intro_dung_layer4, z_mult = 0.5 },
+        { image = images.boss_intro_dung_layer3, z_mult = 0.7 },
+        { image = images.boss_intro_dung_layer2, z_mult = 0.9 },
+        { image = images.boss_intro_dung_layer1, z_mult = 1.4 },
+        { image = images.boss_intro_dung_layer0, z_mult = 1.5 },
     })
 
     menus.view_waves = Menu:new(game, {
@@ -313,18 +313,18 @@ local function generate_menus()
                     end
                 end },
             { "" },
-            { EnumOptionMenuItem, "🔘 {menu.options.input_submenu.controller_button_style}", 
-                "button_style_p" .. tostring(player_n), BUTTON_STYLES, 
+            { EnumOptionMenuItem, "🔘 {menu.options.input_submenu.controller_button_style}",
+                "button_style_p" .. tostring(player_n), BUTTON_STYLES,
                 "menu.options.input_submenu.controller_button_style_value"
             },
-            { RangeOptionMenuItem, "🫨 {menu.options.input_submenu.vibration}", 
-                "vibration_p" .. tostring(player_n), {0.0, 1.0}, 0.2, "%", nil, 
+            { RangeOptionMenuItem, "🫨 {menu.options.input_submenu.vibration}",
+                "vibration_p" .. tostring(player_n), { 0.0, 1.0 }, 0.2, "%", nil,
                 function(self)
                     Input:vibrate(player_n, 0.4, 1.0)
                 end
             },
             { RangeOptionMenuItem, "🕹 {menu.options.input_submenu.deadzone}",
-                "axis_deadzone_p" .. tostring(player_n), {0.0, 0.95}, 0.05, "%", 
+                "axis_deadzone_p" .. tostring(player_n), { 0.0, 0.95 }, 0.05, "%",
                 function(self)
                     if self.is_selected and self.value < 0.3 then
                         self:set_annotation("⚠ {menu.options.input_submenu.low_deadzone_warning}")
@@ -414,7 +414,6 @@ local function generate_menus()
         { "" },
         { "<<< " .. Text:text("menu.credits.music_and_sound_design") .. " >>>" },
         { "OLX 🔗", function() func_url("https://www.youtube.com/@olxdotwav") end },
-        -- { "'Galaxy Trip' by Raphaël Marcon / CC BY 4.0", func_url("https://raphytator.itch.io/")},
         { "" },
         { "<<< " .. Text:text("menu.credits.playtesting") .. " >>>" },
         { "hades140701", function() end },
@@ -428,18 +427,18 @@ local function generate_menus()
         { "AnnaWorldEater", function() end },
         { "Sylvain Fraresso", function() end },
         { "Tom Le Ber", function() end },
-        { "NotGoyome", function() end },
+        { "Guillaume Tran", function() end },
         { "Lucas Froehlinger 😎", function() end },
         { "" },
         { "<<< " .. Text:text("menu.credits.special_thanks") .. " >>>" },
-        { "ArkanYota", function() end },                   --func_url("https://github.com/ARKANYOTA")},
-        { "Gouspourd", function() end },                   -- func_url("https://gouspourd.itch.io/")},
-        { "Raphaël Marcon (Raphytator)", function() end }, -- func_url("https://raphytator.itch.io/") },
-        { "Louie Chapman", function() end },               -- func_url("https://louiechapm.itch.io/") },
-        { "Indie Game Lyon", function() end },             -- func_url("https://www.indiegamelyon.com/")},
+        { "ArkanYota", function() end },       --func_url("https://github.com/ARKANYOTA")},
+        { "Gouspourd", function() end },       -- func_url("https://gouspourd.itch.io/")},
+        { "Raphytator", function() end },      -- func_url("https://raphytator.itch.io/") },
+        { "Louie Chapman", function() end },   -- func_url("https://louiechapm.itch.io/") },
+        { "Indie Game Lyon", function() end }, -- func_url("https://www.indiegamelyon.com/")},
         { "Fabien Delpiano", function() end },
         { "Quentin Picault", function() end },
-        { "NotGoyome", function() end },
+        { "Guillaume Tran", function() end },
         { "Toulouse Game Dev", function() end }, -- func_url("https://www.indiegamelyon.com/")},
         { "LÖVE framework", function() end },    -- func_url("https://love2d.org/") },
         { "" },
