@@ -12,6 +12,7 @@ local BackgroundFinal = require "scripts.level.background.background_final"
 local BackgroundDots = require "scripts.level.background.background_dots"
 local Elevator = require "scripts.level.elevator"
 local Wave = require "scripts.level.wave"
+local StateMachine = require "scripts.state_machine"
 
 local images = require "data.images"
 local sounds = require "data.sounds"
@@ -77,7 +78,7 @@ function Level:init(game)
 
 	self.canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
 	self.buffer_canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
-	self.cafeteria_animation_state = "off"
+	self.cafeteria_animation_state_machine = self:get_cafeteria_animation_state_machine() 
 	self.force_next_wave_flag = false
 	self.do_not_spawn_enemies_on_next_wave_flag = false
 
@@ -110,7 +111,7 @@ function Level:update(dt)
 	self.flash_alpha = max(self.flash_alpha - dt, 0)
 	self:update_ending(dt)
 	
-	self:update_cafeteria(dt)
+	self.cafeteria_animation_state_machine:update(dt)
 end
 
 function Level:set_bounds(rect)
@@ -294,58 +295,80 @@ end
 -----------------------------------------------------
 
 function Level:begin_cafeteria()
-	self.cafeteria_animation_state = "wait"
+	self.cafeteria_animation_state_machine:set_state("wait")
 	self.hole_stencil_radius = 0
 	self.hole_stencil_radius_accel_sign = 1
 
 	self.hole_stencil_start_timer:start()
 end
 
-function Level:update_cafeteria(dt)
-	if self.cafeteria_animation_state == "off" then
-		self.is_hole_stencil_enabled = false
-		
-	elseif self.cafeteria_animation_state == "wait" then
-		if self.hole_stencil_start_timer:update(dt) then
-			self.cafeteria_animation_state = "grow"
-			self.is_hole_stencil_enabled = true
-		end
-
-	elseif self.cafeteria_animation_state == "grow" then
-		self:update_hole_stencil(dt)
-		
-		if self.hole_stencil_radius >= CANVAS_WIDTH*0.5 then
-			self.cafeteria_animation_state = "on"
-			self.world_generator:generate_cafeteria()
-			self:assign_cafeteria_upgrades()
-			
-			game.camera:set_x_locked(false)
-			game.camera:set_y_locked(true)
-		end
-	elseif self.cafeteria_animation_state == "on" then
-		self:update_hole_stencil(dt)
-		if self:can_exit_cafeteria() then
-			game:kill_all_active_enemies()
-			self:end_cafeteria()
-			self.new_wave_progress = math.huge
-			self.force_next_wave_flag = true
-			self.do_not_spawn_enemies_on_next_wave_flag = true
-			self:new_wave_buffer_enemies()
-
-			self.cafeteria_animation_state = "shrink"
-		end
-		
-	elseif self.cafeteria_animation_state == "shrink" then
-		self:update_hole_stencil(dt)
-		if self.hole_stencil_radius <= 0 then
-			game.camera:set_position(0, 0)
-			game.camera:set_target_offset(0, 0)
-
-			self.is_hole_stencil_enabled = false
-			self.new_wave_progress = 0.0
-			self.cafeteria_animation_state = "off"
-		end
-	end
+function Level:get_cafeteria_animation_state_machine(dt)
+	return StateMachine:new({
+		off = {
+			enter = function(state)
+				self.is_hole_stencil_enabled = false
+				self.new_wave_progress = 0.0
+			end,
+			update = function(state, dt)
+				self.is_hole_stencil_enabled = false
+			end
+		},
+		wait = {
+			update = function(state, dt)
+				if self.hole_stencil_start_timer:update(dt) then
+					return "grow"
+				end
+			end
+		}, 
+		grow = {
+			enter = function(state)
+				self.is_hole_stencil_enabled = true
+			end,
+			update = function(state, dt)
+				self:update_hole_stencil(dt)
+				
+				if self.hole_stencil_radius >= CANVAS_WIDTH*0.5 then
+					return "on"
+				end
+			end
+		},
+		on = {
+			enter = function(state)
+				self.world_generator:generate_cafeteria()
+				self:assign_cafeteria_upgrades()
+				
+				game.camera:set_x_locked(false)
+				game.camera:set_y_locked(true)
+			end,
+			update = function(state, dt)
+				self:update_hole_stencil(dt)
+				
+				if self:can_exit_cafeteria() then
+					return "shrink"
+				end
+			end
+		},
+		shrink = {
+			enter = function(state)
+				game:kill_all_active_enemies()
+				self:end_cafeteria()
+				self.new_wave_progress = math.huge
+				self.force_next_wave_flag = true
+				self.do_not_spawn_enemies_on_next_wave_flag = true
+				self:new_wave_buffer_enemies()
+			end,
+			update = function(state, dt)
+				self:update_hole_stencil(dt)
+				if self.hole_stencil_radius <= 0 then
+					return "off"
+				end
+			end,
+			exit = function(state)
+				game.camera:set_position(0, 0)
+				game.camera:set_target_offset(0, 0)
+			end,
+		}
+	}, "off")
 end
 
 function Level:can_exit_cafeteria()
@@ -466,7 +489,7 @@ end
 
 function Level:draw()
 	-- hack to get the cafeteria backgrounds to work
-	local on_cafeteria = (self.cafeteria_animation_state ~= "off")
+	local on_cafeteria = (self.cafeteria_animation_state_machine.current_state_name ~= "off")
 	if on_cafeteria then
 		if self.cafeteria_background then
 			self.cafeteria_background:draw()
