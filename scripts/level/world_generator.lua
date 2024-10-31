@@ -59,9 +59,22 @@ end
 function WorldGenerator:generate_cafeteria()
 	self:reset()
 	self:write_rect(self.cafeteria_rect, TILE_METAL)
-
-	-- table
 	self:write_rect(self.cafeteria_table_rect, TILE_SEMISOLID)
+end
+
+function WorldGenerator:generate_ground_floor()
+	self:reset()
+	self:write_rect(Rect:new(2, 2, 57, 15), TILE_METAL)
+
+	-- tables
+	for _, rect in pairs({
+		Rect:new(24, 14, 27, 14),
+		Rect:new(24+5*1, 14, 27+5*1, 14),
+		Rect:new(24+5*2, 14, 27+5*2, 14),
+		Rect:new(24+5*3, 14, 27+5*3, 14),
+	}) do
+		self:write_rect(rect, TILE_SEMISOLID)
+	end
 end
 
 function WorldGenerator:generate_end_rubble()

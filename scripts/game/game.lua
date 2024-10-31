@@ -130,6 +130,9 @@ function Game:new_game()
 		self.waves_until_respawn[i] = -1
 	end
 
+	-- Camera
+	self.camera = Camera:new()
+	
 	self.level = Level:new(self)
 	
 	-- Actors
@@ -146,9 +149,6 @@ function Game:new_game()
 	-- Exit sign 
 	local exit_x = CANVAS_WIDTH * 0.25
 	self:new_actor(create_actor_centered(Enemies.ExitSign, floor(exit_x), floor(ny)))
-
-	-- Camera & screenshake
-	self.camera = Camera:new()
 
 	-- Debugging
 	self.colview_mode = false
@@ -215,6 +215,7 @@ function Game:new_game()
 	-- Cutscenes
 	self.cutscene = nil
 
+	self.can_start_game = false
 	self.game_state = GAME_STATE_WAITING
 	self.endless_mode = false
 	self.timer_before_game_over = 0
@@ -438,7 +439,6 @@ end
 
 function Game:update_camera_offset(dt)
 	-- Cafeteria camera pan on the right edge
-
 	local all_players_on_the_right = ternary(#self.players == 0, false, true)
 	for _, player in pairs(self.players) do
 		if player.mid_x < (self.level.world_generator.cafeteria_rect.bx - 9) * BW then
@@ -447,7 +447,7 @@ function Game:update_camera_offset(dt)
 		end
 	end
 
-	if all_players_on_the_right then
+	if all_players_on_the_right and self.level:is_on_cafeteria() then
 		self.camera:set_target_offset(500, 0)
 	else
 		self.camera:set_target_offset(0, 0)
@@ -943,7 +943,8 @@ function Game:new_player(player_n, x, y, put_in_buffer)
 	end
 	local mx = math.floor(self.level.door_rect.ax)
 	-- x = param(x, mx + ((player_n-1) / (MAX_NUMBER_OF_PLAYERS-1)) * (self.level.door_rect.bx - self.level.door_rect.ax))
-	x = param(x, mx + math.floor((self.level.door_rect.bx - self.level.door_rect.ax)/2))
+	-- x = param(x, mx + math.floor((self.level.door_rect.bx - self.level.door_rect.ax)/2))
+	x = param(x, mx + math.floor((self.level.door_rect.bx - self.level.door_rect.ax)/2))  +200
 	y = param(y, CANVAS_HEIGHT - 3*16 + 4)
 
 	local player = Player:new(player_n, x, y, Input:get_user(player_n):get_skin() or skins[1])
@@ -1031,8 +1032,10 @@ function Game:start_game()
 
 	self.menu_manager:set_can_pause(true)
 	self:set_zoom(1)
-	self:set_camera_position(0, 0)
+	local x, y = self.camera:get_position()
+	game.camera:set_target_position(0, 0)
 	game.camera:reset()
+	self:set_camera_position(x, y)
 	game.camera:set_x_locked(true)
 	game.camera:set_y_locked(true)
 end

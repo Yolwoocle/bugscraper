@@ -1,6 +1,7 @@
 require "scripts.util"
 local Class = require "scripts.meta.class"
 local Enemies = require "data.enemies"
+local Rect = require "scripts.math.rect"
 
 local Wave = Class:inherit()
 
@@ -8,7 +9,7 @@ function Wave:init(params)
 	self.floor_type = param(params.floor_type, FLOOR_TYPE_NORMAL)
 	self.roll_type = param(params.roll_type, WAVE_ROLL_TYPE_RANDOM)
 	self.music = param(params.music, nil)
-	self.bounds = param(params.bounds, nil)
+	self.bounds = param(params.bounds, Rect:new(unpack(RECT_ELEVATOR_PARAMS)))
 
 	self.min = param(params.min, 1)
 	self.max = param(params.max, 1)
@@ -28,6 +29,7 @@ function Wave:init(params)
 
 	self.floating_text = param(params.floating_text, nil)
 	self.cutscene = param(params.cutscene, nil)
+	self.backroom = param(params.backroom, nil)
 
 	self.enable_stomp_arrow_tutorial = param(params.enable_stomp_arrow_tutorial, false)
 
@@ -188,6 +190,10 @@ function Wave:enable_wave_side_effects(level)
 
 	if self.cutscene then
 		game:play_cutscene(self.cutscene)
+	end
+
+	if self.backroom then
+		game.level:begin_backroom(self.backroom)
 	end
 end
 
