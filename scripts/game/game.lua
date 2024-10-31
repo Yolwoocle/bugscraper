@@ -141,7 +141,7 @@ function Game:new_game()
 	self:init_players()
 
 	-- Start button
-	local nx = CANVAS_WIDTH * 0.75
+	local nx = CANVAS_WIDTH * 0.7
 	local ny = self.level.cabin_inner_rect.by
 	local l = create_actor_centered(Enemies.ButtonSmallGlass, floor(nx), floor(ny))
 	self:new_actor(l)

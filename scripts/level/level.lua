@@ -83,15 +83,15 @@ function Level:init(game)
 	self.force_next_wave_flag = false
 	self.do_not_spawn_enemies_on_next_wave_flag = false
 	
-	self.canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
-	self.buffer_canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
+	self.canvas = love.graphics.newCanvas(CANVAS_WIDTH*2, CANVAS_HEIGHT)
+	self.buffer_canvas = love.graphics.newCanvas(CANVAS_WIDTH*2, CANVAS_HEIGHT)
 	self.is_hole_stencil_enabled = true
 	self.hole_stencil_pause_radius = CANVAS_WIDTH
-	self.hole_stencil_max_radius = CANVAS_WIDTH
+	self.hole_stencil_max_radius = CANVAS_WIDTH*2
 	self.hole_stencil_start_timer = Timer:new(2.0)
 	self.hole_stencil_radius = 0
 	self.hole_stencil_radius_speed = 0
-	self.hole_stencil_radius_accel = 500
+	self.hole_stencil_radius_accel = 300
 	self.hole_stencil_radius_accel_sign = 1
 
 	self.elevator_crashing_sound = sounds.elev_burning.source
@@ -339,7 +339,7 @@ end
 
 function Level:set_backroom_on()
 	self.backroom_animation_state_machine:set_state("on")
-	self.hole_stencil_radius = CANVAS_WIDTH
+	self.hole_stencil_radius = CANVAS_WIDTH*2
 end
 
 function Level:get_backroom_animation_state_machine(dt)

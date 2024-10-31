@@ -14,7 +14,7 @@ function Camera:init()
     self.w = CANVAS_WIDTH
     self.h = CANVAS_HEIGHT
 
-    self.min_x, self.max_x = 0, 640 + 3*16
+    self.min_x, self.max_x = 0, CANVAS_WIDTH
     self.min_y, self.max_y = 0, CANVAS_HEIGHT
     self.target_x = 0.0
     self.target_y = 0.0

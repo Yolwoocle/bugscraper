@@ -41,7 +41,7 @@ function GameUI:draw()
 	if not self.is_visible then return end
 	self:draw_stomp_arrow()
 	if game.debug and game.debug.title_junk then
-		self:draw_logo()
+		-- self:draw_logo()
 		self:draw_join_tutorial()
 		self:draw_timer()
 		self:draw_version()
@@ -98,7 +98,7 @@ end
 
 function GameUI:draw_join_tutorial()
 	local def_x = math.floor((game.level.door_rect.ax + game.level.door_rect.bx) / 2)
-	local def_y = game.logo_y + 50
+	local def_y = game.logo_y - 10
 	local number_of_keyboard_users = Input:get_number_of_users(INPUT_TYPE_KEYBOARD)
 
 	local icons = {
