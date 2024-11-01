@@ -43,7 +43,7 @@ To export the game, please look into [Makelove](https://github.com/pfirsich/make
 
 Please note that I was in highschool when I began this project. I am basically the only maintainer and I did not always plan for the future or make the best code design choices. The code is almost not documented and there are many, many, many things I would do differently if I were to start from scratch. You have been warned. 
 
-For any questions you can [contact me](https://yolwoocle.com/about) (on Discord preferably).
+For any questions you can [contact me](https://yolwoocle.com/about) (by email or on Discord preferably).
 
 <div align="center">
   🐝🐝🐝🐝🐝

@@ -18,7 +18,7 @@ return {
         win_thanks = "Thank you for playing the demo",
         win_wishlist = "Wishlist the game on Steam :)", -- "Wishlist" is a verb
         win_prompt = "[Pause to continue]",
-        warning_web_controller = "Some browsers may not have proper controller support"
+        warning_web_controller = "Some browsers may not have proper controller support",
 
     },
     level = {
@@ -43,8 +43,9 @@ return {
     player = {
         name = {
             -- Player names
-            -- No reason to change these during translation, except if they clash with something 
-            -- specific to the language/culture (notify me if it is the case)
+            -- No reason to change these during translation, except if:
+            -- - it's more appropriate to use a transliteration, or to use the script of the concerned language 
+            -- - they clash with something specific to the language/culture (notify me if it is the case)
             mio = "Mio",
             cap = "Cap",
             zia = "Zia",
@@ -226,13 +227,14 @@ return {
         credits = {
             title = "CREDITS",
             game_by = "A game by",
+            game_by_template = "A game by %s", -- Used on the title screen. 
             music_and_sound_design = "Music and sound design",
             playtesting = "Playtesting",
             special_thanks = "Special thanks",
             asset_creators = "Asset creators",
             licenses = "Asset & library licenses",
 
-            asset_item = "%s by %s / %s", -- "ASSET_NAME by CREATOR / LICENCE"
+            asset_item = "%s by %s / %s", -- "ASSET_NAME by CREATOR / LICENCE". Used to credit assets such as sound effects
         },
         open_source = {
             title = "Open source libraries",

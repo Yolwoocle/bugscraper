@@ -116,8 +116,6 @@ local function generate_menus()
 
 
     local pause_items = {
-        { "🎚 BOSS INTRO", func_set_menu('boss_intro') },
-        { "" },
         { "<<<<<<<<< " .. Text:text("menu.pause.title") .. " >>>>>>>>>" },
         { "" },
         { "▶ " .. Text:text("menu.pause.resume"), function() game.menu_manager:unpause() end },

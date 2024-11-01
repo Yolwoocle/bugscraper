@@ -67,7 +67,7 @@ function QueuedPlayer:update_position(dt, queued_players)
 	local width = 64
 
     self.target_x = (CANVAS_WIDTH - (n-1) * width) / 2 + self_n * width
-	self.y = CANVAS_HEIGHT * 0.75
+	self.y = CANVAS_HEIGHT * 0.75 - 32
 end
 
 function QueuedPlayer:on_confirm()

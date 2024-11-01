@@ -13,6 +13,7 @@ local BackgroundDots = require "scripts.level.background.background_dots"
 local Elevator = require "scripts.level.elevator"
 local Wave = require "scripts.level.wave"
 local StateMachine = require "scripts.state_machine"
+local BackroomGroundFloor = require "scripts.level.backrooms.backroom_ground_floor"
 
 local images = require "data.images"
 local sounds = require "data.sounds"
@@ -40,13 +41,13 @@ function Level:init(game)
 	local bw = BLOCK_WIDTH
 	local cabin_ax, cabin_ay = shaft_rect.ax,   shaft_rect.ay
 	local cabin_bx, cabin_by = shaft_rect.bx+1, shaft_rect.by+1
-	self:set_bounds(Rect:new(cabin_ax, cabin_ay, cabin_bx, cabin_by))
-
 	local door_ax, door_ay = cabin_ax*BW+154, cabin_ax*BW+122
 	local door_bx, door_by = cabin_ay*BW+261, cabin_ay*BW+207
 	self.door_rect = Rect:new(door_ax, door_ay, door_bx, door_by)
 
-	self.kill_zone = Rect:new(-400000, -400000, 400000, CANVAS_HEIGHT+BW)
+	self:set_bounds(Rect:new(unpack(RECT_GROUND_FLOOR_PARAMS)))
+
+	self.kill_zone = Rect:new(-400000, -400000, 400000, CANVAS_HEIGHT + BW)
 
 	-- Level info
 	self.floor = 0 --Floor n°
@@ -63,7 +64,7 @@ function Level:init(game)
     
 	self.flash_alpha = 0
 	self.show_cabin = true
-	self.show_rubble = false
+	self.show_rubble = false 
 
 	self.is_on_win_screen = false
 
@@ -74,21 +75,23 @@ function Level:init(game)
 	self.background = BackgroundDots:new(self)
 	-- self.background = BackgroundBeehive:new(self)
 	self.background:set_def_speed(self.def_level_speed)
-	self.cafeteria_background = BackgroundCafeteria:new(self)
-
-	self.canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
-	self.buffer_canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
-	self.cafeteria_animation_state_machine = self:get_cafeteria_animation_state_machine() 
+	
+	self.backroom = BackroomGroundFloor:new()
+	self.backroom_animation_state_machine = self:get_backroom_animation_state_machine() 
+	
+	self.force_backroom_end_flag = false
 	self.force_next_wave_flag = false
 	self.do_not_spawn_enemies_on_next_wave_flag = false
-
+	
+	self.canvas = love.graphics.newCanvas(CANVAS_WIDTH*2, CANVAS_HEIGHT)
+	self.buffer_canvas = love.graphics.newCanvas(CANVAS_WIDTH*2, CANVAS_HEIGHT)
 	self.is_hole_stencil_enabled = true
 	self.hole_stencil_pause_radius = CANVAS_WIDTH
-	self.hole_stencil_max_radius = CANVAS_WIDTH
+	self.hole_stencil_max_radius = CANVAS_WIDTH*2
 	self.hole_stencil_start_timer = Timer:new(2.0)
 	self.hole_stencil_radius = 0
 	self.hole_stencil_radius_speed = 0
-	self.hole_stencil_radius_accel = 500
+	self.hole_stencil_radius_accel = 300
 	self.hole_stencil_radius_accel_sign = 1
 
 	self.elevator_crashing_sound = sounds.elev_burning.source
@@ -96,9 +99,20 @@ function Level:init(game)
 	self.elevator_crash_sound = sounds.elev_crash.source
 
 	self.ending_timer = Timer:new(15)
+
+	self.has_run_ready = false
+end
+
+function Level:ready()
+	self:set_backroom_on()
+	self.has_run_ready = true
 end
 
 function Level:update(dt)
+	if not self.has_run_ready then
+		self:ready()
+	end
+
 	self:update_elevator_progress(dt)
 	self.elevator:set_floor_progress(self.new_wave_progress)
 	self.background:set_speed(self.level_speed)
@@ -107,14 +121,19 @@ function Level:update(dt)
 	self.map:update(dt)
 	self.background:update(dt)
 	self.elevator:update(dt)
-	
+	if self.backroom then
+		self.backroom:update(dt)
+	end
+
 	self.flash_alpha = max(self.flash_alpha - dt, 0)
 	self:update_ending(dt)
 	
-	self.cafeteria_animation_state_machine:update(dt)
+	self.backroom_animation_state_machine:update(dt)
 end
 
 function Level:set_bounds(rect)
+	print_debug("removeme SET RECT ", rect.ax, rect.ay, rect.bx, rect.by)
+
 	self.cabin_rect = rect:clone():scale(BW)
 	self.cabin_inner_rect = self.cabin_rect:clone():expand(-BW)
 end
@@ -138,10 +157,6 @@ function Level:begin_next_wave_animation()
 	end
 	self.new_wave_progress = self.slowdown_timer_override or 1.0
 	self.new_wave_animation_state_machine:set_state("slowdown")
-
-	if self:is_on_cafeteria() then
-		self:begin_cafeteria()
-	end
 end
 
 
@@ -321,15 +336,22 @@ end
 
 -----------------------------------------------------
 
-function Level:begin_cafeteria()
-	self.cafeteria_animation_state_machine:set_state("wait")
+function Level:begin_backroom(backroom)
+	self.backroom = backroom
+
+	self.backroom_animation_state_machine:set_state("wait")
 	self.hole_stencil_radius = 0
 	self.hole_stencil_radius_accel_sign = 1
-
+	
 	self.hole_stencil_start_timer:start()
 end
 
-function Level:get_cafeteria_animation_state_machine(dt)
+function Level:set_backroom_on()
+	self.backroom_animation_state_machine:set_state("on")
+	self.hole_stencil_radius = CANVAS_WIDTH*2
+end
+
+function Level:get_backroom_animation_state_machine(dt)
 	return StateMachine:new({
 		off = {
 			enter = function(state)
@@ -346,7 +368,7 @@ function Level:get_cafeteria_animation_state_machine(dt)
 					return "grow"
 				end
 			end
-		}, 
+		},
 		grow = {
 			enter = function(state)
 				self.is_hole_stencil_enabled = true
@@ -361,16 +383,18 @@ function Level:get_cafeteria_animation_state_machine(dt)
 		},
 		on = {
 			enter = function(state)
-				self.world_generator:generate_cafeteria()
-				self:assign_cafeteria_upgrades()
+				if self.backroom then
+					self.backroom:generate(self.world_generator)
+				end
 				
-				game.camera:set_x_locked(false)
-				game.camera:set_y_locked(true)
+				self.game.camera:set_x_locked(false)
+				self.game.camera:set_y_locked(true)
 			end,
 			update = function(state, dt)
 				self:update_hole_stencil(dt)
 				
-				if self:can_exit_cafeteria() then
+				if self:can_exit_backroom() then
+					self.backroom:on_exit()
 					return "shrink"
 				end
 			end
@@ -378,7 +402,8 @@ function Level:get_cafeteria_animation_state_machine(dt)
 		shrink = {
 			enter = function(state)
 				game:kill_all_active_enemies()
-				self:end_cafeteria()
+				self:end_backroom()
+				
 				self.new_wave_progress = math.huge
 				self.force_next_wave_flag = true
 				self.do_not_spawn_enemies_on_next_wave_flag = true
@@ -398,20 +423,19 @@ function Level:get_cafeteria_animation_state_machine(dt)
 	}, "off")
 end
 
-function Level:can_exit_cafeteria()
-	for _, a in pairs(game.actors) do
-		if a.name == "upgrade_display" then
-			return false
-		end
+
+function Level:can_exit_backroom()
+	if self.force_backroom_end_flag then
+		self.force_backroom_end_flag = false
+		return true
 	end
 
-	for _, p in pairs(game.players) do
-		if not is_point_in_rect(p.mid_x, p.mid_y, self.door_rect) then
-			return false
-		end		
+	if self.backroom then
+		return self.backroom:can_exit()
 	end
-	return true
+	return false
 end
+
 
 function Level:update_hole_stencil(dt)
 	self.hole_stencil_radius_speed = self.hole_stencil_radius_speed + self.hole_stencil_radius_accel_sign * self.hole_stencil_radius_accel * dt
@@ -420,11 +444,13 @@ function Level:update_hole_stencil(dt)
 	self.hole_stencil_radius = clamp(self.hole_stencil_radius, 0, self.hole_stencil_max_radius)
 end
 
+
 function Level:is_on_cafeteria() 
 	return self:get_floor_type() == FLOOR_TYPE_CAFETERIA
 end
 
-function Level:end_cafeteria()
+
+function Level:end_backroom()
 	self.world_generator:generate_cabin()
 
 	self.hole_stencil_radius = CANVAS_WIDTH
@@ -439,25 +465,6 @@ function Level:end_cafeteria()
 	game.camera:set_target_position(0, 0)
 end
 
-function Level:assign_cafeteria_upgrades()
-	local bag = {
-		{upgrades.UpgradeTea, 1},
-		{upgrades.UpgradeEspresso, 1},
-		{upgrades.UpgradeMilk, 1},
-		{upgrades.UpgradePeanut, 1},
-		{upgrades.UpgradeEnergyDrink, 1},
-		{upgrades.UpgradeSoda, 1},
-	}
-
-	for _, actor in pairs(self.game.actors) do
-		if actor.name == "upgrade_display" then
-			local upgrade, _, i = random_weighted(bag)
-			table.remove(bag, i)
-
-			actor:assign_upgrade(upgrade:new())
-		end
-	end
-end
 
 function Level:on_upgrade_display_killed(display)
 	for _, actor in pairs(game.actors) do
@@ -484,7 +491,9 @@ end
 
 -----------------------------------------------------
 
-function Level:draw_with_hole(draw_func)
+function Level:draw_with_hole(draw_func, stencil_test)
+	stencil_test = stencil_test or "less"
+
 	exec_on_canvas(self.buffer_canvas, function()
 		game.camera:reset_transform()
 
@@ -503,7 +512,7 @@ function Level:draw_with_hole(draw_func)
 				love.graphics.clear()
 				love.graphics.circle("fill", (self.door_rect.ax + self.door_rect.bx)/2, (self.door_rect.ay + self.door_rect.by)/2, self.hole_stencil_radius)
 			end, "increment")
-			love.graphics.setStencilTest("less", 1)
+			love.graphics.setStencilTest(stencil_test, 1)
 		end
 		
 		love.graphics.draw(self.buffer_canvas)
@@ -514,14 +523,14 @@ function Level:draw_with_hole(draw_func)
 	love.graphics.draw(self.canvas, 0, 0)
 end
 
+
 function Level:draw()
 	-- hack to get the cafeteria backgrounds to work
-	local on_cafeteria = (self.cafeteria_animation_state_machine.current_state_name ~= "off")
+	local on_cafeteria = (self.backroom_animation_state_machine.current_state_name ~= "off")
 	if on_cafeteria then
-		if self.cafeteria_background then
-			self.cafeteria_background:draw()
+		if self.backroom and self.backroom.draw then
+			self.backroom:draw()
 		end
-		love.graphics.draw(images.cafeteria, -16, -16)
 	else
 		self.background:draw()
 	end
@@ -541,7 +550,14 @@ function Level:draw()
 	end
 end
 
+
 function Level:draw_front(x,y)
+	if self.backroom and self.is_hole_stencil_enabled then
+		self:draw_with_hole(function()
+			self.backroom:draw_front()
+		end, "gequal")
+	end
+
 	self:draw_with_hole(function()
 		self:draw_rubble()
 		
@@ -550,6 +566,7 @@ function Level:draw_front(x,y)
 		end
 	end)
 end
+
 
 function Level:draw_win_screen()
 	if game.game_state ~= GAME_STATE_WIN then
@@ -600,6 +617,7 @@ function Level:draw_win_screen()
 	end
 end
 
+
 function Level:draw_ui()
 	self:draw_win_screen()
 
@@ -607,6 +625,7 @@ function Level:draw_ui()
 		rect_color({1,1,1,self.flash_alpha}, "fill", 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
 	end
 end
+
 
 function Level:draw_rubble()
 	if self.show_rubble then
@@ -623,6 +642,7 @@ function Level:on_red_button_pressed()
 	self.elevator_crashing_sound:play()
 	self.elevator_alarm_sound:play()
 end
+
 
 function Level:update_ending(dt)
 	if game.game_state == GAME_STATE_ELEVATOR_BURNING then
@@ -647,6 +667,7 @@ function Level:update_ending(dt)
 		self:update_win_screen()
 	end
 end
+
 
 function Level:on_elevator_crashed()
 	if self.background.set_clear_color then
@@ -673,6 +694,7 @@ function Level:on_elevator_crashed()
 	self.is_reversing_elevator = false
 end
 
+
 function Level:update_win_screen(dt)
 	for i = 2, #self.world_generator.end_rubble_slices do
 		local slice = self.world_generator.end_rubble_slices[i]
@@ -697,8 +719,10 @@ function Level:get_floor()
 	return self.floor
 end
 
+
 function Level:set_floor(val)
 	self.floor = val
 end
+
 
 return Level

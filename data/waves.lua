@@ -6,10 +6,11 @@ local cutscenes = require "data.cutscenes"
 local Rect = require "scripts.math.rect"
 local LevelGeometry = require "scripts.level.level_geometry"
 local Wave = require "scripts.level.wave"
+local BackroomCafeteria = require "scripts.level.backrooms.backroom_cafeteria"
 local E = require "data.enemies"
 
-RECT_ELEVATOR = Rect:new(2, 2, 28, 16)
-RECT_CAFETERIA = Rect:new(2, 2, 53, 16)
+RECT_ELEVATOR = Rect:new(unpack(RECT_ELEVATOR_PARAMS))
+RECT_CAFETERIA = Rect:new(unpack(RECT_CAFETERIA_PARAMS))
 
 local function new_cafeteria(run_func)
 	run_func = run_func or function(...) end
@@ -40,6 +41,8 @@ local function new_cafeteria(run_func)
 			{ E.UpgradeDisplay, 1, position = { 544, 192 } },
 			{ E.UpgradeDisplay, 1, position = { 600, 192 } },
 		},
+
+		backroom = BackroomCafeteria:new()
 	})
 end
 

@@ -84,7 +84,7 @@ function Debug:init(game)
             _G_do_fixed_framerate = not _G_do_fixed_framerate
         end},
         ["v"] = {"__jackofalltrades", function()
-            game.menu_manager:set_menu("boss_intro")
+            game.level.force_cafeteria_end_flag = true
         end},
         ["f"] = {"toggle FPS", function()
             self.view_fps = not self.view_fps
@@ -130,7 +130,7 @@ function Debug:init(game)
             end
         end},
         ["d"] = {"spawn", function()
-            local arc = enemies.ChipperMinion:new(CANVAS_CENTER[1], CANVAS_CENTER[2])
+            local arc = enemies.JumpingProp:new(CANVAS_CENTER[1], CANVAS_CENTER[2])
             game:new_actor(arc)            
         end},
         ["o"] = {"spike offset", function() 

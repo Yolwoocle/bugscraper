@@ -14,7 +14,7 @@ function Camera:init()
     self.w = CANVAS_WIDTH
     self.h = CANVAS_HEIGHT
 
-    self.min_x, self.max_x = 0, 640 + 3*16
+    self.min_x, self.max_x = 0, CANVAS_WIDTH
     self.min_y, self.max_y = 0, CANVAS_HEIGHT
     self.target_x = 0.0
     self.target_y = 0.0
@@ -59,7 +59,7 @@ function Camera:clamp_camera_position(dt)
 end
 
 function Camera:follow_players(dt)
-    if Input:get_number_of_users() == 0 or (self.is_x_locked and self.is_y_locked) then 
+    if game:get_number_of_alive_players() == 0 or (self.is_x_locked and self.is_y_locked) then 
         return
     end 
 
@@ -87,7 +87,7 @@ function Camera:update_screenshake(dt)
 	self.screenshake_q = max(0, self.screenshake_q - self.screenshake_speed * dt)
 
 	local base_mult = Options:get("screenshake")
-    local multiplayer_mult = clamp(1 / Input:get_number_of_users(), 0, 1)
+    local multiplayer_mult = clamp(1 / game:get_number_of_alive_players(), 0, 1)
 	local q = self.screenshake_q * base_mult * multiplayer_mult
 	local ox, oy = random_neighbor(q), random_neighbor(q)
 

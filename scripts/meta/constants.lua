@@ -91,6 +91,10 @@ TILE_BORDER = 5
 BULLET_BOUNCE_MODE_RADIAL = "radial"
 BULLET_BOUNCE_MODE_NORMAL = "normal"
 
+RECT_ELEVATOR_PARAMS = {2, 2, 28, 16}
+RECT_CAFETERIA_PARAMS = {2, 2, 53, 16}
+RECT_GROUND_FLOOR_PARAMS = {2, 2, 58, 16}
+
 --------------------------------------------- 
 
 TIMED_SPIKES_TIMING_MODE_TEMPORAL = "temporal" -- Spikes timing depend on time
@@ -562,4 +566,4 @@ LIGHNING_COORDINATE_MODE_POLAR = "polar" -- radius, angle
 
 -- Super secret
 -- Go ahead and figure out what this is. I'm not here to stop you
-SMASH_EASTER_EGG_PROBABILITY = 0.02
+SMASH_EASTER_EGG_PROBABILITY = 0.05

@@ -82,7 +82,9 @@ function love.keypressed(key, scancode, isrepeat)
 		end
 
 	elseif key == "return" and (love.keyboard.isDown("lalt") or love.keyboard.isDown("ralt")) then
-		if Options then   Options:toggle_fullscreen()    end
+		if Options then
+			Options:toggle("is_fullscreen")
+		end
 	
 	elseif scancode == "f9" then
 		if _G_frame_by_frame_mode then

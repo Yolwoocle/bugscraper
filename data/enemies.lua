@@ -50,6 +50,7 @@ local enemies = {
 
 	BeeBoss =            require "scripts.actor.enemies.bee_boss", --*
 	
+	JumpingProp =        require "scripts.actor.enemies.jumping_prop",
 	Dummy =              require "scripts.actor.enemies.dummy",
 	ButtonBigPressed =   require "scripts.actor.enemies.button_big_pressed",
 	ButtonBig =          require "scripts.actor.enemies.button_big",
