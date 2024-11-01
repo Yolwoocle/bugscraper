@@ -40,7 +40,7 @@ function JumpingProp:draw()
 end
 
 function JumpingProp:on_collision(col, other)
-    if col.other.is_player and math.abs(col.other.vx) > 100 and self.is_grounded then
+    if col.other.is_player and dist(col.other.vx, col.other.vy) > 100 and self.is_grounded then
         self.buffer_jump = true
     end
 end

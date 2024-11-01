@@ -9,7 +9,9 @@ function Fly:init(x, y, spr, w, h)
     self:init_fly(x, y, spr, w, h)
 end
 
-function Fly:init_fly(x, y, spr, w, h)
+function Fly:init_fly(x, y, spr, w, h, buzzing_enabled)
+    buzzing_enabled = param(buzzing_enabled, true)
+
     self:init_enemy(x,y, spr or images.fly1, w, h)
     self.name = "fly"
     self.is_flying = true
@@ -26,10 +28,15 @@ function Fly:init_fly(x, y, spr, w, h)
     self.anim_frame_len = 0.05
     self.anim_frames = {images.fly1, images.fly2}
 
-    self:add_constant_sound("buzz", "fly_buzz", false)
-    self:seek_constant_sound("buzz", random_range(0, self:get_constant_sound("buzz"):get_duration())) 
-    self.is_buzz_enabled = true
-    self.buzz_is_started = false
+    if buzzing_enabled then
+        self:add_constant_sound("buzz", "fly_buzz", false)
+        self:seek_constant_sound("buzz", random_range(0, self:get_constant_sound("buzz"):get_duration())) 
+        self.is_buzz_enabled = true
+        self.buzz_is_started = false
+    else
+        self.is_buzz_enabled = false
+        self.buzz_is_started = false
+    end
 end
 
 function Fly:update(dt)

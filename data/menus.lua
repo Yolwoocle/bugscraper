@@ -504,6 +504,7 @@ local function generate_menus()
         { Text:text("menu.credits.asset_item", "'80s alarm'", "tim.kahn", "CC BY 4.0"),                                      func_url("https://freesound.org/s/83280/") },
         { Text:text("menu.credits.asset_item", "'Metal container impact firm'", "jorickhoofd", "CC BY 4.0"),                 func_url("https://freesound.org/s/160077/") },
         { Text:text("menu.credits.asset_item", "'Roller blind circuit breaker'", "newlocknew", "CC BY 4.0"),                 func_url("https://freesound.org/s/583451/") },
+        { Text:text("menu.credits.asset_item", "'Digging, Ice, Hammer, A'", "InspectorJ", "CC BY 4.0"),                      func_url("https://freesound.org/s/420878/ ") },
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
 
     local items = {

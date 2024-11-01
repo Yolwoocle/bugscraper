@@ -8,7 +8,7 @@ local images = require "data.images"
 local ShovelBee = Fly:inherit()
 	
 function ShovelBee:init(x, y, spr)
-    self:init_fly(x,y, spr or images.shovel_bee, 14, 16)
+    self:init_fly(x,y, spr or images.shovel_bee, 14, 16, false)
     self.name = "shovel_bee"
     self.is_flying = true
     self.life = 10
@@ -73,6 +73,8 @@ function ShovelBee:init(x, y, spr)
         attack = {
             enter = function(state)
                 self.spr:update_offset(0, 0)
+
+                Audio:play_var("shovel_bee_attack", 0.1, 1.1)
             end,
             update = function(state, dt)
                 self.speed_x = 0
@@ -84,11 +86,23 @@ function ShovelBee:init(x, y, spr)
         },
 
         stuck = {
+            enter = function(state)
+                Audio:play_var("shovel_bee_land_"..tostring(random_range_int(1, 3)), 0.1, 1.1)
+				Audio:play_var("bullet_bounce_"..random_sample{"1","2"}, 0.2, 1.2, {pitch = 0.8})
+
+                self.stuck_oscillation_t = 0.0
+                self.stuck_oscillation_amplitude = 1.0
+            end,
             update = function(state, dt)
                 self.vx = 0
                 self.vy = 0
                 self.spr:set_image(self.img_stuck)
                 self.spr:update_offset(0, self.stuck_spr_oy)
+
+                self.stuck_oscillation_t = self.stuck_oscillation_t + dt
+                self.stuck_oscillation_amplitude = math.max(0.0, self.stuck_timer.time / self.stuck_timer.duration - 0.5)
+                self.spr.rot = math.sin(self.stuck_oscillation_t * 100) * pi/10 * self.stuck_oscillation_amplitude
+
                 if self.stuck_timer:update(dt) then
                     self.state_machine:set_state("flying")
                 end

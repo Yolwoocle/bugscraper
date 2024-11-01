@@ -40,6 +40,11 @@ local sfxnames = {
 	menu_pause =      "menu_pause.ogg",
 	menu_unpause =    "menu_unpause.ogg",
 
+	shovel_bee_land_1 = "actor/enemy/shovel_bee_land_1.ogg",
+	shovel_bee_land_2 = "actor/enemy/shovel_bee_land_2.ogg",
+	shovel_bee_land_3 = "actor/enemy/shovel_bee_land_3.ogg",
+	shovel_bee_attack = "actor/enemy/shovel_bee_attack.ogg",
+	
 	wall_slide = "wall_slide.ogg",
 	death = "death.ogg",
 
