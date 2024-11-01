@@ -271,6 +271,14 @@ local img_names = {
 	ground_floor =            "level/ground_floor",
 	ground_floor_front =      "level/ground_floor_front",
 
+	ground_floor_lamp =            "level/props/ground_floor_lamp",
+	ground_floor_cactus =            "level/props/ground_floor_cactus",
+	ground_floor_computer_left =     "level/props/ground_floor_computer_left",
+	ground_floor_computer_right =     "level/props/ground_floor_computer_right",
+	ground_floor_mug =               "level/props/ground_floor_mug",
+	ground_floor_potted_tree =       "level/props/ground_floor_potted_tree",
+	ground_floor_potted_plant =      "level/props/ground_floor_potted_plant",
+
 	-----------------------------------------------------
 
 	-- hud

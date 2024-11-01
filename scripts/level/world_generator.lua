@@ -72,6 +72,7 @@ function WorldGenerator:generate_ground_floor()
 		Rect:new(24+5*1, 14, 27+5*1, 14),
 		Rect:new(24+5*2, 14, 27+5*2, 14),
 		Rect:new(24+5*3, 14, 27+5*3, 14),
+		Rect:new(47, 12, 50, 12),
 	}) do
 		self:write_rect(rect, TILE_SEMISOLID)
 	end

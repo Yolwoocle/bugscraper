@@ -132,6 +132,7 @@ function Game:new_game()
 
 	-- Camera
 	self.camera = Camera:new()
+	self.camera:set_position(312 - 16, 0)
 	
 	self.level = Level:new(self)
 	
@@ -944,7 +945,7 @@ function Game:new_player(player_n, x, y, put_in_buffer)
 	local mx = math.floor(self.level.door_rect.ax)
 	-- x = param(x, mx + ((player_n-1) / (MAX_NUMBER_OF_PLAYERS-1)) * (self.level.door_rect.bx - self.level.door_rect.ax))
 	-- x = param(x, mx + math.floor((self.level.door_rect.bx - self.level.door_rect.ax)/2))
-	x = param(x, mx + math.floor((self.level.door_rect.bx - self.level.door_rect.ax)/2))  +200
+	x = param(x, 26*16 + 16*5*(player_n - 1))
 	y = param(y, CANVAS_HEIGHT - 3*16 + 4)
 
 	local player = Player:new(player_n, x, y, Input:get_user(player_n):get_skin() or skins[1])

@@ -219,13 +219,14 @@ function Actor:update_actor(dt)
 
 	-- react to collisions
 	local old_grounded = self.is_grounded
-	self.is_grounded = false
+	self.buffer_is_grounded = false
 	self.wall_col = nil
 	for _, col in pairs(cols) do
 		self:on_collision(col, col.other)
 		self:react_to_collision(col)
 		table.insert(self.collisions, col)
 	end
+	self.is_grounded = self.buffer_is_grounded
 	if old_grounded ~= self.is_grounded then
 		self:on_grounded_state_change(self.is_grounded)
 	end
@@ -304,7 +305,7 @@ function Actor:react_to_collision(col)
 
 		-- is grounded
 		if col.normal.y == -1 then
-			self.is_grounded = true
+			self.buffer_is_grounded = true
 			self.grounded_col = col
 		end
 	end

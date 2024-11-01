@@ -130,7 +130,7 @@ function Debug:init(game)
             end
         end},
         ["d"] = {"spawn", function()
-            local arc = enemies.ChipperMinion:new(CANVAS_CENTER[1], CANVAS_CENTER[2])
+            local arc = enemies.JumpingProp:new(CANVAS_CENTER[1], CANVAS_CENTER[2])
             game:new_actor(arc)            
         end},
         ["o"] = {"spike offset", function() 

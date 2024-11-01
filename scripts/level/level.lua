@@ -100,10 +100,19 @@ function Level:init(game)
 
 	self.ending_timer = Timer:new(15)
 
+	self.has_run_ready = false
+end
+
+function Level:ready()
 	self:set_backroom_on()
+	self.has_run_ready = true
 end
 
 function Level:update(dt)
+	if not self.has_run_ready then
+		self:ready()
+	end
+
 	self:update_elevator_progress(dt)
 	self.elevator:set_floor_progress(self.new_wave_progress)
 	self.background:set_speed(self.level_speed)

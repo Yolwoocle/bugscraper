@@ -59,7 +59,7 @@ function Camera:clamp_camera_position(dt)
 end
 
 function Camera:follow_players(dt)
-    if Input:get_number_of_users() == 0 or (self.is_x_locked and self.is_y_locked) then 
+    if game:get_number_of_alive_players() == 0 or (self.is_x_locked and self.is_y_locked) then 
         return
     end 
 
@@ -87,7 +87,7 @@ function Camera:update_screenshake(dt)
 	self.screenshake_q = max(0, self.screenshake_q - self.screenshake_speed * dt)
 
 	local base_mult = Options:get("screenshake")
-    local multiplayer_mult = clamp(1 / Input:get_number_of_users(), 0, 1)
+    local multiplayer_mult = clamp(1 / game:get_number_of_alive_players(), 0, 1)
 	local q = self.screenshake_q * base_mult * multiplayer_mult
 	local ox, oy = random_neighbor(q), random_neighbor(q)
 

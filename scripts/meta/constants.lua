@@ -566,4 +566,4 @@ LIGHNING_COORDINATE_MODE_POLAR = "polar" -- radius, angle
 
 -- Super secret
 -- Go ahead and figure out what this is. I'm not here to stop you
-SMASH_EASTER_EGG_PROBABILITY = 0.02
+SMASH_EASTER_EGG_PROBABILITY = 0.05

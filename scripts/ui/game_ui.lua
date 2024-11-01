@@ -89,7 +89,7 @@ function GameUI:draw_version()
 	local text = concat("v", BUGSCRAPER_VERSION)
 	local x = math.floor(CANVAS_WIDTH - get_text_width(text) - 2)
 	local y = CANVAS_HEIGHT - self.game.logo_y + 16
-	print_outline(COL_DARK_GRAY, nil, text, x, y)
+	print_outline(COL_DARK_GRAY, COL_VERY_DARK_GRAY, text, x, y)
 
 	if OPERATING_SYSTEM == "Web" and not game.has_seen_controller_warning then
 		print_centered_outline(COL_MID_GRAY, COL_BLACK_BLUE, "⚠️ "..Text:text("game.warning_web_controller"), CANVAS_WIDTH/2, y+6)
@@ -97,8 +97,9 @@ function GameUI:draw_version()
 end
 
 function GameUI:draw_join_tutorial()
-	local def_x = math.floor((game.level.door_rect.ax + game.level.door_rect.bx) / 2)
-	local def_y = game.logo_y - 10
+	local def_x = math.floor((game.level.door_rect.ax + game.level.door_rect.bx) / 2 )
+	-- local def_y = game.logo_y - 10
+	local def_y = CANVAS_HEIGHT - game.logo_y + 8
 	local number_of_keyboard_users = Input:get_number_of_users(INPUT_TYPE_KEYBOARD)
 
 	local icons = {
@@ -122,14 +123,17 @@ function GameUI:draw_join_tutorial()
 		end
 	end
 	
-	x = def_x
-	y = y + 16
 	if number_of_keyboard_users == 1 then
 		local icon_split_kb = Input:get_button_icon(1, Input:get_input_profile("global"):get_primary_button("split_keyboard"))
-		local split_label = ternary(number_of_keyboard_users == 1, Text:text("input.prompts.split_keyboard"), Text:text("input.prompts.unsplit_keyboard"))
+		local split_label = ternary(number_of_keyboard_users == 1, Text:text("input.prompts.split_keyboard"), Text:text("input.prompts.unsplit_keyboard")) 
+		
+		-- SCOTCH SCOTCH SCOTCH SCOTCH SCOTCH SCOTCH SCOTCH SCOTCH !!!!!!
+		-- TODO: create a "ButtonPrompt" object that can be reused in menus and other places
+		local total_w = get_text_width(split_label) + icon_split_kb:getWidth()
+		x = CANVAS_WIDTH/2 - total_w/2 + 2
+		y = -16 + game.logo_y
 
-		print_outline(COL_WHITE, COL_BLACK_BLUE, split_label, x, y)
-		x = x - icon_split_kb:getWidth() - 2
+		print_outline(COL_WHITE, COL_BLACK_BLUE, split_label, x + 2 + icon_split_kb:getWidth(), y)
 		love.graphics.draw(icon_split_kb, x, y)
 	end
 end

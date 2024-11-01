@@ -1,6 +1,7 @@
 require "scripts.util"
 local upgrades = require "data.upgrades"
 local images = require "data.images"
+local enemies = require "data.enemies"
 local Backroom = require "scripts.level.backrooms.backroom"
 local BackgroundCafeteria = require "scripts.level.background.background_cafeteria"
 local ElevatorDoor       = require "scripts.level.elevator_door"
@@ -21,6 +22,21 @@ end
 
 function BackroomGroundFloor:generate(world_generator)
     world_generator:generate_ground_floor()
+	
+	for _, prop_data in pairs({
+		{x = 482-16, y = 219-16, img = images.ground_floor_cactus},
+		{x = 433-16, y = 224-16, img = images.ground_floor_computer_left},
+		{x = 518-16, y = 223-16, img = images.ground_floor_computer_left},
+		{x = 454-16, y = 232-16, img = images.ground_floor_mug},
+		{x = 79-16, y = 213-16, img = images.ground_floor_potted_tree},
+		{x = 715-16, y = 213-16, img = images.ground_floor_potted_plant},
+		{x = 644-16, y = 222-16, img = images.ground_floor_lamp},
+		{x = 574-16, y = 222-16, img = images.ground_floor_computer_right},
+		{x = 651-16, y = 222-16, img = images.ground_floor_computer_right},
+	}) do
+		local prop = enemies.JumpingProp:new(prop_data.x, prop_data.y, prop_data.img)
+		game:new_actor(prop)
+	end
 end
 
 function BackroomGroundFloor:can_exit()
@@ -74,6 +90,17 @@ end
 function BackroomGroundFloor:draw_all()	
 	self.door:draw()
 	love.graphics.draw(images.ground_floor, -16, -16)
+	game.level.elevator:draw_counter()
+	print_centered_outline(COL_WHITE, COL_BLACK_BLUE, Text:text("menu.credits.game_by_template", "Léo Bernard"), 536, 7*16)
+
+	--215, 79
+	for ix = 0, 55 do
+		for iy = 0, 31 do
+			exec_color(random_sample {COL_WHITE, COL_LIGHTEST_GRAY, COL_LIGHT_GRAY}, function()
+				love.graphics.points(715 + ix, 79 + iy)
+			end)
+		end
+	end
 end
 
 function BackroomGroundFloor:draw_front()	
