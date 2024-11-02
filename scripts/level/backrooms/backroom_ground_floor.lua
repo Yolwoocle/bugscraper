@@ -33,8 +33,25 @@ function BackroomGroundFloor:generate(world_generator)
 		{x = 644-16, y = 222-16, img = images.ground_floor_lamp},
 		{x = 574-16, y = 222-16, img = images.ground_floor_computer_right},
 		{x = 651-16, y = 222-16, img = images.ground_floor_computer_right},
+
+		{x = 386-16, y = 212-16, z = -10, img = images.ground_floor_stack_papers_big},
+		{x = 404-16, y = 208-16, z = -10, img = images.ground_floor_stack_papers_medium},
+		{x = 412-16, y = 224-16, z = -11, img = images.ground_floor_stack_papers_medium},
+		{x = 422-16, y = 232-16, z = -11, img = images.ground_floor_stack_papers_small},
+		{x = 494-16, y = 224-16, z = -10, img = images.ground_floor_stack_papers_medium_b},
+		{x = 528-16, y = 232-16, z = -10, img = images.ground_floor_stack_papers_small},
+		{x = 500-16, y = 190-16, z = -10, img = images.ground_floor_stack_papers_big},
+		{x = 563-16, y = 212-16, z = -10, img = images.ground_floor_stack_papers_big},
+		{x = 558-16, y = 248-16, z = -11, img = images.ground_floor_stack_papers_small},
+		{x = 618-16, y = 225-16, z = -11, img = images.ground_floor_stack_papers_medium_b},
+		{x = 696-16, y = 212-16, z = -11, img = images.ground_floor_stack_papers_big},
+		{x = 688-16, y = 225-16, z = -12, img = images.ground_floor_stack_papers_medium},
+		{x = 678-16, y = 225-16, z = -12, img = images.ground_floor_stack_papers_small},
 	}) do
 		local prop = enemies.JumpingProp:new(prop_data.x, prop_data.y, prop_data.img)
+		if prop_data.z then
+			prop.z = prop_data.z
+		end
 		game:new_actor(prop)
 	end
 end
@@ -94,8 +111,8 @@ function BackroomGroundFloor:draw_all()
 	print_centered_outline(COL_WHITE, COL_BLACK_BLUE, Text:text("menu.credits.game_by_template", "Léo Bernard"), 536, 7*16)
 
 	--215, 79
-	for ix = 0, 55 do
-		for iy = 0, 31 do
+	for ix = 0, 54 do
+		for iy = 0, 30 do
 			exec_color(random_sample {COL_WHITE, COL_LIGHTEST_GRAY, COL_LIGHT_GRAY}, function()
 				love.graphics.points(715 + ix, 79 + iy)
 			end)

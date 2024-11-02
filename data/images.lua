@@ -278,6 +278,10 @@ local img_names = {
 	ground_floor_mug =               "level/props/ground_floor_mug",
 	ground_floor_potted_tree =       "level/props/ground_floor_potted_tree",
 	ground_floor_potted_plant =      "level/props/ground_floor_potted_plant",
+	ground_floor_stack_papers_big =  "level/props/ground_floor_stack_papers_big",
+	ground_floor_stack_papers_medium = "level/props/ground_floor_stack_papers_medium",
+	ground_floor_stack_papers_medium_b = "level/props/ground_floor_stack_papers_medium_b",
+	ground_floor_stack_papers_small = "level/props/ground_floor_stack_papers_small",
 
 	-----------------------------------------------------
 
@@ -351,6 +355,10 @@ local img_names = {
 	
 	-- misc
 	yanis = "yanis",
+
+	_test_gaysquare = "_test_gaysquare",
+	_test_hexagon = "_test_hexagon",
+	_test_hexagon_small = "_test_hexagon_small",
 }
 for id, path in pairs(img_names) do
 	images[id] = load_image(path..".png")

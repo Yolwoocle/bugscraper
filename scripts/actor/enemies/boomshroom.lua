@@ -9,7 +9,7 @@ local images = require "data.images"
 local Boomshroom = Fly:inherit()
 	
 function Boomshroom:init(x, y)
-    self:init_fly(x,y, images.boomshroom_1, 14, 16)
+    self:init_fly(x,y, images.boomshroom_1, 14, 16, false)
     self.name = "boomshroom"
     self.max_life = 15
     self.life = self.max_life

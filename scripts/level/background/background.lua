@@ -32,6 +32,7 @@ end
 
 function Background:draw()
 	love.graphics.clear(self.clear_color)
+	love.graphics.setColor(1, 1, 1, 1)
 end
 
 return Background

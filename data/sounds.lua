@@ -44,6 +44,11 @@ local sfxnames = {
 	shovel_bee_land_2 = "actor/enemy/shovel_bee_land_2.ogg",
 	shovel_bee_land_3 = "actor/enemy/shovel_bee_land_3.ogg",
 	shovel_bee_attack = "actor/enemy/shovel_bee_attack.ogg",
+
+	beelet_inflate_1 = "actor/enemy/beelet_inflate_1.ogg",
+	beelet_inflate_2 = "actor/enemy/beelet_inflate_2.ogg",
+	beelet_inflate_3 = "actor/enemy/beelet_inflate_3.ogg",
+	beelet_inflate_4 = "actor/enemy/beelet_inflate_4.ogg",
 	
 	wall_slide = "wall_slide.ogg",
 	death = "death.ogg",

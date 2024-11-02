@@ -318,7 +318,7 @@ local waves = {
 			{ E.Mosquito, 2 },
 		},
 
-		background = backgrounds.BackgroundBeehive:new(),
+		background = backgrounds.BackgroundFactory:new(),
 		music = "w2",
 
 		title = get_world_name("2"),

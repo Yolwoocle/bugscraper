@@ -20,27 +20,27 @@ function BackgroundBeehive:init(level)
 	self.bg_particles = {}	
 	self.bg_particle_col = {color(0xfeae34), COL_WHITE}
 	self.bg_particle_palettes = {
-		{color(0xfee761), {color(0xfeae34), COL_WHITE}}, --orange & white
-		{color(0xfee761), {color(0xfeae34), COL_WHITE}}, --orange & white
-		{color(0xfee761), {color(0xfeae34), COL_WHITE}}, --orange & white
-		{color(0xfee761), {color(0xfeae34), COL_WHITE}}, --orange & white
-		{color(0xfee761), {color(0xfeae34), COL_WHITE}}, --orange & white
-		{color(0xfee761), {color(0xfeae34), COL_WHITE}}, --orange & white
-		{color(0xfee761), {color(0xfeae34), COL_WHITE}}, --orange & white
-		{color(0xfee761), {color(0xfeae34), COL_WHITE}}, --orange & white
-		{color(0xfee761), {color(0xfeae34), COL_WHITE}}, --orange & white
-		{color(0xfee761), {color(0xfeae34), COL_WHITE}}, --orange & white
-		{color(0xfee761), {color(0xfeae34), COL_WHITE}}, --orange & white
-		{color(0xfee761), {color(0xfeae34), COL_WHITE}}, --orange & white
-		{color(0xfee761), {color(0xfeae34), COL_WHITE}}, --orange & white
-		{color(0xfee761), {color(0xfeae34), COL_WHITE}}, --orange & white
-		{color(0xfee761), {color(0xfeae34), COL_WHITE}}, --orange & white
-		{color(0xfee761), {color(0xfeae34), COL_WHITE}}, --orange & white
-		{color(0xfee761), {color(0xfeae34), COL_WHITE}}, --orange & white
-		{color(0xfee761), {color(0xfeae34), COL_WHITE}}, --orange & white
-		{color(0xfee761), {color(0xfeae34), COL_WHITE}}, --orange & white
-		{color(0xfee761), {color(0xfeae34), COL_WHITE}}, --orange & white
-		{color(0xfee761), {color(0xfeae34), COL_WHITE}}, --orange & white
+		{color(0xfeae34), {color(0xfee761), COL_WHITE}}, --orange & white
+		{color(0xfeae34), {color(0xfee761), COL_WHITE}}, --orange & white
+		{color(0xfeae34), {color(0xfee761), COL_WHITE}}, --orange & white
+		{color(0xfeae34), {color(0xfee761), COL_WHITE}}, --orange & white
+		{color(0xfeae34), {color(0xfee761), COL_WHITE}}, --orange & white
+		{color(0xfeae34), {color(0xfee761), COL_WHITE}}, --orange & white
+		{color(0xfeae34), {color(0xfee761), COL_WHITE}}, --orange & white
+		{color(0xfeae34), {color(0xfee761), COL_WHITE}}, --orange & white
+		{color(0xfeae34), {color(0xfee761), COL_WHITE}}, --orange & white
+		{color(0xfeae34), {color(0xfee761), COL_WHITE}}, --orange & white
+		{color(0xfeae34), {color(0xfee761), COL_WHITE}}, --orange & white
+		{color(0xfeae34), {color(0xfee761), COL_WHITE}}, --orange & white
+		{color(0xfeae34), {color(0xfee761), COL_WHITE}}, --orange & white
+		{color(0xfeae34), {color(0xfee761), COL_WHITE}}, --orange & white
+		{color(0xfeae34), {color(0xfee761), COL_WHITE}}, --orange & white
+		{color(0xfeae34), {color(0xfee761), COL_WHITE}}, --orange & white
+		{color(0xfeae34), {color(0xfee761), COL_WHITE}}, --orange & white
+		{color(0xfeae34), {color(0xfee761), COL_WHITE}}, --orange & white
+		{color(0xfeae34), {color(0xfee761), COL_WHITE}}, --orange & white
+		{color(0xfeae34), {color(0xfee761), COL_WHITE}}, --orange & white
+		{color(0xfeae34), {color(0xfee761), COL_WHITE}}, --orange & white
 		{COL_BLACK_BLUE,  {COL_VERY_DARK_GRAY, COL_DARK_GRAY}},
 		{COL_DARK_GREEN,  {COL_MID_DARK_GREEN, COL_MID_GREEN}},
 		{COL_DARK_RED,    {COL_LIGHT_RED, COL_PINK}}, --l red + light pink

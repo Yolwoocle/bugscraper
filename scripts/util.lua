@@ -166,6 +166,15 @@ function duplicate_table(tab, n)
 	return ntab
 end	
 
+--- Returns the sum of all the elements in the table.
+function table_sum(tab)
+	local s = 0
+	for i, val in ipairs(tab) do
+		s = s + val
+	end
+	return s
+end
+
 function is_in_table(tab, val)
 	for _,v in pairs(tab) do
 		if val == v then

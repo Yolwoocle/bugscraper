@@ -26,7 +26,7 @@ return {
 
         -- World names
         world_1 = "The offices",
-        world_2 = "The beehive",
+        world_2 = "The factory",
         world_3 = "The server room",
         world_4 = "The final climb",
     },

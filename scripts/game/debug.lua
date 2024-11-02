@@ -141,6 +141,11 @@ function Debug:init(game)
             end
         end},
         ["r"] = {"start game", function()
+            for _, p in pairs(game.players) do
+                p:set_pos(CANVAS_CENTER[1], CANVAS_CENTER[2])
+            end
+            game.can_start_game = true
+            game.camera:reset()
             game:start_game()
         end},
         

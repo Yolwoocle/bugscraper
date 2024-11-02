@@ -41,8 +41,7 @@ function Beellet:init(x, y)
     
     --- Telegraph
     self.telegraph_timer = Timer:new(0.5)
-    self.telegraph_source = Audio:get_sound("chipper_telegraph"):clone()
-    self.telegraph_source:set_pitch(0.7)
+    self.telegraph_sound = "beelet_inflate_1"
     
     --- Attack
     self.force_charge_flag = false
@@ -100,7 +99,7 @@ function Beellet:init(x, y)
 
                 self.spr:set_animation("attack")
                 self.telegraph_timer:start()
-                self.telegraph_source:play()
+                Audio:play_var("beelet_inflate_1", 0.1, 1.2)
 
                 self.s = 2
                 self.target_s = 1
@@ -150,7 +149,6 @@ function Beellet:init(x, y)
                 self.spr:set_animation("normal")
 
                 self.post_attack_timer:start()
-                self.telegraph_source:stop()
             
 				Audio:play_var("bullet_bounce_"..random_sample{"1","2"}, 0.2, 1.2)
                 Audio:play_var("metal_impact", 0, 1)
