@@ -35,7 +35,7 @@ function ButtonSmall:update_button_small(dt)
     if self.is_pressed then
         self.pressed_disappear_timer = self.pressed_disappear_timer - dt
         if self.pressed_disappear_timer <= 0 then
-            game:kill_all_active_enemies()
+            self:kill()
         end
     end
 end

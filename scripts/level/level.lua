@@ -88,7 +88,7 @@ function Level:init(game)
 	self.is_hole_stencil_enabled = true
 	self.hole_stencil_pause_radius = CANVAS_WIDTH
 	self.hole_stencil_max_radius = CANVAS_WIDTH*2
-	self.hole_stencil_start_timer = Timer:new(2.0)
+	self.hole_stencil_start_timer = Timer:new(1.0)
 	self.hole_stencil_radius = 0
 	self.hole_stencil_radius_speed = 0
 	self.hole_stencil_radius_accel = 300

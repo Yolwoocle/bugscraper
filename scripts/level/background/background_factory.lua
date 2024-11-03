@@ -9,7 +9,7 @@ local BackgroundFactory = BackgroundLayered:inherit()
 function BackgroundFactory:init(level)
 	BackgroundFactory.super.init(self, level)
 
-	self.clear_color = COL_DARK_BROWN
+	self.clear_color = COL_BLACK_BLUE
 
 	-- self:add_layer(BackgroundLayerParticles:new(self, 1, {
 	-- 	images = {images.cabin_grid}

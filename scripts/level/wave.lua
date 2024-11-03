@@ -17,8 +17,8 @@ function Wave:init(params)
 	self.fixed_enemies = param(params.fixed_enemies, {})
 	self.level_geometry = param(params.level_geometry, nil)
 	self.elevator_layers = param(params.elevator_layers, {})
-	self.run = param(params.run, nil)
-
+	self.door_images = param(params.door_images, nil)
+	
 	self.title = param(params.title, nil)
 	self.title_x = param(params.title_x, CANVAS_WIDTH/2)
 	self.title_y = param(params.title_y, CANVAS_HEIGHT/2)
@@ -26,7 +26,8 @@ function Wave:init(params)
 	self.title_stay_time = param(params.title_stay_time, 3)
 	self.title_scale = param(params.title_scale, 2)
 	self.title_outline_color = param(params.title_outline_color, COL_WHITE)
-
+	
+	self.run = param(params.run, nil)
 	self.floating_text = param(params.floating_text, nil)
 	self.cutscene = param(params.cutscene, nil)
 	self.backroom = param(params.backroom, nil)
@@ -194,6 +195,10 @@ function Wave:enable_wave_side_effects(level)
 
 	if self.backroom then
 		game.level:begin_backroom(self.backroom)
+	end
+
+	if self.door_images then
+		game.level.elevator.door:set_images(self.door_images[1], self.door_images[2], self.door_images[3], self.door_images[4])
 	end
 end
 

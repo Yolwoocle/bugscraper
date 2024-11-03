@@ -2,6 +2,7 @@ require "scripts.util"
 local backgrounds = require "data.backgrounds"
 local enemies = require "data.enemies"
 local cutscenes = require "data.cutscenes"
+local images    = require "data.images"
 
 local Rect = require "scripts.math.rect"
 local LevelGeometry = require "scripts.level.level_geometry"
@@ -304,7 +305,7 @@ local waves = {
 
 	----------------------------------------------------------------------------------------------------------
 	----------------------------------------------------------------------------------------------------------
-	--- W2: beehive
+	--- W2: beehive / factory
 	----------------------------------------------------------------------------------------------------------
 	----------------------------------------------------------------------------------------------------------
 
@@ -320,6 +321,21 @@ local waves = {
 
 		background = backgrounds.BackgroundFactory:new(),
 		music = "w2",
+
+		elevator_layers = {
+			["cabin_brown"] = true,
+			["walls_brown"] = true,
+			["bg_grid_brown"] = true,
+
+			["walls"] = false,
+			["bg_grid"] = false,
+		},
+		door_images = {
+			images.cabin_door_brown_left_far,
+			images.cabin_door_brown_left_center,
+			images.cabin_door_brown_right_far,
+			images.cabin_door_brown_right_center,
+		},
 
 		title = get_world_name("2"),
 		title_color = COL_YELLOW_ORANGE,
@@ -566,6 +582,15 @@ local waves = {
 		},
 		background = backgrounds.BackgroundServers:new(),
 		music = "w3",
+
+		elevator_layers = {
+			["cabin_brown"] = false,
+			["walls_brown"] = false,
+			["bg_grid_brown"] = false,
+
+			["walls"] = true,
+			["bg_grid"] = true,
+		},
 
 		title = get_world_name("3"),
 		title_color = COL_MID_GREEN,

@@ -24,6 +24,10 @@ function Elevator:init(level)
 		["walls"] = true,
 		["bg_grid"] = true,
 		["fg_grid"] = false,
+
+		["cabin_brown"] = false,
+		["walls_brown"] = false,
+		["bg_grid_brown"] = false,
 	}
 
 	self.grid_timer = Timer:new(1.5)
@@ -100,6 +104,9 @@ function Elevator:draw_front()
 	if self.layers["walls"] then
 		gfx.draw(images.cabin_walls, self.level.cabin_rect.ax, self.level.cabin_rect.ay)
 	end
+	if self.layers["walls_brown"] then
+		gfx.draw(images.cabin_walls_brown, self.level.cabin_rect.ax, self.level.cabin_rect.ay)
+	end
 	if self.layers["test"] then
 		gfx.draw(images.test, self.level.cabin_rect.ax, self.level.cabin_rect.ay)
 	end
@@ -115,12 +122,20 @@ function Elevator:draw_cabin()
 	self.door:draw()
 
 	-- Cabin background
-	love.graphics.draw(images.cabin_bg, cabin_rect.ax, cabin_rect.ay)
+	if self.layers["cabin_brown"] then
+		love.graphics.draw(images.cabin_bg_brown, cabin_rect.ax, cabin_rect.ay)
+	else
+		love.graphics.draw(images.cabin_bg, cabin_rect.ax, cabin_rect.ay)
+	end
 	love.graphics.draw(images.cabin_bg_ambient_occlusion, cabin_rect.ax, cabin_rect.ay)
 	
 	if self.layers["bg_grid"] then
 		love.graphics.draw(images.cabin_grid, cabin_rect.ax +   16, cabin_rect.ay + 4*16)
 		love.graphics.draw(images.cabin_grid, cabin_rect.ax + 19*16, cabin_rect.ay + 4*16)
+	end
+	if self.layers["bg_grid_brown"] then
+		love.graphics.draw(images.cabin_grid_brown, cabin_rect.ax +   16, cabin_rect.ay + 4*16)
+		love.graphics.draw(images.cabin_grid_brown, cabin_rect.ax + 19*16, cabin_rect.ay + 4*16)
 	end
 	
 	self:draw_counter()

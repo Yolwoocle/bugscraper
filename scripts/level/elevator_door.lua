@@ -23,6 +23,13 @@ function ElevatorDoor:init(x, y, image_left_far, image_left_center, image_right_
 	self.is_opened = false
 end
 
+function ElevatorDoor:set_images(image_left_far, image_left_center, image_right_far, image_right_center)
+	self.image_left_far = image_left_far or images.cabin_door_left_far
+	self.image_left_center = image_left_center or images.cabin_door_left_center
+	self.image_right_far = image_right_far or images.cabin_door_right_far
+	self.image_right_center = image_right_center or images.cabin_door_right_center
+end
+
 function ElevatorDoor:update(dt)
 	self.offset = lerp(self.offset, self.offset_target, 0.1)
 end
