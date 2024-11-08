@@ -38,6 +38,11 @@ function ElectricArc:init(x, y, is_active, activation_delay)
     -- self.particle_probability = 0.005
     self.particle_probability = 0.001
 
+    self.active_arc_min_line_width = 1
+    self.active_arc_max_line_width = 3
+    self.inactive_arc_min_line_width = 0.1
+    self.inactive_arc_max_line_width = 0.5
+
     self.activation_timer = Timer:new(activation_delay or 0)
     if activation_delay then
         self.activation_timer:start()
@@ -111,8 +116,8 @@ function ElectricArc:update_segment(dt)
 end
 
 function ElectricArc:update_lightning(dt)
-    self.lightning.min_line_width = ternary(self.is_arc_active, 1, 0.1)
-    self.lightning.max_line_width = ternary(self.is_arc_active, 3, 0.5)
+    self.lightning.min_line_width = ternary(self.is_arc_active, self.active_arc_min_line_width, self.inactive_arc_min_line_width)
+    self.lightning.max_line_width = ternary(self.is_arc_active, self.active_arc_max_line_width, self.inactive_arc_max_line_width)
 
     self.lightning:generate(self.segment)
 end

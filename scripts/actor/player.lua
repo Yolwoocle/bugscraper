@@ -219,8 +219,8 @@ function Player:update(dt)
 	self:shoot(dt, false)
 	self:update_gun_pos(dt)
 
-	self.ui_x = lerp(self.ui_x, floor(self.mid_x), 0.1)
-	self.ui_y = lerp(self.ui_y, floor(self.y), 0.1)
+	self.ui_x = lerp(self.ui_x, floor(self.mid_x), 0.2)
+	self.ui_y = lerp(self.ui_y, floor(self.y), 0.2)
 
 	-- self.ui_x = CANVAS_WIDTH/2
 	-- self.ui_y = 50

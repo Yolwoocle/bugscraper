@@ -52,9 +52,12 @@ local function new_wave(params)
 	return Wave:new(params)
 end
 
+local function get_world_prefix(n)
+	return Text:text("level.world_prefix", tostring(n))
+end
+
 local function get_world_name(n)
-	return string.format("%s - %s", Text:text("level.short_world_prefix", tostring(n)),
-		Text:text("level.world_" .. tostring(n)))
+	return Text:text("level.world_" .. tostring(n))
 end
 
 local function spawn_timed_spikes()
@@ -101,7 +104,8 @@ local waves = {
 		},
 		music = "w1",
 
-		title = get_world_name("1"),
+		over_title = get_world_prefix(1),
+		title = get_world_name(1),
 		title_color = COL_MID_BLUE,
 	}),
 
@@ -337,7 +341,8 @@ local waves = {
 			images.cabin_door_brown_right_center,
 		},
 
-		title = get_world_name("2"),
+		over_title = get_world_prefix(2),
+		title = get_world_name(2),
 		title_color = COL_YELLOW_ORANGE,
 	}),
 
@@ -592,7 +597,8 @@ local waves = {
 			["bg_grid"] = true,
 		},
 
-		title = get_world_name("3"),
+		over_title = get_world_prefix(3),
+		title = get_world_name(3),
 		title_color = COL_MID_GREEN,
 	}),
 
@@ -904,7 +910,8 @@ local waves = {
 		background = backgrounds.BackgroundFinal:new(),
 		music = "w4",
 
-		title = get_world_name("4"),
+		over_title = get_world_prefix(4),
+		title = get_world_name(4),
 		title_color = COL_LIGHT_BLUE,
 		title_outline_color = COL_DARK_BLUE,
 

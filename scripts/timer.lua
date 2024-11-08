@@ -76,6 +76,7 @@ function Timer:start(duration, args)
     if self.on_apply then
         self:on_apply()
     end
+    return self
 end
 
 function Timer:stop()

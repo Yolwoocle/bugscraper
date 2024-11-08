@@ -19,6 +19,7 @@ function Wave:init(params)
 	self.elevator_layers = param(params.elevator_layers, {})
 	self.door_images = param(params.door_images, nil)
 	
+	self.over_title = param(params.over_title, nil)
 	self.title = param(params.title, nil)
 	self.title_x = param(params.title_x, CANVAS_WIDTH/2)
 	self.title_y = param(params.title_y, CANVAS_HEIGHT/2)
@@ -153,6 +154,7 @@ end
 
 function Wave:show_title()
 	if self.title then
+		Particles:word(self.title_x, self.title_y - 16, self.over_title, self.title_color, self.title_stay_time, 1, self.title_outline_color)
 		Particles:word(self.title_x, self.title_y, self.title, self.title_color, self.title_stay_time, self.title_scale, self.title_outline_color)
 	end
 end

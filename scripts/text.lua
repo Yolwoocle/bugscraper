@@ -8,6 +8,14 @@ local TextManager = Class:inherit()
 
 function TextManager:init()
     self.values = self:unpack(lang_en)
+
+    -- local words = 0
+    -- for _, v in pairs(self.values) do
+    --     local s = split_str(v, " ")
+    --     print_table(s)
+    --     words = words + #s
+    -- end
+    -- print("TextManager: Unpacked "..tostring(words).." words.")
 end
 
 --- Unpacks a table to be used as text keys. Example:

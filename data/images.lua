@@ -86,6 +86,12 @@ local img_names = {
 	chipper_1 =                "actors/enemies/chipper_1",
 	chipper_2 =                "actors/enemies/chipper_2",
 	chipper_3 =                "actors/enemies/chipper_3",
+	cloud_enemy_size1 =        "actors/enemies/cloud_enemy_size1",
+	cloud_enemy_size2 =        "actors/enemies/cloud_enemy_size2",
+	cloud_enemy_size3 =        "actors/enemies/cloud_enemy_size3",
+	cloud_storm =              "actors/enemies/cloud_storm",
+	cloud_storm_angry =        "actors/enemies/cloud_storm_angry",
+	cloud_storm_angry_attack = "actors/enemies/cloud_storm_angry_attack",
 	beelet_1 =                 "actors/enemies/beelet_1",
 	beelet_activated_1 =       "actors/enemies/beelet_activated_1",
 	beelet_activated_2 =       "actors/enemies/beelet_activated_2",
@@ -242,6 +248,8 @@ local img_names = {
 	jump_dust_kick_1 =     "particles/jump_dust_kick_1",
 	jump_dust_kick_2 =     "particles/jump_dust_kick_2",
 	jump_dust_kick_3 =     "particles/jump_dust_kick_3",
+	jump_dust_kick_4 =     "particles/jump_dust_kick_4",
+	jump_dust_kick_5 =     "particles/jump_dust_kick_5",
 
 	-----------------------------------------------------
 	

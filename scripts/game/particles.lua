@@ -77,10 +77,15 @@ function CircleParticle:init(x,y,s,palette, vx,vy,vs, life, g, fill_mode, params
 	self:init_particle(x,y,s,0, vx,vy,vs,0, life, g)
 
 	self.palette = palette or COL_WHITE
-	if not self.palette.type then
-		self.col = palette
-	elseif self.palette.type == "gradient" then
+	if self.palette.type == "gradient" then
 		self.col = self.palette[1]
+
+	elseif self.palette[1] and type(self.palette[1]) == "table" then
+		self.col = random_sample(self.palette)
+
+	elseif not self.palette.type then
+		self.col = palette
+
 	end
 	self.fill_mode = fill_mode or "fill"
 	self.type = "circle"
@@ -775,9 +780,9 @@ function ParticleSystem:glow_dust(x, y, size, sizevar)
 end
 
 
-function ParticleSystem:flash(x, y)
+function ParticleSystem:flash(x, y, radius, radius_rand)
 	-- x,y,r,col, vx,vy,vr, life
-	local r = 8 + random_neighbor(2)
+	local r = (radius or 8) + random_neighbor(radius_rand or 2)
 	-- self:add_particle(x, y, r, COL_LIGHT_YELLOW, 0, 0, 220, _life)
 	self:add_particle(CircleParticle:new(x, y, r, COL_WHITE, 0, 0, 220, _life))
 end
@@ -891,7 +896,9 @@ function ParticleSystem:jump_dust_kick(x, y, rot)
 		images.jump_dust_kick_1,
 		images.jump_dust_kick_2,
 		images.jump_dust_kick_3,
-	}, x, y, rot, 0.08)
+		images.jump_dust_kick_4,
+		images.jump_dust_kick_5,
+	}, x, y, rot, 0.12)
 end
 
 function ParticleSystem:stomped_enemy(x, y, spr)

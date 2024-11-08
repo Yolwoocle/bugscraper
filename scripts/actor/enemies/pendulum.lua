@@ -16,6 +16,8 @@ function Pendulum:init(x, y, angle_range, radius, swing_speed, initial_angle_t)
     self.is_stompable = false
     self.is_affected_by_bounds = false
     self.affected_by_walls = false
+	self.destroy_bullet_on_impact = false
+	self.is_immune_to_bullets = true
 
     self.is_pushable = false
     

@@ -24,6 +24,7 @@ local enemies = {
 	TimedSpikes =        require "scripts.actor.enemies.timed_spikes",
 	FlyingSpawner =      require "scripts.actor.enemies.flying_spawner",
 	LarvaSpawner =       require "scripts.actor.enemies.larva_spawner", --*
+	BeeBoss =            require "scripts.actor.enemies.bee_boss",
 
 	ElectricArc =        require "scripts.actor.enemies.electric_arc", 
 	ElectricRays =       require "scripts.actor.enemies.electric_rays", 
@@ -38,6 +39,8 @@ local enemies = {
 	SwitchBug =          require "scripts.actor.enemies.switch_bug", --*
 	W2boss =             require "scripts.actor.enemies.w2boss", --*
 
+	CloudEnemy =         require "scripts.actor.enemies.cloud_enemy", --*
+	CloudStorm =         require "scripts.actor.enemies.cloud_storm", --*
 	Centipede =          require "scripts.actor.enemies.centipede", --*
 	BigBug =             require "scripts.actor.enemies.big_bug", --*
 	Slime =              require "scripts.actor.enemies.slime", --*
@@ -47,8 +50,6 @@ local enemies = {
 	MotherboardButton =  require "scripts.actor.enemies.motherboard_button", --*
 
 	MushroomAnt =        require "scripts.actor.enemies.mushroom_ant",
-
-	BeeBoss =            require "scripts.actor.enemies.bee_boss", --*
 	
 	JumpingProp =        require "scripts.actor.enemies.jumping_prop",
 	Dummy =              require "scripts.actor.enemies.dummy",

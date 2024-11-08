@@ -29,6 +29,19 @@ function Enemy:init_enemy(x,y, img, w,h)
 	self.is_flying = false
 	self.is_active = true
 	self.follow_player = true
+	self.ai_template = nil
+	self.ai_templates = {
+		["random_rotate"] = {
+			ready = function(ai)
+				self.direction = random_range(0, pi2)
+			end,
+			update = function(ai, dt)
+                self.direction = self.direction + random_sample({-1, 1}) * dt * 3
+                self.vx = self.vx + math.cos(self.direction) * self.speed
+                self.vy = self.vy + math.sin(self.direction) * self.speed
+			end
+		}
+	}
 
 	self.destroy_bullet_on_impact = true
 	self.is_immune_to_bullets = false
@@ -98,13 +111,22 @@ end
 
 function Enemy:ready()
 	self:ajust_loot_probabilities()
+
+	if self.ai_template and self.ai_templates[self.ai_template] and self.ai_templates[self.ai_template].ready then
+		self.ai_templates[self.ai_template]:ready()
+	end
 end
 
 function Enemy:update_enemy(dt)
 	-- if not self.is_active then    return    end
 	self:update_actor(dt)
 	
-	self:assign_target_as_nearest_player(dt)
+	if self.follow_player then
+		self:assign_target_as_nearest_player(dt)
+	end
+	if self.ai_template and self.ai_templates[self.ai_template] then
+		self.ai_templates[self.ai_template]:update(dt)
+	end
 	self:follow_target(dt)
 	self.invincible_timer = max(self.invincible_timer - dt, 0)
 	self.harmless_timer = max(self.harmless_timer - dt, 0)
