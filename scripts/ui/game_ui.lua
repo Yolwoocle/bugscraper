@@ -48,6 +48,7 @@ function GameUI:draw()
 	end 
 	self:draw_offscreen_indicators()
 	self:draw_floating_text()
+	self:draw_upgrades()
 
 	-- local r
     -- r = game.level.cabin_inner_rect
@@ -225,6 +226,18 @@ end
 function GameUI:draw_floating_text()
 	if #self.floating_text > 0 then
 		print_centered_outline(nil, nil, self.floating_text, CANVAS_WIDTH/2, self.floating_text_y)
+	end
+end
+
+function GameUI:draw_upgrades()
+	local padding = 4
+	local spacing = 2
+	local item_size = 20
+	local x = CANVAS_WIDTH - padding
+	local y = padding + item_size/2
+	for _, upgrade in pairs(game.upgrades) do
+		x = x - item_size
+		draw_centered(upgrade.sprite, x, y)
 	end
 end
 

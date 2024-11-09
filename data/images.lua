@@ -394,6 +394,9 @@ images.button_fragments = {
 -----------------------------------------------------
 -- Input buttons
 
+local start = love.timer.getTime()
+print_debug("Loading images...")
+
 -- Keyboard
 for key_constant, button_image_name in pairs(KEY_CONSTANT_TO_IMAGE_NAME) do
 	images[button_image_name] = load_image("buttons/keyboard/"..button_image_name..".png")
@@ -440,6 +443,8 @@ for button, _ in pairs(CONTROLLER_BUTTONS) do
 	end
 end
 images.btn_c_unknown = load_image("buttons/controller/btn_c_unknown.png")
+
+print_debug("Finished loading", table_key_count(images), "images. (", (love.timer.getTime() - start) * 1000 ,"ms)")
 
 -----------------------------------------------------
 

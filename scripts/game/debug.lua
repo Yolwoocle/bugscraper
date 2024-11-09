@@ -48,7 +48,7 @@ function Debug:init(game)
             local p = self.game.players[tonumber(n)]
             if p ~= nil then
                 p:do_damage(1)
-                p.iframes = 0.0
+                p.invincible_time = 0.0
             end
         end
     end 

@@ -40,7 +40,7 @@ function Cocoon:on_death(damager, reason)
     Particles:image(self.mid_x, self.mid_y, 20, {images.cocoon_fragment_1, images.cocoon_fragment_2}, self.w, nil, nil, 0.5)
     local player = game:new_player(self.player_n, self.x, self.y)
     
-    player:set_invincibility(player.max_iframes)
+    player:set_invincibility(player.max_invincible_time)
 
     -- local l = math.floor(damager.life/2)
     -- player:set_life(l)

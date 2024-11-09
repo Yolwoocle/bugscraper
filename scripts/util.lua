@@ -175,6 +175,14 @@ function table_sum(tab)
 	return s
 end
 
+function table_key_count(tab)
+	local n = 0
+	for k, v in pairs(tab) do
+		n=n+1
+	end
+	return n
+end
+
 function is_in_table(tab, val)
 	for _,v in pairs(tab) do
 		if val == v then
@@ -276,6 +284,17 @@ function draw_with_selected_outline(spr, x, y, r, sx, sy)
 	love.graphics.draw(spr, x, y, r, sx, sy)
 end
 
+--- func desc
+---@param outline_color table
+---@param outline_type "round" | "square"
+---@param spr love.Drawable
+---@param x number
+---@param y number
+---@param r number
+---@param sx number
+---@param sy number
+---@param ox number
+---@param oy number
 function draw_with_outline(outline_color, outline_type, spr, x, y, r, sx, sy, ox, oy)
 	outline_type = outline_type or "round"
 	ox = ox or 0

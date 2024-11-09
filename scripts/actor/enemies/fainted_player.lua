@@ -81,7 +81,7 @@ function FaintedPlayer:revive(damager)
     end
 
     local new_player = game:new_player(self.player_n, self.x, self.y)
-    new_player:set_invincibility(new_player.max_iframes)
+    new_player:set_invincibility(new_player.max_invincible_time)
     new_player:equip_gun(self.gun)
     for _, upgrade in pairs(game.upgrades) do
         new_player:apply_upgrade(upgrade, true)

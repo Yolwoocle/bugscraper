@@ -17,10 +17,6 @@ function BackgroundLayerPattern:init(background, parallax, params)
     self.row_count = math.ceil(CANVAS_HEIGHT / self.pattern_height) + 2
 
     self.tiles = self:create_tiles()
-    print_debug("LELEZLEZLZE", self.pattern_height)
-    print_debug("LELEZLEZLZE", CANVAS_HEIGHT / self.pattern_height)
-    print_debug("LELEZLEZLZE", #self.tiles)
-
 end
 
 function BackgroundLayerPattern:get_pattern_height()

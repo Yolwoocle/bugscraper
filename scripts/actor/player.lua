@@ -1,14 +1,7 @@
-local Class = require "scripts.meta.class"
 local Actor = require "scripts.actor.actor"
 local Guns = require "data.guns"
-local Bullet = require "scripts.actor.bullet"
-local Effect = require "scripts.effect.effect"
 local Enemies = require "data.enemies"
-local EffectSlowness = require "scripts.effect.effect_slowness"
-local InputButton = require "scripts.input.input_button"
 local images = require "data.images"
-local sounds = require "data.sounds"
-local shaders = require "data.shaders"
 local ui = require "scripts.ui.ui"
 require "scripts.util"
 require "scripts.meta.constants"
@@ -103,8 +96,8 @@ function Player:init(n, x, y, skin)
 
 	-- Invicibility
 	self.is_invincible = false
-	self.iframes = 0
-	self.max_iframes = 3
+	self.invincible_time = 0
+	self.max_invincible_time = 3
 	self.iframe_blink_freq = 0.1
 	self.iframe_blink_timer = 0
 
@@ -263,17 +256,17 @@ function Player:add_temporary_life(val)
 end
 
 function Player:do_invincibility(dt)
-	self.iframes = max(0, self.iframes - dt)
+	self.invincible_time = max(0, self.invincible_time - dt)
 
 	self.is_invincible = false
-	if self.iframes > 0 and game.frames_to_skip <= 0 then
+	if self.invincible_time > 0 and game.frames_to_skip <= 0 then
 		self.is_invincible = true
 		self.iframe_blink_timer = (self.iframe_blink_timer + dt) % self.iframe_blink_freq
 	end
 end
 
 function Player:set_invincibility(n)
-	self.iframes = math.max(n, self.iframes)
+	self.invincible_time = math.max(n, self.invincible_time)
 end
 
 function Player:kill()
@@ -311,7 +304,7 @@ end
 
 function Player:do_damage(n, source)
 	if self.debug_god_mode then return false   end
-	if self.iframes > 0 then    return false   end
+	if self.invincible_time > 0 then    return false   end
 	if n <= 0 then              return false   end
 
 	-- if Input:get_number_of_users() == 1 then
@@ -339,7 +332,7 @@ function Player:do_damage(n, source)
 		Particles:image(self.ui_x, self.ui_y - 16, temporary_life_diff, images.particle_leaf, 5, 1.5, 0.6, 0.5)
 	end
 	
-	self:set_invincibility(self.max_iframes)
+	self:set_invincibility(self.max_invincible_time)
 	self:set_fury(0)
 	
 	if self.life <= 0 then
@@ -746,7 +739,7 @@ end
 --- When an enemy bullet hits the player
 function Player:on_hit_bullet(bullet, col)
 	if bullet.player == self then   return   end
-	if self.iframes > 0 then   return   end
+	if self.invincible_time > 0 then   return   end
 
 	self:do_damage(bullet.damage, bullet)
 	self.vx = self.vx + sign(bullet.vx) * bullet.knockback
@@ -1146,7 +1139,7 @@ function Player:update_color(dt)
 	end
 
 	if self.is_invincible then
-		local v = 1 - (self.iframes / self.max_iframes)
+		local v = 1 - (self.invincible_time / self.max_invincible_time)
 		local a = 1
 		if self.iframe_blink_timer < self.iframe_blink_freq/2 then
 			a = 0.5
