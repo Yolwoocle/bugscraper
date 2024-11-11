@@ -158,8 +158,7 @@ function OptionsManager:set(name, val)
 end
 
 function OptionsManager:toggle(name)
-	self.options[name] = not self.options[name]
-	self:update_options_file()
+	self:set(name, not self.options[name])
 end
 
 function OptionsManager:update_volume()

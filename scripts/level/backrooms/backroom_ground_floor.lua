@@ -5,6 +5,7 @@ local enemies = require "data.enemies"
 local Backroom = require "scripts.level.backrooms.backroom"
 local BackgroundCafeteria = require "scripts.level.background.background_cafeteria"
 local ElevatorDoor       = require "scripts.level.elevator_door"
+local TvPresentation    = require "scripts.level.background.layer.tv_presentation"
 
 local BackroomGroundFloor = Backroom:inherit()
 
@@ -18,6 +19,7 @@ function BackroomGroundFloor:init()
 	self.all_in_front = false
 
 	self.close_door_timer = 0.5
+	self.tv_presentation = TvPresentation:new(715, 79)
 end
 
 function BackroomGroundFloor:generate(world_generator)
@@ -87,6 +89,7 @@ function BackroomGroundFloor:update(dt)
 	end
 
 	self.door:update(dt)
+	self.tv_presentation:update(dt)
 
 	if game.can_start_game and not self.has_opened_door then
 		self.door:open()
@@ -104,6 +107,8 @@ function BackroomGroundFloor:draw()
 	end
 end
 
+local n = 1
+local frame = 0
 function BackroomGroundFloor:draw_all()	
 	self.door:draw()
 	love.graphics.draw(images.ground_floor, -16, -16)
@@ -111,13 +116,20 @@ function BackroomGroundFloor:draw_all()
 	print_centered_outline(COL_WHITE, COL_BLACK_BLUE, Text:text("menu.credits.game_by_template", "Léo Bernard"), 536, 7*16)
 
 	--215, 79
-	for ix = 0, 54 do
-		for iy = 0, 30 do
-			exec_color(random_sample {COL_WHITE, COL_LIGHTEST_GRAY, COL_LIGHT_GRAY}, function()
-				love.graphics.points(715 + ix, 79 + iy)
-			end)
-		end
-	end
+	-- for ix = 0, 54 do
+	-- 	for iy = 0, 30 do
+	-- 		exec_color(random_sample {COL_WHITE, COL_LIGHTEST_GRAY, COL_LIGHT_GRAY}, function()
+	-- 			love.graphics.points(715 + ix, 79 + iy)
+	-- 		end)
+	-- 	end
+	-- end
+
+	-- frame = frame + 1
+	-- n = mod_plus_1(n + 1, 140)
+	-- local name = "render"..string.sub("0000"..tostring(n), -4, -1)
+	-- draw_with_outline(COL_WHITE, "round", images[name], 715, 79) 
+
+	self.tv_presentation:draw()
 end
 
 function BackroomGroundFloor:draw_front()	

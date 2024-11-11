@@ -15,6 +15,23 @@ local function load_image(name)
 	debug_set_image_col(im, name)
 	return im 
 end
+
+local function load_spritesheet(name, number)
+	local image = load_image(name)
+	local sheet = {
+		type = "spritesheet",
+		image = image,
+		quads = {},
+	}
+	local width = math.floor(image:getWidth()/number)
+
+	for x = 0, image:getWidth(), width do
+		table.insert(sheet.quads, love.graphics.newQuad(x, 0, width, image:getHeight(), image:getDimensions()))
+	end
+
+    return sheet
+end
+
 local function load_image_table(name, n, w, h)
 	if not n then  error("number of images `n` not defined")  end
 	local t = {}
@@ -125,6 +142,7 @@ local img_names = {
 	larva_projectile =         "actors/enemies/larva_projectile",
 	metal_mosquito_1 =         "actors/enemies/metal_mosquito_1",
 	metal_mosquito_2 =         "actors/enemies/metal_mosquito_2",
+	mole_digging_1 =           "actors/enemies/mole_digging_1",
 	mosquito1 =                "actors/enemies/mosquito1",
 	mosquito2 =                "actors/enemies/mosquito2",
 	motherboard =              "actors/enemies/motherboard",
@@ -302,6 +320,23 @@ local img_names = {
 	ground_floor_stack_papers_medium_b = "level/props/ground_floor_stack_papers_medium_b",
 	ground_floor_stack_papers_small = "level/props/ground_floor_stack_papers_small",
 
+	tv_slideshow_001 = "level/tv_slideshow/tv_slideshow_001",
+	tv_slideshow_002 = "level/tv_slideshow/tv_slideshow_002",
+	tv_slideshow_003 = "level/tv_slideshow/tv_slideshow_003",
+	tv_slideshow_004 = "level/tv_slideshow/tv_slideshow_004",
+	tv_slideshow_005 = "level/tv_slideshow/tv_slideshow_005",
+	tv_slideshow_006 = "level/tv_slideshow/tv_slideshow_006",
+	tv_slideshow_007 = "level/tv_slideshow/tv_slideshow_007",
+	tv_slideshow_008 = "level/tv_slideshow/tv_slideshow_008",
+	tv_slideshow_009 = "level/tv_slideshow/tv_slideshow_009",
+	tv_slideshow_010 = "level/tv_slideshow/tv_slideshow_010",
+	tv_slideshow_011 = "level/tv_slideshow/tv_slideshow_011",
+	tv_slideshow_012 = "level/tv_slideshow/tv_slideshow_012",
+	tv_slideshow_013 = "level/tv_slideshow/tv_slideshow_013",
+	tv_slideshow_014 = "level/tv_slideshow/tv_slideshow_014",
+	tv_slideshow_999 = "level/tv_slideshow/tv_slideshow_999",
+	tv_bluescreen = "level/tv_slideshow/tv_bluescreen",
+
 	-----------------------------------------------------
 
 	-- hud
@@ -379,8 +414,19 @@ local img_names = {
 	_test_hexagon = "_test_hexagon",
 	_test_hexagon_small = "_test_hexagon_small",
 }
+
 for id, path in pairs(img_names) do
-	images[id] = load_image(path..".png")
+	if type(path) == "string" then
+		images[id] = load_image(path..".png")
+
+	elseif type(path) == "table" then
+		if path[1] == "spritesheet" then
+			images[id] = load_spritesheet(path[2]..".png", path[3])
+		end
+
+	else
+		error("Invalid type for image: "..type(path))
+	end
 end
 
 images.button_fragments = {
@@ -396,6 +442,12 @@ images.button_fragments = {
 
 local start = love.timer.getTime()
 print_debug("Loading images...")
+
+-- TV big animation
+for i=1,35 do
+	local name = "tv_slideshow_003_"..string.sub("0000"..tostring(i), -3, -1)
+	images[name] = load_image("level/tv_slideshow/mio_rotate/"..name..".png")
+end
 
 -- Keyboard
 for key_constant, button_image_name in pairs(KEY_CONSTANT_TO_IMAGE_NAME) do

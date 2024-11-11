@@ -20,7 +20,7 @@ function FlyingSpawner:init(x, y, spr, w, h)
 
     self.flip_mode = ENEMY_FLIP_MODE_MANUAL
 
-    self.life = 25
+    self.life = 15
 
     self.spawn_larva_timer = Timer:new({ 1, 2 })
     self.larva_projectiles = {}

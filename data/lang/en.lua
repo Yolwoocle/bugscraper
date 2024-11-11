@@ -33,10 +33,10 @@ return {
         world_prefix = "Department %s", 
 
         -- World names
-        world_1 = "The offices",
-        world_2 = "The factory",
-        world_3 = "The server room",
-        world_4 = "Bug resources",
+        world_1 = "Bug resources",
+        world_2 = "Factory",
+        world_3 = "Data center",
+        world_4 = "Executive",
     },
     gun = {
         -- Gun names

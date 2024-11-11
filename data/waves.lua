@@ -1,17 +1,17 @@
 require "scripts.util"
-local backgrounds = require "data.backgrounds"
-local enemies = require "data.enemies"
-local cutscenes = require "data.cutscenes"
-local images    = require "data.images"
+local backgrounds       = require "data.backgrounds"
+local enemies           = require "data.enemies"
+local cutscenes         = require "data.cutscenes"
+local images            = require "data.images"
 
-local Rect = require "scripts.math.rect"
-local LevelGeometry = require "scripts.level.level_geometry"
-local Wave = require "scripts.level.wave"
+local Rect              = require "scripts.math.rect"
+local LevelGeometry     = require "scripts.level.level_geometry"
+local Wave              = require "scripts.level.wave"
 local BackroomCafeteria = require "scripts.level.backrooms.backroom_cafeteria"
-local E = require "data.enemies"
+local E                 = require "data.enemies"
 
-RECT_ELEVATOR = Rect:new(unpack(RECT_ELEVATOR_PARAMS))
-RECT_CAFETERIA = Rect:new(unpack(RECT_CAFETERIA_PARAMS))
+RECT_ELEVATOR           = Rect:new(unpack(RECT_ELEVATOR_PARAMS))
+RECT_CAFETERIA          = Rect:new(unpack(RECT_CAFETERIA_PARAMS))
 
 local function new_cafeteria(run_func)
 	run_func = run_func or function(...) end
@@ -27,10 +27,10 @@ local function new_cafeteria(run_func)
 			end
 
 			for _, actor in pairs(game.actors) do
-                if actor.name == "fainted_player" then
-                    actor:revive()
-                end
-            end
+				if actor.name == "fainted_player" then
+					actor:revive()
+				end
+			end
 			run_func(self, level)
 		end,
 
@@ -94,7 +94,7 @@ local waves = {
 	-- debug_wave(),
 	-- new_cafeteria(),
 	-- [[
-	
+
 	new_wave({
 		min = 5,
 		max = 5,
@@ -374,7 +374,7 @@ local waves = {
 			{ E.Larva,      4 },
 			{ E.Mosquito,   4 },
 			{ E.Boomshroom, 4 },
-			{ E.Beelet, 2 },
+			{ E.Beelet,     2 },
 		},
 	}),
 
@@ -393,8 +393,8 @@ local waves = {
 		max = 6,
 
 		enemies = {
-			{ E.Mosquito,   4 },
-			{ E.Beelet, 3 },
+			{ E.Mosquito, 4 },
+			{ E.Beelet,   3 },
 		},
 	}),
 
@@ -595,6 +595,13 @@ local waves = {
 
 			["walls"] = true,
 			["bg_grid"] = true,
+		},
+
+		door_images = {
+			images.cabin_door_left_far,
+			images.cabin_door_left_center,
+			images.cabin_door_right_far,
+			images.cabin_door_right_center,
 		},
 
 		over_title = get_world_prefix(3),
@@ -858,7 +865,6 @@ local waves = {
 			{ E.Chipper,   2 },
 			{ E.StinkBug,  2 },
 		},
-
 	}),
 
 
@@ -898,13 +904,11 @@ local waves = {
 	----------------------------------------------------------------------------------------------------------
 
 	new_wave({
-		min = 8,
-		max = 8,
+		min = 4,
+		max = 6,
 
 		enemies = {
-			{ E.Larva, 2 },
-			{ E.Fly,   2 },
-			{ E.Slug,  2 },
+			{ E.CloudEnemy, 2 },
 		},
 
 		background = backgrounds.BackgroundFinal:new(),
@@ -916,8 +920,6 @@ local waves = {
 		title_outline_color = COL_DARK_BLUE,
 
 		elevator_layers = {
-			["cabin"] = false,
-			["bg_grid"] = false,
 		},
 		run = function(self, level)
 		end,
@@ -925,214 +927,31 @@ local waves = {
 
 
 	new_wave({
-		min = 9,
+		min = 4,
+		max = 4,
+
+		enemies = {
+			{ E.CloudEnemy, 2 },
+			{ E.CloudStorm, 2 },
+		},
+	}),
+	
+	new_wave({
+		min = 3,
+		max = 3,
+
+		enemies = {
+			{ E.MushroomAnt, 1 },
+		},
+	}),
+
+	new_wave({
+		min = 7,
 		max = 9,
 
 		enemies = {
-			{ E.Fly,       2 },
-			{ E.SpikedFly, 2 },
-			{ E.Woodlouse, 2 },
-		},
-	}),
-
-
-	new_wave({
-		min = 11,
-		max = 11,
-
-		enemies = {
-			{ E.Woodlouse,    20 },
-			{ E.SpikedFly,    20 },
-			{ E.SnailShelled, 20 },
-			{ E.Boomshroom,   15 },
-		},
-	}),
-
-
-	new_wave({
-		min = 12,
-		max = 13,
-
-		enemies = {
-			{ E.StinkBug,     2 },
-			{ E.Spider,       2 },
-			{ E.SnailShelled, 2 },
-			{ E.Boomshroom,   2 },
-		},
-	}),
-
-	new_wave({
-		min = 13,
-		max = 14,
-
-		enemies = {
-			{ E.Larva,        2 },
-			{ E.Fly,          2 },
-			{ E.Woodlouse,    2 },
-			{ E.SpikedFly,    2 },
-			{ E.Boomshroom,   2 },
-			{ E.SnailShelled, 2 },
-			{ E.Spider,       2 },
-		},
-	}),
-
-	-- W2 recap
-
-	new_wave({
-		min = 8,
-		max = 9,
-
-		enemies = {
-			{ E.Larva,     2 },
-			{ E.Mosquito,  2 },
-			{ E.ShovelBee, 2 },
-		},
-
-		run = function(wave, level)
-			spawn_timed_spikes()
-		end,
-	}),
-
-	new_wave({
-		min = 9,
-		max = 10,
-
-		enemies = {
-			{ E.Larva,      2 },
-			{ E.Mosquito,   2 },
-			{ E.Beelet, 2 },
-		},
-	}),
-
-	new_wave({
-		min = 11,
-		max = 12,
-
-		enemies = {
-			{ E.Mosquito,    2 },
-			{ E.HoneypotAnt, 2 },
-			{ E.DrillBee,    2 },
-		},
-		fixed_enemies = {
-			{ E.FlyingSpawner, 1 },
-		}
-	}),
-
-	new_wave({
-		min = 11,
-		max = 12,
-
-		enemies = {
-			{ E.HoneypotAnt, 2 },
-			{ E.DrillBee,    2 },
-			{ E.ShovelBee,   2 },
-			{ E.Beelet,  2 },
-			{ E.Mosquito,    2 },
-		},
-	}),
-
-	new_wave({
-		min = 11,
-		max = 12,
-
-		enemies = {
-			{ E.Larva,       2 },
-			{ E.Mosquito,    2 },
-			{ E.ShovelBee,   2 },
-			{ E.HoneypotAnt, 2 },
-			{ E.DrillBee,    2 },
-			{ E.Beelet,  2 },
-		},
-
-		fixed_enemies = {
-			{ E.HoneycombFootball, 1 },
-			{ E.FlyingSpawner,      1 },
-		}
-	}),
-
-	-- W3 recap
-
-	new_wave({
-		min = 12,
-		max = 12,
-
-		enemies = {
-			{ E.Chipper, 2 },
-		},
-
-		fixed_enemies = {
-			{
-				E.ElectricRays,
-				1,
-				position = { CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + 8 },
-				args = {
-					{
-						n_rays = 1,
-						activation_delay = 2,
-						angle_speed = 0.3,
-					}
-				}
-			},
-		},
-
-		run = function(wave, level)
-			game:kill_actors_with_name("timed_spikes")
-		end
-	}),
-
-	new_wave({
-		min = 14,
-		max = 14,
-
-		enemies = {
-			{ E.Chipper,  2 },
-			{ E.StinkBug, 2 },
-		},
-
-		fixed_enemies = {
-			{ E.BulbBuddy, 1 },
-		}
-	}),
-
-	new_wave({
-		min = 14,
-		max = 14,
-
-		enemies = {
-			{ E.Chipper,     2 },
-			{ E.StinkBug,    2 },
-			{ E.Grasshopper, 2 },
-			{ E.Fly,         2 },
-		},
-
-		fixed_enemies = {
-			{ E.BulbBuddy, 1 },
-		},
-	}),
-
-	new_wave({
-		min = 16,
-		max = 16,
-
-		enemies = {
-			{ E.SnailShelledBouncy, 2 },
-			{ E.Fly,                2 },
-			{ E.Spider,             2 },
-		},
-	}),
-
-	new_wave({
-		min = 16,
-		max = 16,
-
-		enemies = {
-			{ E.Chipper,            2 },
-			{ E.BulbBuddy,          2 },
-			{ E.StinkBug,           2 },
-			{ E.SnailShelledBouncy, 2 },
-			{ E.MetalFly,           2 },
-			{ E.Grasshopper,        2 },
-			{ E.Spider,             2 },
+			{ E.CloudEnemy, 2 },
+			{ E.CloudStorm, 2 },
 		},
 	}),
 

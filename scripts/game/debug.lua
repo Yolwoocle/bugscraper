@@ -131,11 +131,7 @@ function Debug:init(game)
         end},
         ["d"] = {"spawn", function()
             local arc
-            if random_range_int(1, 2) <= 1 then
-                arc = enemies.CloudStorm:new(CANVAS_CENTER[1], CANVAS_CENTER[2], 3)
-            else
-                arc = enemies.CloudEnemy:new(CANVAS_CENTER[1], CANVAS_CENTER[2], 3)
-            end
+            arc = enemies.Mole:new(CANVAS_CENTER[1], CANVAS_CENTER[2])
             game:new_actor(arc)            
         end},
         ["o"] = {"spike offset", function() 

@@ -50,6 +50,8 @@ local enemies = {
 	MotherboardButton =  require "scripts.actor.enemies.motherboard_button", --*
 
 	MushroomAnt =        require "scripts.actor.enemies.mushroom_ant",
+	WallWalker =         require "scripts.actor.enemies.wall_walker",
+	Mole =               require "scripts.actor.enemies.mole",
 	
 	JumpingProp =        require "scripts.actor.enemies.jumping_prop",
 	Dummy =              require "scripts.actor.enemies.dummy",

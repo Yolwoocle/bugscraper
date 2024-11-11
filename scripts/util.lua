@@ -20,6 +20,7 @@ pi = math.pi
 pi2 = 2*math.pi
 inf = math.huge
 
+
 -- scotch 
 local old_print = love.graphics.print
 function love.graphics.print(text, x, y, ...)

@@ -170,6 +170,26 @@ local function generate_menus()
             game:start_game()
             game.menu_manager:unpause()
         end },
+        { "[DEBUG] Skip to world 4", function()
+            for k, e in pairs(game.actors) do
+                if e.is_enemy then
+                    e:kill()
+                end
+            end
+            game:set_floor(60)
+            game:start_game()
+            game.menu_manager:unpause()
+        end },
+        { "[DEBUG] Skip to world 4 boss", function()
+            for k, e in pairs(game.actors) do
+                if e.is_enemy then
+                    e:kill()
+                end
+            end
+            game:set_floor(78)
+            game:start_game()
+            game.menu_manager:unpause()
+        end },
     }
     if OPERATING_SYSTEM == "Web" then
         -- Disable quitting on web
