@@ -904,8 +904,8 @@ local waves = {
 	----------------------------------------------------------------------------------------------------------
 
 	new_wave({
-		min = 4,
-		max = 6,
+		min = 3,
+		max = 4,
 
 		enemies = {
 			{ E.CloudEnemy, 2 },
@@ -931,8 +931,7 @@ local waves = {
 		max = 4,
 
 		enemies = {
-			{ E.CloudEnemy, 2 },
-			{ E.CloudStorm, 2 },
+			{ E.CloudStorm, 3 },
 		},
 	}),
 	

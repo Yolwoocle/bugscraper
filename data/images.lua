@@ -334,6 +334,9 @@ local img_names = {
 	tv_slideshow_012 = "level/tv_slideshow/tv_slideshow_012",
 	tv_slideshow_013 = "level/tv_slideshow/tv_slideshow_013",
 	tv_slideshow_014 = "level/tv_slideshow/tv_slideshow_014",
+	tv_slideshow_015 = "level/tv_slideshow/tv_slideshow_015",
+	tv_slideshow_016 = "level/tv_slideshow/tv_slideshow_016",
+	tv_slideshow_017 = "level/tv_slideshow/tv_slideshow_017",
 	tv_slideshow_999 = "level/tv_slideshow/tv_slideshow_999",
 	tv_bluescreen = "level/tv_slideshow/tv_bluescreen",
 
@@ -442,12 +445,6 @@ images.button_fragments = {
 
 local start = love.timer.getTime()
 print_debug("Loading images...")
-
--- TV big animation
-for i=1,35 do
-	local name = "tv_slideshow_003_"..string.sub("0000"..tostring(i), -3, -1)
-	images[name] = load_image("level/tv_slideshow/mio_rotate/"..name..".png")
-end
 
 -- Keyboard
 for key_constant, button_image_name in pairs(KEY_CONSTANT_TO_IMAGE_NAME) do

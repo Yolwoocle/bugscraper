@@ -214,14 +214,16 @@ function table.clone(orig)
     return copy
 end
 
-function shuffle_table(t, rng)
+function shuffle_table(t, min, max, rng)
+	min = min or 1
+	max = max or #t
 	--Fisher–Yates shuffle: https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
-	for i=#t, 1, -1 do
+	for i=max, min, -1 do
 		local j 
 		if rng then
-			j = rng:random(i)
+			j = rng:random(min, i)
 		else
-			j = love.math.random(i)
+			j = love.math.random(min, i)
 		end
 		t[j], t[i] = t[i], t[j]
 	end

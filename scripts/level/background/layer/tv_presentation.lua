@@ -24,10 +24,13 @@ function TvPresentation:init(x, y)
         { frames = images.tv_slideshow_008, frame_duration = 0.1 },
         { frames = images.tv_slideshow_009, frame_duration = 0.3 },
         { frames = images.tv_slideshow_010, frame_duration = 0 },
-        { frames = images.tv_slideshow_011, frame_duration = 0.03 },
+        { frames = images.tv_slideshow_011, frame_duration = 0.035 },
         { frames = images.tv_slideshow_012, frame_duration = 0.03 },
         { frames = images.tv_slideshow_013, frame_duration = 0.03 },
         { frames = images.tv_slideshow_014, frame_duration = 0.08 },
+        { frames = images.tv_slideshow_015, frame_duration = 0.3 },
+        { frames = images.tv_slideshow_016, frame_duration = 0 },
+        { frames = images.tv_slideshow_017, frame_duration = 0.08 },
         { frames = images.tv_slideshow_999, frame_duration = 0 },
     }
     for i, slide in pairs(self.slides) do
@@ -35,10 +38,12 @@ function TvPresentation:init(x, y)
         slide.duration = slide.frame_count * slide.frame_duration
         print_debug(i, slide.duration, slide.frame_count, slide.frames:getWidth(), self.canvas_w)
     end
+    shuffle_table(self.slides, 1, #self.slides - 1)
+
     self.bluescreen_image = images.tv_bluescreen
     self.bluescreen_probability = 0.1
     self.is_bluescreened = (random_range(0, 1) < self.bluescreen_probability)
-    self.default_slide_duration = 3.0
+    self.default_slide_duration = 5.0
     self.slideshow_timer = Timer:new(self.default_slide_duration):start()
 
     self.canvas = love.graphics.newCanvas(self.canvas_w, self.canvas_h)
@@ -98,7 +103,7 @@ function TvPresentation:init(x, y)
     self.transition_t = 0.0
     self.transition_timer = Timer:new(0.5)
 
-    self.current_slide_number = 4 -- random_range_int(1, #self.slides)
+    self.current_slide_number = 1
     self.old_slide = self.slides[self.current_slide_number]
     self.current_slide = self.slides[self.current_slide_number]
 
@@ -171,8 +176,8 @@ function TvPresentation:draw_frame(spritesheet, frame, x, y)
     t = t + 1 / 60
     love.graphics.draw(spritesheet,
         love.graphics.newQuad(
-            self.canvas_w * (frame0 % tile_count_x), 
-            self.canvas_h * math.floor(frame0 / tile_count_x), 
+            self.canvas_w * (frame0 % tile_count_x),
+            self.canvas_h * math.floor(frame0 / tile_count_x),
             self.canvas_w, self.canvas_h, spritesheet:getDimensions()),
         x, y)
 
