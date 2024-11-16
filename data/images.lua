@@ -143,6 +143,7 @@ local img_names = {
 	metal_mosquito_1 =         "actors/enemies/metal_mosquito_1",
 	metal_mosquito_2 =         "actors/enemies/metal_mosquito_2",
 	mole_digging_1 =           "actors/enemies/mole_digging_1",
+	mole_outside =             "actors/enemies/mole_outside",
 	mosquito1 =                "actors/enemies/mosquito1",
 	mosquito2 =                "actors/enemies/mosquito2",
 	motherboard =              "actors/enemies/motherboard",

@@ -8,10 +8,10 @@ local WallWalker = Enemy:inherit()
 
 -- This ant will walk around corners, but this code will not work for "ledges".
 -- Please look at the code of my old project (gameaweek1) if needed
-function WallWalker:init(x, y) 
+function WallWalker:init(x, y, spr, w, h) 
     -- this hitbox is too big, but it works for walls
     -- self:init_enemy(x, y, images.mushroom_ant, 20, 20)
-    WallWalker.super.init(self, x, y, images.mushroom_ant1, 20, 20)
+    WallWalker.super.init(self, x, y, spr or images.mushroom_ant1, w or 20, h or 20)
     self.name = "wall_walker"
     
     self.follow_player = false

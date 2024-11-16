@@ -137,7 +137,9 @@ function Enemy:update_enemy(dt)
 		end
 		
 	elseif self.flip_mode == ENEMY_FLIP_MODE_XVELOCITY then
-		self.spr:set_flip_x(self.vx < 0)
+		if math.abs(self.vx) > 30 then
+			self.spr:set_flip_x(self.vx < 0)
+		end
 
 	end
 

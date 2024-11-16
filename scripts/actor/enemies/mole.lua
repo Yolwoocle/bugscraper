@@ -6,6 +6,7 @@ local Guns = require "data.guns"
 local StateMachine = require "scripts.state_machine"
 local Timer = require "scripts.timer"
 local WallWalker = require "scripts.actor.enemies.wall_walker"
+local AnimatedSprite = require "scripts.graphics.animated_sprite"
 
 local Mole = WallWalker:inherit()
 
@@ -15,10 +16,20 @@ function Mole:init(x, y)
     -- this hitbox is too big, but it works for walls
     -- self:init_enemy(x, y, images.mushroom_ant, 20, 20)
     Mole.super.init(self, x, y, images.mole_digging_1, 20, 20)
-    self.name = "mushroom_ant"
+    self.name = "mole"
 
-    -- self.spr = AnimatedSprite todo
- 
+    self.spr = AnimatedSprite:new({
+        digging = {
+            {images.mole_digging_1}, 0.1
+        },
+        flying = {
+            {images.mole_outside}, 0.1
+        },
+    })
+    self.spr:set_anchor(SPRITE_ANCHOR_CENTER_CENTER)
+
+    self.fly_speed = 400
+
     self.state_timer = Timer:new()
     self.state_machine = StateMachine:new({
         dig = {
@@ -28,6 +39,7 @@ function Mole:init(x, y)
                 self.is_stompable = false
                 self.walk_dir = random_sample{-1, 1}
                 self.state_timer:start(random_range(1, 2))
+                self.spr:set_animation("digging")
 
                 self.is_wall_walking = true
             end,
@@ -41,8 +53,9 @@ function Mole:init(x, y)
             enter = function(state)
                 self.walk_speed = 0
                 self.damage = 0
-                self.is_stompable = false
+                self.is_stompable = true
                 self.spr:update_offset(0, 0)
+                self.spr:set_animation("digging")
 
                 self.state_timer:start(1)
             end,
@@ -60,9 +73,11 @@ function Mole:init(x, y)
         jump = {
             enter = function(state)
                 self.is_wall_walking = false
-                self.vx = self.up_vect.x * 200
-                self.vy = self.up_vect.y * 200
-                self.is_stompable = true
+                self.is_stompable = false
+                self.damage = 1
+                self.vx = self.up_vect.x * self.fly_speed
+                self.vy = self.up_vect.y * self.fly_speed
+                self.spr:set_animation("flying")
             end,
 
             update = function(state, dt)
@@ -83,8 +98,10 @@ function Mole:init(x, y)
         },
         linger = {
             enter = function(state)
+                self.is_stompable = true
                 self.walk_speed = 0
                 self.state_timer:start(1)
+                self.spr:set_animation("digging")
             end,
             update = function(state, dt)
                 if self.state_timer:update(dt) then
