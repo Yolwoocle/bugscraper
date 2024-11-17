@@ -9,31 +9,31 @@ local Timer = require "scripts.timer"
 local DungProjectile = require "scripts.actor.enemies.dung_projectile"
 
 local Dung = Enemy:inherit()
-	
+
 function Dung:init(x, y, spr, w, h)
     self:init_dung(x, y, spr, w, h)
 end
 
 function Dung:init_dung(x, y, spr, w, h)
-    self:init_enemy(x,y, spr or images.dung, w or 24, h or 30)
+    self:init_enemy(x, y, spr or images.dung, w or 24, h or 30)
     self.name = "dung"
     self.follow_player = false
-    
+
     self.life = 100
 
     self.friction_x = 0.999
     self.speed_x = 1
     self.self_knockback_mult = 200
-    
+
     self.is_stompable = false
     self.destroy_bullet_on_impact = false
-	self.is_immune_to_bullets = true
+    self.is_immune_to_bullets = true
     self.is_bouncy_to_bullets = true
 
     self.player_stationary_counters = {}
     self.player_stationary_detect_range = 64
     self.stationary_max_time = 2
-    
+
     self.rot_mult = 0.06
 
     self.bounce_restitution = 0.4
@@ -44,7 +44,7 @@ function Dung:init_dung(x, y, spr, w, h)
     -- self.audio_delay = love.math.random(0.3, 1)
 
     self.state_timer = Timer:new(1)
-    
+
     self.jump_speed = 500
     self.jump_flag = false
 
@@ -56,6 +56,21 @@ function Dung:init_dung(x, y, spr, w, h)
                 return random_sample {
                     "chase", "bunny_hopping_telegraph", "throw_projectile"
                 }
+            end,
+        },
+        idle = {
+            enter = function(state)
+                self.friction_x = 0.7
+                self.speed_x = 0
+                self.bounce_restitution = 0.5
+            end,
+            on_damage = function(state)
+                game:frameskip(15)
+                game:screenshake(8)
+
+                Audio:play_var("glass_fracture", 0.1, 1.1)
+                Particles:image(self.rider.mid_x, self.rider.mid_y, 15, images.glass_shard, self.rider.h)
+                self.state_machine:set_state("chase")
             end,
         },
         chase = {
@@ -96,18 +111,25 @@ function Dung:init_dung(x, y, spr, w, h)
                 self.friction_x = 0.999
                 self.speed_x = 1.5
                 self.bounce_restitution = 0.5
-                
+
                 self.chase_target = self:get_random_player()
                 self.state_timer:start(random_range(4.0, 7.0))
+                self.jump_speed = 500
+
+                self.bounces = 6
             end,
             update = function(state, dt)
                 self:chase_player(dt)
 
                 if self.is_grounded then
+                    if self.bounces <= 2 then
+                        self.jump_speed = 300
+                    end
+                    self.bounces = self.bounces - 1
                     self:jump()
                 end
 
-                if self.state_timer:update(dt) then
+                if self.state_timer:update(dt) or self.bounces <= 0 then
                     return "random"
                 end
             end,
@@ -123,10 +145,10 @@ function Dung:init_dung(x, y, spr, w, h)
         },
         throw_projectile = {
             enter = function(state)
-                self.friction_x = 0.7
+                self.friction_x = 0.8
                 self.speed_x = 0
                 self.bounce_restitution = 0.5
-                
+
                 self.state_timer:start(random_range(3.0, 5.0))
                 self.projectile_timer = Timer:new(0.25)
                 self.projectile_timer:start()
@@ -143,7 +165,7 @@ function Dung:init_dung(x, y, spr, w, h)
                 end
             end,
         }
-    }, "chase")
+    }, "idle")
 
     self:add_constant_sound("ball_roll", "ball_roll")
     self:set_constant_sound_volume("ball_roll", 0)
@@ -158,6 +180,7 @@ end
 function Dung:update(dt)
     self:update_dung(dt)
 end
+
 function Dung:update_dung(dt)
     self.state_machine:update(dt)
 
@@ -166,7 +189,7 @@ function Dung:update_dung(dt)
         self.vx = self.buffer_vx
         self.buffer_vx = nil
     end
-    
+
     -- if self.jump_timer:update(dt) then
     --     self.jump_timer:start(random_range(2, 6))
     --     self:jump()
@@ -181,11 +204,15 @@ function Dung:update_dung(dt)
     self:update_enemy(dt)
 
     self.spr:set_rotation(self.spr.rot + self.vx * self.rot_mult * dt)
-    
+
     if self.is_grounded and math.abs(self.vx) > 20 then
         Particles:dust(self.mid_x, self.y + self.h)
     end
     self:set_constant_sound_volume(math.abs(self.vx) / 400)
+end
+
+function Dung:on_damage()
+    self.state_machine:_call("on_damage")
 end
 
 function Dung:chase_player(dt)
@@ -209,12 +236,12 @@ function Dung:jump()
     self.jump_flag = true
 end
 
-
 function Dung:draw()
     self:draw_enemy()
-    
+
     if game.debug.colview_mode then
-        rect_color({1, 0, 0, 0.4}, "fill", self.mid_x - self.player_stationary_detect_range, 0, self.player_stationary_detect_range*2, CANVAS_HEIGHT)
+        rect_color({ 1, 0, 0, 0.4 }, "fill", self.mid_x - self.player_stationary_detect_range, 0,
+            self.player_stationary_detect_range * 2, CANVAS_HEIGHT)
     end
 
     for _, player in pairs(game.players) do

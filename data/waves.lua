@@ -297,7 +297,7 @@ local waves = {
 		min = 1,
 		max = 1,
 		enemies = {
-			{ E.Dung, 1, position = { 240, 200 } },
+			{ E.Dung, 1, position = { CANVAS_WIDTH/2 - 24/2, 200 } },
 		},
 		music = "miniboss",
 		cutscene = cutscenes.dung_boss_enter,
@@ -1195,7 +1195,7 @@ local demo_waves = {
 		min = 1,
 		max = 1,
 		enemies = {
-			{ E.Dung, 1, position = { 240, 200 } },
+			{ E.Dung, 1, position = { CANVAS_WIDTH/2 - 24/2, 200 } },
 		},
 		music = "miniboss",
 	}),
