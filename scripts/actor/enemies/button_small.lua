@@ -1,5 +1,6 @@
 require "scripts.util"
 local Enemy = require "scripts.actor.enemy"
+local Timer = require "scripts.timer"
 local images = require "data.images"
 local ButtonBig = require "scripts.actor.enemies.button_big"
 
@@ -17,7 +18,8 @@ function ButtonSmall:init_button_small(x, y, spr, w, h)
 	self.destroy_bullet_on_impact = false
 	self.is_immune_to_bullets = true
     self.is_killed_on_stomp = false
-    self.pressed_disappear_timer = 0.5
+    self.pressed_disappear_timer = Timer:new(0.5)
+    self.disappear_after_press = true
 
     self.sprite_pressed = images.small_button_pressed
     self.is_pressed = false
@@ -33,8 +35,7 @@ function ButtonSmall:update_button_small(dt)
     self:update_enemy(dt)
 
     if self.is_pressed then
-        self.pressed_disappear_timer = self.pressed_disappear_timer - dt
-        if self.pressed_disappear_timer <= 0 then
+        if self.pressed_disappear_timer:update(dt) then
             self:kill()
         end
     end
@@ -49,6 +50,9 @@ end
 
 function ButtonSmall:press_button()
     self.is_pressed = true
+    if self.disappear_after_press then
+        self.pressed_disappear_timer:start()
+    end
     
     self:set_image(self.sprite_pressed)
     self:on_press()

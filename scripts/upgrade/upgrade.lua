@@ -45,6 +45,10 @@ end
 function Upgrade:on_finish(player)
 end
 
+function Upgrade:finish(player)
+    self:on_finish(player)
+end
+
 function Upgrade:draw(x, y, s)
     self:draw_upgrade(x, y, s)
 end

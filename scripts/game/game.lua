@@ -61,12 +61,12 @@ function Game:init()
 		USE_CANVAS_RESIZING = false
 		CANVAS_SCALE = 2
 		-- Init window
-		love.window.setMode(CANVAS_WIDTH*CANVAS_SCALE, CANVAS_HEIGHT*CANVAS_SCALE, self:get_window_flags())
+		love.window.setMode(CANVAS_WIDTH * CANVAS_SCALE, CANVAS_HEIGHT * CANVAS_SCALE, self:get_window_flags())
 	else
 		-- Init window
 		love.window.setMode(Options:get("windowed_width"), Options:get("windowed_height"), self:get_window_flags())
 	end
-	
+
 	SCREEN_WIDTH, SCREEN_HEIGHT = gfx.getDimensions()
 	-- love.window.setTitle("Bugscraper")
 	-- love.window.setIcon(love.image.newImageData("icon.png"))
@@ -84,22 +84,22 @@ function Game:init()
 	FONT_MINI = gfx.newFont("fonts/Kenney Mini.ttf", 8)
 	FONT_PAINT = gfx.newFont("fonts/NicoPaint-Regular.ttf", 16)
 	gfx.setFont(FONT_REGULAR)
-	
+
 	-- Audio ===> Moved to OptionsManager
 	-- self.volume = options:get("volume")
 	-- self.sound_on = options:get("sound_on")
 
 	Options:set("volume", Options:get("volume"))
-	
+
 	self:new_game()
-	
+
 	self.debug = Debug:new(self)
 	self.menu_manager = MenuManager:new(self)
 	love.mouse.setVisible(Options:get("mouse_visible"))
 
 	self.is_game_ui_visible = true
 	self.is_first_time = Options.is_first_time
-	self.has_seen_controller_warning = false 
+	self.has_seen_controller_warning = false
 	self.ui_visible = true
 
 	self.discord_presence = DiscordPresence
@@ -112,7 +112,7 @@ function Game:new_game()
 	if OPERATING_SYSTEM ~= "Web" then -- scotch
 		love.audio.stop()
 	end
-	
+
 	-- Reset global systems
 	Collision = CollisionManager:new()
 	Particles = ParticleSystem:new()
@@ -123,19 +123,19 @@ function Game:new_game()
 
 	-- Remove old queued players
 	self:remove_queued_players()
-		
+
 	-- Players
 	self.waves_until_respawn = {}
-	for i = 1, MAX_NUMBER_OF_PLAYERS do 
+	for i = 1, MAX_NUMBER_OF_PLAYERS do
 		self.waves_until_respawn[i] = -1
 	end
 
 	-- Camera
 	self.camera = Camera:new()
 	self.camera:set_position(312 - 16, 0)
-	
+
 	self.level = Level:new(self)
-	
+
 	-- Actors
 	self.actor_limit = 100
 	self.actors = {}
@@ -146,8 +146,8 @@ function Game:new_game()
 	local ny = self.level.cabin_inner_rect.by
 	local l = create_actor_centered(Enemies.ButtonSmallGlass, floor(nx), floor(ny))
 	self:new_actor(l)
-	
-	-- Exit sign 
+
+	-- Exit sign
 	local exit_x = CANVAS_WIDTH * 0.25
 	self:new_actor(create_actor_centered(Enemies.ExitSign, floor(exit_x), floor(ny)))
 
@@ -164,7 +164,7 @@ function Game:new_game()
 	self.move_logo = false
 	self.jetpack_tutorial_y = -30
 	self.move_jetpack_tutorial = false
-	
+
 	if self.menu_manager then
 		self.menu_manager:reset()
 		self.menu_manager:set_menu()
@@ -206,7 +206,7 @@ function Game:new_game()
 	self.music_player = MusicPlayer:new()
 	self.music_player:set_disk("intro")
 	self.music_player:play()
-	self.sfx_elevator_bg = sounds.elevator_bg.source
+	self.sfx_elevator_bg            = sounds.elevator_bg.source
 	self.sfx_elevator_bg_volume     = self.sfx_elevator_bg:getVolume()
 	self.sfx_elevator_bg_def_volume = self.sfx_elevator_bg:getVolume()
 	-- self.music_source:setVolume(options:get("music_volume"))
@@ -239,7 +239,7 @@ end
 function Game:init_layers()
 	self.layers = {}
 	for i = 1, self.layers_count do
-		local layer 
+		local layer
 		if i == LAYER_LIGHT then
 			layer = LightLayer:new(CANVAS_WIDTH, CANVAS_HEIGHT, self.light_world)
 		else
@@ -281,61 +281,58 @@ end
 
 function Game:update_screen()
 	WINDOW_WIDTH, WINDOW_HEIGHT = gfx.getDimensions()
-	
+
 	local pixel_scale_mode = Options:get("pixel_scale")
-	
+
 	local screen_sx = WINDOW_WIDTH / CANVAS_WIDTH
 	local screen_sy = WINDOW_HEIGHT / CANVAS_HEIGHT
 	local auto_scale = math.min(screen_sx, screen_sy)
 
 	local scale = auto_scale
-	
+
 	if pixel_scale_mode == "auto" then
 		scale = auto_scale
-		
 	elseif pixel_scale_mode == "max_whole" then
 		scale = math.floor(auto_scale)
-
 	elseif type(tonumber(pixel_scale_mode)) == "number" then
 		scale = math.min(tonumber(pixel_scale_mode), auto_scale)
-
 	else
-		print("Game.update_screen: WARNING: pixel scale mode has invalid value: '"..tostring(pixel_scale_mode).."'")
-
+		print("Game.update_screen: WARNING: pixel scale mode has invalid value: '" .. tostring(pixel_scale_mode) .. "'")
 	end
 
 	CANVAS_SCALE = scale
 
-	CANVAS_OX = math.floor(max(0, (WINDOW_WIDTH  - CANVAS_WIDTH  * CANVAS_SCALE)/2))
-	CANVAS_OY = math.floor(max(0, (WINDOW_HEIGHT - CANVAS_HEIGHT * CANVAS_SCALE)/2))
+	CANVAS_OX = math.floor(max(0, (WINDOW_WIDTH - CANVAS_WIDTH * CANVAS_SCALE) / 2))
+	CANVAS_OY = math.floor(max(0, (WINDOW_HEIGHT - CANVAS_HEIGHT * CANVAS_SCALE) / 2))
 end
 
 function Game:update(dt)
 	self.frame = self.frame + 1
 
 	self.camera:update_screenshake(dt)
-	
+
 	self.frames_to_skip = max(0, self.frames_to_skip - 1)
-	local do_frameskip = self.slow_mo_rate ~= 0 and self.frame%self.slow_mo_rate ~= 0
+	local do_frameskip = self.slow_mo_rate ~= 0 and self.frame % self.slow_mo_rate ~= 0
 	if self.frames_to_skip > 0 or do_frameskip then
 		return
 	end
 
 	Input:update(dt)
 	self.music_player:update(dt)
-	
+
 	-- Menus
 	self.menu_manager:update(dt)
 	if self.debug_mode then
 		self.debug:update(dt)
 	end
-	
+
 	if not self.menu_manager.cur_menu then
 		self:update_main_game(dt)
 	end
 
-	for i = 1, #self.layers-1 do
-		self.layers[i].blur = Options:get("menu_blur") and (self.menu_manager.cur_menu ~= nil) and (self.menu_manager.cur_menu.blur_enabled)
+	for i = 1, #self.layers - 1 do
+		self.layers[i].blur = Options:get("menu_blur") and (self.menu_manager.cur_menu ~= nil) and
+		(self.menu_manager.cur_menu.blur_enabled)
 	end
 
 	self.discord_presence:update(dt)
@@ -354,7 +351,7 @@ function Game:update_main_game(dt)
 	self.t = self.t + dt
 
 	self:listen_for_player_join(dt)
-	
+
 	self.level:update(dt)
 
 	self:update_timer_before_game_over(dt)
@@ -395,11 +392,11 @@ end
 
 function Game:update_actors(dt)
 	if self.sort_actors_flag then
-		table.sort(self.actors, function(a, b) 
+		table.sort(self.actors, function(a, b)
 			if a.z == b.z then
 				return a.creation_index > b.creation_index
-			end 
-			return a.z > b.z 
+			end
+			return a.z > b.z
 		end)
 		self.sort_actors_flag = false
 	end
@@ -412,7 +409,7 @@ function Game:update_actors(dt)
 			if actor.is_affected_by_bounds and self.apply_bounds_clamping then
 				actor:clamp_to_bounds(self.level.cabin_inner_rect)
 			end
-			
+
 			if not self.level.kill_zone:is_point_in_inclusive(actor.mid_x, actor.mid_y) then
 				actor:kill()
 			end
@@ -426,7 +423,7 @@ function Game:update_actors(dt)
 end
 
 function Game:update_logo(dt)
-	self.logo_a = self.logo_a + dt*3
+	self.logo_a = self.logo_a + dt * 3
 	if self.move_logo then
 		self.logo_vy = self.logo_vy - dt
 		self.logo_y = self.logo_y + self.logo_vy
@@ -466,12 +463,13 @@ end
 function Game:get_zoom()
 	return self.camera:get_zoom()
 end
+
 function Game:set_zoom(zoom)
 	self.camera:set_zoom(zoom)
 end
 
 function Game:update_debug(dt)
-	
+
 end
 
 function Game:get_layer(layer_id)
@@ -482,7 +480,7 @@ function Game:draw_on_layer(layer_id, paint_function, params)
 	local layer = self.layers[layer_id]
 	if layer == nil then return end
 
-    params = param(params, {})
+	params = param(params, {})
 	local apply_camera = param(params.apply_camera, true)
 
 	layer:paint(paint_function, {
@@ -494,11 +492,11 @@ end
 function Game:draw()
 	-- Using a canvas for that sweet, resizable pixel art
 	gfx.setCanvas(main_canvas)
-	gfx.clear(0,0,0)
+	gfx.clear(0, 0, 0)
 	gfx.translate(0, 0)
-	
+
 	self:draw_game()
-	
+
 	gfx.setCanvas()
 	gfx.origin()
 	gfx.scale(1, 1)
@@ -518,12 +516,12 @@ function Game:draw_game()
 	exec_on_canvas(self.smoke_canvas, love.graphics.clear)
 
 	---------------------------------------------
-	
+
 	self:draw_on_layer(LAYER_BACKGROUND, function()
 		love.graphics.clear()
 		self.level:draw()
 	end)
-	
+
 	---------------------------------------------
 
 	self:draw_on_layer(LAYER_OBJECTS, function()
@@ -532,17 +530,17 @@ function Game:draw_game()
 		Particles:draw_layer(PARTICLE_LAYER_BACK)
 
 		-- Draw actors
-		for _,actor in pairs(self.actors) do
+		for _, actor in pairs(self.actors) do
 			if not actor.is_player and actor.is_active then
 				actor:draw()
 			end
 		end
-		for _,p in pairs(self.players) do
+		for _, p in pairs(self.players) do
 			if p.is_active then
 				p:draw()
 			end
 		end
-	
+
 		Particles:draw_layer(PARTICLE_LAYER_NORMAL)
 	end)
 
@@ -550,38 +548,38 @@ function Game:draw_game()
 		love.graphics.clear()
 		Particles:draw_layer(PARTICLE_LAYER_SHADOWLESS)
 	end)
-	
+
 	---------------------------------------------
 
 	self:draw_on_layer(LAYER_HUD, function()
 		love.graphics.clear()
-		for k,actor in pairs(self.actors) do
+		for k, actor in pairs(self.actors) do
 			if actor.is_active and actor.draw_hud and self.game_ui.is_visible then
 				actor:draw_hud()
 			end
 		end
 	end)
-	
+
 	---------------------------------------------
 
 	self:draw_on_layer(LAYER_SHADOW, function()
 		love.graphics.clear()
 
-		exec_color({0,0,0, 0.5}, function()
+		exec_color({ 0, 0, 0, 0.5 }, function()
 			love.graphics.draw(self:get_layer(LAYER_OBJECTS).canvas, self.shadow_ox, self.shadow_oy)
-			love.graphics.draw(self:get_layer(LAYER_HUD).canvas,     self.shadow_ox, self.shadow_oy)
+			love.graphics.draw(self:get_layer(LAYER_HUD).canvas, self.shadow_ox, self.shadow_oy)
 		end)
-	end, {apply_camera = false})
+	end, { apply_camera = false })
 
 	-----------------------------------------------------
-	
+
 	self:draw_on_layer(LAYER_FRONT, function()
 		love.graphics.clear()
 
 		self:draw_smoke_canvas()
 		self.level:draw_front()
-		
-		for _,actor in pairs(self.actors) do
+
+		for _, actor in pairs(self.actors) do
 			if actor.is_active and actor.is_front then
 				actor:draw()
 			end
@@ -591,16 +589,16 @@ function Game:draw_game()
 	end)
 
 	-----------------------------------------------------
-	
+
 	self:draw_on_layer(LAYER_LIGHT, function()
 		-- love.graphics.clear({0, 0, 0, 0.85})
 		local c = copy_table(COL_BLACK_BLUE)
-		c[4] = self.light_world.darkness_intensity 
-		rect_color(c, "fill", -CANVAS_WIDTH, -CANVAS_HEIGHT, CANVAS_WIDTH*3, CANVAS_HEIGHT*3)
+		c[4] = self.light_world.darkness_intensity
+		rect_color(c, "fill", -CANVAS_WIDTH, -CANVAS_HEIGHT, CANVAS_WIDTH * 3, CANVAS_HEIGHT * 3)
 	end)
 
 	-----------------------------------------------------
-	
+
 	-- UI
 	self:draw_on_layer(LAYER_UI, function()
 		love.graphics.clear()
@@ -612,8 +610,8 @@ function Game:draw_game()
 		if self.debug.colview_mode then
 			self.debug:draw_colview()
 		end
-	end, {apply_camera = false})
-	
+	end, { apply_camera = false })
+
 	-----------------------------------------------------
 
 	-- Menus
@@ -625,11 +623,11 @@ function Game:draw_game()
 			self.menu_manager:draw()
 		end
 		self.game_ui:draw_front()
-		
+
 		if self.debug_mode then
 			self.debug:draw()
 		end
-	end, {apply_camera = false})
+	end, { apply_camera = false })
 
 	-----------------------------------------------------
 
@@ -643,7 +641,7 @@ function Game:draw_game()
 	end
 
 	--'Memory used (in kB): ' .. collectgarbage('count')
-	
+
 	-- local t = "EARLY VERSION - NOT FINAL!"
 	-- gfx.print(t, CANVAS_WIDTH-get_text_width(t), 0)
 	-- local t = os.date('%a %d/%b/%Y')
@@ -657,27 +655,27 @@ function Game:draw_smoke_canvas()
 	exec_on_canvas(self.smoke_buffer_canvas, function()
 		love.graphics.clear()
 
-		love.graphics.setColor(0.2,0.2,0.2)
+		love.graphics.setColor(0.2, 0.2, 0.2)
 		love.graphics.draw(self.smoke_canvas, 0, 4)
-		love.graphics.setColor(1,1,1)
+		love.graphics.setColor(1, 1, 1)
 		love.graphics.draw(self.smoke_canvas, 0, 0)
 	end)
 	exec_on_canvas(self.smoke_canvas, function()
 		love.graphics.clear()
-		
-		love.graphics.setColor(0,0,0.1)
+
+		love.graphics.setColor(0, 0, 0.1)
 		-- Outline
 		love.graphics.draw(self.smoke_buffer_canvas, -1, 0)
 		love.graphics.draw(self.smoke_buffer_canvas, 1, 0)
 		love.graphics.draw(self.smoke_buffer_canvas, 0, -1)
 		love.graphics.draw(self.smoke_buffer_canvas, 0, 1)
-		love.graphics.setColor(1,1,1)
+		love.graphics.setColor(1, 1, 1)
 		love.graphics.draw(self.smoke_buffer_canvas, 0, 0)
 	end)
-	
-	love.graphics.setColor(1,1,1,0.5)
+
+	love.graphics.setColor(1, 1, 1, 0.5)
 	love.graphics.draw(self.smoke_canvas, 0, 0)
-	love.graphics.setColor(1,1,1,1)
+	love.graphics.setColor(1, 1, 1, 1)
 
 	self.camera:apply_transform()
 end
@@ -689,7 +687,7 @@ end
 function Game:listen_for_player_join(dt)
 	if self.game_state ~= GAME_STATE_WAITING then return end
 
-	if Input:action_pressed_global("join_game") then 
+	if Input:action_pressed_global("join_game") then
 		local global_user = Input:get_global_user()
 		local last_button = global_user.last_pressed_button
 		local input_profile_id = ""
@@ -703,7 +701,6 @@ function Game:listen_for_player_join(dt)
 		if last_button and Input:can_add_user() and can_add_keyboard_user then
 			if last_button.type == INPUT_TYPE_KEYBOARD then
 				input_profile_id = "keyboard_solo"
-			
 			elseif last_button.type == INPUT_TYPE_CONTROLLER then
 				input_profile_id = "controller"
 				joystick = Input:get_global_user().last_active_joystick
@@ -717,8 +714,8 @@ function Game:listen_for_player_join(dt)
 			self:queue_join_game("keyboard_solo")
 			Input:split_keyboard()
 
-		-- elseif Input:get_number_of_users(INPUT_TYPE_KEYBOARD) == 2 then
-		-- 	self:unsplit_keyboard_and_kick_second_player()
+			-- elseif Input:get_number_of_users(INPUT_TYPE_KEYBOARD) == 2 then
+			-- 	self:unsplit_keyboard_and_kick_second_player()
 		end
 	end
 end
@@ -756,12 +753,13 @@ end
 
 function Game:pause_repeating_sounds()
 	self.sfx_elevator_bg:pause()
-	for k,a in pairs(self.actors) do
+	for k, a in pairs(self.actors) do
 		a:pause_constant_sounds()
 		-- if a.pause_repeating_sounds then
 		-- end
 	end
 end
+
 function Game:on_button_glass_spawn(button)
 	self.music_player:stop()
 end
@@ -769,8 +767,8 @@ end
 function Game:on_unmenu()
 	self.music_player:on_unmenu()
 	self.sfx_elevator_bg:play()
-	
-	for k,a in pairs(self.actors) do
+
+	for k, a in pairs(self.actors) do
 		a:resume_constant_sounds()
 	end
 end
@@ -822,10 +820,10 @@ end
 
 function Game:update_timer_before_game_over(dt)
 	if self.game_state ~= GAME_STATE_DYING then
-		return 
+		return
 	end
 	self.timer_before_game_over = self.timer_before_game_over - dt
-	
+
 	if self.timer_before_game_over <= 0 then
 		self:game_over()
 	end
@@ -869,17 +867,18 @@ end
 function Game:get_floor()
 	return self.level:get_floor()
 end
+
 function Game:set_floor(val)
 	self.level:set_floor(val)
 end
 
 function draw_log()
 	-- log
-	local x2 = floor(CANVAS_WIDTH/2)
+	local x2 = floor(CANVAS_WIDTH / 2)
 	local h = gfx.getFont():getHeight()
 	print_label("--- LOG ---", x2, 0)
-	for i=1, min(#msg_log, max_msg_log) do
-		print_label(msg_log[i], x2, i*h)
+	for i = 1, min(#msg_log, max_msg_log) do
+		print_label(msg_log[i], x2, i * h)
 	end
 end
 
@@ -945,8 +944,8 @@ function Game:new_player(player_n, x, y, put_in_buffer)
 	local mx = math.floor(self.level.door_rect.ax)
 	-- x = param(x, mx + ((player_n-1) / (MAX_NUMBER_OF_PLAYERS-1)) * (self.level.door_rect.bx - self.level.door_rect.ax))
 	-- x = param(x, mx + math.floor((self.level.door_rect.bx - self.level.door_rect.ax)/2))
-	x = param(x, 26*16 + 16*5*(player_n - 1))
-	y = param(y, CANVAS_HEIGHT - 3*16 + 4)
+	x = param(x, 26 * 16 + 16 * 5 * (player_n - 1))
+	y = param(y, CANVAS_HEIGHT - 3 * 16 + 4)
 
 	local player = Player:new(player_n, x, y, Input:get_user(player_n):get_skin() or skins[1])
 	self.players[player_n] = player
@@ -956,7 +955,7 @@ function Game:new_player(player_n, x, y, put_in_buffer)
 		self.level:buffer_actor(player)
 		self.level.elevator:open_door(1.0)
 	end
-	
+
 	self:new_actor(player)
 
 	return player
@@ -969,7 +968,7 @@ function Game:leave_game(player_n)
 
 	local player = self.players[player_n]
 	local profile_id = Input:get_input_profile_from_player_n(player.n):get_profile_id()
-	
+
 	Particles:smoke(player.mid_x, player.mid_y, 10)
 	self.players[player_n]:remove()
 	self.players[player_n] = nil
@@ -996,11 +995,11 @@ function Game:draw_queued_players()
 	for _, queued_player in pairs(self.queued_players) do
 		n = n + 1
 	end
-	
+
 	local spacing = 32
 	local width = 64
 
-	local x = (CANVAS_WIDTH - (n-1) * width) / 2
+	local x = (CANVAS_WIDTH - (n - 1) * width) / 2
 	local y = CANVAS_HEIGHT * 0.75
 	for _, queued_player in pairs(self.queued_players) do
 		queued_player:draw(x, y)
@@ -1054,16 +1053,25 @@ function Game:on_elevator_crashed()
 	self.level:on_elevator_crashed()
 end
 
-function Game:apply_upgrade(upgrade) 
+function Game:apply_upgrade(upgrade)
 	table.insert(self.upgrades, upgrade)
 	for i, player in pairs(self.players) do
 		player:apply_upgrade(upgrade)
 	end
 end
 
+function Game:revoke_upgrade(upgrade_index)
+	assert(self.upgrades[upgrade_index] ~= nil)
+
+	table.remove(self.upgrades, upgrade_index)
+	for i, player in pairs(self.players) do
+		player:revoke_upgrade(upgrade_index)
+	end
+end
+
 function Game:screenshot()
 	local filename, filepath, imgdata, imgpng = Screenshot:screenshot()
-	self.notif = "screenshot "..filename
+	self.notif = "screenshot " .. filename
 	self.notif_timer = 3.0
 	-- Particles:word(CANVAS_WIDTH/2, CANVAS_HEIGHT/2)
 end
@@ -1096,7 +1104,7 @@ function Game:keypressed(key, scancode, isrepeat)
 		self.debug_mode = true
 		self.debug.notif = "debug mode enabled"
 		self.debug.notif_timer = 3.0
-	
+
 		-- self.debug
 	end
 
@@ -1120,9 +1128,9 @@ end
 
 function Game:joystickremoved(joystick)
 	Input:joystickremoved(joystick)
-	
+
 	local player_n = Input:get_joystick_user_n(joystick)
-	if player_n ~= -1 then 
+	if player_n ~= -1 then
 		if self.game_state == GAME_STATE_WAITING then
 			self:leave_game(player_n)
 			self.menu_manager:unpause()
@@ -1134,30 +1142,30 @@ end
 
 function Game:gamepadpressed(joystick, buttoncode)
 	Input:gamepadpressed(joystick, buttoncode)
-	if self.menu_manager then   self.menu_manager:gamepadpressed(joystick, buttoncode)   end
-	if self.debug then          self.debug:gamepadpressed(joystick, buttoncode)    end
+	if self.menu_manager then self.menu_manager:gamepadpressed(joystick, buttoncode) end
+	if self.debug then self.debug:gamepadpressed(joystick, buttoncode) end
 end
 
 function Game:gamepadreleased(joystick, buttoncode)
 	Input:gamepadreleased(joystick, buttoncode)
-	if self.menu_manager then   self.menu_manager:gamepadreleased(joystick, buttoncode)   end
-	if self.debug then          self.debug:gamepadreleased(joystick, buttoncode)    end
+	if self.menu_manager then self.menu_manager:gamepadreleased(joystick, buttoncode) end
+	if self.debug then self.debug:gamepadreleased(joystick, buttoncode) end
 end
 
 function Game:gamepadaxis(joystick, axis, value)
 	Input:gamepadaxis(joystick, axis, value)
-	if self.menu_manager then   self.menu_manager:gamepadaxis(joystick, axis, value)   end
-	if self.debug then          self.debug:gamepadaxis(joystick, axis, value)    end
+	if self.menu_manager then self.menu_manager:gamepadaxis(joystick, axis, value) end
+	if self.debug then self.debug:gamepadaxis(joystick, axis, value) end
 end
 
 function Game:mousepressed(x, y, button, istouch, presses)
 	-- Input:mousepressed(joystick, axis, value)
-	if self.menu_manager then   self.menu_manager:mousepressed(x, y, button, istouch, presses)   end
+	if self.menu_manager then self.menu_manager:mousepressed(x, y, button, istouch, presses) end
 end
 
 function Game:mousereleased(x, y, button, istouch, presses)
 	-- Input:mousereleased(joystick, axis, value)
-	if self.menu_manager then   self.menu_manager:mousereleased(x, y, button, istouch, presses)   end
+	if self.menu_manager then self.menu_manager:mousereleased(x, y, button, istouch, presses) end
 end
 
 function Game:focus(f)
@@ -1188,7 +1196,7 @@ end
 
 function Game:update_skin_choices()
 	self.skin_choices = {}
-	for i=1, #skins do
+	for i = 1, #skins do
 		self.skin_choices[i] = true
 	end
 	for i, player in pairs(self.players) do

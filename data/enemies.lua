@@ -49,9 +49,9 @@ local enemies = {
 	BigBeelet =          require "scripts.actor.enemies.big_beelet", --*
 	MotherboardButton =  require "scripts.actor.enemies.motherboard_button", --*
 
-	MushroomAnt =        require "scripts.actor.enemies.mushroom_ant",
-	WallWalker =         require "scripts.actor.enemies.wall_walker",
-	Mole =               require "scripts.actor.enemies.mole",
+	MushroomAnt =        require "scripts.actor.enemies.mushroom_ant", --*
+	WallWalker =         require "scripts.actor.enemies.wall_walker", --*
+	Mole =               require "scripts.actor.enemies.mole", --*
 	
 	JumpingProp =        require "scripts.actor.enemies.jumping_prop",
 	Dummy =              require "scripts.actor.enemies.dummy",
@@ -64,6 +64,7 @@ local enemies = {
 	UpgradeDisplay =     require "scripts.actor.enemies.upgrade_display",
 	GunDisplay =         require "scripts.actor.enemies.gun_display",
 	VendingMachine =     require "scripts.actor.enemies.vending_machine.vending_machine",
+	WaterDispenser =     require "scripts.actor.enemies.vending_machine.water_dispenser",
 	
 	Cocoon =             require "scripts.actor.enemies.cocoon",
 	FaintedPlayer =      require "scripts.actor.enemies.fainted_player",

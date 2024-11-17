@@ -143,6 +143,7 @@ local img_names = {
 	metal_mosquito_1 =         "actors/enemies/metal_mosquito_1",
 	metal_mosquito_2 =         "actors/enemies/metal_mosquito_2",
 	mole_digging_1 =           "actors/enemies/mole_digging_1",
+	mole_telegraph_1 =         "actors/enemies/mole_telegraph_1",
 	mole_outside =             "actors/enemies/mole_outside",
 	mosquito1 =                "actors/enemies/mosquito1",
 	mosquito2 =                "actors/enemies/mosquito2",
@@ -193,6 +194,7 @@ local img_names = {
 	punching_glove =           "actors/enemies/punching_glove",
 	spring =                   "actors/enemies/spring",
 
+	water_dispenser =          "actors/enemies/water_dispenser",
 	machine_coffee =           "actors/enemies/machine_coffee",
 	machine_coffee_pressed =   "actors/enemies/machine_coffee_pressed",
 	machine_snacks =           "actors/enemies/machine_snacks",
@@ -391,6 +393,7 @@ local img_names = {
 	upgrade_peanut =       "upgrades/upgrade_peanut",
 	upgrade_energy_drink = "upgrades/upgrade_energy_drink",
 	upgrade_soda =         "upgrades/upgrade_soda",
+	upgrade_water =        "upgrades/upgrade_water",
 	
 	-----------------------------------------------------
 

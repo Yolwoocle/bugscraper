@@ -10,7 +10,7 @@ local BulbBuddy = Fly:inherit()
 function BulbBuddy:init(x, y, is_child)
     is_child = param(is_child, false)
 
-    self:init_fly(x,y, images.bulb_buddy_1, 18, 24)
+    self:init_fly(x,y, images.bulb_buddy_1, 18, 24, false)
     self.name = "bulb_buddy"
     self.life = 10
 
@@ -49,8 +49,6 @@ function BulbBuddy:init(x, y, is_child)
 	self.sound_damage = {"impactglass_light_001", "impactglass_light_002", "impactglass_light_003", "impactglass_light_004"}
 	self.sound_death = "glass_break_weak"
 	self.sound_stomp = "glass_break_weak"
-
-    self:disable_buzzing()
 end
 
 function BulbBuddy:update(dt)

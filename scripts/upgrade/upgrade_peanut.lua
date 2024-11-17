@@ -14,7 +14,7 @@ function UpgradePeanut:init()
 end
 
 function UpgradePeanut:update(dt)
-    self:update_upgrade(dt)
+    UpgradePeanut.super:update(self, dt)
 end
 
 function UpgradePeanut:apply_permanent(player)

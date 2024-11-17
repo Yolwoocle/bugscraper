@@ -15,7 +15,7 @@ function UpgradeMilk:init()
 end
 
 function UpgradeMilk:update(dt)
-    self:update_upgrade(dt)
+    UpgradeMilk.super:update(self, dt)
 end
 
 function UpgradeMilk:apply_permanent(player)

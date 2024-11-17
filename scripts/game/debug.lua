@@ -131,7 +131,7 @@ function Debug:init(game)
         end},
         ["d"] = {"spawn", function()
             local arc
-            arc = enemies.Mole:new(CANVAS_CENTER[1], CANVAS_CENTER[2])
+            arc = enemies.WaterDispenser:new(CANVAS_CENTER[1], CANVAS_CENTER[2])
             game:new_actor(arc)            
         end},
         ["o"] = {"spike offset", function() 

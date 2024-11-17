@@ -22,6 +22,9 @@ function Mole:init(x, y)
         digging = {
             {images.mole_digging_1}, 0.1
         },
+        telegraph = {
+            {images.mole_telegraph_1}, 0.1
+        },
         flying = {
             {images.mole_outside}, 0.1
         },
@@ -55,7 +58,7 @@ function Mole:init(x, y)
                 self.damage = 0
                 self.is_stompable = true
                 self.spr:update_offset(0, 0)
-                self.spr:set_animation("digging")
+                self.spr:set_animation("telegraph")
 
                 self.state_timer:start(1)
             end,
@@ -101,7 +104,7 @@ function Mole:init(x, y)
                 self.is_stompable = true
                 self.walk_speed = 0
                 self.state_timer:start(1)
-                self.spr:set_animation("digging")
+                self.spr:set_animation("telegraph")
             end,
             update = function(state, dt)
                 if self.state_timer:update(dt) then

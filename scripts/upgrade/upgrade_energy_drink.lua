@@ -11,11 +11,11 @@ function UpgradeEnergyDrink:init()
     -- self.strength_fury_max = 5.0
     self.strength_fury_speed = 0.5
 
-    self.color = COL_MID_BLUE
+    self.color = COL_PURPLE
 end
 
 function UpgradeEnergyDrink:update(dt)
-    self:update_upgrade(dt)
+    UpgradeEnergyDrink.super:update(self, dt)
 end
 
 function UpgradeEnergyDrink:apply_permanent(player)

@@ -36,7 +36,6 @@ function TvPresentation:init(x, y)
     for i, slide in pairs(self.slides) do
         slide.frame_count = (slide.frames:getWidth() / self.canvas_w) * (slide.frames:getHeight() / self.canvas_h)
         slide.duration = slide.frame_count * slide.frame_duration
-        print_debug(i, slide.duration, slide.frame_count, slide.frames:getWidth(), self.canvas_w)
     end
     shuffle_table(self.slides, 1, #self.slides - 1)
 

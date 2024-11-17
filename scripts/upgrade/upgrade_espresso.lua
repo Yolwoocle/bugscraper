@@ -14,7 +14,7 @@ function UpgradeEspresso:init()
 end
 
 function UpgradeEspresso:update(dt)
-    self:update_upgrade(dt)
+    UpgradeEspresso.super:update(self, dt)
 end
 
 function UpgradeEspresso:apply_instant(player)

@@ -43,11 +43,6 @@ function Fly:update(dt)
     self:update_fly(dt)
 end
 
-function Fly:disable_buzzing()
-    self.is_buzz_enabled = false
-    self:stop_constant_sound("buzz")
-end
-
 function Fly:update_fly(dt)
     self:update_enemy(dt)
     self:update_buzz(dt)

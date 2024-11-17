@@ -229,15 +229,20 @@ function GameUI:draw_floating_text()
 	end
 end
 
-function GameUI:draw_upgrades()
+function GameUI:get_upgrade_preview_position(i)
 	local padding = 4
-	local spacing = 2
 	local item_size = 20
-	local x = CANVAS_WIDTH - padding
-	local y = padding + item_size/2
+	return CANVAS_WIDTH - padding - item_size/2 - item_size * (i-1)
+end
+
+function GameUI:draw_upgrades()
+	local item_size = 20
+	local i = 1
+	local y = 4 + item_size/2
 	for _, upgrade in pairs(game.upgrades) do
-		x = x - item_size
+		local x = self:get_upgrade_preview_position(i)
 		draw_centered(upgrade.sprite, x, y)
+		i = i + 1
 	end
 end
 

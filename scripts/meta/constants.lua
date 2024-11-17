@@ -153,7 +153,8 @@ COL_DARK_BLUE = color(0x124e89)
 COL_MID_BLUE = color(0x0095e9)
 COL_LIGHT_BLUE = color(0x2ce8f5)
 
-COL_DARK_PURPLE = rgb(104, 56, 108)
+COL_PURPLE = color(0xb55088)
+COL_DARK_PURPLE = color(0x68386c)
 
 SELECTED_HIGHLIGHT_COLOR = COL_LIGHT_RED
 LOGO_COLS = {COL_LIGHT_YELLOW, COL_LIGHT_BLUE, COL_LIGHT_RED}
@@ -494,6 +495,9 @@ KEY_CONSTANT_TO_IMAGE_NAME = {
 	["mouse7"] = "btn_k_mouse7",
 	["mouse8"] = "btn_k_mouse8",
 	["mouse9"] = "btn_k_mouse9",
+	["mouse10"] = "btn_k_mouse10",
+	["mouse11"] = "btn_k_mouse11",
+	["mouse12"] = "btn_k_mouse12",
 }
 
 CONTROLLER_BUTTONS = {

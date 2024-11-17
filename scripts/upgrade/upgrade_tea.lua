@@ -15,7 +15,7 @@ function UpgradeTea:init()
 end
 
 function UpgradeTea:update(dt)
-    self:update_upgrade(dt)
+    UpgradeTea.super:update(self, dt)
 end
 
 function UpgradeTea:apply_instant(player)

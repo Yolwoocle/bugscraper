@@ -6,6 +6,7 @@ local Backroom = require "scripts.level.backrooms.backroom"
 local BackgroundCafeteria = require "scripts.level.background.background_cafeteria"
 local ElevatorDoor       = require "scripts.level.elevator_door"
 local TvPresentation    = require "scripts.level.background.layer.tv_presentation"
+local WaterDispenser   = require "scripts.actor.enemies.vending_machine.water_dispenser"
 
 local BackroomGroundFloor = Backroom:inherit()
 
@@ -56,6 +57,8 @@ function BackroomGroundFloor:generate(world_generator)
 		end
 		game:new_actor(prop)
 	end
+
+	game:new_actor(WaterDispenser:new(749-16, 212-16))
 end
 
 function BackroomGroundFloor:can_exit()

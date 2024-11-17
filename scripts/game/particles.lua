@@ -45,10 +45,22 @@ function Particle:update_particle(dt)
 		local items, len = Collision.world:queryPoint(self.x, self.y, function(item) 
 			return (item.collision_info and item.collision_info.type == COLLISION_TYPE_SOLID) or item.is_player
 		end) --FIXME: particles can go through walls bc no checks on the collision vector are made 
-		if len > 0 then
+		if len > 0 and self.vy > 0 then
 			self.bounces = self.bounces - 1
 			self.vy = -self.bounce_force - random_neighbor(40)
 		end
+
+		if game and game.level and game.level.cabin_inner_rect then
+			if self.x < game.level.cabin_inner_rect.ax then
+				self.vx = math.max(math.abs(self.vx), 20)
+			elseif game.level.cabin_inner_rect.bx < self.x then
+				self.vx = -math.max(math.abs(self.vx), 20)
+			end
+
+			self.x = clamp(self.x, game.level.cabin_inner_rect.ax, game.level.cabin_inner_rect.bx)
+			self.y = clamp(self.y, game.level.cabin_inner_rect.ay, game.level.cabin_inner_rect.by)
+		end
+
 	end
 
 	if self.s <= 0 or self.life <= 0 then

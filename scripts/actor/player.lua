@@ -303,13 +303,17 @@ function Player:on_removed()
 end
 
 function Player:do_damage(n, source)
-	if self.debug_god_mode then return false   end
-	if self.invincible_time > 0 then    return false   end
-	if n <= 0 then              return false   end
+	if self.debug_god_mode then
+		return false
+	end
+	if self.invincible_time > 0 then
+		return false
+	end
+	if n <= 0 then
+		return false
+	end
 
-	-- if Input:get_number_of_users() == 1 then
-		game:frameskip(8)
-	-- end
+	game:frameskip(8)
 	game:screenshake(5)
 	Input:vibrate(self.n, 0.3, 0.45)
 	Audio:play("hurt")
@@ -340,7 +344,19 @@ function Player:do_damage(n, source)
 		self:kill()
 	end
 
+	self:remove_water_upgrade()
+	
 	return true
+end
+
+function Player:remove_water_upgrade()
+	print_debug(#self.upgrades)
+	for i, upgrade in pairs(self.upgrades) do 
+		if upgrade.name == "water" then
+			game:revoke_upgrade(i)
+			return
+		end
+	end
 end
 
 function Player:subtract_life(n)
@@ -756,14 +772,20 @@ end
 
 ------------------------------------------
 --- Upgrades & effects ---
+------------------------------------------
 
 function Player:apply_upgrade(upgrade, is_revive)
 	is_revive = param(is_revive, false)
 	
 	upgrade:apply(self, is_revive)
-	if upgrade.type == UPGRADE_TYPE_TEMPORARY or upgrade.type == UPGRADE_TYPE_PERMANENT then
-		table.insert(self.upgrades, upgrade)
-	end
+	table.insert(self.upgrades, upgrade)
+end
+
+function Player:revoke_upgrade(upgrade_index)
+	assert(self.upgrades[upgrade_index] ~= nil)
+
+	self.upgrades[upgrade_index]:finish(self)
+	table.remove(self.upgrades, upgrade_index)
 end
 
 function Player:update_upgrades(dt)

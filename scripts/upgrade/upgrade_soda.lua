@@ -15,7 +15,7 @@ function UpgradeSoda:init()
 end
 
 function UpgradeSoda:update(dt)
-    self:update_upgrade(dt)
+    UpgradeSoda.super:update(self, dt)
 end
 
 function UpgradeSoda:apply_permanent(player)
