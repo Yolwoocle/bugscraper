@@ -319,6 +319,15 @@ function InputManager:get_users(input_type)
     return users
 end
 
+function InputManager:find_free_user_number()
+	for i = 1, MAX_NUMBER_OF_PLAYERS do
+		if self.users[i] == nil then
+			return i
+		end
+	end
+	return nil
+end
+
 function InputManager:get_global_user()
     return self.global_user
 end
@@ -510,11 +519,11 @@ function InputManager:generate_unknown_key_icon(icon, text)
 end
 
 function InputManager:get_action_primary_icon(player_n, action, brand_override)
-    local button = Input:get_primary_button(player_n, action)
+    local button = self:get_primary_button(player_n, action)
     if button == nil then
         return ternary(self:get_primary_input_type(player_n) == INPUT_TYPE_KEYBOARD, images.btn_k_unknown, images.btn_c_unknown)
     end
-    local icon = Input:get_button_icon(player_n, button, brand_override)
+    local icon = self:get_button_icon(player_n, button, brand_override)
     return icon
 end
 
@@ -559,17 +568,41 @@ function InputManager:get_button_icon_controller(button, brand)
     return images[image_name] or self:generate_unknown_key_icon(images.btn_c_unknown, button.key_name)
 end
 
-function InputManager:draw_input_prompt(player_n, actions, label, label_color, x, y)
+function InputManager:draw_input_prompt(player_n, actions, label, label_color, x, y, params)
+    params = params or {}
+
+    local spacing = 4
+    local icons = {}
+
+    local ox = 0
     for __, action in ipairs(actions) do
-        local icon = Input:get_action_primary_icon(player_n, action)
-        local icon_w = icon:getWidth()
+        local icon
+        if type(action) == "string" then
+            icon = self:get_action_primary_icon(player_n, action, params.brand_override)
+
+        elseif type(action) == "table" then 
+            local button = self:get_input_profile_from_player_n(player_n):get_primary_button(action[1], action[2])
+            icon = self:get_button_icon(player_n, button, action[3])
         
-        love.graphics.draw(icon, x, y)
-        x = x + icon_w + 2
+        end
+        local icon_w = icon:getWidth()
+        table.insert(icons, {x = ox, icon = icon})
+
+        ox = ox + icon_w + spacing
     end
+    
+    
     local text = Text:text(label)
     local text_w = get_text_width(text)
-    print_outline(label_color, COL_BLACK_BLUE, text, x, y)
+    local total_w = text_w + ox
+
+    if params.centered then
+        x = x - total_w/2
+    end
+    for _, icon_data in pairs(icons) do
+        love.graphics.draw(icon_data.icon, math.floor(x + icon_data.x), y)
+    end
+    print_outline(label_color, COL_BLACK_BLUE, text, x + ox, y)
 
     x = x + text_w
     return x

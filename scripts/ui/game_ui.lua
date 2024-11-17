@@ -1,6 +1,7 @@
 require "scripts.util"
 local images = require "data.images"
 local Class = require "scripts.meta.class"
+local PlayerPreview = require "scripts.ui.player_preview"
 local shaders = require "data.shaders"
 
 local GameUI = Class:inherit()
@@ -14,10 +15,24 @@ function GameUI:init(game, is_visible)
 	self.floating_text = ""
 	self.floating_text_y = -50
 	self.floating_text_target_y = -100
+
+	self.player_previews = {}
+	local w = 108
+	local spacing = 10
+	local x = CANVAS_WIDTH/2 - ((w + spacing) * (MAX_NUMBER_OF_PLAYERS-1) + w)/2
+	local y = 200
+	for i = 1, MAX_NUMBER_OF_PLAYERS do
+		table.insert(self.player_previews, PlayerPreview:new(i, x, y, w, 64))
+		x = x + w + spacing	
+	end
 end
 
 function GameUI:update(dt)
 	self:update_floating_text(dt)
+	for i, preview in pairs(self.player_previews) do
+		preview:update(dt)
+		preview.y = preview.base_y - self.game.logo_y
+	end
 end
 
 function GameUI:update_floating_text(dt)
@@ -49,6 +64,7 @@ function GameUI:draw()
 	self:draw_offscreen_indicators()
 	self:draw_floating_text()
 	self:draw_upgrades()
+	self:draw_player_previews()
 
 	-- local r
     -- r = game.level.cabin_inner_rect
@@ -89,7 +105,7 @@ end
 function GameUI:draw_version()
 	local text = concat("v", BUGSCRAPER_VERSION)
 	local x = math.floor(CANVAS_WIDTH - get_text_width(text) - 2)
-	local y = CANVAS_HEIGHT - self.game.logo_y + 16
+	local y = self.game.logo_y
 	print_outline(COL_DARK_GRAY, COL_VERY_DARK_GRAY, text, x, y)
 
 	if OPERATING_SYSTEM == "Web" and not game.has_seen_controller_warning then
@@ -98,6 +114,8 @@ function GameUI:draw_version()
 end
 
 function GameUI:draw_join_tutorial()
+	if true then return end --removeme
+
 	local def_x = math.floor((game.level.door_rect.ax + game.level.door_rect.bx) / 2 )
 	-- local def_y = game.logo_y - 10
 	local def_y = CANVAS_HEIGHT - game.logo_y + 8
@@ -245,5 +263,18 @@ function GameUI:draw_upgrades()
 		i = i + 1
 	end
 end
+
+function GameUI:draw_player_previews()
+	for i, preview in pairs(self.player_previews) do
+		preview:draw()
+	end
+end
+
+function GameUI:on_player_joined(player)
+	for i, preview in pairs(self.player_previews) do
+		preview:on_player_joined(player)
+	end
+end
+
 
 return GameUI

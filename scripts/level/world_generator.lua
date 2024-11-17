@@ -64,7 +64,7 @@ end
 
 function WorldGenerator:generate_ground_floor()
 	self:reset()
-	self:write_rect(Rect:new(2, 2, 57, 15), TILE_METAL)
+	self:write_rect(Rect:new(2, 3, 57, 15), TILE_METAL)
 
 	-- tables
 	for _, rect in pairs({

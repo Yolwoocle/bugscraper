@@ -935,7 +935,7 @@ function Player:draw_hud()
 		if Input:get_number_of_users() > 1 then
 			print_centered_outline(self.color_palette[1], nil, Text:text("player.abbreviation", self.n), ui_x, ui_y- 8)
 		end
-		self:draw_controls()
+		-- self:draw_controls()
 	end
 end
 

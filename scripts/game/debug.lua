@@ -83,6 +83,9 @@ function Debug:init(game)
             _G_t = 0
             _G_do_fixed_framerate = not _G_do_fixed_framerate
         end},
+        ["backspace"] = {"show help", function()
+            self.debug_menu = not self.debug_menu
+        end},
         ["v"] = {"__jackofalltrades", function()
             print_debug("-------")
             -- game.level.force_cafeteria_end_flag = true

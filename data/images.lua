@@ -378,6 +378,10 @@ local img_names = {
 	boss_intro_dung_layer4 = "ui/boss_intro/boss_intro_dung_layer4",
 	boss_intro_dung_layer5 = "ui/boss_intro/boss_intro_dung_layer5",
 
+	player_preview_bg = "ui/player_preview/player_preview_bg",
+	player_preview_detail = "ui/player_preview/player_preview_detail",
+	player_preview_dotted = "ui/player_preview/player_preview_dotted",
+
 	-----------------------------------------------------
 	
 	-- effects

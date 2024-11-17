@@ -69,7 +69,7 @@ function ControlsMenuItem:draw_value_text()
 	end
 end
 
-local BUTTON_ICON_MARGIN = 1
+local BUTTON_ICON_MARGIN = 4
 
 function ControlsMenuItem:draw_button_icon(i, button, x, y)
 	local img = Input:get_button_icon(self.player_n, button)

@@ -20,7 +20,7 @@ function BackroomGroundFloor:init()
 	self.all_in_front = false
 
 	self.close_door_timer = 0.5
-	self.tv_presentation = TvPresentation:new(715, 79)
+	self.tv_presentation = TvPresentation:new(715, 100)
 end
 
 function BackroomGroundFloor:generate(world_generator)
@@ -116,7 +116,7 @@ function BackroomGroundFloor:draw_all()
 	self.door:draw()
 	love.graphics.draw(images.ground_floor, -16, -16)
 	game.level.elevator:draw_counter()
-	print_centered_outline(COL_WHITE, COL_BLACK_BLUE, Text:text("menu.credits.game_by_template", "Léo Bernard"), 536, 7*16)
+	print_centered_outline(COL_WHITE, COL_BLACK_BLUE, Text:text("menu.credits.game_by_template", "Léo Bernard"), 536, 8*16)
 
 	--215, 79
 	-- for ix = 0, 54 do

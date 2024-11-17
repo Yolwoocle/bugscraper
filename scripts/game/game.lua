@@ -132,7 +132,7 @@ function Game:new_game()
 
 	-- Camera
 	self.camera = Camera:new()
-	self.camera:set_position(312 - 16, 0)
+	self.camera:set_position(312 - 16, 48)
 
 	self.level = Level:new(self)
 
@@ -158,7 +158,7 @@ function Game:new_game()
 	self.test_t = 0
 
 	-- Logo
-	self.logo_y = 30
+	self.logo_y = 0
 	self.logo_vy = 0
 	self.logo_a = 0
 	self.move_logo = false
@@ -605,7 +605,6 @@ function Game:draw_game()
 
 		love.graphics.draw(self.front_canvas, 0, 0)
 		self.game_ui:draw()
-		self:draw_queued_players()
 		self.level:draw_ui()
 		if self.debug.colview_mode then
 			self.debug:draw_colview()
@@ -891,18 +890,10 @@ function Game:init_players()
 	end
 end
 
-function Game:find_free_player_number()
-	for i = 1, MAX_NUMBER_OF_PLAYERS do
-		if Input.users[i] == nil then
-			return i
-		end
-	end
-	return nil
-end
 
 function Game:queue_join_game(input_profile_id, joystick)
 	-- FIXME ça marche pas quand tu join avec manette puis que tu join sur clavier
-	local player_n = self:find_free_player_number()
+	local player_n = Input:find_free_user_number()
 	if player_n == nil then
 		return
 	end
@@ -918,7 +909,7 @@ function Game:queue_join_game(input_profile_id, joystick)
 	end
 	Input:assign_input_profile(player_n, input_profile_id)
 
-	table.insert(self.queued_players, QueuedPlayer:new(player_n, input_profile_id, joystick))
+	self.queued_players[player_n] = QueuedPlayer:new(player_n, input_profile_id, joystick)
 
 	return player_n
 end
@@ -930,9 +921,7 @@ function Game:join_game(player_n)
 		self.skin_choices[player.skin.id] = false
 	end
 
-	for _, queued_player in pairs(self.queued_players) do
-		queued_player:on_other_joined(player)
-	end
+	self.game_ui:on_player_joined(player)
 end
 
 function Game:new_player(player_n, x, y, put_in_buffer)
@@ -986,23 +975,6 @@ function Game:update_queued_players(dt)
 		if queued_player.is_removed then
 			self.queued_players[key] = nil
 		end
-	end
-end
-
-function Game:draw_queued_players()
-	local n = 0
-	for _, queued_player in pairs(self.queued_players) do
-		n = n + 1
-	end
-
-	local spacing = 32
-	local width = 64
-
-	local x = (CANVAS_WIDTH - (n - 1) * width) / 2
-	local y = CANVAS_HEIGHT * 0.75
-	for _, queued_player in pairs(self.queued_players) do
-		queued_player:draw(x, y)
-		x = x + width
 	end
 end
 

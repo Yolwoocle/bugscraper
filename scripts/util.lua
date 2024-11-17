@@ -269,6 +269,10 @@ function rect_color_centered(col, mode, x, y, w, h)
 	rect_color(col, mode, x - w/2, y - h/2, w, h)
 end
 
+function bound_rect(color, mode, x, y, width, height, angle)
+	rect_color(color, mode, -width/2, -height/2, width, height, 6, 6) -- origin in the middle
+end
+
 function draw_with_selected_outline(spr, x, y, r, sx, sy)
 	love.graphics.setShader(shaders.draw_in_highlight_color)
 	local offset = 1
@@ -854,6 +858,19 @@ function rect_color(col, mode, x, y, w, h, ...)
 	col = col or {1,1,1,1}
 	love.graphics.setColor(col)
 	love.graphics.rectangle(mode, floor(x)+0.5, floor(y)+0.5, floor(w), floor(h), ...)
+	love.graphics.setColor(1,1,1,1)
+end
+
+function rect_color_float(col, mode, x, y, w, h, ...)
+	assert(col, "color not defined")
+	assert(mode, "rect mode not defined ('line' or 'fill')")
+	assert(x, "rect x not defined")
+	assert(y, "rect y not defined")
+	assert(w, "rect width not defined")
+	assert(h, "rect height not defined")
+	col = col or {1,1,1,1}
+	love.graphics.setColor(col)
+	love.graphics.rectangle(mode, x, y, w, h, ...)
 	love.graphics.setColor(1,1,1,1)
 end
 
