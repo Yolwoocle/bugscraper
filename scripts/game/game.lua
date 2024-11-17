@@ -738,7 +738,6 @@ function Game:unsplit_keyboard_and_kick_second_player()
 end
 
 function Game:on_menu()
-	print("ON MENU")
 	self.music_player:on_menu()
 	self:pause_repeating_sounds()
 end

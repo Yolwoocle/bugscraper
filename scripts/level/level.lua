@@ -132,8 +132,6 @@ function Level:update(dt)
 end
 
 function Level:set_bounds(rect)
-	print_debug("removeme SET RECT ", rect.ax, rect.ay, rect.bx, rect.by)
-
 	self.cabin_rect = rect:clone():scale(BW)
 	self.cabin_inner_rect = self.cabin_rect:clone():expand(-BW)
 end

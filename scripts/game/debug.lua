@@ -84,7 +84,8 @@ function Debug:init(game)
             _G_do_fixed_framerate = not _G_do_fixed_framerate
         end},
         ["v"] = {"__jackofalltrades", function()
-            game.level.force_cafeteria_end_flag = true
+            print_debug("-------")
+            -- game.level.force_cafeteria_end_flag = true
         end},
         ["f"] = {"toggle FPS", function()
             self.view_fps = not self.view_fps

@@ -458,18 +458,27 @@ function Actor:remove_constant_sound(name)
 end
 
 function Actor:pause_constant_sound(name)
+	if not self.is_active then
+		return
+	end
 	local sound = self:get_constant_sound(name)
 	if not sound then return end
 	sound:pause()
 end
 
 function Actor:resume_constant_sound(name)
+	if not self.is_active then
+		return
+	end
 	local sound = self:get_constant_sound(name)
 	if not sound then return end
 	sound:resume()
 end
 
 function Actor:stop_constant_sound(name)
+	if not self.is_active then
+		return
+	end
 	local sound = self:get_constant_sound(name)
 	if not sound then return end
 	sound:stop()
@@ -494,12 +503,20 @@ function Actor:pause_constant_sounds()
 end
 
 function Actor:resume_constant_sounds()
+	print_debug("removeme RESUME all", self.name)
+	if not self.is_active then
+		return
+	end
 	for sound_name, sound in pairs(self.constant_sounds) do
 		self:resume_constant_sound(sound_name)
 	end
 end
 
 function Actor:stop_constant_sounds()
+	print_debug("removeme STOP all", self.name)
+	if not self.is_active then
+		return
+	end
 	for sound_name, sound in pairs(self.constant_sounds) do
 		self:stop_constant_sound(sound_name)
 	end
