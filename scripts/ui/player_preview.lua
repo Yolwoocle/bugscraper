@@ -86,21 +86,26 @@ function PlayerPreview:init(player_n, x, y, w, h)
 
                 self.prompts = {
                     { self.player_n, { "ui_select" }, Text:text("input.prompts.ui_select"), COL_WHITE },
-                    { self.player_n, { "ui_back" }, Text:text("input.prompts.ui_back").."TODO", COL_WHITE },
+                    { self.player_n, { "ui_back" }, Text:text("input.prompts.ui_back"), COL_WHITE },
                 }
             end,
             update = function(state, dt)
                 if not self.queued_player or self.queued_player.is_removed then
                     self.queued_player = nil
-                    return "tutorial"
+                    if Input:get_user(self.player_n) then
+                        return "tutorial"
+                    else
+                        return "waiting"
+                    end
                 end
-
-                local queued_players = game.queued_players
 
                 self.t = self.t + dt
                 self.is_pressed = Input:action_pressed(self.player_n, "ui_select")
                 if self.t > 0.1 and Input:action_pressed(self.player_n, "ui_select") then
                     self:on_confirm_character_select()
+                end
+                if self.t > 0.1 and Input:action_pressed(self.player_n, "ui_back") then
+                    self:on_cancel_character_select()
                 end
 
                 if Input:action_pressed(self.player_n, "ui_left") then
@@ -121,7 +126,7 @@ function PlayerPreview:init(player_n, x, y, w, h)
             draw = function(state)
                 self:draw_bg_card_empty()
 
-                if not self.queued_player or self.queued_player.is_removed then
+                if not self.queued_player or self.queued_player.is_removed or not Input:get_user(self.player_n) then
                     return
                 end
 
@@ -232,6 +237,11 @@ function PlayerPreview:on_confirm_character_select()
 
     game:join_game(self.player_n)
     self.queued_player:remove()
+end
+
+function PlayerPreview:on_cancel_character_select()
+    game:remove_queued_player(self.player_n)
+    self.state_machine:set_state("waiting")
 end
 
 function PlayerPreview:draw_rotated_rectangle(color, mode, x, y, width, height, angle)

@@ -103,14 +103,18 @@ function GameUI:draw_logo()
 end
 
 function GameUI:draw_version()
+	local old_font = love.graphics.getFont()
+	love.graphics.setFont(FONT_MINI)
+
 	local text = concat("v", BUGSCRAPER_VERSION)
 	local x = math.floor(CANVAS_WIDTH - get_text_width(text) - 2)
 	local y = self.game.logo_y
 	print_outline(COL_DARK_GRAY, COL_VERY_DARK_GRAY, text, x, y)
+	love.graphics.setFont(old_font)
 
-	if OPERATING_SYSTEM == "Web" and not game.has_seen_controller_warning then
-		print_centered_outline(COL_MID_GRAY, COL_BLACK_BLUE, "⚠️ "..Text:text("game.warning_web_controller"), CANVAS_WIDTH/2, y+6)
-	end
+	-- if OPERATING_SYSTEM == "Web" and not game.has_seen_controller_warning then
+	-- 	print_centered_outline(COL_MID_GRAY, COL_BLACK_BLUE, "⚠️ "..Text:text("game.warning_web_controller"), CANVAS_WIDTH/2, y+6)
+	-- end
 end
 
 function GameUI:draw_join_tutorial()

@@ -23,7 +23,7 @@ local function func_url(url)
     end
 end
 
-local DEFAULT_MENU_BG_COLOR = { 0, 0, 0, 0.7 }
+local DEFAULT_MENU_BG_COLOR = { 0, 0, 0, 0.8 }
 
 local PROMPTS_NORMAL = {
     { { "ui_select" }, "input.prompts.ui_select" },

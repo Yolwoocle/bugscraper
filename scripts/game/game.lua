@@ -719,6 +719,17 @@ function Game:listen_for_player_join(dt)
 	end
 end
 
+function Game:remove_queued_player(player_n)
+    local queued_player = self.queued_players[player_n]
+	if not queued_player then
+		return
+	end
+
+	Input:remove_user(player_n)
+	self.queued_players[player_n]:remove()
+	self.queued_players[player_n] = nil
+end
+
 function Game:remove_queued_players()
 	if self.queued_players then
 		for _, queued_player in pairs(self.queued_players) do
