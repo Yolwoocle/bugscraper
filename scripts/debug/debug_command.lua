@@ -49,7 +49,8 @@ function DebugCommand:init(params)
         self.args[i] = {
             name = name,
             type = type,
-            default = arg[2],
+            default = arg.default,
+            values = arg.values,
         }
         -- TODO sanity check for optional arguments only after mandatory ones
     end

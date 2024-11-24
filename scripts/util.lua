@@ -547,14 +547,27 @@ function get_rank_color(rank, defcol)
 	end
 end
 
-function split_str(inputstr, sep)
+function split_str(inputstr, sep, include_empty)
 	if sep == nil then
 		sep = "%s"
 	end
 	local t={}
-	for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
-		table.insert(t, str)
+	local pattern = "([^"..sep.."]+)"	
+	if include_empty then
+		pattern = pattern.."()"
 	end
+
+	local last_pos = 1
+
+	for str, pos in string.gmatch(inputstr, pattern) do
+		table.insert(t, str)
+		last_pos = pos
+	end
+
+	if include_empty and last_pos <= #inputstr then
+        table.insert(t, "")
+    end
+
 	return t
 end
 
