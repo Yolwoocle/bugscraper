@@ -423,7 +423,7 @@ function Game:update_actors(dt)
 end
 
 function Game:update_logo(dt)
-	self.logo_a = self.logo_a + dt * 3
+	self.logo_a = self.logo_a + dt * 12
 	if self.move_logo then
 		self.logo_vy = self.logo_vy - dt
 		self.logo_y = self.logo_y + self.logo_vy

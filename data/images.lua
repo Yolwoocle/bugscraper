@@ -421,6 +421,9 @@ local img_names = {
 	-- misc
 	yanis = "yanis",
 
+	removeme_button_on = "removeme_button_on",
+	removeme_button_off = "removeme_button_off",
+
 	_test_gaysquare = "_test_gaysquare",
 	_test_hexagon = "_test_hexagon",
 	_test_hexagon_small = "_test_hexagon_small",

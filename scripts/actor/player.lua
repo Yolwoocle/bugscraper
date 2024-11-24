@@ -223,6 +223,8 @@ function Player:update(dt)
 	if self:is_in_poison_cloud() then
 		Particles:dust(self.mid_x + random_neighbor(7), self.mid_y + random_neighbor(7), random_sample{color(0x3e8948), color(0x265c42), color(0x193c3e)})
 	end
+
+	self.flag_has_jumped_on_current_frame = false
 end
 
 ------------------------------------------
@@ -350,7 +352,6 @@ function Player:do_damage(n, source)
 end
 
 function Player:remove_water_upgrade()
-	print_debug(#self.upgrades)
 	for i, upgrade in pairs(self.upgrades) do 
 		if upgrade.name == "water" then
 			game:revoke_upgrade(i)
@@ -447,6 +448,8 @@ function Player:do_wall_sliding(dt)
 	end
 end
 
+
+local removeme_n = 0
 function Player:update_jumping(dt)
 	-- self.debug_values[1] = concat(self.jumps, "/", self.max_jumps)
 	-- Update number of jumps
@@ -457,6 +460,8 @@ function Player:update_jumping(dt)
 	-- This buffer is so that you still jump even if you're a few frames behind
 	self.buffer_jump_timer = self.buffer_jump_timer - 1
 	if Input:action_pressed(self.n, "jump") then
+		removeme_n = removeme_n + 1
+
 		self.buffer_jump_timer = 12
 	end
 
@@ -492,8 +497,8 @@ function Player:update_jumping(dt)
 
 			if left_jump or right_jump or wall_climb then
 				self:wall_jump(wall_normal)
+				self:on_jump()
 			end
-			self:on_jump()
 				
 		elseif not self.is_grounded and (self.jumps > 0) then 
 			-- Midair jump
@@ -560,6 +565,8 @@ end
 function Player:on_jump()
 	self.buffer_jump_timer = 0
 	self.coyote_time = 0
+
+	self.flag_has_jumped_on_current_frame = true
 end
 
 function Player:add_max_jumps(val)
@@ -567,7 +574,9 @@ function Player:add_max_jumps(val)
 end
 
 function Player:on_leaving_ground()
-	self.coyote_time = self.default_coyote_time
+	if not self.flag_has_jumped_on_current_frame then
+		self.coyote_time = self.default_coyote_time
+	end
 end
 
 function Player:on_leaving_collision()
@@ -1087,7 +1096,8 @@ function Player:draw_player()
 		local i = 0
 		local th = get_text_height()
 		for _, val in pairs(self.debug_values) do
-			print_outline(nil, nil, tostring(val), self.x + self.w, self.y - i*th)
+			local txt = tostring(val)
+			print_outline(nil, nil, txt, self.x - get_text_width(txt)/2 + self.w/2, self.y - i*th)
 			i = i + 1
 		end
 	end
