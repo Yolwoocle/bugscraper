@@ -176,6 +176,8 @@ function RiseAndLingerParticle:init(x,y, spawn_delay, stay_time)
 	self.spawn_delay = spawn_delay or 0.0
 	self.stay_timer = stay_time or 0.1
 
+	self.start_rise_y = nil
+
 	self.min_oy = -50
 end
 
@@ -190,6 +192,10 @@ function RiseAndLingerParticle:update(dt)
 	
 	if abs(self.vy) <= 0.005 then
 		self.stay_timer = math.max(0, self.stay_timer-dt)
+
+		if not self.start_rise_y then
+			self.start_rise_y = self.y
+		end 
 
 		if self.stay_timer <= 0 then
 			self.vy2 = self.vy2 - dt*2
@@ -234,8 +240,12 @@ end
 
 local RisingImageParticle = RiseAndLingerParticle:inherit()
 
-function RisingImageParticle:init(x, y, image, scale, spawn_delay, stay_time)
+function RisingImageParticle:init(x, y, image, scale, spawn_delay, stay_time, params)
+	params = params or {}
 	RisingImageParticle.super.init(self, x,y, spawn_delay, stay_time)
+
+	self.rising_squish_x = param(params.rising_squish_x, false)
+	self.rising_squish_y = param(params.rising_squish_y, false)
 	self.image = image
 	self.scale = scale or 1
 	self.rot = 0.0
@@ -249,7 +259,15 @@ function RisingImageParticle:draw()
 		return
 	end
 
-	draw_centered(self.image, self.x, self.y, self.rot, self.scale, self.scale)
+	local squish_x = 1
+	local squish_y = 1
+	if self.start_rise_y then
+		local min_y = self.spawn_y + self.min_oy
+		local dist = self.y - min_y
+		local total = self.start_rise_y - min_y
+		squish_x = dist / total
+	end
+	draw_centered(self.image, self.x, self.y, self.rot, self.scale * squish_x, self.scale * squish_y)
 end
 
 ------------------------------------------------------------

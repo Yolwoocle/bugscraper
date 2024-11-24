@@ -135,8 +135,8 @@ function Debug:init(game)
         end},
         ["d"] = {"spawn", function()
             local arc
-            arc = enemies.WaterDispenser:new(CANVAS_CENTER[1], CANVAS_CENTER[2])
-            game:new_actor(arc)            
+            arc = enemies.StinkBug:new(CANVAS_CENTER[1], CANVAS_CENTER[2])
+            game:new_actor(arc)
         end},
         ["o"] = {"spike offset", function() 
             for _, actor in pairs(game.actors) do

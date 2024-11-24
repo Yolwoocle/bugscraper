@@ -63,6 +63,7 @@ function Player:init(n, x, y, skin)
 	self.jump_speed = 450
 	self.jump_speed_mult = 1.0
 	self.buffer_jump_timer = 0
+	self.max_buffer_jump_timer = 8
 	self.coyote_time = 0
 	self.default_coyote_time = 6
 	self.stomp_jump_speed = 500
@@ -347,6 +348,10 @@ function Player:do_damage(n, source)
 	end
 
 	self:remove_water_upgrade()
+
+	if source then
+		self.last_damage_source_name = source.name
+	end
 	
 	return true
 end
@@ -462,7 +467,7 @@ function Player:update_jumping(dt)
 	if Input:action_pressed(self.n, "jump") then
 		removeme_n = removeme_n + 1
 
-		self.buffer_jump_timer = 12
+		self.buffer_jump_timer = self.max_buffer_jump_timer
 	end
 
 	-- Update air time (I think that is used to make you jump higher when holding jump)
@@ -839,9 +844,11 @@ end
 function Player:update_poison(dt)
 	if self:is_in_poison_cloud() and not self.is_invincible then
 		self.poison_timer = self.poison_timer + dt
+
 		if self.poison_timer >= self.poison_damage_time then
 			self:do_damage(1, self.poison_cloud)
 			self.poison_timer = 0.0	
+			Particles:rising_image(self.mid_x, self.mid_y, images.poison_skull, nil, nil, nil, {rising_squish_x = true})
 		end
 	else
 		self.poison_timer = math.max(0.0, self.poison_timer - dt)	
@@ -1176,7 +1183,11 @@ function Player:update_color(dt)
 		if self.iframe_blink_timer < self.iframe_blink_freq/2 then
 			a = 0.5
 		end
+
 		self.spr:set_color{1, v, v, a}
+		if self.last_damage_source_name == "poison_cloud" then
+			self.spr:set_color{v, 1, v, a}
+		end
 	end
 end
 

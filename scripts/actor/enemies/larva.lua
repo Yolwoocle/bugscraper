@@ -10,7 +10,7 @@ function Larva:init(x, y, spr, w, h)
 end
 
 function Larva:init_larva(x, y, spr, w, h)
-    self:init_enemy(x,y, spr or images.larva1, w or 14, h or 6)
+    self:init_enemy(x,y, spr or images.larva1, w or 12, h or 4)
     self.name = "larva"
     self.follow_player = false
     

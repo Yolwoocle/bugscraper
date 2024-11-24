@@ -249,6 +249,7 @@ local img_names = {
 	white_dust =           "particles/white_dust",
 	particle_bit_zero =    "particles/particle_bit_zero",
 	particle_bit_one =     "particles/particle_bit_one",
+	poison_skull =         "particles/poison_skull",
 
 	bullet_vanish_1 =      "particles/bullet_vanish_1",
 	bullet_vanish_2 =      "particles/bullet_vanish_2",
