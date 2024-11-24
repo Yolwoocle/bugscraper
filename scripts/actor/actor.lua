@@ -164,9 +164,6 @@ function Actor:clamp_to_bounds(rect)
 	local x = clamp(self.x, rect.ax, rect.bx - self.w)
 	local y = clamp(self.y, rect.ay, rect.by - self.h)
 
-	if self.name == "button_small" then
-		-- print_debug("y", round(self.y), y, "rect", rect.ay, rect.by-self.h, " | ", random_neighbor(1))
-	end
 	self:set_pos(x, y)
 end
 
@@ -503,7 +500,6 @@ function Actor:pause_constant_sounds()
 end
 
 function Actor:resume_constant_sounds()
-	print_debug("removeme RESUME all", self.name)
 	if not self.is_active then
 		return
 	end
@@ -513,7 +509,6 @@ function Actor:resume_constant_sounds()
 end
 
 function Actor:stop_constant_sounds()
-	print_debug("removeme STOP all", self.name)
 	if not self.is_active then
 		return
 	end

@@ -64,7 +64,7 @@ function Enemy:init_enemy(x,y, img, w,h)
 	self.loot = {
 		{nil, 160},
 		{Loot.Life, 6, loot_type="life", value=1},
-		{Loot.Gun, 4, loot_type="gun"},
+		{Loot.Gun, 3, loot_type="gun"},
 	}
 
 	self.is_stompable = true

@@ -525,16 +525,38 @@ function Guns:get_current_used_gun()
 	end
 end
 
+-- Returns a gun that is held by  
+function Guns:find_gun_held_by_all_players()
+	if not game then 
+		return nil
+	end
+
+	local gun_name
+	for _, player in pairs(game.players) do
+		if player.gun == nil then
+			return nil
+		end
+
+		if gun_name == nil then
+			gun_name = player.gun.name
+		end
+		if player.gun.name ~= gun_name then
+			return nil 
+		end
+	end
+	return gun_name 
+end
+
 function Guns:get_random_gun(user)
 	local gun = random_sample(all_guns) or self.unlootable.Machinegun
+	local all_player_gun = self:find_gun_held_by_all_players()
+	print_debug("all_player_gun ", all_player_gun)
 	local inst = gun:new(user)
 	
-	if game:get_floor() <= 5 then
-		local limit = 10
-		while limit > 0 and inst.name == "ring" do
-			inst = random_sample(all_guns):new(user)
-			limit = limit - 1
-		end
+	local limit = 10
+	while limit > 0 and inst.name == all_player_gun do
+		inst = random_sample(all_guns):new(user)
+		limit = limit - 1
 	end
 
 	return inst
