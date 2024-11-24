@@ -118,7 +118,7 @@ end
 function Mole:update(dt)
     self.state_machine:update(dt)
 
-    self.debug_values[1] = self.state_machine.current_state_name
+    -- self.debug_values[1] = self.state_machine.current_state_name
     Mole.super.update(self, dt)
 end
 

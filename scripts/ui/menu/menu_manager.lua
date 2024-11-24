@@ -243,39 +243,66 @@ function MenuManager:back()
 end
 
 function MenuManager:keypressed(key, scancode, isrepeat)
-	if self.sel_item == nil then return end
-	if self.sel_item.keypressed == nil then return end
-	self.sel_item:keypressed(key, scancode, isrepeat)
+	if self.sel_item and self.sel_item.keypressed then
+		self.sel_item:keypressed(key, scancode, isrepeat)
+	end
+	if self.cur_menu and self.cur_menu.keypressed then
+		self.cur_menu:keypressed(key, scancode, isrepeat)
+	end
 end
 
 function MenuManager:gamepadpressed(joystick, buttoncode)
-	if self.sel_item == nil then return end
-	if self.sel_item.gamepadpressed == nil then return end
-	self.sel_item:gamepadpressed(joystick, buttoncode)
+	if self.sel_item and self.sel_item.gamepadpressed then
+		self.sel_item:gamepadpressed(joystick, buttoncode)
+	end
+	if self.cur_menu and self.cur_menu.gamepadpressed then
+		self.cur_menu:gamepadpressed(joystick, buttoncode)
+	end
 end
 
 function MenuManager:gamepadreleased(joystick, buttoncode)
-	if self.sel_item == nil then return end
-	if self.sel_item.gamepadreleased == nil then return end
-	self.sel_item:gamepadreleased(joystick, buttoncode)
+	if self.sel_item and self.sel_item.gamepadreleased then
+		self.sel_item:gamepadreleased(joystick, buttoncode)
+	end
+	if self.cur_menu and self.cur_menu.gamepadreleased then
+		self.cur_menu:gamepadreleased(joystick, buttoncode)
+	end
 end
 
 function MenuManager:gamepadaxis(joystick, axis, value)
-	if self.sel_item == nil then return end
-	if self.sel_item.gamepadaxis == nil then return end
-	self.sel_item:gamepadaxis(joystick, axis, value)
+	if self.sel_item and self.sel_item.gamepadaxis then
+		self.sel_item:gamepadaxis(joystick, axis, value)
+	end
+	if self.cur_menu and self.cur_menu.gamepadaxis then
+		self.cur_menu:gamepadaxis(joystick, axis, value)
+	end
 end
 
 function MenuManager:mousepressed(x, y, button, istouch, presses)
-	if self.sel_item == nil then return end
-	if self.sel_item.mousepressed == nil then return end
-	self.sel_item:mousepressed(x, y, button, istouch, presses)
+	if self.sel_item and self.sel_item.mousepressed then
+		self.sel_item:mousepressed(x, y, button, istouch, presses)
+	end
+	if self.cur_menu and self.cur_menu.mousepressed then
+		self.cur_menu:mousepressed(x, y, button, istouch, presses)
+	end
 end
 
 function MenuManager:mousereleased(x, y, button, istouch, presses)
-	if self.sel_item == nil then return end
-	if self.sel_item.mousereleased == nil then return end
-	self.sel_item:mousereleased(x, y, button, istouch, presses)
+	if self.sel_item and self.sel_item.mousereleased then
+		self.sel_item:mousereleased(x, y, button, istouch, presses)
+	end
+	if self.cur_menu and self.cur_menu.mousereleased then
+		self.cur_menu:mousereleased(x, y, button, istouch, presses)
+	end
+end
+
+function MenuManager:textinput(text)
+	if self.sel_item and self.sel_item.textinput then
+		self.sel_item:textinput(text)
+	end
+	if self.cur_menu and self.cur_menu.textinput then
+		self.cur_menu:textinput(text)
+	end
 end
 
 ---------------------------------------------

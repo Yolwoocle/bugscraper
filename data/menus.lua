@@ -1,15 +1,16 @@
 local Menu                = require "scripts.ui.menu.menu"
 local BossIntroMenu       = require "scripts.ui.menu.boss_intro_menu"
-local RangeOptionMenuItem = require "scripts.ui.menu.range_option_menu_item"
-local BoolOptionMenuItem  = require "scripts.ui.menu.bool_option_menu_item"
-local EnumOptionMenuItem  = require "scripts.ui.menu.enum_option_menu_item"
-local StatsMenuItem       = require "scripts.ui.menu.menu_item_stats"
-local ControlsMenuItem    = require "scripts.ui.menu.controls_menu_item"
-local CustomDrawMenuItem  = require "scripts.ui.menu.menu_item_custom_draw"
+local RangeOptionMenuItem = require "scripts.ui.menu.items.range_option_menu_item"
+local BoolOptionMenuItem  = require "scripts.ui.menu.items.bool_option_menu_item"
+local EnumOptionMenuItem  = require "scripts.ui.menu.items.enum_option_menu_item"
+local StatsMenuItem       = require "scripts.ui.menu.items.menu_item_stats"
+local ControlsMenuItem    = require "scripts.ui.menu.items.controls_menu_item"
+local CustomDrawMenuItem  = require "scripts.ui.menu.items.menu_item_custom_draw"
 local waves               = require "data.waves"
 local Enemies             = require "data.enemies"
 local debug_draw_waves    = require "scripts.debug.draw_waves"
 local images              = require "data.images"
+local DebugCommandMenu   = require "scripts.ui.menu.debug_command_menu"
 
 local function func_set_menu(menu)
     return function()
@@ -96,6 +97,8 @@ local function generate_menus()
         { "" },
         { "" },
     }, DEFAULT_MENU_BG_COLOR)
+
+    menus.debug_command = DebugCommandMenu:new(game)
 
     menus.boss_intro = BossIntroMenu:new(game, { 38 / 255, 43 / 255, 68 / 255, 0.8 }, "Dung Manager", {
         { image = images.boss_intro_dung_layer5, z_mult = 0.3 },

@@ -1150,6 +1150,10 @@ function Game:mousereleased(x, y, button, istouch, presses)
 	if self.menu_manager then self.menu_manager:mousereleased(x, y, button, istouch, presses) end
 end
 
+function Game:textinput( text )
+	if self.menu_manager then self.menu_manager:textinput(text) end
+end
+
 function Game:focus(f)
 	if f then
 	else

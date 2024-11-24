@@ -1,4 +1,4 @@
-local OptionMenuItem = require "scripts.ui.menu.option_menu_item"
+local OptionMenuItem = require "scripts.ui.menu.items.option_menu_item"
 
 local SliderOptionMenuItem = OptionMenuItem:inherit()
 

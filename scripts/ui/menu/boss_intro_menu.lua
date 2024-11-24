@@ -1,6 +1,6 @@
 require "scripts.util"
 local Menu = require "scripts.ui.menu.menu"
-local TextMenuItem = require "scripts.ui.menu.text_menu_item"
+local TextMenuItem = require "scripts.ui.menu.items.text_menu_item"
 local images       = require "data.images"
 
 local BossIntroMenu = Menu:inherit()

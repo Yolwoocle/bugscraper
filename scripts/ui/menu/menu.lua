@@ -1,6 +1,6 @@
 require "scripts.util"
 local Class = require "scripts.meta.class"
-local TextMenuItem = require "scripts.ui.menu.text_menu_item"
+local TextMenuItem = require "scripts.ui.menu.items.text_menu_item"
 
 local Menu = Class:inherit()
 
@@ -68,6 +68,9 @@ function Menu:draw()
 end
 
 function Menu:on_set()
+end
+
+function Menu:textinput()
 end
 
 function Menu:set_target_scroll_position(value)

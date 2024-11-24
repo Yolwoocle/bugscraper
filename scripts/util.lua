@@ -167,6 +167,16 @@ function duplicate_table(tab, n)
 	return ntab
 end	
 
+
+function table_keys(tab)
+	local keys = {}
+	for k, _ in pairs(tab) do
+		table.insert(keys, k)
+	end
+	return keys
+end
+
+
 --- Returns the sum of all the elements in the table.
 function table_sum(tab)
 	local s = 0

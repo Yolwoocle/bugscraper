@@ -1,4 +1,4 @@
-local MenuItem = require "scripts.ui.menu.menu_item"
+local MenuItem = require "scripts.ui.menu.items.menu_item"
 
 local CustomDrawMenuItem = MenuItem:inherit()
 

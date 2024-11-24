@@ -134,9 +134,7 @@ function Debug:init(game)
             end
         end},
         ["d"] = {"spawn", function()
-            local arc
-            arc = enemies.StinkBug:new(CANVAS_CENTER[1], CANVAS_CENTER[2])
-            game:new_actor(arc)
+            game.menu_manager:set_menu("debug_command") 
         end},
         ["o"] = {"spike offset", function() 
             for _, actor in pairs(game.actors) do
@@ -280,10 +278,13 @@ function Debug:keypressed(key, scancode, isrepeat)
     if isrepeat then return end
     if not game.debug_mode then return end
 
-    if scancode == "f1"then
+    if scancode == "f1" then
+        game.menu_manager:set_menu("debug_command") 
+        
+    elseif scancode == "lctrl" then
         self.is_reading_for_f1_action = true
     else 
-        if love.keyboard.isScancodeDown("f1") then
+        if love.keyboard.isScancodeDown("lctrl") then
             self:debug_action(key, scancode, isrepeat)
             self.is_reading_for_f1_action = false
             return
@@ -292,7 +293,7 @@ function Debug:keypressed(key, scancode, isrepeat)
 end
 
 function Debug:keyreleased(key, scancode, isrepeat)
-    if scancode == "f1" and self.is_reading_for_f1_action then
+    if scancode == "lctrl" and self.is_reading_for_f1_action then
         self.is_reading_for_f1_action = false
     end
 end

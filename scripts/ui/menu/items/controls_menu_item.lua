@@ -1,5 +1,5 @@
 require "scripts.util"
-local TextMenuItem = require "scripts.ui.menu.text_menu_item"
+local TextMenuItem = require "scripts.ui.menu.items.text_menu_item"
 local InputButton = require "scripts.input.input_button"
 local images = require "data.images"
 
