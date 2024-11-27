@@ -140,13 +140,6 @@ function Actor:set_image(image)
 end
 
 function Actor:update_sprite_position()
-	-- Sprite
-	-- local spr_w2 = floor(self.spr.image:getWidth() / 2)
-	-- local spr_h2 = floor(self.spr.image:getHeight() / 2)
-
-	-- local ox = math.floor(spr_w2)-- - self.spr_centering_ox)
-	-- local oy = math.floor(spr_h2)-- - self.spr_centering_oy)
-	-- self.spr:update_offset(ox, oy)
 end
 
 function Actor:set_dimensions(w, h)

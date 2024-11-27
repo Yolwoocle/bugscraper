@@ -1,6 +1,7 @@
 local Actor = require "scripts.actor.actor"
 local Guns = require "data.guns"
 local Enemies = require "data.enemies"
+local AnimatedSprite = require "scripts.graphics.animated_sprite"
 local images = require "data.images"
 local ui = require "scripts.ui.ui"
 require "scripts.util"
@@ -33,7 +34,12 @@ function Player:init(n, x, y, skin)
 	-- Animation
 	self.color_palette = skin.color_palette
 	self.skin = skin
-	self.spr:set_image(self.skin.spr_idle)
+	self.spr = AnimatedSprite:new({
+		idle = {images.mio_idle, 0.2, 4},
+		jump1 = {images.ant1},
+		jump2 = {images.ant2},
+		wall_slide = {images.ant_wall_slide},
+	}, "idle", SPRITE_ANCHOR_CENTER_BOTTOM)
 
 	self.is_grounded = true
 	self.is_walking = false
@@ -603,7 +609,7 @@ function Player:on_grounded()
 	Audio:play_var(s, 0.3, 1, {pitch=0.5, volume=0.5})
 
 	self.jump_squash = 1.5
-	self.spr:set_image(self.skin.spr_idle)
+	self.spr:set_animation("idle")
 	Particles:smoke(self.mid_x, self.y+self.h, 10, COL_WHITE, 8, 4, 2)
 
 	self.air_time = 0
@@ -661,34 +667,33 @@ function Player:shoot(dt, is_burst)
 	end
 end
 
+function Player:get_gun_pos()
+	local gunw = self.gun.spr:getWidth()
+	local gunh = self.gun.spr:getHeight()
+	local top_y = self.y + self.h - self.spr.h
+	local hand_oy = 15
+
+	-- x pos is player sprite width minus a bit, plus gun width 
+	local w = (self.spr.w/2-5 + gunw/2)
+	local hand_y = top_y + hand_oy - self.walkbounce_oy
+	local x = self.mid_x 
+	local y = hand_y - gunh/2 
+	return x, y, self.shoot_dir_x * w, self.shoot_dir_y * gunh
+end
+
 function Player:update_gun_pos(dt, lerpval)
 	-- Why do I keep overcomplicating these things
 	-- TODO: move to Gun?
 	-- Gun is drawn at its center
 	lerpval = lerpval or 0.5
-	 
-	local gunw = self.gun.spr:getWidth()
-	local gunh = self.gun.spr:getHeight()
-	local top_y = self.y + self.h - self.spr.image:getHeight()
-	local hand_oy = 15
 
-	-- x pos is player sprite width minus a bit, plus gun width 
-	local w = (self.spr.image:getWidth()/2-5 + gunw/2)
-	
-	local hand_y = top_y + hand_oy - self.walkbounce_oy
-
-	local tar_x = self.mid_x + self.shoot_dir_x * w
-	local tar_y = hand_y - gunh/2 + self.shoot_dir_y * gunh
+	local tar_x, tar_y, ox, oy = self:get_gun_pos()
 	local ang = self.shoot_ang
 	
-	self.gun.x = lerp(self.gun.x, tar_x, lerpval)
-	self.gun.y = lerp(self.gun.y, tar_y, lerpval)
-
---[[	local rot_offset = ang - atan2(-self.vy, -self.vx)
-	local d = dist(self.vx, self.vy)
-	rot_offset = rot_offset * 0.2
-	if abs(d) < 0.01 then    rot_offset = 0    end
---]]
+	self.gun.ox = lerp(self.gun.ox, ox, lerpval)
+	self.gun.oy = lerp(self.gun.oy, oy, lerpval)
+	self.gun.x = tar_x + self.gun.ox
+	self.gun.y = tar_y + self.gun.oy
 	self.gun.rot = lerp_angle(self.gun.rot, ang, 0.3)
 end
 
@@ -702,6 +707,7 @@ function Player:equip_gun(gun)
 	self.gun = gun
 	self.gun.user = self
 
+	self:get_gun_pos()
 	self:update_gun_pos(1)
 end
 
@@ -942,7 +948,7 @@ function Player:draw_hud()
 	if self.is_removed or self.is_dead then    return    end
 
 	local ui_x = floor(self.ui_x)
-	local ui_y = floor(self.ui_y) - self.spr.image:getHeight() - 12
+	local ui_y = floor(self.ui_y) - self.spr.h - 12
 
 	self:draw_life_bar(ui_x, ui_y)
 	self:draw_ammo_bar(ui_x, ui_y)
@@ -1203,18 +1209,18 @@ function Player:update_sprite(dt)
 	self.spr:set_flip_x(self.dir_x < 0)
 
 	-- Set sprite 
-	self.spr:set_image(self.skin.spr_idle)
+	self.spr:set_animation("idle")
 	if not self.is_grounded then
-		self.spr:set_image(self.skin.spr_jump)
+		self.spr:set_animation("jump2")
 	end
 	if self.is_wall_sliding then
-		self.spr:set_image(self.skin.spr_wall_slide)
+		self.spr:set_animation("wall_slide")
 	end
 	if self.is_walking then
 		if self.walkbounce_y < 4 then
-			self.spr:set_image(self.skin.spr_idle)
+			self.spr:set_animation("jump1")
 		else
-			self.spr:set_image(self.skin.spr_jump)
+			self.spr:set_animation("jump2")
 		end
 	end
 end

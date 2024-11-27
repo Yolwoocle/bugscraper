@@ -62,7 +62,7 @@ function Enemy:init_enemy(x,y, img, w,h)
 	self.speed_y = 0
 
 	self.loot = {
-		{nil, 160},
+		{nil, 180},
 		{Loot.Life, 6, loot_type="life", value=1},
 		{Loot.Gun, 3, loot_type="gun"},
 	}
@@ -84,7 +84,6 @@ function Enemy:init_enemy(x,y, img, w,h)
 	self.damaged_flash_timer = 0
 	self.damaged_flash_max = 0.07
 	self.flash_white = false
-	self.flash_white_shader = shaders.white_shader
 
 	self.do_squash = false
 	self.squash = 1
@@ -154,18 +153,10 @@ function Enemy:update(dt)
 	self:update_enemy(dt)
 end
 
-function Enemy:get_flash_white_shader()
-	return self.flash_white_shader
-end
-
 function Enemy:update_flash(dt)
 	self.damaged_flash_timer = max(self.damaged_flash_timer - dt, 0)
 
-	if self:is_flashing_white() then
-		self.spr.shader = self:get_flash_white_shader()
-	else
-		self.spr.shader = nil
-	end
+	self.spr:set_flashing_white(self:is_flashing_white())
 end
 
 function Enemy:get_nearest_player()

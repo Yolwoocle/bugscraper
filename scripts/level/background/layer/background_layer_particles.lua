@@ -36,7 +36,7 @@ function BackgroundLayerParticles:new_particle(p)
     p.spr = Sprite:new(random_sample(self.images), SPRITE_ANCHOR_CENTER_CENTER)
 
     p.despawn_condition = function(_self)
-        return _self.y - _self.spr.image:getHeight() > CANVAS_HEIGHT
+        return _self.y - _self.spr.h > CANVAS_HEIGHT
     end
 
     p.draw = function(_self)

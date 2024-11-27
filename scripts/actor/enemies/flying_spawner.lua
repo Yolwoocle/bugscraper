@@ -15,7 +15,7 @@ function FlyingSpawner:init(x, y, spr, w, h)
     self.name = "sinusoidal_flyer"
 
     self.spr = AnimatedSprite:new({
-        normal = { { images.flying_spawner_1, images.flying_spawner_2 }, 0.05 }
+        normal = { images.flying_spawner, 0.1, 2 }
     }, "normal", SPRITE_ANCHOR_CENTER_CENTER)
 
     self.flip_mode = ENEMY_FLIP_MODE_MANUAL

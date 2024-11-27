@@ -11,6 +11,7 @@ function Gun:init_gun(user)
 
 	self.spr = images.gun_machinegun
 	self.x, self.y = -100, -100
+	self.ox, self.oy = 0, 0
 	self.rot = 0
 	
 	self.is_lootable = true

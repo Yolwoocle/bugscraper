@@ -173,6 +173,7 @@ function Camera:reset()
 end
 
 function Camera:reset_transform()
+    -- TODO rename these to push and pop
     love.graphics.origin()
 	love.graphics.scale(1)
 end

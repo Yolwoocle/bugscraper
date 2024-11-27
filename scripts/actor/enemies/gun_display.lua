@@ -108,12 +108,14 @@ function GunDisplay:update(dt)
     if self.dissapear_life < 0 then
         self:remove()
     end
+
+    self.gun_spr:set_flashing_white(self:is_flashing_white())
 end
 
 function GunDisplay:draw()
     if self.gun and self.blink_is_shown then
         -- self.gun:draw()
-        self.gun_spr:draw(self.x, self.y, self.w, self.h, self:is_flashing_white() and draw_white)
+        self.gun_spr:draw(self.x, self.y, self.w, self.h)
     end
 	self:draw_prop() 
 end

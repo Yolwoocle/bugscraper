@@ -47,6 +47,8 @@ function Motherboard:init(x, y)
 
     -- graphics
     self.flash_white_shader = shaders.multiply_color
+    self.flash_white_shader:send("multColor", { 3, 3, 3, 1 })
+    self.spr.white_flash_timer = self.flash_white_shader
 
     -- rays and arcs
     self.rays = ElectricRays:new(self.mid_x, self.y + self.h + 24, {
@@ -316,11 +318,6 @@ function Motherboard:init(x, y)
 
     self:set_bouncy(true)
     self:spawn_button()
-end
-
-function Motherboard:get_flash_white_shader()
-    self.flash_white_shader:send("multColor", { 3, 3, 3, 1 })
-    return self.flash_white_shader
 end
 
 function Motherboard:set_bouncy(val)

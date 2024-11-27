@@ -65,11 +65,15 @@ local img_names = {
 
 	leo =              "actors/players/leo",
 
+	mio_idle_1 =       "actors/players/mio_idle_1",
+	mio_idle_2 =       "actors/players/mio_idle_2",
+	mio_idle_3 =       "actors/players/mio_idle_3",
+	mio_idle_4 =       "actors/players/mio_idle_4",
+	mio_idle =         "actors/players/mio_idle",
 	ant1 =             "actors/players/ant1",
 	ant2 =             "actors/players/ant2",
 	ant_wall_slide =   "actors/players/ant_wall_slide",
 	ant_dead =         "actors/players/ant_dead",
-	ant_head =         "actors/players/ant_head",
 
 	bee_1 =            "actors/players/bee_1",
 	bee_2 =            "actors/players/bee_2",
@@ -137,8 +141,7 @@ local img_names = {
 	larva1 =                   "actors/enemies/larva1",
 	larva2 =                   "actors/enemies/larva2",
 	larva_spawner =            "actors/enemies/larva_spawner",
-	flying_spawner_1 =         "actors/enemies/flying_spawner_1",
-	flying_spawner_2 =         "actors/enemies/flying_spawner_2",
+	flying_spawner =           "actors/enemies/flying_spawner",
 	larva_projectile =         "actors/enemies/larva_projectile",
 	metal_mosquito_1 =         "actors/enemies/metal_mosquito_1",
 	metal_mosquito_2 =         "actors/enemies/metal_mosquito_2",
@@ -424,6 +427,7 @@ local img_names = {
 
 	removeme_button_on = "removeme_button_on",
 	removeme_button_off = "removeme_button_off",
+	removeme_spritesheet_test = "removeme_spritesheet_test",
 
 	_test_gaysquare = "_test_gaysquare",
 	_test_hexagon = "_test_hexagon",

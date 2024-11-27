@@ -40,7 +40,7 @@ function TvPresentation:init(x, y)
     shuffle_table(self.slides, 1, #self.slides - 1)
 
     self.bluescreen_image = images.tv_bluescreen
-    self.bluescreen_probability = 0.1
+    self.bluescreen_probability = 0.05
     self.is_bluescreened = (random_range(0, 1) < self.bluescreen_probability)
     self.default_slide_duration = 5.0
     self.slideshow_timer = Timer:new(self.default_slide_duration):start()
@@ -177,8 +177,9 @@ function TvPresentation:draw_frame(spritesheet, frame, x, y)
         love.graphics.newQuad(
             self.canvas_w * (frame0 % tile_count_x),
             self.canvas_h * math.floor(frame0 / tile_count_x),
-            self.canvas_w, self.canvas_h, spritesheet:getDimensions()),
-        x, y)
+            self.canvas_w, self.canvas_h, spritesheet:getDimensions()
+        ), x, y
+    )
 
     game.camera:apply_transform()
 end

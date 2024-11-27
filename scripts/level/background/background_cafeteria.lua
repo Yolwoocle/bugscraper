@@ -38,7 +38,7 @@ function BackgroundCafeteria:draw()
 		local y = layer.y
 		local z = layer.z
 		local x = cam_x * (1 - 1/z)
-		for ix = x, cam_x + CANVAS_WIDTH + 16, layer.sprite.image:getWidth() do
+		for ix = x, cam_x + CANVAS_WIDTH + 16, layer.sprite.w do
 			layer.sprite:draw(math.floor(ix), math.floor(cam_y + y))
 		end
 	end

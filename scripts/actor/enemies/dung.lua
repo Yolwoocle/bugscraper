@@ -116,15 +116,12 @@ function Dung:init_dung(x, y, spr, w, h)
                 self.state_timer:start(random_range(4.0, 7.0))
                 self.jump_speed = 500
 
-                self.bounces = 6
+                self.bounces = 3
             end,
             update = function(state, dt)
                 self:chase_player(dt)
 
                 if self.is_grounded then
-                    if self.bounces <= 2 then
-                        self.jump_speed = 300
-                    end
                     self.bounces = self.bounces - 1
                     self:jump()
                 end
