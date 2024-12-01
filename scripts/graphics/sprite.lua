@@ -222,7 +222,8 @@ function Sprite:get_sprite_offset()
     return spr_w2 - self.ox, spr_h2 - self.oy
 end
 
-function Sprite:draw(x, y, w, h, custom_draw) --TODO
+function Sprite:draw(x, y, w, h, custom_draw)
+    -- This function is HORRENDOUSLY ugly. Refactor it some day. Whatever it works 
     if not self.is_visible then
         return
     end
@@ -246,10 +247,18 @@ function Sprite:draw(x, y, w, h, custom_draw) --TODO
         old_shader = love.graphics.getShader()
         love.graphics.setShader(self.shader)
     end
+
     exec_color(self.color, function()
         if self.outline then
-            draw_with_outline(self.outline.color, self.outline.type, self.image, x + anchor_ox, y + anchor_oy, self.rot,
-                scale_x, scale_y, sprite_ox, sprite_oy)
+            if self.is_spritesheet then
+                draw_spritesheet_with_outline(self.outline.color, self.outline.type, self.image, self.spritesheet_quad,
+                    x + anchor_ox, y + anchor_oy, self.rot,
+                    scale_x, scale_y, sprite_ox, sprite_oy)
+            else
+                draw_with_outline(self.outline.color, self.outline.type, self.image, x + anchor_ox, y + anchor_oy,
+                    self.rot,
+                    scale_x, scale_y, sprite_ox, sprite_oy)
+            end
         end
 
         if self.is_spritesheet then

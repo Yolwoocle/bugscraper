@@ -217,14 +217,11 @@ function GameUI:draw_offscreen_indicator_for(player)
 		draw_centered(images.offscreen_indicator, x, y, rot, scale, scale)
 	end)
 	
-	-- print_centered_outline(player.skin.color_palette[4], player.skin.color_palette[1], player.n, x, y-14)
 	shaders.draw_in_color:sendColor("fillColor", player.skin.color_palette[4])
-	-- exec_using_shader(shaders.draw_in_color, function()
-	-- 	draw_centered(player.skin.spr_idle, x, y, 0, 0.5, 0.5)
-	-- end)
 	exec_color(player.skin.color_palette[4], function()
 		print_centered(player.skin.icon, x, y)
 	end)
+	print_centered_outline(player.skin.color_palette[1], player.skin.color_palette[4], Text:text("player.abbreviation", player.n), x, y - 16)
 end
 
 function GameUI:draw_stomp_arrow()

@@ -35,10 +35,10 @@ function Player:init(n, x, y, skin)
 	self.color_palette = skin.color_palette
 	self.skin = skin
 	self.spr = AnimatedSprite:new({
-		idle = {images.mio_idle, 0.2, 4},
-		jump1 = {images.ant1},
-		jump2 = {images.ant2},
-		wall_slide = {images.ant_wall_slide},
+		idle = skin.anim_idle,
+		walk_down = {skin.img_walk_down},
+		airborne = {skin.img_airborne},
+		wall_slide = skin.anim_wall_slide,
 	}, "idle", SPRITE_ANCHOR_CENTER_BOTTOM)
 
 	self.is_grounded = true
@@ -1211,16 +1211,16 @@ function Player:update_sprite(dt)
 	-- Set sprite 
 	self.spr:set_animation("idle")
 	if not self.is_grounded then
-		self.spr:set_animation("jump2")
+		self.spr:set_animation("airborne")
 	end
 	if self.is_wall_sliding then
 		self.spr:set_animation("wall_slide")
 	end
 	if self.is_walking then
 		if self.walkbounce_y < 4 then
-			self.spr:set_animation("jump1")
+			self.spr:set_animation("walk_down")
 		else
-			self.spr:set_animation("jump2")
+			self.spr:set_animation("airborne")
 		end
 	end
 end

@@ -437,7 +437,11 @@ function SmashedPlayerParticle:update(dt)
 	self:update_particle(dt)
 
 	self.freeze_duration = max(0.0, self.freeze_duration - dt)
-	if self.freeze_duration <= 0 then
+	if self.freeze_duration > 0 then
+		self.ox = random_polar(2)
+		self.oy = random_polar(2)
+
+	else
 		self.vx = self.future_vx
 		self.vy = self.future_vy
 		self.vr = self.future_vr

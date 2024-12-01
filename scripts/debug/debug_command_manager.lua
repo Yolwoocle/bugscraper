@@ -20,21 +20,7 @@ function DebugCommandManager:init()
         end
     }
 
-    local enemies_keys = {
-        "Larva",
-        "Fly",
-        "SpikedFly",
-        "Woodlouse",
-        "Mosquito",
-        "Slug",
-        "Spider",
-        "StinkBug",
-        "SnailShelled",
-        "Boomshroom",
-        "Dung",
-        "DungBeetle",
-        "DungProjectile",
-    } --table_keys(enemies)
+    local enemies_keys = table_keys(enemies)
     table.sort(enemies_keys)
     self.commands["spawn"] = DebugCommand:new {
         name = "spawn",

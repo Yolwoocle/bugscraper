@@ -140,10 +140,10 @@ function PlayerPreview:init(player_n, x, y, w, h)
                 self:draw_rotated_rectangle(palette[1], "fill", x + self.selection_ox * 0.5, y, w, w, self.t)
 
                 if self.selection then
-                    draw_centered(self.selection.spr_idle, x + self.selection_ox, y, 0, self.squash, 1 / self.squash)
+                    draw_centered(self.selection.img_walk_down, x + self.selection_ox, y, 0, self.squash, 1 / self.squash)
                     local text = string.upper(Text:text("player.name." .. self.selection.text_key) or "")
-                    print_centered_outline(palette[2], nil, text, x + 1 + self.selection_ox, y - 20 + 1)
-                    print_centered_outline(palette[2], nil, text, x + 1 + self.selection_ox, y - 20)
+                    print_centered_outline(palette[1], nil, text, x + 1 + self.selection_ox, y - 20 + 1)
+                    print_centered_outline(palette[1], nil, text, x + 1 + self.selection_ox, y - 20)
                 end
                 -- print_centered_outline(nil, ncil, table_to_str(self.choices), x+1+self.selection_ox, y - 100)
 
@@ -286,26 +286,31 @@ function PlayerPreview:draw_input_prompts(promps)
 end
 
 function PlayerPreview:draw_player_abbreviation()
-    local txt = ""
+    local txt_top = ""
+    local txt_bot = ""
     local color = COL_MID_GRAY
     
     if self.state_machine.current_state_name == "waiting" then
         color = COL_MID_GRAY
         
     elseif self.state_machine.current_state_name == "character_select" then
-        txt = txt .. Text:text("player.abbreviation", self.player_n)
+        txt_top = txt_top .. Text:text("player.abbreviation", self.player_n)
         color = self.selection.color_palette[2]
         
     end
     
     if self.state_machine.current_state_name == "tutorial" then
+        txt_top = txt_top .. Text:text("player.abbreviation", self.player_n)
+
         if self.user and self.user:get_skin() then
-            txt = self.user:get_skin().icon .. " " .. Text:text("player.abbreviation", self.player_n)
+            txt_bot = self.user:get_skin().icon
+                -- .. string.upper(Text:text("player.name."..self.user:get_skin().text_key))
             color = self.user:get_skin().color_palette[2]
         end
     end
 
-    print_color(color, txt, self.x + self.ox + self.w - get_text_width(txt) - 4, self.y + self.oy + self.h - 16)
+    print_color(color, txt_top, self.x + self.ox + self.w - get_text_width(txt_top) - 4, self.y)--self.oy + self.h - 16)
+    print_color(color, txt_bot, self.x + self.ox + self.w - get_text_width(txt_bot) - 4, self.y + self.oy + self.h - 16)
 end
 
 function PlayerPreview:draw_bg_card()

@@ -60,16 +60,37 @@ function TextManager:value_exists(code)
 end
 
 function TextManager:text(code, ...)
-    local v = self.values[code]
+    local key_code
+    local params = {}
+    if type(code) == "table" then
+        key_code = code[1]
+        params = code
+    elseif type(code) == "string" then
+        key_code = code
+    else 
+        error("Invalid type for 'code': "..tostring(type(code)))
+        return
+    end
+
+    local raw_value = self.values[key_code]
+    local output = raw_value
+    if raw_value == nil then
+        output = key_code
+
+    elseif #({...}) > 0 then
+        output = string.format(raw_value, ...)
+    end
+
+    if params.uppercase then
+        output = string.upper(output)
+    end
+    if params.lowercase then
+        output = string.lower(output)
+    end
+    return output
+
     -- assert(v ~= nil, "Text value for key '"..tostring(code).."' doesn't exist") 
-    if v == nil then
-        -- print_debug("/!\\ TextManager:text - value for key '"..tostring(code).."' doesn't exist)");
-        return code
-    end
-    if #({...}) > 0 then
-        return string.format(v, ...)
-    end
-    return v
+    -- print_debug("/!\\ TextManager:text - value for key '"..tostring(code).."' doesn't exist)");
 end
 
 function TextManager:text_fallback(code, fallback, ...)

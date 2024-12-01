@@ -1,29 +1,21 @@
 require "scripts.util"
-local Enemy = require "scripts.actor.enemy"
-local sounds = require "data.sounds"
 local images = require "data.images"
-local Guns = require "data.guns"
+local ButtonSmall = require "scripts.actor.enemies.button_small"
 
-local ExitSign = Enemy:inherit()
+local utf8 = require "utf8"
+
+local ExitSign = ButtonSmall:inherit()
 
 function ExitSign:init(x, y)
-    self:init_enemy(x,y, images.exit_sign, 40, 45)
-    self.name = "exit_sign"
-    self.is_exit_sign = true
-    
-    self.life = 12
-    self.damage = 0
-    self.self_knockback_mult = 0.1
-    
-    self.knockback = 0
-    
-    self.follow_player = false
-    self.is_pushable = false
-	self.is_immune_to_bullets = true
-	self.destroy_bullet_on_impact = false
-    self.is_knockbackable = false
-    self.is_stompable = false
+    ExitSign.super.init(self, x, y, nil, 30, 12)
+    self.name = "roizoiezrjaorzezrenaciozcrorzcuorcaorczpuaporcua"
 
+    self:set_image(images.machine_coffee)
+    self.sprite_pressed = images.small_button_pressed
+
+    self.stomp_height = 12
+    self.disappear_after_press = false
+    
     self.spring_active = false
     self.spring_stiffness = 3.0
     self.spring_friction = 0.94
@@ -46,8 +38,6 @@ function ExitSign:init(x, y)
 end
 
 function ExitSign:update(dt)
-    self.is_touching_player = false
-
     self.spring_vy = self.spring_vy + (self.spring_ideal_length - self.spring_y) * self.spring_stiffness
     self.spring_vy = self.spring_vy * self.spring_friction
     self.spring_y = self.spring_y + self.spring_vy * dt
@@ -57,21 +47,19 @@ function ExitSign:update(dt)
     else
         self.spring_ideal_length = self.default_spring_ideal_length
         self.spring_active = false
+        self:set_pressed(false)
     end
-    
-    self:update_smash_easter_egg(dt) 
-    
-    self:update_enemy(dt)
+
+    self:update_smash_easter_egg(dt)
+
+    ExitSign.super.update(self, dt)
 end
 
-function ExitSign:on_collision(col, other)
-	if col.other.is_player then
-		self.is_touching_player = true
-	end
-end
-
-function ExitSign:activate(player)
-    -- if self.spring_active then return end
+function ExitSign:on_press(presser)
+    if not presser.is_player then
+        return
+    end
+    local player = presser
 
     if random_range(0, 1) < SMASH_EASTER_EGG_PROBABILITY then
         self:activate_smash_easter_egg(player)
@@ -87,7 +75,7 @@ function ExitSign:activate(player)
     end
 end
 
-function ExitSign:draw()    
+function ExitSign:draw()
     self.spr:set_image(images.exit_sign)
     self:draw_enemy()
 
@@ -95,6 +83,8 @@ function ExitSign:draw()
         self:draw_smash_easter_egg()
     end
     
+    print_centered_outline(COL_LIGHT_GREEN, COL_BLACK_BLUE, Text:text("input.prompts.leave_game"), self.mid_x, self.y - 38)
+
     local final_spring_y = math.floor(self.y + self.h + 5 - self.spring_y)
     local max_spring_y = math.floor(self.y + self.h + 6) -- Value to clamp the y value to (to prevent intersection w/ floor)
     local spring_height = images.spring:getHeight()
@@ -107,16 +97,14 @@ function ExitSign:draw()
     end
 
     self.spr:set_image(images.exit_sign_front)
-    self:draw_enemy()
 
-    -- love.graphics.line(self.mid_x, self.y + self.h, self.mid_x, self.y + self.h - self.spring_ideal_length)
-    -- for i=1, #self.vals-1 do
-    --     local m = 0.6
-    --     love.graphics.line(self.mid_x + i*m + 30, self.mid_y - self.vals[i], self.mid_x + (i + 1)*m + 30, self.mid_y - self.vals[i+1])
-    -- end
+    ExitSign.super.draw(self)
 end
 
 ------------------------------------------------------------
+------------------------------------------------------------
+------------------------------------------------------------
+
 
 function ExitSign:draw_smash_easter_egg()
     local colors = {
@@ -218,14 +206,15 @@ function ExitSign:update_smash_effect_end(dt)
     end
     
     if self.pan_camera_to_default then
-        self.old_camera_x, self.old_camera_y = 0,0
+        self.old_camera_x, self.old_camera_y = 0,48
         self:lerp_camera(self.old_camera_x, self.old_camera_y)
         self:lerp_zoom(1)
 
         -- End smash effect
-        if distsqr(0, 0, game:get_camera_position()) <= 0.1 then
+        if distsqr(0, 48, game:get_camera_position()) <= 0.1 then
             self.pan_camera_to_default = false
-            game:set_camera_position(0, 0)
+            game.camera:reset()
+        	game:set_camera_position(0, 48)
             game:set_zoom(1)
             game.camera:set_y_locked(true)
             

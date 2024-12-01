@@ -58,6 +58,7 @@ return {
             cap = "Cap",
             zia = "Zia",
             tok = "Tok",
+            nel = "Nel",
             rico = "Rico",
             leo = "Leo",
         },

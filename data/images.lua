@@ -59,34 +59,33 @@ local img_names = {
 	-----------------------------------------------------
 
 	-- players
-	beetle_1 =         "actors/players/beetle_1",
-	beetle_2 =         "actors/players/beetle_2",
-	beetle_dead =      "actors/players/beetle_dead",
-
 	leo =              "actors/players/leo",
 
-	mio_idle_1 =       "actors/players/mio_idle_1",
-	mio_idle_2 =       "actors/players/mio_idle_2",
-	mio_idle_3 =       "actors/players/mio_idle_3",
-	mio_idle_4 =       "actors/players/mio_idle_4",
 	mio_idle =         "actors/players/mio_idle",
-	ant1 =             "actors/players/ant1",
-	ant2 =             "actors/players/ant2",
-	ant_wall_slide =   "actors/players/ant_wall_slide",
-	ant_dead =         "actors/players/ant_dead",
+	mio_walk_down =    "actors/players/mio_walk_down",
+	mio_airborne =     "actors/players/mio_airborne",
+	mio_wall_slide =   "actors/players/mio_wall_slide",
+	mio_dead =         "actors/players/mio_dead",
+
+	cap_idle =         "actors/players/cap_idle",
+	cap_walk_down =    "actors/players/cap_walk_down",
+	cap_airborne =     "actors/players/cap_airborne",
+	cap_wall_slide =   "actors/players/cap_wall_slide",
+	cap_dead =         "actors/players/cap_dead",
 
 	bee_1 =            "actors/players/bee_1",
 	bee_2 =            "actors/players/bee_2",
 	bee_dead =         "actors/players/bee_dead",
 
+	beetle_1 =         "actors/players/beetle_1",
+	beetle_2 =         "actors/players/beetle_2",
+	beetle_dead =      "actors/players/beetle_dead",
+	
+	nel_idle =         "actors/players/nel_idle",
+
 	rabbit_1 =         "actors/players/rabbit_1",
 	rabbit_2 =         "actors/players/rabbit_2",
 	rabbit_dead =      "actors/players/rabbit_dead",
-	
-	caterpillar_1 =    "actors/players/caterpillar_1",
-	caterpillar_2 =    "actors/players/caterpillar_2",
-	caterpillar_dead = "actors/players/caterpillar_dead",
-	caterpillar_head = "actors/players/caterpillar_head",
 
 	duck =             "actors/players/duck",
 

@@ -5,6 +5,7 @@ local images = require "data.images"
 local Guns = require "data.guns"
 local ButtonSmall = require "scripts.actor.enemies.button_small"
 local ButtonBigGlass = require "scripts.actor.enemies.button_big_glass"
+local CollisionInfo = require "scripts.physics.collision_info"
 
 local ButtonSmallGlass = ButtonBigGlass:inherit()
 
@@ -31,6 +32,11 @@ function ButtonSmallGlass:init(x, y)
     
     self.sound_fracture = "glass_fracture"
     self.sound_break = "glass_break_weak"
+
+    self.collision_info = CollisionInfo:new {
+        type = COLLISION_TYPE_SEMISOLID,
+        is_slidable = true,
+    }
 
     self:set_image(images.small_button_crack2)
     self:set_dimensions(22, 21)

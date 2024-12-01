@@ -22,6 +22,7 @@ function ButtonSmall:init_button_small(x, y, spr, w, h)
     self.disappear_after_press = true
 
     self.sprite_pressed = images.small_button_pressed
+    self.sprite_unpressed = images.small_button
     self.is_pressed = false
 
     self:set_image(images.small_button)
@@ -45,21 +46,25 @@ function ButtonSmall:on_stomp_killed(damager)
     game:screenshake(5)
     Audio:play("button_press")
     
-    self:press_button()
+    self:press_button(damager)
 end
 
-function ButtonSmall:press_button()
-    self.is_pressed = true
+function ButtonSmall:press_button(presser)
+    self:set_pressed(true)
     if self.disappear_after_press then
         self.pressed_disappear_timer:start()
     end
     
-    self:set_image(self.sprite_pressed)
-    self:on_press()
-    self.is_stompable = false
+    self:on_press(presser)
 end
 
-function ButtonSmall:on_press()
+function ButtonSmall:set_pressed(value)
+    self:set_image(ternary(value, self.sprite_pressed, self.sprite_unpressed))
+    self.is_pressed = value
+    self.is_stompable = not value
+end
+
+function ButtonSmall:on_press(presser)
     game.can_start_game = true
 end
 
