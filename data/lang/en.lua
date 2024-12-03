@@ -107,7 +107,6 @@ return {
             ui_down = "Menu down",
             ui_select = "Confirm",
             ui_back = "Back",
-            ui_reset_keys = "Clear keys",
             pause = "Pause",
 
             join = "Join",
@@ -167,7 +166,10 @@ return {
                 note_global_controller = "These bindings are the same for all controllers",
                 subtitle_no_player = "[⚠ NO PLAYER %d]",
                 subtitle_no_controller = "[⚠ NO CONTROLLER CONNECTED]",
-
+                no_buttons = "[NO BUTTONS]",
+                press_button = "[PRESS A BUTTON]",
+                press_again_to_remove = "Press an already bind button to remove it",
+                
                 keyboard = "Keyboard",
                 keyboard_solo = "KEYBOARD (Default)",
                 keyboard_p1 = "KEYBOARD (Split 1)",

@@ -38,7 +38,6 @@ local PROMPTS_GAME_OVER = {
 
 local PROMPTS_CONTROLS = {
     { { "ui_select" },     "input.prompts.ui_select" },
-    { { "ui_reset_keys" }, "input.prompts.ui_reset_keys" },
     { { "ui_back" },       "input.prompts.ui_back" },
 }
 
@@ -296,7 +295,6 @@ local function generate_menus()
             { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_KEYBOARD, "down", "⬇ " .. Text:text("input.prompts.down") },
             { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_KEYBOARD, "jump", "⏏ " .. Text:text("input.prompts.jump") },
             { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_KEYBOARD, "shoot", "🔫 " .. Text:text("input.prompts.shoot") },
-            { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_KEYBOARD, "leave_game", "🔚 " .. Text:text("input.prompts.leave_game") },
             { "" },
             { "<<< {menu.options.input_submenu.interface} >>>" },
             { "{menu.options.input_submenu.note_ui_min_button}" },
@@ -367,7 +365,6 @@ local function generate_menus()
             { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "down", "⬇ " .. Text:text("input.prompts.down") },
             { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "jump", "⏏ " .. Text:text("input.prompts.jump") },
             { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "shoot", "🔫 " .. Text:text("input.prompts.shoot") },
-            { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "leave_game", "🔚 " .. Text:text("input.prompts.leave_game") },
             { "" },
             { "<<< {menu.options.input_submenu.interface} >>>" },
             { Text:text("menu.options.input_submenu.note_ui_min_button") },
@@ -467,8 +464,9 @@ local function generate_menus()
         { "Kenney", function() end }, -- func_url("https://kenney.nl/")},
         { "somepx", function() end }, -- func_url("https://somepx.itch.io/")},
         { "emhuo", function() end },  -- func_url("https://emhuo.itch.io/")},
+        { "Endesga", function() end },  -- func_url("https://emhuo.itch.io/")},
         { "freesound.org [" .. Text:text("menu.see_more") .. "]", func_set_menu("credits_sounds") },
-        { "Open source assets [" .. Text:text("menu.see_more") .. "]", func_set_menu("open_source") },
+        { Text:text("menu.open_source.title").." [" .. Text:text("menu.see_more") .. "]", func_set_menu("open_source") },
         { "" },
         { "<< " .. Text:text("menu.credits.licenses") .. " >>" },
         { "CC0 🔗", func_url("https://creativecommons.org/publicdomain/zero/1.0/") },
@@ -478,7 +476,8 @@ local function generate_menus()
         { "Zlib 🔗", func_url("https://www.zlib.net/zlib_license.html") },
         { "OFL-1.1 🔗", func_url("https://spdx.org/licenses/OFL-1.1.html") },
         { "" },
-        { random_sample({ "🐜", "🐛", "🐝", "🪲", "🐰" }) .. "❤" },
+        -- { random_sample({ "🐜", "🐛", "🐝", "🪲", "🐰" }) .. "❤" },
+        { "🐜❤" },
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
 
     menus.open_source = Menu:new(game, {

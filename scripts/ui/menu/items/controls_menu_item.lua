@@ -13,6 +13,7 @@ function ControlsMenuItem:init(i, x, y, player_n, profile_id, input_type, action
 	self.profile_id = profile_id
 	self.input_type = input_type
 	self.action_name = action_name
+	self.is_ui_action = is_in_table(UI_ACTIONS, self.action_name)
 	
 	self.scancode = nil
 	
@@ -29,15 +30,16 @@ function ControlsMenuItem:update(dt)
 
 	self.value = self:get_buttons()
 	self:set_value_text("")
+
+	if self.is_waiting_for_input then
+		self:set_annotation("{menu.options.input_submenu.press_again_to_remove}")
+	else
+		self:set_annotation(nil)
+	end
 	
 	self.waiting_timer = max(0.0, self.waiting_timer - dt)
 	if self.is_waiting_for_input and self.waiting_timer <= 0 then
 		self:stop_waiting()
-	end
-
-	if self.is_selected and not self.is_waiting_for_input and Input:action_pressed("ui_reset_keys") then
-		self:clear_buttons()
-		return
 	end
 end
 
@@ -48,12 +50,12 @@ function ControlsMenuItem:draw_value_text()
 
 	local draw_func = self:get_leftjustified_text_draw_function()
 	if self.is_waiting_for_input then
-		local text = "[PRESS BUTTON]"
+		local text = Text:text("menu.options.input_submenu.no_buttons")
 		local w = get_text_width(text)
 		draw_func(text, right_bound - w, y)
 
 	elseif type(self.value) == "table" and #self.value == 0 then
-		local text = "[NO BUTTONS]"
+		local text = Text:text("menu.options.input_submenu.no_buttons")
 		local w = get_text_width(text)
 		draw_func(text, right_bound - w, y)
 
@@ -116,10 +118,10 @@ function ControlsMenuItem:on_click()
 end
 
 function ControlsMenuItem:keypressed(key, scancode, isrepeat)
-	if scancode == "escape" then
-		self.is_waiting_for_input = false
-		Input:set_standby_mode(false)
-	end
+	-- if scancode == "escape" then
+	-- 	self.is_waiting_for_input = false
+	-- 	Input:set_standby_mode(false)
+	-- end
 	
 	-- Apply new key control
 	self:on_button_pressed(InputButton:new(INPUT_TYPE_KEYBOARD, scancode))
@@ -168,6 +170,7 @@ function ControlsMenuItem:on_button_pressed(button)
 		self:stop_waiting()
 		
 		if Input:is_button_in_use(self.profile_id, self.action_name, button) then
+			self:remove_action_button(button)
 			return
 		end
 		if #self:get_buttons() >= MAX_ASSIGNABLE_BUTTONS then
@@ -182,8 +185,31 @@ function ControlsMenuItem:on_button_pressed(button)
 	end
 end
 
-function ControlsMenuItem:clear_buttons()
+
+function ControlsMenuItem:remove_action_button(button_to_remove)
 	local old_buttons = self:get_buttons()
+
+	-- Don't allow removal of the last button for UI actions
+	if self.is_ui_action and #old_buttons <= 1 then
+		return
+	end
+	-- TODO: do not allow multiple ui actions to have the same button (especially confirm & back, which can cause softlocks)
+
+	local new_bindings = {}
+	
+	for _, button in pairs(old_buttons) do
+		if (button.type == self.input_type) and (button.key_name ~= button_to_remove.key_name) then
+			table.insert(new_bindings, button)
+		end
+	end
+
+	Input:set_action_buttons(self.profile_id, self.action_name, new_bindings)
+end
+
+
+function ControlsMenuItem:clear_buttons()
+	-- NOTE: this will remove any buttons whose input type aren't the menu item's input type (I think?) 
+	local old_buttons = self:get_buttons() 
 	local new_bindings = {}
 	for _, button in pairs(old_buttons) do
 		if button.type ~= self.input_type then

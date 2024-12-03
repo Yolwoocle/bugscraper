@@ -32,6 +32,10 @@ function TextMenuItem:init(i, x, y, text, on_click, update_value)
 end
 
 function TextMenuItem:set_annotation(text)
+	if text == nil then
+		self.annotation = nil
+		return
+	end
 	self.annotation = Text:parse_string(text)
 end
 

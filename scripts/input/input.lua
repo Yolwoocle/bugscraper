@@ -351,13 +351,13 @@ function InputManager:get_buttons_from_player_n(player_n, action)
 end
 
 function InputManager:set_action_buttons(profile_id, action, buttons)
-    local map = self:get_input_profile(profile_id)
-    if map == nil then
+    local profile = self:get_input_profile(profile_id)
+    if profile == nil then
         print(concat("set_action_buttons: profile '",profile_id,"' doesn't exist"))
         return
     end
 
-    map:set_action_buttons(action, buttons)
+    profile:set_action_buttons(action, buttons)
 
 	self:update_controls_file(profile_id)
 end

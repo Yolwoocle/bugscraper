@@ -867,9 +867,6 @@ function Player:leave_game_if_possible(dt)
 	self.is_touching_exit_sign = is_touching
 	if is_touching then
 		self.controls_oy = lerp(self.controls_oy, -6, 0.3)
-		if Input:action_pressed(self.n, "leave_game") and game.game_state == GAME_STATE_WAITING then
-			exit_sign.other:activate(self)
-		end
 	else
 		self.controls_oy = lerp(self.controls_oy, 0, 0.3)
 	end
