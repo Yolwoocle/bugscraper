@@ -99,10 +99,12 @@ end
 
 function TextMenuItem:draw_annotation()
 	if self.is_selected and self.annotation then
-		local x = math.floor(MENU_PADDING)
-		local y = math.floor(self.y + self.oy - 6 + 24)
-		local w = math.floor(CANVAS_WIDTH - MENU_PADDING*2)
+		-- local w = math.floor(CANVAS_WIDTH - MENU_PADDING*2)
+		local w = get_text_width(self.annotation) + 64
 		local h = math.floor(16)
+
+		local x = math.floor(CANVAS_WIDTH / 2 - w/2)
+		local y = math.floor(self.y + self.oy - 6 + 24)
 
 		draw_3_slice(images.selection_left, images.selection_right, COL_WHITE, x, y, w, h)
 		draw_centered(images.bubble_tip, x + w/2, y - images.bubble_tip:getHeight()/2)
