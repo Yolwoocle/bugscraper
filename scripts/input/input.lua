@@ -585,7 +585,7 @@ function InputManager:draw_input_prompt(player_n, actions, label, label_color, x
             icon = self:get_button_icon(player_n, button, action[3])
         
         end
-        local icon_w = icon:getWidth()
+        icon_w = icon:getWidth()
         table.insert(icons, {x = ox, icon = icon})
 
         ox = ox + icon_w + spacing
@@ -604,7 +604,7 @@ function InputManager:draw_input_prompt(player_n, actions, label, label_color, x
     end
     print_outline(label_color, COL_BLACK_BLUE, text, x + ox, y)
 
-    x = x + text_w
+    x = x + ox + text_w
     return x
 end
 

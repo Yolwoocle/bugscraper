@@ -19,8 +19,10 @@ function ControlsMenuItem:init(i, x, y, player_n, profile_id, input_type, action
 	
 	self.is_waiting_for_input = false
 	self.waiting_timer = 0.0
-	self.waiting_duration = 5.0
+	self.waiting_duration = 8.0
 	self.is_selectable = true
+
+	self.t = 0.0
 end
 
 function ControlsMenuItem:update(dt)
@@ -41,6 +43,8 @@ function ControlsMenuItem:update(dt)
 	if self.is_waiting_for_input and self.waiting_timer <= 0 then
 		self:stop_waiting()
 	end
+
+	self.t = self.t + dt
 end
 
 function ControlsMenuItem:draw_value_text()
@@ -49,12 +53,8 @@ function ControlsMenuItem:draw_value_text()
 	local y = math.floor(self.y + self.oy + 2)
 
 	local draw_func = self:get_leftjustified_text_draw_function()
-	if self.is_waiting_for_input then
-		local text = Text:text("menu.options.input_submenu.no_buttons")
-		local w = get_text_width(text)
-		draw_func(text, right_bound - w, y)
 
-	elseif type(self.value) == "table" and #self.value == 0 then
+	if not self.is_waiting_for_input and (type(self.value) == "table" and #self.value == 0) then
 		local text = Text:text("menu.options.input_submenu.no_buttons")
 		local w = get_text_width(text)
 		draw_func(text, right_bound - w, y)
@@ -67,6 +67,12 @@ function ControlsMenuItem:draw_value_text()
 				x = self:draw_button_icon(i, button, x, y)
 				i = i + 1
 			end
+		end
+
+		if self.is_waiting_for_input and self.t % 0.5 < 0.3 then
+			local text = Text:text("menu.options.input_submenu.press_button")
+			local w = get_text_width(text)
+			draw_func(text, x - w, y)
 		end
 	end
 end

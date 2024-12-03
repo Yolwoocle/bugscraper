@@ -167,8 +167,8 @@ return {
                 subtitle_no_player = "[⚠ NO PLAYER %d]",
                 subtitle_no_controller = "[⚠ NO CONTROLLER CONNECTED]",
                 no_buttons = "[NO BUTTONS]",
-                press_button = "[PRESS A BUTTON]",
-                press_again_to_remove = "Press an already bind button to remove it",
+                press_button = "[PRESS BUTTON]",
+                press_again_to_remove = "Press an already bound button to remove it",
                 
                 keyboard = "Keyboard",
                 keyboard_solo = "KEYBOARD (Default)",

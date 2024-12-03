@@ -78,7 +78,7 @@ function Menu:set_target_scroll_position(value)
 end
 
 function Menu:draw_prompts()
-	local x = 2
+	local x = 4
 	local rect_h = 18
 	local def_y = CANVAS_HEIGHT - rect_h
 	local y = def_y
@@ -90,12 +90,6 @@ function Menu:draw_prompts()
 	local bottom_width = 0
 	local top_width = 0
 	for i, prompt in ipairs(self.prompts) do
-		if i == #self.prompts then
-			bottom_width = x
-			x = 2
-			y = 2
-		end
-
 		if #prompt >= 2 then
 			local actions, text = prompt[1], prompt[2]
 			local user_n = Input:get_last_ui_user_n() -- scotch
@@ -111,13 +105,12 @@ function Menu:draw_prompts()
 				user_n = find_first_valid_player()
 			end
 			local new_x = Input:draw_input_prompt(user_n, actions, text, COL_LIGHTEST_GRAY, x, y)
-			x = new_x + 4
+			x = new_x + 8
 		end
 	end
 
 	love.graphics.setCanvas(old_canvas)
-	rect_color({0,0,0,0.7}, "fill", 0, def_y, bottom_width, rect_h)
-	rect_color({0,0,0,0.7}, "fill", 0, 0, x, rect_h)
+	rect_color({0,0,0,0.7}, "fill", 0, def_y, x, rect_h)
 	love.graphics.draw(self.second_layer, 0, 0)
 end
 
