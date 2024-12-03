@@ -1,9 +1,18 @@
+-- Splash screen
+love.graphics.clear()
+love.graphics.setDefaultFilter("nearest", "nearest")
+love.graphics.scale(2, 2)
+love.graphics.draw(love.graphics.newImage('images/splash.png'))
+love.graphics.present()
+
 require "scripts.util"
 require "lib.please_work_error_explorer.error_explorer" {
 	source_font = love.graphics.newFont("fonts/FiraCode-Regular.ttf", 12)
 }
 local Game = require "scripts.game.game"
 local Measure = require "scripts.debug.measure"
+
+love.graphics.origin()
 
 -- LÖVE uses Luajit 2.1 which is based on Lua 5.1 but has some additions (like goto)
 

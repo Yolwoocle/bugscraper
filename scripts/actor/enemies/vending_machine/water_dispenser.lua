@@ -23,6 +23,8 @@ function WaterDispenser:init(x, y)
     self.show_text = false
     self.show_preview = false
     self.do_collected_particle = true
+
+    self:set_pressed(true)
 end
 
 return WaterDispenser
