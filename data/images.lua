@@ -429,6 +429,8 @@ local img_names = {
 	removeme_button_off = "removeme_button_off",
 	removeme_spritesheet_test = "removeme_spritesheet_test",
 
+	splash = "splash",
+
 	_test_gaysquare = "_test_gaysquare",
 	_test_hexagon = "_test_hexagon",
 	_test_hexagon_small = "_test_hexagon_small",

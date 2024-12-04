@@ -42,6 +42,22 @@ function DebugCommandManager:init()
             return true
         end,
     }
+    self.commands["kill"] = DebugCommand:new {
+        name = "kill",
+        description = "Kills a player",
+        args = {
+            { "player_n:number", default = 1 },
+        },
+        run = function(player_n)
+            local player = game.players[player_n]
+            if not player then
+                return false, "Player "..tostring(player_n).." doesn't exist"
+            end 
+            
+            player:kill()
+            return true
+        end,
+    }
     self.commands["say"] = DebugCommand:new {
         name = "say",
         description = "Send a message in the chat",

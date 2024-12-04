@@ -6,8 +6,7 @@ local utf8 = require "utf8"
 
 local OptionsManager = Class:inherit()
 
-function OptionsManager:init(game)
-	self.game = game
+function OptionsManager:init()
 	self.is_first_time = false
 	self.default_options = {
 		volume = 1.0,
@@ -22,6 +21,7 @@ function OptionsManager:init(game)
 		pixel_scale = "auto",
 		windowed_width = CANVAS_WIDTH,
 		windowed_height = CANVAS_HEIGHT,
+		is_window_maximized = true,
 		menu_blur = true,
 		background_speed = 1.0,
 

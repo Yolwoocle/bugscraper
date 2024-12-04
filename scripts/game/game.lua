@@ -10,7 +10,6 @@ local Enemies = require "data.enemies"
 local ParticleSystem = require "scripts.game.particles"
 local AudioManager = require "scripts.audio.audio"
 local MenuManager = require "scripts.ui.menu.menu_manager"
-local OptionsManager = require "scripts.game.options"
 local InputManager = require "scripts.input.input"
 local MusicPlayer = require "scripts.audio.music_player"
 local Level = require "scripts.level.level"
@@ -44,28 +43,12 @@ local Game = Class:inherit()
 function Game:init()
 	-- Global singletons
 	Input = InputManager:new(self)
-	Options = OptionsManager:new(self)
 	Collision = CollisionManager:new()
 	Particles = ParticleSystem:new()
 	Audio = AudioManager:new()
 	Screenshot = ScreenshotManager:new()
 
 	Input:init_users()
-
-	-- OPERATING_SYSTEM = "Web"
-	OPERATING_SYSTEM = love.system.getOS()
-	USE_CANVAS_RESIZING = true
-	SCREEN_WIDTH, SCREEN_HEIGHT = 0, 0
-
-	if OPERATING_SYSTEM == "Web" then
-		USE_CANVAS_RESIZING = false
-		CANVAS_SCALE = 2
-		-- Init window
-		love.window.setMode(CANVAS_WIDTH * CANVAS_SCALE, CANVAS_HEIGHT * CANVAS_SCALE, self:get_window_flags())
-	else
-		-- Init window
-		love.window.setMode(Options:get("windowed_width"), Options:get("windowed_height"), self:get_window_flags())
-	end
 
 	SCREEN_WIDTH, SCREEN_HEIGHT = gfx.getDimensions()
 	-- love.window.setTitle("Bugscraper")
@@ -106,6 +89,8 @@ function Game:init()
 	self.steamworks = Steamworks
 
 	self.debug_mode = DEBUG_MODE
+
+	self.show_splash = true
 end
 
 function Game:new_game()
@@ -263,6 +248,7 @@ function Game:on_resize(w, h)
 	if not Options:get("is_fullscreen") then
 		Options:set("windowed_width", w)
 		Options:set("windowed_height", h)
+		Options:set("is_window_maximized", love.window.isMaximized())
 	end
 	self:update_screen()
 end
@@ -273,7 +259,12 @@ function Game:update_fullscreen(is_fullscreen)
 	if not is_fullscreen then
 		local window_w = Options:get("windowed_width")
 		local window_h = Options:get("windowed_height")
+		local maximized = Options:get("is_window_maximized")
+
 		love.window.setMode(window_w, window_h, self:get_window_flags())
+		if maximized then
+			love.window.maximize()
+		end
 	end
 
 	self:update_screen()

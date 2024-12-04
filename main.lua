@@ -1,9 +1,7 @@
 -- Splash screen
-love.graphics.clear()
-love.graphics.setDefaultFilter("nearest", "nearest")
-love.graphics.scale(2, 2)
-love.graphics.draw(love.graphics.newImage('images/splash.png'))
-love.graphics.present()
+local init = require "scripts.meta.init"
+init()
+----------
 
 require "scripts.util"
 require "lib.please_work_error_explorer.error_explorer" {
@@ -12,15 +10,9 @@ require "lib.please_work_error_explorer.error_explorer" {
 local Game = require "scripts.game.game"
 local Measure = require "scripts.debug.measure"
 
-love.graphics.origin()
-
--- LÖVE uses Luajit 2.1 which is based on Lua 5.1 but has some additions (like goto)
-
 game = nil
 
 function love.load(arg)
-	frame = 0
-
 	game = Game:new()
 end
 
@@ -43,21 +35,15 @@ local function fixed_update()
 	_G_fixed_frame = _G_fixed_frame + 1
 
 	game:update(fixed_dt)
-	-- local d = measure_update:tick(function()
-	-- end, 40)
-	-- if d then
-	-- 	print_debug("MEASURE update =", d*10e6, "us")
-	-- end
 end
 
 _G_do_fixed_framerate = true
 
 function love.update(dt)
 	_G_t = math.min(_G_t + dt, max_frame_buffer_duration)
-	local cap = 1 --If there's lag spike, repeat up to how many frames?
+	local cap = 1 
 	local i = 0
 	local update_fixed_dt = fixed_dt
-	-- local update_fixed_dt = 1/30
 	while (not _G_do_fixed_framerate or _G_t > update_fixed_dt) and cap > 0 do
 		_G_t = _G_t - update_fixed_dt
 		fixed_update()
@@ -69,24 +55,18 @@ function love.update(dt)
 	_G_frame = _G_frame + 1
 end
 
-local measure_draw = Measure:new(10000)
 function love.draw()
 	game:draw()
-	-- local d = measure_draw:tick(function()
-	-- end, 40)
-	-- if d then
-	-- 	print_debug("MEASURE draw =", d*10e6, "us")
-	-- end
 end
 
 function love.keypressed(key, scancode, isrepeat)
 	if key == "f5" then
-		if love.keyboard.isDown("lshift") then
+		if love.keyboard.isDown("lshift") or love.keyboard.isDown("rshift") then
 			love.event.quit("restart")
 		end
 
 	elseif key == "f4" then
-		if love.keyboard.isDown("lshift") then
+		if love.keyboard.isDown("lshift") or love.keyboard.isDown("rshift") then
 			love.event.quit()
 		end
 

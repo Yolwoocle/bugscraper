@@ -25,6 +25,10 @@ function GameUI:init(game, is_visible)
 		table.insert(self.player_previews, PlayerPreview:new(i, x, y, w, 64))
 		x = x + w + spacing	
 	end
+
+	self.splash_x = 0
+	self.splash_vx = 0
+	self.show_splash = true
 end
 
 function GameUI:update(dt)
@@ -33,6 +37,8 @@ function GameUI:update(dt)
 		preview:update(dt)
 		preview.y = preview.base_y - self.game.logo_y
 	end
+
+	self:update_splash(dt)
 end
 
 function GameUI:update_floating_text(dt)
@@ -65,7 +71,8 @@ function GameUI:draw()
 	self:draw_floating_text()
 	self:draw_upgrades()
 	self:draw_player_previews()
-
+	
+	self:draw_splash_animation()
 	-- local r
     -- r = game.level.cabin_inner_rect
     -- rect_color(COL_GREEN, "line", r.ax, r.ay, r.w, r.h)
@@ -277,5 +284,19 @@ function GameUI:on_player_joined(player)
 	end
 end
 
+function GameUI:update_splash(dt)
+	if self.splash_x < -CANVAS_WIDTH*2 then
+		game.show_splash = false
+	end
+	self.splash_vx = self.splash_vx - dt*500
+	self.splash_x = self.splash_x + self.splash_vx * dt
+end
+
+function GameUI:draw_splash_animation()
+	if not game.show_splash then 
+		return
+	end
+	love.graphics.draw(images.splash, self.splash_x, 0)
+end
 
 return GameUI
