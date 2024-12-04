@@ -16,7 +16,7 @@ function TvPresentation:init(x, y)
     self.slides = {
         { frames = images.tv_slideshow_001, frame_duration = 0 },
         { frames = images.tv_slideshow_002, frame_duration = 0 },
-        { frames = images.tv_slideshow_003, frame_duration = 0.02 },
+        { frames = images.tv_slideshow_003, frame_duration = 0.04 }, --mio rotate
         { frames = images.tv_slideshow_004, frame_duration = 0 },
         { frames = images.tv_slideshow_005, frame_duration = 0 },
         { frames = images.tv_slideshow_006, frame_duration = 0.07 },
@@ -31,7 +31,8 @@ function TvPresentation:init(x, y)
         { frames = images.tv_slideshow_015, frame_duration = 0.3 },
         { frames = images.tv_slideshow_016, frame_duration = 0 },
         { frames = images.tv_slideshow_017, frame_duration = 0.08 },
-        { frames = images.tv_slideshow_999, frame_duration = 0 },
+        { frames = images.tv_slideshow_018, frame_duration = 0.04 }, -- Mio explode
+        -- { frames = images.tv_slideshow_999, frame_duration = 0 }, -- UNCOMMENT if the website is ready
     }
     for i, slide in pairs(self.slides) do
         slide.frame_count = (slide.frames:getWidth() / self.canvas_w) * (slide.frames:getHeight() / self.canvas_h)

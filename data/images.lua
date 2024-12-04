@@ -343,6 +343,7 @@ local img_names = {
 	tv_slideshow_015 = "level/tv_slideshow/tv_slideshow_015",
 	tv_slideshow_016 = "level/tv_slideshow/tv_slideshow_016",
 	tv_slideshow_017 = "level/tv_slideshow/tv_slideshow_017",
+	tv_slideshow_018 = "level/tv_slideshow/tv_slideshow_018",
 	tv_slideshow_999 = "level/tv_slideshow/tv_slideshow_999",
 	tv_bluescreen = "level/tv_slideshow/tv_bluescreen",
 

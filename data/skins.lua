@@ -67,7 +67,7 @@ local skins = {
 		anim_wall_slide = {images.rabbit_2},
 		img_walk_down = images.rabbit_1,
 		img_airborne = images.rabbit_2,
-		spr_dead = images.beetle_dead,
+		spr_dead = images.rabbit_dead,
 
 		color_palette = {COL_WHITE, COL_LIGHTEST_GRAY, COL_MID_GRAY, COL_DARK_GRAY, COL_BLACK_BLUE},
 		menu_color = COL_MID_GRAY, 
