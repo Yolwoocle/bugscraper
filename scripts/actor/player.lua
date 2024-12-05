@@ -213,7 +213,7 @@ function Player:update(dt)
 		self.frames_since_land = 0
 	end
 
-	self:update_fury(dt)
+	-- self:update_fury(dt)
 
 	self.gun:update(dt)
 	self:shoot(dt, false)
@@ -222,10 +222,7 @@ function Player:update(dt)
 	self.ui_x = lerp(self.ui_x, floor(self.mid_x), 0.2)
 	self.ui_y = lerp(self.ui_y, floor(self.y), 0.2)
 
-	-- self.ui_x = CANVAS_WIDTH/2
-	-- self.ui_y = 50
-
-	--Visuals
+	-- Visuals
 	self:update_visuals()
 	if self:is_in_poison_cloud() then
 		Particles:dust(self.mid_x + random_neighbor(7), self.mid_y + random_neighbor(7), random_sample{color(0x3e8948), color(0x265c42), color(0x193c3e)})
@@ -886,6 +883,7 @@ function Player:update_fury(dt)
 	local old_fury_active = self.fury_active
 	self.fury_active = (self.fury_bar >= self.fury_threshold)
 
+	-- Particles when fury is activated 
 	if not old_fury_active and self.fury_active then
 		-- Particles:word(self.mid_x, self.mid_y, "FURY", COL_LIGHT_YELLOW)
 		-- Particles:smoke_big(self.mid_x, self.mid_y, random_sample{COL_LIGHT_YELLOW, COL_ORANGE})
@@ -954,7 +952,6 @@ function Player:draw_hud()
 		if Input:get_number_of_users() > 1 then
 			print_centered_outline(self.color_palette[1], nil, Text:text("player.abbreviation", self.n), ui_x, ui_y- 8)
 		end
-		-- self:draw_controls()
 	end
 end
 
@@ -969,6 +966,7 @@ function Player:draw_life_bar(ui_x, ui_y)
 end
 
 function Player:draw_ammo_bar(ui_x, ui_y)
+	-- Please make an ui library and stop doing this shit
 	local ammo_icon_w = images.ammo:getWidth()
 	local slider_w = 23 * (1 + (self:get_max_ammo_multiplier() - 1)/2)
 	local bar_w = slider_w + ammo_icon_w + 2
@@ -988,7 +986,6 @@ function Player:draw_ammo_bar(ui_x, ui_y)
 		val, maxval = self.gun.max_reload_timer - self.gun.reload_timer, self.gun.max_reload_timer
 	end
 
-	-- /!\ Doing calculations like these in draw is a BAD idea! Too bad!
 	self.ui_col_gradient = self.ui_col_gradient * 0.9
 	if self.ui_col_gradient >= 0.02 then
 		col_fill = lerp_color(col_fill, COL_WHITE, self.ui_col_gradient)
@@ -1001,7 +998,7 @@ function Player:draw_ammo_bar(ui_x, ui_y)
 						col_fill, COL_BLACK_BLUE, col_shad, text)
 
 
-	self:draw_fury_bar(bar_x, y+ammo_icon_w-1, slider_w, 4)
+	-- self:draw_fury_bar(bar_x, y+ammo_icon_w-1, slider_w, 4)
 end
 
 function Player:draw_fury_bar(x, y, w, h)

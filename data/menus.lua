@@ -118,21 +118,30 @@ local function generate_menus()
 
 
     local pause_items = {
-        { "<<<<<<<<< " .. Text:text("menu.pause.title") .. " >>>>>>>>>" },
-        { "" },
-        { "▶ " .. Text:text("menu.pause.resume"), function() game.menu_manager:unpause() end },
-        { "🔄 " .. Text:text("menu.pause.retry"), function() game:new_game() end },
-        { "🎚 " .. Text:text("menu.pause.options"), func_set_menu('options') },
-        { "💡 " .. Text:text("menu.pause.feedback"), func_set_menu("feedback") },
-        { "❤ " .. Text:text("menu.pause.credits"), func_set_menu('credits') },
-        { "🔚 " .. Text:text("menu.pause.quit"), func_set_menu('quit') },
-        { "" },
-        { "❤ " .. Text:text("menu.win.wishlist") .. " 🔗", func_url("steam://advertise/2957130/") },
-        -- { "📺 " .. Text:text("menu.pause.website") .. " 🔗", func_url("https://bugscraper.net/") },
-        { "😈 " .. Text:text("menu.pause.discord") .. " 🔗", func_url("https://discord.gg/BAMMwMn2m5") },
-        -- { "🐦 " .. Text:text("menu.pause.twitter") .. " 🔗", func_url("https://x.com/yolwoocle_") },
-        { "" },
-        { "[DEBUG] Skip to world 2", function()
+        [1]  = { "" },
+        [2]  = { "<<<<<<<<< " .. Text:text("menu.pause.title") .. " >>>>>>>>>" },
+        [3]  = { "" },
+        [4]  = { "▶ " .. Text:text("menu.pause.resume"), function() game.menu_manager:unpause() end },
+        [5]  = { "🔄 " .. Text:text("menu.pause.retry"), function() game:new_game() end },
+        [6]  = { "🎚 " .. Text:text("menu.pause.options"), func_set_menu('options') },
+        [7]  = { "💡 " .. Text:text("menu.pause.feedback"), func_set_menu("feedback") },
+        [8]  = { "❤ " .. Text:text("menu.pause.credits"), func_set_menu('credits') },
+        [9]  = { "🔚 " .. Text:text("menu.pause.quit"), func_set_menu('quit') },
+        [10] = { "" },
+        [11] = { "❤ " .. Text:text("menu.win.wishlist") .. " 🔗", func_url("steam://advertise/2957130/") },
+        [12] = { "😈 " .. Text:text("menu.pause.discord") .. " 🔗", func_url("https://discord.gg/BAMMwMn2m5") },
+    }
+    if OPERATING_SYSTEM == "Web" then
+        -- Disable quitting on web
+        table.remove(pause_items, 9)
+    end
+    if not DEMO_BUILD then
+        -- Disable wishlist if not demo
+        table.remove(pause_items, 11)
+    end
+    if DEBUG_MODE then
+        table.insert(pause_items, { " " })
+        table.insert(pause_items, { "[DEBUG] Skip to world 2", function()
             for k, e in pairs(game.actors) do
                 if e.is_enemy then
                     e:kill()
@@ -141,8 +150,8 @@ local function generate_menus()
             game:set_floor(20)
             game:start_game()
             game.menu_manager:unpause()
-        end },
-        { "[DEBUG] Skip to world 2 boss", function()
+        end })
+        table.insert(pause_items, { "[DEBUG] Skip to world 2 boss", function()
             for k, e in pairs(game.actors) do
                 if e.is_enemy then
                     e:kill()
@@ -151,8 +160,8 @@ local function generate_menus()
             game:set_floor(38)
             game:start_game()
             game.menu_manager:unpause()
-        end },
-        { "[DEBUG] Skip to world 3", function()
+        end })
+        table.insert(pause_items, { "[DEBUG] Skip to world 3", function()
             for k, e in pairs(game.actors) do
                 if e.is_enemy then
                     e:kill()
@@ -161,8 +170,8 @@ local function generate_menus()
             game:set_floor(40)
             game:start_game()
             game.menu_manager:unpause()
-        end },
-        { "[DEBUG] Skip to world 3 boss", function()
+        end })
+        table.insert(pause_items, { "[DEBUG] Skip to world 3 boss", function()
             for k, e in pairs(game.actors) do
                 if e.is_enemy then
                     e:kill()
@@ -171,8 +180,8 @@ local function generate_menus()
             game:set_floor(58)
             game:start_game()
             game.menu_manager:unpause()
-        end },
-        { "[DEBUG] Skip to world 4", function()
+        end })
+        table.insert(pause_items, { "[DEBUG] Skip to world 4", function()
             for k, e in pairs(game.actors) do
                 if e.is_enemy then
                     e:kill()
@@ -181,8 +190,8 @@ local function generate_menus()
             game:set_floor(60)
             game:start_game()
             game.menu_manager:unpause()
-        end },
-        { "[DEBUG] Skip to world 4 boss", function()
+        end })
+        table.insert(pause_items, { "[DEBUG] Skip to world 4 boss", function()
             for k, e in pairs(game.actors) do
                 if e.is_enemy then
                     e:kill()
@@ -191,16 +200,7 @@ local function generate_menus()
             game:set_floor(78)
             game:start_game()
             game.menu_manager:unpause()
-        end },
-    }
-    if OPERATING_SYSTEM == "Web" then
-        -- Disable quitting on web
-        menus.pause.items[9].is_selectable = false
-    end
-    if DEBUG_MODE then
-        --
-        -- { "[DEBUG] joystick_removed", func_set_menu('joystick_removed' ) },
-        -- table.insert(pause_items, { "[DEBUG] VIEW WAVES", func_set_menu('view_waves' ) })c
+        end })
     end
     menus.pause = Menu:new(game, pause_items, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL, draw_elevator_progress)
 
@@ -384,6 +384,8 @@ local function generate_menus()
         }, DEFAULT_MENU_BG_COLOR, PROMPTS_CONTROLS)
     end
 
+    ------------------------------------------------------------
+
     menus.controls_keyboard_solo = create_keyboard_controls_menu(Text:text("menu.options.input_submenu.keyboard_solo"),
         "keyboard_solo")
     menus.controls_keyboard_split_p1 = create_keyboard_controls_menu(Text:text("menu.options.input_submenu.keyboard_p1"),
@@ -399,7 +401,9 @@ local function generate_menus()
     menus.controls_controller_p4 = create_controller_controls_menu(Text:text("menu.options.input_submenu.controller_p4"),
         "controller_4", 4)
 
-    menus.game_over = Menu:new(game, {
+    ------------------------------------------------------------
+
+    local game_over_items = {
         { "<<<<<<<<< " .. Text:text("menu.game_over.title") .. " >>>>>>>>>" },
         { "" },
         { StatsMenuItem, Text:text("menu.game_over.kills"), function(self)
@@ -420,9 +424,15 @@ local function generate_menus()
             game.has_seen_controller_warning = true
             game:new_game()
         end },
-        { "❤ " .. Text:text("menu.win.wishlist") .. " 🔗", func_url("steam://advertise/2957130/") },
-        { "" },
-    }, DEFAULT_MENU_BG_COLOR, PROMPTS_GAME_OVER, draw_elevator_progress)
+    }
+    if DEMO_BUILD then
+        table.insert(game_over_items, 
+            { "❤ " .. Text:text("menu.win.wishlist") .. " 🔗", func_url("steam://advertise/2957130/") }
+        )
+    end
+    menus.game_over = Menu:new(game, game_over_items, DEFAULT_MENU_BG_COLOR, PROMPTS_GAME_OVER, draw_elevator_progress)
+
+    ------------------------------------------------------------
 
     menus.credits = Menu:new(game, {
         { "<<<<<<<<< " .. Text:text("menu.credits.title") .. " >>>>>>>>>" },
@@ -545,23 +555,21 @@ local function generate_menus()
             return concat(game.stats.floor, "/",
                 game.level.max_floor)
         end },
-        -- { StatsMenuItem, Text:text("menu.game_over.max_combo"), function(self) return concat(game.stats.max_combo) end },
         { "" },
-        -- { "❤ "..Text:text("menu.win.wishlist").." 🔗", func_url("https://s.team/a/2957130") },
         { "❤ " .. Text:text("menu.win.wishlist") .. " 🔗", func_url("steam://advertise/2957130/") },
         { "▶ " .. Text:text("menu.win.continue"), function()
             --scotch
             game.has_seen_controller_warning = true
             game:new_game()
         end },
-        -- { --[["🔚 "..]]Text:text("menu.pause.quit"), quit_game },
         { "" },
 
     }
 
-    -- if OPERATING_SYSTEM == "Web" or true the$n
-    --     table.remove(items, 8)
-    -- end
+    if not DEMO_BUILD then
+        table.remove(items, 7) -- Remove whishlist if not demo
+    end
+
     menus.win = Menu:new(game, items, { 0, 0, 0, 0.85 }, PROMPTS_GAME_OVER)
 
     ------------------------------------------------------------
