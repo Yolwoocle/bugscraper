@@ -427,11 +427,14 @@ local waves = {
 
 
 	new_wave({
-		min = 1,
-		max = 1,
+		min = 6,
+		max = 6,
 
 		enemies = {
-			{ E.HoneycombFootball, 2 },
+			{ E.Beelet, 8 },
+		},
+		fixed_enemies = {
+			{ E.HoneycombFootball, 1 },
 		},
 	}),
 

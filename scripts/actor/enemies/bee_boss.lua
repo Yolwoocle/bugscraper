@@ -13,7 +13,7 @@ local BeeBoss = Enemy:inherit()
 
 function BeeBoss:init(x, y)
     self:init_enemy(x,y, images.bee_boss_1, 32, 32)
-    self.name = "bee_boss"  --removeme(dont actually)
+    self.name = "bee_boss"  --changeme removeme(dont actually)
 
     -- Parameters 
     self.def_friction_y = self.friction_y
@@ -32,10 +32,10 @@ function BeeBoss:init(x, y)
     self.self_knockback_mult = 0
     self.stomps = math.huge
     self.is_stompable = false
-    self.damage_on_stomp = 5
+    self.damage_on_stomp = 10
     self.friction_y = self.friction_x
     self.def_target_y = game.level.cabin_rect.ay + BW*4
-    self.telegraph_oy = 16
+    self.telegraph_oy = 16    
 
     -- Animation
     self.anim_frame_len = 0.05
@@ -246,7 +246,7 @@ function BeeBoss:update(dt)
     self.state_machine:update(dt)
 
     -- self.debug_values[1] = concat(self.state_machine.current_state_name)
-    -- self.debug_values[2] = concat(self.life,"❤")
+    self.debug_values[2] = concat(self.life,"❤")
 end
 
 function BeeBoss:draw()

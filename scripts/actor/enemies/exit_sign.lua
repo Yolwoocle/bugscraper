@@ -7,8 +7,8 @@ local utf8 = require "utf8"
 local ExitSign = ButtonSmall:inherit()
 
 function ExitSign:init(x, y)
-    ExitSign.super.init(self, x, y, nil, 30, 12)
-    self.name = "roizoiezrjaorzezrenaciozcrorzcuorcaorczpuaporcua"
+    ExitSign.super.init(self, x, y, nil, 20, 8)
+    self.name = "exit_sign"
 
     self:set_image(images.machine_coffee)
     self.sprite_pressed = images.small_button_pressed

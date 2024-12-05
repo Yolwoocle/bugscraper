@@ -45,7 +45,7 @@ function BackroomCafeteria:assign_cafeteria_upgrades()
 		{upgrades.UpgradeEspresso, 1},
 		{upgrades.UpgradeMilk, 1},
 		{upgrades.UpgradePeanut, 1},
-		{upgrades.UpgradeEnergyDrink, 1},
+		-- {upgrades.UpgradeEnergyDrink, 1},
 		{upgrades.UpgradeSoda, 1},
 	}
 

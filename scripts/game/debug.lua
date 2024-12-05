@@ -246,7 +246,6 @@ function Debug:init(game)
         end },
 
         ["c"] = { "cutscene", function()
-            game:play_cutscene(cutscenes.boss_enter)
         end },
     }
 

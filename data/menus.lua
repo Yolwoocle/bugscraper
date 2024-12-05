@@ -148,6 +148,11 @@ local function generate_menus()
                 end
             end
             game:set_floor(20)
+            for _, p in pairs(game.players) do
+                p:set_pos(CANVAS_CENTER[1], CANVAS_CENTER[2])
+            end
+            game.can_start_game = true
+            game.camera:reset()
             game:start_game()
             game.menu_manager:unpause()
         end })
@@ -158,6 +163,11 @@ local function generate_menus()
                 end
             end
             game:set_floor(38)
+            for _, p in pairs(game.players) do
+                p:set_pos(CANVAS_CENTER[1], CANVAS_CENTER[2])
+            end
+            game.can_start_game = true
+            game.camera:reset()
             game:start_game()
             game.menu_manager:unpause()
         end })
@@ -168,6 +178,11 @@ local function generate_menus()
                 end
             end
             game:set_floor(40)
+            for _, p in pairs(game.players) do
+                p:set_pos(CANVAS_CENTER[1], CANVAS_CENTER[2])
+            end
+            game.can_start_game = true
+            game.camera:reset()
             game:start_game()
             game.menu_manager:unpause()
         end })
@@ -178,6 +193,11 @@ local function generate_menus()
                 end
             end
             game:set_floor(58)
+            for _, p in pairs(game.players) do
+                p:set_pos(CANVAS_CENTER[1], CANVAS_CENTER[2])
+            end
+            game.can_start_game = true
+            game.camera:reset()
             game:start_game()
             game.menu_manager:unpause()
         end })
@@ -188,6 +208,11 @@ local function generate_menus()
                 end
             end
             game:set_floor(60)
+            for _, p in pairs(game.players) do
+                p:set_pos(CANVAS_CENTER[1], CANVAS_CENTER[2])
+            end
+            game.can_start_game = true
+            game.camera:reset()
             game:start_game()
             game.menu_manager:unpause()
         end })
@@ -198,6 +223,11 @@ local function generate_menus()
                 end
             end
             game:set_floor(78)
+            for _, p in pairs(game.players) do
+                p:set_pos(CANVAS_CENTER[1], CANVAS_CENTER[2])
+            end
+            game.can_start_game = true
+            game.camera:reset()
             game:start_game()
             game.menu_manager:unpause()
         end })
