@@ -364,7 +364,7 @@ AXIS_TABLE = {
     triggerright =   true,
 }
 
-AXIS_DEADZONE = 0.3
+AXIS_DEADZONE = 0.4
 TRIGGER_DEADZONE = 0.15
 AXIS_ANGLE_MARGIN = 3 * math.pi/8
 UI_AXIS_ANGLE_MARGIN = 2 * math.pi/8

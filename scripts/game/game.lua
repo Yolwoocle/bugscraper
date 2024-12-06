@@ -112,7 +112,7 @@ function Game:new_game()
 	-- Players
 	self.waves_until_respawn = {}
 	for i = 1, MAX_NUMBER_OF_PLAYERS do
-		self.waves_until_respawn[i] = -1
+		self.waves_until_respawn[i] = {-1, nil}
 	end
 
 	-- Camera
@@ -800,7 +800,7 @@ end
 
 function Game:on_player_death(player)
 	self.players[player.n] = nil
-	self.waves_until_respawn[player.n] = Input:get_number_of_users()
+	self.waves_until_respawn[player.n] = {1, player}
 
 	if self:get_number_of_alive_players() <= 0 then
 		self:on_last_player_death(player)
@@ -939,7 +939,7 @@ function Game:new_player(player_n, x, y, put_in_buffer)
 
 	local player = Player:new(player_n, x, y, Input:get_user(player_n):get_skin() or skins[1])
 	self.players[player_n] = player
-	self.waves_until_respawn[player_n] = -1
+	self.waves_until_respawn[player_n] = {-1, nil}
 	if put_in_buffer then
 		player:set_active(false)
 		self.level:buffer_actor(player)

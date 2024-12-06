@@ -880,7 +880,7 @@ function ParticleSystem:image(x, y, number, spr, spw_rad, life, vs, g, parms)
 	end
 end
 
--- FIXME: scotch
+-- FIXME: scotch scotch scotch ugly ugly ugly ugly!!!
 function ParticleSystem:static_image(img, x, y, rot, life, scale)
 	Particles:image(x, y, 1, img, 0, nil, 0, 0, {
 		is_solid = false,
@@ -904,6 +904,16 @@ function ParticleSystem:bullet_vanish(x, y, rot)
 		images.bullet_vanish_2,
 		images.bullet_vanish_3,
 	}, x, y, rot)
+end
+
+-- FIXME: scotch
+function ParticleSystem:sweat(x, y)
+	self:static_image({
+		images.sweat_1,
+		images.sweat_2,
+		images.sweat_3,
+		images.sweat_4,
+	}, x, y, 0, 0.2)
 end
 
 -- FIXME: scotch

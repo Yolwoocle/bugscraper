@@ -145,6 +145,14 @@ function PlayerPreview:init(player_n, x, y, w, h)
                     print_centered_outline(palette[1], nil, text, x + 1 + self.selection_ox, y - 20 + 1)
                     print_centered_outline(palette[1], nil, text, x + 1 + self.selection_ox, y - 20)
                 end
+
+                local total_n = #skins
+                for i = 1, total_n do
+                    local ix = x - (total_n*4)/2 + 4*(i-1)
+
+                    rect_color(COL_BLACK_BLUE, "fill", ix, y -1 + 15, 4, 3)
+                    rect_color(ternary(i == self.selection_n, COL_WHITE, COL_MID_GRAY), "fill", ix+1, y + 15, 2, 1)
+                end
                 -- print_centered_outline(nil, ncil, table_to_str(self.choices), x+1+self.selection_ox, y - 100)
 
                 local icon_left = Input:get_action_primary_icon(self.player_n, "ui_left")

@@ -542,7 +542,7 @@ function Debug:draw_info_view()
 
     local wave_resp_str = "waves_until_respawn "
     for i = 1, MAX_NUMBER_OF_PLAYERS do
-        wave_resp_str = concat(wave_resp_str, "{", i, ":", self.game.waves_until_respawn[i], "}, ")
+        wave_resp_str = concat(wave_resp_str, "{", i, ":", self.game.waves_until_respawn[i][1], "}, ")
     end
 
     local queued_players_str = "{"

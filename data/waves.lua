@@ -27,7 +27,7 @@ local function new_cafeteria(run_func)
 			end
 
 			for _, actor in pairs(game.actors) do
-				if actor.name == "fainted_player" then
+				if actor.name == "cocoon" then
 					actor:revive()
 				end
 			end

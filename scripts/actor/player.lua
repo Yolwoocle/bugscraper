@@ -282,13 +282,8 @@ function Player:kill()
 	game:frameskip(30)
 	Input:vibrate(self.n, 0.6, 0.4)
 
-	if game:get_number_of_alive_players() > 1 then 
-		local fainted_player = Enemies.FaintedPlayer:new(self.x, self.y, self)
-		game:new_actor(fainted_player)
-	else
-		local ox, oy = self.spr:get_total_centered_offset_position(self.x, self.y, self.w, self.h)
-		Particles:dead_player(ox, oy, self.skin.spr_dead, self.color_palette, self.dir_x)
-	end
+	local ox, oy = self.spr:get_total_centered_offset_position(self.x, self.y, self.w, self.h)
+	Particles:dead_player(ox, oy, self.skin.spr_dead, self.color_palette, self.dir_x)
 
 	self:on_death()
 	game:on_kill(self)
@@ -323,7 +318,7 @@ function Player:do_damage(n, source)
 	game:screenshake(5)
 	Input:vibrate(self.n, 0.3, 0.45)
 	Audio:play("hurt")
-	-- Particles:word(self.mid_x, self.mid_y, concat("-",n), COL_LIGHT_RED)
+	Particles:word(self.mid_x, self.mid_y, concat("-",n), COL_LIGHT_RED)
 	
 	if self.is_knockbackable and source then
 		self.vx = self.vx + sign(self.mid_x - source.mid_x)*source.knockback
@@ -335,9 +330,6 @@ function Player:do_damage(n, source)
 	self:subtract_life(n)
 	local permanent_life_diff = old_life - self.life
 	local temporary_life_diff = old_temporary_life - self.temporary_life
-	if permanent_life_diff > 0 then
-		Particles:image(self.ui_x, self.ui_y - 16, permanent_life_diff, images.heart, 5, 2, 0.2, 1.0)
-	end
 	if temporary_life_diff > 0 then
 		Particles:image(self.ui_x, self.ui_y - 16, temporary_life_diff, images.particle_leaf, 5, 1.5, 0.6, 0.5)
 	end
@@ -763,10 +755,6 @@ function Player:on_stomp(enemy)
 	-- end
 
 	self:add_fury(self.fury_stomp_value)
-	
-	-- self.ui_col_gradient = 1
-	-- self.gun.ammo = self.gun.ammo + floor(self.gun.max_ammo*.25)
-	-- self.gun.reload_timer = 0
 end
 
 --- When an enemy bullet hits the player
@@ -979,6 +967,11 @@ function Player:draw_ammo_bar(ui_x, ui_y)
 	local col_shad = COL_DARK_BLUE
 	local col_fill = COL_MID_BLUE
 	local val, maxval = self.gun.ammo, self.gun:get_max_ammo()
+	if val <= maxval * 0.35 then
+		col_fill = COL_ORANGE
+		col_shad = COL_LIGHT_RED
+	end
+
 	if self.gun.is_reloading then
 		text = ""
 		col_fill = COL_WHITE

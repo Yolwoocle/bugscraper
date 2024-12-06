@@ -1,11 +1,7 @@
 return {
     steam = {
-        short_desicription = [[
-            Welcome to the bugscraper. Rise to the top of this pest-filled tower in this 2D shooter platformer and battle waves of enemies at every floor as they come for your skin (or rather, exoskeleton). 
-        ]],
-        description = [[
-            Welcome to the bugscraper. Here, pests all around the world come to gather. Your mission: stopping them before it is too late!🐜In this platformer shooter, you take the role of Mio, a courageous ant, trying to stop the employees of a bug-filled skyscraper from corrupting the world with a deadly mushroom.🐛You will battle waves of enemies in an elevator as they come for your skin (or rather, exoskeleton) on every floor.🐝Using a wide variety of weapons and upgrades, eliminate them and prepare to battle for the next floor!🐞Play in solo, or with up to 4 friends in local co-op multiplayer.
-        ]]
+        short_desicription = [[Welcome to the bugscraper. Rise to the top of this pest-filled tower in this 2D shooter platformer and battle waves of enemies at every floor as they come for your skin (or rather, exoskeleton).]],
+        description = [[Welcome to the bugscraper. Here, pests all around the world come to gather. Your mission: stopping them before it is too late!🐜In this platformer shooter, you take the role of Mio, a courageous ant, trying to stop the employees of a bug-filled skyscraper from corrupting the world with a deadly mushroom.🐛You will battle waves of enemies in an elevator as they come for your skin (or rather, exoskeleton) on every floor.🐝Using a wide variety of weapons and upgrades, eliminate them and prepare to battle for the next floor!🐞Play in solo, or with up to 4 friends in local co-op multiplayer.]]
     },
     discord = { -- Text used for Discord rich presence
         state = {
@@ -238,7 +234,7 @@ return {
         credits = {
             title = "CREDITS",
             game_by = "A game by",
-            game_by_template = "A game by %s", -- Used on the title screen. 
+            game_by_template = "By Léo Bernard & friends", -- Used on the title screen. 
             music_and_sound_design = "Music and sound design",
             playtesting = "Playtesting",
             special_thanks = "Special thanks",

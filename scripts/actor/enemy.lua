@@ -275,7 +275,7 @@ function Enemy:react_to_stomp(player)
 	end
 	self:on_stomped(player)
 	if self.stomps <= 0 then
-		if self.do_stomp_animation then
+		if self.do_stomp_animation and self.is_grounded then
 			local ox, oy = self.spr:get_total_centered_offset_position(self.x, self.y, self.w, self.h)
 			Particles:stomped_enemy(self.mid_x, self.y+self.h, self.spr.image)
 		end

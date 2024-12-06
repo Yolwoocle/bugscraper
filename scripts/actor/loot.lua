@@ -80,7 +80,7 @@ function Loot:update_loot(dt)
 	self.life = self.life - dt
 	self.ghost_timer = self.ghost_timer - dt
 	if self.is_collectable then
-		if self.target_player then
+		if self.target_player and not self.target_player.is_dead then
 			self:attract_to_player(dt)
 		else
 			self:assign_attract_player(dt)
@@ -292,7 +292,7 @@ function Loot.Gun:reset()
 	self.vy = 0
 
 	self.min_attract_dist = 16
-	self.uncollectable_timer = 1.0
+	self.uncollectable_timer = 0.3
 	
 	self.friction_x = self.default_friction
 	

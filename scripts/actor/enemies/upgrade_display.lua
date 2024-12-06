@@ -15,11 +15,11 @@ function UpgradeDisplay:init(x, y)
     -- self:select_random_product()
     self.has_player_in_range = false
     self.is_focused = false
-    self.is_stompable = true
+    self.is_stompable = false
     self.is_killed_on_stomp = true
     self.do_stomp_animation = false
 
-    self.life = 10
+    self.life = 30
     self.loot = {}
 
 	self.destroy_bullet_on_impact = true

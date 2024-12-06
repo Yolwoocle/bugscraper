@@ -67,7 +67,6 @@ local enemies = {
 	WaterDispenser =     require "scripts.actor.enemies.vending_machine.water_dispenser",
 	
 	Cocoon =             require "scripts.actor.enemies.cocoon",
-	FaintedPlayer =      require "scripts.actor.enemies.fainted_player",
 
 	PoisonCloud =        require "scripts.actor.enemies.poison_cloud",
 	PongBall =           require "scripts.actor.enemies.pong_ball",

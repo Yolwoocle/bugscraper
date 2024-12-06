@@ -306,8 +306,8 @@ end
 
 function Level:new_wave_buffer_enemies()
 	for i = 1, MAX_NUMBER_OF_PLAYERS do
-		if self.game.waves_until_respawn[i] ~= -1 then
-			self.game.waves_until_respawn[i] = math.max(0, self.game.waves_until_respawn[i] - 1)
+		if self.game.waves_until_respawn[i][1] ~= -1 then
+			self.game.waves_until_respawn[i][1] = math.max(0, self.game.waves_until_respawn[i][1] - 1)
 		end
 	end
 

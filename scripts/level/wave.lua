@@ -39,11 +39,15 @@ function Wave:init(params)
 end
 
 function Wave:roll()
+	local roll = {}
 	if self.roll_type == WAVE_ROLL_TYPE_RANDOM then
-		return self:roll_random()
+		roll = self:roll_random()
 	elseif self.roll_type == WAVE_ROLL_TYPE_FIXED then
-		return self:roll_fixed()
+		roll = self:roll_fixed()
 	end
+
+	self:add_cocoons(roll)
+	return roll
 end
 
 function Wave:roll_random(enemies)
@@ -84,14 +88,17 @@ function Wave:roll_fixed(enemies)
 end
 
 function Wave:add_cocoons(enemy_classes)
-	if game:get_number_of_alive_players() < Input:get_number_of_users() then
-		for i = 1, MAX_NUMBER_OF_PLAYERS do
-			if game.waves_until_respawn[i] ~= -1 and game.waves_until_respawn[i] == 0 then
-				table.insert(enemy_classes, {
-					enemy_class = Enemies.Cocoon,
-					args = {i},
-				})
-			end
+	if game:get_number_of_alive_players() >= Input:get_number_of_users() then
+		return 
+	end
+
+	for i = 1, MAX_NUMBER_OF_PLAYERS do
+		if game.waves_until_respawn[i][1] ~= -1 and game.waves_until_respawn[i][1] == 0 then
+			table.insert(enemy_classes, {
+				enemy_class = Enemies.Cocoon,
+				args = {game.waves_until_respawn[i][2]},
+			})
+			game.waves_until_respawn[i] = {-1, nil}
 		end
 	end
 end

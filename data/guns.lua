@@ -115,6 +115,7 @@ function Guns:init()
 		self.speed_floor = 200
 
 		self.jetpack_force = 1200 --def: 340
+		self.knockback = 150
 
 		self.screenshake = 4
 	end
@@ -161,6 +162,7 @@ function Guns:init()
 		self.bullet_spread = pi2
 		self.bullet_friction = 0.9
 		self.random_angle_offset = 0
+		self.knockback = 150
 
 		self.random_angle_offset = 0
 		self.damage = 2

@@ -259,6 +259,11 @@ local img_names = {
 	bullet_vanish_4 =      "particles/bullet_vanish_4",
 	bullet_vanish_5 =      "particles/bullet_vanish_5",
 
+	sweat_1 =              "particles/sweat_1",
+	sweat_2 =              "particles/sweat_2",
+	sweat_3 =              "particles/sweat_3",
+	sweat_4 =              "particles/sweat_4",
+
 	star_splash_1 =        "particles/star_splash_1",
 	star_splash_2 =        "particles/star_splash_2",
 	star_splash_3 =        "particles/star_splash_3",
