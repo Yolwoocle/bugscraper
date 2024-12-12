@@ -16,6 +16,8 @@ function MushroomAnt:init(x, y)
     self.name = "mushroom_ant"
     self.gun = Guns.unlootable.MushroomAntGun:new(self)
 
+    self.walk_speed = random_range(50, 90)
+
     self.shoot_cooldown_range = {2, 3}
     self.shoot_timer = random_range(unpack(self.shoot_cooldown_range))
 

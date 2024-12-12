@@ -1,6 +1,6 @@
 name = "bugscraper_demo"
 # default_targets = ["lovejs", "win32", "win64", "macos", "appimage"]
-default_targets = ["win64", "macos"]
+default_targets = ["win64"]
 build_directory = "export"
 icon_file = "icon.png"
 
@@ -31,7 +31,7 @@ love_files = [
 # If you are not doing a versioned build, 0.4 is empty.
 [windows.exe_metadata]
 FileDescription = "Bugscraper: Rise to the top of a bug-filled tower" # "LÖVE {löve version}"
-FileVersion = "0.5.1" # "{löve version}"
+FileVersion = "0.6" # "{löve version}"
 CompanyName = "Léo Bernard" # "LÖVE World Domination Inc."
 LegalCopyright = "Copyright © 2024 Léo Bernard" # "Copyright © 2006-2020 LÖVE Development Team" or ""
 ProductName = "Bugscraper" # "LÖVE"

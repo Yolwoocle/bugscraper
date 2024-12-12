@@ -47,7 +47,7 @@ function CloudEnemy:draw()
     CloudEnemy.super.draw(self)
 end
 function CloudEnemy:on_death()
-    if self.size <= 1 then
+    if self.size <= 2 then
         return
     end
     for i = 1, self.enemies_on_death do

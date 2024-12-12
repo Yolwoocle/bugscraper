@@ -4,7 +4,7 @@ local Fly = require "scripts.actor.enemies.fly"
 local sounds = require "data.sounds"
 local images = require "data.images"
 
-local Mosquito = Fly:inherit()
+local Bee = Fly:inherit()
 	
 local PHASE_CHASE = "chase"
 local PHASE_TELEGRAPH = "telegraph"
@@ -12,9 +12,9 @@ local PHASE_ATTACK = "attack"
 
 local PHASE_TELEGRAPH_DURATION = 0.4
 
-function Mosquito:init(x, y)
+function Bee:init(x, y)
     self:init_fly(x,y, images.mosquito1, 12, 16)
-    self.name = "mosquito"
+    self.name = "bee"
     self.life = 5
 
     self.anim_frame_len = 0.05
@@ -36,7 +36,7 @@ function Mosquito:init(x, y)
     self.t = 0
 end
 
-function Mosquito:update(dt)
+function Bee:update(dt)
     self:update_fly(dt)
     self:update_phase(dt)
 
@@ -54,12 +54,12 @@ function Mosquito:update(dt)
     end
 end
 
-function Mosquito:update_phase_chase(dt)
+function Bee:update_phase_chase(dt)
     self.follow_player = true
     self.buzz_source:setPitch(1.5)
 end
 
-function Mosquito:update_phase_telegraph(dt)
+function Bee:update_phase_telegraph(dt)
     self.buzz_source:setPitch(1)
     self.follow_player = false
     
@@ -78,7 +78,7 @@ function Mosquito:update_phase_telegraph(dt)
     Particles:dust(self.mid_x + random_polar(8), self.mid_y + random_polar(8))    
 end
 
-function Mosquito:update_phase_attack(dt)
+function Bee:update_phase_attack(dt)
     local target = self.attack_target
     if target == nil then
         return
@@ -91,7 +91,7 @@ function Mosquito:update_phase_attack(dt)
     Particles:dust(self.mid_x, self.mid_y)
 end
 
-function Mosquito:update_phase(dt)
+function Bee:update_phase(dt)
     self.current_phase_timer = self.current_phase_timer - dt
     if self.current_phase_timer < 0 then
         if self.phase == PHASE_ATTACK then
@@ -110,7 +110,7 @@ function Mosquito:update_phase(dt)
     end
 end
 
-function Mosquito:draw()
+function Bee:draw()
 	self:draw_enemy()
     
     -- love.graphics.print(concat(self.phase), self.x, self.y-16)
@@ -118,15 +118,15 @@ function Mosquito:draw()
 end
 
 
-function Mosquito:pause_repeating_sounds() --scotch
+function Bee:pause_repeating_sounds() --scotch
     self.buzz_source:setVolume(0)
 end
-function Mosquito:play_repeating_sounds()
+function Bee:play_repeating_sounds()
     self.buzz_source:setVolume(1)
 end
 
-function Mosquito:on_death()
+function Bee:on_death()
     self.buzz_source:stop()
 end
 
-return Mosquito
+return Bee

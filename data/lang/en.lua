@@ -30,8 +30,8 @@ return {
 
         -- World names
         world_1 = "Bug resources",
-        world_2 = "Factory",
-        world_3 = "Data center",
+        world_2 = "The factory",
+        world_3 = "The server room",
         world_4 = "Executive",
     },
     gun = {
@@ -59,6 +59,9 @@ return {
             leo = "Leo",
         },
         abbreviation = "P%d", -- Short appreviation to denote players by their number. Example: in english, "P1" means "Player 1", in french "J1" means "Joueur 1".
+    },
+    enemy = {
+        dung = "Mr. Dung",
     },
     upgrade = {
         tea = {

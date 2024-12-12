@@ -1,11 +1,12 @@
 require "scripts.util"
 
 local enemies = {
+	-- W1
 	Larva =              require "scripts.actor.enemies.larva",
 	Fly =                require "scripts.actor.enemies.fly",
 	SpikedFly =          require "scripts.actor.enemies.spiked_fly",
 	Woodlouse =          require "scripts.actor.enemies.woodlouse",
-	Mosquito =           require "scripts.actor.enemies.mosquito",
+	Bee =           require "scripts.actor.enemies.bee",
 	Slug =               require "scripts.actor.enemies.slug",
 	Spider =             require "scripts.actor.enemies.spider",
 	StinkBug =           require "scripts.actor.enemies.stink_bug",
@@ -16,6 +17,7 @@ local enemies = {
 	DungProjectile =     require "scripts.actor.enemies.dung_projectile",
 	FlyingDung =         require "scripts.actor.enemies.flying_dung",
 	
+	-- W2
 	Beelet =             require "scripts.actor.enemies.beelet", 
 	ShovelBee =          require "scripts.actor.enemies.shovel_bee", 
 	DrillBee =           require "scripts.actor.enemies.drill_bee", 
@@ -26,6 +28,7 @@ local enemies = {
 	LarvaSpawner =       require "scripts.actor.enemies.larva_spawner", --*
 	BeeBoss =            require "scripts.actor.enemies.bee_boss",
 
+	-- W3
 	ElectricArc =        require "scripts.actor.enemies.electric_arc", 
 	ElectricRays =       require "scripts.actor.enemies.electric_rays", 
 	ElectricBullet =     require "scripts.actor.enemies.electric_bullet", 
@@ -33,25 +36,29 @@ local enemies = {
 	Grasshopper =        require "scripts.actor.enemies.grasshopper", 
 	Chipper =            require "scripts.actor.enemies.chipper",  
 	ChipperMinion =      require "scripts.actor.enemies.chipper_minion",  
-	Pendulum =           require "scripts.actor.enemies.pendulum",  
 	MetalFly =           require "scripts.actor.enemies.metal_fly",
 	BulbBuddy =          require "scripts.actor.enemies.bulb_buddy", 
-	SwitchBug =          require "scripts.actor.enemies.switch_bug", --*
-	W2boss =             require "scripts.actor.enemies.w2boss", --*
+	Motherboard =        require "scripts.actor.enemies.motherboard",
+	Pendulum =           require "scripts.actor.enemies.pendulum",  
+	MotherboardButton =  require "scripts.actor.enemies.motherboard_button",
+	BigBeelet =          require "scripts.actor.enemies.big_beelet",
 
-	CloudEnemy =         require "scripts.actor.enemies.cloud_enemy", --*
-	CloudStorm =         require "scripts.actor.enemies.cloud_storm", --*
-	Centipede =          require "scripts.actor.enemies.centipede", --*
+	-- W4
+	WallWalker =         require "scripts.actor.enemies.wall_walker", 
+	MushroomAnt =        require "scripts.actor.enemies.mushroom_ant", 
+	Mole =               require "scripts.actor.enemies.mole", 
+	CloudEnemy =         require "scripts.actor.enemies.cloud_enemy",
+	CloudStorm =         require "scripts.actor.enemies.cloud_storm",
+	Centipede =          require "scripts.actor.enemies.centipede", 
+	Shooter =            require "scripts.actor.enemies.shooter", 
+	-- todo enemy qui tire 6 balles dans un rayon circulaire
+
+	-- Unused
 	BigBug =             require "scripts.actor.enemies.big_bug", --*
 	Slime =              require "scripts.actor.enemies.slime", --*
 	Frog =               require "scripts.actor.enemies.frog", --*
-	Motherboard =        require "scripts.actor.enemies.motherboard", --*
-	BigBeelet =          require "scripts.actor.enemies.big_beelet", --*
-	MotherboardButton =  require "scripts.actor.enemies.motherboard_button", --*
-
-	WallWalker =         require "scripts.actor.enemies.wall_walker", --*
-	MushroomAnt =        require "scripts.actor.enemies.mushroom_ant", --*
-	Mole =               require "scripts.actor.enemies.mole", --*
+	SwitchBug =          require "scripts.actor.enemies.switch_bug", --*
+	W2boss =             require "scripts.actor.enemies.w2boss", --*
 	
 	JumpingProp =        require "scripts.actor.enemies.jumping_prop",
 	Dummy =              require "scripts.actor.enemies.dummy",

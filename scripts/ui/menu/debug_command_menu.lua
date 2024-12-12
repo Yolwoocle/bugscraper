@@ -140,7 +140,7 @@ function DebugCommandMenu:reset_autocompletion_cursors()
 end
 
 function DebugCommandMenu:update_autocomplete()
-	self.args = split_str(self.input, " ", true)
+	self.args = split_str(self.input, " ", false)
 	if #self.args == 0 and not self.show_autocompletion_on_empty then
 		self.autocomplete = {}
 	else

@@ -99,7 +99,7 @@ local function generate_menus()
 
     menus.debug_command = DebugCommandMenu:new(game)
 
-    menus.boss_intro = BossIntroMenu:new(game, { 38 / 255, 43 / 255, 68 / 255, 0.8 }, "Dung Manager", {
+    menus.boss_intro = BossIntroMenu:new(game, { 38 / 255, 43 / 255, 68 / 255, 0.8 }, Text:text("enemy.dung"), {
         { image = images.boss_intro_dung_layer5, z_mult = 0.3 },
         { image = images.boss_intro_dung_layer4, z_mult = 0.5 },
         { image = images.boss_intro_dung_layer3, z_mult = 0.7 },

@@ -297,7 +297,7 @@ local waves = {
 		min = 1,
 		max = 1,
 		enemies = {
-			{ E.Dung, 1, position = { CANVAS_WIDTH/2 - 24/2, 200 } },
+			{ E.Dung, 1, position = { CANVAS_WIDTH / 2 - 24 / 2, 200 } },
 		},
 		music = "miniboss",
 		cutscene = cutscenes.dung_boss_enter,
@@ -319,8 +319,8 @@ local waves = {
 		max = 7,
 
 		enemies = {
-			{ E.Larva,    2 },
-			{ E.Mosquito, 2 },
+			{ E.Larva, 2 },
+			{ E.Bee,   2 },
 		},
 
 		background = backgrounds.BackgroundFactory:new(),
@@ -352,7 +352,7 @@ local waves = {
 
 		enemies = {
 			{ E.Larva,     2 },
-			{ E.Mosquito,  2 },
+			{ E.Bee,       2 },
 			{ E.ShovelBee, 4 },
 		},
 	}),
@@ -372,7 +372,7 @@ local waves = {
 
 		enemies = {
 			{ E.Larva,      4 },
-			{ E.Mosquito,   4 },
+			{ E.Bee,        4 },
 			{ E.Boomshroom, 4 },
 			{ E.Beelet,     2 },
 		},
@@ -383,7 +383,7 @@ local waves = {
 		max = 6,
 
 		enemies = {
-			{ E.Mosquito,    4 },
+			{ E.Bee,         4 },
 			{ E.HoneypotAnt, 4 },
 		},
 	}),
@@ -393,8 +393,8 @@ local waves = {
 		max = 6,
 
 		enemies = {
-			{ E.Mosquito, 4 },
-			{ E.Beelet,   3 },
+			{ E.Bee,    4 },
+			{ E.Beelet, 3 },
 		},
 	}),
 
@@ -403,7 +403,7 @@ local waves = {
 		max = 6,
 
 		enemies = {
-			{ E.Mosquito,    3 },
+			{ E.Bee,         3 },
 			{ E.HoneypotAnt, 4 },
 			{ E.ShovelBee,   3 },
 		},
@@ -418,7 +418,7 @@ local waves = {
 
 		enemies = {
 			{ E.SnailShelled, 1 },
-			{ E.Mosquito,     3 },
+			{ E.Bee,          3 },
 			{ E.HoneypotAnt,  1 },
 			{ E.ShovelBee,    2 },
 			{ E.Larva,        2 },
@@ -447,8 +447,8 @@ local waves = {
 		max = 5,
 
 		enemies = {
-			{ E.Mosquito, 3 },
-			{ E.Larva,    3 },
+			{ E.Bee,   3 },
+			{ E.Larva, 3 },
 		},
 
 		music = "w2",
@@ -463,7 +463,7 @@ local waves = {
 		max = 6,
 
 		enemies = {
-			{ E.Mosquito,    3 },
+			{ E.Bee,         3 },
 			{ E.Larva,       3 },
 			{ E.HoneypotAnt, 2 },
 			{ E.Fly,         2 },
@@ -475,7 +475,7 @@ local waves = {
 		max = 7,
 
 		enemies = {
-			{ E.Mosquito,    3 },
+			{ E.Bee,         3 },
 			{ E.Larva,       3 },
 			{ E.HoneypotAnt, 2 },
 			{ E.Fly,         2 },
@@ -499,7 +499,7 @@ local waves = {
 		max = 6,
 
 		enemies = {
-			{ E.Mosquito,   20 },
+			{ E.Bee,        20 },
 			{ E.ShovelBee,  10 },
 			{ E.Boomshroom, 20 },
 			{ E.DrillBee,   30 },
@@ -512,7 +512,7 @@ local waves = {
 
 		enemies = {
 			{ E.Larva,       3 },
-			{ E.Mosquito,    3 },
+			{ E.Bee,         3 },
 			{ E.HoneypotAnt, 3 },
 		},
 		fixed_enemies = {
@@ -526,7 +526,7 @@ local waves = {
 		max = 7,
 
 		enemies = {
-			{ E.Mosquito,  3 },
+			{ E.Bee,       3 },
 			{ E.ShovelBee, 3 },
 			{ E.DrillBee,  3 },
 		},
@@ -539,7 +539,7 @@ local waves = {
 
 		enemies = {
 			{ E.Larva,       3 },
-			{ E.Mosquito,    3 },
+			{ E.Bee,         3 },
 			{ E.ShovelBee,   3 },
 			{ E.DrillBee,    3 },
 			{ E.HoneypotAnt, 3 },
@@ -902,16 +902,16 @@ local waves = {
 
 	----------------------------------------------------------------------------------------------------------
 	----------------------------------------------------------------------------------------------------------
-	--- W4: the final climb
+	--- W4: executive
 	----------------------------------------------------------------------------------------------------------
 	----------------------------------------------------------------------------------------------------------
 
 	new_wave({
-		min = 3,
-		max = 4,
+		min = 6,
+		max = 6,
 
 		enemies = {
-			{ E.CloudEnemy, 2 },
+			{ E.CloudStorm, 20 },
 		},
 
 		background = backgrounds.BackgroundFinal:new(),
@@ -930,21 +930,26 @@ local waves = {
 
 
 	new_wave({
-		min = 4,
-		max = 4,
+		min = 7,
+		max = 7,
 
 		enemies = {
-			{ E.CloudStorm, 3 },
+			{ E.CloudStorm, 30 },
+			{ E.Shooter,    40 },
 		},
 	}),
-	
+
 	new_wave({
-		min = 3,
-		max = 3,
+		min = 6,
+		max = 6,
 
 		enemies = {
 			{ E.MushroomAnt, 1 },
+			{ E.Grasshopper, 1 },
 		},
+		fixed_enemies = {
+			{ E.MushroomAnt, 1 },
+		}
 	}),
 
 	new_wave({
@@ -952,8 +957,8 @@ local waves = {
 		max = 9,
 
 		enemies = {
-			{ E.CloudEnemy, 2 },
-			{ E.CloudStorm, 2 },
+			{ E.CloudStorm,  2 },
+			{ E.MushroomAnt, 1 },
 		},
 	}),
 
@@ -965,6 +970,50 @@ local waves = {
 			{ E.Mole, 2 },
 		},
 	}),
+
+	new_wave({
+		min = 7,
+		max = 7,
+
+		enemies = {
+			{ E.MushroomAnt, 2 },
+			{ E.Mole,        2 },
+		},
+	}),
+
+	new_wave({
+		min = 6,
+		max = 6,
+
+		enemies = {
+			{ E.Shooter, 1 },
+			{ E.Mole,    2 },
+		},
+	}),
+
+	new_wave({
+		min = 6,
+		max = 6,
+
+		enemies = {
+			{ E.CloudStorm,  2 },
+			{ E.Shooter, 1 },
+			{ E.MushroomAnt, 2 },
+		},
+	}),
+
+	new_wave({
+		min = 1,
+		max = 1,
+
+		enemies = {
+			{ E.Centipede, 1, args = { 15 } },
+		},
+	}),
+
+	---------------------------------------------
+	new_cafeteria(),
+	---------------------------------------------
 
 	--]]
 
@@ -1207,7 +1256,7 @@ local demo_waves = {
 		min = 1,
 		max = 1,
 		enemies = {
-			{ E.Dung, 1, position = { CANVAS_WIDTH/2 - 24/2, 200 } },
+			{ E.Dung, 1, position = { CANVAS_WIDTH / 2 - 24 / 2, 200 } },
 		},
 		music = "miniboss",
 	}),

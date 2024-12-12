@@ -5,15 +5,33 @@ local sounds = require "data.sounds"
 local images = require "data.images"
 
 local Centipede = Enemy:inherit()
-	
-function Centipede:init(x, y, length, parent)
-    length = length or 10
 
-    self:init_enemy(x,y, images.stink_bug_1, 10, 10)
+function Centipede:init(x, y, length, parent, params)
+    params = params or {
+        center_x = x,
+        center_y = y,
+        angle = 0,
+    }
+    length = length or 30
+    if params.center_x and params.angle then
+        x = params.center_x + math.cos(params.angle) * (1 + params.angle)
+    end
+    if params.center_y and params.angle then
+        y = params.center_y + math.sin(params.angle) * (1 + params.angle)
+    end
+    print_table(params)
+    print_debug(x)
+    print_debug(y)
+    print_debug("")
+    self.spawn_center_x = params.center_x
+    self.spawn_center_y = params.center_y
+    self.spawn_angle = params.angle
+
+    Centipede.super.init(self, x, y, images.stink_bug_1, 10, 10)
     self.name = "centipede"
     self.is_flying = true
     self.follow_player = false
-    self.life = 10
+    self.life = 7
     self.is_pushable = true
     self.self_knockback_mult = 0.1
 
@@ -25,13 +43,13 @@ function Centipede:init(x, y, length, parent)
 
     self.centipede_length = length
     self.centipede_parent = parent
-    if length == 0 then 
+    if length == 0 then
         self:init_centipede_head()
     else
         self:init_centipede_body()
     end
-    
-    self.speed = random_range(7,13) --10
+
+    self.speed = random_range(7, 13) --10
     self.speed_x = self.speed
     self.speed_y = self.speed
 
@@ -41,10 +59,10 @@ function Centipede:init(x, y, length, parent)
     self.friction_y = self.friction_x
 
     self.anim_frame_len = 0.05
-    self.anim_frames = {images.stink_bug_1, images.stink_bug_1}
-	self.flip_mode = ENEMY_FLIP_MODE_MANUAL
+    self.anim_frames = { images.stink_bug_1, images.stink_bug_1 }
+    self.flip_mode = ENEMY_FLIP_MODE_MANUAL
     self.spr:set_anchor(SPRITE_ANCHOR_CENTER_CENTER)
-    
+
     self.sound_death = "stink_bug_death"
     self.sound_stomp = "stink_bug_death"
 end
@@ -55,10 +73,16 @@ end
 
 function Centipede:init_centipede_body()
     self.centipede_type = "body"
-    
-    local child = Centipede:new(self.x, self.y, self.centipede_length-1, self)
+
+    local child = Centipede:new(self.x, self.y, self.centipede_length - 1, self, {
+        center_x = self.spawn_center_x,
+        center_y = self.spawn_center_y,
+        angle = (self.spawn_angle or 0) + 0.6,
+    })
     game:new_actor(child)
     self.centipede_child = child
+
+    table.insert(self.spawned_actors, self.centipede_child)
 end
 
 function Centipede:update(dt)
@@ -75,9 +99,9 @@ function Centipede:update(dt)
     if self.centipede_type == "body" then
         if self.centipede_child then
             local ang = math.atan2(self.centipede_child.y - self.y, self.centipede_child.x - self.x)
-            self.direction = ang--move_toward_angle(self.direction, , 1)
-            
-            self:follow_direction(dt*20)           
+            self.direction = ang --move_toward_angle(self.direction, , 1)
+
+            self:follow_direction(dt * 20)
         end
     else
         local target = self:get_nearest_player()
@@ -85,20 +109,20 @@ function Centipede:update(dt)
         if target then
             a = get_angle_between_actors(self, target)
         else
-            a = self.direction + random_sample({-1, 1})
+            a = self.direction + random_sample({ -1, 1 })
         end
         self.direction = move_toward_angle(self.direction, a, dt * 3)
         self:follow_direction(dt)
     end
-    
+
     if self.centipede_child then
         self:spring_join(self.centipede_child)
     end
     if self.centipede_parent then
         self:spring_join(self.centipede_parent)
     end
-    
-    
+
+
     self.spr:set_rotation(self.direction)
 end
 
@@ -110,14 +134,14 @@ end
 
 function Centipede:follow_direction(dt)
     self.vx = self.vx + math.cos(self.direction) * self.speed
-	self.vy = self.vy + math.sin(self.direction) * self.speed
+    self.vy = self.vy + math.sin(self.direction) * self.speed
 end
 
 function Centipede:draw()
-	self:draw_enemy()
+    self:draw_enemy()
 
     if self.centipede_parent then
-        line_color(COL_RED, self.x, self.y, self.centipede_parent.x, self.centipede_parent.y)
+        line_color(COL_RED, self.mid_x, self.mid_y, self.centipede_parent.mid_x, self.centipede_parent.mid_y)
     end
     -- if self.debug_ang then
     --     line_color(COL_YELLOW, self.x, self.y, self.x + 12*math.cos(self.direction), self.y + 12*math.sin(self.direction))
@@ -129,7 +153,8 @@ function Centipede:after_collision(col, other)
     if col.type ~= "cross" then
         -- Particles:smoke(col.touch.x, col.touch.y)
 
-        local new_vx, new_vy = bounce_vector_cardinal(math.cos(self.direction), math.sin(self.direction), col.normal.x, col.normal.y)
+        local new_vx, new_vy = bounce_vector_cardinal(math.cos(self.direction), math.sin(self.direction), col.normal.x,
+            col.normal.y)
         self.direction = math.atan2(new_vy, new_vx)
     end
 end

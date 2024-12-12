@@ -45,8 +45,6 @@ function FlyingDung:init_flying_dung(x, y, spawner)
 end
 
 function FlyingDung:update(dt)
-    self.debug_values[1] = self.invul_timer.time
-
     self:update_pong_ball(dt)
 
     if self.invul_timer:update(dt) then

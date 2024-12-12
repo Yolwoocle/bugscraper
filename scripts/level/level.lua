@@ -263,7 +263,7 @@ function Level:new_endless_wave()
 			{Enemies.Woodlouse, random_range(1,6)},
 			{Enemies.Fly, random_range(1,6)},
 			{Enemies.Slug, random_range(1,6)},
-			{Enemies.Mosquito, random_range(1, 6)},
+			{Enemies.Bee, random_range(1, 6)},
 
 			{Enemies.StinkBug, random_range(1,4)},
 			{Enemies.Boomshroom, random_range(1,4)},

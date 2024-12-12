@@ -146,10 +146,18 @@ function Wave:spawn_roll(rect, roll, spawned_enemies)
 		end
 		
 		-- Extra spawned enemies
-		for _, extra_enemy in pairs(enemy_instance.spawned_actors or {}) do
-			table.insert(spawned_enemies, extra_enemy)
-			extra_enemy:set_active(false)
+		local function add_spawned_actors(enemy)
+			if not enemy.spawned_actors or #enemy.spawned_actors == 0 then
+				return
+			end
+
+			for _, extra_enemy in pairs(enemy.spawned_actors or {}) do
+				table.insert(spawned_enemies, extra_enemy)
+				extra_enemy:set_active(false)
+				add_spawned_actors(extra_enemy)
+			end
 		end
+		add_spawned_actors(enemy_instance)
 	end
 
 	return spawned_enemies

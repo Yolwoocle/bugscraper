@@ -12,7 +12,7 @@ local W2boss = Enemy:inherit()
 
 function W2boss:init(x, y)
     self:init_enemy(x,y, images.chipper_1, 32, 32)
-    self.name = "todo_changeme"  --removeme(dont actually)
+    self.name = "w2_boss"  --removeme(dont actually)
 
     -- Parameters 
     self.life = 300

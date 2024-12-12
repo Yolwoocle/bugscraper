@@ -412,6 +412,40 @@ function Guns:init()
 	end
 
 	-------
+	
+	
+	-----
+
+	self.unlootable.SixBullets = Gun:inherit()
+
+	function self.unlootable.SixBullets:init(user)
+		self.name = "ring"
+		self:init_gun(user)
+		
+		self.max_ammo = 8
+		self.max_reload_timer = 0.01
+		self.bullet_number = 6
+		self.bullet_spread = pi - pi/6
+		self.random_angle_offset = 0
+
+		self.random_angle_offset = 0
+		self.damage = 1
+		self.sfx = {"gunshot_ring_1", "gunshot_ring_2", "gunshot_ring_3"}
+		self.sfx2 = "pop_ring"
+		self.sfx_volume = 1
+		self.sfx_pitch = 1.4
+		
+		self.cooldown = 0.01
+		self.bullet_speed = 125-- 200
+		
+		self.bullet_spr = images.bullet_ring
+		self.bul_w = 10
+		self.bul_h = 10
+
+		self.screenshake = 4
+	end
+
+	----
 
 	self.unlootable.ExplosionGun = Gun:inherit()
 

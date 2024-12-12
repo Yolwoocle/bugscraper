@@ -68,27 +68,26 @@ function DebugCommand:generate_signature()
 end
 
 function DebugCommand:run(...)
-    local args = {...}
+    local input_args = {...}
     for i = 1, #self.args do
-        local user_arg = args[i]
         local arg_data = self.args[i]
         local arg_type = arg_data.type
 
-        if args[i] == nil then
-            args[i] = self.args[i].default
+        if input_args[i] == nil then
+            input_args[i] = self.args[i].default
         end
-        if args[i] == nil then
+        if input_args[i] == nil then
             return false, "No argument given for '"..tostring(self.args[i].name).."'"
         end
         
-        if not supported_types[arg_type].check(user_arg) then
-            return false, "Invalid format for type "..tostring(arg_type)..": '"..tostring(user_arg).."'"
+        if not supported_types[arg_type].check(input_args[i]) then
+            return false, "Invalid format for type "..tostring(arg_type)..": '"..tostring(input_args[i]).."'"
         end
 
-        args[i] = supported_types[arg_data.type].build(args[i])
+        input_args[i] = supported_types[arg_data.type].build(input_args[i])
     end
 
-    local success, err = self.run_arg(unpack(args))
+    local success, err = self.run_arg(unpack(input_args))
     if not success then
         return success, err
     end

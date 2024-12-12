@@ -40,6 +40,22 @@ function Enemy:init_enemy(x,y, img, w,h)
                 self.vx = self.vx + math.cos(self.direction) * self.speed
                 self.vy = self.vy + math.sin(self.direction) * self.speed
 			end
+		},
+		["random_rotate_upper"] = { -- Like random_rotate, but with a priority on staying in the upper half of the screen	
+			ready = function(ai)
+				self.direction = random_range(0, pi2)
+			end,
+			update = function(ai, dt)
+                self.direction = self.direction + random_sample({-1, 1}) * dt * 3
+                self.vx = self.vx + math.cos(self.direction) * self.speed
+                self.vy = self.vy + math.sin(self.direction) * self.speed
+
+				if self.y > CANVAS_HEIGHT/2 then
+					print_debug("TRUE")
+					self.vy = -math.abs(self.vy)
+					self.direction = math.atan2(self.vy, self.vx)
+				end
+			end
 		}
 	}
 

@@ -25,13 +25,14 @@ function CloudStorm:init(x, y, size)
     self.friction_y = self.friction_x
 
     self.life = 15
-    self.ai_template = "random_rotate"
+    self.ai_template = "random_rotate_upper"
     self.follow_player = false
 
     self.arc = ElectricArc:new(self.mid_x, self.mid_y)
     game:new_actor(self.arc)
 
     self.flip_mode = ENEMY_FLIP_MODE_MANUAL
+    self.lightning_angle_offset = 0.0
 
     self.state_timer = Timer:new(0.0)
     self.state_machine = StateMachine:new({
@@ -40,8 +41,8 @@ function CloudStorm:init(x, y, size)
                 self.spr:set_image(images.cloud_storm)
                 self.spr:update_offset(0, 0)
 
-                self.ai_template = "random_rotate"
-                self.state_timer:start(random_range(2.0, 4.0))
+                self.ai_template = "random_rotate_upper"
+                self.state_timer:start(random_range(1.0, 3.0))
                 self.arc:set_active(false)
             end,
             update = function(state, dt)
@@ -58,6 +59,8 @@ function CloudStorm:init(x, y, size)
                 self.arc:set_active(true)
                 self.arc:set_arc_active(false)
                 self.state_timer:start(1.0)
+
+                self.lightning_angle_offset = random_neighbor(pi/12)
             end,
             update = function(state, dt)
                 Particles:flash(self.mid_x + random_polar(3), self.y + self.h + 4 + random_polar(3), 4, 1)
@@ -137,7 +140,11 @@ function CloudStorm:update(dt)
     self.state_machine:update(dt)
     
     local bounds = game.level.cabin_inner_rect
-    self.arc:set_segment(self.mid_x, self.mid_y, self.mid_x, bounds.by)
+
+    local bx = self.mid_x + math.cos(pi/2 + self.lightning_angle_offset) * 1000
+    local by = self.mid_y + math.sin(pi/2 + self.lightning_angle_offset) * 1000
+    local ax, ay, bx, by = clamp_segment_to_rectangle(Segment:new(self.mid_x, self.mid_y, bx, by), game.level.cabin_inner_rect)
+    self.arc:set_segment(ax, ay, bx, by)
 end
 
 function CloudStorm:draw()
