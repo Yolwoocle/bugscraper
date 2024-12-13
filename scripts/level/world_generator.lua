@@ -68,11 +68,11 @@ function WorldGenerator:generate_ground_floor()
 
 	-- tables
 	for _, rect in pairs({
-		Rect:new(24, 14, 27, 14),
+		Rect:new(24, 14, 27, 14), -- Desks
 		Rect:new(24+5*1, 14, 27+5*1, 14),
 		Rect:new(24+5*2, 14, 27+5*2, 14),
 		Rect:new(24+5*3, 14, 27+5*3, 14),
-		Rect:new(47, 12, 50, 12),
+		Rect:new(49, 12, 52, 12), -- Machines
 	}) do
 		self:write_rect(rect, TILE_SEMISOLID)
 	end

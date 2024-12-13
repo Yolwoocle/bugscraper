@@ -10,7 +10,7 @@ local waves               = require "data.waves"
 local Enemies             = require "data.enemies"
 local debug_draw_waves    = require "scripts.debug.draw_waves"
 local images              = require "data.images"
-local DebugCommandMenu   = require "scripts.ui.menu.debug_command_menu"
+local DebugCommandMenu    = require "scripts.ui.menu.debug_command_menu"
 
 local function func_set_menu(menu)
     return function()
@@ -37,8 +37,8 @@ local PROMPTS_GAME_OVER = {
 }
 
 local PROMPTS_CONTROLS = {
-    { { "ui_select" },     "input.prompts.ui_select" },
-    { { "ui_back" },       "input.prompts.ui_back" },
+    { { "ui_select" }, "input.prompts.ui_select" },
+    { { "ui_back" },   "input.prompts.ui_back" },
 }
 
 local function draw_elevator_progress()
@@ -121,15 +121,15 @@ local function generate_menus()
         [1]  = { "" },
         [2]  = { "<<<<<<<<< " .. Text:text("menu.pause.title") .. " >>>>>>>>>" },
         [3]  = { "" },
-        [4]  = { "▶ " .. Text:text("menu.pause.resume"), function() game.menu_manager:unpause() end },
-        [5]  = { "🔄 " .. Text:text("menu.pause.retry"), function() game:new_game() end },
-        [6]  = { "🎚 " .. Text:text("menu.pause.options"), func_set_menu('options') },
-        [7]  = { "💡 " .. Text:text("menu.pause.feedback"), func_set_menu("feedback") },
-        [8]  = { "❤ " .. Text:text("menu.pause.credits"), func_set_menu('credits') },
-        [9]  = { "🔚 " .. Text:text("menu.pause.quit"), func_set_menu('quit') },
+        [4]  = { "▶ {menu.pause.resume}", function() game.menu_manager:unpause() end },
+        [5]  = { "🔄 {menu.pause.retry}", function() game:new_game() end },
+        [6]  = { "🎚 {menu.pause.options}", func_set_menu('options') },
+        [7]  = { "💡 {menu.pause.feedback}", func_set_menu("feedback") },
+        [8]  = { "❤ {menu.pause.credits}", func_set_menu('credits') },
+        [9]  = { "🔚 {menu.pause.quit}", func_set_menu('quit') },
         [10] = { "" },
-        [11] = { "❤ " .. Text:text("menu.win.wishlist") .. " 🔗", func_url("steam://advertise/2957130/") },
-        [12] = { "😈 " .. Text:text("menu.pause.discord") .. " 🔗", func_url("https://discord.gg/BAMMwMn2m5") },
+        [11] = { "❤ {menu.win.wishlist} 🔗", func_url("steam://advertise/2957130/") },
+        [12] = { "😈 {menu.pause.discord} 🔗", func_url("https://discord.gg/BAMMwMn2m5") },
     }
     if OPERATING_SYSTEM == "Web" then
         -- Disable quitting on web
@@ -235,10 +235,10 @@ local function generate_menus()
     menus.pause = Menu:new(game, pause_items, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL, draw_elevator_progress)
 
     menus.feedback = Menu:new(game, {
-        { "<<<<<<<<< " .. Text:text("menu.feedback.title") .. " >>>>>>>>>" },
+        { "<<<<<<<<< {menu.feedback.title} >>>>>>>>>" },
         { "" }, -- pinnnnn
-        { Text:text("menu.feedback.bugs"),                                 func_url("https://github.com/Yolwoocle/bugscraper/issues") },
-        { Text:text("menu.feedback.features"),                             func_url("https://github.com/Yolwoocle/bugscraper/issues") },
+        { "{menu.feedback.bugs}", func_url("https://github.com/Yolwoocle/bugscraper/issues") },
+        { "{menu.feedback.features}", func_url("https://github.com/Yolwoocle/bugscraper/issues") },
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL, draw_elevator_progress)
 
     menus.options = Menu:new(game, {
@@ -286,7 +286,7 @@ local function generate_menus()
         { RangeOptionMenuItem, "🌄 {menu.options.visuals.background_speed}", "background_speed", { 0.0, 1.0 }, 0.05, "%" },
         { "" },
         { "<<< {menu.options.game.title} >>>" },
-        { RangeOptionMenuItem, "🛜 " .. Text:text("menu.options.game.screenshake"), "screenshake", { 0.0, 1.0 }, 0.05, "%" },
+        { RangeOptionMenuItem, "🛜 {menu.options.game.screenshake}", "screenshake", { 0.0, 1.0 }, 0.05, "%" },
         { BoolOptionMenuItem, "🕐 {menu.options.game.timer}", "timer_on" },
         { BoolOptionMenuItem, "↖ {menu.options.game.mouse_visible}", "mouse_visible" },
         { BoolOptionMenuItem, "🛅 {menu.options.game.pause_on_unfocus}", "pause_on_unfocus" },
@@ -295,18 +295,18 @@ local function generate_menus()
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
 
     menus.options_input = Menu:new(game, {
-        { "<<<<<<<<< " .. Text:text("menu.options.input_submenu.title") .. " >>>>>>>>>" },
+        { "<<<<<<<<< {menu.options.input_submenu.title} >>>>>>>>>" },
         { "" },
-        { "<<< " .. Text:text("menu.options.input_submenu.keyboard") .. " >>>" },
-        { "⌨ " .. Text:text("menu.options.input_submenu.keyboard_solo"), func_set_menu("controls_keyboard_solo") },
-        { "⌨ " .. Text:text("menu.options.input_submenu.keyboard_p1"), func_set_menu("controls_keyboard_split_p1") },
-        { "⌨ " .. Text:text("menu.options.input_submenu.keyboard_p2"), func_set_menu("controls_keyboard_split_p2") },
+        { "<<< {menu.options.input_submenu.keyboard} >>>" },
+        { "⌨ {menu.options.input_submenu.keyboard_solo}", func_set_menu("controls_keyboard_solo") },
+        { "⌨ {menu.options.input_submenu.keyboard_p1}", func_set_menu("controls_keyboard_split_p1") },
+        { "⌨ {menu.options.input_submenu.keyboard_p2}", func_set_menu("controls_keyboard_split_p2") },
         { "" },
-        { "<<< " .. Text:text("menu.options.input_submenu.controller") .. " >>>" },
-        { "🎮 " .. Text:text("menu.options.input_submenu.controller_p1"), func_set_menu("controls_controller_p1") },
-        { "🎮 " .. Text:text("menu.options.input_submenu.controller_p2"), func_set_menu("controls_controller_p2") },
-        { "🎮 " .. Text:text("menu.options.input_submenu.controller_p3"), func_set_menu("controls_controller_p3") },
-        { "🎮 " .. Text:text("menu.options.input_submenu.controller_p4"), func_set_menu("controls_controller_p4") },
+        { "<<< {menu.options.input_submenu.controller} >>>" },
+        { "🎮 {menu.options.input_submenu.controller_p1}", func_set_menu("controls_controller_p1") },
+        { "🎮 {menu.options.input_submenu.controller_p2}", func_set_menu("controls_controller_p2") },
+        { "🎮 {menu.options.input_submenu.controller_p3}", func_set_menu("controls_controller_p3") },
+        { "🎮 {menu.options.input_submenu.controller_p4}", func_set_menu("controls_controller_p4") },
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
 
     local function create_keyboard_controls_menu(title, input_profile_id)
@@ -325,6 +325,7 @@ local function generate_menus()
             { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_KEYBOARD, "down", "⬇ " .. Text:text("input.prompts.down") },
             { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_KEYBOARD, "jump", "⏏ " .. Text:text("input.prompts.jump") },
             { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_KEYBOARD, "shoot", "🔫 " .. Text:text("input.prompts.shoot") },
+            { ControlsMenuItem, -1, input_profile_id, INPUT_TYPE_KEYBOARD, "leave_game", "🔚 " .. Text:text("input.prompts.leave_game") },
             { "" },
             { "<<< {menu.options.input_submenu.interface} >>>" },
             { "{menu.options.input_submenu.note_ui_min_button}" },
@@ -395,6 +396,7 @@ local function generate_menus()
             { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "down", "⬇ " .. Text:text("input.prompts.down") },
             { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "jump", "⏏ " .. Text:text("input.prompts.jump") },
             { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "shoot", "🔫 " .. Text:text("input.prompts.shoot") },
+            { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "leave_game", "🔚 " .. Text:text("input.prompts.leave_game") },
             { "" },
             { "<<< {menu.options.input_submenu.interface} >>>" },
             { Text:text("menu.options.input_submenu.note_ui_min_button") },
@@ -456,7 +458,7 @@ local function generate_menus()
         end },
     }
     if DEMO_BUILD then
-        table.insert(game_over_items, 
+        table.insert(game_over_items,
             { "❤ " .. Text:text("menu.win.wishlist") .. " 🔗", func_url("steam://advertise/2957130/") }
         )
     end
@@ -501,12 +503,12 @@ local function generate_menus()
         { "LÖVE framework", function() end },    -- func_url("https://love2d.org/") },
         { "" },
         { "<<< " .. Text:text("menu.credits.asset_creators") .. " >>>" },
-        { "Kenney", function() end }, -- func_url("https://kenney.nl/")},
-        { "somepx", function() end }, -- func_url("https://somepx.itch.io/")},
-        { "emhuo", function() end },  -- func_url("https://emhuo.itch.io/")},
-        { "Endesga", function() end },  -- func_url("https://emhuo.itch.io/")},
+        { "Kenney", function() end },  -- func_url("https://kenney.nl/")},
+        { "somepx", function() end },  -- func_url("https://somepx.itch.io/")},
+        { "emhuo", function() end },   -- func_url("https://emhuo.itch.io/")},
+        { "Endesga", function() end }, -- func_url("https://emhuo.itch.io/")},
         { "freesound.org [" .. Text:text("menu.see_more") .. "]", func_set_menu("credits_sounds") },
-        { Text:text("menu.open_source.title").." [" .. Text:text("menu.see_more") .. "]", func_set_menu("open_source") },
+        { Text:text("menu.open_source.title") .. " [" .. Text:text("menu.see_more") .. "]", func_set_menu("open_source") },
         { "" },
         { "<< " .. Text:text("menu.credits.licenses") .. " >>" },
         { "CC0 🔗", func_url("https://creativecommons.org/publicdomain/zero/1.0/") },
@@ -567,8 +569,8 @@ local function generate_menus()
         { Text:text("menu.credits.asset_item", "'Metal container impact firm'", "jorickhoofd", "CC BY 4.0"),                 func_url("https://freesound.org/s/160077/") },
         { Text:text("menu.credits.asset_item", "'Roller blind circuit breaker'", "newlocknew", "CC BY 4.0"),                 func_url("https://freesound.org/s/583451/") },
         { Text:text("menu.credits.asset_item", "'Digging, Ice, Hammer, A'", "InspectorJ", "CC BY 4.0"),                      func_url("https://freesound.org/s/420878/ ") },
-        { Text:text("menu.credits.asset_item", "'Whoosh For Whip Zoom'", "BennettFilmTeacher", "CC0"),                      func_url("https://freesound.org/s/420878/ ") },
-        { Text:text("menu.credits.asset_item", "'Balloon_Inflate_Quick_Multiple'", "Terhen", "CC BY 3.0"),                      func_url("https://freesound.org/s/420878/ ") },
+        { Text:text("menu.credits.asset_item", "'Whoosh For Whip Zoom'", "BennettFilmTeacher", "CC0"),                       func_url("https://freesound.org/s/420878/ ") },
+        { Text:text("menu.credits.asset_item", "'Balloon_Inflate_Quick_Multiple'", "Terhen", "CC BY 3.0"),                   func_url("https://freesound.org/s/420878/ ") },
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
 
     local items = {

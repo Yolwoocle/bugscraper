@@ -37,19 +37,19 @@ function BackroomGroundFloor:generate(world_generator)
 		{x = 574-16, y = 222-16, img = images.ground_floor_computer_right},
 		{x = 651-16, y = 222-16, img = images.ground_floor_computer_right},
 
-		{x = 386-16, y = 212-16, z = -10, img = images.ground_floor_stack_papers_big},
-		{x = 404-16, y = 208-16, z = -10, img = images.ground_floor_stack_papers_medium},
-		{x = 412-16, y = 224-16, z = -11, img = images.ground_floor_stack_papers_medium},
-		{x = 422-16, y = 232-16, z = -11, img = images.ground_floor_stack_papers_small},
-		{x = 494-16, y = 224-16, z = -10, img = images.ground_floor_stack_papers_medium_b},
-		{x = 528-16, y = 232-16, z = -10, img = images.ground_floor_stack_papers_small},
-		{x = 500-16, y = 190-16, z = -10, img = images.ground_floor_stack_papers_big},
-		{x = 563-16, y = 212-16, z = -10, img = images.ground_floor_stack_papers_big},
-		{x = 558-16, y = 248-16, z = -11, img = images.ground_floor_stack_papers_small},
-		{x = 618-16, y = 225-16, z = -11, img = images.ground_floor_stack_papers_medium_b},
-		{x = 696-16, y = 212-16, z = -11, img = images.ground_floor_stack_papers_big},
-		{x = 688-16, y = 225-16, z = -12, img = images.ground_floor_stack_papers_medium},
-		{x = 678-16, y = 225-16, z = -12, img = images.ground_floor_stack_papers_small},
+		-- {x = 386-16, y = 212-16, z = -10, img = images.ground_floor_stack_papers_big},
+		-- {x = 404-16, y = 208-16, z = -10, img = images.ground_floor_stack_papers_medium},
+		-- {x = 412-16, y = 224-16, z = -11, img = images.ground_floor_stack_papers_medium},
+		-- {x = 422-16, y = 232-16, z = -11, img = images.ground_floor_stack_papers_small},
+		-- {x = 494-16, y = 224-16, z = -10, img = images.ground_floor_stack_papers_medium_b},
+		-- {x = 528-16, y = 232-16, z = -10, img = images.ground_floor_stack_papers_small},
+		-- {x = 500-16, y = 190-16, z = -10, img = images.ground_floor_stack_papers_big},
+		-- {x = 563-16, y = 212-16, z = -10, img = images.ground_floor_stack_papers_big},
+		-- {x = 558-16, y = 248-16, z = -11, img = images.ground_floor_stack_papers_small},
+		-- {x = 618-16, y = 225-16, z = -11, img = images.ground_floor_stack_papers_medium_b},
+		-- {x = 696-16, y = 212-16, z = -11, img = images.ground_floor_stack_papers_big},
+		-- {x = 688-16, y = 225-16, z = -12, img = images.ground_floor_stack_papers_medium},
+		-- {x = 678-16, y = 225-16, z = -12, img = images.ground_floor_stack_papers_small},
 	}) do
 		local prop = enemies.JumpingProp:new(prop_data.x, prop_data.y, prop_data.img)
 		if prop_data.z then
@@ -58,7 +58,20 @@ function BackroomGroundFloor:generate(world_generator)
 		game:new_actor(prop)
 	end
 
-	game:new_actor(WaterDispenser:new(749-16, 212-16))
+	-- Water dispenser
+	game:new_actor(WaterDispenser:new(845, 212-16))
+
+	-- Start button
+	local nx = CANVAS_WIDTH * 0.7
+	local ny = game.level.cabin_inner_rect.by
+	local l = create_actor_centered(enemies.ButtonSmallGlass, floor(nx), floor(ny))
+	game:new_actor(l)
+
+	-- Exit sign
+	local exit_x = CANVAS_WIDTH * 0.25
+	game:new_actor(create_actor_centered(enemies.ExitSign, floor(744), floor(ny)))
+
+	game:new_actor(create_actor_centered(enemies.Clock, floor(440), floor(105)))
 end
 
 function BackroomGroundFloor:can_exit()
@@ -116,7 +129,7 @@ function BackroomGroundFloor:draw_all()
 	self.door:draw()
 	love.graphics.draw(images.ground_floor, -16, -16)
 	game.level.elevator:draw_counter()
-	print_centered_outline(COL_WHITE, COL_BLACK_BLUE, Text:text("menu.credits.game_by_template", "Léo Bernard"), 536, 8*16)
+	print_centered_outline(COL_WHITE, COL_BLACK_BLUE, Text:text("menu.credits.game_by_template"), 551-16, 8*16)
 
 	--215, 79
 	-- for ix = 0, 54 do

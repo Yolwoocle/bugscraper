@@ -14,10 +14,10 @@ function Centipede:init(x, y, length, parent, params)
     }
     length = length or 30
     if params.center_x and params.angle then
-        x = params.center_x + math.cos(params.angle) * (1 + params.angle)
+        x = params.center_x + math.cos(params.angle) * (1 + params.angle) * 4
     end
     if params.center_y and params.angle then
-        y = params.center_y + math.sin(params.angle) * (1 + params.angle)
+        y = params.center_y + math.sin(params.angle) * (1 + params.angle) * 4
     end
     print_table(params)
     print_debug(x)
@@ -104,15 +104,16 @@ function Centipede:update(dt)
             self:follow_direction(dt * 20)
         end
     else
-        local target = self:get_nearest_player()
-        local a
-        if target then
-            a = get_angle_between_actors(self, target)
-        else
-            a = self.direction + random_sample({ -1, 1 })
-        end
-        self.direction = move_toward_angle(self.direction, a, dt * 3)
-        self:follow_direction(dt)
+        self.ai_template = "random_rotate"
+        -- local target = self:get_nearest_player()
+        -- local a
+        -- if target then
+        --     a = get_angle_between_actors(self, target)
+        -- else
+        --     a = self.direction + random_sample({ -1, 1 })
+        -- end
+        -- self.direction = move_toward_angle(self.direction, a, dt * 3)
+        -- self:follow_direction(dt)
     end
 
     if self.centipede_child then

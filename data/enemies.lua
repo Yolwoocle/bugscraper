@@ -51,7 +51,7 @@ local enemies = {
 	CloudStorm =         require "scripts.actor.enemies.cloud_storm",
 	Centipede =          require "scripts.actor.enemies.centipede", 
 	Shooter =            require "scripts.actor.enemies.shooter", 
-	-- todo enemy qui tire 6 balles dans un rayon circulaire
+	FloorHoleSpawner =   require "scripts.actor.enemies.floor_hole_spawner", 
 
 	-- Unused
 	BigBug =             require "scripts.actor.enemies.big_bug", --*
@@ -72,6 +72,7 @@ local enemies = {
 	GunDisplay =         require "scripts.actor.enemies.gun_display",
 	VendingMachine =     require "scripts.actor.enemies.vending_machine.vending_machine",
 	WaterDispenser =     require "scripts.actor.enemies.vending_machine.water_dispenser",
+	Clock =              require "scripts.actor.enemies.clock",
 	
 	Cocoon =             require "scripts.actor.enemies.cocoon",
 

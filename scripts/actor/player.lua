@@ -851,7 +851,10 @@ function Player:leave_game_if_possible(dt)
 
 	self.is_touching_exit_sign = is_touching
 	if is_touching then
-		self.controls_oy = lerp(self.controls_oy, -6, 0.3)
+		self.controls_oy = lerp(self.controls_oy, 0, 0.3)
+		if Input:action_pressed(self.n, "leave_game") and game.game_state == GAME_STATE_WAITING then
+			exit_sign.other:activate(self)
+		end
 	else
 		self.controls_oy = lerp(self.controls_oy, 0, 0.3)
 	end
@@ -940,6 +943,7 @@ function Player:draw_hud()
 		if Input:get_number_of_users() > 1 then
 			print_centered_outline(self.color_palette[1], nil, Text:text("player.abbreviation", self.n), ui_x, ui_y- 8)
 		end
+		self:draw_controls()
 	end
 end
 
@@ -1011,13 +1015,8 @@ function Player:get_controls_tutorial_values()
 		return {
 			{{"leave_game"}, "input.prompts.leave_game"},
 		}
-	else
-		return {
-			{{"shoot"}, "input.prompts.shoot"},
-			{{"jump"}, "input.prompts.jump"},
-			{{"right", "down", "left", "up"}, "input.prompts.move", Input:get_primary_input_type(self.n) == INPUT_TYPE_KEYBOARD},
-		} 
 	end
+	return {}
 end
 
 function Player:get_controls_text_color(i)

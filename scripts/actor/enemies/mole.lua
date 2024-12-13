@@ -31,7 +31,8 @@ function Mole:init(x, y)
     })
     self.spr:set_anchor(SPRITE_ANCHOR_CENTER_CENTER)
 
-    self.fly_speed = 400
+    self.fly_speed = 300
+    self.is_stompable = true
 
     self.state_timer = Timer:new()
     self.state_machine = StateMachine:new({
@@ -39,11 +40,11 @@ function Mole:init(x, y)
             enter = function(state)
                 self.walk_speed = 200
                 self.damage = 0
-                self.is_stompable = false
                 self.walk_dir = random_sample{-1, 1}
                 self.state_timer:start(random_range(1, 2))
                 self.spr:set_animation("digging")
 
+                self.gravity = self.default_gravity
                 self.is_wall_walking = true
             end,
             update = function(state, dt)
@@ -56,7 +57,6 @@ function Mole:init(x, y)
             enter = function(state)
                 self.walk_speed = 0
                 self.damage = 0
-                self.is_stompable = true
                 self.spr:update_offset(0, 0)
                 self.spr:set_animation("telegraph")
 
@@ -76,10 +76,11 @@ function Mole:init(x, y)
         jump = {
             enter = function(state)
                 self.is_wall_walking = false
-                self.is_stompable = false
                 self.damage = 1
                 self.vx = self.up_vect.x * self.fly_speed
                 self.vy = self.up_vect.y * self.fly_speed
+
+                self.gravity = self.default_gravity/2
                 self.spr:set_animation("flying")
             end,
 

@@ -126,16 +126,6 @@ function Game:new_game()
 	self.actors = {}
 	self:init_players()
 
-	-- Start button
-	local nx = CANVAS_WIDTH * 0.7
-	local ny = self.level.cabin_inner_rect.by
-	local l = create_actor_centered(Enemies.ButtonSmallGlass, floor(nx), floor(ny))
-	self:new_actor(l)
-
-	-- Exit sign
-	local exit_x = CANVAS_WIDTH * 0.25
-	self:new_actor(create_actor_centered(Enemies.ExitSign, floor(exit_x), floor(ny)))
-
 	-- Debugging
 	self.colview_mode = false
 	self.msg_log = {}
@@ -178,7 +168,7 @@ function Game:new_game()
 
 	self.is_light_on = true
 	self.draw_shadows = true
-	self.shadow_ox = 1
+	self.shadow_ox = -1
 	self.shadow_oy = 2
 	self.object_canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
 	self.front_canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)

@@ -352,6 +352,8 @@ local img_names = {
 	tv_slideshow_999 = "level/tv_slideshow/tv_slideshow_999",
 	tv_bluescreen = "level/tv_slideshow/tv_bluescreen",
 
+	clock = "actors/enemies/clock",
+
 	-----------------------------------------------------
 
 	-- hud

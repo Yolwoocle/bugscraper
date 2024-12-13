@@ -12,8 +12,6 @@ love_files = [
 
     "-./luasteam.dll",
     "-./steam_api64.dll",
-
-    "-./data/waves_fullgame.lua",
 ]
 
 

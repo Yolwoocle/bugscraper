@@ -978,6 +978,7 @@ local waves = {
 		enemies = {
 			{ E.MushroomAnt, 2 },
 			{ E.Mole,        2 },
+			{ E.Shooter,     1 },
 		},
 	}),
 
