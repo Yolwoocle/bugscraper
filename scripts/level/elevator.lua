@@ -22,6 +22,7 @@ function Elevator:init(level)
 	self.layers = {
 		["cabin"] = true,
 		["walls"] = true,
+		["walls_no_floor"] = false,
 		["bg_grid"] = true,
 		["fg_grid"] = false,
 
@@ -103,6 +104,9 @@ function Elevator:draw_front()
 
 	if self.layers["walls"] then
 		gfx.draw(images.cabin_walls, self.level.cabin_rect.ax, self.level.cabin_rect.ay)
+	end
+	if self.layers["walls_no_floor"] then
+		gfx.draw(images.cabin_walls_no_floor, self.level.cabin_rect.ax, self.level.cabin_rect.ay)
 	end
 	if self.layers["walls_brown"] then
 		gfx.draw(images.cabin_walls_brown, self.level.cabin_rect.ax, self.level.cabin_rect.ay)

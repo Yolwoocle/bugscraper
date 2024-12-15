@@ -14,6 +14,7 @@ function HoneypotLiquid:init(x, y)
     self.follow_player = false
 
     self.is_stompable = false
+    self.is_pushable = false
     self.is_immune_to_bullets = true
     
     self.loot = {}

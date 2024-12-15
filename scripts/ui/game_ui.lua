@@ -173,8 +173,9 @@ function GameUI:draw_timer()
 		return
 	end
 
-	rect_color({0,0,0,0.5}, "fill", 0, 10, 50, 12)
-	gfx.print(time_to_string(game.time), 8, 8)
+	local text = time_to_string(game.time)
+	rect_color({0,0,0,0.5}, "fill", 0, 10, get_text_width(text) + 16, 12)
+	gfx.print(text, 8, 8)
 end
 
 function GameUI:draw_FPS()

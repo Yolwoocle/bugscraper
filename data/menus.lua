@@ -8,6 +8,7 @@ local ControlsMenuItem    = require "scripts.ui.menu.items.controls_menu_item"
 local CustomDrawMenuItem  = require "scripts.ui.menu.items.menu_item_custom_draw"
 local waves               = require "data.waves"
 local Enemies             = require "data.enemies"
+local backgrounds         = require "data.backgrounds"
 local debug_draw_waves    = require "scripts.debug.draw_waves"
 local images              = require "data.images"
 local DebugCommandMenu    = require "scripts.ui.menu.debug_command_menu"
@@ -126,110 +127,67 @@ local function generate_menus()
         [6]  = { "🎚 {menu.pause.options}", func_set_menu('options') },
         [7]  = { "💡 {menu.pause.feedback}", func_set_menu("feedback") },
         [8]  = { "❤ {menu.pause.credits}", func_set_menu('credits') },
-        [9]  = { "🔚 {menu.pause.quit}", func_set_menu('quit') },
-        [10] = { "" },
-        [11] = { "❤ {menu.win.wishlist} 🔗", func_url("steam://advertise/2957130/") },
-        [12] = { "😈 {menu.pause.discord} 🔗", func_url("https://discord.gg/BAMMwMn2m5") },
     }
-    if OPERATING_SYSTEM == "Web" then
+    if OPERATING_SYSTEM ~= "Web" then
         -- Disable quitting on web
-        table.remove(pause_items, 9)
+        table.insert(pause_items, { "🔚 {menu.pause.quit}", func_set_menu('quit') })
     end
-    if not DEMO_BUILD then
+    table.insert(pause_items, {""})
+    if DEMO_BUILD then
         -- Disable wishlist if not demo
-        table.remove(pause_items, 11)
+        table.insert(pause_items, { "❤ {menu.win.wishlist} 🔗", func_url("steam://advertise/2957130/") })
+    end
+    table.insert(pause_items, { "😈 {menu.pause.discord} 🔗", func_url("https://discord.gg/BAMMwMn2m5") })
+    
+    local function debug_removeme_skipto(wave, background)
+        for k, e in pairs(game.actors) do
+            if e.is_enemy then
+                e:remove()
+            end
+        end
+        game:set_floor(wave)
+        for _, p in pairs(game.players) do
+            p:set_pos(CANVAS_CENTER[1], CANVAS_CENTER[2])
+        end
+        game.can_start_game = true
+        game.camera:reset()
+        game:start_game()
+        game.menu_manager:unpause()
+        if background then
+            game.level:set_background(background)
+        end
+        for k, e in pairs(game.actors) do
+            if e.is_enemy then
+                e:remove()
+            end
+        end
     end
     if DEBUG_MODE then
         table.insert(pause_items, { " " })
+        table.insert(pause_items, { "[DEBUG] Skip to world 1 boss", function()
+            debug_removeme_skipto(18)
+        end })
         table.insert(pause_items, { "[DEBUG] Skip to world 2", function()
-            for k, e in pairs(game.actors) do
-                if e.is_enemy then
-                    e:kill()
-                end
-            end
-            game:set_floor(20)
-            for _, p in pairs(game.players) do
-                p:set_pos(CANVAS_CENTER[1], CANVAS_CENTER[2])
-            end
-            game.can_start_game = true
-            game.camera:reset()
-            game:start_game()
-            game.menu_manager:unpause()
+            debug_removeme_skipto(20)
         end })
         table.insert(pause_items, { "[DEBUG] Skip to world 2 boss", function()
-            for k, e in pairs(game.actors) do
-                if e.is_enemy then
-                    e:kill()
-                end
-            end
-            game:set_floor(38)
-            for _, p in pairs(game.players) do
-                p:set_pos(CANVAS_CENTER[1], CANVAS_CENTER[2])
-            end
-            game.can_start_game = true
-            game.camera:reset()
-            game:start_game()
-            game.menu_manager:unpause()
+            debug_removeme_skipto(38, backgrounds.BackgroundBeehive:new())
         end })
         table.insert(pause_items, { "[DEBUG] Skip to world 3", function()
-            for k, e in pairs(game.actors) do
-                if e.is_enemy then
-                    e:kill()
-                end
-            end
-            game:set_floor(40)
-            for _, p in pairs(game.players) do
-                p:set_pos(CANVAS_CENTER[1], CANVAS_CENTER[2])
-            end
-            game.can_start_game = true
-            game.camera:reset()
-            game:start_game()
-            game.menu_manager:unpause()
+            debug_removeme_skipto(40)
         end })
         table.insert(pause_items, { "[DEBUG] Skip to world 3 boss", function()
-            for k, e in pairs(game.actors) do
-                if e.is_enemy then
-                    e:kill()
-                end
-            end
-            game:set_floor(58)
-            for _, p in pairs(game.players) do
-                p:set_pos(CANVAS_CENTER[1], CANVAS_CENTER[2])
-            end
-            game.can_start_game = true
-            game.camera:reset()
-            game:start_game()
-            game.menu_manager:unpause()
+            debug_removeme_skipto(58, backgrounds.BackgroundBeehive:new())
         end })
         table.insert(pause_items, { "[DEBUG] Skip to world 4", function()
-            for k, e in pairs(game.actors) do
-                if e.is_enemy then
-                    e:kill()
-                end
-            end
-            game:set_floor(60)
-            for _, p in pairs(game.players) do
-                p:set_pos(CANVAS_CENTER[1], CANVAS_CENTER[2])
-            end
-            game.can_start_game = true
-            game.camera:reset()
-            game:start_game()
-            game.menu_manager:unpause()
+            debug_removeme_skipto(60)
+
+        end })
+        table.insert(pause_items, { "[DEBUG] Skip to world 4 wave 70", function()
+            debug_removeme_skipto(70, backgrounds.BackgroundFinal:new())
         end })
         table.insert(pause_items, { "[DEBUG] Skip to world 4 boss", function()
-            for k, e in pairs(game.actors) do
-                if e.is_enemy then
-                    e:kill()
-                end
-            end
-            game:set_floor(78)
-            for _, p in pairs(game.players) do
-                p:set_pos(CANVAS_CENTER[1], CANVAS_CENTER[2])
-            end
-            game.can_start_game = true
-            game.camera:reset()
-            game:start_game()
-            game.menu_manager:unpause()
+            debug_removeme_skipto(80, backgrounds.BackgroundFinal:new())
         end })
     end
     menus.pause = Menu:new(game, pause_items, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL, draw_elevator_progress)

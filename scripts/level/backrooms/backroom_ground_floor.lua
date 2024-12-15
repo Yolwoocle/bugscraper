@@ -11,7 +11,8 @@ local WaterDispenser   = require "scripts.actor.enemies.vending_machine.water_di
 local BackroomGroundFloor = Backroom:inherit()
 
 function BackroomGroundFloor:init()
-    BackroomGroundFloor.super.init()
+    BackroomGroundFloor.super.init(self)
+	self.name = "ground_floor"
 
 	self.cafeteria_background = BackgroundCafeteria:new(self)
 	self.door = ElevatorDoor:new(186, 154, images.cabin_door_light_left_far, images.cabin_door_light_left_center, images.cabin_door_light_right_far, images.cabin_door_light_right_center)
@@ -21,9 +22,12 @@ function BackroomGroundFloor:init()
 
 	self.close_door_timer = 0.5
 	self.tv_presentation = TvPresentation:new(715, 100)
+
 end
 
 function BackroomGroundFloor:generate(world_generator)
+	game.camera.max_x = CANVAS_WIDTH
+	
     world_generator:generate_ground_floor()
 	
 	for _, prop_data in pairs({
@@ -129,7 +133,7 @@ function BackroomGroundFloor:draw_all()
 	self.door:draw()
 	love.graphics.draw(images.ground_floor, -16, -16)
 	game.level.elevator:draw_counter()
-	print_centered_outline(COL_WHITE, COL_BLACK_BLUE, Text:text("menu.credits.game_by_template"), 551-16, 8*16)
+	-- print_centered_outline(COL_WHITE, COL_BLACK_BLUE, Text:text("menu.credits.game_by_template"), 551-16, 8*16)
 
 	--215, 79
 	-- for ix = 0, 54 do

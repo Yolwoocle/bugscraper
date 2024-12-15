@@ -350,10 +350,6 @@ function Actor:do_knockback_from(q, source, ox, oy)
 	self:apply_force_from(q, source, ox, oy)
 end
 
--- When the enemy is buffered for the next wave of enemies
-function Actor:on_buffered()
-end
-
 function Actor:on_collision(col, other)
 	-- Implement on_collision
 end

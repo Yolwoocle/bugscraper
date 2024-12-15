@@ -517,8 +517,7 @@ function Debug:draw_info_view()
         self.test_sprite:set_spritesheet_tile(mod_plus_1(self.test_sprite.spritesheet_tile + 1,
             self.test_sprite.spritesheet_tile_count_x))
     end
-
-    self.test_sprite:draw(200, 100)
+    -- self.test_sprite:draw(200, 100)
 
     local players_str = "players: "
     for k, player in pairs(self.game.players) do
@@ -559,11 +558,10 @@ function Debug:draw_info_view()
         concat("LÖVE version: ", string.format("%d.%d.%d - %s", love.getVersion())),
         concat("game state: ", game.game_state),
         concat("memory used ", collectgarbage("count")),
-        concat("n° of active audio sources: ", love.audio.getActiveSourceCount()),
-        concat("n° of actors: ", #self.game.actors, " / ", self.game.actor_limit),
-        concat("n° of enemies: ", self.game:get_enemy_count()),
-        concat("n° of particles: ", Particles:get_number_of_particles()),
-        concat("n° collision items: ", Collision.world:countItems()),
+        concat("nb of active audio sources: ", love.audio.getActiveSourceCount()),
+        concat("nb of actors: ", #self.game.actors, " / ", self.game.actor_limit),
+        concat("nb of enemies: ", self.game:get_enemy_count()),
+        concat("nb collision items: ", Collision.world:countItems()),
         concat("number_of_alive_players ", self.game:get_number_of_alive_players()),
         players_str,
         users_str,
@@ -574,13 +572,15 @@ function Debug:draw_info_view()
         concat("level_speed ", game.level.level_speed),
         concat("menu_stack ", #game.menu_manager.menu_stack),
         concat("cur_menu_name ", game.menu_manager.cur_menu_name),
+        concat("cur_backroom ", (game.level.backroom == nil) and "nil" or game.level.backroom.name),
         "",
     }
 
     for i = 1, #txts do print_label(txts[i], 0, 0 + txt_h * (i - 1)) end
 
     for _, e in pairs(self.game.actors) do
-        love.graphics.circle("fill", e.x, e.y, 1)
+        love.graphics.circle("fill", e.x - game.camera.x, e.y - game.camera.y, 1)
+        print_outline(COL_WHITE, COL_BLACK_BLUE, concat(math.floor(e.x), ", ", math.floor(e.y)), e.x - game.camera.x, e.y - game.camera.y - 10)
     end
 
     self.game.level.world_generator:draw()

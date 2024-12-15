@@ -65,7 +65,9 @@ function Game:init()
 	FONT_REGULAR = gfx.newImageFont("fonts/hope_gold.png", FONT_CHARACTERS)
 	FONT_7SEG = gfx.newImageFont("fonts/7seg_font.png", " 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 	FONT_MINI = gfx.newFont("fonts/Kenney Mini.ttf", 8)
+	FONT_CHINESE = gfx.newFont("fonts/BoutiqueBitmap9x9_1.9.ttf", 10)
 	FONT_PAINT = gfx.newFont("fonts/NicoPaint-Regular.ttf", 16)
+
 	gfx.setFont(FONT_REGULAR)
 
 	-- Audio ===> Moved to OptionsManager
@@ -418,19 +420,19 @@ end
 
 function Game:update_camera_offset(dt)
 	-- Cafeteria camera pan on the right edge
-	local all_players_on_the_right = ternary(#self.players == 0, false, true)
-	for _, player in pairs(self.players) do
-		if player.mid_x < (self.level.world_generator.cafeteria_rect.bx - 9) * BW then
-			all_players_on_the_right = false
-			break
-		end
-	end
+	-- local all_players_on_the_right = ternary(#self.players == 0, false, true)
+	-- for _, player in pairs(self.players) do
+	-- 	if player.mid_x < (76 * 16) then
+	-- 		all_players_on_the_right = false
+	-- 		break
+	-- 	end
+	-- end
 
-	if all_players_on_the_right and self.level:is_on_cafeteria() then
-		self.camera:set_target_offset(500, 0)
-	else
-		self.camera:set_target_offset(0, 0)
-	end
+	-- if all_players_on_the_right and self.level:is_on_cafeteria() then
+	-- 	self.camera:set_target_offset(1000, 0)
+	-- else
+	-- 	self.camera:set_target_offset(0, 0)
+	-- end
 end
 
 function Game:get_camera_position()
@@ -745,8 +747,6 @@ function Game:pause_repeating_sounds()
 	self.sfx_elevator_bg:pause()
 	for k, a in pairs(self.actors) do
 		a:pause_constant_sounds()
-		-- if a.pause_repeating_sounds then
-		-- end
 	end
 end
 

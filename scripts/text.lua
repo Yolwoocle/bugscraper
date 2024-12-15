@@ -3,19 +3,29 @@ local utf8 = require "utf8"
 local Class = require "scripts.meta.class"
 
 local lang_en = require "data.lang.en"
+local lang_cn = require "data.lang.cn"
+local lang_fr = require "data.lang.fr"
 
 local TextManager = Class:inherit()
 
 function TextManager:init()
-    self.values = self:unpack(lang_en)
+    self.languages = {
+        en = lang_en,
+        cn = lang_cn,
+        fr = lang_fr,
+    }
 
-    -- local words = 0
-    -- for _, v in pairs(self.values) do
-    --     local s = split_str(v, " ")
-    --     print_table(s)
-    --     words = words + #s
-    -- end
-    -- print("TextManager: Unpacked "..tostring(words).." words.")
+    self.default_lang = "en"
+    self.language = Options:get("language")
+    self.values = self:unpack(self.language or self.default_lang)
+
+    local words = 0
+    for _, v in pairs(self.values) do
+        local s = split_str(v, " ")
+        -- print_table(s)
+        words = words + #s
+    end
+    print("TextManager: Unpacked "..tostring(words).." words.")
 end
 
 --- Unpacks a table to be used as text keys. Example:

@@ -20,7 +20,7 @@ function TvPresentation:init(x, y)
         { frames = images.tv_slideshow_004, frame_duration = 0 },
         { frames = images.tv_slideshow_005, frame_duration = 0 },
         { frames = images.tv_slideshow_006, frame_duration = 0.07 },
-        { frames = images.tv_slideshow_007, frame_duration = 0 },
+        { frames = images.tv_slideshow_007, frame_duration = 0.11 }, -- Starbugs green tea
         { frames = images.tv_slideshow_008, frame_duration = 0.1 },
         { frames = images.tv_slideshow_009, frame_duration = 0.3 },
         { frames = images.tv_slideshow_010, frame_duration = 0 },

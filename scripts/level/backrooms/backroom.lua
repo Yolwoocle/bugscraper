@@ -4,7 +4,7 @@ local Class = require "scripts.meta.class"
 local Backroom = Class:inherit()
 
 function Backroom:init()
-
+    self.name = "backroom"
 end
 
 --- (Abstract) Generate the map for this backroom.

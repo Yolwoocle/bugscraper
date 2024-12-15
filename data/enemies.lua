@@ -62,6 +62,9 @@ local enemies = {
 	
 	JumpingProp =        require "scripts.actor.enemies.jumping_prop",
 	Dummy =              require "scripts.actor.enemies.dummy",
+
+	-- Misc
+	BossDoor =           require "scripts.actor.enemies.boss_door",
 	ButtonBigPressed =   require "scripts.actor.enemies.button_big_pressed",
 	ButtonBig =          require "scripts.actor.enemies.button_big",
 	ButtonBigGlass =     require "scripts.actor.enemies.button_big_glass",

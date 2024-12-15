@@ -28,7 +28,7 @@ function Level:init(game)
     self.game = game
 	
 	-- Map & world gen
-	self.map = TileMap:new(69, 17) --nice.
+	self.map = TileMap:new(120, 17)
 	self.world_generator = WorldGenerator:new(self.map)
 
 	local shaft_w, shaft_h = 26, 14
@@ -47,7 +47,7 @@ function Level:init(game)
 
 	self:set_bounds(Rect:new(unpack(RECT_GROUND_FLOOR_PARAMS)))
 
-	self.kill_zone = Rect:new(-400000, -400000, 400000, CANVAS_HEIGHT + BW)
+	self.kill_zone = Rect:new(-400000, -400000, 400000, CANVAS_HEIGHT + BW*6)
 
 	-- Level info
 	self.floor = 0 --Floor n°
@@ -443,7 +443,7 @@ function Level:update_hole_stencil(dt)
 end
 
 
-function Level:is_on_cafeteria() 
+function Level:is_on_cafeteria()
 	return self:get_floor_type() == FLOOR_TYPE_CAFETERIA
 end
 

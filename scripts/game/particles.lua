@@ -389,7 +389,7 @@ local EjectedPlayerParticle = Particle:inherit()
 
 function EjectedPlayerParticle:init(spr, x, y, vx, vy)
 	--                (x,y,s,r, vx,vy,vs,vr,                    life, g, is_solid)
-	self:init_particle(x,y,1,0, vx,vy,0,random_range(10, 20),   3,    15)
+	self:init_particle(x,y,1,0, vx,vy,0, sign(vx) * random_range(10, 20),   3,    15)
 	self.spr = spr
 	
 	self.spr_w = self.spr:getWidth()
@@ -954,7 +954,7 @@ function ParticleSystem:dead_player(x, y, spr, colors, dir_x)
 end
 
 function ParticleSystem:ejected_player(spr, x, y, vx, vy)
-	self:add_particle(EjectedPlayerParticle:new(spr, x, y, vx or random_range(100, 300), vy or -random_range(400, 600)), PARTICLE_LAYER_FRONT)
+	self:add_particle(EjectedPlayerParticle:new(spr, x, y, vx or (random_sample{-1, 1} * random_range(100, 300)), vy or -random_range(400, 600)), PARTICLE_LAYER_FRONT)
 end
 
 function ParticleSystem:smashed_player(spr, x, y, vx, vy)

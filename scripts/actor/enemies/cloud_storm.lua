@@ -24,7 +24,7 @@ function CloudStorm:init(x, y, size)
     self.gravity = 0
     self.friction_y = self.friction_x
 
-    self.life = 15
+    self.life = 12
     self.ai_template = "random_rotate_upper"
     self.follow_player = false
 
@@ -78,7 +78,7 @@ function CloudStorm:init(x, y, size)
                 self.ai_template = nil
                 self.arc:set_active(true)
                 self.arc:set_arc_active(true)
-                self.state_timer:start(random_range(0.5, 1.0))
+                self.state_timer:start(0.75)
 
                 self.spr:update_offset(0, 6)
                 self.spr_oy = 12

@@ -7,7 +7,8 @@ local BackgroundCafeteria = require "scripts.level.background.background_cafeter
 local BackroomCafeteria = Backroom:inherit()
 
 function BackroomCafeteria:init()
-    BackroomCafeteria.super.init()
+    BackroomCafeteria.super.init(self)
+	self.name = "cafeteria"
 
 	self.cafeteria_background = BackgroundCafeteria:new(self)
 end
@@ -15,6 +16,8 @@ end
 function BackroomCafeteria:generate(world_generator)
     world_generator:generate_cafeteria()
     self:assign_cafeteria_upgrades()
+	
+	game.camera.max_x = CANVAS_WIDTH
 end
 
 function BackroomCafeteria:can_exit()

@@ -17,6 +17,7 @@ function Mole:init(x, y)
     -- self:init_enemy(x, y, images.mushroom_ant, 20, 20)
     Mole.super.init(self, x, y, images.mole_digging_1, 20, 20)
     self.name = "mole"
+    self.is_pushable = false
 
     self.spr = AnimatedSprite:new({
         digging = {
@@ -45,6 +46,7 @@ function Mole:init(x, y)
                 self.spr:set_animation("digging")
 
                 self.gravity = self.default_gravity
+                self.is_stompable = false
                 self.is_wall_walking = true
             end,
             update = function(state, dt)
@@ -60,6 +62,7 @@ function Mole:init(x, y)
                 self.spr:update_offset(0, 0)
                 self.spr:set_animation("telegraph")
 
+                self.is_stompable = true
                 self.state_timer:start(1)
             end,
             update = function(state, dt)
@@ -80,6 +83,7 @@ function Mole:init(x, y)
                 self.vx = self.up_vect.x * self.fly_speed
                 self.vy = self.up_vect.y * self.fly_speed
 
+                self.is_stompable = true
                 self.gravity = self.default_gravity/2
                 self.spr:set_animation("flying")
             end,
@@ -105,6 +109,7 @@ function Mole:init(x, y)
                 self.is_stompable = true
                 self.walk_speed = 0
                 self.state_timer:start(1)
+                self.is_stompable = true
                 self.spr:set_animation("telegraph")
             end,
             update = function(state, dt)

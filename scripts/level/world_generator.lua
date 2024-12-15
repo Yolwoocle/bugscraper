@@ -56,6 +56,13 @@ function WorldGenerator:generate_cabin()
 	end
 end
 
+function WorldGenerator:generate_boss_office()
+	self:reset()
+	self:write_rect(Rect:new(2, 2, 79+24, 15), TILE_METAL)
+	self:write_rect(Rect:new(27, 3, 54+24, 8), TILE_METAL)
+	self:write_rect(Rect:new(78, 9, 78, 9), TILE_METAL)
+end
+
 function WorldGenerator:generate_cafeteria()
 	self:reset()
 	self:write_rect(self.cafeteria_rect, TILE_METAL)

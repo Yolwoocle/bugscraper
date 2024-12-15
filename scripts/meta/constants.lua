@@ -87,12 +87,15 @@ TILE_RUBBLE = 2
 TILE_SEMISOLID = 3
 TILE_CHAIN = 4
 TILE_BORDER = 5
+TILE_FLIP_ON = 6
+TILE_FLIP_OFF = 7
 
 BULLET_BOUNCE_MODE_RADIAL = "radial"
 BULLET_BOUNCE_MODE_NORMAL = "normal"
 
 RECT_ELEVATOR_PARAMS = {2, 2, 28, 16}
 RECT_CAFETERIA_PARAMS = {2, 2, 53, 16}
+RECT_BOSS_OFFICE_PARAMS = {2, 2, 104, 16}
 RECT_GROUND_FLOOR_PARAMS = {2, 2, 58, 16}
 
 --------------------------------------------- 
@@ -570,4 +573,4 @@ LIGHNING_COORDINATE_MODE_POLAR = "polar" -- radius, angle
 
 -- Super secret
 -- Go ahead and figure out what this is. I'm not here to stop you
-SMASH_EASTER_EGG_PROBABILITY = 0.05
+SMASH_EASTER_EGG_PROBABILITY = 0.02

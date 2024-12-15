@@ -1,17 +1,19 @@
 require "scripts.util"
-local backgrounds       = require "data.backgrounds"
-local enemies           = require "data.enemies"
-local cutscenes         = require "data.cutscenes"
-local images            = require "data.images"
+local backgrounds        = require "data.backgrounds"
+local enemies            = require "data.enemies"
+local cutscenes          = require "data.cutscenes"
+local images             = require "data.images"
 
-local Rect              = require "scripts.math.rect"
-local LevelGeometry     = require "scripts.level.level_geometry"
-local Wave              = require "scripts.level.wave"
-local BackroomCafeteria = require "scripts.level.backrooms.backroom_cafeteria"
-local E                 = require "data.enemies"
+local Rect               = require "scripts.math.rect"
+local LevelGeometry      = require "scripts.level.level_geometry"
+local Wave               = require "scripts.level.wave"
+local BackroomCafeteria  = require "scripts.level.backrooms.backroom_cafeteria"
+local BackroomBossOffice = require "scripts.level.backrooms.backroom_boss_office"
+local E                  = require "data.enemies"
 
-RECT_ELEVATOR           = Rect:new(unpack(RECT_ELEVATOR_PARAMS))
-RECT_CAFETERIA          = Rect:new(unpack(RECT_CAFETERIA_PARAMS))
+RECT_ELEVATOR            = Rect:new(unpack(RECT_ELEVATOR_PARAMS))
+RECT_CAFETERIA           = Rect:new(unpack(RECT_CAFETERIA_PARAMS))
+RECT_BOSS_OFFICE         = Rect:new(unpack(RECT_BOSS_OFFICE_PARAMS))
 
 local function new_cafeteria(run_func)
 	run_func = run_func or function(...) end
@@ -23,6 +25,9 @@ local function new_cafeteria(run_func)
 			for _, actor in pairs(game.actors) do
 				if actor.name == "poison_cloud" then
 					actor.lifespan = 1
+				end
+				if actor.name == "floor_hole_spawner" then
+					actor:remove()
 				end
 			end
 
@@ -107,6 +112,7 @@ local waves = {
 		over_title = get_world_prefix(1),
 		title = get_world_name(1),
 		title_color = COL_MID_BLUE,
+		title_outline_color = COL_BLACK_BLUE,
 	}),
 
 
@@ -344,6 +350,7 @@ local waves = {
 		over_title = get_world_prefix(2),
 		title = get_world_name(2),
 		title_color = COL_YELLOW_ORANGE,
+		title_outline_color = COL_BLACK_BLUE,
 	}),
 
 	new_wave({
@@ -610,6 +617,7 @@ local waves = {
 		over_title = get_world_prefix(3),
 		title = get_world_name(3),
 		title_color = COL_MID_GREEN,
+		title_outline_color = COL_BLACK_BLUE,
 	}),
 
 	new_wave({
@@ -920,7 +928,7 @@ local waves = {
 		over_title = get_world_prefix(4),
 		title = get_world_name(4),
 		title_color = COL_LIGHT_BLUE,
-		title_outline_color = COL_DARK_BLUE,
+		title_outline_color = COL_BLACK_BLUE,
 
 		elevator_layers = {
 		},
@@ -998,7 +1006,7 @@ local waves = {
 
 		enemies = {
 			{ E.CloudStorm,  2 },
-			{ E.Shooter, 1 },
+			{ E.Shooter,     1 },
 			{ E.MushroomAnt, 2 },
 		},
 	}),
@@ -1016,21 +1024,157 @@ local waves = {
 	new_cafeteria(),
 	---------------------------------------------
 
+	new_wave({
+		min = 5,
+		max = 5,
+
+		enemies = {
+			{ E.CloudStorm, 20 },
+			{ E.CloudEnemy, 20 },
+		},
+
+		fixed_enemies = {
+			{ E.FloorHoleSpawner, 1 },
+		},
+
+		run = function(self, level)
+			for _, p in pairs(game.players) do
+				p.is_affected_by_bounds = false
+			end
+		end,
+
+		elevator_layers = {
+			["walls"] = false,
+			["walls_no_floor"] = true,
+		},
+
+		music = "w4",
+	}),
+
+
+	new_wave({
+		min = 7,
+		max = 7,
+
+		enemies = {
+			{ E.Shooter, 40 },
+		},
+	}),
+
+	new_wave({
+		min = 8,
+		max = 8,
+
+		enemies = {
+			{ E.CloudEnemy, 20 },
+			{ E.CloudStorm, 40 },
+			{ E.Shooter,    40 },
+		},
+	}),
+
+	new_wave({
+		min = 6,
+		max = 6,
+
+		enemies = {
+			{ E.Chipper, 20 },
+		},
+		fixed_enemies = {
+			{ E.BulbBuddy, 1 },
+		}
+	}),
+
+	new_wave({
+		min = 1,
+		max = 1,
+
+		enemies = {
+			{ E.Centipede, 1 },
+		},
+	}),
+
+	new_wave({
+		min = 4,
+		max = 4,
+
+		enemies = {
+			{ E.Bee,       2 },
+			{ E.ShovelBee, 2 },
+		},
+	}),
+
+	new_wave({
+		min = 5,
+		max = 5,
+
+		enemies = {
+			{ E.DrillBee, 2 },
+		},
+	}),
+
+	new_wave({
+		min = 7,
+		max = 7,
+
+		enemies = {
+			{ E.StinkBug, 1 },
+			{ E.Spider,   1 },
+		},
+	}),
+
+	new_wave({
+		min = 6,
+		max = 6,
+
+		enemies = {
+			{ E.Beelet, 1 },
+		},
+		fixed_enemies = {
+			{ E.HoneycombFootball, 1 },
+		},
+	}),
+
 	--]]
 
 	-----------------------------------------------------
 	--- Last wave
 	-----------------------------------------------------
 
-	-- Last wave
 	new_wave({
+		floor_type = FLOOR_TYPE_CAFETERIA,
+		roll_type = WAVE_ROLL_TYPE_FIXED,
+		music = "off",
+
+		run = function(self, level) 
+			for _, actor in pairs(game.actors) do
+				if actor.name == "poison_cloud" then
+					actor.lifespan = 1
+				end
+				if actor.name == "floor_hole_spawner" then
+					actor:remove()
+				end
+			end
+		end,
+
 		min = 1,
 		max = 1,
 		enemies = {
-			{ E.ButtonBigGlass, 1, position = { 211, 194 } }
 		},
-		music = "off",
+
+		bounds = RECT_BOSS_OFFICE,
+
+		backroom = BackroomBossOffice:new()
 	})
+
+	-- Last wave
+	-- new_wave({
+	-- 	min = 1,
+	-- 	max = 1,
+	-- 	enemies = {
+	-- 		{ E.ButtonBigGlass, 1, position = { 211, 194 } }
+	-- 	},
+	-- 	music = "off",
+	-- })
 }
 
 
@@ -1067,6 +1211,7 @@ local demo_waves = {
 
 		title = get_world_name("1"),
 		title_color = COL_MID_BLUE,
+		title_outline_color = COL_BLACK_BLUE,
 	}),
 
 

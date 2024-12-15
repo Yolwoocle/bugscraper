@@ -1048,40 +1048,44 @@ function Player:draw_controls()
 	-- love.graphics.line(x, y, self.ui_x, self.ui_y - 30)
 	for i, tuto in ipairs(tutorials) do
 		y = y - 16
-		local btn_x = x - 2
+		Input:draw_input_prompt(self.n, tuto[1], tuto[2], self:get_controls_text_color(i), x, y, {
+			centered = true,
+			background_color = {0, 0, 0.1, 0.5},
+		})
+		-- local btn_x = x - 2
 
-		local shown_duration = 0.5
-		local actions = tuto[1]
-		local label = Text:text(tuto[2])
-		local show_in_keybaord_form = tuto[3]
+		-- local shown_duration = 0.5
+		-- local actions = tuto[1]
+		-- local label = Text:text(tuto[2])
+		-- local show_in_keybaord_form = tuto[3]
 
-		local x_of_second_button = 0
-		if not show_in_keybaord_form then
-			local action_index = math.floor((game.t % (shown_duration * #actions)) / shown_duration) + 1
-			actions = {actions[action_index]}
-		end
-		for i_action = 1, #actions do
-			local action = actions[i_action]
+		-- local x_of_second_button = 0
+		-- if not show_in_keybaord_form then
+		-- 	local action_index = math.floor((game.t % (shown_duration * #actions)) / shown_duration) + 1
+		-- 	actions = {actions[action_index]}
+		-- end
+		-- for i_action = 1, #actions do
+		-- 	local action = actions[i_action]
 
-			local icon = Input:get_action_primary_icon(self.n, action)
-			local w = icon:getWidth()
+		-- 	local icon = Input:get_action_primary_icon(self.n, action)
+		-- 	local w = icon:getWidth()
 
-			btn_x = btn_x - w
-			if not (show_in_keybaord_form and i_action == 4) then
-				love.graphics.draw(icon, btn_x, y)
-			end
+		-- 	btn_x = btn_x - w
+		-- 	if not (show_in_keybaord_form and i_action == 4) then
+		-- 		love.graphics.draw(icon, btn_x, y)
+		-- 	end
 
-			if show_in_keybaord_form then
-				if i_action == 2 then
-					x_of_second_button = btn_x
-				elseif i_action == 4 then
-					love.graphics.draw(icon, x_of_second_button, y - 16)
-				end
-			end
-		end
+		-- 	if show_in_keybaord_form then
+		-- 		if i_action == 2 then
+		-- 			x_of_second_button = btn_x
+		-- 		elseif i_action == 4 then
+		-- 			love.graphics.draw(icon, x_of_second_button, y - 16)
+		-- 		end
+		-- 	end
+		-- end
 		
-		local text_color = self:get_controls_text_color(i)
-		print_outline(text_color, COL_BLACK_BLUE, label, x, y)
+		-- local text_color = self:get_controls_text_color(i)
+		-- print_outline(text_color, COL_BLACK_BLUE, label, x, y)
 	end
 end
 
