@@ -1,4 +1,10 @@
 return {
+    language = {
+        -- These should be kept untranslated in their original language ("english", "français", "中文", etc)
+        en = "English",
+        fr = "Français",
+        zh = "简体中文",
+    },
     steam = {
         short_description = [[Welcome to the bugscraper. Rise to the top of this pest-filled tower in this 2D shooter platformer and battle waves of enemies at every floor as they come for your skin (or rather, exoskeleton).]],
         description = [[Welcome to the bugscraper. Here, pests all around the world come to gather. Your mission: stopping them before it is too late!🐜In this platformer shooter, you take the role of Mio, a courageous ant, trying to stop the employees of a bug-filled skyscraper from corrupting the world with a deadly mushroom.🐛You will battle waves of enemies in an elevator as they come for your skin (or rather, exoskeleton) on every floor.🐝Using a wide variety of weapons and upgrades, eliminate them and prepare to battle for the next floor!🐞Play in solo, or with up to 4 friends in local co-op multiplayer.]]
@@ -142,7 +148,7 @@ return {
                 input = "INPUT SETTINGS...",
             },
             input_submenu = {
-                title = "Input settings",
+                title = "INPUT SETTINGS",
                 reset_controls = "RESET CONTROLS",
                 controller_button_style = "BUTTON STYLE",
                 controller_button_style_value = {
@@ -186,7 +192,6 @@ return {
                 volume = "VOLUME",
                 music_volume = "MUSIC VOLUME",
                 music_pause_menu = "MUSIC ON PAUSE MENU",
-                background_sounds = "BACKGROUND_SOUNDS",
             },
             visuals = {
                 title = "Visuals",
@@ -196,19 +201,26 @@ return {
                     auto = "auto",
                     max_whole = "max whole",
                 },
-                vsync = "VERTICAL SYNCHRONIZATION",
+                vsync = "VSYNC",
                 menu_blur = "MENU BACKGROUND BLUR",
                 background_speed = "BACKGROUND SPEED",
             },
             game = {
-                title = "Gameplay",
+                title = "Game",
+                language = "LANGUAGE...",
                 timer = "TIMER",
                 mouse_visible = "SHOW MOUSE CURSOR",
                 pause_on_unfocus = "PAUSE ON LOST FOCUS",
                 screenshake = "SCREENSHAKE",
                 show_fps_warning = "SHOW LOW FRAMERATE WARNING",
 
-            }
+            },
+            language = {
+                title = "LANGUAGE",
+            },
+            confirm_language = {
+                description = "Restart the game to apply new language?",
+            },
         },
         feedback = {
             title = "FEEDBACK",

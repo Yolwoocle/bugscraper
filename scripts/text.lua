@@ -3,7 +3,7 @@ local utf8 = require "utf8"
 local Class = require "scripts.meta.class"
 
 local lang_en = require "data.lang.en"
-local lang_cn = require "data.lang.cn"
+local lang_zh = require "data.lang.zh"
 local lang_fr = require "data.lang.fr"
 
 local TextManager = Class:inherit()
@@ -11,13 +11,16 @@ local TextManager = Class:inherit()
 function TextManager:init()
     self.languages = {
         en = lang_en,
-        cn = lang_cn,
+        zh = lang_zh,
         fr = lang_fr,
     }
-
     self.default_lang = "en"
+    if DEBUG_MODE then
+        self:sanity_check_languages(self.default_lang)
+    end
+
     self.language = Options:get("language")
-    self.values = self:unpack(self.language or self.default_lang)
+    self.values = self:unpack(self.languages[self.language or self.default_lang])
 
     local words = 0
     for _, v in pairs(self.values) do
@@ -120,6 +123,10 @@ function TextManager:parse_string(text)
 
     text = text:gsub("\1", "{"):gsub("\2", "}")
     return text
+end
+
+function TextManager:sanity_check_languages(reference_language)
+    
 end
 
 return TextManager

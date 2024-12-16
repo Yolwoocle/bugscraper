@@ -105,8 +105,8 @@ return {
             pause = "Pause",
 
             join = "Rejoindre",
-            split_keyboard = "Clavier partagé",
-            unsplit_keyboard = "Clavier non partagé",
+            split_keyboard = "Partager le clavier",
+            unsplit_keyboard = "Réunifier le clavier",
 
             jetpack = "Jetpack",
         },
@@ -182,7 +182,6 @@ return {
                 volume = "VOLUME",
                 music_volume = "VOLUME DE LA MUSIQUE",
                 music_pause_menu = "MUSIQUE DANS LE MENU PAUSE",
-                background_sounds = "SONS DE FOND",
             },
             visuals = {
                 title = "Visuels",
@@ -192,7 +191,7 @@ return {
                     auto = "auto",
                     max_whole = "max entier",
                 },
-                vsync = "SYNCHRONISATION VERTICALE",
+                vsync = "VSYNC",
                 menu_blur = "FLUO MENU",
                 background_speed = "VITESSE DU FOND",
             },
@@ -206,7 +205,7 @@ return {
             }
         },
         feedback = {
-            title = "AVIS",
+            title = "RETOURS",
             bugs = "SIGNALER UN BUG 🔗",
             features = "SUGGÉRER UNE FONCTIONNALITÉ 🔗",
         },

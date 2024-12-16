@@ -194,10 +194,11 @@ local function generate_menus()
 
     menus.feedback = Menu:new(game, {
         { "<<<<<<<<< {menu.feedback.title} >>>>>>>>>" },
-        { "" }, -- pinnnnn
+        { "" }, 
         { "{menu.feedback.bugs}", func_url("https://github.com/Yolwoocle/bugscraper/issues") },
         { "{menu.feedback.features}", func_url("https://github.com/Yolwoocle/bugscraper/issues") },
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL, draw_elevator_progress)
+
 
     menus.options = Menu:new(game, {
         { "<<<<<<<<< {menu.options.title} >>>>>>>>>" },
@@ -244,6 +245,7 @@ local function generate_menus()
         { RangeOptionMenuItem, "🌄 {menu.options.visuals.background_speed}", "background_speed", { 0.0, 1.0 }, 0.05, "%" },
         { "" },
         { "<<< {menu.options.game.title} >>>" },
+        { "🌐 {menu.options.game.language}", func_set_menu("options_language") },
         { RangeOptionMenuItem, "🛜 {menu.options.game.screenshake}", "screenshake", { 0.0, 1.0 }, 0.05, "%" },
         { BoolOptionMenuItem, "🕐 {menu.options.game.timer}", "timer_on" },
         { BoolOptionMenuItem, "↖ {menu.options.game.mouse_visible}", "mouse_visible" },
@@ -251,6 +253,36 @@ local function generate_menus()
         { BoolOptionMenuItem, "⚠ {menu.options.game.show_fps_warning}", "show_fps_warning" },
 
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
+
+
+
+    local function func_language_menu(lang)
+        return function()
+            game.buffered_language = lang
+            game.menu_manager:set_menu("options_confirm_language")
+        end
+    end
+
+    menus.options_language = Menu:new(game, {
+        { "<<<<<<<<< {menu.options.language.title} >>>>>>>>>" },
+        { "" }, 
+        { "{language.en}", func_language_menu("en") },
+        { "{language.fr}", func_language_menu("fr") },
+        { "{language.zh}", func_language_menu("zh") },
+    }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
+
+    
+    menus.options_confirm_language = Menu:new(game, {
+        { "{menu.options.confirm_language.description}" },
+        { "{menu.no}",  function() game.menu_manager:back() end },
+        { "{menu.yes}", function() 
+            if game.buffered_language then
+                Options:set("language", game.buffered_language)
+            end
+            quit_game(true)
+        end },
+    }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
+
 
     menus.options_input = Menu:new(game, {
         { "<<<<<<<<< {menu.options.input_submenu.title} >>>>>>>>>" },

@@ -158,9 +158,11 @@ function print(...)
 	-- print_log_file:close()
 end
 
-function quit_game()
+--- Quits the game and saves settings.
+---@param restart boolean Whether the game should restart
+function quit_game(restart)
 	print("Quitting game")
 	if Options then   Options:on_quit()   end
 	if Input then     Input:on_quit()   end
-	love.event.quit()
+	love.event.quit(ternary(restart, "restart", nil))
 end

@@ -9,6 +9,8 @@ love_files = [
     "-*/.*",
     "-./export/*",
     "-./dyn/*",
+    "-*.aseprite",
+    "-*.lnk",
 
     "-./luasteam.dll",
     "-./steam_api64.dll",

@@ -2,6 +2,8 @@
 /.vscode/*
 .vscode/*
 /export/*
+*.aseprite
+*.lnk
 steam_api64.dll
 libsteam_api_osx.dylib
 libsteam_api_linux64.so

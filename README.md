@@ -1,13 +1,12 @@
-**NOTE:** if you are just here to obtain a free copy of the game, fair enough, but please consider [supporting me](https://bugscraper.net) if you can, or sharing the game with other people. Thanks! 🙂
+**NOTE:** if you are just here to obtain a free copy of the game, fair enough, but please consider supporting me by [buying the game](https://bugscraper.net) when you can, or at least sharing the game with other people. Thanks! 🙂
 <br>
-<div align="center">
-  <h1>Bugscraper</h1>
-</div>
+
+![Bugscraper banner](readme/banner.png)
 
 [**Website**](https://bugscraper.net) ·
-[**GitHub**](https://github.com/yolwoocle/bugscraper) ·
+[**Steam**](https://s.team/a/2957130) ·
 [**itch.io**](https://yolwoocle.itch.io/bugscraper) ·
-[**Steam**](https://s.team/a/2957130)
+[**GitHub**](https://github.com/yolwoocle/bugscraper)
 
 Welcome to the bugscraper.
 Here, pests all around the world come to gather.
@@ -23,9 +22,9 @@ Rise to the top of a bug-infested tower by fighting on an elevator. On each floo
 ## Is this game open source?
 **This game is _NOT_ [open source](https://en.wikipedia.org/wiki/Open-source_software)**, rather it is [source available](https://en.wikipedia.org/wiki/Source-available_software). Some of the assets I use are incompatible with a traditional open-source licence. **Not having a licence means that by default I reserve all original rights for the game, even if the code is public.**  
 
-However, I am very lax with what you can do with the source code. Please feel free to reuse, modify, or remix the source code of the game for any non-commercial project, as long as you're not directly distributing the code, assets, or any executables.
+However, this is just to legally cover my ass from abusers. I am very lax with what you can do with the source code. Please feel free to reuse, modify, or remix it for any non-commercial project, as long as you're not directly distributing any executables.
 
-If it does not fit that description please [contact me first](https://yolwoocle.com/about). I'll probably say yes! I don't bite :).   
+If it does not fit that description please [contact me first](https://yolwoocle.com/about). I don't bite! :)
 
 <div align="center">
   🐛🐛🐛🐛🐛

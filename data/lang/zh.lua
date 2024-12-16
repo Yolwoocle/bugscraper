@@ -1,7 +1,13 @@
 return {
+    language = {
+        -- These should be kept untranslated in their original language ("english", "français", "中文", etc)
+        en = "English",
+        fr = "Français",
+        zh = "简体中文",
+    },
     steam = {
         short_description = [[Welcome to the bugscraper. Rise to the top of this pest-filled tower in this 2D shooter platformer and battle waves of enemies at every floor as they come for your skin (or rather, exoskeleton).]],
-        description = [[Welcome to the bugscraper. Here, pests all around the world come to gather. Your mission: stopping them before it is too late!🐜In this platformer shooter, you take the role of Mio, a courageous ant, trying to stop the employees of a bug-filled skyscraper from corrupting the world with a deadly mushroom.🐛You will battle waves of enemies in an elevator as they come for your skin (or rather, exoskeleton) on every floor.🐝Using a wide variety of weapons and upgrades, eliminate them and prepare to battle for the next floor!🐞Play in solo, or with up to 4 friends in local co-op multiplayer.]]
+        description = [[Welcome to the bugscraper. Here, pests all around the world come to gather. Your mission: stopping them before it is too late!🐜In this platformer shooter, you take the role of Mio, a courageous ant, trying to stop the employees of a bug-filled skyscraper from corrupting the world with a deadly mushroom.🐛You will battle waves of enemies in an elevator as they come for your skin (or rather, exoskeleton) on every floor.🐝Using a wide variety of weapons and upgrades, eliminate them and prepare to battle for the next floor!🐞Play in solo, or with up to 4 friends in local co-op multiplayer.]],
     },
     discord = { -- Text used for Discord rich presence
         state = {
@@ -48,8 +54,8 @@ return {
         name = {
             -- Player names
             -- No reason to change these during translation, except if:
-            -- - it's more appropriate to use a transliteration, or to use the script of the concerned language 
-            -- - they clash with something specific to the language/culture (notify me if it is the case)
+            --  * it's more appropriate to use a transliteration, or to use the script of the concerned language (e.g. Using the Chinese script)
+            --  * they clash with something specific to the language/culture (please notify me if it is the case)
             mio = "Mio",
             cap = "Cap",
             zia = "Zia",
@@ -92,13 +98,13 @@ return {
     input = {
         prompts = {
             move = "移动",
-            left = "Left",
-            right = "Right",
-            up = "Up",
-            down = "Down",
+            left = "左",
+            right = "右",
+            up = "上",
+            down = "下",
             jump = "跳跃",
             shoot = "射击",
-            leave_game = "Leave", 
+            leave_game = "退出", 
 
             ui_left = "Menu left",
             ui_right = "Menu right",
@@ -108,8 +114,8 @@ return {
             ui_back = "取消",
             pause = "Pause",
 
-            join = "Join",
-            split_keyboard = "Split keyboard",
+            join = "加入",
+            split_keyboard = "共享键盘",
             unsplit_keyboard = "Unsplit keyboard",
 
             jetpack = "Jetpack",
@@ -126,7 +132,7 @@ return {
             title = "暂停",
             resume = "继续",
             retry = "重试",
-            options = "选项",
+            options = "设置",
             credits = "致谢",
             feedback = "反馈",
             quit = "退出",
@@ -135,14 +141,14 @@ return {
             twitter = "FOLLOW ON TWITTER (𝕏)", 
         },
         options = {
-            title = "OPTIONS",
+            title = "设置",
 
             input = {
-                title = "Input",
-                input = "INPUT SETTINGS...",
+                title = "输入",
+                input = "输入设置...",
             },
             input_submenu = {
-                title = "Input settings",
+                title = "INPUT SETTINGS",
                 reset_controls = "RESET CONTROLS",
                 controller_button_style = "BUTTON STYLE",
                 controller_button_style_value = {
@@ -181,34 +187,40 @@ return {
                 controller_p4 = "CONTROLLER (Player 4)",
             },
             audio = {
-                title = "Audio",
-                sound = "SOUND",
-                volume = "VOLUME",
-                music_volume = "MUSIC VOLUME",
-                music_pause_menu = "MUSIC ON PAUSE MENU",
-                background_sounds = "BACKGROUND_SOUNDS",
+                title = "声音",
+                sound = "声音",
+                volume = "音量",
+                music_volume = "音乐音量",
+                music_pause_menu = "音乐暂停菜单",
             },
             visuals = {
-                title = "Visuals",
-                fullscreen = "FULLSCREEN",
-                pixel_scale = "PIXEL SCALE",
+                title = "视频",
+                fullscreen = "全屏",
+                pixel_scale = "像素比例尺",
                 pixel_scale_value = {
-                    auto = "auto",
-                    max_whole = "max whole",
+                    auto = "自动",
+                    max_whole = "最大整数值",
                 },
-                vsync = "VERTICAL SYNCHRONIZATION",
-                menu_blur = "MENU BACKGROUND BLUR",
-                background_speed = "BACKGROUND SPEED",
+                vsync = "垂直同步",
+                menu_blur = "菜单背景模糊",
+                background_speed = "背景速度",
             },
             game = {
-                title = "Gameplay",
-                timer = "TIMER",
-                mouse_visible = "SHOW MOUSE CURSOR",
-                pause_on_unfocus = "PAUSE ON LOST FOCUS",
-                screenshake = "SCREENSHAKE",
-                show_fps_warning = "SHOW LOW FRAMERATE WARNING",
+                title = "游戏",
+                language = "语言...",
+                timer = "马表",
+                mouse_visible = "显示鼠标指针",
+                pause_on_unfocus = "失去焦点时暂停",
+                screenshake = "屏幕震动",
+                show_fps_warning = "显示低帧率警告",
 
-            }
+            },
+            language = {
+                title = "LANGUAGE",
+            },
+            confirm_language = {
+                description = "Restart the game to apply new language?",
+            },
         },
         feedback = {
             title = "FEEDBACK",
