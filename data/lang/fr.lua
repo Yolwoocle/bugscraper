@@ -1,11 +1,18 @@
 return {
+    language = {
+        -- These should be kept untranslated in their original language ("english", "français", "中文", etc)
+        en = "English",
+        fr = "Français",
+        zh = "简体中文",
+    },
     steam = {
+        --[[TODO]]
         short_description = [[Bienvenue dans le bugscraper. Gravissez les étages de cette tour remplie de parasites dans ce jeu de plateforme et de tir 2D, et combattez des vagues d'ennemis à chaque étage alors qu'ils viennent pour votre peau (ou plutôt votre exosquelette).]],
         description = [[Bienvenue dans le bugscraper. Ici, des parasites du monde entier viennent se rassembler. Votre mission : les arrêter avant qu'il ne soit trop tard ! 🐜 Dans ce jeu de tir et de plateforme, vous incarnez Mio, une fourmi courageuse, essayant d'empêcher les employés d'un gratte-ciel rempli de parasites de corrompre le monde avec un champignon mortel. 🐛 Vous affronterez des vagues d'ennemis dans un ascenseur, alors qu'ils cherchent à atteindre votre peau (ou plutôt votre exosquelette) à chaque étage. 🐝 Utilisez une grande variété d'armes et d'améliorations pour les éliminer et préparez-vous à combattre pour l'étage suivant ! 🐞 Jouez en solo ou avec jusqu'à 4 amis en coopération locale.]]
     },
-    discord = { -- Text utilisé pour la présence enrichie Discord
+    discord = { -- Text used for Discord rich presence
         state = {
-            solo = "Joue en solo",
+            solo = "Solo",
             local_multiplayer = "Multijoueur local",
         },
         details = {
@@ -16,52 +23,57 @@ return {
         },
     },
     game = {
-        demo = "DÉMO", -- Mention ajoutée au logo du jeu pour indiquer que cette version est une démo
+        demo = "DÉMO",  -- Chip added to the game logo to indicate that this version is a demo
         fps = "%d FPS",
         congratulations = "FÉLICITATIONS !",
         win_thanks = "Merci d'avoir joué à la démo",
-        win_wishlist = "Ajoutez le jeu à votre liste de souhaits sur Steam :)",
+        win_wishlist = "Ajoutez à votre liste de souhaits Steam :)", -- "Wishlist" is a verb
         win_prompt = "[Pause pour continuer]",
-        warning_web_controller = "Certains navigateurs peuvent ne pas prendre en charge correctement les manettes",
+        warning_web_controller = "Certains navigateurs ne supportent pas correctement les manettes",
     },
     level = {
-        world_prefix = "Service %s", 
+        world_prefix = "Département %s", 
 
         -- Noms des mondes
-        world_1 = "Ressources parasitaires",
-        world_2 = "L'usine",
-        world_3 = "La salle des serveurs",
-        world_4 = "Direction",
+        world_1 = "Ressources parasites",
+        world_2 = "Chambre de production",
+        world_3 = "Salle des serveurs",
+        world_4 = "Éxécutif",
     },
     gun = {
         -- Noms des armes
-        machinegun = "pistolet à pois",
-        triple = "triple piment",
-        burst = "éclat de pollen",
-        shotgun = "fusil à framboises",
-        minigun = "minigun à graines",
-        ring = "grosse baie",
-        mushroom_cannon = "canon à champignons",
+        machinegun = "Petit pois",
+        triple = "Triple piment",
+        burst = "Éclat pollen",
+        shotgun = "Fusil framboise",
+        minigun = "Minigun pépin",
+        ring = "Grosse baie",
+        mushroom_cannon = "Canon champi",
     },
     player = {
-        name = {
-            -- Noms des joueurs
+        name = {            
+        -- Player names
+        -- No reason to change these during translation, except if:
+        --  * it's more appropriate to use a transliteration, or to use the script of the concerned language (e.g. Leo -> Léo in French)
+        --  * they clash with something specific to the language/culture (please notify me if it is the case)
             mio = "Mio",
             cap = "Cap",
             zia = "Zia",
             tok = "Tok",
             nel = "Nel",
             rico = "Rico",
-            leo = "Leo",
+            leo = "Léo",
         },
-        abbreviation = "J%d", -- Abréviation pour désigner les joueurs par leur numéro. Exemple : en français, "J1" signifie "Joueur 1".
+        -- Short appreviation to denote players by their number. 
+        -- Example: in english, "P1" means "Player 1", in french "J1" means "Joueur 1".
+        abbreviation = "J%d", 
     },
     enemy = {
-        dung = "M. Dung",
+        dung = "M. Bouse",
     },
     upgrade = {
         tea = {
-            title = "Thé Vert",
+            title = "Thé vert",
             description = "+2 ❤ temporaires",
         },
         espresso = {
@@ -74,20 +86,16 @@ return {
         },
         peanut = {
             title = "Cacahuète",
-            description = "x2 munitions maximales",
-        },
-        energy_drink = {
-            title = "Boisson Énergisante",
-            description = "La barre de furie se vide plus lentement",
+            description = "x2 munitions maximum",
         },
         soda = {
             title = "Soda",
-            description = "+1 saut en l'air",
+            description = "+1 saut dans les airs",
         },
     },
     input = {
         prompts = {
-            move = "Se déplacer",
+            move = "Bouger",
             left = "Gauche",
             right = "Droite",
             up = "Haut",
@@ -96,23 +104,22 @@ return {
             shoot = "Tirer",
             leave_game = "Quitter",
 
-            ui_left = "Menu gauche",
-            ui_right = "Menu droite",
-            ui_up = "Menu haut",
-            ui_down = "Menu bas",
+            ui_left =  "Gauche (menu)",
+            ui_right = "Droite (menu)",
+            ui_up =    "Haut (menu)",
+            ui_down =  "Bas (menu)",
             ui_select = "Confirmer",
             ui_back = "Retour",
             pause = "Pause",
 
             join = "Rejoindre",
-            split_keyboard = "Partager le clavier",
-            unsplit_keyboard = "Réunifier le clavier",
+            split_keyboard = "Partager clavier", -- Try to keep short
 
             jetpack = "Jetpack",
         },
     },
     menu = {
-        see_more = "voir plus...",
+        see_more = "plus d'infos...",
         yes = "OUI",
         no = "NON",
         quit = {
@@ -124,11 +131,10 @@ return {
             retry = "RECOMMENCER",
             options = "OPTIONS",
             credits = "CRÉDITS",
-            feedback = "AVIS",
+            feedback = "RETOURS",
             quit = "QUITTER",
             website = "SITE OFFICIEL",
             discord = "REJOINDRE LE DISCORD",
-            twitter = "SUIVRE SUR TWITTER (𝕏)",
         },
         options = {
             title = "OPTIONS",
@@ -138,7 +144,7 @@ return {
                 input = "PARAMÈTRES DES CONTRÔLES...",
             },
             input_submenu = {
-                title = "Paramètres des contrôles",
+                title = "PARAMÈTRES DES CONTRÔLES",
                 reset_controls = "RÉINITIALISER LES CONTRÔLES",
                 controller_button_style = "STYLE DES BOUTONS",
                 controller_button_style_value = {
@@ -148,21 +154,21 @@ return {
                     playstation5 = "PlayStation 5",
                     xbox = "Xbox",
                 },
-                deadzone = "ZONE MORTE JOYSTICK",
+                deadzone = "ZONE MORTE DU JOYSTICK",
                 vibration = "VIBRATION",
-                low_deadzone_warning = "Des valeurs faibles peuvent causer des problèmes",
-                note_deadzone = "Les paramètres de la zone morte seront appliqués en quittant ce menu",
+                low_deadzone_warning = "⚠ Des valeurs faibles peuvent causer des problèmes",
+                note_deadzone = "Les paramètres de zone morte seront appliqués en quittant ce menu",
 
                 gameplay = "Gameplay",
                 interface = "Interface",
                 global = "Global",
                 note_ui_min_button = "Au moins une attribution est requise",
-                note_global_keyboard = "Ces paramètres sont communs à tous les joueurs au clavier",
-                note_global_controller = "Ces paramètres sont communs à toutes les manettes",
+                note_global_keyboard = "Ces paramètres sont communs à tous les joueurs clavier",
+                note_global_controller = "Ces paramètres sont communs à tous les joueurs manette",
                 subtitle_no_player = "[⚠ PAS DE JOUEUR %d]",
                 subtitle_no_controller = "[⚠ AUCUNE MANETTE CONNECTÉE]",
                 no_buttons = "[AUCUN BOUTON]",
-                press_button = "[APPUYEZ SUR UN BOUTON]",
+                press_button = "[APPUYER BOUTON]",
                 press_again_to_remove = "Appuyez de nouveau sur un bouton attribué pour le supprimer",
 
                 keyboard = "Clavier",
@@ -192,17 +198,24 @@ return {
                     max_whole = "max entier",
                 },
                 vsync = "VSYNC",
-                menu_blur = "FLUO MENU",
-                background_speed = "VITESSE DU FOND",
+                menu_blur = "FLOU DU FOND DES MENUS",
+                background_speed = "VITESSE DE L'ARRIÈRE PLAN",
             },
             game = {
-                title = "Gameplay",
-                timer = "TIMER",
+                title = "Jeu",
+                language = "LANGUE...",
+                timer = "CHRONOMÈTRE",
                 mouse_visible = "AFFICHER LE CURSEUR",
                 pause_on_unfocus = "PAUSE EN CAS DE PERTE DE FOCUS",
                 screenshake = "TREMBLEMENT D'ÉCRAN",
-                show_fps_warning = "AFFICHER L'AVERTISSEMENT DE BAS FPS",
-            }
+                show_fps_warning = "AFFICHER AVERTISSEMENT DE FPS BAS",
+            },
+            language = {
+                title = "LANGUAGE",
+            },
+            confirm_language = {
+                description = "Restart the game to apply new language?",
+            },
         },
         feedback = {
             title = "RETOURS",
@@ -218,7 +231,7 @@ return {
         },
         win = {
             title = "FÉLICITATIONS !",
-            wishlist = "AJOUTER À LA LISTE DE SOUHAITS SUR STEAM",
+            wishlist = "AJOUTER À LA LISTE DE SOUHAITS STEAM",
             continue = "CONTINUER",
         },
         joystick_removed = {
@@ -230,14 +243,14 @@ return {
         credits = {
             title = "CRÉDITS",
             game_by = "Un jeu de",
-            game_by_template = "Par Léo Bernard & ses amis", -- Utilisé sur l'écran titre
-            music_and_sound_design = "Musique et conception sonore",
-            playtesting = "Tests de jeu",
-            special_thanks = "Remerciements spéciaux",
+            game_by_template = "Par Léo Bernard & amis", -- Utilisé sur l'écran titre
+            music_and_sound_design = "Musique et sound design",
+            playtesting = "Playtesting",
+            special_thanks = "Remerciements",
             asset_creators = "Créateurs d'assets",
             licenses = "Licences des assets & bibliothèques",
 
-            asset_item = "%s par %s / %s", -- "ASSET_NAME par CREATOR / LICENCE". Utilisé pour créditer des assets comme les effets sonores
+            asset_item = "%s par %s / %s", -- "ASSET_NAME by CREATOR / LICENCE". Used to credit assets such as sound effects
         },
         open_source = {
             title = "Bibliothèques open source",

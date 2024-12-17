@@ -35,27 +35,27 @@ return {
         world_prefix = "Department %s", 
 
         -- World names
-        world_1 = "Bug resources",
-        world_2 = "The factory",
-        world_3 = "The server room",
+        world_1 = "Bug Resources",
+        world_2 = "Production Chamber",
+        world_3 = "Server Room",
         world_4 = "Executive",
     },
     gun = {
         -- Gun names
-        machinegun = "pea gun",
-        triple = "triple pepper",
-        burst = "pollen burst",
-        shotgun = "raspberry shotgun",
-        minigun = "seed minigun",
-        ring = "big berry",
-        mushroom_cannon = "mushroom cannon",
+        machinegun = "Pea Gun",
+        triple = "Triple Pepper",
+        burst = "Pollen Burst",
+        shotgun = "Raspberry Shotgun",
+        minigun = "Seed Minigun",
+        ring = "Big Berry",
+        mushroom_cannon = "Mushroom Cannon",
     },
     player = {
         name = {
             -- Player names
             -- No reason to change these during translation, except if:
-            -- - it's more appropriate to use a transliteration, or to use the script of the concerned language 
-            -- - they clash with something specific to the language/culture (notify me if it is the case)
+            --  * it's more appropriate to use a transliteration, or to use the script of the concerned language (e.g. Leo -> Léo in French)
+            --  * they clash with something specific to the language/culture (please notify me if it is the case)
             mio = "Mio",
             cap = "Cap",
             zia = "Zia",
@@ -86,10 +86,6 @@ return {
             title = "Peanut",
             description = "x2 maximum ammo",
         },
-        energy_drink = {
-            title = "Energy Drink",
-            description = "Fury bar decays slower",
-        },
         soda = {
             title = "Soda",
             description = "+1 midair jump",
@@ -106,19 +102,18 @@ return {
             shoot = "Shoot",
             leave_game = "Leave", 
 
-            ui_left = "Menu left",
-            ui_right = "Menu right",
-            ui_up = "Menu up",
-            ui_down = "Menu down",
+            ui_left =  "Left (menu)",
+            ui_right = "Right (menu)",
+            ui_up =    "Up (menu)",
+            ui_down =  "Down (menu)",
             ui_select = "Confirm",
             ui_back = "Back",
             pause = "Pause",
 
             join = "Join",
-            split_keyboard = "Split keyboard",
-            unsplit_keyboard = "Unsplit keyboard",
+            split_keyboard = "Split keyboard", -- Try to keep short
 
-            jetpack = "Jetpack",
+            jetpack = "Jetpack", -- Refers to "jetpackking", a move in the game, so this is an infinitive verb 
         },
     },
     menu = {
@@ -138,7 +133,6 @@ return {
             quit = "QUIT",
             website = "OFFICIAL WEBSITE",
             discord = "JOIN ON DISCORD",
-            twitter = "FOLLOW ON TWITTER (𝕏)", 
         },
         options = {
             title = "OPTIONS",
@@ -160,19 +154,19 @@ return {
                 },
                 deadzone = "JOYSTICK DEADZONE",
                 vibration = "VIBRATION",
-                low_deadzone_warning = "Low values may cause issues",
+                low_deadzone_warning = "Low values may cause issues", -- Warning displayed when the deadzone is very small
                 note_deadzone = "Deadzone settings will be applied after leaving this menu",
 
                 gameplay = "Gameplay",
                 interface = "Interface",
                 global = "Global",
-                note_ui_min_button = "At least one binding is required",
+                note_ui_min_button = "At least one binding is required", 
                 note_global_keyboard = "These bindings are the same for all keyboard players",
                 note_global_controller = "These bindings are the same for all controllers",
                 subtitle_no_player = "[⚠ NO PLAYER %d]",
                 subtitle_no_controller = "[⚠ NO CONTROLLER CONNECTED]",
                 no_buttons = "[NO BUTTONS]",
-                press_button = "[PRESS BUTTON]",
+                press_button = "[PRESS BUTTON]", -- Try to keep it short
                 press_again_to_remove = "Press an already bound button to remove it",
                 
                 keyboard = "Keyboard",
@@ -232,7 +226,6 @@ return {
             kills = "Kills",
             time = "Time",
             floor = "Floor",
-            -- max_combo = "Max combo",
             continue = "CONTINUE",
         },
         win = {
@@ -244,7 +237,7 @@ return {
             title = "CONTROLLER DISCONNECTED",
             description = "Please plug in the following controllers:",
             continue = "CONTINUE ANYWAY",
-            item = "Player %d (%s)",
+            item = "Player %d (%s)", -- e.g. "Player 2 (Xbox Controller)"
         },
         credits = {
             title = "CREDITS",

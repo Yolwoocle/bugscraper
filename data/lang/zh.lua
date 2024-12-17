@@ -208,7 +208,7 @@ return {
             game = {
                 title = "游戏",
                 language = "语言...",
-                timer = "马表",
+                timer = "计时器",
                 mouse_visible = "显示鼠标指针",
                 pause_on_unfocus = "失去焦点时暂停",
                 screenshake = "屏幕震动",
