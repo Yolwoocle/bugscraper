@@ -4,6 +4,7 @@ return {
         en = "English",
         fr = "Français",
         zh = "简体中文",
+        pl = "Polski",
     },
     steam = {
         short_description = [[Welcome to the bugscraper. Rise to the top of this pest-filled tower in this 2D shooter platformer and battle waves of enemies at every floor as they come for your skin (or rather, exoskeleton).]],

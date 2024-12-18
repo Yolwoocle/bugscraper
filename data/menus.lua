@@ -269,6 +269,7 @@ local function generate_menus()
         { "{language.en}", func_language_menu("en") },
         { "{language.fr}", func_language_menu("fr") },
         { "{language.zh}", func_language_menu("zh") },
+        { "{language.pl}", func_language_menu("pl") },
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
 
     

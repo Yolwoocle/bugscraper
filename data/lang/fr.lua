@@ -4,6 +4,7 @@ return {
         en = "English",
         fr = "Français",
         zh = "简体中文",
+        pl = "Polski",
     },
     steam = {
         --[[TODO]]
