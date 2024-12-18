@@ -150,6 +150,8 @@ function InputManager:assign_joystick(user_n, joystick)
         input_user.joystick = joystick
         self.joystick_to_user_map[joystick] = input_user
     end
+
+    joystick:setPlayerIndex(user_n)
 end
 
 function InputManager:joystickadded(joystick)

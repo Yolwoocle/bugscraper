@@ -65,7 +65,7 @@ function Game:init()
 	FONT_REGULAR = gfx.newImageFont("fonts/hope_gold.png", FONT_CHARACTERS)
 	FONT_CHINESE = gfx.newImageFont("fonts/font_chinese.png", FONT_CHINESE_CHARACTERS)
 	FONT_7SEG = gfx.newImageFont("fonts/7seg_font.png", FONT_7SEG_CHARACTERS)
-	FONT_MINI = gfx.newFont("fonts/Kenney Mini.ttf", 8)
+	FONT_MINI = gfx.newImageFont("fonts/font_ant_party.png", FONT_MINI_CHARACTERS)
 	FONT_PAINT = gfx.newFont("fonts/NicoPaint-Regular.ttf", 16)
 
 	FONT_REGULAR:setFallbacks(FONT_CHINESE)

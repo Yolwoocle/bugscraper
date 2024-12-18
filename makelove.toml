@@ -9,6 +9,7 @@ love_files = [
     "-*/.*",
     "-./export/*",
     "-./dyn/*",
+    "-./_tools/*",
     "-*.aseprite",
     "-*.lnk",
 

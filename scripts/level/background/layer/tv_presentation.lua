@@ -41,7 +41,7 @@ function TvPresentation:init(x, y)
     shuffle_table(self.slides, 1, #self.slides - 1)
 
     self.bluescreen_image = images.tv_bluescreen
-    self.bluescreen_probability = 0.05
+    self.bluescreen_probability = TV_BLUESCREEN_PROBABILITY
     self.is_bluescreened = (random_range(0, 1) < self.bluescreen_probability)
     self.default_slide_duration = 5.0
     self.slideshow_timer = Timer:new(self.default_slide_duration):start()

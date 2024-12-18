@@ -27,6 +27,17 @@ function love.graphics.print(text, x, y, ...)
 	return old_print(text, math.floor(x), math.floor(y), ...)
 end
 
+
+local old_newCanvas = love.graphics.newCanvas
+function love.graphics.newCanvas(width, height, settings)
+	settings = settings or {}
+
+	if settings.dpiscale == nil then
+		settings.dpiscale = 1 
+	end
+	return old_newCanvas(width, height, settings)
+end
+
 -- scotch: gigantic hack for love.js canvas compatibility
 -- https://github.com/Davidobot/love.js/issues/92
 -- local old_newCanvas = love.graphics.newCanvas
@@ -255,7 +266,7 @@ function rgb(r, g, b)
 end
 
 function ternary(cond, t, f)
-	if cond then return t end
+	if cond == true then return t end
 	return f
 end
 

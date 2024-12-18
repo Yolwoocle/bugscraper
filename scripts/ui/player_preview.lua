@@ -51,13 +51,17 @@ function PlayerPreview:init(player_n, x, y, w, h)
                 }
 
                 local number_of_keyboard_users = Input:get_number_of_users(INPUT_TYPE_KEYBOARD)
-                if number_of_keyboard_users == 1 and self.player_n == Input:find_free_user_number() then
-                    table.insert(self.prompts, {
-                        -1, { "split_keyboard" }, "", COL_WHITE
-                    })
-                    table.insert(self.prompts, {
-                        -1, {}, Text:text("input.prompts.split_keyboard"), COL_WHITE
-                    })
+                if number_of_keyboard_users == 1 then
+                    table.remove(self.prompts[1][2], 1)
+
+                    if self.player_n == Input:find_free_user_number() then
+                        table.insert(self.prompts, {
+                            -1, { "split_keyboard" }, "", COL_WHITE
+                        })
+                        table.insert(self.prompts, {
+                            -1, {}, Text:text("input.prompts.split_keyboard"), COL_WHITE
+                        })
+                    end
                 end
 
                 if Input:get_user(self.player_n) then

@@ -112,6 +112,7 @@ FONT_CHARACTERS =
     "ПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюяё€🔊🔉🔈🎵🎼🔳🔲📺🕐↖🛜▶⏸🔄🔘⬅➡⬆⬇⏏🔫🔚📥👆🔙🗄⌨🎮🎚❤"..
     "✅❎🔗💡⚠🕹🫨💧🐜🐛🐝🪲🎓🌄🛅😎😈🐦𝕏🐰🐞🌐"
 FONT_7SEG_CHARACTERS = " 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+FONT_MINI_CHARACTERS = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_abcdefghijklmnopqrstuvwxyz{|}~"
 FONT_CHINESE_CHARACTERS = require "fonts.font_chinese_characters"
 
 --------------------------------------------- 
@@ -573,6 +574,6 @@ LIGHNING_COORDINATE_MODE_POLAR = "polar" -- radius, angle
 
 --------------------------------------------- 
 
--- Super secret
--- Go ahead and figure out what this is. I'm not here to stop you
+-- Super secret settings :)
 SMASH_EASTER_EGG_PROBABILITY = 0.02
+TV_BLUESCREEN_PROBABILITY = 0.02
