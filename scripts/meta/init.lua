@@ -1,6 +1,12 @@
 require "scripts.meta.constants"
+require "bugscraper_config"
 
 local function init()
+    print("====================[ Launched Bugscraper"..(DEMO_BUILD and " Demo" or "").." (v"..BUGSCRAPER_VERSION..") ]====================")
+    print("LOVE version: "..string.format("%d.%d.%d - %s", love.getVersion()))
+    print("Debug mode: "..tostring(DEBUG_MODE))
+    print("")
+
     local OptionsManager = require "scripts.game.options"
     Options = OptionsManager:new()
 
@@ -28,15 +34,17 @@ local function init()
         })
         if Options:get("is_window_maximized") then
             love.window.maximize()
+            print_debug("Maximized size :", gfx.getDimensions())
         end
     end
-
+    
     WINDOW_WIDTH, WINDOW_HEIGHT = gfx.getDimensions()
 	local screen_sx = WINDOW_WIDTH / CANVAS_WIDTH
 	local screen_sy = WINDOW_HEIGHT / CANVAS_HEIGHT
 	local scale = math.min(screen_sx, screen_sy)
 	CANVAS_OX = math.floor(max(0, (WINDOW_WIDTH - CANVAS_WIDTH * scale) / 2))
 	CANVAS_OY = math.floor(max(0, (WINDOW_HEIGHT - CANVAS_HEIGHT * scale) / 2))
+    print_debug("Scale :", scale)
     
     -- Splash screen
     love.graphics.clear()

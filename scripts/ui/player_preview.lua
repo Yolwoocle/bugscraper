@@ -36,7 +36,8 @@ function PlayerPreview:init(player_n, x, y, w, h)
                         { "join_game", INPUT_TYPE_KEYBOARD },
                         { "join_game", INPUT_TYPE_CONTROLLER, BUTTON_STYLE_XBOX },
                         { "join_game", INPUT_TYPE_CONTROLLER, BUTTON_STYLE_PLAYSTATION4 },
-                    }, Text:text("input.prompts.join"), COL_WHITE },
+                    }, "", COL_WHITE },
+                    { -1, {}, Text:text("input.prompts.join"), COL_WHITE },
                 }
             end,
             update = function(state, dt)
@@ -45,13 +46,17 @@ function PlayerPreview:init(player_n, x, y, w, h)
                         { "join_game", INPUT_TYPE_KEYBOARD },
                         { "join_game", INPUT_TYPE_CONTROLLER, BUTTON_STYLE_XBOX },
                         { "join_game", INPUT_TYPE_CONTROLLER, BUTTON_STYLE_PLAYSTATION4 },
-                    }, Text:text("input.prompts.join"), COL_WHITE },
+                    }, "", COL_WHITE },
+                    { -1, {}, Text:text("input.prompts.join"), COL_WHITE },
                 }
 
                 local number_of_keyboard_users = Input:get_number_of_users(INPUT_TYPE_KEYBOARD)
                 if number_of_keyboard_users == 1 and self.player_n == Input:find_free_user_number() then
                     table.insert(self.prompts, {
-                        -1, { "split_keyboard" }, Text:text("input.prompts.split_keyboard"), COL_WHITE
+                        -1, { "split_keyboard" }, "", COL_WHITE
+                    })
+                    table.insert(self.prompts, {
+                        -1, {}, Text:text("input.prompts.split_keyboard"), COL_WHITE
                     })
                 end
 
@@ -146,12 +151,13 @@ function PlayerPreview:init(player_n, x, y, w, h)
                     print_centered_outline(palette[1], nil, text, x + 1 + self.selection_ox, y - 20)
                 end
 
+                -- Bottom dots
                 local total_n = #skins
                 for i = 1, total_n do
                     local ix = x - (total_n*4)/2 + 4*(i-1)
 
-                    rect_color(COL_BLACK_BLUE, "fill", ix, y -1 + 15, 4, 3)
-                    rect_color(ternary(i == self.selection_n, COL_WHITE, COL_MID_GRAY), "fill", ix+1, y + 15, 2, 1)
+                    rect_color(COL_BLACK_BLUE, "fill", ix, y -1 + 16, 4, 3)
+                    rect_color(ternary(i == self.selection_n, COL_WHITE, COL_MID_GRAY), "fill", ix+1, y + 16, 2, 1)
                 end
                 -- print_centered_outline(nil, ncil, table_to_str(self.choices), x+1+self.selection_ox, y - 100)
 

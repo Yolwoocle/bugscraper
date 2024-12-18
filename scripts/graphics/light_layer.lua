@@ -36,14 +36,15 @@ function LightLayer:paint(paint_function, params)
         end
 		love.graphics.clear()
         
-        love.graphics.stencil(function()
-            self.light_world:paint()
-        end, "replace")
-        love.graphics.setStencilTest("less", 1)
+        love.graphics.setStencilState("replace", "always", 1)
+        love.graphics.setColorMask(false)
+        self.light_world:paint()
+
+        love.graphics.setStencilState("keep", "less", 1)
+        love.graphics.setColorMask(true)
 		
         paint_function()
-		
-		love.graphics.setStencilTest()
+		love.graphics.setStencilState()
 	end)
 end
 

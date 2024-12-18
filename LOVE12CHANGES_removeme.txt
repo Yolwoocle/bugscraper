@@ -1,0 +1,7 @@
+====================[ Launched Bugscraper ]====================
+
+LOVE - Warning: scripts/game/options.lua:110: Using deprecated function love.filesystem.newFile (renamed to love.filesystem.openFile)
+LOVE - Warning: scripts/level/background/background_factory.lua:22: Using deprecated function love.math.noise (replaced by love.math.perlinNoise or love.math.simplexNoise)
+LOVE - Warning: scripts/util.lua:38: Using deprecated function love.graphics.getCanvasFormats (replaced by love.graphics.getTextureFormats)
+LOVE - Warning: scripts/level/level.lua:509: Using deprecated function love.graphics.stencil (replaced by love.graphics.setStencilMode or setStencilState)
+LOVE - Warning: scripts/level/level.lua:513: Using deprecated function love.graphics.setStencilTest (replaced by love.graphics.setStencilMode or setStencilState)

@@ -384,8 +384,6 @@ function Debug:draw_joystick_view()
         self:draw_joystick_view_for(joy, i * spacing, -20, "rightx", "righty")
         i = i + 1
     end
-
-    self:test_lighting()
 end
 
 function Debug:draw_joystick_view_for(joystick, x, y, axis_x, axis_y, is_first)
@@ -636,72 +634,6 @@ function Debug:test_info_view_crop_line()
     -- end
 end
 
-removeme_t = 0
-function Debug:test_lighting()
-    local normal_canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
-
-    removeme_t = removeme_t + 1 / 60
-
-    exec_on_canvas({ normal_canvas, stencil = true }, function()
-        game.camera:reset_transform()
-        love.graphics.clear()
-
-        love.graphics.stencil(function()
-            love.graphics.clear()
-
-            local rect = Rect:new(-4000, -16, 4000, game.level.cabin_inner_rect.by + 3)
-
-            local function new_light(x, y, angle, spread)
-                return {
-                    x = x,
-                    y = y,
-                    angle = angle,
-                    spread = spread,
-                    rect = rect,
-
-                    get_segments = function(self)
-                        local s1 = Segment:new(self.x, self.y, self.x + math.cos(self.angle + self.spread) * 800,
-                            self.y + math.sin(self.angle + self.spread) * 800)
-                        local s2 = Segment:new(self.x, self.y, self.x + math.cos(self.angle - self.spread) * 800,
-                            self.y + math.sin(self.angle - self.spread) * 800)
-                        return Segment:new(clamp_segment_to_rectangle(s1, self.rect)),
-                            Segment:new(clamp_segment_to_rectangle(s2, self.rect))
-                    end,
-
-                    draw = function(self)
-                        local s1, s2 = self:get_segments(self.rect)
-                        if s1 and s2 then
-                            love.graphics.polygon("fill", s1.ax, s1.ay, s1.bx, s1.by, s2.bx, s2.by, s2.ax, s2.ay)
-                        end
-                    end,
-                }
-            end
-
-            local lights = {
-                new_light(CANVAS_WIDTH / 2, -32, pi * 0.5, pi * 0.1),
-                new_light(500, -32, pi * 0.7, pi * 0.05),
-                new_light(CANVAS_WIDTH - 500, -32, pi * 0.3, pi * 0.05),
-            }
-
-            local i = 1
-            for _, l in pairs(lights) do
-                if 3 + i * 0.4 < removeme_t then
-                    l:draw()
-                end
-                i = i + 1
-            end
-        end, "replace")
-        love.graphics.setStencilTest("less", 1)
-
-        rect_color({ 0, 0, 0, 0.85 }, "fill", 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
-
-        love.graphics.setStencilTest()
-        game.camera:apply_transform()
-    end)
-
-    love.graphics.draw(normal_canvas)
-end
-
 function Debug:draw_colview()
     game.camera:apply_transform()
 
@@ -725,8 +657,17 @@ function Debug:draw_layers()
     local x = 0
     local y = 0
     for i = 1, #self.game.layers do
-        rect_color({ 1, 1, 1, 0.8 }, "fill", x, y, CANVAS_WIDTH, CANVAS_HEIGHT)
-        love.graphics.draw(self.game.layers[i].canvas, x, y)
+        local layer_canvas = self.game.layers[i].canvas
+        rect_color({ 0.6, 0.6, 0.6, 0.8 }, "fill", x, y, CANVAS_WIDTH, CANVAS_HEIGHT)
+        for ix = 0, layer_canvas:getWidth(), 8 do
+            for iy = 0, layer_canvas:getHeight(), 8 do
+                if (math.floor(ix/8) + math.floor(iy/8)) % 2 == 0 then
+                    rect_color({ 1/2,1/2,1/2, 0.8 }, "fill", x + ix, y + iy, math.min(8, layer_canvas:getWidth() - ix), math.min(8, layer_canvas:getHeight() - iy))
+                end
+            end
+        end
+
+        love.graphics.draw(layer_canvas, x, y)
         print_outline(nil, nil, concat(i, " ", LAYER_NAMES[i]), x, y, nil, nil, 2)
         rect_color(COL_RED, "line", x, y, CANVAS_WIDTH, CANVAS_HEIGHT)
 

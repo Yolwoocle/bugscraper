@@ -107,8 +107,7 @@ function OptionsManager:load_options()
 	end
 
 	-- Read options.txt file
-	local file = love.filesystem.newFile("options.txt")
-	file:open("r")
+	local file = love.filesystem.openFile("options.txt", "r")
 	
 	local text, size = file:read()
 	if not text then    print("Error reading options.txt file: "..size)    end
@@ -136,8 +135,7 @@ end
 
 function OptionsManager:update_options_file()
 	-- print("Creating or updating options.txt file")
-	local file = love.filesystem.newFile("options.txt")
-	file:open("w")
+	local file = love.filesystem.openFile("options.txt", "w")
 	
 	for k, v in pairs(self.options) do
 		local val = v

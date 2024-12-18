@@ -50,37 +50,39 @@ function TvPresentation:init(x, y)
     self.buffer_canvas = love.graphics.newCanvas(self.canvas_w, self.canvas_h)
 
     self.transitions = {
-        { -- fade
-            draw = function(trans, old_image, old_frame, new_image, new_frame, alpha)
-                exec_color({ 1, 1, 1, 1 - alpha }, function() self:draw_frame(old_image, old_frame, 0, 0) end)
-                exec_color({ 1, 1, 1, alpha }, function() self:draw_frame(new_image, new_frame, 0, 0) end)
-            end,
-        },
-        { -- push vertical
-            draw = function(trans, old_image, old_frame, new_image, new_frame, alpha)
-                self:draw_frame(old_image, old_frame, 0, self.canvas_h * alpha)
-                self:draw_frame(new_image, new_frame, 0, self.canvas_h * (alpha - 1))
-            end,
-        },
-        { -- push horizontal
-            draw = function(trans, old_image, old_frame, new_image, new_frame, alpha)
-                self:draw_frame(old_image, old_frame, self.canvas_w * alpha, 0)
-                self:draw_frame(new_image, new_frame, self.canvas_w * (alpha - 1), 0)
-            end,
-        },
-        { -- cover
-            draw = function(trans, old_image, old_frame, new_image, new_frame, alpha)
-                self:draw_frame(old_image, old_frame, 0, 0)
-                self:draw_frame(new_image, new_frame, self.canvas_w * (alpha - 1), 0)
-            end,
-        },
+        -- { -- fade
+        --     draw = function(trans, old_image, old_frame, new_image, new_frame, alpha)
+        --         exec_color({ 1, 1, 1, 1 - alpha }, function() self:draw_frame(old_image, old_frame, 0, 0) end)
+        --         exec_color({ 1, 1, 1, alpha }, function() self:draw_frame(new_image, new_frame, 0, 0) end)
+        --     end,
+        -- },
+        -- { -- push vertical
+        --     draw = function(trans, old_image, old_frame, new_image, new_frame, alpha)
+        --         self:draw_frame(old_image, old_frame, 0, self.canvas_h * alpha)
+        --         self:draw_frame(new_image, new_frame, 0, self.canvas_h * (alpha - 1))
+        --     end,
+        -- },
+        -- { -- push horizontal
+        --     draw = function(trans, old_image, old_frame, new_image, new_frame, alpha)
+        --         self:draw_frame(old_image, old_frame, self.canvas_w * alpha, 0)
+        --         self:draw_frame(new_image, new_frame, self.canvas_w * (alpha - 1), 0)
+        --     end,
+        -- },
+        -- { -- cover
+        --     draw = function(trans, old_image, old_frame, new_image, new_frame, alpha)
+        --         self:draw_frame(old_image, old_frame, 0, 0)
+        --         self:draw_frame(new_image, new_frame, self.canvas_w * (alpha - 1), 0)
+        --     end,
+        -- },
         { -- growing circle
             draw = function(trans, old_image, old_frame, new_image, new_frame, alpha)
                 love.graphics.draw(new_image, -self.canvas_w * (new_frame - 1), 0)
-                love.graphics.stencil(function()
-                    love.graphics.circle("fill", self.canvas_w / 2, self.canvas_h / 2, alpha * self.canvas_w * 1.2)
-                end)
-                love.graphics.setStencilTest("less", 1)
+
+                love.graphics.setStencilMode("draw", 1)
+                love.graphics.circle("fill", self.canvas_w / 2, self.canvas_h / 2, alpha * self.canvas_w * 1.2)
+                love.graphics.setStencilMode("test", 1)
+
+                -- love.graphics.setStencilTest("less", 1)
                 love.graphics.draw(old_image, -self.canvas_w * (old_frame - 1), 0)
                 love.graphics.setStencilTest()
             end,
@@ -88,14 +90,14 @@ function TvPresentation:init(x, y)
         { -- "curtains" (idk how to call it)
             draw = function(trans, old_image, old_frame, new_image, new_frame, alpha)
                 love.graphics.draw(new_image, -self.canvas_w * (new_frame - 1), 0)
-                love.graphics.stencil(function()
-                    love.graphics.rectangle("fill", 0, 0, self.canvas_w / 2 * alpha, self.canvas_h)
-                    love.graphics.rectangle("fill", self.canvas_w - self.canvas_w / 2 * alpha, 0, self.canvas_w,
-                        self.canvas_h)
-                end)
-                love.graphics.setStencilTest("less", 1)
+    
+                love.graphics.setStencilState("replace", "always", 1)
+                love.graphics.rectangle("fill", 0, 0, self.canvas_w / 2 * alpha, self.canvas_h)
+                love.graphics.rectangle("fill", self.canvas_w - self.canvas_w / 2 * alpha, 0, self.canvas_w, self.canvas_h)
+
+    			love.graphics.setStencilState("keep", "less", 1)
                 love.graphics.draw(old_image, -self.canvas_w * (old_frame - 1), 0)
-                love.graphics.setStencilTest()
+                love.graphics.setStencilState()
             end,
         },
     }

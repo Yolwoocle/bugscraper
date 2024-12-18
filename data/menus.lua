@@ -522,6 +522,7 @@ local function generate_menus()
         { Text:text("menu.credits.asset_item", "'batteries'", "1bardesign", "Zlib"),                       func_url("https://github.com/1bardesign/batteries") },
         { Text:text("menu.credits.asset_item", "'mlib'", "davisdude", "Zlib"),                             func_url("https://github.com/davisdude/mlib") },
         { Text:text("menu.credits.asset_item", "'Fira Code'", "The Fira Code Project Authors", "OFL-1.1"), func_url("https://github.com/tonsky/FiraCode/") },
+        { Text:text("menu.credits.asset_item", "'Boutique Bitmap 9x9'", "Luke Liu", "OFL-1.1"),            func_url("https://luke036.itch.io/boutique-bitmap-9x9") },
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
 
     menus.credits_sounds = Menu:new(game, {

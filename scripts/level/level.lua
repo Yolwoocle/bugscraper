@@ -506,16 +506,18 @@ function Level:draw_with_hole(draw_func, stencil_test)
 		love.graphics.clear()
 		
 		if self.is_hole_stencil_enabled then
-			love.graphics.stencil(function()
-				love.graphics.clear()
-				love.graphics.circle("fill", (self.door_rect.ax + self.door_rect.bx)/2, (self.door_rect.ay + self.door_rect.by)/2, self.hole_stencil_radius)
-			end, "increment")
-			love.graphics.setStencilTest(stencil_test, 1)
+			love.graphics.setStencilState("replace", "always", 1)
+			love.graphics.setColorMask(false)
+			love.graphics.clear()
+			love.graphics.circle("fill", (self.door_rect.ax + self.door_rect.bx)/2, (self.door_rect.ay + self.door_rect.by)/2, self.hole_stencil_radius)
+
+			love.graphics.setStencilState("keep", stencil_test, 1)
+			love.graphics.setColorMask(true)
 		end
 		
 		love.graphics.draw(self.buffer_canvas)
 		
-		love.graphics.setStencilTest()
+		love.graphics.setStencilState()
 		game.camera:apply_transform()
 	end)
 	love.graphics.draw(self.canvas, 0, 0)

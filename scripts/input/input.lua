@@ -656,8 +656,7 @@ function InputManager:load_control_file(profile_id, profile)
         return
     end
 
-    local file = love.filesystem.newFile(filename)
-    file:open("r")
+    local file = love.filesystem.openFile(filename, "r")
 
     local new_mappings = copy_table(profile:get_mappings())
 
@@ -742,9 +741,8 @@ end
 
 function InputManager:update_controls_file(profile_id)
     local filename = concat("inputprofile_",profile_id,".txt")
-    local controlsfile = love.filesystem.newFile(filename)
+    local controlsfile = love.filesystem.openFile(filename, "w")
     print(concat("Creating or updating ", filename, " file"))
-    controlsfile:open("w")
 
     controlsfile:write(string.format("$version:%s\n", INPUT_FILE_FORMAT_VERSION))
     local profile = self.input_profiles[profile_id]

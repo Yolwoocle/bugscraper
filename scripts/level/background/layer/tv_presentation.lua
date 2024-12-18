@@ -76,26 +76,46 @@ function TvPresentation:init(x, y)
         },
         { -- growing circle
             draw = function(trans, old_image, old_frame, new_image, new_frame, alpha)
-                love.graphics.draw(new_image, -self.canvas_w * (new_frame - 1), 0)
-                love.graphics.stencil(function()
-                    love.graphics.circle("fill", self.canvas_w / 2, self.canvas_h / 2, alpha * self.canvas_w * 1.2)
-                end)
-                love.graphics.setStencilTest("less", 1)
                 love.graphics.draw(old_image, -self.canvas_w * (old_frame - 1), 0)
-                love.graphics.setStencilTest()
+
+                love.graphics.setStencilState("replace", "always", 1)
+                love.graphics.circle("fill", self.canvas_w / 2, self.canvas_h / 2, alpha * self.canvas_w * 1.2)
+                
+                love.graphics.setStencilState("keep", "greater", 0)
+                love.graphics.draw(new_image, -self.canvas_w * (new_frame - 1), 0)
+
+                love.graphics.setStencilMode()
+            end,
+        },
+        { -- bunch of growing circles
+            draw = function(trans, old_image, old_frame, new_image, new_frame, alpha)
+                love.graphics.draw(old_image, -self.canvas_w * (old_frame - 1), 0)
+
+                love.graphics.setStencilState("replace", "always", 1)
+                for ix = 0, self.canvas_w, 10 do
+                    for iy = 0, self.canvas_h, 10 do
+                        love.graphics.circle("fill", ix, iy, alpha * 15)
+                    end
+                end
+                
+                love.graphics.setStencilState("keep", "greater", 0)
+                love.graphics.draw(new_image, -self.canvas_w * (new_frame - 1), 0)
+
+                love.graphics.setStencilMode()
             end,
         },
         { -- "curtains" (idk how to call it)
             draw = function(trans, old_image, old_frame, new_image, new_frame, alpha)
-                love.graphics.draw(new_image, -self.canvas_w * (new_frame - 1), 0)
-                love.graphics.stencil(function()
-                    love.graphics.rectangle("fill", 0, 0, self.canvas_w / 2 * alpha, self.canvas_h)
-                    love.graphics.rectangle("fill", self.canvas_w - self.canvas_w / 2 * alpha, 0, self.canvas_w,
-                        self.canvas_h)
-                end)
-                love.graphics.setStencilTest("less", 1)
                 love.graphics.draw(old_image, -self.canvas_w * (old_frame - 1), 0)
-                love.graphics.setStencilTest()
+                
+                love.graphics.setStencilState("replace", "always", 1)
+                love.graphics.rectangle("fill", 0, 0, self.canvas_w / 2 * alpha, self.canvas_h)
+                love.graphics.rectangle("fill", self.canvas_w - self.canvas_w / 2 * alpha, 0, self.canvas_w, self.canvas_h)
+                
+                love.graphics.setStencilState("keep", "greater", 0)
+                love.graphics.draw(new_image, -self.canvas_w * (new_frame - 1), 0)
+
+                love.graphics.setStencilMode()
             end,
         },
     }

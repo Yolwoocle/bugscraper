@@ -2,22 +2,26 @@ require "scripts.util"
 local utf8 = require "utf8"
 local Class = require "scripts.meta.class"
 
-local lang_en = require "data.lang.en"
-local lang_zh = require "data.lang.zh"
-local lang_fr = require "data.lang.fr"
-
 local TextManager = Class:inherit()
 
 function TextManager:init()
+    local start = love.timer.getTime()
     self.languages = {
-        en = lang_en,
-        zh = lang_zh,
-        fr = lang_fr,
+        en = require "data.lang.en",
+        zh = require "data.lang.zh",
+        fr = require "data.lang.fr",
     }
+    for lang_name, lang_values in pairs(self.languages) do
+        self.languages[lang_name] = self:unpack(lang_values)
+    end
+
     self.default_lang = "en"
     if DEBUG_MODE then
         self:sanity_check_languages(self.default_lang)
     end
+
+    self.user_locale = os.setlocale(nil, "all")
+    print_debug("User locale = '"..self.user_locale.."'")
 
     self.language = Options:get("language")
     self.values = self:unpack(self.languages[self.language or self.default_lang])
@@ -28,7 +32,7 @@ function TextManager:init()
         -- print_table(s)
         words = words + #s
     end
-    print("TextManager: Unpacked "..tostring(words).." words.")
+    print("TextManager: Unpacked "..tostring(words).." words in "..(1000* (love.timer.getTime() - start)).."ms.")
 end
 
 --- Unpacks a table to be used as text keys. Example:
@@ -126,7 +130,14 @@ function TextManager:parse_string(text)
 end
 
 function TextManager:sanity_check_languages(reference_language)
-    
+    -- Check for missing keys
+    for ref_key, ref_value in pairs(self.languages[reference_language]) do
+        for lang_name, lang_values in pairs(self.languages) do
+            if lang_name ~= reference_language and not lang_values[ref_key] then
+                print_debug("- [Text] /!\\ missing key '"..ref_key.."' for language '"..lang_name.."'")
+            end
+        end
+    end
 end
 
 return TextManager

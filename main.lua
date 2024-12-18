@@ -134,8 +134,7 @@ function love.focus(f)
 	if game.focus then  game:focus(f)  end
 end
 
-print_log_file = love.filesystem.newFile("consolelog.txt")
-print_log_file:open("w")
+print_log_file = love.filesystem.openFile("consolelog.txt", "w")
 print_log_file:write("")
 print_log_file:close()
 
