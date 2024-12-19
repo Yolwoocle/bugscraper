@@ -47,9 +47,9 @@ end
 function ElevatorDoor:draw()
 	-- Doors
 	local door_x_left_center =  self.x - self.offset
-	local door_x_right_center = self.x + self.w/2 + self.offset
+	local door_x_right_center = self.x + self.offset
 	local door_x_left_far =     self.x - math.max(0, self.offset - 54/2)
-	local door_x_right_far =    self.x + self.w/2 + math.max(0, self.offset - 54/2)
+	local door_x_right_far =    self.x + math.max(0, self.offset - 54/2)
 	local door_y = self.y
 	gfx.draw(self.image_left_center,  door_x_left_center,  door_y)
 	gfx.draw(self.image_right_center, door_x_right_center, door_y)

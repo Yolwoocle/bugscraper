@@ -335,8 +335,7 @@ local waves = {
 		elevator_layers = {
 			["cabin_brown"] = true,
 			["walls_brown"] = true,
-			["bg_grid_brown"] = true,
-
+			
 			["walls"] = false,
 			["bg_grid"] = false,
 		},
