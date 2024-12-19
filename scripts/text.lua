@@ -10,6 +10,7 @@ function TextManager:init()
         en = require "data.lang.en",
         zh = require "data.lang.zh",
         fr = require "data.lang.fr",
+        pl = require "data.lang.pl",
     }
     for lang_name, lang_values in pairs(self.languages) do
         self.languages[lang_name] = self:unpack(lang_values)
