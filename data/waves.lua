@@ -570,7 +570,7 @@ local waves = {
 			end
 		end,
 
-		cutscene = cutscenes.bee_boss_enter,
+		-- cutscene = cutscenes.bee_boss_enter,
 	}),
 
 	new_cafeteria(function()

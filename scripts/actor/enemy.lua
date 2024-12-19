@@ -224,8 +224,10 @@ function Enemy:draw_enemy()
 	self:draw_actor()
 
 	if game.debug.colview_mode then
-		gfx.draw(images.heart, self.x-7 -2+16, self.y-16)
-		print_outline(COL_WHITE, COL_DARK_BLUE, self.life, self.x+16, self.y-16-2)
+		local old_font = love.graphics.getFont()
+		love.graphics.setFont(FONT_MINI)
+		print_outline(COL_WHITE, COL_DARK_BLUE, concat(round(self.life,2), "HP"), self.x, self.y-6)
+		love.graphics.setFont(old_font)
 	end
 end
 
@@ -444,7 +446,7 @@ end
 function Enemy:on_damage()
 end
 
---- (Abstract) Called when the enemy is stomped, but but necessarily stomp-killed
+--- (Abstract) Called when the enemy is stomped, but not necessarily stomp-killed
 function Enemy:on_stomped(damager)
 end
 

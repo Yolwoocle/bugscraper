@@ -166,6 +166,7 @@ local img_names = {
 	stink_bug_1 =              "actors/enemies/stink_bug_1",
 	timed_spikes_base =        "actors/enemies/timed_spikes_base",
 	timed_spikes_spikes =      "actors/enemies/timed_spikes_spikes",
+	timed_spikes_spikes_stem = "actors/enemies/timed_spikes_spikes_stem",
 	woodlouse_1 =              "actors/enemies/woodlouse_1",
 	woodlouse_2 =              "actors/enemies/woodlouse_2",
 

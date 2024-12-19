@@ -225,7 +225,7 @@ return {
         },
         game_over = {
             title = "GAME OVER!",
-            kills = "Éliminations",
+            kills = "Ennemis tués",
             time = "Temps",
             floor = "Étage",
             continue = "CONTINUER",
