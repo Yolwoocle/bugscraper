@@ -32,8 +32,8 @@ return {
 
         -- World names
         world_1 = "Bug Resources",
-        world_2 = "Production Chamber",
-        world_3 = "Server Room",
+        world_2 = "The Factory",
+        world_3 = "The Server Room",
         world_4 = "Executive",
     },
     gun = {
