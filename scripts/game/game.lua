@@ -551,11 +551,12 @@ function Game:draw_game()
 		love.graphics.clear()
 
 		exec_color({ 0, 0, 0, 0.5 }, function()
+			-- love.graphics.cl
 			love.graphics.draw(self:get_layer(LAYER_OBJECTS).canvas, self.shadow_ox, self.shadow_oy)
 			love.graphics.draw(self:get_layer(LAYER_HUD).canvas, self.shadow_ox, self.shadow_oy)
 		end)
 	end, { apply_camera = false })
-
+ 
 	-----------------------------------------------------
 
 	self:draw_on_layer(LAYER_FRONT, function()

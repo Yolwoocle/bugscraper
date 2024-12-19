@@ -39,8 +39,9 @@ function TimedSpikes:init(x, y, duration_off, duration_telegraph, duration_on, s
         {"on", duration_on or 1},
     }
 
-    self.spike_y = -16
-    self.spike_target_y = -16
+    self.spike_length = args.spike_length or 16 
+    self.spike_y = -self.spike_length
+    self.spike_target_y = -self.spike_length
     self.spike_sprite = Sprite:new(images.timed_spikes_spikes)
     self.spike_sprite:set_anchor(sprite_anchor)
     self.spike_sprite:set_rotation(self.orientation * pi/2)

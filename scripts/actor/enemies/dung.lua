@@ -113,7 +113,6 @@ function Dung:init_dung(x, y, spr, w, h)
                 self.bounce_restitution = 0.5
 
                 self.chase_target = self:get_random_player()
-                self.state_timer:start(random_range(4.0, 7.0))
                 self.jump_speed = 500
 
                 self.bounces = 3
@@ -121,12 +120,16 @@ function Dung:init_dung(x, y, spr, w, h)
             update = function(state, dt)
                 self:chase_player(dt)
 
-                if self.is_grounded then
+                if self.is_grounded and self.bounces > 0 then
                     self.bounces = self.bounces - 1
                     self:jump()
+
+                    if self.bounces <= 0 then
+                        self.state_timer:start(3.0)
+                    end
                 end
 
-                if self.state_timer:update(dt) or self.bounces <= 0 then
+                if self.state_timer:update(dt) then
                     return "random"
                 end
             end,
@@ -135,7 +138,7 @@ function Dung:init_dung(x, y, spr, w, h)
                 self.rider.spr:update_offset(0, 0)
             end,
             after_collision = function(state, col)
-                if col.type ~= "cross" then
+                if col.type ~= "cross" and self.bounces > 0 then
                     game:screenshake(4)
                 end
             end
@@ -176,6 +179,8 @@ end
 
 function Dung:update(dt)
     self:update_dung(dt)
+
+    self.debug_values[1] = self.state_machine.current_state_name
 end
 
 function Dung:update_dung(dt)

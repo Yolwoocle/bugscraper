@@ -509,6 +509,8 @@ function Debug:draw_debug_menu()
 end
 
 function Debug:draw_info_view()
+    love.graphics.setFont(FONT_MINI)
+
     self.test_sprite_t = self.test_sprite_t + 1 / 60
     if self.test_sprite_t > 0.3 then
         self.test_sprite_t = 0.0
@@ -548,12 +550,15 @@ function Debug:draw_info_view()
     end
     queued_players_str = queued_players_str .. "}"
 
+    local renderer_name, renderer_version, renderer_vendor, renderer_device = love.graphics.getRendererInfo( )
 
     -- Print debug info
     local txt_h = get_text_height(" ")
     local txts = {
         concat("FPS: ", love.timer.getFPS(), " / frmRpeat: ", self.game.frame_repeat, " / frame: ", frame),
         concat("LÖVE version: ", string.format("%d.%d.%d - %s", love.getVersion())),
+        concat("Renderer info: ", renderer_name, " (v", renderer_version, ")"),
+        concat("Renderer vendor: ", renderer_vendor, ", device ", renderer_device),
         concat("game state: ", game.game_state),
         concat("memory used ", collectgarbage("count")),
         concat("nb of active audio sources: ", love.audio.getActiveSourceCount()),
@@ -599,6 +604,8 @@ function Debug:draw_info_view()
     --     rect_color(move_toward_color(col_a, col_b, ix/w), "fill", ix, 100, 1, 25)
     --     rect_color(move_toward_color_radial(col_a, col_b, ix/w), "fill", ix, 120, 1, 25)
     -- end
+
+    love.graphics.setFont(FONT_REGULAR)
 end
 
 function Debug:test_info_view_3d_renderer()
