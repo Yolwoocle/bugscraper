@@ -2,6 +2,7 @@ require "scripts.util"
 local Enemy = require "scripts.actor.enemy"
 local Timer = require "scripts.timer"
 local FlyingDung = require "scripts.actor.enemies.flying_dung"
+local AnimatedSprite = require "scripts.graphics.animated_sprite"
 
 local sounds = require "data.sounds"
 local images = require "data.images"
@@ -30,8 +31,20 @@ function DungBeetle:init(x, y)
     self.dung_limit = 6
     self.dungs = {}
 
-    self.anim_frame_len = 0.2
-    self.anim_frames = {images.dung_beetle_1, images.dung_beetle_2}
+    self.spr = AnimatedSprite:new({
+        idle = {
+            {images.dung_beetle_walk_1},
+            0.1
+        },
+        walk = {
+            {images.dung_beetle_walk_1, images.dung_beetle_walk_2},
+            0.1
+        },
+        run = {
+            {images.dung_beetle_1, images.dung_beetle_2, images.dung_beetle_3, images.dung_beetle_4, images.dung_beetle_5, images.dung_beetle_6}, 
+            0.08
+        },
+    }, "idle") 
 
     self.hits = self.dung_limit
     self.life = math.huge
@@ -68,12 +81,28 @@ function DungBeetle:update(dt)
     end
 
     -- animation
-    if self.vehicle then
-        self.anim_frame_len = math.abs(10/self.vehicle.vx)
+    self.debug_values[1] = ""
+    self.debug_values[2] = ""
+    if self.vehicle and math.abs(self.vehicle.vx) > 80 then
+        self.spr:set_animation("run")
         self.spr:set_flip_x(self.vehicle.vx < 0)
+        self.debug_values[3] = "80"
+        
+    elseif self.vehicle and math.abs(self.vehicle.vx) > 40 then
+        self.spr:set_animation("walk")
+        self.spr:set_flip_x(self.vehicle.vx < 0)
+        self.debug_values[3] = "40"
+        
+    elseif not self.vehicle then
+        self.spr:set_animation("walk")
+        self.debug_values[3] = "not vehicle"
+        
     else
-        self.anim_frame_len = 0.2
+        self.spr:set_animation("idle")
+        self.debug_values[3] = "huge"
     end
+    self.anim_frame_len = 0.08
+
 end
 
 function DungBeetle:on_death()

@@ -31,6 +31,7 @@ function OptionsManager:init()
 		mouse_visible = false,
 		pause_on_unfocus = ternary(love.system.getOS() == "Web", false, true),
 		screenshake_on = true,
+		skip_boss_intros = false,
 		show_fps_warning = true,
 
 		button_style_p1 = BUTTON_STYLE_DETECT,

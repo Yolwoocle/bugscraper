@@ -83,7 +83,12 @@ function Debug:init(game)
         end },
         ["f7"] = { "toggle speedup", function()
             _G_t = 0
-            _G_do_fixed_framerate = not _G_do_fixed_framerate
+            _G_speedup = not _G_speedup
+            if _G_speedup then
+                _G_frame_repeat = 4
+            else
+                _G_frame_repeat = 1
+            end
         end },
         ["backspace"] = { "show help", function()
             self.debug_menu = not self.debug_menu

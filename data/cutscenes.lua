@@ -11,7 +11,9 @@ cutscenes.dung_boss_enter = Cutscene:new {
     Scene:new({
         duration = 1.5,
         enter = function(scene)
-            game.menu_manager:set_menu("w1_boss_intro")
+            if not Options:get("skip_boss_intros") then
+                game.menu_manager:set_menu("w1_boss_intro")
+            end
         end,
     }),
 }

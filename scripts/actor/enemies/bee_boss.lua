@@ -309,7 +309,6 @@ function BeeBoss:update(dt)
     end
 
     -- self.debug_values[1] = concat(self.state_machine.current_state_name)
-    self.debug_values[2] = concat(self.life,"❤")
 
     if self.invul_timer.is_active then
         local freq = ternary(self.invul_timer.time < self.invul_timer.duration/2, 0.12, 0.07)

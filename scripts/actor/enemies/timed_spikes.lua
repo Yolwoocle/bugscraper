@@ -138,6 +138,8 @@ function TimedSpikes:init(x, y, duration_off, duration_telegraph, duration_on, s
         },
     }, "standby")
 
+    self.spike_stem_sprite.is_visible = self.spike_sprite.is_visible
+
     self.t = 0
 end
 

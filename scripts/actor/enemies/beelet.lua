@@ -191,6 +191,7 @@ function Beellet:detect_player_in_range()
     return false
 end
 
+
 function Beellet:update(dt)
     self:update_enemy(dt)
 
@@ -213,6 +214,7 @@ function Beellet:after_collision(col, other)
     end
 end
 
+
 function Beellet:draw()
     self:draw_enemy()
 
@@ -221,5 +223,6 @@ function Beellet:draw()
         rect_color(COL_RED, "line", self.detection_segment.ax - self.player_detection_width/2, self.detection_segment.ay - self.player_detection_width/2, self.player_detection_width, self.player_detection_width)
     end
 end
+
 
 return Beellet

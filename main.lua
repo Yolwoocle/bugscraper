@@ -21,6 +21,8 @@ _G_t = 0
 _G_frame = 0
 _G_fixed_frame = 0
 _G_frame_by_frame_mode = false
+_G_frame_repeat = 1
+_G_speedup = false
 local max_frame_buffer_duration = fixed_dt * 2
 local _frame_by_frame_mode_advance_flag = false
 
@@ -35,6 +37,11 @@ local function fixed_update()
 	_G_fixed_frame = _G_fixed_frame + 1
 
 	game:update(fixed_dt)
+	if _G_speedup then
+		for i = 1, _G_frame_repeat-1 do
+			game:update(fixed_dt)
+		end
+	end
 end
 
 _G_do_fixed_framerate = true
