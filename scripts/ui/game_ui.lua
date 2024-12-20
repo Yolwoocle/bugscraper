@@ -63,7 +63,6 @@ function GameUI:draw()
 	self:draw_stomp_arrow()
 	if game.debug and game.debug.title_junk then
 		-- self:draw_logo()
-		self:draw_join_tutorial()
 		self:draw_timer()
 		self:draw_version()
 	end 
@@ -122,50 +121,6 @@ function GameUI:draw_version()
 	-- if OPERATING_SYSTEM == "Web" and not game.has_seen_controller_warning then
 	-- 	print_centered_outline(COL_MID_GRAY, COL_BLACK_BLUE, "⚠️ "..Text:text("game.warning_web_controller"), CANVAS_WIDTH/2, y+6)
 	-- end
-end
-
-function GameUI:draw_join_tutorial()
-	if true then return end --removeme
-
-	local def_x = math.floor((game.level.door_rect.ax + game.level.door_rect.bx) / 2 )
-	-- local def_y = game.logo_y - 10
-	local def_y = CANVAS_HEIGHT - game.logo_y + 8
-	local number_of_keyboard_users = Input:get_number_of_users(INPUT_TYPE_KEYBOARD)
-
-	local icons = {
-		Input:get_button_icon(1, Input:get_input_profile("global"):get_primary_button("join_game", INPUT_TYPE_CONTROLLER), BUTTON_STYLE_XBOX),
-		Input:get_button_icon(1, Input:get_input_profile("global"):get_primary_button("join_game", INPUT_TYPE_CONTROLLER), BUTTON_STYLE_PLAYSTATION5),
-		Input:get_button_icon(1, Input:get_input_profile("global"):get_primary_button("join_game", INPUT_TYPE_KEYBOARD)),
-	}
-	if number_of_keyboard_users >= 1 then
-		table.remove(icons)
-	end
-	
-	local x = def_x
-	local y = def_y
-
-	print_outline(COL_WHITE, COL_BLACK_BLUE, Text:text("input.prompts.join"), x, y)
-	for i, icon in pairs(icons) do
-		x = x - icon:getWidth() - 2
-		love.graphics.draw(icon, x, y)
-		if i ~= #icons then
-			print_outline(COL_WHITE, COL_BLACK_BLUE, "/", x-3, y)
-		end
-	end
-	
-	if number_of_keyboard_users == 1 then
-		local icon_split_kb = Input:get_button_icon(1, Input:get_input_profile("global"):get_primary_button("split_keyboard"))
-		local split_label = ternary(number_of_keyboard_users == 1, Text:text("input.prompts.split_keyboard"), Text:text("input.prompts.unsplit_keyboard")) 
-		
-		-- SCOTCH SCOTCH SCOTCH SCOTCH SCOTCH SCOTCH SCOTCH SCOTCH !!!!!!
-		-- TODO: create a "ButtonPrompt" object that can be reused in menus and other places
-		local total_w = get_text_width(split_label) + icon_split_kb:getWidth()
-		x = CANVAS_WIDTH/2 - total_w/2 + 2
-		y = -16 + game.logo_y
-
-		print_outline(COL_WHITE, COL_BLACK_BLUE, split_label, x + 2 + icon_split_kb:getWidth(), y)
-		love.graphics.draw(icon_split_kb, x, y)
-	end
 end
 
 function GameUI:draw_timer()

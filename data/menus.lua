@@ -270,12 +270,15 @@ local function generate_menus()
         { "{language.fr}", func_language_menu("fr") },
         { "{language.zh}", func_language_menu("zh") },
         { "{language.pl}", func_language_menu("pl") },
+        { "{language.br}", func_language_menu("br") },
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
 
     
     menus.options_confirm_language = Menu:new(game, {
         { "{menu.options.confirm_language.description}" },
-        { "{menu.no}",  function() game.menu_manager:back() end },
+        { "{menu.no}",  function() 
+                game.menu_manager:back()
+            end },
         { "{menu.yes}", function() 
             if game.buffered_language then
                 Options:set("language", game.buffered_language)
@@ -466,6 +469,9 @@ local function generate_menus()
         { "<<< " .. Text:text("menu.credits.music_and_sound_design") .. " >>>" },
         { "OLX 🔗", function() func_url("https://www.youtube.com/@olxdotwav") end },
         { "" },
+        { "<<< " .. Text:text("menu.credits.localization") .. " >>>" },
+        { "Jakub Piłasiewicz", function() end },
+        { "" },
         { "<<< " .. Text:text("menu.credits.playtesting") .. " >>>" },
         { "hades140701", function() end },
         { "Corentin Vaillant", function() end },      --func_url("https://github.com/CorentinVaillant/")},
@@ -482,7 +488,7 @@ local function generate_menus()
         { "Lucas Froehlinger 😎", function() end },
         { "" },
         { "<<< " .. Text:text("menu.credits.special_thanks") .. " >>>" },
-        { "ArkanYota", function() end },       --func_url("https://github.com/ARKANYOTA")},
+        { "Nolan Carlisi", function() end },       --func_url("https://github.com/ARKANYOTA")},
         { "Gouspourd", function() end },       -- func_url("https://gouspourd.itch.io/")},
         { "Raphytator", function() end },      -- func_url("https://raphytator.itch.io/") },
         { "Louie Chapman", function() end },   -- func_url("https://louiechapm.itch.io/") },

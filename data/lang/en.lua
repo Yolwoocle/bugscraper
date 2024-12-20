@@ -5,6 +5,7 @@ return {
         fr = "Français",
         zh = "简体中文",
         pl = "Polski",
+        br = "Português Brasileiro",
     },
     discord = { -- Text used for Discord rich presence
         state = {
@@ -90,7 +91,8 @@ return {
     },
     input = {
         prompts = {
-            move = "Move",
+            -- All of these may be shown as button prompts (i.e., "[Arrow keys] Move", "[C] Jump", etc)
+            move = "Move", 
             left = "Left",
             right = "Right",
             up = "Up",
@@ -108,9 +110,9 @@ return {
             pause = "Pause",
 
             join = "Join",
-            split_keyboard = "Split keyboard", -- Try to keep short
+            split_keyboard = "Split keyboard", -- Verb, as in "Press [key] to split the keyboard". Shown on the title screen when one keyboard player has joined. Try to keep short since space is limited there.
 
-            jetpack = "Jetpack", -- Refers to "jetpackking", a move in the game, so this is an infinitive verb 
+            jetpack = "Jetpack", -- Refers to "jetpackking", a move in the game 
         },
     },
     menu = {
@@ -160,15 +162,15 @@ return {
                 note_ui_min_button = "At least one binding is required", 
                 note_global_keyboard = "These bindings are the same for all keyboard players",
                 note_global_controller = "These bindings are the same for all controllers",
-                subtitle_no_player = "[⚠ NO PLAYER %d]",
-                subtitle_no_controller = "[⚠ NO CONTROLLER CONNECTED]",
+                subtitle_no_player = "[⚠ NO PLAYER %d]", -- Shown when navigating to player "%d"'s controller settings while no player of this number has joined yet.
+                subtitle_no_controller = "[⚠ NO CONTROLLER CONNECTED]", -- Shown in the controller settings while no controller is connected
                 no_buttons = "[NO BUTTONS]",
                 press_button = "[PRESS BUTTON]", -- Try to keep it short
                 press_again_to_remove = "Press an already bound button to remove it",
                 
                 keyboard = "Keyboard",
                 keyboard_solo = "KEYBOARD (Default)",
-                keyboard_p1 = "KEYBOARD (Split 1)",
+                keyboard_p1 = "KEYBOARD (Split 1)", -- Split is an adjective here; as in, "the 1st split keyboard user"
                 keyboard_p2 = "KEYBOARD (Split 2)",
 
                 controller = "Controller",
@@ -182,18 +184,18 @@ return {
                 sound = "SOUND",
                 volume = "VOLUME",
                 music_volume = "MUSIC VOLUME",
-                music_pause_menu = "MUSIC ON PAUSE MENU",
+                music_pause_menu = "MUSIC ON PAUSE MENU", -- Whether music should play on the pause menu
             },
             visuals = {
                 title = "Visuals",
                 fullscreen = "FULLSCREEN",
-                pixel_scale = "PIXEL SCALE",
+                pixel_scale = "PIXEL SCALE", -- How big should every pixel be displayed on-screen
                 pixel_scale_value = {
                     auto = "auto",
                     max_whole = "max whole",
                 },
                 vsync = "VSYNC",
-                menu_blur = "MENU BACKGROUND BLUR",
+                menu_blur = "MENU BACKGROUND BLUR", 
                 background_speed = "BACKGROUND SPEED",
             },
             game = {
@@ -201,9 +203,9 @@ return {
                 language = "LANGUAGE...",
                 timer = "TIMER",
                 mouse_visible = "SHOW MOUSE CURSOR",
-                pause_on_unfocus = "PAUSE ON LOST FOCUS",
+                pause_on_unfocus = "PAUSE ON LOST FOCUS", -- whether the game should pause when the window loses focus
                 screenshake = "SCREENSHAKE",
-                show_fps_warning = "SHOW LOW FRAMERATE WARNING",
+                show_fps_warning = "SHOW LOW FRAMERATE WARNING", -- Whether the game should show a warning when its framerate is low
 
             },
             language = {
@@ -220,9 +222,9 @@ return {
         },
         game_over = {
             title = "GAME OVER!",
-            kills = "Kills",
-            time = "Time",
-            floor = "Floor",
+            kills = "Enemies killed", -- The amount of enemies the player has killed
+            time = "Time", -- The time that the player took to complete the level
+            floor = "Floor", -- Which storey the player was on when they died
             continue = "CONTINUE",
         },
         win = {
@@ -241,6 +243,7 @@ return {
             game_by = "A game by",
             game_by_template = "By Léo Bernard & friends", -- Used on the title screen. 
             music_and_sound_design = "Music and sound design",
+            localization = "Localization",
             playtesting = "Playtesting",
             special_thanks = "Special thanks",
             asset_creators = "Asset creators",

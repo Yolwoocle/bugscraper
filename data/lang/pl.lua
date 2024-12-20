@@ -5,6 +5,7 @@ return {
         fr = "Français",
         zh = "简体中文",
         pl = "Polski",
+        br = "Português Brasileiro",
     },
     steam = {
         --[[TODO]]
@@ -44,13 +45,13 @@ return {
     },
     gun = {
         -- Gun names
-        machinegun = "grosznik", -- hard to translate to english, kinda a mix beween pea and gun
-        triple = "paprypak", -- it's a mix of two words pepper and pack the idea is that peppers are commonly sold in packs so it's a pack of peppers
-        burst = "seriopyłek", -- mix between pollen and burst
-        shotgun = "malinada", -- mix of raspberry and lemonade
-        minigun = "pestkotron", -- not even sure how to translate it to english :D it's a word made up that mixes the 'seed' (pestka) into the name
-        ring = "jagodynator", -- hard to translate it's a made up word that mixes berry(jagody) and word nator which I'm not even sure how to translate back to what it would mean in english
-        mushroom_cannon = "grzybomor", -- hard to translate it back to english, in polish it's just a person who is very much into collecting mushrooms :P
+        machinegun = "Grosznik", -- hard to translate to english, kinda a mix beween pea and gun
+        triple = "Paprypak", -- it's a mix of two words pepper and pack the idea is that peppers are commonly sold in packs so it's a pack of peppers
+        burst = "Seriopyłek", -- mix between pollen and burst
+        shotgun = "Malinada", -- mix of raspberry and lemonade
+        minigun = "Pestkotron", -- not even sure how to translate it to english :D it's a word made up that mixes the 'seed' (pestka) into the name
+        ring = "Jagodynator", -- hard to translate it's a made up word that mixes berry(jagody) and word nator which I'm not even sure how to translate back to what it would mean in english
+        mushroom_cannon = "Grzybomor", -- hard to translate it back to english, in polish it's just a person who is very much into collecting mushrooms :P
     },
     player = {
         name = {
@@ -108,10 +109,10 @@ return {
             shoot = "Strzał",
             leave_game = "Wyjdź", 
 
-            ui_left = "Menu lewo",
-            ui_right = "Menu prawo",
-            ui_up = "Menu góra",
-            ui_down = "Menu dół",
+            ui_left = "Lewo (Menu)",
+            ui_right = "Prawo (Menu)",
+            ui_up = "Góra (Menu)",
+            ui_down = "Dół (Menu)",
             ui_select = "Zatwierdź",
             ui_back = "Wstecz",
             pause = "Pauza",
@@ -231,7 +232,8 @@ return {
         },
         game_over = {
             title = "KONIEC GRY!",
-            kills = "Zabójstwa",
+            -- kills = "Zabójstwa",
+            kills = "Zabici wrogowie", -- Translated with DeepL, not fact-checked yet
             time = "Czas",
             floor = "Piętro",
             -- max_combo = "Maks combo",
@@ -253,6 +255,7 @@ return {
             game_by = "Gra autorstwa",
             game_by_template = "Léo Bernard & przyjaciele", -- Used on the title screen. 
             music_and_sound_design = "Muzyka i projektowanie dźwięku",
+            localization = "Lokalizacja",
             playtesting = "Testowanie gry",
             special_thanks = "Specjalne podziękowania",
             asset_creators = "Autorzy zasobów",

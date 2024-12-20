@@ -31,11 +31,16 @@ function BeeBoss:init(x, y)
     self.follow_player = false
     self.self_knockback_mult = 0
     self.stomps = math.huge
-    self.is_stompable = false
+    self.is_stompable = true
     self.damage_on_stomp = 10
     self.friction_y = self.friction_x
-    self.def_target_y = game.level.cabin_rect.ay + BW*4
+    self.def_target_y = game.level.cabin_rect.ay + BW*7
     self.telegraph_oy = 16    
+
+    self.knockback_x = self.knockback * 3
+    self.knockback_y = self.knockback * 1
+    self.invul = false
+    self.invul_timer = Timer:new(0.5)
 
     -- Animation
     self.anim_frame_len = 0.05
@@ -72,6 +77,8 @@ function BeeBoss:init(x, y)
                     "spinning_spikes",
                     "thwomp",
                     "timing",
+                    "bars",
+                    "big_wave",
                 }
                 return random_sample(possible_states)
             end,
@@ -115,19 +122,20 @@ function BeeBoss:init(x, y)
 
         thwomp = {
             enter = function(state)
+                self:set_spikes_pattern_times(2, 0.75, 0.25)
+
                 for _, spike in pairs(self.spikes) do
                     spike.timing_mode = TIMED_SPIKES_TIMING_MODE_MANUAL
                     spike:force_off()
                     spike:freeze()
                 end
 
-                self.stomps_counter = random_range_int(3, 3)
+                self.stomps_counter = random_range_int(1, 3)
             end,
             update = function(state, dt)
                 self.state_machine:set_state("thwomp_rise")
             end,
         },
-
         thwomp_flying = {
             enter = function(state)
                 self.friction_y = self.def_friction_y
@@ -215,7 +223,7 @@ function BeeBoss:init(x, y)
                 local spike = self.spikes[1]
                 local t = 7
                 if spike then
-                    t = spike:get_cycle_total_time()
+                    t = spike:get_cycle_total_time() + 0.1
                 end
                 self.state_timer:start(t * 1--[[4 changeme]])
             end,
@@ -223,6 +231,50 @@ function BeeBoss:init(x, y)
                 if self.state_timer:update(dt) then
                     self.state_machine:set_state("random")
                 end
+            end,
+        },
+
+        bars = {
+            enter = function(state)
+                self.vx = 0
+                self.vy = 0
+                self:set_spikes_pattern_bars()
+
+                local spike = self.spikes[1]
+                local t = 5
+                if spike then
+                    t = spike:get_cycle_total_time() + 0.1
+                end
+                self.state_timer:start(t)
+            end,
+            update = function(state, dt)
+                if self.state_timer:update(dt) then
+                    self.state_machine:set_state("random")
+                end
+            end,
+        },
+
+        big_wave = {
+            enter = function(state)
+                self.vx = 0
+                self.vy = 0
+                self:set_spikes_pattern_big_wave()
+
+                local spike = self.spikes[1]
+                local t = 5
+                if spike then
+                    t = spike:get_cycle_total_time() + 0.9
+                end
+                self.state_timer:start(t)
+            end,
+            update = function(state, dt)
+                self.spr:update_offset(random_neighbor(2), random_neighbor(2))
+                if self.state_timer:update(dt) then
+                    self.state_machine:set_state("random")
+                end
+            end,
+            exit = function(state)
+                self.spr:update_offset(0, 0)
             end,
         },
     }, "standby")
@@ -245,6 +297,12 @@ function BeeBoss:update(dt)
 
     self.state_machine:update(dt)
 
+    if self.invul_timer:update(dt) then
+        self.invul = false
+        self.damage = 1
+        self.is_stompable = true
+    end
+
     -- self.debug_values[1] = concat(self.state_machine.current_state_name)
     self.debug_values[2] = concat(self.life,"❤")
 end
@@ -256,6 +314,8 @@ function BeeBoss:draw()
 end
 
 function BeeBoss:set_spike_waves()
+    self:set_spikes_length(16)
+
     local function dist_func(source, spike)
         return 3 - 0.01 * dist(source.mid_x, source.mid_y, spike.mid_x, spike.mid_y)
     end
@@ -268,7 +328,45 @@ function BeeBoss:set_spike_waves()
     end
 end
 
+function BeeBoss:set_spikes_pattern_big_wave()
+    self:set_spikes_length(64)
+    self:set_spikes_pattern_times(2, 0.6, 0.25)
+
+    local wave_pos = random_sample{0, CANVAS_WIDTH}
+
+    for _, spike in pairs(self.spikes) do
+        if spike.orientation == 0 then
+            local t = math.abs(spike.mid_x - wave_pos) / 200
+            spike:force_off()
+            spike:freeze()
+            spike:standby(t, 0.5)
+        else
+            spike:force_off()
+            spike:freeze()
+        end
+    end
+end
+
+function BeeBoss:set_spikes_pattern_bars()
+    self:set_spikes_length(16)
+    self:set_spikes_pattern_times(2, 0.8, 0.25)
+
+    local r = random_range_int(0, 2)
+    for _, spike in pairs(self.spikes) do
+        spike:force_off()
+        spike:freeze()
+        if spike.orientation == 0 and spike.spike_i % 3 == r then
+            spike.timing_mode = TIMED_SPIKES_TIMING_MODE_TEMPORAL
+            spike:set_time_offset(0)    
+            spike:set_length(12*16)
+        end
+    end
+end
+
 function BeeBoss:set_spikes_pattern_timing()
+    self:set_spikes_length(12)
+    self:set_spikes_pattern_times(2, 0.75, 0.25)
+
     for _, spike in pairs(self.spikes) do
         spike.timing_mode = TIMED_SPIKES_TIMING_MODE_TEMPORAL
         spike:force_off()
@@ -278,11 +376,44 @@ function BeeBoss:set_spikes_pattern_timing()
 end
 
 function BeeBoss:set_spikes_pattern_spinning(time_offset, number_of_waves)
+    self:set_spikes_length(16)
+    self:set_spikes_pattern_times(2, 0.75, 0.25)
+
     local t_total = self.spikes[1]:get_cycle_total_time()
+    local rand_t_offset = random_range(0, t_total)
     for _, spike in pairs(self.spikes) do
         -- spike:set_time_offset()
-        spike:standby(spike.spike_i * (t_total/68)*number_of_waves + time_offset, 1.5)
+        spike:standby(spike.spike_i * (t_total/68)*number_of_waves + time_offset + rand_t_offset, 0.75)
     end
+end
+
+------------------------------------------
+
+function BeeBoss:set_spikes_pattern_times(t_off, t_telegraph, t_on)
+    for _, spike in pairs(self.spikes) do
+        spike:set_pattern_times(t_off, t_telegraph, t_on)
+    end
+end
+
+function BeeBoss:set_spikes_length(length)
+    for _, spike in pairs(self.spikes) do
+        spike:set_length(length)
+    end
+end
+
+function BeeBoss:on_stomped(player)
+    game:frameskip(10)
+    game:screenshake(8)
+
+    local dx, dy = normalize_vect(player.mid_x - self.mid_x, player.mid_y - self.mid_y)
+
+    player.vx = self.vx + dx * self.knockback_x
+    player.vx = self.vx + dy * self.knockback_y
+
+    self.invul_timer:start(1.0)
+    self.invul = true
+    self.damage = 0
+    self.is_stompable = false
 end
 
 function BeeBoss:spawn_spikes()
