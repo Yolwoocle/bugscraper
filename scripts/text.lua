@@ -8,9 +8,10 @@ function TextManager:init()
     local start = love.timer.getTime()
     self.languages = {
         en = require "data.lang.en",
-        zh = require "data.lang.zh",
         fr = require "data.lang.fr",
+        zh = require "data.lang.zh",
         pl = require "data.lang.pl",
+        -- br = require "data.lang.br",
     }
     for lang_name, lang_values in pairs(self.languages) do
         self.languages[lang_name] = self:unpack(lang_values)
@@ -139,6 +140,8 @@ function TextManager:sanity_check_languages(reference_language)
             end
         end
     end
+
+    -- TODO: check for "ghost keys" that don't have an equivalent in the reference language
 end
 
 return TextManager

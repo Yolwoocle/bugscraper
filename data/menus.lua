@@ -270,12 +270,15 @@ local function generate_menus()
         { "{language.fr}", func_language_menu("fr") },
         { "{language.zh}", func_language_menu("zh") },
         { "{language.pl}", func_language_menu("pl") },
+        { "{language.br}", func_language_menu("br") },
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
 
     
     menus.options_confirm_language = Menu:new(game, {
         { "{menu.options.confirm_language.description}" },
-        { "{menu.no}",  function() game.menu_manager:back() end },
+        { "{menu.no}",  function() 
+                game.menu_manager:back()
+            end },
         { "{menu.yes}", function() 
             if game.buffered_language then
                 Options:set("language", game.buffered_language)

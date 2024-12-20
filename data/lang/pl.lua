@@ -5,6 +5,7 @@ return {
         fr = "Français",
         zh = "简体中文",
         pl = "Polski",
+        br = "Português Brasileiro",
     },
     steam = {
         --[[TODO]]
@@ -254,6 +255,7 @@ return {
             game_by = "Gra autorstwa",
             game_by_template = "Léo Bernard & przyjaciele", -- Used on the title screen. 
             music_and_sound_design = "Muzyka i projektowanie dźwięku",
+            localization = "Lokalizacja",
             playtesting = "Testowanie gry",
             special_thanks = "Specjalne podziękowania",
             asset_creators = "Autorzy zasobów",

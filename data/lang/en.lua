@@ -5,6 +5,7 @@ return {
         fr = "Français",
         zh = "简体中文",
         pl = "Polski",
+        br = "Português Brasileiro",
     },
     discord = { -- Text used for Discord rich presence
         state = {
@@ -242,6 +243,7 @@ return {
             game_by = "A game by",
             game_by_template = "By Léo Bernard & friends", -- Used on the title screen. 
             music_and_sound_design = "Music and sound design",
+            localization = "Localization",
             playtesting = "Playtesting",
             special_thanks = "Special thanks",
             asset_creators = "Asset creators",
