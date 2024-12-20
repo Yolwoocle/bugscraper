@@ -125,7 +125,7 @@ return {
             title = "PAUSA",
             resume = "RETOMAR",
             retry = "TENTAR DE NOVO",
-            options = "OPÇÕESK",
+            options = "OPÇÕES",
             credits = "CRÉDITOS",
             feedback = "FEEDBACK",
             quit = "SAIR",
@@ -153,7 +153,7 @@ return {
                 deadzone = "DEADZONE DO JOYSTICK",
                 vibration = "VIBRAÇÃO",
                 low_deadzone_warning = "Valores baixos podem dar problema", -- Warning displayed when the deadzone is very small
-                note_deadzone = "Opções de deadzone vão ser aplicadas depois de sair desse menu",
+                note_deadzone = "Opções de deadzone vão ser aplicadas após sair desse menu",
 
                 gameplay = "Gameplay",
                 interface = "Interface",
@@ -169,8 +169,8 @@ return {
 
                 keyboard = "Teclado",
                 keyboard_solo = "TECLADO (Padrão)",
-                keyboard_p1 = "KEYBOARD (Parte 1)",
-                keyboard_p2 = "KEYBOARD (Parte 2)",
+                keyboard_p1 = "TECLADO (Parte 1)",
+                keyboard_p2 = "TECLADO (Parte 2)",
 
                 controller = "CONTROLE",
                 controller_p1 = "CONTROLE (Jogador 1)",
@@ -183,7 +183,7 @@ return {
                 sound = "SOM",
                 volume = "VOLUME",
                 music_volume = "VOLUME DA MÚSICA",
-                music_pause_menu = "MÚSICA NO MENU DE PAUSE",
+                music_pause_menu = "MÚSICA NO MENU DE PAUSA",
             },
             visuals = {
                 title = "Visuais",
@@ -233,7 +233,7 @@ return {
         },
         joystick_removed = {
             title = "CONTROLE DISCONECTADO",
-            description = "Favor conectar os seguinte controles:",
+            description = "Favor conectar os seguintes controles:",
             continue = "CONTINUAR MESMO ASSIM",
             item = "Jogador %d (%s)", -- e.g. "Player 2 (Xbox Controller)"
         },
