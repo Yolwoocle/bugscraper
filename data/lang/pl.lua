@@ -200,8 +200,8 @@ return {
                 fullscreen = "PEŁEN EKRAN",
                 pixel_scale = "SKALA PIXELI",
                 pixel_scale_value = {
-                    auto = "automatyczne",
-                    max_whole = "maksymalnie całe",
+                    auto = "automatyczna",
+                    max_whole = "maksymalnie cała",
                 },
                 vsync = "VSYNC",
                 menu_blur = "ROZMYCIE TŁA MENU",
