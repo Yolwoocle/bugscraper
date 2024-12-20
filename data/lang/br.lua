@@ -183,7 +183,7 @@ return {
                 sound = "SOM",
                 volume = "VOLUME",
                 music_volume = "VOLUME DA MÚSICA",
-                music_pause_menu = "MÚSICA NO MENU DE PAUSE",
+                music_pause_menu = "MÚSICA NO MENU DE PAUSA",
             },
             visuals = {
                 title = "Visuais",
