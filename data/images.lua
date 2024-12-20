@@ -388,12 +388,19 @@ local img_names = {
 
 	sawtooth_separator = "ui/sawtooth_separator",
 
-	boss_intro_dung_layer0 = "ui/boss_intro/boss_intro_dung_layer0",
-	boss_intro_dung_layer1 = "ui/boss_intro/boss_intro_dung_layer1",
-	boss_intro_dung_layer2 = "ui/boss_intro/boss_intro_dung_layer2",
-	boss_intro_dung_layer3 = "ui/boss_intro/boss_intro_dung_layer3",
-	boss_intro_dung_layer4 = "ui/boss_intro/boss_intro_dung_layer4",
-	boss_intro_dung_layer5 = "ui/boss_intro/boss_intro_dung_layer5",
+	boss_intro_dung_layer0 = "ui/boss_intro/dung/boss_intro_dung_layer0",
+	boss_intro_dung_layer1 = "ui/boss_intro/dung/boss_intro_dung_layer1",
+	boss_intro_dung_layer2 = "ui/boss_intro/dung/boss_intro_dung_layer2",
+	boss_intro_dung_layer3 = "ui/boss_intro/dung/boss_intro_dung_layer3",
+	boss_intro_dung_layer4 = "ui/boss_intro/dung/boss_intro_dung_layer4",
+	boss_intro_dung_layer5 = "ui/boss_intro/dung/boss_intro_dung_layer5",
+
+	boss_intro_bee_layer0 = "ui/boss_intro/bee_boss/boss_intro_bee_layer0",
+	boss_intro_bee_layer1 = "ui/boss_intro/bee_boss/boss_intro_bee_layer1",
+	boss_intro_bee_layer2 = "ui/boss_intro/bee_boss/boss_intro_bee_layer2",
+	boss_intro_bee_layer3 = "ui/boss_intro/bee_boss/boss_intro_bee_layer3",
+	boss_intro_bee_layer4 = "ui/boss_intro/bee_boss/boss_intro_bee_layer4",
+	boss_intro_bee_layer5 = "ui/boss_intro/bee_boss/boss_intro_bee_layer5",
 
 	player_preview_bg = "ui/player_preview/player_preview_bg",
 	player_preview_detail = "ui/player_preview/player_preview_detail",

@@ -396,16 +396,15 @@ function draw_centered_text(text, rect_x, rect_y, rect_w, rect_h, rot, sx, sy, f
 	rot           = rot or 0
 	sx            = sx or 1
 	sy            = sy or sx
-	local deffont = love.graphics.getFont()
 	local font    = font or love.graphics.getFont()
 	local text_w  = font:getWidth(text)
 	local text_h  = font:getHeight(text)
 	local x       = math.floor(rect_x + rect_w / 2)
 	local y       = math.floor(rect_y + rect_h / 2)
 
-	love.graphics.setFont(font)
+	push_font(font)
 	love.graphics.print(text, x, y, rot, sx, sy, math.floor(text_w / 2), math.floor(text_h / 2))
-	love.graphics.setFont(deffont)
+	pop_font()
 end
 
 function draw_stretched_spr(x1, y1, x2, y2, spr, scale)

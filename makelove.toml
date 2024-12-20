@@ -1,6 +1,6 @@
 name = "bugscraper_demo"
 # default_targets = ["lovejs", "win32", "win64", "macos", "appimage"]
-default_targets = ["win64"]
+default_targets = []
 build_directory = "export"
 icon_file = "icon.png"
 
@@ -16,8 +16,6 @@ love_files = [
     "-./luasteam.dll",
     "-./steam_api64.dll",
 ]
-
-love_version = "12.0"
 
 [windows]
 # The files specified here will be added in addition to the ones specified on top level.

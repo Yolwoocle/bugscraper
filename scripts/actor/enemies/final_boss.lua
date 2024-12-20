@@ -170,7 +170,7 @@ function FinalBoss:init(x, y)
     }, "standby")
 end
 
-function FinalBoss:after_collision(col, other)ko
+function FinalBoss:after_collision(col, other)
     if col.type ~= "cross" then
         if self.state_machine.current_state_name == "thwomp_attack" then--and col.normal.y == -1 then
             self.state_machine:_call("after_collision", col)

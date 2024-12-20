@@ -232,8 +232,7 @@ return {
         },
         game_over = {
             title = "KONIEC GRY!",
-            -- kills = "Zabójstwa",
-            kills = "Zabici wrogowie", -- Translated with DeepL, not fact-checked yet
+            kills = "Zabici wrogowie",
             time = "Czas",
             floor = "Piętro",
             -- max_combo = "Maks combo",

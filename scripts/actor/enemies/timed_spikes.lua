@@ -262,6 +262,7 @@ function TimedSpikes:update(dt)
     self.spike_sprite.sy = lerp(self.spike_sprite.sy, 1, 0.1)
 
     self.spike_stem_sprite.color = self.spike_sprite.color
+    self.spike_stem_sprite.is_visible = self.spike_sprite.is_visible
 
     self.state_machine:update(dt)
 end

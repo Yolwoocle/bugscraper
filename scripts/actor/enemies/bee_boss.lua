@@ -17,7 +17,7 @@ function BeeBoss:init(x, y)
 
     -- Parameters 
     self.def_friction_y = self.friction_y
-    self.life = 200
+    self.life = 300
     self.is_flying = true
     self.gravity = 0
     self.attack_radius = 16
@@ -27,6 +27,10 @@ function BeeBoss:init(x, y)
     self.speed_y = self.speed*3
     self.friction_x = 0.8
     self.friction_y = 0.8
+
+    self.destroy_bullet_on_impact = false
+    self.is_bouncy_to_bullets = true
+    self.is_immune_to_bullets = true
 
     self.follow_player = false
     self.self_knockback_mult = 0
@@ -298,6 +302,7 @@ function BeeBoss:update(dt)
     self.state_machine:update(dt)
 
     if self.invul_timer:update(dt) then
+        self.spr:set_color(COL_WHITE)        
         self.invul = false
         self.damage = 1
         self.is_stompable = true
@@ -305,6 +310,15 @@ function BeeBoss:update(dt)
 
     -- self.debug_values[1] = concat(self.state_machine.current_state_name)
     self.debug_values[2] = concat(self.life,"❤")
+
+    if self.invul_timer.is_active then
+        local freq = ternary(self.invul_timer.time < self.invul_timer.duration/2, 0.12, 0.07)
+        if self.invul_timer.time % freq > freq/2 then
+            self.spr:set_color(COL_WHITE)
+        else
+            self.spr:set_color({0.5, 0.5, 0.5})
+        end
+    end
 end
 
 function BeeBoss:draw()

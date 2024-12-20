@@ -100,13 +100,22 @@ local function generate_menus()
 
     menus.debug_command = DebugCommandMenu:new(game)
 
-    menus.boss_intro = BossIntroMenu:new(game, { 38 / 255, 43 / 255, 68 / 255, 0.8 }, Text:text("enemy.dung"), {
+    menus.w1_boss_intro = BossIntroMenu:new(game, { 38 / 255, 43 / 255, 68 / 255, 0.8 }, Text:text("enemy.dung"), {
         { image = images.boss_intro_dung_layer5, z_mult = 0.3 },
         { image = images.boss_intro_dung_layer4, z_mult = 0.5 },
         { image = images.boss_intro_dung_layer3, z_mult = 0.7 },
         { image = images.boss_intro_dung_layer2, z_mult = 0.9 },
         { image = images.boss_intro_dung_layer1, z_mult = 1.4 },
         { image = images.boss_intro_dung_layer0, z_mult = 1.5 },
+    })
+
+    menus.w2_boss_intro = BossIntroMenu:new(game, { 38 / 255, 43 / 255, 68 / 255, 0.8 }, Text:text("enemy.bee_boss"), {
+        { image = images.boss_intro_bee_layer5, z_mult = 0.3 },
+        { image = images.boss_intro_bee_layer4, z_mult = 0.5 },
+        { image = images.boss_intro_bee_layer3, z_mult = 0.7 },
+        { image = images.boss_intro_bee_layer2, z_mult = 0.9 },
+        { image = images.boss_intro_bee_layer1, z_mult = 1.4 },
+        { image = images.boss_intro_bee_layer0, z_mult = 1.5 },
     })
 
     menus.view_waves = Menu:new(game, {
@@ -471,6 +480,16 @@ local function generate_menus()
         { "" },
         { "<<< " .. Text:text("menu.credits.localization") .. " >>>" },
         { "Jakub Piłasiewicz", function() end },
+        { "Nicole Sanches (rhysuki)", function() end },
+        { "Polyglot Project", function() end },
+        { "" },
+        { "<<< " .. Text:text("menu.credits.asset_creators") .. " >>>" },
+        { "Kenney", function() end },  -- func_url("https://kenney.nl/")},
+        { "somepx", function() end },  -- func_url("https://somepx.itch.io/")},
+        { "emhuo", function() end },   -- func_url("https://emhuo.itch.io/")},
+        { "Endesga", function() end }, -- func_url("https://emhuo.itch.io/")},
+        { "Noam Goldfarb (SSlime7)", function() end }, -- func_url("https://emhuo.itch.io/")},
+        { "freesound.org [{menu.see_more}]", func_set_menu("credits_sounds") },
         { "" },
         { "<<< " .. Text:text("menu.credits.playtesting") .. " >>>" },
         { "hades140701", function() end },
@@ -478,7 +497,7 @@ local function generate_menus()
         { "NerdOfGamers + partner", function() end }, --func_url("https://ryancavendell.itch.io/")},
         { "Azuras03 (NicolasYT)", function() end },
         { "Lars Loe (MadByte)", function() end },
-        { "Theobosse", function() end },
+        { "Théodore Billotte", function() end },
         { "Alexis", function() end }, -- func_url("https://binarysunrise.dev")},
         { "Binary Sunrise", function() end },
         { "AnnaWorldEater", function() end },
@@ -487,7 +506,7 @@ local function generate_menus()
         { "Guillaume Tran", function() end },
         { "Lucas Froehlinger 😎", function() end },
         { "" },
-        { "<<< " .. Text:text("menu.credits.special_thanks") .. " >>>" },
+        { "<<< {menu.credits.special_thanks} >>>" },
         { "Nolan Carlisi", function() end },       --func_url("https://github.com/ARKANYOTA")},
         { "Gouspourd", function() end },       -- func_url("https://gouspourd.itch.io/")},
         { "Raphytator", function() end },      -- func_url("https://raphytator.itch.io/") },
@@ -498,14 +517,7 @@ local function generate_menus()
         { "Guillaume Tran", function() end },
         { "Toulouse Game Dev", function() end }, -- func_url("https://www.indiegamelyon.com/")},
         { "LÖVE framework", function() end },    -- func_url("https://love2d.org/") },
-        { "" },
-        { "<<< " .. Text:text("menu.credits.asset_creators") .. " >>>" },
-        { "Kenney", function() end },  -- func_url("https://kenney.nl/")},
-        { "somepx", function() end },  -- func_url("https://somepx.itch.io/")},
-        { "emhuo", function() end },   -- func_url("https://emhuo.itch.io/")},
-        { "Endesga", function() end }, -- func_url("https://emhuo.itch.io/")},
-        { "freesound.org [" .. Text:text("menu.see_more") .. "]", func_set_menu("credits_sounds") },
-        { Text:text("menu.open_source.title") .. " [" .. Text:text("menu.see_more") .. "]", func_set_menu("open_source") },
+        { "{menu.open_source.title} [{menu.see_more}]", func_set_menu("open_source") },
         { "" },
         { "<< " .. Text:text("menu.credits.licenses") .. " >>" },
         { "CC0 🔗", func_url("https://creativecommons.org/publicdomain/zero/1.0/") },

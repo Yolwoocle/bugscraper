@@ -242,6 +242,7 @@ return {
             game_by = "Um jogo por",
             game_by_template = "Por Léo Bernard & amigos", -- Used on the title screen.
             music_and_sound_design = "Música e design de som",
+            localization = "Localização",
             playtesting = "Playtest",
             special_thanks = "Agradecimentos especiais",
             asset_creators = "Criadores de recursos",

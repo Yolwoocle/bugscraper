@@ -179,8 +179,6 @@ end
 
 function Dung:update(dt)
     self:update_dung(dt)
-
-    self.debug_values[1] = self.state_machine.current_state_name
 end
 
 function Dung:update_dung(dt)

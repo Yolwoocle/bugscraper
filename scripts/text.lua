@@ -11,7 +11,7 @@ function TextManager:init()
         fr = require "data.lang.fr",
         zh = require "data.lang.zh",
         pl = require "data.lang.pl",
-        -- br = require "data.lang.br",
+        br = require "data.lang.br",
     }
     for lang_name, lang_values in pairs(self.languages) do
         self.languages[lang_name] = self:unpack(lang_values)
@@ -35,6 +35,10 @@ function TextManager:init()
         words = words + #s
     end
     print("TextManager: Unpacked "..tostring(words).." words in "..(1000* (love.timer.getTime() - start)).."ms.")
+
+    ------
+    
+    self.font_stack = {}
 end
 
 --- Unpacks a table to be used as text keys. Example:
@@ -142,6 +146,17 @@ function TextManager:sanity_check_languages(reference_language)
     end
 
     -- TODO: check for "ghost keys" that don't have an equivalent in the reference language
+end
+
+function TextManager:push_font(font)
+	table.insert(self.font_stack, font)
+	love.graphics.setFont(font)
+end
+
+function TextManager:pop_font()
+	local font = table.remove(self.font_stack, #self.font_stack)
+	love.graphics.setFont(self.font_stack[#self.font_stack] or FONT_REGULAR)
+	return font
 end
 
 return TextManager

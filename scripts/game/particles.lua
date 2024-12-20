@@ -213,10 +213,12 @@ end
 
 local TextParticle = RiseAndLingerParticle:inherit()
 
-function TextParticle:init(x,y,str,spawn_delay, col, stay_time, text_scale, outline_color)
+function TextParticle:init(x,y,str,spawn_delay, col, stay_time, text_scale, outline_color, params)
+	params = params or {}
 	TextParticle.super.init(self, x,y, spawn_delay, stay_time)
 	self.str = str
 	self.text_scale = text_scale or 1
+	self.font = param(params.font, nil)
 
 	self.col_in = col
 	self.col_out = outline_color
@@ -232,7 +234,13 @@ function TextParticle:draw()
 
 	local col = COL_WHITE
 	if self.col_in then col = self.col_in end
+	if self.font then
+		Text:push_font(self.font)
+	end
 	print_outline(col, self.col_out or COL_BLACK_BLUE, self.str, self.x, self.y, nil, nil, self.text_scale)
+	if self.font then
+		Text:pop_font()
+	end
 end
 
 ------------------------------------------------------------
@@ -965,18 +973,18 @@ function ParticleSystem:smash_flash(x, y, r, col)
 	self:add_particle(SmashFlashParticle:new(x, y, r, col), PARTICLE_LAYER_FRONT)
 end
 
-function ParticleSystem:letter(x, y, str, spawn_delay, col, stay_time, text_scale, outline_color)
-	self:add_particle(TextParticle:new(x, y, str, spawn_delay, col, stay_time, text_scale, outline_color))
+function ParticleSystem:letter(x, y, str, spawn_delay, col, stay_time, text_scale, outline_color, params)
+	self:add_particle(TextParticle:new(x, y, str, spawn_delay, col, stay_time, text_scale, outline_color, params))
 end
 
-function ParticleSystem:word(x, y, str, col, stay_time, text_scale, outline_color, letter_time_spacing)
+function ParticleSystem:word(x, y, str, col, stay_time, text_scale, outline_color, letter_time_spacing, params)
 	stay_time = param(stay_time, 0)
 	text_scale = param(text_scale, 1)
 
 	local x = x - (text_scale * get_text_width(str))/2
 	for i=1, #str do
 		local letter = utf8.sub(str, i,i)
-		Particles:letter(x, y, letter, i*(letter_time_spacing or 0.05), col, stay_time, text_scale, outline_color)
+		Particles:letter(x, y, letter, i*(letter_time_spacing or 0.05), col, stay_time, text_scale, outline_color, params)
 		x = x + get_text_width(letter) * text_scale
 	end
 end

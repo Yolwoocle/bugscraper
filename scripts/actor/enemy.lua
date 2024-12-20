@@ -224,10 +224,9 @@ function Enemy:draw_enemy()
 	self:draw_actor()
 
 	if game.debug.colview_mode then
-		local old_font = love.graphics.getFont()
-		love.graphics.setFont(FONT_MINI)
+		push_font(FONT_MINI)
 		print_outline(COL_WHITE, COL_DARK_BLUE, concat(round(self.life,2), "HP"), self.x, self.y-6)
-		love.graphics.setFont(old_font)
+		pop_font()
 	end
 end
 

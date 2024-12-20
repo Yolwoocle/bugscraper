@@ -1,7 +1,8 @@
 local TextManager = require "scripts.text"
+Text = TextManager:new()
+
 local backgrounds = require "data.backgrounds"
 local LightWorld = require "scripts.graphics.light_world"
-Text = TextManager:new()
 
 local Class = require "scripts.meta.class"
 local CollisionManager = require "scripts.physics.collision"
@@ -50,9 +51,8 @@ function Game:init()
 
 	Input:init_users()
 
+	love.keyboard.setTextInput(true)
 	SCREEN_WIDTH, SCREEN_HEIGHT = gfx.getDimensions()
-	-- love.window.setTitle("Bugscraper")
-	-- love.window.setIcon(love.image.newImageData("icon.png"))
 	gfx.setDefaultFilter("nearest", "nearest")
 	love.graphics.setLineStyle("rough")
 
@@ -66,16 +66,13 @@ function Game:init()
 	FONT_CHINESE = gfx.newImageFont("fonts/font_chinese.png", FONT_CHINESE_CHARACTERS)
 	FONT_7SEG = gfx.newImageFont("fonts/7seg_font.png", FONT_7SEG_CHARACTERS)
 	FONT_MINI = gfx.newImageFont("fonts/font_ant_party.png", FONT_MINI_CHARACTERS)
+	FONT_FAT = gfx.newImageFont("fonts/font_counting_apples.png", FONT_FAT_CHARACTERS)
 	FONT_PAINT = gfx.newFont("fonts/NicoPaint-Regular.ttf", 16)
 
 	FONT_REGULAR:setFallbacks(FONT_CHINESE)
-
-	gfx.setFont(FONT_REGULAR)
+    Text:push_font(FONT_REGULAR)
 
 	-- Audio ===> Moved to OptionsManager
-	-- self.volume = options:get("volume")
-	-- self.sound_on = options:get("sound_on")
-
 	Options:set("volume", Options:get("volume"))
 
 	self:new_game()
@@ -910,7 +907,7 @@ function Game:queue_join_game(input_profile_id, joystick)
 end
 
 function Game:join_game(player_n)
-	local player = self:new_player(player_n, nil, nil, true)
+	local player = self:new_player(player_n, nil, nil, false)
 
 	if player then
 		self.skin_choices[player.skin.id] = false
@@ -937,6 +934,8 @@ function Game:new_player(player_n, x, y, put_in_buffer)
 		player:set_active(false)
 		self.level:buffer_actor(player)
 		self.level.elevator:open_door(1.0)
+	else
+		Particles:smoke_big(player.mid_x, player.mid_y, COL_WHITE)
 	end
 
 	self:new_actor(player)

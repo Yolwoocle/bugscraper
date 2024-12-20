@@ -66,6 +66,7 @@ return {
     },
     enemy = {
         dung = "Mr. Dung",
+        bee_boss = "[Boss name placeholder]" -- Do not translate
     },
     upgrade = {
         tea = {

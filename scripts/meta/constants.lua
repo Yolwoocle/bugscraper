@@ -113,6 +113,7 @@ FONT_CHARACTERS =
     "✅❎🔗💡⚠🕹🫨💧🐜🐛🐝🪲🎓🌄🛅😎😈🐦𝕏🐰🐞🌐"
 FONT_7SEG_CHARACTERS = " 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 FONT_MINI_CHARACTERS = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_abcdefghijklmnopqrstuvwxyz{|}~"
+FONT_FAT_CHARACTERS = " ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890!,.:;'\"@#$%^&*()[]{}_-=+<>/\\|~"
 FONT_CHINESE_CHARACTERS = require "fonts.font_chinese_characters"
 
 --------------------------------------------- 

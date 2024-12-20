@@ -11,7 +11,7 @@ cutscenes.dung_boss_enter = Cutscene:new {
     Scene:new({
         duration = 1.5,
         enter = function(scene)
-            game.menu_manager:set_menu("boss_intro")
+            game.menu_manager:set_menu("w1_boss_intro")
         end,
     }),
 }
@@ -52,7 +52,7 @@ cutscenes.bee_boss_enter = Cutscene:new {
         end,
     }),
     Scene:new({
-        duration = 2.3,
+        duration = 2.0,
         enter = function(scene)
             game.light_world:new_light("right", Light:new(CANVAS_WIDTH - 500, -32, {
                 angle = pi*0.3, 
@@ -61,6 +61,12 @@ cutscenes.bee_boss_enter = Cutscene:new {
                 is_active = true,
             }))
             Audio:play_var("spotlight_3", nil, 1.05)
+        end,
+    }),
+    Scene:new({
+        duration = 1.5,
+        enter = function(scene)
+            game.menu_manager:set_menu("w2_boss_intro")
         end,
     }),
     Scene:new({

@@ -348,7 +348,7 @@ local waves = {
 
 		over_title = get_world_prefix(2),
 		title = get_world_name(2),
-		title_color = COL_YELLOW_ORANGE,
+		title_color = COL_LIGHT_YELLOW,
 		title_outline_color = COL_BLACK_BLUE,
 	}),
 
@@ -570,7 +570,7 @@ local waves = {
 			end
 		end,
 
-		-- cutscene = cutscenes.bee_boss_enter,
+		cutscene = cutscenes.bee_boss_enter,
 	}),
 
 	new_cafeteria(function()
