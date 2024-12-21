@@ -252,6 +252,7 @@ local function generate_menus()
         { BoolOptionMenuItem, "📺 {menu.options.visuals.vsync}", "is_vsync" },
         { BoolOptionMenuItem, "💧 {menu.options.visuals.menu_blur}", "menu_blur" },
         { RangeOptionMenuItem, "🌄 {menu.options.visuals.background_speed}", "background_speed", { 0.0, 1.0 }, 0.05, "%" },
+        { RangeOptionMenuItem, "🌄 {menu.options.visuals.bullet_lightness}", "bullet_lightness", { 0.1, 1.0 }, 0.1, "%" },
         { "" },
         { "<<< {menu.options.game.title} >>>" },
         { "🌐 {menu.options.game.language}", func_set_menu("options_language") },
@@ -259,6 +260,7 @@ local function generate_menus()
         { BoolOptionMenuItem, "🕐 {menu.options.game.timer}", "timer_on" },
         { BoolOptionMenuItem, "↖ {menu.options.game.mouse_visible}", "mouse_visible" },
         { BoolOptionMenuItem, "🛅 {menu.options.game.pause_on_unfocus}", "pause_on_unfocus" },
+        { BoolOptionMenuItem, "⏭ {menu.options.game.skip_boss_intros}", "skip_boss_intros" },
         { BoolOptionMenuItem, "⚠ {menu.options.game.show_fps_warning}", "show_fps_warning" },
 
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)

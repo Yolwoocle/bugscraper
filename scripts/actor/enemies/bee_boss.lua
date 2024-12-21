@@ -38,7 +38,7 @@ function BeeBoss:init(x, y)
     self.is_stompable = true
     self.damage_on_stomp = 10
     self.friction_y = self.friction_x
-    self.def_target_y = game.level.cabin_rect.ay + BW*7
+    self.def_target_y = game.level.cabin_rect.ay + BW*6
     self.telegraph_oy = 16    
 
     self.knockback_x = self.knockback * 3
@@ -307,9 +307,6 @@ function BeeBoss:update(dt)
         self.damage = 1
         self.is_stompable = true
     end
-
-    -- self.debug_values[1] = concat(self.state_machine.current_state_name)
-
     if self.invul_timer.is_active then
         local freq = ternary(self.invul_timer.time < self.invul_timer.duration/2, 0.12, 0.07)
         if self.invul_timer.time % freq > freq/2 then

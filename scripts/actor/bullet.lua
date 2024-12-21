@@ -106,6 +106,9 @@ function Bullet:update(dt)
 		)
 		self.renderer_3d:update(dt)
 	end
+
+	local v = Options:get("bullet_lightness") or 1
+	self.spr:set_color({v, v, v})
 end
 
 function Bullet:draw()

@@ -26,6 +26,7 @@ function OptionsManager:init()
 		is_window_maximized = true,
 		menu_blur = true,
 		background_speed = 1.0,
+		bullet_lightness = 1.0,
 
 		timer_on = false,
 		mouse_visible = false,
