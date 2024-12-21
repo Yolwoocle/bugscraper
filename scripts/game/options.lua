@@ -9,7 +9,7 @@ local OptionsManager = Class:inherit()
 function OptionsManager:init()
 	self.is_first_time = false
 	self.default_options = {
-		language = "en",
+		language = "default",
 
 		volume = 1.0,
 		music_volume = 0.5,

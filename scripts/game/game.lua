@@ -209,6 +209,10 @@ function Game:new_game()
 	self.upgrades = {}
 	self:update_skin_choices()
 
+	if Text.language == nil then
+		self.menu_manager:set_menu("options_language")
+	end
+
 	Options:update_volume()
 end
 

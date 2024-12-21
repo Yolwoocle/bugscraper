@@ -13,6 +13,21 @@ function TextManager:init()
         pl = require "data.lang.pl",
         br = require "data.lang.br",
     }
+    self.locale_to_language = {
+        ["en_US"] = "en", 
+        ["en_GB"] = "en",
+
+        ["fr_FR"] = "fr",
+        ["fr_CA"] = "fr",
+
+        ["zh_CN"] = "zh",
+        ["zh_SG"] = "zh",
+
+        ["pl_PL"] = "pl",
+
+        ["pt_BR"] = "br",
+    }
+
     for lang_name, lang_values in pairs(self.languages) do
         self.languages[lang_name] = self:unpack(lang_values)
     end
@@ -22,10 +37,7 @@ function TextManager:init()
         self:sanity_check_languages(self.default_lang)
     end
 
-    self.user_locale = os.setlocale(nil, "all")
-    print_debug("User locale = '"..self.user_locale.."'")
-
-    self.language = Options:get("language")
+    self.language = self:get_locale()
     self.values = self:unpack(self.languages[self.language or self.default_lang])
 
     local words = 0
@@ -39,6 +51,22 @@ function TextManager:init()
     ------
     
     self.font_stack = {}
+end
+
+function TextManager:get_locale()
+    local option = Options:get("language")
+
+    if not option or option == "default" then
+        local locales = love.system.getPreferredLocales()
+        print_debug("User preferred locales :", table_to_str(locales))
+
+        local lang = self.locale_to_language[locales[1] or "_____"]
+        if lang then
+            option = lang
+        end
+    end 
+
+    return option
 end
 
 --- Unpacks a table to be used as text keys. Example:
