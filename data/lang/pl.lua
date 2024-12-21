@@ -79,7 +79,7 @@ return {
         },
         espresso = {
             title = "Espresso",
-            description = "x2 predkosc strzelania przez minute", 
+            description = "x2 prędkość strzelania przez minute", 
         },
         milk = {
             title = "Mleko",
@@ -117,7 +117,7 @@ return {
             ui_back = "Wstecz",
             pause = "Pauza",
 
-            join = "Dołacz",
+            join = "Dołącz",
             split_keyboard = "Podziel klawiature",
             unsplit_keyboard = "Połącz klawiature",
 
@@ -192,8 +192,8 @@ return {
             audio = {
                 title = "Dźwięk",
                 sound = "DŹWIĘK",
-                volume = "GLOŚNOŚĆ",
-                music_volume = "GLOŚNOŚĆ MUZYKI",
+                volume = "GŁOŚNOŚĆ",
+                music_volume = "GŁOŚNOŚĆ MUZYKI",
                 music_pause_menu = "MUZYKA W MENU PAUZY",
             },
             visuals = {
@@ -201,12 +201,12 @@ return {
                 fullscreen = "PEŁEN EKRAN",
                 pixel_scale = "SKALA PIXELI",
                 pixel_scale_value = {
-                    auto = "automatyczne",
-                    max_whole = "maksymalnie całe",
+                    auto = "automatyczna",
+                    max_whole = "maksymalnie cała",
                 },
                 vsync = "VSYNC",
                 menu_blur = "ROZMYCIE TŁA MENU",
-                background_speed = "PREDKOŚĆ TŁA",
+                background_speed = "PRĘDKOŚĆ TŁA",
             },
             game = {
                 title = "Gra",
@@ -227,7 +227,7 @@ return {
         },
         feedback = {
             title = "ZOSTAW OPINIE",
-            bugs = "ZGŁOŚ BLĄD 🔗",
+            bugs = "ZGŁOŚ BŁĄD 🔗",
             features = "ZGŁOŚ PROPOZYCJE 🔗",
         },
         game_over = {
