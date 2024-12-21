@@ -81,25 +81,19 @@ function DungBeetle:update(dt)
     end
 
     -- animation
-    self.debug_values[1] = ""
-    self.debug_values[2] = ""
     if self.vehicle and math.abs(self.vehicle.vx) > 80 then
         self.spr:set_animation("run")
         self.spr:set_flip_x(self.vehicle.vx < 0)
-        self.debug_values[3] = "80"
         
     elseif self.vehicle and math.abs(self.vehicle.vx) > 40 then
         self.spr:set_animation("walk")
         self.spr:set_flip_x(self.vehicle.vx < 0)
-        self.debug_values[3] = "40"
         
     elseif not self.vehicle then
         self.spr:set_animation("walk")
-        self.debug_values[3] = "not vehicle"
         
     else
         self.spr:set_animation("idle")
-        self.debug_values[3] = "huge"
     end
     self.anim_frame_len = 0.08
 

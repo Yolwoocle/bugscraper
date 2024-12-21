@@ -19,11 +19,12 @@ function Dung:init_dung(x, y, spr, w, h)
     self.name = "dung"
     self.follow_player = false
 
-    self.life = 80
+    self.life = 100
 
     self.friction_x = 0.999
     self.speed_x = 1
     self.self_knockback_mult = 200
+    self.max_vx = 120
 
     self.is_stompable = false
     self.destroy_bullet_on_impact = false
@@ -189,6 +190,8 @@ function Dung:update_dung(dt)
         self.vx = self.buffer_vx
         self.buffer_vx = nil
     end
+    self.vx = clamp(self.vx, -self.max_vx, self.max_vx)
+    self.debug_values[1] = self.vx
 
     -- if self.jump_timer:update(dt) then
     --     self.jump_timer:start(random_range(2, 6))

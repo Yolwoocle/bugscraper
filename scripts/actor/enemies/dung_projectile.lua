@@ -11,6 +11,8 @@ local DungProjectile = Projectile:inherit()
 function DungProjectile:init(x, y)
     self.super.init(self, x,y, images.dung_projectile, 8, 8)
     self.name = "dung_projectile"
+
+    self.is_pushable = false
 end
 
 return DungProjectile

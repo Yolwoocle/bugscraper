@@ -74,6 +74,9 @@ function Player:init(n, x, y, skin)
 	self.default_coyote_time = 6
 	self.stomp_jump_speed = 500
 
+	self.can_hold_jump_to_float = false
+	self.float_speed = 60
+
 	-- Air time
 	self.air_time = 0
 	self.jump_air_time = 0.3
@@ -189,6 +192,7 @@ function Player:update(dt)
 	self:move(dt)
 	self:do_wall_sliding(dt)
 	self:update_jumping(dt)
+	self:do_floating(dt)
 	self:do_gravity(dt) -- FIXME: ouch, this is already called in update_actor so there is x2 gravity here
 	self:update_actor(dt)
 	self:do_aiming(dt)
@@ -509,6 +513,18 @@ function Player:update_jumping(dt)
 			-- :smoke      (x,          y,            number, col, spw_rad, size, sizevar, layer, fill_mode)
 			Particles:smoke(self.mid_x, self.y+self.h, nil,   nil, nil,     nil,  nil,     nil, "line")
 		end
+	end
+end
+
+function Player:do_floating(dt)
+	if not self.can_hold_jump_to_float then
+		return
+	end
+
+	if self.vy > 0 and Input:action_down(self.n, "jump") then
+		self.gravity = 0
+		self.vy = self.float_speed
+	else
 	end
 end
 
