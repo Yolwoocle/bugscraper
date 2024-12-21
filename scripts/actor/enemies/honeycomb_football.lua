@@ -43,16 +43,7 @@ function HoneycombFootball:init(x, y, spr)
     self.exploding_timer = Timer:new(2.0)
     self.flash_timer = Timer:new(0.5)
 
-    self.unstompable_timer = Timer:new(0.5, {
-        on_apply = function(timer)
-            self.is_stompable = false
-            self.damage = 0
-        end,
-        on_timeout = function(timer)
-            self.is_stompable = true
-            self.damage = 1
-        end,
-    })
+    self.unstompable_timer = Timer:new(1.0)
 
     self.gun = guns.unlootable.HoneycombFootballGun:new(self)
 
@@ -130,7 +121,7 @@ function HoneycombFootball:update(dt)
     self.super.update(self, dt)
 
     self:update_renderer(dt)
-    
+
     self.state_machine:update(dt)
 end
 
@@ -140,7 +131,10 @@ function HoneycombFootball:update_renderer(dt)
     self.object_3d.position.x = self.mid_x
     self.object_3d.position.y = self.mid_y
 
-    self.unstompable_timer:update(dt)
+    if self.unstompable_timer:update(dt) then
+        self.is_stompable = true
+        self.damage = 1
+    end
 
     if self:is_flashing_white() then
         self.renderer.lighting_palette = {COL_WHITE}
@@ -156,6 +150,11 @@ function HoneycombFootball:on_stomped()
     self.pong_speed = self.pong_speed + 60
 
     self.unstompable_timer:start()
+    self.is_stompable = false
+    self.damage = 0
+    if math.sin(self.pong_direction) < 0 then
+        self.pong_direction = math.atan2(math.abs(math.sin(self.pong_direction)), math.cos(self.pong_direction))
+    end
 end
 
 function HoneycombFootball:draw()

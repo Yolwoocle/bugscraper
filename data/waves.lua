@@ -30,12 +30,7 @@ local function new_cafeteria(run_func)
 					actor:remove()
 				end
 			end
-
-			for _, actor in pairs(game.actors) do
-				if actor.name == "cocoon" then
-					actor:revive()
-				end
-			end
+			
 			run_func(self, level)
 		end,
 
