@@ -259,7 +259,14 @@ function Player:action_down(action)
 end
 
 function Player:action_pressed(action)
-	return Input:action_pressed(self.n, action)
+	if self.input_mode == PLAYER_INPUT_MODE_USER then
+		return Input:action_pressed(self.n, action)
+
+	elseif self.input_mode == PLAYER_INPUT_MODE_CODE then
+		-- I haven't implemented this feature yet (using action_pressed via code), so this is good enough for now.  
+		return self:action_down(action)
+
+	end
 end
 
 
@@ -310,9 +317,9 @@ end
 function Player:kill()
 	if self.is_dead then return end
 	
+	Input:vibrate(self.n, 0.6, 0.4)
 	game:screenshake(10)
 	game:frameskip(30)
-	Input:vibrate(self.n, 0.6, 0.4)
 
 	local ox, oy = self.spr:get_total_centered_offset_position(self.x, self.y, self.w, self.h)
 	Particles:dead_player(ox, oy, self.skin.spr_dead, self.color_palette, self.dir_x)

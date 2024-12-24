@@ -22,7 +22,7 @@ function BackroomCEOOffice:generate(world_generator)
 	game:new_actor(enemies.UpgradeDisplay:new(53*16, 14*16))
 	game:new_actor(enemies.BossDoor:new(78*16, 10*16))
 	
-	game:new_actor(enemies.FinalBoss:new(87*16, 14*16))
+	game:new_actor(enemies.FinalBoss:new(88*16, 14*16))
 end
 
 function BackroomCEOOffice:can_exit()

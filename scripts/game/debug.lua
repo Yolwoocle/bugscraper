@@ -89,7 +89,7 @@ function Debug:init(game)
             else
                 _G_frame_repeat = 1
             end
-        end },
+        end, do_not_require_ctrl = true },
         ["backspace"] = { "show help", function()
             self.debug_menu = not self.debug_menu
         end },
@@ -352,6 +352,10 @@ end
 function Debug:debug_action(key, scancode, isrepeat)
     local action = self.actions[scancode]
     if action then
+        if not action.do_not_require_ctrl and not love.keyboard.isScancodeDown("lctrl") then
+            return
+        end
+
         action[2]()
         self:new_notification("Executed '" .. tostring(action[1]) .. "'")
     else
@@ -373,11 +377,8 @@ function Debug:keypressed(key, scancode, isrepeat)
     elseif scancode == "lctrl" then
         self.is_reading_for_f1_action = true
     else
-        if love.keyboard.isScancodeDown("lctrl") then
-            self:debug_action(key, scancode, isrepeat)
-            self.is_reading_for_f1_action = false
-            return
-        end
+        self:debug_action(key, scancode, isrepeat)
+        self.is_reading_for_f1_action = false
     end
 end
 
@@ -655,7 +656,17 @@ function Debug:draw_info_view()
         concat("level_speed ", game.level.level_speed),
         concat("menu_stack ", #game.menu_manager.menu_stack),
         concat("cur_menu_name ", game.menu_manager.cur_menu_name),
-        concat("cur_backroom ", (game.level.backroom == nil) and "nil" or game.level.backroom.name),
+        concat("cur_backroom ", (game.level.backroom == nil) and "[nil]" or game.level.backroom.name),
+        concat("cur_cutscene ", (game.cutscene == nil) and "[nil]" or 
+            string.format("%s: [%d/%d] (%.1f s/%.1f s) '%s' / (total: %.1f s)", 
+                game.cutscene.name, 
+                game.cutscene.current_scene_i, 
+                #game.cutscene.scenes, 
+                game.cutscene.timer.duration - game.cutscene.timer.time, 
+                game.cutscene.timer.duration, 
+                game.cutscene.current_scene.description, 
+                game.cutscene.total_duration
+            )),
         "",
     }
 

@@ -752,6 +752,12 @@ function random_neighbor(n)
 	return love.math.random() * 2 * n - n
 end
 
+--- Returns an INTEGER in the range ]-n, n[. (-n and n excluded)
+---@param n any
+function random_neighbor_int(n)
+	return round(random_neighbor(n))
+end
+
 --- Returns an INTEGER between in the range [a, b]. (a included, b included)
 ---@param a number
 ---@param b number

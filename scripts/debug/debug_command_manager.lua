@@ -3,6 +3,7 @@ local Class = require "scripts.meta.class"
 local DebugCommand = require "scripts.debug.debug_command"
 local enemies = require "data.enemies"
 local utf8 = require 'utf8'
+local cutscenes = require 'data.cutscenes'
 
 local DebugCommandManager = Class:inherit()
 
@@ -21,6 +22,7 @@ function DebugCommandManager:init()
     }
 
     local enemies_keys = table_keys(enemies)
+    local cutscenes_keys = table_keys(cutscenes)
     table.sort(enemies_keys)
     self.commands["spawn"] = DebugCommand:new {
         name = "spawn",
@@ -39,6 +41,24 @@ function DebugCommandManager:init()
             local enemy = enemy_class:new(x, y)
             game:new_actor(enemy)
             self:add_message("Spawned '"..name.."'")
+
+            return true
+        end,
+    }
+    self.commands["cutscene"] = DebugCommand:new {
+        name = "cutscene",
+        description = "Plays a cutscene",
+        args = {
+            { "name:string", values = cutscenes_keys },
+        },
+        run = function(name, x, y)
+            local cutscene = cutscenes[name]
+            if not cutscene then
+                return false, "Cutscene '" .. name .. "' not found"
+            end
+
+            game:play_cutscene(cutscene)
+            self:add_message("Played cutscene '"..name.."'")
 
             return true
         end,

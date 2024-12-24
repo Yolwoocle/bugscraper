@@ -17,8 +17,9 @@ function FinalBoss:init(x, y)
     self.name = "final_boss"
 
     self.spr = AnimatedSprite:new({
-        normal = {{images.ceo}, 0.1},
-    }, "normal")
+        introduction = {{images.ceo_normal}, 0.1},
+        fight = {{images.ceo}, 0.1},
+    }, "introduction")
 
     -- Parameters 
     self.def_friction_y = self.friction_y
@@ -32,13 +33,18 @@ function FinalBoss:init(x, y)
     self.is_immune_to_bullets = true
 
     self.is_stompable = true
+    self.can_be_stomped_if_falling_down = false
     self.damage_on_stomp = 5
 
-    self.speed = random_range(7,13) --10
+    self.speed = 10
     self.speed_x = self.speed
     self.speed_y = self.speed*3
     self.friction_x = 0.8
     self.friction_y = 0.8
+    self.thwomp_follow_player_speed = 150
+    self.thwomp_telegraph_speed = self.speed * 8
+    self.thwomp_attack_speed = self.speed * 512
+    self.thwomp_rise_speed = self.speed * 1024
 
     self.follow_player = false
     self.self_knockback_mult = 0
@@ -62,10 +68,19 @@ function FinalBoss:init(x, y)
 
     self.spikes = {}
 
+    self.flip_mode = ENEMY_FLIP_MODE_MANUAL
+
     -- State machine
     self.state_machine = StateMachine:new({
+        introduction = {
+            enter = function(state)
+                self.spr:set_animation("introduction")
+            end,
+        },
+
         standby = {
             enter = function(state)
+                self.spr:set_animation("fight")
             end,
             update = function(state, dt)
                 self:spawn_spikes()
@@ -111,9 +126,15 @@ function FinalBoss:init(x, y)
                 self.friction_y = self.def_friction_y
 
                 self.gravity = self.default_gravity
+                
+                self.bunny_hop_target = self:get_random_player()
             end,
             update = function(state, dt)
-                self.spr:update_offset(random_neighbor(3), random_neighbor(3))
+                local ox = 0
+                if self.bunny_hop_target then
+                    ox = (self.bunny_hop_target.mid_x - self.mid_x) / 64
+                end
+                self.spr:update_offset(ox + random_neighbor_int(3), 5 + random_neighbor_int(3))
 
                 if self.state_timer:update(dt) then
                     return "bunny_hopping"
@@ -125,18 +146,19 @@ function FinalBoss:init(x, y)
         },
         bunny_hopping = {
             enter = function(state)
-                local target = self:get_random_player()
-                if not target then
+                self.vy = -500
+                
+                if not self.bunny_hop_target then
                     return
                 end
 
-                self.vx = (target.mid_x - self.mid_x) * random_range(0.8, 1.2)
-                self.vy = -500
+                self.vx = (self.bunny_hop_target.mid_x - self.mid_x) * random_range(0.8, 1.2)
             end,
             after_collision = function(state, col)
                 if col.normal.y == -1 then
                     self.state_machine:set_state("waiting")
                     self.vx = 0
+                    Input:vibrate_all(0.2, 0.5)
                     game:screenshake(8)
                 end
             end
@@ -150,9 +172,11 @@ function FinalBoss:init(x, y)
                 self:reset_spikes()
                 
                 local target = self:get_random_player()
-                local dir = 1
+                local dir 
                 if target then
                     dir = sign(target.mid_x - self.mid_x)
+                else
+                    dir = random_sample {-1, 1}
                 end
 
                 self.friction_x = 1
@@ -169,14 +193,14 @@ function FinalBoss:init(x, y)
             enter = function(state) 
                 self.vx = 0
                 self.vy = 0
-                self.state_timer:start(0.7)
+                self.state_timer:start(0.6)
 
                 self.telegraph_t = 0
             end,
             update = function(state, dt)
                 self.telegraph_t = (self.telegraph_t + dt * 200) % images.ceo_telegraph_arrow:getWidth()
 
-                self.spr:update_offset(random_neighbor(3), random_neighbor(3))
+                self.spr:update_offset(random_neighbor_int(3), random_neighbor_int(3))
                 if self.state_timer:update(dt) then
                     return "charging"
                 end
@@ -214,6 +238,7 @@ function FinalBoss:init(x, y)
             after_collision = function(state, col)
                 if col.type ~= "cross" and math.abs(col.normal.x) == 1 then
                     self.state_machine:set_state("waiting")
+                    Input:vibrate_all(0.2, 0.5)
                     game:screenshake(8)
                 end
             end
@@ -243,7 +268,7 @@ function FinalBoss:init(x, y)
             end,
             update = function(state, dt)
                 if self.thwomp_target then
-                    self.vx = self.speed * sign(self.thwomp_target.mid_x - self.mid_x)
+                    self.vx = self.thwomp_follow_player_speed * sign(self.thwomp_target.mid_x - self.mid_x)
                 end
 
                 for _, player in pairs(game.players) do
@@ -266,13 +291,13 @@ function FinalBoss:init(x, y)
             end,
             update = function(state, dt)
                 self.speed_x = 0
-                self.speed_y = self.speed * 0.5
+                self.speed_y = self.thwomp_telegraph_speed
 
                 self.vy = -self.speed_y
                 if self.telegraph_timer:update(dt) then 
                     return "thwomp_attack"
                 end
-                self.spr:update_offset(random_neighbor(3), random_neighbor(3))
+                self.spr:update_offset(random_neighbor_int(3), random_neighbor_int(3))
             end,
             exit = function(state)
                 self.spr:update_offset(0, 0)
@@ -283,7 +308,7 @@ function FinalBoss:init(x, y)
             end,
             update = function(state, dt)
                 self.speed_x = 0
-                self.speed_y = self.speed * 64
+                self.speed_y = self.thwomp_attack_speed
                 self.friction_y = 1
 
                 self.vy = self.vy + self.speed_y*dt
@@ -297,7 +322,8 @@ function FinalBoss:init(x, y)
                     else
                         self.state_machine:set_state("thwomp_rise")
                     end
-                    game:screenshake(6)
+                    Input:vibrate_all(0.2, 0.5)
+                    game:screenshake(8)
                     self:set_spike_waves()
                 end
             end
@@ -307,7 +333,7 @@ function FinalBoss:init(x, y)
             end,
             update = function(state, dt)
                 self.speed_x = 0
-                self.speed_y = self.speed * 64
+                self.speed_y = self.thwomp_rise_speed
                 self.friction_y = 1
 
                 self.vy = -self.speed_y*dt
@@ -317,7 +343,7 @@ function FinalBoss:init(x, y)
             end,
         },
 
-    }, "standby")
+    }, "introduction")
 end
 
 function FinalBoss:update(dt)
@@ -344,13 +370,14 @@ function FinalBoss:update(dt)
     self.debug_values[2] = concat(self.life,"❤")
 end
 
-function FinalBoss:on_stomped()
+function FinalBoss:on_stomped(player)
     self.unstompable_timer:start()
     self.is_stompable = false
     self.damage = 0
 
     game:frameskip(10)
-    game:screenshake(8)
+    game:screenshake(6)
+    Input:vibrate(player.n, 0.1, 0.3)
 end
 
 function FinalBoss:reset_spikes()

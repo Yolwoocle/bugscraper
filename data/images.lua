@@ -116,6 +116,7 @@ local img_names = {
 	beelet_activated_1 =       "actors/enemies/beelet_activated_1",
 	beelet_activated_2 =       "actors/enemies/beelet_activated_2",
 	ceo =                      "actors/enemies/ceo",
+	ceo_normal =               "actors/enemies/ceo_normal",
 	ceo_telegraph_arrow =      "actors/enemies/ceo_telegraph_arrow",
 	chipper_attack_1 =         "actors/enemies/chipper_attack_1",
 	chipper_attack_2 =         "actors/enemies/chipper_attack_2",

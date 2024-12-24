@@ -29,6 +29,12 @@ function GameUI:init(game, is_visible)
 	self.splash_x = 0
 	self.splash_vx = 0
 	self.show_splash = true
+
+	self.cinematic_bar_loop_threshold = 14
+	self.cinematic_bar_scroll = 0
+	self.cinematic_bar_scroll_speed = -14
+	self.cinematic_bar_current_height = 0
+	self.cinematic_bar_height = 24
 end
 
 function GameUI:update(dt)
@@ -38,9 +44,9 @@ function GameUI:update(dt)
 		preview.y = preview.base_y - self.game.logo_y
 	end
 
+	self:update_cinematic_bars(dt)
 	self:update_splash(dt)
 end
-
 function GameUI:update_floating_text(dt)
 	self.floating_text_y = lerp(self.floating_text_y, self.floating_text_target_y, 0.05)
 end
@@ -70,6 +76,7 @@ function GameUI:draw()
 	self:draw_floating_text()
 	self:draw_upgrades()
 	self:draw_player_previews()
+	self:draw_cinematic_bars()
 	
 	self:draw_splash_animation()
 	-- local r
@@ -239,6 +246,31 @@ function GameUI:on_player_joined(player)
 		preview:on_player_joined(player)
 	end
 end
+
+-- CINEMATIC BARS
+
+function GameUI:update_cinematic_bars(dt)
+	local target_height = 0
+	if self.cinematic_bars_enabled then
+		target_height = self.cinematic_bar_height
+	end
+	self.cinematic_bar_current_height = lerp(self.cinematic_bar_current_height, target_height, 0.08)
+
+	self.cinematic_bar_scroll = (self.cinematic_bar_scroll + self.cinematic_bar_scroll_speed * dt) % self.cinematic_bar_loop_threshold
+end
+
+
+function GameUI:draw_cinematic_bars()
+	local x = round(-self.cinematic_bar_loop_threshold + self.cinematic_bar_scroll)
+	love.graphics.draw(images.sawtooth_separator, x, round(self.cinematic_bar_current_height), 0, 1, -1)
+	rect_color(COL_BLACK_BLUE, "fill", 0, 0, CANVAS_WIDTH, round(self.cinematic_bar_current_height) - 8)
+	
+	local bot_y = CANVAS_HEIGHT - self.cinematic_bar_current_height
+	love.graphics.draw(images.sawtooth_separator, x, bot_y)
+	rect_color(COL_BLACK_BLUE, "fill", 0, bot_y + 8, CANVAS_WIDTH, CANVAS_HEIGHT - bot_y)	
+end
+
+--- SPLASH
 
 function GameUI:update_splash(dt)
 	if self.splash_x < -CANVAS_WIDTH*2 then

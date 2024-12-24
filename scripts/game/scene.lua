@@ -8,6 +8,7 @@ local Scene = Class:inherit()
 function Scene:init(params)
     params = params or {}
 
+    self.description = param(params.description, "[no description]")
     self.duration = param(params.duration, 1.0)
     
     self.enter_func = param(params.enter, function(scene) end)
@@ -24,7 +25,7 @@ function Scene:exit()
 end
 
 function Scene:update(dt)
-    self:update_func(dt)
+    return self:update_func(dt)
 end
 
 return Scene

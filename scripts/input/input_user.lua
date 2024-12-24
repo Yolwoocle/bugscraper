@@ -260,6 +260,7 @@ function InputUser:vibrate(duration, strength_left, strength_right)
     self.vibration_timer = math.max(self.vibration_timer, duration)
     self.vibration_strength_left  = strength_left
     self.vibration_strength_right = strength_right
+    self:update_vibration(0)
 end
 
 function InputUser:update_vibration(dt)

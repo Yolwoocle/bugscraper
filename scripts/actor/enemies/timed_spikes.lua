@@ -103,6 +103,8 @@ function TimedSpikes:init(x, y, duration_off, duration_telegraph, duration_on, s
                 self.spr:set_scale(1, 1)
                 self.spike_sprite:set_scale(1, 1)
                 self.spike_stem_sprite:set_scale(1, 1)
+
+                self.spike_sprite.is_visible = true
             end,
         },
         disabled = {

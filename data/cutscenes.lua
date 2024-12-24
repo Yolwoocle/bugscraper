@@ -5,18 +5,20 @@ local Rect = require "scripts.math.rect"
 
 local cutscenes = {}
 
-cutscenes.enter_ceo_office = Cutscene:new {
+cutscenes.enter_ceo_office = Cutscene:new("enter_ceo_office", {
     Scene:new({
-        -- All players walk into position
+        description = "Setup scene",
         duration = 1.0,
         enter = function(scene)
             for _, player in pairs(game.players) do
                 player.input_mode = PLAYER_INPUT_MODE_CODE
             end
+
+            game.game_ui.cinematic_bars_enabled = true
         end,
     }),
     Scene:new({
-        -- All players walk into position
+        description = "All players walk into position",
         duration = 4.0,
         enter = function(scene)
             for _, player in pairs(game.players) do
@@ -28,40 +30,65 @@ cutscenes.enter_ceo_office = Cutscene:new {
             -- boss min x = 79*16
         end,
         update = function(scene, dt)
+            local ok_players = 0
             for _, player in pairs(game.players) do
-                local target_x = 79*16 + 8 + (4-player.n+1) * 24 
+                local target_x = 79*16 + 8 + (4-player.n) * 24 
 
                 player.virtual_controller.actions["left"] = false
                 player.virtual_controller.actions["right"] = false
-                if player.x < target_x - 4 then
+                if player.x < target_x - 6 then
                     player.virtual_controller.actions["right"] = true
-                elseif target_x + 4 < player.x then
+                elseif target_x + 6 < player.x then
                     player.virtual_controller.actions["left"] = true
                 else 
                     player.dir_x = 1
+                    ok_players = ok_players + 1
                 end
+            end
+
+            -- the scene is finished early
+            print_debug(ok_players, "/", game:get_number_of_alive_players())
+            if ok_players == game:get_number_of_alive_players() then
+                return true 
             end
         end
     }),
     Scene:new({
-        duration = 0.1,
+        description = "Set level walls",
+
+        duration = 1.0,
         enter = function(scene)
+            game.level.world_generator:write_rect(Rect:new(78, 10, 78, 14), TILE_METAL)
+            game:screenshake(6)
         end,
     }),
     Scene:new({
+        description = "Give back controls to players",
+
         duration = 1.0,
         enter = function(scene)
             for _, p in pairs(game.players) do
                 p.input_mode = PLAYER_INPUT_MODE_USER
             end
 
-            game.level.world_generator:write_rect(Rect:new(78, 10, 78, 14), TILE_METAL)
-            game:screenshake(6)
+            game.game_ui.cinematic_bars_enabled = false
         end,
     }),
-}
+    Scene:new({
+        description = "Give back control to boss",
 
-cutscenes.dung_boss_enter = Cutscene:new {
+        duration = 1.0,
+        enter = function(scene)
+            for _, actor in pairs(game.actors) do
+                if actor.name == "final_boss" then
+                    actor.state_machine:set_state("standby")
+                end
+            end
+        end,
+    }),
+})
+
+cutscenes.dung_boss_enter = Cutscene:new("dung_boss_enter", {
     Scene:new({
         duration = 2.0,
     }),
@@ -73,9 +100,9 @@ cutscenes.dung_boss_enter = Cutscene:new {
             end
         end,
     }),
-}
+})
 
-cutscenes.bee_boss_enter = Cutscene:new {
+cutscenes.bee_boss_enter = Cutscene:new("bee_boss_enter", {
     Scene:new({
         duration = 1.5,
         enter = function(scene)
@@ -163,6 +190,6 @@ cutscenes.bee_boss_enter = Cutscene:new {
             game.light_world.darkness_intensity = move_toward(game.light_world.darkness_intensity, 0.4, 0.3*dt)
         end
     }),
-}
+})
 
 return cutscenes

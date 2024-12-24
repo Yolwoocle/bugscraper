@@ -89,7 +89,9 @@ function Enemy:init_enemy(x,y, img, w,h)
 	self.stomp_height = self.h/2
 	self.stomps = 1
 	self.damage_on_stomp = 0
+	self.head_ratio = 0.25
 	self.can_be_stomped_if_on_head = true
+	self.can_be_stomped_if_falling_down = true
 
 	self.is_pushable = true
 	self.is_knockbackable = true -- Multiplicator when knockback is applied to
@@ -255,8 +257,8 @@ function Enemy:on_collision(col, other)
 		-- if player.vy > epsilon and self.is_stompable then
 		local feet_y = player.y + player.h
 
-		local is_on_head      = (feet_y <= self.y + self.h * 0.75) and self.can_be_stomped_if_on_head
-		local is_falling_down = (player.vy > 0.0001)
+		local is_on_head      = (feet_y <= self.y + self.h * self.head_ratio) and self.can_be_stomped_if_on_head
+		local is_falling_down = (player.vy > 0.0001) and self.can_be_stomped_if_falling_down
 		local recently_landed = (0 < player.frames_since_land) and (player.frames_since_land <= 7)
 		if self.is_stompable and (is_on_head or is_falling_down or recently_landed) then
 			self:react_to_stomp(player)

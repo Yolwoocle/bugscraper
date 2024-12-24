@@ -5,10 +5,15 @@ local Class = require "scripts.meta.class"
 
 local Cutscene = Class:inherit()
 
-function Cutscene:init(scenes)
+function Cutscene:init(name, scenes)
+    self.name = name
     self.scenes = scenes
     self.current_scene = nil
     self.current_scene_i = -1
+    self.total_duration = 0
+    for _, scene in pairs(self.scenes) do
+        self.total_duration = self.total_duration + scene.duration
+    end
 
     self.timer = Timer:new()
     self.is_playing = false
@@ -28,6 +33,7 @@ end
 function Cutscene:play()
     self:set_current_scene(1)
     self.is_playing = true
+    self.total_time = 0
 end
 
 function Cutscene:stop()
@@ -37,9 +43,10 @@ end
 
 function Cutscene:update(dt)
     if self.is_playing then
-        self.current_scene:update(dt)
+        local skip_scene = self.current_scene:update(dt)
+        print_debug("ret ", skip_scene)
         
-        if self.timer:update(dt) then
+        if skip_scene or self.timer:update(dt) then
             local next_i = mod_plus_1(self.current_scene_i + 1, #self.scenes)
             if next_i ~= 1 then
                 self:set_current_scene(next_i)
