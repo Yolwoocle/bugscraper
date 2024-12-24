@@ -96,8 +96,8 @@ function GameUI:draw_logo()
 			col = COL_WHITE
 			img = images.logo_noshad
 		end
-		gfx.setColor(col)
-		gfx.draw(img, math.floor(logo_x + ox), math.floor(game.logo_y + oy))
+		love.graphics.setColor(col)
+		love.graphics.draw(img, math.floor(logo_x + ox), math.floor(game.logo_y + oy))
 		if DEMO_BUILD then
 			if i == 4 then
 				print_outline(COL_WHITE, COL_BLACK_BLUE, Text:text("game.demo"), logo_x + ox + 90, game.logo_y + oy + 19)
@@ -130,7 +130,7 @@ function GameUI:draw_timer()
 
 	local text = time_to_string(game.time)
 	rect_color({0,0,0,0.5}, "fill", 0, 10, get_text_width(text) + 16, 12)
-	gfx.print(text, 8, 8)
+	love.graphics.print(text, 8, 8)
 end
 
 function GameUI:draw_FPS()

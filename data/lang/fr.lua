@@ -72,6 +72,8 @@ return {
     },
     enemy = {
         dung = "M. Bouse",
+        bee_boss = "Sa Majesté", 
+        motherboard = "La Webmaster",
     },
     upgrade = {
         tea = {
@@ -86,13 +88,17 @@ return {
             title = "Lait",
             description = "+1 ❤ permanent",
         },
-        peanut = {
-            title = "Cacahuète",
+        boba = {
+            title = "Bubble tea",
             description = "x2 munitions maximum",
         },
         soda = {
             title = "Soda",
             description = "+1 saut dans les airs",
+        },
+        fizzy_lemonade = { -- ADDED
+            title = "Fizzy Lemonade",
+            description = "Hold jump to glide",
         },
     },
     input = {
@@ -202,6 +208,7 @@ return {
                 vsync = "VSYNC",
                 menu_blur = "FLOU DU FOND DES MENUS",
                 background_speed = "VITESSE DE L'ARRIÈRE PLAN",
+                bullet_lightness = "LUMINOSITÉ DES BALLES",
             },
             game = {
                 title = "Jeu",
@@ -210,6 +217,7 @@ return {
                 mouse_visible = "AFFICHER LE CURSEUR",
                 pause_on_unfocus = "PAUSE EN CAS DE PERTE DE FOCUS",
                 screenshake = "TREMBLEMENT D'ÉCRAN",
+                skip_boss_intros = "PASSER LES INTROS DE BOSS",
                 show_fps_warning = "AFFICHER AVERTISSEMENT DE FPS BAS",
             },
             language = {

@@ -56,7 +56,7 @@ function WorldGenerator:generate_cabin()
 	end
 end
 
-function WorldGenerator:generate_boss_office()
+function WorldGenerator:generate_ceo_office()
 	self:reset()
 	self:write_rect(Rect:new(2, 2, 79+24, 15), TILE_METAL)
 	self:write_rect(Rect:new(27, 3, 54+24, 8), TILE_METAL)
@@ -136,7 +136,7 @@ end
 
 function WorldGenerator:draw()
 	if self.canvas then
-		gfx.draw(self.canvas, 0,0)
+		love.graphics.draw(self.canvas, 0,0)
 	end
 end
 

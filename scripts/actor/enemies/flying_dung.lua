@@ -135,8 +135,6 @@ function FlyingDung:hit_target(target)
     if target.on_hit_flying_dung then
         target:on_hit_flying_dung(self)
     end
-    game:screenshake(6)
-    game:frameskip(8)
 
     self:kill()
 end

@@ -90,7 +90,7 @@ function OptionsManager:init()
             love.mouse.setVisible(value)
 		end,
 	}
-	self.options = copy_table(self.default_options)
+	self.options = copy_table_deep(self.default_options)
 
 	self:load_options()
 end

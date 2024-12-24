@@ -660,7 +660,7 @@ function InputManager:load_control_file(profile_id, profile)
 
     local file = love.filesystem.openFile(filename, "r")
 
-    local new_mappings = copy_table(profile:get_mappings())
+    local new_mappings = copy_table_deep(profile:get_mappings())
 
     -- Read file contents
     local text, size = file:read()

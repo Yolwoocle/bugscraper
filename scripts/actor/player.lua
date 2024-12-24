@@ -30,6 +30,16 @@ function Player:init(n, x, y, skin)
 	
 	-- Death
 	self.is_dead = false
+
+	-- Input
+	self.input_mode = PLAYER_INPUT_MODE_USER
+	self.virtual_controller = {
+		actions = {}
+	}
+	local mappings = Input:get_input_profile_from_player_n(self.n).mappings
+	for action, _ in pairs(mappings) do
+		self.virtual_controller.actions[action] = false
+	end
 	
 	-- Animation
 	self.color_palette = skin.color_palette
@@ -236,6 +246,24 @@ function Player:update(dt)
 end
 
 ------------------------------------------
+--- Input ---
+
+function Player:action_down(action)
+	if self.input_mode == PLAYER_INPUT_MODE_USER then
+		return Input:action_down(self.n, action)
+
+	elseif self.input_mode == PLAYER_INPUT_MODE_CODE then
+		return self.virtual_controller.actions[action]
+
+	end
+end
+
+function Player:action_pressed(action)
+	return Input:action_pressed(self.n, action)
+end
+
+
+------------------------------------------
 --- Life ---
 
 function Player:set_player_n(n)
@@ -382,8 +410,8 @@ end
 function Player:move(dt)
 	-- compute movement dir
 	local dir = {x=0, y=0}
-	if Input:action_down(self.n, 'left') then   dir.x = dir.x - 1   end
-	if Input:action_down(self.n, 'right') then   dir.x = dir.x + 1   end
+	if self:action_down('left') then   dir.x = dir.x - 1   end
+	if self:action_down('right') then   dir.x = dir.x + 1   end
 
 	if dir.x ~= 0 then
 		self.dir_x = dir.x
@@ -414,8 +442,8 @@ function Player:do_wall_sliding(dt)
 		local col_normal = self.wall_col.normal
 		local is_walled = (col_normal.y == 0)
 		local is_falling = (self.vy > 0)
-		local holding_left = Input:action_down(self.n, 'left') and col_normal.x == 1
-		local holding_right = Input:action_down(self.n, 'right') and col_normal.x == -1
+		local holding_left = self:action_down('left') and col_normal.x == 1
+		local holding_right = self:action_down('right') and col_normal.x == -1
 		
 		local is_wall_sliding = is_walled and is_falling and (holding_left or holding_right) 
 			and (self.wall_col.other.collision_info and self.wall_col.other.collision_info.is_slidable)
@@ -463,7 +491,7 @@ function Player:update_jumping(dt)
 
 	-- This buffer is so that you still jump even if you're a few frames behind
 	self.buffer_jump_timer = self.buffer_jump_timer - 1
-	if Input:action_pressed(self.n, "jump") then
+	if self:action_pressed("jump") then
 		removeme_n = removeme_n + 1
 
 		self.buffer_jump_timer = self.max_buffer_jump_timer
@@ -473,7 +501,7 @@ function Player:update_jumping(dt)
 	self.air_time = self.air_time + dt
 	if self.is_grounded then self.air_time = 0 end
 	if self.air_time < self.jump_air_time and not self.is_grounded then
-		if Input:action_down(self.n, "jump") then
+		if self:action_down("jump") then
 			self.vy = self.vy - self.air_jump_force
 		end
 	end
@@ -493,8 +521,8 @@ function Player:update_jumping(dt)
 		
 		elseif wall_normal then
 			-- Conditions for a wall jump ("wall kick")
-			local left_jump  = (wall_normal.x == 1) and Input:action_down(self.n, "right")
-			local right_jump = (wall_normal.x == -1) and Input:action_down(self.n, "left")
+			local left_jump  = (wall_normal.x == 1) and self:action_down("right")
+			local right_jump = (wall_normal.x == -1) and self:action_down("left")
 			
 			-- Conditions for a wall jump used for climbing, while sliding ("wall climb")
 			local wall_climb = self.is_wall_sliding
@@ -510,8 +538,7 @@ function Player:update_jumping(dt)
 			self.jumps = math.max(0, self.jumps - 1)
 			self:on_jump()
 			
-			-- :smoke      (x,          y,            number, col, spw_rad, size, sizevar, layer, fill_mode)
-			Particles:smoke(self.mid_x, self.y+self.h, nil,   nil, nil,     nil,  nil,     nil, "line")
+			Particles:bubble_fizz_cloud(self.mid_x, self.y+self.h, 8, 10)
 		end
 	end
 end
@@ -521,9 +548,11 @@ function Player:do_floating(dt)
 		return
 	end
 
-	if self.vy > 0 and Input:action_down(self.n, "jump") then
+	if self.vy > 0 and self:action_down("jump") then
 		self.gravity = 0
 		self.vy = self.float_speed
+		Particles:smoke(self.mid_x, self.y+self.h, 1, transparent_color(COL_LIGHT_YELLOW, 1))
+		Particles:bubble_fizz_cloud(self.mid_x, self.y+self.h, 8, 1)
 	else
 	end
 end
@@ -628,7 +657,7 @@ function Player:shoot(dt, is_burst)
 	
 	-- Update aiming direction
 	local dx, dy = self.dir_x, self.dir_y
-	local aim_horizontal = (Input:action_down(self.n, "left") or Input:action_down(self.n, "right"))
+	local aim_horizontal = (self:action_down("left") or self:action_down("right"))
 	-- Allow aiming upwards 
 	if self.dir_y ~= 0 and not aim_horizontal then    dx = 0    end
 
@@ -637,8 +666,8 @@ function Player:shoot(dt, is_burst)
 	self.shoot_dir_x = cos(self.shoot_ang)
 	self.shoot_dir_y = sin(self.shoot_ang)
 
-	local btn_auto = (self.gun.is_auto and Input:action_down(self.n, "shoot"))
-	local btn_manu = (not self.gun.is_auto and Input:action_pressed(self.n, "shoot"))
+	local btn_auto = (self.gun.is_auto and self:action_down("shoot"))
+	local btn_manu = (not self.gun.is_auto and self:action_pressed("shoot"))
 	if btn_auto or btn_manu or is_burst then
 		self.is_shooting = true
 
@@ -661,8 +690,8 @@ function Player:shoot(dt, is_burst)
 				self.vy = (self.vy - dy*self.gun.jetpack_force) * self.friction_x
 			end
 		else
-			-- (Normal behaviour) If shooting downwards, then go up like a jetpack
-			if Input:action_down(self.n, "down") and success then
+			-- If shooting downwards, then go up like a jetpack
+			if self:action_down("down") and success then
 				self.vy = self.vy - self.gun.jetpack_force
 				self.vy = self.vy * self.friction_x
 			end
@@ -704,8 +733,8 @@ end
 
 function Player:do_aiming(dt)
 	self.dir_y = 0
-	if Input:action_down(self.n, "up") then      self.dir_y = -1    end
-	if Input:action_down(self.n, "down") then    self.dir_y = 1     end
+	if self:action_down("up") then      self.dir_y = -1    end
+	if self:action_down("down") then    self.dir_y = 1     end
 end
 
 function Player:equip_gun(gun)
@@ -758,7 +787,7 @@ end
 
 function Player:on_stomp(enemy)
 	local spd = -self.stomp_jump_speed
-	if Input:action_down(self.n, "jump") or self.buffer_jump_timer > 0 then
+	if self:action_down("jump") or self.buffer_jump_timer > 0 then
 		spd = spd * 1.3
 	end
 	self.vy = spd
@@ -868,7 +897,7 @@ function Player:leave_game_if_possible(dt)
 	self.is_touching_exit_sign = is_touching
 	if is_touching then
 		self.controls_oy = lerp(self.controls_oy, 0, 0.3)
-		if Input:action_pressed(self.n, "leave_game") and game.game_state == GAME_STATE_WAITING then
+		if self:action_pressed("leave_game") and game.game_state == GAME_STATE_WAITING then
 			exit_sign.other:activate(self)
 		end
 	else
@@ -941,7 +970,7 @@ function Player:draw()
 
 	-- Draw self
 	self:draw_player()
-	gfx.setColor(COL_WHITE)
+	love.graphics.setColor(COL_WHITE)
 
 	-- print_outline(nil, nil, tostring(self.jumps), self.x + 20, self.y)
 end
@@ -981,7 +1010,7 @@ function Player:draw_ammo_bar(ui_x, ui_y)
 
 	local x = floor(ui_x) - floor(bar_w/2)
 	local y = floor(ui_y) + 8
-	gfx.draw(images.ammo, x, y)
+	love.graphics.draw(images.ammo, x, y)
 
 	local text = self.gun.ammo
 	local col_shad = COL_DARK_BLUE

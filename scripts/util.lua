@@ -153,28 +153,27 @@ end
 -- 	return newtab
 -- end
 
-function copy_table(orig)
+function copy_table_deep(orig)
 	-- http://lua-users.org/wiki/CopyTable
 	local orig_type = type(orig)
 	local copy
 	if orig_type == 'table' then
 		copy = {}
 		for orig_key, orig_value in next, orig, nil do
-			copy[copy_table(orig_key)] = copy_table(orig_value)
+			copy[copy_table_deep(orig_key)] = copy_table_deep(orig_value)
 		end
-		setmetatable(copy, copy_table(getmetatable(orig)))
+		setmetatable(copy, copy_table_deep(getmetatable(orig)))
 	else -- number, string, boolean, etc
 		copy = orig
 	end
 	return copy
 end
 
-function duplicate_table(tab, n)
+function copy_table_shallow(tab)
 	local ntab = {}
-	-- assert(type(n) == "number", "duplicate_table argument 'n' must be a number, not "..type(n))
 
-	for i = 1, n do
-		table.insert(ntab, tab)
+	for k, v in pairs(tab) do
+		ntab[k] = v
 	end
 	return ntab
 end
@@ -259,6 +258,10 @@ function lighten_color(col, v)
 		table.insert(ncol, ch + v)
 	end
 	return ncol
+end
+
+function transparent_color(col, alpha)
+	return {col[1], col[2], col[3], alpha}
 end
 
 function rgb(r, g, b)

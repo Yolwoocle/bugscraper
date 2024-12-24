@@ -114,7 +114,7 @@ end
 
 function Loot:draw()
 	self:draw_actor()
-	--gfx.draw(self.spr, self.x, self.y)
+	--love.graphics.draw(self.spr, self.x, self.y)
 end
 
 --- Used in find_close_player to find the player that the loot should be attracted to. 

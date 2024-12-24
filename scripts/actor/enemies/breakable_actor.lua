@@ -66,7 +66,7 @@ function BreakableActor:ready()
     self.break_state = math.min(self.break_state, #self.images_cracked -1)
 end
 
-function BreakableActor:on_damage(n, old_life)
+function BreakableActor:on_damage(amount)
     local number_of_break_states = #self.images_cracked
     local old_state = self.break_state
     local part = self.max_life / number_of_break_states

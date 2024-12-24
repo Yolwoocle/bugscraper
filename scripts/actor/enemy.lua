@@ -89,6 +89,7 @@ function Enemy:init_enemy(x,y, img, w,h)
 	self.stomp_height = self.h/2
 	self.stomps = 1
 	self.damage_on_stomp = 0
+	self.can_be_stomped_if_on_head = true
 
 	self.is_pushable = true
 	self.is_knockbackable = true -- Multiplicator when knockback is applied to
@@ -254,7 +255,7 @@ function Enemy:on_collision(col, other)
 		-- if player.vy > epsilon and self.is_stompable then
 		local feet_y = player.y + player.h
 
-		local is_on_head      = (feet_y <= self.y + self.h/2)
+		local is_on_head      = (feet_y <= self.y + self.h * 0.75) and self.can_be_stomped_if_on_head
 		local is_falling_down = (player.vy > 0.0001)
 		local recently_landed = (0 < player.frames_since_land) and (player.frames_since_land <= 7)
 		if self.is_stompable and (is_on_head or is_falling_down or recently_landed) then
@@ -317,7 +318,7 @@ function Enemy:do_damage(n, damager)
 	
 	if self.play_sfx then   Audio:play_var(self.sound_damage, 0.3, 1.1)   end
 	self.life = self.life - n
-	self:on_damage(n, self.life + n)
+	self:on_damage(n)
 
 	if self.life <= 0 then
 		if self.kill_when_negative_life then
@@ -442,7 +443,7 @@ function Enemy:on_negative_life()
 end
 
 --- (Abstract) Called when the enemy is damaged
-function Enemy:on_damage()
+function Enemy:on_damage(amount)
 end
 
 --- (Abstract) Called when the enemy is stomped, but not necessarily stomp-killed

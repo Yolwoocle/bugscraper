@@ -38,6 +38,7 @@ function DebugCommandManager:init()
 
             local enemy = enemy_class:new(x, y)
             game:new_actor(enemy)
+            self:add_message("Spawned '"..name.."'")
 
             return true
         end,

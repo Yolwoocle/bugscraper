@@ -82,12 +82,12 @@ function TimedSpikes:init(x, y, duration_off, duration_telegraph, duration_on, s
                     self.spike_target_y = 6
                     self.spike_sprite.color = {0.5,0.5,0.5}
                     self.spike_stem_sprite.color = {0.5,0.5,0.5}
-                    self.spr.is_visible = true
+                    self.spike_sprite.is_visible = true
                 else
                     self.spike_target_y = 0
                     self.spike_sprite.color = COL_WHITE
                     self.spike_stem_sprite.color = COL_WHITE
-                    self.spr.is_visible = false
+                    self.spike_sprite.is_visible = false
                 end
                 self.spike_y = self.spike_target_y
                 self.standby_timer:start()
@@ -138,7 +138,7 @@ function TimedSpikes:init(x, y, duration_off, duration_telegraph, duration_on, s
         },
     }, "standby")
 
-    self.spike_stem_sprite.is_visible = self.spike_sprite.is_visible
+    self.spike_stem_sprite.is_visible = false
 
     self.t = 0
 end

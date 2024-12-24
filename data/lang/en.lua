@@ -66,7 +66,8 @@ return {
     },
     enemy = {
         dung = "Mr. Dung",
-        bee_boss = "[Boss name placeholder]" -- Do not translate
+        bee_boss = "Her Majesty", 
+        motherboard = "The Webmaster",
     },
     upgrade = {
         tea = {
@@ -81,13 +82,17 @@ return {
             title = "Milk",
             description = "+1 permanent ❤",
         },
-        peanut = {
-            title = "Peanut",
+        boba = {
+            title = "Boba",
             description = "x2 maximum ammo",
         },
         soda = {
             title = "Soda",
             description = "+1 midair jump",
+        },
+        fizzy_lemonade = {
+            title = "Fizzy Lemonade",
+            description = "Hold jump to glide",
         },
     },
     input = {
@@ -198,6 +203,7 @@ return {
                 vsync = "VSYNC",
                 menu_blur = "MENU BACKGROUND BLUR", 
                 background_speed = "BACKGROUND SPEED",
+                bullet_lightness = "BULLET BRIGHTNESS",
             },
             game = {
                 title = "Game",
@@ -206,6 +212,7 @@ return {
                 mouse_visible = "SHOW MOUSE CURSOR",
                 pause_on_unfocus = "PAUSE ON LOST FOCUS", -- whether the game should pause when the window loses focus
                 screenshake = "SCREENSHAKE",
+                skip_boss_intros = "SKIP BOSS INTROS",
                 show_fps_warning = "SHOW LOW FRAMERATE WARNING", -- Whether the game should show a warning when its framerate is low
 
             },

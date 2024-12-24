@@ -24,6 +24,7 @@ function ButtonBig:init_button_big(x, y, spr, w, h)
     self.is_pushable = false
     self.is_knockbackable = false
     self.play_sfx = false
+    self.can_be_stomped_if_on_head = false
     self.loot = {}
 
     self.damage = 0

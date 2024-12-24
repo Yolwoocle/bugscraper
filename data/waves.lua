@@ -8,12 +8,12 @@ local Rect               = require "scripts.math.rect"
 local LevelGeometry      = require "scripts.level.level_geometry"
 local Wave               = require "scripts.level.wave"
 local BackroomCafeteria  = require "scripts.level.backrooms.backroom_cafeteria"
-local BackroomBossOffice = require "scripts.level.backrooms.backroom_boss_office"
+local BackroomCEOOffice = require "scripts.level.backrooms.backroom_ceo_office"
 local E                  = require "data.enemies"
 
 RECT_ELEVATOR            = Rect:new(unpack(RECT_ELEVATOR_PARAMS))
 RECT_CAFETERIA           = Rect:new(unpack(RECT_CAFETERIA_PARAMS))
-RECT_BOSS_OFFICE         = Rect:new(unpack(RECT_BOSS_OFFICE_PARAMS))
+RECT_CEO_OFFICE          = Rect:new(unpack(RECT_CEO_OFFICE_PARAMS))
 
 local function new_cafeteria(run_func)
 	run_func = run_func or function(...) end
@@ -1152,13 +1152,23 @@ local waves = {
 
 		min = 1,
 		max = 1,
+		enemies = {},
+
+		bounds = RECT_CEO_OFFICE,
+
+		backroom = BackroomCEOOffice:new()
+	}),
+
+	
+	new_wave({
+		roll_type = WAVE_ROLL_TYPE_FIXED,
+
+		min = 1,
+		max = 1,
 		enemies = {
+			{E.FinalBoss, 1, position = {87*16, 14*16}}
 		},
-
-		bounds = RECT_BOSS_OFFICE,
-
-		backroom = BackroomBossOffice:new()
-	})
+	}),
 
 	-- Last wave
 	-- new_wave({

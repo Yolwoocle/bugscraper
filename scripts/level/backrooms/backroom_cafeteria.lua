@@ -1,5 +1,5 @@
 require "scripts.util"
-local upgrades = require "data.upgrades"
+local upgrade_probabilities = require "data.upgrade_probabilities"
 local images = require "data.images"
 local Backroom = require "scripts.level.backrooms.backroom"
 local BackgroundCafeteria = require "scripts.level.background.background_cafeteria"
@@ -43,21 +43,16 @@ function BackroomCafeteria:update(dt)
 end
 
 function BackroomCafeteria:assign_cafeteria_upgrades()
-	local bag = {
-		{upgrades.UpgradeTea, 1},
-		{upgrades.UpgradeEspresso, 1},
-		{upgrades.UpgradeMilk, 1},
-		{upgrades.UpgradePeanut, 1},
-		-- {upgrades.UpgradeEnergyDrink, 1},
-		{upgrades.UpgradeSoda, 1},
-	}
+	local bag = copy_table_shallow(upgrade_probabilities)
 
 	for _, actor in pairs(game.actors) do
 		if actor.name == "upgrade_display" then
 			local upgrade, _, i = random_weighted(bag)
 			table.remove(bag, i)
 
-			actor:assign_upgrade(upgrade:new())
+			if upgrade then
+				actor:assign_upgrade(upgrade:new())
+			end
 		end
 	end
 end

@@ -573,8 +573,8 @@ function Level:draw_win_screen()
 		return
 	end
 
-	local old_font = gfx.getFont()
-	gfx.setFont(FONT_PAINT)
+	local old_font = love.graphics.getFont()
+	love.graphics.setFont(FONT_PAINT)
 
 	local text = Text:text("game.congratulations")
 	local w = get_text_width(text, FONT_PAINT)
@@ -591,14 +591,14 @@ function Level:draw_win_screen()
 			if col == nil then
 				col = COL_WHITE
 			end
-			gfx.setColor(col)
-			gfx.print(chr, text_x + ox, 40 + oy)
+			love.graphics.setColor(col)
+			love.graphics.print(chr, text_x + ox, 40 + oy)
 
 			text_x = text_x + get_text_width(chr) + 1
 		end
 	end
 
-	gfx.setFont(old_font)
+	love.graphics.setFont(old_font)
 	
 	-- Win stats
 	local iy = 0

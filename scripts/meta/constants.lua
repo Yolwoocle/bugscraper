@@ -95,7 +95,7 @@ BULLET_BOUNCE_MODE_NORMAL = "normal"
 
 RECT_ELEVATOR_PARAMS = {2, 2, 28, 16}
 RECT_CAFETERIA_PARAMS = {2, 2, 53, 16}
-RECT_BOSS_OFFICE_PARAMS = {2, 2, 104, 16}
+RECT_CEO_OFFICE_PARAMS = {2, 2, 104, 16}
 RECT_GROUND_FLOOR_PARAMS = {2, 2, 58, 16}
 
 --------------------------------------------- 
@@ -129,13 +129,13 @@ COL_BLUE = {0, 0, 1, 1}
 COL_MAGENTA = {1, 0, 1, 1}
 
 -- Reference is EDG32 palette
-COL_VERY_DARK_GRAY = rgb(38, 43, 68)
-COL_DARK_GRAY = rgb(58, 68, 102)
+COL_VERY_DARK_GRAY = color(0x262b44)
+COL_DARK_GRAY = color(0x3a4466)
 COL_MID_GRAY = color(0x5a6988)
 COL_LIGHT_GRAY = color(0x8b9bb4)
 COL_LIGHTEST_GRAY = color(0xc0cbdc)
 
-COL_DARK_RED = rgb(158, 40, 53)
+COL_DARK_RED = color(0x9e2835)
 COL_LIGHT_RED = color(0xe43b44)
 COL_PINK = color(0xf6757a)
 
@@ -190,6 +190,9 @@ MULTIPLAYER_LOOT_PROBABILITY_MULTIPLIER = 1.0
 
 -- Input
 MAX_ASSIGNABLE_BUTTONS = 8
+
+PLAYER_INPUT_MODE_USER = "user" -- The player is controlled with normal buttons
+PLAYER_INPUT_MODE_CODE = "code" -- The player is controlled via code (for example, for cutscenes)
 
 INPUT_TYPE_KEYBOARD = "k"
 INPUT_TYPE_CONTROLLER = "c"

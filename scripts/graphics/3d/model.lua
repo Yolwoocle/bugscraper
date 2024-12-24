@@ -19,7 +19,7 @@ function Model:init(vertices, tris)
 end
 
 function Model:clone()
-    return Model:new(copy_table(self.vertices), copy_table(self.faces))
+    return Model:new(copy_table_deep(self.vertices), copy_table_deep(self.faces))
 end
 
 return Model

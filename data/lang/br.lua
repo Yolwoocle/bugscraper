@@ -66,6 +66,8 @@ return {
     },
     enemy = {
         dung = "Sr. Esterco",
+        bee_boss = "The Queen", -- ADDED
+        motherboard = "The Webmaster", -- ADDED
     },
     upgrade = {
         tea = {
@@ -80,13 +82,17 @@ return {
             title = "Leite",
             description = "+1 ❤ permanente",
         },
-        peanut = {
-            title = "Amendoim",
+        boba = {
+            title = "Amendoim", -- CHANGED: Boba
             description = "x2 munição máxima",
         },
         soda = {
             title = "Refri",
             description = "+1 pulo no ar",
+        },
+        fizzy_lemonade = { -- ADDED
+            title = "Fizzy Lemonade",
+            description = "Hold jump to glide",
         },
     },
     input = {
@@ -196,6 +202,7 @@ return {
                 vsync = "SINCRONIZAÇÃO VERTICAL",
                 menu_blur = "DESFOQUE DO FUNDO DO MENU",
                 background_speed = "VELOCIDADE DO FUNDO",
+                bullet_lightness = "BULLET BRIGHTNESS", -- ADDED
             },
             game = {
                 title = "Jogo",
@@ -204,6 +211,7 @@ return {
                 mouse_visible = "MOSTRAR PONTEIRO DO MOUSE",
                 pause_on_unfocus = "PAUSAR QUANDO SEM FOCO",
                 screenshake = "VIBRAÇÃO DA TELA",
+                skip_boss_intros = "SKIP BOSS INTROS", -- ADDED
                 show_fps_warning = "MOSTRAR AVISO DE FPS BAIXO",
 
             },

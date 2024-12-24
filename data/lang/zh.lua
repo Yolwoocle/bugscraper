@@ -70,6 +70,8 @@ return {
     },
     enemy = {
         dung = "Mr. Dung",
+        bee_boss = "The Queen",  -- ADDED
+        motherboard = "The Webmaster", -- ADDED
     },
     upgrade = {
         tea = {
@@ -84,8 +86,8 @@ return {
             title = "Milk",
             description = "+1 permanent ❤",
         },
-        peanut = {
-            title = "Peanut",
+        boba = {
+            title = "Boba",
             description = "x2 maximum ammo",
         },
         energy_drink = {
@@ -95,6 +97,10 @@ return {
         soda = {
             title = "Soda",
             description = "+1 midair jump",
+        },
+        fizzy_lemonade = { -- ADDED
+            title = "Fizzy Lemonade",
+            description = "Hold jump to glide",
         },
     },
     input = {
@@ -206,6 +212,7 @@ return {
                 vsync = "垂直同步",
                 menu_blur = "菜单背景模糊",
                 background_speed = "背景速度",
+                bullet_lightness = "BULLET BRIGHTNESS", -- ADDED
             },
             game = {
                 title = "游戏",
@@ -214,6 +221,7 @@ return {
                 mouse_visible = "显示鼠标指针",
                 pause_on_unfocus = "失去焦点时暂停",
                 screenshake = "屏幕震动",
+                skip_boss_intros = "SKIP BOSS INTROS", -- ADDED
                 show_fps_warning = "显示低帧率警告",
 
             },

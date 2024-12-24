@@ -1,6 +1,7 @@
 require "scripts.util"
 local images = require "data.images"
 local sounds = require "data.sounds"
+local cutscenes = require "data.cutscenes"
 
 local BreakableActor = require "scripts.actor.enemies.breakable_actor"
 local Guns = require "data.guns"
@@ -27,6 +28,8 @@ function BossDoor:on_death()
 
     game.camera:set_target_offset(1000, 0)
     game.camera.max_x = 76*16
+
+    game:play_cutscene(cutscenes.enter_ceo_office)
 end
 
 return BossDoor

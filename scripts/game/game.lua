@@ -52,22 +52,21 @@ function Game:init()
 	Input:init_users()
 
 	love.keyboard.setTextInput(true)
-	SCREEN_WIDTH, SCREEN_HEIGHT = gfx.getDimensions()
-	gfx.setDefaultFilter("nearest", "nearest")
+	SCREEN_WIDTH, SCREEN_HEIGHT = love.graphics.getDimensions()
+	love.graphics.setDefaultFilter("nearest", "nearest")
 	love.graphics.setLineStyle("rough")
 
 	self:update_screen()
 
-	main_canvas = gfx.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
+	main_canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
 
 	-- Load fonts
-	-- FONT_REGULAR = gfx.newFont("fonts/Hardpixel.otf", 20)
-	FONT_REGULAR = gfx.newImageFont("fonts/hope_gold.png", FONT_CHARACTERS)
-	FONT_CHINESE = gfx.newImageFont("fonts/font_chinese.png", FONT_CHINESE_CHARACTERS)
-	FONT_7SEG = gfx.newImageFont("fonts/7seg_font.png", FONT_7SEG_CHARACTERS)
-	FONT_MINI = gfx.newImageFont("fonts/font_ant_party.png", FONT_MINI_CHARACTERS)
-	FONT_FAT = gfx.newImageFont("fonts/font_counting_apples.png", FONT_FAT_CHARACTERS)
-	FONT_PAINT = gfx.newFont("fonts/NicoPaint-Regular.ttf", 16)
+	FONT_REGULAR = love.graphics.newImageFont("fonts/hope_gold.png", FONT_CHARACTERS)
+	FONT_CHINESE = love.graphics.newImageFont("fonts/font_chinese.png", FONT_CHINESE_CHARACTERS)
+	FONT_7SEG = love.graphics.newImageFont("fonts/7seg_font.png", FONT_7SEG_CHARACTERS)
+	FONT_MINI = love.graphics.newImageFont("fonts/font_ant_party.png", FONT_MINI_CHARACTERS)
+	FONT_FAT = love.graphics.newImageFont("fonts/font_counting_apples.png", FONT_FAT_CHARACTERS)
+	FONT_PAINT = love.graphics.newFont("fonts/NicoPaint-Regular.ttf", 16)
 
 	FONT_REGULAR:setFallbacks(FONT_CHINESE)
     Text:push_font(FONT_REGULAR)
@@ -123,7 +122,7 @@ function Game:new_game()
 	self.level = Level:new(self)
 
 	-- Actors
-	self.actor_limit = 100
+	self.actor_limit = 150
 	self.actors = {}
 	self:init_players()
 
@@ -266,7 +265,7 @@ function Game:update_fullscreen(is_fullscreen)
 end
 
 function Game:update_screen()
-	WINDOW_WIDTH, WINDOW_HEIGHT = gfx.getDimensions()
+	WINDOW_WIDTH, WINDOW_HEIGHT = love.graphics.getDimensions()
 
 	local pixel_scale_mode = Options:get("pixel_scale")
 
@@ -477,17 +476,17 @@ end
 
 function Game:draw()
 	-- Using a canvas for that sweet, resizable pixel art
-	gfx.setCanvas(main_canvas)
-	gfx.clear(0, 0, 0)
-	gfx.translate(0, 0)
+	love.graphics.setCanvas(main_canvas)
+	love.graphics.clear(0, 0, 0)
+	love.graphics.translate(0, 0)
 
 	self:draw_game()
 
-	gfx.setCanvas()
-	gfx.origin()
-	gfx.scale(1, 1)
+	love.graphics.setCanvas()
+	love.graphics.origin()
+	love.graphics.scale(1, 1)
 
-	gfx.draw(main_canvas, CANVAS_OX, CANVAS_OY, 0, CANVAS_SCALE, CANVAS_SCALE)
+	love.graphics.draw(main_canvas, CANVAS_OX, CANVAS_OY, 0, CANVAS_SCALE, CANVAS_SCALE)
 
 	if self.debug.layer_view then
 		self.debug:draw_layers()
@@ -495,6 +494,9 @@ function Game:draw()
 	if self.notif_timer > 0 then
 		love.graphics.print(self.notif, 0, 0, 0, 3, 3)
 	end
+
+    -- love.graphics.draw(images.removeme_bands, 0, 0)
+
 end
 
 function Game:draw_game()
@@ -579,7 +581,7 @@ function Game:draw_game()
 
 	self:draw_on_layer(LAYER_LIGHT, function()
 		-- love.graphics.clear({0, 0, 0, 0.85})
-		local c = copy_table(COL_BLACK_BLUE)
+		local c = copy_table_deep(COL_BLACK_BLUE)
 		c[4] = self.light_world.darkness_intensity
 		rect_color(c, "fill", -CANVAS_WIDTH, -CANVAS_HEIGHT, CANVAS_WIDTH * 3, CANVAS_HEIGHT * 3)
 	end)
@@ -629,7 +631,7 @@ function Game:draw_game()
 	--'Memory used (in kB): ' .. collectgarbage('count')
 
 	-- local t = "EARLY VERSION - NOT FINAL!"
-	-- gfx.print(t, CANVAS_WIDTH-get_text_width(t), 0)
+	-- love.graphics.print(t, CANVAS_WIDTH-get_text_width(t), 0)
 	-- local t = os.date('%a %d/%b/%Y')
 	-- print_color({.7,.7,.7}, t, CANVAS_WIDTH-get_text_width(t), 12)	
 end
@@ -869,7 +871,7 @@ end
 function draw_log()
 	-- log
 	local x2 = floor(CANVAS_WIDTH / 2)
-	local h = gfx.getFont():getHeight()
+	local h = love.graphics.getFont():getHeight()
 	print_label("--- LOG ---", x2, 0)
 	for i = 1, min(#msg_log, max_msg_log) do
 		print_label(msg_log[i], x2, i * h)
@@ -915,8 +917,9 @@ function Game:join_game(player_n)
 
 	if player then
 		self.skin_choices[player.skin.id] = false
+		Particles:smoke_big(player.mid_x, player.mid_y, COL_WHITE)
 	end
-
+	
 	self.game_ui:on_player_joined(player)
 end
 
@@ -938,8 +941,6 @@ function Game:new_player(player_n, x, y, put_in_buffer)
 		player:set_active(false)
 		self.level:buffer_actor(player)
 		self.level.elevator:open_door(1.0)
-	else
-		Particles:smoke_big(player.mid_x, player.mid_y, COL_WHITE)
 	end
 
 	self:new_actor(player)

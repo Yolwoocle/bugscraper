@@ -71,6 +71,8 @@ return {
     },
     enemy = {
         dung = "Pan Odchodek",
+        bee_boss = "The Queen", -- ADDED
+        motherboard = "The Webmaster", -- ADDED
     },
     upgrade = {
         tea = {
@@ -85,8 +87,8 @@ return {
             title = "Mleko",
             description = "+1 permamentne ❤",
         },
-        peanut = {
-            title = "Orzeszek",
+        boba = {
+            title = "Orzeszek", -- CHANGED: Boba
             description = "x2 maks amunicji",
         },
         energy_drink = {
@@ -96,6 +98,10 @@ return {
         soda = {
             title = "Cola",
             description = "+1 skok w powietrzu",
+        },
+        fizzy_lemonade = { -- ADDED
+            title = "Fizzy Lemonade",
+            description = "Hold jump to glide",
         },
     },
     input = {
@@ -207,6 +213,7 @@ return {
                 vsync = "VSYNC",
                 menu_blur = "ROZMYCIE TŁA MENU",
                 background_speed = "PRĘDKOŚĆ TŁA",
+                bullet_lightness = "BULLET BRIGHTNESS", -- ADDED
             },
             game = {
                 title = "Gra",
@@ -215,6 +222,7 @@ return {
                 mouse_visible = "POKAŻ KURSOR",
                 pause_on_unfocus = "PAUZA PRZY UTRACIE OKNA",
                 screenshake = "TRZĘSIENIE EKRANU",
+                skip_boss_intros = "SKIP BOSS INTROS", -- ADDED
                 show_fps_warning = "OSTRZEŻENIE O NISKIEJ LICZBIE FPS",
 
             },

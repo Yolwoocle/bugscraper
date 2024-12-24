@@ -28,7 +28,7 @@ end
 
 function Tile:draw()
 	if self.spr then
-		gfx.draw(self.spr, self.x, self.y)
+		love.graphics.draw(self.spr, self.x, self.y)
 	end
 end
 

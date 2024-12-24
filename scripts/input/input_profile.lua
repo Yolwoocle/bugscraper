@@ -7,8 +7,8 @@ function InputProfile:init(profile_id, primary_input_type, mappings)
     self.profile_id = profile_id
     self.primary_input_type = primary_input_type
 
-    self.default_mappings = copy_table(mappings)
-    self.mappings = copy_table(mappings)
+    self.default_mappings = copy_table_deep(mappings)
+    self.mappings = copy_table_deep(mappings)
     -- self.metadata = {}
     -- for key, _ in pairs(self.default_mappings) do
     --     self.metadata[key] = {
@@ -18,7 +18,7 @@ function InputProfile:init(profile_id, primary_input_type, mappings)
 end
 
 function InputProfile:set_mappings(mappings)
-    self.mappings = copy_table(mappings)
+    self.mappings = copy_table_deep(mappings)
 end
 
 function InputProfile:get_default_mappings()

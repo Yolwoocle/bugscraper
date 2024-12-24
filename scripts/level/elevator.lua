@@ -103,16 +103,16 @@ function Elevator:draw_front()
 	local cabin_rect = self.level.cabin_rect
 
 	if self.layers["walls"] then
-		gfx.draw(images.cabin_walls, self.level.cabin_rect.ax, self.level.cabin_rect.ay)
+		love.graphics.draw(images.cabin_walls, self.level.cabin_rect.ax, self.level.cabin_rect.ay)
 	end
 	if self.layers["walls_no_floor"] then
-		gfx.draw(images.cabin_walls_no_floor, self.level.cabin_rect.ax, self.level.cabin_rect.ay)
+		love.graphics.draw(images.cabin_walls_no_floor, self.level.cabin_rect.ax, self.level.cabin_rect.ay)
 	end
 	if self.layers["walls_brown"] then
-		gfx.draw(images.cabin_walls_brown, self.level.cabin_rect.ax, self.level.cabin_rect.ay)
+		love.graphics.draw(images.cabin_walls_brown, self.level.cabin_rect.ax, self.level.cabin_rect.ay)
 	end
 	if self.layers["test"] then
-		gfx.draw(images.test, self.level.cabin_rect.ax, self.level.cabin_rect.ay)
+		love.graphics.draw(images.test, self.level.cabin_rect.ax, self.level.cabin_rect.ay)
 	end
 	if self.layers["fg_grid"] then
 		love.graphics.draw(images.cabin_grid_platform, cabin_rect.ax +    16, cabin_rect.ay + 6*16)
@@ -152,12 +152,12 @@ function Elevator:draw_counter()
 	local x1, y1 = cabin_x + 207.5, cabin_y + 89
 	self.clock_ang = lerp(self.clock_ang, pi + clamp(self.level.floor / self.level.max_floor, 0, 1) * pi, 0.1)
 	local a = self.clock_ang
-	gfx.line(x1, y1, x1 + cos(a)*11, y1 + sin(a)*11)
+	love.graphics.line(x1, y1, x1 + cos(a)*11, y1 + sin(a)*11)
 	
 	-- Level counter
-	gfx.setFont(FONT_7SEG)
+	love.graphics.setFont(FONT_7SEG)
 	print_color(COL_WHITE, string.sub("00000"..tostring(self.level.floor), -3, -1), 198+16*2, 97+16*2)
-	gfx.setFont(FONT_REGULAR)
+	love.graphics.setFont(FONT_REGULAR)
 end
 
 function Elevator:start_grid_timer(time)

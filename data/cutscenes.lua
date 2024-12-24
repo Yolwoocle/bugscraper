@@ -1,8 +1,65 @@
 local Cutscene = require "scripts.game.cutscene"
 local Scene    = require "scripts.game.scene"
 local Light = require "scripts.graphics.light"
+local Rect = require "scripts.math.rect"
 
 local cutscenes = {}
+
+cutscenes.enter_ceo_office = Cutscene:new {
+    Scene:new({
+        -- All players walk into position
+        duration = 1.0,
+        enter = function(scene)
+            for _, player in pairs(game.players) do
+                player.input_mode = PLAYER_INPUT_MODE_CODE
+            end
+        end,
+    }),
+    Scene:new({
+        -- All players walk into position
+        duration = 4.0,
+        enter = function(scene)
+            for _, player in pairs(game.players) do
+                if player.x < 79*16 - CANVAS_WIDTH then
+                   player.x = 79*16 - CANVAS_WIDTH
+                   Particles:smoke_big(player.mid_x, player.mid_y, COL_WHITE)
+                end
+            end
+            -- boss min x = 79*16
+        end,
+        update = function(scene, dt)
+            for _, player in pairs(game.players) do
+                local target_x = 79*16 + 8 + (4-player.n+1) * 24 
+
+                player.virtual_controller.actions["left"] = false
+                player.virtual_controller.actions["right"] = false
+                if player.x < target_x - 4 then
+                    player.virtual_controller.actions["right"] = true
+                elseif target_x + 4 < player.x then
+                    player.virtual_controller.actions["left"] = true
+                else 
+                    player.dir_x = 1
+                end
+            end
+        end
+    }),
+    Scene:new({
+        duration = 0.1,
+        enter = function(scene)
+        end,
+    }),
+    Scene:new({
+        duration = 1.0,
+        enter = function(scene)
+            for _, p in pairs(game.players) do
+                p.input_mode = PLAYER_INPUT_MODE_USER
+            end
+
+            game.level.world_generator:write_rect(Rect:new(78, 10, 78, 14), TILE_METAL)
+            game:screenshake(6)
+        end,
+    }),
+}
 
 cutscenes.dung_boss_enter = Cutscene:new {
     Scene:new({

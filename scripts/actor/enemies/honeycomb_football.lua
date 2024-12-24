@@ -121,6 +121,11 @@ function HoneycombFootball:update(dt)
     self.super.update(self, dt)
 
     self:update_renderer(dt)
+    
+    if self.unstompable_timer:update(dt) then
+        self.is_stompable = true
+        self.damage = 1
+    end
 
     self.state_machine:update(dt)
 end
@@ -130,11 +135,6 @@ function HoneycombFootball:update_renderer(dt)
     self.object_3d.rotation.y = self.object_3d.rotation.y + (self.vy / 50)*dt
     self.object_3d.position.x = self.mid_x
     self.object_3d.position.y = self.mid_y
-
-    if self.unstompable_timer:update(dt) then
-        self.is_stompable = true
-        self.damage = 1
-    end
 
     if self:is_flashing_white() then
         self.renderer.lighting_palette = {COL_WHITE}

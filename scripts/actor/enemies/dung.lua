@@ -11,11 +11,7 @@ local DungProjectile = require "scripts.actor.enemies.dung_projectile"
 local Dung = Enemy:inherit()
 
 function Dung:init(x, y, spr, w, h)
-    self:init_dung(x, y, spr, w, h)
-end
-
-function Dung:init_dung(x, y, spr, w, h)
-    self:init_enemy(x, y, spr or images.dung, w or 24, h or 30)
+    Dung.super.init(self, x, y, spr or images.dung, w or 24, h or 30)
     self.name = "dung"
     self.follow_player = false
 
@@ -45,6 +41,8 @@ function Dung:init_dung(x, y, spr, w, h)
     -- self.audio_delay = love.math.random(0.3, 1)
 
     self.state_timer = Timer:new(1)
+
+    self.loot = {}
 
     self.jump_speed = 500
     self.jump_flag = false
@@ -116,7 +114,7 @@ function Dung:init_dung(x, y, spr, w, h)
                 self.chase_target = self:get_random_player()
                 self.jump_speed = 500
 
-                self.bounces = 3
+                self.bounces = 2
             end,
             update = function(state, dt)
                 self:chase_player(dt)
@@ -191,7 +189,6 @@ function Dung:update_dung(dt)
         self.buffer_vx = nil
     end
     self.vx = clamp(self.vx, -self.max_vx, self.max_vx)
-    self.debug_values[1] = self.vx
 
     -- if self.jump_timer:update(dt) then
     --     self.jump_timer:start(random_range(2, 6))
@@ -214,8 +211,13 @@ function Dung:update_dung(dt)
     self:set_constant_sound_volume(math.abs(self.vx) / 400)
 end
 
-function Dung:on_damage()
+function Dung:on_damage(amount)
     self.state_machine:_call("on_damage")
+
+    if self.life > 0 then
+        game:screenshake(6)
+        game:frameskip(8)
+    end
 end
 
 function Dung:chase_player(dt)

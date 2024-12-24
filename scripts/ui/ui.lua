@@ -22,8 +22,8 @@ function UI:draw_half_icon_bar(x, y, val, max_val, img_full, img_half, img_empty
 		if i+1 == val then    img = img_half     end 
 
 		local ix = floor(x1 + img_w*(i/2))
-		gfx.draw(img, ix, iy)
-		gfx.print(i, ix, iy+8)
+		love.graphics.draw(img, ix, iy)
+		love.graphics.print(i, ix, iy+8)
 	end
 end
 
@@ -52,7 +52,7 @@ function UI:draw_icon_bar(x, y, val, max_val, val_extra, img_full, img_empty, im
 
 		local ix = floor(x1 + img_w*i)
 		local oy = math.max(0, img:getHeight() - img_empty:getHeight())
-		gfx.draw(img, ix, iy - oy)
+		love.graphics.draw(img, ix, iy - oy)
 	end
 end
 
@@ -72,10 +72,10 @@ function UI:draw_progress_bar(x, y, w, h, val, max_val, col_fill, col_out, col_f
 	text = text or ""
 	text_col = text_col or COL_WHITE 
 	font = font or FONT_MINI
-	local old_font = gfx.getFont()
-	gfx.setFont(font)
+	local old_font = love.graphics.getFont()
+	love.graphics.setFont(font)
 	print_color(COL_WHITE, text, x+1, y-2)
-	gfx.setFont(old_font)
+	love.graphics.setFont(old_font)
 end
 
 return UI:new()

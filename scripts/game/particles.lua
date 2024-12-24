@@ -953,6 +953,15 @@ function ParticleSystem:jump_dust_kick(x, y, rot)
 	}, x, y, rot, 0.12)
 end
 
+-- FIXME: scotch
+function ParticleSystem:bubble_fizz_cloud(x, y, radius, amount)
+	for i=1, amount do
+		self:static_image({
+			images.bubble_fizz_1,
+		}, x + random_neighbor(radius), y + random_neighbor(radius))
+	end
+end
+
 function ParticleSystem:stomped_enemy(x, y, spr)
 	self:add_particle(StompedEnemyParticle:new(x, y, spr))
 end

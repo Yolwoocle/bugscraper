@@ -32,8 +32,10 @@ end
 
 function DebugCommandMenu:keypressed(key, scancode, isrepeat)
 	if key == 'escape' or key == 'f1' then
+		game.menu_manager:set_can_pause(false)
 		game.menu_manager:unpause()
 		game.menu_manager:set_menu()
+		game.debug.set_can_pause_to_true_timer = 2
 	end
 
 	-- Send messages

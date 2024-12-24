@@ -34,11 +34,11 @@ local function init()
         })
         if Options:get("is_window_maximized") then
             love.window.maximize()
-            print_debug("Maximized size :", gfx.getDimensions())
+            print_debug("Maximized size :", love.graphics.getDimensions())
         end
     end
     
-    WINDOW_WIDTH, WINDOW_HEIGHT = gfx.getDimensions()
+    WINDOW_WIDTH, WINDOW_HEIGHT = love.graphics.getDimensions()
 	local screen_sx = WINDOW_WIDTH / CANVAS_WIDTH
 	local screen_sy = WINDOW_HEIGHT / CANVAS_HEIGHT
 	local scale = math.min(screen_sx, screen_sy)

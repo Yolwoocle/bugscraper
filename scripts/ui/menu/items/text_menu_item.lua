@@ -62,7 +62,7 @@ function TextMenuItem:draw()
 	self:draw_textitem()
 end
 function TextMenuItem:draw_textitem()
-	gfx.setColor(1, 1, 1, 1)
+	love.graphics.setColor(1, 1, 1, 1)
 	local text_height = get_text_height(self.label_text)
 	
 	-- if self.is_selected then
@@ -92,7 +92,7 @@ function TextMenuItem:draw_textitem()
 		self:draw_with_value()
 	end
 	
-	gfx.setColor(1, 1, 1, 1)
+	love.graphics.setColor(1, 1, 1, 1)
 
 	self:draw_annotation()
 end
@@ -133,7 +133,7 @@ function TextMenuItem:draw_without_value(text_color)
 	)
 
 	if not self.is_selectable then
-		gfx.setColor(COL_LIGHT_GRAY)
+		love.graphics.setColor(COL_LIGHT_GRAY)
 	end
 	print_centered(self.label_text, self.x, self.y + self.oy)
 end
@@ -142,7 +142,7 @@ function TextMenuItem:draw_with_value()
 	local draw_func = self:get_leftjustified_text_draw_function()
 
 	if not self.is_selectable then
-		gfx.setColor(COL_MID_GRAY)
+		love.graphics.setColor(COL_MID_GRAY)
 	end
 	-- draw_func(self.label_text, self.x + MENU_PADDING, self.y + self.oy)
 	draw_func(self.label_text, MENU_PADDING + 16, self.y + self.oy)

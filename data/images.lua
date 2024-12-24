@@ -115,12 +115,15 @@ local img_names = {
 	beelet_1 =                 "actors/enemies/beelet_1",
 	beelet_activated_1 =       "actors/enemies/beelet_activated_1",
 	beelet_activated_2 =       "actors/enemies/beelet_activated_2",
+	ceo =                      "actors/enemies/ceo",
+	ceo_telegraph_arrow =      "actors/enemies/ceo_telegraph_arrow",
 	chipper_attack_1 =         "actors/enemies/chipper_attack_1",
 	chipper_attack_2 =         "actors/enemies/chipper_attack_2",
 	chipper_attack_3 =         "actors/enemies/chipper_attack_3",
 	cocoon =                   "actors/enemies/cocoon",
 	dummy_target =             "actors/enemies/dummy_target",
 	dung =                     "actors/enemies/dung",
+	dung_beetle_idle =         "actors/enemies/dung_beetle_idle",
 	dung_beetle_1 =            "actors/enemies/dung_beetle_1",
 	dung_beetle_2 =            "actors/enemies/dung_beetle_2",
 	dung_beetle_3 =            "actors/enemies/dung_beetle_3",
@@ -131,8 +134,10 @@ local img_names = {
 	dung_beetle_walk_2 =       "actors/enemies/dung_beetle_walk_2",
 	dung_beetle_shield =       "actors/enemies/dung_beetle_shield",
 	dung_beetle_shield_shine = "actors/enemies/dung_beetle_shield_shine",
+	dung_beetle_dead =         "actors/enemies/dung_beetle_dead",
 	dung_flying =              "actors/enemies/dung_flying",
 	dung_flying_spiked =       "actors/enemies/dung_flying_spiked",
+	dung_pile =                "actors/enemies/dung_pile",
 	dung_projectile =          "actors/enemies/dung_projectile",
 	drill_bee =                "actors/enemies/drill_bee",
 	fly1 =                     "actors/enemies/fly1",
@@ -237,55 +242,62 @@ local img_names = {
 	-----------------------------------------------------
 	
 	-- particles
-	cocoon_fragment_1 =    "particles/cocoon_fragment_1",
-	cocoon_fragment_2 =    "particles/cocoon_fragment_2",
-	honey_fragment_1 =     "particles/honey_fragment_1",
-	honey_fragment_2 =     "particles/honey_fragment_2",
-	dummy_fragment_1 =     "particles/dummy_fragment_1",
-	dummy_fragment_2 =     "particles/dummy_fragment_2",
-	explosion_flash =      "particles/explosion_flash",
-	glass_shard =          "particles/glass_shard",
-	snail_shell_fragment = "particles/snail_shell_fragment",
+	cocoon_fragment_1 =           "particles/cocoon_fragment_1",
+	cocoon_fragment_2 =           "particles/cocoon_fragment_2",
+	honey_fragment_1 =            "particles/honey_fragment_1",
+	honey_fragment_2 =            "particles/honey_fragment_2",
+	dummy_fragment_1 =            "particles/dummy_fragment_1",
+	dummy_fragment_2 =            "particles/dummy_fragment_2",
+	explosion_flash =             "particles/explosion_flash",
+	glass_shard =                 "particles/glass_shard",
+	snail_shell_fragment =        "particles/snail_shell_fragment",
 	snail_shell_bouncy_fragment = "particles/snail_shell_bouncy_fragment",
-	bullet_casing =        "particles/bullet_casing",
-	button_fragment_1 =    "particles/button_fragment_1",
-	button_fragment_2 =    "particles/button_fragment_2",
-	button_fragment_3 =    "particles/button_fragment_3",
-	button_fragment_4 =    "particles/button_fragment_4",
-	button_fragment_5 =    "particles/button_fragment_5",
-	smash_flash =          "particles/smash_flash",
-	particle_leaf =        "particles/particle_leaf",
-	white_dust =           "particles/white_dust",
-	particle_bit_zero =    "particles/particle_bit_zero",
-	particle_bit_one =     "particles/particle_bit_one",
-	poison_skull =         "particles/poison_skull",
+	bullet_casing =               "particles/bullet_casing",
+	button_fragment_1 =           "particles/button_fragment_1",
+	button_fragment_2 =           "particles/button_fragment_2",
+	button_fragment_3 =           "particles/button_fragment_3",
+	button_fragment_4 =           "particles/button_fragment_4",
+	button_fragment_5 =           "particles/button_fragment_5",
+	smash_flash =                 "particles/smash_flash",
+	particle_leaf =               "particles/particle_leaf",
+	white_dust =                  "particles/white_dust",
+	particle_bit_zero =           "particles/particle_bit_zero",
+	particle_bit_one =            "particles/particle_bit_one",
+	poison_skull =                "particles/poison_skull",
 
-	bullet_vanish_1 =      "particles/bullet_vanish_1",
-	bullet_vanish_2 =      "particles/bullet_vanish_2",
-	bullet_vanish_3 =      "particles/bullet_vanish_3",
-	bullet_vanish_4 =      "particles/bullet_vanish_4",
-	bullet_vanish_5 =      "particles/bullet_vanish_5",
+	bubble_fizz_1 =               "particles/bubble_fizz_1",
+	bubble_fizz_2 =               "particles/bubble_fizz_2",
 
-	sweat_1 =              "particles/sweat_1",
-	sweat_2 =              "particles/sweat_2",
-	sweat_3 =              "particles/sweat_3",
-	sweat_4 =              "particles/sweat_4",
+	bullet_vanish_1 =             "particles/bullet_vanish_1",
+	bullet_vanish_2 =             "particles/bullet_vanish_2",
+	bullet_vanish_3 =             "particles/bullet_vanish_3",
+	bullet_vanish_4 =             "particles/bullet_vanish_4",
+	bullet_vanish_5 =             "particles/bullet_vanish_5",
 
-	star_splash_1 =        "particles/star_splash_1",
-	star_splash_2 =        "particles/star_splash_2",
-	star_splash_3 =        "particles/star_splash_3",
-	star_splash_4 =        "particles/star_splash_4",
-	star_splash_5 =        "particles/star_splash_5",
+	sweat_1 =                     "particles/sweat_1",
+	sweat_2 =                     "particles/sweat_2",
+	sweat_3 =                     "particles/sweat_3",
+	sweat_4 =                     "particles/sweat_4",
 
-	star_splash_small_1 =  "particles/star_splash_small_1",
-	star_splash_small_2 =  "particles/star_splash_small_2",
-	star_splash_small_3 =  "particles/star_splash_small_3",
+	star_splash_1 =               "particles/star_splash_1",
+	star_splash_2 =               "particles/star_splash_2",
+	star_splash_3 =               "particles/star_splash_3",
+	star_splash_4 =               "particles/star_splash_4",
+	star_splash_5 =               "particles/star_splash_5",
 
-	jump_dust_kick_1 =     "particles/jump_dust_kick_1",
-	jump_dust_kick_2 =     "particles/jump_dust_kick_2",
-	jump_dust_kick_3 =     "particles/jump_dust_kick_3",
-	jump_dust_kick_4 =     "particles/jump_dust_kick_4",
-	jump_dust_kick_5 =     "particles/jump_dust_kick_5",
+	star_splash_small_1 =         "particles/star_splash_small_1",
+	star_splash_small_2 =         "particles/star_splash_small_2",
+	star_splash_small_3 =         "particles/star_splash_small_3",
+
+	jump_dust_kick_1 =            "particles/jump_dust_kick_1",
+	jump_dust_kick_2 =            "particles/jump_dust_kick_2",
+	jump_dust_kick_3 =            "particles/jump_dust_kick_3",
+	jump_dust_kick_4 =            "particles/jump_dust_kick_4",
+	jump_dust_kick_5 =            "particles/jump_dust_kick_5",
+	
+	dung_particle_1 =             "particles/dung_particle_1",
+	dung_particle_2 =             "particles/dung_particle_2",
+	dung_particle_3 =             "particles/dung_particle_3",
 
 	-----------------------------------------------------
 	
@@ -339,7 +351,7 @@ local img_names = {
 	ground_floor_stack_papers_medium_b = "level/props/ground_floor_stack_papers_medium_b",
 	ground_floor_stack_papers_small =    "level/props/ground_floor_stack_papers_small",
 	
-	boss_office =       "level/boss_office",
+	ceo_office =        "level/ceo_office",
 	boss_door =         "level/boss_door",
 	boss_door_cracked = "level/boss_door_cracked",
 	
@@ -420,14 +432,15 @@ local img_names = {
 	-----------------------------------------------------
 	
 	-- upgrades
-	upgrade_coffee =       "upgrades/upgrade_coffee",
-	upgrade_tea =          "upgrades/upgrade_tea",
-	upgrade_chocolate =    "upgrades/upgrade_chocolate",
-	upgrade_milk =         "upgrades/upgrade_milk",
-	upgrade_peanut =       "upgrades/upgrade_peanut",
-	upgrade_energy_drink = "upgrades/upgrade_energy_drink",
-	upgrade_soda =         "upgrades/upgrade_soda",
-	upgrade_water =        "upgrades/upgrade_water",
+	upgrade_coffee =         "upgrades/upgrade_coffee",
+	upgrade_tea =            "upgrades/upgrade_tea",
+	upgrade_chocolate =      "upgrades/upgrade_chocolate",
+	upgrade_milk =           "upgrades/upgrade_milk",
+	upgrade_boba =           "upgrades/upgrade_boba",
+	upgrade_energy_drink =   "upgrades/upgrade_energy_drink",
+	upgrade_soda =           "upgrades/upgrade_soda",
+	upgrade_fizzy_lemonade = "upgrades/upgrade_fizzy_lemonade",
+	upgrade_water =          "upgrades/upgrade_water",
 	
 	-----------------------------------------------------
 
@@ -454,6 +467,7 @@ local img_names = {
 	removeme_button_on = "removeme_button_on",
 	removeme_button_off = "removeme_button_off",
 	removeme_spritesheet_test = "removeme_spritesheet_test",
+	removeme_bands = "removeme_bands",
 
 	splash = "splash",
 
@@ -505,7 +519,7 @@ local function load_button_icon(brand, button)
 	images[name] = load_image(path)
 end
 
-local brands = copy_table(CONTROLLER_BRANDS)
+local brands = copy_table_deep(CONTROLLER_BRANDS)
 local ps5_index = 0
 for i = 1, #brands do 
 	if brands[i] == BUTTON_STYLE_PLAYSTATION5 then
@@ -521,7 +535,7 @@ for _, brand in pairs(brands) do
 	end
 end
 
--- PS5 buttons
+-- Load PS5 buttons from PS4 ones
 local ps5_buttons = {
     ["back"] = true,
     ["start"] = true,

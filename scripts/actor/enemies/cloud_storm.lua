@@ -83,7 +83,7 @@ function CloudStorm:init(x, y, size)
                 self.spr:update_offset(0, 6)
                 self.spr_oy = 12
 
-                self.buffer_pal = copy_table(self.arc.lightning.palette)
+                self.buffer_pal = copy_table_deep(self.arc.lightning.palette)
                 self.arc.lightning.palette = {COL_WHITE}
                 self.arc.active_arc_min_line_width = 6
                 self.arc.active_arc_max_line_width = 12

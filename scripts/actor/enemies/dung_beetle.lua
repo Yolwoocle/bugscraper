@@ -3,6 +3,8 @@ local Enemy = require "scripts.actor.enemy"
 local Timer = require "scripts.timer"
 local FlyingDung = require "scripts.actor.enemies.flying_dung"
 local AnimatedSprite = require "scripts.graphics.animated_sprite"
+local Sprite = require "scripts.graphics.sprite"
+local StateMachine  = require "scripts.state_machine"
 
 local sounds = require "data.sounds"
 local images = require "data.images"
@@ -33,27 +35,109 @@ function DungBeetle:init(x, y)
 
     self.spr = AnimatedSprite:new({
         idle = {
-            {images.dung_beetle_walk_1},
+            {images.dung_beetle_idle},
             0.1
         },
-        walk = {
-            {images.dung_beetle_walk_1, images.dung_beetle_walk_2},
+        dead = {
+            {images.dung_beetle_dead},
             0.1
         },
         run = {
-            {images.dung_beetle_1, images.dung_beetle_2, images.dung_beetle_3, images.dung_beetle_4, images.dung_beetle_5, images.dung_beetle_6}, 
-            0.08
+            {
+                images.dung_beetle_4, 
+                images.dung_beetle_5, 
+                images.dung_beetle_6,
+                images.dung_beetle_1, 
+                images.dung_beetle_2,
+                images.dung_beetle_3, 
+            }, 
+            0.06
         },
     }, "idle") 
+
+    self.state_machine = StateMachine:new({
+        chase = {
+            update = function(state, dt)
+                if self.vehicle and math.abs(self.vehicle.vx) > 20 then
+                    self.spr:set_animation("run")
+                    self.spr:set_flip_x(self.vehicle.vx > 0)
+                    
+                else
+                    if self.spr.frame_i == 1 then
+                        self.spr:set_animation("idle")
+                    end
+                end
+                self.anim_frame_len = 0.08
+            end
+        },
+        flying = {
+            enter = function(state)
+                self.vy = -300
+                self.vx = 0
+                self.gravity = self.default_gravity * 0.3
+
+                self.is_pushable = false
+                self.is_knockbackable = false
+                self.self_knockback_mult = 0
+                self.is_immune_to_bullets = true
+                self.destroy_bullet_on_impact = false
+
+                self.dung_pile_sprite = Sprite:new(images.dung_pile)
+                self.dung_pile_sprite_x = self.mid_x
+                self.dung_pile_sprite_y = game.level.cabin_inner_rect.by
+
+                self.spr:set_animation("dead")
+                self.spr:set_anchor(SPRITE_ANCHOR_CENTER_CENTER)
+                self.vr = 9        
+
+                game:frameskip(25)
+                game:screenshake(8)
+                Particles:image(self.mid_x, self.mid_y, 40, images.glass_shard, self.h)
+            end,
+            update = function(state, dt)
+                self.spr.rot = self.spr.rot + self.vr * dt 
+
+                if self.y + self.h > game.level.cabin_inner_rect.by - 26 then
+                    return "stuck"
+                end
+            end,
+            draw = function(state)
+                self.dung_pile_sprite:draw(self.dung_pile_sprite_x, self.dung_pile_sprite_y)
+            end
+        },
+        stuck = {
+            enter = function(state)
+                self.vx = 0
+                self.vy = 0
+                self.vr = 0
+                self.gravity = 0
+                self.is_pushable = false
+                self.is_stompable = true
+                self.y = game.level.cabin_inner_rect.by - 26
+                self.can_be_stomped_if_on_head = false
+                self.spr.rot = pi
+
+                game:screenshake(6)
+                Particles:image(self.mid_x, self.mid_y, 40, {images.dung_particle_1, images.dung_particle_2, images.dung_particle_3}, self.h)
+            end,
+
+            draw = function(state)
+                self.dung_pile_sprite:draw(self.dung_pile_sprite_x, self.dung_pile_sprite_y)
+            end
+        },
+    },"chase")
 
     self.hits = self.dung_limit
     self.life = math.huge
     self.unridden_life = 10
 
     self.has_unridden = false
+    self.vr = 0
 end
 
 function DungBeetle:update(dt)
+    self.state_machine:update(dt)
+
     self:update_enemy(dt)
 
     if self.spawn_dung_timer:update(dt) and self.vehicle then
@@ -79,25 +163,15 @@ function DungBeetle:update(dt)
         self.has_unridden = true
         self:unride()
     end
-
-    -- animation
-    if self.vehicle and math.abs(self.vehicle.vx) > 80 then
-        self.spr:set_animation("run")
-        self.spr:set_flip_x(self.vehicle.vx < 0)
-        
-    elseif self.vehicle and math.abs(self.vehicle.vx) > 40 then
-        self.spr:set_animation("walk")
-        self.spr:set_flip_x(self.vehicle.vx < 0)
-        
-    elseif not self.vehicle then
-        self.spr:set_animation("walk")
-        
-    else
-        self.spr:set_animation("idle")
-    end
-    self.anim_frame_len = 0.08
-
 end
+
+function DungBeetle:on_damage(amount)
+    if self.life > 0 then
+        game:screenshake(6)
+        game:frameskip(8)
+    end
+end
+
 
 function DungBeetle:on_death()
     for i = 1, #self.dungs do
@@ -108,6 +182,7 @@ end
 
 function DungBeetle:draw()
     self:draw_enemy()
+    self.state_machine:draw()
 
     if self.vehicle then
         draw_centered(images.dung_beetle_shield, self.mid_x, self.mid_y, -self.vehicle.spr.rot)
@@ -129,7 +204,7 @@ function DungBeetle:on_hit_flying_dung(flying_dung)
 end
 
 function DungBeetle:unride()
-    self.follow_player = true 
+    self.follow_player = false
     self.is_pushable = true
     self.is_knockbackable = true
 
@@ -138,6 +213,16 @@ function DungBeetle:unride()
     self.is_bouncy_to_bullets = false
 
     self.life = self.unridden_life
+    self.damage = 0
+
+    for i = 1, #self.dungs do
+        local dung = self.dungs[i]
+        dung:kill()
+    end
+
+    self.pass_to_flying_flag = true
+    
+    self.state_machine:set_state("flying")
 end
 
 return DungBeetle

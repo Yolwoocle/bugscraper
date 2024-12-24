@@ -340,6 +340,13 @@ end
 
 function Debug:update(dt)
     if not game.debug_mode then return end
+
+    if self.set_can_pause_to_true_timer and self.set_can_pause_to_true_timer > 0 then
+        self.set_can_pause_to_true_timer = self.set_can_pause_to_true_timer - 1
+        if self.set_can_pause_to_true_timer <= 0 then
+            game.menu_manager:set_can_pause(true)
+        end
+    end
 end
 
 function Debug:debug_action(key, scancode, isrepeat)
@@ -629,7 +636,7 @@ function Debug:draw_info_view()
     local txt_h = get_text_height(" ")
     local txts = {
         concat("FPS: ", love.timer.getFPS(), " / frmRpeat: ", self.game.frame_repeat, " / frame: ", frame),
-        concat("LÖVE version: ", string.format("%d.%d.%d - %s", love.getVersion())),
+        concat("LOVE version: ", string.format("%d.%d.%d - %s", love.getVersion())),
         concat("Renderer info: ", renderer_name, " (v", renderer_version, ")"),
         concat("Renderer vendor: ", renderer_vendor, ", device ", renderer_device),
         concat("game state: ", game.game_state),
@@ -656,7 +663,10 @@ function Debug:draw_info_view()
 
     for _, e in pairs(self.game.actors) do
         love.graphics.circle("fill", e.x - game.camera.x, e.y - game.camera.y, 1)
-        print_outline(COL_WHITE, COL_BLACK_BLUE, concat(math.floor(e.x), ", ", math.floor(e.y)), e.x - game.camera.x, e.y - game.camera.y - 10)
+        
+        print_outline(COL_WHITE, COL_BLACK_BLUE, 
+            concat(math.floor(e.x), ", ", math.floor(e.y), ternary(e.is_player, concat(" [", math.floor(e.x/16), ", ", math.floor(e.y/16), "]"), "")), e.x - game.camera.x, e.y - game.camera.y - 10)
+        
     end
 
     self.game.level.world_generator:draw()
@@ -679,6 +689,8 @@ function Debug:draw_info_view()
     -- end
 
     love.graphics.setFont(FONT_REGULAR)
+
+    -- love.graphics.draw(images.removeme_bands, 0, 0)
 end
 
 function Debug:test_info_view_3d_renderer()
