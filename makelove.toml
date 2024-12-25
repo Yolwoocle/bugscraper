@@ -1,4 +1,4 @@
-name = "bugscraper_demo"
+name = "bugscraper"
 # default_targets = ["lovejs", "win32", "win64", "macos", "appimage"]
 default_targets = []
 build_directory = "export"
@@ -16,6 +16,8 @@ love_files = [
     "-./luasteam.dll",
     "-./steam_api64.dll",
 ]
+
+# love_version = "12.0"
 
 [windows]
 # The files specified here will be added in addition to the ones specified on top level.
@@ -36,7 +38,7 @@ CompanyName = "Léo Bernard" # "LÖVE World Domination Inc."
 LegalCopyright = "Copyright © 2024 Léo Bernard" # "Copyright © 2006-2020 LÖVE Development Team" or ""
 ProductName = "Bugscraper" # "LÖVE"
 # ProductVersion = "<same as FileVersion>"
-OriginalFilename = "bugscraper" # "love.exe"
+OriginalFilename = "bugscraper.exe" # "love.exe"
 
 
 [macos]

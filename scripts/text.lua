@@ -14,17 +14,22 @@ function TextManager:init()
         br = require "data.lang.br",
     }
     self.locale_to_language = {
+        ["en"] = "en",
         ["en_US"] = "en", 
         ["en_GB"] = "en",
 
+        ["fr"] = "fr",
         ["fr_FR"] = "fr",
         ["fr_CA"] = "fr",
 
+        ["zh"] = "zh",
         ["zh_CN"] = "zh",
         ["zh_SG"] = "zh",
 
+        ["pl"] = "pl",
         ["pl_PL"] = "pl",
 
+        ["pt"] = "br",
         ["pt_BR"] = "br",
     }
 
@@ -38,7 +43,7 @@ function TextManager:init()
     end
 
     self.language = self:get_locale()
-    self.values = self:unpack(self.languages[self.language or self.default_lang])
+    self.values = self:unpack(self.languages[self.language or self.default_lang] or self.languages[self.default_lang])
 
     local words = 0
     for _, v in pairs(self.values) do
@@ -57,7 +62,7 @@ function TextManager:get_locale()
     local option = Options:get("language")
 
     if not option or option == "default" then
-        local locales = love.system.getPreferredLocales()
+        local locales = love.system.getPreferredLocales() -- TODO if first language not supported, look for others
         print_debug("User preferred locales :", table_to_str(locales))
 
         local lang = self.locale_to_language[locales[1] or "_____"]

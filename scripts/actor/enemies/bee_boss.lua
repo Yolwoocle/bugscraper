@@ -44,7 +44,6 @@ function BeeBoss:init(x, y)
     self.knockback_x = self.knockback * 3
     self.knockback_y = self.knockback * 1
     self.invul = false
-    self.invul_timer = Timer:new(0.5)
 
     -- Animation
     self.anim_frame_len = 0.05
@@ -157,7 +156,7 @@ function BeeBoss:init(x, y)
                 end
 
                 for _, player in pairs(game.players) do
-                    if player.y > self.y + self.h and math.abs(self.mid_x - player.mid_x) <= self.attack_radius then
+                    if math.abs(self.mid_x - player.mid_x) <= self.attack_radius then
                         self.stomps_counter = self.stomps_counter - 1
                         self.state_machine:set_state("thwomp_telegraph")
                     end
@@ -300,21 +299,6 @@ function BeeBoss:update(dt)
     self:update_enemy(dt)
 
     self.state_machine:update(dt)
-
-    if self.invul_timer:update(dt) then
-        self.spr:set_color(COL_WHITE)        
-        self.invul = false
-        self.damage = 1
-        self.is_stompable = true
-    end
-    if self.invul_timer.is_active then
-        local freq = ternary(self.invul_timer.time < self.invul_timer.duration/2, 0.12, 0.07)
-        if self.invul_timer.time % freq > freq/2 then
-            self.spr:set_color(COL_WHITE)
-        else
-            self.spr:set_color({0.5, 0.5, 0.5})
-        end
-    end
 end
 
 function BeeBoss:draw()
@@ -420,10 +404,8 @@ function BeeBoss:on_stomped(player)
     player.vx = self.vx + dx * self.knockback_x
     player.vx = self.vx + dy * self.knockback_y
 
-    self.invul_timer:start(1.0)
-    self.invul = true
-    self.damage = 0
-    self.is_stompable = false
+    self:set_invincibility(1.0)
+    self:set_harmless(1.0)
 end
 
 function BeeBoss:spawn_spikes()

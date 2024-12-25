@@ -111,8 +111,13 @@ function DungBeetle:init(x, y)
                 self.vy = 0
                 self.vr = 0
                 self.gravity = 0
+
                 self.is_pushable = false
                 self.is_stompable = true
+                self.destroy_bullet_on_impact = true
+                self.is_immune_to_bullets = false
+                self.is_bouncy_to_bullets = false
+                
                 self.y = game.level.cabin_inner_rect.by - 26
                 self.can_be_stomped_if_on_head = false
                 self.spr.rot = pi

@@ -116,6 +116,9 @@ local img_names = {
 	beelet_activated_1 =       "actors/enemies/beelet_activated_1",
 	beelet_activated_2 =       "actors/enemies/beelet_activated_2",
 	ceo =                      "actors/enemies/ceo",
+	ceo_office_desk =          "actors/enemies/ceo_office_desk",
+	ceo_office_legs =          "actors/enemies/ceo_office_legs",
+	ceo_office_glass =         "actors/enemies/ceo_office_glass",
 	ceo_normal =               "actors/enemies/ceo_normal",
 	ceo_telegraph_arrow =      "actors/enemies/ceo_telegraph_arrow",
 	chipper_attack_1 =         "actors/enemies/chipper_attack_1",
@@ -352,7 +355,7 @@ local img_names = {
 	ground_floor_stack_papers_medium_b = "level/props/ground_floor_stack_papers_medium_b",
 	ground_floor_stack_papers_small =    "level/props/ground_floor_stack_papers_small",
 	
-	ceo_office =        "level/ceo_office",
+	ceo_office_room =   "level/ceo_office_room",
 	boss_door =         "level/boss_door",
 	boss_door_cracked = "level/boss_door_cracked",
 	

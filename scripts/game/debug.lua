@@ -359,7 +359,7 @@ function Debug:debug_action(key, scancode, isrepeat)
         action[2]()
         self:new_notification("Executed '" .. tostring(action[1]) .. "'")
     else
-        self:new_notification("Action not recognized")
+        -- self:new_notification("Action not recognized")
     end
 end
 

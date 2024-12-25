@@ -4,6 +4,7 @@ local DebugCommand = require "scripts.debug.debug_command"
 local enemies = require "data.enemies"
 local utf8 = require 'utf8'
 local cutscenes = require 'data.cutscenes'
+local upgrades  = require 'data.upgrades'
 
 local DebugCommandManager = Class:inherit()
 
@@ -23,7 +24,27 @@ function DebugCommandManager:init()
 
     local enemies_keys = table_keys(enemies)
     local cutscenes_keys = table_keys(cutscenes)
+    local upgrades_keys = table_keys(upgrades)
     table.sort(enemies_keys)
+    self.commands["upgrade"] = DebugCommand:new {
+        name = "upgrade",
+        description = "Applies an upgrade",
+        args = {
+            { "name:string", values = upgrades_keys },
+        },
+        run = function(name, x, y)
+            local upgrade_class = upgrades[name]
+            if not upgrade_class then
+                return false, "Upgrade '" .. name .. "' not found"
+            end
+
+            local upgrade = upgrade_class:new()
+            game:apply_upgrade(upgrade)
+            self:add_message("Applied upgrade '"..name.."'")
+
+            return true
+        end,
+    }
     self.commands["spawn"] = DebugCommand:new {
         name = "spawn",
         description = "Spawns an enemy",

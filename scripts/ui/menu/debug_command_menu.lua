@@ -173,8 +173,11 @@ end
 function DebugCommandMenu:draw()
 	DebugCommandMenu.super.draw(self)
 
+	Text:push_font(FONT_MINI)
+	local text_height = get_text_height()
+
 	local x = 4
-	local y = CANVAS_HEIGHT - 16
+	local y = CANVAS_HEIGHT - text_height
 
 	-- Draw input bar
 	local final_text = "> "..self.input
@@ -216,6 +219,8 @@ function DebugCommandMenu:draw()
 		rect_color({0, 0, 0, 1}, "fill", 0, autocomplete_y, x + msg_w + 4, msg_h)
 		print_outline(color, COL_BLACK_BLUE, message, x, autocomplete_y)
 	end
+
+	Text:pop_font()
 end
 
 return DebugCommandMenu

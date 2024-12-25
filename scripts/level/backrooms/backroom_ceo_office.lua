@@ -35,7 +35,7 @@ end
 
 function BackroomCEOOffice:draw()
 	self.cafeteria_background:draw()
-	love.graphics.draw(images.ceo_office, 0, 0)
+	love.graphics.draw(images.ceo_office_room, -16, -16)
 end
 
 return BackroomCEOOffice

@@ -35,6 +35,7 @@ function GunDisplay:init(x, y, gun)
 
 	self.destroy_bullet_on_impact = true
 	self.is_immune_to_bullets = false
+    self.can_be_stomped_if_on_head = false
 
     self.player_detection_range_x = 26
     self.player_detection_range_y = 64

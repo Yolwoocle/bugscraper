@@ -260,7 +260,7 @@ function Enemy:on_collision(col, other)
 		local is_on_head      = (feet_y <= self.y + self.h * self.head_ratio) and self.can_be_stomped_if_on_head
 		local is_falling_down = (player.vy > 0.0001) and self.can_be_stomped_if_falling_down
 		local recently_landed = (0 < player.frames_since_land) and (player.frames_since_land <= 7)
-		if self.is_stompable and (is_on_head or is_falling_down or recently_landed) then
+		if self.invincible_timer <= 0 and self.is_stompable and (is_on_head or is_falling_down or recently_landed) then
 			self:react_to_stomp(player)
 
 		else
@@ -309,6 +309,11 @@ end
 --- Makes the enemy invincible for `duration`.  
 function Enemy:set_invincibility(duration)
 	self.invincible_timer = math.max(self.invincible_timer, duration)
+end
+
+--- Makes the enemy harmless for `duration`.  
+function Enemy:set_harmless(duration)
+	self.harmless_timer = math.max(self.harmless_timer, duration)
 end
 
 --- Deal damage to the enemy.

@@ -18,7 +18,8 @@ function Projectile:init(x, y, image, w, h, invul_duration, angle, min_speed, ma
 
     self.is_stompable = false
     self.is_immune_to_bullets = true
-    
+    self.destroy_bullet_on_impact = false
+
     angle = angle or (-pi/2 + random_neighbor(pi/3))
     local spd = random_range(min_speed or 200, max_speed or 300)
     self.vx = math.cos(angle) * spd

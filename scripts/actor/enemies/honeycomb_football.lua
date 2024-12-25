@@ -43,8 +43,6 @@ function HoneycombFootball:init(x, y, spr)
     self.exploding_timer = Timer:new(2.0)
     self.flash_timer = Timer:new(0.5)
 
-    self.unstompable_timer = Timer:new(1.0)
-
     self.gun = guns.unlootable.HoneycombFootballGun:new(self)
 
     self.state_machine = StateMachine:new({
@@ -121,11 +119,6 @@ function HoneycombFootball:update(dt)
     self.super.update(self, dt)
 
     self:update_renderer(dt)
-    
-    if self.unstompable_timer:update(dt) then
-        self.is_stompable = true
-        self.damage = 1
-    end
 
     self.state_machine:update(dt)
 end
@@ -149,9 +142,8 @@ end
 function HoneycombFootball:on_stomped()
     self.pong_speed = self.pong_speed + 60
 
-    self.unstompable_timer:start()
-    self.is_stompable = false
-    self.damage = 0
+    self:set_harmless(1.0)
+    self:set_invincibility(1.0)
     if math.sin(self.pong_direction) < 0 then
         self.pong_direction = math.atan2(math.abs(math.sin(self.pong_direction)), math.cos(self.pong_direction))
     end
