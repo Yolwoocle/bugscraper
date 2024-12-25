@@ -1,7 +1,7 @@
 --[[
     TO TRANSLATORS:
     * Reference document for all enemies, players, levels, etc: 
-      https://docs.google.com/document/d/13UntpWqoTXgYnBm5HL0pZmjBDwMStIN8YB1IPdi7hlA/edit?tab=t.0
+      https://docs.google.com/document/d/13UntpWqoTXgYnBm5HL0pZmjBDwMStIN8YB1IPdi7hlA
     * Even though my target audience is people who already play games, since the game supports 
       local co-op and has very simple, accessible controls, it's not absurd to think that more 
       occasional gamers would try their hand at the game, so try to avoid english gamer terms like 
