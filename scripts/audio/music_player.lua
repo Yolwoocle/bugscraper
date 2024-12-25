@@ -77,8 +77,8 @@ end
 
 function MusicPlayer:set_disk(disk_name)
 	if disk_name == "off" then
-		self.current_disk = nil
 		self:stop()
+		self.current_disk = nil
 		return
 	end
 	

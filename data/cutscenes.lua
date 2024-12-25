@@ -71,6 +71,7 @@ cutscenes.enter_ceo_office = Cutscene:new("enter_ceo_office", {
                 p.input_mode = PLAYER_INPUT_MODE_USER
             end
 
+            game.music_player:set_disk("miniboss")
             game.game_ui.cinematic_bars_enabled = false
         end,
     }),

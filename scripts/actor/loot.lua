@@ -247,7 +247,7 @@ end
 
 function Loot.Life:get_player_score_function()
 	return function(player)
-		return player.life
+		return player:get_total_life()
 	end
 end
 

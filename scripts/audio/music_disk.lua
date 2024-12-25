@@ -12,6 +12,7 @@ function MusicDisk:init(music_player, music_ingame, music_pause)
         [MUSIC_MODE_PAUSE] = music_pause,
     }
     
+    self.last_advancement = 0
     self.music_mode = MUSIC_MODE_OFF
     self.current_source = self.sources[MUSIC_MODE_INGAME]
 end
@@ -36,7 +37,9 @@ function MusicDisk:play()
 end
 
 function MusicDisk:stop()
-    if self.current_source ~= nil then    self.current_source:stop()    end
+    if self.current_source ~= nil then  
+        self.current_source:stop()
+    end
 end
 
 function MusicDisk:set_mode(mode)

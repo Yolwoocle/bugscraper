@@ -1,3 +1,13 @@
+--[[
+    TO TRANSLATORS:
+    * Reference document for all enemies, players, levels, etc: 
+      https://docs.google.com/document/d/13UntpWqoTXgYnBm5HL0pZmjBDwMStIN8YB1IPdi7hlA/edit?tab=t.0
+    * Even though my target audience is people who already play games, since the game supports 
+      local co-op and has very simple, accessible controls, it's not absurd to think that more 
+      occasional gamers would try their hand at the game, so try to avoid english gamer terms like 
+      "checkpoint", etc, except if it's the normal term for the word.
+]]
+
 return {
     language = {
         -- These should be kept untranslated in their original language ("english", "français", "中文", etc)
@@ -51,9 +61,9 @@ return {
     player = {
         name = {
             -- Player names
-            -- No reason to change these during translation, except if:
-            --  * it's more appropriate to use a transliteration, or to use the script of the concerned language (e.g. Leo -> Léo in French)
-            --  * they clash with something specific to the language/culture (please notify me if it is the case)
+            -- You can stay close to the original, but you're also free to have a more creative interpretation if you wish!
+            -- If the native name clashes with something specific to the language/culture, please notify me.
+            -- You can also use translitations into the script of the language if needed (i.e. Leo -> Léo)
             mio = "Mio",
             cap = "Cap",
             zia = "Zia",

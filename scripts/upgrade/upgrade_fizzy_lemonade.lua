@@ -17,8 +17,11 @@ function UpgradeFizzyLemon:update(dt)
     UpgradeFizzyLemon.super:update(self, dt)
 end
 
-function UpgradeFizzyLemon:apply_instant(player)
+function UpgradeFizzyLemon:apply_permanent(player)
     player.can_hold_jump_to_float = true
+end
+
+function UpgradeFizzyLemon:apply_instant(player)
 end
 
 function UpgradeFizzyLemon:play_effects(player)

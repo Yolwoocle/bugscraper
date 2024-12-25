@@ -605,6 +605,9 @@ function InputManager:draw_input_prompt(player_n, actions, label, label_color, x
     if params.background_color then
         rect_color(params.background_color, "fill", x-3, y, total_w+6, get_text_height()+3)
     end
+    if params.outline_color then
+        rect_color(params.outline_color, "line", x-3, y, total_w+6, get_text_height()+3)
+    end
     for _, icon_data in pairs(icons) do
         love.graphics.draw(icon_data.icon, math.floor(x + icon_data.x), y)
     end

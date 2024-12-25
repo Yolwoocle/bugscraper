@@ -126,13 +126,24 @@ local function generate_menus()
     }, DEFAULT_MENU_BG_COLOR, {}, function() end
     )
 
+    
+    menus.confirm_retry = Menu:new(game, {
+        { "{menu.options.confirm_retry.description}" },
+        { "{menu.no}",  function() 
+                game.menu_manager:back()
+            end },
+        { "{menu.yes}", function() 
+            game:new_game()
+        end },
+    }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
+
 
     local pause_items = {
         [1]  = { "" },
         [2]  = { "<<<<<<<<< " .. Text:text("menu.pause.title") .. " >>>>>>>>>" },
         [3]  = { "" },
         [4]  = { "▶ {menu.pause.resume}", function() game.menu_manager:unpause() end },
-        [5]  = { "🔄 {menu.pause.retry}", function() game:new_game() end },
+        [5]  = { "🔄 {menu.pause.retry}", func_set_menu('confirm_retry') },
         [6]  = { "🎚 {menu.pause.options}", func_set_menu('options') },
         [7]  = { "💡 {menu.pause.feedback}", func_set_menu("feedback") },
         [8]  = { "❤ {menu.pause.credits}", func_set_menu('credits') },
