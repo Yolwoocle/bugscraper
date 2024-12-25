@@ -14,13 +14,18 @@ return {
 			local_multiplayer = "Multijugador local",
 		},
 		details = {
-			waiting = "En el lobby",
+			-- Yolwoocle note:
+			-- I should have mentionned, but if you can please avoid english video gamy terms ("checkpoint", etc),
+			-- except if they are the normal word for saying the thing;
+			-- this is because this game might be played by non-gamers especially in local co-op
+			waiting = "En el vestíbulo", -- *sigh* The europeans. (no one uses vestibulo on latam but better play it safe)
 			playing = "Jugando (Piso %d/%d)",
 			dying = "Derrotado (Piso %d/%d)",
 			win = "Pantalla de victoria",
 		},
 	},
 	game = {
+		-- There's `demostración` but we can get away with just demo as is
 		demo = "DEMO", -- Chip added to the game logo to indicate that this version is a demo
 		fps = "%d FPS",
 		congratulations = "FELICITACIONES!",
@@ -228,12 +233,12 @@ return {
 			},
 		},
 		feedback = {
-			title = "COMENTARIOS",
+			title = "COMENTARIOS", -- comments
 			bugs = "REPORTAR UN PROBLEMA 🔗",
 			features = "PROPONER UNA IDEA 🔗",
 		},
 		game_over = {
-			title = "JUEGO TERMINADO!", -- Europeans use `fin de la partida` but the latam version `game over` (literally 1:1) fits better
+			title = "JUEGO TERMINADO!", -- *sigh* Europeans use `fin de la partida` but the latam version `game over` (literally 1:1) fits better
 			kills = "Enemigos matados", -- The amount of enemies the player has killed
 			time = "Tiempo transcurrido", -- The time that the player took to complete the level
 			floor = "Piso",      -- Which storey the player was on when they died
