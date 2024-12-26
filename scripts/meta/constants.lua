@@ -59,12 +59,13 @@ SPRITE_ANCHOR_RIGHT_TOP = "es"
 SPRITE_ANCHOR_RIGHT_CENTER = "ec"
 SPRITE_ANCHOR_RIGHT_BOTTOM = "ee"
 
-PARTICLE_LAYER_COUNT = 4
-
 PARTICLE_LAYER_BACK = 1
 PARTICLE_LAYER_NORMAL = 2
 PARTICLE_LAYER_SHADOWLESS = 3
-PARTICLE_LAYER_FRONT = 4
+PARTICLE_LAYER_HUD = 4
+PARTICLE_LAYER_FRONT = 5
+
+PARTICLE_LAYER_COUNT = 5 -- CHANGE THIS AFTER ADDING A PARTICLE LAYER
 
 -- Enemy flipping mode
 ENEMY_FLIP_MODE_MANUAL = "manual" -- only manual flipping
@@ -107,7 +108,7 @@ TIMED_SPIKES_TIMING_MODE_MANUAL = "manual" -- Spikes timing are manual
 
 -- Font
 FONT_CHARACTERS = 
-    " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz"..
+    " !\"#$%&'()*+,-·./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz"..
     "{|}~ ¡¢£©®°¿ÀÁÂÃÄÅĄÆÇĆÈÉÊËĘÌÍÎÏŁÐÑŃÒÓÔÕÖØÙÚÛÜŚÝŹŻÞßàáâãäåąæçćèéêëęìíîïłðñńòóôõöøùúûüśýþÿźżŒœŸЁАБВГДЕЖЗИЙКЛМНО"..
     "ПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюяё€🔊🔉🔈🎵🎼🔳🔲📺🕐↖🛜▶⏸🔄🔘⬅➡⬆⬇⏏🔫🔚📥👆🔙🗄⌨🎮🎚❤"..
     "✅❎🔗💡⚠🕹🫨💧🐜🐛🐝🪲🎓🌄🛅😎😈🐦𝕏🐰🐞🌐⏭"
@@ -293,8 +294,8 @@ RAW_INPUT_MAP_DEFAULT_KEYBOARD_SOLO = {
     right =     {"k_right", "k_d"},
     up =        {"k_up", "k_w"},
     down =      {"k_down", "k_s"},
-    jump =      {"k_c", "k_b"},
-    shoot =     {"k_x", "k_v"},
+    jump =      {"k_c", "k_b", "k_z"},
+    shoot =     {"k_x", "k_v", "k_n"},
     
     pause =     {"k_escape", "k_p"},
     ui_select = {"k_c", "k_b", "k_return"},

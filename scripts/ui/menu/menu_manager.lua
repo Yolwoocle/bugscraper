@@ -230,16 +230,17 @@ function MenuManager:set_selection(n)
 end
 
 function MenuManager:back()
+	local item = table.remove(self.menu_stack)
+	if item and item.menu then
+		self:set_menu(item.menu, true)
+		self:set_selection(item.sel_n)
+	end
+	
 	if #self.menu_stack == 0 then
 		self:unpause()
 		return
 	end
 
-	local item = table.remove(self.menu_stack)
-	if item.menu then
-		self:set_menu(item.menu, true)
-		self:set_selection(item.sel_n)
-	end
 end
 
 function MenuManager:keypressed(key, scancode, isrepeat)

@@ -38,9 +38,9 @@ local function new_cafeteria(run_func)
 		max = 1,
 		bounds = RECT_CAFETERIA,
 		enemies = {
-			{ E.UpgradeDisplay, 1, position = { 488, 192 } },
-			{ E.UpgradeDisplay, 1, position = { 544, 192 } },
-			{ E.UpgradeDisplay, 1, position = { 600, 192 } },
+			{ E.UpgradeDisplay, 1, position = { 488, 181 } },
+			{ E.UpgradeDisplay, 1, position = { 544, 181 } },
+			{ E.UpgradeDisplay, 1, position = { 600, 181 } },
 		},
 
 		backroom = BackroomCafeteria:new()
@@ -106,7 +106,7 @@ local waves = {
 
 		over_title = get_world_prefix(1),
 		title = get_world_name(1),
-		title_color = COL_MID_BLUE,
+		title_color = COL_LIGHTEST_GRAY,
 		title_outline_color = COL_BLACK_BLUE,
 	}),
 

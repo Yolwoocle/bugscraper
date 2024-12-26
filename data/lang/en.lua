@@ -5,17 +5,18 @@
     * Even though my target audience is people who already play games, since the game supports 
       local co-op and has very simple, accessible controls, it's not absurd to think that more 
       occasional gamers would try their hand at the game, so try to avoid english gamer terms like 
-      "checkpoint", etc, except if it's the normal term for the word.
+      "kills", "checkpoint", etc, except if it's the normal established term for the word.
 ]]
 
 return {
     language = {
         -- These should be kept untranslated in their original language ("english", "français", "中文", etc)
         en = "English",
+        es = "Español",
         fr = "Français",
         zh = "简体中文",
         pl = "Polski",
-        br = "Português Brasileiro",
+        pt = "Português Brasileiro",
     },
     discord = { -- Text used for Discord rich presence
         state = {
@@ -128,7 +129,7 @@ return {
             join = "Join",
             split_keyboard = "Split keyboard", -- Verb, as in "Press [key] to split the keyboard". Shown on the title screen when one keyboard player has joined. Try to keep short since space is limited there.
 
-            jetpack = "Jetpack", -- Refers to "jetpackking", a move in the game 
+            jetpack = "Jetpack", -- Refers to "jetpackking", a move in the game. 
         },
     },
     menu = {
@@ -137,6 +138,10 @@ return {
         no = "NO",
         quit = {
             description = "Are you sure you want to quit?"
+        },
+        confirm_retry = {
+            -- Here refers to going back to the main menu to try another run, NOT restarting the game
+            description = "Retry?", 
         },
         pause = {
             title = "PAUSE",
@@ -265,9 +270,12 @@ return {
             playtesting = "Playtesting",
             special_thanks = "Special thanks",
             asset_creators = "Asset creators",
+            tv_slideshow = "TV slideshow contributors", -- ADDED // Refers to the powerpoint TV slideshow on the title screen, which was contributed by a variety of people 
+            tv_slideshow_submit = "Submit yours...", -- ADDED // Leads to a web page where people can submit their own slides
             licenses = "Asset & library licenses",
 
-            asset_item = "%s by %s / %s", -- "ASSET_NAME by CREATOR / LICENCE". Used to credit assets such as sound effects
+            x_by_y =     "%s by %s", -- "ASSET_NAME by CREATOR". Used to credit assets such as sound effects
+            asset_item = "%s by %s / %s", -- "ASSET_NAME by CREATOR / LICENCE"
         },
         open_source = {
             title = "Open source libraries",

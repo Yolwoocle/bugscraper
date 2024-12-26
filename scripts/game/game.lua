@@ -541,6 +541,7 @@ function Game:draw_game()
 
 	self:draw_on_layer(LAYER_HUD, function()
 		love.graphics.clear()
+		Particles:draw_layer(PARTICLE_LAYER_HUD)
 		for k, actor in pairs(self.actors) do
 			if actor.is_active and actor.draw_hud and self.game_ui.is_visible then
 				actor:draw_hud()

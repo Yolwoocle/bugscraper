@@ -14,25 +14,26 @@ function TvPresentation:init(x, y)
     self.canvas_h = 31
 
     self.slides = {
-        { frames = images.tv_slideshow_001, frame_duration = 0 },
-        { frames = images.tv_slideshow_002, frame_duration = 0 },
-        { frames = images.tv_slideshow_003, frame_duration = 0.04 }, --mio rotate
-        { frames = images.tv_slideshow_004, frame_duration = 0 },
-        { frames = images.tv_slideshow_005, frame_duration = 0 },
-        { frames = images.tv_slideshow_006, frame_duration = 0.07 },
-        { frames = images.tv_slideshow_007, frame_duration = 0.11 }, -- Starbugs green tea
-        { frames = images.tv_slideshow_008, frame_duration = 0.1 },
-        { frames = images.tv_slideshow_009, frame_duration = 0.3 },
-        { frames = images.tv_slideshow_010, frame_duration = 0 },
-        { frames = images.tv_slideshow_011, frame_duration = 0.035 },
-        { frames = images.tv_slideshow_012, frame_duration = 0.03 },
-        { frames = images.tv_slideshow_013, frame_duration = 0.03 },
-        { frames = images.tv_slideshow_014, frame_duration = 0.08 },
-        { frames = images.tv_slideshow_015, frame_duration = 0.3 },
-        { frames = images.tv_slideshow_016, frame_duration = 0 },
-        { frames = images.tv_slideshow_017, frame_duration = 0.08 },
-        { frames = images.tv_slideshow_018, frame_duration = 0.04 }, -- Mio explode
-        -- { frames = images.tv_slideshow_999, frame_duration = 0 }, -- UNCOMMENT if the website is ready
+        { frames = images.tv_slideshow_001, frame_duration = 0 },      -- Powerpoint stats         by Sslime7 
+        { frames = images.tv_slideshow_002, frame_duration = 0 },      -- Hot dogs                 by Alexis Belmonte
+        { frames = images.tv_slideshow_003, frame_duration = 0.04 },   -- Mio rotate               by Corentin Vaillant 
+        { frames = images.tv_slideshow_018, frame_duration = 0.04 },   -- Mio explode              by Corentin Vaillant
+        { frames = images.tv_slideshow_004, frame_duration = 0 },      -- Bug with Guns            by Yolwoocle
+        { frames = images.tv_slideshow_005, frame_duration = 0 },      -- "Love, obey"             by ellraiser
+        { frames = images.tv_slideshow_006, frame_duration = 0.07 },   -- "Need your duck taped?"  by Broseph (?)
+        { frames = images.tv_slideshow_007, frame_duration = 0.11 },   -- Starbugs green tea       by Goyome
+        { frames = images.tv_slideshow_008, frame_duration = 0.1 },    -- Binarion                 by hector_misc (Nextop Games)
+        { frames = images.tv_slideshow_010, frame_duration = 0 },      -- "injured? good"          by hector_misc (Nextop Games) 
+        { frames = images.tv_slideshow_009, frame_duration = 0.3 },    -- "No quuen?"              by behck
+        { frames = images.tv_slideshow_011, frame_duration = 0.035 },  -- Splat commercial         by Sarcose
+        { frames = images.tv_slideshow_012, frame_duration = 0.03 },   -- End toastal abuse        by Clemapfel
+        { frames = images.tv_slideshow_013, frame_duration = 0.03 },   -- A salt rifle             by Clemapfel
+        { frames = images.tv_slideshow_014, frame_duration = 0.08 },   -- Beatleblock              by DPS2004
+        { frames = images.tv_slideshow_015, frame_duration = 0.3 },    -- bugscrapers arent enough by chromosoze
+        { frames = images.tv_slideshow_016, frame_duration = 0 },      -- optic studio             by chromosoze
+        { frames = images.tv_slideshow_017, frame_duration = 0.08 },   -- Soon(tm)                 by pixelbath
+
+        -- { frames = images.tv_slideshow_999, frame_duration = 0 },   -- UNCOMMENT if the website is ready
     }
     for i, slide in pairs(self.slides) do
         slide.frame_count = (slide.frames:getWidth() / self.canvas_w) * (slide.frames:getHeight() / self.canvas_h)
@@ -40,7 +41,7 @@ function TvPresentation:init(x, y)
     end
     shuffle_table(self.slides, 1, #self.slides - 1)
 
-    self.bluescreen_image = images.tv_bluescreen
+    self.bluescreen_image = images.tv_bluescreen -- By hector_misc (Nextop Games)
     self.bluescreen_probability = TV_BLUESCREEN_PROBABILITY
     self.is_bluescreened = (random_range(0, 1) < self.bluescreen_probability)
     self.default_slide_duration = 5.0

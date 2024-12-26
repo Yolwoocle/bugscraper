@@ -10,11 +10,7 @@ local PongBall = require "scripts.actor.enemies.pong_ball"
 local SnailShelled = PongBall:inherit()
 
 function SnailShelled:init(x, y, spr)
-    self:init_snail_shelled(x, y, spr)
-end
-
-function SnailShelled:init_snail_shelled(x, y, spr)
-    self:init_pong_ball(x,y, spr or images.snail_shell, 16, 16)
+    SnailShelled.super.init(self, x,y, spr or images.snail_shell, 16, 16)
     self.name = "snail_shelled"
 
     self.is_flying = true
@@ -30,14 +26,11 @@ function SnailShelled:init_snail_shelled(x, y, spr)
 end
 
 function SnailShelled:update(dt)
-    self:update_snail_shelled(dt)
-end
-function SnailShelled:update_snail_shelled(dt)
-    self:update_pong_ball(dt)
+    SnailShelled.super.update(self, dt)
 end
 
 function SnailShelled:draw()
-    self:draw_pong_ball()
+    SnailShelled.super.draw(self)
 end
 
 function SnailShelled:on_death()
@@ -45,6 +38,8 @@ function SnailShelled:on_death()
     local slug = Slug:new(self.x, self.y)
     slug.vy = -200
     slug.harmless_timer = 0.5
+    slug.invincible_timer = 0.1
+
     game:new_actor(slug)
 end
 

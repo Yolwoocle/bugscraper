@@ -67,20 +67,20 @@ function Debug:init(game)
     self.actions = {
         ["f2"] = { "toggle collision view mode", function()
             self.colview_mode = not self.colview_mode
-        end },
+        end, do_not_require_ctrl = true },
         ["f3"] = { "view more info", function()
             self.info_view = not self.info_view
-        end },
+        end, do_not_require_ctrl = true },
         ["f4"] = { "view joystick info", function()
             self.joystick_view = not self.joystick_view
-        end },
+        end, do_not_require_ctrl = true },
         ["f5"] = { "view input info", function()
             self.input_view = not self.input_view
-        end },
+        end, do_not_require_ctrl = true },
         ["f6"] = { "toggle UI", function()
             self.game.game_ui.is_visible = not self.game.game_ui.is_visible
             self.game.is_game_ui_visible = not self.game.is_game_ui_visible
-        end },
+        end, do_not_require_ctrl = true },
         ["f7"] = { "toggle speedup", function()
             _G_t = 0
             _G_speedup = not _G_speedup

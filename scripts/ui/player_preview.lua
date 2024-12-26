@@ -321,7 +321,7 @@ function PlayerPreview:draw_player_abbreviation()
         txt_top = txt_top .. Text:text("player.abbreviation", self.player_n)
 
         if self.user and self.user:get_skin() then
-            txt_bot = string.upper(Text:text("player.name."..self.user:get_skin().text_key))
+            -- txt_bot = string.upper(Text:text("player.name."..self.user:get_skin().text_key))
             txt_bot = txt_bot .. " " .. self.user:get_skin().icon
             color = self.user:get_skin().color_palette[2]
         end

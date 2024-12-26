@@ -614,6 +614,9 @@ local ParticleSystem = Class:inherit()
 function ParticleSystem:init(x,y)
 	self.layers = {}
 	self.layer_count = PARTICLE_LAYER_COUNT
+	
+	self.layer_stack = {PARTICLE_LAYER_NORMAL}
+	self.current_layer = self.layer_stack[#self.layer_stack]
 	for i = 1, self.layer_count do
 		self.layers[i] = {}
 	end
@@ -632,6 +635,17 @@ function ParticleSystem:update(dt)
 	end
 end
 
+function ParticleSystem:push_layer(layer)
+	table.insert(self.layer_stack, layer)
+	self.current_layer = self.layer_stack[#self.layer_stack]
+end
+
+function ParticleSystem:pop_layer()
+	local layer = table.remove(self.layer_stack, #self.layer_stack)
+	self.current_layer = self.layer_stack[#self.layer_stack] or PARTICLE_LAYER_NORMAL
+	return layer
+end
+
 function ParticleSystem:get_number_of_particles()
 	local n = 0
 	for _, layer in pairs(self.layers) do
@@ -647,8 +661,8 @@ function ParticleSystem:draw_layer(layer_id)
 	end
 end
 
-function ParticleSystem:add_particle(ptc, layer_id)
-	layer_id = param(layer_id, PARTICLE_LAYER_NORMAL)
+function ParticleSystem:add_particle(ptc)
+	local layer_id = self.current_layer
 	assert(self.layers[layer_id] ~= nil, "layer doesn't exist")
 	table.insert(self.layers[layer_id], ptc)
 end
@@ -713,14 +727,13 @@ function ParticleSystem:smoke_big(x, y, col, rad, quantity, params)
 	self:smoke(x, y, quantity or 15, col or COL_WHITE, rad or 16, 8, 4, nil, nil, params)
 end
 
-function ParticleSystem:smoke(x, y, number, col, spw_rad, size, sizevar, layer, fill_mode, params)
+function ParticleSystem:smoke(x, y, number, col, spw_rad, size, sizevar, __UNUSED_REMOVEME__, fill_mode, params)
 	params = params or {}
 
 	number = param(number, 10)
 	spw_rad = param(spw_rad, 8)
 	size = param(size, 4)
 	sizevar = param(sizevar, 2)
-	layer = param(layer, PARTICLE_LAYER_FRONT)
 	local min_spawn_delay = param(params.min_spawn_delay, 0)
 	local max_spawn_delay = param(params.max_spawn_delay, 0)
 
@@ -740,7 +753,7 @@ function ParticleSystem:smoke(x, y, number, col, spw_rad, size, sizevar, layer, 
 		local particle = CircleParticle:new(x+dx, y+dy, size+dsize, col, vx, vy, _vs, _vr, _life, fill_mode, {
 			spawn_delay = random_range(min_spawn_delay, max_spawn_delay),
 		})
-		self:add_particle(particle, layer)
+		self:add_particle(particle)
 	end
 end
 
@@ -967,19 +980,27 @@ function ParticleSystem:stomped_enemy(x, y, spr)
 end
 
 function ParticleSystem:dead_player(x, y, spr, colors, dir_x)
-	self:add_particle(DeadPlayerParticle:new(x, y, spr, colors, dir_x), PARTICLE_LAYER_FRONT)
+	self:push_layer(PARTICLE_LAYER_FRONT)
+	self:add_particle(DeadPlayerParticle:new(x, y, spr, colors, dir_x))
+	self:pop_layer()
 end
 
 function ParticleSystem:ejected_player(spr, x, y, vx, vy)
-	self:add_particle(EjectedPlayerParticle:new(spr, x, y, vx or (random_sample{-1, 1} * random_range(100, 300)), vy or -random_range(400, 600)), PARTICLE_LAYER_FRONT)
+	self:push_layer(PARTICLE_LAYER_FRONT)
+	self:add_particle(EjectedPlayerParticle:new(spr, x, y, vx or (random_sample{-1, 1} * random_range(100, 300)), vy or -random_range(400, 600)))
+	self:pop_layer()
 end
 
 function ParticleSystem:smashed_player(spr, x, y, vx, vy)
-	self:add_particle(SmashedPlayerParticle:new(spr, x, y, vx or 400, vy or -random_range(600, 600)), PARTICLE_LAYER_FRONT)
+	self:push_layer(PARTICLE_LAYER_FRONT)
+	self:add_particle(SmashedPlayerParticle:new(spr, x, y, vx or 400, vy or -random_range(600, 600)))
+	self:pop_layer()
 end
 
 function ParticleSystem:smash_flash(x, y, r, col)
-	self:add_particle(SmashFlashParticle:new(x, y, r, col), PARTICLE_LAYER_FRONT)
+	self:push_layer(PARTICLE_LAYER_FRONT)
+	self:add_particle(SmashFlashParticle:new(x, y, r, col))
+	self:pop_layer()
 end
 
 function ParticleSystem:letter(x, y, str, spawn_delay, col, stay_time, text_scale, outline_color, params)
@@ -987,8 +1008,11 @@ function ParticleSystem:letter(x, y, str, spawn_delay, col, stay_time, text_scal
 end
 
 function ParticleSystem:word(x, y, str, col, stay_time, text_scale, outline_color, letter_time_spacing, params)
+	params = params or {}
 	stay_time = param(stay_time, 0)
 	text_scale = param(text_scale, 1)
+	local layer = param(params.layer, PARTICLE_LAYER_HUD)
+	self:push_layer(layer)
 
 	local x = x - (text_scale * get_text_width(str))/2
 	for i=1, #str do
@@ -996,14 +1020,20 @@ function ParticleSystem:word(x, y, str, col, stay_time, text_scale, outline_colo
 		Particles:letter(x, y, letter, i*(letter_time_spacing or 0.05), col, stay_time, text_scale, outline_color, params)
 		x = x + get_text_width(letter) * text_scale
 	end
+
+	self:pop_layer()
 end
 
 function ParticleSystem:falling_grid(x, y)
-	self:add_particle(FallingGridParticle:new(images.cabin_grid, images.cabin_grid_platform, x, y), PARTICLE_LAYER_SHADOWLESS)
+	self:push_layer(PARTICLE_LAYER_SHADOWLESS)
+	self:add_particle(FallingGridParticle:new(images.cabin_grid, images.cabin_grid_platform, x, y))
+	self:pop_layer()
 end
 
 function ParticleSystem:falling_grid_side(x, y)
-	self:add_particle(FallingGridParticle:new(images.cabin_grid_platform, images.cabin_grid, x, y), PARTICLE_LAYER_SHADOWLESS)
+	self:push_layer(PARTICLE_LAYER_SHADOWLESS)
+	self:add_particle(FallingGridParticle:new(images.cabin_grid_platform, images.cabin_grid, x, y))
+	self:pop_layer()
 end
 
 function ParticleSystem:spark(x, y, amount)
@@ -1011,13 +1041,17 @@ function ParticleSystem:spark(x, y, amount)
 	local life = 1 + random_neighbor(0.2)
 	local g = nil
 	local is_solid = false
+	self:push_layer(PARTICLE_LAYER_FRONT)
 	for i=1, amount do 
-		self:add_particle(SparkParticle:new(x,y, life, g, is_solid), PARTICLE_LAYER_FRONT)
+		self:add_particle(SparkParticle:new(x,y, life, g, is_solid))
 	end
+	self:pop_layer()
 end
 
 function ParticleSystem:rising_image(x, y, image, scale, spawn_delay, stay_time)
+	self:push_layer(PARTICLE_LAYER_FRONT)
 	self:add_particle(RisingImageParticle:new(x, y, image, scale, spawn_delay, stay_time))
+	self:pop_layer()
 end
 
 function ParticleSystem:collected_upgrade(x, y, image, scale, spawn_delay, stay_time)

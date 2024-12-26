@@ -13,6 +13,8 @@ local debug_draw_waves    = require "scripts.debug.draw_waves"
 local images              = require "data.images"
 local DebugCommandMenu    = require "scripts.ui.menu.debug_command_menu"
 
+local empty_func = function() end
+
 local function func_set_menu(menu)
     return function()
         game.menu_manager:set_menu(menu)
@@ -60,7 +62,7 @@ local function draw_elevator_progress()
         local y = y2 - (i / n_floors) * h
         local sep_x = x1 - sep_w / 2
         local sep_y = round(y - sep_w / 2)
-        if i % 5 == 0 then
+        if i % 10 == 0 then
             love.graphics.rectangle("fill", sep_x, sep_y, sep_w, sep_w)
         end
         if i == game:get_floor() then
@@ -80,14 +82,6 @@ end
 local function generate_menus()
     local menus = {}
 
-    menus.quit = Menu:new(game, {
-        { "" },
-        { "{menu.quit.description}" },
-        { "{menu.no}",              function() game.menu_manager:back() end },
-        { "{menu.yes}",             quit_game },
-        { "" },
-    }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
-
     menus.title = Menu:new(game, {
         { ">>>> Bugscraper (logo here) <<<<" },
         { "" },
@@ -99,6 +93,11 @@ local function generate_menus()
     }, DEFAULT_MENU_BG_COLOR)
 
     menus.debug_command = DebugCommandMenu:new(game)
+
+    
+    -----------------------------------------------------
+    --- BOSS INTROS
+    -----------------------------------------------------
 
     menus.w1_boss_intro = BossIntroMenu:new(game, { 38 / 255, 43 / 255, 68 / 255, 0.8 }, Text:text("enemy.dung"), {
         { image = images.boss_intro_dung_layer5, z_mult = 0.3 },
@@ -118,17 +117,26 @@ local function generate_menus()
         { image = images.boss_intro_bee_layer0, z_mult = 1.5 },
     })
 
+
+    -----------------------------------------------------
+    --- DEBUG
+    -----------------------------------------------------
+
     menus.view_waves = Menu:new(game, {
         { "waves" },
         { CustomDrawMenuItem, debug_draw_waves },
-        { "",                 function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end },
-        { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end }, { "", function() end },
-    }, DEFAULT_MENU_BG_COLOR, {}, function() end
+        { "",                 empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func },
+        { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func }, { "", empty_func },
+    }, DEFAULT_MENU_BG_COLOR, {}, empty_func
     )
 
+
+    -----------------------------------------------------
+    --- CONFIRM RETRY
+    -----------------------------------------------------
     
     menus.confirm_retry = Menu:new(game, {
-        { "{menu.options.confirm_retry.description}" },
+        { "{menu.confirm_retry.description}" },
         { "{menu.no}",  function() 
                 game.menu_manager:back()
             end },
@@ -137,6 +145,23 @@ local function generate_menus()
         end },
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
 
+    
+    -----------------------------------------------------
+    --- CONFIRM QUIT
+    -----------------------------------------------------
+
+    menus.quit = Menu:new(game, {
+        { "" },
+        { "{menu.quit.description}" },
+        { "{menu.no}",              function() game.menu_manager:back() end },
+        { "{menu.yes}",             quit_game },
+        { "" },
+    }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
+
+
+    -----------------------------------------------------
+    --- PAUSE
+    -----------------------------------------------------
 
     local pause_items = {
         [1]  = { "" },
@@ -226,6 +251,8 @@ local function generate_menus()
     menus.options = Menu:new(game, {
         { "<<<<<<<<< {menu.options.title} >>>>>>>>>" },
         { "" },
+        { "🌐 {menu.options.game.language}", func_set_menu("options_language") },
+        { "" },
         { "<<< {menu.options.input.title} >>>" },
         { "🔘 {menu.options.input.input}", func_set_menu("options_input") },
         { "" },
@@ -269,7 +296,6 @@ local function generate_menus()
         { RangeOptionMenuItem, "🌄 {menu.options.visuals.bullet_lightness}", "bullet_lightness", { 0.1, 1.0 }, 0.1, "%" },
         { "" },
         { "<<< {menu.options.game.title} >>>" },
-        { "🌐 {menu.options.game.language}", func_set_menu("options_language") },
         { RangeOptionMenuItem, "🛜 {menu.options.game.screenshake}", "screenshake", { 0.0, 1.0 }, 0.05, "%" },
         { BoolOptionMenuItem, "🕐 {menu.options.game.timer}", "timer_on" },
         { BoolOptionMenuItem, "↖ {menu.options.game.mouse_visible}", "mouse_visible" },
@@ -293,10 +319,11 @@ local function generate_menus()
         { "" }, 
         -- { "{language.default}", func_language_menu("default") },
         { "{language.en}", func_language_menu("en") },
+        { "{language.es}", func_language_menu("es") },
         { "{language.fr}", func_language_menu("fr") },
         { "{language.zh}", func_language_menu("zh") },
         { "{language.pl}", func_language_menu("pl") },
-        { "{language.br}", func_language_menu("br") },
+        { "{language.pt}", func_language_menu("pt") },
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
 
     
@@ -490,50 +517,52 @@ local function generate_menus()
         { "<<<<<<<<< " .. Text:text("menu.credits.title") .. " >>>>>>>>>" },
         { "" },
         { "<<< " .. Text:text("menu.credits.game_by") .. " >>>" },
-        { "Yolwoocle (Léo Bernard) 🔗", func_url("https://yolwoocle.com/") },
+        { "Léo Bernard (Yolwoocle) 🔗", func_url("https://yolwoocle.com/") },
         { "" },
         { "<<< " .. Text:text("menu.credits.music_and_sound_design") .. " >>>" },
         { "OLX 🔗", function() func_url("https://www.youtube.com/@olxdotwav") end },
         { "" },
         { "<<< " .. Text:text("menu.credits.localization") .. " >>>" },
-        { "Jakub Piłasiewicz", function() end },
-        { "Nicole Sanches (rhysuki)", function() end },
-        { "Polyglot Project", function() end },
+        { "Jakub Piłasiewicz", empty_func },
+        { "Nicole Sanches (rhysuki)", empty_func },
+        { "Alejandro Alzate Sánchez", empty_func }, -- https://github.com/alejandro-alzate
+        { "Polyglot Project", empty_func },
         { "" },
         { "<<< " .. Text:text("menu.credits.asset_creators") .. " >>>" },
-        { "Kenney", function() end },  -- func_url("https://kenney.nl/")},
-        { "somepx", function() end },  -- func_url("https://somepx.itch.io/")},
-        { "emhuo", function() end },   -- func_url("https://emhuo.itch.io/")},
-        { "Endesga", function() end }, -- func_url("https://emhuo.itch.io/")},
-        { "Noam Goldfarb (SSlime7)", function() end }, -- func_url("https://emhuo.itch.io/")},
+        { "Kenney", empty_func },  -- func_url("https://kenney.nl/")},
+        { "somepx", empty_func },  -- func_url("https://somepx.itch.io/")},
+        { "emhuo", empty_func },   -- func_url("https://emhuo.itch.io/")},
+        { "Endesga", empty_func }, -- func_url("https://emhuo.itch.io/")},
+        { "Noam Goldfarb (SSlime7)", empty_func }, -- func_url("https://emhuo.itch.io/")},
         { "freesound.org [{menu.see_more}]", func_set_menu("credits_sounds") },
+        { "{menu.credits.tv_slideshow} [{menu.see_more}]", func_set_menu("credits_tv_slideshow") },
         { "" },
         { "<<< " .. Text:text("menu.credits.playtesting") .. " >>>" },
-        { "hades140701", function() end },
-        { "Corentin Vaillant", function() end },      --func_url("https://github.com/CorentinVaillant/")},
-        { "NerdOfGamers + partner", function() end }, --func_url("https://ryancavendell.itch.io/")},
-        { "Azuras03 (NicolasYT)", function() end },
-        { "Lars Loe (MadByte)", function() end },
-        { "Théodore Billotte", function() end },
-        { "Alexis", function() end }, -- func_url("https://binarysunrise.dev")},
-        { "Binary Sunrise", function() end },
-        { "AnnaWorldEater", function() end },
-        { "Sylvain Fraresso", function() end },
-        { "Tom Le Ber", function() end },
-        { "Guillaume Tran", function() end },
-        { "Lucas Froehlinger 😎", function() end },
+        { "hades140701", empty_func },
+        { "Corentin Vaillant", empty_func },      --func_url("https://github.com/CorentinVaillant/")},
+        { "NerdOfGamers + partner", empty_func }, --func_url("https://ryancavendell.itch.io/")},
+        { "Azuras03 (NicolasYT)", empty_func },
+        { "Lars Loe (MadByte)", empty_func },
+        { "Théodore Billotte", empty_func },
+        { "Alexis", empty_func }, -- func_url("https://binarysunrise.dev")},
+        { "Binary Sunrise", empty_func },
+        { "AnnaWorldEater", empty_func },
+        { "Sylvain Fraresso", empty_func },
+        { "Tom Le Ber", empty_func },
+        { "Guillaume Tran", empty_func },
+        { "Lucas Froehlinger 😎", empty_func },
         { "" },
         { "<<< {menu.credits.special_thanks} >>>" },
-        { "Nolan Carlisi", function() end },       --func_url("https://github.com/ARKANYOTA")},
-        { "Gouspourd", function() end },       -- func_url("https://gouspourd.itch.io/")},
-        { "Raphytator", function() end },      -- func_url("https://raphytator.itch.io/") },
-        { "Louie Chapman", function() end },   -- func_url("https://louiechapm.itch.io/") },
-        { "Indie Game Lyon", function() end }, -- func_url("https://www.indiegamelyon.com/")},
-        { "Fabien Delpiano", function() end },
-        { "Quentin Picault", function() end },
-        { "Guillaume Tran", function() end },
-        { "Toulouse Game Dev", function() end }, -- func_url("https://www.indiegamelyon.com/")},
-        { "LÖVE framework", function() end },    -- func_url("https://love2d.org/") },
+        { "Nolan Carlisi", empty_func },       --func_url("https://github.com/ARKANYOTA")},
+        { "Gaspard Delpiano-Manfrini (Gouspourd)", empty_func },       -- func_url("https://gouspourd.itch.io/")},
+        { "Raphytator", empty_func },      -- func_url("https://raphytator.itch.io/") },
+        { "Louie Chapman", empty_func },   -- func_url("https://louiechapm.itch.io/") },
+        { "Fabien Delpiano", empty_func },
+        { "Quentin Picault", empty_func },
+        { "Guillaume Tran", empty_func },
+        { "Indie Game Lyon", empty_func }, -- func_url("https://www.indiegamelyon.com/")},
+        { "Toulouse Game Dev", empty_func }, -- func_url("https://www.indiegamelyon.com/")},
+        { "LÖVE framework", empty_func },    -- func_url("https://love2d.org/") },
         { "{menu.open_source.title} [{menu.see_more}]", func_set_menu("open_source") },
         { "" },
         { "<< " .. Text:text("menu.credits.licenses") .. " >>" },
@@ -561,43 +590,69 @@ local function generate_menus()
         { Text:text("menu.credits.asset_item", "'Boutique Bitmap 9x9'", "Luke Liu", "OFL-1.1"),            func_url("https://luke036.itch.io/boutique-bitmap-9x9") },
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
 
-    menus.credits_sounds = Menu:new(game, {
-        { "<<< freesound.org credits >>>" },
+    menus.credits_tv_slideshow = Menu:new(game, {
+        { "<<< {menu.credits.tv_slideshow} >>>" },
         { "" },
-        { Text:text("menu.credits.asset_item", "'jf Glass Breaking.wav'", "cmusounddesign", "CC BY 3.0"),                    func_url("https://freesound.org/people/cmusounddesign/sounds/85168/") },
-        { Text:text("menu.credits.asset_item", "'Glass Break'", "avrahamy", "CC0"),                                          func_url("https://freesound.org/people/avrahamy/sounds/141563/") },
-        { Text:text("menu.credits.asset_item", "'Glass shard tinkle texture'", "el-bee", "CC BY 4.0"),                       func_url("https://freesound.org/people/el-bee/sounds/636238/") },
-        { Text:text("menu.credits.asset_item", "'Bad Beep (Incorrect)'", "RICHERlandTV", "CC BY 3.0"),                       func_url("https://freesound.org/people/RICHERlandTV/sounds/216090/") },
-        { Text:text("menu.credits.asset_item", "[Keyboard press]", "MattRuthSound", "CC BY 3.0"),                            func_url("https://freesound.org/people/MattRuthSound/sounds/561661/") },
-        { Text:text("menu.credits.asset_item", "'Paper Throw Into Air(fuller) 2'", "RossBell", "CC0"),                       func_url("https://freesound.org/people/RossBell/sounds/389442/") },
-        { Text:text("menu.credits.asset_item", "'Slime'", "Lukeo135", "CC0"),                                                func_url("https://freesound.org/people/Lukeo135/sounds/530617/") },
-        { Text:text("menu.credits.asset_item", "'brushes_on_snare'", "Heigh-hoo", "CC0"),                                    func_url("https://freesound.org/people/Heigh-hoo/sounds/20297/") },
-        { Text:text("menu.credits.asset_item", "'01 Elevator UP'", "soundslikewillem", "CC BY 4.0"),                         func_url("https://freesound.org/people/soundslikewillem/sounds/340747/") },
-        { Text:text("menu.credits.asset_item", "'indsustrial_elevator_door_open'", "joedeshon", "CC BY 4.0"),                func_url("https://freesound.org/people/joedeshon/sounds/368737/") },
-        { Text:text("menu.credits.asset_item", "'indsustrial_elevator_door_close'", "joedeshon", "CC BY 4.0"),               func_url("https://freesound.org/people/joedeshon/sounds/368738/") },
-        { Text:text("menu.credits.asset_item", "'Footsteps on gravel'", "Joozz", "CC BY 4.0"),                               func_url("https://freesound.org/people/Joozz/sounds/531952/") },
-        { Text:text("menu.credits.asset_item", "'THE CRASH'", "sandyrb", "CC BY 4.0"),                                       func_url("https://freesound.org/people/sandyrb/sounds/95078/") },
-        { Text:text("menu.credits.asset_item", "'Door slam - Gun shot'", "coolguy244e", "CC BY 4.0"),                        func_url("https://freesound.org/people/coolguy244e/sounds/266915/") },
-        { Text:text("menu.credits.asset_item", "'bee fly'", "soundmary", "CC BY 4.0"),                                       func_url("https://freesound.org/people/soundmary/sounds/194932/") },
-        { Text:text("menu.credits.asset_item", "'Pop, Low, A (H1)'", "InspectorJ", "CC BY 4.0"),                             func_url("https://freesound.org/people/InspectorJ/sounds/411639/") },
-        { Text:text("menu.credits.asset_item", "'Crack 1'", "JustInvoke", "CC BY 3.0"),                                      func_url("https://freesound.org/people/JustInvoke/sounds/446118/") },
-        { Text:text("menu.credits.asset_item", "'Emergency Siren'", "onderwish", "CC0"),                                     func_url("https://freesound.org/people/onderwish/sounds/470504/") },
-        { Text:text("menu.credits.asset_item", "'Wood burning in the stove'", "smand", "CC0"),                               func_url("https://freesound.org/people/smand/sounds/521118/") },
-        { Text:text("menu.credits.asset_item", "'Bike falling down an escalator'", "dundass", "CC BY 3.0"),                  func_url("https://freesound.org/people/dundass/sounds/509831/") },
-        { Text:text("menu.credits.asset_item", "'squishing and squeezing a wet sponge in a bowl'", "breadparticles", "CC0"), func_url("https://freesound.org/people/breadparticles/sounds/575332/#comments") },
-        { Text:text("menu.credits.asset_item", "'Insect Bug Smash & Crush'", "EminYILDIRIM", "CC BY 4.0"),                   func_url("https://freesound.org/people/EminYILDIRIM/sounds/570767/") },
-        { Text:text("menu.credits.asset_item", "'Inhaler  Puff 170427_1464'", "megashroom", "CC0"),                          func_url("https://freesound.org/s/390174/") },
-        { Text:text("menu.credits.asset_item", "'Poof/Puff'", "JustInvoke", "CC BY 4.0"),                                    func_url("https://freesound.org/s/446124/") },
-        { Text:text("menu.credits.asset_item", "'rolling bag'", "Sunejackie", "CC BY 4.0"),                                  func_url("https://freesound.org/s/542402/") },
+        { Text:text("menu.credits.x_by_y", "'Graphs'",                    "Sslime7"),                    empty_func },
+        { Text:text("menu.credits.x_by_y", "'Hot dogs'",                  "Alexis Belmonte"),            empty_func },
+        { Text:text("menu.credits.x_by_y", "'Mio rotate'",                "Corentin Vaillant"),          empty_func },
+        { Text:text("menu.credits.x_by_y", "'Mio explode'",               "Corentin Vaillant"),          empty_func },
+        { Text:text("menu.credits.x_by_y", "'Bugs With Guns'",            "Yolwoocle"),                  empty_func },
+        { Text:text("menu.credits.x_by_y", "'Löve, Öbey'",                "ellraiser"),                  empty_func },
+        { Text:text("menu.credits.x_by_y", "'Need your duck taped?'",     "Broseph" --[[(?)]]),          empty_func },
+        { Text:text("menu.credits.x_by_y", "'Starbugs Green Tea'",        "Goyome"),                     empty_func },
+        { Text:text("menu.credits.x_by_y", "'Binarion'",                  "hector_misc (Nextop Games)"), empty_func },
+        { Text:text("menu.credits.x_by_y", "'Injured? Good'",             "hector_misc (Nextop Games)"), empty_func },
+        { Text:text("menu.credits.x_by_y", "'No queen?'",                 "behck"),                      empty_func },
+        { Text:text("menu.credits.x_by_y", "'Splat'",                     "Sarcose"),                    empty_func },
+        { Text:text("menu.credits.x_by_y", "'End toastal abuse'",         "Clemapfel"),                  empty_func },
+        { Text:text("menu.credits.x_by_y", "'A-salt rifle'",              "Clemapfel"),                  empty_func },
+        { Text:text("menu.credits.x_by_y", "'Beatleblock'",               "DPS2004"),                    empty_func },
+        { Text:text("menu.credits.x_by_y", "'Bugscrapers aren't enough'", "chromosoze"),                 empty_func },
+        { Text:text("menu.credits.x_by_y", "'Optic Studio'",              "chromosoze"),                 empty_func },
+        { Text:text("menu.credits.x_by_y", "'Soon (TM)'",                 "pixelbath"),                  empty_func },
+        { "" },
+        -- { "{menu.credits.tv_slideshow_submit} 🔗", func_url("https://bugscraper.net/tv") }
+
+    }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
+
+    menus.credits_sounds = Menu:new(game, {
+        { "<<< freesound.org >>>" },
+        { "" },
+        { Text:text("menu.credits.asset_item", "'jf Glass Breaking.wav'", "cmusounddesign", "CC BY 3.0")                    .. " 🔗", func_url("https://freesound.org/people/cmusounddesign/sounds/85168/") },
+        { Text:text("menu.credits.asset_item", "'Glass Break'", "avrahamy", "CC0")                                          .. " 🔗", func_url("https://freesound.org/people/avrahamy/sounds/141563/") },
+        { Text:text("menu.credits.asset_item", "'Glass shard tinkle texture'", "el-bee", "CC BY 4.0")                       .. " 🔗", func_url("https://freesound.org/people/el-bee/sounds/636238/") },
+        { Text:text("menu.credits.asset_item", "'Bad Beep (Incorrect)'", "RICHERlandTV", "CC BY 3.0")                       .. " 🔗", func_url("https://freesound.org/people/RICHERlandTV/sounds/216090/") },
+        { Text:text("menu.credits.asset_item", "[Keyboard press]", "MattRuthSound", "CC BY 3.0")                            .. " 🔗", func_url("https://freesound.org/people/MattRuthSound/sounds/561661/") },
+        { Text:text("menu.credits.asset_item", "'Paper Throw Into Air(fuller) 2'", "RossBell", "CC0")                       .. " 🔗", func_url("https://freesound.org/people/RossBell/sounds/389442/") },
+        { Text:text("menu.credits.asset_item", "'Slime'", "Lukeo135", "CC0")                                                .. " 🔗", func_url("https://freesound.org/people/Lukeo135/sounds/530617/") },
+        { Text:text("menu.credits.asset_item", "'brushes_on_snare'", "Heigh-hoo", "CC0")                                    .. " 🔗", func_url("https://freesound.org/people/Heigh-hoo/sounds/20297/") },
+        { Text:text("menu.credits.asset_item", "'01 Elevator UP'", "soundslikewillem", "CC BY 4.0")                         .. " 🔗", func_url("https://freesound.org/people/soundslikewillem/sounds/340747/") },
+        { Text:text("menu.credits.asset_item", "'indsustrial_elevator_door_open'", "joedeshon", "CC BY 4.0")                .. " 🔗", func_url("https://freesound.org/people/joedeshon/sounds/368737/") },
+        { Text:text("menu.credits.asset_item", "'indsustrial_elevator_door_close'", "joedeshon", "CC BY 4.0")               .. " 🔗", func_url("https://freesound.org/people/joedeshon/sounds/368738/") },
+        { Text:text("menu.credits.asset_item", "'Footsteps on gravel'", "Joozz", "CC BY 4.0")                               .. " 🔗", func_url("https://freesound.org/people/Joozz/sounds/531952/") },
+        { Text:text("menu.credits.asset_item", "'THE CRASH'", "sandyrb", "CC BY 4.0")                                       .. " 🔗", func_url("https://freesound.org/people/sandyrb/sounds/95078/") },
+        { Text:text("menu.credits.asset_item", "'Door slam - Gun shot'", "coolguy244e", "CC BY 4.0")                        .. " 🔗", func_url("https://freesound.org/people/coolguy244e/sounds/266915/") },
+        { Text:text("menu.credits.asset_item", "'bee fly'", "soundmary", "CC BY 4.0")                                       .. " 🔗", func_url("https://freesound.org/people/soundmary/sounds/194932/") },
+        { Text:text("menu.credits.asset_item", "'Pop, Low, A (H1)'", "InspectorJ", "CC BY 4.0")                             .. " 🔗", func_url("https://freesound.org/people/InspectorJ/sounds/411639/") },
+        { Text:text("menu.credits.asset_item", "'Crack 1'", "JustInvoke", "CC BY 3.0")                                      .. " 🔗", func_url("https://freesound.org/people/JustInvoke/sounds/446118/") },
+        { Text:text("menu.credits.asset_item", "'Emergency Siren'", "onderwish", "CC0")                                     .. " 🔗", func_url("https://freesound.org/people/onderwish/sounds/470504/") },
+        { Text:text("menu.credits.asset_item", "'Wood burning in the stove'", "smand", "CC0")                               .. " 🔗", func_url("https://freesound.org/people/smand/sounds/521118/") },
+        { Text:text("menu.credits.asset_item", "'Bike falling down an escalator'", "dundass", "CC BY 3.0")                  .. " 🔗", func_url("https://freesound.org/people/dundass/sounds/509831/") },
+        { Text:text("menu.credits.asset_item", "'squishing and squeezing a wet sponge in a bowl'", "breadparticles", "CC0") .. " 🔗", func_url("https://freesound.org/people/breadparticles/sounds/575332/#comments") },
+        { Text:text("menu.credits.asset_item", "'Insect Bug Smash & Crush'", "EminYILDIRIM", "CC BY 4.0")                   .. " 🔗", func_url("https://freesound.org/people/EminYILDIRIM/sounds/570767/") },
+        { Text:text("menu.credits.asset_item", "'Inhaler  Puff 170427_1464'", "megashroom", "CC0")                          .. " 🔗", func_url("https://freesound.org/s/390174/") },
+        { Text:text("menu.credits.asset_item", "'Poof/Puff'", "JustInvoke", "CC BY 4.0")                                    .. " 🔗", func_url("https://freesound.org/s/446124/") },
+        { Text:text("menu.credits.asset_item", "'rolling bag'", "Sunejackie", "CC BY 4.0")                                  .. " 🔗", func_url("https://freesound.org/s/542402/") },
         -- { Text:text("menu.credits.asset_item", "'Ruler Bounce 3'", "belanhud", "CC0"),                         func_url("https://freesound.org/s/537904/")},
-        { Text:text("menu.credits.asset_item", "'Springboard A'", "lmbubec", "CC0"),                                         func_url("https://freesound.org/s/119793/") },
-        { Text:text("menu.credits.asset_item", "'Springboard B'", "lmbubec", "CC0"),                                         func_url("https://freesound.org/s/119794/") },
-        { Text:text("menu.credits.asset_item", "'80s alarm'", "tim.kahn", "CC BY 4.0"),                                      func_url("https://freesound.org/s/83280/") },
-        { Text:text("menu.credits.asset_item", "'Metal container impact firm'", "jorickhoofd", "CC BY 4.0"),                 func_url("https://freesound.org/s/160077/") },
-        { Text:text("menu.credits.asset_item", "'Roller blind circuit breaker'", "newlocknew", "CC BY 4.0"),                 func_url("https://freesound.org/s/583451/") },
-        { Text:text("menu.credits.asset_item", "'Digging, Ice, Hammer, A'", "InspectorJ", "CC BY 4.0"),                      func_url("https://freesound.org/s/420878/ ") },
-        { Text:text("menu.credits.asset_item", "'Whoosh For Whip Zoom'", "BennettFilmTeacher", "CC0"),                       func_url("https://freesound.org/s/420878/ ") },
-        { Text:text("menu.credits.asset_item", "'Balloon_Inflate_Quick_Multiple'", "Terhen", "CC BY 3.0"),                   func_url("https://freesound.org/s/420878/ ") },
+        { Text:text("menu.credits.asset_item", "'Springboard A'", "lmbubec", "CC0")                                         .. " 🔗", func_url("https://freesound.org/s/119793/") },
+        { Text:text("menu.credits.asset_item", "'Springboard B'", "lmbubec", "CC0")                                         .. " 🔗", func_url("https://freesound.org/s/119794/") },
+        { Text:text("menu.credits.asset_item", "'80s alarm'", "tim.kahn", "CC BY 4.0")                                      .. " 🔗", func_url("https://freesound.org/s/83280/") },
+        { Text:text("menu.credits.asset_item", "'Metal container impact firm'", "jorickhoofd", "CC BY 4.0")                 .. " 🔗", func_url("https://freesound.org/s/160077/") },
+        { Text:text("menu.credits.asset_item", "'Roller blind circuit breaker'", "newlocknew", "CC BY 4.0")                 .. " 🔗", func_url("https://freesound.org/s/583451/") },
+        { Text:text("menu.credits.asset_item", "'Digging, Ice, Hammer, A'", "InspectorJ", "CC BY 4.0")                      .. " 🔗", func_url("https://freesound.org/s/420878/ ") },
+        { Text:text("menu.credits.asset_item", "'Whoosh For Whip Zoom'", "BennettFilmTeacher", "CC0")                       .. " 🔗", func_url("https://freesound.org/s/420878/ ") },
+        { Text:text("menu.credits.asset_item", "'Balloon_Inflate_Quick_Multiple'", "Terhen", "CC BY 3.0")                   .. " 🔗", func_url("https://freesound.org/s/420878/ ") },
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
 
     local items = {

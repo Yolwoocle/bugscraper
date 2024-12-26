@@ -19,7 +19,9 @@ function EffectEspresso:update(dt, player)
     
     -- number, col, spw_rad, size, sizevar, layer
     player.spr:update_offset(random_neighbor(1), random_neighbor(1))
-    Particles:smoke(player.mid_x, player.mid_y, 1, random_sample{COL_MID_BROWN, COL_DARK_BROWN}, nil, nil, nil, PARTICLE_LAYER_BACK)
+    Particles:push_layer(PARTICLE_LAYER_BACK)
+    Particles:smoke(player.mid_x, player.mid_y, 1, random_sample{COL_MID_BROWN, COL_DARK_BROWN})
+    Particles:pop_layer()
 end
 
 function EffectEspresso:on_finish(player)

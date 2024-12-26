@@ -2,13 +2,14 @@ require "scripts.util"
 local Enemy = require "scripts.actor.enemy"
 local images = require "data.images"
 local Prop = require "scripts.actor.enemies.prop"
+local CollisionInfo = require "scripts.physics.collision_info"
 
 local utf8 = require "utf8"
 
 local UpgradeDisplay = Prop:inherit()
 
 function UpgradeDisplay:init(x, y)
-    self:init_prop(x, y, images.upgrade_jar, 16, 16)
+    self:init_prop(x, y, images.upgrade_jar, 28, 28)
     self.name = "upgrade_display"
     
     self.product = nil
@@ -19,7 +20,7 @@ function UpgradeDisplay:init(x, y)
     self.is_killed_on_stomp = true
     self.do_stomp_animation = false
 
-    self.life = 30
+    self.life = 20
     self.loot = {}
 
 	self.destroy_bullet_on_impact = true
@@ -35,6 +36,11 @@ function UpgradeDisplay:init(x, y)
     self.animation_t = 0
     self.is_animation_exiting = false
     self.letters = {}
+
+    self.collision_info = CollisionInfo:new {
+        type = COLLISION_TYPE_SEMISOLID,
+        is_slidable = true,
+    }
 end
 
 function UpgradeDisplay:assign_upgrade(upgrade)

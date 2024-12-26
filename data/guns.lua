@@ -17,7 +17,9 @@ function Guns:init()
 		self.name = "machinegun"
 		self:init_gun(user)
 		
+		self.color = COL_LIGHT_YELLOW
 		self.sfx = "mushroom_ant_pop"
+
 		self.damage = 1.5
 		self.max_ammo = 25
 		self.max_reload_timer = 1.5
@@ -39,6 +41,8 @@ function Guns:init()
 	function self.Triple:init(user)
 		self.name = "triple"
 		self:init_gun(user)
+
+		self.color = COL_LIGHT_RED
 
 		self.max_ammo = 15
 
@@ -68,6 +72,8 @@ function Guns:init()
 		self.name = "burst"
 		self:init_gun(user)
 
+		self.color = COL_ORANGE
+
 		self.spr = images.gun_burst
 		self.sfx = "mushroom_ant_pop"
 		self.sfx_pitch = 1.1
@@ -95,6 +101,8 @@ function Guns:init()
 		self:init_gun(user)
 
 		self.spr = images.gun_shotgun
+		self.color = COL_LIGHT_BLUE
+
 		self.sfx = "mushroom_ant_pop"
 		self.sfx_pitch = 0.6
 		self.is_auto = false
@@ -128,6 +136,8 @@ function Guns:init()
 		self.name = "minigun"
 		self:init_gun(user)
 		
+		self.color = COL_PINK
+
 		self.max_ammo = 50
 		self.max_reload_timer = 1.5
 
@@ -155,6 +165,8 @@ function Guns:init()
 	function self.Ring:init(user)
 		self.name = "ring"
 		self:init_gun(user)
+
+		self.color = COL_LIGHT_BLUE
 		
 		self.max_ammo = 8
 		self.max_reload_timer = 1.3
@@ -190,6 +202,8 @@ function Guns:init()
 	function self.MushroomCannon:init(user)
 		self.name = "mushroom_cannon"
 		self:init_gun(user)
+		
+		self.color = COL_YELLOW_ORANGE
 		
 		self.sfx = "mushroom_ant_pop"
 		self.sfx_pitch = 0.7
