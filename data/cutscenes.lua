@@ -150,12 +150,12 @@ cutscenes.bee_boss_enter = Cutscene:new("bee_boss_enter", {
             Audio:play_var("spotlight_3", nil, 1.05)
         end,
     }),
-    Scene:new({
-        duration = 1.5,
-        enter = function(scene)
-            game.menu_manager:set_menu("w2_boss_intro")
-        end,
-    }),
+    -- Scene:new({
+    --     duration = 1.5,
+    --     enter = function(scene)
+    --         game.menu_manager:set_menu("w2_boss_intro")
+    --     end,
+    -- }),
     Scene:new({
         enter = function(scene)
             game.level.slowdown_timer_override = nil

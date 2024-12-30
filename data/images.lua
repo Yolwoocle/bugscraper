@@ -3,16 +3,10 @@ require "scripts.meta.constants"
 local Class = require "scripts.meta.class"
 
 DEBUG_IMAGE_TO_COL = {}
-local function debug_set_image_col(im, name)
-	local image_data = love.image.newImageData("images/"..name)
-	local col = {image_data:getPixel(im:getWidth()/2, im:getHeight()/2)}
-	DEBUG_IMAGE_TO_COL[im] = col
-end
 
 local function load_image(name)
 	local im = love.graphics.newImage("images/"..name)
 	im:setFilter("nearest", "nearest")
-	debug_set_image_col(im, name)
 	return im 
 end
 
@@ -328,6 +322,11 @@ local img_names = {
 	cabin_door_light_right_far =     "level/cabin_door_light_right_far",
 	cabin_door_light_right_center =  "level/cabin_door_light_right_center",
 
+	cabin_door_bee_left_far =        "level/cabin_door_bee_left_far", 
+	cabin_door_bee_left_center =     "level/cabin_door_bee_left_center",
+	cabin_door_bee_right_far =       "level/cabin_door_bee_right_far",
+	cabin_door_bee_right_center =    "level/cabin_door_bee_right_center",
+
 	cabin_door_brown_left_far =      "level/cabin_door_brown_left_far", 
 	cabin_door_brown_left_center =   "level/cabin_door_brown_left_center",
 	cabin_door_brown_right_far =     "level/cabin_door_brown_right_far",
@@ -339,6 +338,7 @@ local img_names = {
 	cabin_grid_platform =            "level/cabin_grid_platform",
 
 	cafeteria =                      "level/cafeteria",
+	cafeteria_front =                "level/cafeteria_front",
 	elevator_through_door =          "level/elevator_through_door",
 	ground_floor =                   "level/ground_floor",
 	ground_floor_front =             "level/ground_floor_front",

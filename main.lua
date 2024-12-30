@@ -23,6 +23,7 @@ _G_fixed_frame = 0
 _G_frame_by_frame_mode = false
 _G_frame_repeat = 1
 _G_speedup = false
+_G_profiler_on = false
 local max_frame_buffer_duration = fixed_dt * 2
 local _frame_by_frame_mode_advance_flag = false
 
@@ -139,29 +140,6 @@ end
 
 function love.focus(f)
 	if game.focus then  game:focus(f)  end
-end
-
-print_log_file = love.filesystem.openFile("consolelog.txt", "w")
-print_log_file:write("")
-print_log_file:close()
-
-max_msg_log = 20
-old_print = print
-msg_log = {}
-function print(...)
-	-- print_log_file:open("a")
-
-	old_print(...)
-	
-	local text = concatsep({...}, " ")
-	-- table.insert(msg_log, text)
-	-- print_log_file:write(concat(os.date("%c", os.time())," | ",text,"\n"))
-	
-	if #msg_log > max_msg_log then
-		table.remove(msg_log, 1)
-	end
-
-	-- print_log_file:close()
 end
 
 --- Quits the game and saves settings.

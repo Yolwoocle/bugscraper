@@ -29,7 +29,7 @@ function LightLayer:paint(paint_function, params)
       
     exec_on_canvas({self.canvas, stencil=true}, function()
         if apply_camera then
-            camera:apply_transform()
+            camera:push()
         else
             love.graphics.origin()
             love.graphics.scale(1)
@@ -45,6 +45,10 @@ function LightLayer:paint(paint_function, params)
 		
         paint_function()
 		love.graphics.setStencilState()
+
+        if apply_camera then
+            camera:pop()
+        end
 	end)
 end
 

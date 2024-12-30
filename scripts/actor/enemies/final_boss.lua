@@ -387,7 +387,7 @@ function FinalBoss:update(dt)
     end
 
     for _, layer in pairs(self.layers) do
-        layer:update_offset(self.spr.ox, self.spr.oy)
+        layer.spr:update_offset(self.spr.ox, self.spr.oy)
     end
 
     -- self.debug_values[1] = concat(self.state_machine.current_state_name)

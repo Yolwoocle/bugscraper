@@ -217,7 +217,7 @@ function Wave:enable_wave_side_effects(level)
 	end
 
 	if self.backroom then
-		game.level:begin_backroom(self.backroom)
+		game.level:begin_backroom(self.backroom:new())
 	end
 
 	if self.door_images then

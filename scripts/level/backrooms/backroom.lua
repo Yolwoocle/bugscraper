@@ -17,6 +17,15 @@ function Backroom:can_exit()
     return false
 end
 
+--- (Abstract) Called when the backroom is entered
+function Backroom:on_enter()
+end
+
+--- (Abstract) Called when the backroom is fully entered (the circle transition is finished and 
+--- the backroom takes up the whole screen)
+function Backroom:on_fully_entered()
+end
+
 function Backroom:on_exit()
 end
 

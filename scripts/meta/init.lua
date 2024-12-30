@@ -7,6 +7,11 @@ local function init()
     print("Debug mode: "..tostring(DEBUG_MODE))
     print("")
 
+    if DEBUG_MODE then
+        love.profiler = require "lib.profiler.profile"
+        love.profiler.start()
+    end
+
     local OptionsManager = require "scripts.game.options"
     Options = OptionsManager:new()
 
@@ -52,6 +57,15 @@ local function init()
     love.graphics.draw(love.graphics.newImage('images/splash.png'), CANVAS_OX, CANVAS_OY, 0, scale)
     love.graphics.present()
     love.graphics.origin()
+
+    if DEBUG_MODE then
+        print("")
+        print("---[[ LOAD PROFILER REPORT ]]---")
+        print(love.profiler.report(20))
+        print("")
+    
+        love.profiler.stop()
+    end
 end
 
 return init

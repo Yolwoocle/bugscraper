@@ -90,9 +90,6 @@ function Debug:init(game)
                 _G_frame_repeat = 1
             end
         end, do_not_require_ctrl = true },
-        ["backspace"] = { "show help", function()
-            self.debug_menu = not self.debug_menu
-        end },
         ["v"] = { "__jackofalltrades", function()
 
             local j = 0
@@ -189,16 +186,14 @@ function Debug:init(game)
         ["s"] = { "+10 floors", function()
             self.game:set_floor(self.game:get_floor() + 10)
         end },
-        ["h"] = { "toggle title junk ui", function()
-            self.title_junk = not self.title_junk
+        ["h"] = { "show help", function()
+            self.debug_menu = not self.debug_menu
         end },
 
         ["u"] = { "toggle title junk ui", function()
             self.title_junk = not self.title_junk
         end },
         ["t"] = { "particle", function()
-            local cabin_rect = game.level.cabin_rect
-
             local cabin_rect = game.level.cabin_rect
             Particles:falling_grid(cabin_rect.ax + 16, cabin_rect.ay + 6 * 16 + 0 * 8)
             Particles:falling_grid(cabin_rect.bx - 7 * 16, cabin_rect.ay + 6 * 16 + 0 * 8)
@@ -318,8 +313,21 @@ function Debug:init(game)
             _G_frame_by_frame_mode = not _G_frame_by_frame_mode
         end },
 
-        ["c"] = { "cutscene", function()
-        end },
+        ["p"] = { "start/end profiler", function()
+            _G_profiler_on = not _G_profiler_on
+            if _G_profiler_on then
+                love.profiler.reset()
+                love.profiler.start()
+            else
+                love.profiler.stop()
+                print("")
+                print("===[[ PROFILER REPORT ]]===")
+                print(love.profiler.report(40))
+                print("")
+                love.profiler.reset()
+
+            end
+        end}
     }
 
     -- self.test_spritesheet = AnimatedSprite:new()
@@ -652,6 +660,8 @@ function Debug:draw_info_view()
         joystick_user_str,
         joystick_str,
         wave_resp_str,
+        concat("is_hole_stencil_enabled ", game.level.is_hole_stencil_enabled),
+        concat("backroom ", (game.level.backroom == nil) and "nil" or game.level.backroom.name),
         concat("queued_players ", queued_players_str),
         concat("level_speed ", game.level.level_speed),
         concat("menu_stack ", #game.menu_manager.menu_stack),
@@ -738,7 +748,7 @@ function Debug:test_info_view_crop_line()
 end
 
 function Debug:draw_colview()
-    game.camera:apply_transform()
+    game.camera:push()
 
     local items, len = Collision.world:getItems()
     for i, it in pairs(items) do
@@ -753,7 +763,7 @@ function Debug:draw_colview()
             level.cabin_inner_rect.h)
     end
 
-    game.camera:reset_transform()
+    game.camera:pop()
 end
 
 function Debug:draw_layers()

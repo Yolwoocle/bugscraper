@@ -1,14 +1,14 @@
 name = "bugscraper"
 # default_targets = ["lovejs", "win32", "win64", "macos", "appimage"]
 default_targets = []
-build_directory = "export"
+build_directory = "_export"
 icon_file = "icon.png"
 
 love_files = [
     "+*",
     "-*/.*",
-    "-./export/*",
-    "-./dyn/*",
+    "-./_export/*",
+    "-./_dyn/*",
     "-./_tools/*",
     "-*.aseprite",
     "-*.lnk",
@@ -49,8 +49,8 @@ icon_file = "icon.png"  # or macIcon.icns
 # All specified files will be copied to the <name>/Contents/Resources/ directory of the .app file.
 [macos.archive_files]
 "steam_appid.txt" = "steam_appid.txt"
-"dyn/osx/luasteam.so" = "luasteam.so"
-"dyn/osx/libsteam_api.dylib" = "libsteam_api.dylib"
+"_dyn/osx/luasteam.so" = "luasteam.so"
+"_dyn/osx/libsteam_api.dylib" = "libsteam_api.dylib"
 
 
 [macos.app_metadata]

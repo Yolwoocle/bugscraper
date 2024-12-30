@@ -26,8 +26,8 @@ function TvPresentation:init(x, y)
         { frames = images.tv_slideshow_010, frame_duration = 0 },      -- "injured? good"          by hector_misc (Nextop Games) 
         { frames = images.tv_slideshow_009, frame_duration = 0.3 },    -- "No quuen?"              by behck
         { frames = images.tv_slideshow_011, frame_duration = 0.035 },  -- Splat commercial         by Sarcose
-        { frames = images.tv_slideshow_012, frame_duration = 0.03 },   -- End toastal abuse        by Clemapfel
-        { frames = images.tv_slideshow_013, frame_duration = 0.03 },   -- A salt rifle             by Clemapfel
+        { frames = images.tv_slideshow_012, frame_duration = 0.03 },   -- End toastal abuse        by clem 
+        { frames = images.tv_slideshow_013, frame_duration = 0.03 },   -- A salt rifle             by clem 
         { frames = images.tv_slideshow_014, frame_duration = 0.08 },   -- Beatleblock              by DPS2004
         { frames = images.tv_slideshow_015, frame_duration = 0.3 },    -- bugscrapers arent enough by chromosoze
         { frames = images.tv_slideshow_016, frame_duration = 0 },      -- optic studio             by chromosoze
@@ -188,22 +188,23 @@ end
 
 local t = 0
 function TvPresentation:draw_frame(spritesheet, frame, x, y)
-    game.camera:reset_transform()
+    -- CAMERATEST
+    -- game.camera:pop()
 
-    local tile_count_x = (spritesheet:getWidth() / self.canvas_w)
-    local frame_count = (spritesheet:getWidth() / self.canvas_w) * (spritesheet:getHeight() / self.canvas_h)
-    local frame0 = (frame - 1)
+    -- local tile_count_x = (spritesheet:getWidth() / self.canvas_w)
+    -- local frame_count = (spritesheet:getWidth() / self.canvas_w) * (spritesheet:getHeight() / self.canvas_h)
+    -- local frame0 = (frame - 1)
 
-    t = t + 1 / 60
-    love.graphics.draw(spritesheet,
-        love.graphics.newQuad(
-            self.canvas_w * (frame0 % tile_count_x),
-            self.canvas_h * math.floor(frame0 / tile_count_x),
-            self.canvas_w, self.canvas_h, spritesheet:getDimensions()
-        ), x, y
-    )
+    -- t = t + 1 / 60
+    -- love.graphics.draw(spritesheet,
+    --     love.graphics.newQuad(
+    --         self.canvas_w * (frame0 % tile_count_x),
+    --         self.canvas_h * math.floor(frame0 / tile_count_x),
+    --         self.canvas_w, self.canvas_h, spritesheet:getDimensions()
+    --     ), x, y
+    -- )
 
-    game.camera:apply_transform()
+    -- game.camera:push()
 end
 
 function TvPresentation:draw()
@@ -213,7 +214,6 @@ function TvPresentation:draw()
     end
 
     exec_on_canvas({ self.canvas, stencil = true }, function()
-        game.camera:reset_transform()
         love.graphics.clear()
         if self.current_transition then
             self.current_transition:draw(self.old_slide.frames, self.old_frame, self.current_slide.frames, 1,
@@ -221,7 +221,6 @@ function TvPresentation:draw()
         else
             self:draw_frame(self.current_slide.frames, self.current_frame, 0, 0)
         end
-        game.camera:apply_transform()
     end)
 
     love.graphics.draw(self.canvas, self.x, self.y)

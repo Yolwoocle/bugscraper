@@ -38,12 +38,12 @@ local function new_cafeteria(run_func)
 		max = 1,
 		bounds = RECT_CAFETERIA,
 		enemies = {
-			{ E.UpgradeDisplay, 1, position = { 488, 181 } },
-			{ E.UpgradeDisplay, 1, position = { 544, 181 } },
-			{ E.UpgradeDisplay, 1, position = { 600, 181 } },
+			{ E.UpgradeDisplay, 1, position = { 474+16, 181 } },
+			{ E.UpgradeDisplay, 1, position = { 530+16, 181 } },
+			{ E.UpgradeDisplay, 1, position = { 586+16, 181 } },
 		},
 
-		backroom = BackroomCafeteria:new()
+		backroom = BackroomCafeteria
 	})
 end
 
@@ -335,10 +335,10 @@ local waves = {
 			["bg_grid"] = false,
 		},
 		door_images = {
-			images.cabin_door_brown_left_far,
-			images.cabin_door_brown_left_center,
-			images.cabin_door_brown_right_far,
-			images.cabin_door_brown_right_center,
+			images.cabin_door_bee_left_far,
+			images.cabin_door_bee_left_center,
+			images.cabin_door_bee_right_far,
+			images.cabin_door_bee_right_center,
 		},
 
 		over_title = get_world_prefix(2),
@@ -1156,7 +1156,7 @@ local waves = {
 
 		bounds = RECT_CEO_OFFICE,
 
-		backroom = BackroomCEOOffice:new()
+		backroom = BackroomCEOOffice
 	}),
 
 	

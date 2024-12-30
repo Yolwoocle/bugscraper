@@ -2,6 +2,7 @@ require "scripts.util"
 local images = require "data.images"
 
 local Class = require "scripts.meta.class"
+local sounds = require "data.sounds"
 
 local ElevatorDoor = Class:inherit()
 
@@ -34,14 +35,30 @@ function ElevatorDoor:update(dt)
 	self.offset = lerp(self.offset, self.offset_target, 0.1)
 end
 
-function ElevatorDoor:close()
+function ElevatorDoor:close(play_sound)
+	play_sound = param(play_sound, true)
+	if not self.is_opened then
+		return
+	end
+
 	self.is_opened = false
 	self.offset_target = 0
+	if play_sound then
+		sounds.elev_door_close.source:play()
+	end
 end
 
-function ElevatorDoor:open()
+function ElevatorDoor:open(play_sound)
+	play_sound = param(play_sound, true)
+	if self.is_opened then
+		return
+	end
+
 	self.is_opened = true
 	self.offset_target = self.half_width
+	if play_sound then
+		sounds.elev_door_open.source:play()
+	end
 end
 
 function ElevatorDoor:draw()

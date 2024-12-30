@@ -336,6 +336,7 @@ end
 
 function Level:begin_backroom(backroom)
 	self.backroom = backroom
+	self.backroom:on_enter()
 
 	self.backroom_animation_state_machine:set_state("wait")
 	self.hole_stencil_radius = 0
@@ -383,6 +384,7 @@ function Level:get_backroom_animation_state_machine(dt)
 			enter = function(state)
 				if self.backroom then
 					self.backroom:generate(self.world_generator)
+					self.backroom:on_fully_entered()
 				end
 				
 				self.game.camera:set_x_locked(false)
@@ -399,7 +401,7 @@ function Level:get_backroom_animation_state_machine(dt)
 		},
 		shrink = {
 			enter = function(state)
-				game:kill_all_active_enemies()
+				game:remove_all_active_enemies()
 				self:end_backroom()
 				
 				self.new_wave_progress = math.huge
@@ -485,6 +487,9 @@ function Level:on_upgrade_display_killed(display)
 		source:seek(time)
 	end
 
+	if self.backroom and self.backroom.name == "cafeteria" then
+		self.backroom:open_door()	
+	end
 end
 
 -----------------------------------------------------
@@ -493,16 +498,17 @@ function Level:draw_with_hole(draw_func, stencil_test)
 	stencil_test = stencil_test or "less"
 
 	exec_on_canvas(self.buffer_canvas, function()
-		game.camera:reset_transform()
-
+		game.camera:pop()
+		
 		love.graphics.clear()
 		draw_func()
-
-		game.camera:apply_transform()
+		
+		game.camera:push()
 	end)
 
+	-- Draw stencil shape
 	exec_on_canvas({self.canvas, stencil=true}, function()
-		game.camera:reset_transform()
+		game.camera:pop()
 		love.graphics.clear()
 		
 		if self.is_hole_stencil_enabled then
@@ -518,7 +524,7 @@ function Level:draw_with_hole(draw_func, stencil_test)
 		love.graphics.draw(self.buffer_canvas)
 		
 		love.graphics.setStencilState()
-		game.camera:apply_transform()
+		game.camera:push()
 	end)
 	love.graphics.draw(self.canvas, 0, 0)
 end
@@ -526,8 +532,8 @@ end
 
 function Level:draw()
 	-- hack to get the cafeteria backgrounds to work
-	local on_cafeteria = (self.backroom_animation_state_machine.current_state_name ~= "off")
-	if on_cafeteria then
+	local is_on_backroom = (self.backroom_animation_state_machine.current_state_name ~= "off")
+	if is_on_backroom then
 		if self.backroom and self.backroom.draw then
 			self.backroom:draw()
 		end
@@ -536,7 +542,7 @@ function Level:draw()
 	end
 	
 	self:draw_with_hole(function()
-		if on_cafeteria then
+		if is_on_backroom then
 			self.background:draw()
 		end
 		self.map:draw()

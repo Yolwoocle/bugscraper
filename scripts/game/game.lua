@@ -470,7 +470,7 @@ function Game:draw_on_layer(layer_id, paint_function, params)
 
 	layer:paint(paint_function, {
 		apply_camera = apply_camera,
-		camera = ternary(apply_camera, self.camera, nil),
+		camera = self.camera,
 	})
 end
 
@@ -576,7 +576,7 @@ function Game:draw_game()
 		end
 
 		Particles:draw_layer(PARTICLE_LAYER_FRONT)
-	end)
+	end, { apply_camera = true })
 
 	-----------------------------------------------------
 
@@ -638,7 +638,8 @@ function Game:draw_game()
 end
 
 function Game:draw_smoke_canvas()
-	self.camera:reset_transform()
+	-- self.camera:reset_transform()
+	self.camera:pop()
 
 	-- Used for effects for the stink bugs
 	exec_on_canvas(self.smoke_buffer_canvas, function()
@@ -666,7 +667,8 @@ function Game:draw_smoke_canvas()
 	love.graphics.draw(self.smoke_canvas, 0, 0)
 	love.graphics.setColor(1, 1, 1, 1)
 
-	self.camera:apply_transform()
+	-- self.camera:apply_transform()
+	self.camera:push()
 end
 
 function Game:set_ui_visible(bool)
@@ -823,6 +825,14 @@ function Game:update_timer_before_game_over(dt)
 
 	if self.timer_before_game_over <= 0 then
 		self:game_over()
+	end
+end
+
+function Game:remove_all_active_enemies()
+	for _, actor in pairs(self.actors) do
+		if actor.is_active and actor.counts_as_enemy then
+			actor:remove()
+		end
 	end
 end
 
@@ -1002,6 +1012,7 @@ function Game:start_game()
 	self:remove_queued_players()
 
 	self.menu_manager:set_can_pause(true)
+
 	self:set_zoom(1)
 	local x, y = self.camera:get_position()
 	game.camera:set_target_position(0, 0)

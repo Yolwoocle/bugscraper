@@ -4,7 +4,6 @@ local ElevatorDoor = require "scripts.level.elevator_door"
 local Timer = require "scripts.timer"
 
 local images = require "data.images"
-local sounds = require "data.sounds"
 
 local Elevator = Class:inherit()
 
@@ -12,7 +11,7 @@ function Elevator:init(level)
     self.level = level
 
 	self.door = ElevatorDoor:new(self.level.door_rect.ax, self.level.door_rect.ay)
-	self.door:close()
+	self.door:close(false)
 
 	self.floor_progress = 0.0
 	self.door_animation = false
@@ -50,7 +49,6 @@ end
 
 function Elevator:open_door(close_timer)
 	self.door:open()
-	sounds.elev_door_open.source:play()
 	if close_timer then
 		self.door_animation_timer:set_duration(close_timer)
 		self.door_animation_timer:start()
@@ -59,7 +57,6 @@ end
 
 function Elevator:close_door()
 	self.door:close()
-	sounds.elev_door_close.source:play()
 	self.door_animation_timer:stop()
 	self.level:on_door_close()
 end

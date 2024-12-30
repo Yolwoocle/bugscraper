@@ -21,12 +21,16 @@ function Layer:paint(paint_function, params)
     
     exec_on_canvas(self.canvas, function() 
         if apply_camera then
-            camera:apply_transform()
+            camera:push()
         else
-            love.graphics.origin()
-            love.graphics.scale(1)
+            -- camera:pop()
         end
         paint_function()
+        if apply_camera then
+            camera:pop()
+        else
+            -- camera:push()
+        end
     end)
 end
 

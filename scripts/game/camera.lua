@@ -173,14 +173,18 @@ function Camera:reset()
 end
 
 function Camera:reset_transform()
-    -- TODO rename these to push and pop
     love.graphics.origin()
 	love.graphics.scale(1)
 end
 
-function Camera:apply_transform()
-    self:reset_transform()
+function Camera:pop()
+    love.graphics.pop()
+end
 
+function Camera:push()
+    -- self:reset_transform()
+    
+    love.graphics.push()
     local x, y = self:get_real_position()
 	love.graphics.translate(math.floor(-x), math.floor(-y))
     love.graphics.rotate(self.rot)
