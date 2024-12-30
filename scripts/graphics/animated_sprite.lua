@@ -33,7 +33,7 @@ function AnimatedSprite:set_animation(animation_name)
         return
     end
     local anim = self.animations[animation_name]
-    assert(anim, "Animation '" .. animation_name .. "' does not exist") 
+    assert(anim, "Animation '" .. tostring(animation_name) .. "' does not exist") 
     self.animation = anim
     self.current_animation_name = animation_name
     self.frame_i = 1
