@@ -81,6 +81,7 @@ BW = BLOCK_WIDTH
 COLLISION_TYPE_SOLID = "solid"
 COLLISION_TYPE_SEMISOLID = "semisolid"
 COLLISION_TYPE_NONSOLID = "nonsolid"
+COLLISION_TYPE_PLAYER_NONSOLID = "player_nonsolid"
 
 TILE_AIR = 0
 TILE_METAL = 1
@@ -170,7 +171,7 @@ LOGO_COLS = {COL_LIGHT_YELLOW, COL_LIGHT_BLUE, COL_LIGHT_RED}
 ---------------------------------------------
 
 -- Ui
-MENU_PADDING = CANVAS_WIDTH * 0.1
+MENU_PADDING = CANVAS_WIDTH * 0.18
 
 ---------------------------------------------
 

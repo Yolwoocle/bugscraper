@@ -22,7 +22,7 @@ function FloorHoleSpawner:init(x, y)
     self.pattern_ox = 0
     self.pattern_x_direction = 1
     self.floor_width = 24
-    self.hole_pattern = {2, 4}
+    self.hole_pattern = {2, 8}
     self.hole_pattern_sum = table_sum(self.hole_pattern)
 
     self.move_timer = 0.0

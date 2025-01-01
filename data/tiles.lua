@@ -83,7 +83,7 @@ function Tiles:init()
 		self.spr = images.semisolid
 	end)
 
-	-- Flip tile
+	-- Flip tile on
 	self.tiles[TILE_FLIP_ON] = make_tile(function(self, x, y, w)
 		self:init_tile(x, y, w)
 		self.id = TILE_FLIP_ON
@@ -97,7 +97,7 @@ function Tiles:init()
 		}
 	end)
 
-	-- Flip tile
+	-- Flip tile off
 	self.tiles[TILE_FLIP_OFF] = make_tile(function(self, x, y, w)
 		self:init_tile(x, y, w)
 		self.id = TILE_FLIP_OFF
@@ -106,7 +106,7 @@ function Tiles:init()
 		self.spr = images.bg_plate
 
 		self.collision_info = CollisionInfo:new {
-			type = COLLISION_TYPE_NONSOLID,
+			type = COLLISION_TYPE_PLAYER_NONSOLID,
 			is_slidable = false,
 		}
 	end)

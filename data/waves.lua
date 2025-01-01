@@ -924,10 +924,21 @@ local waves = {
 		title_color = COL_LIGHT_BLUE,
 		title_outline_color = COL_BLACK_BLUE,
 
-		elevator_layers = {
+		
+		fixed_enemies = {
+			{ E.FloorHoleSpawner, 1 },
 		},
+
 		run = function(self, level)
+			for _, p in pairs(game.players) do
+				p.is_affected_by_bounds = false
+			end
 		end,
+
+		elevator_layers = {
+			["walls"] = false,
+			["walls_no_floor"] = true,
+		},
 	}),
 
 
