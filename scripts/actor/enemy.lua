@@ -51,7 +51,6 @@ function Enemy:init_enemy(x,y, img, w,h)
                 self.vy = self.vy + math.sin(self.direction) * self.speed
 
 				if self.y > CANVAS_HEIGHT/2 then
-					print_debug("TRUE")
 					self.vy = -math.abs(self.vy)
 					self.direction = math.atan2(self.vy, self.vx)
 				end

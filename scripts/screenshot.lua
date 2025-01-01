@@ -34,7 +34,7 @@ local function time_diff(name, func)
 	local start = love.timer.getTime( )
 	func()
 	local result = love.timer.getTime() - start
-	print_debug(string.format("Measure '%s': %.4f ms", name, result * 1000 ))
+	print(string.format("Measure '%s': %.4f ms", name, result * 1000 ))
 	return result
 end
 
@@ -69,10 +69,10 @@ function ScreenshotManager:screenshot_measure()
 		filepath = love.filesystem.getSaveDirectory().."/"..filename
 	end
 
-	print_debug(string.format("Measure for %d screenshots:", n))
-	print_debug(string.format("- canvas draw:       %.4f ms", t1 * 1000 ))
-	print_debug(string.format("- new image data:    %.4f ms", t2 * 1000 ))
-	print_debug(string.format("- encode image data: %.4f ms", t3 * 1000 ))
+	print(string.format("Measure for %d screenshots:", n))
+	print(string.format("- canvas draw:       %.4f ms", t1 * 1000 ))
+	print(string.format("- new image data:    %.4f ms", t2 * 1000 ))
+	print(string.format("- encode image data: %.4f ms", t3 * 1000 ))
 
 	-- notification = "Screenshot path pasted to clipboard"
 	-- love.system.setClipboardText(filepath)

@@ -64,7 +64,7 @@ function TextManager:get_locale()
 
     if not option or option == "default" then
         local locales = love.system.getPreferredLocales() -- TODO if first language not supported, look for others
-        print_debug("User preferred locales :", table_to_str(locales))
+        print("User preferred locales :", table_to_str(locales))
 
         local lang = self.locale_to_language[locales[1] or "_____"]
         if lang then
@@ -174,7 +174,7 @@ function TextManager:sanity_check_languages(reference_language)
     for ref_key, ref_value in pairs(self.languages[reference_language]) do
         for lang_name, lang_values in pairs(self.languages) do
             if lang_name ~= reference_language and not lang_values[ref_key] then
-                print_debug("- [Text] /!\\ missing key '"..ref_key.."' for language '"..lang_name.."'")
+                print("- [Text] /!\\ missing key '"..ref_key.."' for language '"..lang_name.."'")
             end
         end
     end
