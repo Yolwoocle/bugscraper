@@ -24,7 +24,7 @@ local utf8 = require "utf8"
 
 local Level = Class:inherit()
 
-function Level:init(game)
+function Level:init(game, backroom)
     self.game = game
 	
 	-- Map & world gen
@@ -76,7 +76,7 @@ function Level:init(game)
 	-- self.background = BackgroundBeehive:new(self)
 	self.background:set_def_speed(self.def_level_speed)
 	
-	self.backroom = BackroomGroundFloor:new()
+	self.backroom = backroom or BackroomGroundFloor:new()
 	self.backroom_animation_state_machine = self:get_backroom_animation_state_machine() 
 	
 	self.force_backroom_end_flag = false

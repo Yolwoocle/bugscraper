@@ -93,7 +93,9 @@ function Game:init()
 	self.show_splash = true
 end
 
-function Game:new_game()
+function Game:new_game(params)
+	params = params or {}
+
 	if OPERATING_SYSTEM ~= "Web" then -- scotch
 		love.audio.stop()
 	end
@@ -124,7 +126,13 @@ function Game:new_game()
 	-- Actors
 	self.actor_limit = 150
 	self.actors = {}
-	self:init_players()
+	local px, py, spacing
+	if params.quick_restart then
+		px = self.level.door_rect.ax + 32
+		py = self.level.door_rect.by
+		spacing = 16
+	end
+	self:init_players(px, py, spacing)
 
 	-- Debugging
 	self.colview_mode = false
@@ -213,6 +221,14 @@ function Game:new_game()
 	end
 
 	Options:update_volume()
+
+	if params.quick_restart then
+		self.level.force_backroom_end_flag = true
+		self.camera.x = 0
+		self.camera.y = 0
+		self.logo_y = 5000
+		self:start_game()
+	end
 end
 
 function Game:init_layers()
@@ -889,12 +905,19 @@ function draw_log()
 	end
 end
 
-function Game:init_players()
+function Game:init_players(x, y, spacing)
+	spacing = spacing or (5*16)
 	self.players = {}
 
 	for i = 1, MAX_NUMBER_OF_PLAYERS do
 		if Input:get_user(i) ~= nil then
-			self:new_player(i)
+			local px, py
+			if x and y and spacing then
+				px = x + spacing*(i - 1)
+				py = y
+			end
+			
+			self:new_player(i, px, py)
 		end
 	end
 end
@@ -939,12 +962,11 @@ function Game:new_player(player_n, x, y, put_in_buffer)
 	if player_n == nil then
 		return
 	end
-	local mx = math.floor(self.level.door_rect.ax)
-	-- x = param(x, mx + ((player_n-1) / (MAX_NUMBER_OF_PLAYERS-1)) * (self.level.door_rect.bx - self.level.door_rect.ax))
-	-- x = param(x, mx + math.floor((self.level.door_rect.bx - self.level.door_rect.ax)/2))
-	x = param(x, 26 * 16 + 16 * 5 * (player_n - 1))
-	y = param(y, CANVAS_HEIGHT - 3 * 16 + 4)
 
+	x = param(x, 26*16 + (5*16)*(player_n - 1))
+	y = param(y, CANVAS_HEIGHT - 3*16 + 4)
+				
+	
 	local player = Player:new(player_n, x, y, Input:get_user(player_n):get_skin() or skins[1])
 	self.players[player_n] = player
 	self.waves_until_respawn[player_n] = {-1, nil}

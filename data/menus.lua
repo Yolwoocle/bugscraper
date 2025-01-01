@@ -498,15 +498,19 @@ local function generate_menus()
         end },
         -- { StatsMenuItem, Text:text("menu.game_over.max_combo"), function(self) return concat(game.stats.max_combo) end },
         { "" },
-        { "▶ " .. Text:text("menu.game_over.continue"), function()
+        { "▶ {menu.game_over.continue}", function()
             -- scotch
             game.has_seen_controller_warning = true
             game:new_game()
         end },
-    }
+        { "🔄 {menu.game_over.quick_restart}", function()
+            game.has_seen_controller_warning = true
+            game:new_game({quick_restart = true})
+        end },
+    } 
     if DEMO_BUILD then
         table.insert(game_over_items,
-            { "❤ " .. Text:text("menu.win.wishlist") .. " 🔗", func_url("steam://advertise/2957130/") }
+            { "❤ {menu.win.wishlist} 🔗", func_url("steam://advertise/2957130/") }
         )
     end
     menus.game_over = Menu:new(game, game_over_items, DEFAULT_MENU_BG_COLOR, PROMPTS_GAME_OVER, draw_elevator_progress)

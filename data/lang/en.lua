@@ -249,6 +249,7 @@ return {
             time = "Time", -- The time that the player took to complete the level
             floor = "Floor", -- Which storey the player was on when they died
             continue = "CONTINUE",
+            quick_restart = "QUICK RESTART",
         },
         win = {
             title = "CONGRATULATIONS!",
