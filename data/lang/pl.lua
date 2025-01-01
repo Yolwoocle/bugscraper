@@ -252,6 +252,7 @@ return {
             floor = "Piętro",
             -- max_combo = "Maks combo",
             continue = "KONTYNUUJ",
+            quick_restart = "QUICK RESTART", --ADDED
         },
         win = {
             title = "GRATULACJE!",

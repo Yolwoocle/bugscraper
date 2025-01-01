@@ -245,6 +245,7 @@ return {
             time = "Temps",
             floor = "Étage",
             continue = "CONTINUER",
+            quick_restart = "REDÉMARRAGE RAPIDE",
         },
         win = {
             title = "FÉLICITATIONS !",

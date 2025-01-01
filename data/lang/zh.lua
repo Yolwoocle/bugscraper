@@ -246,11 +246,12 @@ return {
         },
         game_over = {
             title = "GAME OVER!",
-            kills = "Kills",
+            kills = "Enemies killed",
             time = "Time",
             floor = "Floor",
             -- max_combo = "Max combo",
             continue = "CONTINUE",
+            quick_restart = "QUICK RESTART", --ADDED
         },
         win = {
             title = "CONGRATULATIONS!",

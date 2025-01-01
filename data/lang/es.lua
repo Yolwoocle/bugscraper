@@ -248,6 +248,7 @@ return {
             time = "Tiempo transcurrido", -- The time that the player took to complete the level
             floor = "Piso",      -- Which storey the player was on when they died
             continue = "CONTINUAR",
+            quick_restart = "QUICK RESTART", --ADDED
         },
         win = {
             title = "FELICITACIONES!",

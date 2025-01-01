@@ -234,10 +234,11 @@ return {
         },
         game_over = {
             title = "FIM DE JOGO!",
-            kills = "Abates",
+            kills = "Abates", -- CHANGED: enemies killed
             time = "Tempo",
             floor = "Andar",
             continue = "CONTINUAR",
+            quick_restart = "QUICK RESTART", --ADDED
         },
         win = {
             title = "PARABÉNS!",
