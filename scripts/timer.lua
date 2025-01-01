@@ -3,12 +3,13 @@ local Class = require "scripts.meta.class"
 
 local Timer = Class:inherit()
 
-function Timer:init(duration, args)
-    args = args or {}
+function Timer:init(duration, params)
+    params = params or {}
     
     self:set_duration(duration)
     self.time = duration
-    self:apply_args(args)
+    self.loopback = param(params.loopback, false)
+    self:apply_args(params)
 
     self.is_active = false
     self:reset()
@@ -31,12 +32,16 @@ function Timer:update(dt)
         return false
     end
 
-    self.time = math.max(self.time - dt, 0.0)
+    self.time = self.time - dt
     if self.time <= 0 then
         if self.on_timeout then
             self:on_timeout()
         end
-        self:stop()
+        if self.loopback then
+            self.time = self.time + self.duration
+        else
+            self:stop()
+        end
         return true
     end
     return false
@@ -80,6 +85,7 @@ function Timer:start(duration, args)
 end
 
 function Timer:stop()
+    self.time = 0
     self.is_active = false
     self:reset()
 end

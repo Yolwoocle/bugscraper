@@ -19,10 +19,6 @@ function Centipede:init(x, y, length, parent, params)
     if params.center_y and params.angle then
         y = params.center_y + math.sin(params.angle) * (1 + params.angle) * 4
     end
-    print_table(params)
-    print_debug(x)
-    print_debug(y)
-    print_debug("")
     self.spawn_center_x = params.center_x
     self.spawn_center_y = params.center_y
     self.spawn_angle = params.angle

@@ -44,7 +44,6 @@ end
 function Cutscene:update(dt)
     if self.is_playing then
         local skip_scene = self.current_scene:update(dt)
-        print_debug("ret ", skip_scene)
         
         if skip_scene or self.timer:update(dt) then
             local next_i = mod_plus_1(self.current_scene_i + 1, #self.scenes)

@@ -471,6 +471,7 @@ local img_names = {
 	removeme_button_on = "removeme_button_on",
 	removeme_button_off = "removeme_button_off",
 	removeme_spritesheet_test = "removeme_spritesheet_test",
+	removeme_spritesheet_test2 = "removeme_spritesheet_test2",
 	removeme_bands = "removeme_bands",
 
 	splash = "splash",
@@ -506,7 +507,7 @@ images.button_fragments = {
 -- Input buttons
 
 local start = love.timer.getTime()
-print_debug("Loading images...")
+print("Loading images...")
 
 -- Keyboard
 for key_constant, button_image_name in pairs(KEY_CONSTANT_TO_IMAGE_NAME) do
@@ -555,7 +556,7 @@ for button, _ in pairs(CONTROLLER_BUTTONS) do
 end
 images.btn_c_unknown = load_image("buttons/controller/btn_c_unknown.png")
 
-print_debug("Finished loading", table_key_count(images), "images. (", (love.timer.getTime() - start) * 1000 ,"ms)")
+print("Finished loading", table_key_count(images), "images. (", (love.timer.getTime() - start) * 1000 ,"ms)")
 
 -----------------------------------------------------
 

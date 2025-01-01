@@ -47,7 +47,6 @@ cutscenes.enter_ceo_office = Cutscene:new("enter_ceo_office", {
             end
 
             -- the scene is finished early
-            print_debug(ok_players, "/", game:get_number_of_alive_players())
             if ok_players == game:get_number_of_alive_players() then
                 return true 
             end

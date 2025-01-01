@@ -1,6 +1,7 @@
 require "scripts.util"
 local Class = require "scripts.meta.class"
 local shaders = require "data.shaders"
+local images  = require "data.images"
 
 local Sprite = Class:inherit()
 
@@ -61,16 +62,19 @@ function Sprite:set_visible(val)
 end
 
 function Sprite:set_spritesheet(image, tile_count_x, tile_count_y)
+    tile_count_x = tile_count_x or 1
+    tile_count_y = tile_count_y or 1
+
     self.is_spritesheet = (image ~= nil)
 
     if self.is_spritesheet then
         self.image = image
 
         self.spritesheet_tile = 1
-        self.spritesheet_tile_count_x = tile_count_x or 1
-        self.spritesheet_tile_count_y = tile_count_y or 1
-        self.spritesheet_tile_w = image:getWidth() / self.spritesheet_tile_count_x
-        self.spritesheet_tile_h = image:getHeight() / self.spritesheet_tile_count_y
+        self.spritesheet_tile_count_x = tile_count_x
+        self.spritesheet_tile_count_y = tile_count_y
+        self.spritesheet_tile_w = image:getWidth()  / tile_count_x
+        self.spritesheet_tile_h = image:getHeight() / tile_count_y
 
         self.w = self.spritesheet_tile_w
         self.h = self.spritesheet_tile_h
@@ -83,6 +87,7 @@ function Sprite:set_spritesheet_tile(tile)
     self.spritesheet_tile = tile
 
     local frame0 = (self.spritesheet_tile - 1)
+
     self.spritesheet_quad:setViewport(
         self.spritesheet_tile_w * (frame0 % self.spritesheet_tile_count_x),
         self.spritesheet_tile_h * math.floor(frame0 / self.spritesheet_tile_count_x),

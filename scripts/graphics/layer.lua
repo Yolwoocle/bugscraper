@@ -22,14 +22,10 @@ function Layer:paint(paint_function, params)
     exec_on_canvas(self.canvas, function() 
         if apply_camera then
             camera:push()
-        else
-            -- camera:pop()
         end
         paint_function()
         if apply_camera then
             camera:pop()
-        else
-            -- camera:push()
         end
     end)
 end

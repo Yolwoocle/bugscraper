@@ -118,7 +118,6 @@ function DebugCommandManager:init()
             { "text:string" },
         },
         run = function(text)
-            print_debug(text)
             return true
         end,
     }
