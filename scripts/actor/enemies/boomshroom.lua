@@ -80,7 +80,7 @@ function Boomshroom:init(x, y)
                     self.flash_timer:start()
                 end
 
-                if self.exploding_timer:update(dt) then
+                if self.exploding_timer:update(dt) then                    
                     local explosion = Explosion:new(self.mid_x, self.mid_y, {radius = self.explosion_radius})
                     game:new_actor(explosion)
                     self:kill()

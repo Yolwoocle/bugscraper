@@ -241,6 +241,9 @@ local img_names = {
 	-----------------------------------------------------
 	
 	-- particles
+	cabin_fragment_1 =            "particles/cabin_fragment_1",
+	cabin_fragment_2 =            "particles/cabin_fragment_2",
+	cabin_fragment_3 =            "particles/cabin_fragment_3",
 	cocoon_fragment_1 =           "particles/cocoon_fragment_1",
 	cocoon_fragment_2 =           "particles/cocoon_fragment_2",
 	honey_fragment_1 =            "particles/honey_fragment_1",

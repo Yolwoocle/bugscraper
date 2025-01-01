@@ -37,6 +37,7 @@ function Explosion:update(dt)
         end
         game:screenshake(self.screenshake)
         game:frameskip(5)
+        Input:vibrate_all(0.3, 0.5)
         Audio:play("explosion")
         Particles:explosion(self.mid_x, self.mid_y, self.radius + 8)
         -- Particles:static_image(images._test_anim_explosion, self.mid_x, self.mid_y, 0, 1)

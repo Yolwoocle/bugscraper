@@ -43,6 +43,7 @@ function Motherboard:init(x, y)
     self.bullet_bounce_mode = BULLET_BOUNCE_MODE_NORMAL
     self.is_front = true
     self.is_affected_by_bounds = false
+	self.affected_by_walls = false
     self.laser_count = 15
 
     -- graphics
@@ -97,11 +98,61 @@ function Motherboard:init(x, y)
         { FlyingDung, 2 },
     }
     self.wave_enemies = {}
+    self.can_spawn_button = true
 
     self.hard_mode = false
 
     local removeme_timer_mult = 1 --0.1
     self.state_machine = StateMachine:new({
+        intro = {
+            enter = function(state)
+                state.intro_target_y = 3 * 16 + 4
+                self.vy = 1000
+            end,
+            update = function(state, dt)
+                if self.y > state.intro_target_y then
+                    return "intro_linger"
+                end
+            end,
+            exit = function(state)
+                self.y = state.intro_target_y
+                self.vy = 0
+
+                for ix = self.x, self.x + self.w, 16 do
+                    Particles:image(ix, self.y + self.h, 5, {images.cabin_fragment_1, images.cabin_fragment_2, images.cabin_fragment_3}, 4, nil, nil, nil, {
+                        vx1 = -50,
+                        vx2 = 50,
+                
+                        vy1 = 80,
+                        vy2 = 200,
+                    })
+                end
+
+                game:screenshake(8)
+                Input:vibrate_all(0.5, 0.7)
+            end
+        },
+        intro_linger = {
+            enter = function(state)
+                self.state_timer:start(1.0)
+            end,
+            update = function(state, dt)
+                local r = self.state_timer.time / self.state_timer.duration
+                self.spr:update_offset(random_neighbor(r*8), random_neighbor(r*8))
+
+                if self.state_timer:update(dt) then
+                    self:randomize_button_position()
+                    self:spawn_button()
+                    self:transition_to_random_state()
+                    
+                end
+            end,
+            exit = function(state)
+                self.spr:update_offset(0, 0)
+                game.menu_manager:set_menu("w3_boss_intro")
+            end
+        },
+
         chippers = {
             enter = function(state)
                 local bounds = game.level.cabin_inner_rect
@@ -275,6 +326,8 @@ function Motherboard:init(x, y)
 
                 self.kill_on_next_frame = false
                 self.is_immune_to_bullets = true
+
+                self.can_spawn_button = false
             end,
 
             update = function(state, dt)
@@ -310,14 +363,9 @@ function Motherboard:init(x, y)
                 self.spr:update_offset(random_neighbor(5), random_neighbor(5))
             end
         }
-    })
-
-    self:transition_to_random_state()
-
-    self:randomize_button_position()
+    }, "intro")
 
     self:set_bouncy(true)
-    self:spawn_button()
 end
 
 function Motherboard:set_bouncy(val)
@@ -396,7 +444,7 @@ function Motherboard:randomize_button_position()
 end
 
 function Motherboard:update_random_button(dt)
-    if self.new_button_timer:update(dt) then
+    if self.new_button_timer:update(dt) and self.can_spawn_button then
         self:spawn_button()
     end
 end

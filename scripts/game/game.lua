@@ -226,7 +226,7 @@ function Game:new_game(params)
 		self.level.force_backroom_end_flag = true
 		self.camera.x = 0
 		self.camera.y = 0
-		self.logo_y = 5000
+		self.logo_y = -5000 -- SCOTCH
 		self:start_game()
 	end
 end
