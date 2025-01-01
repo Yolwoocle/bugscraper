@@ -600,7 +600,6 @@ end
 function Guns:get_random_gun(user)
 	local gun = random_sample(all_guns) or self.unlootable.Machinegun
 	local all_player_gun = self:find_gun_held_by_all_players()
-	print_debug("all_player_gun ", all_player_gun)
 	local inst = gun:new(user)
 	
 	local limit = 10

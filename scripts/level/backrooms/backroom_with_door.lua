@@ -1,12 +1,7 @@
 require "scripts.util"
-local upgrades = require "data.upgrades"
 local images = require "data.images"
-local enemies = require "data.enemies"
 local Backroom = require "scripts.level.backrooms.backroom"
-local BackgroundCafeteria = require "scripts.level.background.background_cafeteria"
 local ElevatorDoor       = require "scripts.level.elevator_door"
-local TvPresentation    = require "scripts.level.background.layer.tv_presentation"
-local WaterDispenser   = require "scripts.actor.enemies.vending_machine.water_dispenser"
 
 local BackroomWithDoor = Backroom:inherit()
 

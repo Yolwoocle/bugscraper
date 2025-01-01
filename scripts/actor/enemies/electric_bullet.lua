@@ -11,10 +11,6 @@ function ElectricBullet:init(x, y, i)
     self.name = "electric_bullet"
 
     self.remove_on_exit_bounds = true
-
-    self.removeme_n = 0
-    self.removeme_i = i
-
 end
 
 function ElectricBullet:set_properties(x, y, angle, length, speed, bounds)
@@ -29,10 +25,6 @@ function ElectricBullet:set_properties(x, y, angle, length, speed, bounds)
         x + length * cosa, y + length * sina
     )
 
-    if self.removeme_i == 0 and self.removeme_n <= 1000 then
-        print_debug("elecbul", x, y, x + length * cosa, y + length * sina)        
-        print_debug("seg 0", self.segment.ax, self.segment.ay, self.segment.bx, self.segment.by)
-    end
     self.arc_vx = speed * cosa
     self.arc_vy = speed * sina
 end
