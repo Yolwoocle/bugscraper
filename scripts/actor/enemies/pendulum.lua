@@ -5,6 +5,10 @@ local Timer = require "scripts.timer"
 local sounds = require "data.sounds"
 local images = require "data.images"
 
+local spike_ball = require "data.models.spike_ball"
+local Renderer3D = require "scripts.graphics.3d.renderer_3d"
+local Object3D = require "scripts.graphics.3d.object_3d"
+
 local Pendulum = Enemy:inherit()
 	
 function Pendulum:init(x, y, angle_range, radius, swing_speed, initial_angle_t)
@@ -44,8 +48,20 @@ function Pendulum:init(x, y, angle_range, radius, swing_speed, initial_angle_t)
     self.t = 0.0
 
     self.rope = ElectricArc:new(self.x, self.y)
+    self.rope.lightning.style = LIGHTNING_STYLE_BITS
     self.rope.is_arc_active = false
     game:new_actor(self.rope)
+
+    self.def_ball_scale = 20
+    self.object_3d = Object3D:new(spike_ball)
+    self.renderer = Renderer3D:new({self.object_3d})
+
+    self.renderer.line_color = COL_WHITE
+	self.renderer.lighting_palette = {{1, 1, 1, 0}}
+    self.object_3d.scale:sset(self.def_ball_scale)
+    self.object_3d.position.x = 200
+    self.object_3d.position.y = 200
+    self.ball_rotate_speed = 4
 
     self:update_pendulum_position(0)
 end
@@ -66,6 +82,15 @@ function Pendulum:update(dt)
 
         self:update_pendulum_position(dt)
     end 
+
+    -- 3D
+    self.renderer.line_color = self.spr.color
+    self.object_3d.position.x = self.x + self.w/2
+    self.object_3d.position.y = self.y + self.h/2
+    self.object_3d.rotation.z = math.atan2(self.y + self.h/2 - self.anchor_y, self.x + self.w/2 - self.anchor_x)
+    self.object_3d.rotation.x = self.object_3d.rotation.x + dt*self.ball_rotate_speed
+
+    self.renderer:update(dt)
 end
 
 function Pendulum:update_pendulum_position(dt)
@@ -81,6 +106,12 @@ end
 
 function Pendulum:on_removed()
     self.rope:remove()
+end
+
+function Pendulum:draw()
+    Pendulum.super.draw(self)
+    
+    self.renderer:draw()
 end
 
 return Pendulum

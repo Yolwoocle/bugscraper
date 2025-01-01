@@ -15,17 +15,15 @@ function BigBeelet:init(x, y)
     self.super.init(self, x, y)
     self.name = "big_beelet"
     self:set_dimensions(24, 24)
-    self.spr:set_scale(2, 2)
     self.attack_bounces = 8
     self.life = 40
     self.is_stompable = false
 
-    self.base_scale = 2
     self.attack_speed = 70
 
     self.spr = AnimatedSprite:new({
-        normal = {{images.chipper_1, images.chipper_2, images.chipper_3, images.chipper_2}, 0.2},
-        attack = {{images.chipper_attack_1, images.chipper_attack_2, images.chipper_attack_3, images.chipper_attack_2}, 0.1},
+        normal = {images.big_chipper, 0.2, 4},
+        attack = {images.big_chipper_activated, 0.1, 4},
     }, "normal", SPRITE_ANCHOR_CENTER_CENTER) 
 end
 

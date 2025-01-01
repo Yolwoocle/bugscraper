@@ -27,7 +27,7 @@ function Beellet:init(x, y)
     self.anim_frame_len = 0.2
     self.spr = AnimatedSprite:new({
         normal = {{images.beelet_1}, 0.2},
-        attack = {{images.beelet_activated_1, images.beelet_activated_2}, 0.1},
+        attack = {images.beelet_activated, 0.1, 2},
     }, "normal", SPRITE_ANCHOR_CENTER_CENTER) 
 	self.flip_mode = ENEMY_FLIP_MODE_MANUAL
     self.spr:set_anchor(SPRITE_ANCHOR_CENTER_CENTER)

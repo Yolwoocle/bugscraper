@@ -187,6 +187,9 @@ GAME_STATE_WIN = "win"
 -- For non-empty fields in enemies' loot tables, new_probablity = probablity * (1 + this_value * (number_of_players - 1))
 MULTIPLAYER_LOOT_PROBABILITY_MULTIPLIER = 1.0
 
+LIGHTNING_STYLE_NORMAL = "normal"
+LIGHTNING_STYLE_BITS = "bits"
+
 ---------------------------------------------
 
 -- Input

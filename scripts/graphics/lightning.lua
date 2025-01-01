@@ -29,6 +29,8 @@ function Lightning:init(params)
 
     self.color = self.palette[1]
     self.segments = {}
+
+    self.style = LIGHTNING_STYLE_NORMAL
 end
 
 function Lightning:convert_segment(ax, ay, bx, by)
@@ -82,14 +84,22 @@ function Lightning:draw(ox, oy)
     ox = param(ox, 0)
     oy = param(oy, 0)
     
-    local old_width = love.graphics.getLineWidth()
-    for i, point in pairs(self.segments) do
-        love.graphics.setLineWidth(point.line_width) 
-        line_color(point.color, ox + point.segment.ax, oy + point.segment.ay, ox + point.segment.bx, oy + point.segment.by)
-        i = i + 1
-    end
+    if self.style == LIGHTNING_STYLE_NORMAL then
+        local old_width = love.graphics.getLineWidth()
+        for i, point in pairs(self.segments) do
+            love.graphics.setLineWidth(point.line_width) 
+            line_color(point.color, ox + point.segment.ax, oy + point.segment.ay, ox + point.segment.bx, oy + point.segment.by)
+        end
+    
+        love.graphics.setLineWidth(old_width)
+    
+    elseif self.style == LIGHTNING_STYLE_BITS then
+        for i, point in pairs(self.segments) do
+            local img = ternary(point.line_width < lerp(self.min_line_width, self.max_line_width, 0.5), images.particle_bit_zero, images.particle_bit_one)
+            love.graphics.draw(img, ox + point.segment.bx, oy + point.segment.by)
+        end
 
-    love.graphics.setLineWidth(old_width)
+    end
 end
 
 return Lightning
