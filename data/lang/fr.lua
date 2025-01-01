@@ -89,7 +89,7 @@ return {
         },
         milk = {
             title = "Lait",
-            description = "+1 ❤ permanent",
+            description = "+1 maximum ❤",
         },
         boba = {
             title = "Bubble tea",
@@ -102,6 +102,10 @@ return {
         fizzy_lemonade = { 
             title = "Limonade pétillante",
             description = "Maintenir saut pour planer",
+        },
+        apple_juice = {
+            title = "Apple Juice",
+            description = "Obtenir +1 ❤",
         },
     },
     input = {

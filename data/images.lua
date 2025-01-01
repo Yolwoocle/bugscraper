@@ -448,6 +448,7 @@ local img_names = {
 	upgrade_energy_drink =   "upgrades/upgrade_energy_drink",
 	upgrade_soda =           "upgrades/upgrade_soda",
 	upgrade_fizzy_lemonade = "upgrades/upgrade_fizzy_lemonade",
+	upgrade_apple_juice =    "upgrades/upgrade_apple_juice",
 	upgrade_water =          "upgrades/upgrade_water",
 	
 	-----------------------------------------------------

@@ -361,7 +361,7 @@ function Player:do_damage(n, source)
 	game:screenshake(5)
 	Input:vibrate(self.n, 0.3, 0.45)
 	Audio:play("hurt")
-	Particles:word(self.mid_x, self.mid_y, concat("-",n), COL_LIGHT_RED)
+	Particles:word(self.mid_x, self.y, concat("-",n), COL_LIGHT_RED)
 	
 	if self.is_knockbackable and source then
 		self.vx = self.vx + sign(self.mid_x - source.mid_x)*source.knockback

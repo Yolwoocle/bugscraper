@@ -20,18 +20,6 @@ function Loot:init_loot(spr, x, y, w, h, val, vx, vy)
 
 	self.value = val
 
-	-- Verify if the loot is spawned through the wall
-	local actual_x, actual_y, cols, len = Collision:check(self, self.x, self.y, self.collision_filter)
-	local is_coll = false
-	for _,c in pairs(cols) do
-		if c.type ~= "cross" then
-			is_coll = true
-		end
-	end
-	if is_coll then
-		self:set_pos(CANVAS_WIDTH/2, CANVAS_HEIGHT/2)
-	end
-
 	self:reset()
 end
 
@@ -256,7 +244,7 @@ function Loot.Life:on_collect(player)
 	Particles:smoke(self.mid_x, self.mid_y, nil, COL_LIGHT_RED)
 	Audio:play("item_collect")
 
-	Particles:word(self.mid_x, self.mid_y, concat(self.value,"❤"), COL_LIGHT_RED)
+	Particles:word(self.mid_x, self.y, concat(self.value,"❤"), COL_LIGHT_RED)
 
 	if not success then
 		--TODO
@@ -311,7 +299,7 @@ function Loot.Gun:on_collect(player)
 	Audio:play("item_collect")
 
 	local old_life = self.life
-	Particles:word(self.mid_x, self.mid_y, string.upper(self.gun.display_name or self.gun.name), self.gun.color or COL_LIGHT_YELLOW)
+	Particles:word(self.mid_x, self.y, string.upper(self.gun.display_name or self.gun.name), self.gun.color or COL_LIGHT_YELLOW)
 	self:reset()
 	
 	-- local new_loot = Loot.Gun:new(self.x, self.y, self.value, 0, 0)

@@ -87,7 +87,7 @@ return {
         },
         milk = {
             title = "Milk",
-            description = "+1 permanent ❤",
+            description = "+1 permanent ❤", -- CHANGED: "+1 maximum ❤"
         },
         boba = {
             title = "Boba",

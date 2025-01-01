@@ -81,7 +81,7 @@ return {
         },
         milk = {
             title = "Leite",
-            description = "+1 ❤ permanente",
+            description = "+1 ❤ permanente", -- CHANGED: "+1 maximum ❤"
         },
         boba = {
             title = "Amendoim", -- CHANGED: Boba

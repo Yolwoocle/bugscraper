@@ -7,6 +7,7 @@ local upgrade_probabilities = {
     {upgrades.UpgradeBoba, 1},
     {upgrades.UpgradeSoda, 1},
     {upgrades.UpgradeFizzyLemonade, 1},
+    {upgrades.UpgradeAppleJuice, 1},
 }
 
 return upgrade_probabilities

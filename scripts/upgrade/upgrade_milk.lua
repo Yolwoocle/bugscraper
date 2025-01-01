@@ -23,7 +23,6 @@ function UpgradeMilk:apply_permanent(player)
 end
 
 function UpgradeMilk:apply_instant(player)
-    player:heal(self.strength)
 end
 
 function UpgradeMilk:on_finish(player)

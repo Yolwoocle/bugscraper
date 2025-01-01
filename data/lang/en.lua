@@ -91,7 +91,7 @@ return {
         },
         milk = {
             title = "Milk",
-            description = "+1 permanent ❤",
+            description = "+1 maximum ❤",
         },
         boba = {
             title = "Boba",
@@ -104,6 +104,10 @@ return {
         fizzy_lemonade = {
             title = "Fizzy Lemonade",
             description = "Hold jump to glide",
+        },
+        apple_juice = {
+            title = "Apple Juice",
+            description = "Gain +1 ❤",
         },
     },
     input = {

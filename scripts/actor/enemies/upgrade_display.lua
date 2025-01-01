@@ -85,6 +85,8 @@ function UpgradeDisplay:update_focus(dt)
             end
         end
     end
+
+    self.z = ternary(self.is_focused, -10, 0)
     
     self.has_player_in_range = in_range 
     self.target_players = players
