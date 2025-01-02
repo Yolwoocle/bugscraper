@@ -4,11 +4,8 @@ local images= require "data.images"
 
 local Upgrade = Class:inherit()
 
-function Upgrade:init()
-    self:init_upgrade()
-end
-function Upgrade:init_upgrade()
-    self.name = self.name or "upgrade"
+function Upgrade:init(name)
+    self.name = name or "upgrade"
     self.type = UPGRADE_TYPE_INSTANT
 
     self.sprite = images.upgrade_coffee

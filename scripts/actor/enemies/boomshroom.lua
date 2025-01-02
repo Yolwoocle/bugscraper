@@ -34,8 +34,17 @@ function Boomshroom:init(x, y)
 
     self.anim_frames = nil
 
+    self.sizes = {
+        [1] = {w = 14, h = 16, sprite = images.boomshroom_1},
+        [2] = {w = 14, h = 16, sprite = images.boomshroom_2},
+        [3] = {w = 14, h = 16, sprite = images.boomshroom_3},
+        [4] = {w = 14, h = 17, sprite = images.boomshroom_4},
+        [5] = {w = 16, h = 16, sprite = images.boomshroom_5},
+        [6] = {w = 16, h = 16, sprite = images.boomshroom_6},
+        [7] = {w = 20, h = 20, sprite = images.boomshroom_8},
+    }
+
     self.dead_scale = 1.5
-    self.sprites = {images.boomshroom_1, images.boomshroom_2, images.boomshroom_3, images.boomshroom_4, images.boomshroom_5, images.boomshroom_6, images.boomshroom_8}
     self.spr:set_anchor(SPRITE_ANCHOR_CENTER_CENTER)
 
     self.state_machine = StateMachine:new({
@@ -48,7 +57,7 @@ function Boomshroom:init(x, y)
                 self.vy = self.vy + math.sin(self.direction) * self.speed + self.weight * self.weight_vy_multiplier
 
                 -- You don't need to understand this.
-                self.spr:set_image(self.sprites[clamp(math.ceil((#self.sprites-1) * (1 - self.life / self.max_life)), 1, #self.sprites - 1)])
+                self:set_size(clamp(math.ceil((#self.sizes-1) * (1 - self.life / self.max_life)), 1, #self.sizes - 1)) 
             end
         }, 
             
@@ -67,7 +76,7 @@ function Boomshroom:init(x, y)
                 self.exploding_timer:start()
                 self.flash_timer:start(0.5)
 
-                self.spr:set_image(self.sprites[#self.sprites])
+                self:set_size(#self.sizes)
                 Audio:play("stomp2")
             end,
             update = function(state, dt)
@@ -115,6 +124,12 @@ function Boomshroom:update(dt)
     self.t = self.t + dt
 
     self.state_machine:update(dt)
+end
+
+function Boomshroom:set_size(size)
+    size = clamp(size, 1, #self.sizes) 
+    self.spr:set_image(self.sizes[size].sprite)
+    self:set_dimensions(self.sizes[size].w, self.sizes[size].h)
 end
 
 function Boomshroom:on_negative_life()

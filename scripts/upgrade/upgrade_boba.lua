@@ -5,8 +5,7 @@ local images = require "data.images"
 local UpgradeBoba = Upgrade:inherit()
 
 function UpgradeBoba:init()
-    self.name = "boba"
-    self:init_upgrade()
+    UpgradeBoba.super.init(self, "boba")
     self.sprite = images.upgrade_boba
     self.strength = 2.0
 

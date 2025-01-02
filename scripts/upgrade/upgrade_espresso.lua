@@ -6,8 +6,7 @@ local EffectCoffee = require "scripts.effect.effect_espresso"
 local UpgradeEspresso = Upgrade:inherit()
 
 function UpgradeEspresso:init()
-    self.name = "espresso"
-    self:init_upgrade()
+    UpgradeEspresso.super.init(self, "espresso")
     self.sprite = images.upgrade_coffee
 
     self.color = COL_MID_BROWN

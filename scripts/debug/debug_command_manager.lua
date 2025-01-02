@@ -145,29 +145,35 @@ function DebugCommandManager:filter_argument_completion(argument, possible_value
 end
 
 function DebugCommandManager:get_autocomplete(input)
-    local args = split_str(input, " ", true)
-    -- local last_arg_index = #args - 1
+    local function get_autocomplete_unsorted()
+        local args = split_str(input, " ", true)
+        -- local last_arg_index = #args - 1
 
-    if #args == 0 then
-        return self.all_commands
+        if #args == 0 then
+            return self.all_commands
+        end
+
+        local last_arg = args[#args]
+        local len_args = #args
+
+        if len_args == 1 then
+            return self:filter_argument_completion(last_arg, self.all_commands)
+        elseif len_args >= 2 then
+            local command = self.commands[args[1]]
+            if not command then return {} end
+            local arg = command.args[len_args - 1] --TODO this won't work with subcommands
+
+            if not arg then return {} end
+            if not arg.values then return {} end
+            return self:filter_argument_completion(last_arg, arg.values)
+        end
+
+        return {}
     end
 
-    local last_arg = args[#args]
-    local len_args = #args
-
-    if len_args == 1 then
-        return self:filter_argument_completion(last_arg, self.all_commands)
-    elseif len_args >= 2 then
-        local command = self.commands[args[1]]
-        if not command then return {} end
-        local arg = command.args[len_args - 1] --TODO this won't work with subcommands
-
-        if not arg then return {} end
-        if not arg.values then return {} end
-        return self:filter_argument_completion(last_arg, arg.values)
-    end
-
-    return {}
+    local compl = copy_table_shallow(get_autocomplete_unsorted())
+    table.sort(compl)
+    return compl
 end
 
 function DebugCommandManager:add_message(message)

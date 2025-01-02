@@ -5,8 +5,7 @@ local images = require "data.images"
 local UpgradeSoda = Upgrade:inherit()
 
 function UpgradeSoda:init()
-    self.name = "soda"
-    self:init_upgrade()
+    UpgradeSoda.super.init(self, "soda")
     self.sprite = images.upgrade_soda
 
     self.strength = 1

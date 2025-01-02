@@ -128,6 +128,10 @@ function Player:init(n, x, y, skin)
 	self.shoot_ang = 0
 	self.gun_cooldown_multiplier = 1.0
 	self.max_ammo_multiplier = 1.0
+	self.ammo_usage_multiplier = 1.0
+	self.gun_damage_multiplier = 1.0
+	self.ammo_bar_fill_color = COL_MID_BLUE
+	self.ammo_bar_shad_color = COL_DARK_BLUE
 	
 	self:equip_gun(Guns.unlootable.Machinegun:new())
 	-- self:equip_gun(Guns.unlootable.DebugGun:new())
@@ -164,6 +168,7 @@ function Player:init(n, x, y, skin)
 
 	-- Combo / fury
 	self.combo = 0
+	self.min_combo_visual_trigger = 5
 	self.max_combo = 0
 	self.fury_bar = 0.0
 	self.fury_threshold = 2.5
@@ -228,6 +233,7 @@ function Player:update(dt)
 	end
 
 	-- self:update_fury(dt)
+	self:update_combo(dt)
 
 	self.gun:update(dt)
 	self:shoot(dt, false)
@@ -756,6 +762,10 @@ function Player:equip_gun(gun)
 	self:update_gun_pos(1)
 end
 
+function Player:set_ammo_usage_multiplier(val)
+	self.ammo_usage_multiplier = val
+end
+
 function Player:get_max_ammo_multiplier()
 	return self.max_ammo_multiplier
 end
@@ -780,11 +790,15 @@ function Player:get_gun_cooldown_multiplier()
 	return value
 end
 
-function Player:get_gun_damage_multiplier()
+function Player:set_gun_damage_multiplier(val)
+	self.gun_damage_multiplier = val
+end
+function Player:get_total_gun_damage_multiplier()
 	local value = 1.0
 	if self.fury_active then 
 		value = value * self.fury_gun_damage_multiplier
 	end
+	value = value * self.gun_damage_multiplier
 	return value
 end
 
@@ -795,6 +809,7 @@ end
 
 ------------------------------------------
 --- Combat ---
+------------------------------------------
 
 function Player:on_stomp(enemy)
 	local spd = -self.stomp_jump_speed
@@ -804,11 +819,7 @@ function Player:on_stomp(enemy)
 	self.vy = spd
 	self:set_invincibility(0.15) --0.1
 
-	self.combo = self.combo + 1
-	
-	-- if self.combo >= 4 then
-	-- 	Particles:word(self.mid_x, self.mid_y, tostring(self.combo), COL_LIGHT_BLUE)
-	-- end
+	self:increase_combo()
 
 	self:add_fury(self.fury_stomp_value)
 end
@@ -829,6 +840,13 @@ function Player:on_my_bullet_hit(bullet, victim, col)
 	if bullet.player ~= self then   return   end
 
 	self:add_fury(bullet.damage * self.fury_bullet_damage_value_multiplier)
+end
+
+--- When the player kills an enemy
+function Player:on_kill_other(enemy, reason)
+	if reason ~= "stomped" then
+		self:increase_combo()
+	end
 end
 
 ------------------------------------------
@@ -877,6 +895,7 @@ end
 
 ------------------------------------------
 --- Misc ---
+------------------------------------------
 
 function Player:is_in_poison_cloud()
 	local is_touching, col = self:is_touching_collider(function(col) return col.other.is_poisonous end)
@@ -914,6 +933,30 @@ function Player:leave_game_if_possible(dt)
 	else
 		self.controls_oy = lerp(self.controls_oy, 0, 0.3)
 	end
+end
+
+------------------------------------------
+--- Combos, fury, score
+------------------------------------------
+
+function Player:update_combo(dt)
+	if self.frames_since_land > 4 and self.combo > self.min_combo_visual_trigger then
+		self:end_combo()
+	end
+end
+
+function Player:increase_combo(x, y)
+	self.combo = self.combo + 1
+	
+	if self.combo >= self.min_combo_visual_trigger then
+		Particles:word(x or self.mid_x, y or self.mid_y, tostring(self.combo), COL_LIGHT_BLUE)
+	end
+end
+
+function Player:end_combo()
+	Particles:word(self.mid_x, self.y, Text:text("game.combo", self.combo), COL_LIGHT_BLUE)
+	self.max_combo = math.max(self.combo, self.max_combo)
+	self.combo = 0
 end
 
 function Player:update_fury(dt)
@@ -1024,8 +1067,8 @@ function Player:draw_ammo_bar(ui_x, ui_y)
 	love.graphics.draw(images.ammo, x, y)
 
 	local text = self.gun.ammo
-	local col_shad = COL_DARK_BLUE
-	local col_fill = COL_MID_BLUE
+	local col_fill = self.ammo_bar_fill_color
+	local col_shad = self.ammo_bar_shad_color
 	local val, maxval = self.gun.ammo, self.gun:get_max_ammo()
 	if val <= maxval * 0.35 then
 		col_fill = COL_ORANGE
@@ -1049,7 +1092,6 @@ function Player:draw_ammo_bar(ui_x, ui_y)
 	local bar_x = x+ammo_icon_w+2
 	ui:draw_progress_bar(bar_x, y, slider_w, ammo_icon_w, val, maxval, 
 						col_fill, COL_BLACK_BLUE, col_shad, text)
-
 
 	-- self:draw_fury_bar(bar_x, y+ammo_icon_w-1, slider_w, 4)
 end

@@ -361,6 +361,14 @@ function Enemy:kill(damager, reason)
 	
 	self:drop_loot()
 	self:on_death(damager, reason)
+
+	if damager then
+		if damager.is_bullet and damager.player.on_kill_other then
+			damager.player:on_kill_other(self, reason)
+		elseif damager.on_kill_other then
+			damager:on_kill_other(self, reason)
+		end
+	end
 end
 
 --- Ajusts loot table according to the number of players

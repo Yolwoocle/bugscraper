@@ -6,8 +6,7 @@ local EffectSlowness = require "scripts.effect.effect_slowness"
 local UpgradeAppleJuice = Upgrade:inherit()
 
 function UpgradeAppleJuice:init()
-    self.name = "apple_juice"
-    self:init_upgrade()
+    UpgradeAppleJuice.super.init(self, "apple_juice")
     self.sprite = images.upgrade_apple_juice
     self.strength = 1
 

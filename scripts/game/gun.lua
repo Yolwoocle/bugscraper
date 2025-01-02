@@ -169,7 +169,7 @@ function Gun:shoot(dt, player, x, y, dx, dy, is_burst)
 		end
 		self.cooldown_timer = self.cooldown * m
 	end
-	self.ammo = self.ammo - 1
+	self.ammo = math.max(self.ammo - 1 * (player.ammo_usage_multiplier or 1), 0)
 	-- self.ammo = self.ammo - self.bullet_number
 
 	self.natural_recharge_delay_timer = self.natural_recharge_delay
@@ -187,7 +187,7 @@ function Gun:shoot(dt, player, x, y, dx, dy, is_burst)
 	self:on_shoot(player)
 
 	-- Reload if ammo is 0
-	if self.ammo == 0 and not self.is_reloading then
+	if self.ammo <= 0 and not self.is_reloading then
 		self:reload()
 	end
 
@@ -284,8 +284,8 @@ end
 
 function Gun:get_damage(user)
 	local value = self.damage
-	if user and user.is_player then
-		value = value * user:get_gun_damage_multiplier()
+	if user and user.get_total_gun_damage_multiplier then
+		value = value * user:get_total_gun_damage_multiplier()
 	end
 	return value
 end

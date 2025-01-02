@@ -39,6 +39,7 @@ return {
         win_prompt = "[Pause to continue]",
         warning_web_controller = "Some browsers may not have proper controller support",
 
+        combo = "COMBO %d !" -- ADDED
     },
     level = {
         world_prefix = "Department %s", 
@@ -108,6 +109,10 @@ return {
         apple_juice = {
             title = "Apple Juice",
             description = "Gain +1 ❤",
+        },
+        hot_sauce = {
+            title = "Hot Sauce",
+            description = "Deal x%d damage but use x%d ammo", -- First "%d" is the damage, second "%d" is ammo 
         },
     },
     input = {

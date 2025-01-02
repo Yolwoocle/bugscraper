@@ -143,6 +143,10 @@ end
 
 function DebugCommandMenu:update_autocomplete()
 	self.args = split_str(self.input, " ", false)
+	if utf8.sub(self.input, #self.input, #self.input) == " " then
+		table.insert(self.args, "")
+	end
+
 	if #self.args == 0 and not self.show_autocompletion_on_empty then
 		self.autocomplete = {}
 	else
@@ -154,7 +158,7 @@ function DebugCommandMenu:complete_autocomplete()
 	if #self.args > 0 and #self.autocomplete > 0 and is_between(self.autocompletion_cursor, 1, #self.autocomplete) then
 		local completion = self.autocomplete[self.autocompletion_cursor]
 		local last_arg = self.args[#self.args]
-
+		
 		self.input = self.input..utf8.sub(completion, #last_arg + 1, #completion).." "
 		self.cursor_pos = #self.input
 	end

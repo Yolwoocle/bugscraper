@@ -6,8 +6,7 @@ local EffectSlowness = require "scripts.effect.effect_slowness"
 local UpgradeWater = Upgrade:inherit()
 
 function UpgradeWater:init()
-    self.name = "water"
-    self:init_upgrade()
+    UpgradeWater.super.init(self, "water") 
     self.sprite = images.upgrade_water
 
     self.color = COL_LIGHT_BLUE

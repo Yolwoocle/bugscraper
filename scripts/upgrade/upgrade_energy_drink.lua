@@ -5,8 +5,7 @@ local images = require "data.images"
 local UpgradeEnergyDrink = Upgrade:inherit()
 
 function UpgradeEnergyDrink:init()
-    self.name = "energy_drink"
-    self:init_upgrade()
+    UpgradeEnergyDrink.super.init(self, "energy_drink")
     self.sprite = images.upgrade_energy_drink
     -- self.strength_fury_max = 5.0
     self.strength_fury_speed = 0.5

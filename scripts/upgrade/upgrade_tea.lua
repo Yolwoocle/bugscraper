@@ -6,8 +6,7 @@ local EffectSlowness = require "scripts.effect.effect_slowness"
 local UpgradeTea = Upgrade:inherit()
 
 function UpgradeTea:init()
-    self.name = "tea"
-    self:init_upgrade()
+    UpgradeTea.super.init(self, "tea")
     self.sprite = images.upgrade_tea
     self.number_of_hearts = 2
 
