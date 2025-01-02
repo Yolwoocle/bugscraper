@@ -61,4 +61,8 @@ function Upgrade:get_description()
     return self.description
 end
 
+function Upgrade:set_description(...)
+    self.description = Text:text("upgrade."..tostring(self.name)..".description", ...)
+end
+
 return Upgrade

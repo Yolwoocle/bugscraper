@@ -9,8 +9,9 @@ function UpgradeMilk:init()
     UpgradeMilk.super.init(self, "milk")
     self.sprite = images.upgrade_milk
     self.strength = 1
-
-    self.color = COL_WHITE
+    self:set_description(self.strength)
+    
+    self.color = COL_MID_BLUE
 end
 
 function UpgradeMilk:update(dt)

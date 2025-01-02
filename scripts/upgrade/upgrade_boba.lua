@@ -8,6 +8,7 @@ function UpgradeBoba:init()
     UpgradeBoba.super.init(self, "boba")
     self.sprite = images.upgrade_boba
     self.strength = 2.0
+    self:set_description(self.strength)
 
     self.color = COL_PINK
 end

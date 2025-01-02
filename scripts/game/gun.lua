@@ -232,7 +232,11 @@ function Gun:get_max_ammo()
 end
 
 function Gun:do_reloading(dt)
-	local reload_delta = (dt)/(self.max_reload_timer --[[* self.user:get_gun_cooldown_multiplier()]] )
+	local reload_delta = dt/self.max_reload_timer
+	if self.user.gun_reload_speed_multiplier then
+		reload_delta = reload_delta * self.user.gun_reload_speed_multiplier	
+	end
+
 	self.reload_timer = max(self.reload_timer - reload_delta, 0)
 	if self.reload_timer <= 0 and self.is_reloading then
 		self.is_reloading = false

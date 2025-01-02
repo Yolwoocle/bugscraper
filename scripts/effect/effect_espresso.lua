@@ -4,10 +4,10 @@ local images = require "data.images"
 
 local EffectEspresso = Effect:inherit()
 
-function EffectEspresso:init()
+function EffectEspresso:init(strength)
     self:init_effect()
     self.name = "effect_coffee"
-    self.strength = 2.0
+    self.strength = strength or 2.0
 end
 
 function EffectEspresso:on_apply(player, duration)

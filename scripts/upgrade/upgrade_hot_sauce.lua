@@ -11,7 +11,7 @@ function UpgradeHotSauce:init()
 
     self.ammo_usage = 2.0
     self.damage_mult = 2.0
-    self.description = Text:text("upgrade."..tostring(self.name)..".description", self.damage_mult, self.ammo_usage)
+    self:set_description(self.damage_mult, self.ammo_usage)
 end
 
 function UpgradeHotSauce:update(dt)

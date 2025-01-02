@@ -78,27 +78,43 @@ return {
     upgrade = {
         tea = {
             title = "Té verde",
-            description = "+2 ❤ temporales",
+            description = "+%d ❤ temporales",
         },
         espresso = {
             title = "Espresso", -- Foreign word that is used as is here
-            description = "Multiplica x2 la velocidad de disparo durante un minuto",
+            description = "Multiplica x%d la velocidad de disparo durante un minuto",
         },
         milk = {
             title = "Leche", -- Dad? you came back?
-            description = "+1 ❤ permanente", -- CHANGED: "+1 maximum ❤"
+            description = "+%d ❤ permanente", -- CHANGED: "+%d maximum ❤"
         },
         boba = {
             title = "Té de Boba",
-            description = "Multiplica x2 el maximo de munición",
+            description = "Multiplica x%d el maximo de munición",
         },
         soda = {
             title = "Gaseosa", -- Cola works too but this is more specific.
-            description = "+1 salto en el aire",
+            description = "+%d salto en el aire",
         },
         fizzy_lemonade = {
             title = "Limonada efervescente", -- Avoided the use of gaseosa as might be confusing.
             description = "Mantén saltar para bajar suavemente",
+        },
+        apple_juice = { -- ADDED
+            title = "Apple Juice",
+            description = "Gain +%d ❤",
+        },
+        hot_sauce = { -- ADDED
+            title = "Hot Sauce",
+            description = "Deal x%d damage but use x%d ammo", -- First "%d" is the damage, second "%d" is ammo 
+        },
+        coconut_water = { -- ADDED
+            title = "Coconut Water",
+            description = "Stomping enemies gives back %d%% ammo",
+        },
+        hot_chocolate = { -- ADDED
+            title = "Hot Chocolate",
+            description = "x%d reloading speed",
         },
     },
     input = {

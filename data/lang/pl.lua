@@ -80,19 +80,19 @@ return {
     upgrade = {
         tea = {
             title = "Zielona Herbata",
-            description = "+2 tymczasowe ❤",
+            description = "+%d tymczasowe ❤",
         },
         espresso = {
             title = "Espresso",
-            description = "x2 prędkość strzelania przez minute",
+            description = "x%d prędkość strzelania przez minute",
         },
         milk = {
             title = "Mleko",
-            description = "+1 permamentne ❤", -- CHANGED: "+1 maximum ❤"
+            description = "+%d permamentne ❤", -- CHANGED: "+1 maximum ❤"
         },
         boba = {
             title = "Orzeszek", -- CHANGED: Boba
-            description = "x2 maks amunicji",
+            description = "x%d maks amunicji",
         },
         energy_drink = {
             title = "Napój Energetyczny",
@@ -100,11 +100,27 @@ return {
         },
         soda = {
             title = "Cola",
-            description = "+1 skok w powietrzu",
+            description = "+%d skok w powietrzu",
         },
         fizzy_lemonade = { -- ADDED
             title = "Fizzy Lemonade",
             description = "Hold jump to glide",
+        },
+        apple_juice = { -- ADDED
+            title = "Apple Juice",
+            description = "Gain +%d ❤",
+        },
+        hot_sauce = { -- ADDED
+            title = "Hot Sauce",
+            description = "Deal x%d damage but use x%d ammo", -- First "%d" is the damage, second "%d" is ammo 
+        },
+        coconut_water = { -- ADDED
+            title = "Coconut Water",
+            description = "Stomping enemies gives back %d%% ammo",
+        },
+        hot_chocolate = { -- ADDED
+            title = "Hot Chocolate",
+            description = "x%d reloading speed",
         },
     },
     input = {

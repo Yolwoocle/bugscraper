@@ -9,10 +9,11 @@ function UpgradeAppleJuice:init()
     UpgradeAppleJuice.super.init(self, "apple_juice")
     self.sprite = images.upgrade_apple_juice
     self.strength = 1
+    self:set_description(self.strength)
 
     self.color = COL_LIGHT_GREEN
 end
-
+    
 function UpgradeAppleJuice:update(dt)
     UpgradeAppleJuice.super:update(self, dt)
 end

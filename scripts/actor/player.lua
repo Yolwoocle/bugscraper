@@ -130,8 +130,10 @@ function Player:init(n, x, y, skin)
 	self.max_ammo_multiplier = 1.0
 	self.ammo_usage_multiplier = 1.0
 	self.gun_damage_multiplier = 1.0
+	self.gun_reload_speed_multiplier = 1.0
 	self.ammo_bar_fill_color = COL_MID_BLUE
 	self.ammo_bar_shad_color = COL_DARK_BLUE
+	self.ammo_percent_gain_on_stomp = 0
 	
 	self:equip_gun(Guns.unlootable.Machinegun:new())
 	-- self:equip_gun(Guns.unlootable.DebugGun:new())
@@ -818,6 +820,8 @@ function Player:on_stomp(enemy)
 	end
 	self.vy = spd
 	self:set_invincibility(0.15) --0.1
+
+	self.gun:add_ammo(math.floor(self.ammo_percent_gain_on_stomp * self.gun:get_max_ammo()))
 
 	self:increase_combo()
 

@@ -440,7 +440,7 @@ local img_names = {
 	-----------------------------------------------------
 	
 	-- upgrades
-	upgrade_coffee =         "upgrades/upgrade_coffee",
+	upgrade_espresso =       "upgrades/upgrade_espresso",
 	upgrade_tea =            "upgrades/upgrade_tea",
 	upgrade_chocolate =      "upgrades/upgrade_chocolate",
 	upgrade_milk =           "upgrades/upgrade_milk",
@@ -450,6 +450,8 @@ local img_names = {
 	upgrade_fizzy_lemonade = "upgrades/upgrade_fizzy_lemonade",
 	upgrade_apple_juice =    "upgrades/upgrade_apple_juice",
 	upgrade_hot_sauce =      "upgrades/upgrade_hot_sauce",
+	upgrade_coconut_water =  "upgrades/upgrade_coconut_water",
+	upgrade_hot_chocolate =  "upgrades/upgrade_hot_chocolate",
 	upgrade_water =          "upgrades/upgrade_water",
 	
 	-----------------------------------------------------

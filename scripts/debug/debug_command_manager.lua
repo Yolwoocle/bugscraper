@@ -121,6 +121,24 @@ function DebugCommandManager:init()
             return true
         end,
     }
+    self.commands["_spawn_upgrades"] = DebugCommand:new {
+        name = "_spawn_upgrades",
+        description = "Spawns a bunch of upgrades",
+        args = {
+        },
+        run = function(text)
+            local upgrades_copy = copy_table_shallow(upgrades)
+            table.sort(upgrades_copy)
+            local i = 0
+            for name, upgrade in pairs(upgrades_copy) do
+                local a = enemies.UpgradeDisplay:new(128 + i*42, 300)
+                game:new_actor(a)
+                a:assign_upgrade(upgrade:new())
+                i = i + 1
+            end
+            return true
+        end,
+    }
 
     self.messages = {}
     self.max_messages = 18

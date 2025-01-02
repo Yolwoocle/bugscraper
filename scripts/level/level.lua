@@ -481,7 +481,6 @@ function Level:on_upgrade_display_killed(display)
 	end
 	
 	game.music_player:set_disk("cafeteria_empty")
-	game.camera:set_target_offset(-64, 0)
 	if game.music_player.current_disk and game.music_player.current_disk.current_source then
 		local source = game.music_player.current_disk.current_source
 		source:seek(time)

@@ -7,8 +7,9 @@ local UpgradeSoda = Upgrade:inherit()
 function UpgradeSoda:init()
     UpgradeSoda.super.init(self, "soda")
     self.sprite = images.upgrade_soda
-
+    
     self.strength = 1
+    self:set_description(self.strength)
 
     self.color = COL_LIGHT_RED
 end
