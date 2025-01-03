@@ -39,7 +39,7 @@ return {
         win_prompt = "[Pause to continue]",
         warning_web_controller = "Some browsers may not have proper controller support",
 
-        combo = "COMBO %d !" -- ADDED
+        combo = "COMBO %d!" -- ADDED
     },
     level = {
         world_prefix = "Department %s", 

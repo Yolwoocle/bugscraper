@@ -191,17 +191,9 @@ function ExitSign:update_smash_easter_egg(dt)
 
     if self.is_in_smash_easter_egg then
         self.spring_y = self.retracted_spring_ideal_length
-        self:lerp_camera(self.smash_x - CANVAS_WIDTH/4, self.smash_y - CANVAS_HEIGHT/4 + 128)
+        self:lerp_camera(self.x + CANVAS_HEIGHT + 200, self.y - CANVAS_HEIGHT/4)
         
         self:update_star()
-
-        for _, star in pairs(self.smash_stars) do
-            for i = 1, #star-1, 2 do
-                -- print_ debug(i_star, i, self.smash_stars[i_star][i], self.smash_stars[i_star][i] +1)
-                -- star[i]   = star[i]   + random_neighbor(20) * dt
-                -- star[i+1] = star[i+1] + random_neighbor(20) * dt
-            end
-        end
     end
 
     if self.smash_unzoom_timer <= 0 then 
@@ -218,14 +210,13 @@ function ExitSign:update_smash_effect_end(dt)
     end
     
     if self.pan_camera_to_default then
-        self.old_camera_x, self.old_camera_y = 0,0
         self:lerp_camera(self.old_camera_x, self.old_camera_y)
         self:lerp_zoom(1)
 
         -- End smash effect
-        if distsqr(0, 0, game:get_camera_position()) <= 0.1 then
+        if distsqr(self.old_camera_x, self.old_camera_y, game:get_camera_position()) <= 0.1 then
             self.pan_camera_to_default = false
-            game:set_camera_position(0, 0)
+            game:set_camera_position(self.old_camera_x, self.old_camera_y)
             game:set_zoom(1)
             game.camera:set_y_locked(true)
             

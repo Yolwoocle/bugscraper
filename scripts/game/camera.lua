@@ -192,9 +192,9 @@ end
 function Camera:push()
     love.graphics.push()
     local x, y = self:get_real_position()
-	love.graphics.translate(math.floor(-x), math.floor(-y))
     love.graphics.rotate(self.rot)
 	love.graphics.scale(self.zoom)
+	love.graphics.translate(math.floor(-x), math.floor(-y))
 end
 
 return Camera

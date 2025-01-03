@@ -823,7 +823,7 @@ function Player:on_stomp(enemy)
 
 	self.gun:add_ammo(math.floor(self.ammo_percent_gain_on_stomp * self.gun:get_max_ammo()))
 
-	self:increase_combo()
+	self:increase_combo((enemy or {}).x, (enemy or {}).y)
 
 	self:add_fury(self.fury_stomp_value)
 end
@@ -849,7 +849,7 @@ end
 --- When the player kills an enemy
 function Player:on_kill_other(enemy, reason)
 	if reason ~= "stomped" then
-		self:increase_combo()
+		self:increase_combo((enemy or {}).x, (enemy or {}).y)
 	end
 end
 
