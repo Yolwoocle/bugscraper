@@ -297,7 +297,7 @@ local function generate_menus()
         { BoolOptionMenuItem, "📺 {menu.options.visuals.vsync}", "is_vsync" },
         { BoolOptionMenuItem, "💧 {menu.options.visuals.menu_blur}", "menu_blur" },
         { RangeOptionMenuItem, "🌄 {menu.options.visuals.background_speed}", "background_speed", { 0.0, 1.0 }, 0.05, "%" },
-        { RangeOptionMenuItem, "🌄 {menu.options.visuals.bullet_lightness}", "bullet_lightness", { 0.1, 1.0 }, 0.1, "%" },
+        { RangeOptionMenuItem, "🥚 {menu.options.visuals.bullet_lightness}", "bullet_lightness", { 0.1, 1.0 }, 0.1, "%" },
         { "" },
         { "<<< {menu.options.game.title} >>>" },
         { RangeOptionMenuItem, "🛜 {menu.options.game.screenshake}", "screenshake", { 0.0, 1.0 }, 0.05, "%" },

@@ -26,11 +26,11 @@ local skins = {
 		text_key = "cap",
 	},
 	{
-		anim_idle = {images.bee_1, 0.2, 1},
-		anim_wall_slide = {images.bee_2},
-		img_walk_down = images.bee_1,
-		img_airborne = images.bee_2,
-		spr_dead = images.bee_dead,
+		anim_idle = {images.zia_idle, 0.2, 4},
+		anim_wall_slide = {images.zia_wall_slide},
+		img_walk_down = images.zia_walk_down,
+		img_airborne = images.zia_airborne,
+		spr_dead = images.zia_dead,
 		
 		color_palette = {color(0xfee761), color(0xfeae34), color(0x743f39), color(0x3f2832), color(0xc0cbdc), color(0x9e2835)},
 		menu_color = color(0x743f39),

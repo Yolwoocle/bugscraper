@@ -3,6 +3,7 @@ local Enemy = require "scripts.actor.enemy"
 local PoisonCloud = require "scripts.actor.enemies.poison_cloud"
 local sounds = require "data.sounds"
 local images = require "data.images"
+local AnimatedSprite = require "scripts.graphics.animated_sprite"
 
 local StinkBug = Enemy:inherit()
 	
@@ -27,8 +28,9 @@ function StinkBug:init_fly(x, y, spr)
     self.gravity = 0
     self.friction_y = self.friction_x
 
-    self.anim_frame_len = 0.05
-    self.anim_frames = {images.stink_bug_1, images.stink_bug_1}
+    self.spr = AnimatedSprite:new({
+        walk = {images.stink_bug_walk, 0.2, 2},
+    }, "walk")
 	self.flip_mode = ENEMY_FLIP_MODE_MANUAL
     self.spr:set_anchor(SPRITE_ANCHOR_CENTER_CENTER)
     

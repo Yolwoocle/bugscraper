@@ -67,9 +67,11 @@ local img_names = {
 	cap_wall_slide =   "actors/players/cap_wall_slide",
 	cap_dead =         "actors/players/cap_dead",
 
-	bee_1 =            "actors/players/bee_1",
-	bee_2 =            "actors/players/bee_2",
-	bee_dead =         "actors/players/bee_dead",
+	zia_idle =         "actors/players/zia_idle",
+	zia_walk_down =    "actors/players/zia_walk_down",
+	zia_airborne =     "actors/players/zia_airborne",
+	zia_wall_slide =   "actors/players/zia_wall_slide",
+	zia_dead =         "actors/players/zia_dead",
 
 	tok_idle =         "actors/players/tok_idle",
 	tok_walk_down =    "actors/players/tok_walk_down",
@@ -177,7 +179,7 @@ local img_names = {
 	spider1 =                  "actors/enemies/spider1",
 	spider2 =                  "actors/enemies/spider2",
 	spiked_fly =               "actors/enemies/spiked_fly",
-	stink_bug_1 =              "actors/enemies/stink_bug_1",
+	stink_bug_walk =           "actors/enemies/stink_bug_walk",
 	timed_spikes_base =        "actors/enemies/timed_spikes_base",
 	timed_spikes_spikes =      "actors/enemies/timed_spikes_spikes",
 	timed_spikes_spikes_stem = "actors/enemies/timed_spikes_spikes_stem",

@@ -36,9 +36,6 @@ function PoisonCloud:init_fly(x, y, spr)
 
     self.friction_x = 0.9
     self.friction_y = self.friction_x
-
-    -- self.anim_frame_len = 0.05
-    -- self.anim_frames = {images.stink_bug_1, images.stink_bug_1}
     
     self.damage = 0
     self.is_knockbackable = false
