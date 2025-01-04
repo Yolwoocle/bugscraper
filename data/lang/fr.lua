@@ -107,7 +107,7 @@ return {
         },
         apple_juice = {
             title = "Jus de pomme",
-            description = "Obtenir +%d ❤",
+            description = "Soigne +%d ❤",
         },
         hot_sauce = {
             title = "Sauce piquante",

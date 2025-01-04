@@ -17,6 +17,7 @@ function Shooter:init(x, y)
     self.follow_player = false
     self.ai_template = "random_rotate"
     self.spr:set_anchor(SPRITE_ANCHOR_CENTER_CENTER)
+    self.spr:set_color(COL_RED)
     self.anim_frames = nil
 
     self.gun = guns.unlootable.SixBullets:new(self)

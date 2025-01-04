@@ -170,8 +170,8 @@ function MenuManager:pause()
 end
 
 function MenuManager:unpause()
-	if not self.is_paused then return end
-
+	if not self.cur_menu then return end
+	
 	self.is_paused = false
 	self:set_menu()
 	game:on_unmenu()

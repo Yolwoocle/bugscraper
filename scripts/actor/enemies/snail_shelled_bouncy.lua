@@ -45,6 +45,7 @@ function SnailShelledBouncy:on_death()
     local slug = Slug:new(self.x, self.y)
     slug.vy = -200
     slug.harmless_timer = 0.5
+    slug.invincible_timer = 0.1
     game:new_actor(slug)
 end
 

@@ -102,7 +102,7 @@ return {
         },
         apple_juice = { -- ADDED
             title = "Apple Juice",
-            description = "Gain +%d ❤",
+            description = "Heal +%d ❤",
         },
         hot_sauce = { -- ADDED
             title = "Hot Sauce",

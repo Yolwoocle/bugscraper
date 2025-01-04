@@ -944,7 +944,7 @@ end
 ------------------------------------------
 
 function Player:update_combo(dt)
-	if self.frames_since_land > 4 and self.combo > self.min_combo_visual_trigger then
+	if self.frames_since_land > 4 then
 		self:end_combo()
 	end
 end
@@ -958,7 +958,9 @@ function Player:increase_combo(x, y)
 end
 
 function Player:end_combo()
-	Particles:word(self.mid_x, self.y, Text:text("game.combo", self.combo), COL_LIGHT_BLUE)
+	if self.combo > self.min_combo_visual_trigger then
+		Particles:word(self.mid_x, self.y, Text:text("game.combo", self.combo), COL_LIGHT_BLUE)
+	end
 	self.max_combo = math.max(self.combo, self.max_combo)
 	self.combo = 0
 end

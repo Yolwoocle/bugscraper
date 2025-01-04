@@ -108,7 +108,7 @@ return {
         },
         apple_juice = {
             title = "Apple Juice",
-            description = "Gain +%d ❤",
+            description = "Heal +%d ❤",
         },
         hot_sauce = {
             title = "Hot Sauce",

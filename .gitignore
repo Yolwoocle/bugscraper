@@ -2,6 +2,7 @@
 /.vscode/*
 .vscode/*
 /export/*
+/_export/*
 *.aseprite
 *.lnk
 steam_api64.dll

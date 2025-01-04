@@ -280,12 +280,14 @@ function Actor:draw_actor()
 	end
 
 	if game.debug_mode then
+		Text:push_font(FONT_MINI)
 		local i = 0
 		local th = get_text_height()
 		for _, val in pairs(self.debug_values) do
 			print_outline(nil, nil, tostring(val), self.x, self.y - i * th)
 			i = i + 1
 		end
+		Text:pop_font()
 	end
 end
 

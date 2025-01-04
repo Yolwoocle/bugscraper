@@ -3,6 +3,7 @@ local Enemy = require "scripts.actor.enemy"
 local PoisonCloud = require "scripts.actor.enemies.poison_cloud"
 local sounds = require "data.sounds"
 local images = require "data.images"
+local AnimatedSprite = require "scripts.graphics.animated_sprite"
 
 local Centipede = Enemy:inherit()
 
@@ -23,39 +24,39 @@ function Centipede:init(x, y, length, parent, params)
     self.spawn_center_y = params.center_y
     self.spawn_angle = params.angle
 
-    Centipede.super.init(self, x, y, images.stink_bug_1, 10, 10)
+    Centipede.super.init(self, x, y, images.centipede_body, 10, 10)
     self.name = "centipede"
+    self.spr = AnimatedSprite:new({
+        head = {images.centipede_head, 1},
+        body = {images.centipede_body, 1},
+    })
     self.is_flying = true
     self.follow_player = false
     self.life = 7
-    self.is_pushable = true
+    self.is_pushable = false
     self.self_knockback_mult = 0.1
 
     self.is_stompable = false
 
     --self.speed_y = 0--self.speed * 0.5
-    self.centipede_spacing = 16
+    self.centipede_spacing = 12
     self.centipede_spring_force = 2
 
     self.centipede_length = length
     self.centipede_parent = parent
+    self.total_centipede_length = parent and parent.total_centipede_length or length
     if length == 0 then
         self:init_centipede_head()
     else
         self:init_centipede_body()
     end
 
-    self.speed = random_range(7, 13) --10
-    self.speed_x = self.speed
-    self.speed_y = self.speed
-
+    self:update_speed()
     self.direction = random_range(0, pi2)
 
     self.gravity = 0
     self.friction_y = self.friction_x
 
-    self.anim_frame_len = 0.05
-    self.anim_frames = { images.stink_bug_1, images.stink_bug_1 }
     self.flip_mode = ENEMY_FLIP_MODE_MANUAL
     self.spr:set_anchor(SPRITE_ANCHOR_CENTER_CENTER)
 
@@ -65,10 +66,12 @@ end
 
 function Centipede:init_centipede_head()
     self.centipede_type = "head"
+    self.spr:set_animation("head")
 end
 
 function Centipede:init_centipede_body()
     self.centipede_type = "body"
+    self.spr:set_animation("body")
 
     local child = Centipede:new(self.x, self.y, self.centipede_length - 1, self, {
         center_x = self.spawn_center_x,
@@ -81,15 +84,47 @@ function Centipede:init_centipede_body()
     table.insert(self.spawned_actors, self.centipede_child)
 end
 
+function Centipede:become_head(dt)
+    self.centipede_child = nil
+    self.centipede_type = "head"
+    self.spr:set_animation("head")
+    
+    local cursor = self
+    local size = 0
+    local total_size = self.total_centipede_length - self.centipede_length
+    while cursor do
+        cursor.centipede_length = size
+        cursor.total_centipede_length = total_size
+        cursor = cursor.centipede_parent
+        size = size + 1
+    end
+end
+
+function Centipede:update_child_total_length(total_length)
+    local cursor = self
+    while cursor do
+        cursor.total_centipede_length = total_length
+        cursor = cursor.centipede_child
+    end
+end
+
+function Centipede:update_speed()
+    self.speed = 10 + (20 - clamp(0, self.total_centipede_length, 20))
+    self.speed_x = self.speed
+    self.speed_y = self.speed
+end
+
+
 function Centipede:update(dt)
+    self:update_speed()
     self:update_enemy(dt)
 
     if self.centipede_child and self.centipede_child.is_dead then
-        self.centipede_child = nil
-        self.centipede_type = "head"
+        self:become_head()
     end
     if self.centipede_parent and self.centipede_parent.is_dead then
         self.centipede_parent = nil
+        self:update_child_total_length(self.centipede_length)
     end
 
     if self.centipede_type == "body" then
@@ -100,16 +135,15 @@ function Centipede:update(dt)
             self:follow_direction(dt * 20)
         end
     else
-        self.ai_template = "random_rotate"
-        -- local target = self:get_nearest_player()
-        -- local a
-        -- if target then
-        --     a = get_angle_between_actors(self, target)
-        -- else
-        --     a = self.direction + random_sample({ -1, 1 })
-        -- end
-        -- self.direction = move_toward_angle(self.direction, a, dt * 3)
-        -- self:follow_direction(dt)
+        local target = self:get_nearest_player()
+        local a
+        if target then
+            a = get_angle_between_actors(self, target)
+        else
+            a = self.direction + random_sample({ -1, 1 })
+        end
+        self.direction = move_toward_angle(self.direction, a, dt)
+        self:follow_direction(dt)
     end
 
     if self.centipede_child then
@@ -138,7 +172,7 @@ function Centipede:draw()
     self:draw_enemy()
 
     if self.centipede_parent then
-        line_color(COL_RED, self.mid_x, self.mid_y, self.centipede_parent.mid_x, self.centipede_parent.mid_y)
+        -- line_color(COL_RED, self.mid_x, self.mid_y, self.centipede_parent.mid_x, self.centipede_parent.mid_y)
     end
     -- if self.debug_ang then
     --     line_color(COL_YELLOW, self.x, self.y, self.x + 12*math.cos(self.direction), self.y + 12*math.sin(self.direction))
