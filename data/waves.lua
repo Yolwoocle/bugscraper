@@ -26,7 +26,7 @@ local function new_cafeteria(run_func)
 				if actor.name == "poison_cloud" then
 					actor.lifespan = 1
 				end
-				if actor.name == "floor_hole_spawner" then
+				if actor.name == "floor_hole_spawner" or actor.name == "pendulum" then
 					actor:remove()
 				end
 			end

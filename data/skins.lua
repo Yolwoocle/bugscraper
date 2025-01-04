@@ -38,11 +38,11 @@ local skins = {
 		text_key = "zia",
 	},
 	{
-		anim_idle = {images.beetle_1, 0.2, 1},
-		anim_wall_slide = {images.beetle_2},
-		img_walk_down = images.beetle_1,
-		img_airborne = images.beetle_2,
-		spr_dead = images.beetle_dead,
+		anim_idle = {images.tok_idle, 0.18, 4},
+		anim_wall_slide = {images.tok_wall_slide},
+		img_walk_down = images.tok_walk_down,
+		img_airborne = images.tok_airborne,
+		spr_dead = images.tok_dead,
 
 		color_palette = {color(0x2ce8f5), color(0x0195e9), color(0x9e2835), color(0x3a4466), color(0x262b44)},
 		menu_color = color(0x0195e9), 

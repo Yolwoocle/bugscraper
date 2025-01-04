@@ -171,7 +171,7 @@ function Guns:init()
 		self.max_ammo = 8
 		self.max_reload_timer = 1.3
 		self.bullet_number = 24
-		self.bullet_spread = pi2
+		self.bullet_spread = pi - pi/24
 		self.bullet_friction = 0.9
 		self.random_angle_offset = 0
 		self.knockback = 150
@@ -448,6 +448,7 @@ function Guns:init()
 		self.sfx2 = "pop_ring"
 		self.sfx_volume = 1
 		self.sfx_pitch = 1.4
+		self.harmless_time = 0.3
 		
 		self.cooldown = 0.01
 		self.bullet_speed = 125-- 200

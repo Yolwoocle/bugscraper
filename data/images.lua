@@ -71,9 +71,11 @@ local img_names = {
 	bee_2 =            "actors/players/bee_2",
 	bee_dead =         "actors/players/bee_dead",
 
-	beetle_1 =         "actors/players/beetle_1",
-	beetle_2 =         "actors/players/beetle_2",
-	beetle_dead =      "actors/players/beetle_dead",
+	tok_idle =         "actors/players/tok_idle",
+	tok_walk_down =    "actors/players/tok_walk_down",
+	tok_airborne =     "actors/players/tok_airborne",
+	tok_wall_slide =   "actors/players/tok_wall_slide",
+	tok_dead =         "actors/players/tok_dead",
 	
 	nel_idle =         "actors/players/nel_idle",
 
