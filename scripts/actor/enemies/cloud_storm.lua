@@ -25,14 +25,17 @@ function CloudStorm:init(x, y, size)
     self.friction_y = self.friction_x
 
     self.life = 12
-    self.ai_template = "random_rotate_upper"
-    self.follow_player = false
 
     self.arc = ElectricArc:new(self.mid_x, self.mid_y)
     game:new_actor(self.arc)
 
     self.flip_mode = ENEMY_FLIP_MODE_MANUAL
     self.lightning_angle_offset = 0.0
+
+    self.ai_template = "rotate"
+    self.follow_player = false
+    self.vertical_target_offset = 64
+    self.player_detection_range = 32
 
     self.state_timer = Timer:new(0.0)
     self.state_machine = StateMachine:new({
@@ -41,14 +44,33 @@ function CloudStorm:init(x, y, size)
                 self.spr:set_image(images.cloud_storm)
                 self.spr:update_offset(0, 0)
 
-                self.ai_template = "random_rotate_upper"
+                self.ai_template = "rotate"
                 self.state_timer:start(random_range(1.0, 3.0))
                 self.arc:set_active(false)
+
+                state.target = self:get_random_player()
             end,
             update = function(state, dt)
-                if self.state_timer:update(dt) then
+                self.ai_template = "rotate"
+                if state.target then
+                    self.direction = get_angle_between_actors(
+                        self, {
+                            mid_x = state.target.mid_x, 
+                            mid_y = state.target.mid_y - self.vertical_target_offset
+                        }, true)
+                    if state.target.is_dead or state.target.is_removed then
+                        state.target = self:get_random_player()
+                    end
+                end
+
+                if state.target and state.target.y > self.y and is_between(
+                    state.target.mid_x, self.mid_x - self.player_detection_range, self.mid_x + self.player_detection_range
+                ) then
                     return "telegraph"
                 end
+                -- if self.state_timer:update(dt) then
+                --     return "telegraph"
+                -- end
             end
         },
         telegraph = {
@@ -56,6 +78,8 @@ function CloudStorm:init(x, y, size)
                 self.spr:set_image(images.cloud_storm_angry)
 
                 self.ai_template = nil
+                self.vx = 0
+                self.vy = 0
                 self.arc:set_active(true)
                 self.arc:set_arc_active(false)
                 self.state_timer:start(1.0)
@@ -135,9 +159,9 @@ function CloudStorm:after_collision(col, other)
 end
 
 function CloudStorm:update(dt)
-    CloudStorm.super.update(self, dt)
-
     self.state_machine:update(dt)
+
+    CloudStorm.super.update(self, dt)
     
     local bounds = game.level.cabin_inner_rect
 

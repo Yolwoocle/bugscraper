@@ -769,6 +769,9 @@ end
 ---@param a number
 ---@param b number
 function random_range(a, b)
+	if b < a then
+		a, b = b, a
+	end
 	return love.math.random() * (b - a) + a
 end
 

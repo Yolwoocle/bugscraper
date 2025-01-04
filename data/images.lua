@@ -265,6 +265,8 @@ local img_names = {
 	white_dust =                  "particles/white_dust",
 	particle_bit_zero =           "particles/particle_bit_zero",
 	particle_bit_one =            "particles/particle_bit_one",
+	particle_bit_zero_dark =      "particles/particle_bit_zero_dark",
+	particle_bit_one_dark =       "particles/particle_bit_one_dark",
 	poison_skull =                "particles/poison_skull",
 
 	bubble_fizz_1 =               "particles/bubble_fizz_1",
@@ -470,6 +472,8 @@ local img_names = {
 	bg_element_w1_05 = "level/background/bg_element_w1_05",
 	bg_element_w1_06 = "level/background/bg_element_w1_06",
 	bg_element_w1_07 = "level/background/bg_element_w1_07",
+
+	bg_walls_w4 = "level/background/bg_walls_w4",
 
 	-----------------------------------------------------
 	

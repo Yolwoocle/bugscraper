@@ -22,6 +22,7 @@ function Pendulum:init(x, y, angle_range, radius, swing_speed, initial_angle_t)
     self.affected_by_walls = false
 	self.destroy_bullet_on_impact = false
 	self.is_immune_to_bullets = true
+    self.counts_as_enemy = false
 
     self.is_pushable = false
     
@@ -47,11 +48,6 @@ function Pendulum:init(x, y, angle_range, radius, swing_speed, initial_angle_t)
     self.no_damage_timer:start()
     self.t = 0.0
 
-    self.rope = ElectricArc:new(self.x, self.y)
-    self.rope.lightning.style = LIGHTNING_STYLE_BITS
-    self.rope.is_arc_active = false
-    game:new_actor(self.rope)
-
     self.def_ball_scale = 20
     self.object_3d = Object3D:new(spike_ball)
     self.renderer = Renderer3D:new({self.object_3d})
@@ -62,6 +58,13 @@ function Pendulum:init(x, y, angle_range, radius, swing_speed, initial_angle_t)
     self.object_3d.position.x = 200
     self.object_3d.position.y = 200
     self.ball_rotate_speed = 4
+end
+
+function Pendulum:ready(dt)
+    self.rope = ElectricArc:new(self.x, self.y)
+    self.rope.lightning.style = LIGHTNING_STYLE_BITS
+    self.rope.is_arc_active = false
+    game:new_actor(self.rope)
 
     self:update_pendulum_position(0)
 end
@@ -105,7 +108,9 @@ function Pendulum:update_pendulum_position(dt)
 end
 
 function Pendulum:on_removed()
-    self.rope:remove()
+    if self.rope then
+        self.rope:remove()
+    end
 end
 
 function Pendulum:draw()

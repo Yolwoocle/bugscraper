@@ -31,6 +31,17 @@ function Enemy:init_enemy(x,y, img, w,h)
 	self.follow_player = true
 	self.ai_template = nil
 	self.ai_templates = {
+		["rotate"] = {
+			ready = function(ai)
+				self.direction = 0
+			end,
+			update = function(ai, dt)
+				print_debug("vx vy bf", self.vx, self.vy)
+                self.vx = self.vx + math.cos(self.direction) * self.speed
+                self.vy = self.vy + math.sin(self.direction) * self.speed
+				print_debug("vx vy af", self.vx, self.vy)
+			end
+		},
 		["random_rotate"] = {
 			ready = function(ai)
 				self.direction = random_range(0, pi2)

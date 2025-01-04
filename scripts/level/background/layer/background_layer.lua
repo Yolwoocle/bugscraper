@@ -7,11 +7,12 @@ function BackgroundLayer:init(background, parallax)
     self.background = background
     self.parallax = parallax or 1
 
+    self.layer_x = 0.0
     self.layer_y = 0.0
 end
 
 function BackgroundLayer:update(dt)
-	self.layer_y = self.layer_y - self.background:get_speed() * dt 
+	self.layer_y = self.layer_y + self.background:get_speed() * dt 
 end
 
 function BackgroundLayer:draw()

@@ -51,10 +51,11 @@ function CloudEnemy:on_death()
         return
     end
     for i = 1, self.enemies_on_death do
-        local slug = CloudEnemy:new(self.x, self.y, self.size - 1)
-        slug.vy = -200
-        slug.harmless_timer = 0.5
-        game:new_actor(slug)
+        local cloud = CloudEnemy:new(self.x, self.y, self.size - 1)
+        cloud.vy = -200
+        cloud.harmless_timer = 0.5
+        cloud.invincible_timer = 0.1    
+        game:new_actor(cloud)
     end
 end
 

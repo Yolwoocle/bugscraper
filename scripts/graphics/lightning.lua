@@ -95,7 +95,7 @@ function Lightning:draw(ox, oy)
     
     elseif self.style == LIGHTNING_STYLE_BITS then
         for i, point in pairs(self.segments) do
-            local img = ternary(point.line_width < lerp(self.min_line_width, self.max_line_width, 0.5), images.particle_bit_zero, images.particle_bit_one)
+            local img = ternary(point.line_width < lerp(self.min_line_width, self.max_line_width, 0.5), images.particle_bit_zero_dark, images.particle_bit_one_dark)
             love.graphics.draw(img, ox + point.segment.bx, oy + point.segment.by)
         end
 

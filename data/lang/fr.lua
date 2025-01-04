@@ -35,6 +35,8 @@ return {
         win_wishlist = "Ajoutez à votre liste de souhaits Steam :)", -- "Wishlist" is a verb
         win_prompt = "[Pause pour continuer]",
         warning_web_controller = "Certains navigateurs ne supportent pas correctement les manettes",
+
+        combo = "COMBO %d !" -- ADDED
     },
     level = {
         world_prefix = "Département %s",

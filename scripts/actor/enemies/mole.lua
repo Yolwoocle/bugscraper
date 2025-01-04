@@ -61,6 +61,7 @@ function Mole:init(x, y)
                 self.damage = 0
                 self.spr:update_offset(0, 0)
                 self.spr:set_animation("telegraph")
+                self.gravity = 0
 
                 self.is_stompable = true
                 self.state_timer:start(1)
@@ -70,6 +71,10 @@ function Mole:init(x, y)
                 
                 if self.state_timer:update(dt) then
                     return "jump"
+                end
+
+                if random_range(0, 1) < 0.2 then
+                    Particles:image(self.mid_x, self.mid_y, 1, {images.dung_particle_1, images.dung_particle_2, images.dung_particle_3}, 8)
                 end
             end,
             draw = function(state)
@@ -86,15 +91,16 @@ function Mole:init(x, y)
                 self.is_stompable = true
                 self.gravity = self.default_gravity/2
                 self.spr:set_animation("flying")
+
+                Particles:image(self.mid_x, self.mid_y, 20, {images.dung_particle_1, images.dung_particle_2, images.dung_particle_3}, 8)
+            	Particles:jump_dust_kick(self.mid_x, self.mid_y, math.atan2(self.vy, self.vx) + pi/2)
             end,
 
             update = function(state, dt)
-
             end,
 
             on_collision = function(state, col, other)
                 if col.type ~= "cross" then
-                    print("ezzerzer")
                     self.is_on_wall = true
                     self.is_wall_walking = true
                     self.up_vect.x = col.normal.x
@@ -108,16 +114,74 @@ function Mole:init(x, y)
             enter = function(state)
                 self.is_stompable = true
                 self.walk_speed = 0
-                self.state_timer:start(1)
+                self.state_timer:start(2.0)
                 self.is_stompable = true
                 self.spr:set_animation("telegraph")
+
+                Particles:image(self.mid_x, self.mid_y, 20, {images.dung_particle_1, images.dung_particle_2, images.dung_particle_3}, 8)
             end,
             update = function(state, dt)
+                local r = 5 * clamp((self.state_timer.time-1) / (self.state_timer.duration-1), 0, 1)
+                self.spr:update_offset(random_neighbor(r), random_neighbor(r))
                 if self.state_timer:update(dt) then
                     return "dig"
                 end
             end,
-        }
+            exit = function (state)
+                self.spr:update_offset(0, 0)
+            end
+        },
+        -- walk_around = {
+        --     enter = function(state)
+        --         self.walk_speed = 200
+        --         self.damage = 0
+
+        --         -- get random x target location that is far enough from enemy
+        --         local tries = 10
+        --         state.target_x = self.x
+        --         while tries > 0 and math.abs(state.target_x - self.x) <= 64 do
+        --             state.target_x = random_range(game.level.cabin_inner_rect.ax + 16, game.level.cabin_inner_rect.bx - self.w - 16)
+        --             tries = tries - 1
+        --         end
+        --         state.dir_sign = sign(state.target_x - self.x)
+        --         self.vx = state.dir_sign * self.walk_speed
+        --         self.spr:set_animation("flying")
+
+        --         self.gravity = self.default_gravity
+        --         self.is_stompable = true
+        --         self.is_wall_walking = false
+        --     end,
+        --     update = function(state, dt)
+        --         if (state.dir_sign == 1 and self.x > state.target_x) or (state.dir_sign == -1 and self.x < state.target_x)then
+        --             return "jump_in"
+        --         end
+        --     end,
+        -- },
+        -- jump_in = {
+        --     enter = function(state)
+        --         self.is_stompable = true
+        --         self.vx = 0
+        --         self.state_timer:start(0.4)
+        --         self.spr:set_animation("flying")
+
+        --         self.affected_by_walls = false
+        --         self.is_affected_by_bounds = false
+                
+        --         self.gravity = self.default_gravity
+        --         self.vy = -300
+        --         state.original_y = self.y
+        --         state.oy_threshold = 16
+        --     end,
+        --     update = function(state, dt)
+        --         if self.y > state.original_y + state.oy_threshold then
+        --             return "dig"
+        --         end
+        --     end,
+        --     exit = function (state)
+        --         self.affected_by_walls = true
+        --         self.is_affected_by_bounds = true
+        --     end
+        -- },
     }, "dig")
 end
 

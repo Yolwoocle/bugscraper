@@ -36,7 +36,7 @@ function BackgroundLayerPattern:create_tiles(amount)
         local start_x = (ox % self.pattern_image:getWidth()) - self.pattern_image:getWidth()
 
         for ix = start_x, CANVAS_WIDTH, self.pattern_image:getWidth() do
-            table.insert(tiles, self:new_particle(nil, ix, iy))
+            table.insert(tiles, self:new_tile(nil, ix, iy))
         end 
 
         iy = iy + self.pattern_image:getHeight() + self.pattern_y_offsets[(i_row % #self.pattern_y_offsets) + 1]
@@ -46,7 +46,7 @@ function BackgroundLayerPattern:create_tiles(amount)
     return tiles
 end
 
-function BackgroundLayerPattern:new_particle(p, x, y)
+function BackgroundLayerPattern:new_tile(p, x, y)
     p = p or {}
 
     p.x = x

@@ -909,14 +909,14 @@ local waves = {
 	----------------------------------------------------------------------------------------------------------
 
 	new_wave({
-		min = 6,
-		max = 6,
+		min = 4,
+		max = 4,
 
 		enemies = {
-			{ E.CloudStorm, 20 },
+			{ E.CloudEnemy, 20 },
 		},
 
-		background = backgrounds.BackgroundFinal:new(),
+		background = backgrounds.BackgroundGreenhouse:new(),
 		music = "w4",
 
 		over_title = get_world_prefix(4),
@@ -924,20 +924,12 @@ local waves = {
 		title_color = COL_LIGHT_BLUE,
 		title_outline_color = COL_BLACK_BLUE,
 
-		
 		fixed_enemies = {
-			{ E.FloorHoleSpawner, 1 },
-		},
-
-		run = function(self, level)
-			for _, p in pairs(game.players) do
-				p.is_affected_by_bounds = false
-			end
-		end,
-
-		elevator_layers = {
-			["walls"] = false,
-			["walls_no_floor"] = true,
+			{ 
+				E.Pendulum, 1, 
+				args = {pi/3, 200, 1}, 
+				position = {CANVAS_WIDTH/2, 3*16} 
+			},
 		},
 	}),
 
@@ -948,20 +940,19 @@ local waves = {
 
 		enemies = {
 			{ E.CloudStorm, 30 },
-			{ E.Shooter,    40 },
+			{ E.CloudEnemy, 10 },
 		},
 	}),
 
 	new_wave({
-		min = 6,
-		max = 6,
+		min = 3,
+		max = 3,
 
 		enemies = {
-			{ E.MushroomAnt, 1 },
-			{ E.Grasshopper, 1 },
+			{ E.Shooter, 1 },
 		},
 		fixed_enemies = {
-			{ E.MushroomAnt, 1 },
+			{ E.CloudEnemy, 2 },
 		}
 	}),
 
@@ -1039,19 +1030,14 @@ local waves = {
 		},
 
 		fixed_enemies = {
-			{ E.FloorHoleSpawner, 1 },
+			{ E.Pendulum, 1, position = {CANVAS_WIDTH/2, 3*16} },
 		},
 
-		run = function(self, level)
-			for _, p in pairs(game.players) do
-				p.is_affected_by_bounds = false
-			end
-		end,
-
-		elevator_layers = {
-			["walls"] = false,
-			["walls_no_floor"] = true,
-		},
+		-- run = function(self, level)
+		-- 	for _, p in pairs(game.players) do
+		-- 		p.is_affected_by_bounds = false
+		-- 	end
+		-- end,
 
 		music = "w4",
 	}),
