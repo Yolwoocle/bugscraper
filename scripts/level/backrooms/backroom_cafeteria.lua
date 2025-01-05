@@ -57,7 +57,7 @@ function BackroomCafeteria:on_fully_entered()
 end
 
 function BackroomCafeteria:assign_cafeteria_upgrades()
-	local bag = copy_table_shallow(upgrade_probabilities)
+	local bag = copy_table_shallow(game.level.upgrade_bag)
 
 	for _, actor in pairs(game.actors) do
 		if actor.name == "upgrade_display" then
@@ -65,7 +65,7 @@ function BackroomCafeteria:assign_cafeteria_upgrades()
 			table.remove(bag, i)
 
 			if upgrade then
-				actor:assign_upgrade(upgrade:new())
+				actor:assign_upgrade(upgrade)
 			end
 		end
 	end

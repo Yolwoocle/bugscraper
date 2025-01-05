@@ -1058,6 +1058,7 @@ function Game:on_elevator_crashed()
 end
 
 function Game:apply_upgrade(upgrade)
+	self.level:on_upgrade_applied(upgrade)
 	table.insert(self.upgrades, upgrade)
 	for i, player in pairs(self.players) do
 		player:apply_upgrade(upgrade)

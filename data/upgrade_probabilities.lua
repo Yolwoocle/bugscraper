@@ -1,16 +1,16 @@
 local upgrades = require "data.upgrades"
 
 local upgrade_probabilities = {
-    {upgrades.UpgradeTea, 1},
-    {upgrades.UpgradeEspresso, 1},
-    {upgrades.UpgradeMilk, 1},
-    {upgrades.UpgradeBoba, 1},
-    {upgrades.UpgradeSoda, 1},
-    {upgrades.UpgradeFizzyLemonade, 1},
-    {upgrades.UpgradeAppleJuice, 1},
-    {upgrades.UpgradeHotSauce, 1},
-    {upgrades.UpgradeCoconutWater, 1},
-    {upgrades.UpgradeHotChocolate, 1},
+    {upgrades.UpgradeTea:new(), 1},
+    {upgrades.UpgradeEspresso:new(), 1},
+    {upgrades.UpgradeMilk:new(), 1},
+    {upgrades.UpgradeBoba:new(), 1},
+    {upgrades.UpgradeSoda:new(), 1},
+    {upgrades.UpgradeFizzyLemonade:new(), 1},
+    {upgrades.UpgradeAppleJuice:new(), 1},
+    {upgrades.UpgradeHotSauce:new(), 1},
+    {upgrades.UpgradeCoconutWater:new(), 1},
+    {upgrades.UpgradeHotChocolate:new(), 1},
 }
 
 return upgrade_probabilities

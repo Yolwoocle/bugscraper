@@ -14,6 +14,7 @@ local Elevator = require "scripts.level.elevator"
 local Wave = require "scripts.level.wave"
 local StateMachine = require "scripts.state_machine"
 local BackroomGroundFloor = require "scripts.level.backrooms.backroom_ground_floor"
+local upgrade_probabilities = require "data.upgrade_probabilities"
 
 local images = require "data.images"
 local sounds = require "data.sounds"
@@ -71,11 +72,12 @@ function Level:init(game, backroom)
     self.enemy_buffer = {}
 
 	self.elevator = Elevator:new(self)
-	-- self.background = BackgroundTest3D:new(self)
+
+	-- Background
 	self.background = BackgroundDots:new(self)
-	-- self.background = BackgroundBeehive:new(self)
 	self.background:set_def_speed(self.def_level_speed)
 	
+	-- Backroom
 	self.backroom = backroom or BackroomGroundFloor:new()
 	self.backroom_animation_state_machine = self:get_backroom_animation_state_machine() 
 	
@@ -83,6 +85,7 @@ function Level:init(game, backroom)
 	self.force_next_wave_flag = false
 	self.do_not_spawn_enemies_on_next_wave_flag = false
 	
+	-- Canvas & stencils
 	self.canvas = love.graphics.newCanvas(CANVAS_WIDTH*2, CANVAS_HEIGHT)
 	self.buffer_canvas = love.graphics.newCanvas(CANVAS_WIDTH*2, CANVAS_HEIGHT)
 	self.is_hole_stencil_enabled = true
@@ -94,12 +97,14 @@ function Level:init(game, backroom)
 	self.hole_stencil_radius_accel = 300
 	self.hole_stencil_radius_accel_sign = 1
 
+	-- Sounds
 	self.elevator_crashing_sound = sounds.elev_burning.source
 	self.elevator_alarm_sound = sounds.elev_siren.source
 	self.elevator_crash_sound = sounds.elev_crash.source
 
+	-- Misc
+	self.upgrade_bag = copy_table_shallow(upgrade_probabilities)
 	self.ending_timer = Timer:new(15)
-
 	self.has_run_ready = false
 end
 
@@ -465,6 +470,28 @@ function Level:end_backroom()
 	game.camera:set_target_position(0, 0)
 end
 
+
+function Level:on_upgrade_applied(upgrade)
+	-- Remove the upgrade from the bag
+	-- Scotch, should probably make a table instead of going through the whole table... whatever... 
+	
+	print_debug("bef upgrades:")
+	for _, up in pairs(self.upgrade_bag) do
+		print_debug("-", up[1].name)
+	end
+	print_debug("")
+
+	for i = #self.upgrade_bag, 1, -1 do
+		if self.upgrade_bag[i][1].name == upgrade.name then
+			table.remove(self.upgrade_bag, i)
+		end
+	end
+	print_debug("aft upgrades:")
+	for _, up in pairs(self.upgrade_bag) do
+		print_debug("-", up[1].name)
+	end
+	print_debug("")
+end
 
 function Level:on_upgrade_display_killed(display)
 	for _, actor in pairs(game.actors) do
