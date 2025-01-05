@@ -139,10 +139,10 @@ function TextManager:text(code, ...)
     end
 
     if params.uppercase then
-        output = string.upper(output)
+        output = utf8.upper(output)
     end
     if params.lowercase then
-        output = string.lower(output)
+        output = utf8.lower(output)
     end
     return output
 

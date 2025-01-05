@@ -11,6 +11,8 @@ local BackroomCafeteria  = require "scripts.level.backrooms.backroom_cafeteria"
 local BackroomCEOOffice = require "scripts.level.backrooms.backroom_ceo_office"
 local E                  = require "data.enemies"
 
+local utf8 = require "utf8"
+
 RECT_ELEVATOR            = Rect:new(unpack(RECT_ELEVATOR_PARAMS))
 RECT_CAFETERIA           = Rect:new(unpack(RECT_CAFETERIA_PARAMS))
 RECT_CEO_OFFICE          = Rect:new(unpack(RECT_CEO_OFFICE_PARAMS))
@@ -677,7 +679,7 @@ local waves = {
 				} }
 			},
 		},
-		floating_text = "🎓 " .. string.upper(Text:text("input.prompts.jetpack")),
+		floating_text = "🎓 " .. utf8.upper(Text:text("input.prompts.jetpack")),
 
 		min = 4,
 		max = 6,
@@ -780,7 +782,7 @@ local waves = {
 		},
 		music = "w3",
 
-		floating_text = "🎓 " .. string.upper(Text:text("input.prompts.jetpack")),
+		floating_text = "🎓 " .. utf8.upper(Text:text("input.prompts.jetpack")),
 	}),
 
 	new_wave({

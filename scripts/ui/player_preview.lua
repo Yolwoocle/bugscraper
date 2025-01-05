@@ -3,6 +3,7 @@ local Class = require "scripts.meta.class"
 local StateMachine = require "scripts.state_machine"
 local images = require "data.images"
 local skins = require "data.skins"
+local utf8 = require "utf8"
 
 local PlayerPreview = Class:inherit()
 
@@ -150,7 +151,7 @@ function PlayerPreview:init(player_n, x, y, w, h)
 
                 if self.selection then
                     draw_centered(self.selection.img_walk_down, x + self.selection_ox, y, 0, self.squash, 1 / self.squash)
-                    local text = string.upper(Text:text("player.name." .. self.selection.text_key) or "")
+                    local text = utf8.upper(Text:text("player.name." .. self.selection.text_key) or "")
                     print_centered_outline(palette[1], nil, text, x + 1 + self.selection_ox, y - 20 + 1)
                     print_centered_outline(palette[1], nil, text, x + 1 + self.selection_ox, y - 20)
                 end
@@ -321,7 +322,6 @@ function PlayerPreview:draw_player_abbreviation()
         txt_top = txt_top .. Text:text("player.abbreviation", self.player_n)
 
         if self.user and self.user:get_skin() then
-            -- txt_bot = string.upper(Text:text("player.name."..self.user:get_skin().text_key))
             txt_bot = txt_bot .. " " .. self.user:get_skin().icon
             color = self.user:get_skin().color_palette[2]
         end

@@ -299,6 +299,10 @@ local img_names = {
 	star_splash_small_2 =         "particles/star_splash_small_2",
 	star_splash_small_3 =         "particles/star_splash_small_3",
 
+	star_small_1 =                "particles/star_small_1",
+	star_small_2 =                "particles/star_small_2",
+	star_small_3 =                "particles/star_small_3",
+
 	jump_dust_kick_1 =            "particles/jump_dust_kick_1",
 	jump_dust_kick_2 =            "particles/jump_dust_kick_2",
 	jump_dust_kick_3 =            "particles/jump_dust_kick_3",

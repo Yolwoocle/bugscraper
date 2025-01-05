@@ -354,6 +354,19 @@ function Enemy:kill(damager, reason)
 	end
 	self.death_reason = reason or ""
 
+	local player 
+	if damager and damager.is_player then player = damager end
+	if damager and damager.is_bullet and damager.player.is_player then player = damager.player end
+
+	game:screenshake(2)
+	if player then
+		Input:vibrate(player.n, 0.05, 0.05)
+
+		Particles:floating_image({
+			images.star_small_1,
+			images.star_small_2,
+		}, self.mid_x, self.mid_y, random_range_int(2,5), 0, 0.2, 1, 120, 0.95)
+	end
 	if self.do_killed_smoke then
 		Particles:smoke(self.mid_x, self.mid_y)
 		Particles:star_splash(self.mid_x, self.mid_y)

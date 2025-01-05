@@ -92,61 +92,72 @@ function Debug:init(game)
         end, do_not_require_ctrl = true },
         ["v"] = { "__jackofalltrades", function()
 
-            local j = 0
+            -- Particles:floating_image({
+            --     images.star_splash_small_1,
+            --     images.star_splash_small_2,
+            --     images.star_splash_small_3,
+            -- }, 100, 100, 1, 0, nil, 1, 300, 0.95)
+            Particles:static_image({
+                    images.star_splash_small_1,
+                    images.star_splash_small_2,
+                    images.star_splash_small_3,
+                }, 100, 100, 0, nil, 1)
 
-            local t_off, t_tel, t_on = 2, 0.75, 1
-            local t_total = t_off + t_tel + t_on
-            local function spawn_spike(x, y, orientation, j)
-                local spikes = enemies.TimedSpikes:new(x, y, t_off, t_tel, t_on, j*(t_total/68)*2, {
-                    orientation = orientation,
-                    start_after_standby = false,
-                })
-                spikes.spike_i = j
-                -- spikes.timing_mode = TIMED_SPIKES_TIMING_MODE_MANUAL
-                spikes.z = 2 - j/100
-                -- spikes.debug_values[1] = j
-                game:new_actor(spikes)
-            end
-            local spikes
+            -- local j = 0
 
-            -- Bottom
-            for i = 3, CANVAS_WIDTH/16 - 4, 2 do
-                spawn_spike(i * BW, CANVAS_HEIGHT*0.85, 0, j)
+            -- local t_off, t_tel, t_on = 2, 0.75, 1
+            -- local t_total = t_off + t_tel + t_on
+            -- local function spawn_spike(x, y, orientation, j)
+            --     local spikes = enemies.TimedSpikes:new(x, y, t_off, t_tel, t_on, j*(t_total/68)*2, {
+            --         orientation = orientation,
+            --         start_after_standby = false,
+            --     })
+            --     spikes.spike_i = j
+            --     -- spikes.timing_mode = TIMED_SPIKES_TIMING_MODE_MANUAL
+            --     spikes.z = 2 - j/100
+            --     -- spikes.debug_values[1] = j
+            --     game:new_actor(spikes)
+            -- end
+            -- local spikes
+
+            -- -- Bottom
+            -- for i = 3, CANVAS_WIDTH/16 - 4, 2 do
+            --     spawn_spike(i * BW, CANVAS_HEIGHT*0.85, 0, j)
             
-                if i ~= CANVAS_WIDTH/16 - 4 then
-                    j = j + 1
-                end
-            end
+            --     if i ~= CANVAS_WIDTH/16 - 4 then
+            --         j = j + 1
+            --     end
+            -- end
 
             
-            -- Right
-            for i = 14, 3, -2 do
-                spawn_spike(16*10, i * BW, 3, j)
+            -- -- Right
+            -- for i = 14, 3, -2 do
+            --     spawn_spike(16*10, i * BW, 3, j)
 
-                if i ~= 3 then
-                    j = j + 1
-                end
-            end
+            --     if i ~= 3 then
+            --         j = j + 1
+            --     end
+            -- end
 
-            -- Top
-            for i = CANVAS_WIDTH/16 - 4, 3, -2 do
-                spawn_spike(i * BW, BW*4, 2, j)
+            -- -- Top
+            -- for i = CANVAS_WIDTH/16 - 4, 3, -2 do
+            --     spawn_spike(i * BW, BW*4, 2, j)
                 
-                if i ~= 3 then
-                    j = j + 1
-                end
+            --     if i ~= 3 then
+            --         j = j + 1
+            --     end
 
-            end
+            -- end
             
-            -- Left
-            for i = 3, 14, 2 do
-                spawn_spike(3*BW, i * BW, 1, j)
+            -- -- Left
+            -- for i = 3, 14, 2 do
+            --     spawn_spike(3*BW, i * BW, 1, j)
                                 
-                if i ~= 14 then
-                    j = j + 1
-                end
+            --     if i ~= 14 then
+            --         j = j + 1
+            --     end
 
-            end
+            -- end
         end },
         ["j"] = { "longer", function()
             for _, e in pairs(game.actors) do

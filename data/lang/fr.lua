@@ -111,7 +111,7 @@ return {
         },
         hot_sauce = {
             title = "Sauce piquante",
-            description = "Faire x%d de dégâts mais utiliser x%d munitions", 
+            description = "Faire x%d dégâts mais utiliser x%d munitions", 
         },
         coconut_water = {
             title = "Eau de coco",

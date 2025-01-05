@@ -299,7 +299,7 @@ function Loot.Gun:on_collect(player)
 	Audio:play("item_collect")
 
 	local old_life = self.life
-	Particles:word(self.mid_x, self.y, string.upper(self.gun.display_name or self.gun.name), self.gun.color or COL_LIGHT_YELLOW)
+	Particles:word(self.mid_x, self.y, utf8.upper(self.gun.display_name or self.gun.name), self.gun.color or COL_LIGHT_YELLOW)
 	self:reset()
 	
 	-- local new_loot = Loot.Gun:new(self.x, self.y, self.value, 0, 0)

@@ -6,13 +6,16 @@ local utf8 = require "utf8"
 
 local Particle = Class:inherit()
 
-function Particle:init(x,y,s,r, vx,vy,vs,vr, life, g, is_solid)
-	self:init_particle(x,y,s,r, vx,vy,vs,vr, life, g, is_solid)
+function Particle:init(x,y,s,r, vx,vy,vs,vr, life, g, is_solid, params)
+	self:init_particle(x,y,s,r, vx,vy,vs,vr, life, g, is_solid, params)
 end
 
-function Particle:init_particle(x,y,s,r, vx,vy,vs,vr, life, g, is_solid)
+function Particle:init_particle(x,y,s,r, vx,vy,vs,vr, life, g, is_solid, params)
+	params = params or {}
 	self.x, self.y = x, y
 	self.vx, self.vy = vx or 0, vy or 0
+	self.friction_x = params.friction_x or 1
+	self.friction_y = params.friction_y or 1
 
 	self.s = s or 1.0-- size or radius
 	self.original_s = self.s
@@ -33,6 +36,9 @@ function Particle:init_particle(x,y,s,r, vx,vy,vs,vr, life, g, is_solid)
 end
 
 function Particle:update_particle(dt)
+	self.vx = self.vx * self.friction_x
+	self.vy = self.vy * self.friction_y
+
 	self.x = self.x + self.vx*dt
 	self.y = self.y + self.vy*dt
 	self.s = self.s - self.vs*dt
@@ -130,11 +136,12 @@ end
 
 local ImageParticle = Particle:inherit()
 
-function ImageParticle:init(spr, x,y,s,r, vx,vy,vs,vr, life, g, is_solid)
-	self:init_image_particle(spr, x,y,s,r, vx,vy,vs,vr, life, g, is_solid)
+function ImageParticle:init(spr, x,y,s,r, vx,vy,vs,vr, life, g, is_solid, params)
+	self:init_image_particle(spr, x,y,s,r, vx,vy,vs,vr, life, g, is_solid, params)
 end
-function ImageParticle:init_image_particle(spr, x,y,s,r, vx,vy,vs,vr, life, g, is_solid)
-	self:init_particle(x,y,s,r, vx,vy,vs,vr, life, g, is_solid)
+function ImageParticle:init_image_particle(spr, x,y,s,r, vx,vy,vs,vr, life, g, is_solid, params)
+	params = params or {}
+	self:init_particle(x,y,s,r, vx,vy,vs,vr, life, g, is_solid, params)
 	self.spr = spr
 
 	self.is_animated = (type(spr) == "table")
@@ -385,6 +392,7 @@ function DeadPlayerParticle:update(dt)
 		
 		Audio:play("explosion")
 		Particles:splash(self.x, self.y - self.oy, 40, {COL_LIGHT_YELLOW, COL_ORANGE, COL_LIGHT_RED, COL_WHITE})
+		Particles:star_splash(self.x, self.y)
 		self:remove()
 	end
 end
@@ -845,7 +853,8 @@ function ParticleSystem:flash(x, y, radius, radius_rand)
 end
 
 -- FIXME giant scotch, fix for later
-function ParticleSystem:image(x, y, number, spr, spw_rad, life, vs, g, parms)
+function ParticleSystem:image(x, y, number, spr, spw_rad, life, vs, g, params)
+	params = params or {}
 	number = number or 10
 	spw_rad = spw_rad or 8
 	life = life or 1
@@ -853,9 +862,11 @@ function ParticleSystem:image(x, y, number, spr, spw_rad, life, vs, g, parms)
 	-- sizevar = sizevar or 2
 
 	for i=1,number do
+		local particle_params = {}
+
 		local ang = love.math.random() * pi2
-		local dist = love.math.random() * spw_rad
-		local dx, dy = cos(ang)*dist, sin(ang)*dist
+		local distance = love.math.random() * spw_rad
+		local dx, dy = cos(ang)*distance, sin(ang)*distance
 		-- local dsize = random_neighbor(sizevar)
 
 		local rot = random_neighbor(pi)
@@ -869,37 +880,48 @@ function ParticleSystem:image(x, y, number, spr, spw_rad, life, vs, g, parms)
 		local is_animated = false
 		local scale = 1
 
-		if parms and parms.vx1 ~= nil and parms.vx2 ~= nil then
-			vx = random_range(parms.vx1, parms.vx2)
+		if params.vx1 ~= nil and params.vx2 ~= nil then
+			vx = random_range(params.vx1, params.vx2)
 		end
-		if parms and parms.vy1 ~= nil and parms.vy2 ~= nil then
-			vy = random_range(parms.vy1, parms.vy2)
+		if params.vy1 ~= nil and params.vy2 ~= nil then
+			vy = random_range(params.vy1, params.vy2)
 		end
-		if parms and parms.vr1 ~= nil and parms.vr2 ~= nil then
-			vr = random_range(parms.vr1, parms.vr2)
+		if params.vr1 ~= nil and params.vr2 ~= nil then
+			vr = random_range(params.vr1, params.vr2)
 		end
-		if parms and parms.rot ~= nil then
-			rot = parms.rot
+		if params.rot ~= nil then
+			rot = params.rot
 		end
-		if parms and parms.is_solid ~= nil then
-			is_solid = parms.is_solid
+		if params.is_solid ~= nil then
+			is_solid = params.is_solid
 		end
-		if parms and parms.is_animated ~= nil then
-			is_animated = parms.is_animated
+		if params.is_animated ~= nil then
+			is_animated = params.is_animated
 		end
-		if parms and parms.life ~= nil then
-			life = parms.life
+		if params.life ~= nil then
+			life = params.life
 		end
-		if parms and parms.scale ~= nil then
-			scame = parms.scale
+		if params.scale ~= nil then
+			scale = params.scale
 		end
+		if params.friction_x ~= nil then
+			particle_params.friction_x = params.friction_x
+		end
+		if params.friction_y ~= nil then
+			particle_params.friction_y = params.friction_y
+		end
+		if params.max_vel then
+			local nvx, nvy = normalize_vect(vx, vy)
+			local norm = math.min(dist(vx, vy), params.max_vel)
+			vx, vy = nvx * norm, nvy * norm
+		end 
 		
 		local sprite = spr
 		if (not is_animated) and type(spr) == "table" then
 			sprite = random_sample(spr)
 		end
 		--spr, x,y,s,r, vx,vy,vs,vr, life, g, is_solid
-		self:add_particle(ImageParticle:new(sprite, x+dx, y+dy, scale, rot, vx,vy,vs,vr, life, g, is_solid))
+		self:add_particle(ImageParticle:new(sprite, x+dx, y+dy, scale, rot, vx,vy,vs,vr, life, g, is_solid, particle_params))
 	end
 end
 
@@ -917,6 +939,26 @@ function ParticleSystem:static_image(img, x, y, rot, life, scale)
 		life = life or 0.12,
 		is_animated = true,
 		scale = scale,
+	})
+end
+
+-- scottttcccchhhh
+function ParticleSystem:floating_image(img, x, y, amount, rot, life, scale, vel, friction)
+	Particles:image(x, y, amount, img, 0, nil, 0, 0, {
+		is_solid = false,
+		rot = rot,
+		vx1 = -vel,
+		vx2 = vel,
+		vy1 = -vel,
+		vy2 = vel,
+		max_vel = vel,
+		vr1 = 0,
+		vr2 = 0,
+		life = life or 0.12,
+		is_animated = true,
+		scale = scale,
+		friction_x = friction,
+		friction_y = friction,
 	})
 end
 
@@ -945,7 +987,7 @@ function ParticleSystem:star_splash(x, y)
 		images.star_splash_1,
 		images.star_splash_2,
 		images.star_splash_3,
-	}, x, y, 0, 0.08)
+	}, x, y, 0, 0.12)
 end
 
 -- FIXME: scotch

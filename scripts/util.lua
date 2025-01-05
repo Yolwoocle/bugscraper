@@ -1,4 +1,5 @@
 local utf8 = require "utf8"
+require "scripts.meta.utf8_fixes"
 require "scripts.meta.constants"
 local shaders = require "data.shaders"
 
@@ -835,60 +836,6 @@ function random_polar(rad)
 	local x = math.cos(rnd_ang) * rnd_rad
 	local y = math.sin(rnd_ang) * rnd_rad
 	return x, y
-end
-
---[[
-function utf8.sub(str, i, j)
-	local offseti = utf8.offset(str, i or 1)
-	local offsetj = utf8.offset(str, j+1 or 0)-1
-	if offseti and (offsetj or not j) then
-		return str:sub(offseti, j and offsetj)
-	end
-	return str
-end
-function utf8.sub(str, i, j)
-	if utf8.len(str) == 0 then  return ""  end
-  local ii = utf8.offset(str, i)
-  local jj = utf8.offset(str, j)-1
-	return string.sub(str, ii, jj)
-end
-
-function utf8.sub(str, i, j)
-	str = str or ""
-	str = tostring(str)
-	i = i or 1
-	j = j or 1
-	--if i < 0 then   i = uft8.len(str)-i+1   end
-	--if j < 0 then   j = uft8.len(str)-j+1   end
-	local len = utf8.len(str)
-	if i > len then   i = len   end
-	if j > len then   j = len   end
-	if utf8.len(str) == 0 then  return ""  end
-	print(str,i, j, len)
-	local ii = utf8.offset(str, i)
-  local jj = utf8.offset(str, j)+1
-	return string.sub(ii, jj)
-end
---]]
-
--- Thanks to "index five" on Discord
-local utf8pos, utf8len = utf8.offset, utf8.len
-local sub = string.sub
-local max, min = math.max, math.min
-
-function posrelat(pos, len)
-	if pos >= 0 then return pos end
-	if -pos > len then return 0 end
-	return pos + len + 1
-end
-
-function utf8.sub(str, i, j)
-	local len = utf8len(str)
-	i, j = max(posrelat(i, len), 1), j and min(posrelat(j, len), len) or len
-	if i <= j then
-		return sub(str, utf8pos(str, i), utf8pos(str, j + 1) - 1)
-	end
-	return ""
 end
 
 function print_color(col, text, x, y, r, s)
