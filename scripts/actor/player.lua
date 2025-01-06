@@ -86,6 +86,8 @@ function Player:init(n, x, y, skin)
 
 	self.can_hold_jump_to_float = false
 	self.float_speed = 60
+	self.float_max_duration = 3
+	self.float_timer = 0
 
 	-- Air time
 	self.air_time = 0
@@ -566,13 +568,18 @@ function Player:do_floating(dt)
 	if not self.can_hold_jump_to_float then
 		return
 	end
+	if self.is_grounded or self.is_wall_sliding then
+		self.float_timer = self.float_max_duration
+	end
 
-	if self.vy > 0 and self:action_down("jump") then
-		self.gravity = 0
-		self.vy = self.float_speed
-		Particles:smoke(self.mid_x, self.y+self.h, 1, transparent_color(COL_LIGHT_YELLOW, 1))
-		Particles:bubble_fizz_cloud(self.mid_x, self.y+self.h, 8, 1)
-	else
+	if self.float_timer > 0 then
+		self.float_timer = math.max(0, self.float_timer - dt)
+		if self.vy > 0 and self:action_down("jump") then
+			self.gravity = 0
+			self.vy = self.float_speed
+			Particles:smoke(self.mid_x, self.y+self.h, 1, transparent_color(COL_LIGHT_YELLOW, 1))
+			Particles:bubble_fizz_cloud(self.mid_x, self.y+self.h, 8, 1)
+		end
 	end
 end
 
@@ -821,6 +828,7 @@ function Player:on_stomp(enemy)
 	self.vy = spd
 	self:set_invincibility(0.15) --0.1
 
+	self.float_timer = self.float_max_duration
 	self.gun:add_ammo(math.floor(self.ammo_percent_gain_on_stomp * self.gun:get_max_ammo()))
 
 	self:increase_combo((enemy or {}).x, (enemy or {}).y)

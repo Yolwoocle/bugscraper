@@ -183,6 +183,13 @@ function DungBeetle:on_death()
         local dung = self.dungs[i]
         dung:kill()
     end
+
+    game:screenshake(8)
+    game:frameskip(30)
+    Input:vibrate_all(0.3, 0.3)
+    
+    Particles:ejected_player(images.dung_beetle_dead, self.mid_x, self.mid_y)
+    Particles:image(self.mid_x, self.mid_y, 100, {images.dung_particle_1, images.dung_particle_2, images.dung_particle_3}, self.h, 2)
 end
 
 function DungBeetle:draw()

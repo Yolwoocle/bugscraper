@@ -181,7 +181,7 @@ function PlayerPreview:init(player_n, x, y, w, h)
                 self.prompt_y_alignment = "center"
                 
                 self.prompts = {
-                    { self.player_n, { "left", "right", "up", "down" }, "", COL_WHITE },
+                    { self.player_n, { "up", "left", "down", "right" }, "", COL_WHITE },
                     { self.player_n, {}, Text:text("input.prompts.move"), COL_WHITE },
                     { self.player_n, { "jump" }, Text:text("input.prompts.jump"), COL_WHITE },
                     { self.player_n, { "shoot" }, Text:text("input.prompts.shoot"), COL_WHITE },
