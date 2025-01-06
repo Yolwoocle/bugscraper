@@ -598,8 +598,10 @@ function InputManager:draw_input_prompt(player_n, actions, label, label_color, x
     local text_w = get_text_width(text)
     local total_w = text_w + ox
 
-    if params.centered then
+    if params.alignment == "center" then
         x = x - total_w/2
+    elseif params.alignment == "right" then
+        x = x - total_w
     end
 
     if params.background_color then

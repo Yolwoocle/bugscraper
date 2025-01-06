@@ -1149,7 +1149,7 @@ function Player:draw_controls()
 	for i, tuto in ipairs(tutorials) do
 		y = y - 16
 		Input:draw_input_prompt(self.n, tuto[1], tuto[2], self:get_controls_text_color(i), x, y, {
-			centered = true,
+			alignment = "center",
 			background_color = transparent_color(COL_BLACK_BLUE, 0.5),
 			outline_color = COL_WHITE,
 		})

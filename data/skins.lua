@@ -74,17 +74,19 @@ local skins = {
 		icon = "🐰",
 		text_key = "rico",
 	},
-	-- {
-	-- 	spr_idle = images.leo,
-	-- 	spr_jump = images.leo,
-	-- 	spr_wall_slide = images.leo,
-	-- 	spr_dead = images.leo,
-	-- 	color_palette = {color(0x63c74d), color(0x3e8948), color(0x265c42), color(0x193c3e), color(0x5a6988), color(0x3a4466)},
-	-- 	menu_color = color(0x3e8948), 
-	-- 	icon = "🐰",
-	-- 	text_key = "leo",
-	-- },
+	{
+		anim_idle = {images.leo, 0.2, 1},
+		anim_wall_slide = {images.leo},
+		img_walk_down = images.leo,
+		img_airborne = images.leo,
+		spr_dead = images.leo,
+		color_palette = {color(0x63c74d), color(0x3e8948), color(0x265c42), color(0x193c3e), color(0x5a6988), color(0x3a4466)},
+		menu_color = color(0x3e8948), 
+		icon = "🐰",
+		text_key = "leo",
+	},
 }
+
 
 for i, skin in pairs(skins) do
 	skins[i].id = i
