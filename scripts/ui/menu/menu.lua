@@ -70,6 +70,9 @@ end
 function Menu:on_set()
 end
 
+function Menu:on_unset()
+end
+
 function Menu:textinput()
 end
 

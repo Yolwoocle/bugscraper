@@ -392,7 +392,7 @@ function DeadPlayerParticle:update(dt)
 		
 		Audio:play("explosion")
 		Particles:splash(self.x, self.y - self.oy, 40, {COL_LIGHT_YELLOW, COL_ORANGE, COL_LIGHT_RED, COL_WHITE})
-		Particles:star_splash(self.x, self.y)
+		Particles:star_splash(self.x, self.y-self.oy)
 		self:remove()
 	end
 end

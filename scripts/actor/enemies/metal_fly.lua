@@ -34,6 +34,7 @@ function MetalFly:init(x, y)
     })
 
     self.electrified_flash = random_range(0, 1)
+    self.score = 10
 end
 
 function MetalFly:update(dt)

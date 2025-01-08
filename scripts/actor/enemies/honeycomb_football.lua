@@ -44,6 +44,7 @@ function HoneycombFootball:init(x, y, spr)
     self.flash_timer = Timer:new(0.5)
 
     self.gun = guns.unlootable.HoneycombFootballGun:new(self)
+    self.score = 80
 
     self.state_machine = StateMachine:new({
         normal = {

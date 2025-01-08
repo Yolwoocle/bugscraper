@@ -323,6 +323,7 @@ local img_names = {
 
 	cabin_bg =                       "level/cabin_bg",
 	cabin_bg_brown =                 "level/cabin_bg_brown",
+	cabin_bg_w3 =                    "level/cabin_bg_w3",
 	cabin_bg_ambient_occlusion =     "level/cabin_bg_ambient_occlusion",
 	cabin_walls =                    "level/cabin_walls",
 	cabin_walls_brown =              "level/cabin_walls_brown",
@@ -578,7 +579,7 @@ for button, _ in pairs(CONTROLLER_BUTTONS) do
 end
 images.btn_c_unknown = load_image("buttons/controller/btn_c_unknown.png")
 
-print("Finished loading", table_key_count(images), "images. (", (love.timer.getTime() - start) * 1000 ,"ms)")
+print(concatsep({"Finished loading", table_key_count(images), "images. (", (love.timer.getTime() - start) * 1000 ,"ms)"}))
 
 -----------------------------------------------------
 

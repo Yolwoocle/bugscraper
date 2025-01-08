@@ -49,6 +49,7 @@ function Chipper:init_fly(x, y, spr)
     self.telegraph_source = Audio:get_sound("chipper_telegraph"):clone()
     self.attack_speed = 100
     self.post_attack_timer = Timer:new(0.5)
+    self.score = 10
 
     self.state_machine = StateMachine:new({
         wander = {

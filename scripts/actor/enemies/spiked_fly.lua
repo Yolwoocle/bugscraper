@@ -20,6 +20,8 @@ function SpikedFly:init(x, y)
 
     self.gravity = 0
     self.friction_y = self.friction_x
+
+	self.score = 15
 end
 
 return SpikedFly

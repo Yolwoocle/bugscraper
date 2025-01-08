@@ -101,6 +101,7 @@ function Motherboard:init(x, y)
     self.can_spawn_button = true
 
     self.hard_mode = false
+    self.score = 500
 
     local removeme_timer_mult = 1 --0.1
     self.state_machine = StateMachine:new({
@@ -238,6 +239,7 @@ function Motherboard:init(x, y)
             end,
             exit = function(state)
                 for _, c in pairs(self.big_chippers) do
+                    c.score = 0
                     c:kill()
                 end
             end
@@ -290,6 +292,8 @@ function Motherboard:init(x, y)
                 self.spr.color = {1.0, 0.4, 0.4}
 
                 self.new_button_timer:stop()
+
+                self.button.score = 0
                 self.button:kill()
                 self.button = nil
 
@@ -479,6 +483,7 @@ end
 function Motherboard:on_death()
     if self.wave_enemies then
         for _, e in pairs(self.wave_enemies) do
+            -- e.score = 0
             e:kill()
         end
     end

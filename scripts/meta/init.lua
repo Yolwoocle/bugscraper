@@ -12,6 +12,9 @@ local function init()
         love.profiler.start()
     end
 
+    local FileManager = require "scripts.file.files"
+    Files = FileManager:new()
+
     local OptionsManager = require "scripts.game.options"
     Options = OptionsManager:new()
 

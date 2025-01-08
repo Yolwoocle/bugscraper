@@ -33,6 +33,8 @@ function DungBeetle:init(x, y)
     self.dung_limit = 6
     self.dungs = {}
 
+    self.score = 500
+
     self.spr = AnimatedSprite:new({
         idle = {
             {images.dung_beetle_idle},

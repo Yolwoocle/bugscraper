@@ -135,6 +135,8 @@ function Enemy:init_enemy(x,y, img, w,h)
 	--{"crush_bug_1", "crush_bug_2", "crush_bug_3", "crush_bug_4"}
 
 	self.has_run_ready = false
+
+	self.score = 0
 end
 
 function Enemy:ready()

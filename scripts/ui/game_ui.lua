@@ -68,7 +68,6 @@ function GameUI:draw()
 	if not self.is_visible then return end
 	self:draw_stomp_arrow()
 	if game.debug and game.debug.title_junk then
-		-- self:draw_logo()
 		self:draw_timer()
 		self:draw_version()
 	end 

@@ -1,6 +1,5 @@
 require "scripts.util"
 local Class = require "scripts.meta.class"
-local skins = require "data.skins"
 
 local QueuedPlayer = Class:inherit()
 

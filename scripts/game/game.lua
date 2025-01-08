@@ -22,6 +22,7 @@ local LightLayer = require "scripts.graphics.light_layer"
 local ScreenshotManager = require "scripts.screenshot"
 local QueuedPlayer = require "scripts.game.queued_player"
 local GunDisplay = require "scripts.actor.enemies.gun_display"
+local MetaprogressionManager = require "scripts.game.metaprogression"
 
 local DiscordPresence = require "scripts.meta.discord_presence"
 local Steamworks = require "scripts.meta.steamworks"
@@ -30,7 +31,7 @@ local guns = require "data.guns"
 local upgrades = require "data.upgrades"
 local shaders = require "data.shaders"
 local images = require "data.images"
-local skins = require "data.skins"
+local skins, skin_name_to_id = require "data.skins"
 local sounds = require "data.sounds"
 local utf8 = require "utf8"
 
@@ -48,6 +49,7 @@ function Game:init()
 	Particles = ParticleSystem:new()
 	Audio = AudioManager:new()
 	Screenshot = ScreenshotManager:new()
+	Metaprogression = MetaprogressionManager:new()
 
 	Input:init_users()
 
@@ -164,6 +166,7 @@ function Game:new_game(params)
 	self.kills = 0
 	self.time = 0
 	self.max_combo = 0
+	self.score = 0
 
 	self.frames_to_skip = 0
 	self.slow_mo_rate = 0
@@ -510,13 +513,9 @@ function Game:draw()
 	if self.notif_timer > 0 then
 		love.graphics.print(self.notif, 0, 0, 0, 3, 3)
 	end
-
-    -- love.graphics.draw(images.removeme_bands, 0, 0)
-
 end
 
 function Game:draw_game()
-	-- local real_camx, real_camy = math.cos(self.t) * 10, math.sin(self.t) * 10;
 	exec_on_canvas(self.smoke_canvas, love.graphics.clear)
 
 	---------------------------------------------
@@ -644,17 +643,9 @@ function Game:draw_game()
 			self.layers[i]:draw(0, 0)
 		end
 	end
-
-	--'Memory used (in kB): ' .. collectgarbage('count')
-
-	-- local t = "EARLY VERSION - NOT FINAL!"
-	-- love.graphics.print(t, CANVAS_WIDTH-get_text_width(t), 0)
-	-- local t = os.date('%a %d/%b/%Y')
-	-- print_color({.7,.7,.7}, t, CANVAS_WIDTH-get_text_width(t), 12)	
 end
 
 function Game:draw_smoke_canvas()
-	-- self.camera:reset_transform()
 	self.camera:pop()
 
 	-- Used for effects for the stink bugs
@@ -683,7 +674,6 @@ function Game:draw_smoke_canvas()
 	love.graphics.draw(self.smoke_canvas, 0, 0)
 	love.graphics.setColor(1, 1, 1, 1)
 
-	-- self.camera:apply_transform()
 	self.camera:push()
 end
 
@@ -806,6 +796,8 @@ end
 function Game:on_kill(actor)
 	if actor.counts_as_enemy then
 		self.kills = self.kills + 1
+		self.score = self.score + (actor.score or 0)
+		-- Particles:word(actor.x, actor.y, tostring(actor.score or 0))
 	end
 
 	if actor.is_player then
@@ -873,14 +865,12 @@ function Game:save_stats()
 	self.stats.floor = self.level.floor
 	self.stats.kills = self.kills
 	self.stats.max_combo = self.max_combo
+	self.stats.score = self.score
 end
 
 function Game:game_over()
+	Metaprogression:add_xp(self.score)
 	self.menu_manager:set_menu("game_over")
-	-- for _, a in pairs(self.actors) do
-	-- 	a:remove()
-	-- 	a:final_remove()
-	-- end
 end
 
 function Game:do_win()
@@ -893,16 +883,6 @@ end
 
 function Game:set_floor(val)
 	self.level:set_floor(val)
-end
-
-function draw_log()
-	-- log
-	local x2 = floor(CANVAS_WIDTH / 2)
-	local h = love.graphics.getFont():getHeight()
-	print_label("--- LOG ---", x2, 0)
-	for i = 1, min(#msg_log, max_msg_log) do
-		print_label(msg_log[i], x2, i * h)
-	end
 end
 
 function Game:init_players(x, y, spacing)
@@ -924,7 +904,6 @@ end
 
 
 function Game:queue_join_game(input_profile_id, joystick)
-	-- FIXME ça marche pas quand tu join avec manette puis que tu join sur clavier
 	local player_n = Input:find_free_user_number()
 	if player_n == nil then
 		return
@@ -967,7 +946,7 @@ function Game:new_player(player_n, x, y, put_in_buffer)
 	y = param(y, CANVAS_HEIGHT - 3*16 + 4)
 				
 	
-	local player = Player:new(player_n, x, y, Input:get_user(player_n):get_skin() or skins[1])
+	local player = Player:new(player_n, x, y, Input:get_user(player_n):get_skin() or skins["mio"])
 	self.players[player_n] = player
 	self.waves_until_respawn[player_n] = {-1, nil}
 	if put_in_buffer then
@@ -1205,8 +1184,11 @@ end
 
 function Game:update_skin_choices()
 	self.skin_choices = {}
-	for i = 1, #skins do
-		self.skin_choices[i] = true
+	for skin_id, _ in pairs(skins) do
+		self.skin_choices[skin_id] = false
+	end
+	for _, unlocked_skin_id in pairs(Metaprogression:get("skins")) do
+		self.skin_choices[unlocked_skin_id] = true
 	end
 	for i, player in pairs(self.players) do
 		self.skin_choices[player.skin.id] = false

@@ -21,6 +21,7 @@ function Shooter:init(x, y)
     self.anim_frames = nil
 
     self.gun = guns.unlootable.SixBullets:new(self)
+    self.score = 10
 
     self.state_timer = Timer:new(0.0)
     self.state_machine = StateMachine:new({

@@ -39,6 +39,7 @@ function Pendulum:init(x, y, angle_range, radius, swing_speed, initial_angle_t)
     self.friction_y = self.friction_x
 
     self.spr:set_anchor(SPRITE_ANCHOR_CENTER_CENTER)
+    self.score = 0
 
     -- self.anim_frame_len = 0.05
     -- self.anim_frames = {images.fly1, images.fly2}

@@ -23,6 +23,8 @@ function SnailShelled:init(x, y, spr)
 
     self.sound_death = "snail_shell_crack"
     self.sound_stomp = "snail_shell_crack"
+    
+    self.score = 10
 end
 
 function SnailShelled:update(dt)

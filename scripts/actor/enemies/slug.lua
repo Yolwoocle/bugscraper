@@ -17,6 +17,8 @@ function Slug:init(x, y)
 
     self.anim_frame_len = 0.4
     self.anim_frames = {images.slug1, images.slug2}
+
+    self.score = 10
 end
 
 function Slug:update(dt)

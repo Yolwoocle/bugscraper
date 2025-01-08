@@ -6,7 +6,6 @@ local enemies = {
 	Fly =                require "scripts.actor.enemies.fly",
 	SpikedFly =          require "scripts.actor.enemies.spiked_fly",
 	Woodlouse =          require "scripts.actor.enemies.woodlouse",
-	Bee =           require "scripts.actor.enemies.bee",
 	Slug =               require "scripts.actor.enemies.slug",
 	Spider =             require "scripts.actor.enemies.spider",
 	StinkBug =           require "scripts.actor.enemies.stink_bug",
@@ -18,6 +17,7 @@ local enemies = {
 	FlyingDung =         require "scripts.actor.enemies.flying_dung",
 	
 	-- W2
+	Bee =                require "scripts.actor.enemies.bee",
 	Beelet =             require "scripts.actor.enemies.beelet", 
 	ShovelBee =          require "scripts.actor.enemies.shovel_bee", 
 	DrillBee =           require "scripts.actor.enemies.drill_bee", 

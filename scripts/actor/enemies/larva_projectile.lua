@@ -28,6 +28,7 @@ function LarvaProjectile:on_projectile_land()
 
     local larva = Larva:new(self.mid_x, self.mid_y)
     larva.loot = {}
+    larva.score = 0
     game:new_actor(larva)
 
     self.larva = larva

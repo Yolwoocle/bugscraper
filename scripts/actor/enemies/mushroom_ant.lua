@@ -23,6 +23,7 @@ function MushroomAnt:init(x, y)
 
     self.anim_frames = {images.mushroom_ant1, images.mushroom_ant2}
     self.anim_frame_len = 0.3
+    self.score = 10
 end
 
 function MushroomAnt:update(dt)

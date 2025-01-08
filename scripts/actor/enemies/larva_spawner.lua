@@ -37,6 +37,7 @@ function LarvaSpawner:update(dt)
     if self.spawn_larva_timer:update(dt) then
         local larva = Larva:new(self.mid_x, self.mid_y)
         larva.loot = {}
+        larva.score = 0
         game:new_actor(larva)
 
         table.insert(self.larvae, larva)

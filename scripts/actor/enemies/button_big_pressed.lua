@@ -15,6 +15,7 @@ function ButtonBigPressed:init_button_big_pressed(x, y)
 
     self.max_life = 999999
     self.life = self.max_life
+    self.score = 0
     
     self.knockback = 0
     self.is_stompable = false

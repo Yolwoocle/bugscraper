@@ -34,6 +34,7 @@ function Mole:init(x, y)
 
     self.fly_speed = 300
     self.is_stompable = true
+    self.score = 10
 
     self.state_timer = Timer:new()
     self.state_machine = StateMachine:new({

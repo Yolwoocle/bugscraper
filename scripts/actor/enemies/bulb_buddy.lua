@@ -26,6 +26,7 @@ function BulbBuddy:init(x, y, is_child)
 
     self.arc_ox = 0
     self.arc_oy = -4
+    self.score = 10
 
     if not is_child then
         local arc = ElectricArc:new(self.x, self.y)

@@ -24,6 +24,8 @@ function Larva:init_larva(x, y, spr, w, h)
     self.anim_frame_len = 0.2
     self.anim_frames = {images.larva1, images.larva2}
     self.audio_delay = love.math.random(0.3, 1)
+
+	self.score = 10
 end
 
 function Larva:update(dt)

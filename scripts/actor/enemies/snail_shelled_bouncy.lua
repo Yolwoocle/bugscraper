@@ -27,6 +27,8 @@ function SnailShelledBouncy:init_snail_shelled(x, y, spr)
 
     self.sound_death = "snail_shell_crack"
     self.sound_stomp = "snail_shell_crack"
+
+    self.score = 10
 end
 
 function SnailShelledBouncy:update(dt)

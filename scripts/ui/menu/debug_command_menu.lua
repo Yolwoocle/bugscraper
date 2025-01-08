@@ -16,7 +16,11 @@ function DebugCommandMenu:init(game)
 end
 
 function DebugCommandMenu:on_set()
+	Input:set_standby_mode(true)
 	self:init_menu()
+end
+
+function DebugCommandMenu:on_unset()
 end
 
 function DebugCommandMenu:init_menu()
@@ -31,9 +35,11 @@ function DebugCommandMenu:init_menu()
 end
 
 function DebugCommandMenu:keypressed(key, scancode, isrepeat)
-	if key == 'escape' or key == 'f1' then
+	if key == 'escape' then
+		Input:set_standby_mode(false)
+
 		game.menu_manager:set_can_pause(false)
-		game.menu_manager:unpause()
+			game.menu_manager:unpause()
 		game.menu_manager:set_menu()
 		game.debug.set_can_pause_to_true_timer = 2
 	end
@@ -142,11 +148,6 @@ function DebugCommandMenu:reset_autocompletion_cursors()
 end
 
 function DebugCommandMenu:update_autocomplete()
-	self.args = split_str(self.input, " ", false)
-	if utf8.sub(self.input, #self.input, #self.input) == " " then
-		table.insert(self.args, "")
-	end
-
 	if #self.args == 0 and not self.show_autocompletion_on_empty then
 		self.autocomplete = {}
 	else
@@ -171,6 +172,7 @@ end
 function DebugCommandMenu:update(dt)
 	DebugCommandMenu.super.update(self, dt)
 
+	self.args = split_str(self.input, " ", false)
 	self:update_autocomplete()
 end
 

@@ -48,6 +48,7 @@ function DrillBee:init(x, y, spr)
     self.telegraph_timer = Timer:new(0.3)
     self.burrow_timer = Timer:new(0.05)
     self.no_attack_timer = Timer:new(1.0)
+    self.score = 10
 
     self.state_machine = StateMachine:new({
         wander = {

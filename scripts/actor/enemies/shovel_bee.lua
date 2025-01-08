@@ -44,6 +44,7 @@ function ShovelBee:init(x, y, spr)
     -- self.anim_frame_len = 0.05
     self.anim_frames = nil
     self.do_squash = true
+    self.score = 10
     
     self.state_machine = StateMachine:new({
         flying = {

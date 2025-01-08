@@ -28,6 +28,7 @@ function Grasshopper:init(x, y)
     self.landing_squash = 0.7
 
     self.jump_speed = 300
+    self.score = 10
     -- self.jump_speed = 200
 end
 

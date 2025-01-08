@@ -58,6 +58,7 @@ function Beellet:init(x, y)
     self.s = 1
     self.target_s = 1
     self.base_scale = 1
+    self.score = 10
 
     self.state_machine = StateMachine:new({
         wander = {

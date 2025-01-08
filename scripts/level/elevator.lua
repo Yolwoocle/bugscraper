@@ -3,6 +3,10 @@ local Class = require "scripts.meta.class"
 local ElevatorDoor = require "scripts.level.elevator_door"
 local Timer = require "scripts.timer"
 
+local teapot3d = require "data.models.teapot"
+local Renderer3D = require "scripts.graphics.3d.renderer_3d"
+local Object3D = require "scripts.graphics.3d.object_3d"
+
 local images = require "data.images"
 
 local Elevator = Class:inherit()
@@ -28,7 +32,19 @@ function Elevator:init(level)
 		["cabin_brown"] = false,
 		["walls_brown"] = false,
 		["bg_grid_brown"] = false,
+
+		["cabin_w3"] = false,
+		["spinning_teapot"] = false,
 	}
+
+	self.def_ball_scale = 5
+    self.object_3d = Object3D:new(teapot3d)
+    self.renderer_3d = Renderer3D:new({self.object_3d})
+    self.object_3d.scale:sset(self.def_ball_scale)
+    self.object_3d.position.x = 150
+    self.object_3d.position.y = 145
+	self.renderer_3d.lighting_palette = {COL_MID_DARK_GREEN, COL_MID_GREEN, COL_LIGHT_GREEN}
+	self.renderer_3d.line_color = {1, 1, 1, 0}
 
 	self.grid_timer = Timer:new(1.5)
 
@@ -37,6 +53,10 @@ end
 
 function Elevator:update(dt)
 	self:update_door_animation(dt)
+
+	self.object_3d.rotation.x = self.object_3d.rotation.x + dt
+    self.object_3d.rotation.y = self.object_3d.rotation.y + dt
+	self.renderer_3d:update(dt)
 	
 	if self.door_animation_timer:update(dt) then
 		self:close_door()
@@ -120,11 +140,18 @@ end
 function Elevator:draw_cabin()
 	local cabin_rect = self.level.cabin_rect
 
+	if self.layers["spinning_teapot"] then
+		rect_color(COL_DARK_GREEN, "fill", self.object_3d.position.x - 16, self.object_3d.position.y - 16, 34, 34)
+		self.renderer_3d:draw()
+	end
+
 	self.door:draw()
 
 	-- Cabin background
 	if self.layers["cabin_brown"] then
 		love.graphics.draw(images.cabin_bg_brown, cabin_rect.ax, cabin_rect.ay)
+	elseif self.layers["cabin_w3"] then
+		love.graphics.draw(images.cabin_bg_w3, cabin_rect.ax, cabin_rect.ay)
 	else
 		love.graphics.draw(images.cabin_bg, cabin_rect.ax, cabin_rect.ay)
 	end

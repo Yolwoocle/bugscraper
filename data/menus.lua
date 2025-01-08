@@ -500,6 +500,9 @@ local function generate_menus()
             return concat(game.stats.floor, "/",
                 game.level.max_floor)
         end },
+        { StatsMenuItem, Text:text("menu.game_over.score"), function(self)
+            return concat(game.stats.score)
+        end },
         -- { StatsMenuItem, Text:text("menu.game_over.max_combo"), function(self) return concat(game.stats.max_combo) end },
         { "" },
         { "▶ {menu.game_over.continue}", function()

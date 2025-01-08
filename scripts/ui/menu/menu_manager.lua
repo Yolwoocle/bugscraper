@@ -118,7 +118,12 @@ function MenuManager:set_menu(menu, is_back)
 		m = menu
 	end
 
-	if not m then return false, "menu '" .. menu .. "' does not exist" end
+	if not m then 
+		return false, "menu '" .. tostring(menu) .. "' does not exist"
+	end
+	if self.cur_menu then
+		self.cur_menu:on_unset()
+	end
 	self.cur_menu = m
 	self.cur_menu_name = menu
 

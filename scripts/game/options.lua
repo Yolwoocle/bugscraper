@@ -52,7 +52,9 @@ function OptionsManager:init()
 
 		has_seen_stomp_tutorial = false,
 
-		removeme_test_option = 0.5,
+		-- Save data (because who needs a separate file for that)
+		xp = 0,
+		xp_level = 0,
 	}
 	self.setters = {
 		sound_on = function(value) 
@@ -90,61 +92,18 @@ function OptionsManager:init()
             love.mouse.setVisible(value)
 		end,
 	}
-	self.options = copy_table_deep(self.default_options)
 
 	self:load_options()
 end
 
 function OptionsManager:load_options()
-	if love.filesystem.getInfo == nil then
-		print("/!\\ WARNING: love.filesystem.getInfo doesn't exist. Either running on web or LÖVE version is incorrect. Loading options.txt aborted, so custom options will not be loaded.")
-		return
-	end
-	local options_file_exists = love.filesystem.getInfo("options.txt")
-	if not options_file_exists then
-		print("options.txt does not exist, so creating it")
-		self.is_first_time = true
-		self:update_options_file()
-		return
-	end
-
-	-- Read options.txt file
-	local file = love.filesystem.openFile("options.txt", "r")
-	
-	local text, size = file:read()
-	if not text then    print("Error reading options.txt file: "..size)    end
-	local lines = split_str(text, "\n") -- Split lines
-
-	for i = 1, #lines do
-		local line = lines[i]
-		local tab = split_str(line, ":")
-		local key, value = tab[1], tab[2]
-
-		if self.options[key] ~= nil then
-			local typ = type(self.options[key])
-			local val
-			if typ == "string" then   val = value    end
-			if typ == "number" then   val = tonumber(value)   end
-			if typ == "boolean" then   val = strtobool(value)   end
-			if typ == "table" then   val = split_str(value, ",")   end
-
-			self.options[key] = val
-		else
-			print(concat("Error: option '",key,"' does not exist"))
-		end
-	end
+	print("Loading options...")
+	self.options = Files:read_config_file("options.txt", self.default_options)
+	print("Finished loading options.")
 end
 
 function OptionsManager:update_options_file()
-	-- print("Creating or updating options.txt file")
-	local file = love.filesystem.openFile("options.txt", "w")
-	
-	for k, v in pairs(self.options) do
-		local val = v
-		local success, errmsg = file:write(concat(k, ":", val, "\n"))
-	end
-	
-	file:close()
+	Files:write_config_file("options.txt", self.options)
 end
 
 function OptionsManager:get(name)

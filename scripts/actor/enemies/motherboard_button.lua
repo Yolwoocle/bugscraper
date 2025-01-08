@@ -22,6 +22,7 @@ function MotherboardButton:init(x, y, parent)
     self.parent_damage = 20
     
     self.parent = parent
+    self.score = 10
 	-- self.sound_damage = "glass_fracture"
 	-- self.sound_death = "glass_break_weak"
 end

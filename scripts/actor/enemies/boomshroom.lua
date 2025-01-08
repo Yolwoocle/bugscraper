@@ -47,6 +47,8 @@ function Boomshroom:init(x, y)
     self.dead_scale = 1.5
     self.spr:set_anchor(SPRITE_ANCHOR_CENTER_CENTER)
 
+    self.score = 10
+
     self.state_machine = StateMachine:new({
         normal = {
             update = function(state, dt)

@@ -20,6 +20,7 @@ local Scene            = require "scripts.game.scene"
 local Class            = require "scripts.meta.class"
 local AnimatedSprite   = require "scripts.graphics.animated_sprite"
 local Sprite           = require "scripts.graphics.sprite"
+local skins            = require "data.skins"
 
 local Debug            = Class:inherit()
 
@@ -610,6 +611,14 @@ end
 
 function Debug:draw_info_view()
     love.graphics.setFont(FONT_MINI)
+    
+    for _, e in pairs(self.game.actors) do
+        love.graphics.circle("fill", e.x - game.camera.x, e.y - game.camera.y, 1)
+        
+        print_outline(COL_WHITE, COL_BLACK_BLUE, 
+            concat(math.floor(e.x), ", ", math.floor(e.y), ternary(e.is_player, concat(" [", math.floor(e.x/16), ", ", math.floor(e.y/16), "]"), "")), e.x - game.camera.x, e.y - game.camera.y - 10)
+        
+    end
 
     self.test_sprite_t = self.test_sprite_t + 1 / 60
     if self.test_sprite_t > 0.3 then
@@ -652,6 +661,11 @@ function Debug:draw_info_view()
 
     local renderer_name, renderer_version, renderer_vendor, renderer_device = love.graphics.getRendererInfo( )
 
+    local skininfo = ""
+    for _, skin_id in pairs(Metaprogression:get("skins")) do
+        skininfo = skininfo .. concat(skin_id, "(", skins[skin_id].text_key, "), ")
+    end
+
     -- Print debug info
     local txt_h = get_text_height(" ")
     local txts = {
@@ -662,8 +676,7 @@ function Debug:draw_info_view()
         concat("game state: ", game.game_state),
         concat("memory used ", collectgarbage("count")),
         concat("nb of active audio sources: ", love.audio.getActiveSourceCount()),
-        concat("nb of actors: ", #self.game.actors, " / ", self.game.actor_limit),
-        concat("nb of enemies: ", self.game:get_enemy_count()),
+        concat("nb of actors: ", #self.game.actors, " / ", self.game.actor_limit, " | nb of enemies: ", self.game:get_enemy_count()),
         concat("nb collision items: ", Collision.world:countItems()),
         concat("number_of_alive_players ", self.game:get_number_of_alive_players()),
         players_str,
@@ -671,38 +684,32 @@ function Debug:draw_info_view()
         joystick_user_str,
         joystick_str,
         wave_resp_str,
-        concat("is_hole_stencil_enabled ", game.level.is_hole_stencil_enabled),
         concat("backroom ", (game.level.backroom == nil) and "nil" or game.level.backroom.name),
         concat("queued_players ", queued_players_str),
         concat("level_speed ", game.level.level_speed),
-        concat("menu_stack ", #game.menu_manager.menu_stack),
+        concat("menu_stack size: ", #game.menu_manager.menu_stack),
         concat("cur_menu_name ", game.menu_manager.cur_menu_name),
-        concat("cur_backroom ", (game.level.backroom == nil) and "[nil]" or game.level.backroom.name),
-        concat("cur_cutscene ", (game.cutscene == nil) and "[nil]" or 
-            string.format("%s: [%d/%d] (%.1f s/%.1f s) '%s' / (total: %.1f s)", 
-                game.cutscene.name, 
-                game.cutscene.current_scene_i, 
-                #game.cutscene.scenes, 
-                game.cutscene.timer.duration - game.cutscene.timer.time, 
-                game.cutscene.timer.duration, 
-                game.cutscene.current_scene.description, 
-                game.cutscene.total_duration
-            )),
+        -- concat("cur_cutscene ", (game.cutscene == nil) and "[nil]" or 
+        --     string.format("%s: [%d/%d] (%.1f s/%.1f s) '%s' / (total: %.1f s)", 
+        --         game.cutscene.name, 
+        --         game.cutscene.current_scene_i, 
+        --         #game.cutscene.scenes, 
+        --         game.cutscene.timer.duration - game.cutscene.timer.time, 
+        --         game.cutscene.timer.duration, 
+        --         game.cutscene.current_scene.description, 
+        --         game.cutscene.total_duration
+        --     )
+        -- ),
+        concat("score: ", game.score),
+        concat("xp: ", Metaprogression:get_xp()),
+        concat("xp_level: ", Metaprogression:get_xp_level()),
+        concat("unlocked_skins: ", skininfo),
         "",
     }
 
     for i = 1, #txts do print_label(txts[i], 0, 0 + txt_h * (i - 1)) end
 
-    for _, e in pairs(self.game.actors) do
-        love.graphics.circle("fill", e.x - game.camera.x, e.y - game.camera.y, 1)
-        
-        print_outline(COL_WHITE, COL_BLACK_BLUE, 
-            concat(math.floor(e.x), ", ", math.floor(e.y), ternary(e.is_player, concat(" [", math.floor(e.x/16), ", ", math.floor(e.y/16), "]"), "")), e.x - game.camera.x, e.y - game.camera.y - 10)
-        
-    end
-
     self.game.level.world_generator:draw()
-    -- draw_log()
 
     -- self:test_info_view_3d_renderer()
 

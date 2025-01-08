@@ -598,9 +598,10 @@ local waves = {
 			["cabin_brown"] = false,
 			["walls_brown"] = false,
 			["bg_grid_brown"] = false,
-
+			
 			["walls"] = true,
 			["bg_grid"] = true,
+			["cabin_w3"] = true,
 		},
 
 		door_images = {

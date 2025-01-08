@@ -36,6 +36,8 @@ function StinkBug:init_fly(x, y, spr)
     
     self.sound_death = "stink_bug_death"
     self.sound_stomp = "stink_bug_death"
+
+    self.score = 10
 end
 
 function StinkBug:update(dt)

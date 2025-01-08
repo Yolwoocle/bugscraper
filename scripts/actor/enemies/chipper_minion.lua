@@ -23,6 +23,7 @@ function ChipperMinion:init(x, y, direction, attack_speed)
     end
 
     self.loot = {}
+    self.score = 0
 end
 
 function ChipperMinion:update(dt)

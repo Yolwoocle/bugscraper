@@ -15,6 +15,8 @@ function HoneypotAnt:init(x, y)
 
     self.anim_frame_len = 0.4
     self.anim_frames = {images.honeypot_ant1, images.honeypot_ant2}
+    
+    self.score = 10
 end
 
 function HoneypotAnt:update(dt)

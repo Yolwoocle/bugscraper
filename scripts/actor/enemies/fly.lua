@@ -28,6 +28,8 @@ function Fly:init_fly(x, y, spr, w, h, buzzing_enabled)
     self.anim_frame_len = 0.05
     self.anim_frames = {images.fly1, images.fly2}
 
+	self.score = 10
+
     if buzzing_enabled then
         self:add_constant_sound("buzz", "fly_buzz", false)
         self:seek_constant_sound("buzz", random_range(0, self:get_constant_sound("buzz"):get_duration())) 

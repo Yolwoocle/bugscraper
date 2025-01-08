@@ -21,6 +21,8 @@ function FinalBoss:init(x, y)
         fight = { { images.ceo }, 0.1 },
     }, "introduction")
 
+    self.score = 1000
+
     self.layers = {
         { spr = self.spr, is_visible = true },
         { -- Desk

@@ -28,6 +28,7 @@ function Spider:init(x, y)
     self.string_grow_dir = 1
     self.string_growth_speed = random_range(30,55)
 
+    self.score = 10
     self.dt = 0
 end
 

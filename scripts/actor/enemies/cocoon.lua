@@ -2,7 +2,6 @@ require "scripts.util"
 local Enemy = require "scripts.actor.enemy"
 local sounds = require "data.sounds"
 local images = require "data.images"
-local skins = require "data.skins"
 
 local Guns = require "data.guns"
 local Timer = require "scripts.timer"

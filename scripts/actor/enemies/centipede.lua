@@ -37,6 +37,7 @@ function Centipede:init(x, y, length, parent, params)
     self.self_knockback_mult = 0.1
 
     self.is_stompable = false
+    self.score = 5
 
     --self.speed_y = 0--self.speed * 0.5
     self.centipede_spacing = 12

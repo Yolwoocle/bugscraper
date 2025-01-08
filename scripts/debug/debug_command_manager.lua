@@ -5,6 +5,11 @@ local enemies = require "data.enemies"
 local utf8 = require 'utf8'
 local cutscenes = require 'data.cutscenes'
 local upgrades  = require 'data.upgrades'
+local skins = require "data.skins"
+local skin_name_to_id = require "data.skin_name_to_id"
+
+local a, b = require "scripts.test"
+print_debug("a, b", a, b)
 
 local DebugCommandManager = Class:inherit()
 
@@ -118,6 +123,28 @@ function DebugCommandManager:init()
             { "text:string" },
         },
         run = function(text)
+            print(text)
+            return true
+        end,
+    }
+
+    local skin_names = table_keys(skin_name_to_id)
+    self.commands["unlock_skin"] = DebugCommand:new {
+        name = "unlock_skin",
+        description = "Unlocks a skin",
+        args = {
+            { "skin_name:string", values = skin_names },
+        },
+        run = function(skin_name)
+            if not skin_name then
+                return false, "No skin given"
+            end
+            local skin_id = skin_name_to_id[skin_name]
+            if not skin_id then
+                return false, concat("Skin '", skin_name, "' doesn't exit")
+            end
+
+            Metaprogression:unlock_skin(skin_id)
             return true
         end,
     }

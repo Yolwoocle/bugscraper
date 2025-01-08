@@ -30,6 +30,8 @@ function FlyingSpawner:init(x, y, spr, w, h)
 
     self.target_y = (game.level.cabin_inner_rect.ay + game.level.cabin_inner_rect.by) / 2
     self.target_follow_speed_y = 60
+    
+    self.score = 50
 
     self.state_machine = StateMachine:new({
         rise = {

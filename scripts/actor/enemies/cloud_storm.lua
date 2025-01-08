@@ -36,6 +36,7 @@ function CloudStorm:init(x, y, size)
     self.follow_player = false
     self.vertical_target_offset = 64
     self.player_detection_range = 32
+    self.score = 10
 
     self.state_timer = Timer:new(0.0)
     self.state_machine = StateMachine:new({

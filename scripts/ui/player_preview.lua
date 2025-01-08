@@ -226,7 +226,6 @@ function PlayerPreview:on_player_joined(player)
 end
 
 
-
 function PlayerPreview:increment_character_selection(diff)
     self.selection_n = self:find_first_free_skin(mod_plus_1(self.selection_n + diff, #skins), diff)
     self.selection = skins[self.selection_n]
@@ -239,6 +238,7 @@ function PlayerPreview:increment_character_selection(diff)
         self.left_prompt_ox = diff * 4
     end
 end
+
 
 function PlayerPreview:find_first_free_skin(start, diff)
     diff = diff or 1

@@ -34,6 +34,8 @@ function FlyingDung:init_flying_dung(x, y, spawner)
     self.is_stompable = false
     self.damage = 0
 
+    self.score = 10
+
     self.is_spiky = random_range(0, 1) >= 0.2
     if not self.is_spiky then
         self:set_image(images.dung_flying_spiked)

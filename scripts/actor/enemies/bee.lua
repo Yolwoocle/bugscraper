@@ -32,6 +32,7 @@ function Bee:init(x, y)
     self.buzz_source:setPitch(1.5)
 
     self.spr:set_anchor(SPRITE_ANCHOR_CENTER_CENTER)
+    self.score = 10
 
     self.t = 0
 end

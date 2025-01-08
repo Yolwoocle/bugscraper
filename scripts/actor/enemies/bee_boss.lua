@@ -60,6 +60,7 @@ function BeeBoss:init(x, y)
     self.standby_timer = Timer:new(2)
 
     self.spikes = {}
+    self.score = 500
 
     -- State machine
     self.state_machine = StateMachine:new({

@@ -3,7 +3,6 @@ local Class = require "scripts.meta.class"
 local InputUser = require "scripts.input.input_user"
 local InputProfile = require "scripts.input.input_profile"
 local images = require "data.images"
-local skins = require "data.skins"
 local utf8 = require "utf8"
 
 local InputManager = Class:inherit()
@@ -652,7 +651,6 @@ end
 
 
 function InputManager:load_control_file(profile_id, profile)
-    print("profile_id ", profile_id)
     local filename = concat("inputprofile_",profile_id,".txt")
 
     -- Check if file exists

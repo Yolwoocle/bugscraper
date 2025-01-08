@@ -23,6 +23,7 @@ function CloudEnemy:init(x, y, size)
     self.follow_player = false
 
     self.flip_mode = ENEMY_FLIP_MODE_MANUAL
+    self.score = 10
 
     if self.size > 1 then
         self.loot = {}

@@ -8,6 +8,7 @@ local skins = {
 		img_walk_down = images.mio_walk_down,
 		img_airborne = images.mio_airborne,
 		spr_dead = images.mio_dead,
+
 		color_palette = {color(0xf6757a), color(0xb55088), color(0xe43b44), color(0x9e2835), color(0x3a4466), color(0x262b44)},
 		menu_color = color(0xf6757a),
 		icon = "🐜",
@@ -61,7 +62,6 @@ local skins = {
 		icon = "🐞",
 		text_key = "nel",
 	},
-	
 	{
 		anim_idle = {images.rabbit_1, 0.2, 1},
 		anim_wall_slide = {images.rabbit_2},
@@ -87,9 +87,8 @@ local skins = {
 	},
 }
 
-
-for i, skin in pairs(skins) do
-	skins[i].id = i
+for key, skin in pairs(skins) do
+	skins[key].id = key
 end
 
 return skins

@@ -20,6 +20,7 @@ function BigBeelet:init(x, y)
     self.is_stompable = false
 
     self.attack_speed = 70
+    self.score = 30
 
     self.spr = AnimatedSprite:new({
         normal = {images.big_chipper, 0.2, 4},
