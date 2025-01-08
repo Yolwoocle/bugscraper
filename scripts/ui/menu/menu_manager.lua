@@ -29,6 +29,9 @@ function MenuManager:reset()
 	self.joystick_wait_cooldown = 0.0
 	self.joystick_wait_mode = false
 	self.joystick_wait_set = {}
+
+	self.sawtooth_scroll = 0
+	self.border_scroll_speed = -14
 end
 
 function MenuManager:update(dt)
@@ -53,6 +56,7 @@ function MenuManager:update(dt)
 	end
 
 	self.joystick_wait_cooldown = math.max(self.joystick_wait_cooldown - dt, 0.0)
+	self.sawtooth_scroll = self.sawtooth_scroll + self.border_scroll_speed*dt
 end
 
 function MenuManager:update_current_menu(dt)

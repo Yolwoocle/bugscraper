@@ -1,10 +1,13 @@
 require "scripts.util"
 local Class = require "scripts.meta.class"
 local TextMenuItem = require "scripts.ui.menu.items.text_menu_item"
+local Ui = require "scripts.ui.ui"
+local images = require "data.images"
 
 local Menu = Class:inherit()
 
-function Menu:init(game, items, bg_color, prompts, extra_draw)
+function Menu:init(game, title, items, bg_color, prompts, extra_draw)
+	self.title = Text:parse_string(title)
 	self.items = {}
 	self.is_menu = true
 	
@@ -23,7 +26,7 @@ function Menu:init(game, items, bg_color, prompts, extra_draw)
 
 	self.bg_color = bg_color or { 1, 1, 1, 0 }
 	self.blur_enabled = true
-	self.padding_y = 50
+	self.padding_y = 64
 
 	self.prompts = prompts or {}
 	self.second_layer = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
@@ -37,6 +40,10 @@ function Menu:init(game, items, bg_color, prompts, extra_draw)
 
 	self.scroll_position = self.def_y
 	self.target_scroll_position = self.def_y
+	
+	self.draw_sawtooth_border = true
+	self.sawtooth_scroll = 0
+	self.border_scroll_speed = -14
 
 	self.extra_draw = extra_draw or function() end
 end
@@ -63,6 +70,12 @@ function Menu:draw()
 			item:draw()
 		end
 	end
+
+	if self.draw_sawtooth_border then
+		Ui:draw_sawtooth_border(36, 24, game.menu_manager.sawtooth_scroll, {color = COL_BLACK_BLUE, image_bottom = images.sawtooth_separator_small})
+	end
+
+	print_centered_outline(COL_LIGHTEST_GRAY, COL_BLACK_BLUE, self.title, CANVAS_WIDTH/2, 14)
 	self:draw_prompts()
 	if self.extra_draw then self.extra_draw() end
 end
@@ -113,7 +126,7 @@ function Menu:draw_prompts()
 	end
 
 	love.graphics.setCanvas(old_canvas)
-	rect_color({0,0,0,0.7}, "fill", 0, def_y, x, rect_h)
+	-- rect_color({0,0,0,0.7}, "fill", 0, def_y, x, rect_h)
 	love.graphics.draw(self.second_layer, 0, 0)
 end
 

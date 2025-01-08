@@ -78,4 +78,27 @@ function UI:draw_progress_bar(x, y, w, h, val, max_val, col_fill, col_out, col_f
 	love.graphics.setFont(old_font)
 end
 
+function UI:draw_sawtooth_border(height_top, height_bottom, scroll, params)
+	params = params or {}
+	local loop_threshold = param(params.loop_threshold, 14)
+	local color = param(params.color, COL_BLACK_BLUE)
+	local image_height = param(params.image_height, 8)
+	local image_top = param(params.image_top, images.sawtooth_separator)
+	local image_bottom = param(params.image_bottom, images.sawtooth_separator)
+	
+	scroll = scroll % loop_threshold
+	local x = round(-loop_threshold + scroll)
+
+	exec_color(color, function()
+		love.graphics.draw(image_top, x, round(height_top), 0, 1, -1)
+	end)
+	rect_color(color, "fill", 0, 0, CANVAS_WIDTH, round(height_top) - image_height)
+	
+	local bot_y = CANVAS_HEIGHT - height_bottom
+	exec_color(color, function()
+		love.graphics.draw(image_bottom, x, bot_y)
+	end)
+	rect_color(color, "fill", 0, bot_y + image_height, CANVAS_WIDTH, CANVAS_HEIGHT - bot_y)
+end
+
 return UI:new()

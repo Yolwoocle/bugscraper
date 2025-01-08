@@ -1,0 +1,71 @@
+require "scripts.util"
+local menu_util = require "scripts.ui.menu.menu_util"
+local Menu = require "scripts.ui.menu.menu"
+
+local DEFAULT_MENU_BG_COLOR = menu_util.DEFAULT_MENU_BG_COLOR
+local empty_func        = menu_util.empty_func
+local func_set_menu     = menu_util.func_set_menu
+local func_url          = menu_util.func_url
+local PROMPTS_NORMAL    = menu_util.PROMPTS_NORMAL
+
+return Menu:new(game, "{menu.credits.title}", {
+    { "<<< " .. Text:text("menu.credits.game_by") .. " >>>" },
+    { "Léo Bernard (Yolwoocle) 🔗", func_url("https://yolwoocle.com/") },
+    { "" },
+    { "<<< " .. Text:text("menu.credits.music_and_sound_design") .. " >>>" },
+    { "OLX 🔗", func_url("https://www.youtube.com/@olxdotwav") },
+    { "" },
+    { "<<< " .. Text:text("menu.credits.localization") .. " >>>" },
+    { "Jakub Piłasiewicz", empty_func },
+    { "Nicole Sanches (rhysuki)", empty_func },
+    { "Alejandro Alzate Sánchez", empty_func }, -- https://github.com/alejandro-alzate
+    { "Polyglot Project", empty_func },
+    { "" },
+    { "<<< " .. Text:text("menu.credits.asset_creators") .. " >>>" },
+    { "Kenney", empty_func },  -- func_url("https://kenney.nl/")},
+    { "somepx", empty_func },  -- func_url("https://somepx.itch.io/")},
+    { "emhuo", empty_func },   -- func_url("https://emhuo.itch.io/")},
+    { "Endesga", empty_func }, -- func_url("https://emhuo.itch.io/")},
+    { "Noam Goldfarb (SSlime7)", empty_func }, -- func_url("https://emhuo.itch.io/")},
+    { "freesound.org [{menu.see_more}]", func_set_menu("credits_sounds") },
+    { "{menu.credits.tv_slideshow} [{menu.see_more}]", func_set_menu("credits_tv_slideshow") },
+    { "" },
+    { "<<< " .. Text:text("menu.credits.playtesting") .. " >>>" },
+    { "hades140701", empty_func },
+    { "Corentin Vaillant", empty_func },      --func_url("https://github.com/CorentinVaillant/")},
+    { "NerdOfGamers + partner", empty_func }, --func_url("https://ryancavendell.itch.io/")},
+    { "Azuras03 (NicolasYT)", empty_func },
+    { "Lars Loe (MadByte)", empty_func },
+    { "Théodore Billotte", empty_func },
+    { "Alexis", empty_func }, -- func_url("https://binarysunrise.dev")},
+    { "Binary Sunrise", empty_func },
+    { "AnnaWorldEater", empty_func },
+    { "Sylvain Fraresso", empty_func },
+    { "Tom Le Ber", empty_func },
+    { "Guillaume Tran", empty_func },
+    { "Lucas Froehlinger 😎", empty_func },
+    { "" },
+    { "<<< {menu.credits.special_thanks} >>>" },
+    { "Nolan Carlisi", empty_func },       --func_url("https://github.com/ARKANYOTA")},
+    { "Gaspard Delpiano-Manfrini", empty_func },       -- func_url("https://gouspourd.itch.io/")},
+    { "Raphytator", empty_func },      -- func_url("https://raphytator.itch.io/") },
+    { "Louie Chapman", empty_func },   -- func_url("https://louiechapm.itch.io/") },
+    { "Fabien Delpiano", empty_func },
+    { "Quentin Picault", empty_func },
+    { "Guillaume Tran", empty_func },
+    { "Indie Game Lyon", empty_func }, -- func_url("https://www.indiegamelyon.com/")},
+    { "Toulouse Game Dev", empty_func }, -- func_url("https://www.indiegamelyon.com/")},
+    { "LÖVE framework", empty_func },    -- func_url("https://love2d.org/") },
+    { "{menu.open_source.title} [{menu.see_more}]", func_set_menu("open_source") },
+    { "" },
+    { "<< " .. Text:text("menu.credits.licenses") .. " >>" },
+    { "CC0 🔗", func_url("https://creativecommons.org/publicdomain/zero/1.0/") },
+    { "CC BY 3.0 🔗", func_url("https://creativecommons.org/licenses/by/3.0/") },
+    { "CC BY 4.0 🔗", func_url("https://creativecommons.org/licenses/by/4.0/") },
+    { "MIT 🔗", func_url("https://opensource.org/license/mit") },
+    { "Zlib 🔗", func_url("https://www.zlib.net/zlib_license.html") },
+    { "OFL-1.1 🔗", func_url("https://spdx.org/licenses/OFL-1.1.html") },
+    { "" },
+    -- { random_sample({ "🐜", "🐛", "🐝", "🪲", "🐰" }) .. "❤" },
+    { "🐜❤" },
+}, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)

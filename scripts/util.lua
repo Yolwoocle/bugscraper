@@ -425,8 +425,8 @@ function print_centered(text, x, y, rot, sx, sy, ...)
 	sx           = sx or 1
 	sy           = sy or sx
 	local font   = love.graphics.getFont()
-	local text_w = font:getWidth(text)
-	local text_h = font:getHeight()
+	local text_w = font:getWidth(text)*sx
+	local text_h = font:getHeight()*sy
 	love.graphics.print(text, x - text_w / 2, y - text_h / 2, rot, sx, sy, ...)
 end
 

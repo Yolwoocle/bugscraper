@@ -8,7 +8,7 @@ local utf8 = require 'utf8'
 local DebugCommandMenu = Menu:inherit()
 
 function DebugCommandMenu:init(game)
-	DebugCommandMenu.super.init(self, game, {{""}}, {0, 0, 0, 0.5}, nil, nil)
+	DebugCommandMenu.super.init(self, game, "", {{""}}, {0, 0, 0, 0.5}, nil, nil)
 
 	self.debug_command_manager = debug_command_manager
 	

@@ -2,14 +2,16 @@ require "scripts.util"
 local Menu = require "scripts.ui.menu.menu"
 local TextMenuItem = require "scripts.ui.menu.items.text_menu_item"
 local images       = require "data.images"
+local ui = require "scripts.ui.ui"
 
 local BossIntroMenu = Menu:inherit()
 
 function BossIntroMenu:init(game, bg_color, title, layers)
-	BossIntroMenu.super.init(self, game, {{""}}, bg_color, nil, nil)
+	BossIntroMenu.super.init(self, game, "", {{""}}, bg_color, nil, nil)
 
 	self.title = title
 	self.layers = layers
+	self.draw_sawtooth_border = false
 
 	self:init_boss_intro()
 end
@@ -83,13 +85,7 @@ function BossIntroMenu:draw()
 end
 
 function BossIntroMenu:draw_borders()
-	local x = round(-self.border_loop_threshold + self.border_scroll)
-	love.graphics.draw(images.sawtooth_separator, x, round(self.border_width), 0, 1, -1)
-	rect_color(COL_BLACK_BLUE, "fill", 0, 0, CANVAS_WIDTH, round(self.border_width) - 8)
-	
-	local bot_y = CANVAS_HEIGHT - self.border_width - self.title_border_add
-	love.graphics.draw(images.sawtooth_separator, x, bot_y)
-	rect_color(COL_BLACK_BLUE, "fill", 0, bot_y + 8, CANVAS_WIDTH, CANVAS_HEIGHT - bot_y)	
+	ui:draw_sawtooth_border(self.border_width, self.border_width + self.title_border_add, self.border_scroll)
 end
 
 function BossIntroMenu:draw_layers()

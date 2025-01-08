@@ -426,6 +426,7 @@ local img_names = {
 	stomp_arrow = "ui/stomp_arrow",
 
 	sawtooth_separator = "ui/sawtooth_separator",
+	sawtooth_separator_small = "ui/sawtooth_separator_small",
 
 	boss_intro_dung_layer0 = "ui/boss_intro/dung/boss_intro_dung_layer0",
 	boss_intro_dung_layer1 = "ui/boss_intro/dung/boss_intro_dung_layer1",
