@@ -7,31 +7,44 @@ local MetaprogressionManager = Class:inherit()
 
 function MetaprogressionManager:init()
     self.default_data = {
+        total_xp = 0,
         xp = 0,
         xp_level = 0,
         skins = { 1, 2, 3, 4 }
     }
 
+    local t = skin_name_to_id
     self.levels = {
-        [1] = { threshold = 100, rewards = { { type = "skin", skin = "nel" } } },
-        [2] = { threshold = 2000, rewards = { { type = "skin", skin = "leo" } } },
+        [0] = { threshold = 100, rewards = { { type = "skin", skin = t.nel } } },
+        [1] = { threshold = 200, rewards = { { type = "skin", skin = t.leo } } },
+        [2] = { threshold = 300, rewards = { { type = "skin", skin = t.leo } } },
+        [3] = { threshold = 400, rewards = { { type = "skin", skin = t.leo } } },
+        [4] = { threshold = 500, rewards = { { type = "skin", skin = t.leo } } },
+        [5] = { threshold = 600, rewards = { { type = "skin", skin = t.leo } } },
     }
 
     self:read_progress()
+
+    self.old_xp = self:get_xp()
+    self.old_total_xp = self:get_total_xp()
+    self.old_xp_level = self:get_xp_level()
 end
 
 function MetaprogressionManager:add_xp(value)
+    self.old_xp = self:get_xp()
+    self.old_total_xp = self:get_total_xp()
+    self.old_xp_level = self:get_xp_level()
+
     local new_xp = self:get_xp() + value 
     local new_level = self:get_xp_level()
 
-    while new_xp >= self:get_xp_level_threshold(new_level + 1) do
-        new_level = new_level + 1
+    while new_xp >= self:get_xp_level_threshold(new_level) do
         new_xp = new_xp - self:get_xp_level_threshold(new_level)
         self:grant_level_rewards(new_level)
-
-        print((self:get_xp_level_info(new_level) or {}).threshold or math.huge)
+        new_level = new_level + 1
     end
 
+    self:set_total_xp(self:get_total_xp() + value)
     self:set_xp(new_xp)
     self:set_xp_level(new_level)
 end
@@ -54,7 +67,7 @@ function MetaprogressionManager:grant_reward(reward)
     print_debug("granting ")
     if reward.type == "skin" then
         print_debug("granting skin")
-        self:unlock_skin(skin_name_to_id[reward.skin])
+        self:unlock_skin(reward.skin)
     end
 end
     
@@ -64,6 +77,14 @@ end
 
 function MetaprogressionManager:set_xp(value)
     self:set("xp", value)
+end
+    
+function MetaprogressionManager:get_total_xp()
+    return self:get("total_xp")
+end
+
+function MetaprogressionManager:set_total_xp(value)
+    self:set("total_xp", value)
 end
 
 function MetaprogressionManager:get_xp_level()

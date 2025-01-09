@@ -16,6 +16,8 @@ function DebugCommandMenu:init(game)
 end
 
 function DebugCommandMenu:on_set()
+	DebugCommandMenu.super.on_set(self)
+
 	Input:set_standby_mode(true)
 	self:init_menu()
 end
@@ -39,7 +41,7 @@ function DebugCommandMenu:keypressed(key, scancode, isrepeat)
 		Input:set_standby_mode(false)
 
 		game.menu_manager:set_can_pause(false)
-			game.menu_manager:unpause()
+		game.menu_manager:unpause()
 		game.menu_manager:set_menu()
 		game.debug.set_can_pause_to_true_timer = 2
 	end

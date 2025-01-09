@@ -155,6 +155,8 @@ local sfxnames = {
 	spotlight_2 = "spotlight_2.ogg",
 	spotlight_3 = "spotlight_3.ogg",
 
+	xp_tick = "xp_tick.wav",
+
 	---------
 	stomp2 = "stomp2.ogg", --removeme todo rename this
 

@@ -870,6 +870,8 @@ end
 
 function Game:game_over()
 	Metaprogression:add_xp(self.score)
+    self.score = 0
+
 	self.menu_manager:set_menu("game_over")
 end
 

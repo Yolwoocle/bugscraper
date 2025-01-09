@@ -1,0 +1,61 @@
+local MenuItem = require "scripts.ui.menu.items.menu_item"
+local images   = require "data.images"
+
+local ProgressBarMenuItem = MenuItem:inherit()
+
+function ProgressBarMenuItem:init(i, x, y, params)
+	params = params or {}
+
+	ProgressBarMenuItem.super.init(self, i, x, y)
+	self.ox = 0
+	self.oy = 0
+	self.w = CANVAS_WIDTH - MENU_PADDING*2
+
+	self.type = "progress_bar"
+
+	if params.on_click and type(params.on_click) == "function" then
+		self.on_click = params.on_click
+		self.is_selectable = true
+	else
+		self.is_selectable = false
+	end
+
+	self.overlay_value = 0
+	self.value = 0
+	self.update_value = param(params.update_value, function(_, _) end)
+	self.init_value = param(params.init_value, function(_) end) 
+	self.text = "azert"
+end
+
+function ProgressBarMenuItem:on_set()
+	ProgressBarMenuItem.super.on_set(self)
+	self.init_value(self)
+end
+
+function ProgressBarMenuItem:update(dt)
+	ProgressBarMenuItem.super.update(self, dt) 	
+	self.update_value(self, dt)
+
+	self.ox = lerp(self.ox, 0, 0.3)
+	self.oy = lerp(self.oy, 0, 0.3)
+	if math.abs(self.ox) <= 0.1 then self.ox = 0 end
+	if math.abs(self.oy) <= 0.1 then self.oy = 0 end
+end
+
+function ProgressBarMenuItem:draw()
+	local w = self.w
+	local x = self.x - w/2
+	local y = self.y - 8 + 3
+	draw_3_slice(images.selection_left_small, images.selection_right_small, COL_MID_GRAY, x, y, w, 10)
+	draw_3_slice(images.selection_left_small, images.selection_right_small, COL_WHITE,    x, y, w * self.value, 10)
+	if self.overlay_value then
+		draw_3_slice(images.selection_left_small, images.selection_right_small, COL_LIGHTEST_GRAY, x, y, w * self.overlay_value, 10)
+	end
+	print_centered_outline(COL_WHITE, COL_MID_GRAY, self.text, self.x, y + 4)
+end
+
+function ProgressBarMenuItem:after_click()	
+	self.oy = -4
+end
+
+return ProgressBarMenuItem

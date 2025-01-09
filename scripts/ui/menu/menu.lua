@@ -6,7 +6,8 @@ local images = require "data.images"
 
 local Menu = Class:inherit()
 
-function Menu:init(game, title, items, bg_color, prompts, extra_draw)
+function Menu:init(game, title, items, bg_color, prompts, extra_draw, params)
+	params = params or {}
 	self.title = Text:parse_string(title)
 	self.items = {}
 	self.is_menu = true
@@ -45,6 +46,7 @@ function Menu:init(game, title, items, bg_color, prompts, extra_draw)
 	self.sawtooth_scroll = 0
 	self.border_scroll_speed = -14
 
+	self.extra_update = params.update or function(_, _) end
 	self.extra_draw = extra_draw or function() end
 end
 
@@ -81,6 +83,9 @@ function Menu:draw()
 end
 
 function Menu:on_set()
+	for i, item in pairs(self.items) do
+		item:on_set()
+	end
 end
 
 function Menu:on_unset()

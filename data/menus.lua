@@ -1,25 +1,24 @@
-local menu_util = require "scripts.ui.menu.menu_util"
-local Menu                = require "scripts.ui.menu.menu"
-local BossIntroMenu       = require "scripts.ui.menu.boss_intro_menu"
-local RangeOptionMenuItem = require "scripts.ui.menu.items.range_option_menu_item"
-local BoolOptionMenuItem  = require "scripts.ui.menu.items.bool_option_menu_item"
-local EnumOptionMenuItem  = require "scripts.ui.menu.items.enum_option_menu_item"
-local StatsMenuItem       = require "scripts.ui.menu.items.menu_item_stats"
-local ControlsMenuItem    = require "scripts.ui.menu.items.controls_menu_item"
-local CustomDrawMenuItem  = require "scripts.ui.menu.items.menu_item_custom_draw"
-local waves               = require "data.waves"
-local Enemies             = require "data.enemies"
-local debug_draw_waves    = require "scripts.debug.draw_waves"
-local images              = require "data.images"
-local DebugCommandMenu    = require "scripts.ui.menu.debug_command_menu"
+local menu_util             = require "scripts.ui.menu.menu_util"
+local Menu                  = require "scripts.ui.menu.menu"
+local BossIntroMenu         = require "scripts.ui.menu.boss_intro_menu"
+local RangeOptionMenuItem   = require "scripts.ui.menu.items.range_option_menu_item"
+local BoolOptionMenuItem    = require "scripts.ui.menu.items.bool_option_menu_item"
+local EnumOptionMenuItem    = require "scripts.ui.menu.items.enum_option_menu_item"
+local StatsMenuItem         = require "scripts.ui.menu.items.menu_item_stats"
+local ControlsMenuItem      = require "scripts.ui.menu.items.controls_menu_item"
+local CustomDrawMenuItem    = require "scripts.ui.menu.items.menu_item_custom_draw"
+local debug_draw_waves      = require "scripts.debug.draw_waves"
+local images                = require "data.images"
+local DebugCommandMenu      = require "scripts.ui.menu.debug_command_menu"
+local NewXpRewardMenu       = require "data.menus.menu_new_xp_reward"
 
 local DEFAULT_MENU_BG_COLOR = menu_util.DEFAULT_MENU_BG_COLOR
-local empty_func        = menu_util.empty_func
-local func_set_menu     = menu_util.func_set_menu
-local func_url          = menu_util.func_url
-local PROMPTS_NORMAL    = menu_util.PROMPTS_NORMAL
-local PROMPTS_GAME_OVER = menu_util.PROMPTS_GAME_OVER
-local PROMPTS_CONTROLS  = menu_util.PROMPTS_CONTROLS
+local empty_func            = menu_util.empty_func
+local func_set_menu         = menu_util.func_set_menu
+local func_url              = menu_util.func_url
+local PROMPTS_NORMAL        = menu_util.PROMPTS_NORMAL
+local PROMPTS_GAME_OVER     = menu_util.PROMPTS_GAME_OVER
+local PROMPTS_CONTROLS      = menu_util.PROMPTS_CONTROLS
 
 -----------------------------------------------------
 ------ [[[[[[[[[[[[[[[[ MENUS ]]]]]]]]]]]]]]]] ------
@@ -48,9 +47,14 @@ local function generate_menus()
         { image = images.boss_intro_bee_layer0, z_mult = 1.5 },
     })
 
-    menus.w3_boss_intro = BossIntroMenu:new(game, { 38 / 255, 43 / 255, 68 / 255, 0.8 }, Text:text("enemy.motherboard"), {
-        { image = images.motherboard, z_mult = 0.7 },
-    })
+    menus.w3_boss_intro = BossIntroMenu:new(game, { 38 / 255, 43 / 255, 68 / 255, 0.8 }, Text:text("enemy.motherboard"),
+        {
+            { image = images.motherboard, z_mult = 0.7 },
+        })
+
+    menus.new_xp_reward = NewXpRewardMenu:new(game)
+
+    menus.options = require "data.menus.menu_options"
 
     menus.view_waves = Menu:new(game, "waves", {
         { CustomDrawMenuItem, debug_draw_waves },
@@ -61,28 +65,26 @@ local function generate_menus()
 
     menus.confirm_retry = Menu:new(game, "", {
         { "{menu.confirm_retry.description}" },
-        { "{menu.no}",  function() 
-                game.menu_manager:back()
-            end },
-        { "{menu.yes}", function() 
+        { "{menu.no}", function()
+            game.menu_manager:back()
+        end },
+        { "{menu.yes}", function()
             game:new_game()
         end },
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
 
-    
+
     menus.quit = Menu:new(game, "", {
-        { "" },
         { "{menu.quit.description}" },
         { "{menu.no}",              function() game.menu_manager:back() end },
         { "{menu.yes}",             quit_game },
-        { "" },
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
 
 
     menus.pause = require "data.menus.menu_pause"
 
     menus.feedback = Menu:new(game, "{menu.feedback.title}", {
-        { "{menu.feedback.bugs}", func_url("https://github.com/Yolwoocle/bugscraper/issues") },
+        { "{menu.feedback.bugs}",     func_url("https://github.com/Yolwoocle/bugscraper/issues") },
         { "{menu.feedback.features}", func_url("https://github.com/Yolwoocle/bugscraper/issues") },
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
 
@@ -90,13 +92,13 @@ local function generate_menus()
     menus.options = require "data.menus.menu_options"
 
     menus.options_language = require "data.menus.menu_options_language"
-    
+
     menus.options_confirm_language = Menu:new(game, "", {
         { "{menu.options.confirm_language.description}" },
-        { "{menu.no}",  function() 
-                game.menu_manager:back()
-            end },
-        { "{menu.yes}", function() 
+        { "{menu.no}", function()
+            game.menu_manager:back()
+        end },
+        { "{menu.yes}", function()
             if game.buffered_language then
                 Options:set("language", game.buffered_language)
             end
@@ -139,7 +141,7 @@ local function generate_menus()
         "controller_4", 4)
 
     menus.game_over = require "data.menus.menu_game_over"
-    
+
     menus.credits = require "data.menus.menu_credits"
 
     menus.open_source = Menu:new(game, "{menu.open_source.title}", {
@@ -154,64 +156,64 @@ local function generate_menus()
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
 
     menus.credits_tv_slideshow = Menu:new(game, "{menu.credits.tv_slideshow}", {
-        { Text:text("menu.credits.x_by_y", "'Graphs'",                    "Sslime7"),                    empty_func },
-        { Text:text("menu.credits.x_by_y", "'Hot dogs'",                  "Alexis Belmonte"),            empty_func },
-        { Text:text("menu.credits.x_by_y", "'Mio rotate'",                "Corentin Vaillant"),          empty_func },
-        { Text:text("menu.credits.x_by_y", "'Mio explode'",               "Corentin Vaillant"),          empty_func },
-        { Text:text("menu.credits.x_by_y", "'Bugs With Guns'",            "Yolwoocle"),                  empty_func },
-        { Text:text("menu.credits.x_by_y", "'Löve, Öbey'",                "ellraiser"),                  empty_func },
-        { Text:text("menu.credits.x_by_y", "'Need your duck taped?'",     "Joseph (Jedi)"),              empty_func },
-        { Text:text("menu.credits.x_by_y", "'Starbugs Green Tea'",        "Goyome"),                     empty_func },
-        { Text:text("menu.credits.x_by_y", "'Binarion'",                  "Hector SK  (Nextop Games)"),  empty_func },
-        { Text:text("menu.credits.x_by_y", "'Injured? Good'",             "Hector SK  (Nextop Games)"),  empty_func },
-        { Text:text("menu.credits.x_by_y", "'No queen?'",                 "Behck"),                      empty_func },
-        { Text:text("menu.credits.x_by_y", "'Splat'",                     "Sarcose"),                    empty_func },
-        { Text:text("menu.credits.x_by_y", "'End toastal abuse'",         "Clem"),                       empty_func },
-        { Text:text("menu.credits.x_by_y", "'A-salt rifle'",              "Clem"),                       empty_func },
-        { Text:text("menu.credits.x_by_y", "'Beatleblock'",               "Dimitri Sophinos (DPS2004)"), empty_func },
+        { Text:text("menu.credits.x_by_y", "'Graphs'", "Sslime7"),                                       empty_func },
+        { Text:text("menu.credits.x_by_y", "'Hot dogs'", "Alexis Belmonte"),                             empty_func },
+        { Text:text("menu.credits.x_by_y", "'Mio rotate'", "Corentin Vaillant"),                         empty_func },
+        { Text:text("menu.credits.x_by_y", "'Mio explode'", "Corentin Vaillant"),                        empty_func },
+        { Text:text("menu.credits.x_by_y", "'Bugs With Guns'", "Yolwoocle"),                             empty_func },
+        { Text:text("menu.credits.x_by_y", "'Löve, Öbey'", "ellraiser"),                                 empty_func },
+        { Text:text("menu.credits.x_by_y", "'Need your duck taped?'", "Joseph (Jedi)"),                  empty_func },
+        { Text:text("menu.credits.x_by_y", "'Starbugs Green Tea'", "Goyome"),                            empty_func },
+        { Text:text("menu.credits.x_by_y", "'Binarion'", "Hector SK  (Nextop Games)"),                   empty_func },
+        { Text:text("menu.credits.x_by_y", "'Injured? Good'", "Hector SK  (Nextop Games)"),              empty_func },
+        { Text:text("menu.credits.x_by_y", "'No queen?'", "Behck"),                                      empty_func },
+        { Text:text("menu.credits.x_by_y", "'Splat'", "Sarcose"),                                        empty_func },
+        { Text:text("menu.credits.x_by_y", "'End toastal abuse'", "Clem"),                               empty_func },
+        { Text:text("menu.credits.x_by_y", "'A-salt rifle'", "Clem"),                                    empty_func },
+        { Text:text("menu.credits.x_by_y", "'Beatleblock'", "Dimitri Sophinos (DPS2004)"),               empty_func },
         { Text:text("menu.credits.x_by_y", "'Bugscrapers aren't enough'", "pkhead"),                     empty_func },
-        { Text:text("menu.credits.x_by_y", "'Optic Studio'",              "pkhead"),                     empty_func },
-        { Text:text("menu.credits.x_by_y", "'Soon (TM)'",                 "pixelbath"),                  empty_func },
+        { Text:text("menu.credits.x_by_y", "'Optic Studio'", "pkhead"),                                  empty_func },
+        { Text:text("menu.credits.x_by_y", "'Soon (TM)'", "pixelbath"),                                  empty_func },
         { "" },
         -- { "{menu.credits.tv_slideshow_submit} 🔗", func_url("https://bugscraper.net/tv") }
 
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
 
     menus.credits_sounds = Menu:new(game, "freesound.org", {
-        { Text:text("menu.credits.asset_item", "'jf Glass Breaking.wav'", "cmusounddesign", "CC BY 3.0")                    .. " 🔗", func_url("https://freesound.org/people/cmusounddesign/sounds/85168/") },
-        { Text:text("menu.credits.asset_item", "'Glass Break'", "avrahamy", "CC0")                                          .. " 🔗", func_url("https://freesound.org/people/avrahamy/sounds/141563/") },
-        { Text:text("menu.credits.asset_item", "'Glass shard tinkle texture'", "el-bee", "CC BY 4.0")                       .. " 🔗", func_url("https://freesound.org/people/el-bee/sounds/636238/") },
-        { Text:text("menu.credits.asset_item", "'Bad Beep (Incorrect)'", "RICHERlandTV", "CC BY 3.0")                       .. " 🔗", func_url("https://freesound.org/people/RICHERlandTV/sounds/216090/") },
-        { Text:text("menu.credits.asset_item", "[Keyboard press]", "MattRuthSound", "CC BY 3.0")                            .. " 🔗", func_url("https://freesound.org/people/MattRuthSound/sounds/561661/") },
-        { Text:text("menu.credits.asset_item", "'Paper Throw Into Air(fuller) 2'", "RossBell", "CC0")                       .. " 🔗", func_url("https://freesound.org/people/RossBell/sounds/389442/") },
-        { Text:text("menu.credits.asset_item", "'Slime'", "Lukeo135", "CC0")                                                .. " 🔗", func_url("https://freesound.org/people/Lukeo135/sounds/530617/") },
-        { Text:text("menu.credits.asset_item", "'brushes_on_snare'", "Heigh-hoo", "CC0")                                    .. " 🔗", func_url("https://freesound.org/people/Heigh-hoo/sounds/20297/") },
-        { Text:text("menu.credits.asset_item", "'01 Elevator UP'", "soundslikewillem", "CC BY 4.0")                         .. " 🔗", func_url("https://freesound.org/people/soundslikewillem/sounds/340747/") },
-        { Text:text("menu.credits.asset_item", "'indsustrial_elevator_door_open'", "joedeshon", "CC BY 4.0")                .. " 🔗", func_url("https://freesound.org/people/joedeshon/sounds/368737/") },
-        { Text:text("menu.credits.asset_item", "'indsustrial_elevator_door_close'", "joedeshon", "CC BY 4.0")               .. " 🔗", func_url("https://freesound.org/people/joedeshon/sounds/368738/") },
-        { Text:text("menu.credits.asset_item", "'Footsteps on gravel'", "Joozz", "CC BY 4.0")                               .. " 🔗", func_url("https://freesound.org/people/Joozz/sounds/531952/") },
-        { Text:text("menu.credits.asset_item", "'THE CRASH'", "sandyrb", "CC BY 4.0")                                       .. " 🔗", func_url("https://freesound.org/people/sandyrb/sounds/95078/") },
-        { Text:text("menu.credits.asset_item", "'Door slam - Gun shot'", "coolguy244e", "CC BY 4.0")                        .. " 🔗", func_url("https://freesound.org/people/coolguy244e/sounds/266915/") },
-        { Text:text("menu.credits.asset_item", "'bee fly'", "soundmary", "CC BY 4.0")                                       .. " 🔗", func_url("https://freesound.org/people/soundmary/sounds/194932/") },
-        { Text:text("menu.credits.asset_item", "'Pop, Low, A (H1)'", "InspectorJ", "CC BY 4.0")                             .. " 🔗", func_url("https://freesound.org/people/InspectorJ/sounds/411639/") },
-        { Text:text("menu.credits.asset_item", "'Crack 1'", "JustInvoke", "CC BY 3.0")                                      .. " 🔗", func_url("https://freesound.org/people/JustInvoke/sounds/446118/") },
-        { Text:text("menu.credits.asset_item", "'Emergency Siren'", "onderwish", "CC0")                                     .. " 🔗", func_url("https://freesound.org/people/onderwish/sounds/470504/") },
-        { Text:text("menu.credits.asset_item", "'Wood burning in the stove'", "smand", "CC0")                               .. " 🔗", func_url("https://freesound.org/people/smand/sounds/521118/") },
-        { Text:text("menu.credits.asset_item", "'Bike falling down an escalator'", "dundass", "CC BY 3.0")                  .. " 🔗", func_url("https://freesound.org/people/dundass/sounds/509831/") },
+        { Text:text("menu.credits.asset_item", "'jf Glass Breaking.wav'", "cmusounddesign", "CC BY 3.0") .. " 🔗", func_url("https://freesound.org/people/cmusounddesign/sounds/85168/") },
+        { Text:text("menu.credits.asset_item", "'Glass Break'", "avrahamy", "CC0") .. " 🔗", func_url("https://freesound.org/people/avrahamy/sounds/141563/") },
+        { Text:text("menu.credits.asset_item", "'Glass shard tinkle texture'", "el-bee", "CC BY 4.0") .. " 🔗", func_url("https://freesound.org/people/el-bee/sounds/636238/") },
+        { Text:text("menu.credits.asset_item", "'Bad Beep (Incorrect)'", "RICHERlandTV", "CC BY 3.0") .. " 🔗", func_url("https://freesound.org/people/RICHERlandTV/sounds/216090/") },
+        { Text:text("menu.credits.asset_item", "[Keyboard press]", "MattRuthSound", "CC BY 3.0") .. " 🔗", func_url("https://freesound.org/people/MattRuthSound/sounds/561661/") },
+        { Text:text("menu.credits.asset_item", "'Paper Throw Into Air(fuller) 2'", "RossBell", "CC0") .. " 🔗", func_url("https://freesound.org/people/RossBell/sounds/389442/") },
+        { Text:text("menu.credits.asset_item", "'Slime'", "Lukeo135", "CC0") .. " 🔗", func_url("https://freesound.org/people/Lukeo135/sounds/530617/") },
+        { Text:text("menu.credits.asset_item", "'brushes_on_snare'", "Heigh-hoo", "CC0") .. " 🔗", func_url("https://freesound.org/people/Heigh-hoo/sounds/20297/") },
+        { Text:text("menu.credits.asset_item", "'01 Elevator UP'", "soundslikewillem", "CC BY 4.0") .. " 🔗", func_url("https://freesound.org/people/soundslikewillem/sounds/340747/") },
+        { Text:text("menu.credits.asset_item", "'indsustrial_elevator_door_open'", "joedeshon", "CC BY 4.0") .. " 🔗", func_url("https://freesound.org/people/joedeshon/sounds/368737/") },
+        { Text:text("menu.credits.asset_item", "'indsustrial_elevator_door_close'", "joedeshon", "CC BY 4.0") .. " 🔗", func_url("https://freesound.org/people/joedeshon/sounds/368738/") },
+        { Text:text("menu.credits.asset_item", "'Footsteps on gravel'", "Joozz", "CC BY 4.0") .. " 🔗", func_url("https://freesound.org/people/Joozz/sounds/531952/") },
+        { Text:text("menu.credits.asset_item", "'THE CRASH'", "sandyrb", "CC BY 4.0") .. " 🔗", func_url("https://freesound.org/people/sandyrb/sounds/95078/") },
+        { Text:text("menu.credits.asset_item", "'Door slam - Gun shot'", "coolguy244e", "CC BY 4.0") .. " 🔗", func_url("https://freesound.org/people/coolguy244e/sounds/266915/") },
+        { Text:text("menu.credits.asset_item", "'bee fly'", "soundmary", "CC BY 4.0") .. " 🔗", func_url("https://freesound.org/people/soundmary/sounds/194932/") },
+        { Text:text("menu.credits.asset_item", "'Pop, Low, A (H1)'", "InspectorJ", "CC BY 4.0") .. " 🔗", func_url("https://freesound.org/people/InspectorJ/sounds/411639/") },
+        { Text:text("menu.credits.asset_item", "'Crack 1'", "JustInvoke", "CC BY 3.0") .. " 🔗", func_url("https://freesound.org/people/JustInvoke/sounds/446118/") },
+        { Text:text("menu.credits.asset_item", "'Emergency Siren'", "onderwish", "CC0") .. " 🔗", func_url("https://freesound.org/people/onderwish/sounds/470504/") },
+        { Text:text("menu.credits.asset_item", "'Wood burning in the stove'", "smand", "CC0") .. " 🔗", func_url("https://freesound.org/people/smand/sounds/521118/") },
+        { Text:text("menu.credits.asset_item", "'Bike falling down an escalator'", "dundass", "CC BY 3.0") .. " 🔗", func_url("https://freesound.org/people/dundass/sounds/509831/") },
         { Text:text("menu.credits.asset_item", "'squishing and squeezing a wet sponge in a bowl'", "breadparticles", "CC0") .. " 🔗", func_url("https://freesound.org/people/breadparticles/sounds/575332/#comments") },
-        { Text:text("menu.credits.asset_item", "'Insect Bug Smash & Crush'", "EminYILDIRIM", "CC BY 4.0")                   .. " 🔗", func_url("https://freesound.org/people/EminYILDIRIM/sounds/570767/") },
-        { Text:text("menu.credits.asset_item", "'Inhaler  Puff 170427_1464'", "megashroom", "CC0")                          .. " 🔗", func_url("https://freesound.org/s/390174/") },
-        { Text:text("menu.credits.asset_item", "'Poof/Puff'", "JustInvoke", "CC BY 4.0")                                    .. " 🔗", func_url("https://freesound.org/s/446124/") },
-        { Text:text("menu.credits.asset_item", "'rolling bag'", "Sunejackie", "CC BY 4.0")                                  .. " 🔗", func_url("https://freesound.org/s/542402/") },
+        { Text:text("menu.credits.asset_item", "'Insect Bug Smash & Crush'", "EminYILDIRIM", "CC BY 4.0") .. " 🔗", func_url("https://freesound.org/people/EminYILDIRIM/sounds/570767/") },
+        { Text:text("menu.credits.asset_item", "'Inhaler  Puff 170427_1464'", "megashroom", "CC0") .. " 🔗", func_url("https://freesound.org/s/390174/") },
+        { Text:text("menu.credits.asset_item", "'Poof/Puff'", "JustInvoke", "CC BY 4.0") .. " 🔗", func_url("https://freesound.org/s/446124/") },
+        { Text:text("menu.credits.asset_item", "'rolling bag'", "Sunejackie", "CC BY 4.0") .. " 🔗", func_url("https://freesound.org/s/542402/") },
         -- { Text:text("menu.credits.asset_item", "'Ruler Bounce 3'", "belanhud", "CC0"),                         func_url("https://freesound.org/s/537904/")},
-        { Text:text("menu.credits.asset_item", "'Springboard A'", "lmbubec", "CC0")                                         .. " 🔗", func_url("https://freesound.org/s/119793/") },
-        { Text:text("menu.credits.asset_item", "'Springboard B'", "lmbubec", "CC0")                                         .. " 🔗", func_url("https://freesound.org/s/119794/") },
-        { Text:text("menu.credits.asset_item", "'80s alarm'", "tim.kahn", "CC BY 4.0")                                      .. " 🔗", func_url("https://freesound.org/s/83280/") },
-        { Text:text("menu.credits.asset_item", "'Metal container impact firm'", "jorickhoofd", "CC BY 4.0")                 .. " 🔗", func_url("https://freesound.org/s/160077/") },
-        { Text:text("menu.credits.asset_item", "'Roller blind circuit breaker'", "newlocknew", "CC BY 4.0")                 .. " 🔗", func_url("https://freesound.org/s/583451/") },
-        { Text:text("menu.credits.asset_item", "'Digging, Ice, Hammer, A'", "InspectorJ", "CC BY 4.0")                      .. " 🔗", func_url("https://freesound.org/s/420878/ ") },
-        { Text:text("menu.credits.asset_item", "'Whoosh For Whip Zoom'", "BennettFilmTeacher", "CC0")                       .. " 🔗", func_url("https://freesound.org/s/420878/ ") },
-        { Text:text("menu.credits.asset_item", "'Balloon_Inflate_Quick_Multiple'", "Terhen", "CC BY 3.0")                   .. " 🔗", func_url("https://freesound.org/s/420878/ ") },
+        { Text:text("menu.credits.asset_item", "'Springboard A'", "lmbubec", "CC0") .. " 🔗", func_url("https://freesound.org/s/119793/") },
+        { Text:text("menu.credits.asset_item", "'Springboard B'", "lmbubec", "CC0") .. " 🔗", func_url("https://freesound.org/s/119794/") },
+        { Text:text("menu.credits.asset_item", "'80s alarm'", "tim.kahn", "CC BY 4.0") .. " 🔗", func_url("https://freesound.org/s/83280/") },
+        { Text:text("menu.credits.asset_item", "'Metal container impact firm'", "jorickhoofd", "CC BY 4.0") .. " 🔗", func_url("https://freesound.org/s/160077/") },
+        { Text:text("menu.credits.asset_item", "'Roller blind circuit breaker'", "newlocknew", "CC BY 4.0") .. " 🔗", func_url("https://freesound.org/s/583451/") },
+        { Text:text("menu.credits.asset_item", "'Digging, Ice, Hammer, A'", "InspectorJ", "CC BY 4.0") .. " 🔗", func_url("https://freesound.org/s/420878/ ") },
+        { Text:text("menu.credits.asset_item", "'Whoosh For Whip Zoom'", "BennettFilmTeacher", "CC0") .. " 🔗", func_url("https://freesound.org/s/420878/ ") },
+        { Text:text("menu.credits.asset_item", "'Balloon_Inflate_Quick_Multiple'", "Terhen", "CC BY 3.0") .. " 🔗", func_url("https://freesound.org/s/420878/ ") },
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
 
     local items = {

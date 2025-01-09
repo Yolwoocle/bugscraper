@@ -101,15 +101,16 @@ function MenuManager:draw()
 	self.cur_menu:draw()
 end
 
-function MenuManager:set_menu(menu, is_back)
+function MenuManager:set_menu(menu, params)
+	params = params or {}
 	self.last_menu = self.cur_menu
 
 	-- nil menu
 	if menu == nil then
 		self.buffer_unpause = true
-		return
+		return true
 	else
-		if not is_back then
+		if not params.is_back then
 			table.insert(self.menu_stack, {
 				menu = self.cur_menu,
 				sel_n = self.sel_n,
@@ -125,7 +126,7 @@ function MenuManager:set_menu(menu, is_back)
 	if not m then 
 		return false, "menu '" .. tostring(menu) .. "' does not exist"
 	end
-	if self.cur_menu then
+	if self.cur_menu and not params.skip_on_unset_call then
 		self.cur_menu:on_unset()
 	end
 	self.cur_menu = m
@@ -134,7 +135,9 @@ function MenuManager:set_menu(menu, is_back)
 	-- Update selection to first selectable
 	local sel, found = self:find_selectable_from(1, 1)
 	self:set_selection(sel)
-	self.cur_menu:on_set()
+	if not params.skip_on_set_call then
+		self.cur_menu:on_set()
+	end
 	self.cur_menu:update(0)
 
 	-- Reset game screenshake
@@ -238,10 +241,13 @@ function MenuManager:set_selection(n)
 	return true
 end
 
-function MenuManager:back()
+function MenuManager:back(params)
+	params = params or {}
 	local item = table.remove(self.menu_stack)
 	if item and item.menu then
-		self:set_menu(item.menu, true)
+		local _params = copy_table_shallow(params)
+		_params.is_back = true
+		self:set_menu(item.menu, _params)
 		self:set_selection(item.sel_n)
 	end
 	

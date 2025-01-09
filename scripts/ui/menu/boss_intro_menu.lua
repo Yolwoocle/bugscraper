@@ -17,6 +17,7 @@ function BossIntroMenu:init(game, bg_color, title, layers)
 end
 
 function BossIntroMenu:on_set()
+	BossIntroMenu.super.on_set(self)
 	self:init_boss_intro()
 end
 

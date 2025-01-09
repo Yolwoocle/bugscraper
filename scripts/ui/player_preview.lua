@@ -280,6 +280,8 @@ function PlayerPreview:update(dt)
 
     self.ox = lerp(self.ox, 0, 0.3)
     self.oy = lerp(self.oy, 0, 0.3)
+    if math.abs(self.ox) <= 0.1 then self.ox = 0 end
+	if math.abs(self.oy) <= 0.1 then self.oy = 0 end
 end
 
 function PlayerPreview:draw_bg_card_empty()

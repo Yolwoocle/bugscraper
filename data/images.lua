@@ -418,6 +418,8 @@ local img_names = {
 	selection_left =  "ui/selection_left",
 	selection_mid =   "ui/selection_mid",
 	selection_right = "ui/selection_right",
+	selection_left_small =  "ui/selection_left_small",
+	selection_right_small = "ui/selection_right_small",
 	bubble_tip =      "ui/bubble_tip",
 
 	-- ui

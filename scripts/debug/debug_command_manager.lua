@@ -128,6 +128,56 @@ function DebugCommandManager:init()
         end,
     }
 
+    self.commands["score"] = DebugCommand:new {
+        name = "score",
+        description = "Grants some amount of score",
+        args = {
+            { "number:number" },
+        },
+        run = function(number)
+            if not number then
+                return false, "Invalid number"
+            end
+            game.score = game.score + number
+            self:add_message(concat("Added ", number, " to the score"))
+            return true
+        end,
+    }
+
+    self.commands["xp"] = DebugCommand:new {
+        name = "xp",
+        description = "Grants some amount of xp",
+        args = {
+            { "number:number" },
+        },
+        run = function(number)
+            if not number then
+                return false, "Invalid number"
+            end
+            Metaprogression:add_xp(number)
+            self:add_message(concat("Added ", number, " to the xp"))
+            return true
+        end,
+    }
+
+    self.commands["menu"] = DebugCommand:new {
+        name = "menu",
+        description = "Sets the menu",
+        args = {
+            { "name:string" }, -- Menu keys can't be set since the menus are loaded at the same time as the debug menu... to fix later
+        },
+        run = function(name)
+            local success, err = game.menu_manager:set_menu(name)
+            if not success then
+                return false, err
+            end
+            
+            game.menu_manager:set_menu(name)
+            self:add_message(concat("Set menu to '", name, "'"))
+            return true
+        end,
+    }
+
     local skin_names = table_keys(skin_name_to_id)
     self.commands["unlock_skin"] = DebugCommand:new {
         name = "unlock_skin",
@@ -145,6 +195,7 @@ function DebugCommandManager:init()
             end
 
             Metaprogression:unlock_skin(skin_id)
+            self:add_message(concat("Unlocked skin '", skin_name, "'"))
             return true
         end,
     }
