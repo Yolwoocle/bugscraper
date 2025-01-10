@@ -51,7 +51,7 @@ function MenuManager:update(dt)
 		elseif self.is_paused then
 			self:unpause()
 		end
-	elseif back_button then
+	elseif back_button and ((not self.cur_menu) or (self.cur_menu and self.cur_menu.is_backable)) then
 		self:back()
 	end
 
@@ -124,7 +124,7 @@ function MenuManager:set_menu(menu, params)
 	end
 
 	if not m then 
-		return false, "menu '" .. tostring(menu) .. "' does not exist"
+		return false, "Menu '" .. tostring(menu) .. "' does not exist"
 	end
 	if self.cur_menu and not params.skip_on_unset_call then
 		self.cur_menu:on_unset()

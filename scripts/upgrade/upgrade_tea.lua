@@ -12,6 +12,7 @@ function UpgradeTea:init()
     self:set_description(self.number_of_hearts)
 
     self.color = COL_MID_GREEN
+    self.palette = {COL_MID_GREEN, COL_MID_DARK_GREEN, COL_DARK_GREEN}
 end
 
 function UpgradeTea:update(dt)

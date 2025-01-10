@@ -57,7 +57,7 @@ local skins = {
 		img_airborne = images.nel_idle,
 		spr_dead = images.nel_idle,
 
-		color_palette = {COL_LIGHT_RED, COL_DARK_RED, color(0x9e2835), color(0x3a4466), color(0x262b44)},
+		color_palette = {COL_LIGHT_RED, COL_DARK_RED, COL_DARK_BROWN, color(0x3a4466), color(0x262b44)},
 		menu_color = COL_LIGHT_RED, 
 		icon = "🐞",
 		text_key = "nel",

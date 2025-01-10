@@ -143,8 +143,12 @@ function UpgradeDisplay:draw_product()
         local y = self.mid_y - 64
         local s = ease_out_cubic(clamp(self.animation_t, 0, 1))
         
-        love.graphics.setColor(self.product.color)
-        draw_centered(images.rays, x, y, game.t, s*0.4, s*0.4)
+        love.graphics.setColor(self.product.palette[3])
+        draw_centered(images.rays_big, x, y, 0.6*game.t, s*0.2)
+        love.graphics.setColor(self.product.palette[2])
+        draw_centered(images.rays_big, x, y, -0.8*game.t, s*0.18)
+        love.graphics.setColor(self.product.palette[1])
+        draw_centered(images.rays_big, x, y, game.t, s*0.15)
         love.graphics.setColor(COL_WHITE)
     
         self.product:draw(x, y, s)

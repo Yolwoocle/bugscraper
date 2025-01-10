@@ -265,8 +265,14 @@ return {
             kills = "Enemies killed", -- The amount of enemies the player has killed
             time = "Time", -- The time that the player took to complete the level
             floor = "Floor", -- Which storey the player was on when they died
+            score = "Score", -- ADDED
+            
             continue = "CONTINUE",
             quick_restart = "QUICK RESTART", --ADDED
+        },
+        new_reward = {
+            new_skin = "New character!", -- ADDED
+            new_upgrade = "New upgrade!", -- ADDED
         },
         win = {
             title = "CONGRATULATIONS!",

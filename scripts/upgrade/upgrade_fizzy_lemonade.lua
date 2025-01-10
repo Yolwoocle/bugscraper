@@ -10,6 +10,7 @@ function UpgradeFizzyLemonade:init()
     self.sprite = images.upgrade_fizzy_lemonade
 
     self.color = COL_LIGHT_YELLOW
+    self.palette = {COL_LIGHT_BEIGE, COL_LIGHT_YELLOW, COL_YELLOW_ORANGE}
 end
 
 function UpgradeFizzyLemonade:update(dt)

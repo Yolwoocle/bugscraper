@@ -4,13 +4,14 @@ local upgrades = {
     UpgradeMilk =          require "scripts.upgrade.upgrade_milk",
     UpgradeBoba =          require "scripts.upgrade.upgrade_boba",
     UpgradeSoda =          require "scripts.upgrade.upgrade_soda",
-    UpgradeFizzyLemonade = require "scripts.upgrade.upgrade_fizzy_lemonade",
     UpgradeAppleJuice =    require "scripts.upgrade.upgrade_apple_juice",
     
-    UpgradeEnergyDrink =   require "scripts.upgrade.upgrade_energy_drink",
+    UpgradeFizzyLemonade = require "scripts.upgrade.upgrade_fizzy_lemonade",
     UpgradeHotSauce =      require "scripts.upgrade.upgrade_hot_sauce",
     UpgradeCoconutWater =  require "scripts.upgrade.upgrade_coconut_water",
     UpgradeHotChocolate =  require "scripts.upgrade.upgrade_hot_chocolate",
+    
+    UpgradeEnergyDrink =   require "scripts.upgrade.upgrade_energy_drink",
 
     UpgradeWater =       require "scripts.upgrade.upgrade_water",
 }

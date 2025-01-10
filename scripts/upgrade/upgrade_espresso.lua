@@ -12,6 +12,7 @@ function UpgradeEspresso:init()
     self:set_description(self.strength)
 
     self.color = COL_MID_BROWN
+    self.palette = {COL_MID_BROWN, COL_LIGHT_BROWN, COL_DARK_BROWN}
 end
 
 function UpgradeEspresso:update(dt)

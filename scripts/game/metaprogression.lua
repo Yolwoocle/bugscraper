@@ -1,5 +1,6 @@
 require "scripts.util"
 local Class = require "scripts.meta.class"
+local upgrades = require "data.upgrades"
 local skins = require "data.skins"
 local skin_name_to_id = require "data.skin_name_to_id"
 
@@ -9,18 +10,28 @@ function MetaprogressionManager:init()
     self.default_data = {
         total_xp = 0,
         xp = 0,
-        xp_level = 0,
-        skins = { 1, 2, 3, 4 }
+        xp_level = 1,
+
+        skins = { 1, 2, 3, 4 },
+        upgrades = { 
+            "UpgradeTea",
+            "UpgradeEspresso",
+            "UpgradeMilk",
+            -- "UpgradeBoba",
+            -- "UpgradeSoda",
+            -- "UpgradeAppleJuice",
+        },
     }
 
     local t = skin_name_to_id
     self.levels = {
-        [0] = { threshold = 100, rewards = { { type = "skin", skin = t.nel } } },
-        [1] = { threshold = 200, rewards = { { type = "skin", skin = t.leo } } },
-        [2] = { threshold = 300, rewards = { { type = "skin", skin = t.leo } } },
-        [3] = { threshold = 400, rewards = { { type = "skin", skin = t.leo } } },
-        [4] = { threshold = 500, rewards = { { type = "skin", skin = t.leo } } },
-        [5] = { threshold = 600, rewards = { { type = "skin", skin = t.leo } } },
+        { threshold = 100, rewards = { { type = "skin", skin = t.nel } } },
+        { threshold = 200, rewards = { { type = "upgrade", upgrade = "UpgradeBoba" } } },
+        { threshold = 300, rewards = { { type = "skin", skin = t.rico } } },
+        { threshold = 200, rewards = { { type = "upgrade", upgrade = "UpgradeSoda" } } },
+        { threshold = 400, rewards = { { type = "skin", skin = t.leo } } },
+        { threshold = 200, rewards = { { type = "upgrade", upgrade = "UpgradeAppleJuice" } } },
+        { threshold = 600, rewards = { { type = "skin", skin = t.leo } } },
     }
 
     self:read_progress()
@@ -50,24 +61,22 @@ function MetaprogressionManager:add_xp(value)
 end
 
 function MetaprogressionManager:grant_level_rewards(xp_level)
-    print_debug("granting level rews call", xp_level)
     local level_info = self:get_xp_level_info(xp_level)
 
     if not level_info then
         return
     end
 
-    print_debug("granting level rews", xp_level)
     for _, reward in pairs(level_info.rewards) do
         self:grant_reward(reward)
     end
 end
 
 function MetaprogressionManager:grant_reward(reward)
-    print_debug("granting ")
     if reward.type == "skin" then
-        print_debug("granting skin")
         self:unlock_skin(reward.skin)
+    elseif reward.type == "upgrade" then
+        self:unlock_upgrade(reward.upgrade)
     end
 end
     
@@ -107,6 +116,15 @@ function MetaprogressionManager:unlock_skin(skin_id)
     local s = self:get("skins")
     table.insert(s, skin_id)
     self:save_progress()
+end
+
+function MetaprogressionManager:unlock_upgrade(upgrade_name)
+    local tab = self:get("upgrades")
+    local u = upgrades[upgrade_name]
+    if u then
+        table.insert(tab, upgrade_name)
+        self:save_progress()
+    end
 end
 
 -----------------------------------------------------

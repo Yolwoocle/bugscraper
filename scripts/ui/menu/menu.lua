@@ -11,7 +11,7 @@ function Menu:init(game, title, items, bg_color, prompts, extra_draw, params)
 	self.title = Text:parse_string(title)
 	self.items = {}
 	self.is_menu = true
-	
+
 	local th = get_text_height() + 2
 	self.height = (#items - 1) * th
 
@@ -44,7 +44,10 @@ function Menu:init(game, title, items, bg_color, prompts, extra_draw, params)
 	
 	self.draw_sawtooth_border = true
 	self.sawtooth_scroll = 0
+	self.sawtooth_color = COL_BLACK_BLUE
 	self.border_scroll_speed = -14
+
+	self.is_backable = param(params.is_backable, true)
 
 	self.extra_update = params.update or function(_, _) end
 	self.extra_draw = extra_draw or function() end
@@ -74,7 +77,7 @@ function Menu:draw()
 	end
 
 	if self.draw_sawtooth_border then
-		Ui:draw_sawtooth_border(36, 24, game.menu_manager.sawtooth_scroll, {color = COL_BLACK_BLUE, image_bottom = images.sawtooth_separator_small})
+		Ui:draw_sawtooth_border(36, 24, game.menu_manager.sawtooth_scroll, {color = self.sawtooth_color or COL_BLACK_BLUE, image_bottom = images.sawtooth_separator_small})
 	end
 
 	print_centered_outline(COL_LIGHTEST_GRAY, COL_BLACK_BLUE, self.title, CANVAS_WIDTH/2, 14)

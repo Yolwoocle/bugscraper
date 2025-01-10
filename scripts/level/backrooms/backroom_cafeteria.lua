@@ -1,10 +1,10 @@
 require "scripts.util"
-local upgrade_probabilities = require "data.upgrade_probabilities"
 local images = require "data.images"
 local BackroomWithDoor = require "scripts.level.backrooms.backroom_with_door"
 local BackgroundCafeteria = require "scripts.level.background.background_cafeteria"
 local Rect = require "scripts.math.rect"
 local TvPresentation    = require "scripts.level.background.tv_presentation"
+local upgrades          = require "data.upgrades"
 
 local BackroomCafeteria = BackroomWithDoor:inherit()
 

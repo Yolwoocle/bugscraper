@@ -14,7 +14,6 @@ local Elevator = require "scripts.level.elevator"
 local Wave = require "scripts.level.wave"
 local StateMachine = require "scripts.state_machine"
 local BackroomGroundFloor = require "scripts.level.backrooms.backroom_ground_floor"
-local upgrade_probabilities = require "data.upgrade_probabilities"
 
 local images = require "data.images"
 local sounds = require "data.sounds"
@@ -103,7 +102,10 @@ function Level:init(game, backroom)
 	self.elevator_crash_sound = sounds.elev_crash.source
 
 	-- Misc
-	self.upgrade_bag = copy_table_shallow(upgrade_probabilities)
+	self.upgrade_bag = {}
+	for _, upgrade_name in pairs(Metaprogression:get("upgrades")) do
+		table.insert(self.upgrade_bag, {upgrades[upgrade_name]:new(), 1})
+	end
 	self.ending_timer = Timer:new(15)
 	self.has_run_ready = false
 end

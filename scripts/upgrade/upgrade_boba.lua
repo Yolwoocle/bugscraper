@@ -11,6 +11,7 @@ function UpgradeBoba:init()
     self:set_description(self.strength)
 
     self.color = COL_PINK
+    self.palette = {COL_PINK, COL_PURPLE, COL_DARK_BROWN}
 end
 
 function UpgradeBoba:update(dt)

@@ -13,6 +13,7 @@ function Upgrade:init(name)
     self.title       = Text:text("upgrade."..tostring(self.name)..".title")
     self.description = Text:text("upgrade."..tostring(self.name)..".description")
     self.color = COL_WHITE
+    self.palette = {COL_LIGHTEST_GRAY, COL_LIGHT_GRAY}
 end
 
 function Upgrade:update(dt)

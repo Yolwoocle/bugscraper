@@ -8,6 +8,7 @@ function UpgradeHotSauce:init()
     UpgradeHotSauce.super.init(self, "hot_sauce")
     self.sprite = images.upgrade_hot_sauce
     self.color = COL_DARK_RED
+    self.palette = {COL_LIGHT_RED, COL_DARK_RED, COL_MID_GREEN}
 
     self.ammo_usage = 2.0
     self.damage_mult = 2.0

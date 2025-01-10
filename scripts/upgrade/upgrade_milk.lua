@@ -12,6 +12,7 @@ function UpgradeMilk:init()
     self:set_description(self.strength)
     
     self.color = COL_MID_BLUE
+    self.palette = {COL_MID_BLUE, COL_WHITE, COL_DARK_BLUE}
 end
 
 function UpgradeMilk:update(dt)

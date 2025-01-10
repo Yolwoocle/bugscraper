@@ -424,6 +424,7 @@ local img_names = {
 
 	-- ui
 	rays = "ui/rays",
+	rays_big = "ui/rays_big",
 	offscreen_indicator = "ui/offscreen_indicator",
 	stomp_arrow = "ui/stomp_arrow",
 

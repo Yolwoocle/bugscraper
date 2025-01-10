@@ -12,6 +12,7 @@ function UpgradeAppleJuice:init()
     self:set_description(self.strength)
 
     self.color = COL_LIGHT_GREEN
+    self.palette = {COL_LIGHT_GREEN, COL_WHITE, COL_DARK_RED}
 end
     
 function UpgradeAppleJuice:update(dt)

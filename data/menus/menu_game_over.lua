@@ -36,10 +36,10 @@ local game_over_items       = {
                 local actual_level = Metaprogression:get_xp_level()
                 local shown_level_threshold = Metaprogression:get_xp_level_threshold(item.shown_level)
 
+                -- Compute target value
                 local value_target
                 if shown_level_threshold == math.huge then
                     value_target = 1
-                    shown_level_threshold = 1
                     item.value = 1
                 elseif actual_level > item.shown_level then
                     value_target = 1
@@ -47,8 +47,8 @@ local game_over_items       = {
                     value_target = Metaprogression:get_xp() / shown_level_threshold
                 end
 
+                -- New level
                 if math.abs(item.value - 1) < 0.01 and actual_level > item.shown_level then
-                    -- New level!!
                     item.value = 0
                     item.overlay_value = nil
                     item.shown_level = item.shown_level + 1
@@ -56,11 +56,16 @@ local game_over_items       = {
 
                     local reward_info = Metaprogression:get_xp_level_info(item.shown_level - 1)
                     if reward_info then
-                        game.menu_manager.menus["new_xp_reward"]:set_rewards(reward_info.rewards)
-                        game.menu_manager:set_menu("new_xp_reward")
+                        Metaprogression.old_xp = 0
+                        Metaprogression.old_xp_level = item.shown_level
+                        game.has_finished_game_over_animation = false
+
+                        game.menu_manager.menus["new_reward"]:set_rewards(reward_info.rewards)
+                        game.menu_manager:set_menu("new_reward")
                     end
                 end
 
+                -- Set the progress bar value
                 local old_value = item.value * shown_level_threshold
                 if item.augment_xp_delay <= 0 then
                     item.value = lerp(item.value, value_target, 0.1)
@@ -70,10 +75,19 @@ local game_over_items       = {
                     Audio:play("xp_tick", 1, lerp(1 - item.value, 0.5, 1.5))
                 end
 
+                -- Shows the text
                 local shown_xp = round(item.value * shown_level_threshold)
                 item.text = concat(shown_xp, "/", shown_level_threshold)
                 if shown_level_threshold == math.huge then
                     item.text = concat(shown_xp)
+                end
+
+                -- Finish animation 
+                if item.augment_xp_delay <= 0 and (
+                    shown_level_threshold == math.huge or
+                    (actual_level == item.shown_level and math.abs(item.value - Metaprogression:get_xp()/Metaprogression:get_xp_level_threshold(actual_level)) < 0.1)
+                ) then
+                    game.has_finished_game_over_animation = true
                 end
             end, 
             init_value = function(item)
@@ -88,18 +102,24 @@ local game_over_items       = {
                 end
 
                 item.augment_xp_delay = 0.5
+
+                game.has_finished_game_over_animation = false
             end
         }
     },
     { "" },
-    { "▶ {menu.game_over.continue}", function()
+    { "▶ {menu.game_over.continue}", function(item)
         -- scotch
-        game.has_seen_controller_warning = true
-        game:new_game()
+        if game.has_finished_game_over_animation then
+            game.has_seen_controller_warning = true
+            game:new_game()
+        end
     end },
     { "🔄 {menu.game_over.quick_restart}", function()
-        game.has_seen_controller_warning = true
-        game:new_game({ quick_restart = true })
+        if game.has_finished_game_over_animation then
+            game.has_seen_controller_warning = true
+            game:new_game({ quick_restart = true })
+        end
     end },
 }
 if DEMO_BUILD then
@@ -108,6 +128,6 @@ if DEMO_BUILD then
     )
 end
 
-local game_over_menu = Menu:new(game, "{menu.game_over.title}", game_over_items, DEFAULT_MENU_BG_COLOR, PROMPTS_GAME_OVER, nil)
+local game_over_menu = Menu:new(game, "{menu.game_over.title}", game_over_items, DEFAULT_MENU_BG_COLOR, PROMPTS_GAME_OVER, nil, { is_backable = false})
 
 return game_over_menu

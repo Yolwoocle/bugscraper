@@ -12,6 +12,7 @@ function UpgradeSoda:init()
     self:set_description(self.strength)
 
     self.color = COL_LIGHT_RED
+    self.palette = {COL_LIGHT_RED, COL_MID_BROWN, COL_DARK_BROWN}
 end
 
 function UpgradeSoda:update(dt)

@@ -10,7 +10,7 @@ local CustomDrawMenuItem    = require "scripts.ui.menu.items.menu_item_custom_dr
 local debug_draw_waves      = require "scripts.debug.draw_waves"
 local images                = require "data.images"
 local DebugCommandMenu      = require "scripts.ui.menu.debug_command_menu"
-local NewXpRewardMenu       = require "data.menus.menu_new_xp_reward"
+local NewRewardMenu       = require "data.menus.menu_new_reward"
 
 local DEFAULT_MENU_BG_COLOR = menu_util.DEFAULT_MENU_BG_COLOR
 local empty_func            = menu_util.empty_func
@@ -52,7 +52,7 @@ local function generate_menus()
             { image = images.motherboard, z_mult = 0.7 },
         })
 
-    menus.new_xp_reward = NewXpRewardMenu:new(game)
+    menus.new_reward = NewRewardMenu:new(game)
 
     menus.options = require "data.menus.menu_options"
 
@@ -243,7 +243,7 @@ local function generate_menus()
         table.remove(items, 5) -- Remove whishlist if not demo
     end
 
-    menus.win = Menu:new(game, "{game.congratulations}", items, { 0, 0, 0, 0.85 }, PROMPTS_GAME_OVER)
+    menus.win = Menu:new(game, "{game.congratulations}", items, { 0, 0, 0, 0.85 }, PROMPTS_GAME_OVER, nil, {is_backable = false})
 
     ------------------------------------------------------------
 
@@ -280,7 +280,7 @@ local function generate_menus()
             end,
         },
         { "" },
-    }, DEFAULT_MENU_BG_COLOR, PROMPTS_GAME_OVER)
+    }, DEFAULT_MENU_BG_COLOR, PROMPTS_GAME_OVER, nil, {is_backable = false})
 
     return menus
 end

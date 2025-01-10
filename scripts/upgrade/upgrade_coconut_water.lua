@@ -12,6 +12,7 @@ function UpgradeCoconutWater:init()
     self:set_description(self.value * 100)
 
     self.color = COL_WHITE
+    self.palette = {COL_WHITE, COL_MID_BROWN, COL_DARK_BROWN}
 end
 
 function UpgradeCoconutWater:update(dt)

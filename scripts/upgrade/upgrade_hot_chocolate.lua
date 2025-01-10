@@ -13,6 +13,7 @@ function UpgradeHotChocolate:init()
     self:set_description(self.value)
 
     self.color = COL_LIGHT_BROWN
+    self.palette = {COL_LIGHT_BROWN, COL_WHITE, COL_MID_BROWN}
 end
 
 function UpgradeHotChocolate:update(dt)

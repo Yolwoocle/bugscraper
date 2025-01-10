@@ -492,6 +492,21 @@ function print_ycentered_outline(col_in, col_out, text, x, y, thick, rot, sx, sy
 	print_outline(col_in, col_out, text, x, y - text_h / 2, thick, rot, sx, sy, ...)
 end
 
+function print_wavy_centered_outline_text(col_in, col_out, text, x, y, thick, wave_t, wave_ampl, wave_freq, letter_offset, rot, sx, sy, ...)
+	rot          = rot or 0
+	sx           = sx or 1
+	sy           = sy or sx
+	local font   = love.graphics.getFont()
+	local text_w = font:getWidth(text) * sx
+	local text_h = font:getHeight() * sy
+	local ix = x - text_w/2
+	for i = 1, #text do
+		local c = utf8.sub(text, i, i)
+		print_outline(col_in, col_out, c, ix, y + math.sin(wave_t * wave_freq + i*letter_offset) * wave_ampl, thick, rot, sx, sy, ...)
+		ix = ix + get_text_width(c) * sx
+	end
+end
+
 function get_text_width(text, font)
 	local text = text or ' '
 	local font = font or love.graphics.getFont()
