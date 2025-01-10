@@ -602,6 +602,7 @@ local waves = {
 			["walls"] = true,
 			["bg_grid"] = true,
 			["cabin_w3"] = true,
+			["spinning_teapot"] = true,
 		},
 
 		door_images = {
