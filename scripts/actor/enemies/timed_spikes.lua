@@ -132,11 +132,15 @@ function TimedSpikes:init(x, y, duration_off, duration_telegraph, duration_on, s
         },
         on = {
             enter = function(state)
-                self.damage = 1
                 self.spike_target_y = self.spike_length
                 self.spike_sprite.color = COL_WHITE
                 -- self.spike_sprite.sy = 1.7
             end, 
+            update = function(state, dt)
+                if self.spike_y >= self.spike_length - 8 then
+                    self.damage = 1
+                end
+            end
         },
     }, "standby")
 

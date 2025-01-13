@@ -571,7 +571,11 @@ local waves = {
 	}),
 
 	new_cafeteria(function()
-		game:kill_actors_with_name("timed_spikes")
+		for _, a in pairs(game.actors) do
+			if a.name == "timed_spikes" then
+				a:remove()
+			end
+		end
 
 		game.is_light_on = true
 	end),

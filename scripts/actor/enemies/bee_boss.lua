@@ -78,9 +78,9 @@ function BeeBoss:init(x, y)
             end,
             update = function(state, dt)
                 local possible_states = {
-                    "spinning_spikes",
-                    "thwomp",
-                    "timing",
+                    -- "spinning_spikes",
+                    -- "thwomp",
+                    -- "timing",
                     "bars",
                     "big_wave",
                 }
@@ -344,7 +344,7 @@ end
 
 function BeeBoss:set_spikes_pattern_bars()
     self:set_spikes_length(16)
-    self:set_spikes_pattern_times(2, 0.8, 0.25)
+    self:set_spikes_pattern_times(2, 1.2, 0.25)
 
     local r = random_range_int(0, 2)
     for _, spike in pairs(self.spikes) do

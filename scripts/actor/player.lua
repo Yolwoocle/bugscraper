@@ -961,13 +961,13 @@ function Player:increase_combo(x, y)
 	self.combo = self.combo + 1
 	
 	if self.combo >= self.min_combo_visual_trigger then
-		Particles:word(x or self.mid_x, y or self.mid_y, tostring(self.combo), COL_LIGHT_BLUE)
+		-- Particles:word(x or self.mid_x, y or self.mid_y, tostring(self.combo), COL_LIGHT_BLUE)
 	end
 end
 
 function Player:end_combo()
-	if self.combo > self.min_combo_visual_trigger then
-		Particles:word(self.mid_x, self.y, Text:text("game.combo", self.combo), COL_LIGHT_BLUE)
+	if self.combo >= self.min_combo_visual_trigger then
+		Particles:word(self.mid_x, self.y, Text:text("game.combo", self.combo), COL_LIGHT_YELLOW)
 	end
 	self.max_combo = math.max(self.combo, self.max_combo)
 	self.combo = 0
@@ -1057,6 +1057,14 @@ function Player:draw_hud()
 			print_centered_outline(self.color_palette[1], nil, Text:text("player.abbreviation", self.n), ui_x, ui_y- 8)
 		end
 		self:draw_controls()
+	end
+	
+	if self.combo >= self.min_combo_visual_trigger then
+		Text:push_font(FONT_MINI)
+		
+		print_centered_outline(COL_LIGHT_YELLOW, nil, tostring(self.combo), ui_x, ui_y- 8)
+		
+		Text:pop_font()
 	end
 end
 
