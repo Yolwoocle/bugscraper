@@ -78,9 +78,9 @@ function BeeBoss:init(x, y)
             end,
             update = function(state, dt)
                 local possible_states = {
-                    -- "spinning_spikes",
-                    -- "thwomp",
-                    -- "timing",
+                    "spinning_spikes",
+                    "thwomp",
+                    "timing",
                     "bars",
                     "big_wave",
                 }
