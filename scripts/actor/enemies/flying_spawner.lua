@@ -11,11 +11,11 @@ local AnimatedSprite = require "scripts.graphics.animated_sprite"
 local FlyingSpawner = SinusoidalFlyer:inherit()
 
 function FlyingSpawner:init(x, y, spr, w, h)
-    self.super.init(self, x, y, spr or images.flying_spawner_1, w or 16, h or 18)
-    self.name = "sinusoidal_flyer"
+    self.super.init(self, x, y, spr or images.flying_spawner_big, w or 16, h or 24)
+    self.name = "flying_spawner"
 
     self.spr = AnimatedSprite:new({
-        normal = { images.flying_spawner, 0.1, 2 }
+        normal = { images.flying_spawner_big, 0.06, 6 }
     }, "normal", SPRITE_ANCHOR_CENTER_CENTER)
 
     self.flip_mode = ENEMY_FLIP_MODE_MANUAL

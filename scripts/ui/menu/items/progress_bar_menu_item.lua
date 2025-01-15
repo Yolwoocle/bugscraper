@@ -21,6 +21,8 @@ function ProgressBarMenuItem:init(i, x, y, params)
 	end
 
 	self.overlay_value = 0
+	self.min_value = 0
+	self.max_value = 1
 	self.value = 0
 	self.update_value = param(params.update_value, function(_, _) end)
 	self.init_value = param(params.init_value, function(_) end) 
@@ -46,10 +48,17 @@ function ProgressBarMenuItem:draw()
 	local w = self.w
 	local x = self.x - w/2
 	local y = self.y - 8 + 3
-	draw_3_slice(images.selection_left_small, images.selection_right_small, COL_MID_GRAY, x, y, w, 10)
-	draw_3_slice(images.selection_left_small, images.selection_right_small, COL_WHITE,    x, y, w * self.value, 10)
+
+	local val =      (clamp(self.value,         self.min_value, self.max_value) - self.min_value) / (self.max_value - self.min_value)
+	local over_val
 	if self.overlay_value then
-		draw_3_slice(images.selection_left_small, images.selection_right_small, COL_LIGHTEST_GRAY, x, y, w * self.overlay_value, 10)
+		over_val = (clamp(self.overlay_value, self.min_value, self.max_value) - self.min_value) / (self.max_value - self.min_value)
+	end
+
+	draw_3_slice(images.selection_left_small, images.selection_right_small, COL_MID_GRAY, x, y, w, 10)
+	draw_3_slice(images.selection_left_small, images.selection_right_small, COL_WHITE,    x, y, w * val, 10)
+	if self.overlay_value then
+		draw_3_slice(images.selection_left_small, images.selection_right_small, COL_LIGHTEST_GRAY, x, y, w * over_val, 10)
 	end
 	print_centered_outline(COL_WHITE, COL_MID_GRAY, self.text, self.x, y + 4)
 end

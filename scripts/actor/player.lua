@@ -6,6 +6,7 @@ local images = require "data.images"
 local ui = require "scripts.ui.ui"
 require "scripts.util"
 require "scripts.meta.constants"
+local Loot = require "scripts.actor.loot"
 
 local Player = Actor:inherit()
 
@@ -174,6 +175,8 @@ function Player:init(n, x, y, skin)
 	self.combo = 0
 	self.min_combo_visual_trigger = 5
 	self.max_combo = 0
+	self.combo_reward_heart_threshold = 30
+	
 	self.fury_bar = 0.0
 	self.fury_threshold = 2.5
 	self.def_fury_max = 5.0
@@ -856,9 +859,9 @@ end
 
 --- When the player kills an enemy
 function Player:on_kill_other(enemy, reason)
-	if reason ~= "stomped" then
-		self:increase_combo((enemy or {}).x, (enemy or {}).y)
-	end
+	-- if reason ~= "stomped" then
+	-- 	self:increase_combo((enemy or {}).x, (enemy or {}).y)
+	-- end
 end
 
 ------------------------------------------
@@ -885,7 +888,7 @@ function Player:update_upgrades(dt)
 	end
 end
 
-function Player:apply_effect(effect, duration)
+function Player:apply_effect(effect, duration) 
 	effect:apply(self, duration)
 	table.insert(self.effects, effect)
 end
@@ -926,7 +929,7 @@ function Player:update_poison(dt)
 		if self.poison_timer >= self.poison_damage_time then
 			self:do_damage(1, self.poison_cloud)
 			self.poison_timer = 0.0	
-			Particles:rising_image(self.mid_x, self.mid_y, images.poison_skull, nil, nil, nil, {rising_squish_x = true})
+			Particles:rising_image(self.mid_x, self.y - 8, images.poison_skull, nil, nil, nil, {rising_squish_x = true})
 		end
 	else
 		self.poison_timer = math.max(0.0, self.poison_timer - dt)	
@@ -952,7 +955,7 @@ end
 ------------------------------------------
 
 function Player:update_combo(dt)
-	if self.frames_since_land > 4 then
+	if self.frames_since_land > 4 and not game.level:is_on_cafeteria() then
 		self:end_combo()
 	end
 end
@@ -960,17 +963,50 @@ end
 function Player:increase_combo(x, y)
 	self.combo = self.combo + 1
 	
+	-- Rewards 
+	local text_color, is_special, reward_text = self:grant_combo_rewards(self.combo)
+
 	if self.combo >= self.min_combo_visual_trigger then
-		-- Particles:word(x or self.mid_x, y or self.mid_y, tostring(self.combo), COL_LIGHT_BLUE)
+		-- str, col, stay_time, text_scale, outline_color, letter_time_spacing, params
+		local s = tostring(self.combo) 
+		if is_special then
+			s = Text:text("game.combo_special", self.combo)
+			if reward_text then
+				s = s .. " (" .. reward_text .. ")"
+			end
+		end 
+		local fnt = ternary(is_special, FONT_REGULAR, FONT_MINI)
+		Particles:word(x or self.mid_x, y or self.mid_y, s, text_color, nil, nil, nil, nil, {font = fnt})
 	end
+end
+
+function Player:grant_combo_rewards(value)
+	local color, special, reward_text = COL_LIGHT_YELLOW, false, nil
+	if value <= 0 then
+		return color, special
+	end
+	
+	
+	if value % self.combo_reward_heart_threshold == 0 then
+		color = COL_YELLOW_ORANGE
+		special = true
+		reward_text = "+1❤"
+
+		local vx = random_neighbor(300)
+		local vy = random_range(-200, -500)
+		local instance = Loot.Life:new(self.mid_x, self.mid_y, 1, vx, vy)
+
+		game:new_actor(instance)
+	end 
+	return color, special, reward_text
 end
 
 function Player:end_combo()
 	if self.combo >= self.min_combo_visual_trigger then
-		Particles:word(self.mid_x, self.y, Text:text("game.combo", self.combo), COL_LIGHT_YELLOW)
+		Particles:word(self.mid_x, self.y, Text:text("game.combo_end", self.combo), COL_ORANGE)
 	end
 	self.max_combo = math.max(self.combo, self.max_combo)
-	self.combo = 0
+	self.combo = 0 
 end
 
 function Player:update_fury(dt)
@@ -1062,7 +1098,9 @@ function Player:draw_hud()
 	if self.combo >= self.min_combo_visual_trigger then
 		Text:push_font(FONT_MINI)
 		
-		print_centered_outline(COL_LIGHT_YELLOW, nil, tostring(self.combo), ui_x, ui_y- 8)
+		local s = tostring(self.combo)
+		if game.level:is_on_cafeteria() then s = "["..s.."]" end
+		print_centered_outline(COL_LIGHT_YELLOW, nil, s, ui_x, ui_y- 8)
 		
 		Text:pop_font()
 	end

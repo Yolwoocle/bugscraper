@@ -1,7 +1,7 @@
 **NOTE:** if you are just here to obtain a free copy of the game, fair enough, but please consider supporting me by [buying the game](https://bugscraper.net) when you can, or at least sharing the game with other people. Thanks! 🙂
 <br>
 
-![Bugscraper banner](readme/banner.png)
+![Bugscraper banner](_readme/banner.png)
 
 [**Website**](https://bugscraper.net) ·
 [**Steam**](https://s.team/a/2957130) ·

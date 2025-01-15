@@ -29,25 +29,25 @@ function FinalBoss:init(x, y)
             spr = AnimatedSprite:new({
                 normal = { { images.ceo_office_desk }, 0.1 },
             }, "normal"),
-            is_visible = true
+            is_visible = false
         },
         { -- Glass
             spr = AnimatedSprite:new({
                 normal = { { images.ceo_office_glass }, 0.1 },
             }, "normal"),
-            is_visible = true
+            is_visible = false
         },
         { -- Legs
             spr = AnimatedSprite:new({
                 normal = { { images.ceo_office_legs }, 0.1 },
             }, "normal"),
-            is_visible = true
+            is_visible = false
         },
     }
 
     -- Parameters
     self.def_friction_y = self.friction_y
-    self.life = 200
+    self.life = 170
     self.is_flying = true
     self.gravity = 0
     self.attack_radius = 64
@@ -105,10 +105,13 @@ function FinalBoss:init(x, y)
         standby = {
             enter = function(state)
                 self.spr:set_animation("fight")
+                for _, l in pairs(self.layers) do
+                    l.is_visible = true
+                end
             end,
             update = function(state, dt)
-                self:spawn_spikes()
-                return "random"
+                self:spawn_spikes(76, 0)
+                return "thwomp"
             end,
         },
 
@@ -466,7 +469,7 @@ function FinalBoss:set_spikes_pattern_spinning(time_offset, number_of_waves)
     end
 end
 
-function FinalBoss:spawn_spikes()
+function FinalBoss:spawn_spikes(tile_ox, tile_oy)
     self.spikes = {}
 
     local j = 0
@@ -489,7 +492,7 @@ function FinalBoss:spawn_spikes()
 
     -- Bottom
     for i = 3, CANVAS_WIDTH / 16 - 4 do
-        spawn_spike(i * BW, CANVAS_HEIGHT * 0.85, 0, j)
+        spawn_spike(tile_ox*16 + i * BW, tile_oy*16 + CANVAS_HEIGHT * 0.85, 0, j)
 
         if i ~= CANVAS_WIDTH / 16 - 4 then
             j = j + 1
@@ -497,32 +500,32 @@ function FinalBoss:spawn_spikes()
     end
 
 
-    -- Right
-    for i = 14, 3, -1 do
-        spawn_spike(CANVAS_WIDTH - 32, i * BW, 3, j)
+    -- -- Right
+    -- for i = 14, 3, -1 do
+    --     spawn_spike(tile_ox*16 + CANVAS_WIDTH - 32, tile_oy*16 + i * BW, 3, j)
 
-        if i ~= 3 then
-            j = j + 1
-        end
-    end
+    --     if i ~= 3 then
+    --         j = j + 1
+    --     end
+    -- end
 
-    -- Top
-    for i = CANVAS_WIDTH / 16 - 4, 3, -1 do
-        spawn_spike(i * BW, BW * 3, 2, j)
+    -- -- Top
+    -- for i = CANVAS_WIDTH / 16 - 4, 3, -1 do
+    --     spawn_spike(tile_ox*16 + i * BW, tile_oy*16 + BW * 3, 2, j)
 
-        if i ~= 3 then
-            j = j + 1
-        end
-    end
+    --     if i ~= 3 then
+    --         j = j + 1
+    --     end
+    -- end
 
-    -- Left
-    for i = 3, 14 do
-        spawn_spike(3, i * BW, 1, j)
+    -- -- Left
+    -- for i = 3, 14 do
+    --     spawn_spike(tile_ox*16 + 3, tile_oy*16 + i * BW, 1, j)
 
-        if i ~= 14 then
-            j = j + 1
-        end
-    end
+    --     if i ~= 14 then
+    --         j = j + 1
+    --     end
+    -- end
 end
 
 return FinalBoss

@@ -986,8 +986,10 @@ function ParticleSystem:star_splash(x, y)
 	self:static_image({
 		images.star_splash_1,
 		images.star_splash_2,
+		images.star_splash_2,
 		images.star_splash_3,
-	}, x, y, 0, 0.12)
+		images.star_splash_4,
+	}, x, y, 0, 0.15, 1)
 end
 
 -- FIXME: scotch

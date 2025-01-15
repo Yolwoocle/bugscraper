@@ -8,9 +8,9 @@ local Segment = require "scripts.math.segment"
 local AnimatedSprite = require "scripts.graphics.animated_sprite"
 local guns  = require "data.guns"
 
-local Beellet = Enemy:inherit()
+local Beelet = Enemy:inherit()
 
-function Beellet:init(x, y)
+function Beelet:init(x, y)
     self:init_enemy(x,y, images.beelet_1, 12, 12)
     self.name = "beelet"
 
@@ -171,10 +171,10 @@ function Beellet:init(x, y)
     }, "wander")
 end
 
-function Beellet:enter_wander()
+function Beelet:enter_wander()
 end
 
-function Beellet:detect_player_in_range()
+function Beelet:detect_player_in_range()
     local dx, dy = math.cos(self.direction), math.sin(self.direction)
     local detection_segment = Segment:new(
         self.mid_x + dx*self.player_detection_width, 
@@ -193,7 +193,7 @@ function Beellet:detect_player_in_range()
 end
 
 
-function Beellet:update(dt)
+function Beelet:update(dt)
     self:update_enemy(dt)
 
     self.direction = self.direction + self.direction_speed*dt
@@ -207,7 +207,7 @@ function Beellet:update(dt)
 end
 
 
-function Beellet:after_collision(col, other)
+function Beelet:after_collision(col, other)
     self.state_machine:_call("after_collision", col)
     if col.type ~= "cross" then
         local new_vx, new_vy = bounce_vector_cardinal(math.cos(self.direction), math.sin(self.direction), col.normal.x, col.normal.y)
@@ -216,7 +216,7 @@ function Beellet:after_collision(col, other)
 end
 
 
-function Beellet:draw()
+function Beelet:draw()
     self:draw_enemy()
 
     if game.debug.colview_mode and self.detection_segment then
@@ -226,4 +226,4 @@ function Beellet:draw()
 end
 
 
-return Beellet
+return Beelet

@@ -19,7 +19,10 @@ function BackroomCEOOffice:generate(world_generator)
 	
 	game.camera.max_x = 50*16
 
-	game:new_actor(enemies.UpgradeDisplay:new(53*16, 14*16))
+	local upgrade_display = enemies.UpgradeDisplay:new(53*16, 14*16)
+	game:new_actor(upgrade_display)
+	upgrade_display:assign_upgrade(upgrades.UpgradeAppleJuice:new())
+
 	game:new_actor(enemies.BossDoor:new(78*16, 10*16))
 	
 	game:new_actor(enemies.FinalBoss:new(88*16, 14*16))

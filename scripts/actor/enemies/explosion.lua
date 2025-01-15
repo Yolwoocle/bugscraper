@@ -21,7 +21,7 @@ function Explosion:init(x, y, args)
     self.resolution = param(args.resolution, 32)
     self.screenshake = param(args.screenshake, 8)
 
-    self.do_killed_smoke = false
+    self.do_death_effects = false
 	self.play_sfx = false
     self.gun = guns.unlootable.ExplosionGun:new(self, self.radius, self.explosion_damage, self.resolution, {
         override_enemy_damage = self.override_enemy_damage

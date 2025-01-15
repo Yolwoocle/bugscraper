@@ -199,6 +199,7 @@ function DebugCommandManager:init()
             return true
         end,
     }
+
     self.commands["_spawn_upgrades"] = DebugCommand:new {
         name = "_spawn_upgrades",
         description = "Spawns a bunch of upgrades",
@@ -213,6 +214,20 @@ function DebugCommandManager:init()
                 game:new_actor(a)
                 a:assign_upgrade(upgrade:new())
                 i = i + 1
+            end
+            return true
+        end,
+    }
+    self.commands["_weaken_all"] = DebugCommand:new {
+        name = "_weaken_all",
+        description = "Sets life of all enemies to 1 HP",
+        args = {
+        },
+        run = function()
+            for _, actor in pairs(game.actors) do
+                if actor.is_enemy and actor.life then
+                    actor.life = 1
+                end
             end
             return true
         end,

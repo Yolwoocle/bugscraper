@@ -193,10 +193,10 @@ function Debug:init(game)
             self.game:set_floor(self.game:get_floor() + 1)
         end },
         ["a"] = { "-10 floors", function()
-            self.game:set_floor(self.game:get_floor() - 10)
+            self.game:set_floor(self.game:get_floor() - 20)
         end },
         ["s"] = { "+10 floors", function()
-            self.game:set_floor(self.game:get_floor() + 10)
+            self.game:set_floor(self.game:get_floor() + 20)
         end },
         ["h"] = { "show help", function()
             self.debug_menu = not self.debug_menu

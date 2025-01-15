@@ -5,12 +5,13 @@
     * Even though my target audience is people who already play games, since the game supports 
       local co-op and has very simple, accessible controls, it's not absurd to think that more 
       occasional gamers would try their hand at the game, so try to avoid english gamer terms like 
-      "kills", "checkpoint", etc, except if it's the normal established term for the word.
+      "kills", "checkpoint", etc, except if it's the normal established term for the word (e.g. "jetpack", etc). 
+    * It is very easy for me to add more characters if needed, just tell me and I'll do it.
 ]]
 
 return {
     language = {
-        -- These should be kept untranslated in their original language ("english", "français", "中文", etc)
+        -- These should be kept untranslated in their original language ("English", "Français", "简体中文", etc)
         en = "English",
         es = "Español",
         fr = "Français",
@@ -39,7 +40,8 @@ return {
         win_prompt = "[Pause to continue]",
         warning_web_controller = "Some browsers may not have proper controller support",
 
-        combo = "COMBO %d!" -- ADDED
+        combo_special = "%d!",     -- ADDED // When a combo reaches a key value (e.g. "50!")
+        combo_end = "COMBO %d!"    -- ADDED // When a combo ends 
     },
     level = {
         world_prefix = "Department %s", 
@@ -52,6 +54,7 @@ return {
     },
     gun = {
         -- Gun names
+        -- You can stay close to the original, but please feel free to have a more creative interpretation if you wish!
         machinegun = "Pea Gun",
         triple = "Triple Pepper",
         burst = "Pollen Burst",
@@ -63,7 +66,6 @@ return {
     player = {
         name = {
             -- Player names
-            -- You can stay close to the original, but you're also free to have a more creative interpretation if you wish!
             -- If the native name clashes with something specific to the language/culture, please notify me.
             -- You can also use translitations into the script of the language if needed (i.e. Leo -> Léo)
             mio = "Mio",
@@ -125,7 +127,7 @@ return {
     },
     input = {
         prompts = {
-            -- All of these may be shown as button prompts (i.e., "[Arrow keys] Move", "[C] Jump", etc)
+            -- All of these may be shown as button prompts (i.e., "[X] Shoot", "[C] Jump", etc)
             move = "Move", 
             left = "Left",
             right = "Right",
@@ -146,7 +148,7 @@ return {
             join = "Join",
             split_keyboard = "Split keyboard", -- Verb, as in "Press [key] to split the keyboard". Shown on the title screen when one keyboard player has joined. Try to keep short since space is limited there.
 
-            jetpack = "Jetpack", -- Refers to "jetpackking", a move in the game. 
+            jetpack = "Jetpack", -- Refers to "jetpacking", a move in the game. 
         },
     },
     menu = {

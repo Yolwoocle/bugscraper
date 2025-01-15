@@ -3,6 +3,7 @@ local images = require "data.images"
 local Class = require "scripts.meta.class"
 local PlayerPreview = require "scripts.ui.player_preview"
 local shaders = require "data.shaders"
+local Ui = require "scripts.ui.ui"
 
 local GameUI = Class:inherit()
 
@@ -260,13 +261,16 @@ end
 
 
 function GameUI:draw_cinematic_bars()
-	local x = round(-self.cinematic_bar_loop_threshold + self.cinematic_bar_scroll)
-	love.graphics.draw(images.sawtooth_separator, x, round(self.cinematic_bar_current_height), 0, 1, -1)
-	rect_color(COL_BLACK_BLUE, "fill", 0, 0, CANVAS_WIDTH, round(self.cinematic_bar_current_height) - 8)
-	
-	local bot_y = CANVAS_HEIGHT - self.cinematic_bar_current_height
-	love.graphics.draw(images.sawtooth_separator, x, bot_y)
-	rect_color(COL_BLACK_BLUE, "fill", 0, bot_y + 8, CANVAS_WIDTH, CANVAS_HEIGHT - bot_y)	
+	Ui:draw_sawtooth_border(
+		self.cinematic_bar_current_height, 
+		self.cinematic_bar_current_height, 
+		self.cinematic_bar_scroll, 
+		{
+			color = COL_BLACK_BLUE, 
+			image_top = images.sawtooth_separator_small, 
+			image_bottom = images.sawtooth_separator_small
+		}
+	)	
 end
 
 --- SPLASH
@@ -275,7 +279,7 @@ function GameUI:update_splash(dt)
 	if self.splash_x < -CANVAS_WIDTH*2 then
 		game.show_splash = false
 	end
-	self.splash_vx = self.splash_vx - dt*500
+	self.splash_vx = self.splash_vx - dt*500 
 	self.splash_x = self.splash_x + self.splash_vx * dt
 end
 

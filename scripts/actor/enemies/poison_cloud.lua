@@ -23,7 +23,7 @@ function PoisonCloud:init_fly(x, y, spr)
 	self.is_immune_to_bullets = true
     self.is_stompable = false
     self.is_killed_on_stomp = false
-    self.do_killed_smoke = false
+    self.do_death_effects = false
     
     self.play_sfx = false
     self.spr:set_anchor(SPRITE_ANCHOR_CENTER_CENTER)

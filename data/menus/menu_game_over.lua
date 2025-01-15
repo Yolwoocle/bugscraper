@@ -33,22 +33,18 @@ local game_over_items       = {
             update_value = function(item, dt)
                 item.augment_xp_delay = math.max(0, item.augment_xp_delay - dt)
 
+                local actual_xp = Metaprogression:get_xp()
                 local actual_level = Metaprogression:get_xp_level()
                 local shown_level_threshold = Metaprogression:get_xp_level_threshold(item.shown_level)
 
                 -- Compute target value
-                local value_target
-                if shown_level_threshold == math.huge then
-                    value_target = 1
-                    item.value = 1
-                elseif actual_level > item.shown_level then
-                    value_target = 1
-                else
-                    value_target = Metaprogression:get_xp() / shown_level_threshold
+                local value_target = actual_xp
+                if actual_level > item.shown_level then
+                    value_target = shown_level_threshold
                 end
 
                 -- New level
-                if math.abs(item.value - 1) < 0.01 and actual_level > item.shown_level then
+                if math.abs(item.value - shown_level_threshold) < 0.1 and actual_level > item.shown_level then
                     item.value = 0
                     item.overlay_value = nil
                     item.shown_level = item.shown_level + 1
@@ -66,17 +62,17 @@ local game_over_items       = {
                 end
 
                 -- Set the progress bar value
-                local old_value = item.value * shown_level_threshold
+                local old_value = item.value
                 if item.augment_xp_delay <= 0 then
                     item.value = lerp(item.value, value_target, 0.1)
                 end
 
-                if math.floor(item.value * shown_level_threshold / 5) * 5 > math.floor(old_value / 5) * 5 then
-                    Audio:play("xp_tick", 1, lerp(1 - item.value, 0.5, 1.5))
+                if math.floor(item.value / 5) * 5 > math.floor(old_value / 5) * 5 then
+                    Audio:play("xp_tick", 1, lerp(1 - (item.value / item.max_value), 0.5, 1.5))
                 end
 
                 -- Shows the text
-                local shown_xp = round(item.value * shown_level_threshold)
+                local shown_xp = round(item.value)
                 item.text = concat(shown_xp, "/", shown_level_threshold)
                 if shown_level_threshold == math.huge then
                     item.text = concat(shown_xp)
@@ -85,20 +81,24 @@ local game_over_items       = {
                 -- Finish animation 
                 if item.augment_xp_delay <= 0 and (
                     shown_level_threshold == math.huge or
-                    (actual_level == item.shown_level and math.abs(item.value - Metaprogression:get_xp()/Metaprogression:get_xp_level_threshold(actual_level)) < 0.1)
+                    (actual_level == item.shown_level and math.abs(item.value - Metaprogression:get_xp()) < 0.1)
                 ) then
                     game.has_finished_game_over_animation = true
                 end
             end, 
             init_value = function(item)
                 local threshold = Metaprogression:get_xp_level_threshold(Metaprogression.old_xp_level)
-                item.value = Metaprogression.old_xp / threshold
+                item.value = Metaprogression.old_xp
                 item.overlay_value = item.value
+                item.max_value = threshold
                 item.shown_level = Metaprogression.old_xp_level
 
                 if threshold == math.huge then
                     item.overlay_value = nil
-                    item.value = 1
+                    item.max_value = 1
+                end
+                if Metaprogression.old_xp == 0 then
+                    item.overlay_value = nil
                 end
 
                 item.augment_xp_delay = 0.5

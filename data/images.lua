@@ -157,6 +157,7 @@ local img_names = {
 	larva2 =                   "actors/enemies/larva2",
 	larva_spawner =            "actors/enemies/larva_spawner",
 	flying_spawner =           "actors/enemies/flying_spawner",
+	flying_spawner_big =       "actors/enemies/flying_spawner_big",
 	larva_projectile =         "actors/enemies/larva_projectile",
 	metal_mosquito_1 =         "actors/enemies/metal_mosquito_1",
 	metal_mosquito_2 =         "actors/enemies/metal_mosquito_2",
