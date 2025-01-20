@@ -36,6 +36,8 @@ function GameUI:init(game, is_visible)
 	self.cinematic_bar_scroll_speed = -14
 	self.cinematic_bar_current_height = 0
 	self.cinematic_bar_height = 24
+
+	self.t = 0
 end
 
 function GameUI:update(dt)
@@ -47,6 +49,8 @@ function GameUI:update(dt)
 
 	self:update_cinematic_bars(dt)
 	self:update_splash(dt)
+
+	self.t = self.t + dt
 end
 function GameUI:update_floating_text(dt)
 	self.floating_text_y = lerp(self.floating_text_y, self.floating_text_target_y, 0.05)
@@ -77,6 +81,7 @@ function GameUI:draw()
 	self:draw_upgrades()
 	self:draw_player_previews()
 	self:draw_cinematic_bars()
+	self:draw_fury()
 	
 	self:draw_splash_animation()
 	-- local r
@@ -288,6 +293,20 @@ function GameUI:draw_splash_animation()
 		return
 	end
 	love.graphics.draw(images.splash, self.splash_x, 0)
+end
+
+--- FURY
+
+function GameUI:draw_fury()
+	print_centered_outline(nil, nil, concat(round(game.level.fury_bar, 1), " / ", game.level.fury_max, " (", game.level.fury_threshold, ")"), CANVAS_WIDTH/2, 24)
+	if not game.level.fury_active then
+		return
+	end	
+
+	local w = math.min(game.level.fury_bar * 16, 128)
+	rect_color(COL_YELLOW_ORANGE, "fill", CANVAS_WIDTH/2 - w, 8, w*2, 8)
+	print_wavy_centered_outline_text(nil, nil, Text:text("game.fury"), CANVAS_WIDTH/2, 8, nil, self.t, 2, 9, 0.8)
+
 end
 
 return GameUI

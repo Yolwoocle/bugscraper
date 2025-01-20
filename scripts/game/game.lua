@@ -523,6 +523,8 @@ function Game:draw_game()
 	self:draw_on_layer(LAYER_BACKGROUND, function()
 		love.graphics.clear()
 		self.level:draw()
+
+		Particles:draw_layer(PARTICLE_LAYER_BACK_SHADOWLESS)
 	end)
 
 	---------------------------------------------
@@ -793,6 +795,12 @@ function Game:new_actor(actor, buffer_enemy)
 	table.insert(self.actors, actor)
 end
 
+function Game:on_enemy_damage(enemy, n, damager)
+	self.level:on_enemy_damage(enemy, n, damager)
+end
+function Game:on_player_damage(player, n, source)
+	self.level:on_player_damage(player, n, source)
+end
 function Game:on_kill(actor)
 	if actor.counts_as_enemy then
 		self.kills = self.kills + 1

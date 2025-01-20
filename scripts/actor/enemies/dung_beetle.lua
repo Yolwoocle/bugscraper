@@ -147,7 +147,7 @@ function DungBeetle:update(dt)
 
     self:update_enemy(dt)
 
-    if self.spawn_dung_timer:update(dt) and self.vehicle then
+    if (self.spawn_dung_timer:update(dt) or #self.dungs == 0) and self.vehicle then
         local flying_dung = FlyingDung:new(self.mid_x, self.mid_y, self)
         flying_dung:center_actor()
         game:new_actor(flying_dung)
@@ -173,7 +173,7 @@ function DungBeetle:update(dt)
 end
 
 function DungBeetle:on_damage(amount)
-    if self.life > 0 then
+    if self.life > 0 and self.vehicle then
         game:screenshake(6)
         game:frameskip(8)
     end

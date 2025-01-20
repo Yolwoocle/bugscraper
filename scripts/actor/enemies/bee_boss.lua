@@ -17,7 +17,7 @@ function BeeBoss:init(x, y)
 
     -- Parameters 
     self.def_friction_y = self.friction_y
-    self.life = 300
+    self.life = 200
     self.is_flying = true
     self.gravity = 0
     self.attack_radius = 16
@@ -28,9 +28,9 @@ function BeeBoss:init(x, y)
     self.friction_x = 0.8
     self.friction_y = 0.8
 
-    self.destroy_bullet_on_impact = false
-    self.is_bouncy_to_bullets = true
-    self.is_immune_to_bullets = true
+    -- self.destroy_bullet_on_impact = false
+    -- self.is_bouncy_to_bullets = true
+    -- self.is_immune_to_bullets = true
 
     self.follow_player = false
     self.self_knockback_mult = 0

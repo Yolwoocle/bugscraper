@@ -345,6 +345,7 @@ function Enemy:do_damage(n, damager)
 		end 
 		self:on_negative_life()
 	end
+	game:on_enemy_damage(self, n, damager)
 	return true
 end
 
@@ -360,8 +361,8 @@ function Enemy:kill(damager, reason)
 	if damager and damager.is_player then player = damager end
 	if damager and damager.is_bullet and damager.player.is_player then player = damager.player end
 
-	game:screenshake(2)
 	if self.do_death_effects then
+		game:screenshake(2)
 		Particles:smoke(self.mid_x, self.mid_y)
 		Particles:star_splash(self.mid_x, self.mid_y)
 

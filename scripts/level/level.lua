@@ -108,6 +108,16 @@ function Level:init(game, backroom)
 	end
 	self.ending_timer = Timer:new(15)
 	self.has_run_ready = false
+
+	-- Fury 
+	self.fury_bar = 0.0
+	self.fury_bar_activate_boost = 1.0
+	self.fury_bar_deactivate_debuff = 1.0
+	self.fury_threshold = 5.0
+	self.def_fury_max = 8.0
+	self.fury_damage_malus = 3.0
+	self.fury_max = self.def_fury_max
+	self.fury_speed = 0.9
 end
 
 function Level:ready()
@@ -125,6 +135,7 @@ function Level:update(dt)
 	self.background:set_speed(self.level_speed)
 	self.background:set_def_speed(self.def_level_speed)
 
+	self:update_fury(dt)
 	self.map:update(dt)
 	self.background:update(dt)
 	self.elevator:update(dt)
@@ -760,6 +771,63 @@ end
 
 ----------------------------------------------------------------------------------------
 
+function Level:on_player_damage(player, amount, source)
+	if player then
+		self.fury_bar = math.max(0.0, self.fury_bar - amount * self.fury_damage_malus)
+	end
+end
 
+function Level:on_enemy_damage(enemy, amount, source)
+	-- if enemy then
+	-- 	self.fury_bar = math.max(0.0, self.fury_bar - amount * self.fury_damage_malus)
+	-- end
+end
+
+function Level:update_fury(dt)
+	local final_fury_speed = self.fury_speed
+
+	if game:get_enemy_count() > 0 and not game.level:is_on_cafeteria() then
+		self.fury_bar = math.max(self.fury_bar - dt*final_fury_speed, 0.0)
+	end
+	self.fury_bar = clamp(self.fury_bar, 0.0, self.fury_max)
+
+	local old_fury_active = self.fury_active
+	self.fury_active = (self.fury_bar >= self.fury_threshold)
+
+	if not old_fury_active and self.fury_active then
+		self.fury_bar = self.fury_bar + self.fury_bar_activate_boost
+	end
+	if old_fury_active and not self.fury_active then
+		self.fury_bar = self.fury_bar - self.fury_bar_deactivate_debuff
+	end
+end
+
+function Level:add_fury(val)
+	self.fury_bar = self.fury_bar + val
+end
+
+
+function Level:set_fury(val)
+	self.fury_bar = val
+end
+function Level:add_fury_max(val)
+	self.fury_max = self.fury_max + val
+end
+function Level:multiply_fury_speed(val)
+	self.fury_speed = self.fury_speed * val
+end
+
+
+function Level:draw_fury_bar(x, y, w, h)
+	-- Fury bar
+	local fury_color =  ternary(self.has_energy_drink, COL_MID_BLUE,  COL_LIGHT_YELLOW)
+	local fury_shadow = ternary(self.has_energy_drink, COL_DARK_BLUE, COL_ORANGE)
+	if self.fury_active then
+		local flash_color = ternary(self.has_energy_drink, COL_WHITE, COL_RED)
+		fury_color = ternary(game.t % 0.2 <= 0.1, fury_color, flash_color)
+	end
+	
+	ui:draw_progress_bar(x, y, w, h, self.fury_bar, self.fury_threshold, fury_color, COL_BLACK_BLUE, fury_shadow)
+end
 
 return Level

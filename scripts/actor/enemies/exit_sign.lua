@@ -78,7 +78,12 @@ function ExitSign:activate(player)
     else
         game:leave_game(player.n)
         game:screenshake(4)
+		Particles:star_splash(player.mid_x, player.mid_y)
         Particles:ejected_player(player.skin.spr_dead, player.x, player.y)
+        Particles:floating_image({
+            images.star_small_1,
+            images.star_small_2,
+        }, player.mid_x, player.mid_y, random_range_int(7, 10), 0, 0.25, 1, 120, 0.95)
         Audio:play("exit_sign_activate")
         
         self.spring_active = true
