@@ -78,11 +78,13 @@ function DungBeetle:init(x, y)
                 self.vx = 0
                 self.gravity = self.default_gravity * 0.3
 
-                self.is_pushable = false
-                self.is_knockbackable = false
                 self.self_knockback_mult = 0
-                self.is_immune_to_bullets = true
-                self.destroy_bullet_on_impact = false
+                
+                self.is_pushable = false
+                self.is_stompable = true
+                self.destroy_bullet_on_impact = true
+                self.is_immune_to_bullets = false
+                self.is_bouncy_to_bullets = false
 
                 self.dung_pile_sprite = Sprite:new(images.dung_pile)
                 self.dung_pile_sprite_x = self.mid_x

@@ -9,7 +9,7 @@ local BossIntroMenu = Menu:inherit()
 function BossIntroMenu:init(game, bg_color, title, layers)
 	BossIntroMenu.super.init(self, game, "", {{""}}, bg_color, nil, nil)
 
-	self.title = title
+	self.boss_title = title
 	self.layers = layers
 	self.draw_sawtooth_border = false
 
@@ -83,8 +83,8 @@ function BossIntroMenu:draw()
 	self:draw_borders()
 	self:draw_layers()
 
-	local h = get_text_height(self.title) * 3
-	print_outline(COL_WHITE, COL_BLACK_BLUE, self.title, self.title_padding, CANVAS_HEIGHT - self.border_width - h + 32, 3, 0, 3)
+	local h = get_text_height(self.boss_title) * 3
+	print_outline(COL_WHITE, COL_BLACK_BLUE, self.boss_title, self.title_padding, CANVAS_HEIGHT - self.border_width - h + 32, 3, 0, 3)
 end
 
 function BossIntroMenu:draw_borders()

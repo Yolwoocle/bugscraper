@@ -839,7 +839,7 @@ function Player:on_stomp(enemy)
 
 	self:increase_combo((enemy or {}).x, (enemy or {}).y)
 
-	game.level:add_fury(self.fury_stomp_value)
+	game.level:add_fury(self.fury_stomp_value * enemy.fury_stomp_multiplier)
 end
 
 --- When an enemy bullet hits the player
@@ -964,6 +964,7 @@ function Player:update_combo(dt)
 end
 
 function Player:increase_combo(x, y)
+	if true then return end -- Removed combo for now, remove this line if ever needed 
 	self.combo = self.combo + 1
 	
 	-- Rewards 
@@ -1033,7 +1034,7 @@ function Player:update_visuals()
 		Particles:static_image(self.skin.img_walk_down, x, y, 0, 0.12, 1, {
 			color = transparent_color(self.skin.color_palette[1], 0.5),
 			alpha = 0.3,
-			sx = self.spr.sx * ternary(self.spr.flip_x, -1, 1),
+			sx = self.spr.sx * ternary(self.dir_x, -1, 1),
 			sy = self.spr.sy,
 		})
 		

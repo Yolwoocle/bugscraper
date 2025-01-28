@@ -85,8 +85,8 @@ function Level:init(game, backroom)
 	self.do_not_spawn_enemies_on_next_wave_flag = false
 	
 	-- Canvas & stencils
-	self.canvas = love.graphics.newCanvas(CANVAS_WIDTH*2, CANVAS_HEIGHT)
-	self.buffer_canvas = love.graphics.newCanvas(CANVAS_WIDTH*2, CANVAS_HEIGHT)
+	self.canvas = love.graphics.newCanvas(CANVAS_WIDTH*2, CANVAS_HEIGHT*2)
+	self.buffer_canvas = love.graphics.newCanvas(CANVAS_WIDTH*2, CANVAS_HEIGHT + 48)
 	self.is_hole_stencil_enabled = true
 	self.hole_stencil_pause_radius = CANVAS_WIDTH
 	self.hole_stencil_max_radius = CANVAS_WIDTH*2
@@ -434,7 +434,7 @@ function Level:get_backroom_animation_state_machine(dt)
 				end
 			end,
 			exit = function(state)
-				game.camera:set_position(0, 0)
+				game.camera:set_position(DEFAULT_CAMERA_X, DEFAULT_CAMERA_Y)
 				game.camera:set_target_offset(0, 0)
 			end,
 		}
@@ -480,7 +480,7 @@ function Level:end_backroom()
 
 	game.camera:set_x_locked(true)
 	game.camera:set_y_locked(true)
-	game.camera:set_target_position(0, 0)
+	game.camera:set_target_position(DEFAULT_CAMERA_X, DEFAULT_CAMERA_Y)
 end
 
 
@@ -815,19 +815,6 @@ function Level:add_fury_max(val)
 end
 function Level:multiply_fury_speed(val)
 	self.fury_speed = self.fury_speed * val
-end
-
-
-function Level:draw_fury_bar(x, y, w, h)
-	-- Fury bar
-	local fury_color =  ternary(self.has_energy_drink, COL_MID_BLUE,  COL_LIGHT_YELLOW)
-	local fury_shadow = ternary(self.has_energy_drink, COL_DARK_BLUE, COL_ORANGE)
-	if self.fury_active then
-		local flash_color = ternary(self.has_energy_drink, COL_WHITE, COL_RED)
-		fury_color = ternary(game.t % 0.2 <= 0.1, fury_color, flash_color)
-	end
-	
-	ui:draw_progress_bar(x, y, w, h, self.fury_bar, self.fury_threshold, fury_color, COL_BLACK_BLUE, fury_shadow)
 end
 
 return Level

@@ -134,6 +134,9 @@ function Enemy:init_enemy(x,y, img, w,h)
 	-- self.sound_stomp = {"enemy_stomp_2", "enemy_stomp_3"}
 	--{"crush_bug_1", "crush_bug_2", "crush_bug_3", "crush_bug_4"}
 
+	self.fury_damage_multiplier = 1.0
+	self.fury_stomp_multiplier = 1.0
+
 	self.has_run_ready = false
 
 	self.score = 0

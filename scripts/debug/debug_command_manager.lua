@@ -200,6 +200,18 @@ function DebugCommandManager:init()
         end,
     }
 
+    self.commands["fury"] = DebugCommand:new {
+        name = "fury",
+        description = "Enables fury",
+        args = {
+        },
+        run = function()
+            game.level.fury_bar = game.level.fury_max
+            self:add_message(concat("Enabled fury"))
+            return true
+        end,
+    }
+
     self.commands["_spawn_upgrades"] = DebugCommand:new {
         name = "_spawn_upgrades",
         description = "Spawns a bunch of upgrades",

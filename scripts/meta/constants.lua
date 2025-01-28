@@ -103,6 +103,7 @@ RECT_GROUND_FLOOR_PARAMS = {2, 2, 58, 16}
 
 --------------------------------------------- 
 
+-- Enemies
 TIMED_SPIKES_TIMING_MODE_TEMPORAL = "temporal" -- Spikes timing depend on time
 TIMED_SPIKES_TIMING_MODE_MANUAL = "manual" -- Spikes timing are manual
 
@@ -191,6 +192,9 @@ MULTIPLAYER_LOOT_PROBABILITY_MULTIPLIER = 1.0
 
 LIGHTNING_STYLE_NORMAL = "normal"
 LIGHTNING_STYLE_BITS = "bits"
+
+DEFAULT_CAMERA_X = 0
+DEFAULT_CAMERA_Y = 8
 
 ---------------------------------------------
 

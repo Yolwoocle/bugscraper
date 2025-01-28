@@ -227,8 +227,8 @@ function Game:new_game(params)
 
 	if params.quick_restart then
 		self.level.force_backroom_end_flag = true
-		self.camera.x = 0
-		self.camera.y = 0
+		self.camera.x = DEFAULT_CAMERA_X
+		self.camera.y = DEFAULT_CAMERA_Y
 		self.logo_y = -5000 -- SCOTCH
 		self:start_game()
 	end
@@ -366,7 +366,6 @@ function Game:update_main_game(dt)
 	Particles:update(dt)
 	self:update_actors(dt)
 	self:update_logo(dt)
-	self:update_camera_offset(dt)
 	self:update_debug(dt)
 	if self.cutscene then
 		self.cutscene:update(dt)
@@ -437,23 +436,6 @@ function Game:update_logo(dt)
 	else
 		self.jetpack_tutorial_y = lerp(self.jetpack_tutorial_y, -30, 0.1)
 	end
-end
-
-function Game:update_camera_offset(dt)
-	-- Cafeteria camera pan on the right edge
-	-- local all_players_on_the_right = ternary(#self.players == 0, false, true)
-	-- for _, player in pairs(self.players) do
-	-- 	if player.mid_x < (76 * 16) then
-	-- 		all_players_on_the_right = false
-	-- 		break
-	-- 	end
-	-- end
-
-	-- if all_players_on_the_right and self.level:is_on_cafeteria() then
-	-- 	self.camera:set_target_offset(1000, 0)
-	-- else
-	-- 	self.camera:set_target_offset(0, 0)
-	-- end
 end
 
 function Game:get_camera_position()
@@ -1023,14 +1005,6 @@ function Game:start_game()
 	self:remove_queued_players()
 
 	self.menu_manager:set_can_pause(true)
-
-	self:set_zoom(1)
-	local x, y = self.camera:get_position()
-	game.camera:set_target_position(0, 0)
-	game.camera:reset()
-	self:set_camera_position(x, y)
-	game.camera:set_x_locked(true)
-	game.camera:set_y_locked(true)
 end
 
 function Game:on_red_button_pressed()

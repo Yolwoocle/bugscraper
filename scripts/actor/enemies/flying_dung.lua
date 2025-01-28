@@ -83,6 +83,8 @@ function FlyingDung:on_stomp_killed(damager)
 end
 
 function FlyingDung:begin_targeting()
+    game.level:add_fury(2)
+
     self.state = "targeting"
     self.is_ponging = false
     Audio:play_var("flying_dung_death", 0, 1.2)
