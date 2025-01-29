@@ -109,7 +109,7 @@ function Level:init(game, backroom)
 	self.ending_timer = Timer:new(15)
 	self.has_run_ready = false
 
-	-- Fury 
+	-- Fury & combo
 	self.fury_bar = 0.0
 	self.fury_bar_activate_boost = 1.0
 	self.fury_bar_deactivate_debuff = 1.0
@@ -118,6 +118,8 @@ function Level:init(game, backroom)
 	self.fury_damage_malus = 3.0
 	self.fury_max = self.def_fury_max
 	self.fury_speed = 0.9
+
+	self.fury_combo = 0
 end
 
 function Level:ready()
@@ -771,9 +773,13 @@ end
 
 ----------------------------------------------------------------------------------------
 
+function Level:on_enemy_death(enemy)
+	self.fury_combo = self.fury_combo + 1
+end
+
 function Level:on_player_damage(player, amount, source)
 	if player then
-		self.fury_bar = math.max(0.0, self.fury_bar - amount * self.fury_damage_malus)
+		self:add_fury(-amount * self.fury_damage_malus)
 	end
 end
 
@@ -787,7 +793,7 @@ function Level:update_fury(dt)
 	local final_fury_speed = self.fury_speed
 
 	if game:get_enemy_count() > 0 and not game.level:is_on_cafeteria() then
-		self.fury_bar = math.max(self.fury_bar - dt*final_fury_speed, 0.0)
+		self.fury_bar = math.max(0.0, self.fury_bar - dt*final_fury_speed)
 	end
 	self.fury_bar = clamp(self.fury_bar, 0.0, self.fury_max)
 
@@ -795,17 +801,31 @@ function Level:update_fury(dt)
 	self.fury_active = (self.fury_bar >= self.fury_threshold)
 
 	if not old_fury_active and self.fury_active then
-		self.fury_bar = self.fury_bar + self.fury_bar_activate_boost
+		self:on_fury_activate()
 	end
 	if old_fury_active and not self.fury_active then
-		self.fury_bar = self.fury_bar - self.fury_bar_deactivate_debuff
+		self:on_fury_deactivate()
 	end
+end
+
+function Level:on_fury_activate()
+	self.fury_bar = self.fury_bar + self.fury_bar_activate_boost
+	self.fury_combo = 0
+end
+
+function Level:on_fury_deactivate()
+	self.fury_bar = self.fury_bar - self.fury_bar_deactivate_debuff
+
+	Particles:push_layer(PARTICLE_LAYER_HUD)
+	Particles:word(CANVAS_WIDTH/2, CANVAS_HEIGHT + 32, Text:text("game.combo", self.fury_combo), COL_LIGHT_YELLOW, 1)
+	Particles:pop_layer()
+	self.fury_combo = 0
 end
 
 function Level:add_fury(val)
-	self.fury_bar = self.fury_bar + val
+	val = val / math.max(1, game:get_number_of_alive_players())
+	self.fury_bar = math.max(0.0, self.fury_bar + val)	
 end
-
 
 function Level:set_fury(val)
 	self.fury_bar = val

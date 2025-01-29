@@ -783,11 +783,13 @@ end
 function Game:on_player_damage(player, n, source)
 	self.level:on_player_damage(player, n, source)
 end
+
 function Game:on_kill(actor)
 	if actor.counts_as_enemy then
 		self.kills = self.kills + 1
 		self.score = self.score + (actor.score or 0)
 		-- Particles:word(actor.x, actor.y, tostring(actor.score or 0))
+		self.level:on_enemy_death(actor)
 	end
 
 	if actor.is_player then
