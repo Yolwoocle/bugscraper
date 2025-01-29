@@ -40,8 +40,8 @@ return {
         win_prompt = "[Pause to continue]",
         warning_web_controller = "Some browsers may not have proper controller support",
 
+        combo = "COMBO %d", -- ADDED 
         combo_special = "%d!",     -- ADDED // When a combo reaches a key value (e.g. "50!")
-        combo_end = "COMBO %d!"    -- ADDED // When a combo ends 
     },
     level = {
         world_prefix = "Department %s", 

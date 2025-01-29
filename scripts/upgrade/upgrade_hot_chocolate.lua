@@ -8,7 +8,7 @@ local UpgradeHotChocolate = Upgrade:inherit()
 function UpgradeHotChocolate:init()
     UpgradeHotChocolate.super.init(self, "hot_chocolate")
     self.sprite = images.upgrade_hot_chocolate
-    self.value = 3.0
+    self.value = 2.0
 
     self:set_description(self.value)
 

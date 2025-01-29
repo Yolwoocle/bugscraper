@@ -3,6 +3,7 @@ local Class = require "scripts.meta.class"
 local Sprite = require "scripts.graphics.sprite"
 local images = require "data.images"
 local utf8 = require "utf8"
+local shaders = require "data.shaders"
 
 local Particle = Class:inherit()
 
@@ -155,10 +156,16 @@ function ImageParticle:init_image_particle(spr, x,y,s,r, vx,vy,vs,vr, life, g, i
 	self.spr_ox = self.spr_w / 2
 	self.spr_oy = self.spr_h / 2
 	
+	self.color = params.color
+	self.alpha = params.alpha or 1
+	self.alpha_speed = params.alpha_speed or 0
+
 	self.is_solid = is_solid
 end
 function ImageParticle:update(dt)
 	self:update_particle(dt)
+
+	self.alpha = clamp(self.alpha - self.alpha_speed*dt, 0, 1)
 
 	if self.is_animated then
 		local frame_i = clamp(math.ceil(#self.spr_table * (1 - self.life/self.max_life)), 1, #self.spr_table)
@@ -166,7 +173,18 @@ function ImageParticle:update(dt)
 	end
 end
 function ImageParticle:draw()
-	love.graphics.draw(self.spr, self.x, self.y, self.r, self.s, self.s, self.spr_ox, self.spr_oy)
+	if self.color then
+		shaders.draw_in_color:send("fillColor", self.color)
+		love.graphics.setShader(shaders.draw_in_color)
+	end
+
+	exec_color({1, 1, 1, (self.color or {})[4] or 1}, function()
+		love.graphics.draw(self.spr, self.x, self.y, self.r, self.s, self.s, self.spr_ox, self.spr_oy)
+	end)
+	
+	if self.color then
+		love.graphics.setShader()
+	end
 end
 
 ------------------------------------------------------------
@@ -915,6 +933,9 @@ function ParticleSystem:image(x, y, number, spr, spw_rad, life, vs, g, params)
 			local norm = math.min(dist(vx, vy), params.max_vel)
 			vx, vy = nvx * norm, nvy * norm
 		end 
+		if params.color then
+			particle_params.color = params.color
+		end
 		
 		local sprite = spr
 		if (not is_animated) and type(spr) == "table" then
@@ -926,8 +947,8 @@ function ParticleSystem:image(x, y, number, spr, spw_rad, life, vs, g, params)
 end
 
 -- FIXME: scotch scotch scotch ugly ugly ugly ugly!!!
-function ParticleSystem:static_image(img, x, y, rot, life, scale)
-	Particles:image(x, y, 1, img, 0, nil, 0, 0, {
+function ParticleSystem:static_image(img, x, y, rot, life, scale, params)
+	local final_params = {
 		is_solid = false,
 		rot = rot,
 		vx1 = 0,
@@ -939,7 +960,11 @@ function ParticleSystem:static_image(img, x, y, rot, life, scale)
 		life = life or 0.12,
 		is_animated = true,
 		scale = scale,
-	})
+	}
+	for k, v in pairs(params or {}) do
+		final_params[k] = v 
+	end
+	Particles:image(x, y, 1, img, 0, nil, 0, 0, final_params)
 end
 
 -- scottttcccchhhh

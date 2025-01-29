@@ -36,6 +36,7 @@ return {
         win_prompt = "[Pause pour continuer]",
         warning_web_controller = "Certains navigateurs ne supportent pas correctement les manettes",
 
+        fury = "FURIE",
         combo_special = "%d !", -- When a combo reaches a key value (e.g. "50!")
         combo_end = "COMBO %d !" -- ADDED
     },

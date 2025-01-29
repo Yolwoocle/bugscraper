@@ -134,6 +134,9 @@ function Enemy:init_enemy(x,y, img, w,h)
 	-- self.sound_stomp = {"enemy_stomp_2", "enemy_stomp_3"}
 	--{"crush_bug_1", "crush_bug_2", "crush_bug_3", "crush_bug_4"}
 
+	self.fury_damage_multiplier = 1.0
+	self.fury_stomp_multiplier = 1.0
+
 	self.has_run_ready = false
 
 	self.score = 0
@@ -345,6 +348,7 @@ function Enemy:do_damage(n, damager)
 		end 
 		self:on_negative_life()
 	end
+	game:on_enemy_damage(self, n, damager)
 	return true
 end
 
@@ -360,8 +364,8 @@ function Enemy:kill(damager, reason)
 	if damager and damager.is_player then player = damager end
 	if damager and damager.is_bullet and damager.player.is_player then player = damager.player end
 
-	game:screenshake(2)
 	if self.do_death_effects then
+		game:screenshake(2)
 		Particles:smoke(self.mid_x, self.mid_y)
 		Particles:star_splash(self.mid_x, self.mid_y)
 

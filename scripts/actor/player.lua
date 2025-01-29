@@ -176,17 +176,12 @@ function Player:init(n, x, y, skin)
 	self.min_combo_visual_trigger = 5
 	self.max_combo = 0
 	self.combo_reward_heart_threshold = 30
-	
-	self.fury_bar = 0.0
-	self.fury_threshold = 2.5
-	self.def_fury_max = 5.0
-	self.fury_max = self.def_fury_max
-	self.fury_gun_cooldown_multiplier = 0.8
-	self.fury_gun_damage_multiplier = 1.5
-	self.fury_speed = 0.9
+
 	self.fury_stomp_value = 0.8 -- How much is added to the fury bar when stomping an enemy
 	self.fury_bullet_damage_value_multiplier = 0.18  -- Percentage of the bullet damage that is added to the fury bar when hitting an enemy 
-	self.has_energy_drink = false
+	self.fury_gun_cooldown_multiplier = 0.8
+	self.fury_gun_damage_multiplier = 1.5
+	self.fury_speed_mult = 1.3
 
 	-- Upgrades
 	self.upgrades = {}
@@ -204,10 +199,12 @@ function Player:init(n, x, y, skin)
 
 	-- Debug 
 	self.dt = 1
+	self.t = 0
 end
 
 function Player:update(dt)
 	self.dt = dt
+	self.t = self.t + 1
 	
 	self:update_upgrades(dt)
 	self:update_effects(dt)
@@ -239,7 +236,6 @@ function Player:update(dt)
 		self.frames_since_land = 0
 	end
 
-	-- self:update_fury(dt)
 	self:update_combo(dt)
 
 	self.gun:update(dt)
@@ -251,9 +247,6 @@ function Player:update(dt)
 
 	-- Visuals
 	self:update_visuals()
-	if self:is_in_poison_cloud() then
-		Particles:dust(self.mid_x + random_neighbor(7), self.mid_y + random_neighbor(7), random_sample{color(0x3e8948), color(0x265c42), color(0x193c3e)})
-	end
 
 	self.flag_has_jumped_on_current_frame = false
 end
@@ -391,8 +384,8 @@ function Player:do_damage(n, source)
 	end
 	
 	self:set_invincibility(self.max_invincible_time)
-	self:set_fury(0)
-	
+	game:on_player_damage(self, n, source)
+
 	if self.life <= 0 then
 		self.life = 0 
 		self:kill()
@@ -448,8 +441,18 @@ function Player:move(dt)
 	end
 
 	-- Apply velocity 
-	self.vx = self.vx + dir.x * self.speed * self.speed_mult
-	self.vy = self.vy + dir.y * self.speed * self.speed_mult
+	self.vx = self.vx + dir.x * self:get_speed()
+	self.vy = self.vy + dir.y * self:get_speed()
+end
+
+function Player:get_speed()
+	local v = self.speed
+	v = v * self.speed_mult
+	if game.level.fury_active then
+		v = v * self.fury_speed_mult
+	end
+
+	return v
 end
 
 function Player:do_wall_sliding(dt)
@@ -796,7 +799,7 @@ function Player:multiply_gun_cooldown_multiplier(val)
 end
 function Player:get_gun_cooldown_multiplier()
 	local value = self.gun_cooldown_multiplier
-	if self.fury_active then 
+	if game.level.fury_active then 
 		value = value * self.fury_gun_cooldown_multiplier
 	end
 	return value
@@ -807,7 +810,7 @@ function Player:set_gun_damage_multiplier(val)
 end
 function Player:get_total_gun_damage_multiplier()
 	local value = 1.0
-	if self.fury_active then 
+	if game.level.fury_active then 
 		value = value * self.fury_gun_damage_multiplier
 	end
 	value = value * self.gun_damage_multiplier
@@ -836,7 +839,7 @@ function Player:on_stomp(enemy)
 
 	self:increase_combo((enemy or {}).x, (enemy or {}).y)
 
-	self:add_fury(self.fury_stomp_value)
+	game.level:add_fury(self.fury_stomp_value * enemy.fury_stomp_multiplier)
 end
 
 --- When an enemy bullet hits the player
@@ -854,7 +857,7 @@ function Player:on_my_bullet_hit(bullet, victim, col)
 	-- Why tf would this happen
 	if bullet.player ~= self then   return   end
 
-	self:add_fury(bullet.damage * self.fury_bullet_damage_value_multiplier)
+	game.level:add_fury(bullet.damage * self.fury_bullet_damage_value_multiplier)
 end
 
 --- When the player kills an enemy
@@ -951,7 +954,7 @@ function Player:leave_game_if_possible(dt)
 end
 
 ------------------------------------------
---- Combos, fury, score
+--- Combos & score
 ------------------------------------------
 
 function Player:update_combo(dt)
@@ -961,6 +964,7 @@ function Player:update_combo(dt)
 end
 
 function Player:increase_combo(x, y)
+	if true then return end -- Removed combo for now, remove this line if ever needed 
 	self.combo = self.combo + 1
 	
 	-- Rewards 
@@ -1009,51 +1013,6 @@ function Player:end_combo()
 	self.combo = 0 
 end
 
-function Player:update_fury(dt)
-	local final_fury_speed = self.fury_speed
-	if not self.is_grounded then
-		final_fury_speed = final_fury_speed * 0.5
-	end
-
-	if game:get_enemy_count() > 0 and not game.level:is_on_cafeteria() then
-		self.fury_bar = math.max(self.fury_bar - dt*final_fury_speed, 0.0)
-	end
-	self.fury_bar = clamp(self.fury_bar, 0.0, self.fury_max)
-
-	local old_fury_active = self.fury_active
-	self.fury_active = (self.fury_bar >= self.fury_threshold)
-
-	-- Particles when fury is activated 
-	if not old_fury_active and self.fury_active then
-		-- Particles:word(self.mid_x, self.mid_y, "FURY", COL_LIGHT_YELLOW)
-		-- Particles:smoke_big(self.mid_x, self.mid_y, random_sample{COL_LIGHT_YELLOW, COL_ORANGE})
-	end
-
-	if self.fury_active then
-		local fury_colors = ternary(
-			self.has_energy_drink, 
-			{COL_MID_BLUE, COL_DARK_BLUE},
-			{COL_LIGHT_YELLOW, COL_ORANGE}
-		)
-		-- number, col, spw_rad, size, sizevar, is_front, is_back
-		Particles:smoke(self.mid_x, self.mid_y, 1, random_sample(fury_colors), 12, nil, nil, PARTICLE_LAYER_BACK)
-	end
-end
-
-function Player:add_fury(val)
-	self.fury_bar = self.fury_bar + val
-end
-
-function Player:set_fury(val)
-	self.fury_bar = val
-end
-function Player:add_fury_max(val)
-	self.fury_max = self.fury_max + val
-end
-function Player:multiply_fury_speed(val)
-	self.fury_speed = self.fury_speed * val
-end
-
 -----------------------------------------------------
 --- Visuals ---
 
@@ -1063,6 +1022,24 @@ function Player:update_visuals()
 	self.squash = self.jump_squash * self.walkbounce_squash
 
 	self.spr:set_scale(self.squash, 1/self.squash)
+
+	if self:is_in_poison_cloud() then
+		Particles:dust(self.mid_x + random_neighbor(7), self.mid_y + random_neighbor(7), random_sample{color(0x3e8948), color(0x265c42), color(0x193c3e)})
+	end
+
+	if (game.level.fury_active) and self.t % 2 == 0 then
+		Particles:push_layer(PARTICLE_LAYER_BACK_SHADOWLESS)
+		
+		local x, y = self.spr:get_total_centered_offset_position(self.x, self.y, self.w, self.h)
+		Particles:static_image(self.skin.img_walk_down, x, y, 0, 0.12, 1, {
+			color = transparent_color(self.skin.color_palette[1], 0.5),
+			alpha = 0.3,
+			sx = self.spr.sx * ternary(self.dir_x, -1, 1),
+			sy = self.spr.sy,
+		})
+		
+		Particles:pop_layer()
+	end
 end
 
 function Player:draw()
@@ -1152,20 +1129,6 @@ function Player:draw_ammo_bar(ui_x, ui_y)
 	local bar_x = x+ammo_icon_w+2
 	ui:draw_progress_bar(bar_x, y, slider_w, ammo_icon_w, val, maxval, 
 						col_fill, COL_BLACK_BLUE, col_shad, text)
-
-	-- self:draw_fury_bar(bar_x, y+ammo_icon_w-1, slider_w, 4)
-end
-
-function Player:draw_fury_bar(x, y, w, h)
-	-- Fury bar
-	local fury_color =  ternary(self.has_energy_drink, COL_MID_BLUE,  COL_LIGHT_YELLOW)
-	local fury_shadow = ternary(self.has_energy_drink, COL_DARK_BLUE, COL_ORANGE)
-	if self.fury_active then
-		local flash_color = ternary(self.has_energy_drink, COL_WHITE, COL_RED)
-		fury_color = ternary(game.t % 0.2 <= 0.1, fury_color, flash_color)
-	end
-	
-	ui:draw_progress_bar(x, y, w, h, self.fury_bar, self.fury_threshold, fury_color, COL_BLACK_BLUE, fury_shadow)
 end
 
 function Player:get_controls_tutorial_values()

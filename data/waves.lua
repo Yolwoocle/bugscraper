@@ -685,7 +685,6 @@ local waves = {
 				} }
 			},
 		},
-		floating_text = "🎓 " .. utf8.upper(Text:text("input.prompts.jetpack")),
 
 		min = 4,
 		max = 6,
@@ -787,8 +786,6 @@ local waves = {
 			},
 		},
 		music = "w3",
-
-		floating_text = "🎓 " .. utf8.upper(Text:text("input.prompts.jetpack")),
 	}),
 
 	new_wave({

@@ -16,6 +16,8 @@ function HoneypotLiquid:init(x, y)
     self.is_stompable = false
     self.is_pushable = false
     self.is_immune_to_bullets = true
+
+    self.counts_as_enemy = false
     
     self.loot = {}
 end

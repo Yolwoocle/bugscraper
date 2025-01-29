@@ -36,6 +36,14 @@ function GameUI:init(game, is_visible)
 	self.cinematic_bar_scroll_speed = -14
 	self.cinematic_bar_current_height = 0
 	self.cinematic_bar_height = 24
+
+	self.fury_previous_value = 0
+	self.fury_visual_width = 0
+	self.fury_flash_timer = 0
+	self.fury_flash_max_timer = 0.2
+	self.fury_is_flashing = false
+
+	self.t = 0
 end
 
 function GameUI:update(dt)
@@ -47,6 +55,9 @@ function GameUI:update(dt)
 
 	self:update_cinematic_bars(dt)
 	self:update_splash(dt)
+	self:update_fury(dt)
+
+	self.t = self.t + dt
 end
 function GameUI:update_floating_text(dt)
 	self.floating_text_y = lerp(self.floating_text_y, self.floating_text_target_y, 0.05)
@@ -77,6 +88,7 @@ function GameUI:draw()
 	self:draw_upgrades()
 	self:draw_player_previews()
 	self:draw_cinematic_bars()
+	self:draw_fury()
 	
 	self:draw_splash_animation()
 	-- local r
@@ -288,6 +300,43 @@ function GameUI:draw_splash_animation()
 		return
 	end
 	love.graphics.draw(images.splash, self.splash_x, 0)
+end
+
+--- FURY
+
+function GameUI:update_fury(dt)
+	local target = math.max((game.level.fury_bar - game.level.fury_threshold) * 32, 0)
+	self.fury_visual_width = lerp(self.fury_visual_width, target, 0.3)
+	if math.abs(self.fury_visual_width) <= 1 then
+		self.fury_visual_width = 0
+	end
+
+	self.fury_flash_timer = self.fury_flash_timer - dt
+	if self.fury_flash_timer < 0.0 then
+		self.fury_flash_timer = self.fury_flash_timer + self.fury_flash_max_timer 
+	end
+	self.fury_is_flashing = (self.fury_flash_timer < self.fury_flash_max_timer/2)
+end
+
+
+function GameUI:draw_fury()
+	-- print_centered_outline(nil, nil, concat(round(game.level.fury_bar, 1), " / ", game.level.fury_max, " (", game.level.fury_threshold, ")"), CANVAS_WIDTH/2, 24)
+	if self.fury_visual_width <= 0 then
+		return
+	end	
+
+	-- local y = 12
+	local y = CANVAS_HEIGHT - 12
+	local w = math.min(self.fury_visual_width, math.huge)
+	local h = 8
+	local col = ternary(self.fury_is_flashing, COL_YELLOW_ORANGE, COL_ORANGE)
+	rect_color(col, "fill", CANVAS_WIDTH/2 - w, y-h/2, w*2, h)
+	print_wavy_centered_outline_text(
+		COL_LIGHT_YELLOW, nil, 
+		Text:text("game.combo", game.level.fury_combo), 
+		CANVAS_WIDTH/2, y-h/2, nil, self.t, 2, 9, 0.8
+	)
+
 end
 
 return GameUI

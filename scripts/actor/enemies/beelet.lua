@@ -138,6 +138,7 @@ function Beelet:init(x, y)
 
                 game:screenshake(3)
             	Input:vibrate_all(0.1, 0.45)
+                Audio:play_var("metal_impact", 0, 1)
 
                 self.attack_bounces_counter = math.max(0, self.attack_bounces_counter - 1)
                 if self.attack_bounces_counter <= 0 then

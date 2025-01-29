@@ -16,6 +16,7 @@ function HoneypotAnt:init(x, y)
     self.anim_frame_len = 0.4
     self.anim_frames = {images.honeypot_ant1, images.honeypot_ant2}
     
+    self.fury_damage_multiplier = 2.0
     self.score = 10
 end
 

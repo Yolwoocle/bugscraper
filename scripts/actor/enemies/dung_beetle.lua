@@ -78,11 +78,13 @@ function DungBeetle:init(x, y)
                 self.vx = 0
                 self.gravity = self.default_gravity * 0.3
 
-                self.is_pushable = false
-                self.is_knockbackable = false
                 self.self_knockback_mult = 0
-                self.is_immune_to_bullets = true
-                self.destroy_bullet_on_impact = false
+                
+                self.is_pushable = false
+                self.is_stompable = true
+                self.destroy_bullet_on_impact = true
+                self.is_immune_to_bullets = false
+                self.is_bouncy_to_bullets = false
 
                 self.dung_pile_sprite = Sprite:new(images.dung_pile)
                 self.dung_pile_sprite_x = self.mid_x
@@ -147,7 +149,7 @@ function DungBeetle:update(dt)
 
     self:update_enemy(dt)
 
-    if self.spawn_dung_timer:update(dt) and self.vehicle then
+    if (self.spawn_dung_timer:update(dt) or #self.dungs == 0) and self.vehicle then
         local flying_dung = FlyingDung:new(self.mid_x, self.mid_y, self)
         flying_dung:center_actor()
         game:new_actor(flying_dung)
@@ -173,7 +175,7 @@ function DungBeetle:update(dt)
 end
 
 function DungBeetle:on_damage(amount)
-    if self.life > 0 then
+    if self.life > 0 and self.vehicle then
         game:screenshake(6)
         game:frameskip(8)
     end

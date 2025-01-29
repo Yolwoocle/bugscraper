@@ -85,8 +85,8 @@ function Level:init(game, backroom)
 	self.do_not_spawn_enemies_on_next_wave_flag = false
 	
 	-- Canvas & stencils
-	self.canvas = love.graphics.newCanvas(CANVAS_WIDTH*2, CANVAS_HEIGHT)
-	self.buffer_canvas = love.graphics.newCanvas(CANVAS_WIDTH*2, CANVAS_HEIGHT)
+	self.canvas = love.graphics.newCanvas(CANVAS_WIDTH*2, CANVAS_HEIGHT*2)
+	self.buffer_canvas = love.graphics.newCanvas(CANVAS_WIDTH*2, CANVAS_HEIGHT + 48)
 	self.is_hole_stencil_enabled = true
 	self.hole_stencil_pause_radius = CANVAS_WIDTH
 	self.hole_stencil_max_radius = CANVAS_WIDTH*2
@@ -108,6 +108,18 @@ function Level:init(game, backroom)
 	end
 	self.ending_timer = Timer:new(15)
 	self.has_run_ready = false
+
+	-- Fury & combo
+	self.fury_bar = 0.0
+	self.fury_bar_activate_boost = 1.0
+	self.fury_bar_deactivate_debuff = 1.0
+	self.fury_threshold = 5.0
+	self.def_fury_max = 8.0
+	self.fury_damage_malus = 3.0
+	self.fury_max = self.def_fury_max
+	self.fury_speed = 0.9
+
+	self.fury_combo = 0
 end
 
 function Level:ready()
@@ -125,6 +137,7 @@ function Level:update(dt)
 	self.background:set_speed(self.level_speed)
 	self.background:set_def_speed(self.def_level_speed)
 
+	self:update_fury(dt)
 	self.map:update(dt)
 	self.background:update(dt)
 	self.elevator:update(dt)
@@ -423,7 +436,7 @@ function Level:get_backroom_animation_state_machine(dt)
 				end
 			end,
 			exit = function(state)
-				game.camera:set_position(0, 0)
+				game.camera:set_position(DEFAULT_CAMERA_X, DEFAULT_CAMERA_Y)
 				game.camera:set_target_offset(0, 0)
 			end,
 		}
@@ -469,7 +482,7 @@ function Level:end_backroom()
 
 	game.camera:set_x_locked(true)
 	game.camera:set_y_locked(true)
-	game.camera:set_target_position(0, 0)
+	game.camera:set_target_position(DEFAULT_CAMERA_X, DEFAULT_CAMERA_Y)
 end
 
 
@@ -760,6 +773,68 @@ end
 
 ----------------------------------------------------------------------------------------
 
+function Level:on_enemy_death(enemy)
+	self.fury_combo = self.fury_combo + 1
+end
 
+function Level:on_player_damage(player, amount, source)
+	if player then
+		self:add_fury(-amount * self.fury_damage_malus)
+	end
+end
+
+function Level:on_enemy_damage(enemy, amount, source)
+	-- if enemy then
+	-- 	self.fury_bar = math.max(0.0, self.fury_bar - amount * self.fury_damage_malus)
+	-- end
+end
+
+function Level:update_fury(dt)
+	local final_fury_speed = self.fury_speed
+
+	if game:get_enemy_count() > 0 and not game.level:is_on_cafeteria() then
+		self.fury_bar = math.max(0.0, self.fury_bar - dt*final_fury_speed)
+	end
+	self.fury_bar = clamp(self.fury_bar, 0.0, self.fury_max)
+
+	local old_fury_active = self.fury_active
+	self.fury_active = (self.fury_bar >= self.fury_threshold)
+
+	if not old_fury_active and self.fury_active then
+		self:on_fury_activate()
+	end
+	if old_fury_active and not self.fury_active then
+		self:on_fury_deactivate()
+	end
+end
+
+function Level:on_fury_activate()
+	self.fury_bar = self.fury_bar + self.fury_bar_activate_boost
+	self.fury_combo = 0
+end
+
+function Level:on_fury_deactivate()
+	self.fury_bar = self.fury_bar - self.fury_bar_deactivate_debuff
+
+	Particles:push_layer(PARTICLE_LAYER_HUD)
+	Particles:word(CANVAS_WIDTH/2, CANVAS_HEIGHT + 32, Text:text("game.combo", self.fury_combo), COL_LIGHT_YELLOW, 1)
+	Particles:pop_layer()
+	self.fury_combo = 0
+end
+
+function Level:add_fury(val)
+	val = val / math.max(1, game:get_number_of_alive_players())
+	self.fury_bar = math.max(0.0, self.fury_bar + val)	
+end
+
+function Level:set_fury(val)
+	self.fury_bar = val
+end
+function Level:add_fury_max(val)
+	self.fury_max = self.fury_max + val
+end
+function Level:multiply_fury_speed(val)
+	self.fury_speed = self.fury_speed * val
+end
 
 return Level

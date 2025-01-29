@@ -68,7 +68,9 @@ function Dung:init(x, y, spr, w, h)
                 game:screenshake(8)
 
                 Audio:play_var("glass_fracture", 0.1, 1.1)
-                Particles:image(self.rider.mid_x, self.rider.mid_y, 15, images.glass_shard, self.rider.h)
+                if self.rider then
+                    Particles:image(self.rider.mid_x, self.rider.mid_y, 15, images.glass_shard, self.rider.h)
+                end
                 self.state_machine:set_state("chase")
             end,
         },
@@ -98,7 +100,9 @@ function Dung:init(x, y, spr, w, h)
             end,
             update = function(state, dt)
                 self.spr:update_offset(random_neighbor(3), random_neighbor(3))
-                self.rider.spr:update_offset(random_neighbor(3), random_neighbor(3))
+                if self.rider then
+                    self.rider.spr:update_offset(random_neighbor(3), random_neighbor(3))
+                end
 
                 if self.state_timer:update(dt) then
                     return "bunny_hopping"
@@ -134,7 +138,9 @@ function Dung:init(x, y, spr, w, h)
             end,
             exit = function(state)
                 self.spr:update_offset(0, 0)
-                self.rider.spr:update_offset(0, 0)
+                if self.rider then
+                    self.rider.spr:update_offset(0, 0)
+                end
             end,
             after_collision = function(state, col)
                 if col.type ~= "cross" and self.bounces > 0 then
@@ -153,7 +159,7 @@ function Dung:init(x, y, spr, w, h)
                 self.projectile_timer:start()
             end,
             update = function(state, dt)
-                if self.projectile_timer:update(dt) then
+                if self.projectile_timer:update(dt) and self.rider then
                     local projectile = DungProjectile:new(self.rider.mid_x, self.rider.mid_y)
                     game:new_actor(projectile)
                     self.projectile_timer:start()
