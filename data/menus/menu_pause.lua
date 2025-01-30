@@ -26,7 +26,7 @@ if DEMO_BUILD then
     -- Disable wishlist if not demo
     table.insert(pause_items, { "❤ {menu.win.wishlist} 🔗", func_url("steam://advertise/2957130/") })
 end
-table.insert(pause_items, { "😈 {menu.pause.discord} 🔗", func_url("https://discord.gg/BAMMwMn2m5") })
+table.insert(pause_items, { "😈 {menu.pause.discord} 🔗", func_url("https://bugscraper.net/discord") })
 
 local function debug_skipto(wave, background)
     for k, e in pairs(game.actors) do

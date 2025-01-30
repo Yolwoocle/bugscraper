@@ -30,8 +30,8 @@ function BackroomGroundFloor:generate(world_generator)
     world_generator:generate_ground_floor()
 	
 	for _, prop_data in pairs({
-		{x = 482-16, y = 219-16, img = images.ground_floor_cactus},
-		{x = 433-16, y = 224-16, img = images.ground_floor_computer_left},
+		{x = 482-16, y = 218-16, img = images.ground_floor_cactus},
+		{x = 433-16, y = 223-16, img = images.ground_floor_computer_left},
 		{x = 518-16, y = 223-16, img = images.ground_floor_computer_left},
 		{x = 454-16, y = 232-16, img = images.ground_floor_mug},
 		{x = 79-16, y = 213-16, img = images.ground_floor_potted_tree},
@@ -40,8 +40,8 @@ function BackroomGroundFloor:generate(world_generator)
 		{x = 574-16, y = 222-16, img = images.ground_floor_computer_right},
 		{x = 651-16, y = 222-16, img = images.ground_floor_computer_right},
 
-		{x = 386-16, y = 212-16, z = -10, img = images.ground_floor_stack_papers_big},
-		{x = 404-16, y = 208-16, z = -10, img = images.ground_floor_stack_papers_medium},
+		{x = 386-16, y = 211-16, z = -10, img = images.ground_floor_stack_papers_big},
+		{x = 404-16, y = 207-16, z = -10, img = images.ground_floor_stack_papers_medium},
 		{x = 412-16, y = 224-16, z = -11, img = images.ground_floor_stack_papers_medium},
 		{x = 422-16, y = 232-16, z = -11, img = images.ground_floor_stack_papers_small},
 		{x = 494-16, y = 224-16, z = -10, img = images.ground_floor_stack_papers_medium_b},
