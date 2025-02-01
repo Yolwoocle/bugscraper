@@ -810,14 +810,14 @@ end
 
 function Level:on_fury_activate()
 	self.fury_bar = self.fury_bar + self.fury_bar_activate_boost
-	self.fury_combo = 0
+	self.fury_combo = 1
 end
 
 function Level:on_fury_deactivate()
 	self.fury_bar = self.fury_bar - self.fury_bar_deactivate_debuff
 
 	Particles:push_layer(PARTICLE_LAYER_HUD)
-	Particles:word(CANVAS_WIDTH/2, CANVAS_HEIGHT + 32, Text:text("game.combo", self.fury_combo), COL_LIGHT_YELLOW, 1)
+	Particles:word(CANVAS_WIDTH/2, CANVAS_HEIGHT + 34, Text:text("game.combo", self.fury_combo), COL_LIGHT_YELLOW, 1)
 	Particles:pop_layer()
 	self.fury_combo = 0
 end

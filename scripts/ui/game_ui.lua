@@ -329,11 +329,13 @@ function GameUI:draw_fury()
 	local y = CANVAS_HEIGHT - 12
 	local w = math.min(self.fury_visual_width, math.huge)
 	local h = 8
-	local col = ternary(self.fury_is_flashing, COL_YELLOW_ORANGE, COL_ORANGE)
+	-- local col = ternary(self.fury_is_flashing, COL_YELLOW_ORANGE, COL_ORANGE)
+	local col = COL_YELLOW_ORANGE
 	rect_color(col, "fill", CANVAS_WIDTH/2 - w, y-h/2, w*2, h)
 	print_wavy_centered_outline_text(
 		COL_LIGHT_YELLOW, nil, 
-		Text:text("game.combo", game.level.fury_combo), 
+		-- Text:text("game.combo", game.level.fury_combo), 
+		concat(game.level.fury_combo), 
 		CANVAS_WIDTH/2, y-h/2, nil, self.t, 2, 9, 0.8
 	)
 

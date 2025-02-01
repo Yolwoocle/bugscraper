@@ -13,7 +13,7 @@ local PHASE_ATTACK = "attack"
 local PHASE_TELEGRAPH_DURATION = 0.4
 
 function Bee:init(x, y)
-    self:init_fly(x,y, images.mosquito1, 12, 16)
+    Bee.super.init(self, x,y, images.mosquito1, 12, 16)
     self.name = "bee"
     self.life = 5
 
@@ -38,7 +38,7 @@ function Bee:init(x, y)
 end
 
 function Bee:update(dt)
-    self:update_fly(dt)
+    Bee.super.update(self, dt)
     self:update_phase(dt)
 
     self.t = self.t + dt

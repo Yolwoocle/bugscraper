@@ -25,7 +25,7 @@ function UpgradeWater:play_effects(player)
 end
 
 function UpgradeWater:on_finish(player)
-        Particles:image(player.mid_x, player.mid_y, 1, images.upgrade_water, _spw_rad, 3, 0, 2)
+    Particles:image(player.mid_x, player.mid_y, 1, images.upgrade_water, _spw_rad, 3, 0, 2)
 end
 
 

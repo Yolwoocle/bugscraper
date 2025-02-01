@@ -7,6 +7,7 @@ local ui = require "scripts.ui.ui"
 require "scripts.util"
 require "scripts.meta.constants"
 local Loot = require "scripts.actor.loot"
+local Explosion = require "scripts.actor.enemies.explosion"
 
 local Player = Actor:inherit()
 
@@ -191,6 +192,8 @@ function Player:init(n, x, y, skin)
 	self.poison_cloud = nil
 	self.poison_timer = 0.0
 	self.poison_damage_time = 0.6
+
+	self.spawn_explosion_on_damage = false
 
 	-- Exiting 
 	self.is_touching_exit_sign = false
@@ -391,13 +394,22 @@ function Player:do_damage(n, source)
 		self:kill()
 	end
 
-	self:remove_water_upgrade()
-
+	self:apply_effect_on_damage()
+	
 	if source then
 		self.last_damage_source_name = source.name
 	end
 	
 	return true
+end
+
+function Player:apply_effect_on_damage()
+	self:remove_water_upgrade()
+
+	if self.spawn_explosion_on_damage then
+		local explosion = Explosion:new(self.mid_x, self.mid_y, {explosion_damage = 0})
+		game:new_actor(explosion)
+	end
 end
 
 function Player:remove_water_upgrade()

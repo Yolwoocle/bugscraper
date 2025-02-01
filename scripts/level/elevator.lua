@@ -26,7 +26,7 @@ function Elevator:init(level)
 		["cabin"] = true,
 		["walls"] = true,
 		["walls_no_floor"] = false,
-		["bg_grid"] = true,
+		["bg_grid"] = false,
 		["fg_grid"] = false,
 
 		["cabin_brown"] = false,

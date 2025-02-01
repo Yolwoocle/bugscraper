@@ -664,8 +664,6 @@ local waves = {
 			["bg_grid"] = false,
 		},
 		run = function(self, level)
-			game:screenshake(10)
-
 			local cabin_rect = game.level.cabin_rect
 			Particles:falling_grid(cabin_rect.ax + 16, cabin_rect.ay + 6 * 16)
 			Particles:falling_grid(cabin_rect.bx - 7 * 16, cabin_rect.ay + 6 * 16)

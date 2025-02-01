@@ -34,7 +34,7 @@ function BackroomGroundFloor:generate(world_generator)
 		{x = 433-16, y = 223-16, img = images.ground_floor_computer_left},
 		{x = 518-16, y = 223-16, img = images.ground_floor_computer_left},
 		{x = 454-16, y = 232-16, img = images.ground_floor_mug},
-		{x = 79-16, y = 213-16, img = images.ground_floor_potted_tree},
+		{x = 79-16,  y = 213-16, img = images.ground_floor_potted_tree},
 		{x = 715-16, y = 213-16, img = images.ground_floor_potted_plant},
 		{x = 644-16, y = 222-16, img = images.ground_floor_lamp},
 		{x = 574-16, y = 222-16, img = images.ground_floor_computer_right},

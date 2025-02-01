@@ -31,17 +31,25 @@ function Upgrade:apply(player, is_revive)
     end
 end
 
+------------------------------------------
+
+--- [ABSTRACT]
 function Upgrade:apply_permanent(player, is_revive)
 end
 
+--- [ABSTRACT]
 function Upgrade:apply_instant(player)
 end
 
+--- [ABSTRACT]
 function Upgrade:play_effects(player)
 end
 
+--- [ABSTRACT]
 function Upgrade:on_finish(player)
 end
+
+------------------------------------------
 
 function Upgrade:finish(player)
     self:on_finish(player)

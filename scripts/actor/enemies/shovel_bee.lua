@@ -8,7 +8,7 @@ local images = require "data.images"
 local ShovelBee = Fly:inherit()
 	
 function ShovelBee:init(x, y, spr)
-    self:init_fly(x,y, spr or images.shovel_bee, 14, 16, false)
+    self:init_fly(x,y, spr or images.shovel_bee, 10, 16, false)
     self.name = "shovel_bee"
     self.is_flying = true
     self.life = 10

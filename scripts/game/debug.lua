@@ -205,16 +205,9 @@ function Debug:init(game)
         ["u"] = { "toggle title junk ui", function()
             self.title_junk = not self.title_junk
         end },
-        ["t"] = { "particle", function()
-            local cabin_rect = game.level.cabin_rect
-            Particles:falling_grid(cabin_rect.ax + 16, cabin_rect.ay + 6 * 16 + 0 * 8)
-            Particles:falling_grid(cabin_rect.bx - 7 * 16, cabin_rect.ay + 6 * 16 + 0 * 8)
-
-            -- Particles:word(CANVAS_WIDTH/2, CANVAS_HEIGHT/2+100, "HELLO!!", COL_WHITE, 1)
-            for i = 1, 50 do
-                -- Particles:spark(CANVAS_WIDTH/2, CANVAS_HEIGHT/2 + 50)
-            end
-        end },
+        -- ["t"] = { "reload images", function()
+        --     images.load_images()
+        -- end },
         ["d"] = { "spawn", function()
             game.menu_manager:set_menu("debug_command")
         end },

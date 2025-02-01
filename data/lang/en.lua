@@ -124,6 +124,10 @@ return {
             title = "Hot Chocolate",
             description = "x%d reloading speed",
         },
+        pomegranate_juice = {
+            title = "Pomegranate Juice",
+            description = "Create an explosion when you take damage",
+        },
     },
     input = {
         prompts = {

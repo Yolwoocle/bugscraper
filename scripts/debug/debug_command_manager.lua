@@ -29,7 +29,12 @@ function DebugCommandManager:init()
 
     local enemies_keys = table_keys(enemies)
     local cutscenes_keys = table_keys(cutscenes)
+
     local upgrades_keys = table_keys(upgrades)
+    for i, u in pairs(upgrades_keys) do
+        upgrades_keys[i] = utf8.sub(u, 8, #u)
+    end
+
     table.sort(enemies_keys)
     self.commands["upgrade"] = DebugCommand:new {
         name = "upgrade",
@@ -38,7 +43,7 @@ function DebugCommandManager:init()
             { "name:string", values = upgrades_keys },
         },
         run = function(name, x, y)
-            local upgrade_class = upgrades[name]
+            local upgrade_class = upgrades["Upgrade"..tostring(name)]
             if not upgrade_class then
                 return false, "Upgrade '" .. name .. "' not found"
             end

@@ -26,20 +26,7 @@ local function load_spritesheet(name, number)
     return sheet
 end
 
-local function load_image_table(name, n, w, h)
-	if not n then  error("number of images `n` not defined")  end
-	local t = {}
-	for i=1,n do 
-		t[i] = load_image(name..tostring(i)..".png")
-	end
-	t.w = w
-	t.h = h
-	return t
-end
-
 -----------------------------------------------------
-
-local images = {}
 
 local img_names = {
 	empty = "empty",
@@ -170,6 +157,9 @@ local img_names = {
 	motherboard_button =       "actors/enemies/motherboard_button",
 	mushroom_ant1 =            "actors/enemies/mushroom_ant1",
 	mushroom_ant2 =            "actors/enemies/mushroom_ant2",
+	shooter_focused =          "actors/enemies/shooter_focused",
+	shooter_focused_uncharged = "actors/enemies/shooter_focused_uncharged",
+	shooter_normal =           "actors/enemies/shooter_normal",
 	shovel_bee =               "actors/enemies/shovel_bee",
 	shovel_bee_buried =        "actors/enemies/shovel_bee_buried",
 	slug1 =                    "actors/enemies/slug1",
@@ -458,19 +448,20 @@ local img_names = {
 	-----------------------------------------------------
 	
 	-- upgrades
-	upgrade_espresso =       "upgrades/upgrade_espresso",
-	upgrade_tea =            "upgrades/upgrade_tea",
-	upgrade_chocolate =      "upgrades/upgrade_chocolate",
-	upgrade_milk =           "upgrades/upgrade_milk",
-	upgrade_boba =           "upgrades/upgrade_boba",
-	upgrade_energy_drink =   "upgrades/upgrade_energy_drink",
-	upgrade_soda =           "upgrades/upgrade_soda",
-	upgrade_fizzy_lemonade = "upgrades/upgrade_fizzy_lemonade",
-	upgrade_apple_juice =    "upgrades/upgrade_apple_juice",
-	upgrade_hot_sauce =      "upgrades/upgrade_hot_sauce",
-	upgrade_coconut_water =  "upgrades/upgrade_coconut_water",
-	upgrade_hot_chocolate =  "upgrades/upgrade_hot_chocolate",
-	upgrade_water =          "upgrades/upgrade_water",
+	upgrade_espresso =          "upgrades/upgrade_espresso",
+	upgrade_tea =               "upgrades/upgrade_tea",
+	upgrade_chocolate =         "upgrades/upgrade_chocolate",
+	upgrade_milk =              "upgrades/upgrade_milk",
+	upgrade_boba =              "upgrades/upgrade_boba",
+	upgrade_energy_drink =      "upgrades/upgrade_energy_drink",
+	upgrade_soda =              "upgrades/upgrade_soda",
+	upgrade_fizzy_lemonade =    "upgrades/upgrade_fizzy_lemonade",
+	upgrade_apple_juice =       "upgrades/upgrade_apple_juice",
+	upgrade_hot_sauce =         "upgrades/upgrade_hot_sauce",
+	upgrade_coconut_water =     "upgrades/upgrade_coconut_water",
+	upgrade_hot_chocolate =     "upgrades/upgrade_hot_chocolate",
+	upgrade_pomegranate_juice = "upgrades/upgrade_pomegranate_juice",
+	upgrade_water =             "upgrades/upgrade_water",
 	
 	-----------------------------------------------------
 
@@ -509,83 +500,93 @@ local img_names = {
 	_test_hexagon_small = "_test_hexagon_small",
 }
 
-for id, path in pairs(img_names) do
-	if type(path) == "string" then
-		images[id] = load_image(path..".png")
-
-	elseif type(path) == "table" then
-		if path[1] == "spritesheet" then
-			images[id] = load_spritesheet(path[2]..".png", path[3])
-		end
-
-	else
-		error("Invalid type for image: "..type(path))
-	end
-end
-
-images.button_fragments = {
-	images.button_fragment_1,
-	images.button_fragment_2,
-	images.button_fragment_3,
-	images.button_fragment_4,
-	images.button_fragment_5,
-}
-
 -----------------------------------------------------
 -- Input buttons
 
-local start = love.timer.getTime()
-print("Loading images...")
+local images = {}
+local function load_images()
+	local start = love.timer.getTime()
+	print("Loading images...")
 
--- Keyboard
-for key_constant, button_image_name in pairs(KEY_CONSTANT_TO_IMAGE_NAME) do
-	images[button_image_name] = load_image("buttons/keyboard/"..button_image_name..".png")
-end
+	images = {}
 
--- Controller
-local function get_button_name(brand, button)
-	return string.format("btn_c_%s_%s", brand, button)
-end
-local function load_button_icon(brand, button)
-	local name = get_button_name(brand, button)
-	local path = string.format("buttons/controller/%s/%s.png", brand, name)
-	images[name] = load_image(path)
-end
+	for id, path in pairs(img_names) do
+		if type(path) == "string" then
+			images[id] = load_image(path..".png")
 
-local brands = copy_table_deep(CONTROLLER_BRANDS)
-local ps5_index = 0
-for i = 1, #brands do 
-	if brands[i] == BUTTON_STYLE_PLAYSTATION5 then
-		ps5_index = i
-		break
+		elseif type(path) == "table" then
+			if path[1] == "spritesheet" then
+				images[id] = load_spritesheet(path[2]..".png", path[3])
+			end
+
+		else
+			error("Invalid type for image: "..type(path))
+		end
 	end
-end
-assert(ps5_index ~= 0, "no PS5 button scheme found")
-table.remove(brands, ps5_index)
-for _, brand in pairs(brands) do
-	for button, __ in pairs(CONTROLLER_BUTTONS) do
-		load_button_icon(brand, button)
-	end
-end
 
--- Load PS5 buttons from PS4 ones
-local ps5_buttons = {
-    ["back"] = true,
-    ["start"] = true,
-    ["misc1"] = true,
-    ["touchpad"] = true,
-}
-for button, _ in pairs(CONTROLLER_BUTTONS) do
-	if ps5_buttons[button] then
-		load_button_icon(BUTTON_STYLE_PLAYSTATION5, button)
-	else
-		images[get_button_name(BUTTON_STYLE_PLAYSTATION5, button)] = images[get_button_name(BUTTON_STYLE_PLAYSTATION4, button)]
-	end
-end
-images.btn_c_unknown = load_image("buttons/controller/btn_c_unknown.png")
+	images.button_fragments = {
+		images.button_fragment_1,
+		images.button_fragment_2,
+		images.button_fragment_3,
+		images.button_fragment_4,
+		images.button_fragment_5,
+	}
 
-print(concatsep({"Finished loading", table_key_count(images), "images. (", (love.timer.getTime() - start) * 1000 ,"ms)"}))
+	-- Keyboard
+	for key_constant, button_image_name in pairs(KEY_CONSTANT_TO_IMAGE_NAME) do
+		images[button_image_name] = load_image("buttons/keyboard/"..button_image_name..".png")
+	end
+
+	-- Controller
+	local function get_button_name(brand, button)
+		return string.format("btn_c_%s_%s", brand, button)
+	end
+	local function load_button_icon(brand, button)
+		local name = get_button_name(brand, button)
+		local path = string.format("buttons/controller/%s/%s.png", brand, name)
+		images[name] = load_image(path)
+	end
+
+	local brands = copy_table_deep(CONTROLLER_BRANDS)
+	local ps5_index = 0
+	for i = 1, #brands do 
+		if brands[i] == BUTTON_STYLE_PLAYSTATION5 then
+			ps5_index = i
+			break
+		end
+	end
+	assert(ps5_index ~= 0, "no PS5 button scheme found")
+	table.remove(brands, ps5_index)
+	for _, brand in pairs(brands) do
+		for button, __ in pairs(CONTROLLER_BUTTONS) do
+			load_button_icon(brand, button)
+		end
+	end
+
+	-- Load PS5 buttons from PS4 ones
+	local ps5_buttons = {
+		["back"] = true,
+		["start"] = true,
+		["misc1"] = true,
+		["touchpad"] = true,
+	}
+	for button, _ in pairs(CONTROLLER_BUTTONS) do
+		if ps5_buttons[button] then
+			load_button_icon(BUTTON_STYLE_PLAYSTATION5, button)
+		else
+			images[get_button_name(BUTTON_STYLE_PLAYSTATION5, button)] = images[get_button_name(BUTTON_STYLE_PLAYSTATION4, button)]
+		end
+	end
+	images.btn_c_unknown = load_image("buttons/controller/btn_c_unknown.png")
+
+	images.load_images = load_images
+
+	print(concatsep({"Finished loading", table_key_count(images), "images. (", (love.timer.getTime() - start) * 1000 ,"ms)"}))
+
+end
 
 -----------------------------------------------------
+
+load_images()
 
 return images

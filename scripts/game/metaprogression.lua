@@ -27,11 +27,12 @@ function MetaprogressionManager:init()
     self.levels = {
         { threshold = 3000, rewards = { { type = "skin", skin = t.nel } } },
         { threshold = 5000, rewards = { { type = "upgrade", upgrade = "UpgradeFizzyLemonade" } } },
-        { threshold = 8000, rewards = { { type = "upgrade", upgrade = "UpgradeHotSauce" } } },
+        { threshold = 5000, rewards = { { type = "upgrade", upgrade = "UpgradeHotSauce" } } },
+        { threshold = 5000, rewards = { { type = "upgrade", upgrade = "UpgradeHotChocolate" } } },
         { threshold = 10000, rewards = { { type = "skin", skin = t.rico } } },
-        { threshold = 10000, rewards = { { type = "upgrade", upgrade = "UpgradeHotChocolate" } } },
-        { threshold = 10000, rewards = { { type = "upgrade", upgrade = "UpgradeCoconutWater" } } },
-        { threshold = 20000, rewards = { { type = "skin", skin = t.leo } } },
+        { threshold = 5000, rewards = { { type = "upgrade", upgrade = "UpgradeCoconutWater" } } },
+        { threshold = 5000, rewards = { { type = "upgrade", upgrade = "UpgradePomegranateJuice" } } },
+        { threshold = 10000, rewards = { { type = "skin", skin = t.leo } } },
     }
 
     self:read_progress()

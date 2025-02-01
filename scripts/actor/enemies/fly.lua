@@ -5,8 +5,8 @@ local images = require "data.images"
 
 local Fly = Enemy:inherit()
 	
-function Fly:init(x, y, spr, w, h)
-    self:init_fly(x, y, spr, w, h)
+function Fly:init(x, y, spr, w, h, buzzing_enabled)
+    self:init_fly(x, y, spr, w, h, buzzing_enabled)
 end
 
 function Fly:init_fly(x, y, spr, w, h, buzzing_enabled)
@@ -30,15 +30,13 @@ function Fly:init_fly(x, y, spr, w, h, buzzing_enabled)
 
 	self.score = 10
 
-    if buzzing_enabled then
+    self.is_buzz_enabled = buzzing_enabled
+    print("buzzing_enabled ", buzzing_enabled)
+    if self.is_buzz_enabled then
         self:add_constant_sound("buzz", "fly_buzz", false)
         self:seek_constant_sound("buzz", random_range(0, self:get_constant_sound("buzz"):get_duration())) 
-        self.is_buzz_enabled = true
-        self.buzz_is_started = false
-    else
-        self.is_buzz_enabled = false
-        self.buzz_is_started = false
     end
+    self.buzz_is_started = false
 end
 
 function Fly:update(dt)
@@ -55,10 +53,12 @@ function Fly:update_buzz(dt)
         self:play_constant_sound("buzz")
     end
     local spd = dist(0, 0, self.vx, self.vy)
-    if spd >= 0.001 then
-        self:set_constant_sound_volume("buzz", 1)
-    else
-        self:set_constant_sound_volume("buzz", 0)
+    if self.is_buzz_enabled then
+        if spd >= 0.001 then
+            self:set_constant_sound_volume("buzz", 1)
+        else
+            self:set_constant_sound_volume("buzz", 0)
+        end
     end
 end
 
