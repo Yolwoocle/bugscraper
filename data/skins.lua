@@ -51,11 +51,11 @@ local skins = {
 		text_key = "tok",
 	},
 	{
-		anim_idle = {images.nel_idle, 0.2, 1},
-		anim_wall_slide = {images.nel_idle},
-		img_walk_down = images.nel_idle,
-		img_airborne = images.nel_idle,
-		spr_dead = images.nel_idle,
+		anim_idle = {images.nel_idle, 0.18, 4},
+		anim_wall_slide = {images.nel_wall_slide},
+		img_walk_down = images.nel_walk_down,
+		img_airborne = images.nel_airborne,
+		spr_dead = images.nel_dead,
 
 		color_palette = {COL_LIGHT_RED, COL_DARK_RED, COL_DARK_BROWN, color(0x3a4466), color(0x262b44)},
 		menu_color = COL_LIGHT_RED, 

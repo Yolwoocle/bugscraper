@@ -67,6 +67,10 @@ local img_names = {
 	tok_dead =         "actors/players/tok_dead",
 	
 	nel_idle =         "actors/players/nel_idle",
+	nel_walk_down =    "actors/players/nel_walk_down",
+	nel_airborne =     "actors/players/nel_airborne",
+	nel_wall_slide =   "actors/players/nel_wall_slide",
+	nel_dead =         "actors/players/nel_dead",
 
 	rabbit_1 =         "actors/players/rabbit_1",
 	rabbit_2 =         "actors/players/rabbit_2",
