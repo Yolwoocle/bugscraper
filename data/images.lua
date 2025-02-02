@@ -259,12 +259,15 @@ local img_names = {
 	button_fragment_5 =           "particles/button_fragment_5",
 	smash_flash =                 "particles/smash_flash",
 	particle_leaf =               "particles/particle_leaf",
-	white_dust =                  "particles/white_dust",
 	particle_bit_zero =           "particles/particle_bit_zero",
 	particle_bit_one =            "particles/particle_bit_one",
 	particle_bit_zero_dark =      "particles/particle_bit_zero_dark",
 	particle_bit_one_dark =       "particles/particle_bit_one_dark",
 	poison_skull =                "particles/poison_skull",
+	pomegranate_piece_1 =         "particles/pomegranate_piece_1",
+	pomegranate_piece_2 =         "particles/pomegranate_piece_2",
+	pomegranate_piece_3 =         "particles/pomegranate_piece_3",
+	white_dust =                  "particles/white_dust",
 
 	bubble_fizz_1 =               "particles/bubble_fizz_1",
 	bubble_fizz_2 =               "particles/bubble_fizz_2",
@@ -307,10 +310,10 @@ local img_names = {
 	-----------------------------------------------------
 	
 	-- level
-	metal =                   "level/metal",
-	chain =                   "level/chain",
-	semisolid =               "level/semisolid",
-	bg_plate =                "level/bg_plate",
+	metal =     "level/metal",
+	chain =     "level/chain",
+	semisolid = "level/semisolid",
+	bg_plate =  "level/bg_plate",
 
 	cabin_bg =                       "level/cabin_bg",
 	cabin_bg_brown =                 "level/cabin_bg_brown",

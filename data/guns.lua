@@ -496,6 +496,7 @@ function Guns:init()
 		self.bul_w = 10
 		self.bul_h = 10
 		self.bullet_target_type = "everyone"
+		self.destroy_bullet_on_damage = false
 
 		self.screenshake = 4
 		self.do_particles = false

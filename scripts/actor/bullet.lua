@@ -56,6 +56,7 @@ function Bullet:init(gun, player, damage, x, y, w, h, vx, vy, args)
 
 	self.is_affected_by_bounds = false
 	self.is_explosion = param(args.is_explosion, false)
+	self.destroy_on_damage = param(args.destroy_on_damage, true)
 
 	local old_filter = self.collision_filter
 	self.collision_filter = function(item, other)
@@ -151,14 +152,17 @@ function Bullet:on_collision(col)
 		self:kill()
 	end
 		
-	if self.harmless_timer.is_active then return end
+	if self.harmless_timer.is_active then 
+		return 
+	end
+
 	if col.other.on_hit_bullet and self:is_actor_my_enemy(col.other) then
 		local damaged = col.other:on_hit_bullet(self, col)
 		if damaged and self.player and self.player.is_player then
 			self.player:on_my_bullet_hit(self, col.other, col)
 		end
 
-		if col.other.destroy_bullet_on_impact then
+		if col.other.destroy_bullet_on_impact and self.destroy_on_damage then
 			local s = "metalfootstep_0"..tostring(love.math.random(0,4))
 			if self.play_sfx then
 				Audio:play_var(s, 0.3, 1, {pitch=0.7, volume=0.5})

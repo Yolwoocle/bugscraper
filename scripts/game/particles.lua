@@ -705,7 +705,9 @@ function ParticleSystem:clear(layer_id)
 	end
 end
 
-function ParticleSystem:explosion(x, y, radius)
+function ParticleSystem:explosion(x, y, radius, args)
+	args = args or {}
+
 	local function explosion_layer(col, rad, quantity, min_spawn_delay, max_spawn_delay)
 		self:smoke_big(x, y, col, rad, quantity, {
 			vx = 0, 
@@ -721,6 +723,10 @@ function ParticleSystem:explosion(x, y, radius)
 		type = "gradient",
 		COL_WHITE, COL_YELLOW, COL_ORANGE, COL_DARK_RED, COL_DARK_GRAY, COL_BLACK_BLUE
 	}
+	if args.color_gradient then
+		gradient = copy_table_shallow(args.color_gradient)
+		gradient.type = "gradient"
+	end
 	explosion_layer({type = "gradient", COL_DARK_GRAY},  radius, 100, 0.2, 0.4)
 	explosion_layer({type = "gradient", COL_BLACK_BLUE}, radius, 100, 0.2, 0.4)
 

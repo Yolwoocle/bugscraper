@@ -407,8 +407,21 @@ function Player:apply_effect_on_damage()
 	self:remove_water_upgrade()
 
 	if self.spawn_explosion_on_damage then
-		local explosion = Explosion:new(self.mid_x, self.mid_y, {explosion_damage = 0})
+		local explosion = Explosion:new(self.mid_x, self.mid_y, {
+			explosion_damage = 0,
+			color_gradient = {COL_PURPLE, COL_LIGHT_RED, COL_DARK_RED, COL_DARK_PURPLE},
+			safe_margin = 0,
+			radius = 42,
+		})
 		game:new_actor(explosion)
+
+		Particles:image(self.mid_x, self.mid_y, 30, {images.pomegranate_piece_1, images.pomegranate_piece_2, images.pomegranate_piece_3}, 4, nil, nil, nil, {
+			vx1 = -150,
+			vx2 = 150,
+	
+			vy1 = 80,
+			vy2 = -200,
+		})
 	end
 end
 

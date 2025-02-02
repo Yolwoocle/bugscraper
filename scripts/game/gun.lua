@@ -33,6 +33,7 @@ function Gun:init_gun(user)
 	self.random_speed_offset = 40
 	self.random_friction_offset = 0
 	self.bullet_target_type = "default"
+	self.destroy_bullet_on_damage = true
 	
 	self.shoot_offset_x = nil
 
@@ -281,7 +282,8 @@ function Gun:fire_bullet(dt, user, x, y, bul_w, bul_h, dx, dy)
 		is_explosion = self.is_explosion,
 		bullet_model = self.bullet_model,
 		object_3d_rot_speed = rot_3d_speed,
-		object_3d_scale = self.object_3d_scale
+		object_3d_scale = self.object_3d_scale,
+		destroy_on_damage = self.destroy_bullet_on_damage
 	})
 	game:new_actor(bullet)
 end
