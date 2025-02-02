@@ -856,10 +856,13 @@ end
 
 --- When an enemy bullet hits the player
 function Player:on_hit_bullet(bullet, col)
-	if bullet.player == self then   return   end
-	if self.invincible_time > 0 then   return   end
+	if bullet.player == self then      return false   end
+	if self.invincible_time > 0 then   return false   end
 
-	self:do_damage(bullet.damage, bullet)
+	local damage_success = self:do_damage(bullet.damage, bullet)
+	if not damage_success then
+		return false
+	end
 	self.vx = self.vx + sign(bullet.vx) * bullet.knockback
 	return true
 end
