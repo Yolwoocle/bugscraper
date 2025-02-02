@@ -75,6 +75,12 @@ local img_names = {
 	rabbit_1 =         "actors/players/rabbit_1",
 	rabbit_2 =         "actors/players/rabbit_2",
 	rabbit_dead =      "actors/players/rabbit_dead",
+	
+	dodu_idle =        "actors/players/dodu_idle",
+	dodu_walk_down =   "actors/players/dodu_idle",
+	dodu_airborne =    "actors/players/dodu_idle",
+	dodu_wall_slide =  "actors/players/dodu_idle",
+	dodu_dead =        "actors/players/dodu_dead",
 
 	duck =             "actors/players/duck",
 

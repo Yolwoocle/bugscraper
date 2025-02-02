@@ -75,6 +75,7 @@ return {
             nel = "Nel",
             rico = "Rico",
             leo = "Leo",
+            dodu = "Dodu",
         },
         abbreviation = "P%d", -- Short appreviation to denote players by their number. Example: in english, "P1" means "Player 1", in french "J1" means "Joueur 1".
     },

@@ -45,7 +45,7 @@ local skins = {
 		img_airborne = images.tok_airborne,
 		spr_dead = images.tok_dead,
 
-		color_palette = {color(0x2ce8f5), color(0x0195e9), color(0x9e2835), color(0x3a4466), color(0x262b44)},
+		color_palette = {COL_LIGHT_BLUE, COL_MID_BLUE, color(0x9e2835), color(0x3a4466), color(0x262b44)},
 		menu_color = color(0x0195e9), 
 		icon = "🪲",
 		text_key = "tok",
@@ -82,8 +82,20 @@ local skins = {
 		spr_dead = images.leo,
 		color_palette = {color(0x63c74d), color(0x3e8948), color(0x265c42), color(0x193c3e), color(0x5a6988), color(0x3a4466)},
 		menu_color = color(0x3e8948), 
-		icon = "🐰",
+		icon = "🥦",
 		text_key = "leo",
+	},
+	{
+		anim_idle = {images.dodu_idle, 0.18, 1},
+		anim_wall_slide = {images.dodu_wall_slide},
+		img_walk_down = images.dodu_walk_down,
+		img_airborne = images.dodu_airborne,
+		spr_dead = images.dodu_dead,
+
+		color_palette = {COL_DARK_GRAY, COL_MID_GRAY, COL_LIGHT_GRAY, COL_LIGHTEST_GRAY, COL_WHITE},
+		menu_color = COL_MID_GRAY, 
+		icon = "🐧",
+		text_key = "dodu",
 	},
 }
 

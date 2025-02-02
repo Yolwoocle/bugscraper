@@ -64,13 +64,14 @@ function Game:init()
 
 	-- Load fonts
 	FONT_REGULAR = love.graphics.newImageFont("fonts/hope_gold.png", FONT_CHARACTERS)
+	FONT_SYMBOLS = love.graphics.newImageFont("fonts/font_symbols.png", FONT_SYMBOLS_CHARACTERS)
 	FONT_CHINESE = love.graphics.newImageFont("fonts/font_chinese.png", FONT_CHINESE_CHARACTERS)
 	FONT_7SEG = love.graphics.newImageFont("fonts/7seg_font.png", FONT_7SEG_CHARACTERS)
 	FONT_MINI = love.graphics.newImageFont("fonts/font_ant_party.png", FONT_MINI_CHARACTERS)
 	FONT_FAT = love.graphics.newImageFont("fonts/font_counting_apples.png", FONT_FAT_CHARACTERS)
 	FONT_PAINT = love.graphics.newFont("fonts/NicoPaint-Regular.ttf", 16)
 
-	FONT_REGULAR:setFallbacks(FONT_CHINESE)
+	FONT_REGULAR:setFallbacks(FONT_SYMBOLS, FONT_CHINESE)
     Text:push_font(FONT_REGULAR)
 
 	-- Audio ===> Moved to OptionsManager
