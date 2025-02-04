@@ -230,6 +230,7 @@ local img_names = {
 	bullet_red =               "actors/bullets/bullet_red",
 	bullet_blue =              "actors/bullets/bullet_blue",
 	bullet_ring =              "actors/bullets/bullet_ring",
+	bullet_ring_red =          "actors/bullets/bullet_ring_red",
 	mushroom =                 "actors/bullets/mushroom",
 	mushroom_yellow =          "actors/bullets/mushroom_yellow",
 	mushroom_spike =           "actors/bullets/mushroom_spike",

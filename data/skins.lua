@@ -92,7 +92,7 @@ local skins = {
 		img_airborne = images.dodu_airborne,
 		spr_dead = images.dodu_dead,
 
-		color_palette = {COL_DARK_GRAY, COL_MID_GRAY, COL_LIGHT_GRAY, COL_LIGHTEST_GRAY, COL_WHITE},
+		color_palette = {COL_MID_GRAY, COL_LIGHT_GRAY, COL_LIGHTEST_GRAY, COL_WHITE, COL_WHITE},
 		menu_color = COL_MID_GRAY, 
 		icon = "🐧",
 		text_key = "dodu",

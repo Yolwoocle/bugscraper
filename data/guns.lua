@@ -453,7 +453,7 @@ function Guns:init()
 		self.cooldown = 0.01
 		self.bullet_speed = 125-- 200
 		
-		self.bullet_spr = images.bullet_ring
+		self.bullet_spr = images.bullet_ring_red
 		self.bul_w = 10
 		self.bul_h = 10
 
