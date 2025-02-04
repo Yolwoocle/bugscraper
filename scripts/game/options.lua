@@ -34,6 +34,7 @@ function OptionsManager:init()
 		screenshake_on = true,
 		skip_boss_intros = false,
 		show_fps_warning = true,
+		convention_mode = false,
 
 		button_style_p1 = BUTTON_STYLE_DETECT,
 		button_style_p2 = BUTTON_STYLE_DETECT,

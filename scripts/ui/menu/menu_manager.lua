@@ -71,9 +71,13 @@ function MenuManager:update_current_menu(dt)
 	self.cur_menu:update(dt)
 
 	-- Update current selection
-	self.sel_n = mod_plus_1(self.sel_n, #self.cur_menu.items)
-	self.sel_item = self.cur_menu.items[self.sel_n]
-	self.sel_item.is_selected = true
+	if self.cur_menu then
+		self.sel_n = mod_plus_1(self.sel_n, #self.cur_menu.items)
+		self.sel_item = self.cur_menu.items[self.sel_n]
+	end
+	if self.sel_item then
+		self.sel_item.is_selected = true
+	end
 
 	-- On pressed
 	local btn = Input:action_pressed("ui_select")

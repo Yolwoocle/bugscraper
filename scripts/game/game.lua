@@ -107,6 +107,11 @@ function Game:new_game(params)
 	Collision = CollisionManager:new()
 	Particles = ParticleSystem:new()
 	Input:mark_all_actions_as_handled()
+	if Options:get("convention_mode") then
+		for i=1, MAX_NUMBER_OF_PLAYERS do
+			Input:remove_user(i)
+		end
+	end
 
 	self.t = 0
 	self.frame = 0
@@ -883,6 +888,10 @@ end
 function Game:init_players(x, y, spacing)
 	spacing = spacing or (5*16)
 	self.players = {}
+
+	if Options:get("convention_mode") then
+		return
+	end
 
 	for i = 1, MAX_NUMBER_OF_PLAYERS do
 		if Input:get_user(i) ~= nil then

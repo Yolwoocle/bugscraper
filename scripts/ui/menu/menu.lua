@@ -66,12 +66,12 @@ end
 
 function Menu:draw()
 	for i, item in pairs(self.items) do
-		if not item.is_selected then
+		if item.is_visible and not item.is_selected then
 			item:draw()
 		end
 	end
 	for i, item in pairs(self.items) do
-		if item.is_selected then
+		if item.is_visible and item.is_selected then
 			item:draw()
 		end
 	end

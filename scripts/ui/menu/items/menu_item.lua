@@ -10,6 +10,7 @@ function MenuItem:init(i, x, y)
 	self.def_y = y
 
 	self.is_selected = false
+	self.is_visible = true -- TODO
 end
 
 function MenuItem:update(dt)

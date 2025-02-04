@@ -1,6 +1,7 @@
 require "scripts.util"
 local menu_util             = require "scripts.ui.menu.menu_util"
 local Menu                  = require "scripts.ui.menu.menu"
+local Timer                 = require "scripts.timer"
 
 local StatsMenuItem         = require "scripts.ui.menu.items.menu_item_stats"
 local ProgressBarMenuItem   = require "scripts.ui.menu.items.progress_bar_menu_item"
@@ -30,6 +31,7 @@ local game_over_items       = {
     { "" },
     { ProgressBarMenuItem,
         {
+            -- This is so ridiculously overengineered
             update_value = function(item, dt)
                 item.augment_xp_delay = math.max(0, item.augment_xp_delay - dt)
 
@@ -115,12 +117,17 @@ local game_over_items       = {
             game:new_game()
         end
     end },
-    { "🔄 {menu.game_over.quick_restart}", function()
+    { "🔄 {menu.game_over.quick_restart}", function(item)
         if game.has_finished_game_over_animation then
             game.has_seen_controller_warning = true
             game:new_game({ quick_restart = true })
         end
-    end },
+    end,
+    function(item)
+        item.is_selectable = not Options:get("convention_mode")
+        item.is_visible =    not Options:get("convention_mode")
+    end
+    },
 }
 if DEMO_BUILD then
     table.insert(game_over_items,
@@ -128,6 +135,34 @@ if DEMO_BUILD then
     )
 end
 
-local game_over_menu = Menu:new(game, "{menu.game_over.title}", game_over_items, DEFAULT_MENU_BG_COLOR, PROMPTS_GAME_OVER, nil, { is_backable = false})
+---------------------------------------------------------
+
+local GameOverMenu = Menu:inherit()
+
+function GameOverMenu:init(game)
+    GameOverMenu.super.init(self, game, "{menu.game_over.title}", game_over_items, DEFAULT_MENU_BG_COLOR, PROMPTS_GAME_OVER, nil)
+
+    self.is_backable = false
+
+    self.auto_restart_timer = Timer:new(10.0)
+end
+
+function GameOverMenu:update(dt)
+    GameOverMenu.super.update(self, dt)
+
+    if self.auto_restart_timer:update(dt) then
+        game:new_game()
+    end
+end
+
+function GameOverMenu:on_set()
+    GameOverMenu.super.on_set(self)
+
+    if Options:get("convention_mode") then
+        self.auto_restart_timer:start()
+    end
+end
+
+local game_over_menu = GameOverMenu:new()
 
 return game_over_menu
