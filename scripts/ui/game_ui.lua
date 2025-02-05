@@ -42,7 +42,7 @@ function GameUI:init(game, is_visible)
 	self.fury_flash_timer = 0
 	self.fury_flash_max_timer = 0.2
 	self.fury_is_flashing = false
-
+	
 	self.t = 0
 end
 
@@ -56,6 +56,7 @@ function GameUI:update(dt)
 	self:update_cinematic_bars(dt)
 	self:update_splash(dt)
 	self:update_fury(dt)
+	self:update_convention_video(dt)
 
 	self.t = self.t + dt
 end
@@ -86,6 +87,8 @@ function GameUI:draw()
 	self:draw_offscreen_indicators()
 	self:draw_floating_text()
 	self:draw_upgrades()
+
+	self:draw_convention_video()
 	self:draw_player_previews()
 	self:draw_cinematic_bars()
 	self:draw_fury()
@@ -244,6 +247,34 @@ function GameUI:draw_upgrades()
 		local x = self:get_upgrade_preview_position(i)
 		draw_centered(upgrade.sprite, x, y)
 		i = i + 1
+	end
+end
+
+function GameUI:update_convention_video(dt)
+	-- Exit if not in convention_mode
+	if not Options:get("convention_mode") then
+		if self.convention_video and self.convention_video:isPlaying() then
+			self.convention_video:pause()
+		end
+		return
+	end
+
+	-- Load convention video if needed
+	if not self.convention_video then
+		-- Uncomment when videos are ready
+		-- self.convention_video = love.graphics.newVideo("videos/testvideo.ogv")
+		-- self.convention_video:play()
+	end
+		
+	-- Rewind video if reached end
+	if self.convention_video and not self.convention_video:isPlaying() then
+		self.convention_video:rewind()
+	end
+end
+
+function GameUI:draw_convention_video()
+	if Options:get("convention_mode") and self.convention_video then
+		love.graphics.draw(self.convention_video, 0, 0)
 	end
 end
 
