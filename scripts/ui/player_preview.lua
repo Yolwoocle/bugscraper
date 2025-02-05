@@ -95,8 +95,8 @@ function PlayerPreview:init(player_n, x, y, w, h)
                 self.queued_player = game.queued_players[self.player_n]
 
                 self.prompts = {
+                    { self.player_n, { "ui_back" }, "🔙", COL_WHITE, x_alignment = "start", y_alignment = "start" },
                     { self.player_n, { "ui_select" }, Text:text("input.prompts.ui_select"), COL_WHITE },
-                    { self.player_n, { "ui_back" }, Text:text("input.prompts.ui_back"),     COL_WHITE },
                 }
             end,
             update = function(state, dt)
@@ -141,7 +141,7 @@ function PlayerPreview:init(player_n, x, y, w, h)
                 end
 
                 local x = self.x + self.ox + self.w / 2
-                local y = self.y + self.oy + 8
+                local y = self.y + self.oy + 18
 
                 local w = 32 * self.scale
                 local palette = self.selection.color_palette
@@ -159,19 +159,19 @@ function PlayerPreview:init(player_n, x, y, w, h)
                 end
 
                 -- Bottom dots
-                -- local total_n = #skins
-                -- for i = 1, total_n do
-                --     local ix = x - (total_n*4)/2 + 4*(i-1)
+                local total_n = #skins
+                for i = 1, total_n do
+                    local ix = x - (total_n*4)/2 + 4*(i-1)
 
-                --     rect_color(COL_BLACK_BLUE, "fill", ix, y -1 + 16, 4, 3)
-                --     rect_color(ternary(i == self.selection_n, COL_WHITE, COL_MID_GRAY), "fill", ix+1, y + 16, 2, 1)
-                -- end
-                -- print_centered_outline(nil, ncil, table_to_str(self.choices), x+1+self.selection_ox, y - 100)
+                    local _y = y - 18 + ternary(i == self.selection_n, -1, 0)
+                    rect_color(ternary(i == self.selection_n, COL_WHITE, COL_BLACK_BLUE), "fill", ix, _y - 1, 4, ternary(i == self.selection_n, 6, 4))
+                    rect_color(skins[i].color_palette[1], "fill", ix+1, _y, 2, ternary(i == self.selection_n, 4, 2))
+                end
 
                 local icon_left = Input:get_action_primary_icon(self.player_n, "ui_left")
                 local icon_right = Input:get_action_primary_icon(self.player_n, "ui_right")
-                draw_centered(icon_left, x - w * 0.6 + self.left_prompt_ox,   y + 4, 0, self.scale)
-                draw_centered(icon_right, x + w * 0.6 + self.right_prompt_ox, y + 4, 0, self.scale)
+                draw_centered(icon_left,  x - w * 0.8 + self.left_prompt_ox,  y + 18, 0, self.scale)
+                draw_centered(icon_right, x + w * 0.8 + self.right_prompt_ox, y + 18, 0, self.scale)
             end,
         },
 
@@ -367,16 +367,32 @@ function PlayerPreview:draw()
     for _, item in pairs(self.prompts) do
         local player_n, actions, label, col = unpack(item)
         if Input:get_user(player_n) then
-            local prompt_x_alignment = item.alignment or self.prompt_x_alignment
+            local prompt_x_alignment = item.x_alignment or self.prompt_x_alignment
             local x = self.x + self.ox + self.padding
-            if prompt_x_alignment == "center" then
-                x = self.x + self.w /2 
+
+            local _x, _y = x, y
+
+            if item.y_alignment then
+                if item.y_alignment == "start" then
+                    _y = self.y + self.oy + self.padding
+                elseif item.y_alignment == "center" then
+                    _y = self.y + self.oy + self.h / 2 - total_height / 2
+                elseif item.y_alignment == "end" then
+                    _y = self.y + self.oy + self.h - total_height - self.padding
+                end
             end
-            if prompt_x_alignment == "right" then
-                x = self.x + self.w - self.padding
+
+            if prompt_x_alignment == "start" then
+                _x = self.x + self.padding
+            elseif prompt_x_alignment == "center" then
+                _x = self.x + self.w /2 
             end
-            Input:draw_input_prompt(player_n, actions, label, col, x, y, {
+            if prompt_x_alignment == "end" then
+                _x = self.x + self.w - self.padding
+            end
+            Input:draw_input_prompt(player_n, actions, label, col, _x, _y, {
     			alignment = prompt_x_alignment,
+                background_color = item.background_color,
             })
         end
         y = y + (item.height or default_prompt_height)
