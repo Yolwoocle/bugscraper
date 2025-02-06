@@ -8,6 +8,7 @@ local Timer = require "scripts.timer"
 local Segment = require "scripts.math.segment"
 local guns  = require "data.guns"
 local TimedSpikes = require "scripts.actor.enemies.timed_spikes"
+local BeeletMinion = require "scripts.actor.enemies.beelet_minion"
 
 local BeeBoss = Enemy:inherit()
 
@@ -28,9 +29,9 @@ function BeeBoss:init(x, y)
     self.friction_x = 0.8
     self.friction_y = 0.8
 
-    -- self.destroy_bullet_on_impact = false
-    -- self.is_bouncy_to_bullets = true
-    -- self.is_immune_to_bullets = true
+    self.destroy_bullet_on_impact = false
+    self.is_bouncy_to_bullets = true
+    self.is_immune_to_bullets = true
 
     self.follow_player = false
     self.self_knockback_mult = 0
@@ -41,8 +42,8 @@ function BeeBoss:init(x, y)
     self.def_target_y = game.level.cabin_rect.ay + BW*6
     self.telegraph_oy = 16    
 
-    self.knockback_x = self.knockback * 3
-    self.knockback_y = self.knockback * 1
+    self.knockback_x = self.knockback * 2
+    self.knockback_y = self.knockback * 0
     self.invul = false
 
     -- Animation
@@ -62,6 +63,8 @@ function BeeBoss:init(x, y)
     self.spikes = {}
     self.score = 500
 
+    self.minions = {}
+
     -- State machine
     self.state_machine = StateMachine:new({
         standby = {
@@ -69,7 +72,7 @@ function BeeBoss:init(x, y)
             end,
             update = function(state, dt)
                 self:spawn_spikes()
-                self.state_machine:set_state("thwomp")
+                self:set_state("thwomp")
             end,
         },
 
@@ -81,7 +84,8 @@ function BeeBoss:init(x, y)
                     "spinning_spikes",
                     "thwomp",
                     "timing",
-                    "bars",
+                    "spawn_minions",
+                    -- "bars",
                     "big_wave",
                 }
                 return random_sample(possible_states)
@@ -137,7 +141,7 @@ function BeeBoss:init(x, y)
                 self.stomps_counter = random_range_int(1, 3)
             end,
             update = function(state, dt)
-                self.state_machine:set_state("thwomp_rise")
+                self:set_state("thwomp_rise")
             end,
         },
         thwomp_flying = {
@@ -159,12 +163,12 @@ function BeeBoss:init(x, y)
                 for _, player in pairs(game.players) do
                     if math.abs(self.mid_x - player.mid_x) <= self.attack_radius then
                         self.stomps_counter = self.stomps_counter - 1
-                        self.state_machine:set_state("thwomp_telegraph")
+                        self:set_state("thwomp_telegraph")
                     end
                 end
 
                 if self.stomps_counter <= 0 then
-                    self.state_machine:set_state("random")
+                    self:set_state("random")
                 end
             end
         }, 
@@ -181,7 +185,7 @@ function BeeBoss:init(x, y)
 
                 self.vy = -self.speed_y
                 if self.telegraph_timer:update(dt) then 
-                    self.state_machine:set_state("thwomp_attack")
+                    self:set_state("thwomp_attack")
                 end
             end,
         },
@@ -197,7 +201,7 @@ function BeeBoss:init(x, y)
             end,
             after_collision = function(state, col)
                 if col.type ~= "cross" and col.normal.x == 0 and col.normal.y == -1 then
-                    self.state_machine:set_state("thwomp_rise")
+                    self:set_state("thwomp_rise")
                     game:screenshake(6)
                     self:set_spike_waves()
                 end
@@ -213,7 +217,7 @@ function BeeBoss:init(x, y)
 
                 self.vy = -self.speed_y*dt
                 if self.y < self.def_target_y then
-                    self.state_machine:set_state("thwomp_flying")
+                    self:set_state("thwomp_flying")
                 end
             end,
         },
@@ -233,7 +237,7 @@ function BeeBoss:init(x, y)
             end,
             update = function(state, dt)
                 if self.state_timer:update(dt) then
-                    self.state_machine:set_state("random")
+                    self:set_state("random")
                 end
             end,
         },
@@ -253,7 +257,7 @@ function BeeBoss:init(x, y)
             end,
             update = function(state, dt)
                 if self.state_timer:update(dt) then
-                    self.state_machine:set_state("random")
+                    self:set_state("random")
                 end
             end,
         },
@@ -274,11 +278,44 @@ function BeeBoss:init(x, y)
             update = function(state, dt)
                 self.spr:update_offset(random_neighbor(2), random_neighbor(2))
                 if self.state_timer:update(dt) then
-                    self.state_machine:set_state("random")
+                    self:set_state("random")
                 end
             end,
             exit = function(state)
                 self.spr:update_offset(0, 0)
+            end,
+        },
+
+        spawn_minions = {
+            enter = function(state)
+                self.vx = 0
+                self.vy = 0
+
+                self.state_timer:start(3.5)
+                self.spawn_timer = Timer:new(1.0)
+                self.spawn_timer:start()
+            end,
+            update = function(state, dt)
+                self.spr:update_offset(random_neighbor(2), random_neighbor(2))
+                self.spr.rot = self.spr.rot + dt*10
+
+                if self.spawn_timer:update(dt) then
+                    local amount = random_range_int(1, 2)
+                    for i = 1, amount do
+                        local a = BeeletMinion:new(self.mid_x, self.mid_y)
+                        a.z = self.z + 1
+                        table.insert(self.minions, a)
+                        game:new_actor(a)
+                    end
+                    self.spawn_timer:start()
+                end
+                if self.state_timer:update(dt) then
+                    self:set_state("random")
+                end
+            end,
+            exit = function(state)
+                self.spr:update_offset(0, 0)
+                self.spr.rot = 0
             end,
         },
     }, "standby")
@@ -287,6 +324,12 @@ function BeeBoss:init(x, y)
     -- thwomp_flying
     -- spinning_spikes
 end
+
+function BeeBoss:set_state(state_name)
+    self.previous_state_name = self.state_machine.current_state_name
+    self.state_machine:set_state(state_name)
+end
+
 
 function BeeBoss:after_collision(col, other)
     if col.type ~= "cross" then
@@ -360,7 +403,7 @@ end
 
 function BeeBoss:set_spikes_pattern_timing()
     self:set_spikes_length(12)
-    self:set_spikes_pattern_times(2, 0.75, 0.25)
+    self:set_spikes_pattern_times(2, 0.75, 0.1)
 
     for _, spike in pairs(self.spikes) do
         spike.timing_mode = TIMED_SPIKES_TIMING_MODE_TEMPORAL
@@ -396,14 +439,19 @@ function BeeBoss:set_spikes_length(length)
     end
 end
 
+function BeeBoss:on_death()
+    for _, actor in pairs(self.minions) do
+        actor:kill()
+    end
+
+    for _, actor in pairs(self.spikes) do
+        actor:remove()
+    end
+end
+
 function BeeBoss:on_stomped(player)
     game:frameskip(10)
     game:screenshake(8)
-
-    local dx, dy = normalize_vect(player.mid_x - self.mid_x, player.mid_y - self.mid_y)
-
-    player.vx = self.vx + dx * self.knockback_x
-    player.vx = self.vx + dy * self.knockback_y
 
     self:set_invincibility(1.0)
     self:set_harmless(1.0)

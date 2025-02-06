@@ -94,6 +94,28 @@ end
 
 local waves = {
 	-- debug_wave(),
+
+	
+	new_wave({
+		-- roll_type = WAVE_ROLL_TYPE_FIXED,
+		min = 1,
+		max = 1,
+		enemies = {
+			{ E.BeeBoss, 1, position = { 240, 200 } },
+		},
+		music = "miniboss",
+
+		run = function(self, level)
+			for _, actor in pairs(level.game.actors) do
+				if actor.name == "timed_spikes" then
+					actor:remove()
+				end
+			end
+		end,
+
+		-- cutscene = cutscenes.bee_boss_enter,
+	}),
+
 	-- new_cafeteria(),
 	-- [[
 
