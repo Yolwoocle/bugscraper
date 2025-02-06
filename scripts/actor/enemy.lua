@@ -170,6 +170,15 @@ function Enemy:update(dt)
 	self:update_enemy(dt)
 end
 
+function Enemy:set_ai_template(ai_name)
+	self.ai_template = ai_name
+	if not self.ai_template then
+		return
+	end
+	assert(self.ai_templates[self.ai_template] ~= nil, "AI template "..tostring(ai_name).." doesn't exist")
+	self.ai_templates[self.ai_template]:ready()
+end
+
 function Enemy:update_flash(dt)
 	self.damaged_flash_timer = max(self.damaged_flash_timer - dt, 0)
 

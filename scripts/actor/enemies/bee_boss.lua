@@ -294,6 +294,12 @@ function BeeBoss:init(x, y)
                 self.state_timer:start(3.5)
                 self.spawn_timer = Timer:new(1.0)
                 self.spawn_timer:start()
+                self.speed = 30
+
+                self:set_ai_template("rotate")
+                self.direction = random_range(0, pi2)
+                self.friction_x = 0.9
+                self.friction_y = 0.9
             end,
             update = function(state, dt)
                 self.spr:update_offset(random_neighbor(2), random_neighbor(2))
@@ -313,9 +319,14 @@ function BeeBoss:init(x, y)
                     self:set_state("random")
                 end
             end,
+            after_collision = function(state, col)             
+                local new_vx, new_vy = bounce_vector_cardinal(math.cos(self.direction), math.sin(self.direction), col.normal.x, col.normal.y)
+                self.direction = math.atan2(new_vy, new_vx)
+            end,
             exit = function(state)
                 self.spr:update_offset(0, 0)
                 self.spr.rot = 0
+                self.ai_template = nil
             end,
         },
     }, "standby")
@@ -333,9 +344,7 @@ end
 
 function BeeBoss:after_collision(col, other)
     if col.type ~= "cross" then
-        if self.state_machine.current_state_name == "thwomp_attack" then--and col.normal.y == -1 then
-            self.state_machine:_call("after_collision", col)
-        end
+        self.state_machine:_call("after_collision", col)
     end
 end
 
@@ -453,8 +462,8 @@ function BeeBoss:on_stomped(player)
     game:frameskip(10)
     game:screenshake(8)
 
-    self:set_invincibility(1.0)
-    self:set_harmless(1.0)
+    self:set_invincibility(0.5)
+    self:set_harmless(0.5)
 end
 
 function BeeBoss:spawn_spikes()
