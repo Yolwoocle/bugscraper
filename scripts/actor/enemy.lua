@@ -288,6 +288,10 @@ function Enemy:on_collision(col, other)
 		col.other:do_knockback_from(10, self)
 	end
 
+	if self.ai_template and self.ai_templates[self.ai_template] and self.ai_templates[self.ai_template].after_collision then
+		self.ai_templates[self.ai_template]:after_collision(col, other)
+	end
+
 	self:after_collision(col, col.other)
 end
 

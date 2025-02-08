@@ -85,6 +85,7 @@ function BeeBoss:init(x, y)
                     "thwomp",
                     "timing",
                     "spawn_minions",
+                    "spawn_minions",
                     -- "bars",
                     "big_wave",
                 }
@@ -137,6 +138,8 @@ function BeeBoss:init(x, y)
                     spike:force_off()
                     spike:freeze()
                 end
+                self.friction_x = 1
+                self.friction_y = 1
 
                 self.stomps_counter = random_range_int(1, 3)
             end,

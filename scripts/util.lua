@@ -798,6 +798,18 @@ function random_sample(t)
 	return t[love.math.random(1, #t)]
 end
 
+--- Returns a random element of the given table.
+---@param t table
+function random_sample_no_repeat(t, avoided_value)
+	local tries = 10
+	local val = t[love.math.random(1, #t)]
+	while tries > 0 and val == avoided_value do
+		val = t[love.math.random(1, #t)]
+		tries = tries - 1
+	end 
+	return val
+end
+
 function random_str(a, b)
 	return tostring(love.math.random(a, b))
 end

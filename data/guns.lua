@@ -177,7 +177,7 @@ function Guns:init()
 		self.knockback = 150
 
 		self.random_angle_offset = 0
-		self.damage = 2
+		self.damage = 1.2
 		self.is_auto = true
 		self.spr = images.gun_ring
 		self.sfx = {"gunshot_ring_1", "gunshot_ring_2", "gunshot_ring_3"}
@@ -344,7 +344,7 @@ function Guns:init()
 	self.unlootable.W2boss8bullets = Gun:inherit()
 
 	function self.unlootable.W2boss8bullets:init(user)
-		self.name = "ring"
+		self.name = "w2boss8bullets"
 		self:init_gun(user)
 		
 		self.max_ammo = 8
@@ -433,7 +433,7 @@ function Guns:init()
 	self.unlootable.SixBullets = Gun:inherit()
 
 	function self.unlootable.SixBullets:init(user)
-		self.name = "ring"
+		self.name = "six_bullets"
 		self:init_gun(user)
 		
 		self.max_ammo = 8
