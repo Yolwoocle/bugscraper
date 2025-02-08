@@ -59,6 +59,18 @@ function Timer:get_duration()
     return self.duration
 end
 
+function Timer:get_time_passed()
+    return self:get_duration() - self:get_time()
+end
+
+function Timer:get_ratio() -- 0 -> 1
+    return 1 - (self:get_time() / self:get_duration())
+end
+
+function Timer:get_inverse_ratio() -- 1 -> 0
+    return self:get_time() / self:get_duration()
+end
+
 function Timer:set_duration(duration) 
     if type(duration) == "table" and #duration >= 2 then
         self.duration_range = duration
