@@ -26,7 +26,7 @@ local enemies = {
 	TimedSpikes =        require "scripts.actor.enemies.timed_spikes",
 	FlyingSpawner =      require "scripts.actor.enemies.flying_spawner",
 	LarvaSpawner =       require "scripts.actor.enemies.larva_spawner", --*
-	BeeBoss =            require "scripts.actor.enemies.bee_boss_rework",
+	BeeBoss =            require "scripts.actor.enemies.bee_boss",
 
 	-- W3
 	ElectricArc =        require "scripts.actor.enemies.electric_arc", 
