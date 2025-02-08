@@ -135,6 +135,7 @@ function Player:init(n, x, y, skin)
 	self.ammo_usage_multiplier = 1.0
 	self.gun_damage_multiplier = 1.0
 	self.gun_reload_speed_multiplier = 1.0
+	self.ammo_bar_icon = images.ammo
 	self.ammo_bar_fill_color = COL_MID_BLUE
 	self.ammo_bar_shad_color = COL_DARK_BLUE
 	self.ammo_percent_gain_on_stomp = 0
@@ -1123,13 +1124,13 @@ end
 
 function Player:draw_ammo_bar(ui_x, ui_y)
 	-- Please make an ui library and stop doing this shit
-	local ammo_icon_w = images.ammo:getWidth()
+	local ammo_icon_w = self.ammo_bar_icon:getWidth()
 	local slider_w = 23 * (1 + (self:get_max_ammo_multiplier() - 1)/2)
 	local bar_w = slider_w + ammo_icon_w + 2
 
 	local x = floor(ui_x) - floor(bar_w/2)
 	local y = floor(ui_y) + 8
-	love.graphics.draw(images.ammo, x, y)
+	love.graphics.draw(self.ammo_bar_icon, x, y)
 
 	local text = self.gun.ammo
 	local col_fill = self.ammo_bar_fill_color

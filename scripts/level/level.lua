@@ -112,7 +112,7 @@ function Level:init(game, backroom)
 	-- Fury & combo
 	self.fury_bar = 0.0
 	self.fury_bar_activate_boost = 1.0
-	self.fury_bar_deactivate_debuff = 1.0
+	self.fury_bar_deactivate_debuff = 5.0
 	self.fury_threshold = 5.0
 	self.def_fury_max = 8.0
 	self.fury_damage_malus = 3.0

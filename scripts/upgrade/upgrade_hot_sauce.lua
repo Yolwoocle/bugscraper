@@ -23,6 +23,7 @@ function UpgradeHotSauce:apply_permanent(player)
     player:set_ammo_usage_multiplier(self.ammo_usage)
     player:set_gun_damage_multiplier(self.damage_mult)
 
+	player.ammo_bar_icon = images.ammo_hot_sauce
 	player.ammo_bar_fill_color = COL_DARK_RED
 	player.ammo_bar_shad_color = COL_DARK_BROWN
 end

@@ -412,6 +412,7 @@ local img_names = {
 	heart_empty =     "ui/hud/heart_empty",
 	heart_temporary = "ui/hud/heart_temporary",
 	ammo =            "ui/hud/ammo",
+	ammo_hot_sauce =  "ui/hud/ammo_hot_sauce",
 
 	-- logo
 	logo =        "ui/logo/logo",
