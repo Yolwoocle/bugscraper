@@ -1333,6 +1333,11 @@ end
 -- https://easings.net/#easeOutBack
 -- https://www.lexaloffle.com/bbs/?tid=40577
 
+function ease_out_overshoot(t)
+	t=t-1
+	return 1+2.7*t*t*t+1.7*t*t
+end
+
 function ease_out_cubic(x)
 	return 1 - math.pow(1 - x, 3)
 end

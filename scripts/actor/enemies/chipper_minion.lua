@@ -8,7 +8,7 @@ local images = require "data.images"
 
 local ChipperMinion = Chipper:inherit()
 	
-function ChipperMinion:init(x, y, direction, attack_speed)
+function ChipperMinion:init(x, y, direction, attack_speed, wait_duration)
     ChipperMinion.super.init(self, x,y, spr or images.chipper_1)
     self.name = "chipper_minion"
     self.direction = direction or random_sample {0, 2}
@@ -24,10 +24,26 @@ function ChipperMinion:init(x, y, direction, attack_speed)
 
     self.loot = {}
     self.score = 0
+
+    self.damage = 0
+    self.telegraph_timer:set_duration(wait_duration)
+
+    self.t = 0.0
 end
 
 function ChipperMinion:update(dt)
     self.super.update(self, dt)
+    
+    self.t = self.t + dt
+
+    if self.state_machine.current_state_name == "telegraph" then
+        self.damage = 0
+        self.spr:set_color({1, 1, 1, ternary(self.t % 0.2 < 0.1, 1, 0.5)})
+        
+    else
+        self.spr:set_color({1, 1, 1, 1})
+        self.damage = 1
+    end
 end
 
 function ChipperMinion:get_random_walk_duration()

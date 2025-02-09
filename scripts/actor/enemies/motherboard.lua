@@ -30,10 +30,13 @@ function Motherboard:init(x, y)
     self.name = "motherboard"
 
     self.damage = 0
+    self.spr_base_ox = 0
+    self.spr_base_oy = 10
+    self.spr:update_offset(self.spr_base_ox, self.spr_base_oy)
 
     -- Parameters
     self.follow_player = false
-    self.max_life = 350
+    self.max_life = 320
     self.life = self.max_life
     self.self_knockback_mult = 0
     self.is_pushable = false
@@ -43,15 +46,15 @@ function Motherboard:init(x, y)
     self.bullet_bounce_mode = BULLET_BOUNCE_MODE_NORMAL
     self.is_front = true
     self.is_affected_by_bounds = false
-	self.affected_by_walls = false
+    self.affected_by_walls = false
     self.laser_count = 15
 
-    -- graphics
+    -- Graphics
     self.flash_white_shader = shaders.multiply_color
     self.flash_white_shader:send("multColor", { 3, 3, 3, 1 })
     self.spr.white_flash_timer = self.flash_white_shader
 
-    -- rays and arcs
+    -- Rays and arcs
     self.rays = ElectricRays:new(self.mid_x, self.y + self.h + 24, {
         angle_speed = 0.2,
         n_rays = 7,
@@ -120,13 +123,15 @@ function Motherboard:init(x, y)
                 self.vy = 0
 
                 for ix = self.x, self.x + self.w, 16 do
-                    Particles:image(ix, self.y + self.h, 5, {images.cabin_fragment_1, images.cabin_fragment_2, images.cabin_fragment_3}, 4, nil, nil, nil, {
-                        vx1 = -50,
-                        vx2 = 50,
-                
-                        vy1 = 80,
-                        vy2 = 200,
-                    })
+                    Particles:image(ix, self.y + self.h, 5,
+                        { images.cabin_fragment_1, images.cabin_fragment_2, images.cabin_fragment_3 }, 4, nil, nil, nil,
+                        {
+                            vx1 = -50,
+                            vx2 = 50,
+
+                            vy1 = 80,
+                            vy2 = 200,
+                        })
                 end
 
                 game:screenshake(8)
@@ -139,17 +144,16 @@ function Motherboard:init(x, y)
             end,
             update = function(state, dt)
                 local r = self.state_timer.time / self.state_timer.duration
-                self.spr:update_offset(random_neighbor(r*8), random_neighbor(r*8))
+                self.spr:update_offset(self.spr_base_ox + random_neighbor(r * 8), self.spr_base_oy + random_neighbor(r * 8))
 
                 if self.state_timer:update(dt) then
                     self:randomize_button_position()
                     self:spawn_button()
                     self:transition_to_random_state()
-                    
                 end
             end,
             exit = function(state)
-                self.spr:update_offset(0, 0)
+                self.spr:update_offset(self.spr_base_ox, self.spr_base_oy)
                 game.menu_manager:set_menu("w3_boss_intro")
             end
         },
@@ -167,7 +171,12 @@ function Motherboard:init(x, y)
                     local iy = info.y - oy
                     while iy < bounds.by do
                         if iy >= bounds.ay then
-                            local chipper = ChipperMinion:new(info.x, iy, info.direction, ternary(self.hard_mode, 150, 100))
+                            local delay = 0.7 + 0.05*(14 - iy/16)
+                            if self.hard_mode then
+                                delay = delay / 2
+                            end
+
+                            local chipper = ChipperMinion:new(info.x, iy, info.direction, ternary(self.hard_mode, 150, 100), delay)
                             table.insert(self.chippers, chipper)
                             game:new_actor(chipper)
                         end
@@ -175,7 +184,7 @@ function Motherboard:init(x, y)
                     end
                 end
 
-                self.state_timer:start(2.0)
+                self.state_timer:start(2.5)
             end,
 
             update = function(state, dt)
@@ -289,7 +298,7 @@ function Motherboard:init(x, y)
                 self.hard_mode = true
 
                 self.state_timer:start(2.0)
-                self.spr.color = {1.0, 0.4, 0.4}
+                self.spr.color = { 1.0, 0.4, 0.4 }
 
                 self.new_button_timer:stop()
 
@@ -301,7 +310,7 @@ function Motherboard:init(x, y)
             end,
 
             update = function(state, dt)
-                self.spr:update_offset(random_neighbor(5), random_neighbor(5))
+                self.spr:update_offset(self.spr_base_ox + random_neighbor(5), self.spr_base_oy + random_neighbor(5))
                 if self.state_timer:update(dt) then
                     self:transition_to_random_state()
                 end
@@ -309,7 +318,7 @@ function Motherboard:init(x, y)
 
             exit = function(state)
                 self.spr.color = COL_WHITE
-                self.spr:update_offset(0, 0)
+                self.spr:update_offset(self.spr_base_ox, self.spr_base_oy)
 
                 self.new_button_timer:start()
             end
@@ -364,7 +373,7 @@ function Motherboard:init(x, y)
                     end
                 end
 
-                self.spr:update_offset(random_neighbor(5), random_neighbor(5))
+                self.spr:update_offset(self.spr_base_ox + random_neighbor(5), self.spr_base_oy + random_neighbor(5))
             end
         }
     }, "intro")
@@ -460,8 +469,8 @@ end
 
 function Motherboard:draw()
     self:draw_enemy()
-    local x, y = self.x + 193 + self.spr.ox, self.y - 19 + self.spr.oy
-    UI:draw_icon_bar(x, y, 7 * (self.life / self.max_life), 7, 0, images.motherboard_led_on, images.motherboard_led_off,
+    local x, y = self.x + 193 + self.spr.ox, self.y - 19 + self.spr.oy - 5
+    UI:draw_icon_bar(x, y, 8 * (self.life / self.max_life), 8, 0, images.motherboard_led_on, images.motherboard_led_off,
         nil, 1)
 
     if self.gun_directions then

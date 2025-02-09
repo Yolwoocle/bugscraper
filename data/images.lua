@@ -165,6 +165,7 @@ local img_names = {
 	mosquito2 =                "actors/enemies/mosquito2",
 	motherboard =              "actors/enemies/motherboard",
 	motherboard_button =       "actors/enemies/motherboard_button",
+	motherboard_button_front = "actors/enemies/motherboard_button_front",
 	mushroom_ant1 =            "actors/enemies/mushroom_ant1",
 	mushroom_ant2 =            "actors/enemies/mushroom_ant2",
 	shooter_focused =          "actors/enemies/shooter_focused",
