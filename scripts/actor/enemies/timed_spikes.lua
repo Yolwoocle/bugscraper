@@ -189,7 +189,7 @@ function TimedSpikes:set_length(new_length)
         w, h = new_length, h 
     end
 
-    self:set_pos(x, y)
+    self:set_position(x, y)
     self:set_dimensions(w, h)
 end
 

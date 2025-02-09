@@ -23,6 +23,7 @@ local ScreenshotManager = require "scripts.screenshot"
 local QueuedPlayer = require "scripts.game.queued_player"
 local GunDisplay = require "scripts.actor.enemies.gun_display"
 local MetaprogressionManager = require "scripts.game.metaprogression"
+local BackroomTutorial = require "scripts.level.backrooms.backroom_tutorial"
 
 local DiscordPresence = require "scripts.meta.discord_presence"
 local Steamworks = require "scripts.meta.steamworks"
@@ -127,9 +128,16 @@ function Game:new_game(params)
 
 	-- Camera
 	self.camera = Camera:new()
-	self.camera:set_position(312 - 16, 48)
+	
+	-- Level
+	self.level = Level:new(self, BackroomTutorial:new())
 
-	self.level = Level:new(self)
+	if self.level.backroom and self.level.backroom.get_default_camera_position then
+		local cx, cy = self.level.backroom:get_default_camera_position()
+		self.camera:set_position(cx, cy)
+	else
+		self.camera:set_position(0, 0)
+	end
 
 	-- Actors
 	self.actor_limit = 150
@@ -776,11 +784,12 @@ function Game:new_actor(actor, buffer_enemy)
 	if #self.actors >= self.actor_limit then
 		actor:remove()
 		actor:final_remove()
-		return
+		return actor
 	end
 
 	self.sort_actors_flag = true
 	table.insert(self.actors, actor)
+	return actor
 end
 
 function Game:on_enemy_damage(enemy, n, damager)
@@ -937,7 +946,15 @@ function Game:join_game(player_n)
 		Particles:smoke_big(player.mid_x, player.mid_y, COL_WHITE)
 	end
 	
+	self.level:on_player_joined(player)
 	self.game_ui:on_player_joined(player)
+end
+
+function Game:get_default_player_position(player_n)
+	if self.level.backroom and self.level.backroom.get_default_player_position then
+		return self.level.backroom:get_default_player_position(player_n)
+	end
+	return 26*16 + (5*16)*(player_n - 1), CANVAS_HEIGHT - 3*16 + 4
 end
 
 function Game:new_player(player_n, x, y, put_in_buffer)
@@ -946,8 +963,9 @@ function Game:new_player(player_n, x, y, put_in_buffer)
 		return
 	end
 
-	x = param(x, 26*16 + (5*16)*(player_n - 1))
-	y = param(y, CANVAS_HEIGHT - 3*16 + 4)
+	local def_x, def_y = self:get_default_player_position(player_n)
+	x = param(x, def_x)
+	y = param(y, def_y)
 				
 	
 	local player = Player:new(player_n, x, y, Input:get_user(player_n):get_skin() or skins["mio"])
@@ -960,6 +978,15 @@ function Game:new_player(player_n, x, y, put_in_buffer)
 	end
 
 	self:new_actor(player)
+
+	if self.level.backroom and self.level.backroom.get_x_target_after_join_game then
+		player.show_hud = false
+		player.input_mode = PLAYER_INPUT_MODE_CODE
+		player:set_code_input_mode_target_x(self.level.backroom:get_x_target_after_join_game(), function(p)
+			p.show_hud = true
+			p.input_mode = PLAYER_INPUT_MODE_USER
+		end)
+	end
 
 	return player
 end

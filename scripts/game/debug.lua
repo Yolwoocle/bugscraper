@@ -16,7 +16,7 @@ local Segment          = require "scripts.math.segment"
 local Rect             = require "scripts.math.rect"
 local Cutscene         = require "scripts.game.cutscene"
 local cutscenes        = require "data.cutscenes"
-local Scene            = require "scripts.game.scene"
+local Scene            = require "scripts.game.cutscene_scene"
 local Class            = require "scripts.meta.class"
 local AnimatedSprite   = require "scripts.graphics.animated_sprite"
 local Sprite           = require "scripts.graphics.sprite"
@@ -220,7 +220,7 @@ function Debug:init(game)
         end },
         ["r"] = { "start game", function()
             for _, p in pairs(game.players) do
-                p:set_pos(CANVAS_CENTER[1], CANVAS_CENTER[2])
+                p:set_position(CANVAS_CENTER[1], CANVAS_CENTER[2])
             end
             game.can_start_game = true
             game.camera:reset()

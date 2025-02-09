@@ -42,6 +42,8 @@ function Player:init(n, x, y, skin)
 	for action, _ in pairs(mappings) do
 		self.virtual_controller.actions[action] = false
 	end
+	self.code_input_mode_target_x = nil
+	self.input_mode_code_target_x_margin = 4
 	
 	-- Animation
 	self.color_palette = skin.color_palette
@@ -161,6 +163,7 @@ function Player:init(n, x, y, skin)
 	self.is_dead = false
 
 	-- UI
+	self.show_hud = true
 	self.ui_x = self.x
 	self.ui_y = self.y
 	self.ui_col_gradient = 0
@@ -210,6 +213,7 @@ function Player:update(dt)
 	self.dt = dt
 	self.t = self.t + 1
 	
+	self:update_virtual_inputs(dt)
 	self:update_upgrades(dt)
 	self:update_effects(dt)
 	self:move(dt)
@@ -257,6 +261,33 @@ end
 
 ------------------------------------------
 --- Input ---
+
+function Player:set_code_input_mode_target_x(x, target_x_reached_callback)
+	self.code_input_mode_target_x = x
+	self.target_x_reached_callback = target_x_reached_callback
+end
+
+function Player:is_near_code_input_mode_target_x()
+	return math.abs(self.x - self.code_input_mode_target_x) <= self.input_mode_code_target_x_margin
+end
+
+function Player:update_virtual_inputs(dt)
+	if self.code_input_mode_target_x then
+		self.virtual_controller.actions["left"] = false
+		self.virtual_controller.actions["right"] = false
+		if self.x < self.code_input_mode_target_x - self.input_mode_code_target_x_margin then
+			self.virtual_controller.actions["right"] = true
+		elseif self.code_input_mode_target_x + self.input_mode_code_target_x_margin < self.x then
+			self.virtual_controller.actions["left"] = true
+		else 
+			self.dir_x = 1
+		end
+
+		if self:is_near_code_input_mode_target_x() and self.target_x_reached_callback then
+			self.target_x_reached_callback(self)
+		end
+	end
+end
 
 function Player:action_down(action)
 	if self.input_mode == PLAYER_INPUT_MODE_USER then
@@ -1087,6 +1118,7 @@ end
 
 function Player:draw_hud()
 	if self.is_removed or self.is_dead then    return    end
+	if not self.show_hud then    return    end
 
 	local ui_x = floor(self.ui_x)
 	local ui_y = floor(self.ui_y) - self.spr.h - 12

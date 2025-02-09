@@ -253,6 +253,12 @@ function Level:update_elevator_progress(dt)
 end
 
 
+function Level:on_player_joined(player)
+	if self.backroom and self.backroom.on_player_joined then
+		self.backroom:on_player_joined(player)
+	end
+end
+
 function Level:on_door_close()
 	if game.game_state == GAME_STATE_WAITING then
 		self:activate_enemy_buffer()

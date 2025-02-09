@@ -52,6 +52,7 @@ function OptionsManager:init()
 		vibration_p4 = 1.0,
 
 		has_seen_stomp_tutorial = false,
+		has_played_tutorial = false,
 
 		-- Save data (because who needs a separate file for that)
 		xp = 0,

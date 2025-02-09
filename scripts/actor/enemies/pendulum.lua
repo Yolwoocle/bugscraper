@@ -99,7 +99,7 @@ end
 
 function Pendulum:update_pendulum_position(dt)
     self.angle = pi/2 + math.cos(self.angle_t) * self.angle_range                
-    self:set_pos(
+    self:set_position(
         self.anchor_x + math.cos(self.angle) * self.radius - self.w / 2,
         self.anchor_y + math.sin(self.angle) * self.radius - self.h / 2
     )

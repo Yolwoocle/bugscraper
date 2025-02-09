@@ -83,7 +83,7 @@ function W2boss:init(x, y)
                 self.rays:set_state("disabled")
             end,
             update = function(state, dt)
-                self.rays:set_pos(self.mid_x, self.mid_y)
+                self.rays:set_position(self.mid_x, self.mid_y)
                 self.rays:set_state("disabled")
 
                 -- Shoot bullets

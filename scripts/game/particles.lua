@@ -612,6 +612,59 @@ end
 
 ------------------------------------------------------------
 
+local OpenedDoorParticle = Particle:inherit()
+
+function OpenedDoorParticle:init(img, x,y)
+	self:init_particle(x,y,s,r, vx,vy,0,vr, 5.0, g, false)
+	self.img = img
+
+	-- self.spr_w = self.spr:getWidth()
+	-- self.spr_h = self.spr:getWidth()
+	-- self.spr_ox = self.spr_w / 2
+	-- self.spr_oy = self.spr_h / 2
+	
+	self.t = 0 
+	self.rot_3d = math.pi/2
+	self.rot_3d_vel = 0 
+	self.rot_3d_acc = -40
+
+	self.linger_time = 1.0
+	self.phase = "open"
+end
+
+function OpenedDoorParticle:update(dt)
+	self:update_particle(dt)
+
+	self.t = self.t + dt*4
+
+	self.rot_3d_vel = self.rot_3d_vel + self.rot_3d_acc*dt
+	self.rot_3d = clamp(self.rot_3d + self.rot_3d_vel*dt, 0, pi/2)
+
+	if self.phase == "open" then
+		if self.rot_3d <= 0 then
+			self.phase = "linger" 
+		end
+		
+	elseif self.phase == "linger" then
+		self.linger_time = self.linger_time - dt
+		if self.linger_time < 0 then
+			self.phase = "close" 
+			self.rot_3d_acc = 40
+			self.rot_3d_vel = 0 
+		end
+
+	elseif self.phase == "close" then
+
+	end
+end
+
+function OpenedDoorParticle:draw()
+	local scale_side = math.cos(self.rot_3d)
+	love.graphics.draw(self.img, self.x, self.y, 0, scale_side, 1)
+end
+
+------------------------------------------------------------
+
 local SparkParticle = Particle:inherit()
 
 function SparkParticle:init(x,y, life, g, is_solid)
@@ -1099,6 +1152,12 @@ function ParticleSystem:word(x, y, str, col, stay_time, text_scale, outline_colo
 	end
 
 	self:pop_layer()
+end
+
+function ParticleSystem:opened_door(x, y)
+	-- self:push_layer(PARTICLE_LAYER_SHADOWLESS)
+	self:add_particle(OpenedDoorParticle:new(images.wooden_door, x, y))
+	-- self:pop_layer()
 end
 
 function ParticleSystem:falling_grid(x, y)

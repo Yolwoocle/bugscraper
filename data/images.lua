@@ -360,6 +360,10 @@ local img_names = {
 	cabin_grid_brown =               "level/cabin_grid_brown",
 	cabin_grid_platform =            "level/cabin_grid_platform",
 
+	tutorial_level =                 "level/tutorial_level",
+	tutorial_level_back =            "level/tutorial_level_back",
+	wooden_door =                    "level/wooden_door",
+
 	cafeteria =                      "level/cafeteria",
 	cafeteria_front =                "level/cafeteria_front",
 	elevator_through_door =          "level/elevator_through_door",

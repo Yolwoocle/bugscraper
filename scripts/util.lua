@@ -1181,7 +1181,7 @@ function create_actor_centered(actor, x, y, ...)
 	local a = actor:new(x, y, ...)
 	local nx = floor(a.x - a.w / 2)
 	local ny = floor(a.y - a.h)
-	a:set_pos(nx, ny)
+	a:set_position(nx, ny)
 	return a
 end
 

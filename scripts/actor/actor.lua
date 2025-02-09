@@ -163,7 +163,7 @@ function Actor:clamp_to_bounds(rect)
 	local x = clamp(self.x, rect.ax, rect.bx - self.w)
 	local y = clamp(self.y, rect.ay, rect.by - self.h)
 
-	self:set_pos(x, y)
+	self:set_position(x, y)
 end
 
 function Actor:update_mid_position()
@@ -399,7 +399,7 @@ function Actor:move_to(goal_x, goal_y)
 	self.y = actual_y
 end
 
-function Actor:set_pos(x, y)
+function Actor:set_position(x, y)
 	self.x = x or self.x
 	self.y = y or self.y
 

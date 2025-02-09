@@ -105,9 +105,9 @@ function WorldGenerator:write_rect(rect, tile)
 end
 
 
-function WorldGenerator:write_rect_fill(ax, ay, bx, by, tile)
-	for ix=ax, bx do
-		for iy=ay, by do
+function WorldGenerator:write_rect_fill(rect, tile)
+	for ix=rect.ax, rect.bx do
+		for iy=rect.ay, rect.by do
 			self.map:set_tile(ix, iy, tile)
 		end
 	end

@@ -3,9 +3,9 @@ local Timer = require "scripts.timer"
 
 local Class = require "scripts.meta.class"
 
-local Scene = Class:inherit()
+local CutsceneScene = Class:inherit()
 
-function Scene:init(params)
+function CutsceneScene:init(params)
     params = params or {}
 
     self.description = param(params.description, "[no description]")
@@ -16,16 +16,16 @@ function Scene:init(params)
     self.exit_func = param(params.exit, function(scene) end)
 end
 
-function Scene:enter()
+function CutsceneScene:enter()
     self:enter_func()
 end
 
-function Scene:exit()
+function CutsceneScene:exit()
     self:exit_func()
 end
 
-function Scene:update(dt)
+function CutsceneScene:update(dt)
     return self:update_func(dt)
 end
 
-return Scene
+return CutsceneScene

@@ -159,6 +159,16 @@ function Camera:set_zoom(zoom)
     self.zoom = zoom
 end
 
+------------------------------------------------------------
+
+function Camera:transition_to(x, y, zoom, time)
+    self.transition_x = x
+    self.transition_y = x
+    self.transition_zoom = zoom
+    self.transition_duration = zoom
+    self.transition_time = zoom
+end
+
 function Camera:reset()
     self.x = 0
     self.y = 0

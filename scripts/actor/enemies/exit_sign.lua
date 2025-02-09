@@ -35,6 +35,7 @@ function ExitSign:init(x, y)
     self.spring_ideal_length = 0
     self.spring_retract_timer = 0.0
 
+    self.smash_easter_egg_probability = SMASH_EASTER_EGG_PROBABILITY
     self.is_in_smash_easter_egg = false
     self.smash_stars = {}
     self.old_camera_x, self.old_camera_y = 0, 0
@@ -73,7 +74,7 @@ end
 function ExitSign:activate(player)
     -- if self.spring_active then return end
 
-    if random_range(0, 1) < SMASH_EASTER_EGG_PROBABILITY then
+    if random_range(0, 1) < self.smash_easter_egg_probability then
         self:activate_smash_easter_egg(player)
     else
         game:leave_game(player.n)
@@ -123,27 +124,6 @@ end
 
 ------------------------------------------------------------
 
-function ExitSign:draw_smash_easter_egg()
-    local colors = {
-        COL_BLACK_BLUE,
-        COL_LIGHT_RED,
-        COL_LIGHT_YELLOW,
-        COL_LIGHT_RED,
-        COL_BLACK_BLUE,
-    }
-
-    for i = 1, #self.smash_stars do
-        local triangles = love.math.triangulate(self.smash_stars[i])
-        local old_col = {love.graphics.getColor()}
-        love.graphics.setColor(colors[i])
-        for _, tri in pairs(triangles) do
-            love.graphics.polygon("fill", tri)
-        end
-        love.graphics.setColor(old_col)
-    end
-    -- self:draw_star(self.mid_x, self.y)
-end
-
 function ExitSign:activate_smash_easter_egg(player)
     self.is_in_smash_easter_egg = true
     
@@ -168,27 +148,6 @@ function ExitSign:activate_smash_easter_egg(player)
     self.spring_active = true
     self.spring_retract_timer = 2.0
     self.spring_ideal_length = self.retracted_spring_ideal_length
-end
-
-function ExitSign:update_star()
-    self.smash_stars[1] = self:generate_star_points(self.smash_x, self.smash_y, 5)
-    self.smash_stars[2] = self:generate_star_points(self.smash_x, self.smash_y, 4)
-    self.smash_stars[3] = self:generate_star_points(self.smash_x, self.smash_y, 3)
-    self.smash_stars[4] = self:generate_star_points(self.smash_x, self.smash_y, 2)
-    self.smash_stars[5] = self:generate_star_points(self.smash_x, self.smash_y, 1)
-end
-
-function ExitSign:lerp_camera(x, y)
-    local camx, camy = game:get_camera_position()
-    camx = lerp(camx, x,  0.2)
-    camy = lerp(camy, y, 0.2)
-    game:set_camera_position(camx, camy)
-end
-
-function ExitSign:lerp_zoom(dest)
-    local z = game:get_zoom()
-    z = lerp(z, dest, 0.2)
-    game:set_zoom(z)
 end
 
 function ExitSign:update_smash_easter_egg(dt) 
@@ -228,6 +187,49 @@ function ExitSign:update_smash_effect_end(dt)
             game.menu_manager:set_can_pause(true)
         end
     end
+end
+
+function ExitSign:draw_smash_easter_egg()
+    local colors = {
+        COL_BLACK_BLUE,
+        COL_LIGHT_RED,
+        COL_LIGHT_YELLOW,
+        COL_LIGHT_RED,
+        COL_BLACK_BLUE,
+    }
+
+    for i = 1, #self.smash_stars do
+        local triangles = love.math.triangulate(self.smash_stars[i])
+        local old_col = {love.graphics.getColor()}
+        love.graphics.setColor(colors[i])
+        for _, tri in pairs(triangles) do
+            love.graphics.polygon("fill", tri)
+        end
+        love.graphics.setColor(old_col)
+    end
+    -- self:draw_star(self.mid_x, self.y)
+end
+
+
+function ExitSign:update_star()
+    self.smash_stars[1] = self:generate_star_points(self.smash_x, self.smash_y, 5)
+    self.smash_stars[2] = self:generate_star_points(self.smash_x, self.smash_y, 4)
+    self.smash_stars[3] = self:generate_star_points(self.smash_x, self.smash_y, 3)
+    self.smash_stars[4] = self:generate_star_points(self.smash_x, self.smash_y, 2)
+    self.smash_stars[5] = self:generate_star_points(self.smash_x, self.smash_y, 1)
+end
+
+function ExitSign:lerp_camera(x, y)
+    local camx, camy = game:get_camera_position()
+    camx = lerp(camx, x,  0.2)
+    camy = lerp(camy, y, 0.2)
+    game:set_camera_position(camx, camy)
+end
+
+function ExitSign:lerp_zoom(dest)
+    local z = game:get_zoom()
+    z = lerp(z, dest, 0.2)
+    game:set_zoom(z)
 end
 
 function ExitSign:generate_star_points(x, y, size)

@@ -76,7 +76,7 @@ function ElectricArc:set_segment(ax_or_seg, ay, bx, by)
         by = ax_or_seg.by
     end
 
-    self:set_pos(ax, ay)
+    self:set_position(ax, ay)
     self.segment:set_bounds(ax, ay, bx, by)
 end
 

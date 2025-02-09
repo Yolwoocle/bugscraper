@@ -129,7 +129,7 @@ function Wave:spawn_roll(rect, roll, spawned_enemies)
 
 		-- Prevent collisions with floor
 		if enemy_instance.y + enemy_instance.h > rect.by then
-			enemy_instance:set_pos(enemy_instance.x, rect.by - enemy_instance.h)
+			enemy_instance:set_position(enemy_instance.x, rect.by - enemy_instance.h)
 		end
 
 		game:new_actor(enemy_instance)

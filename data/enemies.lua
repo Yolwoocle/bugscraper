@@ -67,6 +67,7 @@ local enemies = {
 
 	-- Misc
 	BossDoor =           require "scripts.actor.enemies.boss_door",
+	BreakableWall =      require "scripts.actor.enemies.breakable_wall",
 	ButtonBigPressed =   require "scripts.actor.enemies.button_big_pressed",
 	ButtonBig =          require "scripts.actor.enemies.button_big",
 	ButtonBigGlass =     require "scripts.actor.enemies.button_big_glass",

@@ -1,12 +1,12 @@
 local Cutscene = require "scripts.game.cutscene"
-local Scene    = require "scripts.game.scene"
+local CutsceneScene = require "scripts.game.cutscene_scene"
 local Light = require "scripts.graphics.light"
 local Rect = require "scripts.math.rect"
 
 local cutscenes = {}
 
 cutscenes.enter_ceo_office = Cutscene:new("enter_ceo_office", {
-    Scene:new({
+    CutsceneScene:new({
         description = "Setup scene",
         duration = 1.0,
         enter = function(scene)
@@ -17,7 +17,7 @@ cutscenes.enter_ceo_office = Cutscene:new("enter_ceo_office", {
             game.game_ui.cinematic_bars_enabled = true
         end,
     }),
-    Scene:new({
+    CutsceneScene:new({
         description = "All players walk into position",
         duration = 4.0,
         enter = function(scene)
@@ -28,20 +28,16 @@ cutscenes.enter_ceo_office = Cutscene:new("enter_ceo_office", {
                 end
             end
             -- boss min x = 79*16
+            
+            for _, player in pairs(game.players) do
+                local target_x = 79*16 + 8 + (4-player.n) * 24 
+                player:set_code_input_mode_target_x(target_x)
+            end
         end,
         update = function(scene, dt)
             local ok_players = 0
             for _, player in pairs(game.players) do
-                local target_x = 79*16 + 8 + (4-player.n) * 24 
-
-                player.virtual_controller.actions["left"] = false
-                player.virtual_controller.actions["right"] = false
-                if player.x < target_x - 6 then
-                    player.virtual_controller.actions["right"] = true
-                elseif target_x + 6 < player.x then
-                    player.virtual_controller.actions["left"] = true
-                else 
-                    player.dir_x = 1
+                if player:is_near_code_input_mode_target_x() then
                     ok_players = ok_players + 1
                 end
             end
@@ -50,9 +46,14 @@ cutscenes.enter_ceo_office = Cutscene:new("enter_ceo_office", {
             if ok_players == game:get_number_of_alive_players() then
                 return true 
             end
+        end,
+        exit = function(scene)
+            for _, player in pairs(game.players) do
+                player:set_code_input_mode_target_x()
+            end
         end
     }),
-    Scene:new({
+    CutsceneScene:new({
         description = "Set level walls",
 
         duration = 1.0,
@@ -61,7 +62,7 @@ cutscenes.enter_ceo_office = Cutscene:new("enter_ceo_office", {
             game:screenshake(6)
         end,
     }),
-    Scene:new({
+    CutsceneScene:new({
         description = "Give back controls to players",
 
         duration = 1.0,
@@ -74,7 +75,7 @@ cutscenes.enter_ceo_office = Cutscene:new("enter_ceo_office", {
             game.game_ui.cinematic_bars_enabled = false
         end,
     }),
-    Scene:new({
+    CutsceneScene:new({
         description = "Give back control to boss",
 
         duration = 1.0,
@@ -89,10 +90,10 @@ cutscenes.enter_ceo_office = Cutscene:new("enter_ceo_office", {
 })
 
 cutscenes.dung_boss_enter = Cutscene:new("dung_boss_enter", {
-    Scene:new({
+    CutsceneScene:new({
         duration = 2.0,
     }),
-    Scene:new({
+    CutsceneScene:new({
         duration = 1.5,
         enter = function(scene)
             if not Options:get("skip_boss_intros") then
@@ -103,7 +104,7 @@ cutscenes.dung_boss_enter = Cutscene:new("dung_boss_enter", {
 })
 
 cutscenes.bee_boss_enter = Cutscene:new("bee_boss_enter", {
-    Scene:new({
+    CutsceneScene:new({
         duration = 1.5,
         enter = function(scene)
             game.light_world.darkness_intensity = 0.85
@@ -113,7 +114,7 @@ cutscenes.bee_boss_enter = Cutscene:new("bee_boss_enter", {
             game.is_light_on = false
         end,
     }),
-    Scene:new({
+    CutsceneScene:new({
         duration = 0.3,
         enter = function(scene)
             game.light_world:new_light("center", Light:new(CANVAS_WIDTH/2, -32, {
@@ -125,7 +126,7 @@ cutscenes.bee_boss_enter = Cutscene:new("bee_boss_enter", {
             Audio:play_var("spotlight_1", nil, 1.05)
         end,
     }),
-    Scene:new({
+    CutsceneScene:new({
         duration = 0.3,
         enter = function(scene)
             game.light_world:new_light("left", Light:new(500, -32, {
@@ -137,7 +138,7 @@ cutscenes.bee_boss_enter = Cutscene:new("bee_boss_enter", {
             Audio:play_var("spotlight_2", nil, 1.05)
         end,
     }),
-    Scene:new({
+    CutsceneScene:new({
         duration = 2.0,
         enter = function(scene)
             game.light_world:new_light("right", Light:new(CANVAS_WIDTH - 500, -32, {
@@ -155,7 +156,7 @@ cutscenes.bee_boss_enter = Cutscene:new("bee_boss_enter", {
     --         game.menu_manager:set_menu("w2_boss_intro")
     --     end,
     -- }),
-    Scene:new({
+    CutsceneScene:new({
         enter = function(scene)
             game.level.slowdown_timer_override = nil
             game.level.opening_door_timer_override = nil
@@ -185,7 +186,7 @@ cutscenes.bee_boss_enter = Cutscene:new("bee_boss_enter", {
             end
         end,
     }),
-    Scene:new({
+    CutsceneScene:new({
         update = function(scene, dt)
             game.light_world.darkness_intensity = move_toward(game.light_world.darkness_intensity, 0.4, 0.3*dt)
         end

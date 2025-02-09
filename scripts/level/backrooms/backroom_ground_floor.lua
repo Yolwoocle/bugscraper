@@ -77,6 +77,10 @@ function BackroomGroundFloor:generate(world_generator)
 	game:new_actor(create_actor_centered(enemies.Clock, floor(440), floor(105)))
 end
 
+function BackroomGroundFloor:get_default_camera_position()
+	return 312 - 16, 48
+end
+
 function BackroomGroundFloor:can_exit()
 	if not game.can_start_game then
 		return false

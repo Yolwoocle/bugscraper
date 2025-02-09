@@ -36,7 +36,7 @@ local function debug_skipto(wave, background)
     end
     game:set_floor(wave)
     for _, p in pairs(game.players) do
-        p:set_pos(CANVAS_CENTER[1], CANVAS_CENTER[2])
+        p:set_position(CANVAS_CENTER[1], CANVAS_CENTER[2])
     end
     game.can_start_game = true
     game.camera:reset()
