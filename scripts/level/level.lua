@@ -85,11 +85,11 @@ function Level:init(game, backroom)
 	self.do_not_spawn_enemies_on_next_wave_flag = false
 	
 	-- Canvas & stencils
-	self.canvas = love.graphics.newCanvas(CANVAS_WIDTH*2, CANVAS_HEIGHT*2)
-	self.buffer_canvas = love.graphics.newCanvas(CANVAS_WIDTH*2, CANVAS_HEIGHT + 48)
+	self.canvas = love.graphics.newCanvas(CANVAS_WIDTH*3.5, CANVAS_HEIGHT*2)
+	self.buffer_canvas = love.graphics.newCanvas(CANVAS_WIDTH*3.5, CANVAS_HEIGHT + 48)
 	self.is_hole_stencil_enabled = true
 	self.hole_stencil_pause_radius = CANVAS_WIDTH
-	self.hole_stencil_max_radius = CANVAS_WIDTH*2
+	self.hole_stencil_max_radius = CANVAS_WIDTH*3
 	self.hole_stencil_start_timer = Timer:new(1.0)
 	self.hole_stencil_radius = 0
 	self.hole_stencil_radius_speed = 0
