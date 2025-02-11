@@ -4,6 +4,7 @@ local enemies = require "data.enemies"
 local BackroomWithDoor = require "scripts.level.backrooms.backroom_with_door"
 local BackgroundCafeteria = require "scripts.level.background.background_cafeteria"
 local Rect = require "scripts.math.rect"
+local cutscenes = require "data.cutscenes"
 
 local BackroomTutorial = BackroomWithDoor:inherit()
 
@@ -40,13 +41,21 @@ function BackroomTutorial:generate(world_generator)
 	game:new_actor(enemies.Dummy:new(77*16, 13*16))
 	game:new_actor(enemies.Dummy:new(80*16, 13*16))
 	game:new_actor(enemies.Dummy:new(83*16, 13*16))
-
+	
 	local sign = game:new_actor(enemies.ExitSign:new(50, 160))
 	sign.smash_easter_egg_probability = 0
 
+	game:new_actor(enemies.PlayerTrigger:new(87*16, 9*16, 8*16, 5*16, function()
+		game:play_cutscene(cutscenes.tutorial_end)
+	end, {min_player_trigger = 0}))
+	
 	game.camera.max_x = 67*16
-
 	game.music_player:set_disk("off")
+	game.level.show_cabin = false
+
+	if not Options:get("has_seen_intro_credits") then
+		game:play_cutscene(cutscenes.tutorial_start)
+	end
 end
 
 function BackroomTutorial:get_default_player_position(player_n)

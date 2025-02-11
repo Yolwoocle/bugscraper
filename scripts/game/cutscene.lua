@@ -43,7 +43,10 @@ end
 
 function Cutscene:update(dt)
     if self.is_playing then
-        local skip_scene = self.current_scene:update(dt)
+        local skip_scene = self.current_scene:update(dt) or game.skip_scene_flag
+        if game.skip_scene_flag then
+            game.skip_scene_flag = false
+        end
         
         if skip_scene or self.timer:update(dt) then
             local next_i = mod_plus_1(self.current_scene_i + 1, #self.scenes)

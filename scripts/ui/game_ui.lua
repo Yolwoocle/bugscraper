@@ -4,6 +4,7 @@ local Class = require "scripts.meta.class"
 local PlayerPreview = require "scripts.ui.player_preview"
 local shaders = require "data.shaders"
 local Ui = require "scripts.ui.ui"
+local Timer = require "scripts.timer"
 
 local GameUI = Class:inherit()
 
@@ -43,6 +44,24 @@ function GameUI:init(game, is_visible)
 	self.fury_flash_max_timer = 0.2
 	self.fury_is_flashing = false
 	
+
+	self.title_buffer_canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
+	self.title = "Léo Bernard"
+	self.subtitle = "Yolwoocle"
+	self.overtitle = "A game by"
+	self.title_alpha = 0.0
+	self.title_alpha_target = 1.0
+
+	self.title_intro_duration = 0.5
+	self.title_stay_duration = 1.0
+	self.title_outro_duration = 0.5
+
+	self.title_state = "intro"
+	self.title_state_timer = Timer:new(0.0)
+	self.current_title_state_duration = "intro"
+
+	self.dark_overlay_alpha = 0.0
+
 	self.t = 0
 end
 
@@ -57,9 +76,58 @@ function GameUI:update(dt)
 	self:update_splash(dt)
 	self:update_fury(dt)
 	self:update_convention_video(dt)
+	self:update_title(dt)
 
 	self.t = self.t + dt
 end
+
+function GameUI:start_title(title, subtitle, overtitle, intro_dur, stay_dur, outro_dur)
+	self.title = Text:parse(title)
+	self.subtitle = Text:parse(subtitle)
+	self.overtitle = Text:parse(overtitle)
+
+	self.title_intro_duration = intro_dur
+	self.title_stay_duration = stay_dur
+	self.title_outro_duration = outro_dur
+
+	self.title_state = "intro"
+
+	self.title_state_timer:start(self.title_intro_duration)
+end
+
+function GameUI:update_title(dt)
+	if self.title_state_timer:update(dt) then
+		if self.title_state == "intro" then
+			self.title_state = "stay"
+			self.title_state_timer:start(self.title_stay_duration)
+			
+		elseif self.title_state == "stay" then
+			self.title_state = "outro"
+			self.title_state_timer:start(self.title_outro_duration)
+
+		elseif self.title_state == "outro" then
+			self.title_state = "off"
+			self.title = nil
+			self.subtitle = nil
+			self.overtitle = nil
+		end
+	end
+
+	if self.title_state == "off" then
+		self.title_alpha = 0
+	end 
+	if self.title_state == "stay" then
+		self.title_alpha = 1
+	end 
+	if self.title_state == "intro" or self.title_state == "outro" then
+		local a, b = 0, 1
+		if self.title_state == "outro" then
+			a, b = 1, 0
+		end
+		self.title_alpha = lerp(a, b, self.title_state_timer:get_ratio())
+	end
+end
+
 function GameUI:update_floating_text(dt)
 	self.floating_text_y = lerp(self.floating_text_y, self.floating_text_target_y, 0.05)
 end
@@ -93,6 +161,11 @@ function GameUI:draw()
 	self:draw_cinematic_bars()
 	self:draw_fury()
 	
+	self:draw_titles()
+	if self.dark_overlay_alpha > 0 then
+		rect_color(transparent_color(COL_BLACK_BLUE, self.dark_overlay_alpha), "fill", 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
+	end
+
 	self:draw_splash_animation()
 	-- local r
     -- r = game.level.cabin_inner_rect
@@ -105,6 +178,31 @@ function GameUI:draw_front()
 	if not self.is_visible then return end
 
 	self:draw_FPS()
+end
+
+function GameUI:draw_titles()
+	exec_on_canvas(self.title_buffer_canvas, function()
+		love.graphics.clear()
+
+		Text:push_font(FONT_REGULAR)
+		if self.title then
+			print_centered_outline(nil, nil, self.title, CANVAS_CENTER[1], CANVAS_CENTER[2])
+		end
+		Text:pop_font()
+	
+		Text:push_font(FONT_MINI)
+		if self.subtitle then
+			print_centered_outline(nil, nil, self.subtitle, CANVAS_CENTER[1], CANVAS_CENTER[2] + 12)
+		end
+		if self.overtitle then
+			print_centered_outline(COL_LIGHTEST_GRAY, nil, self.overtitle, CANVAS_CENTER[1], CANVAS_CENTER[2] - 16)
+		end
+		Text:pop_font()
+	end)
+
+	exec_color({1, 1, 1, self.title_alpha}, function()		
+		love.graphics.draw(self.title_buffer_canvas, 0, 0)
+	end)
 end
 
 function GameUI:draw_logo()

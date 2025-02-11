@@ -12,7 +12,7 @@ return Menu:new(game, "{menu.credits.title}", {
     { "<<< " .. Text:text("menu.credits.game_by") .. " >>>" },
     { "Léo Bernard (Yolwoocle) 🔗", func_url("https://yolwoocle.com/") },
     { "" },
-    { "<<< " .. Text:text("menu.credits.music_and_sound_design") .. " >>>" },
+    { "<<< " .. Text:text("menu.credits.music") .. " >>>" },
     { "OLX 🔗", func_url("https://www.youtube.com/@olxdotwav") },
     { "" },
     { "<<< " .. Text:text("menu.credits.localization") .. " >>>" },

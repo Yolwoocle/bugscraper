@@ -79,6 +79,7 @@ local enemies = {
 	VendingMachine =     require "scripts.actor.enemies.vending_machine.vending_machine",
 	WaterDispenser =     require "scripts.actor.enemies.vending_machine.water_dispenser",
 	Clock =              require "scripts.actor.enemies.clock",
+	PlayerTrigger =      require "scripts.actor.enemies.player_trigger",
 	
 	Cocoon =             require "scripts.actor.enemies.cocoon",
 

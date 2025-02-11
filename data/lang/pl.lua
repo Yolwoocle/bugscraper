@@ -285,7 +285,8 @@ return {
             title = "TWÓRCY",
             game_by = "Gra autorstwa",
             game_by_template = "Léo Bernard & przyjaciele", -- Used on the title screen.
-            music_and_sound_design = "Muzyka i projektowanie dźwięku",
+            music = "Muzyka",
+            sound_design = "Projektowanie dźwięku", -- ADDED
             localization = "Lokalizacja",
             playtesting = "Testowanie gry",
             special_thanks = "Specjalne podziękowania",

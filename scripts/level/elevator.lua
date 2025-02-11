@@ -24,6 +24,7 @@ function Elevator:init(level)
 	self.door_animation_timer = Timer:new(1.0)
 	self.layers = {
 		["cabin"] = true,
+		["counter"] = true,
 		["walls"] = true,
 		["walls_no_floor"] = false,
 		["bg_grid"] = false,
@@ -166,7 +167,9 @@ function Elevator:draw_cabin()
 		love.graphics.draw(images.cabin_grid_brown, cabin_rect.ax + 19*16, cabin_rect.ay + 4*16)
 	end
 	
-	self:draw_counter()
+	if self.layers["counter"] then
+		self:draw_counter()
+	end
 end
 
 function Elevator:draw_counter()

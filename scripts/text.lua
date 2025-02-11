@@ -158,7 +158,7 @@ function TextManager:text_fallback(code, fallback, ...)
 end
 
 
-function TextManager:parse_string(text)
+function TextManager:parse(text)
     text = text:gsub("{lbrace}", "\1"):gsub("{rbrace}", "\2")
     
     text = text:gsub("{(.-)}", function(key)

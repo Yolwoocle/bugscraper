@@ -296,7 +296,9 @@ return {
             title = "CREDITS",
             game_by = "A game by",
             game_by_template = "By Léo Bernard & friends", -- Used on the title screen. 
-            music_and_sound_design = "Music and sound design",
+            music = "Music",
+            sound_design = "Sound design",
+            published_by = "Published by",
             localization = "Localization",
             playtesting = "Playtesting",
             special_thanks = "Special thanks",

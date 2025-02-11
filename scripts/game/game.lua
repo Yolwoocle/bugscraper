@@ -78,7 +78,11 @@ function Game:init()
 	-- Audio ===> Moved to OptionsManager
 	Options:set("volume", Options:get("volume"))
 
-	self:new_game()
+	local backroom
+	if not Options:get("has_played_tutorial") then
+		backroom = BackroomTutorial:new()
+	end
+	self:new_game({backroom = backroom})
 
 	self.debug = Debug:new(self)
 	self.menu_manager = MenuManager:new(self)
@@ -130,7 +134,7 @@ function Game:new_game(params)
 	self.camera = Camera:new()
 	
 	-- Level
-	self.level = Level:new(self, BackroomTutorial:new())
+	self.level = Level:new(self, params.backroom)
 
 	if self.level.backroom and self.level.backroom.get_default_camera_position then
 		local cx, cy = self.level.backroom:get_default_camera_position()
@@ -158,9 +162,7 @@ function Game:new_game(params)
 
 	-- Logo
 	self.logo_y = 0
-	self.logo_vy = 0
-	self.logo_a = 0
-	self.move_logo = false
+	self.logo_y_target = 0
 	self.jetpack_tutorial_y = -30
 	self.move_jetpack_tutorial = false
 
@@ -216,6 +218,7 @@ function Game:new_game(params)
 	-- Cutscenes
 	self.cutscene = nil
 
+	self.can_join_game = true
 	self.can_start_game = false
 	self.game_state = GAME_STATE_WAITING
 	self.endless_mode = false
@@ -243,7 +246,7 @@ function Game:new_game(params)
 		self.level.force_backroom_end_flag = true
 		self.camera.x = DEFAULT_CAMERA_X
 		self.camera.y = DEFAULT_CAMERA_Y
-		self.logo_y = -5000 -- SCOTCH
+		self.logo_y = -70 -- SCOTCH
 		self:start_game()
 	end
 end
@@ -383,7 +386,7 @@ function Game:update_main_game(dt)
 	self:update_debug(dt)
 	if self.cutscene then
 		self.cutscene:update(dt)
-		if not self.cutscene.is_playing then
+		if self.cutscene and not self.cutscene.is_playing then
 			self.cutscene = nil
 		end
 	end
@@ -440,11 +443,9 @@ function Game:update_actors(dt)
 end
 
 function Game:update_logo(dt)
-	self.logo_a = self.logo_a + dt * 12
-	if self.move_logo then
-		self.logo_vy = self.logo_vy - dt
-		self.logo_y = self.logo_y + self.logo_vy
-	end
+	self.logo_y = lerp(self.logo_y, self.logo_y_target, 0.1)
+	self.logo_y = clamp(self.logo_y, -70, 0)
+
 	if self.move_jetpack_tutorial then
 		self.jetpack_tutorial_y = lerp(self.jetpack_tutorial_y, 70, 0.1)
 	else
@@ -682,7 +683,7 @@ end
 function Game:listen_for_player_join(dt)
 	if self.game_state ~= GAME_STATE_WAITING then return end
 
-	if Input:action_pressed_global("join_game") then
+	if Input:action_pressed_global("join_game") and self.can_join_game then
 		local global_user = Input:get_global_user()
 		local last_button = global_user.last_pressed_button
 		local input_profile_id = ""
@@ -981,10 +982,10 @@ function Game:new_player(player_n, x, y, put_in_buffer)
 
 	if self.level.backroom and self.level.backroom.get_x_target_after_join_game then
 		player.show_hud = false
-		player.input_mode = PLAYER_INPUT_MODE_CODE
+		player:set_input_mode(PLAYER_INPUT_MODE_CODE)
 		player:set_code_input_mode_target_x(self.level.backroom:get_x_target_after_join_game(), function(p)
 			p.show_hud = true
-			p.input_mode = PLAYER_INPUT_MODE_USER
+			p:set_input_mode(PLAYER_INPUT_MODE_USER)
 		end)
 	end
 
@@ -1036,7 +1037,7 @@ function Game:enable_endless_mode()
 end
 
 function Game:start_game()
-	self.move_logo = true
+	self.logo_y_target = -70
 	self.game_state = GAME_STATE_PLAYING
 	self.music_player:set_disk("w1")
 	self.level:activate_enemy_buffer()

@@ -119,7 +119,7 @@ FONT_CHARACTERS =
 FONT_SYMBOLS_CHARACTERS = "🔊🔉🔈🎵🎼🔳🔲📺🕐↖🛜▶⏸🔄🔘⬅➡⬆⬇⏏🔫🔚📥👆🔙🗄⌨🎮🎚❤"..
     "✅❎🔗💡⚠🕹🫨💧🐜🐛🐝🪲🎓🌄🛅😎😈🐦𝕏🐰🐞🌐⏭🥚🥦🐧"
 FONT_7SEG_CHARACTERS = " 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-FONT_MINI_CHARACTERS = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_abcdefghijklmnopqrstuvwxyz{|}~"
+FONT_MINI_CHARACTERS = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_abcdefghijklmnopqrstuvwxyz{|}~àáâãäåąæçćèéêëęìíîïłðñńòóôõöøùúûüśýþÿźżŒœ"
 FONT_FAT_CHARACTERS = " ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890!,.:;'\"@#$%^&*()[]{}_-=+<>/\\|~"
 FONT_CHINESE_CHARACTERS = require "fonts.font_chinese_characters"
 
@@ -198,6 +198,9 @@ LIGHTNING_STYLE_BITS = "bits"
 
 DEFAULT_CAMERA_X = 0
 DEFAULT_CAMERA_Y = 8
+
+DEFAULT_CAMERA_FOLLOW_SPEED = 5
+DEFAULT_CAMERA_MAX_SPEED = 300
 
 ---------------------------------------------
 

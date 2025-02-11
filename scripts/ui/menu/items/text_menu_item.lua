@@ -8,7 +8,7 @@ function TextMenuItem:init(i, x, y, text, on_click, update_value)
 
 	self.ox = 0
 	self.oy = 0
-	self:set_label_text(Text:parse_string(text))
+	self:set_label_text(Text:parse(text))
 	self:set_value_text("")
 
 	self.value = nil
@@ -36,15 +36,15 @@ function TextMenuItem:set_annotation(text)
 		self.annotation = nil
 		return
 	end
-	self.annotation = Text:parse_string(text)
+	self.annotation = Text:parse(text)
 end
 
 function TextMenuItem:set_label_text(text)
-	self.label_text = Text:parse_string(text)
+	self.label_text = Text:parse(text)
 end
 
 function TextMenuItem:set_value_text(text)
-	self.value_text = Text:parse_string(text)
+	self.value_text = Text:parse(text)
 end
 
 function TextMenuItem:update(dt)

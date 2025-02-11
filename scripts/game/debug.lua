@@ -205,9 +205,9 @@ function Debug:init(game)
         ["u"] = { "toggle title junk ui", function()
             self.title_junk = not self.title_junk
         end },
-        -- ["t"] = { "reload images", function()
-        --     images.load_images()
-        -- end },
+        ["c"] = { "skip cutscene", function()
+            game.skip_scene_flag = true
+        end },
         ["d"] = { "spawn", function()
             game.menu_manager:set_menu("debug_command")
         end },
@@ -284,22 +284,22 @@ function Debug:init(game)
             self.game:set_zoom(self.game:get_zoom() + 0.1)
         end },
 
-        -- ["left"] = {"move camera left", function()
-        --     local cam_x, cam_y = self.game:get_camera_position()
-        --     self.game:set_camera_position(cam_x - 8, cam_y)
-        -- end},
-        -- ["right"] = {"move camera right", function()
-        --     local cam_x, cam_y = self.game:get_camera_position()
-        --     self.game:set_camera_position(cam_x + 8, cam_y)
-        -- end},
-        -- ["up"] = {"move camera up", function()
-        --     local cam_x, cam_y = self.game:get_camera_position()
-        --     self.game:set_camera_position(cam_x, cam_y - 8)
-        -- end},
-        -- ["down"] = {"move camera down", function()
-        --     local cam_x, cam_y = self.game:get_camera_position()
-        --     self.game:set_camera_position(cam_x, cam_y + 8)
-        -- end},
+        ["left"] = {"move camera left", function()
+            local cam_x, cam_y = self.game:get_camera_position()
+            self.game:set_camera_position(cam_x - 8, cam_y)
+        end},
+        ["right"] = {"move camera right", function()
+            local cam_x, cam_y = self.game:get_camera_position()
+            self.game:set_camera_position(cam_x + 8, cam_y)
+        end},
+        ["up"] = {"move camera up", function()
+            local cam_x, cam_y = self.game:get_camera_position()
+            self.game:set_camera_position(cam_x, cam_y - 8)
+        end},
+        ["down"] = {"move camera down", function()
+            local cam_x, cam_y = self.game:get_camera_position()
+            self.game:set_camera_position(cam_x, cam_y + 8)
+        end},
         ["space"] = { "screenshot", function()
             game:screenshot()
         end },
@@ -682,17 +682,17 @@ function Debug:draw_info_view()
         concat("level_speed ", game.level.level_speed),
         concat("menu_stack size: ", #game.menu_manager.menu_stack),
         concat("cur_menu_name ", game.menu_manager.cur_menu_name),
-        -- concat("cur_cutscene ", (game.cutscene == nil) and "[nil]" or 
-        --     string.format("%s: [%d/%d] (%.1f s/%.1f s) '%s' / (total: %.1f s)", 
-        --         game.cutscene.name, 
-        --         game.cutscene.current_scene_i, 
-        --         #game.cutscene.scenes, 
-        --         game.cutscene.timer.duration - game.cutscene.timer.time, 
-        --         game.cutscene.timer.duration, 
-        --         game.cutscene.current_scene.description, 
-        --         game.cutscene.total_duration
-        --     )
-        -- ),
+        concat("cur_cutscene ", (game.cutscene == nil) and "[nil]" or 
+            string.format("%s: [%d/%d] (%.1f s/%.1f s) '%s' / (total: %.1f s)", 
+                game.cutscene.name, 
+                game.cutscene.current_scene_i, 
+                #game.cutscene.scenes, 
+                game.cutscene.timer.duration - game.cutscene.timer.time, 
+                game.cutscene.timer.duration, 
+                game.cutscene.current_scene.description, 
+                game.cutscene.total_duration
+            )
+        ),
         concat("score: ", game.score),
         concat("xp: ", Metaprogression:get_xp()),
         concat("xp_level: ", Metaprogression:get_xp_level()),

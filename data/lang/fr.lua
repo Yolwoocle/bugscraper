@@ -280,9 +280,11 @@ return {
         },
         credits = {
             title = "CRÉDITS",
-            game_by = "Un jeu de",
+            game_by = "Un jeu par",
             game_by_template = "Par Léo Bernard & amis", -- Utilisé sur l'écran titre
-            music_and_sound_design = "Musique et sound design",
+            music = "Musique",
+            sound_design = "Sound design",
+            published_by = "Publié par",
             localization = "Localisation",
             playtesting = "Playtesting",
             special_thanks = "Remerciements",

@@ -8,7 +8,7 @@ local Menu = Class:inherit()
 
 function Menu:init(game, title, items, bg_color, prompts, extra_draw, params)
 	params = params or {}
-	self.title = Text:parse_string(title)
+	self.title = Text:parse(title)
 	self.items = {}
 	self.is_menu = true
 

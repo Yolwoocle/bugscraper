@@ -5,13 +5,155 @@ local Rect = require "scripts.math.rect"
 
 local cutscenes = {}
 
+cutscenes.tutorial_start = Cutscene:new("tutorial_end", {
+    CutsceneScene:new({
+        description = "",
+
+        duration = 3.0,
+        enter = function(scene)
+            game.can_join_game = false 
+            game.logo_y = -5000
+            game.logo_y_target = -5000
+
+            game.camera.follows_players = false
+            game.camera.min_y = -999999    
+            game.camera:set_position(0, -2200)    
+            game.camera.max_speed = 100
+            
+            local cx, cy = DEFAULT_CAMERA_X, DEFAULT_CAMERA_Y
+            if game.level.backroom and game.level.backroom.get_default_camera_position then
+                cx, cy = game.level.backroom:get_default_camera_position()
+            end
+            game.camera.target_y = cy
+        end,
+    }),
+    CutsceneScene:new({
+        description = "",
+
+        duration = 5.0,
+        enter = function(scene)
+            game.game_ui:start_title("Léo Bernard", "Yolwoocle", "{menu.credits.game_by}", 0.5, 4.0, 0.5)
+        end,
+    }),
+    CutsceneScene:new({
+        description = "",
+
+        duration = 5.0,
+        enter = function(scene)
+            game.game_ui:start_title("Alexandre Mercier", "OLX", "{menu.credits.music}", 0.5, 4.0, 0.5)
+        end,
+    }),
+    CutsceneScene:new({
+        description = "",
+
+        duration = 5.0,
+        enter = function(scene)
+            game.game_ui:start_title("Martin Domergue", "Verbaudet", "{menu.credits.sound_design}", 0.5, 4.0, 0.5)
+        end,
+    }),
+    CutsceneScene:new({
+        description = "",
+
+        duration = 6.0,
+        enter = function(scene)
+            game.game_ui:start_title("Ninesliced", "", "{menu.credits.published_by}", 0.5, 4.0, 0.5)
+        end,
+    }),
+    CutsceneScene:new({
+        description = "",
+
+        duration = 0.1,
+        enter = function(scene)
+	        game.logo_y_target = 0
+
+            game.camera.follows_players = true
+            game.camera.min_y = 0    
+            game.camera.max_speed = DEFAULT_CAMERA_MAX_SPEED
+            game.can_join_game = true 
+
+            Options:set("has_seen_intro_credits", true)
+        end,
+    }),
+})
+
+
+cutscenes.tutorial_end = Cutscene:new("tutorial_end", {
+    CutsceneScene:new({
+        description = "Start",
+        duration = 1.0,
+        enter = function(scene)
+            game.menu_manager:set_can_pause(false)
+
+            for _, player in pairs(game.players) do
+                player:set_input_mode(PLAYER_INPUT_MODE_CODE)
+                player:reset_virtual_controller()
+            end
+
+            game.can_join_game = false 
+            game.logo_y_target = -70
+        end,
+    }),
+    CutsceneScene:new({
+        description = "All players walk into position",
+        duration = 3.0,
+        enter = function(scene)
+            for _, player in pairs(game.players) do
+                player:set_code_input_mode_target_x(88*16 + player.n*16)
+            end
+        end,
+    }),
+    CutsceneScene:new({
+        description = "Players walk into the building",
+        duration = 2.0,
+        enter = function(scene)
+            for _, player in pairs(game.players) do
+                player:set_code_input_mode_target_x(9999999)
+            end
+        end,
+    }),
+    CutsceneScene:new({
+        description = "Pan camera up",
+
+        duration = 7.0,
+        enter = function(scene)
+            game.camera.follows_players = false
+            game.camera.min_y = -2000000    
+            game.camera.target_y = -1000
+        end,
+    }),
+    CutsceneScene:new({
+        description = "Pan camera up",
+
+        duration = 2.0,
+        enter = function(scene)
+            Options:set("has_played_tutorial", true)
+        end,
+        update = function(scene, dt)
+            game.game_ui.dark_overlay_alpha = move_toward(game.game_ui.dark_overlay_alpha, 1.0, dt)
+        end,
+    }),
+    CutsceneScene:new({
+        description = "Pan camera up",
+        duration = 0.1,
+
+        enter = function(scene)
+            game.menu_manager:set_can_pause(true)
+            game.game_ui.dark_overlay_alpha = 0.0
+            game:new_game()
+        end
+
+    })
+})
+
+
 cutscenes.enter_ceo_office = Cutscene:new("enter_ceo_office", {
     CutsceneScene:new({
         description = "Setup scene",
         duration = 1.0,
         enter = function(scene)
             for _, player in pairs(game.players) do
-                player.input_mode = PLAYER_INPUT_MODE_CODE
+                player:set_input_mode(PLAYER_INPUT_MODE_CODE)
+                player:reset_virtual_controller()
             end
 
             game.game_ui.cinematic_bars_enabled = true
@@ -68,7 +210,7 @@ cutscenes.enter_ceo_office = Cutscene:new("enter_ceo_office", {
         duration = 1.0,
         enter = function(scene)
             for _, p in pairs(game.players) do
-                p.input_mode = PLAYER_INPUT_MODE_USER
+                p:set_input_mode(PLAYER_INPUT_MODE_USER)
             end
 
             game.music_player:set_disk("miniboss")
@@ -89,6 +231,7 @@ cutscenes.enter_ceo_office = Cutscene:new("enter_ceo_office", {
     }),
 })
 
+
 cutscenes.dung_boss_enter = Cutscene:new("dung_boss_enter", {
     CutsceneScene:new({
         duration = 2.0,
@@ -102,6 +245,7 @@ cutscenes.dung_boss_enter = Cutscene:new("dung_boss_enter", {
         end,
     }),
 })
+
 
 cutscenes.bee_boss_enter = Cutscene:new("bee_boss_enter", {
     CutsceneScene:new({

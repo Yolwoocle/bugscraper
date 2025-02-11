@@ -262,6 +262,13 @@ end
 ------------------------------------------
 --- Input ---
 
+function Player:set_input_mode(mode)
+	self.input_mode = mode
+	if mode == PLAYER_INPUT_MODE_USER then
+		self:reset_virtual_controller()
+	end
+end
+
 function Player:set_code_input_mode_target_x(x, target_x_reached_callback)
 	self.code_input_mode_target_x = x
 	self.target_x_reached_callback = target_x_reached_callback
@@ -285,7 +292,14 @@ function Player:update_virtual_inputs(dt)
 
 		if self:is_near_code_input_mode_target_x() and self.target_x_reached_callback then
 			self.target_x_reached_callback(self)
+			self:set_code_input_mode_target_x(nil)
 		end
+	end
+end
+
+function Player:reset_virtual_controller()
+	for action, _ in pairs(self.virtual_controller.actions) do
+		self.virtual_controller.actions[action] = false
 	end
 end
 

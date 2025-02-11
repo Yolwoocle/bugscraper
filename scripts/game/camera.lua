@@ -21,8 +21,9 @@ function Camera:init()
     self.target_ox = 0.0
     self.target_oy = 0.0
 
-    self.follow_speed = 5
-    self.max_speed = 300
+    self.follows_players = true
+    self.follow_speed = DEFAULT_CAMERA_FOLLOW_SPEED
+    self.max_speed = DEFAULT_CAMERA_MAX_SPEED
 
     self.screenshake_q = 0.0
 	self.screenshake_speed = 20
@@ -36,7 +37,9 @@ end
 function Camera:update(dt)
 	if not Options:get("screenshake_on") then self.ox, self.oy = 0,0 end
     
-    self:follow_players(dt)  
+    if self.follows_players then
+        self:follow_players(dt)  
+    end
     self:clamp_camera_position(dt)
     self:follow_target(dt)
 

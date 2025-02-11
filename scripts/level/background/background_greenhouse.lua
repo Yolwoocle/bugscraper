@@ -24,7 +24,7 @@ function BackgroundGreenhouse:init(level)
 	self:add_layer(BackgroundLayerSprite:new(self, 0.005, {
 		image = images.bg_city_2
 	}))
-	self:add_layer(BackgroundLayerSprite:new(self, 0.01, {
+	self:add_layer(BackgroundLayerSprite:new(self, 0.01, { 
 		image = images.bg_city_3
 	}))
 	self:add_layer(BackgroundLayerSprite:new(self, 0, {

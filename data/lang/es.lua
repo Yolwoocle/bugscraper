@@ -283,7 +283,8 @@ return {
             title = "CREDITOS",
             game_by = "Un juego por",
             game_by_template = "By Léo Bernard y sus amigos", -- Used on the title screen.
-            music_and_sound_design = "Musica y diseño auditivo", -- auditive design because sound design sounds weird
+            music = "Musica", -- auditive design because sound design sounds weird
+            sound_design = "Diseño auditivo", -- auditive design because sound design sounds weird
             localization = "Localización",
             playtesting = "Probadores de Jugabilidad",
             special_thanks = "Agradecimentos especiales",
