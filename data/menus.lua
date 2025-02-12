@@ -69,7 +69,7 @@ local function generate_menus()
             game.menu_manager:back()
         end },
         { "{menu.yes}", function()
-            game:new_game()
+            game:new_game(game.start_params)
         end },
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
 

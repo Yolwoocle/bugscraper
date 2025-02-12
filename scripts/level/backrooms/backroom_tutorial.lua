@@ -53,7 +53,7 @@ function BackroomTutorial:generate(world_generator)
 	game.music_player:set_disk("off")
 	game.level.show_cabin = false
 
-	if not Options:get("has_seen_intro_credits") then
+	if not Metaprogression:get("has_seen_intro_credits") then
 		game:play_cutscene(cutscenes.tutorial_start)
 	end
 end
@@ -97,6 +97,26 @@ end
 
 function BackroomTutorial:draw_items()
 	love.graphics.draw(images.tutorial_level_back, 0, 0)
+	
+	if not Input:get_user(1) then
+		return 
+	end
+	Input:draw_input_prompt(1, {"jump"}, Text:text("input.prompts.jump"), COL_WHITE, 24*16, 8*16, {
+		alignment = "center",
+		background_color = transparent_color(COL_BLACK_BLUE, 0.5),
+	})
+	Input:draw_input_prompt(1, {"jump", "right"}, Text:text("input.prompts.wall_jump"), COL_WHITE, 32.5*16, 4*16, {
+		alignment = "center",
+		background_color = transparent_color(COL_BLACK_BLUE, 0.5),
+	})
+	Input:draw_input_prompt(1, {"shoot"}, Text:text("input.prompts.shoot"), COL_WHITE, 40*16, 9*16, {
+		alignment = "center",
+		background_color = transparent_color(COL_BLACK_BLUE, 0.5),
+	})
+	Input:draw_input_prompt(1, {"shoot", "down"}, Text:text("input.prompts.jetpack"), COL_WHITE, 54*16, 4*16, {
+		alignment = "center",
+		background_color = transparent_color(COL_BLACK_BLUE, 0.5),
+	})
 end
 
 function BackroomTutorial:draw_front_walls()

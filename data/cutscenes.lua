@@ -71,7 +71,7 @@ cutscenes.tutorial_start = Cutscene:new("tutorial_end", {
             game.camera.max_speed = DEFAULT_CAMERA_MAX_SPEED
             game.can_join_game = true 
 
-            Options:set("has_seen_intro_credits", true)
+            Metaprogression:set("has_seen_intro_credits", true)
         end,
     }),
 })
@@ -126,7 +126,7 @@ cutscenes.tutorial_end = Cutscene:new("tutorial_end", {
 
         duration = 2.0,
         enter = function(scene)
-            Options:set("has_played_tutorial", true)
+            Metaprogression:set("has_played_tutorial", true)
             game.game_ui.dark_overlay_alpha_target = 1.0
         end,
     }),
@@ -236,7 +236,7 @@ cutscenes.enter_ceo_office = Cutscene:new("enter_ceo_office", {
 
 cutscenes.dung_boss_enter = Cutscene:new("dung_boss_enter", {
     CutsceneScene:new({
-        duration = 2.0,
+        duration = 1.9,
     }),
     CutsceneScene:new({
         duration = 1.5,

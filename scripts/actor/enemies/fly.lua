@@ -31,7 +31,6 @@ function Fly:init_fly(x, y, spr, w, h, buzzing_enabled)
 	self.score = 10
 
     self.is_buzz_enabled = buzzing_enabled
-    print("buzzing_enabled ", buzzing_enabled)
     if self.is_buzz_enabled then
         self:add_constant_sound("buzz", "fly_buzz", false)
         self:seek_constant_sound("buzz", random_range(0, self:get_constant_sound("buzz"):get_duration())) 

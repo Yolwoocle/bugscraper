@@ -829,7 +829,7 @@ function Level:on_fury_deactivate()
 end
 
 function Level:add_fury(val)
-	val = val / math.max(1, game:get_number_of_alive_players())
+	val = val-- / math.max(1, game:get_number_of_alive_players())
 	self.fury_bar = math.max(0.0, self.fury_bar + val)	
 end
 

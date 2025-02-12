@@ -42,8 +42,6 @@ function PlayerTrigger:update(dt)
         end
     end
 
-    print(self.triggers)
-
     local cond_all = (self.min_player_trigger == 0 and n == game:get_number_of_alive_players())
     local cond_min = (self.min_player_trigger > 0 and n >= self.min_player_trigger)
     if (n > 0) and (cond_all or cond_min) then

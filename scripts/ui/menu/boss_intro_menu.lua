@@ -14,6 +14,7 @@ function BossIntroMenu:init(game, bg_color, title, layers)
 	self.draw_sawtooth_border = false
 
 	self.is_backable = false
+	self.do_pause_music_mode = false
 
 	self:init_boss_intro()
 end

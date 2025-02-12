@@ -319,6 +319,10 @@ local img_names = {
 	dung_particle_2 =             "particles/dung_particle_2",
 	dung_particle_3 =             "particles/dung_particle_3",
 
+	brick_fragment_1 =            "particles/brick_fragment_1",
+	brick_fragment_2 =            "particles/brick_fragment_2",
+	brick_fragment_3 =            "particles/brick_fragment_3",
+
 	-----------------------------------------------------
 	
 	-- level
@@ -385,6 +389,7 @@ local img_names = {
 	ceo_office_room =   "level/ceo_office_room",
 	boss_door =         "level/boss_door",
 	boss_door_cracked = "level/boss_door_cracked",
+	breakable_wall =    "level/breakable_wall",
 	
 	tv_slideshow_001 = "level/tv_slideshow/tv_slideshow_001",
 	tv_slideshow_002 = "level/tv_slideshow/tv_slideshow_002",

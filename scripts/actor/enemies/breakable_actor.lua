@@ -91,7 +91,13 @@ end
 function BreakableActor:on_death()
     Audio:play(random_sample(self.sound_break), self.volume_break)
     game:screenshake(self.break_screenshake)
-    Particles:image(self.mid_x, self.mid_y, self.break_num_particles, self.break_particle_image, self.h)
+
+    local vol = (self.w/16) * (self.h/16)
+    for ix = 0, self.w, 16 do
+        for iy = 0, self.h, 16 do
+            Particles:image(self.x + ix, self.y + iy, math.floor(self.break_num_particles/vol), self.break_particle_image, 16, 16)
+        end
+    end
 end
 
 return BreakableActor

@@ -21,6 +21,10 @@ function MetaprogressionManager:init()
             "UpgradeSoda",
             "UpgradeAppleJuice",
         },
+
+		has_seen_intro_credits = false,
+		has_played_tutorial = false,
+		has_seen_stomp_tutorial = false,
     }
 
     local t = skin_name_to_id

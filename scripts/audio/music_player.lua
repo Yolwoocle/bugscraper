@@ -112,7 +112,9 @@ function MusicPlayer:fade_out(new_disk, duration)
 end
 
 function MusicPlayer:on_menu()
-	self:set_music_mode(MUSIC_MODE_PAUSE)
+	if game.menu_manager.cur_menu and game.menu_manager.cur_menu.do_pause_music_mode then
+		self:set_music_mode(MUSIC_MODE_PAUSE)
+	end
 
 	if Options:get("play_music_on_pause_menu") then
 		if self.current_disk ~= nil then

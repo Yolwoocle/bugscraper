@@ -153,6 +153,7 @@ return {
             join = "Join",
             split_keyboard = "Split keyboard", -- Verb, as in "Press [key] to split the keyboard". Shown on the title screen when one keyboard player has joined. Try to keep short since space is limited there.
 
+            wall_jump = "Wall jump",
             jetpack = "Jetpack", -- Refers to "jetpacking", a move in the game. 
         },
     },

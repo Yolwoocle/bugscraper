@@ -49,6 +49,8 @@ function Menu:init(game, title, items, bg_color, prompts, extra_draw, params)
 
 	self.is_backable = param(params.is_backable, true)
 
+	self.do_pause_music_mode = true
+
 	self.extra_update = params.update or function(_, _) end
 	self.extra_draw = extra_draw or function() end
 end

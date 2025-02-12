@@ -51,11 +51,6 @@ function OptionsManager:init()
 		vibration_p3 = 1.0,
 		vibration_p4 = 1.0,
 
-		has_seen_intro_credits = false,
-		has_played_tutorial = false,
-		
-		has_seen_stomp_tutorial = false,
-
 		-- Save data (because who needs a separate file for that)
 		xp = 0,
 		xp_level = 0,

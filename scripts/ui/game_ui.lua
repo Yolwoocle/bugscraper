@@ -315,13 +315,13 @@ function GameUI:draw_stomp_arrow()
 
 		if self.stomp_arrow_target.is_removed then
 			self:set_stomp_arrow_target(nil)
-			Options:set("has_seen_stomp_tutorial", true)
+			Metaprogression:set("has_seen_stomp_tutorial", true)
 		end
 	end
 end
 
 function GameUI:set_stomp_arrow_target(target)
-	if target and Options:get("has_seen_stomp_tutorial") then
+	if target and Metaprogression:get("has_seen_stomp_tutorial") then
 		return
 	end
 	self.stomp_arrow_target = target

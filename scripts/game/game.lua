@@ -79,7 +79,7 @@ function Game:init()
 	Options:set("volume", Options:get("volume"))
 
 	local backroom
-	if not Options:get("has_played_tutorial") then
+	if not Metaprogression:get("has_played_tutorial") then
 		backroom = BackroomTutorial:new()
 	end
 	self:new_game({backroom = backroom})
@@ -103,6 +103,7 @@ end
 
 function Game:new_game(params)
 	params = params or {}
+	self.start_params = params
 
 	if OPERATING_SYSTEM ~= "Web" then -- scotch
 		love.audio.stop()
