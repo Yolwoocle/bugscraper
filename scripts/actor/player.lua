@@ -641,6 +641,7 @@ function Player:update_jumping(dt)
 			self.jumps = math.max(0, self.jumps - 1)
 			self:on_jump()
 			
+			Particles:smoke(self.mid_x, self.y+self.h, 15, {COL_MID_BROWN, COL_DARK_BROWN})
 			Particles:bubble_fizz_cloud(self.mid_x, self.y+self.h, 8, 10)
 		end
 	end
@@ -909,6 +910,7 @@ function Player:on_stomp(enemy)
 	end
 	self.vy = spd
 	self:set_invincibility(0.15) --0.1
+	self.jumps = math.max(0, self.max_jumps - 1)
 
 	self.float_timer = self.float_max_duration
 	self.gun:add_ammo(math.floor(self.ammo_percent_gain_on_stomp * self.gun:get_max_ammo()))
@@ -1171,6 +1173,11 @@ function Player:draw_life_bar(ui_x, ui_y)
 		max_life = max_life + self.temporary_life
 	end
 	ui:draw_icon_bar(ui_x, ui_y, self.life, self.max_life, self.temporary_life, images.heart, images.heart_empty, images.heart_temporary)
+
+	if self.max_jumps > 1 then
+		local j = clamp(0, self.jumps, 1)
+		ui:draw_icon_bar(ui_x, ui_y - 12, j, j, 0, images.hud_soda, images.hud_soda, images.hud_soda)
+	end
 end
 
 function Player:draw_ammo_bar(ui_x, ui_y)
@@ -1206,8 +1213,10 @@ function Player:draw_ammo_bar(ui_x, ui_y)
 	end
 
 	-- (x, y, w, h, val, max_val, col_fill, col_out, col_fill_shadow, text, text_col, font);
-	local bar_x = x+ammo_icon_w+2
-	ui:draw_progress_bar(bar_x, y, slider_w, ammo_icon_w, val, maxval, 
+	local bar_x = x--+ammo_icon_w+2
+	-- ui:draw_progress_bar(bar_x, y, slider_w, ammo_icon_w, val, maxval, 
+						-- col_fill, COL_BLACK_BLUE, col_shad, text)
+	ui:draw_progress_bar(bar_x, y, bar_w, ammo_icon_w, val, maxval, 
 						col_fill, COL_BLACK_BLUE, col_shad, text)
 end
 
