@@ -46,7 +46,7 @@ function Motherboard:init(x, y)
     self.bullet_bounce_mode = BULLET_BOUNCE_MODE_NORMAL
     self.is_front = true
     self.is_affected_by_bounds = false
-    self.affected_by_walls = false
+    self.is_affected_by_walls = false
     self.laser_count = 15
 
     -- Graphics

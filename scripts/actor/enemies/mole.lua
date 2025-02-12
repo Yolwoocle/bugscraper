@@ -165,7 +165,7 @@ function Mole:init(x, y)
         --         self.state_timer:start(0.4)
         --         self.spr:set_animation("flying")
 
-        --         self.affected_by_walls = false
+        --         self.is_affected_by_walls = false
         --         self.is_affected_by_bounds = false
                 
         --         self.gravity = self.default_gravity
@@ -179,7 +179,7 @@ function Mole:init(x, y)
         --         end
         --     end,
         --     exit = function (state)
-        --         self.affected_by_walls = true
+        --         self.is_affected_by_walls = true
         --         self.is_affected_by_bounds = true
         --     end
         -- },

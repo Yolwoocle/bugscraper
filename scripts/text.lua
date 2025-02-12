@@ -183,6 +183,9 @@ function TextManager:sanity_check_languages(reference_language)
 end
 
 function TextManager:push_font(font)
+    if not font then
+        return self:pop_font()
+    end
 	table.insert(self.font_stack, font)
 	love.graphics.setFont(font)
 end

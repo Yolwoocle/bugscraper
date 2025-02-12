@@ -22,7 +22,7 @@ function ElectricArc:init(x, y, is_active, activation_delay)
 
     self.is_pushable = false
     self.is_knockbackable = false
-    self.affected_by_walls = false
+    self.is_affected_by_walls = false
     self.affected_by_bounds = false
 
     self.segment = Segment:new(x, y, x + 50, y - 70)

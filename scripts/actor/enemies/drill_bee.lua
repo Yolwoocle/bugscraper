@@ -53,7 +53,7 @@ function DrillBee:init(x, y, spr)
     self.state_machine = StateMachine:new({
         wander = {
             enter = function(state)
-                self.affected_by_walls = true
+                self.is_affected_by_walls = true
                 self.drill_target_player = self:get_random_player()
                 self.speed = 50
                 self.no_attack_timer:start()
@@ -100,7 +100,7 @@ function DrillBee:init(x, y, spr)
         },
         attack = {
             enter = function(state)
-                self.affected_by_walls = true
+                self.is_affected_by_walls = true
                 self.speed = 300
             end,
             update = function(state, dt)

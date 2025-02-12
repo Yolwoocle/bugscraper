@@ -61,6 +61,7 @@ function GameUI:init(game, is_visible)
 	self.current_title_state_duration = "intro"
 
 	self.dark_overlay_alpha = 0.0
+	self.dark_overlay_alpha_target = 0.0
 
 	self.t = 0
 end
@@ -77,6 +78,7 @@ function GameUI:update(dt)
 	self:update_fury(dt)
 	self:update_convention_video(dt)
 	self:update_title(dt)
+	self.dark_overlay_alpha = move_toward(self.dark_overlay_alpha, self.dark_overlay_alpha_target, dt)
 
 	self.t = self.t + dt
 end

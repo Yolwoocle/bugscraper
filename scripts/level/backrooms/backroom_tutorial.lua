@@ -31,16 +31,16 @@ function BackroomTutorial:generate(world_generator)
 	world_generator:write_rect_fill(Rect:new(63, 11, 63, 12), TILE_METAL) -- k
 	world_generator:write_rect_fill(Rect:new(64, 12, 64, 12), TILE_METAL) -- l
 	world_generator:write_rect_fill(Rect:new(66, 14, 96, 14), TILE_METAL) -- m
-	world_generator:write_rect_fill(Rect:new(94, 0,  96, 13), TILE_METAL) -- n
+	world_generator:write_rect_fill(Rect:new(95, 0,  96, 13), TILE_METAL) -- n
 	world_generator:write_rect_fill(Rect:new(57, 6,  60, 6),  TILE_METAL) -- o
 	world_generator:write_rect_fill(Rect:new(60, 7,  60, 8),  TILE_METAL) -- p
 
 	world_generator:write_rect_fill(Rect:new(3, 8, 3, 8),  TILE_SEMISOLID) -- d1
 	
 	game:new_actor(enemies.BreakableWall:new(47*16, 6*16))
-	game:new_actor(enemies.Dummy:new(77*16, 13*16))
-	game:new_actor(enemies.Dummy:new(80*16, 13*16))
-	game:new_actor(enemies.Dummy:new(83*16, 13*16))
+	game:new_actor(enemies.Dummy:new(72*16, 13*16))
+	game:new_actor(enemies.Dummy:new(75*16, 13*16))
+	game:new_actor(enemies.Dummy:new(78*16, 13*16))
 	
 	local sign = game:new_actor(enemies.ExitSign:new(50, 160))
 	sign.smash_easter_egg_probability = 0

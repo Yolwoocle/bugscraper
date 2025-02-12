@@ -79,7 +79,7 @@ function Actor:init_actor(x, y, w, h, spr, args)
 
 	-- Whether the actor should be teleported within bounds
 	self.is_affected_by_bounds = true
-	self.affected_by_walls = true
+	self.is_affected_by_walls = true
 
 	self.collision_filter = function(item, other)
 		-- By default, do not react to collisions
@@ -98,7 +98,7 @@ function Actor:init_actor(x, y, w, h, spr, args)
 			if not collision_info.enabled then
 				return false
 			elseif collision_info.type == COLLISION_TYPE_SOLID then
-				if not self.affected_by_walls then
+				if not self.is_affected_by_walls then
 					type = "cross"
 				else
 					type = "slide"

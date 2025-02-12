@@ -257,6 +257,7 @@ function Player:update(dt)
 	self:update_visuals()
 
 	self.flag_has_jumped_on_current_frame = false
+	self:update_debug(dt)
 end
 
 ------------------------------------------
@@ -498,8 +499,12 @@ end
 function Player:move(dt)
 	-- compute movement dir
 	local dir = {x=0, y=0}
-	if self:action_down('left') then   dir.x = dir.x - 1   end
+	if self:action_down('left') then    dir.x = dir.x - 1   end
 	if self:action_down('right') then   dir.x = dir.x + 1   end
+	if self.debug_god_mode then
+		if self:action_down('up') then     dir.y = dir.y - 1   end
+		if self:action_down('down') then   dir.y = dir.y + 1   end
+	end
 
 	if dir.x ~= 0 then
 		self.dir_x = dir.x
@@ -1265,7 +1270,9 @@ function Player:draw_player()
 	end
 
 	if self.debug_god_mode then
+		Text:push_font(FONT_MINI)
 		print_outline(nil, nil, "god", self.x, self.y - 16)
+		Text:pop_font()
 	end
 end
 
@@ -1384,5 +1391,24 @@ function Player:do_particles(dt)
 	end
 end
 
+function Player:update_debug(dt)
+	if self.debug_god_mode then
+		self.is_affected_by_bounds = false
+		self.is_affected_by_walls = false
+		self.gravity_mult = 0.0
+		self.speed_mult = 2.0
+		
+		self.friction_x = self.default_friction
+		self.friction_y = self.default_friction
+	else
+		self.is_affected_by_bounds = true
+		self.is_affected_by_walls = true
+		self.gravity_mult = 1.0
+		self.speed_mult = 1.0
+		
+		self.friction_x = self.default_friction
+		self.friction_y = 1
+	end
+end
 
 return Player

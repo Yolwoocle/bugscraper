@@ -127,9 +127,7 @@ cutscenes.tutorial_end = Cutscene:new("tutorial_end", {
         duration = 2.0,
         enter = function(scene)
             Options:set("has_played_tutorial", true)
-        end,
-        update = function(scene, dt)
-            game.game_ui.dark_overlay_alpha = move_toward(game.game_ui.dark_overlay_alpha, 1.0, dt)
+            game.game_ui.dark_overlay_alpha_target = 1.0
         end,
     }),
     CutsceneScene:new({
@@ -139,7 +137,11 @@ cutscenes.tutorial_end = Cutscene:new("tutorial_end", {
         enter = function(scene)
             game.menu_manager:set_can_pause(true)
             game.game_ui.dark_overlay_alpha = 0.0
-            game:new_game()
+            game.game_ui.dark_overlay_alpha_target = 0.0
+            game:new_game({
+                dark_overlay_alpha = 1.0,
+                dark_overlay_alpha_target = 0.0,
+            })
         end
 
     })

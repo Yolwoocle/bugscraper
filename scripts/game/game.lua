@@ -227,6 +227,8 @@ function Game:new_game(params)
 
 	-- UI
 	self.game_ui = GameUI:new(self, self.is_game_ui_visible)
+	self.game_ui.dark_overlay_alpha =        param(params.dark_overlay_alpha, self.game_ui.dark_overlay_alpha)
+	self.game_ui.dark_overlay_alpha_target = param(params.dark_overlay_alpha_target, self.game_ui.dark_overlay_alpha_target)
 	self.menu_blur = 1
 	self.max_menu_blur = 3
 

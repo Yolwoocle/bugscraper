@@ -19,7 +19,7 @@ function Pendulum:init(x, y, angle_range, radius, swing_speed, initial_angle_t)
     self.follow_player = false
     self.is_stompable = false
     self.is_affected_by_bounds = false
-    self.affected_by_walls = false
+    self.is_affected_by_walls = false
 	self.destroy_bullet_on_impact = false
 	self.is_immune_to_bullets = true
     self.counts_as_enemy = false

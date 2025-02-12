@@ -24,6 +24,9 @@ function PlayerTrigger:init(x, y, w, h, trigger_func, params)
     self.max_triggers = param(params.triggers, 1)
     self.triggers = self.max_triggers
 
+    self.is_affected_by_bounds = false
+    self.is_affected_by_walls = false
+
     self.rect = Rect:new(self.x, self.y, self.w, self.h)
 end
 

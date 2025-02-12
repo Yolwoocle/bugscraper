@@ -119,7 +119,7 @@ FONT_CHARACTERS =
 FONT_SYMBOLS_CHARACTERS = "🔊🔉🔈🎵🎼🔳🔲📺🕐↖🛜▶⏸🔄🔘⬅➡⬆⬇⏏🔫🔚📥👆🔙🗄⌨🎮🎚❤"..
     "✅❎🔗💡⚠🕹🫨💧🐜🐛🐝🪲🎓🌄🛅😎😈🐦𝕏🐰🐞🌐⏭🥚🥦🐧"
 FONT_7SEG_CHARACTERS = " 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-FONT_MINI_CHARACTERS = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_abcdefghijklmnopqrstuvwxyz{|}~àáâãäåąæçćèéêëęìíîïłðñńòóôõöøùúûüśýþÿźżŒœ"
+FONT_MINI_CHARACTERS = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_abcdefghijklmnopqrstuvwxyz{|}~ÀÁÂÃÄÅĄÆÇĆÈÉÊËĘÌÍÎÏŁÐÑŃÒÓÔÕÖØÙÚÛÜŚÝŹŻÞßàáâãäåąæçćèéêëęìíîïłðñńòóôõöøùúûüśýþÿźżŒœ"
 FONT_FAT_CHARACTERS = " ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890!,.:;'\"@#$%^&*()[]{}_-=+<>/\\|~"
 FONT_CHINESE_CHARACTERS = require "fonts.font_chinese_characters"
 
@@ -276,7 +276,7 @@ RAW_INPUT_MAP_DEFAULT_GLOBAL = {
     ui_reset_keys = {},
     split_keyboard = {"k_y"},
     leave_game = {},
-    join_game = {"k_l", "k_c", "k_b", "k_z", "c_a"},
+    join_game = {"k_c", "k_b", "k_z", "k_l", "c_a"},
 
     debug = {"k_f1", "c_back"},
 }
@@ -595,6 +595,5 @@ LIGHNING_COORDINATE_MODE_POLAR = "polar" -- radius, angle
 --------------------------------------------- 
 
 -- Super secret settings :)
--- SMASH_EASTER_EGG_PROBABILITY = 0.02
-SMASH_EASTER_EGG_PROBABILITY = 1.02
+SMASH_EASTER_EGG_PROBABILITY = 0.02
 TV_BLUESCREEN_PROBABILITY = 0.02
