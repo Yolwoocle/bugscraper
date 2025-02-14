@@ -132,4 +132,5 @@ function WorldGenerator:draw()
 	end
 end
 
+
 return WorldGenerator

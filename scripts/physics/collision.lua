@@ -27,6 +27,14 @@ function CollisionManager:remove(o)
 	self.world:remove(o)
 end
 
+function CollisionManager:get_items()
+	return self.world:getItems()
+end
+
+function CollisionManager:get_rect(o)
+	return self.world:getRect(o)
+end
+
 function CollisionManager:update(o,x,y,w,h)
 	-- Move to pos without changing position
 	x = x or o.x

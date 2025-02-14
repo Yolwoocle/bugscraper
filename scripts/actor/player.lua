@@ -376,6 +376,9 @@ end
 
 function Player:kill()
 	if self.is_dead then return end
+	if self.debug_god_mode then
+		return 
+	end
 	
 	Input:vibrate(self.n, 0.6, 0.4)
 	game:screenshake(10)

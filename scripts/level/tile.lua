@@ -4,19 +4,19 @@ require "scripts.util"
 
 local Tile = Class:inherit()
 
-function Tile:init_tile(x, y, w, spr)
+function Tile:init_tile(x, y, spr)
 	self.type = "tile"
 	self.name = "tile"
 	self.id = -1
 
-	self.mine_time = 0
-
 	self.ix = x
 	self.iy = y
-	self.x = x * w
-	self.y = y * w
-	self.w = w
-	self.h = w
+	self.x = x * BW
+	self.y = y * BW
+	self.w = BW
+	self.h = BW
+	self.mine_time = 0
+
 	self.spr = spr
 
 	self.collision_info = nil

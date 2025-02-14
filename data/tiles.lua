@@ -110,24 +110,11 @@ function Tiles:init()
 			is_slidable = false,
 		}
 	end)
-
-	-- self.tiles[5] = make_tile(function(self, x, y, w)
-	-- 	self:init_tile(x, y, w)
-	-- 	self.id = 5
-		
-	-- 	self.name = "bg_plate"
-	-- 	self.spr = images.bg_plate
-	-- end)
 end
 
-function Tiles:new_tile(n, x, y, w, ...)
+function Tiles:new_tile(x, y, n, ...)
 	local tile_class = self.tiles[n]
-	local tile = tile_class:new(x, y, w, ...)
-
-	-- Init collision box
-	if tile.collision_info then
-		Collision:add(tile, tile.x, tile.y, tile.w, tile.w)
-	end
+	local tile = tile_class:new(x, y, ...)
 
 	return tile
 end

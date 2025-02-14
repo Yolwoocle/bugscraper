@@ -250,19 +250,9 @@ end
 function Dung:draw()
     self:draw_enemy()
 
-    if game.debug.colview_mode then
-        rect_color({ 1, 0, 0, 0.4 }, "fill", self.mid_x - self.player_stationary_detect_range, 0,
-            self.player_stationary_detect_range * 2, CANVAS_HEIGHT)
-    end
-
     for _, player in pairs(game.players) do
         local c = self.player_stationary_counters[player.n]
         local s = (c ~= nil) and concat(round(c, 2)) or "?"
-        -- print_centered_outline(nil, nil, s, player.mid_x, player.y - 8)
-    end
-
-    if self.state_timer then
-        -- print_centered_outline(nil, nil, concat(self.telegraph_timer.time), self.mid_x, self.y - 32)
     end
 end
 

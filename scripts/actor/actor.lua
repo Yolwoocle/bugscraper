@@ -94,15 +94,15 @@ function Actor:init_actor(x, y, w, h, spr, args)
 		end
 
 		if other.collision_info then
+			if not self.is_affected_by_walls then
+				return "cross"
+			end
+
 			local collision_info = other.collision_info
 			if not collision_info.enabled then
 				return false
 			elseif collision_info.type == COLLISION_TYPE_SOLID then
-				if not self.is_affected_by_walls then
-					type = "cross"
-				else
-					type = "slide"
-				end
+				type = "slide"
 			elseif collision_info.type == COLLISION_TYPE_SEMISOLID then
 				type = ternary((self.y + self.h <= other.y) and (self.vy >= 0), "slide", "cross")
 			elseif collision_info.type == COLLISION_TYPE_PLAYER_NONSOLID then
