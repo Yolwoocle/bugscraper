@@ -82,7 +82,7 @@ BW = BLOCK_WIDTH
 COLLISION_TYPE_SOLID = "solid"
 COLLISION_TYPE_SEMISOLID = "semisolid"
 COLLISION_TYPE_NONSOLID = "nonsolid"
-COLLISION_TYPE_PLAYER_NONSOLID = "player_nonsolid"
+COLLISION_TYPE_PLAYER_NONSOLID = "player_nonsolid" -- not slid to players only
 
 TILE_AIR = 0
 TILE_METAL = 1

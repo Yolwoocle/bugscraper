@@ -18,6 +18,8 @@ local _ncalls = {}
 -- list of internal profiler functions
 local _internal = {}
 
+local _total_time = 0.0
+
 --- This is an internal function.
 -- @tparam string event Event type
 -- @tparam number line Line number
@@ -69,6 +71,7 @@ function profile.start()
     jit.flush()
   end
   debug.sethook(profile.hooker, "cr")
+  _total_time = clock()
 end
 
 --- Stops collecting data.
@@ -94,6 +97,8 @@ function profile.stop()
     end
   end
   collectgarbage('collect')
+
+  _total_time = clock() - _total_time
 end
 
 --- Resets all collected data.
@@ -145,7 +150,7 @@ function profile.query(limit)
     if _tcalled[f] then
       dt = clock() - _tcalled[f]
     end
-    t[i] = { i, _labeled[f] or '?', _ncalls[f], _telapsed[f] + dt, 1000*(_telapsed[f] + dt)/_ncalls[f], _defined[f] }
+    t[i] = { i, _labeled[f] or '?', _ncalls[f], (_telapsed[f] + dt), 1000*(_telapsed[f] + dt)/_ncalls[f], _defined[f] }
   end
   return t
 end
@@ -181,7 +186,10 @@ function profile.report(n)
   if #out > 0 then
     sz = sz..' | '..table.concat(out, ' | \n | ')..' | \n'
   end
-  return '\n'..sz..row
+  local out = sz..row
+  out = string.format("Total time: %.2f s\n", _total_time) .. out
+
+  return '\n'..out
 end
 
 -- store all internal profiler functions

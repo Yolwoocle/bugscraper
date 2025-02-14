@@ -11,6 +11,11 @@ end
 -- ax, ay: top left
 -- bx, by: bottom right
 function Rect:set_bounds(ax, ay, bx, by)
+    ax = ax or self.ax
+    ay = ay or self.ay
+    bx = bx or self.bx
+    by = by or self.by
+
     --  invert a and b if in this case:
     --   + (bx, by)    
     --                 
@@ -40,6 +45,19 @@ function Rect:set_bounds(ax, ay, bx, by)
     self.y = ay
     self.w = bx - ax
     self.h = by - ay
+end
+
+function Rect:set_ax(ax)
+    self:set_bounds(ax, self.ay, self.bx, self.by)
+end
+function Rect:set_ay(ay)
+    self:set_bounds(self.ax, ay, self.bx, self.by)
+end
+function Rect:set_bx(bx)
+    self:set_bounds(self.ax, self.ay, bx, self.by)
+end
+function Rect:set_by(by)
+    self:set_bounds(self.ax, self.ay, self.bx, by)
 end
 
 function Rect:clone()

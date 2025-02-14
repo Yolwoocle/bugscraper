@@ -92,73 +92,16 @@ function Debug:init(game)
             end
         end, do_not_require_ctrl = true },
         ["v"] = { "__jackofalltrades", function()
-
-            -- Particles:floating_image({
-            --     images.star_splash_small_1,
-            --     images.star_splash_small_2,
-            --     images.star_splash_small_3,
-            -- }, 100, 100, 1, 0, nil, 1, 300, 0.95)
-            Particles:static_image({
-                    images.star_splash_small_1,
-                    images.star_splash_small_2,
-                    images.star_splash_small_3,
-                }, 100, 100, 0, nil, 1)
-
-            -- local j = 0
-
-            -- local t_off, t_tel, t_on = 2, 0.75, 1
-            -- local t_total = t_off + t_tel + t_on
-            -- local function spawn_spike(x, y, orientation, j)
-            --     local spikes = enemies.TimedSpikes:new(x, y, t_off, t_tel, t_on, j*(t_total/68)*2, {
-            --         orientation = orientation,
-            --         start_after_standby = false,
-            --     })
-            --     spikes.spike_i = j
-            --     -- spikes.timing_mode = TIMED_SPIKES_TIMING_MODE_MANUAL
-            --     spikes.z = 2 - j/100
-            --     -- spikes.debug_values[1] = j
-            --     game:new_actor(spikes)
-            -- end
-            -- local spikes
-
-            -- -- Bottom
-            -- for i = 3, CANVAS_WIDTH/16 - 4, 2 do
-            --     spawn_spike(i * BW, CANVAS_HEIGHT*0.85, 0, j)
-            
-            --     if i ~= CANVAS_WIDTH/16 - 4 then
-            --         j = j + 1
-            --     end
-            -- end
-
-            
-            -- -- Right
-            -- for i = 14, 3, -2 do
-            --     spawn_spike(16*10, i * BW, 3, j)
-
-            --     if i ~= 3 then
-            --         j = j + 1
-            --     end
-            -- end
-
-            -- -- Top
-            -- for i = CANVAS_WIDTH/16 - 4, 3, -2 do
-            --     spawn_spike(i * BW, BW*4, 2, j)
-                
-            --     if i ~= 3 then
-            --         j = j + 1
-            --     end
-
-            -- end
-            
-            -- -- Left
-            -- for i = 3, 14, 2 do
-            --     spawn_spike(3*BW, i * BW, 1, j)
-                                
-            --     if i ~= 14 then
-            --         j = j + 1
-            --     end
-
-            -- end
+            -- game.level.map:rectangularize()
+            -- game.level.map:set_tile(16, 11, 0)
+            local w = game.level.map.width
+            local h = game.level.map.height
+            for ix = 0, w-1 do
+                for iy = 0, h-1 do
+                    local t = random_sample {0, 1, 1, 1, 1, 1, 1, 1, 1}
+                    game.level.map:set_tile(ix, iy, t)
+                end
+            end
         end },
         ["j"] = { "longer", function()
             for _, e in pairs(game.actors) do
@@ -430,6 +373,18 @@ function Debug:draw()
         local t = concat(love.timer.getFPS(), "FPS\n")
         print_outline(nil, nil, t, CANVAS_WIDTH - get_text_width(t), 0)
     end
+
+    game.camera:push()
+    if self.joystick_view then
+        if game.level.map._removeme_rectangles then
+            local rects = game.level.map._removeme_rectangles
+            for _, r in pairs(rects) do
+                rect_color(COL_YELLOW, "line", r.ax*16, r.ay*16, r.w*16, r.h*16)
+            end
+        end
+    end
+    game.camera:pop()
+
 end
 
 function Debug:draw_input_view()
@@ -760,12 +715,16 @@ end
 
 function Debug:draw_colview()
     game.camera:push()
+    Text:push_font(FONT_MINI)
 
-    local items, len = Collision.world:getItems()
+    local items, len = Collision:get_items()
     for i, it in pairs(items) do
-        local x, y, w, h = Collision.world:getRect(it)
+        local x, y, w, h = Collision:get_rect(it)
         rect_color({ 0, 1, 0, .2 }, "fill", x, y, w, h)
         rect_color({ 0, 1, 0, .5 }, "line", x, y, w, h)
+        if it.type == "tile" then
+            print_color(COL_WHITE, concat(it.id), x, y)
+        end
     end
     local level = game.level
     if level then
@@ -774,6 +733,7 @@ function Debug:draw_colview()
             level.cabin_inner_rect.h)
     end
 
+    Text:pop_font()
     game.camera:pop()
 end
 
