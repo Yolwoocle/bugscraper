@@ -171,12 +171,13 @@ end
 
 function TextManager:sanity_check_languages(reference_language)
     -- Check for missing keys
-    for ref_key, ref_value in pairs(self.languages[reference_language]) do
-        for lang_name, lang_values in pairs(self.languages) do
+    for lang_name, lang_values in pairs(self.languages) do
+        for ref_key, ref_value in pairs(self.languages[reference_language]) do
             if lang_name ~= reference_language and not lang_values[ref_key] then
                 print("- [Text] /!\\ missing key '"..ref_key.."' for language '"..lang_name.."'")
             end
         end
+        print(" ")
     end
 
     -- TODO: check for "ghost keys" that don't have an equivalent in the reference language

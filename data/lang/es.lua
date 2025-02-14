@@ -60,7 +60,7 @@ return {
             -- No reason to change these during translation, except if:
             --  * it's more appropriate to use a transliteration, or to use the script of the concerned language (e.g. Leo -> Léo in French)
             --  * they clash with something specific to the language/culture (please notify me if it is the case)
-            mio = "Mino", -- `Mío` = `mine`; mino = means nothing
+            mio = "Mio", -- `Mío` = `mine`; mino = means nothing
             cap = "Cap",
             zia = "Zia",
             tok = "Tok",

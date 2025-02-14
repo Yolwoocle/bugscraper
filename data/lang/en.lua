@@ -41,7 +41,6 @@ return {
         warning_web_controller = "Some browsers may not have proper controller support",
 
         combo = "COMBO %d", -- ADDED 
-        combo_special = "%d!",     -- ADDED // When a combo reaches a key value (e.g. "50!")
     },
     level = {
         world_prefix = "Department %s", 
@@ -128,7 +127,7 @@ return {
         },
         pomegranate_juice = {
             title = "Pomegranate Juice",
-            description = "Create an explosion when you take damage",
+            description = "Create an explosion when taking damage",
         },
     },
     input = {

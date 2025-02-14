@@ -36,9 +36,7 @@ return {
         win_prompt = "[Pause pour continuer]",
         warning_web_controller = "Certains navigateurs ne supportent pas correctement les manettes",
 
-        fury = "FURIE",
-        combo_special = "%d !", -- When a combo reaches a key value (e.g. "50!")
-        combo_end = "COMBO %d !" -- ADDED
+        combo = "COMBO %d !",
     },
     level = {
         world_prefix = "Département %s",
@@ -63,7 +61,8 @@ return {
         name = {
             -- Player names
             -- No reason to change these during translation, except if:
-            --  * it's more appropriate to use a transliteration, or to use the script of the concerned language (e.g. Leo -> Léo in French)
+            --  * it's more appropriate to use a transliteration, or to use the script 
+            --    of the concerned language (e.g. Leo -> Léo in French, or, say, using Kanji instead of roman letters)
             --  * they clash with something specific to the language/culture (please notify me if it is the case)
             mio = "Mio",
             cap = "Cap",
@@ -72,6 +71,8 @@ return {
             nel = "Nel",
             rico = "Rico",
             leo = "Léo",
+            dodu = "Dodu",
+            yv = "Y.V.",
         },
         -- Short appreviation to denote players by their number.
         -- Example: in english, "P1" means "Player 1", in french "J1" means "Joueur 1".
@@ -122,6 +123,10 @@ return {
         hot_chocolate = {
             title = "Chocolat chaud",
             description = "x%d vitesse de recharge",
+        },
+        pomegranate_juice = {
+            title = "Jus de grenadine",
+            description = "Créer une explosion en cas de dégâts",
         },
     },
     input = {
@@ -265,8 +270,14 @@ return {
             kills = "Ennemis tués",
             time = "Temps",
             floor = "Étage",
+            score = "Score",
+
             continue = "CONTINUER",
             quick_restart = "REDÉMARRAGE RAPIDE",
+        },
+        new_reward = {
+            new_skin = "Nouveau personnage !", -- ADDED
+            new_upgrade = "Nouvelle amélioration !", -- ADDED
         },
         win = {
             title = "FÉLICITATIONS !",
