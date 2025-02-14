@@ -112,10 +112,10 @@ function PlayerPreview:init(player_n, x, y, w, h)
                 self.t = self.t + dt
                 self.is_pressed = Input:action_pressed(self.player_n, "ui_select")
                 if self.t > 0.1 and Input:action_pressed(self.player_n, "ui_select") then
-                    self:on_confirm_character_select()
+                    self:confirm_character_select()
                 end
                 if self.t > 0.1 and Input:action_pressed(self.player_n, "ui_back") then
-                    self:on_cancel_character_select()
+                    self:cancel_character_select()
                 end
 
                 if Input:action_pressed(self.player_n, "ui_left") then
@@ -253,14 +253,14 @@ function PlayerPreview:find_first_free_skin(start, diff)
     return start
 end
 
-function PlayerPreview:on_confirm_character_select()
+function PlayerPreview:confirm_character_select()
     Input:get_user(self.player_n):set_skin(self.selection)
 
     game:join_game(self.player_n)
     self.queued_player:remove()
 end
 
-function PlayerPreview:on_cancel_character_select()
+function PlayerPreview:cancel_character_select()
     game:remove_queued_player(self.player_n)
     self.state_machine:set_state("waiting")
 end

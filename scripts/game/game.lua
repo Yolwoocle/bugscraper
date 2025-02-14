@@ -1148,6 +1148,10 @@ function Game:joystickremoved(joystick)
 		else
 			self.menu_manager:enable_joystick_wait_mode(joystick)
 		end
+
+		if self.queued_players and self.queued_players[player_n] then
+			self.game_ui.player_previews[player_n]:cancel_character_select()
+		end
 	end
 end
 
