@@ -82,6 +82,12 @@ local img_names = {
 	dodu_wall_slide =  "actors/players/dodu_idle",
 	dodu_dead =        "actors/players/dodu_dead",
 
+	yv_idle =          "actors/players/yv_idle",
+	yv_walk_down =     "actors/players/yv_walk_down",
+	yv_airborne =      "actors/players/yv_airborne",
+	yv_wall_slide =    "actors/players/yv_wall_slide",
+	yv_dead =          "actors/players/yv_dead",
+
 	duck =             "actors/players/duck",
 
 	-- enemies

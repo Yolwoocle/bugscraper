@@ -115,7 +115,8 @@ end
 -- @tparam function b Second function
 -- @treturn boolean True if "a" should rank higher than "b"
 function profile.comp(a, b)
-  local dt = _telapsed[b] - _telapsed[a]
+  -- local dt = _telapsed[b] - _telapsed[a]
+  local dt = (_telapsed[b]/_ncalls[b]) - (_telapsed[a]/_ncalls[a])
   if dt == 0 then
     return _ncalls[b] < _ncalls[a]
   end
@@ -144,12 +145,12 @@ function profile.query(limit)
     if _tcalled[f] then
       dt = clock() - _tcalled[f]
     end
-    t[i] = { i, _labeled[f] or '?', _ncalls[f], _telapsed[f] + dt, _defined[f] }
+    t[i] = { i, _labeled[f] or '?', _ncalls[f], _telapsed[f] + dt, 1000*(_telapsed[f] + dt)/_ncalls[f], _defined[f] }
   end
   return t
 end
 
-local cols = { 3, 29, 11, 24, 32 }
+local cols = { 3, 29, 11, 24, 24, 32 }
 
 --- Generates a text report of functions that have been called since the profile was started.
 -- Returns the report as a string that can be printed to the console.
@@ -174,8 +175,8 @@ function profile.report(n)
     out[i] = table.concat(row, ' | ')
   end
 
-  local row = " +-----+-------------------------------+-------------+--------------------------+----------------------------------+ \n"
-  local col = " | #   | Function                      | Calls       | Time                     | Code                             | \n"
+  local row = " +-----+-------------------------------+-------------+--------------------------+--------------------------+----------------------------------+ \n"
+  local col = " | #   | Function                      | Calls       | Time                     | Mean time (ms)           | Code                             | \n"
   local sz = row..col..row
   if #out > 0 then
     sz = sz..' | '..table.concat(out, ' | \n | ')..' | \n'

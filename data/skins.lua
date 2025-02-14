@@ -75,6 +75,18 @@ local skins = {
 		text_key = "rico",
 	},
 	{
+		anim_idle = {images.yv_idle, 0.2, 4},
+		anim_wall_slide = {images.yv_wall_slide},
+		img_walk_down = images.yv_walk_down,
+		img_airborne = images.yv_airborne,
+		spr_dead = images.yv_dead,
+
+		color_palette = {COL_WHITE, COL_LIGHTEST_GRAY, COL_MID_GRAY, COL_DARK_GRAY, COL_BLACK_BLUE},
+		menu_color = COL_MID_GRAY, 
+		icon = "🔺",
+		text_key = "yv",
+	},
+	{
 		anim_idle = {images.leo, 0.2, 1},
 		anim_wall_slide = {images.leo},
 		img_walk_down = images.leo,

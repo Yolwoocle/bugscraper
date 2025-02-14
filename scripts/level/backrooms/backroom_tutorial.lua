@@ -34,6 +34,7 @@ function BackroomTutorial:generate(world_generator)
 	world_generator:write_rect_fill(Rect:new(95, 0,  96, 13), TILE_METAL) -- n
 	world_generator:write_rect_fill(Rect:new(57, 6,  60, 6),  TILE_METAL) -- o
 	world_generator:write_rect_fill(Rect:new(60, 7,  60, 8),  TILE_METAL) -- p
+	world_generator:write_rect_fill(Rect:new(85, 8,  94, 8),  TILE_METAL) -- q
 
 	world_generator:write_rect_fill(Rect:new(3, 8, 3, 8),  TILE_SEMISOLID) -- d1
 	

@@ -146,6 +146,7 @@ return {
             join = "Rejoindre",
             split_keyboard = "Partager clavier", -- Try to keep short
 
+            wall_jump = "Saut mural",
             jetpack = "Jetpack",
         },
     },

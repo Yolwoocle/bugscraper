@@ -66,6 +66,8 @@ function Files:read_config_file(path, reference, create_if_missing)
         end
     end
 
+	file:close()
+
     return output
 end
 
