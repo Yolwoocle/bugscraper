@@ -124,7 +124,7 @@ local waves = {
 		max = 5,
 		enemies = {
 			{ E.Larva, 3 },
-			{ E.Fly,   3 },
+			-- { E.Fly,   3 },
 		},
 		music = "w1",
 

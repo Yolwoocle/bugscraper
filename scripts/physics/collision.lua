@@ -15,14 +15,6 @@ function CollisionManager:add(o, x, y, w, h)
 	self.world:add(o, x,y,w,h)
 end
 
---[[
-function Collision:add(self, o)
-	local x, y = o.x - o.w, o.y - o.h
-	local w, h = o.w * 2, o.h * 2
-	self.world:add(o, x,y,w,h)
-end
---]]
-
 function CollisionManager:remove(o)
 	self.world:remove(o)
 end
