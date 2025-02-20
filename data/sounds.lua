@@ -198,6 +198,13 @@ end
 -- sounds.music_galaxy_trip = new_source("music/v2_teelopes.ogg", "static", {looping = true})
 sounds.music_intro_ingame =     new_source("music/music_intro_ingame.ogg",     "stream", {looping = true})
 sounds.music_intro_paused =     new_source("music/music_intro_paused.ogg",     "stream", {looping = true})
+sounds.music_ground_floor_players_paused =    new_source("music/music_ground_floor_players_paused.ogg", "stream", {looping=true}) 
+sounds.music_ground_floor_empty_ingame =      new_source("music/music_ground_floor_empty_ingame.ogg",   "stream", {looping=true}) 
+sounds.music_ground_floor_empty_paused =      new_source("music/music_ground_floor_empty_paused.ogg",   "stream", {looping=true})
+sounds.music_ground_floor_players_ingame =    new_source("music/music_ground_floor_players_ingame.ogg", "stream", {looping=true})
+
+sounds.music_intro_ingame =     new_source("music/music_intro_ingame.ogg",     "stream", {looping = true})
+sounds.music_intro_paused =     new_source("music/music_intro_paused.ogg",     "stream", {looping = true})
 sounds.music_w1_ingame =        new_source("music/music_w1_ingame.ogg",        "stream", {looping = true})
 sounds.music_w1_paused =        new_source("music/music_w1_paused.ogg",        "stream", {looping = true})
 sounds.music_w2_ingame =        new_source("music/music_w2_ingame.mp3",        "stream", {looping = true})

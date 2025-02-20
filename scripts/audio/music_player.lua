@@ -12,11 +12,13 @@ function MusicPlayer:init()
 	local disk_class = ternary(OPERATING_SYSTEM == "Web", MusicDiskWeb, MusicDisk)
 	-- local disk_class = MusicDiskWeb
 	self.disks = {
-		["intro"] =           disk_class:new(self, sounds.music_intro_ingame.source, sounds.music_intro_paused.source),
-		["w1"] =              disk_class:new(self, sounds.music_w1_ingame.source, sounds.music_w1_paused.source),
-		["w2"] =              disk_class:new(self, sounds.music_w2_ingame.source, sounds.music_w2_ingame.source),
-		["w3"] =              disk_class:new(self, sounds.music_w3_ingame.source, sounds.music_w3_paused.source),
-		["w4"] =              disk_class:new(self, sounds.music_w1_ingame.source, sounds.music_w1_paused.source),
+		["ground_floor_empty"] = disk_class:new(self, sounds.music_ground_floor_empty_ingame.source, sounds.music_ground_floor_empty_paused.source),
+		["ground_floor_players"] =    disk_class:new(self, sounds.music_ground_floor_players_ingame.source, sounds.music_ground_floor_players_paused.source),
+		
+		["w1"] =                      disk_class:new(self, sounds.music_w1_ingame.source, sounds.music_w1_paused.source),
+		["w2"] =                      disk_class:new(self, sounds.music_w2_ingame.source, sounds.music_w2_ingame.source),
+		["w3"] =                      disk_class:new(self, sounds.music_w3_ingame.source, sounds.music_w3_paused.source),
+		["w4"] =                      disk_class:new(self, sounds.music_w1_ingame.source, sounds.music_w1_paused.source),
 		
 		["game_over"] =       disk_class:new(self, sounds.music_game_over.source, sounds.music_game_over.source),
 		["cafeteria"] =       disk_class:new(self, sounds.music_cafeteria_ingame.source, sounds.music_cafeteria_paused.source),
@@ -35,7 +37,7 @@ function MusicPlayer:init()
 	self.volume = Options:get("music_volume")
 
 	self.music_mode = MUSIC_MODE_INGAME
-	self.current_disk = self.disks["intro"]
+	self.current_disk = self.disks["ground_floor_empty"]
 	self.current_disk:set_mode(self.music_mode)
 	self.pause_volume = 0.5
 
@@ -75,7 +77,8 @@ function MusicPlayer:update_fadeout(dt)
 	end
 end
 
-function MusicPlayer:set_disk(disk_name)
+function MusicPlayer:set_disk(disk_name, flags)
+	flags = flags or {}
 	if disk_name == "off" then
 		self:stop()
 		self.current_disk = nil
@@ -90,15 +93,31 @@ function MusicPlayer:set_disk(disk_name)
 		return 
 	end
 	
+	local previous_disk_time = 0.0
+	if flags.continue_previous_pos and self.current_disk then
+		if self.current_disk.current_source then
+			local current_source = self.current_disk.current_source
+			previous_disk_time = current_source:tell()
+			print_debug("a", current_source:tell())
+
+		end
+	end
+	
 	if self.current_disk then
 		self.current_disk:stop()
 	end
-	
+
 	self.current_disk = disk
 	if self.current_disk then
 		self:set_music_mode(self.music_mode)
 	end
 	self:play()
+
+	if flags.continue_previous_pos and self.current_disk and self.current_disk.current_source then
+		print_debug("b", previous_disk_time)
+		local source = self.current_disk.current_source
+		source:seek(previous_disk_time)
+	end
 end
 
 function MusicPlayer:fade_out(new_disk, duration)

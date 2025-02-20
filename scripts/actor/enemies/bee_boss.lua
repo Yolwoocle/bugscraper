@@ -499,36 +499,6 @@ function BeeBoss:spawn_spikes()
             j = j + 1
         end
     end
-
-    
-    -- Right
-    for i = 14, 3, -1 do
-        spawn_spike(CANVAS_WIDTH - 32, i * BW, 3, j)
-
-        if i ~= 3 then
-            j = j + 1
-        end
-    end
-
-    -- Top
-    for i = CANVAS_WIDTH/16 - 4, 3, -1 do
-        spawn_spike(i * BW, BW*3, 2, j)
-        
-        if i ~= 3 then
-            j = j + 1
-        end
-
-    end
-    
-    -- Left
-    for i = 3, 14 do
-        spawn_spike(3, i * BW, 1, j)
-                        
-        if i ~= 14 then
-            j = j + 1
-        end
-
-    end
 end
 
 

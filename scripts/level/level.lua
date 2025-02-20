@@ -250,13 +250,16 @@ end
 function Level:update_elevator_progress(dt)
 	self.new_wave_progress = math.max(0, self.new_wave_progress - dt)
 	self.new_wave_animation_state_machine:update(dt)
-end
 
+end
 
 function Level:on_player_joined(player)
 	if self.backroom and self.backroom.on_player_joined then
 		self.backroom:on_player_joined(player)
 	end
+end
+
+function Level:on_player_leave(player_n)
 end
 
 function Level:on_door_close()

@@ -125,6 +125,18 @@ function Game:new_game(params)
 	-- Remove old queued players
 	self:remove_queued_players()
 
+	-- Music
+	if self.music_player then self.music_player:stop() end
+	self.music_player = MusicPlayer:new()
+	self.music_player:set_disk("ground_floor_empty")
+	self.music_player:play()
+	self.sfx_elevator_bg            = sounds.elevator_bg.source
+	self.sfx_elevator_bg_volume     = self.sfx_elevator_bg:getVolume()
+	self.sfx_elevator_bg_def_volume = self.sfx_elevator_bg:getVolume()
+	-- self.music_source:setVolume(options:get("music_volume"))
+	self.sfx_elevator_bg:setVolume(0)
+	self.sfx_elevator_bg:play()
+
 	-- Players
 	self.waves_until_respawn = {}
 	for i = 1, MAX_NUMBER_OF_PLAYERS do
@@ -203,18 +215,6 @@ function Game:new_game(params)
 
 	self.smoke_canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
 	self.smoke_buffer_canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
-
-	-- Music
-	if self.music_player then self.music_player:stop() end
-	self.music_player = MusicPlayer:new()
-	self.music_player:set_disk("intro")
-	self.music_player:play()
-	self.sfx_elevator_bg            = sounds.elevator_bg.source
-	self.sfx_elevator_bg_volume     = self.sfx_elevator_bg:getVolume()
-	self.sfx_elevator_bg_def_volume = self.sfx_elevator_bg:getVolume()
-	-- self.music_source:setVolume(options:get("music_volume"))
-	self.sfx_elevator_bg:setVolume(0)
-	self.sfx_elevator_bg:play()
 
 	-- Cutscenes
 	self.cutscene = nil
@@ -983,13 +983,18 @@ function Game:new_player(player_n, x, y, put_in_buffer)
 
 	self:new_actor(player)
 
-	if self.level.backroom and self.level.backroom.get_x_target_after_join_game then
-		player.show_hud = false
-		player:set_input_mode(PLAYER_INPUT_MODE_CODE)
-		player:set_code_input_mode_target_x(self.level.backroom:get_x_target_after_join_game(), function(p)
-			p.show_hud = true
-			p:set_input_mode(PLAYER_INPUT_MODE_USER)
-		end)
+	if self.level.backroom then 
+		if self.level.backroom.get_x_target_after_join_game then
+			player.show_hud = false
+			player:set_input_mode(PLAYER_INPUT_MODE_CODE)
+			player:set_code_input_mode_target_x(self.level.backroom:get_x_target_after_join_game(), function(p)
+				p.show_hud = true
+				p:set_input_mode(PLAYER_INPUT_MODE_USER)
+			end)
+		end
+		if self.level.backroom.on_new_player then
+			self.level.backroom:on_new_player(player)
+		end
 	end
 
 	return player
@@ -1010,6 +1015,11 @@ function Game:leave_game(player_n)
 	if profile_id == "keyboard_split_p1" or profile_id == "keyboard_split_p2" then
 		Input:unsplit_keyboard()
 	end
+
+	if self.level.backroom.on_player_leave then
+		self.level.backroom:on_player_leave(player)
+	end
+	self.level:on_player_leave(player_n)
 end
 
 function Game:update_queued_players(dt)

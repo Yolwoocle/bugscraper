@@ -92,6 +92,21 @@ function BackroomGroundFloor:can_exit()
 	return BackroomGroundFloor.super.can_exit(self)
 end
 
+function BackroomGroundFloor:on_new_player()
+	game.music_player:set_disk("ground_floor_players", {
+		continue_previous_pos = true,
+	})
+end
+
+function BackroomGroundFloor:on_player_leave()
+	if game:get_number_of_alive_players() <= 0 then
+		game.music_player:set_disk("ground_floor_empty", {
+			continue_previous_pos = true,
+		})
+	end
+end
+
+
 function BackroomGroundFloor:on_exit()
 	BackroomGroundFloor.super.on_exit(self)
     game:start_game()
