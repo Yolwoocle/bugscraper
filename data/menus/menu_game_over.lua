@@ -110,13 +110,6 @@ local game_over_items       = {
         }
     },
     { "" },
-    { "▶ {menu.game_over.continue}", function(item)
-        -- scotch
-        if game.has_finished_game_over_animation then
-            game.has_seen_controller_warning = true
-            game:new_game()
-        end
-    end },
     { "🔄 {menu.game_over.quick_restart}", function(item)
         if game.has_finished_game_over_animation then
             game.has_seen_controller_warning = true
@@ -128,6 +121,13 @@ local game_over_items       = {
         item.is_visible =    not Options:get("convention_mode")
     end
     },
+    { "▶ {menu.game_over.continue}", function(item)
+        -- scotch
+        if game.has_finished_game_over_animation then
+            game.has_seen_controller_warning = true
+            game:new_game()
+        end
+    end },
 }
 if DEMO_BUILD then
     table.insert(game_over_items,

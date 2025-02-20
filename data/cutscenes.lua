@@ -40,7 +40,7 @@ cutscenes.tutorial_start = Cutscene:new("tutorial_end", {
 
         duration = 5.0,
         enter = function(scene)
-            game.game_ui:start_title("Alexandre Mercier", "OLX", "{menu.credits.music}", 0.5, 4.0, 0.5)
+            game.game_ui:start_title("OLX", "Alexandre Mercier", "{menu.credits.music}", 0.5, 4.0, 0.5)
         end,
     }),
     CutsceneScene:new({

@@ -69,7 +69,9 @@ local function generate_menus()
             game.menu_manager:back()
         end },
         { "{menu.yes}", function()
-            game:new_game(game.start_params)
+            game:new_game({
+                backroom = game.start_params.backroom,
+            })
         end },
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
 

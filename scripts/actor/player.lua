@@ -1260,7 +1260,6 @@ function Player:draw_controls()
 		Input:draw_input_prompt(self.n, tuto[1], tuto[2], self:get_controls_text_color(i), x, y, {
 			alignment = "center",
 			background_color = transparent_color(COL_BLACK_BLUE, 0.5),
-			outline_color = COL_WHITE,
 		})
 	end
 end
