@@ -1282,7 +1282,7 @@ function Player:draw_player()
 
 	if self.debug_god_mode then
 		Text:push_font(FONT_MINI)
-		print_outline(nil, nil, "god", self.x, self.y - 16)
+		print_outline(nil, nil, "godmode", self.x, self.y - 16)
 		Text:pop_font()
 	end
 end

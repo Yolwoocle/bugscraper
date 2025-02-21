@@ -32,7 +32,7 @@ function BackgroundGreenhouse:init(level)
 	}))
 
 	self:add_layer(BackgroundLayerPattern:new(self, 0.6, {
-		pattern_image = images._test_window,
+		pattern_images = {images._test_window},
 		pattern_x_offsets = {0, 32},
 		pattern_y_offsets = {0, 0},
 		determinant_function = function(_self, x, y)

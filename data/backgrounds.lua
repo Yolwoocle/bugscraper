@@ -1,7 +1,7 @@
 return {
     BackgroundPlain =      require("scripts.level.background.background_plain"),
     BackgroundTest3D =     require("scripts.level.background.background_test3d"),
-    BackgroundDots =       require("scripts.level.background.background_dots"),
+    BackgroundW1 =         require("scripts.level.background.background_w1"),
     BackgroundBeehive =    require("scripts.level.background.background_beehive"),
     BackgroundFactory =    require("scripts.level.background.background_factory"),
     BackgroundServers =    require("scripts.level.background.background_servers"),

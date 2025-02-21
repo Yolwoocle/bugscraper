@@ -504,6 +504,15 @@ local img_names = {
 	bg_city_3 =     "level/city_3",
 	bg_city_shine = "level/city_shine",
 
+	bg_w1_back_bricks = "level/background/w1/bg_w1_back_bricks",
+	bg_w1_bricks = "level/background/w1/bg_w1_bricks",
+	bg_w1_beams_close = "level/background/w1/bg_w1_beams_close",
+	bg_w1_beams_far = "level/background/w1/bg_w1_beams_far",
+	bg_w1_lights = "level/background/w1/bg_w1_lights",
+	bg_w1_pipe_1 = "level/background/w1/bg_w1_pipe_1",
+	bg_w1_pipe_2 = "level/background/w1/bg_w1_pipe_2",
+	bg_w1_rope = "level/background/w1/bg_w1_rope",
+	
 	bg_element_w1_01 = "level/background/bg_element_w1_01",
 	bg_element_w1_02 = "level/background/bg_element_w1_02",
 	bg_element_w1_03 = "level/background/bg_element_w1_03",

@@ -15,7 +15,7 @@ function BackgroundFactory:init(level)
 	-- 	images = {images.cabin_grid}
 	-- }))
 	self:add_layer(BackgroundLayerPattern:new(self, 0.2, {
-		pattern_image = images._test_hexagon_small,
+		pattern_images = {images._test_hexagon_small},
 		pattern_x_offsets = {0, 7},
 		pattern_y_offsets = {-2, -2},
 		determinant_function = function(_self, x, y)
@@ -24,7 +24,7 @@ function BackgroundFactory:init(level)
 	}))
 	
 	self:add_layer(BackgroundLayerPattern:new(self, 0.4, {
-		pattern_image = images._test_hexagon,
+		pattern_images = {images._test_hexagon},
 		pattern_x_offsets = {0, 15},
 		pattern_y_offsets = {-7, -7},
 		determinant_function = function(_self, x, y)

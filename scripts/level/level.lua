@@ -9,7 +9,7 @@ local BackgroundTest3D = require "scripts.level.background.background_test3d"
 local BackgroundBeehive = require "scripts.level.background.background_beehive"
 local BackgroundCafeteria = require "scripts.level.background.background_cafeteria"
 local BackgroundFinal = require "scripts.level.background.background_final"
-local BackgroundDots = require "scripts.level.background.background_dots"
+local BackgroundW1 = require "scripts.level.background.background_w1"
 local Elevator = require "scripts.level.elevator"
 local Wave = require "scripts.level.wave"
 local StateMachine = require "scripts.state_machine"
@@ -73,7 +73,7 @@ function Level:init(game, backroom)
 	self.elevator = Elevator:new(self)
 
 	-- Background
-	self.background = BackgroundDots:new(self)
+	self.background = BackgroundW1:new(self)
 	self.background:set_def_speed(self.def_level_speed)
 	
 	-- Backroom
