@@ -130,6 +130,8 @@ function Game:new_game(params)
 	self.music_player = MusicPlayer:new()
 	self.music_player:set_disk("ground_floor_empty")
 	self.music_player:play()
+	Options:update_volume()
+
 	self.sfx_elevator_bg            = sounds.elevator_bg.source
 	self.sfx_elevator_bg_volume     = self.sfx_elevator_bg:getVolume()
 	self.sfx_elevator_bg_def_volume = self.sfx_elevator_bg:getVolume()
