@@ -114,12 +114,6 @@ function ExitSign:draw()
 
     self.spr:set_image(images.exit_sign_front)
     self:draw_enemy()
-
-    -- love.graphics.line(self.mid_x, self.y + self.h, self.mid_x, self.y + self.h - self.spring_ideal_length)
-    -- for i=1, #self.vals-1 do
-    --     local m = 0.6
-    --     love.graphics.line(self.mid_x + i*m + 30, self.mid_y - self.vals[i], self.mid_x + (i + 1)*m + 30, self.mid_y - self.vals[i+1])
-    -- end
 end
 
 ------------------------------------------------------------
