@@ -301,6 +301,7 @@ return {
             sound_design = "Sound design",
             published_by = "Published by",
             localization = "Localization",
+            additional_art = "Additional art",
             playtesting = "Playtesting",
             special_thanks = "Special thanks",
             asset_creators = "Asset creators",

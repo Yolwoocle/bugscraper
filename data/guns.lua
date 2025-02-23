@@ -177,7 +177,7 @@ function Guns:init()
 		self.knockback = 150
 
 		self.random_angle_offset = 0
-		self.damage = 1.2
+		self.damage = 1.5
 		self.is_auto = true
 		self.spr = images.gun_ring
 		self.sfx = {"gunshot_ring_1", "gunshot_ring_2", "gunshot_ring_3"}

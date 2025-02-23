@@ -12,8 +12,8 @@ function MusicPlayer:init()
 	local disk_class = ternary(OPERATING_SYSTEM == "Web", MusicDiskWeb, MusicDisk)
 	-- local disk_class = MusicDiskWeb
 	self.disks = {
-		["ground_floor_empty"] = disk_class:new(self, sounds.music_ground_floor_empty_ingame.source, sounds.music_ground_floor_empty_paused.source),
-		["ground_floor_players"] =    disk_class:new(self, sounds.music_ground_floor_players_ingame.source, sounds.music_ground_floor_players_paused.source),
+		["ground_floor_empty"] = disk_class:new(self, sounds.music_ground_floor_empty_ingame.source, sounds.music_ground_floor_empty_paused.source, {volume=0.75}),
+		["ground_floor_players"] =    disk_class:new(self, sounds.music_ground_floor_players_ingame.source, sounds.music_ground_floor_players_paused.source, {volume=0.75}),
 		
 		["w1"] =                      disk_class:new(self, sounds.music_w1_ingame.source, sounds.music_w1_paused.source),
 		["w2"] =                      disk_class:new(self, sounds.music_w2_ingame.source, sounds.music_w2_ingame.source),
@@ -193,6 +193,9 @@ function MusicPlayer:get_total_volume()
 	local volume = self.volume * self.fadeout_volume
 	if self.music_mode == MUSIC_MODE_PAUSE then
 		volume = volume * self.pause_volume
+	end
+	if self.current_disk then
+		volume = volume * self.current_disk.volume
 	end
 	return volume
 end

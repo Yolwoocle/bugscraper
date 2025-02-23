@@ -150,6 +150,12 @@ function HoneycombFootball:on_stomped()
     if math.sin(self.pong_direction) < 0 then
         self.pong_direction = math.atan2(math.abs(math.sin(self.pong_direction)), math.cos(self.pong_direction))
     end
+
+    game:frameskip(10)
+    game:screenshake(8)
+
+    self:set_invincibility(0.5)
+    self:set_harmless(0.5)
 end
 
 function HoneycombFootball:draw()

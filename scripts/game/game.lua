@@ -171,8 +171,6 @@ function Game:new_game(params)
 	self.colview_mode = false
 	self.msg_log = {}
 
-	self.test_t = 0
-
 	-- Logo
 	self.logo_y = 0
 	self.logo_y_target = 0

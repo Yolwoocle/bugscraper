@@ -137,13 +137,14 @@ function MenuManager:set_menu(menu, params)
 	self.cur_menu_name = menu
 
 	-- Update selection to first selectable
-	local sel, found = self:find_selectable_from(1, 1)
-	self:set_selection(sel)
 	if not params.skip_on_set_call then
 		self.cur_menu:on_set()
 	end
 	self.cur_menu:update(0)
-
+	
+	local sel, found = self:find_selectable_from(1, 1)
+	self:set_selection(sel)
+	
 	-- Reset game screenshake
 	-- if game and game.camera then
 		-- game.camera:reset()

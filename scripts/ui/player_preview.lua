@@ -165,7 +165,12 @@ function PlayerPreview:init(player_n, x, y, w, h)
 
                     local _y = y + 26 + ternary(i == self.selection_n, -1, 0)
                     rect_color(ternary(i == self.selection_n, COL_WHITE, COL_BLACK_BLUE), "fill", ix, _y - 1, 4, ternary(i == self.selection_n, 5, 3))
-                    rect_color(skins[i].color_palette[1], "fill", ix+1, _y, 2, ternary(i == self.selection_n, 3, 1))
+
+                    local col = skins[i].color_palette[1]
+                    if not game.skin_choices[i] then
+                        col = COL_BLACK_BLUE
+                    end
+                    rect_color(col, "fill", ix+1, _y, 2, ternary(i == self.selection_n, 3, 1))
                 end
 
                 local icon_left = Input:get_action_primary_icon(self.player_n, "ui_left")

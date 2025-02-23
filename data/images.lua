@@ -91,6 +91,7 @@ local img_names = {
 	duck =             "actors/players/duck",
 
 	-- enemies
+	bee_boss_alt_1 =           "actors/enemies/bee_boss_alt_1",
 	bee_boss_1 =               "actors/enemies/bee_boss_1",
 	bee_boss_2 =               "actors/enemies/bee_boss_2",
 	big_bug_1 =                "actors/enemies/big_bug_1",

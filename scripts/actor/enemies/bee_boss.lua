@@ -13,10 +13,10 @@ local BeeletMinion = require "scripts.actor.enemies.beelet_minion"
 local BeeBoss = Enemy:inherit()
 
 function BeeBoss:init(x, y)
-    self.super.init(self, x,y, images.bee_boss_1, 32, 32)
+    self.super.init(self, x,y, images.bee_boss_alt_1, 32, 32)
     self.name = "bee_boss"
 
-    self.life = 200
+    self.life = 400
     self.stomps = math.huge
     self.is_stompable = true
     self.damage_on_stomp = 10
@@ -34,6 +34,8 @@ function BeeBoss:init(x, y)
 
     self.attack_radius = 16
     self.thwomp_speed = 100
+
+    self.spr:set_anchor(SPRITE_ANCHOR_CENTER_CENTER)
 
     self.gravity = 0
     self.follow_player = false
@@ -98,7 +100,7 @@ function BeeBoss:init(x, y)
                 self.future_pong_dir = (pi/4 + pi/2 * love.math.random(0,3)) % pi2
 	            self.flip_mode = ENEMY_FLIP_MODE_MANUAL
                 self.spr:set_flip_x(false)
-                self.spr.rot = self.future_pong_dir
+                self.spr.rot = self.future_pong_dir - pi/2
             end,
             update = function(state, dt)
                 local r = 3 * self.pong_telegraph_timer:get_ratio()
@@ -127,7 +129,7 @@ function BeeBoss:init(x, y)
                 end
             end,
             update = function(state, dt)
-                self.spr.rot = self.pong_direction or 0
+                self.spr.rot = (self.pong_direction or 0) - pi/2
 
                 if self.attack_bounces <= 0 then
                     self:set_state("pong_linger")
@@ -331,6 +333,7 @@ function BeeBoss:init(x, y)
                     t = spike:get_cycle_total_time() + 0.9
                 end
                 self.state_timer:start(t)
+                state.t = 0
             end,
             update = function(state, dt)
                 self.spr:update_offset(random_neighbor(2), random_neighbor(2))
@@ -343,6 +346,7 @@ function BeeBoss:init(x, y)
                     self.is_stompable = true
                     self:set_state("random")
                 end
+                state.t = state.t + dt
             end,
             exit = function(state)
                 self.spr:update_offset(0, 0)
@@ -350,11 +354,15 @@ function BeeBoss:init(x, y)
                 self.is_stompable = true
             end,
             draw = function(state)
-                
+                if self.is_stompable then
+                    exec_color(ternary((state.t % 0.1) < 0.05, {1,1,1,1}, {1,1,1,0}), function()
+                        draw_centered(images.dung_beetle_shield, self.mid_x, self.mid_y)    
+                    end)
+                end
             end
         },
 
-    }, "thwomp")
+    }, "big_wave")
 
 end
 
@@ -394,7 +402,7 @@ end
 
 function BeeBoss:on_stomped(player)
     game:frameskip(10)
-    game:screenshake(8)
+    game:screenshake(8) 
 
     self:set_invincibility(0.5)
     self:set_harmless(0.5)

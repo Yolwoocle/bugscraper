@@ -38,6 +38,7 @@ function MetaprogressionManager:init()
         { threshold = 10000, rewards = { { type = "skin", skin = t.dodu } } },
         { threshold = 5000, rewards = { { type = "upgrade", upgrade = "UpgradePomegranateJuice" } } },
         { threshold = 10000, rewards = { { type = "skin", skin = t.leo } } },
+        { threshold = 10000, rewards = { { type = "skin", skin = t.yv } } },
     }
 
     self:read_progress()
