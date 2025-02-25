@@ -511,9 +511,9 @@ function InputManager:generate_unknown_key_icon(icon, text)
     local new_canvas = love.graphics.newCanvas(icon:getWidth() + text_w + 3, icon:getHeight() + 2)
     love.graphics.setCanvas(new_canvas)
 
-    love.graphics.print("[", 1, 1)
+    love.graphics.flrprint("[", 1, 1)
     love.graphics.draw(icon, open_bracket_w + 1, 1)
-    love.graphics.print(text.."]", open_bracket_w + icon:getWidth() + 1, 1)
+    love.graphics.flrprint(text.."]", open_bracket_w + icon:getWidth() + 1, 1)
 
     love.graphics.setCanvas(old_canvas)
     return new_canvas

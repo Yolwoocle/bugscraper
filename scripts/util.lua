@@ -24,8 +24,8 @@ inf = math.huge
 
 -- scotch
 local old_print = love.graphics.print
-function love.graphics.print(text, x, y, ...)
-	return old_print(text, math.floor(x), math.floor(y), ...)
+function love.graphics.flrprint(text, x, y, ...)
+	return love.graphics.print(text, math.floor(x), math.floor(y), ...)
 end
 
 
@@ -407,7 +407,7 @@ function draw_centered_text(text, rect_x, rect_y, rect_w, rect_h, rot, sx, sy, f
 	local y       = math.floor(rect_y + rect_h / 2)
 
 	push_font(font)
-	love.graphics.print(text, x, y, rot, sx, sy, math.floor(text_w / 2), math.floor(text_h / 2))
+	love.graphics.flrprint(text, x, y, rot, sx, sy, math.floor(text_w / 2), math.floor(text_h / 2))
 	pop_font()
 end
 
@@ -427,7 +427,7 @@ function print_centered(text, x, y, rot, sx, sy, ...)
 	local font   = love.graphics.getFont()
 	local text_w = font:getWidth(text)*sx
 	local text_h = font:getHeight()*sy
-	love.graphics.print(text, x - text_w / 2, y - text_h / 2, rot, sx, sy, ...)
+	love.graphics.flrprint(text, x - text_w / 2, y - text_h / 2, rot, sx, sy, ...)
 end
 
 function print_ycentered(text, x, y, rot, sx, sy, ...)
@@ -436,7 +436,7 @@ function print_ycentered(text, x, y, rot, sx, sy, ...)
 	sy           = sy or sx
 	local font   = love.graphics.getFont()
 	local text_h = font:getHeight()
-	love.graphics.print(text, x, y - text_h / 2, rot, sx, sy, ...)
+	love.graphics.flrprint(text, x, y - text_h / 2, rot, sx, sy, ...)
 end
 
 function draw_3_slice(img_left, img_right, col, x, y, w, h)
@@ -520,7 +520,7 @@ end
 
 function print_justify_right(text, x, y)
 	local w = get_text_width(text)
-	love.graphics.print(text, x - w, y)
+	love.graphics.flrprint(text, x - w, y)
 	return x - w, y
 end
 
@@ -869,7 +869,7 @@ end
 function print_color(col, text, x, y, r, s)
 	col = col or { 1, 1, 1, 1 }
 	love.graphics.setColor(col)
-	love.graphics.print(text, x, y, r, s, s)
+	love.graphics.flrprint(text, x, y, r, s, s)
 	love.graphics.setColor(1, 1, 1, 1)
 end
 
@@ -1351,6 +1351,10 @@ end
 
 function ease_out_elastic(x)
 	return 1 - (2 ^ (-10 * x)) * math.cos(2 * x)
+end
+
+function square_parabola(x)
+	return -4 * ((x-0.5)^2) + 1
 end
 
 --- Return true if line segments intersect

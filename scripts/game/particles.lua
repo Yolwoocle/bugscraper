@@ -553,8 +553,9 @@ end
 
 local FallingGridParticle = Particle:inherit()
 
-function FallingGridParticle:init(img_side, img_top, x,y)
-	self:init_particle(x,y,s,r, vx,vy,0,vr, 2.5, g, false)
+function FallingGridParticle:init(img_side, img_top, x,y, params)
+	params = params or {}
+	self:init_particle(x,y,s,r, vx,vy,0,vr, params.lifespan or 2.5, g, false)
 	-- self.spr_side = Sprite:new(img_side, SPRITE_ANCHOR_LEFT_BOTTOM)
 	-- self.spr_top =  Sprite:new(img_top,  SPRITE_ANCHOR_LEFT_BOTTOM)
 	self.img_side = img_side
@@ -571,9 +572,9 @@ function FallingGridParticle:init(img_side, img_top, x,y)
 	self.t = 0 
 	self.rot_3d = math.pi/2
 	self.rot_3d_vel = 0 
-	self.rot_3d_acc = -6
+	self.rot_3d_acc = params.rot_3d_acc or -6
 	self.rot_3d_bounce = 0.5
-	self.bounce_vel_threshold = 3
+	self.bounce_vel_threshold = params.bounce_vel_threshold or 3
 end
 
 function FallingGridParticle:update(dt)
@@ -595,6 +596,8 @@ function FallingGridParticle:update(dt)
 	end
 
 	self.y = self.orig_y - math.sin(self.rot_3d) * self.img_side:getHeight()
+	print_debug(self.orig_y, "-", math.sin(self.rot_3d), "*", self.img_side:getHeight(), 
+		"sin", math.sin(self.rot_3d), "cos", math.cos(self.rot_3d))
 end
 
 function FallingGridParticle:draw()
@@ -603,10 +606,10 @@ function FallingGridParticle:draw()
 	local scale_side = math.sin(self.rot_3d)
 	local scale_top = math.cos(self.rot_3d)
 
-	local oy = math.cos(self.rot_3d) * self.img_top:getHeight()
+	local oy = scale_side * h_top
 
 	love.graphics.draw(self.img_side, self.x, self.y + oy, 0, 1, scale_side)
-	love.graphics.draw(self.img_top,  self.x, self.y, 0, 1, scale_top)
+	love.graphics.draw(self.img_top,  self.x, self.y,      0, 1, scale_top)
 	-- love.graphics.line(self.x-32, self.orig_y, self.x+32, self.orig_y)
 end
 
@@ -1158,6 +1161,16 @@ function ParticleSystem:opened_door(x, y)
 	-- self:push_layer(PARTICLE_LAYER_SHADOWLESS)
 	self:add_particle(OpenedDoorParticle:new(images.wooden_door, x, y))
 	-- self:pop_layer()
+end
+
+function ParticleSystem:falling_cabin_back(x, y)
+	self:push_layer(PARTICLE_LAYER_BACK)
+	self:add_particle(FallingGridParticle:new(images.cabin_bg_w2, images.empty, x, y, {
+		bounce_vel_threshold = 0.5,
+		rot_3d_acc = -2,
+		lifespan = 10.0
+	}))
+	self:pop_layer()
 end
 
 function ParticleSystem:falling_grid(x, y)

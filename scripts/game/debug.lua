@@ -92,16 +92,10 @@ function Debug:init(game)
             end
         end, do_not_require_ctrl = true },
         ["v"] = { "__jackofalltrades", function()
-            -- game.level.map:rectangularize()
-            -- game.level.map:set_tile(16, 11, 0)
-            local w = game.level.map.width
-            local h = game.level.map.height
-            for ix = 0, w-1 do
-                for iy = 0, h-1 do
-                    local t = random_sample {0, 1, 1, 1, 1, 1, 1, 1, 1}
-                    game.level.map:set_tile(ix, iy, t)
-                end
-            end
+
+            Particles:falling_cabin_back(game.level.cabin_rect.ax, game.level.cabin_rect.by)
+            -- Particles:falling_grid(game.level.cabin_rect.ax, game.level.cabin_rect.by/2)
+
         end },
         ["j"] = { "longer", function()
             for _, e in pairs(game.actors) do
@@ -168,6 +162,12 @@ function Debug:init(game)
             game.can_start_game = true
             game.camera:reset()
             game:start_game()
+
+            for k, e in pairs(self.game.actors) do
+                if e.is_enemy then
+                    e:kill()
+                end
+            end
         end },
 
         ["e"] = { "kill all enemies", function()

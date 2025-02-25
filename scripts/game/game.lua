@@ -28,6 +28,8 @@ local BackroomTutorial = require "scripts.level.backrooms.backroom_tutorial"
 local DiscordPresence = require "scripts.meta.discord_presence"
 local Steamworks = require "scripts.meta.steamworks"
 
+local measure = require "lib.batteries.measure"
+
 local guns = require "data.guns"
 local upgrades = require "data.upgrades"
 local shaders = require "data.shaders"
@@ -279,8 +281,9 @@ end
 
 function Game:on_resize(w, h)
 	if not Options:get("is_fullscreen") then
-		Options:set("windowed_width", w)
-		Options:set("windowed_height", h)
+		local s = love.graphics.getDPIScale()
+		Options:set("windowed_width", w * s)
+		Options:set("windowed_height", h * s)
 		Options:set("is_window_maximized", love.window.isMaximized())
 	end
 	self:update_screen()
@@ -511,7 +514,7 @@ function Game:draw()
 		self.debug:draw_layers()
 	end
 	if self.notif_timer > 0 then
-		love.graphics.print(self.notif, 0, 0, 0, 3, 3)
+		love.graphics.flrprint(self.notif, 0, 0, 0, 3, 3)
 	end
 end
 

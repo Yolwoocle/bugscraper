@@ -62,8 +62,8 @@ function MetalFly:draw()
         self.lightning:draw(self.mid_x, self.mid_y-2)
     end
     
-    -- love.graphics.print(concat(self.phase), self.x, self.y-16)
-    -- love.graphics.print(concat(self.attack_target == nil), self.x, self.y-32)
+    -- love.graphics.flrprint(concat(self.phase), self.x, self.y-16)
+    -- love.graphics.flrprint(concat(self.attack_target == nil), self.x, self.y-32)
 end
 
 function MetalFly:on_hit_electrictiy()

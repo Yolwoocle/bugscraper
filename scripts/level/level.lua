@@ -174,6 +174,7 @@ function Level:begin_next_wave_animation()
 		self:new_wave_buffer_enemies()
 	end
 	self.new_wave_progress = self.slowdown_timer_override or 1.0
+	self.slowdown_timer_override = nil
 	self.new_wave_animation_state_machine:set_state("slowdown")
 end
 
@@ -202,7 +203,8 @@ function Level:get_new_wave_animation_state_machine()
 				self.elevator:open_door(ternary(self:is_on_cafeteria(), nil, 1.4))
 				self.current_wave:show_title()
 				self:increment_floor()
-				self.new_wave_progress = 1.0
+				self.new_wave_progress = self.opened_door_timer_override or 1.0
+				self.opened_door_timer_override = nil
 			end,
 			update = function(state, dt)
 				if self.new_wave_progress <= 0 then
@@ -601,9 +603,6 @@ function Level:draw()
 			self.elevator:draw(self.enemy_buffer, self.new_wave_progress)
 		end
 	end)
-	if self.show_cabin then
-		self.elevator:draw_counter()
-	end
 end
 
 
@@ -648,7 +647,7 @@ function Level:draw_win_screen()
 				col = COL_WHITE
 			end
 			love.graphics.setColor(col)
-			love.graphics.print(chr, text_x + ox, 40 + oy)
+			love.graphics.flrprint(chr, text_x + ox, 40 + oy)
 
 			text_x = text_x + get_text_width(chr) + 1
 		end

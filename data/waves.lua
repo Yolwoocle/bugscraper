@@ -352,10 +352,9 @@ local waves = {
 		music = "w2",
 
 		elevator_layers = {
-			["cabin_brown"] = true,
-			["walls_brown"] = true,
+			["cabin_bg"] = images.cabin_bg_w2,
+			["walls"] = images.cabin_walls_w2,
 			
-			["walls"] = false,
 			["bg_grid"] = false,
 		},
 		door_images = {
@@ -577,7 +576,7 @@ local waves = {
 		min = 1,
 		max = 1,
 		enemies = {
-			{ E.BeeBoss, 1, position = { 240, 200 } },
+			{ E.BeeBoss, 1, position = { 240-16, 200 } },
 		},
 		music = "miniboss",
 
@@ -610,7 +609,7 @@ local waves = {
 	----------------------------------------------------------------------------------------------------------
 	----------------------------------------------------------------------------------------------------------
 
-	-- Floor 20
+	-- Floor 
 	new_wave({
 		min = 6,
 		max = 6,
@@ -621,14 +620,15 @@ local waves = {
 		music = "w3",
 
 		elevator_layers = {
-			["cabin_brown"] = false,
-			["walls_brown"] = false,
-			["bg_grid_brown"] = false,
-			
-			["walls"] = true,
+			["cabin_bg"] = images.cabin_bg_w3,
+			["walls"] = images.cabin_walls_w3,
+
 			["bg_grid"] = true,
-			["cabin_w3"] = true,
 			["spinning_teapot"] = true,
+
+			["door_background"] = true,
+            ["cabin"] = true,
+            ["counter"] = true,
 		},
 
 		door_images = {
@@ -939,6 +939,17 @@ local waves = {
 
 		enemies = {
 			{ E.CloudEnemy, 20 },
+		},
+
+		elevator_layers = {
+			["bg_grid"] = false,
+			["spinning_teapot"] = false,
+
+			["cabin_bg"] = images.cabin_bg_w4,
+			["walls"] = images.cabin_walls_w3,
+			-- ["walls_brown"] = false,
+			-- ["bg_grid_brown"] = false,
+			-- ["walls"] = false,	
 		},
 
 		background = backgrounds.BackgroundGreenhouse:new(),

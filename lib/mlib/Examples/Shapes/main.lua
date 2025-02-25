@@ -107,7 +107,7 @@ local function lgprint( x, y, ... )
 	table.foreach( text, 
 		function( _, str ) 
 			str = tostring( str )
-			love.graphics.print( str, width + x, y )
+			love.graphics.flrprint( str, width + x, y )
 			width = width + font:getWidth( str ) + 2
 			repeat 
 				width = 20 * math.ceil( width / 20 )
@@ -443,7 +443,7 @@ function love.draw()
 	end
 	
 	love.graphics.setColor( 255, 255, 255, 255 )
-	love.graphics.print( love.timer.getFPS(), 780 )
+	love.graphics.flrprint( love.timer.getFPS(), 780 )
 end
 
 function love.mousepressed( x, y, button )

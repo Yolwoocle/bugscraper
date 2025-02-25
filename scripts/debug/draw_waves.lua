@@ -7,7 +7,7 @@ local function debug_draw_waves(self)
     local slot_w = 25
     local slot_h = 10
     for i, wave in ipairs(waves) do
-        love.graphics.print(concat(i, " ",wave.min, "-", wave.max), x, y)
+        love.graphics.flrprint(concat(i, " ",wave.min, "-", wave.max), x, y)
         x = x + 50
 
         local total_w = slot_w * (wave.min + wave.max)/2

@@ -34,6 +34,17 @@ function BackgroundW1:init(level)
 		-- pattern_y_offsets = {-7, -7},
 	}))
 
+	self:add_layer(BackgroundLayerParticles:new(self, 0.07, {
+		y_range = {-CANVAS_HEIGHT, 0},
+		particles = {
+			{
+				images = {images.bg_w1_pipe_far_1, images.bg_w1_pipe_far_2, images.bg_w1_pipe_far_3},
+				x_anchor = "random",
+			}, 
+		},
+		amount = 3,
+	}))
+
 	self:add_layer(BackgroundLayerParticles:new(self, 0.1, {
 		y_range = {-CANVAS_HEIGHT/2, 0},
 		particles = {

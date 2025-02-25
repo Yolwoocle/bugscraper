@@ -91,9 +91,8 @@ local img_names = {
 	duck =             "actors/players/duck",
 
 	-- enemies
-	bee_boss_alt_1 =           "actors/enemies/bee_boss_alt_1",
-	bee_boss_1 =               "actors/enemies/bee_boss_1",
-	bee_boss_2 =               "actors/enemies/bee_boss_2",
+	bee_boss_alt =             "actors/enemies/bee_boss_alt",
+	bee_boss_shield =          "actors/enemies/bee_boss_shield",
 	big_bug_1 =                "actors/enemies/big_bug_1",
 	big_chipper =              "actors/enemies/big_chipper",
 	big_chipper_activated =    "actors/enemies/big_chipper_activated",
@@ -338,12 +337,15 @@ local img_names = {
 	semisolid = "level/semisolid",
 	bg_plate =  "level/bg_plate",
 
-	cabin_bg =                       "level/cabin_bg",
-	cabin_bg_brown =                 "level/cabin_bg_brown",
+	cabin_bg_w1 =                    "level/cabin_bg_w1",
+	cabin_bg_w2 =                    "level/cabin_bg_w2",
 	cabin_bg_w3 =                    "level/cabin_bg_w3",
+	cabin_bg_w4 =                    "level/cabin_bg_w4",
 	cabin_bg_ambient_occlusion =     "level/cabin_bg_ambient_occlusion",
-	cabin_walls =                    "level/cabin_walls",
-	cabin_walls_brown =              "level/cabin_walls_brown",
+
+	cabin_walls_w1 =                 "level/cabin_walls_w1",
+	cabin_walls_w2 =              	 "level/cabin_walls_w2",
+	cabin_walls_w3 =                 "level/cabin_walls_w3",
 	cabin_walls_no_floor =           "level/cabin_walls_no_floor",
 
 	cabin_door_left_far =            "level/cabin_door_left_far", 
@@ -513,6 +515,9 @@ local img_names = {
 	bg_w1_pipe_1 = "level/background/w1/bg_w1_pipe_1",
 	bg_w1_pipe_2 = "level/background/w1/bg_w1_pipe_2",
 	bg_w1_rope = "level/background/w1/bg_w1_rope",
+	bg_w1_pipe_far_1 = "level/background/w1/bg_w1_pipe_far_1",
+	bg_w1_pipe_far_2 = "level/background/w1/bg_w1_pipe_far_2",
+	bg_w1_pipe_far_3 = "level/background/w1/bg_w1_pipe_far_3",
 	
 	bg_element_w1_01 = "level/background/bg_element_w1_01",
 	bg_element_w1_02 = "level/background/bg_element_w1_02",

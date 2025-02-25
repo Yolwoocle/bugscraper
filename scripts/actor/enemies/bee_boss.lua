@@ -9,6 +9,7 @@ local Segment = require "scripts.math.segment"
 local guns  = require "data.guns"
 local TimedSpikes = require "scripts.actor.enemies.timed_spikes"
 local BeeletMinion = require "scripts.actor.enemies.beelet_minion"
+local AnimatedSprite = require "scripts.graphics.animated_sprite"
 
 local BeeBoss = Enemy:inherit()
 
@@ -26,6 +27,10 @@ function BeeBoss:init(x, y)
     -- self.destroy_bullet_on_impact = false
     -- self.is_bouncy_to_bullets = true
     -- self.is_immune_to_bullets = true
+
+    self.spr = AnimatedSprite:new({
+        normal = {images.bee_boss_alt, 0.2, 2},
+    }, "normal", SPRITE_ANCHOR_CENTER_CENTER) 
 
     self.def_friction_x = self.friction_x
     self.def_friction_y = self.friction_y
@@ -141,6 +146,10 @@ function BeeBoss:init(x, y)
             after_collision = function(state, col, other)
                 if col.type ~= "cross" then
                     self.attack_bounces = self.attack_bounces - 1
+                    
+                    game:screenshake(4)
+                    Input:vibrate_all(0.1, 0.45)
+                    Audio:play_var("metal_impact", 0, 1)
                 end
             end,
         },
@@ -268,7 +277,6 @@ function BeeBoss:init(x, y)
 
         -----------------------------------------------------
         
-        
         spawn_minions = {
             enter = function(state)
                 self.vx = 0
@@ -356,13 +364,13 @@ function BeeBoss:init(x, y)
             draw = function(state)
                 if self.is_stompable then
                     exec_color(ternary((state.t % 0.1) < 0.05, {1,1,1,1}, {1,1,1,0}), function()
-                        draw_centered(images.dung_beetle_shield, self.mid_x, self.mid_y)    
+                        draw_centered(images.bee_boss_shield, self.mid_x, self.mid_y)    
                     end)
                 end
             end
         },
 
-    }, "big_wave")
+    }, "thwomp")
 
 end
 
@@ -396,7 +404,7 @@ function BeeBoss:draw()
     self.state_machine:draw()
 
     if not self.is_stompable then
-        draw_centered(images.dung_beetle_shield, self.mid_x, self.mid_y)    
+        draw_centered(images.bee_boss_shield, self.mid_x, self.mid_y)    
     end
 end
 

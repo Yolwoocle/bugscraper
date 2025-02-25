@@ -23,7 +23,7 @@ function UI:draw_half_icon_bar(x, y, val, max_val, img_full, img_half, img_empty
 
 		local ix = floor(x1 + img_w*(i/2))
 		love.graphics.draw(img, ix, iy)
-		love.graphics.print(i, ix, iy+8)
+		love.graphics.flrprint(i, ix, iy+8)
 	end
 end
 

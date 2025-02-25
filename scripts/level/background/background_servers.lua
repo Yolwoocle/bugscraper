@@ -1,5 +1,6 @@
 require "scripts.util"
 local Background = require "scripts.level.background.background"
+local vec3 = require "lib.batteries.vec3"
 
 local BackgroundServers = Background:inherit()
 
@@ -24,11 +25,7 @@ function BackgroundServers:init(level)
 end
 
 local function new_vec3(x, y, z)
-	return {
-		x = x,
-		y = y,
-		z = z,
-	}
+	return vec3(x, y, z) 
 end
 local function new_edge(point_a, point_b, color)
 	return {
@@ -107,7 +104,8 @@ function BackgroundServers:init_edges()
 			self.edge_color
 		))
 
-		for iz = 1, self.max_z, self.column_width do
+		local iz0 = 0.9
+		for iz = iz0, self.max_z, self.column_width do
 			insert_new_edge(row, new_edge( -- left vertical edge
 				new_vec3(x_left, 0, iz),
 				new_vec3(x_left, self.row_height, iz),
@@ -119,7 +117,35 @@ function BackgroundServers:init_edges()
 				self.edge_color
 			))
 		end
-		for j = 1, 10 do
+
+		local nb_cables = random_range_int(0, 1)
+		for j = 1, nb_cables do -- cables
+			local iz1 = iz0 + random_range_int(0, self.max_z/self.column_width) * self.column_width
+			local iz2 = iz0 + random_range_int(0, self.max_z/self.column_width) * self.column_width
+
+			local pos1 = new_vec3(x_left,  random_range(0, self.row_height), iz1)
+			local pos2 = new_vec3(x_right, random_range(0, self.row_height), iz2)
+
+			local nb_segments = 10
+			local step_vec = pos2:vsub(pos1):sdiv(nb_segments)
+			local cur_pos = pos1:copy()
+			local drip = random_range(40, 100)
+			for i=1, nb_segments do
+				local ipos1 = cur_pos:copy()
+				local ipos2 = cur_pos:vadd(step_vec)
+				local oy1 = square_parabola((i-1) / nb_segments) * drip
+				local oy2 = square_parabola(i / nb_segments) * drip
+				ipos1:saddi(0, oy1, 0)
+				ipos2:saddi(0, oy2, 0)
+				insert_new_edge(row, new_edge( -- left vertical edge
+					ipos1, ipos2,
+					self.edge_color
+				))
+				cur_pos:vaddi(step_vec)
+			end
+		end
+
+		for j = 1, 10 do -- flying bits
 			insert_new_edge(row, new_point(
 				new_vec3(random_range(x_left, x_right), random_range(0, self.row_height), random_range(1, self.max_z)),
 				5, COL_WHITE

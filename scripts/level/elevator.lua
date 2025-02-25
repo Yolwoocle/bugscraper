@@ -25,17 +25,22 @@ function Elevator:init(level)
 	self.layers = {
 		["cabin"] = true,
 		["counter"] = true,
-		["walls"] = true,
-		["walls_no_floor"] = false,
+		["door"] = true,
+		["door_background"] = true,
+		
 		["bg_grid"] = false,
 		["fg_grid"] = false,
+		
+		["cabin_bg"] = images.cabin_bg_w1,
+		["walls"] = images.cabin_walls_w1,
+		-- ["walls"] = true,
 
-		["cabin_brown"] = false,
-		["walls_brown"] = false,
-		["bg_grid_brown"] = false,
-
-		["cabin_w3"] = false,
+		["bg_grid_brown"] = false,	
 		["spinning_teapot"] = false,
+		-- ["cabin_w3"] = false,
+		-- ["walls_w3"] = false,
+
+		["cabin_w4"] = false,
 	}
 
 	self.def_ball_scale = 5
@@ -99,9 +104,11 @@ end
 
 function Elevator:draw(enemy_buffer, wave_progress)
 	-- Door
-	local x, y = self.level.door_rect.ax, self.level.door_rect.ay
-	local w, h = self.level.door_rect.bx - self.level.door_rect.ax+1, self.level.door_rect.by - self.level.door_rect.ay+1
-	rect_color(self.level.background.clear_color, "fill", x, y, w, h);
+	if self.layers["cabin"] and self.layers["door"] and self.layers["door_background"] then
+		local x, y = self.level.door_rect.ax, self.level.door_rect.ay
+		local w, h = self.level.door_rect.bx - self.level.door_rect.ax+1, self.level.door_rect.by - self.level.door_rect.ay+1
+		rect_color(self.level.background.clear_color, "fill", x, y, w, h);
+	end
 	
 	-- Draw buffered enemies
 	for i,e in pairs(enemy_buffer) do
@@ -121,13 +128,7 @@ function Elevator:draw_front()
 	local cabin_rect = self.level.cabin_rect
 
 	if self.layers["walls"] then
-		love.graphics.draw(images.cabin_walls, self.level.cabin_rect.ax, self.level.cabin_rect.ay)
-	end
-	if self.layers["walls_no_floor"] then
-		love.graphics.draw(images.cabin_walls_no_floor, self.level.cabin_rect.ax, self.level.cabin_rect.ay)
-	end
-	if self.layers["walls_brown"] then
-		love.graphics.draw(images.cabin_walls_brown, self.level.cabin_rect.ax, self.level.cabin_rect.ay)
+		love.graphics.draw(self.layers["walls"], self.level.cabin_rect.ax, self.level.cabin_rect.ay)
 	end
 	if self.layers["test"] then
 		love.graphics.draw(images.test, self.level.cabin_rect.ax, self.level.cabin_rect.ay)
@@ -145,16 +146,14 @@ function Elevator:draw_cabin()
 		rect_color(COL_DARK_GREEN, "fill", self.object_3d.position.x - 16, self.object_3d.position.y - 16, 34, 34)
 		self.renderer_3d:draw()
 	end
-
-	self.door:draw()
+	
+	if self.layers["door"] then
+		self.door:draw()
+	end
 
 	-- Cabin background
-	if self.layers["cabin_brown"] then
-		love.graphics.draw(images.cabin_bg_brown, cabin_rect.ax, cabin_rect.ay)
-	elseif self.layers["cabin_w3"] then
-		love.graphics.draw(images.cabin_bg_w3, cabin_rect.ax, cabin_rect.ay)
-	else
-		love.graphics.draw(images.cabin_bg, cabin_rect.ax, cabin_rect.ay)
+	if self.layers["cabin_bg"] then
+		love.graphics.draw(self.layers["cabin_bg"], cabin_rect.ax, cabin_rect.ay)
 	end
 	love.graphics.draw(images.cabin_bg_ambient_occlusion, cabin_rect.ax, cabin_rect.ay)
 	
