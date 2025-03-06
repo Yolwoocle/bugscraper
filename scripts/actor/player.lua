@@ -522,6 +522,9 @@ function Player:move(dt)
 	-- Apply velocity 
 	self.vx = self.vx + dir.x * self:get_speed()
 	self.vy = self.vy + dir.y * self:get_speed()
+
+	-- Misc
+	self.is_affected_by_semisolids = not self:action_down("down")
 end
 
 function Player:get_speed()

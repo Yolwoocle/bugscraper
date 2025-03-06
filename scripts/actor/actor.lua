@@ -80,6 +80,7 @@ function Actor:init_actor(x, y, w, h, spr, args)
 	-- Whether the actor should be teleported within bounds
 	self.is_affected_by_bounds = true
 	self.is_affected_by_walls = true
+	self.is_affected_by_semisolids = true
 
 	self.collision_filter = function(item, other)
 		-- By default, do not react to collisions
@@ -104,7 +105,11 @@ function Actor:init_actor(x, y, w, h, spr, args)
 			elseif collision_info.type == COLLISION_TYPE_SOLID then
 				type = "slide"
 			elseif collision_info.type == COLLISION_TYPE_SEMISOLID then
-				type = ternary((self.y + self.h <= other.y) and (self.vy >= 0), "slide", "cross")
+				type = ternary(
+					self.is_affected_by_semisolids and (self.y + self.h <= other.y) and (self.vy >= 0), 
+					"slide", 
+					"cross"
+				)
 			elseif collision_info.type == COLLISION_TYPE_PLAYER_NONSOLID then
 				if self.is_player then
 					type = "cross"
