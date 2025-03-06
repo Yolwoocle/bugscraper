@@ -162,6 +162,7 @@ return {
         see_more = "see more...",
         yes = "YES",
         no = "NO",
+        leave_menu = "Leave menu?", -- Generic "leave menu?"
         quit = {
             description = "Are you sure you want to quit?"
         },
