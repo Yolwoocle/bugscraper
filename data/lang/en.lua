@@ -248,6 +248,7 @@ return {
             },
             game = {
                 title = "Game",
+                tutorial = "TUTORIAL...",
                 language = "LANGUAGE...",
                 timer = "TIMER",
                 mouse_visible = "SHOW MOUSE CURSOR",

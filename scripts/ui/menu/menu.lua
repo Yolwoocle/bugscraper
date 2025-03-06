@@ -90,6 +90,7 @@ end
 function Menu:on_set()
 	for i, item in pairs(self.items) do
 		item:on_set()
+		item.is_selected = false
 	end
 end
 

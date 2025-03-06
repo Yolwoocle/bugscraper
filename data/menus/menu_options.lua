@@ -6,6 +6,8 @@ local RangeOptionMenuItem = require "scripts.ui.menu.items.range_option_menu_ite
 local BoolOptionMenuItem  = require "scripts.ui.menu.items.bool_option_menu_item"
 local EnumOptionMenuItem  = require "scripts.ui.menu.items.enum_option_menu_item"
 
+local BackroomTutorial = require "scripts.level.backrooms.backroom_tutorial"
+
 local DEFAULT_MENU_BG_COLOR = menu_util.DEFAULT_MENU_BG_COLOR
 local func_set_menu     = menu_util.func_set_menu
 local PROMPTS_NORMAL    = menu_util.PROMPTS_NORMAL
@@ -56,6 +58,9 @@ return Menu:new(game, "{menu.options.title}", {
     { RangeOptionMenuItem, "🥚 {menu.options.visuals.bullet_lightness}", "bullet_lightness", { 0.1, 1.0 }, 0.1, "%" },
     { "" },
     { "<<< {menu.options.game.title} >>>" },
+    { "🎓 {menu.options.game.tutorial}", function()
+	    game:new_game({backroom = BackroomTutorial:new()})
+    end }, 
     { RangeOptionMenuItem, "🛜 {menu.options.game.screenshake}", "screenshake", { 0.0, 1.0 }, 0.05, "%" },
     { BoolOptionMenuItem, "🕐 {menu.options.game.timer}", "timer_on" },
     { BoolOptionMenuItem, "↖ {menu.options.game.mouse_visible}", "mouse_visible" },
