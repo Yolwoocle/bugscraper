@@ -1,15 +1,20 @@
 name = "bugscraper"
 # default_targets = ["lovejs", "win32", "win64", "macos", "appimage"]
-default_targets = []
+default_targets = ["win64", "macos", "appimage"]
+# default_targets = []
 build_directory = "_export"
 icon_file = "icon.png"
 
 love_files = [
     "+*",
     "-*/.*",
+    "-./_*",
     "-./_export/*",
     "-./_dyn/*",
     "-./_tools/*",
+    "-./_readme/*", 
+    "-./_tools/*", 
+    "-./_trash/*",
     "-*.aseprite",
     "-*.lnk",
 
@@ -17,7 +22,10 @@ love_files = [
     "-./steam_api64.dll",
 ]
 
-# love_version = "12.0"
+# love_version = "12.0" 
+
+[win64]
+love_binaries = "/mnt/d/docs/dev/gamedev/love2d/love12-builds/win64"
 
 [windows]
 # The files specified here will be added in addition to the ones specified on top level.
@@ -44,6 +52,7 @@ OriginalFilename = "bugscraper.exe" # "love.exe"
 [macos]
 # optionally, you can include a mac-specific icon, if not mac will use the same icon as other targets
 icon_file = "icon.png"  # or macIcon.icns
+love_binaries = "/mnt/d/docs/dev/gamedev/love2d/love12-builds/macos"
 
 # The files specified here will be added in addition to the ones specified on top level.
 # All specified files will be copied to the <name>/Contents/Resources/ directory of the .app file.
@@ -57,8 +66,10 @@ icon_file = "icon.png"  # or macIcon.icns
 # CFBundleName = "<same as the name from the main config>"
 CFBundleIdentifier = "com.yolwoocle.bugscraper"
 NSHumanReadableCopyright = "Copyright © 2024 Léo Bernard"
-CFBundleShortVersionString = "0.5.1"
+CFBundleShortVersionString = "0.6"
 
+[appimage]
+source_appimage = "/mnt/d/docs/dev/gamedev/love2d/love12-builds/love-12.0-x86_64.AppImage"
 
 [linux]
 # [linux.archive_files]

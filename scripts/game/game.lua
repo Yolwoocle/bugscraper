@@ -254,6 +254,8 @@ function Game:new_game(params)
 		self.logo_y = -70 -- SCOTCH
 		self:start_game()
 	end
+
+	_G_t_test = love.timer.getTime()
 end
 
 function Game:init_layers()
@@ -334,6 +336,7 @@ function Game:update_screen()
 end
 
 function Game:update(dt)
+	local tic = love.timer.getTime()
 	self.frame = self.frame + 1
 
 	self.camera:update_screenshake(dt)
@@ -367,6 +370,7 @@ function Game:update(dt)
 
 	-- THIS SHOULD BE LAST
 	Input:update_last_input_state(dt)
+	__update_dur = love.timer.getTime() - tic
 end
 
 function Game:update_main_game(dt)
@@ -497,6 +501,8 @@ function Game:draw_on_layer(layer_id, paint_function, params)
 end
 
 function Game:draw()
+	local tic = love.timer.getTime()
+
 	-- Using a canvas for that sweet, resizable pixel art
 	love.graphics.setCanvas(main_canvas)
 	love.graphics.clear(0, 0, 0)
@@ -516,6 +522,8 @@ function Game:draw()
 	if self.notif_timer > 0 then
 		love.graphics.flrprint(self.notif, 0, 0, 0, 3, 3)
 	end
+
+	__draw_dur = love.timer.getTime() - tic
 end
 
 function Game:draw_game()

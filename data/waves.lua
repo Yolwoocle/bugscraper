@@ -1201,6 +1201,14 @@ local waves = {
 		enemies = {
 			{E.FinalBoss, 1, position = {87*16, 14*16}}
 		},
+
+		run = function(self, level)
+			for _, actor in pairs(game.actors) do
+				if actor.name == "final_boss" then
+					actor.state_machine:set_state("standby")
+				end
+			end
+		end
 	}),
 
 	-- Last wave

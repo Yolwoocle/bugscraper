@@ -9,21 +9,6 @@ local Segment        = require "scripts.math.segment"
 local guns           = require "data.guns"
 local TimedSpikes    = require "scripts.actor.enemies.timed_spikes"
 local AnimatedSprite = require "scripts.graphics.animated_sprite"
-local CollisionInfo = require "scripts.physics.collision_info"
-
-local Larva =              require "scripts.actor.enemies.larva"
-local Fly =                require "scripts.actor.enemies.fly"
-local SpikedFly =          require "scripts.actor.enemies.spiked_fly"
-local Woodlouse =          require "scripts.actor.enemies.woodlouse"
-local Slug =               require "scripts.actor.enemies.slug"
-local Spider =             require "scripts.actor.enemies.spider"
-local StinkBug =           require "scripts.actor.enemies.stink_bug"
-local SnailShelled =       require "scripts.actor.enemies.snail_shelled" 
-local Boomshroom =         require "scripts.actor.enemies.boomshroom" 
-local Dung =               require "scripts.actor.enemies.dung"
-local DungBeetle =         require "scripts.actor.enemies.dung_beetle"
-local DungProjectile =     require "scripts.actor.enemies.dung_projectile"
-local FlyingDung =         require "scripts.actor.enemies.flying_dung"
 
 local FinalBoss      = Enemy:inherit()
 
@@ -71,12 +56,7 @@ function FinalBoss:init(x, y)
     self.is_bouncy_to_bullets = true
     self.is_immune_to_bullets = true
 
-    self.is_stompable = false
-    self.collision_info = CollisionInfo:new {
-        type = COLLISION_TYPE_SEMISOLID,
-        is_slidable = true,
-    }
-    
+    self.is_stompable = true
     self.can_be_stomped_if_falling_down = false
     self.damage_on_stomp = 5
 
@@ -131,7 +111,7 @@ function FinalBoss:init(x, y)
             end,
             update = function(state, dt)
                 -- self:spawn_spikes(76, 0)
-                return "random"
+                return "thwomp"
             end,
         },
 
@@ -140,10 +120,9 @@ function FinalBoss:init(x, y)
             end,
             update = function(state, dt)
                 local possible_states = {
-                    -- "thwomp",
-                    -- "charge",
-                    -- "bunny_hopping_telegraph",
-                    "spawn_minions",
+                    "thwomp",
+                    "charge",
+                    "bunny_hopping_telegraph",
                 }
                 self.state_machine:set_state(random_sample(possible_states))
             end,
@@ -159,51 +138,6 @@ function FinalBoss:init(x, y)
                 end
             end
         },
-
-        -----------------------------------------------------
-        --- SPAWN ENEMIES ---
-        -----------------------------------------------------
-        spawn_minions = {
-            enter = function(state)
-                self.vx = 0
-                self.vy = 0
-
-                self.minions = {}
-                local wave = {
-                    min = 2, 
-                    max = 4, 
-                    enemies = {
-                        { Slug,      2 },
-                        { StinkBug,  2 },
-                        { Larva,     2 },
-                        { Woodlouse, 2 },
-                    }
-                }
-                local amount = random_range_int(wave.min, wave.max)
-                for i=1, amount do
-                    local enemy = random_weighted(wave.enemies)
-                    local a = enemy:new(self.mid_x, self.mid_y)
-                    table.insert(self.minions, a)
-                    game:new_actor(a)
-                end
-            end,
-            update = function(state, dt)
-                self.debug_values[2] = tostring(#self.minions)
-                for i=#self.minions, 1, -1 do
-                    local enemy = self.minions[i]
-                    if enemy.is_removed then
-                        table.remove(self.minions, i)
-                    end
-                end
-
-                if #self.minions <= 0 then
-                    self.state_machine:set_state("spawn_minions")
-                end
-            end,
-            exit = function(state)
-            end,
-        },
-
 
         -----------------------------------------------------
         --- JUMPING ---
@@ -435,13 +369,11 @@ function FinalBoss:init(x, y)
             end,
         },
 
-    }, "spawn_minions")
+    }, "introduction")
 end
 
 function FinalBoss:update(dt)
     self:update_enemy(dt)
-
-    self.debug_values[2] = tostring(self.state_machine.current_state_name)
 
     self.state_machine:update(dt)
 

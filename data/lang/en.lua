@@ -10,6 +10,7 @@
 ]]
 
 return {
+    __test_DONOTTRANSLATE = [[  Welcome to the bugscraper. Rise to the top of this pest-filled tower in this roguelike shooter and battle waves of enemies at every floor on your way to your boss's office. Welcome to the bugscraper. 🐜 In this roguelike shooter, you play as Mio and his friends, employees of a bug-filled skyscraper, who are fed up with their jobs. 🐛 On your way to your boss's office, you'll have to face waves of enemies on each floor in a tight elevator. 🐝 With a wide variety of weapons and upgrades, eliminate them and prepare to battle for the next floor!🐞 Play solo, or with up to 4 friends in local co-op multiplayer.]],
     language = {
         -- These should be kept untranslated in their original language ("English", "Français", "简体中文", etc)
         en = "English",

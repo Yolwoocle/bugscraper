@@ -29,7 +29,7 @@ function BeeBoss:init(x, y)
     -- self.is_immune_to_bullets = true
 
     self.spr = AnimatedSprite:new({
-        normal = {images.bee_boss_alt, 0.2, 2},
+        normal = {images.bee_boss_alt, 0.05, 2},
     }, "normal", SPRITE_ANCHOR_CENTER_CENTER) 
 
     self.def_friction_x = self.friction_x

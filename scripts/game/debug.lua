@@ -659,6 +659,16 @@ function Debug:draw_info_view()
 
     self.game.level.world_generator:draw()
 
+    if __update_dur and __draw_dur then
+        rect_color(COL_BLACK_BLUE, "fill", CANVAS_WIDTH-64, CANVAS_HEIGHT-16, 64, 16)
+        local w1 = 64*(__update_dur/(1/60))
+        local w2 = 64*(__draw_dur/(1/60))
+        rect_color(COL_BLUE, "fill", CANVAS_WIDTH - w1, CANVAS_HEIGHT-16, w1, 16)
+        rect_color(COL_RED, "fill", CANVAS_WIDTH - w1-w2, CANVAS_HEIGHT-16, w2, 16)
+
+        rect_color(COL_WHITE, "fill", CANVAS_WIDTH-64, CANVAS_HEIGHT-16, 1, CANVAS_HEIGHT)
+    end
+
     -- self:test_info_view_3d_renderer()
 
     -- local w = 255

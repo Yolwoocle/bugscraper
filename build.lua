@@ -4,8 +4,8 @@
     name = 'bugscraper', -- name of the game for your executable
     developer = 'Yolwoocle', -- dev name used in metadata of the file
     output = '_export', -- output location for your game, defaults to $SAVE_DIRECTORY
-    version = '0.6.dev25-01-14', -- 'version' of your game, used to name the folder in output
-    love = '11.5', -- version of LÖVE to use, must match github releases
+    version = '0.6.dev25-02-24', -- 'version' of your game, used to name the folder in output
+    love = '12.0', -- version of LÖVE to use, must match github releases
     ignore = {
         ".git",
         ".vscode",
@@ -36,6 +36,6 @@
     },
     -- hooks = { -- hooks to run commands via os.execute before or after building
     -- },
-    platforms = {'windows'} -- set if you only want to build for a specific platform
+    platforms = {'windows', 'macos', 'linux'} -- set if you only want to build for a specific platform
     
 }
