@@ -92,10 +92,29 @@ function Debug:init(game)
             end
         end, do_not_require_ctrl = true },
         ["v"] = { "__jackofalltrades", function()
+            -- local e = enemies.StinkBug:new(15, 62)
+            -- game:new_actor(e)
+            -- e:kill()
+            local x, y = 14, 56
 
-            Particles:falling_cabin_back(game.level.cabin_rect.ax, game.level.cabin_rect.by)
-            -- Particles:falling_grid(game.level.cabin_rect.ax, game.level.cabin_rect.by/2)
-
+            local n = 11
+            -- for i = 1, n do
+                local spawn_x = clamp(x, game.level.cabin_rect.ax, game.level.cabin_rect.bx - 20)
+                local spawn_y = clamp(y, game.level.cabin_rect.ay, game.level.cabin_rect.by - 20)
+                local cloud = enemies.PoisonCloud:new(spawn_x, spawn_y)
+                
+                local d = (8/11) * pi2 + 0.2
+                local r = 100
+                cloud.vx = math.cos(d) * r
+                cloud.vy = math.sin(d) * r
+                game:new_actor(cloud)
+            -- end
+            -- local cloud = enemies.PoisonCloud:new(spawn_x, spawn_y)
+            -- local d = (10/11) * pi2 + 0.2
+            -- local r = 100
+            -- cloud.vx = math.cos(d) * r
+            -- cloud.vy = math.sin(d) * r
+            -- game:new_actor(cloud)
         end },
         ["j"] = { "longer", function()
             for _, e in pairs(game.actors) do
@@ -559,14 +578,6 @@ end
 
 function Debug:draw_info_view()
     love.graphics.setFont(FONT_MINI)
-    
-    for _, e in pairs(self.game.actors) do
-        love.graphics.circle("fill", e.x - game.camera.x, e.y - game.camera.y, 1)
-        
-        print_outline(COL_WHITE, COL_BLACK_BLUE, 
-            concat(math.floor(e.x), ", ", math.floor(e.y), ternary(e.is_player, concat(" [", math.floor(e.x/16), ", ", math.floor(e.y/16), "]"), "")), e.x - game.camera.x, e.y - game.camera.y - 10)
-        
-    end
 
     self.test_sprite_t = self.test_sprite_t + 1 / 60
     if self.test_sprite_t > 0.3 then
@@ -741,6 +752,14 @@ function Debug:draw_colview()
         rect_color(COL_RED, "line", level.cabin_rect.x, level.cabin_rect.y, level.cabin_rect.w, level.cabin_rect.h)
         rect_color(COL_CYAN, "line", level.cabin_inner_rect.x, level.cabin_inner_rect.y, level.cabin_inner_rect.w,
             level.cabin_inner_rect.h)
+    end
+
+    
+    for _, e in pairs(self.game.actors) do
+        love.graphics.circle("fill", e.x, e.y, 1)
+        
+        print_outline(COL_WHITE, COL_BLACK_BLUE, 
+            concat(math.floor(e.x), ", ", math.floor(e.y), ternary(e.is_player, concat(" [", math.floor(e.x/16), ", ", math.floor(e.y/16), "]"), "")), e.x, e.y - 10) 
     end
 
     Text:pop_font()

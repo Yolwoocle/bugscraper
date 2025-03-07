@@ -524,7 +524,7 @@ function Player:move(dt)
 	self.vy = self.vy + dir.y * self:get_speed()
 
 	-- Misc
-	self.is_affected_by_semisolids = not self:action_down("down")
+	self.is_affected_by_semisolids = not self:action_pressed("down")
 end
 
 function Player:get_speed()
