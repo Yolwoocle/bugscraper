@@ -93,16 +93,20 @@ function BackroomGroundFloor:can_exit()
 end
 
 function BackroomGroundFloor:on_new_player()
-	game.music_player:set_disk("ground_floor_players", {
-		continue_previous_pos = true,
-	})
+	if game.game_state == GAME_STATE_WAITING then
+		game.music_player:set_disk("ground_floor_players", {
+			continue_previous_pos = true,
+		})
+	end
 end
 
 function BackroomGroundFloor:on_player_leave()
-	if game:get_number_of_alive_players() <= 0 then
-		game.music_player:set_disk("ground_floor_empty", {
-			continue_previous_pos = true,
-		})
+	if game.game_state == GAME_STATE_WAITING then
+		if game:get_number_of_alive_players() <= 0 then
+			game.music_player:set_disk("ground_floor_empty", {
+				continue_previous_pos = true,
+			})
+		end
 	end
 end
 

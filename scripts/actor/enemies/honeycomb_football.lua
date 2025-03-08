@@ -40,7 +40,7 @@ function HoneycombFootball:init(x, y, spr)
     self.object_3d.position.y = 200
 	self.ball_lighting_palette = {color(0xf77622), color(0xfeae34), color(0xfee761), color(0xfee761), COL_WHITE}
 
-    self.exploding_timer = Timer:new(2.0)
+    self.exploding_timer = Timer:new(1.0)
     self.flash_timer = Timer:new(0.5)
 
     self.gun = guns.unlootable.HoneycombFootballGun:new(self)
@@ -59,7 +59,7 @@ function HoneycombFootball:init(x, y, spr)
                 self.damage = 0
             end,
             update = function(state, dt)
-                self.pong_speed = move_toward(self.pong_speed, 0, 200*dt)
+                self.pong_speed = move_toward(self.pong_speed, 0, 400*dt)
                 if dist(self.vx, self.vy) <= 1 then
                     self.state_machine:set_state("exploding")
                 end
@@ -102,6 +102,7 @@ function HoneycombFootball:init(x, y, spr)
                 if self.exploding_timer:update(dt) then
                     local explosion = Explosion:new(self.mid_x, self.mid_y, {radius = self.explosion_radius})
                     game:new_actor(explosion)
+                    game.level:add_fury(1.5)
                     self:kill()
                 end
 

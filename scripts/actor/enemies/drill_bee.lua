@@ -113,6 +113,7 @@ function DrillBee:init(x, y, spr)
             after_collision = function(state, col)
                 if col.other.collision_info and col.other.collision_info.type == COLLISION_TYPE_SOLID then
                     local explosion = Explosion:new(self.mid_x, self.mid_y, {radius = self.explosion_radius})
+                    game.level:add_fury(1)
                     game:new_actor(explosion)
                     self:kill()
                 end
@@ -155,7 +156,7 @@ end
 
 function DrillBee:draw()
     self:draw_enemy()
-
+    
     -- if self.drill_normal then
     --     line_color(COL_RED, self.mid_x, self.mid_y, self.mid_x + self.drill_normal.x * 16, self.mid_y + self.drill_normal.y*16)
     --     circle_color(COL_RED, "fill", self.mid_x + self.drill_normal.x * 16, self.mid_y + self.drill_normal.y*16, 3)

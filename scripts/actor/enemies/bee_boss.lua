@@ -17,16 +17,16 @@ function BeeBoss:init(x, y)
     self.super.init(self, x,y, images.bee_boss_alt_1, 32, 32)
     self.name = "bee_boss"
 
-    self.life = 400
+    self.life = 200
     self.stomps = math.huge
     self.is_stompable = true
     self.damage_on_stomp = 10
 
     self.self_knockback_mult = 0.0
 
-    -- self.destroy_bullet_on_impact = false
-    -- self.is_bouncy_to_bullets = true
-    -- self.is_immune_to_bullets = true
+    self.destroy_bullet_on_impact = false
+    self.is_bouncy_to_bullets = true
+    self.is_immune_to_bullets = true
 
     self.spr = AnimatedSprite:new({
         normal = {images.bee_boss_alt, 0.05, 2},
