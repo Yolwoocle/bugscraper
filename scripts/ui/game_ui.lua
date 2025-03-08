@@ -235,6 +235,9 @@ function GameUI:draw_version()
 	love.graphics.setFont(FONT_MINI)
 
 	local text = concat("v", BUGSCRAPER_VERSION)
+	if BETA_BUILD then
+		text = "Beta build: game might be unstable and change in the future - "..text
+	end
 	local x = math.floor(CANVAS_WIDTH - get_text_width(text) - 2)
 	local y = self.game.logo_y
 	print_outline(COL_DARK_GRAY, COL_VERY_DARK_GRAY, text, x, y)

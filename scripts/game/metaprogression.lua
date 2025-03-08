@@ -8,6 +8,8 @@ local MetaprogressionManager = Class:inherit()
 
 function MetaprogressionManager:init()
     self.default_data = {
+        ["$version"] = 2, 
+
         total_xp = 0,
         xp = 0,
         xp_level = 1,
@@ -20,6 +22,11 @@ function MetaprogressionManager:init()
             "UpgradeBoba",
             "UpgradeSoda",
             "UpgradeAppleJuice",
+
+            "UpgradeFizzyLemonade",
+            "UpgradeHotSauce",
+            "UpgradeHotChocolate",
+            "UpgradeCoconutWater",
         },
 
 		has_seen_intro_credits = false,
@@ -29,13 +36,9 @@ function MetaprogressionManager:init()
 
     local t = skin_name_to_id
     self.levels = {
-        { threshold = 3000, rewards = { { type = "upgrade", upgrade = "UpgradeFizzyLemonade" } } },
         { threshold = 5000, rewards = { { type = "skin", skin = t.nel } } },
-        { threshold = 5000, rewards = { { type = "upgrade", upgrade = "UpgradeHotSauce" } } },
         { threshold = 5000, rewards = { { type = "skin", skin = t.rico } } },
-        { threshold = 5000, rewards = { { type = "upgrade", upgrade = "UpgradeHotChocolate" } } },
         { threshold = 5000, rewards = { { type = "skin", skin = t.dodu } } },
-        { threshold = 5000, rewards = { { type = "upgrade", upgrade = "UpgradeCoconutWater" } } },
         { threshold = 5000, rewards = { { type = "skin", skin = t.leo } } },
         { threshold = 5000, rewards = { { type = "upgrade", upgrade = "UpgradePomegranateJuice" } } },
         { threshold = 5000, rewards = { { type = "skin", skin = t.yv } } },

@@ -9,6 +9,7 @@ local OptionsManager = Class:inherit()
 function OptionsManager:init()
 	self.is_first_time = false
 	self.default_options = {
+		["$version"] = 2,
 		language = "default",
 
 		volume = 1.0,
