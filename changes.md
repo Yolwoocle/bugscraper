@@ -4,6 +4,7 @@ First Steam beta release (after a year of development, never too late..!) If you
 
 - **Added**: Option to replay the tutorial in the settings  
 - **Added**: You can press down to go through platforms
+- **Change**: Improved flying nests (temporary name): now only shoot in defined directions and will flash before exploding after being killed
 - **Change**: You now have more upgrades when first starting the game to avoid cases where upgrade jars would spawn empty 
 - **Change**: Improvement to tutorial area visuals
 - **Change**: Honeypot footballs (temporary name) explode faster so it doesn't ruin your combo

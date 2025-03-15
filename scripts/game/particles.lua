@@ -1085,7 +1085,7 @@ function ParticleSystem:star_splash_small(x, y)
 		images.star_splash_small_1,
 		images.star_splash_small_2,
 		images.star_splash_small_3,
-	}, x, y, 0, 0.08)
+	}, x, y, 0, 0.15)
 end
 
 -- FIXME: scotch

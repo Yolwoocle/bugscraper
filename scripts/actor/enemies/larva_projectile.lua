@@ -5,8 +5,8 @@ local Larva = require "scripts.actor.enemies.larva"
 
 local LarvaProjectile = Projectile:inherit()
 
-function LarvaProjectile:init(x, y)
-    self.super.init(self, x, y, images.larva_projectile, 8, 8--[[, __invul_duration, __angle, min_speed, max_speed]])
+function LarvaProjectile:init(x, y, angle)
+    LarvaProjectile.super.init(self, x, y, images.larva_projectile, 8, 8, nil, angle, 300, 300)
     self.gravity_mult = 0.4
     self.name = "larva_projectile"
 
@@ -15,7 +15,7 @@ function LarvaProjectile:init(x, y)
 end
 
 function LarvaProjectile:update(dt)
-    self.super.update(self, dt)
+    LarvaProjectile.super.update(self, dt)
     
     self.spr.rot = self.spr.rot + dt
     Particles:push_layer(PARTICLE_LAYER_BACK)

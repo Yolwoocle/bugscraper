@@ -32,7 +32,7 @@ function ChipperMinion:init(x, y, direction, attack_speed, wait_duration)
 end
 
 function ChipperMinion:update(dt)
-    self.super.update(self, dt)
+    ChipperMinion.super.update(self, dt)
     
     self.t = self.t + dt
 
@@ -55,7 +55,7 @@ function ChipperMinion:detect_player_in_range()
 end
 
 function ChipperMinion:draw()
-	self.super.draw(self)
+	ChipperMinion.super.draw(self)
 end
 
 function ChipperMinion:after_collision(col, other)

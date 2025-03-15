@@ -7,7 +7,7 @@ local utf8 = require "utf8"
 local ElectricBullet = ElectricArc:inherit()
 
 function ElectricBullet:init(x, y, i)
-    self.super.init(self, x, y)
+    ElectricBullet.super.init(self, x, y)
     self.name = "electric_bullet"
 
     self.remove_on_exit_bounds = true
@@ -50,11 +50,11 @@ function ElectricBullet:update(dt)
         end
     end
 
-    self.super.update(self, dt)
+    ElectricBullet.super.update(self, dt)
 end
 
 function ElectricBullet:draw()
-    self.super.draw(self)
+    ElectricBullet.super.draw(self)
 
     -- love.graphics.circle("fill", self.x, self.y, 10)
     -- love.graphics.line(self.segment.ax, self.segment.ay, self.segment.bx, self.segment.by)

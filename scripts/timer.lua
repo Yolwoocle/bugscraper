@@ -51,6 +51,10 @@ function Timer:get_time()
     return self.time
 end
 
+function Timer:get_time_left()
+    return self.time
+end
+
 function Timer:set_time(val)
     self.time = val
 end

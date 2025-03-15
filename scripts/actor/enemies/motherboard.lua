@@ -382,7 +382,7 @@ function Motherboard:init(x, y)
 end
 
 function Motherboard:set_bouncy(val)
-    self.super.set_bouncy(self, val)
+    Motherboard.super.set_bouncy(self, val)
 
     self.shield_sprite:set_visible(val)
 end

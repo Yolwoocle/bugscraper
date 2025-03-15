@@ -12,7 +12,7 @@ local guns  = require "data.guns"
 local BigBeelet = Beelet:inherit()
 
 function BigBeelet:init(x, y)
-    self.super.init(self, x, y)
+    BigBeelet.super.init(self, x, y)
     self.name = "big_beelet"
     self:set_dimensions(24, 24)
     self.attack_bounces = 8
@@ -29,11 +29,11 @@ function BigBeelet:init(x, y)
 end
 
 function BigBeelet:update(dt)
-    self.super.update(self, dt)
+    BigBeelet.super.update(self, dt)
 end
 
 function BigBeelet:enter_wander()
-    self.super.enter_wander(self)
+    BigBeelet.super.enter_wander(self)
 end
 
 function BigBeelet:detect_player_in_range()

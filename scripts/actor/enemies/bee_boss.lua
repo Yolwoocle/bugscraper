@@ -14,7 +14,7 @@ local AnimatedSprite = require "scripts.graphics.animated_sprite"
 local BeeBoss = Enemy:inherit()
 
 function BeeBoss:init(x, y)
-    self.super.init(self, x,y, images.bee_boss_alt_1, 32, 32)
+    BeeBoss.super.init(self, x,y, images.bee_boss_alt_1, 32, 32)
     self.name = "bee_boss"
 
     self.life = 200
