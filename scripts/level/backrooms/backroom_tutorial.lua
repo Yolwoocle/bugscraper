@@ -16,6 +16,8 @@ function BackroomTutorial:init()
 end
 
 function BackroomTutorial:generate(world_generator)
+	game.level:set_bounds(Rect:new(unpack(RECT_TUTORIAL_PARAMS)))
+
 	world_generator:reset()
 
 	world_generator:write_rect_fill(Rect:new(0,  2,  2,  20), TILE_METAL) -- a
@@ -30,7 +32,7 @@ function BackroomTutorial:generate(world_generator)
 	world_generator:write_rect_fill(Rect:new(62, 10, 62, 12), TILE_METAL) -- j
 	world_generator:write_rect_fill(Rect:new(63, 11, 63, 12), TILE_METAL) -- k
 	world_generator:write_rect_fill(Rect:new(64, 12, 64, 12), TILE_METAL) -- l
-	world_generator:write_rect_fill(Rect:new(66, 14, 96, 14), TILE_METAL) -- m
+	world_generator:write_rect_fill(Rect:new(66, 14, 100, 14), TILE_METAL) -- m
 	world_generator:write_rect_fill(Rect:new(95, 0,  96, 13), TILE_BORDER) -- n
 	world_generator:write_rect_fill(Rect:new(57, 6,  60, 6),  TILE_METAL) -- o
 	world_generator:write_rect_fill(Rect:new(60, 7,  60, 8),  TILE_METAL) -- p
@@ -47,9 +49,15 @@ function BackroomTutorial:generate(world_generator)
 	sign.smash_easter_egg_probability = 0
 
 	game:new_actor(enemies.PlayerTrigger:new(87*16, 9*16, 8*16, 5*16, function()
-		game:play_cutscene(cutscenes.tutorial_end)
-		world_generator:write_rect_fill(Rect:new(95, 0,  96, 13), TILE_AIR)
+		if Metaprogression:get("has_played_tutorial") then
+			game:play_cutscene(cutscenes.tutorial_end_short)
+		else
+			game:play_cutscene(cutscenes.tutorial_end)
+		end
 		game.game_ui.offscreen_indicators_enabled = false
+
+		local ax, ay, bx, by = unpack(RECT_TUTORIAL_PARAMS)
+		game.level:set_bounds(Rect:new(ax, ay, bx + 4, by))
 	end, {min_player_trigger = 0}))
 	
 	game.camera.max_x = 67*16
@@ -100,6 +108,7 @@ end
 
 function BackroomTutorial:draw_items()
 	love.graphics.draw(images.tutorial_level_back, 0, 0)
+	love.graphics.draw(images.building, 16*83, 16*14 - images.building:getHeight())
 	
 	if not Input:get_user(1) then
 		return 

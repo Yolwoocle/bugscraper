@@ -373,6 +373,7 @@ local img_names = {
 	cabin_grid_brown =               "level/cabin_grid_brown",
 	cabin_grid_platform =            "level/cabin_grid_platform",
 
+	building =                       "level/building",
 	tutorial_house =                 "level/tutorial_house",
 	tutorial_level =                 "level/tutorial_level",
 	tutorial_level_back =            "level/tutorial_level_back",
