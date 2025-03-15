@@ -168,7 +168,7 @@ function Game:new_game(params)
 		px = self.level.door_rect.ax + 32
 		py = self.level.door_rect.by
 		spacing = 16
-		self.level.is_hole_stencil_enabled = false
+		self.level.hole_stencil_mode = "off"
 	end
 	self:init_players(px, py, spacing)
 

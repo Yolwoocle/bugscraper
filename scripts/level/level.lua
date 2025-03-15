@@ -87,9 +87,14 @@ function Level:init(game, backroom)
 	-- Canvas & stencils
 	self.canvas = love.graphics.newCanvas(CANVAS_WIDTH*3.5, CANVAS_HEIGHT*2)
 	self.buffer_canvas = love.graphics.newCanvas(CANVAS_WIDTH*3.5, CANVAS_HEIGHT + 48)
-	self.is_hole_stencil_enabled = true
-	self.hole_stencil_pause_radius = CANVAS_WIDTH
-	self.hole_stencil_max_radius = CANVAS_WIDTH*3
+	-- 'off' = no hole, show elevator, 
+	-- 'hole' = show backroom and elevator through hole, 
+	-- 'full' = completely show backroom 
+	self.hole_stencil_mode = "off" 
+	-- self.hole_stencil_pause_radius = CANVAS_WIDTH
+	-- self.hole_stencil_max_radius = CANVAS_WIDTH*3
+	self.hole_stencil_max_radius = CANVAS_WIDTH*2
+	-- self.hole_stencil_max_radius = CANVAS_WIDTH*0.6
 	self.hole_stencil_start_timer = Timer:new(1.0)
 	self.hole_stencil_radius = 0
 	self.hole_stencil_radius_speed = 0
@@ -385,11 +390,11 @@ function Level:get_backroom_animation_state_machine(dt)
 	return StateMachine:new({
 		off = {
 			enter = function(state)
-				self.is_hole_stencil_enabled = false
+				self.hole_stencil_mode = "off"
 				self.new_wave_progress = 0.0
 			end,
 			update = function(state, dt)
-				self.is_hole_stencil_enabled = false
+				self.hole_stencil_mode = "off"
 			end
 		},
 		wait = {
@@ -401,11 +406,10 @@ function Level:get_backroom_animation_state_machine(dt)
 		},
 		grow = {
 			enter = function(state)
-				self.is_hole_stencil_enabled = true
+				self.hole_stencil_mode = "hole"
 			end,
 			update = function(state, dt)
 				self:update_hole_stencil(dt)
-				
 				if self.hole_stencil_radius >= CANVAS_WIDTH*0.5 then
 					return "on"
 				end
@@ -413,6 +417,7 @@ function Level:get_backroom_animation_state_machine(dt)
 		},
 		on = {
 			enter = function(state)
+				self.hole_stencil_mode = "full"
 				if self.backroom then
 					self.backroom:generate(self.world_generator)
 					self.backroom:on_fully_entered()
@@ -432,6 +437,7 @@ function Level:get_backroom_animation_state_machine(dt)
 		},
 		shrink = {
 			enter = function(state)
+				self.hole_stencil_mode = "hole"
 				game:remove_all_active_enemies()
 				self:end_backroom()
 				
@@ -549,6 +555,13 @@ end
 function Level:draw_with_hole(draw_func, stencil_test)
 	stencil_test = stencil_test or "less"
 
+	if self.hole_stencil_mode == "full" then
+		if stencil_test == "gequal" then
+			draw_func()
+		end
+		return
+	end
+
 	exec_on_canvas(self.buffer_canvas, function()
 		game.camera:pop()
 		
@@ -563,14 +576,17 @@ function Level:draw_with_hole(draw_func, stencil_test)
 		game.camera:pop()
 		love.graphics.clear()
 		
-		if self.is_hole_stencil_enabled then
+		if self.hole_stencil_mode ~= "off" then
 			love.graphics.setStencilState("replace", "always", 1)
 			love.graphics.setColorMask(false)
 			love.graphics.clear()
-			love.graphics.circle("fill", (self.door_rect.ax + self.door_rect.bx)/2, (self.door_rect.ay + self.door_rect.by)/2, self.hole_stencil_radius)
-
+			if self.hole_stencil_mode == "hole" then
+				love.graphics.circle("fill", (self.door_rect.ax + self.door_rect.bx)/2, (self.door_rect.ay + self.door_rect.by)/2, self.hole_stencil_radius)
+			end
+			
 			love.graphics.setStencilState("keep", stencil_test, 1)
 			love.graphics.setColorMask(true)
+			
 		end
 		
 		love.graphics.draw(self.buffer_canvas)
@@ -607,15 +623,15 @@ end
 
 
 function Level:draw_front(x,y)
-	if self.backroom and self.is_hole_stencil_enabled then
-		self:draw_with_hole(function()
-			self.backroom:draw_front()
-		end, "gequal")
+	if self.backroom then 
+		if self.hole_stencil_mode ~= "off" then
+			self:draw_with_hole(function()
+				self.backroom:draw_front()
+			end, "gequal")
+		end
 	end
 
 	self:draw_with_hole(function()
-		self:draw_rubble()
-		
 		if self.show_cabin then
 			self.elevator:draw_front()
 		end
@@ -681,12 +697,6 @@ function Level:draw_ui()
 	end
 end
 
-
-function Level:draw_rubble()
-	if self.show_rubble then
-		love.graphics.draw(images.cabin_rubble, 0*BW, 11*BW)
-	end
-end
 
 ---------------------------------------------
 

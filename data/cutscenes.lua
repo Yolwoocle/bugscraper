@@ -122,7 +122,7 @@ cutscenes.tutorial_end = Cutscene:new("tutorial_end", {
         end,
     }),
     CutsceneScene:new({
-        description = "Pan camera up",
+        description = "Start dark fadeout",
 
         duration = 2.0,
         enter = function(scene)
@@ -131,7 +131,7 @@ cutscenes.tutorial_end = Cutscene:new("tutorial_end", {
         end,
     }),
     CutsceneScene:new({
-        description = "Pan camera up",
+        description = "End dark fadeout",
         duration = 0.1,
 
         enter = function(scene)

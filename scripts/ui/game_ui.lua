@@ -43,8 +43,9 @@ function GameUI:init(game, is_visible)
 	self.fury_flash_timer = 0
 	self.fury_flash_max_timer = 0.2
 	self.fury_is_flashing = false
-	
 
+	self.offscreen_indicators_enabled = true
+	
 	self.title_buffer_canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
 	self.title = "Léo Bernard"
 	self.subtitle = "Yolwoocle"
@@ -275,6 +276,9 @@ function GameUI:draw_FPS()
 end
 
 function GameUI:draw_offscreen_indicators()
+	if not self.offscreen_indicators_enabled then
+		return
+	end
 	local cam_x, cam_y = self.game.camera:get_position()
 	for i, player in pairs(self.game.players) do
 		if (player.x + player.w < cam_x) or (cam_x + CANVAS_WIDTH < player.x) 

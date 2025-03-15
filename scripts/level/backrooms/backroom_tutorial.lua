@@ -2,7 +2,7 @@ require "scripts.util"
 local images = require "data.images"
 local enemies = require "data.enemies"
 local BackroomWithDoor = require "scripts.level.backrooms.backroom_with_door"
-local BackgroundCafeteria = require "scripts.level.background.background_cafeteria"
+local BackgroundCity = require "scripts.level.background.background_city"
 local Rect = require "scripts.math.rect"
 local cutscenes = require "data.cutscenes"
 
@@ -12,7 +12,7 @@ function BackroomTutorial:init()
     BackroomTutorial.super.init(self)
 	self.name = "tutorial"
 
-	self.cafeteria_background = BackgroundCafeteria:new(self)
+	self.cafeteria_background = BackgroundCity:new(self)
 end
 
 function BackroomTutorial:generate(world_generator)
@@ -31,7 +31,7 @@ function BackroomTutorial:generate(world_generator)
 	world_generator:write_rect_fill(Rect:new(63, 11, 63, 12), TILE_METAL) -- k
 	world_generator:write_rect_fill(Rect:new(64, 12, 64, 12), TILE_METAL) -- l
 	world_generator:write_rect_fill(Rect:new(66, 14, 96, 14), TILE_METAL) -- m
-	world_generator:write_rect_fill(Rect:new(95, 0,  96, 13), TILE_METAL) -- n
+	world_generator:write_rect_fill(Rect:new(95, 0,  96, 13), TILE_BORDER) -- n
 	world_generator:write_rect_fill(Rect:new(57, 6,  60, 6),  TILE_METAL) -- o
 	world_generator:write_rect_fill(Rect:new(60, 7,  60, 8),  TILE_METAL) -- p
 	world_generator:write_rect_fill(Rect:new(85, 8,  94, 8),  TILE_METAL) -- q
@@ -48,6 +48,8 @@ function BackroomTutorial:generate(world_generator)
 
 	game:new_actor(enemies.PlayerTrigger:new(87*16, 9*16, 8*16, 5*16, function()
 		game:play_cutscene(cutscenes.tutorial_end)
+		world_generator:write_rect_fill(Rect:new(95, 0,  96, 13), TILE_AIR)
+		game.game_ui.offscreen_indicators_enabled = false
 	end, {min_player_trigger = 0}))
 	
 	game.camera.max_x = 67*16
@@ -122,6 +124,7 @@ end
 
 function BackroomTutorial:draw_front_walls()
 	love.graphics.draw(images.tutorial_level, 0, 0)
+	love.graphics.draw(images.tutorial_house, 0, -16*5)
 end
 
 return BackroomTutorial

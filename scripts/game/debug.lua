@@ -663,6 +663,11 @@ function Debug:draw_info_view()
         concat("xp: ", Metaprogression:get_xp()),
         concat("xp_level: ", Metaprogression:get_xp_level()),
         concat("unlocked_skins: ", skininfo),
+        concat(
+            "backroom_animation_state_machine.current_state_name: ", 
+            game.level.backroom_animation_state_machine.current_state_name, 
+            "backroom_animation_state_machine.hole_stencil_mode: ", 
+            game.level.backroom_animation_state_machine.hole_stencil_mode),
         "",
     }
 

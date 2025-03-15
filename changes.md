@@ -11,3 +11,4 @@ First Steam beta release after a year of development! If you had the game before
 - **Fix**: Quick restarting no longer has that small “intro”
 - **Fix**: Drill bees (temporary name) now give some fury when exploding
 - **Fix**: Ground floor music no longer plays when reviving a player 
+- **Fix**: Tutorial area doesn't have a cut off house anymore
