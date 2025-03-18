@@ -100,19 +100,19 @@ return {
 			title = "Limonada efervescente", -- Avoided the use of gaseosa as might be confusing.
 			description = "Mantén saltar para bajar suavemente",
 		},
-		apple_juice = { -- Modified
+		apple_juice = {
 			title = "Jugo de manzana",
 			description = "Recupera +%d ❤",
 		},
-		hot_sauce = {                                   -- Modified
+		hot_sauce = {
 			title = "Salsa picante",
 			description = "Hace x%d daño pero usa x%d munición", -- First "%d" is the damage, second "%d" is ammo
 		},
-		coconut_water = {                               -- Modified
+		coconut_water = {
 			title = "Agua de coco",
 			description = "Pisar enemigos te da de vuelta %d%% munición",
 		},
-		hot_chocolate = { -- Modified
+		hot_chocolate = {
 			title = "Chocolate caliente",
 			description = "x%d Velocidad de recarga",
 		},
@@ -154,7 +154,7 @@ return {
 		},
 		confirm_retry = {
 			-- Here refers to going back to the main menu to try another run, NOT restarting the game
-			description = "Reintentar?", -- Modified
+			description = "Reintentar?",
 		},
 		pause = {
 			title = "PAUSAR",
@@ -262,9 +262,9 @@ return {
 			title = "JUEGO TERMINADO!", -- *sigh* Europeans use `fin de la partida` but the latam version `game over` (literally 1:1) fits better
 			kills = "Enemigos matados", -- The amount of enemies the player has killed
 			time = "Tiempo transcurrido", -- The time that the player took to complete the level
-			floor = "Piso",           -- Which storey the player was on when they died
+			floor = "Piso",      -- Which storey the player was on when they died
 			continue = "CONTINUAR",
-			quick_restart = "REINICIO RÁPIDO", -- Modified
+			quick_restart = "REINICIO RÁPIDO",
 		},
 		win = {
 			title = "FELICITACIONES!",
@@ -289,8 +289,8 @@ return {
 			playtesting = "Probadores de Jugabilidad",
 			special_thanks = "Agradecimentos especiales",
 			asset_creators = "Creadores de recursos",
-			tv_slideshow = "Contribuciones de la presentación de la TV", -- Modified // Refers to the powerpoint TV slideshow on the title screen, which was contributed by a variety of people
-			tv_slideshow_submit = "Añade el tuyo...",           -- Modified // Leads to a web page where people can submit their own slides
+			tv_slideshow = "Contribuciones de la presentación en la TV", -- Refers to the powerpoint TV slideshow on the title screen, which was contributed by a variety of people
+			tv_slideshow_submit = "Añade el tuyo...",           -- Leads to a web page where people can submit their own slides
 			licenses = "Recursos y Lisencias de librerías",
 
 			x_by_y = "%s por %s", -- "ASSET_NAME by CREATOR". Used to credit assets such as sound effects
