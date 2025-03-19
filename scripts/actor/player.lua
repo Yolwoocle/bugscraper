@@ -148,9 +148,7 @@ function Player:init(n, x, y, skin)
 	self.guns = {
 		Guns.unlootable.Machinegun:new(self),
 		Guns.unlootable.DebugGun:new(self),
-		Guns.unlootable.DebugGunManual:new(self),
-		Guns.unlootable.ExplosionGun:new(self),
-		Guns.unlootable.HoneycombFootballGun:new(self),
+		Guns.unlootable.EmptyGun:new(self),
 		Guns.Triple:new(self),
 		Guns.Burst:new(self),
 		Guns.Shotgun:new(self),
@@ -1187,6 +1185,9 @@ function Player:draw_life_bar(ui_x, ui_y)
 end
 
 function Player:draw_ammo_bar(ui_x, ui_y)
+	if not self.gun or not self.gun.show_ammo_bar then
+		return 
+	end
 	-- Please make an ui library and stop doing this shit
 	local ammo_icon_w = self.ammo_bar_icon:getWidth()
 	local slider_w = 23 * (1 + (self:get_max_ammo_multiplier() - 1)/2)

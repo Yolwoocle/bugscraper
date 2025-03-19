@@ -983,10 +983,15 @@ function Game:new_player(player_n, x, y, put_in_buffer)
 	x = param(x, def_x)
 	y = param(y, def_y)
 				
-	
 	local player = Player:new(player_n, x, y, Input:get_user(player_n):get_skin() or skins["mio"])
 	self.players[player_n] = player
 	self.waves_until_respawn[player_n] = {-1, nil}
+	if self.level.backroom and self.level.backroom.get_default_player_gun then
+		local gun = self.level.backroom:get_default_player_gun()
+		player:equip_gun(gun)
+	end
+	
+
 	if put_in_buffer then
 		player:set_active(false)
 		self.level:buffer_actor(player)

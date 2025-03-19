@@ -11,6 +11,24 @@ local Guns = Class:inherit()
 function Guns:init()
 	self.unlootable = {}
 	
+	self.unlootable.EmptyGun = Gun:inherit()
+
+	function self.unlootable.EmptyGun:init(user)
+		self.name = "empty_gun"
+		self:init_gun(user)
+		
+		self.color = COL_WHITE
+		self.sfx = "mushroom_ant_pop"
+
+		self.spr = images.empty
+		self.damage = 0
+		self.max_ammo = 0
+
+		self.show_ammo_bar = false
+	end
+
+	-------
+		
 	self.unlootable.Machinegun = Gun:inherit()
 
 	function self.unlootable.Machinegun:init(user)

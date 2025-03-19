@@ -73,21 +73,25 @@ function Gun:init_gun(user)
 	-- Jetpack
 	self.default_jetpack_force = 340
 	self.jetpack_force = self.default_jetpack_force
-	
+
 	-- Sounds
 	self.play_sfx = true
 	self.sfx = "shot1"
 	self.sfx_pitch_var = 1.15
 	self.sfx_pitch = 1
 	
+	-- VFX
 	self.do_particles = true
 	self.screenshake = 0
 
-	self.is_explosion = false
-
+	-- 3D
 	self.bullet_model = nil
 	self.object_3d_rot_speed = 0
 	self.object_3d_scale = 1
+	
+	-- Misc
+	self.is_explosion = false
+	self.show_ammo_bar = true
 end
 
 function Gun:update(dt)

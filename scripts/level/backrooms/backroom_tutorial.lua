@@ -4,7 +4,10 @@ local enemies = require "data.enemies"
 local BackroomWithDoor = require "scripts.level.backrooms.backroom_with_door"
 local BackgroundCity = require "scripts.level.background.background_city"
 local Rect = require "scripts.math.rect"
+local Loot = require "scripts.actor.loot"
+
 local cutscenes = require "data.cutscenes"
+local guns = require "data.guns"
 
 local BackroomTutorial = BackroomWithDoor:inherit()
 
@@ -18,6 +21,7 @@ end
 function BackroomTutorial:generate(world_generator)
 	game.level:set_bounds(Rect:new(unpack(RECT_TUTORIAL_PARAMS)))
 
+	-- Collision 
 	world_generator:reset()
 
 	world_generator:write_rect_fill(Rect:new(0,  2,  2,  20), TILE_METAL) -- a
@@ -40,14 +44,25 @@ function BackroomTutorial:generate(world_generator)
 
 	world_generator:write_rect_fill(Rect:new(3, 8, 3, 8),  TILE_SEMISOLID) -- d1
 	
+	-- Walls, dummies
 	game:new_actor(enemies.BreakableWall:new(47*16, 6*16))
 	game:new_actor(enemies.Dummy:new(72*16, 13*16))
 	game:new_actor(enemies.Dummy:new(75*16, 13*16))
 	game:new_actor(enemies.Dummy:new(78*16, 13*16))
+	game:new_actor(Loot.Gun:new(40*16, 12*16, nil, 0, 0, guns.unlootable.Machinegun:new(), {
+		remove_on_collect = false,
+		life = math.huge,
+		min_attract_dist = -1,
+		player_filter = function(player)
+			return player.gun and player.gun.name == "empty_gun"
+		end
+	}), 440, 105)
 	
+	-- Exit sign
 	local sign = game:new_actor(enemies.ExitSign:new(50, 160))
 	sign.smash_easter_egg_probability = 0
 
+	-- Exit trigger
 	game:new_actor(enemies.PlayerTrigger:new(87*16, 9*16, 8*16, 5*16, function()
 		if Metaprogression:get("has_played_tutorial") then
 			game:play_cutscene(cutscenes.tutorial_end_short)
@@ -60,10 +75,12 @@ function BackroomTutorial:generate(world_generator)
 		game.level:set_bounds(Rect:new(ax, ay, bx + 4, by))
 	end, {min_player_trigger = 0}))
 	
+	-- Camera, music, stuff
 	game.camera.max_x = 67*16
 	game.music_player:set_disk("off")
 	game.level.show_cabin = false
 
+	-- Start cutscene
 	if not Metaprogression:get("has_seen_intro_credits") then
 		game:play_cutscene(cutscenes.tutorial_start)
 	end
@@ -71,6 +88,10 @@ end
 
 function BackroomTutorial:get_default_player_position(player_n)
 	return 3*16, 12*16
+end
+
+function BackroomTutorial:get_default_player_gun()
+	return guns.unlootable.EmptyGun:new()
 end
 
 function BackroomTutorial:get_default_camera_position()

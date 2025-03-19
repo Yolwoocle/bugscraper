@@ -10,7 +10,9 @@ local utf8 = require "utf8"
 
 local Loot = Actor:inherit()
 
-function Loot:init_loot(spr, x, y, w, h, val, vx, vy)
+function Loot:init_loot(spr, x, y, w, h, val, vx, vy, params)
+	params = params or {}
+
 	local x, y = x-w/2, y-h/2
 	self:init_actor(x, y, w, h, spr)
 	self.is_loot = true
@@ -19,6 +21,10 @@ function Loot:init_loot(spr, x, y, w, h, val, vx, vy)
 	self.vy = vy or 0
 
 	self.value = val
+	self.max_life = 10
+
+	self.min_attract_dist = param(params.min_attract_dist, math.huge)
+	self.player_filter = param(params.player_filter, function(player) return true end)
 
 	self:reset()
 end
@@ -27,7 +33,6 @@ function Loot:reset()
 	self:reset_loot()
 end
 function Loot:reset_loot()
-	self.max_life = 10
 	self.life = self.max_life
 
 	self.max_blink_timer = 0.1
@@ -51,7 +56,6 @@ function Loot:reset_loot()
 	self.jump_speed_max = 250
 
 	self.target_player = nil
-	self.min_attract_dist = math.huge
 	self.is_attracted = true
 
 	self.ghost_time = random_range(0.4, 0.8)
@@ -123,7 +127,7 @@ function Loot:get_attract_candidates(score_function)
 	for _, player in pairs(game.players) do
 		local score = score_function(player)
 		local d = distsqr(self.mid_x, self.mid_y, player.mid_x, player.mid_y)
-		if score <= min_score and d <= sqr(self.min_attract_dist) then
+		if score <= min_score and d <= sqr(self.min_attract_dist) and self.player_filter(player) then
 			if score < min_score then
 				min_score = score
 				best_candidates = {}
@@ -180,7 +184,7 @@ function Loot:on_collision(col, other)
 		return
 	end
 
-	if col.other.is_player and self.ghost_timer <= 0 then
+	if col.other.is_player and self.ghost_timer <= 0 and self.player_filter(col.other) then
 		self:on_collect(other)
 	end
 
@@ -256,30 +260,32 @@ end
 
 Loot.Gun = Loot:inherit()
 
-function Loot.Gun:init(x, y, val, vx, vy, gun)
+function Loot.Gun:init(x, y, val, vx, vy, gun, params)
+	params = params or {}
 	if gun then
 		self.gun = gun
 	else
 		gun = Guns:get_random_gun()
 		self.gun = gun
 	end
+	params.min_attract_dist = params.min_attract_dist or 16
 	
-	self:init_loot(gun.spr, x, y, 2, 2, val, vx, vy)
+	self:init_loot(gun.spr, x, y, 2, 2, val, vx, vy, params)
+
+	self.remove_on_collect = param(params.remove_on_collect, true) 
 	
-	self.max_life = 8
+	self.max_life = param(params.life, 8)
 	self.life = self.max_life
 end
 
 function Loot.Gun:reset()
 	self:reset_loot()
 	
-	self.max_life = 15
 	self.life = self.max_life
 
 	self.vx = 0
 	self.vy = 0
 
-	self.min_attract_dist = 16
 	self.uncollectable_timer = 0.3
 	
 	self.friction_x = self.default_friction
@@ -311,7 +317,9 @@ function Loot.Gun:on_collect(player)
 	-- self.uncollectable_timer = 1.0
 	-- self:remove()
 
-	self:remove()
+	if self.remove_on_collect then
+		self:remove()
+	end
 end
 
 function Loot.Gun:update(dt)
