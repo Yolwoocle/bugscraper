@@ -24,7 +24,7 @@ function Guns:init()
 		self.damage = 0
 		self.max_ammo = 0
 
-		self.show_ammo_bar = false
+		self.show_hud = false
 	end
 
 	-------

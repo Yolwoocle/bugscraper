@@ -29,6 +29,9 @@ function Dummy:init(x, y)
 
     self.respawn_timer = Timer:new(1.0)
 
+	self.fury_bullet_damage_multiplier = 0
+    self.fury_stomp_multiplier = 0
+
     self.sound_damage = {"cloth1", "cloth2", "cloth3"}
     self.sound_death = "cloth_drop"
     self.sound_stomp = "cloth_drop"

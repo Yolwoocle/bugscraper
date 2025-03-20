@@ -123,6 +123,7 @@ function Enemy:init_enemy(x,y, img, w,h)
 	self.has_run_ready = false
 
 	self.score = 0
+	self.fury_bullet_damage_multiplier = 1
 end
 
 function Enemy:ready()

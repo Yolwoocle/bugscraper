@@ -56,6 +56,8 @@ function Actor:init_actor(x, y, w, h, spr, args)
 	self.is_removed = false
 	self:add_collision()
 
+	self.fury_bullet_damage_multiplier = 0
+
 	-- Visuals
 	self.spr = Sprite:new()
 	self.draw_shadow = true

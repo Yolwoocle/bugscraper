@@ -91,7 +91,7 @@ function Gun:init_gun(user)
 	
 	-- Misc
 	self.is_explosion = false
-	self.show_ammo_bar = true
+	self.show_hud = true
 end
 
 function Gun:update(dt)

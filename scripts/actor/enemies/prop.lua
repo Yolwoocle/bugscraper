@@ -29,6 +29,8 @@ function Prop:init_prop(x, y, img, w, h)
 	self.destroy_bullet_on_impact = false
 	self.is_immune_to_bullets = true
 
+	self.fury_bullet_damage_multiplier = 0
+
     self.score = 0
 end
 

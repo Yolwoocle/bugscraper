@@ -942,7 +942,7 @@ function Player:on_my_bullet_hit(bullet, victim, col)
 	-- Why tf would this happen
 	if bullet.player ~= self then   return   end
 
-	game.level:add_fury(bullet.damage * self.fury_bullet_damage_value_multiplier)
+	game.level:add_fury(bullet.damage * victim.fury_bullet_damage_multiplier * self.fury_bullet_damage_value_multiplier)
 end
 
 --- When the player kills an enemy
@@ -1144,6 +1144,9 @@ end
 function Player:draw_hud()
 	if self.is_removed or self.is_dead then    return    end
 	if not self.show_hud then    return    end
+	if not self.gun or not self.gun.show_hud then
+		return 
+	end
 
 	local ui_x = floor(self.ui_x)
 	local ui_y = floor(self.ui_y) - self.spr.h - 12
@@ -1185,9 +1188,6 @@ function Player:draw_life_bar(ui_x, ui_y)
 end
 
 function Player:draw_ammo_bar(ui_x, ui_y)
-	if not self.gun or not self.gun.show_ammo_bar then
-		return 
-	end
 	-- Please make an ui library and stop doing this shit
 	local ammo_icon_w = self.ammo_bar_icon:getWidth()
 	local slider_w = 23 * (1 + (self:get_max_ammo_multiplier() - 1)/2)
