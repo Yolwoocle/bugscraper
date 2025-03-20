@@ -85,21 +85,19 @@ function Level:init(game, backroom)
 	self.do_not_spawn_enemies_on_next_wave_flag = false
 	
 	-- Canvas & stencils
-	self.canvas = love.graphics.newCanvas(CANVAS_WIDTH*3.5, CANVAS_HEIGHT*2)
-	self.buffer_canvas = love.graphics.newCanvas(CANVAS_WIDTH*3.5, CANVAS_HEIGHT + 48)
+	self.canvas = love.graphics.newCanvas(CANVAS_WIDTH*2, CANVAS_HEIGHT*2)
+	self.buffer_canvas = love.graphics.newCanvas(CANVAS_WIDTH*2, CANVAS_HEIGHT + 48)
 	-- 'off' = no hole, show elevator, 
 	-- 'hole' = show backroom and elevator through hole, 
 	-- 'full' = completely show backroom 
 	self.hole_stencil_mode = "off" 
-	-- self.hole_stencil_pause_radius = CANVAS_WIDTH
-	-- self.hole_stencil_max_radius = CANVAS_WIDTH*3
 	self.hole_stencil_max_radius = CANVAS_WIDTH*2
-	-- self.hole_stencil_max_radius = CANVAS_WIDTH*0.6
 	self.hole_stencil_start_timer = Timer:new(1.0)
 	self.hole_stencil_radius = 0
-	self.hole_stencil_radius_speed = 0
-	self.hole_stencil_radius_accel = 300
-	self.hole_stencil_radius_accel_sign = 1
+	self.hole_stencil_radius_source = 0
+	self.hole_stencil_radius_target = 0
+	self.hole_stencil_radius_progress = 0
+	self.hole_stencil_radius_progress_speed = 0.5
 
 	-- Sounds
 	self.elevator_crashing_sound = sounds.elev_burning.source
@@ -375,14 +373,12 @@ function Level:begin_backroom(backroom)
 	self.backroom:on_enter()
 
 	self.backroom_animation_state_machine:set_state("wait")
-	self.hole_stencil_radius = 0
-	self.hole_stencil_radius_accel_sign = 1
-	
-	self.hole_stencil_start_timer:start()
+	self:tween_hole_stencil(0, 120)	
 end
 
 function Level:set_backroom_on()
 	self.backroom_animation_state_machine:set_state("on")
+	self.backroom:generate(self.world_generator)
 	self.hole_stencil_radius = CANVAS_WIDTH*2
 end
 
@@ -398,7 +394,23 @@ function Level:get_backroom_animation_state_machine(dt)
 			end
 		},
 		wait = {
+			enter = function(state)
+				self.hole_stencil_start_timer:start(1.5)
+			end,
 			update = function(state, dt)
+				if self.hole_stencil_start_timer:update(dt) then
+					return "grow_intro"
+				end
+			end
+		},
+		grow_intro = {
+			enter = function(state)
+				self.hole_stencil_mode = "hole"
+				self:tween_hole_stencil(0, 90, 1)
+				self.hole_stencil_start_timer:start(1.5)
+			end,
+			update = function(state, dt)
+				self:update_hole_stencil(dt)
 				if self.hole_stencil_start_timer:update(dt) then
 					return "grow"
 				end
@@ -407,10 +419,12 @@ function Level:get_backroom_animation_state_machine(dt)
 		grow = {
 			enter = function(state)
 				self.hole_stencil_mode = "hole"
+				self:tween_hole_stencil(nil, CANVAS_WIDTH, 1)
+				self.backroom:generate(self.world_generator)
 			end,
 			update = function(state, dt)
 				self:update_hole_stencil(dt)
-				if self.hole_stencil_radius >= CANVAS_WIDTH*0.5 then
+				if self.hole_stencil_radius_progress >= 1 then
 					return "on"
 				end
 			end
@@ -419,7 +433,6 @@ function Level:get_backroom_animation_state_machine(dt)
 			enter = function(state)
 				self.hole_stencil_mode = "full"
 				if self.backroom then
-					self.backroom:generate(self.world_generator)
 					self.backroom:on_fully_entered()
 				end
 				
@@ -448,7 +461,7 @@ function Level:get_backroom_animation_state_machine(dt)
 			end,
 			update = function(state, dt)
 				self:update_hole_stencil(dt)
-				if self.hole_stencil_radius <= 0 then
+				if self.hole_stencil_radius <= 1 then
 					return "off"
 				end
 			end,
@@ -475,9 +488,9 @@ end
 
 
 function Level:update_hole_stencil(dt)
-	self.hole_stencil_radius_speed = self.hole_stencil_radius_speed + self.hole_stencil_radius_accel_sign * self.hole_stencil_radius_accel * dt
+	self.hole_stencil_radius_progress = clamp(self.hole_stencil_radius_progress + dt*self.hole_stencil_radius_progress_speed, 0, 1)
 	
-	self.hole_stencil_radius = self.hole_stencil_radius + self.hole_stencil_radius_speed * dt
+	self.hole_stencil_radius = easeinoutquart(self.hole_stencil_radius_source, self.hole_stencil_radius_target, self.hole_stencil_radius_progress)
 	self.hole_stencil_radius = clamp(self.hole_stencil_radius, 0, self.hole_stencil_max_radius)
 end
 
@@ -486,13 +499,10 @@ function Level:is_on_cafeteria()
 	return self:get_floor_type() == FLOOR_TYPE_CAFETERIA
 end
 
-
 function Level:end_backroom()
 	self.world_generator:generate_cabin()
 
-	self.hole_stencil_radius = CANVAS_WIDTH
-	self.hole_stencil_radius_speed = 0
-	self.hole_stencil_radius_accel_sign = -1
+	self:tween_hole_stencil(CANVAS_WIDTH, 0)
 	self.new_wave_progress = 1.0
 	self.elevator:close_door()
 	self.new_wave_animation_state_machine:set_state("closing")
@@ -551,6 +561,18 @@ function Level:on_upgrade_display_killed(display)
 end
 
 -----------------------------------------------------
+
+function Level:tween_hole_stencil(from, to, speed)
+	from = from or self.hole_stencil_radius
+	to = to or self.hole_stencil_radius
+	speed = speed or 0.5
+	
+	self.hole_stencil_radius_progress_speed = speed
+	self.hole_stencil_radius = from
+	self.hole_stencil_radius_source = from
+	self.hole_stencil_radius_target = to
+	self.hole_stencil_radius_progress = 0
+end
 
 function Level:draw_with_hole(draw_func, stencil_test)
 	stencil_test = stencil_test or "less"

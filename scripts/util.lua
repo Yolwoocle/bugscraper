@@ -1045,6 +1045,15 @@ function move_toward_angle(a, b, t)
 	end
 end
 
+-- Lerp with a max step value
+function lerpmax(a, b, t, _max)
+	local step = (b - a) * t
+	if math.abs(step) > _max then
+		return move_toward(a, b, _max)
+	end
+	return a + step
+end
+
 function lerp(a, b, t)
 	return a + (b - a) * t
 end
@@ -1332,6 +1341,15 @@ end
 
 -- https://easings.net/#easeOutBack
 -- https://www.lexaloffle.com/bbs/?tid=40577
+
+function easeinoutquart(a, b, t)
+	if t<.5 then
+		return a + (b-a) * (8*t*t*t*t)
+	else
+		t=t-1
+		return a + (b-a) * (1-8*t*t*t*t)
+	end
+end
 
 function ease_out_overshoot(t)
 	t=t-1
