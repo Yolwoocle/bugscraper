@@ -172,10 +172,10 @@ function Elevator:draw_cabin()
 end
 
 function Elevator:draw_counter()
-	local cabin_ax, cabin_by = self.level.door_rect.ax, self.level.door_rect.ay 
+	local door_x, door_y = self.level.door_rect.ax, self.level.door_rect.ay 
 	
 	-- Level counter clock thing
-	local x1, y1 = cabin_ax + 54.5, cabin_by - 33
+	local x1, y1 = door_x + 54.5, door_y - 33
 	self.clock_ang = lerp(self.clock_ang, pi + clamp(self.level.floor / self.level.max_floor, 0, 1) * pi, 0.1)
 	local a = self.clock_ang
 	love.graphics.line(x1, y1, x1 + cos(a)*11, y1 + sin(a)*11)
