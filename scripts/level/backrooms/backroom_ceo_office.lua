@@ -25,7 +25,18 @@ function BackroomCEOOffice:generate(world_generator)
 
 	game:new_actor(enemies.BossDoor:new(78*16, 10*16))
 	
-	game:new_actor(enemies.FinalBoss:new(88*16, 14*16))
+	-- game:new_actor(enemies.FinalBoss:new(88*16, 14*16))
+	for i=1, 4 do
+		local l = create_actor_centered(enemies.ButtonSmall, 1600 - i * 32, 300)
+		l.disappear_after_press = false
+		l.on_press = function(_self, presser)
+			if presser.kill then
+				presser:kill()
+			end
+		end
+		game:new_actor(l)
+	end
+	
 end
 
 function BackroomCEOOffice:can_exit()
