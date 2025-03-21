@@ -14,12 +14,19 @@ function Effect:init_effect()
     self.player = nil
     self.duration = 5.0
     self.timer = 0.0
+
+    self.duration_unit = "s" -- "s": seconds, "floors": number of floors
 end
 
-function Effect:apply(player, duration)
+function Effect:apply(player, duration, params)
+    params = params or {}
     self.player = player
     
     self.duration = duration
+    self.duration_unit = params.duration_unit or "s"
+    if self.duration_unit == "floor" then
+        self.start_floor = game.level.floor
+    end
 
     self.timer = self.duration
     self.is_active = true
@@ -33,8 +40,14 @@ function Effect:finish()
 end 
 
 function Effect:update_effect(dt)
-    self.timer = math.max(0.0, self.timer - dt)
-    if self.timer == 0.0 then
+    if self.duration_unit == "s" then
+        self.timer = math.max(0.0, self.timer - dt)
+    elseif self.duration_unit == "floor" then
+        self.timer = self.duration - (game.level.floor - self.start_floor)
+        print_debug("self.timer", self.timer)
+    end
+
+    if self.timer <= 0.0 then
         self:finish()
     end
 end

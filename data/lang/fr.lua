@@ -90,7 +90,7 @@ return {
         },
         espresso = {
             title = "Espresso",
-            description = "x%d vitesse de tir pendant une minute",
+            description = "x%d vitesse de tir pendant %d étages",
         },
         milk = {
             title = "Lait",

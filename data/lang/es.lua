@@ -82,7 +82,7 @@ return {
 		},
 		espresso = {
 			title = "Espresso", -- Foreign word that is used as is here
-			description = "Multiplica x%d la velocidad de disparo durante un minuto",
+			description = "Multiplica x%d la velocidad de disparo durante un minuto", -- CHANGED
 		},
 		milk = {
 			title = "Leche", -- Dad? you came back?

@@ -9,7 +9,8 @@ function UpgradeEspresso:init()
     UpgradeEspresso.super.init(self, "espresso")
     self.sprite = images.upgrade_espresso
     self.strength = 2.0
-    self:set_description(self.strength)
+    self.duration = 10 -- Lasts for 10 floors 
+    self:set_description(self.strength, self.duration)
 
     self.color = COL_MID_BROWN
     self.palette = {COL_MID_BROWN, COL_LIGHT_BROWN, COL_DARK_BROWN}
@@ -20,7 +21,7 @@ function UpgradeEspresso:update(dt)
 end
 
 function UpgradeEspresso:apply_instant(player)
-    player:apply_effect(EffectEspresso:new(self.strength), 60)
+    player:apply_effect(EffectEspresso:new(self.strength), self.duration, {duration_unit = "floor"})
 end
 
 function UpgradeEspresso:on_finish(player)

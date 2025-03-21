@@ -976,8 +976,8 @@ function Player:update_upgrades(dt)
 	end
 end
 
-function Player:apply_effect(effect, duration) 
-	effect:apply(self, duration)
+function Player:apply_effect(effect, duration, params) 
+	effect:apply(self, duration, params)
 	table.insert(self.effects, effect)
 end
 

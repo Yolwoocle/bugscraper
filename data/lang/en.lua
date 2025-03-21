@@ -92,7 +92,7 @@ return {
         },
         espresso = {
             title = "Espresso",
-            description = "x%d shooting speed for a minute", 
+            description = "x%d shooting speed for %d floors", 
         },
         milk = {
             title = "Milk",

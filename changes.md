@@ -10,6 +10,7 @@ First Steam beta release (after a year of development, never too late..!) If you
 - **Change**: Honeypot footballs (temporary name) explode faster so it doesn't ruin your combo
 - **Change**: You can no longer attack dept. 2 bee boss with bullets
 - **Change**: Increased opacity for Stink bug poison cloud
+- **Change**: Espresso upgrade now lasts for 10 floors instead of 1 minute
 - **Fix**: Quick restarting no longer has that small “intro”
 - **Fix**: Drill bees (temporary name) now give some fury when exploding
 - **Fix**: Ground floor music no longer plays when reviving a player 
