@@ -73,6 +73,10 @@ function Elevator:update(dt)
 	end
 end
 
+function Elevator:set_door_opened(value)
+	self.door:set_opened(value)
+end
+
 function Elevator:open_door(close_timer)
 	self.door:open()
 	if close_timer then

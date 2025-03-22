@@ -382,6 +382,41 @@ function Level:set_backroom_on()
 	self.hole_stencil_radius = CANVAS_WIDTH*2
 end
 
+
+
+function Level:can_exit_backroom()
+	if self.force_backroom_end_flag then
+		return true
+	end
+
+	if self.backroom then
+		return self.backroom:can_exit()
+	end
+	return false
+end
+
+
+
+function Level:end_backroom()
+	self.world_generator:generate_cabin()
+
+	self.new_wave_progress = 1.0
+	if self.force_backroom_end_flag then
+		self.force_backroom_end_flag = false
+		self:tween_hole_stencil(0, 0)
+	else
+		self:tween_hole_stencil(CANVAS_WIDTH, 0)
+	end
+	self.elevator:close_door()
+	self.new_wave_animation_state_machine:set_state("closing")
+
+	game.camera:set_x_locked(true)
+	game.camera:set_y_locked(true)
+	game.camera:set_target_position(DEFAULT_CAMERA_X, DEFAULT_CAMERA_Y)
+end
+
+
+
 function Level:get_backroom_animation_state_machine(dt)
 	return StateMachine:new({
 		off = {
@@ -441,7 +476,7 @@ function Level:get_backroom_animation_state_machine(dt)
 			end,
 			update = function(state, dt)
 				self:update_hole_stencil(dt)
-				
+
 				if self:can_exit_backroom() then
 					self.backroom:on_exit()
 					return "shrink"
@@ -452,6 +487,7 @@ function Level:get_backroom_animation_state_machine(dt)
 			enter = function(state)
 				self.hole_stencil_mode = "hole"
 				game:remove_all_active_enemies()
+				
 				self:end_backroom()
 				
 				self.new_wave_progress = math.huge
@@ -473,20 +509,6 @@ function Level:get_backroom_animation_state_machine(dt)
 	}, "off")
 end
 
-
-function Level:can_exit_backroom()
-	if self.force_backroom_end_flag then
-		self.force_backroom_end_flag = false
-		return true
-	end
-
-	if self.backroom then
-		return self.backroom:can_exit()
-	end
-	return false
-end
-
-
 function Level:update_hole_stencil(dt)
 	self.hole_stencil_radius_progress = clamp(self.hole_stencil_radius_progress + dt*self.hole_stencil_radius_progress_speed, 0, 1)
 	
@@ -498,20 +520,6 @@ end
 function Level:is_on_cafeteria()
 	return self:get_floor_type() == FLOOR_TYPE_CAFETERIA
 end
-
-function Level:end_backroom()
-	self.world_generator:generate_cabin()
-
-	self:tween_hole_stencil(CANVAS_WIDTH, 0)
-	self.new_wave_progress = 1.0
-	self.elevator:close_door()
-	self.new_wave_animation_state_machine:set_state("closing")
-
-	game.camera:set_x_locked(true)
-	game.camera:set_y_locked(true)
-	game.camera:set_target_position(DEFAULT_CAMERA_X, DEFAULT_CAMERA_Y)
-end
-
 
 function Level:on_upgrade_applied(upgrade)
 	-- Remove the upgrade from the bag

@@ -53,12 +53,18 @@ function ElevatorDoor:open(play_sound)
 	if self.is_opened then
 		return
 	end
-
+	
 	self.is_opened = true
 	self.offset_target = self.half_width
 	if play_sound then
 		sounds.elev_door_open.source:play()
 	end
+end
+
+function ElevatorDoor:set_opened(value)
+	self.is_opened = value
+	self.offset_target = ternary(value, self.half_width, 0)
+	self.target = self.offset_target
 end
 
 function ElevatorDoor:draw()

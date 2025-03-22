@@ -168,7 +168,6 @@ function Game:new_game(params)
 		px = self.level.door_rect.ax + 32
 		py = self.level.door_rect.by
 		spacing = 16
-		self.level.hole_stencil_mode = "off"
 	end
 	self:init_players(px, py, spacing)
 
@@ -253,9 +252,10 @@ function Game:new_game(params)
 		self.camera.x = DEFAULT_CAMERA_X
 		self.camera.y = DEFAULT_CAMERA_Y
 		self.logo_y = -70 -- SCOTCH
+		
 		self:start_game()
 	end
-
+	
 	_G_t_test = love.timer.getTime()
 end
 
