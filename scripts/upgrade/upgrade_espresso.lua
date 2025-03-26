@@ -9,7 +9,7 @@ function UpgradeEspresso:init()
     UpgradeEspresso.super.init(self, "espresso")
     self.sprite = images.upgrade_espresso
     self.strength = 2.0
-    self.duration = 10 -- Lasts for 10 floors 
+    self.duration = 20 -- Lasts for X floors 
     self:set_description(self.strength, self.duration)
 
     self.color = COL_MID_BROWN

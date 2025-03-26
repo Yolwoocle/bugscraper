@@ -355,6 +355,7 @@ local waves = {
 			["cabin_bg"] = images.cabin_bg_w2,
 			["walls"] = images.cabin_walls_w2,
 			
+			["bg_fan"] = true,
 			["bg_grid"] = false,
 		},
 		door_images = {
@@ -959,14 +960,6 @@ local waves = {
 		title = get_world_name(4),
 		title_color = COL_LIGHT_BLUE,
 		title_outline_color = COL_BLACK_BLUE,
-
-		fixed_enemies = {
-			{ 
-				E.Pendulum, 1, 
-				args = {pi/3, 200, 1}, 
-				position = {CANVAS_WIDTH/2, 3*16} 
-			},
-		},
 	}),
 
 
@@ -1068,6 +1061,16 @@ local waves = {
 		fixed_enemies = {
 			{ E.Pendulum, 1, position = {CANVAS_WIDTH/2, 3*16} },
 		},
+
+		
+		
+		-- fixed_enemies = {
+		-- 	{ 
+		-- 		E.Pendulum, 1, 
+		-- 		args = {pi/3, 200, 1}, 
+		-- 		position = {CANVAS_WIDTH/2, 3*16} 
+		-- 	},
+		-- },
 
 		-- run = function(self, level)
 		-- 	for _, p in pairs(game.players) do

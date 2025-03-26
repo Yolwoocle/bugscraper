@@ -49,11 +49,15 @@ function CloudStorm:init(x, y, size)
                 self.state_timer:start(random_range(1.0, 3.0))
                 self.arc:set_active(false)
 
+                state.no_attack_timer = Timer:new(0.5)
+                state.no_attack_timer:start()
                 state.target = self:get_random_player()
             end,
             update = function(state, dt)
+                state.no_attack_timer:update(dt)
+
                 self.ai_template = "rotate"
-                if state.target then
+                if state.target and not state.no_attack_timer.is_active then
                     self.direction = get_angle_between_actors(
                         self, {
                             mid_x = state.target.mid_x, 

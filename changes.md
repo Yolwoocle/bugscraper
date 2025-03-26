@@ -1,5 +1,11 @@
 # Bugscraper changelog
-## 0.6
+## 0.7
+- **Change**: Added a cooldown for cloud storm enemy (temporary name) <<<<<<<<<<<<<<<<<<<fixme>>>>>>>>>>>>>>>>>>>
+- **Change**: Background fan in dept. 2 now spins 
+- **Change**: Espresso now lasts for 20 floors (prev. 10)
+
+## 0.6 (*2025-03-22*)
+
 First Steam beta release (after a year of development, never too late..!) If you had the game before, I'm sorry to say that this release will reset your progress (skins & upgrades). I'll work on a more permanent solution in the future but right now this the best way I found to avoid incompatibility bugs. Be expected for this to happen often in a game still in beta. :P
 
 - **Added**: Option to replay the tutorial in the settings  
@@ -14,3 +20,6 @@ First Steam beta release (after a year of development, never too late..!) If you
 - **Fix**: Quick restarting no longer has that small “intro”
 - **Fix**: Drill bees (temporary name) now give some fury when exploding
 - **Fix**: Ground floor music no longer plays when reviving a player 
+
+## Older versions
+I didn't write changelogs for older versions, but you can probably access these versions at [yolwoocle.itch.io/bugscraper](https://yolwoocle.itch.io/bugscraper) and look for yourself.

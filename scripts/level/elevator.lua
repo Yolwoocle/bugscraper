@@ -35,6 +35,7 @@ function Elevator:init(level)
 		["walls"] = images.cabin_walls_w1,
 		-- ["walls"] = true,
 
+		["bg_fan"] = false,	
 		["bg_grid_brown"] = false,	
 		["spinning_teapot"] = false,
 		-- ["cabin_w3"] = false,
@@ -52,6 +53,9 @@ function Elevator:init(level)
 	self.renderer_3d.lighting_palette = {COL_MID_DARK_GREEN, COL_MID_GREEN, COL_LIGHT_GREEN}
 	self.renderer_3d.line_color = {1, 1, 1, 0}
 
+	self.bg_fan_spin = 0
+	self.bg_fan_spin_speed = 2
+
 	self.grid_timer = Timer:new(1.5)
 
 	self.clock_ang = pi
@@ -63,6 +67,8 @@ function Elevator:update(dt)
 	self.object_3d.rotation.x = self.object_3d.rotation.x + dt
     self.object_3d.rotation.y = self.object_3d.rotation.y + dt
 	self.renderer_3d:update(dt)
+
+	self.bg_fan_spin = self.bg_fan_spin + self.bg_fan_spin_speed * dt
 	
 	if self.door_animation_timer:update(dt) then
 		self:close_door()
@@ -158,6 +164,9 @@ function Elevator:draw_cabin()
 	-- Cabin background
 	if self.layers["cabin_bg"] then
 		love.graphics.draw(self.layers["cabin_bg"], cabin_rect.ax, cabin_rect.ay)
+	end
+	if self.layers["bg_fan"] then
+		draw_centered(images.cabin_bg_w2_fan, cabin_rect.ax + 367, cabin_rect.ay + 42, self.bg_fan_spin)
 	end
 	love.graphics.draw(images.cabin_bg_ambient_occlusion, cabin_rect.ax, cabin_rect.ay)
 	

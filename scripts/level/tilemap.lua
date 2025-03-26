@@ -194,7 +194,6 @@ function TileMap:rectangularize()
 	self:set_visited(false)
 
 	for _, item in pairs(self.world_items) do
-		print("remove ", item)
 		Collision:remove(item)
 	end
 	self.world_items = {}
@@ -232,8 +231,6 @@ function TileMap:rectangularize()
 			tile.h = rect.h * 16
 			Collision:add(tile, rect.x*16, rect.y*16, rect.w*16, rect.h*16)
 			table.insert(self.world_items, tile)
-
-			print("add ", tile)
 		end
 	end
 	return rectangles

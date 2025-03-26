@@ -340,6 +340,7 @@ local img_names = {
 
 	cabin_bg_w1 =                    "level/cabin_bg_w1",
 	cabin_bg_w2 =                    "level/cabin_bg_w2",
+	cabin_bg_w2_fan =                "level/cabin_bg_w2_fan",
 	cabin_bg_w3 =                    "level/cabin_bg_w3",
 	cabin_bg_w4 =                    "level/cabin_bg_w4",
 	cabin_bg_ambient_occlusion =     "level/cabin_bg_ambient_occlusion",
