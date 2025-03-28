@@ -5,12 +5,13 @@
 - **Change**: Added a cooldown for cloud storm enemy (temporary name)
 - **Change**: Background fan in dept. 2 now spins 
 - **Change**: Espresso now lasts for 20 floors (prev. 10)
+- **Fix**: Partial fix to issue where some enemies like boomshrooms, stink bugs' clouds, larvae spawned from projectiles, would clip into the ground and teleport. This might still happen, just hopefully less.
 
 ## 0.6 (*2025-03-22*)
 
 First Steam beta release (after a year of development, never too late..!) If you had the game before, I'm sorry to say that this release will reset your progress (skins & upgrades). I'll work on a more permanent solution in the future but right now this the best way I found to avoid incompatibility bugs. Be expected for this to happen often in a game still in beta. :P
 
-- **Added**: Option to replay the tutorial in the settings  
+- **Added**: Option to replay the tutorial in the settings 
 - **Added**: You can press down to go through platforms
 - **Change**: Various improvements to the tutorial
 - **Change**: Improved flying nests (temporary name): now only shoot in defined directions and will flash before exploding after being killed
