@@ -14,7 +14,7 @@ function Boomshroom:init(x, y)
     self.max_life = 15
     self.life = self.max_life
     
-    self.kill_when_negative_life = false
+    self.is_killed_on_negative_life = false
     self.is_killed_on_stomp = false
     self.do_stomp_animation = false
     self.counts_as_enemy = true

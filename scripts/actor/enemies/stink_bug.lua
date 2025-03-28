@@ -62,8 +62,6 @@ end
 function StinkBug:after_collision(col, other)
     -- Pong-like bounce
     if col.type ~= "cross" then
-        -- Particles:smoke(col.touch.x, col.touch.y)
-
         local new_vx, new_vy = bounce_vector_cardinal(math.cos(self.direction), math.sin(self.direction), col.normal.x, col.normal.y)
         self.direction = math.atan2(new_vy, new_vx)
     end

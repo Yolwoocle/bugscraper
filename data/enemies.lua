@@ -59,6 +59,8 @@ local enemies = {
 	Frog =               require "scripts.actor.enemies.frog", --*
 	SwitchBug =          require "scripts.actor.enemies.switch_bug", --*
 	W2boss =             require "scripts.actor.enemies.w2boss", --*
+	GoldenBeetle =       require "scripts.actor.enemies.golden_beetle", --*
+	Bull =               require "scripts.actor.enemies.bull", --*
 	
 	JumpingProp =        require "scripts.actor.enemies.jumping_prop",
 	Dummy =              require "scripts.actor.enemies.dummy",

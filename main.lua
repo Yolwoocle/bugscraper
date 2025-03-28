@@ -150,3 +150,89 @@ function quit_game(restart)
 	if Input then     Input:on_quit()   end
 	love.event.quit(ternary(restart, "restart", nil))
 end
+
+__buf_times = {}
+__times = {}
+__times_i = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+local function __tick(label, col, layer)
+	__times[label] = {
+		layer = layer or 1,
+		i = __times_i[layer],
+		t = 0,
+		tic = love.timer.getTime(),
+		label = label,
+		col = col or COL_WHITE,
+	}
+	__times_i[layer] = __times_i[layer] + 1
+end
+local function __tock(label)
+	__times[label].t = love.timer.getTime() - __times[label].tic
+end
+
+function love.run()
+	if love.load then love.load(love.arg.parseGameArguments(arg), arg) end
+
+	-- We don't want the first frame's dt to include time taken by love.load.
+	if love.timer then love.timer.step() end
+
+	local dt = 0
+
+	-- Main loop time.
+	return function()
+		__times_i = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+		__times = {}
+		__tick("run", {0.5, 0.5, 0.6, 1}, 1)
+		
+		__tick("event", COL_YELLOW, 2)
+		-- Process events.
+		if love.event then
+			love.event.pump()
+			for name, a,b,c,d,e,f in love.event.poll() do
+				if name == "quit" then
+					if not love.quit or not love.quit() then
+						return a or 0
+					end
+				end
+				love.handlers[name](a,b,c,d,e,f)
+			end
+		end
+		__tock("event")
+
+		-- Update dt, as we'll be passing it to update
+		if love.timer then dt = love.timer.step() end
+
+		__tick("upd", COL_BLUE, 2)
+		-- Call update and draw
+		if love.update then love.update(dt) end -- will pass 0 if love.timer is disabled
+		__tock("upd")
+
+		__tick("draw", COL_RED, 2)
+		if love.graphics and love.graphics.isActive() then
+			__tick("o", COL_RED, 3)
+			love.graphics.origin()
+			__tock("o")
+			__tick("cl", COL_ORANGE, 3)
+			love.graphics.clear(love.graphics.getBackgroundColor())
+			__tock("cl")
+			
+			__tick("dr", COL_YELLOW, 3)
+			if love.draw then love.draw() end
+			__tock("dr")
+			
+			__tick("p", COL_GREEN, 3)
+			love.graphics.present()
+			__tock("p")
+
+			-- love.graphics.clear()
+			-- love.graphics.print(love.timer.getFPS(), 0, 0, 0, 5)
+			-- game.debug:draw()
+			-- love.graphics.present()
+		end
+		__tock("draw")
+		
+		if love.timer then love.timer.sleep(0.001) end		
+		__tock("run")
+
+		__buf_times = __times
+	end
+end

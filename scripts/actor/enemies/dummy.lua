@@ -23,7 +23,7 @@ function Dummy:init(x, y)
     self.is_knockbackable = false
     self.can_be_stomped_if_on_head = false
 	self.is_killed_on_stomp = false
-    self.kill_when_negative_life = false
+    self.is_killed_on_negative_life = false
     self.counts_as_enemy = true
     self.loot = {}
 

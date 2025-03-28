@@ -337,7 +337,6 @@ function Game:update_screen()
 end
 
 function Game:update(dt)
-	local tic = love.timer.getTime()
 	self.frame = self.frame + 1
 
 	self.camera:update_screenshake(dt)
@@ -371,7 +370,6 @@ function Game:update(dt)
 
 	-- THIS SHOULD BE LAST
 	Input:update_last_input_state(dt)
-	__update_dur = love.timer.getTime() - tic
 end
 
 function Game:update_main_game(dt)
@@ -502,7 +500,7 @@ function Game:draw_on_layer(layer_id, paint_function, params)
 end
 
 function Game:draw()
-	local tic = love.timer.getTime()
+	local tic_gamedraw = love.timer.getTime()		
 
 	-- Using a canvas for that sweet, resizable pixel art
 	love.graphics.setCanvas(main_canvas)
@@ -524,8 +522,9 @@ function Game:draw()
 		love.graphics.flrprint(self.notif, 0, 0, 0, 3, 3)
 	end
 
-	__draw_dur = love.timer.getTime() - tic
+	__gamedraw_dur = love.timer.getTime() - tic_gamedraw
 end
+
 
 function Game:draw_game()
 	exec_on_canvas(self.smoke_canvas, love.graphics.clear)

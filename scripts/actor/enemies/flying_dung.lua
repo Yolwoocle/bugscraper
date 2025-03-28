@@ -41,7 +41,7 @@ function FlyingDung:init_flying_dung(x, y, spawner)
         self:set_image(images.dung_flying_spiked)
     end
     self.is_killed_on_stomp = false
-    self.kill_when_negative_life = false
+    self.is_killed_on_negative_life = false
 
     Particles:smoke(self.mid_x, self.mid_y)
 end

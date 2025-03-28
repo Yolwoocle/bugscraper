@@ -150,6 +150,7 @@ local img_names = {
 	drill_bee =                "actors/enemies/drill_bee",
 	fly1 =                     "actors/enemies/fly1",
 	fly2 =                     "actors/enemies/fly2",
+	golden_beetle =            "actors/enemies/golden_beetle",
 	grasshopper =              "actors/enemies/grasshopper",
 	grasshopper_fall =         "actors/enemies/grasshopper_fall",
 	honeypot_ant1 =            "actors/enemies/honeypot_ant1",

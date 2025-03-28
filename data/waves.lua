@@ -1058,19 +1058,17 @@ local waves = {
 			{ E.CloudEnemy, 20 },
 		},
 
-		fixed_enemies = {
-			{ E.Pendulum, 1, position = {CANVAS_WIDTH/2, 3*16} },
-		},
-
-		
-		
 		-- fixed_enemies = {
-		-- 	{ 
-		-- 		E.Pendulum, 1, 
-		-- 		args = {pi/3, 200, 1}, 
-		-- 		position = {CANVAS_WIDTH/2, 3*16} 
-		-- 	},
+		-- 	{ E.Pendulum, 1, position = {CANVAS_WIDTH/2, 3*16} },
 		-- },
+		
+		fixed_enemies = {
+			{ 
+				E.Pendulum, 1, 
+				args = {pi/3, 200, 1}, 
+				position = {CANVAS_WIDTH/2, 3*16} 
+			},
+		},
 
 		-- run = function(self, level)
 		-- 	for _, p in pairs(game.players) do

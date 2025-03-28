@@ -23,7 +23,7 @@ function FlyingSpawner:init(x, y, spr, w, h)
 
     self.life = 15
 
-    self.kill_when_negative_life = false
+    self.is_killed_on_negative_life = false
 
     self.spawn_larva_timer = Timer:new({ 1, 2 })
     self.larva_projectiles = {}

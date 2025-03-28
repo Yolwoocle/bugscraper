@@ -30,6 +30,8 @@ local col_b            = { random_range(0, 1), random_range(0, 1), random_range(
 function Debug:init(game)
     self.game = game
 
+    self.frame = 0  
+
     self.is_reading_for_f1_action = false
     self.debug_menu = false
     self.colview_mode = false
@@ -165,7 +167,9 @@ function Debug:init(game)
             game.skip_scene_flag = true
         end },
         ["d"] = { "spawn", function()
-            game.menu_manager:set_menu("debug_command")
+            -- game.menu_manager:set_menu("debug_command")
+            local cloud = enemies.Bull:new(CANVAS_CENTER[1], CANVAS_CENTER[2])
+            game:new_actor(cloud)
         end },
         ["o"] = { "spike offset", function()
             for _, actor in pairs(game.actors) do
@@ -316,6 +320,7 @@ end
 function Debug:update(dt)
     if not game.debug_mode then return end
 
+    self.frame = self.frame + 1
     if self.set_can_pause_to_true_timer and self.set_can_pause_to_true_timer > 0 then
         self.set_can_pause_to_true_timer = self.set_can_pause_to_true_timer - 1
         if self.set_can_pause_to_true_timer <= 0 then
@@ -628,6 +633,11 @@ function Debug:draw_info_view()
     -- Print debug info
     local txt_h = get_text_height(" ")
     local txts = {
+        "",
+        "",
+        "",
+        "",
+        "",
         concat("FPS: ", love.timer.getFPS(), " / frmRpeat: ", self.game.frame_repeat, " / frame: ", frame),
         concat("LOVE version: ", string.format("%d.%d.%d - %s", love.getVersion())),
         concat("Renderer info: ", renderer_name, " (v", renderer_version, ")"),
@@ -646,8 +656,7 @@ function Debug:draw_info_view()
         concat("backroom ", (game.level.backroom == nil) and "nil" or game.level.backroom.name),
         concat("queued_players ", queued_players_str),
         concat("level_speed ", game.level.level_speed),
-        concat("menu_stack size: ", #game.menu_manager.menu_stack),
-        concat("cur_menu_name ", game.menu_manager.cur_menu_name),
+        concat("menu_stack size: ", #game.menu_manager.menu_stack) .. " / " .. concat("cur_menu_name ", game.menu_manager.cur_menu_name),
         concat("cur_cutscene ", (game.cutscene == nil) and "[nil]" or 
             string.format("%s: [%d/%d] (%.1f s/%.1f s) '%s' / (total: %.1f s)", 
                 game.cutscene.name, 
@@ -659,15 +668,8 @@ function Debug:draw_info_view()
                 game.cutscene.total_duration
             )
         ),
-        concat("score: ", game.score),
-        concat("xp: ", Metaprogression:get_xp()),
-        concat("xp_level: ", Metaprogression:get_xp_level()),
+        concat("score: ", game.score) .. " / ".. concat("xp: ", Metaprogression:get_xp()) .. " / " .. concat("xp_level: ", Metaprogression:get_xp_level()),
         concat("unlocked_skins: ", skininfo),
-        concat(
-            "backroom_animation_state_machine.current_state_name: ", 
-            game.level.backroom_animation_state_machine.current_state_name, 
-            "backroom_animation_state_machine.hole_stencil_mode: ", 
-            game.level.backroom_animation_state_machine.hole_stencil_mode),
         "",
     }
 
@@ -675,14 +677,49 @@ function Debug:draw_info_view()
 
     self.game.level.world_generator:draw()
 
-    if __update_dur and __draw_dur then
-        rect_color(COL_BLACK_BLUE, "fill", CANVAS_WIDTH-64, CANVAS_HEIGHT-16, 64, 16)
-        local w1 = 64*(__update_dur/(1/60))
-        local w2 = 64*(__draw_dur/(1/60))
-        rect_color(COL_BLUE, "fill", CANVAS_WIDTH - w1, CANVAS_HEIGHT-16, w1, 16)
-        rect_color(COL_RED, "fill", CANVAS_WIDTH - w1-w2, CANVAS_HEIGHT-16, w2, 16)
+    if __times then
+        local tab = {}
+        for k, time in pairs(__buf_times) do
+            if not tab[time.layer] then
+                tab[time.layer] = {}
+            end
+            tab[time.layer][time.i] = time
+        end
 
-        rect_color(COL_WHITE, "fill", CANVAS_WIDTH-64, CANVAS_HEIGHT-16, 1, CANVAS_HEIGHT)
+        rect_color(COL_BLACK_BLUE, "fill", CANVAS_WIDTH-64, CANVAS_HEIGHT-16, 64, 16)
+        local total_w = 300
+        local x = 0
+        local y = 0
+        local h = 16
+        for _, layer in pairs(tab) do
+            local x = 0
+            for i, time in pairs(layer) do
+                local w = total_w * (time.t / (1/60))
+
+                rect_color(time.col, "fill", x, y, w, 16)
+                x = x + w
+            end 
+            y = y + 16
+            h = h - 16
+        end 
+
+        local x = 0
+        local y = 0
+        local h = 16
+        local text_oy = false
+        for _, layer in pairs(tab) do
+            local x = 0
+            for i, time in pairs(layer) do
+                local w = total_w * (time.t / (1/60))
+                love.graphics.print(time.label, x, y + ternary(text_oy, 6, 0))
+                x = x + w
+                text_oy = not text_oy
+            end 
+            y = y + 16
+            h = h - 16
+        end 
+
+        rect_color(COL_WHITE, "line", 0, 0, total_w, 16)
     end
 
     -- self:test_info_view_3d_renderer()

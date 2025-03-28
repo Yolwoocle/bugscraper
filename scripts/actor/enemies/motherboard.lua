@@ -42,7 +42,7 @@ function Motherboard:init(x, y)
     self.is_pushable = false
     self.is_stompable = false
     self.gravity = 0
-    self.kill_when_negative_life = false
+    self.is_killed_on_negative_life = false
     self.bullet_bounce_mode = BULLET_BOUNCE_MODE_NORMAL
     self.is_front = true
     self.is_affected_by_bounds = false

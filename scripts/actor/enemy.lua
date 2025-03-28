@@ -43,9 +43,10 @@ function Enemy:init_enemy(x,y, img, w,h)
 		["random_rotate"] = {
 			ready = function(ai)
 				self.direction = random_range(0, pi2)
+				self.random_rotate_speed = 3
 			end,
 			update = function(ai, dt)
-                self.direction = self.direction + random_sample({-1, 1}) * dt * 3
+                self.direction = self.direction + random_sample({-1, 1}) * dt * self.random_rotate_speed
                 self.vx = self.vx + math.cos(self.direction) * self.speed
                 self.vy = self.vy + math.sin(self.direction) * self.speed
 			end
@@ -60,7 +61,7 @@ function Enemy:init_enemy(x,y, img, w,h)
 	
 	self.harmless_timer = 0
 
-	self.kill_when_negative_life = true
+	self.is_killed_on_negative_life = true
 	self.max_life = 10
 	self.life = self.max_life
 	self.is_dead = false
@@ -340,7 +341,7 @@ function Enemy:do_damage(n, damager)
 	self:on_damage(n)
 
 	if self.life <= 0 then
-		if self.kill_when_negative_life then
+		if self.is_killed_on_negative_life then
 			self:kill(damager)
 		end 
 		self:on_negative_life()
