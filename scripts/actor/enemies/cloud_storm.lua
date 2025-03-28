@@ -57,7 +57,7 @@ function CloudStorm:init(x, y, size)
                 state.no_attack_timer:update(dt)
 
                 self.ai_template = "rotate"
-                if state.target and not state.no_attack_timer.is_active then
+                if state.target then
                     self.direction = get_angle_between_actors(
                         self, {
                             mid_x = state.target.mid_x, 
@@ -68,14 +68,12 @@ function CloudStorm:init(x, y, size)
                     end
                 end
 
-                if self.state_timer:update(dt) or 
-                    (
+                if (not state.no_attack_timer.is_active) and (self.state_timer:update(dt) or (
                         state.target and state.target.y > self.y and 
                         is_between(
                             state.target.mid_x, self.mid_x - self.player_detection_range, self.mid_x + self.player_detection_range
                         )
-                    )
-                then
+                )) then
                     return "telegraph"
                 end
                 -- if self.state_timer:update(dt) then

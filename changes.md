@@ -2,7 +2,7 @@
 ## 0.7
 - **Added**: Golden beetles (temporary name), will fly around and explode after you stomp them
 - **Added**: Bulls (temporary name), will walk around on the floor and charge at you when you enter their vision
-- **Change**: Added a cooldown for cloud storm enemy (temporary name) <<<<<<<<<<<<<<<<<<<fixme>>>>>>>>>>>>>>>>>>>
+- **Change**: Added a cooldown for cloud storm enemy (temporary name)
 - **Change**: Background fan in dept. 2 now spins 
 - **Change**: Espresso now lasts for 20 floors (prev. 10)
 
