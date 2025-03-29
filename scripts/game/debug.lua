@@ -677,6 +677,7 @@ function Debug:draw_info_view()
 
     self.game.level.world_generator:draw()
 
+    -- Show time taken by various functions during last frame
     if __times then
         local tab = {}
         for k, time in pairs(__buf_times) do
@@ -703,6 +704,7 @@ function Debug:draw_info_view()
             h = h - 16
         end 
 
+        -- Text
         local x = 0
         local y = 0
         local h = 16

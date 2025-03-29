@@ -151,22 +151,37 @@ function quit_game(restart)
 	love.event.quit(ternary(restart, "restart", nil))
 end
 
+__time_log_calls = 1
 __buf_times = {}
 __times = {}
 __times_i = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 local function __tick(label, col, layer)
-	__times[label] = {
-		layer = layer or 1,
-		i = __times_i[layer],
-		t = 0,
-		tic = love.timer.getTime(),
-		label = label,
-		col = col or COL_WHITE,
-	}
+	if not __times[label] then
+		__times[label] = {}
+		__times[label].total_t = 0
+		__times[label].calls = 0
+	end
+
+	__times[label].layer = layer or 1
+	__times[label].i = __times_i[layer]
+	__times[label].t = 0
+	__times[label].tic = love.timer.getTime()
+	__times[label].label = label
+	__times[label].col = col or COL_WHITE
+	
 	__times_i[layer] = __times_i[layer] + 1
 end
 local function __tock(label)
 	__times[label].t = love.timer.getTime() - __times[label].tic
+
+	__times[label].total_t = __times[label].total_t + __times[label].t
+	__times[label].calls = __times[label].calls + 1
+	__times[label].avg_t = __times[label].total_t / __times[label].calls
+	
+	if __time_log_calls % 60*5 then
+		__times[label].total_t = __times[label].avg_t
+		__times[label].calls = 1
+	end
 end
 
 function love.run()
@@ -180,7 +195,7 @@ function love.run()
 	-- Main loop time.
 	return function()
 		__times_i = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
-		__times = {}
+		-- __times = {}
 		__tick("run", {0.5, 0.5, 0.6, 1}, 1)
 		
 		__tick("event", COL_YELLOW, 2)
@@ -234,5 +249,6 @@ function love.run()
 		__tock("run")
 
 		__buf_times = __times
+		__time_log_calls = __time_log_calls + 1
 	end
 end

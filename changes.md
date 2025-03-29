@@ -5,7 +5,7 @@
 - **Change**: Added a cooldown for cloud storm enemy (temporary name)
 - **Change**: Background fan in dept. 2 now spins 
 - **Change**: Espresso now lasts for 20 floors (prev. 10)
-- **Fix**: Partial fix to issue where some enemies like boomshrooms, stink bugs' clouds, larvae spawned from projectiles, would clip into the ground and teleport. This might still happen, just hopefully less.
+- **Fix**: Partial fix to issue where some enemies like boomshrooms, stink bugs' clouds, larvae spawned from projectiles, would clip into the ground and teleport. This might still happen, just hopefully way less.
 
 ## 0.6 (*2025-03-22*)
 
