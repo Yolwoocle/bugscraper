@@ -638,7 +638,7 @@ function Debug:draw_info_view()
         "",
         "",
         "",
-        concat("FPS: ", love.timer.getFPS(), " / frmRpeat: ", self.game.frame_repeat, " / frame: ", frame),
+        concat("FPS: ", love.timer.getFPS(), " / Vsync: ", Options:get("is_vsync")),
         concat("LOVE version: ", string.format("%d.%d.%d - %s", love.getVersion())),
         concat("Renderer info: ", renderer_name, " (v", renderer_version, ")"),
         concat("Renderer vendor: ", renderer_vendor, ", device ", renderer_device),

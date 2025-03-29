@@ -5,6 +5,7 @@ local images = require "data.images"
 local Timer = require "scripts.timer"
 local StateMachine = require "scripts.state_machine"
 local Rect = require "scripts.math.rect"
+local AnimatedSprite = require "scripts.graphics.animated_sprite"
 
 local Bull = Enemy:inherit()
 	
@@ -32,10 +33,14 @@ function Bull:init(x, y, spr, w, h)
     -- self.sound_damage = {"larva_damage1", "larva_damage2", "larva_damage3"}
     -- self.sound_death = "larva_death"
     self.anim_frame_len = 0.2
-    self.anim_frames = {images.larva1, images.larva2}
     self.audio_delay = love.math.random(0.3, 1)
 
     self.detect_range = 128
+
+    self.spr = AnimatedSprite:new({
+        normal = {images.fly1, 0.05, 1},
+        spiked = {images.spiked_fly, 0.05, 1},
+    }, "normal", SPRITE_ANCHOR_CENTER_CENTER) 
 
     self.state_timer = Timer:new(1.0)
     self.state_machine = StateMachine:new({
@@ -43,6 +48,9 @@ function Bull:init(x, y, spr, w, h)
             enter = function(state)
                 self.speed = self.def_speed + random_neighbor(self.speed_randomness)
                 self.state_timer:start(1.0)
+
+                self.is_stompable = false
+                self.spr:set_animation("spiked")
             end,
             update = function(state, dt)
                 self.vx = self.speed * self.walk_dir_x
@@ -78,6 +86,9 @@ function Bull:init(x, y, spr, w, h)
             enter = function(state)
                 self.vx = 0
                 self.state_timer:start(self.telegraph_duration)
+                
+                self.is_stompable = true
+                self.spr:set_animation("normal")
             end,
             update = function(state, dt)
                 if self.state_timer:update(dt) then

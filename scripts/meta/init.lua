@@ -7,7 +7,7 @@ local function init()
     print("Debug mode: "..tostring(DEBUG_MODE))
     print("")
 
-    if DEBUG_MODE then
+    if DEBUG_MODE and PROFILE_INIT then
         love.profiler = require "lib.profiler.profile"
         love.profiler.start()
     end
@@ -59,7 +59,7 @@ local function init()
     love.graphics.present()
     love.graphics.origin()
 
-    if DEBUG_MODE then
+    if DEBUG_MODE and PROFILE_INIT then
         print("")
         print("---[[ LOAD PROFILER REPORT ]]---")
         print(love.profiler.report(20))

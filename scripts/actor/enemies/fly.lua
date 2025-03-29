@@ -6,13 +6,9 @@ local images = require "data.images"
 local Fly = Enemy:inherit()
 	
 function Fly:init(x, y, spr, w, h, buzzing_enabled)
-    self:init_fly(x, y, spr, w, h, buzzing_enabled)
-end
-
-function Fly:init_fly(x, y, spr, w, h, buzzing_enabled)
     buzzing_enabled = param(buzzing_enabled, true)
+    Fly.super.init(self, x,y, spr or images.fly1, w, h)
 
-    self:init_enemy(x,y, spr or images.fly1, w, h)
     self.name = "fly"
     self.is_flying = true
     self.life = 10
@@ -39,11 +35,7 @@ function Fly:init_fly(x, y, spr, w, h, buzzing_enabled)
 end
 
 function Fly:update(dt)
-    self:update_fly(dt)
-end
-
-function Fly:update_fly(dt)
-    self:update_enemy(dt)
+    Fly.super.update(self, dt)
     self:update_buzz(dt)
 end
 
