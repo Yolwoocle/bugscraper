@@ -261,15 +261,15 @@ function Enemy:on_collision(col, other)
 		local player = col.other
 		
 		-- Being stomped
-		local epsilon = 0.01
-	
 		-- if player.vy > epsilon and self.is_stompable then
 		local feet_y = player.y + player.h
 
 		local is_on_head      = (feet_y <= self.y + self.h * self.head_ratio) and self.can_be_stomped_if_on_head
 		local is_falling_down = (player.vy > 0.0001) and self.can_be_stomped_if_falling_down
 		local recently_landed = (0 < player.frames_since_land) and (player.frames_since_land <= 7)
-		if self.invincible_timer <= 0 and self.is_stompable and (is_on_head or is_falling_down or recently_landed) then
+		local stomp_condition = (is_on_head or is_falling_down or recently_landed)
+		
+		if self.invincible_timer <= 0 and self.is_stompable and stomp_condition then
 			self:react_to_stomp(player)
 
 		else
