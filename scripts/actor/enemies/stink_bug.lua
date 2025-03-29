@@ -37,7 +37,7 @@ function StinkBug:init(x, y, spr)
 end
 
 function StinkBug:update(dt)
-    StinkBug.super.init(self, dt)
+    StinkBug.super.update(self, dt)
 
     self.direction = self.direction + random_sample({-1, 1}) * dt * 3
     
