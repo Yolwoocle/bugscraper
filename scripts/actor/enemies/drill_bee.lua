@@ -11,7 +11,7 @@ local Explosion = require "scripts.actor.enemies.explosion"
 local DrillBee = Fly:inherit()
 	
 function DrillBee:init(x, y, spr)
-    self:init_fly(x,y, spr or images.drill_bee, 20, 20)
+    DrillBee.super.init(self, x,y, spr or images.drill_bee, 20, 20)
     self.name = "drill_bee"
     self.is_flying = true
     self.life = 10
@@ -140,7 +140,7 @@ end
 
 function DrillBee:update(dt)
     self.is_touching_wall = false
-    self:update_fly(dt)
+    DrillBee.super.update(self, dt)
 
     self.state_machine:update(dt)
     self.spr.rot = lerp_angle(self.spr.rot, self.direction - pi/2, 0.15)

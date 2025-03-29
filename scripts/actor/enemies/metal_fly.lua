@@ -15,7 +15,7 @@ local PHASE_ATTACK = "attack"
 local PHASE_TELEGRAPH_DURATION = 0.4
 
 function MetalFly:init(x, y)
-    self:init_fly(x,y, images.metal_mosquito_1, 14, 14)
+    MetalFly.super.init(self, x,y, images.metal_mosquito_1, 14, 14)
     self.name = "metal_fly"
     self.life = 10
 
@@ -38,7 +38,7 @@ function MetalFly:init(x, y)
 end
 
 function MetalFly:update(dt)
-    self:update_fly(dt)
+    MetalFly.super.update(self, dt)
 
     self.electrified_flash = (self.electrified_flash + dt) % 0.5
     self.is_stompable = not self.is_electrified

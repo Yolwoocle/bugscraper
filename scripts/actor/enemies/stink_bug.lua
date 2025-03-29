@@ -8,11 +8,7 @@ local AnimatedSprite = require "scripts.graphics.animated_sprite"
 local StinkBug = Enemy:inherit()
 	
 function StinkBug:init(x, y, spr)
-    self:init_fly(x, y)
-end
-
-function StinkBug:init_fly(x, y, spr)
-    self:init_enemy(x,y, spr or images.stink_bug_1)
+    StinkBug.super.init(self, x,y, spr or images.stink_bug_1)
     self.name = "stink_cloud"
     self.is_flying = true
     self.life = 7
@@ -41,11 +37,7 @@ function StinkBug:init_fly(x, y, spr)
 end
 
 function StinkBug:update(dt)
-    self:update_stink_bug(dt)
-end
-
-function StinkBug:update_stink_bug(dt)
-    self:update_enemy(dt)
+    StinkBug.super.init(self, dt)
 
     self.direction = self.direction + random_sample({-1, 1}) * dt * 3
     

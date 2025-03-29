@@ -10,7 +10,7 @@ local CloudEnemy = Fly:inherit()
 	
 function CloudEnemy:init(x, y, size)
     size = size or 3
-    self:init_fly(x,y, images["cloud_enemy_size"..tostring(size)] or images.cloud_enemy_size3, size*8, size*8, false)
+    CloudEnemy.super.init(self, x,y, images["cloud_enemy_size"..tostring(size)] or images.cloud_enemy_size3, size*8, size*8, false)
     self.size = size
     self.name = "cloud_enemy_CHANGEME"
     self.max_life = 1 + (size-1) * 4
@@ -40,7 +40,7 @@ function CloudEnemy:after_collision(col, other)
 end
 
 function CloudEnemy:update(dt)
-    self:update_fly(dt)
+    CloudEnemy.super.update(self, dt)
 
 end
 

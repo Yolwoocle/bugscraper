@@ -9,11 +9,7 @@ local images = require "data.images"
 local Chipper = Enemy:inherit()
 	
 function Chipper:init(x, y, spr)
-    self:init_fly(x, y)
-end
-
-function Chipper:init_fly(x, y, spr)
-    self:init_enemy(x,y, spr or images.chipper_1)
+    Chipper.super.init(self, x,y, spr or images.chipper_1)
     self.name = "chipper"
     self.is_flying = true
     self.life = 10
@@ -130,11 +126,7 @@ function Chipper:init_fly(x, y, spr)
 end
 
 function Chipper:update(dt)
-    self:update_stink_bug(dt)
-end
-
-function Chipper:update_stink_bug(dt)
-    self:update_enemy(dt)
+    Chipper.super.update(self, dt)
 
     self.spr:set_rotation(lerp_angle(self.spr:get_rotation(), self.target_rot, 0.2))
     self.state_machine:update(dt)

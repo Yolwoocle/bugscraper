@@ -10,7 +10,7 @@ local BulbBuddy = Fly:inherit()
 function BulbBuddy:init(x, y, is_child)
     is_child = param(is_child, false)
 
-    self:init_fly(x,y, images.bulb_buddy_1, 18, 24, false)
+    self.super.init(self, x,y, images.bulb_buddy_1, 18, 24, false)
     self.name = "bulb_buddy"
     self.life = 10
 
@@ -53,7 +53,7 @@ function BulbBuddy:init(x, y, is_child)
 end
 
 function BulbBuddy:update(dt)
-    self:update_fly(dt)
+    BulbBuddy.super.update(self, dt)
 
 
     self.direction = self.direction + random_sample({-1, 1}) * dt * 3

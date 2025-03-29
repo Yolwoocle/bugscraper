@@ -6,11 +6,7 @@ local images = require "data.images"
 local PoisonCloud = Enemy:inherit()
 	
 function PoisonCloud:init(x, y, spr)
-    self:init_fly(x, y)
-end
-
-function PoisonCloud:init_fly(x, y, spr)
-    self:init_enemy(x,y, spr or images.poison_cloud, 20, 20)
+    PoisonCloud.super.init(self, x,y, spr or images.poison_cloud, 20, 20)
     self.name = "poison_cloud"
     self.is_flying = true
     self.life = 10

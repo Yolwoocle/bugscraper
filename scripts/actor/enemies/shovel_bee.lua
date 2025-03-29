@@ -8,7 +8,7 @@ local images = require "data.images"
 local ShovelBee = Fly:inherit()
 	
 function ShovelBee:init(x, y, spr)
-    self:init_fly(x,y, spr or images.shovel_bee, 10, 16, false)
+    ShovelBee.super.init(self, x,y, spr or images.shovel_bee, 10, 16, false)
     self.name = "shovel_bee"
     self.is_flying = true
     self.life = 10
@@ -128,7 +128,7 @@ function ShovelBee:update(dt)
     
     -- self.debug_values[1] = self.phase
     
-    self:update_fly(dt)
+    ShovelBee.super.update(self, dt)
 end
 
 function ShovelBee:update_phase(dt, nearest_player)

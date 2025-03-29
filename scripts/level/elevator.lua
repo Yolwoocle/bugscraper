@@ -37,7 +37,7 @@ function Elevator:init(level)
 
 		["bg_fan"] = false,	
 		["bg_grid_brown"] = false,	
-		["spinning_teapot"] = false,
+		["w3_cabin"] = false,
 		-- ["cabin_w3"] = false,
 		-- ["walls_w3"] = false,
 
@@ -152,9 +152,13 @@ end
 function Elevator:draw_cabin()
 	local cabin_rect = self.level.cabin_rect
 
-	if self.layers["spinning_teapot"] then
+	if self.layers["w3_cabin"] then
 		rect_color(COL_DARK_GREEN, "fill", self.object_3d.position.x - 16, self.object_3d.position.y - 16, 34, 34)
 		self.renderer_3d:draw()
+
+		rect_color(COL_DARK_GREEN, "fill", cabin_rect.ax + 189, cabin_rect.ay + 39, 38, 12)
+		draw_centered(images.cabin_bg_w3_tape, cabin_rect.ax + 195, cabin_rect.ay + 45, self.bg_fan_spin, 0.5, 0.5)
+		draw_centered(images.cabin_bg_w3_tape, cabin_rect.ax + 221, cabin_rect.ay + 45, self.bg_fan_spin+1, 0.5, 0.5)
 	end
 	
 	if self.layers["door"] then
@@ -167,6 +171,12 @@ function Elevator:draw_cabin()
 	end
 	if self.layers["bg_fan"] then
 		draw_centered(images.cabin_bg_w2_fan, cabin_rect.ax + 367, cabin_rect.ay + 42, self.bg_fan_spin)
+	end
+	if self.layers["w3_cabin"] then
+		exec_color({1, 1, 1, ternary(_G_fixed_frame % 4 < 2, 0.2, 0.7)}, function()
+			love.graphics.draw(images.cabin_bg_w3_scanlines, cabin_rect.ax + 283, cabin_rect.ay + 113)
+			love.graphics.draw(images.cabin_bg_w3_scanlines_big, cabin_rect.ax + 105, cabin_rect.ay + 106)
+		end)
 	end
 	love.graphics.draw(images.cabin_bg_ambient_occlusion, cabin_rect.ax, cabin_rect.ay)
 	

@@ -625,7 +625,7 @@ local waves = {
 			["walls"] = images.cabin_walls_w3,
 
 			["bg_grid"] = true,
-			["spinning_teapot"] = true,
+			["w3_cabin"] = true,
 
 			["door_background"] = true,
             ["cabin"] = true,
@@ -633,15 +633,15 @@ local waves = {
 		},
 
 		door_images = {
-			images.cabin_door_left_far,
-			images.cabin_door_left_center,
-			images.cabin_door_right_far,
-			images.cabin_door_right_center,
+			images.cabin_door_empty,
+			images.cabin_door_w3_left_center,
+			images.cabin_door_empty,
+			images.cabin_door_w3_right_center,
 		},
 
 		over_title = get_world_prefix(3),
 		title = get_world_name(3),
-		title_color = COL_MID_GREEN,
+		title_color = COL_LIGHT_GREEN,
 		title_outline_color = COL_BLACK_BLUE,
 	}),
 
@@ -944,7 +944,7 @@ local waves = {
 
 		elevator_layers = {
 			["bg_grid"] = false,
-			["spinning_teapot"] = false,
+			["w3_cabin"] = false,
 
 			["cabin_bg"] = images.cabin_bg_w4,
 			["walls"] = images.cabin_walls_w3,

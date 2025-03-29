@@ -343,6 +343,9 @@ local img_names = {
 	cabin_bg_w2 =                    "level/cabin_bg_w2",
 	cabin_bg_w2_fan =                "level/cabin_bg_w2_fan",
 	cabin_bg_w3 =                    "level/cabin_bg_w3",
+	cabin_bg_w3_scanlines =          "level/cabin_bg_w3_scanlines",
+	cabin_bg_w3_scanlines_big =      "level/cabin_bg_w3_scanlines_big",
+	cabin_bg_w3_tape =               "level/cabin_bg_w3_tape",
 	cabin_bg_w4 =                    "level/cabin_bg_w4",
 	cabin_bg_ambient_occlusion =     "level/cabin_bg_ambient_occlusion",
 
@@ -350,6 +353,8 @@ local img_names = {
 	cabin_walls_w2 =              	 "level/cabin_walls_w2",
 	cabin_walls_w3 =                 "level/cabin_walls_w3",
 	cabin_walls_no_floor =           "level/cabin_walls_no_floor",
+
+	cabin_door_empty =               "level/cabin_door_empty",
 
 	cabin_door_left_far =            "level/cabin_door_left_far", 
 	cabin_door_left_center =         "level/cabin_door_left_center",
@@ -370,6 +375,9 @@ local img_names = {
 	cabin_door_brown_left_center =   "level/cabin_door_brown_left_center",
 	cabin_door_brown_right_far =     "level/cabin_door_brown_right_far",
 	cabin_door_brown_right_center =  "level/cabin_door_brown_right_center",
+
+	cabin_door_w3_left_center =      "level/cabin_door_w3_left_center",
+	cabin_door_w3_right_center =     "level/cabin_door_w3_right_center",
 	
 	cabin_rubble =                   "level/cabin_rubble",
 	cabin_grid =                     "level/cabin_grid",

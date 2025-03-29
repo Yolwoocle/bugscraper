@@ -36,9 +36,10 @@ local function fixed_update()
 	end
 
 	_G_fixed_frame = _G_fixed_frame + 1
-
 	game:update(fixed_dt)
+	
 	if _G_speedup then
+		_G_fixed_frame = _G_fixed_frame + 1
 		for i = 1, _G_frame_repeat-1 do
 			game:update(fixed_dt)
 		end
