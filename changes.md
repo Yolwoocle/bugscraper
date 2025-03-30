@@ -4,6 +4,7 @@
 - **Added**: Bulls (temporary name), will walk around on the floor and charge at you when you enter their vision
 - **Change**: Added a cooldown for cloud storm enemy (temporary name)
 - **Change**: Background fan in dept. 2 now spins 
+- **Change**: Polished up dept. 3 cabin background
 - **Change**: Espresso now lasts for 20 floors (prev. 10)
 - **Fix**: Partial fix to issue where some enemies like boomshrooms, stink bugs' clouds, larvae spawned from projectiles, would clip into the ground and teleport. This might still happen, just hopefully way less.
 
