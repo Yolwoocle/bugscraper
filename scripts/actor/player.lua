@@ -21,6 +21,8 @@ function Player:init(n, x, y, skin)
 	self.name = concat("player", n)
 	self.player_type = "ant"
 
+	self.z = -100
+
 	-- Meta
 	self.n = n
 	self.is_enemy = false

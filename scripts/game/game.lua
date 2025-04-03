@@ -547,13 +547,8 @@ function Game:draw_game()
 
 		-- Draw actors
 		for _, actor in pairs(self.actors) do
-			if not actor.is_player and actor.is_active then
+			if actor.is_active then
 				actor:draw()
-			end
-		end
-		for _, p in pairs(self.players) do
-			if p.is_active then
-				p:draw()
 			end
 		end
 
