@@ -48,13 +48,11 @@ function TvPresentation:init(x, y)
     end
     shuffle_table(self.slide_names)
 
-    self.spr = AnimatedSprite:new(slides, "slide_011", SPRITE_ANCHOR_LEFT_TOP)
-
     self.transitions = {
         { -- fade
             draw = function(trans, old_slide, old_frame, new_image, new_frame, alpha)
-                exec_color({ 1, 1, 1, 1 - alpha }, function() self:draw_frame(old_slide, old_frame, 0, 0) end)
-                exec_color({ 1, 1, 1, alpha },     function() self:draw_frame(new_image, new_frame, 0, 0) end)
+                self:draw_frame(old_slide, old_frame, 0, 0, { 1, 1, 1, 1 - alpha })
+                self:draw_frame(new_image, new_frame, 0, 0, { 1, 1, 1, alpha })
             end,
         },
         { -- push vertical
@@ -77,20 +75,23 @@ function TvPresentation:init(x, y)
         },
         { -- growing circle
             draw = function(trans, old_slide, old_frame, new_slide, new_frame, alpha)
-                self:draw_frame(old_slide, old_frame, -self.canvas_w * (old_frame - 1), 0)
+                love.graphics.setStencilMode()
+                self:draw_frame(old_slide, old_frame, 0, 0)
 
                 love.graphics.setStencilState("replace", "always", 1)
+    			love.graphics.setColorMask(false)
                 love.graphics.circle("fill", self.canvas_w / 2, self.canvas_h / 2, alpha * self.canvas_w * 1.2)
                 
                 love.graphics.setStencilState("keep", "greater", 0)
-                self:draw_frame(new_slide, new_frame, -self.canvas_w * (new_frame - 1), 0)
-
+			    love.graphics.setColorMask(true)
+                self:draw_frame(new_slide, new_frame, 0, 0)
+                
                 love.graphics.setStencilMode()
             end,
         },
         { -- bunch of growing circles
             draw = function(trans, old_slide, old_frame, new_slide, new_frame, alpha)
-                self:draw_frame(old_slide, old_frame, -self.canvas_w * (old_frame - 1), 0)
+                self:draw_frame(old_slide, old_frame, 0, 0)
 
                 love.graphics.setStencilState("replace", "always", 1)
                 for ix = 0, self.canvas_w, 10 do
@@ -100,21 +101,21 @@ function TvPresentation:init(x, y)
                 end
                 
                 love.graphics.setStencilState("keep", "greater", 0)
-                self:draw_frame(new_slide, new_frame, -self.canvas_w * (new_frame - 1), 0)
+                self:draw_frame(new_slide, new_frame, 0, 0)
 
                 love.graphics.setStencilMode()
             end,
         },
         { -- "curtains" (idk how to call it)
             draw = function(trans, old_slide, old_frame, new_slide, new_frame, alpha)
-                self:draw_frame(old_slide, old_frame, -self.canvas_w * (old_frame - 1), 0)
+                self:draw_frame(old_slide, old_frame, 0, 0)
                 
                 love.graphics.setStencilState("replace", "always", 1)
                 love.graphics.rectangle("fill", 0, 0, self.canvas_w / 2 * alpha, self.canvas_h)
                 love.graphics.rectangle("fill", self.canvas_w - self.canvas_w / 2 * alpha, 0, self.canvas_w, self.canvas_h)
                 
                 love.graphics.setStencilState("keep", "greater", 0)
-                self:draw_frame(new_slide, new_frame, -self.canvas_w * (new_frame - 1), 0)
+                self:draw_frame(new_slide, new_frame, 0, 0)
 
                 love.graphics.setStencilMode()
             end,
@@ -129,10 +130,12 @@ function TvPresentation:init(x, y)
     self.canvas = love.graphics.newCanvas(self.canvas_w, self.canvas_h)
     self.buffer_canvas = love.graphics.newCanvas(self.canvas_w, self.canvas_h)
     
-    self.current_slide_number = 1
-    self.old_slide_frame_i = 1
+    self.current_slide_number = random_range_int(1, #self.slide_names)
+    self.old_slide_frame_i = random_range_int(1, #self.slide_names)
     self.old_slide = self.slide_names[self.current_slide_number]
     self.current_slide = self.slide_names[self.current_slide_number]
+
+    self.spr = AnimatedSprite:new(slides, self.current_slide, SPRITE_ANCHOR_LEFT_TOP)
 
     self.bluescreen_probability = TV_BLUESCREEN_PROBABILITY
     self.is_bluescreened = (random_range(0, 1) < self.bluescreen_probability)
@@ -165,10 +168,13 @@ function TvPresentation:set_current_slide(slide_index)
 end
 
 
-function TvPresentation:draw_frame(slide, frame, x, y)
+function TvPresentation:draw_frame(slide, frame, x, y, color)
+    color = color or COL_WHITE
+    self.spr:set_color(color)
     self.spr:set_animation(slide)
     self.spr:set_frame_index(frame)
     self.spr:draw(x, y)
+    self.spr:set_color(COL_WHITE)
 end
 
 function TvPresentation:draw()
