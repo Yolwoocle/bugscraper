@@ -7,6 +7,7 @@
 - **Change**: Polished up dept. 3 cabin background
 - **Change**: Espresso now lasts for 20 floors (prev. 10)
 - **Fix**: Partial fix to issue where some enemies like boomshrooms, stink bugs' clouds, larvae spawned from projectiles, would clip into the ground and teleport. This might still happen, just hopefully way less.
+- **Fix**: Fixed visual bugs related to TV presentation
 
 ## 0.6 (*2025-03-22*)
 

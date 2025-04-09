@@ -82,14 +82,16 @@ function ElectricRays:update(dt)
     for i = 0, self.n_rays - 1 do
         local ax, ay, bx, by = get_vector_in_rect_from_angle(self.x, self.y, self.angle + i * (pi2 / self.n_rays), game.level.cabin_inner_rect)
         local ray = self.rays[i+1]
-        if ax then
-            ray:set_segment(ax, ay, bx, by)
-        end
-
-        if ray.is_arc_active and self.state == "active" then
-            Particles:dust(bx, by)
-            if random_range(0, 1) < 0.1 then
-                Particles:spark(bx, by)
+        if ray then
+            if ax then
+                ray:set_segment(ax, ay, bx, by)
+            end
+    
+            if ray.is_arc_active and self.state == "active" then
+                Particles:dust(bx, by)
+                if random_range(0, 1) < 0.1 then
+                    Particles:spark(bx, by)
+                end
             end
         end
     end
@@ -112,14 +114,18 @@ end
 function ElectricRays:on_death()
     Particles:spark(self.mid_x, self.mid_y, 10)
 
-    for i = 1, self.n_rays do
-        self.rays[i]:kill()
+    for _, ray in pairs(self.rays) do
+        ray:kill()
+        
     end
 end
 
 function ElectricRays:start_disable_timer(duration)
-    for i = 1, self.n_rays do
-        self.rays[i]:start_disable_timer(duration)
+    if not self.rays then
+        return
+    end
+    for _, ray in pairs(self.rays) do
+        ray:start_disable_timer(duration)
     end
 end
 
