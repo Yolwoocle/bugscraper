@@ -35,7 +35,7 @@ function RainbowButterfly:init(x, y, spr)
 
     self.score = 10
 
-    self.cloud_timer = Timer:new(1.0, {loopback = true})
+    self.cloud_timer = Timer:new(0.3, {loopback = true})
     self.cloud_timer:start()
 end
 

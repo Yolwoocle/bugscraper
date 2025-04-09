@@ -5,8 +5,8 @@ local images = require "data.images"
 
 local EffectCloud = Enemy:inherit()
 	
-function EffectCloud:init(x, y, spr)
-    EffectCloud.super.init(self, x,y, spr or images.poison_cloud, 20, 20)
+function EffectCloud:init(x, y, spr, w, h)
+    EffectCloud.super.init(self, x,y, spr or images.poison_cloud, w, h)
     self.name = "poison_cloud"
     self.is_flying = true
     self.life = 10
@@ -42,20 +42,18 @@ function EffectCloud:init(x, y, spr)
     self.s_t_offset = random_range(0.0, pi2)
     self.pos_t_mult = random_range(1.8, 2.2)
     self.pos_t_offset = random_range(0.0, pi2)
+
+    self.cloud_scale = 1.0
 end
 
 function EffectCloud:update(dt)
-    self:update_poison_cloud(dt)
-end
-
-function EffectCloud:update_poison_cloud(dt)
-    self:update_enemy(dt)
+    EffectCloud.super.update(self, dt)
 
     local sx = clamp(self.lifespan*5, 0, 1) * (1 + math.cos(game.t * self.s_t_mult + self.s_t_offset)*0.1)   
     local sy = clamp(self.lifespan*5, 0, 1) * (1 + math.sin(game.t * self.s_t_mult + self.s_t_offset)*0.1)
     local spr_ox = math.cos(game.t * self.pos_t_mult + self.pos_t_offset) * 3.0   
     local spr_oy = math.sin(game.t * self.pos_t_mult + self.pos_t_offset) * 3.0
-    self.spr:set_scale(sx, sy)
+    self.spr:set_scale(sx*self.cloud_scale, sy*self.cloud_scale)
     self.spr:update_offset(spr_ox, spr_oy)
 
     self.lifespan = math.max(0.0, self.lifespan - dt)

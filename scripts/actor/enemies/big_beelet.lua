@@ -17,7 +17,8 @@ function BigBeelet:init(x, y)
     self:set_dimensions(24, 24)
     self.attack_bounces = 8
     self.life = 40
-    self.is_stompable = false
+    self.is_stompable = true
+    self.damage_on_stomp = 5 todo test if this works
 
     self.attack_speed = 70
     self.score = 30

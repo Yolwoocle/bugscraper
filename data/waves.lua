@@ -1057,10 +1057,6 @@ local waves = {
 			{ E.CloudStorm, 20 },
 			{ E.CloudEnemy, 20 },
 		},
-
-		-- fixed_enemies = {
-		-- 	{ E.Pendulum, 1, position = {CANVAS_WIDTH/2, 3*16} },
-		-- },
 		
 		fixed_enemies = {
 			{ 
@@ -1070,19 +1066,13 @@ local waves = {
 			},
 		},
 
-		-- run = function(self, level)
-		-- 	for _, p in pairs(game.players) do
-		-- 		p.is_affected_by_bounds = false
-		-- 	end
-		-- end,
-
 		music = "w4",
 	}),
 
 
 	new_wave({
-		min = 7,
-		max = 7,
+		min = 5,
+		max = 5,
 
 		enemies = {
 			{ E.Shooter, 40 },

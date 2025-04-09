@@ -62,6 +62,8 @@ local enemies = {
 	GoldenBeetle =       require "scripts.actor.enemies.golden_beetle", --*
 	Bull =               require "scripts.actor.enemies.bull", --*
 	RainbowButterfly =   require "scripts.actor.enemies.rainbow_butterfly", --*
+	SquidMother =        require "scripts.actor.enemies.squid_mother", --*
+	SquidChild =         require "scripts.actor.enemies.squid_child", --*
 	
 	JumpingProp =        require "scripts.actor.enemies.jumping_prop",
 	Dummy =              require "scripts.actor.enemies.dummy",
