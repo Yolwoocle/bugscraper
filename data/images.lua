@@ -244,6 +244,8 @@ local img_names = {
 	mushroom_yellow =          "actors/bullets/mushroom_yellow",
 	mushroom_spike =           "actors/bullets/mushroom_spike",
 
+	birby =           "actors/enemies/birby",
+
 	-----------------------------------------------------
 	
 	-- guns
