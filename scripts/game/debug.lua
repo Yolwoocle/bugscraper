@@ -168,7 +168,7 @@ function Debug:init(game)
         end },
         ["d"] = { "spawn", function()
             -- game.menu_manager:set_menu("debug_command")
-            local cloud = enemies.Bull:new(CANVAS_CENTER[1], CANVAS_CENTER[2])
+            local cloud = enemies.WoodlouseBull:new(CANVAS_CENTER[1], CANVAS_CENTER[2])
             game:new_actor(cloud)
         end },
         ["o"] = { "spike offset", function()

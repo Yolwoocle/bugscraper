@@ -7,11 +7,11 @@ local StateMachine = require "scripts.state_machine"
 local Rect = require "scripts.math.rect"
 local AnimatedSprite = require "scripts.graphics.animated_sprite"
 
-local Bull = Enemy:inherit()
+local WoodlouseBull = Enemy:inherit()
 	
-function Bull:init(x, y, spr, w, h)
-    Bull.super.init(self, x,y, spr or images.larva1, w or 16, h or 16)
-    self.name = "bull"
+function WoodlouseBull:init(x, y, spr, w, h)
+    WoodlouseBull.super.init(self, x,y, spr or images.larva1, w or 20, h or 14)
+    self.name = "woodlouse_bull"
     self.follow_player = false
     self.is_pushable = false
     
@@ -38,8 +38,8 @@ function Bull:init(x, y, spr, w, h)
     self.detect_range = 128
 
     self.spr = AnimatedSprite:new({
-        normal = {images.fly1, 0.05, 1},
-        spiked = {images.spiked_fly, 0.05, 1},
+        normal = {images.woodlouse_bull, 0.07, 2},
+        rolled = {images.woodlouse_bull_rolled, 0.05, 1},
     }, "normal", SPRITE_ANCHOR_CENTER_CENTER) 
 
     self.state_timer = Timer:new(1.0)
@@ -50,7 +50,7 @@ function Bull:init(x, y, spr, w, h)
                 self.state_timer:start(1.0)
 
                 self.is_stompable = false
-                self.spr:set_animation("spiked")
+                self.spr:set_animation("normal")
             end,
             update = function(state, dt)
                 self.vx = self.speed * self.walk_dir_x
@@ -88,7 +88,7 @@ function Bull:init(x, y, spr, w, h)
                 self.state_timer:start(self.telegraph_duration)
                 
                 self.is_stompable = true
-                self.spr:set_animation("normal")
+                self.spr:set_animation("rolled")
             end,
             update = function(state, dt)
                 if self.state_timer:update(dt) then
@@ -106,6 +106,12 @@ function Bull:init(x, y, spr, w, h)
                     self.state_machine:set_state("linger")
                 end
             end,
+            update = function(state, dt)
+                self.spr.rot = self.spr.rot + self.walk_dir_x*dt*10
+            end,
+            exit = function(state)
+                self.spr.rot = 0
+            end
         },
         linger = {
             enter = function(state)
@@ -123,10 +129,10 @@ function Bull:init(x, y, spr, w, h)
 	self.score = 10
 end
 
-function Bull:update(dt)
-    Bull.super.update(self, dt)
+function WoodlouseBull:update(dt)
+    WoodlouseBull.super.update(self, dt)
     
-    self.debug_values[1] = self.state_machine.current_state_name
+    -- self.debug_values[1] = self.state_machine.current_state_name
     self.state_machine:update(dt)
     
     -- self.audio_delay = self.audio_delay - dt
@@ -141,8 +147,8 @@ function Bull:update(dt)
         -- end
 end
     
-function Bull:draw()
-    Bull.super.draw(self)
+function WoodlouseBull:draw()
+    WoodlouseBull.super.draw(self)
 
     local r = Rect:new(self.x, self.y, self.x + self.w, self.y + self.h)
     if self.walk_dir_x < 0 then
@@ -150,17 +156,17 @@ function Bull:draw()
     else
         r:set_bx(r.bx + self.detect_range)
     end
-    rect_color(COL_RED, "line", r.x, r.y, r.w, r.h)
+    -- rect_color(COL_RED, "line", r.x, r.y, r.w, r.h)
 end
     
-function Bull:start_attack()
+function WoodlouseBull:start_attack()
 
 end
 
-function Bull:after_collision(col, other)
+function WoodlouseBull:after_collision(col, other)
     if col.type ~= "cross" then
         self.state_machine:_call("after_collision", col, other)
     end
 end
 
-return Bull
+return WoodlouseBull

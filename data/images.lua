@@ -195,6 +195,8 @@ local img_names = {
 	timed_spikes_spikes_stem = "actors/enemies/timed_spikes_spikes_stem",
 	woodlouse_1 =              "actors/enemies/woodlouse_1",
 	woodlouse_2 =              "actors/enemies/woodlouse_2",
+	woodlouse_bull =           "actors/enemies/woodlouse_bull",
+	woodlouse_bull_rolled =    "actors/enemies/woodlouse_bull_rolled",
 
 	motherboard_bullet_cannon = "actors/enemies/motherboard_bullet_cannon",
 	motherboard_led_on =       "actors/enemies/motherboard_led_on",
