@@ -29,6 +29,10 @@ function Enemy:init_enemy(x,y, img, w,h)
 	self.is_flying = false
 	self.is_active = true
 	self.follow_player = true
+
+	self.random_rotate_speed = 3
+	self.random_rotate_probability = 1.0
+
 	self.ai_template = nil
 	self.ai_templates = {
 		["rotate"] = {
@@ -43,10 +47,11 @@ function Enemy:init_enemy(x,y, img, w,h)
 		["random_rotate"] = {
 			ready = function(ai)
 				self.direction = random_range(0, pi2)
-				self.random_rotate_speed = 3
 			end,
 			update = function(ai, dt)
-                self.direction = self.direction + random_sample({-1, 1}) * dt * self.random_rotate_speed
+				if random_range(0, 1) < self.random_rotate_probability then
+					self.direction = self.direction + random_sample({-1, 1}) * dt * self.random_rotate_speed
+				end
                 self.vx = self.vx + math.cos(self.direction) * self.speed
                 self.vy = self.vy + math.sin(self.direction) * self.speed
 			end

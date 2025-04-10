@@ -1420,6 +1420,10 @@ function get_direction_vector_between_actors(actor1, actor2)
 	return normalize_vect(actor2.x - actor1.x, actor2.y - actor1.y)
 end
 
+function get_angle_between_vectors(ax, ay, bx, by)
+	return math.atan2(by - ay, bx - ax)
+end
+
 function get_angle_between_actors(actor1, actor2, use_mid)
 	if use_mid then
 		return math.atan2(actor2.mid_y - actor1.mid_y, actor2.mid_x - actor1.mid_x)
