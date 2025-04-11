@@ -10,7 +10,7 @@ local AnimatedSprite = require "scripts.graphics.animated_sprite"
 local WoodlouseBull = Enemy:inherit()
 	
 function WoodlouseBull:init(x, y, spr, w, h)
-    WoodlouseBull.super.init(self, x,y, spr or images.larva1, w or 20, h or 14)
+    WoodlouseBull.super.init(self, x,y, spr or images.larva1, w or 18, h or 12)
     self.name = "woodlouse_bull"
     self.follow_player = false
     self.is_pushable = false
@@ -35,12 +35,18 @@ function WoodlouseBull:init(x, y, spr, w, h)
     self.anim_frame_len = 0.2
     self.audio_delay = love.math.random(0.3, 1)
 
-    self.detect_range = 128
-
+    self.detect_range = 200
+    self.jump_force = 200
+    
+    self.rotation_speed = 40
     self.spr = AnimatedSprite:new({
         normal = {images.woodlouse_bull, 0.07, 2},
         rolled = {images.woodlouse_bull_rolled, 0.05, 1},
     }, "normal", SPRITE_ANCHOR_CENTER_CENTER) 
+
+    self.skid_spr = AnimatedSprite:new({
+        normal = {images.skid_effect, 0.03, 3}
+    }, "normal", SPRITE_ANCHOR_CENTER_BOTTOM)
 
     self.state_timer = Timer:new(1.0)
     self.state_machine = StateMachine:new({
@@ -89,6 +95,8 @@ function WoodlouseBull:init(x, y, spr, w, h)
                 
                 self.is_stompable = true
                 self.spr:set_animation("rolled")
+
+                self.vy = -self.jump_force 
             end,
             update = function(state, dt)
                 if self.state_timer:update(dt) then
@@ -107,16 +115,35 @@ function WoodlouseBull:init(x, y, spr, w, h)
                 end
             end,
             update = function(state, dt)
-                self.spr.rot = self.spr.rot + self.walk_dir_x*dt*10
+                self.spr.rot = self.spr.rot + self.walk_dir_x*dt*self.rotation_speed
+
+                self.skid_spr:update(dt)
+                self.skid_spr:set_flip_x(not self.spr.flip_x)
+
+                if random_range(0, 1) < 0.3 then
+                    Particles:image(self.mid_x - self.walk_dir_x*16, self.y+self.h, 1, 
+                        images.bullet_casing, 4, nil, nil, nil, {
+                        vx1 = -self.vx*0.1,
+                        vx2 = -self.vx*0.2,
+            
+                        vy1 = -40,
+                        vy2 = -80,
+                    })
+                end
             end,
             exit = function(state)
                 self.spr.rot = 0
+            end,
+            draw = function(state)
+                self.skid_spr:draw(self.mid_x - self.walk_dir_x*16, self.y+self.h)
             end
         },
         linger = {
             enter = function(state)
                 self.vx = 0
                 self.state_timer:start(self.linger_duration + random_neighbor(self.linger_duration_randomness))
+                
+                self.vy = -self.jump_force 
             end,
             update = function(state, dt)
                 if self.state_timer:update(dt)   then
@@ -149,6 +176,7 @@ end
     
 function WoodlouseBull:draw()
     WoodlouseBull.super.draw(self)
+    self.state_machine:draw()
 
     local r = Rect:new(self.x, self.y, self.x + self.w, self.y + self.h)
     if self.walk_dir_x < 0 then

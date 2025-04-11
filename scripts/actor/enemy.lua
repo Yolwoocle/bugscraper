@@ -242,7 +242,7 @@ function Enemy:draw_enemy()
 
 	if game.debug.colview_mode then
 		Text:push_font(FONT_MINI)
-		print_outline(COL_WHITE, COL_DARK_BLUE, concat(round(self.life, 1), "HP"), self.x, self.y-6)
+		-- print_outline(COL_WHITE, COL_DARK_BLUE, concat(round(self.life, 1), "HP"), self.x, self.y-6)
 		Text:pop_font()
 	end
 end

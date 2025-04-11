@@ -496,6 +496,7 @@ local img_names = {
 	
 	-- effects
 	honey_blob = "effects/honey_blob",
+	skid_effect = "effects/skid_effect",
 
 	-----------------------------------------------------
 	
