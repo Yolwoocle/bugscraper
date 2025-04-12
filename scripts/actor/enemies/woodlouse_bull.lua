@@ -18,6 +18,11 @@ function WoodlouseBull:init(x, y, spr, w, h)
     self.life = 30
     self.friction_x = 1
 
+    self.destroy_bullet_on_impact = false
+    self.is_bouncy_to_bullets = true
+    self.is_immune_to_bullets = true
+    self.is_stompable = true
+
     -- State properties
     self.def_speed = 70
     self.speed_randomness = 5
@@ -45,7 +50,7 @@ function WoodlouseBull:init(x, y, spr, w, h)
     }, "normal", SPRITE_ANCHOR_CENTER_CENTER) 
 
     self.skid_spr = AnimatedSprite:new({
-        normal = {images.skid_effect, 0.03, 3}
+        normal = {images.skid_effect, 0.01, 28}
     }, "normal", SPRITE_ANCHOR_CENTER_BOTTOM)
 
     self.state_timer = Timer:new(1.0)
@@ -55,7 +60,6 @@ function WoodlouseBull:init(x, y, spr, w, h)
                 self.speed = self.def_speed + random_neighbor(self.speed_randomness)
                 self.state_timer:start(1.0)
 
-                self.is_stompable = false
                 self.spr:set_animation("normal")
             end,
             update = function(state, dt)
@@ -93,7 +97,6 @@ function WoodlouseBull:init(x, y, spr, w, h)
                 self.vx = 0
                 self.state_timer:start(self.telegraph_duration)
                 
-                self.is_stompable = true
                 self.spr:set_animation("rolled")
 
                 self.vy = -self.jump_force 

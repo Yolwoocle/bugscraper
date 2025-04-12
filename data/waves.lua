@@ -624,6 +624,7 @@ local waves = {
 			["cabin_bg"] = images.cabin_bg_w3,
 			["walls"] = images.cabin_walls_w3,
 
+			["bg_fan"] = false,
 			["bg_grid"] = true,
 			["w3_cabin"] = true,
 
