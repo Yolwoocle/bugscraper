@@ -37,7 +37,8 @@ return {
         world_1 = "Recursos Insetos",
         world_2 = "A Fábrica",
         world_3 = "A Sala de Server",
-        world_4 = "Executivo",
+		world_4 = "The Gardens", -- ADDED
+        world_5 = "Executivo",
     },
     gun = {
         -- Gun names

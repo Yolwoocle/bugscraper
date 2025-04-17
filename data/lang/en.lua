@@ -50,7 +50,8 @@ return {
         world_1 = "Bug Resources",
         world_2 = "The Factory",
         world_3 = "The Server Room",
-        world_4 = "Executive",
+        world_4 = "The Gardens",
+        world_5 = "Executive",
     },
     gun = {
         -- Gun names

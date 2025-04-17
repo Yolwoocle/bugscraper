@@ -2,11 +2,12 @@
 ## 0.7
 - **Added**: Golden beetles (temporary name), will fly around and explode after you stomp them
 - **Added**: Bulls (temporary name), will walk around on the floor and charge at you when you enter their vision
+- **Added**: Cloud Mother (temporary name), is an enemy with a bunch of smaller enemies following it. If you kill the mother, all the children will panic and perish too 
 - **Change**: Added a cooldown for cloud storm enemy (temporary name)
 - **Change**: Background fan in dept. 2 now spins 
 - **Change**: Polished up dept. 3 cabin background
 - **Change**: Espresso now lasts for 20 floors (prev. 10)
-- **Fix**: Partial fix to issue where some enemies like boomshrooms, stink bugs' clouds, larvae spawned from projectiles, would clip into the ground and teleport. This might still happen, just hopefully way less.
+- **Fix**: Partial fix to issue where some enemies like boomshrooms, stink bugs' clouds, larvae spawned from projectiles, would clip into the ground and teleport. This might still happen, just hopefully to a lesser degree.
 - **Fix**: Fixed visual bugs related to TV presentation
 
 ## 0.6 (*2025-03-22*)

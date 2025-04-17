@@ -42,7 +42,8 @@ return {
 		world_1 = "Recursos de Depuracionces", -- The pun is lost (Debugging resources)
 		world_2 = "La fabrica",
 		world_3 = "La sala de servidores",
-		world_4 = "Ejecutivo",
+		world_4 = "The Gardens", -- ADDED
+		world_5 = "Ejecutivo",
 	},
 	gun = {
 		-- Gun names

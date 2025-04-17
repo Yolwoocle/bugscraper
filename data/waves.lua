@@ -931,7 +931,7 @@ local waves = {
 
 	----------------------------------------------------------------------------------------------------------
 	----------------------------------------------------------------------------------------------------------
-	--- W4: executive
+	--- W4: the gardens
 	----------------------------------------------------------------------------------------------------------
 	----------------------------------------------------------------------------------------------------------
 
@@ -951,7 +951,7 @@ local waves = {
 			["walls"] = images.cabin_walls_w3,
 			-- ["walls_brown"] = false,
 			-- ["bg_grid_brown"] = false,
-			-- ["walls"] = false,	
+			-- ["walls"] = false,
 		},
 
 		background = backgrounds.BackgroundGreenhouse:new(),
@@ -1152,6 +1152,206 @@ local waves = {
 			{ E.HoneycombFootball, 1 },
 		},
 	}),
+	
+	---------------------------------------------
+	new_cafeteria(),
+	---------------------------------------------
+
+	
+	----------------------------------------------------------------------------------------------------------
+	----------------------------------------------------------------------------------------------------------
+	--- W5: executive
+	----------------------------------------------------------------------------------------------------------
+	----------------------------------------------------------------------------------------------------------
+
+	new_wave({
+		min = 4,
+		max = 4,
+
+		enemies = {
+			{ E.CloudEnemy, 20 },
+		},
+
+		elevator_layers = {
+			["bg_grid"] = false,
+			["w3_cabin"] = false,
+
+			["cabin_bg"] = images.cabin_bg_w4,
+			["walls"] = images.cabin_walls_w3,
+			-- ["walls_brown"] = false,
+			-- ["bg_grid_brown"] = false,
+			-- ["walls"] = false,
+		},
+
+		background = backgrounds.BackgroundGreenhouse:new(),
+		music = "w5",
+
+		over_title = get_world_prefix(5),
+		title = get_world_name(5),
+		title_color = COL_LIGHT_BLUE,
+		title_outline_color = COL_BLACK_BLUE,
+	}),
+
+
+	new_wave({
+		min = 3,
+		max = 3,
+
+		enemies = {
+			{ E.CloudEnemy, 10 },
+		},
+	}),
+
+	new_wave({
+		min = 3,
+		max = 3,
+
+		enemies = {
+			{ E.CloudEnemy, 10 },
+		},
+	}),
+
+	new_wave({
+		min = 3,
+		max = 3,
+
+		enemies = {
+			{ E.CloudEnemy, 10 },
+		},
+	}),
+
+	new_wave({
+		min = 3,
+		max = 3,
+
+		enemies = {
+			{ E.CloudEnemy, 10 },
+		},
+	}),
+
+	new_wave({
+		min = 3,
+		max = 3,
+
+		enemies = {
+			{ E.CloudEnemy, 10 },
+		},
+	}),
+
+	new_wave({
+		min = 3,
+		max = 3,
+
+		enemies = {
+			{ E.CloudEnemy, 10 },
+		},
+	}),
+
+	new_wave({
+		min = 3,
+		max = 3,
+
+		enemies = {
+			{ E.CloudEnemy, 10 },
+		},
+	}),
+
+	new_wave({
+		min = 3,
+		max = 3,
+
+		enemies = {
+			{ E.CloudEnemy, 10 },
+		},
+	}),
+
+	---------------------------------------------
+	new_cafeteria(),
+	---------------------------------------------
+
+	new_wave({
+		min = 5,
+		max = 5,
+
+		enemies = {
+			{ E.CloudEnemy, 20 },
+		},
+
+		music = "w5",
+	}),
+
+	new_wave({
+		min = 3,
+		max = 3,
+
+		enemies = {
+			{ E.CloudEnemy, 10 },
+		},
+	}),
+	
+	new_wave({
+		min = 3,
+		max = 3,
+
+		enemies = {
+			{ E.CloudEnemy, 10 },
+		},
+	}),
+	
+	new_wave({
+		min = 3,
+		max = 3,
+
+		enemies = {
+			{ E.CloudEnemy, 10 },
+		},
+	}),
+	
+	new_wave({
+		min = 3,
+		max = 3,
+
+		enemies = {
+			{ E.CloudEnemy, 10 },
+		},
+	}),
+	
+	new_wave({
+		min = 3,
+		max = 3,
+
+		enemies = {
+			{ E.CloudEnemy, 10 },
+		},
+	}),
+	
+	new_wave({
+		min = 3,
+		max = 3,
+
+		enemies = {
+			{ E.CloudEnemy, 10 },
+		},
+	}),
+	
+	new_wave({
+		min = 3,
+		max = 3,
+
+		enemies = {
+			{ E.CloudEnemy, 10 },
+		},
+	}),
+	
+	new_wave({
+		min = 3,
+		max = 3,
+
+		enemies = {
+			{ E.CloudEnemy, 10 },
+		},
+	}),
+
 
 	--]]
 
