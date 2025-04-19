@@ -8,10 +8,9 @@ local utf8 = require "utf8"
 local Explosion = Prop:inherit()
 
 function Explosion:init(x, y, args)
-    -- radius, resolution, screenshake
     args = args or {}
 
-    self:init_prop(x, y, images.empty, 1, 1)
+    Explosion.super.init(self, x, y, images.empty, 1, 1)
     self.name = "explosion"
 
     self.use_gun = param(args.use_gun, true)
@@ -31,7 +30,7 @@ function Explosion:init(x, y, args)
 end
 
 function Explosion:update(dt)
-    self:update_prop(dt)
+    Explosion.super.update(self, dt)
 
     if not self.is_dead then
         if self.use_gun then
@@ -44,14 +43,12 @@ function Explosion:update(dt)
         Particles:explosion(self.mid_x, self.mid_y, self.radius + self.safe_margin, {
             color_gradient = self.color_gradient,
         })
-        -- Particles:static_image(images._test_anim_explosion, self.mid_x, self.mid_y, 0, 1)
 
         self:kill()      
     end
 end
 
 function Explosion:draw()
-    -- self:draw_prop()
 end
 
 return Explosion

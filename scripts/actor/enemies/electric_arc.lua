@@ -13,7 +13,7 @@ local utf8 = require "utf8"
 local ElectricArc = Prop:inherit()
 
 function ElectricArc:init(x, y, is_active, activation_delay)
-    self:init_prop(x, y, images.empty, 1, 1)
+    ElectricArc.super.init(self, x, y, images.empty, 1, 1)
     self.name = "electric_arc"
 
     self.counts_as_enemy = false
@@ -81,7 +81,7 @@ function ElectricArc:set_segment(ax_or_seg, ay, bx, by)
 end
 
 function ElectricArc:update(dt)
-    self:update_prop(dt)
+    ElectricArc.super.update(self, dt)
 
     -- Timers
     if self.activation_timer:update(dt) then
@@ -193,7 +193,7 @@ function ElectricArc:start_activation_timer(duration)
 end
 
 function ElectricArc:draw()
-    self:draw_prop()
+    ElectricArc.super.draw(self)
 
     self.lightning:draw()
 end

@@ -7,10 +7,7 @@ local Guns = require "data.guns"
 local Prop = Enemy:inherit()
 
 function Prop:init(x, y, img, w, h)
-    self:init_prop(x, y, img, w, h)
-end
-function Prop:init_prop(x, y, img, w, h)
-    self:init_enemy(x,y, img or images.dummy_target, w or 16, h or 16)
+    Prop.super.init(self, x,y, img or images.dummy_target, w or 16, h or 16)
     self.name = "prop"
 
     self.life = 10
@@ -35,17 +32,11 @@ function Prop:init_prop(x, y, img, w, h)
 end
 
 function Prop:update(dt)
-    self:update_prop(dt)
-end
-function Prop:update_prop(dt)
-    self:update_enemy(dt)
+    Prop.super.update(self, dt)
 end
 
 function Prop:draw()
-    self:draw_prop()
-end
-function Prop:draw_prop()
-    self:draw_enemy()
+    Prop.super.draw(self)
 end
 
 return Prop

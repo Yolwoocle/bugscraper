@@ -10,7 +10,7 @@ local utf8 = require "utf8"
 local MotherboardButton = Prop:inherit()
 
 function MotherboardButton:init(x, y, parent)
-    self:init_prop(x, y, images.motherboard_button, 48, 32)
+    MotherboardButton.super.init(self, x, y, images.motherboard_button, 48, 32)
     self.name = "motherboard_button"
     
     self.gravity = 0
@@ -35,7 +35,7 @@ function MotherboardButton:init(x, y, parent)
 end
 
 function MotherboardButton:update(dt)
-    self:update_prop(dt)
+    MotherboardButton.super.update(self, dt)
 
     self.t = self.t + dt*2
 
@@ -44,7 +44,7 @@ function MotherboardButton:update(dt)
 end
 
 function MotherboardButton:draw()
-	self:draw_prop()
+	MotherboardButton.super.draw(self)
 
     -- self.front_spr:draw(self.x, self.y, self.w, self.h)
 end

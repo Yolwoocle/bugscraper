@@ -33,11 +33,11 @@ function JumpingProp:update(dt)
         self.vy = -self.cur_jump_force
     end
 
-    self:update_prop(dt)
+    JumpingProp.super.update(self, dt)
 end
 
 function JumpingProp:draw()
-	self:draw_prop()
+	JumpingProp.super.draw(self)
 end
 
 function JumpingProp:on_collision(col, other)

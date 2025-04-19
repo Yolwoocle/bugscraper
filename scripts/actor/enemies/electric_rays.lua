@@ -12,7 +12,7 @@ local ElectricRays = Prop:inherit()
 function ElectricRays:init(x, y, args)
     args = args or {}
 
-    self:init_prop(x,y, images.empty, 1, 1)
+    ElectricRays.super.init(self, x,y, images.empty, 1, 1)
     self.name = "electric_rays"
     
     self.max_life = 100
@@ -63,7 +63,7 @@ function ElectricRays:set_state(state)
 end
 
 function ElectricRays:update(dt)
-    self:update_prop(dt)
+    ElectricRays.super.update(self, dt)
     
     -- Spawn rays
     if not self.rays_spawned then
@@ -108,7 +108,7 @@ function ElectricRays:spawn_rays()
 end
 
 function ElectricRays:draw()
-	self:draw_prop()
+	ElectricRays.super.draw(self)
 end
 
 function ElectricRays:on_death()

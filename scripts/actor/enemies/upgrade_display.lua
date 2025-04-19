@@ -9,7 +9,7 @@ local utf8 = require "utf8"
 local UpgradeDisplay = Prop:inherit()
 
 function UpgradeDisplay:init(x, y)
-    self:init_prop(x, y, images.upgrade_jar, 28, 28)
+    UpgradeDisplay.super.init(self, x, y, images.upgrade_jar, 28, 28)
     self.name = "upgrade_display"
     
     self.product = nil
@@ -48,7 +48,7 @@ function UpgradeDisplay:assign_upgrade(upgrade)
 end
 
 function UpgradeDisplay:update(dt)
-    self:update_prop(dt)
+    UpgradeDisplay.super.update(self, dt)
 
     self:update_focus(dt)
 
@@ -114,7 +114,7 @@ function UpgradeDisplay:draw()
     if self.product then
         self.product:draw(self.mid_x, self.mid_y)
     end
-	self:draw_prop()
+	UpgradeDisplay.super.draw(self)
     
     self:draw_product()
 end

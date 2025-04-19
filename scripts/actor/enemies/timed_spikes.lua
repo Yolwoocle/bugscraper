@@ -31,7 +31,7 @@ function TimedSpikes:init(x, y, duration_off, duration_telegraph, duration_on, s
         w, h = self.spike_length, h 
     end
 
-    self:init_prop(x, y, images.empty, w, h)
+    TimedSpikes.super.init(self, x, y, images.empty, w, h)
     self.name = "timed_spikes"
     
     local sprite_anchor = ({
@@ -253,7 +253,7 @@ function TimedSpikes:set_state(index)
 end
 
 function TimedSpikes:update(dt)
-    self:update_prop(dt)
+    TimedSpikes.super.update(self, dt)
     self.t = self.t + dt
 
     if self.state_timer:update(dt) then
@@ -301,7 +301,7 @@ function TimedSpikes:draw()
             y + self.orientation_dir_y * (self.spike_sprite.image:getHeight() - 3), 
         self.w, self.h)
     end
-    self:draw_enemy()
+    TimedSpikes.super.draw(self)
 end
 
 return TimedSpikes

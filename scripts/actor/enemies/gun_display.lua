@@ -11,7 +11,7 @@ local utf8 = require "utf8"
 local GunDisplay = Prop:inherit()
 
 function GunDisplay:init(x, y, gun)
-    self:init_prop(x, y, images.gun_display, 16, 16)
+    GunDisplay.super.init(self, x, y, images.gun_display, 16, 16)
     self.name = "gun_display"
     
     self.gun = gun or guns.Triple:new(nil)
@@ -68,7 +68,7 @@ function GunDisplay:assign_upgrade(upgrade)
 end
 
 function GunDisplay:update(dt)
-    self:update_prop(dt)
+    GunDisplay.super.update(self, dt)
 
     -- scotch
     if self.buffer_vx then
@@ -118,7 +118,7 @@ function GunDisplay:draw()
         -- self.gun:draw()
         self.gun_spr:draw(self.x, self.y, self.w, self.h)
     end
-	self:draw_prop() 
+	GunDisplay.super.draw(self) 
 end
 
 function GunDisplay:on_death(damager, reason)
