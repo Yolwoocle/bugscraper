@@ -1,7 +1,7 @@
 # Bugscraper changelog
 ## 0.7
 - **Added**: Golden beetles (temporary name), will fly around and explode after you stomp them
-- **Added**: Bulls (temporary name), will walk around on the floor and charge at you when you enter their vision
+- **Added**: Rollopods, will walk around on the floor and charge at you when you enter their view
 - **Added**: Cloud Mother (temporary name), is an enemy with a bunch of smaller enemies following it. If you kill the mother, all the children will panic and perish too 
 - **Change**: Added a cooldown for cloud storm enemy (temporary name)
 - **Change**: Background fan in dept. 2 now spins 

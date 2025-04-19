@@ -7,11 +7,11 @@ local StateMachine = require "scripts.state_machine"
 local Rect = require "scripts.math.rect"
 local AnimatedSprite = require "scripts.graphics.animated_sprite"
 
-local WoodlouseBull = Enemy:inherit()
+local Rollopod = Enemy:inherit()
 	
-function WoodlouseBull:init(x, y, spr, w, h)
-    WoodlouseBull.super.init(self, x,y, spr or images.larva1, w or 18, h or 12)
-    self.name = "woodlouse_bull"
+function Rollopod:init(x, y, spr, w, h)
+    Rollopod.super.init(self, x,y, spr or images.larva1, w or 18, h or 12)
+    self.name = "rollopod"
     self.follow_player = false
     self.is_pushable = false
     
@@ -45,8 +45,8 @@ function WoodlouseBull:init(x, y, spr, w, h)
     
     self.rotation_speed = 40
     self.spr = AnimatedSprite:new({
-        normal = {images.woodlouse_bull, 0.07, 2},
-        rolled = {images.woodlouse_bull_rolled, 0.05, 1},
+        normal = {images.rollopod, 0.07, 2},
+        rolled = {images.rollopod_rolled, 0.05, 1},
     }, "normal", SPRITE_ANCHOR_CENTER_CENTER) 
 
     self.skid_spr = AnimatedSprite:new({
@@ -159,8 +159,8 @@ function WoodlouseBull:init(x, y, spr, w, h)
 	self.score = 10
 end
 
-function WoodlouseBull:update(dt)
-    WoodlouseBull.super.update(self, dt)
+function Rollopod:update(dt)
+    Rollopod.super.update(self, dt)
     
     -- self.debug_values[1] = self.state_machine.current_state_name
     self.state_machine:update(dt)
@@ -177,8 +177,8 @@ function WoodlouseBull:update(dt)
         -- end
 end
     
-function WoodlouseBull:draw()
-    WoodlouseBull.super.draw(self)
+function Rollopod:draw()
+    Rollopod.super.draw(self)
     self.state_machine:draw()
 
     local r = Rect:new(self.x, self.y, self.x + self.w, self.y + self.h)
@@ -190,14 +190,14 @@ function WoodlouseBull:draw()
     -- rect_color(COL_RED, "line", r.x, r.y, r.w, r.h)
 end
     
-function WoodlouseBull:start_attack()
+function Rollopod:start_attack()
 
 end
 
-function WoodlouseBull:after_collision(col, other)
+function Rollopod:after_collision(col, other)
     if col.type ~= "cross" then
         self.state_machine:_call("after_collision", col, other)
     end
 end
 
-return WoodlouseBull
+return Rollopod
