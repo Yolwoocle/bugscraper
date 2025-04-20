@@ -51,9 +51,11 @@ local enemies = {
 	CloudStorm =         require "scripts.actor.enemies.cloud_storm",
 	Centipede =          require "scripts.actor.enemies.centipede", 
 	Shooter =            require "scripts.actor.enemies.shooter", 
-	FloorHoleSpawner =   require "scripts.actor.enemies.floor_hole_spawner", 
-
+	ArumTitanBoss =      require "scripts.actor.enemies.arum_titan_boss", 
+	ArumTitanMinion =    require "scripts.actor.enemies.arum_titan_minion", 
+	
 	-- Unused
+	FloorHoleSpawner =   require "scripts.actor.enemies.floor_hole_spawner", 
 	BigBug =             require "scripts.actor.enemies.big_bug", --*
 	Slime =              require "scripts.actor.enemies.slime", --*
 	Frog =               require "scripts.actor.enemies.frog", --*

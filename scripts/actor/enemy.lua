@@ -334,6 +334,12 @@ function Enemy:set_harmless(duration)
 	self.harmless_timer = math.max(self.harmless_timer, duration)
 end
 
+--- Set the life and max life of the enemy
+function Enemy:set_max_life(val)
+	self.max_life = val
+	self.life = val
+end
+
 --- Deal damage to the enemy.
 function Enemy:do_damage(n, damager)
 	if not self.is_active or self.invincible_timer > 0 then

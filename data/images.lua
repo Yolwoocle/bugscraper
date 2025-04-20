@@ -91,6 +91,10 @@ local img_names = {
 	duck =             "actors/players/duck",
 
 	-- enemies
+	arum_titan_boss =          "actors/enemies/arum_titan_boss",
+	arum_titan_boss_spiked =   "actors/enemies/arum_titan_boss_spiked",
+	arum_titan_minion =        "actors/enemies/arum_titan_minion",
+	arum_titan_minion_spiked = "actors/enemies/arum_titan_minion_spiked",
 	bee_boss_alt =             "actors/enemies/bee_boss_alt",
 	bee_boss_shield =          "actors/enemies/bee_boss_shield",
 	big_bug_1 =                "actors/enemies/big_bug_1",

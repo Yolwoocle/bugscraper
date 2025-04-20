@@ -168,7 +168,8 @@ function Debug:init(game)
         end },
         ["d"] = { "spawn", function()
             -- game.menu_manager:set_menu("debug_command")
-            local cloud = enemies.WoodlouseBull:new(CANVAS_CENTER[1], CANVAS_CENTER[2])
+            local cloud = enemies.ArumTitanBoss:new(CANVAS_CENTER[1], CANVAS_CENTER[2])
+            cloud:set_position(cloud.x - cloud.w/2, cloud.y - cloud.h/2)
             game:new_actor(cloud)
         end },
         ["o"] = { "spike offset", function()
@@ -627,7 +628,7 @@ function Debug:draw_info_view()
 
     local skininfo = ""
     for _, skin_id in pairs(Metaprogression:get("skins")) do
-        skininfo = skininfo .. concat(skin_id, "(", skins[skin_id].text_key, "), ")
+        skininfo = skininfo .. concat(skin_id, "(", (skins[skin_id] or {}).text_key, "), ")
     end
 
     -- Print debug info
