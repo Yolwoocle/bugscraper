@@ -8,6 +8,7 @@
 - **Change**: Background fan in dept. 2 now spins 
 - **Change**: Polished up dept. 3 cabin background
 - **Change**: Espresso now lasts for 20 floors (prev. 10)
+- **Change**: Beelets no longer appear spiky when angered
 - **Fix**: Partial fix to issue where some enemies like boomshrooms, stink bugs' clouds, larvae spawned from projectiles, would clip into the ground and teleport. This might still happen, just hopefully to a lesser degree.
 - **Fix**: Fixed visual bugs related to TV presentation
 

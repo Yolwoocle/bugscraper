@@ -73,6 +73,33 @@ function DebugCommandManager:init()
             return true
         end,
     }
+    self.commands["randomupgrades"] = DebugCommand:new {
+        name = "randomupgrades",
+        description = "Applies a number of random upgrades",
+        args = {
+            { "number:number", default = 1 },
+        },
+        run = function(number)
+            local unlocked_upgrades = Metaprogression:get("upgrades")
+            if #unlocked_upgrades < number then
+                return false, concat("Number too large: must be smaller or equal to ", #unlocked_upgrades)
+            end
+            local bag = copy_table_shallow(unlocked_upgrades)
+            shuffle_table(bag)
+
+            local applied = ""
+            for i = 1, number do
+                local upgrade = upgrades[bag[i]]:new()
+                game:apply_upgrade(upgrade)
+
+                applied = applied .. upgrade.name .. ", "
+            end
+
+            self:add_message("Applied upgrades: "..applied)
+
+            return true
+        end,
+    }
     self.commands["spawn"] = DebugCommand:new {
         name = "spawn",
         description = "Spawns an enemy",

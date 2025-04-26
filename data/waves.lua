@@ -1148,6 +1148,8 @@ local waves = {
 		enemies = {
 			{ E.ArumTitanBoss, 1, position = {CANVAS_WIDTH/2 - 16, CANVAS_HEIGHT/2}},
 		},
+
+		cutscene = cutscenes.arum_titan_enter,
 	}),
 	
 	---------------------------------------------

@@ -10,8 +10,8 @@ local CustomDrawMenuItem    = require "scripts.ui.menu.items.menu_item_custom_dr
 local debug_draw_waves      = require "scripts.debug.draw_waves"
 local images                = require "data.images"
 local DebugCommandMenu      = require "scripts.ui.menu.debug_command_menu"
-local NewRewardMenu       = require "data.menus.menu_new_reward"
-local BackroomTutorial = require "scripts.level.backrooms.backroom_tutorial"
+local NewRewardMenu         = require "data.menus.menu_new_reward"
+local BackroomTutorial      = require "scripts.level.backrooms.backroom_tutorial"
 
 local DEFAULT_MENU_BG_COLOR = menu_util.DEFAULT_MENU_BG_COLOR
 local empty_func            = menu_util.empty_func
@@ -52,6 +52,10 @@ local function generate_menus()
         {
             { image = images.motherboard, z_mult = 0.7 },
         })
+    
+    menus.w4_boss_intro = BossIntroMenu:new(game, { 38 / 255, 43 / 255, 68 / 255, 0.8 }, "Boss 4", {
+        { image = images.empty, z_mult = 1.0 },
+    })
 
     menus.new_reward = NewRewardMenu:new(game)
 
@@ -82,7 +86,7 @@ local function generate_menus()
             game.menu_manager:back()
         end },
         { "{menu.yes}", function()
-            game:new_game({backroom = BackroomTutorial:new()})
+            game:new_game({ backroom = BackroomTutorial:new() })
         end },
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
 
@@ -169,24 +173,24 @@ local function generate_menus()
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
 
     menus.credits_tv_slideshow = Menu:new(game, "{menu.credits.tv_slideshow}", {
-        { Text:text("menu.credits.x_by_y", "'Graphs'", "Sslime7"),                                       empty_func },
-        { Text:text("menu.credits.x_by_y", "'Hot dogs'", "Alexis Belmonte"),                             empty_func },
-        { Text:text("menu.credits.x_by_y", "'Mio rotate'", "Corentin Vaillant"),                         empty_func },
-        { Text:text("menu.credits.x_by_y", "'Mio explode'", "Corentin Vaillant"),                        empty_func },
-        { Text:text("menu.credits.x_by_y", "'Bugs With Guns'", "Yolwoocle"),                             empty_func },
-        { Text:text("menu.credits.x_by_y", "'Löve, Öbey'", "ellraiser"),                                 empty_func },
-        { Text:text("menu.credits.x_by_y", "'Need your duck taped?'", "Joseph (Jedi)"),                  empty_func },
-        { Text:text("menu.credits.x_by_y", "'Starbugs Green Tea'", "Goyome"),                            empty_func },
-        { Text:text("menu.credits.x_by_y", "'Binarion'", "Hector SK  (Nextop Games)"),                   empty_func },
-        { Text:text("menu.credits.x_by_y", "'Injured? Good'", "Hector SK  (Nextop Games)"),              empty_func },
-        { Text:text("menu.credits.x_by_y", "'No queen?'", "Behck"),                                      empty_func },
-        { Text:text("menu.credits.x_by_y", "'Splat'", "Sarcose"),                                        empty_func },
-        { Text:text("menu.credits.x_by_y", "'End toastal abuse'", "Clem"),                               empty_func },
-        { Text:text("menu.credits.x_by_y", "'A-salt rifle'", "Clem"),                                    empty_func },
-        { Text:text("menu.credits.x_by_y", "'Beatleblock'", "Dimitri Sophinos (DPS2004)"),               empty_func },
-        { Text:text("menu.credits.x_by_y", "'Bugscrapers aren't enough'", "pkhead"),                     empty_func },
-        { Text:text("menu.credits.x_by_y", "'Optic Studio'", "pkhead"),                                  empty_func },
-        { Text:text("menu.credits.x_by_y", "'Soon (TM)'", "pixelbath"),                                  empty_func },
+        { Text:text("menu.credits.x_by_y", "'Graphs'", "Sslime7"),                          empty_func },
+        { Text:text("menu.credits.x_by_y", "'Hot dogs'", "Alexis Belmonte"),                empty_func },
+        { Text:text("menu.credits.x_by_y", "'Mio rotate'", "Corentin Vaillant"),            empty_func },
+        { Text:text("menu.credits.x_by_y", "'Mio explode'", "Corentin Vaillant"),           empty_func },
+        { Text:text("menu.credits.x_by_y", "'Bugs With Guns'", "Yolwoocle"),                empty_func },
+        { Text:text("menu.credits.x_by_y", "'Löve, Öbey'", "ellraiser"),                    empty_func },
+        { Text:text("menu.credits.x_by_y", "'Need your duck taped?'", "Joseph (Jedi)"),     empty_func },
+        { Text:text("menu.credits.x_by_y", "'Starbugs Green Tea'", "Goyome"),               empty_func },
+        { Text:text("menu.credits.x_by_y", "'Binarion'", "Hector SK  (Nextop Games)"),      empty_func },
+        { Text:text("menu.credits.x_by_y", "'Injured? Good'", "Hector SK  (Nextop Games)"), empty_func },
+        { Text:text("menu.credits.x_by_y", "'No queen?'", "Behck"),                         empty_func },
+        { Text:text("menu.credits.x_by_y", "'Splat'", "Sarcose"),                           empty_func },
+        { Text:text("menu.credits.x_by_y", "'End toastal abuse'", "Clem"),                  empty_func },
+        { Text:text("menu.credits.x_by_y", "'A-salt rifle'", "Clem"),                       empty_func },
+        { Text:text("menu.credits.x_by_y", "'Beatleblock'", "Dimitri Sophinos (DPS2004)"),  empty_func },
+        { Text:text("menu.credits.x_by_y", "'Bugscrapers aren't enough'", "pkhead"),        empty_func },
+        { Text:text("menu.credits.x_by_y", "'Optic Studio'", "pkhead"),                     empty_func },
+        { Text:text("menu.credits.x_by_y", "'Soon (TM)'", "pixelbath"),                     empty_func },
         { "" },
         -- { "{menu.credits.tv_slideshow_submit} 🔗", func_url("https://bugscraper.net/tv") }
 
@@ -256,7 +260,8 @@ local function generate_menus()
         table.remove(items, 5) -- Remove whishlist if not demo
     end
 
-    menus.win = Menu:new(game, "{game.congratulations}", items, { 0, 0, 0, 0.85 }, PROMPTS_GAME_OVER, nil, {is_backable = false})
+    menus.win = Menu:new(game, "{game.congratulations}", items, { 0, 0, 0, 0.85 }, PROMPTS_GAME_OVER, nil,
+        { is_backable = false })
 
     ------------------------------------------------------------
 
@@ -293,7 +298,7 @@ local function generate_menus()
             end,
         },
         { "" },
-    }, DEFAULT_MENU_BG_COLOR, PROMPTS_GAME_OVER, nil, {is_backable = false})
+    }, DEFAULT_MENU_BG_COLOR, PROMPTS_GAME_OVER, nil, { is_backable = false })
 
     return menus
 end

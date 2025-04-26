@@ -77,6 +77,7 @@ cutscenes.tutorial_start = Cutscene:new("tutorial_end", {
 })
 
 
+
 cutscenes.tutorial_end_short = Cutscene:new("tutorial_end", {
     CutsceneScene:new({
         description = "Start",
@@ -137,6 +138,7 @@ cutscenes.tutorial_end_short = Cutscene:new("tutorial_end", {
         end
     })
 })
+
 
 
 cutscenes.tutorial_end = Cutscene:new("tutorial_end", {
@@ -209,6 +211,7 @@ cutscenes.tutorial_end = Cutscene:new("tutorial_end", {
         end
     })
 })
+
 
 
 cutscenes.enter_ceo_office = Cutscene:new("enter_ceo_office", {
@@ -297,6 +300,7 @@ cutscenes.enter_ceo_office = Cutscene:new("enter_ceo_office", {
 })
 
 
+
 cutscenes.dung_boss_enter = Cutscene:new("dung_boss_enter", {
     CutsceneScene:new({
         duration = 1.9,
@@ -310,6 +314,7 @@ cutscenes.dung_boss_enter = Cutscene:new("dung_boss_enter", {
         end,
     }),
 })
+
 
 
 cutscenes.bee_boss_enter = Cutscene:new("bee_boss_enter", {
@@ -416,5 +421,23 @@ cutscenes.bee_boss_enter = Cutscene:new("bee_boss_enter", {
         end
     }),
 })
+
+
+
+cutscenes.arum_titan_enter = Cutscene:new("arum_titan_enter", {
+    CutsceneScene:new({
+        duration = 1.9,
+    }),
+    CutsceneScene:new({
+        duration = 1.5,
+        enter = function(scene)
+            if not Options:get("skip_boss_intros") then
+                game.menu_manager:set_menu("w4_boss_intro")
+            end
+        end,
+    }),
+})
+
+
 
 return cutscenes

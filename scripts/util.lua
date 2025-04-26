@@ -792,7 +792,7 @@ function random_range(a, b)
 	return love.math.random() * (b - a) + a
 end
 
---- Returns a random element of the given table.
+--- Returns a random subset of the given table.
 ---@param t table
 function random_sample(t)
 	return t[love.math.random(1, #t)]

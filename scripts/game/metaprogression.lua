@@ -22,7 +22,6 @@ function MetaprogressionManager:init()
             "UpgradeBoba",
             "UpgradeSoda",
             "UpgradeAppleJuice",
-            "UpgradeEnergyDrink",
 
             "UpgradeFizzyLemonade",
             "UpgradeHotSauce",
