@@ -37,6 +37,7 @@ function MetaprogressionManager:init()
 
     local t = skin_name_to_id
     self.levels = {
+        { threshold = 5000, rewards = { { type = "upgrade", upgrade = "UpgradeEnergyDrink" } } },
         { threshold = 5000, rewards = { { type = "skin", skin = t.nel } } },
         { threshold = 5000, rewards = { { type = "skin", skin = t.rico } } },
         { threshold = 5000, rewards = { { type = "skin", skin = t.dodu } } },
