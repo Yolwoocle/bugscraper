@@ -1142,14 +1142,11 @@ local waves = {
 	}),
 
 	new_wave({
-		min = 6,
-		max = 6,
+		min = 1,
+		max = 1,
 
 		enemies = {
-			{ E.Beelet, 1 },
-		},
-		fixed_enemies = {
-			{ E.HoneycombFootball, 1 },
+			{ E.ArumTitanBoss, 1, position = {CANVAS_WIDTH/2 - 16, CANVAS_HEIGHT/2}},
 		},
 	}),
 	

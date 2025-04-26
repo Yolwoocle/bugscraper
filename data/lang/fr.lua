@@ -129,6 +129,10 @@ return {
             title = "Jus de grenadine",
             description = "Créer une explosion en cas de dégâts",
         },
+        energy_drink = {
+            title = "Boisson énergisante", -- ADDED
+            description = "La barre de combo décroit plus lentement", -- ADDED
+        },
     },
     input = {
         prompts = {

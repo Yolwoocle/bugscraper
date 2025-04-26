@@ -1,14 +1,14 @@
 require "scripts.util"
-local Class = require "scripts.meta.class"
-local DebugCommand = require "scripts.debug.debug_command"
-local enemies = require "data.enemies"
-local utf8 = require 'utf8'
-local cutscenes = require 'data.cutscenes'
-local upgrades  = require 'data.upgrades'
-local skins = require "data.skins"
+local Class           = require "scripts.meta.class"
+local DebugCommand    = require "scripts.debug.debug_command"
+local enemies         = require "data.enemies"
+local utf8            = require 'utf8'
+local cutscenes       = require 'data.cutscenes'
+local upgrades        = require 'data.upgrades'
+local skins           = require "data.skins"
 local skin_name_to_id = require "data.skin_name_to_id"
 
-local a, b = require "scripts.test"
+local a, b            = require "scripts.test"
 print_debug("a, b", a, b)
 
 local DebugCommandManager = Class:inherit()
@@ -36,6 +36,24 @@ function DebugCommandManager:init()
     end
 
     table.sort(enemies_keys)
+
+    self.commands["listupgrades"] = DebugCommand:new {
+        name = "listupgrades",
+        description = "Lists all upgrades",
+        args = { },
+        run = function(name, x, y)
+            local upgrade_keys = {}
+            for _, upgrade_name in pairs(Metaprogression:get("upgrades")) do
+                table.insert(upgrade_keys, upgrades[upgrade_name]:new().name)
+            end
+            table.sort(upgrade_keys)
+
+            for _, k in pairs(upgrade_keys) do
+                self:add_message(concat(" - ", k))
+            end
+            return true
+        end,
+    }
     self.commands["upgrade"] = DebugCommand:new {
         name = "upgrade",
         description = "Applies an upgrade",
@@ -43,14 +61,14 @@ function DebugCommandManager:init()
             { "name:string", values = upgrades_keys },
         },
         run = function(name, x, y)
-            local upgrade_class = upgrades["Upgrade"..tostring(name)]
+            local upgrade_class = upgrades["Upgrade" .. tostring(name)]
             if not upgrade_class then
                 return false, "Upgrade '" .. name .. "' not found"
             end
 
             local upgrade = upgrade_class:new()
             game:apply_upgrade(upgrade)
-            self:add_message("Applied upgrade '"..name.."'")
+            self:add_message("Applied upgrade '" .. name .. "'")
 
             return true
         end,
@@ -71,7 +89,7 @@ function DebugCommandManager:init()
 
             local enemy = enemy_class:new(x, y)
             game:new_actor(enemy)
-            self:add_message("Spawned '"..name.."'")
+            self:add_message("Spawned '" .. name .. "'")
 
             return true
         end,
@@ -89,7 +107,7 @@ function DebugCommandManager:init()
             end
 
             game:play_cutscene(cutscene)
-            self:add_message("Played cutscene '"..name.."'")
+            self:add_message("Played cutscene '" .. name .. "'")
 
             return true
         end,
@@ -103,9 +121,9 @@ function DebugCommandManager:init()
         run = function(player_n)
             local player = game.players[player_n]
             if not player then
-                return false, "Player "..tostring(player_n).." doesn't exist"
-            end 
-            
+                return false, "Player " .. tostring(player_n) .. " doesn't exist"
+            end
+
             player:kill()
             return true
         end,
@@ -176,7 +194,7 @@ function DebugCommandManager:init()
             if not success then
                 return false, err
             end
-            
+
             game.menu_manager:set_menu(name)
             self:add_message(concat("Set menu to '", name, "'"))
             return true
@@ -227,7 +245,7 @@ function DebugCommandManager:init()
             table.sort(upgrades_copy)
             local i = 0
             for name, upgrade in pairs(upgrades_copy) do
-                local a = enemies.UpgradeDisplay:new(128 + i*42, 300)
+                local a = enemies.UpgradeDisplay:new(128 + i * 42, 300)
                 game:new_actor(a)
                 a:assign_upgrade(upgrade:new())
                 i = i + 1

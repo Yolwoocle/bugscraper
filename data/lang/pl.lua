@@ -123,6 +123,10 @@ return {
             title = "Hot Chocolate",
             description = "x%d reloading speed",
         },
+        energy_drink = {
+            title = "Energy Drink", -- ADDED
+            description = "Combo meter decreases more slowly", -- ADDED
+        },
     },
     input = {
         prompts = {

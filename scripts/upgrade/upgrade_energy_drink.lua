@@ -20,8 +20,8 @@ end
 
 function UpgradeEnergyDrink:apply_permanent(player)
     -- player:add_fury_max(self.strength_fury_max)
-    player:multiply_fury_speed(self.strength_fury_speed)
-    player.has_energy_drink = true
+    game.level:multiply_fury_speed(self.strength_fury_speed)
+    game.level.has_energy_drink = true
 end
 
 function UpgradeEnergyDrink:on_finish(player)

@@ -117,6 +117,10 @@ return {
 			title = "Chocolate caliente",
 			description = "x%d Velocidad de recarga",
 		},
+		energy_drink = {
+            title = "Energy Drink", -- ADDED
+            description = "Combo meter decreases more slowly", -- ADDED
+        },
 	},
 	input = {
 		prompts = {

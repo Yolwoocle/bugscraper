@@ -15,6 +15,8 @@ local Boomshroom = require "scripts.actor.enemies.boomshroom"
 local Bee = require "scripts.actor.enemies.bee"
 local Beelet = require "scripts.actor.enemies.beelet"
 local Grasshopper = require "scripts.actor.enemies.grasshopper"
+local Explosion = require "scripts.actor.enemies.explosion"
+local Timer = require "scripts.timer"
 
 local ArumTitanMinion = Enemy:inherit()
 
@@ -47,6 +49,11 @@ function ArumTitanMinion:init(x, y, parent, params)
 
     self.flip_mode = ENEMY_FLIP_MODE_MANUAL
 
+    self.is_killed_on_negative_life = false
+    self.is_killed_on_stomp = false
+    self.do_stomp_animation = false
+    self.counts_as_enemy = true
+
     self.spr = AnimatedSprite:new({
         normal = { { images.arum_titan_minion }, 0.1 },
         spiked = { { images.arum_titan_minion_spiked }, 0.1 },
@@ -74,10 +81,74 @@ function ArumTitanMinion:init(x, y, parent, params)
 
     self.t = 0
     self:set_harmless(2.0)
+
+    self.state_machine = StateMachine:new({
+        rotate = {
+            update = function(state, dt)
+                self:rotate_around_parent(dt)
+            end
+        },
+
+        exploding = {
+            enter = function(state)
+                self.is_immune_to_bullets = true
+                self.is_stompable = false
+                self.destroy_bullet_on_impact = false
+                self.counts_as_enemy = false -- FIXME: check if this affects the "kills" stat
+                self.speed = 0
+                self.speed_x = 0
+                self.speed_y = 0
+                self.damage = 0
+
+                self.exploding_timer = Timer:new(2.0)
+                self.flash_timer = Timer:new(0.5)
+                self.exploding_timer:start()
+                self.flash_timer:start(0.5)
+
+                Audio:play("stomp2")
+            end,
+            update = function(state, dt)
+                self:rotate_around_parent(dt)
+
+                if self.flash_timer:update(dt) then
+                    self.flash_white = not self.flash_white
+                    if self.flash_white then
+                        local d = math.max(0.05, self.flash_timer:get_duration() * 0.3)
+                        self.flash_timer:set_duration(d)
+                    end
+                    self.flash_timer:start()
+                end
+
+                if self.exploding_timer:update(dt) then                    
+                    local explosion = Explosion:new(self.mid_x, self.mid_y, {radius = self.explosion_radius})
+                    game:new_actor(explosion)
+                    self:kill()
+                end
+
+                local time = self.exploding_timer:get_time()
+                local duration = self.exploding_timer:get_duration()
+                if time <= duration * 0.5 then
+                    local s = 1 + (1 - time/(duration*0.5)) * 0.5
+                    self:set_sprite_scale(s)
+                else
+                    self:set_sprite_scale(1)
+                end
+            end
+        }
+    }, "rotate")
+end
+
+function ArumTitanMinion:rotate_around_parent(dt)
+    self.rotate_angle = self.rotate_angle + dt * self.rotate_speed
+    local x = self.parent.mid_x - self.w / 2 + math.cos(self.rotate_angle) * self.rotate_distance
+    local y = self.parent.mid_y - self.h / 2 + math.sin(self.rotate_angle) * self.rotate_distance
+    self:set_position(x, y)
 end
 
 function ArumTitanMinion:update(dt)
     ArumTitanMinion.super.update(self, dt)
+
+    self.state_machine:update(dt)
 
     self.t = self.t + dt
     if self.harmless_timer > 0 and self.t % 0.2 <= 0.1 then
@@ -85,26 +156,25 @@ function ArumTitanMinion:update(dt)
     else
         self.spr:set_color({ 1, 1, 1, 1 })
     end
-
-    self.rotate_angle = self.rotate_angle + dt * self.rotate_speed
-    local x = self.parent.mid_x - self.w / 2 + math.cos(self.rotate_angle) * self.rotate_distance
-    local y = self.parent.mid_y - self.h / 2 + math.sin(self.rotate_angle) * self.rotate_distance
-    self:set_position(x, y)
 end
 
-function ArumTitanMinion:spawn_minions()
+function ArumTitanMinion:on_negative_life()
+    self.state_machine:set_state("exploding")
+
+    -- local e = random_weighted(self.enemy_spawn_probabilities)
+
+    -- if e then
+    --     local actor = create_actor_centered(e, self.mid_x, self.mid_y)
+    --     game:new_actor(actor)
+    -- end
 end
 
-function ArumTitanMinion:on_death()
-    local e = random_weighted(self.enemy_spawn_probabilities)
-
-    if e then
-        local actor = create_actor_centered(e, self.mid_x, self.mid_y)
-        game:new_actor(actor)
-    end
+function ArumTitanMinion:on_stomped()
+    self.state_machine:set_state("exploding")
 end
 
 function ArumTitanMinion:draw()
+    line_color({1, 1, 1, 0.5}, self.mid_x, self.mid_y, self.parent.mid_x, self.parent.mid_y)
     ArumTitanMinion.super.draw(self)
 
     -- rect_color(COL_RED, "line", self.x, self.y, self.w, self.h)

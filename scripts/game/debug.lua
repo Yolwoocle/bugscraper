@@ -631,6 +631,11 @@ function Debug:draw_info_view()
         skininfo = skininfo .. concat(skin_id, "(", (skins[skin_id] or {}).text_key, "), ")
     end
 
+    local upgradeinfo = ""
+    for _, upgrade_name in pairs(Metaprogression:get("upgrades")) do
+        upgradeinfo = upgradeinfo .. concat(upgrades[upgrade_name]:new().name, ", ")
+    end
+
     -- Print debug info
     local txt_h = get_text_height(" ")
     local txts = {
@@ -644,7 +649,6 @@ function Debug:draw_info_view()
         concat("Renderer info: ", renderer_name, " (v", renderer_version, ")"),
         concat("Renderer vendor: ", renderer_vendor, ", device ", renderer_device),
         concat("game state: ", game.game_state),
-        concat("memory used ", collectgarbage("count")),
         concat("nb of active audio sources: ", love.audio.getActiveSourceCount()),
         concat("nb of actors: ", #self.game.actors, " / ", self.game.actor_limit, " | nb of enemies: ", self.game:get_enemy_count()),
         concat("nb collision items: ", Collision.world:countItems()),
@@ -671,6 +675,7 @@ function Debug:draw_info_view()
         ),
         concat("score: ", game.score) .. " / ".. concat("xp: ", Metaprogression:get_xp()) .. " / " .. concat("xp_level: ", Metaprogression:get_xp_level()),
         concat("unlocked_skins: ", skininfo),
+        concat("unlocked_upgrades: ", upgradeinfo),
         "",
     }
 
@@ -688,7 +693,6 @@ function Debug:draw_info_view()
             tab[time.layer][time.i] = time
         end
 
-        rect_color(COL_BLACK_BLUE, "fill", CANVAS_WIDTH-64, CANVAS_HEIGHT-16, 64, 16)
         local total_w = 300
         local x = 0
         local y = 0

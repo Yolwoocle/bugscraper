@@ -1,5 +1,6 @@
 # Bugscraper changelog
 ## 0.7
+- **Added**: Energy Drink upgrade: combo meter decreases more slowly
 - **Added**: Golden beetles (temporary name), will fly around and explode after you stomp them
 - **Added**: Rollopods, will walk around on the floor and charge at you when you enter their view
 - **Added**: Cloud Mother (temporary name), is an enemy with a bunch of smaller enemies following it. If you kill the mother, all the children will panic and perish too 

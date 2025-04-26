@@ -131,6 +131,10 @@ return {
             title = "Pomegranate Juice",
             description = "Create an explosion when taking damage",
         },
+        energy_drink = {
+            title = "Energy Drink", -- ADDED
+            description = "Combo meter decreases more slowly", -- ADDED
+        },
     },
     input = {
         prompts = {

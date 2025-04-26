@@ -8,7 +8,7 @@ local MetaprogressionManager = Class:inherit()
 
 function MetaprogressionManager:init()
     self.default_data = {
-        ["$version"] = 2, 
+        ["$version"] = METAPROGRESSION_FILE_FORMAT_VERSION, 
 
         total_xp = 0,
         xp = 0,
@@ -22,6 +22,7 @@ function MetaprogressionManager:init()
             "UpgradeBoba",
             "UpgradeSoda",
             "UpgradeAppleJuice",
+            "UpgradeEnergyDrink",
 
             "UpgradeFizzyLemonade",
             "UpgradeHotSauce",

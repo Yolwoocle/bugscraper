@@ -123,6 +123,7 @@ function Level:init(game, backroom)
 	self.fury_speed = 0.9
 
 	self.fury_combo = 0
+	self.has_energy_drink = false
 end
 
 function Level:ready()
