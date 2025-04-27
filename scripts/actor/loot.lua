@@ -232,6 +232,7 @@ end
 Loot.Life = Loot:inherit()
 
 function Loot.Life:init(x, y, val, vx, vy)
+	val = val or 1
 	self:init_loot(images.loot_life, x, y, 2, 2, val, vx, vy)
 	self.loot_type = "life"
 	self.value = val

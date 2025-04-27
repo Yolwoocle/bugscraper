@@ -49,10 +49,10 @@ function ArumTitanMinion:init(x, y, parent, params)
 
     self.flip_mode = ENEMY_FLIP_MODE_MANUAL
 
-    self.is_killed_on_negative_life = false
-    self.is_killed_on_stomp = false
-    self.do_stomp_animation = false
-    self.counts_as_enemy = true
+    -- self.is_killed_on_negative_life = false
+    -- self.is_killed_on_stomp = false
+    -- self.do_stomp_animation = false
+    -- self.counts_as_enemy = true
 
     self.spr = AnimatedSprite:new({
         normal = { { images.arum_titan_minion }, 0.1 },
@@ -159,18 +159,18 @@ function ArumTitanMinion:update(dt)
 end
 
 function ArumTitanMinion:on_negative_life()
-    self.state_machine:set_state("exploding")
+    -- self.state_machine:set_state("exploding")
 
-    -- local e = random_weighted(self.enemy_spawn_probabilities)
+    local e = random_weighted(self.enemy_spawn_probabilities)
 
-    -- if e then
-    --     local actor = create_actor_centered(e, self.mid_x, self.mid_y)
-    --     game:new_actor(actor)
-    -- end
+    if e then
+        local actor = create_actor_centered(e, self.mid_x, self.mid_y)
+        game:new_actor(actor)
+    end
 end
 
 function ArumTitanMinion:on_stomped()
-    self.state_machine:set_state("exploding")
+    -- self.state_machine:set_state("exploding")
 end
 
 function ArumTitanMinion:draw()

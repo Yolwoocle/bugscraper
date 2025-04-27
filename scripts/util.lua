@@ -792,7 +792,7 @@ function random_range(a, b)
 	return love.math.random() * (b - a) + a
 end
 
---- Returns a random subset of the given table.
+--- Returns a random element of the given table.
 ---@param t table
 function random_sample(t)
 	return t[love.math.random(1, #t)]
@@ -823,7 +823,7 @@ end
 --- @param li table A list of tables where each table contains two elements: the value and its weight (e.g., {{value1, weight1}, {value2, weight2}, ...}).
 --- @param rng? userdata (optional) A random number generator object. If not provided, the default random number generator is used.
 ---
---- @return any, table, number value The randomly selected value, the selected table, and the index of the selected element in the original list.
+--- @return any, table, number `value, table, index` The randomly selected value, the selected table, and the index of the selected element in the original list.
 ---
 --- @raise If the random selection is out of range, an assertion error is raised.
 ---
@@ -854,8 +854,7 @@ function random_weighted(li, rng)
 		end
 		rnd = rnd - li[i][2]
 	end
-	assert(
-	"Random_weighted out of range. This is NOT supposed to happen: something has definitely gone wrong and your code sucks!")
+	error("random_weighted out of range. This is NOT supposed to happen: something has definitely gone wrong and your code sucks!")
 end
 
 function random_polar(rad)

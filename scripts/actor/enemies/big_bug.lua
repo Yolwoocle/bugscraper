@@ -6,7 +6,7 @@ local images = require "data.images"
 local BigBug = Woodlouse:inherit()
 
 function BigBug:init(x, y, spr, w, h)
-    self:init_woodlouse(x,y, spr or images.big_bug_1, w or 42, h or 48)
+    BigBug.super.init(self, x,y, spr or images.big_bug_1, w or 42, h or 48)
     self.name = "big_bug"
     self.follow_player = false
     
@@ -25,7 +25,7 @@ function BigBug:init(x, y, spr, w, h)
 end
 
 function BigBug:update(dt)
-    self:update_woodlouse(dt)
+    BigBug.super.update(self, dt)
 
     self.debug_values[1] = self.stomps
 end

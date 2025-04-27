@@ -197,6 +197,7 @@ local img_names = {
 	timed_spikes_base =        "actors/enemies/timed_spikes_base",
 	timed_spikes_spikes =      "actors/enemies/timed_spikes_spikes",
 	timed_spikes_spikes_stem = "actors/enemies/timed_spikes_spikes_stem",
+	walking_slot_machine =     "actors/enemies/walking_slot_machine",
 	woodlouse_1 =              "actors/enemies/woodlouse_1",
 	woodlouse_2 =              "actors/enemies/woodlouse_2",
 	rollopod =                 "actors/enemies/rollopod",

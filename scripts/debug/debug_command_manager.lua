@@ -105,18 +105,21 @@ function DebugCommandManager:init()
         description = "Spawns an enemy",
         args = {
             { "name:string", values = enemies_keys },
+            { "amount:number", default = 1 },
             { "x:number",    default = CANVAS_WIDTH / 2 },
-            { "y:number",    default = CANVAS_HEIGHT / 2 }
+            { "y:number",    default = CANVAS_HEIGHT / 2 },
         },
-        run = function(name, x, y)
+        run = function(name, amount, x, y)
             local enemy_class = enemies[name]
             if not enemy_class then
                 return false, "Enemy '" .. name .. "' not found"
             end
 
-            local enemy = enemy_class:new(x, y)
-            game:new_actor(enemy)
-            self:add_message("Spawned '" .. name .. "'")
+            for i = 1, amount do
+                local enemy = enemy_class:new(x, y)
+                game:new_actor(enemy)
+                self:add_message("Spawned '" .. name .. "'")
+            end
 
             return true
         end,

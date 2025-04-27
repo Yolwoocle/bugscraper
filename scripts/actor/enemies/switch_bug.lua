@@ -46,7 +46,7 @@ function SwitchBug:init(x, y, index, siblings, spawner)
     self.state_machine = StateMachine:new({
         on = {
             enter = function(state)
-                self.spr:set_image(images.stink_bug_1)
+                self.spr:set_image(images.fly)
                 
                 self.is_stompable = true
                 

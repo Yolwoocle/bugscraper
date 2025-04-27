@@ -425,21 +425,27 @@ function Enemy:ajust_loot_probabilities()
 	end
 end
 
---- Drops the loot from the enemy
-function Enemy:drop_loot()
-	local loot, parms = random_weighted(self.loot)
+--- Drops random loot from the enemy
+function Enemy:drop_random_loot()
+	local loot, params = random_weighted(self.loot)
 	if not loot then
 		return		
 	end
-	
+	self:drop_loot(loot, params)
+end
+
+--- Drops the given loot, with the given parameters (format: look at self.loot) from the enemy
+function Enemy:drop_loot(loot, params)
+	params = params or {}
+
 	local instance
 	local vx = random_neighbor(300)
 	local vy = random_range(-200, -500)
-	local loot_type = parms.loot_type
-	if loot_type == "ammo" or loot_type == "life" then
-		instance = loot:new(self.mid_x, self.mid_y, parms.value, vx, vy)
-	elseif loot_type == "gun" then
+	local loot_type = params.loot_type
+	if loot_type == "gun" then
 		instance = game:new_gun_display(self.mid_x, self.mid_y)
+	elseif loot_type == "ammo" or loot_type == "life" then
+		instance = loot:new(self.mid_x, self.mid_y, params.value, vx, vy)
 	end 
 
 	game:new_actor(instance)

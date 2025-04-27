@@ -351,7 +351,7 @@ end
 function Actor:apply_force_from(q, source, ox, oy)
 	ox, oy = ox or 0, oy or 0
 	--if not source then    return    end
-	local knockback_x, knockback_y = normalize_vect(source.x - self.x + ox, source.y - self.y + oy)
+	local knockback_x, knockback_y = normalize_vect(source.x - self.mid_x + ox, source.mid_y - self.mid_y + oy)
 	self:apply_force(q, -knockback_x, -knockback_y)
 end
 

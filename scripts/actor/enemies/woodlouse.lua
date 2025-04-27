@@ -6,11 +6,7 @@ local images = require "data.images"
 local Woodlouse = Enemy:inherit()
 
 function Woodlouse:init(x, y, spr, w, h)
-    self:init_woodlouse(x, y, spr, w, h)
-end
-
-function Woodlouse:init_woodlouse(x, y, spr, w, h)
-    self:init_enemy(x,y, spr or images.woodlouse_1, w or 20, h or 14)
+    Woodlouse.super.init(self, x,y, spr or images.woodlouse_1, w or 20, h or 14)
     self.name = "woodlouse"
     self.follow_player = false
     
@@ -33,20 +29,13 @@ function Woodlouse:init_woodlouse(x, y, spr, w, h)
 end
 
 function Woodlouse:update(dt)
-    self:update_woodlouse(dt)
-end
-
-function Woodlouse:update_woodlouse(dt)
-    self:update_enemy(dt)
+    Woodlouse.super.update(self, dt)
 
     self.vx = self.speed * self.walk_dir_x
 end
 
 function Woodlouse:draw()
-    self:draw_woodlouse()
-end
-function Woodlouse:draw_woodlouse()
-    self:draw_enemy()
+    Woodlouse.super.draw(self)
 end
 
 function Woodlouse:after_collision(col, other)
