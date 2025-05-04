@@ -15,8 +15,6 @@ tan = math.tan
 atan2 = math.atan2
 sqrt = math.sqrt
 
-gfx = love.graphics
-
 pi = math.pi
 pi2 = 2 * math.pi
 inf = math.huge
