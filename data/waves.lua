@@ -1059,13 +1059,13 @@ local waves = {
 			{ E.CloudEnemy, 20 },
 		},
 		
-		fixed_enemies = {
-			{ 
-				E.Pendulum, 1, 
-				args = {pi/3, 200, 1}, 
-				position = {CANVAS_WIDTH/2, 3*16} 
-			},
-		},
+		-- fixed_enemies = {
+		-- 	{ 
+		-- 		E.Pendulum, 1, 
+		-- 		args = {pi/3, 200, 1}, 
+		-- 		position = {CANVAS_WIDTH/2, 3*16} 
+		-- 	},
+		-- },
 
 		music = "w4",
 	}),
@@ -1168,7 +1168,7 @@ local waves = {
 		max = 4,
 
 		enemies = {
-			{ E.CloudEnemy, 20 },
+			{ E.GoldenBeetle, 20 },
 		},
 
 		elevator_layers = {
@@ -1193,11 +1193,35 @@ local waves = {
 
 
 	new_wave({
-		min = 3,
-		max = 3,
+		min = 4,
+		max = 5,
+
+		enemies = {
+			{ E.GoldenBeetle, 20 },
+			{ E.Rollopod, 20 },
+		},
+	}),
+
+	new_wave({
+		min = 6,
+		max = 6,
 
 		enemies = {
 			{ E.CloudEnemy, 10 },
+			{ E.GoldenBeetle, 10 },
+			{ E.Rollopod, 10 },
+		},
+	}),
+
+	new_wave({
+		min = 3,
+		max = 4,
+
+		enemies = {
+			{ E.GoldenBeetle, 2 },
+		},
+		fixed_enemies = {
+			{ E.WalkingSlotMachine, 2 },
 		},
 	}),
 
@@ -1207,6 +1231,25 @@ local waves = {
 
 		enemies = {
 			{ E.CloudEnemy, 10 },
+			{ E.Rollopod, 10 },
+		},
+
+		fixed_enemies = {
+			{ 
+				E.Pendulum, 1, 
+				args = {pi/3, 200, 1}, 
+				position = {CANVAS_WIDTH/2, 3*16} 
+			},
+		},
+	}),
+
+	new_wave({
+		min = 5,
+		max = 5,
+
+		enemies = {
+			{ E.StinkBug, 10 },
+			{ E.GoldenBeetle, 10 },
 		},
 	}),
 
@@ -1216,33 +1259,10 @@ local waves = {
 
 		enemies = {
 			{ E.CloudEnemy, 10 },
+			{ E.StinkBug, 10 },
 		},
-	}),
-
-	new_wave({
-		min = 3,
-		max = 3,
-
-		enemies = {
-			{ E.CloudEnemy, 10 },
-		},
-	}),
-
-	new_wave({
-		min = 3,
-		max = 3,
-
-		enemies = {
-			{ E.CloudEnemy, 10 },
-		},
-	}),
-
-	new_wave({
-		min = 3,
-		max = 3,
-
-		enemies = {
-			{ E.CloudEnemy, 10 },
+		fixed_enemies = {
+			{ E.Shooter, 2 },
 		},
 	}),
 
