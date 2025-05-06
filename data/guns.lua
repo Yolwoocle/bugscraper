@@ -548,7 +548,7 @@ function Guns:init()
 		self.random_angle_offset = 0
 		self.damage = 1
 		self.is_auto = true
-		self.spr = images.shovel_bee
+		self.spr = images.stabee
 		self.sfx = {"gunshot_ring_1", "gunshot_ring_2", "gunshot_ring_3"}
 		self.sfx2 = "pop_ring"
 		self.sfx_volume = 1

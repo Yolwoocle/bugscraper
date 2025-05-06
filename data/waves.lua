@@ -378,7 +378,7 @@ local waves = {
 		enemies = {
 			{ E.Larva,     2 },
 			{ E.Bee,       2 },
-			{ E.ShovelBee, 4 },
+			{ E.Stabee, 4 },
 		},
 	}),
 
@@ -430,7 +430,7 @@ local waves = {
 		enemies = {
 			{ E.Bee,         3 },
 			{ E.HoneypotAnt, 4 },
-			{ E.ShovelBee,   3 },
+			{ E.Stabee,   3 },
 		},
 		fixed_enemies = {
 			{ E.FlyingSpawner, 1 },
@@ -445,7 +445,7 @@ local waves = {
 			{ E.SnailShelled, 1 },
 			{ E.Bee,          3 },
 			{ E.HoneypotAnt,  1 },
-			{ E.ShovelBee,    2 },
+			{ E.Stabee,    2 },
 			{ E.Larva,        2 },
 		},
 	}),
@@ -525,7 +525,7 @@ local waves = {
 
 		enemies = {
 			{ E.Bee,        20 },
-			{ E.ShovelBee,  10 },
+			{ E.Stabee,  10 },
 			{ E.Boomshroom, 20 },
 			{ E.DrillBee,   30 },
 		},
@@ -552,7 +552,7 @@ local waves = {
 
 		enemies = {
 			{ E.Bee,       3 },
-			{ E.ShovelBee, 3 },
+			{ E.Stabee, 3 },
 			{ E.DrillBee,  3 },
 		},
 	}),
@@ -565,7 +565,7 @@ local waves = {
 		enemies = {
 			{ E.Larva,       3 },
 			{ E.Bee,         3 },
-			{ E.ShovelBee,   3 },
+			{ E.Stabee,   3 },
 			{ E.DrillBee,    3 },
 			{ E.HoneypotAnt, 3 },
 			{ E.Boomshroom,  3 },
@@ -979,7 +979,7 @@ local waves = {
 		max = 3,
 
 		enemies = {
-			{ E.Shooter, 1 },
+			{ E.Rollopod, 1 },
 		},
 		fixed_enemies = {
 			{ E.CloudEnemy, 2 },
@@ -1012,7 +1012,7 @@ local waves = {
 		enemies = {
 			{ E.MushroomAnt, 2 },
 			{ E.Mole,        2 },
-			{ E.Shooter,     1 },
+			{ E.Rollopod,     1 },
 		},
 	}),
 
@@ -1021,7 +1021,7 @@ local waves = {
 		max = 6,
 
 		enemies = {
-			{ E.Shooter, 1 },
+			{ E.Rollopod, 1 },
 			{ E.Mole,    2 },
 		},
 	}),
@@ -1032,7 +1032,7 @@ local waves = {
 
 		enemies = {
 			{ E.CloudStorm,  2 },
-			{ E.Shooter,     1 },
+			{ E.Rollopod,     1 },
 			{ E.MushroomAnt, 2 },
 		},
 	}),
@@ -1076,7 +1076,7 @@ local waves = {
 		max = 5,
 
 		enemies = {
-			{ E.Shooter, 40 },
+			{ E.Rollopod, 40 },
 		},
 	}),
 
@@ -1087,7 +1087,7 @@ local waves = {
 		enemies = {
 			{ E.CloudEnemy, 20 },
 			{ E.CloudStorm, 40 },
-			{ E.Shooter,    40 },
+			{ E.Rollopod,    40 },
 		},
 	}),
 
@@ -1118,7 +1118,7 @@ local waves = {
 
 		enemies = {
 			{ E.Bee,       2 },
-			{ E.ShovelBee, 2 },
+			{ E.Stabee, 2 },
 		},
 	}),
 

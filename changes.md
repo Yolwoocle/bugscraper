@@ -4,11 +4,12 @@
 - **Added**: Golden beetles (temporary name), will fly around and explode after you stomp them
 - **Added**: Rollopods, will walk around on the floor and charge at you when you enter their view
 - **Added**: Cloud Mother (temporary name), is an enemy with a bunch of smaller enemies following it. If you kill the mother, all the children will panic and perish too 
-- **Change**: Added a cooldown for cloud storm enemy (temporary name)
+- **Change**: Espresso now lasts for 20 floors (prev. 10)
+- **Change**: Beelets from dept. 2 no longer appear spiky when angered
+- **Change**: Reskinned and polished the Stabee enemy, from dept. 2
 - **Change**: Background fan in dept. 2 now spins 
 - **Change**: Polished up dept. 3 cabin background
-- **Change**: Espresso now lasts for 20 floors (prev. 10)
-- **Change**: Beelets no longer appear spiky when angered
+- **Change**: Added a cooldown for cloud storm enemy (temporary name)
 - **Fix**: Partial fix to issue where some enemies like boomshrooms, stink bugs' clouds, larvae spawned from projectiles, would clip into the ground and teleport. This might still happen, just hopefully to a lesser degree.
 - **Fix**: Fixed visual bugs related to TV presentation
 

@@ -196,6 +196,12 @@ function ElectricArc:draw()
     ElectricArc.super.draw(self)
 
     self.lightning:draw()
+
+    if game.debug.colview_mode then
+        rect_color(COL_GREEN, "line", self.segment.ax - self.hitbox_expand, self.segment.ay - self.hitbox_expand, self.hitbox_expand*2, self.hitbox_expand*2)
+        rect_color(COL_GREEN, "line", self.segment.bx - self.hitbox_expand, self.segment.by - self.hitbox_expand, self.hitbox_expand*2, self.hitbox_expand*2)
+        
+    end
 end
 
 return ElectricArc

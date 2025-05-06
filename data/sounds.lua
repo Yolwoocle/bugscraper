@@ -40,10 +40,10 @@ local sfxnames = {
 	menu_pause =      "menu_pause.ogg",
 	menu_unpause =    "menu_unpause.ogg",
 
-	shovel_bee_land_1 = "actor/enemy/shovel_bee_land_1.ogg",
-	shovel_bee_land_2 = "actor/enemy/shovel_bee_land_2.ogg",
-	shovel_bee_land_3 = "actor/enemy/shovel_bee_land_3.ogg",
-	shovel_bee_attack = "actor/enemy/shovel_bee_attack.ogg",
+	stabee_land_1 = "actor/enemy/stabee_land_1.ogg",
+	stabee_land_2 = "actor/enemy/stabee_land_2.ogg",
+	stabee_land_3 = "actor/enemy/stabee_land_3.ogg",
+	stabee_attack = "actor/enemy/stabee_attack.ogg",
 
 	beelet_inflate_1 = "actor/enemy/beelet_inflate_1.ogg",
 	beelet_inflate_2 = "actor/enemy/beelet_inflate_2.ogg",

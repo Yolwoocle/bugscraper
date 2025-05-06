@@ -847,7 +847,9 @@ function ParticleSystem:smoke(x, y, number, col, spw_rad, size, sizevar, __UNUSE
 	end
 end
 
-function ParticleSystem:dust(x, y, col, size, rnd_pos, sizevar)
+function ParticleSystem:dust(x, y, col, size, rnd_pos, sizevar, params)
+	params = params or {}
+
 	rnd_pos = param(rnd_pos, 3)
 	size = param(size, 4)
 	sizevar = param(sizevar, 2)
@@ -857,7 +859,11 @@ function ParticleSystem:dust(x, y, col, size, rnd_pos, sizevar)
 
 	local v = random_range(0.6, 1)
 	local col = col or {v,v,v,1}
-	self:add_particle(CircleParticle:new(x+dx, y+dy, size+dsize, col, 0, 0, _vr, _life))
+
+	local vx = random_range(params.vx1 or 0, params.vx2 or 0)
+	local vy = random_range(params.vy1 or 0, params.vy2 or 0)
+	-- x,y,s,palette, vx,vy,vs, life, g, fill_mode, params
+	self:add_particle(CircleParticle:new(x+dx, y+dy, size+dsize, col, vx, vy, _vr, _life))
 end
 
 
@@ -1030,7 +1036,7 @@ function ParticleSystem:static_image(img, x, y, rot, life, scale, params)
 end
 
 -- scottttcccchhhh
-function ParticleSystem:floating_image(img, x, y, amount, rot, life, scale, vel, friction)
+function ParticleSystem:floating_image(img, x, y, amount, rot, life, scale, vel, friction, params)
 	Particles:image(x, y, amount, img, 0, nil, 0, 0, {
 		is_solid = false,
 		rot = rot,

@@ -19,7 +19,7 @@ local enemies = {
 	-- W2
 	Bee =                require "scripts.actor.enemies.bee",
 	Beelet =             require "scripts.actor.enemies.beelet", 
-	ShovelBee =          require "scripts.actor.enemies.shovel_bee", 
+	Stabee =             require "scripts.actor.enemies.stabee", 
 	DrillBee =           require "scripts.actor.enemies.drill_bee", 
 	HoneycombFootball =  require "scripts.actor.enemies.honeycomb_football", 
 	HoneypotAnt =        require "scripts.actor.enemies.honeypot_ant",

@@ -409,6 +409,7 @@ end
 function Actor:set_position(x, y)
 	self.x = x or self.x
 	self.y = y or self.y
+	self:update_mid_position()
 
 	Collision:update(self, self.x, self.y)
 end

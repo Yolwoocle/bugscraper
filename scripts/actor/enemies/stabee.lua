@@ -2,14 +2,18 @@ require "scripts.util"
 local Fly = require "scripts.actor.enemies.fly"
 local Timer = require "scripts.timer"
 local StateMachine = require "scripts.state_machine"
+local AnimatedSprite = require "scripts.graphics.animated_sprite"
 local sounds = require "data.sounds"
 local images = require "data.images"
 
-local ShovelBee = Fly:inherit()
+local Stabee = Fly:inherit()
 	
-function ShovelBee:init(x, y, spr)
-    ShovelBee.super.init(self, x,y, spr or images.shovel_bee, 10, 16, false)
-    self.name = "shovel_bee"
+function Stabee:init(x, y, spr)
+    Stabee.super.init(self, x,y, spr or images.stabee, 10, 14, false)
+    self.normal_h = self.h
+    self.stuck_h = 7
+
+    self.name = "stabee"
     self.is_flying = true
     self.life = 10
     
@@ -36,9 +40,10 @@ function ShovelBee:init(x, y, spr)
     -- self.stuck_timer = Timer:new(5.0)
     self.stuck_timer = Timer:new(1.0)
     
-    self.img_normal = images.shovel_bee
-    self.img_stuck = images.shovel_bee_buried
-    self.spr:set_anchor(SPRITE_ANCHOR_CENTER_CENTER)
+    self.spr = AnimatedSprite:new({
+        fly = {images.stabee, 0.04, 2},
+        stuck = {images.stabee, 0.1, 2},
+    }, "fly", SPRITE_ANCHOR_CENTER_CENTER)
 
     self.stuck_spr_oy = 8
     -- self.anim_frame_len = 0.05
@@ -49,7 +54,7 @@ function ShovelBee:init(x, y, spr)
     self.state_machine = StateMachine:new({
         flying = {
             enter = function(state)
-                self.spr:set_image(self.img_normal)
+                self.spr:set_animation("fly")
                 self.spr:update_offset(0, 0)
 
                 self.friction_y = self.def_friction_y
@@ -75,7 +80,7 @@ function ShovelBee:init(x, y, spr)
             enter = function(state)
                 self.spr:update_offset(0, 0)
 
-                Audio:play_var("shovel_bee_attack", 0.1, 1.1)
+                Audio:play_var("stabee_attack", 0.1, 1.1)
             end,
             update = function(state, dt)
                 self.speed_x = 0
@@ -83,22 +88,40 @@ function ShovelBee:init(x, y, spr)
                 self.friction_y = 1
                 self.squash = clamp(1/math.abs(self.vy*0.01), 0.5, 1)
                 self.target_y = game.level.cabin_rect.by
+
+                Particles:dust(self.mid_x, self.mid_y, nil, 3, nil, 2)
             end,
         },
 
         stuck = {
             enter = function(state)
-                Audio:play_var("shovel_bee_land_"..tostring(random_range_int(1, 3)), 0.1, 1.1)
+                Audio:play_var("stabee_land_"..tostring(random_range_int(1, 3)), 0.1, 1.1)
 				Audio:play_var("bullet_bounce_"..random_sample{"1","2"}, 0.2, 1.2, {pitch = 0.8})
 
                 self.stuck_oscillation_t = 0.0
                 self.stuck_oscillation_amplitude = 1.0
+                self.spr:set_animation("stuck")
+
+                self.sweat_timer = Timer:new(0.2):start()
+
+                self.is_affected_by_bounds = false
+                self.is_affected_by_walls = false
+                self:set_position(self.x, self.y + self.stuck_spr_oy)
+
+                local y0 = self.y + self.h - self.stuck_spr_oy
+                local vx = random_range(40, 60)
+
+                Particles:dust(self.mid_x, y0, COL_WHITE, 8, nil, 0, {
+                    vx1 = -vx, vx2 = -vx, vy1 = 0, vy2 = 0
+                })
+                Particles:dust(self.mid_x, y0, COL_WHITE, 8, nil, 0, {
+                    vx1 = vx, vx2 = vx, vy1 = 0, vy2 = 0
+                })
             end,
             update = function(state, dt)
                 self.vx = 0
                 self.vy = 0
-                self.spr:set_image(self.img_stuck)
-                self.spr:update_offset(0, self.stuck_spr_oy)
+                -- self.spr:update_offset(0, self.stuck_spr_oy)
 
                 self.stuck_oscillation_t = self.stuck_oscillation_t + dt
                 self.stuck_oscillation_amplitude = math.max(0.0, self.stuck_timer.time / self.stuck_timer.duration - 0.5)
@@ -107,7 +130,25 @@ function ShovelBee:init(x, y, spr)
                 if self.stuck_timer:update(dt) then
                     self.state_machine:set_state("flying")
                 end
+
+                if self.sweat_timer:update(dt) then
+                    Particles:sweat(self.x + self.w + 4, self.y - 4)
+                end
             end,
+            exit = function(state)
+                self.is_affected_by_bounds = true
+                self.is_affected_by_walls = true
+                self:set_position(self.x, self.y - self.stuck_spr_oy)
+
+                local y0 = self.y + self.h
+                local vx = random_range(40, 60)
+                Particles:dust(self.mid_x, y0, COL_WHITE, 8, nil, 0, {
+                    vx1 = -vx, vx2 = -vx, vy1 = 0, vy2 = 0
+                })
+                Particles:dust(self.mid_x, y0, COL_WHITE, 8, nil, 0, {
+                    vx1 = vx, vx2 = vx, vy1 = 0, vy2 = 0
+                })
+            end
         },
     }, "flying")
 
@@ -115,7 +156,7 @@ function ShovelBee:init(x, y, spr)
 end
 
 
-function ShovelBee:update(dt)
+function Stabee:update(dt)
     local nearest_player = self:get_nearest_player()
     if self.state_machine.current_state_name == "flying" and nearest_player then
         if nearest_player.y > self.y + self.h and math.abs(self.mid_x - nearest_player.mid_x) <= self.attack_radius then
@@ -128,10 +169,10 @@ function ShovelBee:update(dt)
     
     -- self.debug_values[1] = self.phase
     
-    ShovelBee.super.update(self, dt)
+    Stabee.super.update(self, dt)
 end
 
-function ShovelBee:update_phase(dt, nearest_player)
+function Stabee:update_phase(dt, nearest_player)
     self.target_x = nil 
     if nearest_player then
         self.target_x = nearest_player.x 
@@ -146,7 +187,7 @@ function ShovelBee:update_phase(dt, nearest_player)
     }
 end
 
-function ShovelBee:after_collision(col, other)
+function Stabee:after_collision(col, other)
     if col.type ~= "cross" then
         if self.state_machine.current_state_name == "attack" then--and col.normal.y == -1 then
             self.state_machine:set_state("stuck")
@@ -156,4 +197,4 @@ function ShovelBee:after_collision(col, other)
     end
 end
 
-return ShovelBee
+return Stabee
