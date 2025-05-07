@@ -8,7 +8,7 @@ local UpgradeHotChocolate = Upgrade:inherit()
 function UpgradeHotChocolate:init()
     UpgradeHotChocolate.super.init(self, "hot_chocolate")
     self.sprite = images.upgrade_hot_chocolate
-    self.value = 2.0
+    self.value = 1.5
 
     self:set_description(self.value)
 
@@ -25,6 +25,7 @@ end
 
 function UpgradeHotChocolate:apply_permanent(player)
     player.gun_reload_speed_multiplier = self.value
+    player.gun_natural_recharge_speed_multiplier = self.value
 end
 
 function UpgradeHotChocolate:play_effects(player)

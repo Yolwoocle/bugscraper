@@ -139,6 +139,7 @@ function Player:init(n, x, y, skin)
 	self.ammo_usage_multiplier = 1.0
 	self.gun_damage_multiplier = 1.0
 	self.gun_reload_speed_multiplier = 1.0
+	self.gun_natural_recharge_speed_multiplier = 1.0
 	self.ammo_bar_icon = images.ammo
 	self.ammo_bar_fill_color = COL_MID_BLUE
 	self.ammo_bar_shad_color = COL_DARK_BLUE

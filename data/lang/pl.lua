@@ -121,7 +121,7 @@ return {
         },
         hot_chocolate = { -- ADDED
             title = "Hot Chocolate",
-            description = "x%d reloading speed",
+            description = "x%d reloading speed", -- -- CHANGED
         },
         energy_drink = {
             title = "Energy Drink", -- ADDED

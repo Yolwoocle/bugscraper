@@ -115,7 +115,7 @@ return {
 		},
 		hot_chocolate = {
 			title = "Chocolate caliente",
-			description = "x%d Velocidad de recarga",
+			description = "x%d Velocidad de recarga", -- CHANGED
 		},
 		energy_drink = {
             title = "Energy Drink", -- ADDED

@@ -123,7 +123,7 @@ return {
         },
         hot_chocolate = {
             title = "Chocolat chaud",
-            description = "x%d vitesse de recharge",
+            description = "Vitesse de recharge plus rapide",
         },
         pomegranate_juice = {
             title = "Jus de grenadine",

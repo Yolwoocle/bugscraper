@@ -256,7 +256,11 @@ function Gun:do_natural_recharge(dt)
 	self.natural_recharge_delay_timer = math.max(0.0, self.natural_recharge_delay_timer - charge_delta)
 	if self.natural_recharge_delay_timer > 0.0 then   return   end
 	
-	self.natural_recharge_progress = math.min(1.0, self.natural_recharge_progress + dt/self.natural_recharge_time)
+	local mult = 1.0 
+	if self.user and self.user.gun_natural_recharge_speed_multiplier then
+		mult = self.user.gun_natural_recharge_speed_multiplier
+	end
+	self.natural_recharge_progress = math.min(1.0, self.natural_recharge_progress + mult*dt/self.natural_recharge_time)
 	local natural_recharge_amount = math.floor(self.original_natural_recharge_ammo + self.natural_recharge_progress * self:get_max_ammo())
 	self.ammo = math.max(self.ammo, math.min(self:get_max_ammo(), natural_recharge_amount))
 end
