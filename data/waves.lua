@@ -1226,8 +1226,8 @@ local waves = {
 	}),
 
 	new_wave({
-		min = 3,
-		max = 3,
+		min = 5,
+		max = 5,
 
 		enemies = {
 			{ E.CloudEnemy, 10 },
@@ -1245,7 +1245,7 @@ local waves = {
 
 	new_wave({
 		min = 5,
-		max = 5,
+		max = 6,
 
 		enemies = {
 			{ E.StinkBug, 10 },
@@ -1254,8 +1254,8 @@ local waves = {
 	}),
 
 	new_wave({
-		min = 3,
-		max = 3,
+		min = 5,
+		max = 5,
 
 		enemies = {
 			{ E.CloudEnemy, 10 },
@@ -1267,11 +1267,15 @@ local waves = {
 	}),
 
 	new_wave({
-		min = 3,
-		max = 3,
+		min = 7,
+		max = 7,
 
 		enemies = {
-			{ E.CloudEnemy, 10 },
+			{ E.GoldenBeetle, 10 },
+			{ E.WalkingSlotMachine, 5 },
+			{ E.Shooter, 10 },
+			{ E.Rollopod, 10 },
+
 		},
 	}),
 
