@@ -22,7 +22,7 @@ function Rollopod:init(x, y, spr, w, h)
     self.is_bouncy_to_bullets = true
     self.is_immune_to_bullets = true
     self.is_stompable = true
-    self.stomp_animation_image = images.rollopod_rolled
+    self.stomp_animation_image = images.rollopod_dead
 
     -- State properties
     self.def_speed = 70

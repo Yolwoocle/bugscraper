@@ -201,6 +201,7 @@ local img_names = {
 	woodlouse_2 =              "actors/enemies/woodlouse_2",
 	rollopod =                 "actors/enemies/rollopod",
 	rollopod_rolled =          "actors/enemies/rollopod_rolled",
+	rollopod_dead =            "actors/enemies/rollopod_dead",
 
 	motherboard_bullet_cannon = "actors/enemies/motherboard_bullet_cannon",
 	motherboard_led_on =       "actors/enemies/motherboard_led_on",
