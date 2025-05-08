@@ -40,7 +40,7 @@ function DebugCommandManager:init()
     self.commands["listupgrades"] = DebugCommand:new {
         name = "listupgrades",
         description = "Lists all upgrades",
-        args = { },
+        args = {},
         run = function(name, x, y)
             local upgrade_keys = {}
             for _, upgrade_name in pairs(Metaprogression:get("upgrades")) do
@@ -95,7 +95,7 @@ function DebugCommandManager:init()
                 applied = applied .. upgrade.name .. ", "
             end
 
-            self:add_message("Applied upgrades: "..applied)
+            self:add_message("Applied upgrades: " .. applied)
 
             return true
         end,
@@ -104,10 +104,10 @@ function DebugCommandManager:init()
         name = "spawn",
         description = "Spawns an enemy",
         args = {
-            { "name:string", values = enemies_keys },
+            { "name:string",   values = enemies_keys },
             { "amount:number", default = 1 },
-            { "x:number",    default = CANVAS_WIDTH / 2 },
-            { "y:number",    default = CANVAS_HEIGHT / 2 },
+            { "x:number",      default = CANVAS_WIDTH / 2 },
+            { "y:number",      default = CANVAS_HEIGHT / 2 },
         },
         run = function(name, amount, x, y)
             local enemy_class = enemies[name]
@@ -294,6 +294,49 @@ function DebugCommandManager:init()
                     actor.life = 1
                 end
             end
+            return true
+        end,
+    }
+    self.commands["_test_sub"] = DebugCommand:new {
+        name = "_test_sub",
+        description = "",
+        args = {
+            { "pattern:string" }
+        },
+        run = function(pattern)
+            local success = nil
+
+            local npattern = pattern:gsub("{(.-)%-(.-)}", function(a_str, b_str)
+                if not (type(a_str) == "string") then
+                    success = "argument 1 is not a string"
+                    return ""
+                end
+                if not (type(b_str) == "string") then
+                    success = "argument 2 is not a string"
+                    return ""
+                end
+                local len = math.max(#a_str, #b_str)
+
+
+                local a = tonumber(a_str)
+                local b = tonumber(b_str)
+                if not (type(a) == "number") then
+                    success = "argument 1 is not a number ('" .. tostring(pattern) .. "')"
+                    return ""
+                end
+                if not (type(b) == "number") then
+                    success = "argument 2 is not a number ('" .. tostring(pattern) .. "')"
+                    return ""
+                end
+                local n = random_range_int(a, b)
+                return string.format("%0" .. len .. "d", n)
+            end)
+
+            if success ~= nil then
+                return false, success
+            end
+
+            self:add_message(npattern)
             return true
         end,
     }

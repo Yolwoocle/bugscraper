@@ -172,30 +172,6 @@ local function generate_menus()
         { Text:text("menu.credits.asset_item", "'Boutique Bitmap 9x9'", "Luke Liu", "OFL-1.1"),            func_url("https://luke036.itch.io/boutique-bitmap-9x9") },
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
 
-    menus.credits_tv_slideshow = Menu:new(game, "{menu.credits.tv_slideshow}", {
-        { Text:text("menu.credits.x_by_y", "'Graphs'", "Sslime7"),                          empty_func },
-        { Text:text("menu.credits.x_by_y", "'Hot dogs'", "Alexis Belmonte"),                empty_func },
-        { Text:text("menu.credits.x_by_y", "'Mio rotate'", "Corentin Vaillant"),            empty_func },
-        { Text:text("menu.credits.x_by_y", "'Mio explode'", "Corentin Vaillant"),           empty_func },
-        { Text:text("menu.credits.x_by_y", "'Bugs With Guns'", "Yolwoocle"),                empty_func },
-        { Text:text("menu.credits.x_by_y", "'Löve, Öbey'", "ellraiser"),                    empty_func },
-        { Text:text("menu.credits.x_by_y", "'Need your duck taped?'", "Joseph (Jedi)"),     empty_func },
-        { Text:text("menu.credits.x_by_y", "'Starbugs Green Tea'", "Goyome"),               empty_func },
-        { Text:text("menu.credits.x_by_y", "'Binarion'", "Hector SK  (Nextop Games)"),      empty_func },
-        { Text:text("menu.credits.x_by_y", "'Injured? Good'", "Hector SK  (Nextop Games)"), empty_func },
-        { Text:text("menu.credits.x_by_y", "'No queen?'", "Behck"),                         empty_func },
-        { Text:text("menu.credits.x_by_y", "'Splat'", "Sarcose"),                           empty_func },
-        { Text:text("menu.credits.x_by_y", "'End toastal abuse'", "Clem"),                  empty_func },
-        { Text:text("menu.credits.x_by_y", "'A-salt rifle'", "Clem"),                       empty_func },
-        { Text:text("menu.credits.x_by_y", "'Beatleblock'", "Dimitri Sophinos (DPS2004)"),  empty_func },
-        { Text:text("menu.credits.x_by_y", "'Bugscrapers aren't enough'", "pkhead"),        empty_func },
-        { Text:text("menu.credits.x_by_y", "'Optic Studio'", "pkhead"),                     empty_func },
-        { Text:text("menu.credits.x_by_y", "'Soon (TM)'", "pixelbath"),                     empty_func },
-        { "" },
-        -- { "{menu.credits.tv_slideshow_submit} 🔗", func_url("https://bugscraper.net/tv") }
-
-    }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
-
     menus.credits_sounds = Menu:new(game, "freesound.org", {
         { Text:text("menu.credits.asset_item", "'jf Glass Breaking.wav'", "cmusounddesign", "CC BY 3.0") .. " 🔗", func_url("https://freesound.org/people/cmusounddesign/sounds/85168/") },
         { Text:text("menu.credits.asset_item", "'Glass Break'", "avrahamy", "CC0") .. " 🔗", func_url("https://freesound.org/people/avrahamy/sounds/141563/") },

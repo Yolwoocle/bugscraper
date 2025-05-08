@@ -20,8 +20,8 @@ function Larva:init_larva(x, y, spr, w, h)
     self.walk_dir_x = random_sample{-1, 1}
 
     -- self.sound_damage = {"larva_damage1", "larva_damage2", "larva_damage3"}
-    self.sound_death = {"sfx_enemies_stomp_gore_01", "sfx_enemies_stomp_gore_02", "sfx_enemies_stomp_gore_03", "sfx_enemies_stomp_gore_04"}
-    self.sound_stomp = {"sfx_enemies_stomp_gore_01", "sfx_enemies_stomp_gore_02", "sfx_enemies_stomp_gore_03", "sfx_enemies_stomp_gore_04"}
+    self.sound_death = "sfx_enemies_stomp_gore_{01-04}"
+    self.sound_stomp = "sfx_enemies_stomp_gore_{01-04}"
     self.anim_frame_len = 0.2
     self.anim_frames = {images.larva1, images.larva2}
     self.audio_delay = love.math.random(0.3, 1)

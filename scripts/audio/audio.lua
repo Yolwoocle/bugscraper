@@ -14,7 +14,21 @@ end
 function AudioManager:play(snd, volume, pitch)
     -- Formalize inputs
     local sndname = snd
-    if type(snd) == "table" then
+    if type(sndname) == "string" then
+		-- Substitute patterns like "sfx_jump_{01-05}" to "sfx_jump_XX" (XX is a random int between 01 and 05)
+		sndname = sndname:gsub("{(.-)%-(.-)}", function(a_str, b_str)
+			assert(type(a_str) == "string", "argument a is not a string (in '"..tostring(snd).."')")
+			assert(type(b_str) == "string", "argument b is not a string (in '"..tostring(snd).."')")
+			local len = math.max(#a_str, #b_str)
+			local a = tonumber(a_str)
+			local b = tonumber(b_str)
+			assert(type(a) == "number", "argument a is not a number (in '"..tostring(snd).."')")
+			assert(type(b) == "number", "argument b is not a number (in '"..tostring(snd).."')")
+			local n = random_range_int(a, b)
+			return string.format("%0"..len.."d", n)
+		end)
+
+	elseif type(snd) == "table" then
         sndname = random_sample(snd)
     end
     volume = volume or 1
