@@ -47,6 +47,9 @@ function Dung:init(x, y, spr, w, h)
     self.jump_speed = 500
     self.jump_flag = false
 
+    self.sound_death = {"sfx_enemies_stomp_gore_01", "sfx_enemies_stomp_gore_02", "sfx_enemies_stomp_gore_03", "sfx_enemies_stomp_gore_04"}
+    self.sound_stomp = {"sfx_enemies_stomp_gore_01", "sfx_enemies_stomp_gore_02", "sfx_enemies_stomp_gore_03", "sfx_enemies_stomp_gore_04"}
+
     self.state_machine = StateMachine:new({
         random = {
             enter = function(state)

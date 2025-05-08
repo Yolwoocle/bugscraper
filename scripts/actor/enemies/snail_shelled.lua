@@ -21,9 +21,12 @@ function SnailShelled:init(x, y, spr)
     -- self.is_bouncy_to_bullets = true
     -- self.is_immune_to_bullets = true
 
-    self.sound_death = "snail_shell_crack"
-    self.sound_stomp = "snail_shell_crack"
+    -- self.sound_death = "snail_shell_crack"
+    -- self.sound_stomp = "snail_shell_crack"
     
+    self.sound_death = {"sfx_enemies_stomp_break_01", "sfx_enemies_stomp_break_02", "sfx_enemies_stomp_break_03", "sfx_enemies_stomp_break_04"}
+    self.sound_stomp = {"sfx_enemies_stomp_break_01", "sfx_enemies_stomp_break_02", "sfx_enemies_stomp_break_03", "sfx_enemies_stomp_break_04"}
+
     self.score = 10
 end
 

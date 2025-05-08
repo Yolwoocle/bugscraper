@@ -32,6 +32,9 @@ function Fly:init(x, y, spr, w, h, buzzing_enabled)
         self:seek_constant_sound("buzz", random_range(0, self:get_constant_sound("buzz"):get_duration())) 
     end
     self.buzz_is_started = false
+
+    self.sound_death = {"sfx_enemies_stomp_gore_01", "sfx_enemies_stomp_gore_02", "sfx_enemies_stomp_gore_03", "sfx_enemies_stomp_gore_04"}
+    self.sound_stomp = {"sfx_enemies_stomp_gore_01", "sfx_enemies_stomp_gore_02", "sfx_enemies_stomp_gore_03", "sfx_enemies_stomp_gore_04"}
 end
 
 function Fly:update(dt)

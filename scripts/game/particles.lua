@@ -437,7 +437,7 @@ function EjectedPlayerParticle:init(spr, x, y, vx, vy)
 end
 function EjectedPlayerParticle:update(dt)
 	self:update_particle(dt)
-	Particles:dust(self.x, self.y, COL_WHITE, nil, nil, nil, true)
+	Particles:dust(self.x, self.y, COL_WHITE, nil, nil, nil)
 end
 function EjectedPlayerParticle:draw()
 	love.graphics.draw(self.spr, self.x, self.y, self.r, self.s, self.s, self.spr_ox, self.spr_oy)

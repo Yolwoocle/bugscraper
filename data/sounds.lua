@@ -15,6 +15,38 @@ local sounds = {}
 
 --music_level_1 = new_source("music/level_1.ogg", "stream", {looping = true})
 local sfxnames = {
+	sfx_enemies_stomp_break_01 =  "actor/enemies/sfx_enemies_stomp_break_01.ogg",
+	sfx_enemies_stomp_break_02 =  "actor/enemies/sfx_enemies_stomp_break_02.ogg",
+	sfx_enemies_stomp_break_03 =  "actor/enemies/sfx_enemies_stomp_break_03.ogg",
+	sfx_enemies_stomp_break_04 =  "actor/enemies/sfx_enemies_stomp_break_04.ogg",
+	sfx_enemies_stomp_glitch_01 = "actor/enemies/sfx_enemies_stomp_glitch_01.ogg",
+	sfx_enemies_stomp_glitch_02 = "actor/enemies/sfx_enemies_stomp_glitch_02.ogg",
+	sfx_enemies_stomp_glitch_03 = "actor/enemies/sfx_enemies_stomp_glitch_03.ogg",
+	sfx_enemies_stomp_glitch_04 = "actor/enemies/sfx_enemies_stomp_glitch_04.ogg",
+	sfx_enemies_stomp_gore_01 =   "actor/enemies/sfx_enemies_stomp_gore_01.ogg",
+	sfx_enemies_stomp_gore_02 =   "actor/enemies/sfx_enemies_stomp_gore_02.ogg",
+	sfx_enemies_stomp_gore_03 =   "actor/enemies/sfx_enemies_stomp_gore_03.ogg",
+	sfx_enemies_stomp_gore_04 =   "actor/enemies/sfx_enemies_stomp_gore_04.ogg",
+
+	sfx_upgrades_glassbreak_01 =  "actor/sfx_upgrades_glassbreak_01.ogg", 
+	sfx_upgrades_glassbreak_02 =  "actor/sfx_upgrades_glassbreak_02.ogg",
+	sfx_upgrades_glassbreak_03 =  "actor/sfx_upgrades_glassbreak_03.ogg",
+	
+	sfx_upgrades_glassbreak_04 = "actor/sfx_upgrades_glassbreak_04.ogg", 
+	sfx_weapon_bulletbounce_01 = "actor/sfx_weapon_bulletbounce_01.ogg", 
+	sfx_weapon_bulletbounce_02 = "actor/sfx_weapon_bulletbounce_02.ogg", 
+	sfx_weapon_bulletbounce_03 = "actor/sfx_weapon_bulletbounce_03.ogg", 
+	sfx_weapon_bulletbounce_04 = "actor/sfx_weapon_bulletbounce_04.ogg", 
+	sfx_weapon_bulletbounce_05 = "actor/sfx_weapon_bulletbounce_05.ogg", 
+	sfx_weapon_bulletbounce_06 = "actor/sfx_weapon_bulletbounce_06.ogg", 
+	sfx_weapon_glassbreak =      "actor/sfx_weapon_glassbreak.ogg", 
+	sfx_weapon_glassjump_01 =    "actor/sfx_weapon_glassjump_01.ogg", 
+	sfx_weapon_glassjump_02 =    "actor/sfx_weapon_glassjump_02.ogg", 
+	sfx_weapon_glassjump_03 =    "actor/sfx_weapon_glassjump_03.ogg", 
+	sfx_weapon_glassjump_04 =    "actor/sfx_weapon_glassjump_04.ogg", 
+	sfx_weapon_glassjump_05 =    "actor/sfx_weapon_glassjump_05.ogg", 
+	sfx_weapon_glassjump_06 =    "actor/sfx_weapon_glassjump_06.ogg",
+
 	jump = "jump1.ogg",
 	shot1 = "shot1.ogg", -- these are pico 8 sfx from birds with guns
 	shot2 = "shot2.ogg",

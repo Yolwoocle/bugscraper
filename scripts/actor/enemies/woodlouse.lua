@@ -26,6 +26,10 @@ function Woodlouse:init(x, y, spr, w, h)
     -- self.anim_frame_len = 0.2
     self.anim_frames = {images.woodlouse_1, images.woodlouse_2}
     self.audio_delay = love.math.random(0.3, 1)
+
+    self.sound_death = {"sfx_enemies_stomp_break_01", "sfx_enemies_stomp_break_02", "sfx_enemies_stomp_break_03", "sfx_enemies_stomp_break_04"}
+    self.sound_stomp = {"sfx_enemies_stomp_break_01", "sfx_enemies_stomp_break_02", "sfx_enemies_stomp_break_03", "sfx_enemies_stomp_break_04"}
+    
 end
 
 function Woodlouse:update(dt)

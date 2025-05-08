@@ -19,6 +19,9 @@ function Slug:init(x, y)
     self.anim_frames = {images.slug1, images.slug2}
 
     self.score = 10
+
+    self.sound_death = {"sfx_enemies_stomp_gore_01", "sfx_enemies_stomp_gore_02", "sfx_enemies_stomp_gore_03", "sfx_enemies_stomp_gore_04"}
+    self.sound_stomp = {"sfx_enemies_stomp_gore_01", "sfx_enemies_stomp_gore_02", "sfx_enemies_stomp_gore_03", "sfx_enemies_stomp_gore_04"}
 end
 
 function Slug:update(dt)
