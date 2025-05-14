@@ -165,6 +165,7 @@ return {
 			title = "PAUSAR",
 			resume = "CONTINUAR",
 			retry = "REINTENTAR",
+            return_to_ground_floor = "RETURN TO GROUND FLOOR", --ADDED
 			options = "OPCIONES",
 			credits = "CREDITOS",
 			feedback = "COMENTARIOS",

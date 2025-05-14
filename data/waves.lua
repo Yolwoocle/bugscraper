@@ -1059,13 +1059,13 @@ local waves = {
 			{ E.CloudEnemy, 20 },
 		},
 		
-		-- fixed_enemies = {
-		-- 	{ 
-		-- 		E.Pendulum, 1, 
-		-- 		args = {pi/3, 200, 1}, 
-		-- 		position = {CANVAS_WIDTH/2, 3*16} 
-		-- 	},
-		-- },
+		fixed_enemies = {
+			{ 
+				E.Pendulum, 1, 
+				args = {pi/3, 200, 1}, 
+				position = {CANVAS_WIDTH/2, 3*16} 
+			},
+		},
 
 		music = "w4",
 	}),
@@ -1149,7 +1149,14 @@ local waves = {
 			{ E.ArumTitanBoss, 1, position = {CANVAS_WIDTH/2 - 16, CANVAS_HEIGHT/2}},
 		},
 
-		cutscene = cutscenes.arum_titan_enter,
+		cutscene = cutscenes.arum_titan_enter, 
+		run = function(self, level)
+			for _, actor in pairs(game.actors) do
+				if actor.name == "pendulum" then
+					actor:remove()
+				end
+			end
+		end,
 	}),
 	
 	---------------------------------------------
@@ -1172,14 +1179,17 @@ local waves = {
 		},
 
 		elevator_layers = {
+			["cabin_bg"] = images.cabin_bg_w2,
+			["walls"] = images.cabin_walls_w2,
+			
+			["bg_fan"] = true,
 			["bg_grid"] = false,
-			["w3_cabin"] = false,
-
-			["cabin_bg"] = images.cabin_bg_w4,
-			["walls"] = images.cabin_walls_w3,
-			-- ["walls_brown"] = false,
-			-- ["bg_grid_brown"] = false,
-			-- ["walls"] = false,
+		},
+		door_images = {
+			images.cabin_door_bee_left_far,
+			images.cabin_door_bee_left_center,
+			images.cabin_door_bee_right_far,
+			images.cabin_door_bee_right_center,
 		},
 
 		background = backgrounds.BackgroundGreenhouse:new(),
@@ -1254,8 +1264,8 @@ local waves = {
 	}),
 
 	new_wave({
-		min = 5,
-		max = 5,
+		min = 3,
+		max = 3,
 
 		enemies = {
 			{ E.CloudEnemy, 10 },
@@ -1280,100 +1290,104 @@ local waves = {
 	}),
 
 	new_wave({
-		min = 3,
-		max = 3,
+		min = 8,
+		max = 8,
 
 		enemies = {
-			{ E.CloudEnemy, 10 },
+			{ E.GoldenBeetle, 10 },
+			{ E.WalkingSlotMachine, 5 },
+			{ E.Shooter, 10 },
+			{ E.Rollopod, 10 },
+
 		},
 	}),
 
 	---------------------------------------------
-	new_cafeteria(),
+	-- new_cafeteria(),
 	---------------------------------------------
 
-	new_wave({
-		min = 5,
-		max = 5,
+	-- new_wave({
+	-- 	min = 5,
+	-- 	max = 5,
 
-		enemies = {
-			{ E.CloudEnemy, 20 },
-		},
+	-- 	enemies = {
+	-- 		{ E.CloudEnemy, 20 },
+	-- 	},
 
-		music = "w5",
-	}),
+	-- 	music = "w5",
+	-- }),
 
-	new_wave({
-		min = 3,
-		max = 3,
+	-- new_wave({
+	-- 	min = 3,
+	-- 	max = 3,
 
-		enemies = {
-			{ E.CloudEnemy, 10 },
-		},
-	}),
+	-- 	enemies = {
+	-- 		{ E.CloudEnemy, 10 },
+	-- 	},
+	-- }),
 	
-	new_wave({
-		min = 3,
-		max = 3,
+	-- new_wave({
+	-- 	min = 3,
+	-- 	max = 3,
 
-		enemies = {
-			{ E.CloudEnemy, 10 },
-		},
-	}),
+	-- 	enemies = {
+	-- 		{ E.CloudEnemy, 10 },
+	-- 	},
+	-- }),
 	
-	new_wave({
-		min = 3,
-		max = 3,
+	-- new_wave({
+	-- 	min = 3,
+	-- 	max = 3,
 
-		enemies = {
-			{ E.CloudEnemy, 10 },
-		},
-	}),
+	-- 	enemies = {
+	-- 		{ E.CloudEnemy, 10 },
+	-- 	},
+	-- }),
 	
-	new_wave({
-		min = 3,
-		max = 3,
+	-- new_wave({
+	-- 	min = 3,
+	-- 	max = 3,
 
-		enemies = {
-			{ E.CloudEnemy, 10 },
-		},
-	}),
+	-- 	enemies = {
+	-- 		{ E.CloudEnemy, 10 },
+	-- 	},
+	-- }),
 	
-	new_wave({
-		min = 3,
-		max = 3,
+	-- new_wave({
+	-- 	min = 3,
+	-- 	max = 3,
 
-		enemies = {
-			{ E.CloudEnemy, 10 },
-		},
-	}),
+	-- 	enemies = {
+	-- 		{ E.CloudEnemy, 10 },
+	-- 	},
+	-- }),
 	
-	new_wave({
-		min = 3,
-		max = 3,
+	-- new_wave({
+	-- 	min = 3,
+	-- 	max = 3,
 
-		enemies = {
-			{ E.CloudEnemy, 10 },
-		},
-	}),
+	-- 	enemies = {
+	-- 		{ E.CloudEnemy, 10 },
+	-- 	},
+	-- }),
 	
-	new_wave({
-		min = 3,
-		max = 3,
+	-- new_wave({
+	-- 	min = 3,
+	-- 	max = 3,
 
-		enemies = {
-			{ E.CloudEnemy, 10 },
-		},
-	}),
+	-- 	enemies = {
+	-- 		{ E.CloudEnemy, 10 },
+	-- 	},
+	-- }),
 	
-	new_wave({
-		min = 3,
-		max = 3,
+	-- new_wave({
+	-- 	min = 3,
+	-- 	max = 3,
 
-		enemies = {
-			{ E.CloudEnemy, 10 },
-		},
-	}),
+	-- 	enemies = {
+	-- 		{ E.CloudEnemy, 10 },
+	-- 	},
+	-- }),
 
 
 	--]]
@@ -1392,7 +1406,7 @@ local waves = {
 				if actor.name == "poison_cloud" then
 					actor.lifespan = 1
 				end
-				if actor.name == "floor_hole_spawner" then
+				if actor.name == "floor_hole_spawner" or actor.name == "pendulum" then
 					actor:remove()
 				end
 			end

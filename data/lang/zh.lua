@@ -168,6 +168,7 @@ return {
             title = "暂停",
             resume = "继续",
             retry = "重试",
+            return_to_ground_floor = "RETURN TO GROUND FLOOR", --ADDE
             options = "设置",
             credits = "致谢",
             feedback = "反馈",

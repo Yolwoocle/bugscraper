@@ -1,8 +1,6 @@
 require "scripts.util"
 require "scripts.meta.constants"
 local Class = require "scripts.meta.class"
-local images = require "data.images"
-local utf8 = require "utf8"
 
 local OptionsManager = Class:inherit()
 

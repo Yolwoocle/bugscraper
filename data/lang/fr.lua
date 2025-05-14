@@ -175,6 +175,7 @@ return {
             title = "PAUSE",
             resume = "REPRENDRE",
             retry = "RECOMMENCER",
+            return_to_ground_floor = "RETOURNER AU REZ-DE-CHAUSSÉE", --ADDED
             options = "OPTIONS",
             credits = "CRÉDITS",
             feedback = "RETOURS",

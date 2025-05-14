@@ -179,6 +179,7 @@ return {
             title = "PAUSE",
             resume = "RESUME",
             retry = "RETRY",
+            return_to_ground_floor = "RETURN TO GROUND FLOOR", --ADDED
             options = "OPTIONS",
             credits = "CREDITS",
             feedback = "FEEDBACK",

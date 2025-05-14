@@ -13,7 +13,7 @@ function Centipede:init(x, y, length, parent, params)
         center_y = y,
         angle = 0,
     }
-    length = length or 30
+    length = length or 20
     if params.center_x and params.angle then
         x = params.center_x + math.cos(params.angle) * (1 + params.angle) * 4
     end

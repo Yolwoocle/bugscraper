@@ -169,6 +169,7 @@ return {
             title = "PAUZA",
             resume = "WZNÓW",
             retry = "SPRÓBUJ PONOWNIE",
+            return_to_ground_floor = "RETURN TO GROUND FLOOR", --ADDED
             options = "OPCJE",
             credits = "TWÓRCY",
             feedback = "ZOSTAW OPINIE",
