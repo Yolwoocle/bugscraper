@@ -115,7 +115,7 @@ function ControlsMenuItem:on_click()
 
 	-- Go in standby mode
 	Options:update_options_file()
-	Audio:play("menu_select")
+	Audio:play("ui_menu_select_{01-04}")
 	self.oy = -4
 	
 	Input:set_standby_mode(true)

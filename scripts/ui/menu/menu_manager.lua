@@ -212,7 +212,7 @@ function MenuManager:incr_selection(n)
 	self.sel_item = self.cur_menu.items[self.sel_n]
 	self.sel_item:set_selected(true, n)
 	
-	Audio:play_var("menu_hover", 0.2, 1)
+	Audio:play_var("ui_menu_hover_{01-04}", 0.2, 1, {pitch= 2.0})
 
 	return true
 end

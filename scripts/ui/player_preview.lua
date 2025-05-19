@@ -120,11 +120,11 @@ function PlayerPreview:init(player_n, x, y, w, h)
 
                 if Input:action_pressed(self.player_n, "ui_left") then
                     self:increment_character_selection(-1)
-                    Audio:play_var("menu_hover", 0.2, 1)
+                    Audio:play_var("ui_menu_hover_{01-04}", 0.2, 1, {pitch= 1.5})
                 end
                 if Input:action_pressed(self.player_n, "ui_right") then
                     self:increment_character_selection(1)
-                    Audio:play_var("menu_hover", 0.2, 1)
+                    Audio:play_var("ui_menu_hover_{01-04}", 0.2, 1, {pitch= 1.5})
                 end
 
                 self.squash = move_toward(self.squash, 1, 5 * dt)

@@ -759,11 +759,11 @@ function Game:on_menu()
 end
 
 function Game:on_pause()
-	Audio:play("menu_pause")
+	Audio:play("ui_menu_pause")
 end
 
 function Game:on_unpause()
-	Audio:play("menu_unpause")
+	Audio:play("ui_menu_unpause")
 end
 
 function Game:pause_repeating_sounds()

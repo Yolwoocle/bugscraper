@@ -32,7 +32,7 @@ function UpgradeDisplay:init(x, y)
     
 	self.sound_damage = "glass_fracture"
 	-- self.sound_death = "glass_break_weak"
-	self.sound_death = {"sfx_upgrades_glassbreak_01", "sfx_upgrades_glassbreak_02", "sfx_upgrades_glassbreak_03"}
+	self.sound_death = "sfx_upgrades_glassbreak_{01-03}"
 
     self.animation_t = 0
     self.is_animation_exiting = false

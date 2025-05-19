@@ -71,7 +71,7 @@ function SliderOptionMenuItem:on_click(diff)
 	self:set_value_and_option(self.value)
 
 	local ratio = (self.value - self.range[1]) / (self.range[2] - self.range[1])
-	Audio:play("menu_select", nil, 0.8 + ratio*0.4)
+	Audio:play("ui_menu_select_{01-04}", nil, 0.8 + ratio*0.4)
 	if self.additional_on_click then
 		self:additional_on_click()
 	end

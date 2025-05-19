@@ -29,8 +29,9 @@ function ButtonSmallGlass:init(x, y)
     self.break_screenshake = 5
     self.break_num_particles = 20
     
-    self.sound_fracture = {"glass_fracture"}
-    self.sound_break = {"glass_break_weak"}
+    self.sounds_impact = "sfx_weapon_glassjump_{01-06}"
+    self.sound_fracture = "sfx_weapon_glassbreak"
+    self.sound_break = "sfx_weapon_glassbreak"
 
     self.collision_info = CollisionInfo:new {
         type = COLLISION_TYPE_SEMISOLID,

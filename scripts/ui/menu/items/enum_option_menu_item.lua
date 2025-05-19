@@ -58,7 +58,7 @@ function EnumOptionMenuItem:on_click(diff)
 	self.option_index = mod_plus_1(self.option_index + diff, #self.values)
 	self:set_value_and_option(self.values[self.option_index])
 
-	Audio:play("menu_select")
+	Audio:play("ui_menu_select_{01-04}")
 end
 
 return EnumOptionMenuItem

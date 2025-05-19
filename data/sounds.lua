@@ -2,7 +2,7 @@ require "scripts.util"
 local Sound = require "scripts.audio.sound"
 
 local function new_source(path, type, args)
-	local source = love.audio.newSource("sfx/"..path, type)
+	local source = love.audio.newSource("sounds/"..path, type)
 	if not args then   return source   end
 
 	if args.looping then
@@ -15,6 +15,28 @@ local sounds = {}
 
 --music_level_1 = new_source("music/level_1.ogg", "stream", {looping = true})
 local sfxnames = {
+	char_walk_metal_001 = "actor/player/footstep/char_walk_metal_001.ogg",
+	char_walk_metal_002 = "actor/player/footstep/char_walk_metal_002.ogg",
+	char_walk_metal_003 = "actor/player/footstep/char_walk_metal_003.ogg",
+	char_walk_metal_004 = "actor/player/footstep/char_walk_metal_004.ogg",
+	char_walk_metal_005 = "actor/player/footstep/char_walk_metal_005.ogg",
+	char_walk_metal_006 = "actor/player/footstep/char_walk_metal_006.ogg",
+	char_walk_metal_007 = "actor/player/footstep/char_walk_metal_007.ogg",
+	char_walk_metal_008 = "actor/player/footstep/char_walk_metal_008.ogg",
+	char_walk_metal_009 = "actor/player/footstep/char_walk_metal_009.ogg",
+	char_walk_metal_010 = "actor/player/footstep/char_walk_metal_010.ogg",
+
+	char_walk_stone_001 = "actor/player/footstep/char_walk_stone_001.ogg",
+	char_walk_stone_002 = "actor/player/footstep/char_walk_stone_002.ogg",
+	char_walk_stone_003 = "actor/player/footstep/char_walk_stone_003.ogg",
+	char_walk_stone_004 = "actor/player/footstep/char_walk_stone_004.ogg",
+	char_walk_stone_005 = "actor/player/footstep/char_walk_stone_005.ogg",
+	char_walk_stone_006 = "actor/player/footstep/char_walk_stone_006.ogg",
+	char_walk_stone_007 = "actor/player/footstep/char_walk_stone_007.ogg",
+	char_walk_stone_008 = "actor/player/footstep/char_walk_stone_008.ogg",
+	char_walk_stone_009 = "actor/player/footstep/char_walk_stone_009.ogg",
+	char_walk_stone_010 = "actor/player/footstep/char_walk_stone_010.ogg",
+
 	sfx_enemies_stomp_break_01 =  "actor/enemies/sfx_enemies_stomp_break_01.ogg",
 	sfx_enemies_stomp_break_02 =  "actor/enemies/sfx_enemies_stomp_break_02.ogg",
 	sfx_enemies_stomp_break_03 =  "actor/enemies/sfx_enemies_stomp_break_03.ogg",
@@ -66,11 +88,17 @@ local sfxnames = {
 	item_collect = "item_collect.ogg",
 
 	menu_hover_old =  "menu_hover.ogg",
-	menu_hover =      "menu_hover_5.ogg",
-	menu_select_old = "menu_select.ogg",
-	menu_select =     "menu_select_2.ogg",
-	menu_pause =      "menu_pause.ogg",
-	menu_unpause =    "menu_unpause.ogg",
+
+	ui_menu_hover_01 =      "ui/ui_menu_hover_01.ogg",
+	ui_menu_hover_02 =      "ui/ui_menu_hover_02.ogg",
+	ui_menu_hover_03 =      "ui/ui_menu_hover_03.ogg",
+	ui_menu_hover_04 =      "ui/ui_menu_hover_04.ogg",
+	ui_menu_select_01 =      "ui/ui_menu_select_01.ogg",
+	ui_menu_select_02 =      "ui/ui_menu_select_02.ogg",
+	ui_menu_select_03 =      "ui/ui_menu_select_03.ogg",
+	ui_menu_select_04 =      "ui/ui_menu_select_04.ogg",
+	ui_menu_pause =      "ui/ui_menu_pause.ogg",
+	ui_menu_unpause =    "ui/ui_menu_unpause.ogg",
 
 	stabee_land_1 = "actor/enemy/stabee_land_1.ogg",
 	stabee_land_2 = "actor/enemy/stabee_land_2.ogg",
@@ -206,10 +234,6 @@ end
 
 sounds.shot1:setVolume(0.9)
 sounds.shot2:setPitch(0.8)
-
-sounds.menu_hover:setPitch(1.23)
-sounds.menu_hover:setVolume(0.5)
-sounds.menu_select:setPitch(0.7)
 
 sounds.sliding_wall_metal:setLooping(true)
 sounds.sliding_wall_metal:setVolume(0.1)

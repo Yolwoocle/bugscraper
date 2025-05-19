@@ -752,7 +752,7 @@ end
 
 function Player:on_grounded()
 	-- On land
-	local s = "metalfootstep_0"..tostring(love.math.random(0,4))
+	local s = "char_walk_metal_{001-010}"
 	if self.grounded_col and self.grounded_col.other.name == "rubble" then
 		s = "gravel_footstep_"..tostring(love.math.random(1,6))
 	end
@@ -1342,11 +1342,11 @@ function Player:animate_walk(dt)
 	
 	-- Walk SFX
 	if sign(self.old_bounce_vy) == 1 and sign(self.bounce_vy) == -1 then
-		local s = "metalfootstep_0"..tostring(love.math.random(0,4))
+		local s = "char_walk_metal_{001-010}"
 		if self.grounded_col and self.grounded_col.other.name == "rubble" then
 			s = "gravel_footstep_"..tostring(love.math.random(1,6))
 		end
-		Audio:play_var(s, 0.3, 1.1, {pitch=0.4, volume=0.5})
+		Audio:play_var(s, 0.3, 1.1, {pitch=1.0, volume=0.5})
 	end
 end
 

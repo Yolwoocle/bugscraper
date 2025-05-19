@@ -165,6 +165,7 @@ function TextMenuItem:set_selected(val, diff)
 end
 
 function TextMenuItem:after_click()
+	Audio:play_var("ui_menu_select_{01-04}", 0.1, 1.2)
 	self.oy = -4
 end
 
