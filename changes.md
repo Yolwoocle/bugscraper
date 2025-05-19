@@ -3,7 +3,7 @@
 - **Added**: Energy Drink upgrade: combo meter decreases more slowly
 - **Added**: Golden beetles (temporary name), will fly around and explode after you stomp them
 - **Added**: Rollopods, will walk around on the floor and charge at you when you enter their view
-- **Added**: Walking Slot Machines (temporary name), will roll a random patter when you stomp on them and produce a random effect when all 3 symbols are rolled
+- **Added**: Walking Slot Machines (temporary name), will roll a random pattern when you stomp on them and produce a random effect when all 3 symbols are rolled
 - **Added**: Cloud Mother (temporary name), is an enemy with a bunch of smaller enemies following it. If you kill the mother, all the children will perish too 
 - **Change**: Espresso now lasts for 20 floors (prev. 10)
 - **Change**: Beelets from dept. 2 no longer appear spiky when angered
