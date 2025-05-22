@@ -17,7 +17,7 @@ return Menu:new(game, "{menu.credits.title}", {
     { "" },
     { "<<< {menu.credits.additional_art} >>>" },
     { "Noam Goldfarb (SSlime7)", empty_func }, 
-    { "Colin ROULLÉ (OHX)", empty_func }, 
+    { "Colin Roullé (OHX)", empty_func }, 
     { "" },
     { "<<< " .. Text:text("menu.credits.localization") .. " >>>" },
     { "Jakub Piłasiewicz", empty_func },
