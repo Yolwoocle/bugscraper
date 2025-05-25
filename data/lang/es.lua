@@ -42,7 +42,7 @@ return {
 		world_1 = "Recursos de Depuracionces", -- The pun is lost (Debugging resources)
 		world_2 = "La fabrica",
 		world_3 = "La sala de servidores",
-		world_4 = "The Gardens", -- ADDED
+		world_4 = "Los jardines",
 		world_5 = "Ejecutivo",
 	},
 	gun = {
@@ -118,8 +118,8 @@ return {
 			description = "x%d Velocidad de recarga", -- CHANGED
 		},
 		energy_drink = {
-            title = "Energy Drink", -- ADDED
-            description = "Combo meter decreases more slowly", -- ADDED
+            title = "Bebida Energizante",
+            description = "El medidor del combo baja mas lento",
         },
 	},
 	input = {
@@ -165,7 +165,7 @@ return {
 			title = "PAUSAR",
 			resume = "CONTINUAR",
 			retry = "REINTENTAR",
-            return_to_ground_floor = "RETURN TO GROUND FLOOR", --ADDED
+            return_to_ground_floor = "VOLVER AL PRIMER PISO",
 			options = "OPCIONES",
 			credits = "CREDITOS",
 			feedback = "COMENTARIOS",
