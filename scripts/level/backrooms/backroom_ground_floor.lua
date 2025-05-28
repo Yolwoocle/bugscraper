@@ -1,6 +1,7 @@
 require "scripts.util"
 local images = require "data.images"
 local enemies = require "data.enemies"
+local npcs = require "data.npcs"
 local BackroomWithDoor = require "scripts.level.backrooms.backroom_with_door"
 local BackgroundCafeteria = require "scripts.level.background.background_cafeteria"
 local ElevatorDoor       = require "scripts.level.elevator_door"
@@ -25,7 +26,7 @@ function BackroomGroundFloor:init()
 end
 
 function BackroomGroundFloor:generate(world_generator)
-	game.camera.max_x = CANVAS_WIDTH
+	game.camera.max_x = CANVAS_WIDTH + 11*16
 	
     world_generator:generate_ground_floor()
 	
@@ -35,7 +36,7 @@ function BackroomGroundFloor:generate(world_generator)
 		{x = 518-16, y = 223-16, z = 0, img = images.ground_floor_computer_left},
 		{x = 454-16, y = 232-16, z = 0, img = images.ground_floor_mug},
 		{x = 79-16,  y = 213-16, z = 0, img = images.ground_floor_potted_tree},
-		{x = 715-16, y = 213-16, z = 0, img = images.ground_floor_potted_plant},
+		{x = 146, y = 213-16, z = 0, img = images.ground_floor_potted_plant},
 		{x = 644-16, y = 222-16, z = 0, img = images.ground_floor_lamp},
 		{x = 574-16, y = 222-16, z = 0, img = images.ground_floor_computer_right},
 		{x = 651-16, y = 222-16, z = 0, img = images.ground_floor_computer_right},
@@ -61,7 +62,7 @@ function BackroomGroundFloor:generate(world_generator)
 	end
 
 	-- Water dispenser
-	game:new_actor(WaterDispenser:new(845, 212-16))
+	game:new_actor(WaterDispenser:new(790, 212-16))
 
 	-- Start button
 	local nx = CANVAS_WIDTH * 0.7
@@ -74,6 +75,12 @@ function BackroomGroundFloor:generate(world_generator)
 	game:new_actor(create_actor_centered(enemies.ExitSign, floor(744), floor(ny)))
 
 	game:new_actor(create_actor_centered(enemies.Clock, floor(440), floor(105)))
+
+	local npc = random_sample(npcs)
+	game:new_actor(enemies.NPC:new(1000, 226, {
+		animation = npc.animation,
+		dialogue_key = "dialogue.npc." .. npc.key,
+	}))
 end
 
 function BackroomGroundFloor:get_default_camera_position()

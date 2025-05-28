@@ -1,30 +1,21 @@
 require "scripts.util"
 local Enemy = require "scripts.actor.enemy"
 local images = require "data.images"
-local Prop = require "scripts.actor.enemies.prop"
+local StaticProp = require "scripts.actor.enemies.static_prop"
 
 local utf8 = require "utf8"
 
-local JumpingProp = Prop:inherit()
+local JumpingProp = StaticProp:inherit()
 
 function JumpingProp:init(x, y, spr)
     spr = spr or images.upgrade_jar
-    JumpingProp.super.init(self, x, y, spr, spr:getWidth(), spr:getHeight())
+    JumpingProp.super.init(self, x, y, spr)
     self.name = "jumping_prop"
     
     self.gravity = self.default_gravity
 
-    self.life = 10
-    self.loot = {}
     self.jump_force = 150
     self.cur_jump_force = self.jump_force
-
-	self.destroy_bullet_on_impact = false
-	self.is_immune_to_bullets = true
-
-    
-	-- self.sound_damage = "glass_fracture"
-	-- self.sound_death = "glass_break_weak"
 end
 
 function JumpingProp:update(dt)

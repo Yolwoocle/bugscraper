@@ -132,6 +132,12 @@ function Actor:init_actor(x, y, w, h, spr, args)
 	self.debug_values = {}
 
 	self.has_run_ready = false
+
+	self.is_interactible = false
+    self.interact_actions = {"up"}
+    self.interaction_margin = 0
+	self.interaction_delay = 3.0
+	self.interaction_delay_timer =0
 end
 
 --- (Abstract) Function ran on the first frame the enemy's update function is called
@@ -273,6 +279,9 @@ function Actor:update_actor(dt)
 		self.rider.vx = 0
 		self.rider.vy = 0
 	end
+
+	-- Check for interactions
+	self:check_for_interactions(dt)
 end
 
 function Actor:draw()
@@ -295,6 +304,29 @@ function Actor:draw_actor()
 			i = i + 1
 		end
 		Text:pop_font()
+	end
+end
+
+function Actor:check_for_interactions(dt)
+	self.interaction_delay_timer = max(0.0, self.interaction_delay_timer - dt)
+
+	if not (self.is_interactible and game and game.players and self.interaction_delay_timer <= 0) then
+		return 
+	end
+	
+	for _, player in pairs(game.players) do
+		local intersects = player:get_rect(self.interaction_margin):rectangle_intersection(self:get_rect())
+		local action_pressed = false
+		for _, action in pairs(self.interact_actions) do
+			if player:action_pressed(action) then
+				action_pressed = true
+			end
+		end
+
+		if intersects and action_pressed then
+			self:on_interact(player)
+			self.interaction_delay_timer = self.interaction_delay
+		end
 	end
 end
 
@@ -351,7 +383,7 @@ end
 function Actor:apply_force_from(q, source, ox, oy)
 	ox, oy = ox or 0, oy or 0
 	--if not source then    return    end
-	local knockback_x, knockback_y = normalize_vect(source.x - self.mid_x + ox, source.mid_y - self.mid_y + oy)
+	local knockback_x, knockback_y = normalize_vect(source.x - self.mid_x + ox, (source.mid_y or source.y) - self.mid_y + oy)
 	self:apply_force(q, -knockback_x, -knockback_y)
 end
 
@@ -370,6 +402,10 @@ function Actor:on_collision(col, other)
 end
 
 function Actor:on_grounded()
+	--
+end
+
+function Actor:on_interact(player)
 	--
 end
 

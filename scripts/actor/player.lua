@@ -228,6 +228,7 @@ function Player:update(dt)
 	self.mid_y = self.y + floor(self.h/2)
 	self.is_walking = self.is_grounded and abs(self.vx) > 50
 	self:do_invincibility(dt)
+	
 	self:animate_walk(dt)
 	self:update_color(dt)
 	self:update_sprite(dt)

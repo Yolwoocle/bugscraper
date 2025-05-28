@@ -68,8 +68,11 @@ local enemies = {
 	SquidChild =         require "scripts.actor.enemies.squid_child", --*
 	WalkingSlotMachine = require "scripts.actor.enemies.walking_slot_machine", --*
 	
+	StaticProp =         require "scripts.actor.enemies.static_prop",
 	JumpingProp =        require "scripts.actor.enemies.jumping_prop",
 	Dummy =              require "scripts.actor.enemies.dummy",
+
+	NPC =                require "scripts.actor.enemies.npc",
 
 	FinalBoss =          require "scripts.actor.enemies.final_boss",
 

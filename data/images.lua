@@ -90,6 +90,11 @@ local img_names = {
 
 	duck =             "actors/players/duck",
 
+	-- NPCs
+	npc_brown =        "actors/npc/npc_brown",
+	npc_noba =         "actors/npc/npc_noba",
+	npc_hornet =       "actors/npc/npc_hornet",
+
 	-- enemies
 	arum_titan_boss =          "actors/enemies/arum_titan_boss",
 	arum_titan_boss_spiked =   "actors/enemies/arum_titan_boss_spiked",

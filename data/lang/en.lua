@@ -163,6 +163,13 @@ return {
             jetpack = "Jetpack", -- Refers to "jetpacking", a move in the game. 
         },
     },
+    dialogue = {
+        npc = {
+            hornet = "I'm still waiting for my sister...",
+            brown = "This is probably not healthy.",
+            noba = "zerzer",
+        },
+    },
     menu = {
         see_more = "see more...",
         yes = "YES",
