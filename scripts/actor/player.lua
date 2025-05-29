@@ -79,6 +79,8 @@ function Player:init(n, x, y, skin)
 	self.speed_mult = 1.0
 
 	-- Jump
+	self.default_gravity = 40
+
 	self.can_do_midair_jump = false
 	self.max_jumps = 1
 	self.jumps = self.max_jumps
@@ -221,11 +223,9 @@ function Player:update(dt)
 	self:do_wall_sliding(dt)
 	self:update_jumping(dt)
 	self:do_floating(dt)
-	self:do_gravity(dt) -- FIXME: ouch, this is already called in update_actor so there is x2 gravity here
 	self:update_actor(dt)
 	self:do_aiming(dt)
-	self.mid_x = self.x + floor(self.w/2)
-	self.mid_y = self.y + floor(self.h/2)
+	self:update_mid_position()
 	self.is_walking = self.is_grounded and abs(self.vx) > 50
 	self:do_invincibility(dt)
 	
