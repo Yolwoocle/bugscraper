@@ -547,7 +547,7 @@ function Game:draw_game()
 
 		-- Draw actors
 		for _, actor in pairs(self.actors) do
-			if actor.is_active then
+			if actor.is_active and actor.is_visible then
 				actor:draw()
 			end
 		end
@@ -823,12 +823,16 @@ function Game:on_kill(actor)
 end
 
 function Game:on_player_death(player)
-	self.players[player.n] = nil
+	self:unregister_alive_player(player.n)
 	self.waves_until_respawn[player.n] = {1, player}
 
 	if self:get_number_of_alive_players() <= 0 then
 		self:on_last_player_death(player)
 	end
+end
+
+function Game:on_player_ghosted(player)
+	self:on_player_death(player)
 end
 
 function Game:on_last_player_death(player)
@@ -906,7 +910,8 @@ end
 
 function Game:init_players(x, y, spacing)
 	spacing = spacing or (5*16)
-	self.players = {}
+	self.all_players = {} -- All players, including dead/ghost ones
+	self.players = {} -- Only alive players
 
 	if Options:get("convention_mode") then
 		return
@@ -967,6 +972,23 @@ function Game:get_default_player_position(player_n)
 	return 26*16 + (5*16)*(player_n - 1), CANVAS_HEIGHT - 3*16 + 4
 end
 
+--- Registers a player into the table of alive players, and the table of all players
+function Game:register_player(player_n, player)
+	self.players[player_n] = player
+	self.all_players[player_n] = player
+end
+
+--- Unregisters a player from the table of alive players, and the table of all players
+function Game:unregister_player(player_n)
+	self.players[player_n] = nil
+	self.all_players[player_n] = nil
+end
+
+--- Unregisters a player ONLY from the table of alive players, and keeps the reference in the table of all players
+function Game:unregister_alive_player(player_n)
+	self.players[player_n] = nil
+end
+
 function Game:new_player(player_n, x, y, put_in_buffer)
 	player_n = player_n or self:find_free_player_number()
 	if player_n == nil then
@@ -978,7 +1000,8 @@ function Game:new_player(player_n, x, y, put_in_buffer)
 	y = param(y, def_y)
 				
 	local player = Player:new(player_n, x, y, Input:get_user(player_n):get_skin() or skins["mio"])
-	self.players[player_n] = player
+	self:register_player(player_n, player)
+
 	self.waves_until_respawn[player_n] = {-1, nil}
 	if self.level.backroom and self.level.backroom.get_default_player_gun then
 		local gun = self.level.backroom:get_default_player_gun()
@@ -1011,17 +1034,24 @@ function Game:new_player(player_n, x, y, put_in_buffer)
 	return player
 end
 
+function Game:remove_player(player_n)
+	if not self.all_players[player_n] then
+		return
+	end
+	self.all_players[player_n]:remove()
+	self:unregister_player(player_n)
+end
+
 function Game:leave_game(player_n)
-	if self.players[player_n] == nil then
+	if self.all_players[player_n] == nil then
 		return
 	end
 
-	local player = self.players[player_n]
+	local player = self.all_players[player_n]
 	local profile_id = Input:get_input_profile_from_player_n(player.n):get_profile_id()
 
 	Particles:smoke(player.mid_x, player.mid_y, 10)
-	self.players[player_n]:remove()
-	self.players[player_n] = nil
+	self:remove_player(player_n)
 	Input:remove_user(player_n)
 	if profile_id == "keyboard_split_p1" or profile_id == "keyboard_split_p2" then
 		Input:unsplit_keyboard()
@@ -1047,10 +1077,8 @@ end
 
 function Game:get_number_of_alive_players()
 	local count = 0
-	for i = 1, MAX_NUMBER_OF_PLAYERS do
-		if self.players[i] ~= nil then
-			count = count + 1
-		end
+	for i, player in pairs(self.players) do
+		count = count + 1
 	end
 	return count
 end
@@ -1242,7 +1270,7 @@ function Game:update_skin_choices()
 	for _, unlocked_skin_id in pairs(Metaprogression:get("skins")) do
 		self.skin_choices[unlocked_skin_id] = true
 	end
-	for i, player in pairs(self.players) do
+	for i, player in pairs(self.all_players) do
 		self.skin_choices[player.skin.id] = false
 	end
 end

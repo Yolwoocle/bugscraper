@@ -95,32 +95,16 @@ function Cocoon:revive(damager)
     Particles:image(self.mid_x, self.mid_y, 20, {images.cocoon_fragment_1, images.cocoon_fragment_2}, self.w, nil, nil, 0.5)
     game:frameskip(10)
 
+    -- Remove old player (if exists)
+    game:remove_player(self.player_n)
+
+    -- Spawn new player
     local new_player = game:new_player(self.player_n, self.x, self.y)
     game.waves_until_respawn[self.player_n] = {-1, nil}
 
     new_player:set_invincibility(new_player.max_invincible_time)
-    new_player:equip_gun(self.gun)
     for _, upgrade in pairs(game.upgrades) do
         new_player:apply_upgrade(upgrade, true)
-    end
-    
-    if reviver and reviver.is_player then
-        local l = math.floor(reviver.life/2)
-        local player_life, reviver_life = l, reviver.life - l
-        if reviver.life <= 1 then
-            player_life = 1
-            reviver_life = 1
-        end
-        Particles:word(new_player.mid_x,  new_player.mid_y - 16,  concat("+", player_life), COL_LIGHT_RED)    
-        if math.abs(reviver.life - reviver_life) > 0 then
-            Particles:word(reviver.mid_x, reviver.mid_y - 16, concat("-", reviver.life - reviver_life), COL_LIGHT_RED)    
-        end 
-        new_player:set_life(player_life)
-        reviver:set_life(reviver_life)
-
-    elseif reviver == nil then
-        new_player:set_life(1)
-
     end
 
     if not self.is_dead then

@@ -80,7 +80,7 @@ function ExitSign:activate(player)
         game:leave_game(player.n)
         game:screenshake(4)
 		Particles:star_splash(player.mid_x, player.mid_y)
-        Particles:ejected_player(player.skin.spr_dead, player.x, player.y)
+        Particles:ejected_player(player.skin.img_dead, player.x, player.y)
         Particles:floating_image({
             images.star_small_1,
             images.star_small_2,
@@ -136,7 +136,7 @@ function ExitSign:activate_smash_easter_egg(player)
 
     game:leave_game(player.n)
     game:screenshake(14)
-    Particles:smashed_player(player.skin.spr_dead, impact_x, impact_y)
+    Particles:smashed_player(player.skin.img_dead, impact_x, impact_y)
     Audio:play("smash_easter_egg")
     
     self.spring_active = true

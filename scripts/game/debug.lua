@@ -94,6 +94,9 @@ function Debug:init(game)
             end
         end, do_not_require_ctrl = true },
         ["v"] = { "__jackofalltrades", function()
+            Particles:dead_player(200, 200, images.mio_dead, {COL_RED}, 1)
+
+            --[[
             -- local e = enemies.StinkBug:new(15, 62)
             -- game:new_actor(e)
             -- e:kill()
@@ -117,6 +120,7 @@ function Debug:init(game)
             -- cloud.vx = math.cos(d) * r
             -- cloud.vy = math.sin(d) * r
             -- game:new_actor(cloud)
+            --]]
         end },
         ["j"] = { "longer", function()
             for _, e in pairs(game.actors) do
@@ -595,6 +599,10 @@ function Debug:draw_info_view()
 
     local players_str = "players: "
     for k, player in pairs(self.game.players) do
+        players_str = concat(players_str, "{", k, ":", player.n, "}, ")
+    end
+    players_str = players_str .. " | all_players: " 
+    for k, player in pairs(self.game.all_players) do
         players_str = concat(players_str, "{", k, ":", player.n, "}, ")
     end
 

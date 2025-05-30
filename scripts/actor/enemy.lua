@@ -142,7 +142,7 @@ end
 
 function Enemy:update_enemy(dt)
 	-- if not self.is_active then    return    end
-	self:update_actor(dt)
+	Enemy.super.update(self, dt)
 	
 	if self.follow_player then
 		self:assign_target_as_nearest_player(dt)

@@ -14,6 +14,7 @@ function Actor:init_actor(x, y, w, h, spr, args)
 	creation_index = creation_index + 1
 
 	self.is_actor = true
+	self.is_visible = true
 	self.is_active = true
 	self.x = x or 0
 	self.y = y or 0
@@ -102,7 +103,7 @@ function Actor:init_actor(x, y, w, h, spr, args)
 			end
 
 			local collision_info = other.collision_info
-			if not collision_info.enabled then
+			if not collision_info.enabled or other.is_ghost then
 				return false
 			elseif collision_info.type == COLLISION_TYPE_SOLID then
 				type = "slide"
@@ -200,10 +201,6 @@ function Actor:do_gravity(dt)
 end
 
 function Actor:update(dt)
-	error("update not implemented")
-end
-
-function Actor:update_actor(dt)
 	if self.is_removed then return end
 
 	if not self.has_run_ready then

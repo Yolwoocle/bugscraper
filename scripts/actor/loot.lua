@@ -63,7 +63,7 @@ function Loot:reset_loot()
 end
 
 function Loot:update_loot(dt)
-	self:update_actor(dt)
+	Loot.super.update(self, dt)
 
 	-- uncollectable timer 
 	self.uncollectable_timer = math.max(self.uncollectable_timer - dt, 0)

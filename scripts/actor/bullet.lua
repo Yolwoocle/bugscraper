@@ -75,7 +75,7 @@ function Bullet:init(gun, player, damage, x, y, w, h, vx, vy, args)
 end
 
 function Bullet:update(dt)
-	self:update_actor(dt)
+	Bullet.super.update(self, dt)
 
 	self.harmless_timer:update(dt)
 	self.spr:set_rotation(atan2(self.vy, self.vx))

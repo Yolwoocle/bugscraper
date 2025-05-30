@@ -8,6 +8,8 @@ require "scripts.util"
 require "scripts.meta.constants"
 local Loot = require "scripts.actor.loot"
 local Explosion = require "scripts.actor.enemies.explosion"
+local StateMachine = require "scripts.state_machine"
+local guns         = require "data.guns"
 
 local Player = Actor:inherit()
 
@@ -55,8 +57,10 @@ function Player:init(n, x, y, skin)
 		walk_down = {skin.img_walk_down},
 		airborne = {skin.img_airborne},
 		wall_slide = skin.anim_wall_slide,
+		dead = {skin.img_dead},
 	}, "idle", SPRITE_ANCHOR_CENTER_BOTTOM)
 
+	self.can_move_360 = false
 	self.is_grounded = true
 	self.is_walking = false
 	self.squash = 1
@@ -205,11 +209,144 @@ function Player:init(n, x, y, skin)
 	-- Exiting 
 	self.is_touching_exit_sign = false
 
-	self.debug_god_mode = false
-
+	self.is_ghost = false
+	self.ghost_opacity = 0.7
+	
 	-- Debug 
+	self.debug_god_mode = false
 	self.dt = 1
 	self.t = 0
+
+	self.state_machine = self:get_state_machine()
+
+	local old_filter = self.collision_filter
+	self.collision_filter = function(item, other)
+		if self.is_ghost and other.is_actor then
+			return false
+		end
+		return old_filter(item, other)
+	end
+end
+
+function Player:get_state_machine()
+	local m = StateMachine:new({
+		normal = {
+			enter = function(state)
+				self.is_ghost = false
+				self.show_gun = true
+				self.show_hud = true
+
+				self.gravity = self.default_gravity
+				self.can_move_360 = false
+
+				self.friction_x = self.default_friction
+				self.friction_y = 1
+				self.speed_mult = 1
+
+				self.is_invincible = false
+			end,
+			update = function(state, dt)
+				self:update_upgrades(dt)
+				self:update_effects(dt)
+				self:move(dt)
+				self.is_affected_by_semisolids = not self:action_pressed("down")
+				self:do_wall_sliding(dt)
+				self:update_jumping(dt)
+				self:do_floating(dt)
+				Player.super.update(self, dt)
+
+				self:do_aiming(dt)
+				self:update_mid_position()
+				self.is_walking = self.is_grounded and abs(self.vx) > 50
+				self:do_invincibility(dt)
+				self:update_poison(dt)
+				self:leave_game_if_possible(dt)
+
+				self.gun:update(dt)
+				self:shoot(dt, false)
+				self:update_gun_pos(dt)
+			end,
+			on_grounded = function(state)
+				self:on_grounded_normal()
+			end
+		},
+		dying = {
+			enter = function(state)
+				self.is_ghost = true
+
+				self.show_hud = false
+				self.show_gun = false
+
+				self.gravity = 0
+				self.can_move_360 = true
+				self.speed_mult = 0
+				
+				self.speed_mult = 0
+				self.ghost_opacity = 1
+
+				state.death_y = self.y
+				state.death_oy = 0
+
+				Input:vibrate(self.n, 0.6, 0.4)
+				game:screenshake(10)
+				game:frameskip(30)
+
+				self.timer_before_death = self.max_timer_before_death
+				Audio:play("death")
+			end,
+			update = function(state, dt)
+				local goal_r = 5*sign(self.dir_x)*pi2
+				self.spr:set_rotation(lerp(self.spr.rot, goal_r, 0.06))
+				self.spr:set_animation("dead")
+
+				state.death_oy = lerp(state.death_oy, 40, 0.05)
+				self:set_position(self.x, state.death_y - state.death_oy)
+
+				if abs(self.spr.rot - goal_r) < 0.1 then
+					game:screenshake(10)
+					Input:vibrate_all(0.3, 0.5)
+					
+					Audio:play("explosion")
+
+					Particles:splash(self.mid_x, state.death_y - state.death_oy + self.h/2, 40, {COL_LIGHT_YELLOW, COL_ORANGE, COL_LIGHT_RED, COL_WHITE})
+					Particles:star_splash(self.mid_x, state.death_y-state.death_oy + self.h/2)
+					
+					return "ghost"
+				end
+			end,
+		},
+		ghost = {
+			enter = function(state)
+				self.is_ghost = true
+				self.show_gun = false
+				self.show_hud = false
+				self.speed_mult = 1
+				self.ghost_opacity = 0.7
+				
+				self.gravity = 0
+				self.can_move_360 = true
+				self.is_affected_by_semisolids = false
+
+				self.is_invincible = true
+				self:equip_gun(guns.unlootable.GhostGun:new(self))
+
+				self.spr:set_color({1,1,1,0.7})
+				self.spr:set_rotation(0)
+			end,
+			update = function(state, dt)
+				self.friction_x = self.default_friction
+				self.friction_y = self.default_friction
+				
+				self.gun:update(dt)
+				self:shoot(dt, false)
+				
+				self:move(dt)
+				Player.super.update(self, dt)				
+			end,
+		}
+	}, "normal")
+
+	return m
 end
 
 function Player:update(dt)
@@ -217,27 +354,16 @@ function Player:update(dt)
 	self.t = self.t + 1
 	
 	self:update_virtual_inputs(dt)
-	self:update_upgrades(dt)
-	self:update_effects(dt)
-	self:move(dt)
-	self:do_wall_sliding(dt)
-	self:update_jumping(dt)
-	self:do_floating(dt)
-	self:update_actor(dt)
-	self:do_aiming(dt)
-	self:update_mid_position()
-	self.is_walking = self.is_grounded and abs(self.vx) > 50
-	self:do_invincibility(dt)
+	self.state_machine:update(dt)
 	
 	self:animate_walk(dt)
 	self:update_color(dt)
 	self:update_sprite(dt)
 	self:do_particles(dt)
-	self:update_poison(dt)
-	self:leave_game_if_possible(dt)
+	self:update_visuals()
 
-	if self.life <= 0 and not self.is_killed then
-		self:kill()
+	if self.life <= 0 and not (self.is_killed or self.is_ghost) then
+		self:start_ghost()
 	end
 	
 	if self.is_grounded then
@@ -248,16 +374,10 @@ function Player:update(dt)
 
 	self:update_combo(dt)
 
-	self.gun:update(dt)
-	self:shoot(dt, false)
-	self:update_gun_pos(dt)
-
 	self.ui_x = lerp(self.ui_x, floor(self.mid_x), 0.2)
 	self.ui_y = lerp(self.ui_y, floor(self.y), 0.2)
 
-	-- Visuals
-	self:update_visuals()
-
+	-- MISC
 	self.flag_has_jumped_on_current_frame = false
 	self:update_debug(dt)
 end
@@ -376,6 +496,11 @@ function Player:set_invincibility(n)
 	self.invincible_time = math.max(n, self.invincible_time)
 end
 
+function Player:start_ghost()
+	self.state_machine:set_state("dying")
+	game:on_player_ghosted(self)
+end
+
 function Player:kill()
 	if self.is_dead then return end
 	if self.debug_god_mode then
@@ -387,7 +512,7 @@ function Player:kill()
 	game:frameskip(30)
 
 	local ox, oy = self.spr:get_total_centered_offset_position(self.x, self.y, self.w, self.h)
-	Particles:dead_player(ox, oy, self.skin.spr_dead, self.color_palette, self.dir_x)
+	Particles:dead_player(ox, oy, self.skin.img_dead, self.color_palette, self.dir_x)
 
 	self:on_death()
 	game:on_kill(self)
@@ -443,7 +568,7 @@ function Player:do_damage(n, source)
 
 	if self.life <= 0 then
 		self.life = 0 
-		self:kill()
+		self:start_ghost()
 	end
 
 	self:apply_effect_on_damage()
@@ -506,7 +631,7 @@ function Player:move(dt)
 	local dir = {x=0, y=0}
 	if self:action_down('left') then    dir.x = dir.x - 1   end
 	if self:action_down('right') then   dir.x = dir.x + 1   end
-	if self.debug_god_mode then
+	if self.debug_god_mode or self.can_move_360 then
 		if self:action_down('up') then     dir.y = dir.y - 1   end
 		if self:action_down('down') then   dir.y = dir.y + 1   end
 	end
@@ -524,9 +649,6 @@ function Player:move(dt)
 	-- Apply velocity 
 	self.vx = self.vx + dir.x * self:get_speed()
 	self.vy = self.vy + dir.y * self:get_speed()
-
-	-- Misc
-	self.is_affected_by_semisolids = not self:action_pressed("down")
 end
 
 function Player:get_speed()
@@ -752,6 +874,10 @@ function Player:on_collision(col, other)
 end
 
 function Player:on_grounded()
+	self.state_machine:_call("on_grounded")
+end
+
+function Player:on_grounded_normal()
 	-- On land
 	local s = "char_walk_metal_{001-010}"
 	if self.grounded_col and self.grounded_col.other.name == "rubble" then
@@ -1116,7 +1242,7 @@ function Player:update_visuals()
 		Particles:dust(self.mid_x + random_neighbor(7), self.mid_y + random_neighbor(7), random_sample{color(0x3e8948), color(0x265c42), color(0x193c3e)})
 	end
 
-	if (game.level.fury_active) and self.t % 2 == 0 then
+	if (game.level.fury_active) and self.t % 2 == 0 and not self.is_ghost then
 		Particles:push_layer(PARTICLE_LAYER_BACK_SHADOWLESS)
 		
 		local x, y = self.spr:get_total_centered_offset_position(self.x, self.y, self.w, self.h)
@@ -1136,7 +1262,9 @@ function Player:draw()
 	if self.is_dead then    return    end
 
 	-- Draw gun
-	self.gun:draw(1, self.dir_x)
+	if self.show_gun then
+		self.gun:draw(1, self.dir_x)
+	end
 
 	-- Draw self
 	self:draw_player()
@@ -1361,7 +1489,7 @@ function Player:update_color(dt)
 	if self.is_invincible then
 		local v = 1 - (self.invincible_time / self.max_invincible_time)
 		local a = 1
-		if self.iframe_blink_timer < self.iframe_blink_freq/2 then
+		if self.iframe_blink_timer > self.iframe_blink_freq/2 then
 			a = 0.5
 		end
 
@@ -1369,6 +1497,10 @@ function Player:update_color(dt)
 		if self.last_damage_source_name == "poison_cloud" then
 			self.spr:set_color{v, 1, v, a}
 		end
+	end
+	
+	if self.is_ghost then
+		self.spr:set_color{1, 1, 1, self.ghost_opacity}
 	end
 end
 
@@ -1397,6 +1529,9 @@ function Player:update_sprite(dt)
 		else
 			self.spr:set_animation("airborne")
 		end
+	end
+	if self.is_ghost then
+		self.spr:set_animation("dead")
 	end
 end
 

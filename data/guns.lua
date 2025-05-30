@@ -567,6 +567,44 @@ function Guns:init()
 		self.object_3d_rot_speed = {4, 6}
 		self.object_3d_scale = 10
 	end
+
+	
+	-----
+
+	self.unlootable.GhostGun = Gun:inherit()
+
+	function self.unlootable.GhostGun:init(user)
+		self.name = "ghost_gun"
+		self:init_gun(user)
+
+		self.color = COL_LIGHT_BLUE
+		
+		self.max_ammo = 1
+		self.max_reload_timer = 0.8
+		self.bullet_number = 8
+		self.bullet_spread = pi - pi/8
+		self.bullet_friction = 0.7
+		self.random_angle_offset = 0
+		self.knockback = 600
+
+		self.random_angle_offset = 0
+		self.damage = 0.1
+		self.is_auto = true
+		self.spr = images.empty
+		self.sfx = {"gunshot_ring_1", "gunshot_ring_2", "gunshot_ring_3"}
+		self.sfx2 = "pop_ring"
+		self.sfx_volume = 1
+		self.sfx_pitch = 1.4
+		
+		self.cooldown = 0.5
+		self.jetpack_force = 1000
+		
+		self.bullet_spr = images.bullet_ring
+		self.bul_w = 10
+		self.bul_h = 10
+
+		self.screenshake = 1
+	end
 end
 
 local guns_instance = Guns:new()
@@ -587,8 +625,7 @@ function Guns:get_all_guns()
 end
 
 function Guns:get_current_used_gun()
-	
-	for _, p in pairs(game.players) do
+	for _, p in pairs(game.players) do 
 		if p.gun then
 			return p.gun.name
 		end
