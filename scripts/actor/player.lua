@@ -602,6 +602,8 @@ function Player:do_damage(n, source)
 		died = true
 	end
 
+	self.spr:set_animation("dead")
+
 	-- Star effect
 	Particles:push_layer(PARTICLE_LAYER_BACK)
 	local a = (source ~= nil) and 
