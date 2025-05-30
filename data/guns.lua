@@ -599,7 +599,7 @@ function Guns:init()
 		self.cooldown = 0.5
 		self.jetpack_force = 1000
 		
-		self.bullet_spr = images.bullet_ring
+		self.bullet_spr = images.bullet_white
 		self.bul_w = 10
 		self.bul_h = 10
 

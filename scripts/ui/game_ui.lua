@@ -280,7 +280,7 @@ function GameUI:draw_offscreen_indicators()
 		return
 	end
 	local cam_x, cam_y = self.game.camera:get_position()
-	for i, player in pairs(self.game.players) do
+	for i, player in pairs(self.game.all_players) do
 		if (player.x + player.w < cam_x) or (cam_x + CANVAS_WIDTH < player.x) 
 			or (player.y + player.h < cam_y) or (cam_y + CANVAS_HEIGHT < player.y) then 
 			self:draw_offscreen_indicator_for(player)

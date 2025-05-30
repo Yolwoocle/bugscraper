@@ -824,7 +824,7 @@ end
 
 function Game:on_player_death(player)
 	self:unregister_alive_player(player.n)
-	self.waves_until_respawn[player.n] = {1, player}
+	self.waves_until_respawn[player.n] = {5, player}
 
 	if self:get_number_of_alive_players() <= 0 then
 		self:on_last_player_death(player)

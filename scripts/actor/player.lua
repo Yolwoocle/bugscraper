@@ -1,5 +1,5 @@
 local Actor = require "scripts.actor.actor"
-local Guns = require "data.guns"
+local guns = require "data.guns"
 local Enemies = require "data.enemies"
 local AnimatedSprite = require "scripts.graphics.animated_sprite"
 local images = require "data.images"
@@ -18,10 +18,37 @@ function Player:init(n, x, y, skin)
 	x = x or 0
 	y = y or 0
 	self:init_actor(x, y, 14, 14, images.ant1)
+
+	self:add_constant_sound("sfx_wall_slide", "sliding_wall_metal")
+
+	self:reset(n, skin)
+	self.wall_collision_box = { --Move this to a seperate class if needed
+		x = self.x,
+		y = self.y,
+		w = self.w + self.wall_jump_margin*2,
+		h = self.h,
+	}
+	Collision:add(self.wall_collision_box)
+
+
+	local old_filter = self.collision_filter
+	self.collision_filter = function(item, other)
+		if self.is_ghost and other.is_actor then
+			return false
+		end
+		return old_filter(item, other)
+	end
+
+	self.state_machine = self:get_state_machine()
+end
+
+function Player:reset(n, skin)
+	n = self.n or n
+	skin = self.skin or skin
+
 	self.is_player = true
 	self.is_being = true
 	self.name = concat("player", n)
-	self.player_type = "ant"
 
 	self.z = -100
 
@@ -116,13 +143,6 @@ function Player:init(n, x, y, skin)
 	self.wall_slide_particle_timer = 0
 
 	self.wall_jump_margin = 8
-	self.wall_collision_box = { --Move this to a seperate class if needed
-		x = self.x,
-		y = self.y,
-		w = self.w + self.wall_jump_margin*2,
-		h = self.h,
-	}
-	Collision:add(self.wall_collision_box)
 
 	-- Visuals
 	self.color = ({COL_RED, COL_GREEN, COL_DARK_RED, COL_YELLOW})[self.n]
@@ -151,19 +171,18 @@ function Player:init(n, x, y, skin)
 	self.ammo_bar_shad_color = COL_DARK_BLUE
 	self.ammo_percent_gain_on_stomp = 0
 	
-	self:equip_gun(Guns.unlootable.Machinegun:new())
-	-- self:equip_gun(Guns.unlootable.DebugGun:new())
+	self:equip_gun(guns.unlootable.Machinegun:new())
 	-- FOR DEBUGGING
 	self.guns = {
-		Guns.unlootable.Machinegun:new(self),
-		Guns.unlootable.DebugGun:new(self),
-		Guns.unlootable.EmptyGun:new(self),
-		Guns.Triple:new(self),
-		Guns.Burst:new(self),
-		Guns.Shotgun:new(self),
-		Guns.Minigun:new(self),
-		Guns.MushroomCannon:new(self),
-		Guns.Ring:new(self),
+		guns.unlootable.Machinegun:new(self),
+		guns.unlootable.DebugGun:new(self),
+		guns.unlootable.EmptyGun:new(self),
+		guns.Triple:new(self),
+		guns.Burst:new(self),
+		guns.Shotgun:new(self),
+		guns.Minigun:new(self),
+		guns.MushroomCannon:new(self),
+		guns.Ring:new(self),
 	}
 	self.gun_number = 1
 
@@ -177,11 +196,9 @@ function Player:init(n, x, y, skin)
 	self.controls_oy = 0
 
 	-- SFX
-	self:add_constant_sound("sfx_wall_slide", "sliding_wall_metal")
-	self:set_constant_sound_volume("sfx_wall_slide", 0)
-	-- self.sfx_wall_slide:play()
 	self.sfx_wall_slide_volume = 0
 	self.sfx_wall_slide_max_volume = 0.1
+	self:set_constant_sound_volume("sfx_wall_slide", 0)
 
 	-- Combo / fury
 	self.combo = 0
@@ -215,23 +232,16 @@ function Player:init(n, x, y, skin)
 	-- Debug 
 	self.debug_god_mode = false
 	self.dt = 1
-	self.t = 0
-
-	self.state_machine = self:get_state_machine()
-
-	local old_filter = self.collision_filter
-	self.collision_filter = function(item, other)
-		if self.is_ghost and other.is_actor then
-			return false
-		end
-		return old_filter(item, other)
-	end
+	self.frame = 0
+	self.t = 0.0
 end
 
 function Player:get_state_machine()
 	local m = StateMachine:new({
 		normal = {
 			enter = function(state)
+				self:reset()
+
 				self.is_ghost = false
 				self.show_gun = true
 				self.show_hud = true
@@ -272,6 +282,8 @@ function Player:get_state_machine()
 		},
 		dying = {
 			enter = function(state)
+				self:reset()
+
 				self.is_ghost = true
 
 				self.show_hud = false
@@ -317,6 +329,8 @@ function Player:get_state_machine()
 		},
 		ghost = {
 			enter = function(state)
+				self:reset()
+
 				self.is_ghost = true
 				self.show_gun = false
 				self.show_hud = false
@@ -332,6 +346,8 @@ function Player:get_state_machine()
 
 				self.spr:set_color({1,1,1,0.7})
 				self.spr:set_rotation(0)
+
+				state.goal_r = nil
 			end,
 			update = function(state, dt)
 				self.friction_x = self.default_friction
@@ -342,6 +358,18 @@ function Player:get_state_machine()
 				
 				self:move(dt)
 				Player.super.update(self, dt)				
+
+				if self:action_pressed("jump") then
+					state.goal_r = pi2
+				end
+
+				if state.goal_r then
+					self.spr:set_rotation(lerp(self.spr.rot, state.goal_r, 0.15))
+					if abs(self.spr.rot - state.goal_r) < 0.15 then
+						state.goal_r = nil
+						self.spr:set_rotation(0)
+					end
+				end
 			end,
 		}
 	}, "normal")
@@ -351,7 +379,8 @@ end
 
 function Player:update(dt)
 	self.dt = dt
-	self.t = self.t + 1
+	self.frame = self.frame + 1
+	self.t = self.t + dt
 	
 	self:update_virtual_inputs(dt)
 	self.state_machine:update(dt)
@@ -1242,7 +1271,7 @@ function Player:update_visuals()
 		Particles:dust(self.mid_x + random_neighbor(7), self.mid_y + random_neighbor(7), random_sample{color(0x3e8948), color(0x265c42), color(0x193c3e)})
 	end
 
-	if (game.level.fury_active) and self.t % 2 == 0 and not self.is_ghost then
+	if (game.level.fury_active) and self.frame % 2 == 0 and not self.is_ghost then
 		Particles:push_layer(PARTICLE_LAYER_BACK_SHADOWLESS)
 		
 		local x, y = self.spr:get_total_centered_offset_position(self.x, self.y, self.w, self.h)
@@ -1269,8 +1298,6 @@ function Player:draw()
 	-- Draw self
 	self:draw_player()
 	love.graphics.setColor(COL_WHITE)
-
-	-- print_outline(nil, nil, tostring(self.jumps), self.x + 20, self.y)
 end
 
 function Player:draw_hud()
@@ -1506,7 +1533,7 @@ end
 
 function Player:update_sprite(dt)
 	-- Outline color
-	if Input:get_number_of_users() > 1 then
+	if Input:get_number_of_users() > 1 and not self.is_ghost then
 		self.spr:set_outline(self.color_palette[1], "round")
 	else
 		self.spr:set_outline(nil)
@@ -1514,6 +1541,11 @@ function Player:update_sprite(dt)
 
 	-- Flipping
 	self.spr:set_flip_x(self.dir_x < 0)
+
+	-- Ghost float effect 
+	if self.is_ghost then
+		self.spr:update_offset(nil, math.sin(self.t*3) * 3.0)
+	end
 
 	-- Set sprite 
 	self.spr:set_animation("idle")

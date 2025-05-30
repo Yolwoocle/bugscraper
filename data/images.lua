@@ -248,6 +248,7 @@ local img_names = {
 	
 	bullet =                   "actors/bullets/bullet",
 	bullet_pea =               "actors/bullets/bullet_pea",
+	bullet_white =             "actors/bullets/bullet_white",
 	bullet_red =               "actors/bullets/bullet_red",
 	bullet_blue =              "actors/bullets/bullet_blue",
 	bullet_ring =              "actors/bullets/bullet_ring",
