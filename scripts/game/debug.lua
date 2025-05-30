@@ -586,8 +586,38 @@ function Debug:draw_debug_menu()
     end
 end
 
+local oa = 0
+local sa = 0.01
+local star
+local function new_star()
+    star = generate_star_shape({
+        triangulated = true,
+
+        ox = 100,
+        oy = 100,
+
+        start_angle = 0,
+        min_angle_step = pi/9,
+        max_angle_step = pi/9,
+        scale = 2,
+        low_radius = 20,
+        high_radius = 40,
+        radius_randomness = 0,
+
+        scale_multiplier_function = function(t)
+            local x = (t + 1) % 1
+            local c = 0.5
+            return 2 * c * abs(x-0.5)-c+1
+        end
+    })
+end
+new_star()
+
+-- 2^(-(2 (x-0.5))^(2))
+
 function Debug:draw_info_view()
-    love.graphics.setFont(FONT_MINI)
+    -- sa = sa + 0.01
+    -- new_star()
 
     self.test_sprite_t = self.test_sprite_t + 1 / 60
     if self.test_sprite_t > 0.3 then
@@ -756,6 +786,12 @@ function Debug:draw_info_view()
     love.graphics.setFont(FONT_REGULAR)
 
     -- love.graphics.draw(images.removeme_bands, 0, 0)
+
+    -- exec_color(COL_RED, function()
+    --     for _, tri in pairs(love.math.triangulate(star)) do
+    --         love.graphics.polygon("fill", tri)
+    --     end
+    -- end)
 end
 
 function Debug:test_info_view_3d_renderer()

@@ -572,11 +572,11 @@ function Player:do_damage(n, source)
 		return false
 	end
 
-	game:frameskip(8)
-	game:screenshake(5)
+	game:frameskip(12)
+	game:screenshake(7)
 	Input:vibrate(self.n, 0.3, 0.45)
 	Audio:play("hurt")
-	Particles:word(self.mid_x, self.y, concat("-",n), COL_LIGHT_RED)
+	-- Particles:word(self.mid_x, self.y, concat("-",n), COL_LIGHT_RED)
 	
 	if self.is_knockbackable and source then
 		self.vx = self.vx + sign(self.mid_x - source.mid_x)*source.knockback
@@ -595,10 +595,23 @@ function Player:do_damage(n, source)
 	self:set_invincibility(self.max_invincible_time)
 	game:on_player_damage(self, n, source)
 
+	local died = false
 	if self.life <= 0 then
 		self.life = 0 
 		self:start_ghost()
+		died = true
 	end
+
+	-- Star effect
+	Particles:push_layer(PARTICLE_LAYER_BACK)
+	local a = (source ~= nil) and 
+		(get_angle_between_vectors(self.mid_x, self.mid_y, (source.mid_x or source.x), (source.mid_y or source.y))) or
+		(random_range(0, pi2))
+	local scale = ternary(died, 0.8, 0.5)
+	Particles:static_image(images.star_big, self.mid_x, self.mid_y, a, 0.02, scale, {
+		color = self.color_palette[1]
+	})
+	Particles:pop_layer()
 
 	self:apply_effect_on_damage()
 	

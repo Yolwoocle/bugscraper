@@ -1439,3 +1439,56 @@ function vec_approx_equal(vec1, vec2)
 	local epsilon = 0.00001
 	return math.abs(vec1.x - vec2.x) < epsilon and math.abs(vec1.y - vec2.y) < epsilon
 end
+
+function generate_star_shape(params)
+	params = params or {}
+
+	local ox = params.ox or 0
+	local oy = params.oy or 0
+	local min_start_angle = params.min_start_angle or 0
+	local max_start_angle = params.max_start_angle or pi2
+    local min_angle_step = params.min_angle_step or 0
+    local max_angle_step = params.max_angle_step or pi/16
+    local low_radius = params.low_radius or 10
+    local high_radius = params.high_radius or 30
+	local radius_randomness = params.radius_randomness or 5
+    local scale = params.scale or 1
+	local scale_multiplier_function = params.scale_multiplier_function or nil
+    local triangulated = params.triangulated
+	
+    local points = {}
+
+    local function add_point(angle, rad)
+        local px = ox + math.cos(-angle) * rad
+        local py = oy + math.sin(-angle) * rad
+        table.insert(points, px)
+        table.insert(points, py)
+    end
+
+	local a = random_range(min_start_angle, max_start_angle)
+    local offset_a = 0
+    local low = false
+    while offset_a <= pi2 do
+		local r
+		if low then
+			r = low_radius + random_neighbor(radius_randomness)
+		else
+			r = high_radius + random_neighbor(radius_randomness)
+		end
+
+		local s = scale
+		if scale_multiplier_function then
+			s = s * scale_multiplier_function(offset_a/pi2)
+		end
+        add_point((a + offset_a) % pi2, r * s)
+        
+        offset_a = offset_a + random_range(min_angle_step, max_angle_step)
+        low = not low
+    end
+
+	-- if triangulated then
+	-- 	points = love.math.triangulate(points)
+	-- end
+
+    return points
+end
