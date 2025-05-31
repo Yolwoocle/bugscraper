@@ -791,6 +791,9 @@ function Game:set_music_volume(vol)
 end
 
 function Game:new_actor(actor, buffer_enemy)
+	if not actor then
+		return
+	end
 	if #self.actors >= self.actor_limit then
 		actor:remove()
 		actor:final_remove()

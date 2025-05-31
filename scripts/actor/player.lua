@@ -10,6 +10,7 @@ local Loot = require "scripts.actor.loot"
 local Explosion = require "scripts.actor.enemies.explosion"
 local StateMachine = require "scripts.state_machine"
 local guns         = require "data.guns"
+local shaders      = require "data.shaders"
 
 local Player = Actor:inherit()
 
@@ -152,8 +153,10 @@ function Player:reset(n, skin)
 	self.is_invincible = false
 	self.invincible_time = 0
 	self.max_invincible_time = 3
-	self.iframe_blink_freq = 0.1
+	self.iframe_blink_default_freq = 0.2
+	self.iframe_blink_freq = 0.2
 	self.iframe_blink_timer = 0
+	self.iframe_blink_color = nil
 
 	-- Shooting & guns (keep it or ditch for family friendliness?)	
 	self.is_shooting = false
@@ -517,6 +520,8 @@ function Player:do_invincibility(dt)
 	self.is_invincible = false
 	if self.invincible_time > 0 and game.frames_to_skip <= 0 then
 		self.is_invincible = true
+
+		self.iframe_blink_freq = (self.invincible_time > 1) and self.iframe_blink_default_freq or self.iframe_blink_default_freq/2
 		self.iframe_blink_timer = (self.iframe_blink_timer + dt) % self.iframe_blink_freq
 	end
 end
@@ -1444,6 +1449,17 @@ end
 
 function Player:draw_player()
 	self.spr:draw(self.x, self.y - self.walkbounce_oy, self.w, self.h)
+	if self.iframe_blink_color then
+		local s = self.spr.is_solid_color
+		local c = self.spr.color
+		self.spr:set_solid(true)
+		self.spr:set_color(self.iframe_blink_color)
+		
+		self.spr:draw(self.x, self.y - self.walkbounce_oy, self.w, self.h)
+
+		self.spr:set_solid(s)
+		self.spr:set_color(c)
+	end
 
 	local post_x, post_y = self.spr:get_total_offset_position(self.x, self.y, self.w, self.h)
 	self:post_draw(post_x, post_y)
@@ -1523,21 +1539,23 @@ end
 
 function Player:update_color(dt)
 	self.spr:set_color{1, 1, 1, 1}
-	if self.poison_timer > 0.1 then
-		local v = 1 - (self.poison_timer / self.poison_damage_time)
-		self.spr:set_color{v, 1, v, 1}
-	end
+	self.spr:set_solid(false)
+	self.iframe_blink_color = nil
+	-- if self.poison_timer > 0.1 then
+	-- 	local v = 1 - (self.poison_timer / self.poison_damage_time)
+	-- 	self.spr:set_color{v, 1, v, 1}
+	-- end
 
-	if self.is_invincible then
-		local v = 1 - (self.invincible_time / self.max_invincible_time)
-		local a = 1
-		if self.iframe_blink_timer > self.iframe_blink_freq/2 then
-			a = 0.5
+	if self.is_invincible and self.invincible_time > 0.1 then
+		local a = (self.invincible_time / self.max_invincible_time)*0.5 + 0.3
+		local col = COL_WHITE
+		if self.last_damage_source_name == "poison_cloud" then
+			col = COL_LIGHT_GREEN
 		end
 
-		self.spr:set_color{1, v, v, a}
-		if self.last_damage_source_name == "poison_cloud" then
-			self.spr:set_color{v, 1, v, a}
+		if self.iframe_blink_timer > self.iframe_blink_freq/2 then
+			-- a = 0.5
+			self.iframe_blink_color = {col[1], col[2], col[3], a}
 		end
 	end
 	

@@ -193,6 +193,10 @@ function Sprite:set_flashing_white(value)
     end
 end
 
+function Sprite:set_solid(enabled)
+    self.is_solid_color = enabled
+end
+
 function Sprite:set_outline(color, type)
     if color == nil then
         self.outline = nil
@@ -252,6 +256,11 @@ function Sprite:draw(x, y, w, h, custom_draw)
         old_shader = love.graphics.getShader()
         love.graphics.setShader(self.shader)
     end
+    
+    if self.is_solid_color then
+		shaders.draw_in_color:sendColor("fillColor", self.color)
+        love.graphics.setShader(shaders.draw_in_color)
+    end
 
     exec_color(self.color, function()
         if self.outline then
@@ -276,7 +285,7 @@ function Sprite:draw(x, y, w, h, custom_draw)
 
         -- draw_func(self.image, x + anchor_ox, y + anchor_oy, self.rot, scale_x, scale_y, spr_w/2, spr_h)
     end)
-    if self.shader then
+    if self.shader or self.is_solid_color then
         love.graphics.setShader(old_shader)
     end
 end

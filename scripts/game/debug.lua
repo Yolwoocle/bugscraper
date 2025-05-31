@@ -615,6 +615,10 @@ new_star()
 
 -- 2^(-(2 (x-0.5))^(2))
 
+local spr = AnimatedSprite:new({
+    normal = {images.bee_boss_alt, 0.05, 2}
+}, "normal")
+
 function Debug:draw_info_view()
     -- sa = sa + 0.01
     -- new_star()
@@ -792,6 +796,11 @@ function Debug:draw_info_view()
     --         love.graphics.polygon("fill", tri)
     --     end
     -- end)
+    
+    spr:update(1/60)
+    spr:set_solid(true)
+    spr:set_color(COL_RED)
+    spr:draw(100, 100)
 end
 
 function Debug:test_info_view_3d_renderer()
