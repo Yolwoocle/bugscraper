@@ -5,13 +5,18 @@
 - **Added**: Rollopods, will walk around on the floor and charge at you when you enter their view
 - **Added**: Walking Slot Machines (temporary name), will roll a random pattern when you stomp on them and produce a random effect when all 3 symbols are rolled
 - **Added**: Cloud Mother (temporary name), is an enemy with a bunch of smaller enemies following it. If you kill the mother, all the children will perish too 
+- **Added**: In co-op, you will now become a ghost after dying. Ghosts can shoot small bursts of bullets that deal a little damage. Players can be respawned from ghosts by breaking cocoons that will appear a few waves later.
+>>>>>>>- **Change**: New sounds from the new sound designer in the team, Verbaudet
+- **Change**: Repawned players will now appear with full health, however cocoons appear more rarely  
 - **Change**: Espresso now lasts for 20 floors (prev. 10)
+- **Change**: Hot chocolate now affects natural recharging (the recharging that happens after waiting for a few seconds)
 - **Change**: Beelets from dept. 2 no longer appear spiky when angered
 - **Change**: Reskinned and polished the Stabee enemy, from dept. 2
 - **Change**: Background fan in dept. 2 now spins 
 - **Change**: Polished up dept. 3 cabin background
 - **Change**: Added a cooldown for cloud storm enemy (temporary name)
-- **Fix**: Partial fix to issue where some enemies like boomshrooms, stink bugs' clouds, larvae spawned from projectiles, would clip into the ground and teleport. This might still happen, just hopefully to a lesser degree.
+- **Change**: Changed the damage and invincibility animation
+- **Fix**: Partial fix to issue where some enemies like boomshrooms, stink bugs' clouds, larvae spawned from projectiles, would clip into the ground and teleport. This might still happen, just hopefully to a lesser degree
 - **Fix**: Fixed visual bugs related to TV presentation
 
 ## 0.6 (*2025-03-22*)
