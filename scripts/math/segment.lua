@@ -23,12 +23,12 @@ function Segment:scale(val)
     return self
 end
 
-function Segment:get_direction()
-    return normalize_vect(self.bx - self.ax, self.by - self.ay)
-end
-
 function Segment:get_length()
     return dist(self.bx - self.ax, self.by - self.ay)
+end
+
+function Segment:get_direction()
+    return normalize_vect(self.bx - self.ax, self.by - self.ay)
 end
 
 return Segment

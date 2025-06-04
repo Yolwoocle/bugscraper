@@ -33,6 +33,7 @@ function Particle:init_particle(x,y,s,r, vx,vy,vs,vr, life, g, is_solid, params)
 	self.max_life = life or 5
 	self.life = self.max_life
 
+	self.ignore_frameskip = param(params.ignore_frameskip, false)
 	self.is_removed = false
 end
 
@@ -74,6 +75,7 @@ function Particle:update_particle(dt)
 		self:remove()
 	end
 end
+
 function Particle:update(dt)
 	self:update_particle(dt)
 end
@@ -709,11 +711,14 @@ end
 function ParticleSystem:update(dt) 
 	for _, layer in pairs(self.layers) do
 		for i, p in pairs(layer) do
-			p:update(dt)
-			if p.is_removed then
-				-- OPTI: maybe performance can improved by doing layer[i] = nil instead as it won't 
-				-- shift all items in the table  
-				table.remove(layer, i)
+			if game.frames_to_skip <= 0 or p.ignore_frameskip then
+				p:update(dt)
+
+				if p.is_removed then
+					-- OPTI: maybe performance can improved by doing layer[i] = nil instead as it won't 
+					-- shift all items in the table  
+					table.remove(layer, i)
+				end
 			end
 		end
 	end
@@ -1009,6 +1014,11 @@ function ParticleSystem:image(x, y, number, spr, spw_rad, life, vs, g, params)
 		if (not is_animated) and type(spr) == "table" then
 			sprite = random_sample(spr)
 		end
+
+		if params.ignore_frameskip ~= nil then
+			particle_params.ignore_frameskip = params.ignore_frameskip
+		end
+
 		--spr, x,y,s,r, vx,vy,vs,vr, life, g, is_solid
 		self:add_particle(ImageParticle:new(sprite, x+dx, y+dy, scale, rot, vx,vy,vs,vr, life, g, is_solid, particle_params))
 	end
@@ -1037,6 +1047,7 @@ end
 
 -- scottttcccchhhh
 function ParticleSystem:floating_image(img, x, y, amount, rot, life, scale, vel, friction, params)
+	params = params or {}
 	Particles:image(x, y, amount, img, 0, nil, 0, 0, {
 		is_solid = false,
 		rot = rot,
@@ -1052,6 +1063,8 @@ function ParticleSystem:floating_image(img, x, y, amount, rot, life, scale, vel,
 		scale = scale,
 		friction_x = friction,
 		friction_y = friction,
+
+		ignore_frameskip = param(params.ignore_frameskip, false)
 	})
 end
 

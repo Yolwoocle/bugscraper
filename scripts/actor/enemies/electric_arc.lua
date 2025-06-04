@@ -63,6 +63,18 @@ function ElectricArc:set_arc_active(active)
     self.is_arc_active = active
 end
 
+function ElectricArc:get_segment()
+    return self.segment
+end
+
+function ElectricArc:get_length()
+    return self.segment:get_length()
+end
+
+function ElectricArc:get_direction()
+    return self.segment:get_direction()
+end
+
 function ElectricArc:set_segment(ax_or_seg, ay, bx, by)
     if self.is_removed then
         return

@@ -326,8 +326,6 @@ end
 function Loot.Gun:update(dt)
 	self:update_loot(dt)
 
-	self.t = self.t + dt
-
 	self.spr:update_offset(nil, -6 - sin(self.t * 4) * 4)
 	self.spr:set_rotation(sin(self.t * 4 + 0.4) * 0.1)
 

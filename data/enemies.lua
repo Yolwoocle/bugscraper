@@ -55,6 +55,7 @@ local enemies = {
 	ArumTitanMinion =    require "scripts.actor.enemies.arum_titan_minion", 
 	
 	-- Unused
+	ProgressingArc =     require "scripts.actor.enemies.progressing_arc", 
 	FloorHoleSpawner =   require "scripts.actor.enemies.floor_hole_spawner", 
 	BigBug =             require "scripts.actor.enemies.big_bug", --*
 	Slime =              require "scripts.actor.enemies.slime", --*

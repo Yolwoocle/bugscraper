@@ -935,6 +935,35 @@ function circle_color(col, mode, x, y, r)
 	love.graphics.setColor(1, 1, 1, 1)
 end
 
+function line_dotted(col, ax, ay, bx, by, params)
+	params = params or {}
+	local spacing = params.spacing or 5.0
+	local segment_length = params.segment_length or 5.0
+	local offset = params.offset or 0.0
+
+	assert(segment_length >= 0, "Segment length is negative")
+	assert(spacing >= 0, "Line spacing is negative")
+	assert(segment_length + spacing > 0, "Dotted line parameters are zero or negative")
+
+	local len = dist(bx - ax, by - ay)
+	local dx = (bx - ax) / len 
+	local dy = (by - ay) / len
+	local ir = ((offset) % (spacing + segment_length)) - (spacing + segment_length)
+	while ir <= len do
+		if ir + segment_length >= 0 then
+			local ir1 = math.max(ir, 0)
+			local ir2 = math.min(ir + segment_length, len)
+			line_color(col, 
+				ax + dx*ir1, 
+				ay + dy*ir1,
+				ax + dx*ir2, 
+				ay + dy*ir2
+			)
+		end
+		ir = ir + segment_length + spacing
+	end
+end
+
 function line_color(col, ax, ay, bx, by, ...)
 	col = col or { 1, 1, 1, 1 }
 	love.graphics.setColor(col)

@@ -109,7 +109,6 @@ end
 
 function Shooter:update(dt)
     Shooter.super.update(self, dt)
-    self.t = self.t + dt
     self.gun:update(dt)
 
     self.state_machine:update(dt)

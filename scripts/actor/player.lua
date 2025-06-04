@@ -236,7 +236,6 @@ function Player:reset(n, skin)
 	self.debug_god_mode = false
 	self.dt = 1
 	self.frame = 0
-	self.t = 0.0
 end
 
 function Player:get_state_machine()
@@ -383,7 +382,6 @@ end
 function Player:update(dt)
 	self.dt = dt
 	self.frame = self.frame + 1
-	self.t = self.t + dt
 	
 	self:update_virtual_inputs(dt)
 	self.state_machine:update(dt)
@@ -615,10 +613,16 @@ function Player:do_damage(n, source)
 		(get_angle_between_vectors(self.mid_x, self.mid_y, (source.mid_x or source.x), (source.mid_y or source.y))) or
 		(random_range(0, pi2))
 	local scale = ternary(died, 0.8, 0.5)
-	Particles:static_image(images.star_big, self.mid_x, self.mid_y, a, 0.02, scale, {
+	Particles:static_image(images.star_big, self.mid_x, self.mid_y, a, 0.05, scale, {
 		color = self.color_palette[1]
 	})
 	Particles:pop_layer()
+
+	Particles:floating_image({
+		images.star_small_1,
+		images.star_small_2,
+	}, self.mid_x, self.mid_y, random_range_int(5, 7), 0, 0.5, 1, 120, 0.95, {ignore_frameskip = true})
+	-- x, y, amount, rot, life, scale, vel, friction, params
 
 	self:apply_effect_on_damage()
 	

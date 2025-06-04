@@ -79,7 +79,6 @@ function ArumTitanMinion:init(x, y, parent, params)
 
     self.score = 10
 
-    self.t = 0
     self:set_harmless(2.0)
 
     self.state_machine = StateMachine:new({
@@ -150,7 +149,6 @@ function ArumTitanMinion:update(dt)
 
     self.state_machine:update(dt)
 
-    self.t = self.t + dt
     if self.harmless_timer > 0 and self.t % 0.2 <= 0.1 then
         self.spr:set_color({ 1, 1, 1, 0.5 })
     else

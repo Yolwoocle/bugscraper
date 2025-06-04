@@ -139,6 +139,8 @@ function Actor:init_actor(x, y, w, h, spr, args)
     self.interaction_margin = 0
 	self.interaction_delay = 3.0
 	self.interaction_delay_timer =0
+
+	self.t = 0.0
 end
 
 --- (Abstract) Function ran on the first frame the enemy's update function is called
@@ -207,6 +209,8 @@ function Actor:update(dt)
 		self.has_run_ready = true
 		self:ready()
 	end 
+
+	self.t = self.t + dt
 
 	self:do_gravity(dt)
 

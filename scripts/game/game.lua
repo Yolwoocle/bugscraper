@@ -342,10 +342,6 @@ function Game:update(dt)
 	self.camera:update_screenshake(dt)
 
 	self.frames_to_skip = max(0, self.frames_to_skip - 1)
-	local do_frameskip = self.slow_mo_rate ~= 0 and self.frame % self.slow_mo_rate ~= 0
-	if self.frames_to_skip > 0 or do_frameskip then
-		return
-	end
 
 	Input:update(dt)
 	self.music_player:update(dt)
@@ -373,6 +369,12 @@ function Game:update(dt)
 end
 
 function Game:update_main_game(dt)
+	Particles:update(dt)
+
+	if self.frames_to_skip > 0 then
+		return
+	end
+
 	self.camera:update(dt)
 
 	if self.game_state == GAME_STATE_PLAYING then
@@ -388,7 +390,6 @@ function Game:update_main_game(dt)
 
 	self:update_skin_choices()
 	self:update_queued_players(dt)
-	Particles:update(dt)
 	self:update_actors(dt)
 	self:update_logo(dt)
 	self:update_debug(dt)
@@ -619,9 +620,8 @@ function Game:draw_game()
 		love.graphics.draw(self.front_canvas, 0, 0)
 		self.game_ui:draw()
 		self.level:draw_ui()
-		if self.debug.colview_mode then
-			self.debug:draw_colview()
-		end
+		self.debug:draw_colview()
+		self.debug:draw_actor_info_view()
 	end, { apply_camera = false })
 
 	-----------------------------------------------------

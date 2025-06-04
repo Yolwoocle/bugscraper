@@ -33,15 +33,11 @@ function Bee:init(x, y)
 
     self.spr:set_anchor(SPRITE_ANCHOR_CENTER_CENTER)
     self.score = 10
-
-    self.t = 0
 end
 
 function Bee:update(dt)
     Bee.super.update(self, dt)
     self:update_phase(dt)
-
-    self.t = self.t + dt
 
     if self.phase == PHASE_CHASE then
         self:update_phase_chase(dt)

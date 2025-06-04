@@ -254,7 +254,6 @@ end
 
 function TimedSpikes:update(dt)
     TimedSpikes.super.update(self, dt)
-    self.t = self.t + dt
 
     if self.state_timer:update(dt) then
         local new_state = mod_plus_1(self.state_index + 1, #self.state_order)

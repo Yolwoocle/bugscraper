@@ -30,7 +30,6 @@ end
 function Clock:update(dt)
     Clock.super.update(self, dt)
 
-    self.t = self.t + dt
     self.datetime = os.date("*t")
 end
 

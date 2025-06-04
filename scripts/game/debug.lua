@@ -35,6 +35,7 @@ function Debug:init(game)
     self.is_reading_for_f1_action = false
     self.debug_menu = false
     self.colview_mode = false
+    self.actor_info_view = false
     self.info_view = false
     self.joystick_view = false
     self.bound_view = false
@@ -93,8 +94,27 @@ function Debug:init(game)
                 _G_frame_repeat = 1
             end
         end, do_not_require_ctrl = true },
+        ["f8"] = { "toggle actor info view mode", function()
+            self.actor_info_view = not self.actor_info_view
+        end, do_not_require_ctrl = true },
+        
         ["v"] = { "__jackofalltrades", function()
-            Particles:dead_player(200, 200, images.mio_dead, {COL_RED}, 1)
+            local points = {}
+            local cx = game.level.door_rect.ax / 2 + game.level.door_rect.bx / 2
+            local cy = game.level.door_rect.ay / 2 + game.level.door_rect.by / 2
+            
+            for i=0, 19 do
+                table.insert(points, {cx + math.cos(pi/2 + pi2*i/20)* 100, cy + math.sin(pi/2 + pi2*i/20)* 100})
+            end
+
+            local e = enemies.ProgressingArc:new(100, 100, {
+                points = points,
+                interval_size = 150,
+                progress_speed = 80,
+            })
+            game:new_actor(e)
+
+            -- Particles:dead_player(200, 200, images.mio_dead, {COL_RED}, 1)
 
             --[[
             -- local e = enemies.StinkBug:new(15, 62)
@@ -618,10 +638,12 @@ new_star()
 local spr = AnimatedSprite:new({
     normal = {images.bee_boss_alt, 0.05, 2}
 }, "normal")
+local linedottedoffset = 0.0
+
+
 
 function Debug:draw_info_view()
-    -- sa = sa + 0.01
-    -- new_star()
+    love.graphics.setFont(FONT_MINI)
 
     self.test_sprite_t = self.test_sprite_t + 1 / 60
     if self.test_sprite_t > 0.3 then
@@ -631,97 +653,99 @@ function Debug:draw_info_view()
     end
     -- self.test_sprite:draw(200, 100)
 
-    local players_str = "players: "
-    for k, player in pairs(self.game.players) do
-        players_str = concat(players_str, "{", k, ":", player.n, "}, ")
-    end
-    players_str = players_str .. " | all_players: " 
-    for k, player in pairs(self.game.all_players) do
-        players_str = concat(players_str, "{", k, ":", player.n, "}, ")
-    end
+    do
+        local players_str = "players: "
+        for k, player in pairs(self.game.players) do
+            players_str = concat(players_str, "{", k, ":", player.n, "}, ")
+        end
+        players_str = players_str .. " | all_players: " 
+        for k, player in pairs(self.game.all_players) do
+            players_str = concat(players_str, "{", k, ":", player.n, "}, ")
+        end
 
-    local users_str = "users: "
-    for k, player in pairs(Input.users) do
-        users_str = concat(users_str, "{", k, ":", player.n, "(", player.input_profile_id, ")", "}, ")
-    end
+        local users_str = "users: "
+        for k, player in pairs(Input.users) do
+            users_str = concat(users_str, "{", k, ":", player.n, "(", player.input_profile_id, ")", "}, ")
+        end
 
-    local joystick_user_str = "joysticks_to_users: "
-    for joy, user in pairs(Input.joystick_to_user_map) do
-        joystick_user_str = concat(joystick_user_str, "{", string.sub(joy:getName(), 1, 4), "... ", ":", user.n, "}, ")
-    end
+        local joystick_user_str = "joysticks_to_users: "
+        for joy, user in pairs(Input.joystick_to_user_map) do
+            joystick_user_str = concat(joystick_user_str, "{", string.sub(joy:getName(), 1, 4), "... ", ":", user.n, "}, ")
+        end
 
-    local joystick_str = "joysticks: "
-    for _, joy in pairs(love.joystick.getJoysticks()) do
-        joystick_str = concat(joystick_str, "{", string.sub(joy:getName(), 1, 4), "...}, ")
-    end
+        local joystick_str = "joysticks: "
+        for _, joy in pairs(love.joystick.getJoysticks()) do
+            joystick_str = concat(joystick_str, "{", string.sub(joy:getName(), 1, 4), "...}, ")
+        end
 
-    local wave_resp_str = "waves_until_respawn "
-    for i = 1, MAX_NUMBER_OF_PLAYERS do
-        wave_resp_str = concat(wave_resp_str, "{", i, ":", self.game.waves_until_respawn[i][1], "}, ")
-    end
+        local wave_resp_str = "waves_until_respawn "
+        for i = 1, MAX_NUMBER_OF_PLAYERS do
+            wave_resp_str = concat(wave_resp_str, "{", i, ":", self.game.waves_until_respawn[i][1], "}, ")
+        end
 
-    local queued_players_str = "{"
-    for k, player in pairs(game.queued_players) do
-        queued_players_str = concat(queued_players_str, player.player_n, ": ", param(player.is_pressed, "nil"), ", ")
-    end
-    queued_players_str = queued_players_str .. "}"
+        local queued_players_str = "{"
+        for k, player in pairs(game.queued_players) do
+            queued_players_str = concat(queued_players_str, player.player_n, ": ", param(player.is_pressed, "nil"), ", ")
+        end
+        queued_players_str = queued_players_str .. "}"
 
-    local renderer_name, renderer_version, renderer_vendor, renderer_device = love.graphics.getRendererInfo( )
+        local renderer_name, renderer_version, renderer_vendor, renderer_device = love.graphics.getRendererInfo( )
 
-    local skininfo = ""
-    for _, skin_id in pairs(Metaprogression:get("skins")) do
-        skininfo = skininfo .. concat(skin_id, "(", (skins[skin_id] or {}).text_key, "), ")
-    end
+        local skininfo = ""
+        for _, skin_id in pairs(Metaprogression:get("skins")) do
+            skininfo = skininfo .. concat(skin_id, "(", (skins[skin_id] or {}).text_key, "), ")
+        end
 
-    local upgradeinfo = ""
-    for _, upgrade_name in pairs(Metaprogression:get("upgrades")) do
-        upgradeinfo = upgradeinfo .. concat(upgrades[upgrade_name]:new().name, ", ")
-    end
+        local upgradeinfo = ""
+        for _, upgrade_name in pairs(Metaprogression:get("upgrades")) do
+            upgradeinfo = upgradeinfo .. concat(upgrades[upgrade_name]:new().name, ", ")
+        end
 
-    -- Print debug info
-    local txt_h = get_text_height(" ")
-    local txts = {
-        "",
-        "",
-        "",
-        "",
-        "",
-        concat("FPS: ", love.timer.getFPS(), " / Vsync: ", Options:get("is_vsync")),
-        concat("LOVE version: ", string.format("%d.%d.%d - %s", love.getVersion())),
-        concat("Renderer info: ", renderer_name, " (v", renderer_version, ")"),
-        concat("Renderer vendor: ", renderer_vendor, ", device ", renderer_device),
-        concat("game state: ", game.game_state),
-        concat("nb of active audio sources: ", love.audio.getActiveSourceCount()),
-        concat("nb of actors: ", #self.game.actors, " / ", self.game.actor_limit, " | nb of enemies: ", self.game:get_enemy_count()),
-        concat("nb collision items: ", Collision.world:countItems()),
-        concat("number_of_alive_players ", self.game:get_number_of_alive_players()),
-        players_str,
-        users_str,
-        joystick_user_str,
-        joystick_str,
-        wave_resp_str,
-        concat("backroom ", (game.level.backroom == nil) and "nil" or game.level.backroom.name),
-        concat("queued_players ", queued_players_str),
-        concat("level_speed ", game.level.level_speed),
-        concat("menu_stack size: ", #game.menu_manager.menu_stack) .. " / " .. concat("cur_menu_name ", game.menu_manager.cur_menu_name),
-        concat("cur_cutscene ", (game.cutscene == nil) and "[nil]" or 
-            string.format("%s: [%d/%d] (%.1f s/%.1f s) '%s' / (total: %.1f s)", 
-                game.cutscene.name, 
-                game.cutscene.current_scene_i, 
-                #game.cutscene.scenes, 
-                game.cutscene.timer.duration - game.cutscene.timer.time, 
-                game.cutscene.timer.duration, 
-                game.cutscene.current_scene.description, 
-                game.cutscene.total_duration
-            )
-        ),
-        concat("score: ", game.score) .. " / ".. concat("xp: ", Metaprogression:get_xp()) .. " / " .. concat("xp_level: ", Metaprogression:get_xp_level()),
-        concat("unlocked_skins: ", skininfo),
-        concat("unlocked_upgrades: ", upgradeinfo),
-        "",
-    }
+        -- Print debug info
+        local txt_h = get_text_height(" ")
+        local txts = {
+            "",
+            "",
+            "",
+            "",
+            "",
+            concat("FPS: ", love.timer.getFPS(), " / Vsync: ", Options:get("is_vsync")),
+            concat("LOVE version: ", string.format("%d.%d.%d - %s", love.getVersion())),
+            concat("Renderer info: ", renderer_name, " (v", renderer_version, ")"),
+            concat("Renderer vendor: ", renderer_vendor, ", device ", renderer_device),
+            concat("game state: ", game.game_state),
+            concat("nb of active audio sources: ", love.audio.getActiveSourceCount()),
+            concat("nb of actors: ", #self.game.actors, " / ", self.game.actor_limit, " | nb of enemies: ", self.game:get_enemy_count()),
+            concat("nb collision items: ", Collision.world:countItems()),
+            concat("number_of_alive_players ", self.game:get_number_of_alive_players()),
+            players_str,
+            users_str,
+            joystick_user_str,
+            joystick_str,
+            wave_resp_str,
+            concat("backroom ", (game.level.backroom == nil) and "nil" or game.level.backroom.name),
+            concat("queued_players ", queued_players_str),
+            concat("level_speed ", game.level.level_speed),
+            concat("menu_stack size: ", #game.menu_manager.menu_stack) .. " / " .. concat("cur_menu_name ", game.menu_manager.cur_menu_name),
+            concat("cur_cutscene ", (game.cutscene == nil) and "[nil]" or 
+                string.format("%s: [%d/%d] (%.1f s/%.1f s) '%s' / (total: %.1f s)", 
+                    game.cutscene.name, 
+                    game.cutscene.current_scene_i, 
+                    #game.cutscene.scenes, 
+                    game.cutscene.timer.duration - game.cutscene.timer.time, 
+                    game.cutscene.timer.duration, 
+                    game.cutscene.current_scene.description, 
+                    game.cutscene.total_duration
+                )
+            ),
+            concat("score: ", game.score) .. " / ".. concat("xp: ", Metaprogression:get_xp()) .. " / " .. concat("xp_level: ", Metaprogression:get_xp_level()),
+            concat("unlocked_skins: ", skininfo),
+            concat("unlocked_upgrades: ", upgradeinfo),
+            "",
+        }
 
-    for i = 1, #txts do print_label(txts[i], 0, 0 + txt_h * (i - 1)) end
+        for i = 1, #txts do print_label(txts[i], 0, 0 + txt_h * (i - 1)) end
+    end 
 
     self.game.level.world_generator:draw()
 
@@ -791,17 +815,10 @@ function Debug:draw_info_view()
 
     -- love.graphics.draw(images.removeme_bands, 0, 0)
 
-    -- exec_color(COL_RED, function()
-    --     for _, tri in pairs(love.math.triangulate(star)) do
-    --         love.graphics.polygon("fill", tri)
-    --     end
-    -- end)
-    
-    spr:update(1/60)
-    spr:set_solid(true)
-    spr:set_color(COL_RED)
-    spr:draw(100, 100)
+    linedottedoffset = linedottedoffset - 0.2
 end
+
+
 
 function Debug:test_info_view_3d_renderer()
 end
@@ -836,7 +853,34 @@ function Debug:test_info_view_crop_line()
     -- end
 end
 
+function Debug:draw_actor_info_view()
+    if not self.actor_info_view then
+        return
+    end 
+
+    game.camera:push()
+    Text:push_font(FONT_MINI)
+
+    for _, e in pairs(self.game.actors) do
+        print_outline(COL_WHITE, COL_BLACK_BLUE, 
+            concat(math.floor(e.x), ", ", math.floor(e.y), ternary(e.is_player, concat(" [", math.floor(e.x/16), ", ", math.floor(e.y/16), "]"), "")), e.x, e.y - 10) 
+
+        Text:push_font(FONT_MINI)
+        if e.life then
+            print_outline(COL_WHITE, COL_DARK_BLUE, concat(round(e.life, 1), "HP"), self.x, self.y-6)
+        end
+		Text:pop_font()
+    end
+    
+    Text:pop_font()
+    game.camera:pop()
+end
+
 function Debug:draw_colview()
+	if not self.colview_mode then
+        return
+    end
+
     game.camera:push()
     Text:push_font(FONT_MINI)
 
@@ -856,12 +900,8 @@ function Debug:draw_colview()
             level.cabin_inner_rect.h)
     end
 
-    
     for _, e in pairs(self.game.actors) do
-        love.graphics.circle("fill", e.x, e.y, 1)
-        
-        print_outline(COL_WHITE, COL_BLACK_BLUE, 
-            concat(math.floor(e.x), ", ", math.floor(e.y), ternary(e.is_player, concat(" [", math.floor(e.x/16), ", ", math.floor(e.y/16), "]"), "")), e.x, e.y - 10) 
+        love.graphics.points(e.x, e.y)
     end
 
     Text:pop_font()

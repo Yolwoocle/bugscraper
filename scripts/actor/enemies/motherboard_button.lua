@@ -37,9 +37,7 @@ end
 function MotherboardButton:update(dt)
     MotherboardButton.super.update(self, dt)
 
-    self.t = self.t + dt*2
-
-    local alpha = clamp(self.t, 0, 1)
+    local alpha = clamp(self.t*2, 0, 1)
     self.spr:update_offset(0, self.spr.h * (ease_out_overshoot(alpha) - 1) + self.oy)
 end
 

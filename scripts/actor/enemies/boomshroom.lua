@@ -110,8 +110,6 @@ function Boomshroom:init(x, y)
             end
         }
     }, "normal")
-
-    self.t = 0
 end
 
 function Boomshroom:after_collision(col, other)
@@ -123,7 +121,6 @@ end
 
 function Boomshroom:update(dt)
     Boomshroom.super.update(self, dt)
-    self.t = self.t + dt
 
     self.state_machine:update(dt)
 end

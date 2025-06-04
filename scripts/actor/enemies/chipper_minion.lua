@@ -27,14 +27,10 @@ function ChipperMinion:init(x, y, direction, attack_speed, wait_duration)
 
     self.damage = 0
     self.telegraph_timer:set_duration(wait_duration)
-
-    self.t = 0.0
 end
 
 function ChipperMinion:update(dt)
-    ChipperMinion.super.update(self, dt)
-    
-    self.t = self.t + dt
+    ChipperMinion.super.update(self, dt)    
 
     if self.state_machine.current_state_name == "telegraph" then
         self.damage = 0
