@@ -949,10 +949,6 @@ local waves = {
 
 			["cabin_bg"] = images.cabin_bg_w4_test,
 			["walls"] = images.empty,
-			-- ["walls"] = images.cabin_walls_w3,
-			-- ["walls_brown"] = false,
-			-- ["bg_grid_brown"] = false,
-			-- ["walls"] = false,
 		},
 
 		background = backgrounds.BackgroundGreenhouse:new(),
@@ -1058,14 +1054,6 @@ local waves = {
 		enemies = {
 			{ E.CloudStorm, 20 },
 			{ E.CloudEnemy, 20 },
-		},
-		
-		fixed_enemies = {
-			{ 
-				E.Pendulum, 1, 
-				args = {pi/3, 200, 1}, 
-				position = {CANVAS_WIDTH/2, 3*16} 
-			},
 		},
 
 		music = "w4",
