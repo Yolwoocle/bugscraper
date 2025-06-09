@@ -794,7 +794,7 @@ local waves = {
 	------------------------------------------------
 	-- Cafeteria
 	new_cafeteria(function()
-		game:kill_actors_with_name("electric_rays")
+		game.actor_manager:kill_actors_with_name("electric_rays")
 	end),
 	------------------------------------------------
 
