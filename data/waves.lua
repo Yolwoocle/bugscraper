@@ -92,6 +92,22 @@ local function debug_wave()
 	})
 end
 
+local function get_w4_vines_points_func_1(x_offset)
+	return function()
+		local pts = {}
+		local center = (game.level.cabin_inner_rect.ax + game.level.cabin_inner_rect.bx) / 2
+
+		local iy = 0
+		while iy < game.level.cabin_rect.by + 32 do
+			table.insert(pts, {center - x_offset + random_neighbor(8), iy})
+			iy = iy + random_range(10, 40)
+		end
+		table.insert(pts, {center - x_offset + random_neighbor(8), game.level.cabin_rect.by + 32})
+		
+		return pts
+	end
+end
+
 local waves = {
 	-- debug_wave(),
 
@@ -988,8 +1004,9 @@ local waves = {
 		max = 9,
 
 		enemies = {
-			{ E.CloudStorm,  2 },
-			{ E.MushroomAnt, 1 },
+			{ E.CloudEnemy,  5 },
+			{ E.CloudStorm,  5 },
+			{ E.Rollopod, 3 },
 		},
 	}),
 
@@ -998,8 +1015,21 @@ local waves = {
 		max = 4,
 
 		enemies = {
-			{ E.Mole, 2 },
+			{ E.CloudEnemy, 2 },
 		},
+
+		fixed_enemies = {
+			{E.ProgressingArc, 1, args = {{
+                points = get_w4_vines_points_func_1(-64),
+                interval_size = 150,
+                progress_speed = 80,
+            }}},
+			{E.ProgressingArc, 1, args = {{
+                points = get_w4_vines_points_func_1(64),
+                interval_size = 150,
+                progress_speed = -80,
+            }}},
+		}
 	}),
 
 	new_wave({

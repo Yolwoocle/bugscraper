@@ -22,7 +22,12 @@ function ProgressingArc:init(x, y, params)
     self.is_immune_to_electricity = true
 
     self.length = 0.0
-    self.points = params.points or {}
+    if type(params.points) == "function" then
+        self.points = params.points()
+    elseif type(params.points) == "table" then
+        self.points = params.points
+    end
+    self.points = self.points or {}
     self.rays = {}
     self.ray_info = {}
 

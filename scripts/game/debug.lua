@@ -95,7 +95,7 @@ function Debug:init(game)
             end
         end, do_not_require_ctrl = true },
         ["f8"] = { "toggle actor info view mode", function()
-            self.actor_info_view = not self.actor_info_view
+            -- self.actor_info_view = not self.actor_info_view
         end, do_not_require_ctrl = true },
         
         ["v"] = { "__jackofalltrades", function()
