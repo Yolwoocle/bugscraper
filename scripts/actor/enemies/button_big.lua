@@ -1,8 +1,8 @@
-require "scripts.util"
-local Enemy = require "scripts.actor.enemy"
-local images = require "data.images"
+require("scripts.util")
+local Enemy = require("scripts.actor.enemy")
+local images = require("data.images")
 
-local ButtonPressed = require "scripts.actor.enemies.button_big_pressed"
+local ButtonPressed = require("scripts.actor.enemies.button_big_pressed")
 
 local ButtonBig = Enemy:inherit()
 
@@ -11,13 +11,13 @@ function ButtonBig:init(x, y, spr, w, h)
 end
 
 function ButtonBig:init_button_big(x, y, spr, w, h)
-    self:init_enemy(x,y, spr or images.big_red_button, w or 34, h or 40)
+    self:init_enemy(x, y, spr or images.big_red_button, w or 34, h or 40)
     self.name = "button_big"
     self.follow_player = false
 
     self.max_life = 40
     self.life = self.max_life
-    
+
     self.knockback = 0
     self.is_stompable = true
     self.do_stomp_animation = false
@@ -44,7 +44,7 @@ function ButtonBig:on_stomp_killed(damager)
     game:screenshake(10)
     game:on_red_button_pressed()
     Audio:play("button_press")
-    
+
     -- TODO: smoke particles
     -- local b = ButtonPressed:new(CANVAS_WIDTH/2, game.world_generator.box_rby)
     local b = self.spawned_button_pressed:new(self.x, self.y)

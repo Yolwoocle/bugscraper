@@ -1,14 +1,14 @@
-require "scripts.util"
-local Enemy = require "scripts.actor.enemy"
-local images = require "data.images"
-local images = require "data.images"
-local Prop = require "scripts.actor.enemies.prop"
-local Rect = require "scripts.math.rect"
-local Segment = require "scripts.math.segment"
-local Lightning = require "scripts.graphics.lightning"
-local Timer = require "scripts.timer"
+require("scripts.util")
+local Enemy = require("scripts.actor.enemy")
+local images = require("data.images")
+local images = require("data.images")
+local Prop = require("scripts.actor.enemies.prop")
+local Rect = require("scripts.math.rect")
+local Segment = require("scripts.math.segment")
+local Lightning = require("scripts.graphics.lightning")
+local Timer = require("scripts.timer")
 
-local utf8 = require "utf8"
+local utf8 = require("utf8")
 
 local ElectricArc = Prop:inherit()
 
@@ -128,15 +128,17 @@ function ElectricArc:update_segment(dt)
 end
 
 function ElectricArc:update_lightning(dt)
-    self.lightning.min_line_width = ternary(self.is_arc_active, self.active_arc_min_line_width, self.inactive_arc_min_line_width)
-    self.lightning.max_line_width = ternary(self.is_arc_active, self.active_arc_max_line_width, self.inactive_arc_max_line_width)
+    self.lightning.min_line_width =
+        ternary(self.is_arc_active, self.active_arc_min_line_width, self.inactive_arc_min_line_width)
+    self.lightning.max_line_width =
+        ternary(self.is_arc_active, self.active_arc_max_line_width, self.inactive_arc_max_line_width)
 
     self.lightning:generate(self.segment)
 end
 
 function ElectricArc:update_target(dt)
     if self.arc_target then
-        if (self.arc_target.is_dead or self.arc_target.is_removed) then
+        if self.arc_target.is_dead or self.arc_target.is_removed then
             self.is_arc_active = false
             self.arc_target = nil
         end
@@ -182,9 +184,15 @@ function ElectricArc:collide_with_actor(a)
     end
 
     -- Sanity checks
-    if a.is_immune_to_electricity then return end
-    if not self:is_my_enemy(a) then return end
-    if not a.do_damage then return end
+    if a.is_immune_to_electricity then
+        return
+    end
+    if not self:is_my_enemy(a) then
+        return
+    end
+    if not a.do_damage then
+        return
+    end
 
     local success = a:do_damage(self.arc_damage, self)
     if success then
@@ -210,9 +218,22 @@ function ElectricArc:draw()
     self.lightning:draw()
 
     if game.debug.colview_mode then
-        rect_color(COL_GREEN, "line", self.segment.ax - self.hitbox_expand, self.segment.ay - self.hitbox_expand, self.hitbox_expand*2, self.hitbox_expand*2)
-        rect_color(COL_GREEN, "line", self.segment.bx - self.hitbox_expand, self.segment.by - self.hitbox_expand, self.hitbox_expand*2, self.hitbox_expand*2)
-        
+        rect_color(
+            COL_GREEN,
+            "line",
+            self.segment.ax - self.hitbox_expand,
+            self.segment.ay - self.hitbox_expand,
+            self.hitbox_expand * 2,
+            self.hitbox_expand * 2
+        )
+        rect_color(
+            COL_GREEN,
+            "line",
+            self.segment.bx - self.hitbox_expand,
+            self.segment.by - self.hitbox_expand,
+            self.hitbox_expand * 2,
+            self.hitbox_expand * 2
+        )
     end
 end
 

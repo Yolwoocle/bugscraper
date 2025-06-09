@@ -1,7 +1,7 @@
-require "scripts.util"
-local Class = require "scripts.meta.class"
-local vec2 = require "lib.batteries.vec2"
-local Segment = require "scripts.math.segment"
+require("scripts.util")
+local Class = require("scripts.meta.class")
+local vec2 = require("lib.batteries.vec2")
+local Segment = require("scripts.math.segment")
 
 local Light = Class:inherit()
 
@@ -11,7 +11,7 @@ function Light:init(x, y, params)
 
     self.position = vec2(x, y)
     self.angle = param(params.angle, 0)
-    self.spread = param(params.spread, pi/8)
+    self.spread = param(params.spread, pi / 8)
     self.range = param(params.range, 800)
 
     self.oscillation_enabled = false
@@ -29,7 +29,6 @@ function Light:update(dt)
     if self.target then
         local a = math.atan2(self.target.mid_y - self.position.y, self.target.mid_x - self.position.x)
         self.angle = a
-        
     elseif self.oscillation_enabled then
         self.oscillation_angle_value = self.oscillation_angle_value + self.oscillation_speed * dt
         self.oscillation_angle_offset = math.sin(self.oscillation_angle_value) * self.oscillation_amplitude
@@ -42,8 +41,18 @@ end
 
 function Light:get_segments(bounds)
     local angle = self.angle + self.oscillation_angle_offset
-    local s1 = Segment:new(self.position.x, self.position.y, self.position.x + math.cos(angle + self.spread) * self.range, self.position.y + math.sin(angle + self.spread) * self.range)
-    local s2 = Segment:new(self.position.x, self.position.y, self.position.x + math.cos(angle - self.spread) * self.range, self.position.y + math.sin(angle - self.spread) * self.range)
+    local s1 = Segment:new(
+        self.position.x,
+        self.position.y,
+        self.position.x + math.cos(angle + self.spread) * self.range,
+        self.position.y + math.sin(angle + self.spread) * self.range
+    )
+    local s2 = Segment:new(
+        self.position.x,
+        self.position.y,
+        self.position.x + math.cos(angle - self.spread) * self.range,
+        self.position.y + math.sin(angle - self.spread) * self.range
+    )
 
     if bounds then
         return Segment:new(clamp_segment_to_rectangle(s1, bounds)), Segment:new(clamp_segment_to_rectangle(s2, bounds))

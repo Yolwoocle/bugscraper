@@ -1,13 +1,13 @@
-require "scripts.util"
-local Enemy = require "scripts.actor.enemy"
-local Fly = require "scripts.actor.enemies.fly"
-local Lightning = require "scripts.graphics.lightning"
-local Segment = require "scripts.math.segment"
-local sounds = require "data.sounds"
-local images = require "data.images"
+require("scripts.util")
+local Enemy = require("scripts.actor.enemy")
+local Fly = require("scripts.actor.enemies.fly")
+local Lightning = require("scripts.graphics.lightning")
+local Segment = require("scripts.math.segment")
+local sounds = require("data.sounds")
+local images = require("data.images")
 
 local MetalFly = Fly:inherit()
-	
+
 local PHASE_CHASE = "chase"
 local PHASE_TELEGRAPH = "telegraph"
 local PHASE_ATTACK = "attack"
@@ -15,12 +15,12 @@ local PHASE_ATTACK = "attack"
 local PHASE_TELEGRAPH_DURATION = 0.4
 
 function MetalFly:init(x, y)
-    MetalFly.super.init(self, x,y, images.metal_mosquito_1, 14, 14)
+    MetalFly.super.init(self, x, y, images.metal_mosquito_1, 14, 14)
     self.name = "metal_fly"
     self.life = 10
 
     self.anim_frame_len = 0.05
-    self.anim_frames = {images.metal_mosquito_1, images.metal_mosquito_2}
+    self.anim_frames = { images.metal_mosquito_1, images.metal_mosquito_2 }
 
     self.is_immune_to_electricity = true
     self.is_electrified = false
@@ -46,7 +46,7 @@ function MetalFly:update(dt)
     if self.is_electrified then
         self.lightning_radius = random_range(10, 14)
         self.lightning:generate(Segment:new(self.lightning_radius, 0, self.lightning_radius, pi2))
-        
+
         if random_range(0, 1) < 0.05 then
             Particles:spark(self.mid_x, self.mid_y)
         end
@@ -56,12 +56,12 @@ function MetalFly:update(dt)
 end
 
 function MetalFly:draw()
-	self:draw_enemy()
+    self:draw_enemy()
 
     if self.is_electrified then
-        self.lightning:draw(self.mid_x, self.mid_y-2)
+        self.lightning:draw(self.mid_x, self.mid_y - 2)
     end
-    
+
     -- love.graphics.flrprint(concat(self.phase), self.x, self.y-16)
     -- love.graphics.flrprint(concat(self.attack_target == nil), self.x, self.y-32)
 end

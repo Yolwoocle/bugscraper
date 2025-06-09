@@ -28,7 +28,6 @@ return {
         win_wishlist = "Adicione esse jogo à lista de desejos :)", -- "Wishlist" is a verb
         win_prompt = "[Pause para continuar]",
         warning_web_controller = "Alguns browsers podem não ser compatíveis com controles",
-
     },
     level = {
         world_prefix = "Departamento %s",
@@ -37,7 +36,7 @@ return {
         world_1 = "Recursos Insetos",
         world_2 = "A Fábrica",
         world_3 = "A Sala de Server",
-		world_4 = "The Gardens", -- ADDED
+        world_4 = "The Gardens", -- ADDED
         world_5 = "Executivo",
     },
     gun = {
@@ -68,7 +67,7 @@ return {
     },
     enemy = {
         dung = "Sr. Esterco",
-        bee_boss = "The Queen",        -- ADDED
+        bee_boss = "The Queen", -- ADDED
         motherboard = "The Webmaster", -- ADDED
     },
     upgrade = {
@@ -102,7 +101,7 @@ return {
         },
         hot_sauce = { -- ADDED
             title = "Hot Sauce",
-            description = "Deal x%d damage but use x%d ammo", -- First "%d" is the damage, second "%d" is ammo 
+            description = "Deal x%d damage but use x%d ammo", -- First "%d" is the damage, second "%d" is ammo
         },
         coconut_water = { -- ADDED
             title = "Coconut Water",
@@ -139,7 +138,7 @@ return {
             join = "Entrar",
             split_keyboard = "Dividir teclado", -- Try to keep short
 
-            jetpack = "Usar jetpack",           -- Refers to "jetpackking", a move in the game, so this is an infinitive verb
+            jetpack = "Usar jetpack", -- Refers to "jetpackking", a move in the game, so this is an infinitive verb
         },
     },
     menu = {
@@ -147,7 +146,7 @@ return {
         yes = "SIM",
         no = "NÃO",
         quit = {
-            description = "Tem certeza que quer sair?"
+            description = "Tem certeza que quer sair?",
         },
         confirm_retry = {
             -- Here refers to going back to the main menu to try another run, NOT restarting the game
@@ -240,7 +239,6 @@ return {
                 screenshake = "VIBRAÇÃO DA TELA",
                 skip_boss_intros = "SKIP BOSS INTROS", -- ADDED
                 show_fps_warning = "MOSTRAR AVISO DE FPS BAIXO",
-
             },
             language = {
                 title = "IDIOMA",
@@ -283,11 +281,11 @@ return {
             playtesting = "Playtest",
             special_thanks = "Agradecimentos especiais",
             asset_creators = "Criadores de recursos",
-            tv_slideshow = "TV slideshow contributors", -- ADDED // Refers to the powerpoint TV slideshow on the title screen, which was contributed by a variety of people 
+            tv_slideshow = "TV slideshow contributors", -- ADDED // Refers to the powerpoint TV slideshow on the title screen, which was contributed by a variety of people
             tv_slideshow_submit = "Submit yours...", -- ADDED // Leads to a web page where people can submit their own slides
             licenses = "Licensas de bibliotecas & recursos",
 
-            x_by_y =     "%s por %s", -- "ASSET_NAME by CREATOR". Used to credit assets such as sound effects
+            x_by_y = "%s por %s", -- "ASSET_NAME by CREATOR". Used to credit assets such as sound effects
             asset_item = "%s por %s / %s", -- "ASSET_NAME by CREATOR / LICENCE". Used to credit assets such as sound effects
         },
         open_source = {

@@ -1,5 +1,5 @@
-require "scripts.util"
-local Class = require "scripts.meta.class"
+require("scripts.util")
+local Class = require("scripts.meta.class")
 
 local Camera = Class:inherit()
 
@@ -10,7 +10,7 @@ function Camera:init()
     self.oy = 0.0
     self.zoom = 1.0
     self.rot = 0.0
-    
+
     self.w = CANVAS_WIDTH
     self.h = CANVAS_HEIGHT
 
@@ -26,7 +26,7 @@ function Camera:init()
     self.max_speed = DEFAULT_CAMERA_MAX_SPEED
 
     self.screenshake_q = 0.0
-	self.screenshake_speed = 20
+    self.screenshake_speed = 20
 
     self.is_x_locked = true
     self.is_y_locked = true
@@ -35,10 +35,12 @@ function Camera:init()
 end
 
 function Camera:update(dt)
-	if not Options:get("screenshake_on") then self.ox, self.oy = 0,0 end
-    
+    if not Options:get("screenshake_on") then
+        self.ox, self.oy = 0, 0
+    end
+
     if self.follows_players then
-        self:follow_players(dt)  
+        self:follow_players(dt)
     end
     self:clamp_camera_position(dt)
     self:follow_target(dt)
@@ -62,14 +64,14 @@ function Camera:clamp_camera_position(dt)
 end
 
 function Camera:follow_players(dt)
-    if game:get_number_of_alive_players() == 0 or (self.is_x_locked and self.is_y_locked) then 
+    if game:get_number_of_alive_players() == 0 or (self.is_x_locked and self.is_y_locked) then
         return
-    end 
+    end
 
     local total_n = game:get_number_of_alive_players()
     local mid_x = 0
     local mid_y = 0
-    for i = 1, MAX_NUMBER_OF_PLAYERS do 
+    for i = 1, MAX_NUMBER_OF_PLAYERS do
         local player = game.players[i]
         if player then
             mid_x = mid_x + (player.x / total_n)
@@ -78,31 +80,33 @@ function Camera:follow_players(dt)
     end
 
     if not self.is_x_locked then
-        self.target_x = mid_x - self.w/2
+        self.target_x = mid_x - self.w / 2
     end
     if not self.is_y_locked then
-        self.target_y = mid_y - self.h/2
+        self.target_y = mid_y - self.h / 2
     end
 end
 
 function Camera:update_screenshake(dt)
-	-- Screenshake
-	self.screenshake_q = max(0, self.screenshake_q - self.screenshake_speed * dt)
+    -- Screenshake
+    self.screenshake_q = max(0, self.screenshake_q - self.screenshake_speed * dt)
 
-	local base_mult = Options:get("screenshake")
+    local base_mult = Options:get("screenshake")
     local multiplayer_mult = clamp(1 / game:get_number_of_alive_players(), 0, 1)
-	local q = self.screenshake_q * base_mult * multiplayer_mult
-	local ox, oy = random_neighbor(q), random_neighbor(q)
+    local q = self.screenshake_q * base_mult * multiplayer_mult
+    local ox, oy = random_neighbor(q), random_neighbor(q)
 
-	-- if abs(ox) >= 0.2 then   ox = sign(ox) * max(abs(ox), 1)   end 
-	-- if abs(oy) >= 0.2 then   oy = sign(oy) * max(abs(oy), 1)   end 
+    -- if abs(ox) >= 0.2 then   ox = sign(ox) * max(abs(ox), 1)   end
+    -- if abs(oy) >= 0.2 then   oy = sign(oy) * max(abs(oy), 1)   end
 
-	self.ox = ox
-	self.oy = oy
+    self.ox = ox
+    self.oy = oy
 end
 
 function Camera:screenshake(q)
-	if not Options:get('screenshake_on') then  return   end
+    if not Options:get("screenshake_on") then
+        return
+    end
     self.screenshake_q = math.max(self.screenshake_q, q)
 end
 
@@ -187,27 +191,25 @@ end
 
 function Camera:reset_transform()
     love.graphics.origin()
-	love.graphics.scale(1)
+    love.graphics.scale(1)
 end
 
 function Camera:pop()
     love.graphics.pop()
 end
 
-
 function Camera:push_origin()
     love.graphics.push()
     love.graphics.origin()
-	love.graphics.scale(1)
+    love.graphics.scale(1)
 end
-
 
 function Camera:push()
     love.graphics.push()
     local x, y = self:get_real_position()
     love.graphics.rotate(self.rot)
-	love.graphics.scale(self.zoom)
-	love.graphics.translate(math.floor(-x), math.floor(-y))
+    love.graphics.scale(self.zoom)
+    love.graphics.translate(math.floor(-x), math.floor(-y))
 end
 
 return Camera

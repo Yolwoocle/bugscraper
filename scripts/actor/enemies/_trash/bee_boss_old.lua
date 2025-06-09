@@ -1,31 +1,31 @@
-require "scripts.util"
-local Enemy = require "scripts.actor.enemy"
-local sounds = require "data.sounds"
-local images = require "data.images"
-local ElectricRays = require "scripts.actor.enemies.electric_rays"
-local StateMachine = require "scripts.state_machine"
-local Timer = require "scripts.timer"
-local Segment = require "scripts.math.segment"
-local guns  = require "data.guns"
-local TimedSpikes = require "scripts.actor.enemies.timed_spikes"
-local BeeletMinion = require "scripts.actor.enemies.beelet_minion"
+require("scripts.util")
+local Enemy = require("scripts.actor.enemy")
+local sounds = require("data.sounds")
+local images = require("data.images")
+local ElectricRays = require("scripts.actor.enemies.electric_rays")
+local StateMachine = require("scripts.state_machine")
+local Timer = require("scripts.timer")
+local Segment = require("scripts.math.segment")
+local guns = require("data.guns")
+local TimedSpikes = require("scripts.actor.enemies.timed_spikes")
+local BeeletMinion = require("scripts.actor.enemies.beelet_minion")
 
 local BeeBoss = Enemy:inherit()
 
 function BeeBoss:init(x, y)
-    self:init_enemy(x,y, images.bee_boss_1, 32, 32)
-    self.name = "bee_boss"  --changeme removeme(dont actually)
+    self:init_enemy(x, y, images.bee_boss_1, 32, 32)
+    self.name = "bee_boss" --changeme removeme(dont actually)
 
-    -- Parameters 
+    -- Parameters
     self.def_friction_y = self.friction_y
     self.life = 200
     self.is_flying = true
     self.gravity = 0
     self.attack_radius = 16
 
-    self.speed = random_range(7,13) --10
+    self.speed = random_range(7, 13) --10
     self.speed_x = self.speed
-    self.speed_y = self.speed*3
+    self.speed_y = self.speed * 3
     self.friction_x = 0.8
     self.friction_y = 0.8
 
@@ -39,8 +39,8 @@ function BeeBoss:init(x, y)
     self.is_stompable = true
     self.damage_on_stomp = 10
     self.friction_y = self.friction_x
-    self.def_target_y = game.level.cabin_rect.ay + BW*6
-    self.telegraph_oy = 16    
+    self.def_target_y = game.level.cabin_rect.ay + BW * 6
+    self.telegraph_oy = 16
 
     self.knockback_x = self.knockback * 2
     self.knockback_y = self.knockback * 0
@@ -48,11 +48,11 @@ function BeeBoss:init(x, y)
 
     -- Animation
     self.anim_frame_len = 0.05
-    self.anim_frames = {images.bee_boss_1, images.bee_boss_2}
+    self.anim_frames = { images.bee_boss_1, images.bee_boss_2 }
 
     -- Timers
     self.telegraph_timer = Timer:new(0.5)
-        
+
     self.sin_x_value = 0
     self.sin_y_value = 0
 
@@ -68,8 +68,7 @@ function BeeBoss:init(x, y)
     -- State machine
     self.state_machine = StateMachine:new({
         standby = {
-            enter = function(state)
-            end,
+            enter = function(state) end,
             update = function(state, dt)
                 self:spawn_spikes()
                 self:set_state("thwomp")
@@ -77,8 +76,7 @@ function BeeBoss:init(x, y)
         },
 
         random = {
-            enter = function(state)
-            end,
+            enter = function(state) end,
             update = function(state, dt)
                 local possible_states = {
                     "spinning_spikes",
@@ -99,7 +97,7 @@ function BeeBoss:init(x, y)
                 self.sin_y_value = 0
 
                 self.state_timer:start(6)
-                
+
                 for _, spike in pairs(self.spikes) do
                     spike.timing_mode = TIMED_SPIKES_TIMING_MODE_TEMPORAL
                     spike:force_off()
@@ -107,7 +105,7 @@ function BeeBoss:init(x, y)
                 end
                 self:set_spikes_pattern_spinning(0.3, 5)
 
-                self.dir_x = random_sample{-1, 1}
+                self.dir_x = random_sample({ -1, 1 })
             end,
             update = function(state, dt)
                 self.sin_y_value = self.sin_y_value + dt * 7
@@ -120,11 +118,11 @@ function BeeBoss:init(x, y)
                     self.dir_x = 1
                 end
 
-                if self.state_timer:update(dt) then 
-                    return random_sample {
+                if self.state_timer:update(dt) then
+                    return random_sample({
                         "thwomp",
                         "timing",
-                    }
+                    })
                 end
             end,
         },
@@ -150,13 +148,12 @@ function BeeBoss:init(x, y)
         thwomp_flying = {
             enter = function(state)
                 self.friction_y = self.def_friction_y
-                
+
                 self.thwomp_target = self:get_random_player()
                 self.thwomp_target_x = {
-                    mid_x = random_range(game.level.cabin_inner_rect.ax + 16, game.level.cabin_inner_rect.bx - 16)
+                    mid_x = random_range(game.level.cabin_inner_rect.ax + 16, game.level.cabin_inner_rect.bx - 16),
                 }
                 self.vy = 0
-
             end,
             update = function(state, dt)
                 if self.thwomp_target then
@@ -173,8 +170,8 @@ function BeeBoss:init(x, y)
                 if self.stomps_counter <= 0 then
                     self:set_state("random")
                 end
-            end
-        }, 
+            end,
+        },
         thwomp_telegraph = {
             enter = function(state)
                 self.vx = 0
@@ -187,20 +184,19 @@ function BeeBoss:init(x, y)
                 self.speed_y = self.speed * 0.5
 
                 self.vy = -self.speed_y
-                if self.telegraph_timer:update(dt) then 
+                if self.telegraph_timer:update(dt) then
                     self:set_state("thwomp_attack")
                 end
             end,
         },
         thwomp_attack = {
-            enter = function(state)
-            end,
+            enter = function(state) end,
             update = function(state, dt)
                 self.speed_x = 0
                 self.speed_y = self.speed * 64
                 self.friction_y = 1
 
-                self.vy = self.vy + self.speed_y*dt
+                self.vy = self.vy + self.speed_y * dt
             end,
             after_collision = function(state, col)
                 if col.type ~= "cross" and col.normal.x == 0 and col.normal.y == -1 then
@@ -208,17 +204,16 @@ function BeeBoss:init(x, y)
                     game:screenshake(6)
                     self:set_spike_waves()
                 end
-            end
+            end,
         },
         thwomp_rise = {
-            enter = function(state)
-            end,
+            enter = function(state) end,
             update = function(state, dt)
                 self.speed_x = 0
                 self.speed_y = self.speed * 64
                 self.friction_y = 1
 
-                self.vy = -self.speed_y*dt
+                self.vy = -self.speed_y * dt
                 if self.y < self.def_target_y then
                     self:set_state("thwomp_flying")
                 end
@@ -306,7 +301,7 @@ function BeeBoss:init(x, y)
             end,
             update = function(state, dt)
                 self.spr:update_offset(random_neighbor(2), random_neighbor(2))
-                self.spr.rot = self.spr.rot + dt*10
+                self.spr.rot = self.spr.rot + dt * 10
 
                 if self.spawn_timer:update(dt) then
                     local amount = random_range_int(1, 2)
@@ -322,8 +317,13 @@ function BeeBoss:init(x, y)
                     self:set_state("random")
                 end
             end,
-            after_collision = function(state, col)             
-                local new_vx, new_vy = bounce_vector_cardinal(math.cos(self.direction), math.sin(self.direction), col.normal.x, col.normal.y)
+            after_collision = function(state, col)
+                local new_vx, new_vy = bounce_vector_cardinal(
+                    math.cos(self.direction),
+                    math.sin(self.direction),
+                    col.normal.x,
+                    col.normal.y
+                )
                 self.direction = math.atan2(new_vy, new_vx)
             end,
             exit = function(state)
@@ -343,7 +343,6 @@ function BeeBoss:set_state(state_name)
     self.previous_state_name = self.state_machine.current_state_name
     self.state_machine:set_state(state_name)
 end
-
 
 function BeeBoss:after_collision(col, other)
     if col.type ~= "cross" then
@@ -382,7 +381,7 @@ function BeeBoss:set_spikes_pattern_big_wave()
     self:set_spikes_length(64)
     self:set_spikes_pattern_times(2, 0.6, 0.25)
 
-    local wave_pos = random_sample{0, CANVAS_WIDTH}
+    local wave_pos = random_sample({ 0, CANVAS_WIDTH })
 
     for _, spike in pairs(self.spikes) do
         if spike.orientation == 0 then
@@ -407,8 +406,8 @@ function BeeBoss:set_spikes_pattern_bars()
         spike:freeze()
         if spike.orientation == 0 and spike.spike_i % 3 == r then
             spike.timing_mode = TIMED_SPIKES_TIMING_MODE_TEMPORAL
-            spike:set_time_offset(0)    
-            spike:set_length(12*16)
+            spike:set_time_offset(0)
+            spike:set_length(12 * 16)
         end
     end
 end
@@ -433,7 +432,7 @@ function BeeBoss:set_spikes_pattern_spinning(time_offset, number_of_waves)
     local rand_t_offset = random_range(0, t_total)
     for _, spike in pairs(self.spikes) do
         -- spike:set_time_offset()
-        spike:standby(spike.spike_i * (t_total/68)*number_of_waves + time_offset + rand_t_offset, 0.75)
+        spike:standby(spike.spike_i * (t_total / 68) * number_of_waves + time_offset + rand_t_offset, 0.75)
     end
 end
 
@@ -477,13 +476,13 @@ function BeeBoss:spawn_spikes()
     local t_off, t_tel, t_on = 2, 0.75, 0.25
     local t_total = t_off + t_tel + t_on
     local function spawn_spike(x, y, orientation, j)
-        local spikes = TimedSpikes:new(x, y, t_off, t_tel, t_on, j*(t_total/68)*2, {
+        local spikes = TimedSpikes:new(x, y, t_off, t_tel, t_on, j * (t_total / 68) * 2, {
             orientation = orientation,
             start_after_standby = false,
         })
         spikes.spike_i = j
         spikes.timing_mode = TIMED_SPIKES_TIMING_MODE_MANUAL
-        spikes.z = 2 - j/100
+        spikes.z = 2 - j / 100
         -- spikes.debug_values[1] = j
         game:new_actor(spikes)
         table.insert(self.spikes, spikes)
@@ -491,15 +490,14 @@ function BeeBoss:spawn_spikes()
     local spikes
 
     -- Bottom
-    for i = 3, CANVAS_WIDTH/16 - 4 do
-        spawn_spike(i * BW, CANVAS_HEIGHT*0.85, 0, j)
-    
-        if i ~= CANVAS_WIDTH/16 - 4 then
+    for i = 3, CANVAS_WIDTH / 16 - 4 do
+        spawn_spike(i * BW, CANVAS_HEIGHT * 0.85, 0, j)
+
+        if i ~= CANVAS_WIDTH / 16 - 4 then
             j = j + 1
         end
     end
 
-    
     -- Right
     for i = 14, 3, -1 do
         spawn_spike(CANVAS_WIDTH - 32, i * BW, 3, j)
@@ -510,25 +508,22 @@ function BeeBoss:spawn_spikes()
     end
 
     -- Top
-    for i = CANVAS_WIDTH/16 - 4, 3, -1 do
-        spawn_spike(i * BW, BW*3, 2, j)
-        
+    for i = CANVAS_WIDTH / 16 - 4, 3, -1 do
+        spawn_spike(i * BW, BW * 3, 2, j)
+
         if i ~= 3 then
             j = j + 1
         end
-
     end
-    
+
     -- Left
     for i = 3, 14 do
         spawn_spike(3, i * BW, 1, j)
-                        
+
         if i ~= 14 then
             j = j + 1
         end
-
     end
 end
-
 
 return BeeBoss

@@ -1,21 +1,27 @@
-require "scripts.meta.constants"
-require "bugscraper_config"
+require("scripts.meta.constants")
+require("bugscraper_config")
 
 local function init()
-    print("====================[ Launched Bugscraper"..(DEMO_BUILD and " Demo" or "").." (v"..BUGSCRAPER_VERSION..") ]====================")
-    print("LOVE version: "..string.format("%d.%d.%d - %s", love.getVersion()))
-    print("Debug mode: "..tostring(DEBUG_MODE))
+    print(
+        "====================[ Launched Bugscraper"
+            .. (DEMO_BUILD and " Demo" or "")
+            .. " (v"
+            .. BUGSCRAPER_VERSION
+            .. ") ]===================="
+    )
+    print("LOVE version: " .. string.format("%d.%d.%d - %s", love.getVersion()))
+    print("Debug mode: " .. tostring(DEBUG_MODE))
     print("")
 
     if DEBUG_MODE and PROFILE_INIT then
-        love.profiler = require "lib.profiler.profile"
+        love.profiler = require("lib.profiler.profile")
         love.profiler.start()
     end
 
-    local FileManager = require "scripts.file.files"
+    local FileManager = require("scripts.file.files")
     Files = FileManager:new()
 
-    local OptionsManager = require "scripts.game.options"
+    local OptionsManager = require("scripts.game.options")
     Options = OptionsManager:new()
 
     OPERATING_SYSTEM = love.system.getOS()
@@ -44,18 +50,18 @@ local function init()
             love.window.maximize()
         end
     end
-    
+
     WINDOW_WIDTH, WINDOW_HEIGHT = love.graphics.getDimensions()
-	local screen_sx = WINDOW_WIDTH / CANVAS_WIDTH
-	local screen_sy = WINDOW_HEIGHT / CANVAS_HEIGHT
-	local scale = math.min(screen_sx, screen_sy)
-	CANVAS_OX = math.floor(max(0, (WINDOW_WIDTH - CANVAS_WIDTH * scale) / 2))
-	CANVAS_OY = math.floor(max(0, (WINDOW_HEIGHT - CANVAS_HEIGHT * scale) / 2))
-    
+    local screen_sx = WINDOW_WIDTH / CANVAS_WIDTH
+    local screen_sy = WINDOW_HEIGHT / CANVAS_HEIGHT
+    local scale = math.min(screen_sx, screen_sy)
+    CANVAS_OX = math.floor(max(0, (WINDOW_WIDTH - CANVAS_WIDTH * scale) / 2))
+    CANVAS_OY = math.floor(max(0, (WINDOW_HEIGHT - CANVAS_HEIGHT * scale) / 2))
+
     -- Splash screen
     love.graphics.clear()
     love.graphics.setDefaultFilter("nearest", "nearest")
-    love.graphics.draw(love.graphics.newImage('images/splash.png'), CANVAS_OX, CANVAS_OY, 0, scale)
+    love.graphics.draw(love.graphics.newImage("images/splash.png"), CANVAS_OX, CANVAS_OY, 0, scale)
     love.graphics.present()
     love.graphics.origin()
 
@@ -64,7 +70,7 @@ local function init()
         print("---[[ LOAD PROFILER REPORT ]]---")
         print(love.profiler.report(20))
         print("")
-    
+
         love.profiler.stop()
     end
 end

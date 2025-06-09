@@ -1,12 +1,12 @@
-require "scripts.util"
-local menu_util = require "scripts.ui.menu.menu_util"
-local Menu = require "scripts.ui.menu.menu"
+require("scripts.util")
+local menu_util = require("scripts.ui.menu.menu_util")
+local Menu = require("scripts.ui.menu.menu")
 
 local DEFAULT_MENU_BG_COLOR = menu_util.DEFAULT_MENU_BG_COLOR
-local empty_func        = menu_util.empty_func
-local func_set_menu     = menu_util.func_set_menu
-local func_url          = menu_util.func_url
-local PROMPTS_NORMAL    = menu_util.PROMPTS_NORMAL
+local empty_func = menu_util.empty_func
+local func_set_menu = menu_util.func_set_menu
+local func_url = menu_util.func_url
+local PROMPTS_NORMAL = menu_util.PROMPTS_NORMAL
 
 return Menu:new(game, "{menu.credits.title}", {
     { "<<< " .. Text:text("menu.credits.game_by") .. " >>>" },
@@ -16,8 +16,8 @@ return Menu:new(game, "{menu.credits.title}", {
     { "Alexandre Mercier (OLX) 🔗", func_url("https://www.youtube.com/@olxdotwav") },
     { "" },
     { "<<< {menu.credits.additional_art} >>>" },
-    { "Noam Goldfarb (SSlime7)", empty_func }, 
-    { "Colin Roullé (OHX)", empty_func }, 
+    { "Noam Goldfarb (SSlime7)", empty_func },
+    { "Colin Roullé (OHX)", empty_func },
     { "" },
     { "<<< " .. Text:text("menu.credits.localization") .. " >>>" },
     { "Jakub Piłasiewicz", empty_func },
@@ -27,11 +27,11 @@ return Menu:new(game, "{menu.credits.title}", {
     { "" },
     { "<<< {menu.credits.playtesting} >>>" },
     { "hades140701", empty_func },
-    { "Corentin Vaillant", empty_func },      --func_url("https://github.com/CorentinVaillant/")},
+    { "Corentin Vaillant", empty_func }, --func_url("https://github.com/CorentinVaillant/")},
     { "NerdOfGamers + partner", empty_func }, --func_url("https://ryancavendell.itch.io/")},
     { "Azuras03 (NicolasYT)", empty_func },
     { "Lars Loe (MadByte)", empty_func },
-    { "Binary Sunrise", empty_func },  -- func_url("https://binarysunrise.dev")},
+    { "Binary Sunrise", empty_func }, -- func_url("https://binarysunrise.dev")},
     { "AnnaWorldEater", empty_func },
     { "Sylvain Fraresso", empty_func },
     { "Tom Le Ber", empty_func },
@@ -40,50 +40,50 @@ return Menu:new(game, "{menu.credits.title}", {
     { "" },
     { "<<< {menu.credits.special_thanks} >>>" },
     { "Guillaume Tran", empty_func },
-    { "Nolan Carlisi", empty_func },       --func_url("https://github.com/ARKANYOTA")},
-    { "Louie Chapman", empty_func },   -- func_url("https://louiechapm.itch.io/") },
-    { "Gaspard Delpiano-Manfrini", empty_func },       -- func_url("https://gouspourd.itch.io/")},
+    { "Nolan Carlisi", empty_func }, --func_url("https://github.com/ARKANYOTA")},
+    { "Louie Chapman", empty_func }, -- func_url("https://louiechapm.itch.io/") },
+    { "Gaspard Delpiano-Manfrini", empty_func }, -- func_url("https://gouspourd.itch.io/")},
     { "Fabien Delpiano", empty_func },
     { "Quentin Picault", empty_func },
     { "Théodore Billotte", empty_func },
     { "Alexis Belmonte", empty_func },
     { "Herweins", empty_func },
-    { "Raphytator", empty_func },      -- func_url("https://raphytator.itch.io/") },
+    { "Raphytator", empty_func }, -- func_url("https://raphytator.itch.io/") },
     { "Axel 'Vlad' Born", empty_func },
     { "Jan Willem Nijman", empty_func },
-    { "Kaïs", empty_func },  -- The two who beat the game at 
-    { "oat_addict", empty_func }, 
+    { "Kaïs", empty_func }, -- The two who beat the game at
+    { "oat_addict", empty_func },
     { "Indie Game Lyon", empty_func }, -- func_url("https://www.indiegamelyon.com/")},
     { "Toulouse Game Dev", empty_func }, -- func_url("https://www.indiegamelyon.com/")},
-    { "LÖVE framework", empty_func },    -- func_url("https://love2d.org/") },
+    { "LÖVE framework", empty_func }, -- func_url("https://love2d.org/") },
     { "{menu.open_source.title} [{menu.see_more}]", func_set_menu("open_source") },
     { "" },
     { "<< {menu.credits.tv_slideshow} >>" },
-    { Text:text("menu.credits.x_by_y", "'Graphs'", "Sslime7"),                          empty_func },
-    { Text:text("menu.credits.x_by_y", "'Hot dogs'", "Alexis Belmonte"),                empty_func },
-    { Text:text("menu.credits.x_by_y", "'Mio rotate'", "Corentin Vaillant"),            empty_func },
-    { Text:text("menu.credits.x_by_y", "'Mio explode'", "Corentin Vaillant"),           empty_func },
-    { Text:text("menu.credits.x_by_y", "'Bugs With Guns'", "Yolwoocle"),                empty_func },
-    { Text:text("menu.credits.x_by_y", "'Löve, Öbey'", "ellraiser"),                    empty_func },
-    { Text:text("menu.credits.x_by_y", "'Need your duck taped?'", "Joseph (Jedi)"),     empty_func },
-    { Text:text("menu.credits.x_by_y", "'Starbugs Green Tea'", "Goyome"),               empty_func },
-    { Text:text("menu.credits.x_by_y", "'Binarion'", "Hector SK  (Nextop Games)"),      empty_func },
+    { Text:text("menu.credits.x_by_y", "'Graphs'", "Sslime7"), empty_func },
+    { Text:text("menu.credits.x_by_y", "'Hot dogs'", "Alexis Belmonte"), empty_func },
+    { Text:text("menu.credits.x_by_y", "'Mio rotate'", "Corentin Vaillant"), empty_func },
+    { Text:text("menu.credits.x_by_y", "'Mio explode'", "Corentin Vaillant"), empty_func },
+    { Text:text("menu.credits.x_by_y", "'Bugs With Guns'", "Yolwoocle"), empty_func },
+    { Text:text("menu.credits.x_by_y", "'Löve, Öbey'", "ellraiser"), empty_func },
+    { Text:text("menu.credits.x_by_y", "'Need your duck taped?'", "Joseph (Jedi)"), empty_func },
+    { Text:text("menu.credits.x_by_y", "'Starbugs Green Tea'", "Goyome"), empty_func },
+    { Text:text("menu.credits.x_by_y", "'Binarion'", "Hector SK  (Nextop Games)"), empty_func },
     { Text:text("menu.credits.x_by_y", "'Injured? Good'", "Hector SK  (Nextop Games)"), empty_func },
-    { Text:text("menu.credits.x_by_y", "'No queen?'", "Behck"),                         empty_func },
-    { Text:text("menu.credits.x_by_y", "'Splat'", "Sarcose"),                           empty_func },
-    { Text:text("menu.credits.x_by_y", "'End toastal abuse'", "Clem"),                  empty_func },
-    { Text:text("menu.credits.x_by_y", "'A-salt rifle'", "Clem"),                       empty_func },
-    { Text:text("menu.credits.x_by_y", "'Beatleblock'", "Dimitri Sophinos (DPS2004)"),  empty_func },
-    { Text:text("menu.credits.x_by_y", "'Bugscrapers aren't enough'", "pkhead"),        empty_func },
-    { Text:text("menu.credits.x_by_y", "'Optic Studio'", "pkhead"),                     empty_func },
-    { Text:text("menu.credits.x_by_y", "'Soon (TM)'", "pixelbath"),                     empty_func },
+    { Text:text("menu.credits.x_by_y", "'No queen?'", "Behck"), empty_func },
+    { Text:text("menu.credits.x_by_y", "'Splat'", "Sarcose"), empty_func },
+    { Text:text("menu.credits.x_by_y", "'End toastal abuse'", "Clem"), empty_func },
+    { Text:text("menu.credits.x_by_y", "'A-salt rifle'", "Clem"), empty_func },
+    { Text:text("menu.credits.x_by_y", "'Beatleblock'", "Dimitri Sophinos (DPS2004)"), empty_func },
+    { Text:text("menu.credits.x_by_y", "'Bugscrapers aren't enough'", "pkhead"), empty_func },
+    { Text:text("menu.credits.x_by_y", "'Optic Studio'", "pkhead"), empty_func },
+    { Text:text("menu.credits.x_by_y", "'Soon (TM)'", "pixelbath"), empty_func },
     { "" },
     { "" },
     { "<<< {menu.credits.asset_creators} >>>" },
-    { "Kenney", empty_func },  -- func_url("https://kenney.nl/")},
-    { "somepx", empty_func },  -- func_url("https://somepx.itch.io/")},
+    { "Kenney", empty_func }, -- func_url("https://kenney.nl/")},
+    { "somepx", empty_func }, -- func_url("https://somepx.itch.io/")},
     -- { "emhuo", empty_func },   -- func_url("https://emhuo.itch.io/")},
-    { "Endesga", empty_func }, 
+    { "Endesga", empty_func },
     { "freesound.org [{menu.see_more}]", func_set_menu("credits_sounds") },
     { "" },
     { "<< " .. Text:text("menu.credits.licenses") .. " >>" },

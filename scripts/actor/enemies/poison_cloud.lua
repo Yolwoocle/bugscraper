@@ -1,13 +1,13 @@
-require "scripts.util"
-local Enemy = require "scripts.actor.enemy"
-local sounds = require "data.sounds"
-local images = require "data.images"
-local EffectCloud = require "scripts.actor.enemies.effect_cloud"
+require("scripts.util")
+local Enemy = require("scripts.actor.enemy")
+local sounds = require("data.sounds")
+local images = require("data.images")
+local EffectCloud = require("scripts.actor.enemies.effect_cloud")
 
 local PoisonCloud = EffectCloud:inherit()
-	
+
 function PoisonCloud:init(x, y, spr)
-    PoisonCloud.super.init(self, x,y, spr or images.poison_cloud, 20, 20)
+    PoisonCloud.super.init(self, x, y, spr or images.poison_cloud, 20, 20)
     self.name = "poison_cloud"
 
     self.is_poisonous = true

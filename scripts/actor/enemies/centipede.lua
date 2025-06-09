@@ -1,9 +1,9 @@
-require "scripts.util"
-local Enemy = require "scripts.actor.enemy"
-local PoisonCloud = require "scripts.actor.enemies.poison_cloud"
-local sounds = require "data.sounds"
-local images = require "data.images"
-local AnimatedSprite = require "scripts.graphics.animated_sprite"
+require("scripts.util")
+local Enemy = require("scripts.actor.enemy")
+local PoisonCloud = require("scripts.actor.enemies.poison_cloud")
+local sounds = require("data.sounds")
+local images = require("data.images")
+local AnimatedSprite = require("scripts.graphics.animated_sprite")
 
 local Centipede = Enemy:inherit()
 
@@ -27,8 +27,8 @@ function Centipede:init(x, y, length, parent, params)
     Centipede.super.init(self, x, y, images.centipede_body, 10, 10)
     self.name = "centipede"
     self.spr = AnimatedSprite:new({
-        head = {images.centipede_head, 1},
-        body = {images.centipede_body, 1},
+        head = { images.centipede_head, 1 },
+        body = { images.centipede_body, 1 },
     })
     self.is_flying = true
     self.follow_player = false
@@ -89,7 +89,7 @@ function Centipede:become_head(dt)
     self.centipede_child = nil
     self.centipede_type = "head"
     self.spr:set_animation("head")
-    
+
     local cursor = self
     local size = 0
     local total_size = self.total_centipede_length - self.centipede_length
@@ -114,7 +114,6 @@ function Centipede:update_speed()
     self.speed_x = self.speed
     self.speed_y = self.speed
 end
-
 
 function Centipede:update(dt)
     self:update_speed()
@@ -154,7 +153,6 @@ function Centipede:update(dt)
         self:spring_join(self.centipede_parent)
     end
 
-
     self.spr:set_rotation(self.direction)
 end
 
@@ -185,8 +183,8 @@ function Centipede:after_collision(col, other)
     if col.type ~= "cross" then
         -- Particles:smoke(col.touch.x, col.touch.y)
 
-        local new_vx, new_vy = bounce_vector_cardinal(math.cos(self.direction), math.sin(self.direction), col.normal.x,
-            col.normal.y)
+        local new_vx, new_vy =
+            bounce_vector_cardinal(math.cos(self.direction), math.sin(self.direction), col.normal.x, col.normal.y)
         self.direction = math.atan2(new_vy, new_vx)
     end
 end

@@ -1,6 +1,6 @@
-require "scripts.util"
-local Class = require "scripts.meta.class"
-local enemies = require "data.enemies"
+require("scripts.util")
+local Class = require("scripts.meta.class")
+local enemies = require("data.enemies")
 
 local DebugCommand = Class:inherit()
 
@@ -8,10 +8,10 @@ local supported_types = {
     ["number"] = {
         build = function(input)
             return tonumber(input)
-        end, 
+        end,
         check = function(input)
             return tonumber(input) ~= nil
-        end
+        end,
     },
     ["string"] = {
         build = function(input)
@@ -19,7 +19,7 @@ local supported_types = {
         end,
         check = function(input)
             return #input > 0
-        end
+        end,
     },
     -- ["enum"] = true,
 }
@@ -44,7 +44,7 @@ function DebugCommand:init(params)
         local name, type = arg[1]:match("([^:]+):([^:]+)")
         assert(name ~= nil, concat("No name given for argument ", i))
         assert(type ~= nil, concat("No name type for argument ", i, " ('", name, "')"))
-        assert(supported_types[type] ~= nil, "Invalid type '"..type.."' for argument '"..name.."'")
+        assert(supported_types[type] ~= nil, "Invalid type '" .. type .. "' for argument '" .. name .. "'")
 
         self.args[i] = {
             name = name,
@@ -54,21 +54,21 @@ function DebugCommand:init(params)
         }
         -- TODO sanity check for optional arguments only after mandatory ones
     end
-    
+
     self.signature = self:generate_signature()
 end
 
 function DebugCommand:generate_signature()
     local sig = self.name .. " "
     for i, arg in pairs(self.args) do
-        local argname = ternary(arg.default ~= nil, "["..arg.name.."]", "<"..arg.name..">")
+        local argname = ternary(arg.default ~= nil, "[" .. arg.name .. "]", "<" .. arg.name .. ">")
         sig = sig .. argname .. " "
     end
     return sig
 end
 
 function DebugCommand:run(...)
-    local input_args = {...}
+    local input_args = { ... }
     for i = 1, #self.args do
         local arg_data = self.args[i]
         local arg_type = arg_data.type
@@ -77,11 +77,11 @@ function DebugCommand:run(...)
             input_args[i] = self.args[i].default
         end
         if input_args[i] == nil then
-            return false, "No argument given for '"..tostring(self.args[i].name).."'"
+            return false, "No argument given for '" .. tostring(self.args[i].name) .. "'"
         end
-        
+
         if not supported_types[arg_type].check(input_args[i]) then
-            return false, "Invalid format for type "..tostring(arg_type)..": '"..tostring(input_args[i]).."'"
+            return false, "Invalid format for type " .. tostring(arg_type) .. ": '" .. tostring(input_args[i]) .. "'"
         end
 
         input_args[i] = supported_types[arg_data.type].build(input_args[i])
@@ -91,7 +91,7 @@ function DebugCommand:run(...)
     if not success then
         return success, err
     end
-    
+
     if self.subcommands then
         -- TODO subcommands
     end

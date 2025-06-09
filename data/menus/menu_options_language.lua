@@ -1,9 +1,9 @@
-require "scripts.util"
-local menu_util = require "scripts.ui.menu.menu_util"
-local Menu = require "scripts.ui.menu.menu"
+require("scripts.util")
+local menu_util = require("scripts.ui.menu.menu_util")
+local Menu = require("scripts.ui.menu.menu")
 
 local DEFAULT_MENU_BG_COLOR = menu_util.DEFAULT_MENU_BG_COLOR
-local PROMPTS_NORMAL    = menu_util.PROMPTS_NORMAL
+local PROMPTS_NORMAL = menu_util.PROMPTS_NORMAL
 
 local function func_language_menu(lang)
     return function()

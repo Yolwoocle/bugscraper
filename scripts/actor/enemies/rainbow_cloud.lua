@@ -1,13 +1,13 @@
-require "scripts.util"
-local Enemy = require "scripts.actor.enemy"
-local sounds = require "data.sounds"
-local images = require "data.images"
-local EffectCloud = require "scripts.actor.enemies.effect_cloud"
+require("scripts.util")
+local Enemy = require("scripts.actor.enemy")
+local sounds = require("data.sounds")
+local images = require("data.images")
+local EffectCloud = require("scripts.actor.enemies.effect_cloud")
 
 local RainbowCloud = EffectCloud:inherit()
-	
+
 function RainbowCloud:init(x, y, spr)
-    RainbowCloud.super.init(self, x,y, spr or images.poison_cloud, 1, 1)
+    RainbowCloud.super.init(self, x, y, spr or images.poison_cloud, 1, 1)
     self.name = "rainbow_cloud"
 
     self.z = -200
@@ -16,7 +16,7 @@ function RainbowCloud:init(x, y, spr)
 end
 
 function RainbowCloud:update(dt)
-    RainbowCloud.super.update(self, dt)    
+    RainbowCloud.super.update(self, dt)
 end
 
 function RainbowCloud:draw()

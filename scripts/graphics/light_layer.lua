@@ -1,9 +1,9 @@
-require "scripts.util"
-local shaders = require "data.shaders"
-local Light = require "scripts.graphics.light"
-local Rect = require "scripts.math.rect"
+require("scripts.util")
+local shaders = require("data.shaders")
+local Light = require("scripts.graphics.light")
+local Rect = require("scripts.math.rect")
 
-local Layer = require "scripts.graphics.layer"
+local Layer = require("scripts.graphics.layer")
 
 local LightLayer = Layer:inherit()
 
@@ -19,37 +19,36 @@ function LightLayer:init(width, height, light_world)
     self.light_world = light_world
 end
 
-function LightLayer:update_lights(dt)
-end
+function LightLayer:update_lights(dt) end
 
 function LightLayer:paint(paint_function, params)
     params = param(params, {})
     local apply_camera = param(params.apply_camera, true)
     local camera = param(params.camera, nil)
-      
-    exec_on_canvas({self.canvas, stencil=true}, function()
+
+    exec_on_canvas({ self.canvas, stencil = true }, function()
         if apply_camera then
             camera:push()
         else
             love.graphics.origin()
             love.graphics.scale(1)
         end
-		love.graphics.clear()
-        
+        love.graphics.clear()
+
         love.graphics.setStencilState("replace", "always", 1)
         love.graphics.setColorMask(false)
         self.light_world:paint()
 
         love.graphics.setStencilState("keep", "less", 1)
         love.graphics.setColorMask(true)
-		
+
         paint_function()
-		love.graphics.setStencilState()
+        love.graphics.setStencilState()
 
         if apply_camera then
             camera:pop()
         end
-	end)
+    end)
 end
 
 function LightLayer:draw(x, y)
@@ -57,7 +56,7 @@ function LightLayer:draw(x, y)
     y = param(y, 0)
     if self.blur then
         shaders.blur_shader:send("r", self.blur_radius)
-		exec_using_shader(shaders.blur_shader, function()
+        exec_using_shader(shaders.blur_shader, function()
             love.graphics.draw(self.canvas, x, y)
         end)
     else

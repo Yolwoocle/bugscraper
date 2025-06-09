@@ -1,8 +1,8 @@
-require "scripts.util"
-local images = require "data.images"
+require("scripts.util")
+local images = require("data.images")
 
-local BreakableCrate = require "scripts.actor.enemies.breakable_crate"
-local Button = require "scripts.actor.enemies.button_big"
+local BreakableCrate = require("scripts.actor.enemies.breakable_crate")
+local Button = require("scripts.actor.enemies.button_big")
 
 local ButtonBigGlass = BreakableCrate:inherit()
 

@@ -1,6 +1,6 @@
-require "scripts.util"
-local Upgrade = require "scripts.upgrade.upgrade"
-local images = require "data.images"
+require("scripts.util")
+local Upgrade = require("scripts.upgrade.upgrade")
+local images = require("data.images")
 
 local UpgradeCoconutWater = Upgrade:inherit()
 
@@ -12,26 +12,21 @@ function UpgradeCoconutWater:init()
     self:set_description(self.value * 100)
 
     self.color = COL_WHITE
-    self.palette = {COL_WHITE, COL_MID_BROWN, COL_DARK_BROWN}
+    self.palette = { COL_WHITE, COL_MID_BROWN, COL_DARK_BROWN }
 end
 
 function UpgradeCoconutWater:update(dt)
     UpgradeCoconutWater.super:update(self, dt)
 end
 
-function UpgradeCoconutWater:apply_instant(player)
-end
+function UpgradeCoconutWater:apply_instant(player) end
 
 function UpgradeCoconutWater:apply_permanent(player)
     player.ammo_percent_gain_on_stomp = self.value
 end
 
-function UpgradeCoconutWater:play_effects(player)
-end
+function UpgradeCoconutWater:play_effects(player) end
 
-function UpgradeCoconutWater:on_finish(player)
-end
-
-
+function UpgradeCoconutWater:on_finish(player) end
 
 return UpgradeCoconutWater

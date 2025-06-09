@@ -1,20 +1,20 @@
-require "scripts.util"
-local Enemy = require "scripts.actor.enemy"
-local sounds = require "data.sounds"
-local images = require "data.images"
-local Timer = require "scripts.timer"
-local StateMachine = require "scripts.state_machine"
-local Rect = require "scripts.math.rect"
-local AnimatedSprite = require "scripts.graphics.animated_sprite"
+require("scripts.util")
+local Enemy = require("scripts.actor.enemy")
+local sounds = require("data.sounds")
+local images = require("data.images")
+local Timer = require("scripts.timer")
+local StateMachine = require("scripts.state_machine")
+local Rect = require("scripts.math.rect")
+local AnimatedSprite = require("scripts.graphics.animated_sprite")
 
 local Rollopod = Enemy:inherit()
-	
+
 function Rollopod:init(x, y, spr, w, h)
-    Rollopod.super.init(self, x,y, spr or images.larva1, w or 18, h or 12)
+    Rollopod.super.init(self, x, y, spr or images.larva1, w or 18, h or 12)
     self.name = "rollopod"
     self.follow_player = false
     self.is_pushable = false
-    
+
     self.life = 30
     self.friction_x = 1
 
@@ -34,7 +34,7 @@ function Rollopod:init(x, y, spr, w, h)
     self.linger_duration_randomness = 0.2
 
     self.self_knockback_mult = 0
-    self.walk_dir_x = random_sample{-1, 1}
+    self.walk_dir_x = random_sample({ -1, 1 })
 
     -- self.sound_damage = {"larva_damage1", "larva_damage2", "larva_damage3"}
     -- self.sound_death = "larva_death"
@@ -43,15 +43,15 @@ function Rollopod:init(x, y, spr, w, h)
 
     self.detect_range = 200
     self.jump_force = 200
-    
+
     self.rotation_speed = 40
     self.spr = AnimatedSprite:new({
-        normal = {images.rollopod, 0.07, 2},
-        rolled = {images.rollopod_rolled, 0.05, 1},
-    }, "normal", SPRITE_ANCHOR_CENTER_CENTER) 
+        normal = { images.rollopod, 0.07, 2 },
+        rolled = { images.rollopod_rolled, 0.05, 1 },
+    }, "normal", SPRITE_ANCHOR_CENTER_CENTER)
 
     self.skid_spr = AnimatedSprite:new({
-        normal = {images.skid_effect, 0.01, 28}
+        normal = { images.skid_effect, 0.01, 28 },
     }, "normal", SPRITE_ANCHOR_CENTER_BOTTOM)
 
     self.state_timer = Timer:new(1.0)
@@ -97,10 +97,10 @@ function Rollopod:init(x, y, spr, w, h)
             enter = function(state)
                 self.vx = 0
                 self.state_timer:start(self.telegraph_duration)
-                
+
                 self.spr:set_animation("rolled")
 
-                self.vy = -self.jump_force 
+                self.vy = -self.jump_force
             end,
             update = function(state, dt)
                 if self.state_timer:update(dt) then
@@ -119,65 +119,74 @@ function Rollopod:init(x, y, spr, w, h)
                 end
             end,
             update = function(state, dt)
-                self.spr.rot = self.spr.rot + self.walk_dir_x*dt*self.rotation_speed
+                self.spr.rot = self.spr.rot + self.walk_dir_x * dt * self.rotation_speed
 
                 self.skid_spr:update(dt)
                 self.skid_spr:set_flip_x(not self.spr.flip_x)
 
                 if random_range(0, 1) < 0.3 then
-                    Particles:image(self.mid_x - self.walk_dir_x*16, self.y+self.h, 1, 
-                        images.bullet_casing, 4, nil, nil, nil, {
-                        vx1 = -self.vx*0.1,
-                        vx2 = -self.vx*0.2,
-            
-                        vy1 = -40,
-                        vy2 = -80,
-                    })
+                    Particles:image(
+                        self.mid_x - self.walk_dir_x * 16,
+                        self.y + self.h,
+                        1,
+                        images.bullet_casing,
+                        4,
+                        nil,
+                        nil,
+                        nil,
+                        {
+                            vx1 = -self.vx * 0.1,
+                            vx2 = -self.vx * 0.2,
+
+                            vy1 = -40,
+                            vy2 = -80,
+                        }
+                    )
                 end
             end,
             exit = function(state)
                 self.spr.rot = 0
             end,
             draw = function(state)
-                self.skid_spr:draw(self.mid_x - self.walk_dir_x*16, self.y+self.h)
-            end
+                self.skid_spr:draw(self.mid_x - self.walk_dir_x * 16, self.y + self.h)
+            end,
         },
         linger = {
             enter = function(state)
                 self.vx = 0
                 self.state_timer:start(self.linger_duration + random_neighbor(self.linger_duration_randomness))
-                
-                self.vy = -self.jump_force 
+
+                self.vy = -self.jump_force
             end,
             update = function(state, dt)
-                if self.state_timer:update(dt)   then
+                if self.state_timer:update(dt) then
                     return "wander"
                 end
             end,
         },
     }, "wander")
 
-	self.score = 10
+    self.score = 10
 end
 
 function Rollopod:update(dt)
     Rollopod.super.update(self, dt)
-    
+
     -- self.debug_values[1] = self.state_machine.current_state_name
     self.state_machine:update(dt)
-    
+
     -- self.audio_delay = self.audio_delay - dt
     -- if self.audio_delay <= 0 then
     -- 	self.audio_delay = love.math.random(0.3, 1.5)
     -- 	audio:play({
-        -- 		"larva_damage1",
-        -- 		"larva_damage2",
-        -- 		"larva_damage3",
-        -- 		"larva_death"
-        -- 	})
-        -- end
+    -- 		"larva_damage1",
+    -- 		"larva_damage2",
+    -- 		"larva_damage3",
+    -- 		"larva_death"
+    -- 	})
+    -- end
 end
-    
+
 function Rollopod:draw()
     Rollopod.super.draw(self)
     self.state_machine:draw()
@@ -190,10 +199,8 @@ function Rollopod:draw()
     end
     -- rect_color(COL_RED, "line", r.x, r.y, r.w, r.h)
 end
-    
-function Rollopod:start_attack()
 
-end
+function Rollopod:start_attack() end
 
 function Rollopod:after_collision(col, other)
     if col.type ~= "cross" then

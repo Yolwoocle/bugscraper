@@ -1,5 +1,5 @@
-require "scripts.util"
-local Class = require "scripts.meta.class"
+require("scripts.util")
+local Class = require("scripts.meta.class")
 
 local BackgroundLayer = Class:inherit()
 
@@ -12,11 +12,11 @@ function BackgroundLayer:init(background, parallax)
 end
 
 function BackgroundLayer:update(dt)
-	self.layer_y = self.layer_y + self.background:get_speed() * dt 
+    self.layer_y = self.layer_y + self.background:get_speed() * dt
 end
 
 function BackgroundLayer:draw()
-	--
+    --
 end
 
 return BackgroundLayer

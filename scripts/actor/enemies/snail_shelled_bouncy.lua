@@ -1,11 +1,11 @@
-require "scripts.util"
-local Enemy = require "scripts.actor.enemy"
-local sounds = require "data.sounds"
-local images = require "data.images"
+require("scripts.util")
+local Enemy = require("scripts.actor.enemy")
+local sounds = require("data.sounds")
+local images = require("data.images")
 
-local Guns = require "data.guns"
-local Slug = require "scripts.actor.enemies.slug"
-local PongBall = require "scripts.actor.enemies.pong_ball"
+local Guns = require("data.guns")
+local Slug = require("scripts.actor.enemies.slug")
+local PongBall = require("scripts.actor.enemies.pong_ball")
 
 local SnailShelledBouncy = PongBall:inherit()
 
@@ -14,7 +14,7 @@ function SnailShelledBouncy:init(x, y, spr)
 end
 
 function SnailShelledBouncy:init_snail_shelled(x, y, spr)
-    self:init_pong_ball(x,y, spr or images.snail_shell_bouncy, 16, 16)
+    self:init_pong_ball(x, y, spr or images.snail_shell_bouncy, 16, 16)
     self.name = "snail_shelled_bouncy"
 
     self.is_flying = true

@@ -1,15 +1,15 @@
-require "scripts.util"
-local Enemy = require "scripts.actor.enemy"
-local sounds = require "data.sounds"
-local images = require "data.images"
-local Loot = require "scripts.actor.loot"
-local PoisonCloud = require "scripts.actor.enemies.poison_cloud"
-local Explosion = require "scripts.actor.enemies.explosion"
-local Larva = require "scripts.actor.enemies.larva"
-local Fly = require "scripts.actor.enemies.fly"
-local SpikedFly = require "scripts.actor.enemies.spiked_fly"
-local Timer = require "scripts.timer"
-local StateMachine = require "scripts.state_machine"
+require("scripts.util")
+local Enemy = require("scripts.actor.enemy")
+local sounds = require("data.sounds")
+local images = require("data.images")
+local Loot = require("scripts.actor.loot")
+local PoisonCloud = require("scripts.actor.enemies.poison_cloud")
+local Explosion = require("scripts.actor.enemies.explosion")
+local Larva = require("scripts.actor.enemies.larva")
+local Fly = require("scripts.actor.enemies.fly")
+local SpikedFly = require("scripts.actor.enemies.spiked_fly")
+local Timer = require("scripts.timer")
+local StateMachine = require("scripts.state_machine")
 
 local WalkingSlotMachine = Enemy:inherit()
 
@@ -23,33 +23,35 @@ function WalkingSlotMachine:init(x, y, spr, w, h)
     self.is_immune_to_bullets = true
     self.is_killed_on_stomp = false
     self.is_killed_on_negative_life = false
-    
+
     self:set_max_life(30)
     self.damage_on_stomp = 10
     self.stomps = math.huge
 
     self.friction_x = 1
     self.speed = 100 + random_neighbor(15)
-    self.walk_dir_x = random_sample { -1, 1 }
+    self.walk_dir_x = random_sample({ -1, 1 })
 
     self.prizes = {
         { -- Losing pattern (random images)
             {
                 image = nil,
                 effect = function()
-                    local explosion = Explosion:new(self.mid_x, self.mid_y, {radius = self.explosion_radius})
+                    local explosion = Explosion:new(self.mid_x, self.mid_y, { radius = self.explosion_radius })
                     game:new_actor(explosion)
                     self:kill()
                 end,
-            }, 30
+            },
+            30,
         },
         {
             {
                 image = images.heart,
                 effect = function()
-                    self:drop_loot(Loot.Life, {loot_type="life"})
+                    self:drop_loot(Loot.Life, { loot_type = "life" })
                 end,
-            }, 5
+            },
+            5,
         },
         {
             {
@@ -59,7 +61,7 @@ function WalkingSlotMachine:init(x, y, spr, w, h)
                         local spawn_x = clamp(self.mid_x - 10, game.level.cabin_rect.ax, game.level.cabin_rect.bx - 20)
                         local spawn_y = clamp(self.mid_y - 10, game.level.cabin_rect.ay, game.level.cabin_rect.by - 20)
                         local cloud = PoisonCloud:new(spawn_x, spawn_y)
-                
+
                         local d = random_range(0, pi2)
                         local r = random_range(0, 400)
                         cloud.vx = math.cos(d) * r
@@ -67,30 +69,33 @@ function WalkingSlotMachine:init(x, y, spr, w, h)
                         game:new_actor(cloud)
                     end
                 end,
-            }, 10
+            },
+            10,
         },
         {
             {
                 image = images.heart_empty,
                 effect = function()
                     local enemies = {
-                        { Larva,       15 },
-                        { Fly,         10 },
-                        { SpikedFly,   5 },
+                        { Larva, 15 },
+                        { Fly, 10 },
+                        { SpikedFly, 5 },
                     }
-            
-                    for i = 1, random_range_int(2,4) do
+
+                    for i = 1, random_range_int(2, 4) do
                         local e = random_weighted(enemies)
-                        local enemy = create_actor_centered(e, self.mid_x + random_neighbor(5), self.mid_y + random_neighbor(5))
+                        local enemy =
+                            create_actor_centered(e, self.mid_x + random_neighbor(5), self.mid_y + random_neighbor(5))
                         game:new_actor(enemy)
                         self:kill()
                     end
                 end,
-            }, 10
+            },
+            10,
         },
     }
     self.all_images = {}
-    for i=1, #self.prizes do
+    for i = 1, #self.prizes do
         table.insert(self.all_images, self.prizes[i][1].image)
     end
     shuffle_table(self.all_images)
@@ -107,7 +112,7 @@ function WalkingSlotMachine:init(x, y, spr, w, h)
                 if self.number_of_symbols >= self.max_number_of_symbols then
                     return "exploding"
                 end
-            end
+            end,
         },
 
         exploding = {
@@ -136,7 +141,7 @@ function WalkingSlotMachine:init(x, y, spr, w, h)
                     self.flash_timer:start()
                 end
 
-                if self.exploding_timer:update(dt) then                    
+                if self.exploding_timer:update(dt) then
                     self.prize.effect()
                     self:kill()
                 end
@@ -149,8 +154,8 @@ function WalkingSlotMachine:init(x, y, spr, w, h)
                 -- else
                 --     self:set_sprite_scale(1)
                 -- end
-            end
-        }
+            end,
+        },
     }, "normal")
 end
 
@@ -174,7 +179,7 @@ function WalkingSlotMachine:draw()
     for i = 0, self.number_of_symbols - 1 do
         local img = sym
         if not sym then
-            img = self.all_images[i+1]
+            img = self.all_images[i + 1]
         end
         love.graphics.draw(img, ox + self.x + i * 10, oy + self.y)
     end

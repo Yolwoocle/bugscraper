@@ -1,15 +1,15 @@
-require "scripts.util"
-local Enemy = require "scripts.actor.enemy"
-local sounds = require "data.sounds"
-local images = require "data.images"
+require("scripts.util")
+local Enemy = require("scripts.actor.enemy")
+local sounds = require("data.sounds")
+local images = require("data.images")
 
 local Woodlouse = Enemy:inherit()
 
 function Woodlouse:init(x, y, spr, w, h)
-    Woodlouse.super.init(self, x,y, spr or images.woodlouse_1, w or 20, h or 14)
+    Woodlouse.super.init(self, x, y, spr or images.woodlouse_1, w or 20, h or 14)
     self.name = "woodlouse"
     self.follow_player = false
-    
+
     self.destroy_bullet_on_impact = false
     self.is_bouncy_to_bullets = true
     self.is_immune_to_bullets = true
@@ -17,19 +17,28 @@ function Woodlouse:init(x, y, spr, w, h)
     self.life = 10
     self.friction_x = 1
     self.speed = 40
-    self.walk_dir_x = random_sample{-1, 1}
+    self.walk_dir_x = random_sample({ -1, 1 })
 
-	self.score = 10
+    self.score = 10
 
     -- self.sound_damage = {"larva_damage1", "larva_damage2", "larva_damage3"}
     -- self.sound_death = "larva_death"
     -- self.anim_frame_len = 0.2
-    self.anim_frames = {images.woodlouse_1, images.woodlouse_2}
+    self.anim_frames = { images.woodlouse_1, images.woodlouse_2 }
     self.audio_delay = love.math.random(0.3, 1)
 
-    self.sound_death = {"sfx_enemies_stomp_break_01", "sfx_enemies_stomp_break_02", "sfx_enemies_stomp_break_03", "sfx_enemies_stomp_break_04"}
-    self.sound_stomp = {"sfx_enemies_stomp_break_01", "sfx_enemies_stomp_break_02", "sfx_enemies_stomp_break_03", "sfx_enemies_stomp_break_04"}
-    
+    self.sound_death = {
+        "sfx_enemies_stomp_break_01",
+        "sfx_enemies_stomp_break_02",
+        "sfx_enemies_stomp_break_03",
+        "sfx_enemies_stomp_break_04",
+    }
+    self.sound_stomp = {
+        "sfx_enemies_stomp_break_01",
+        "sfx_enemies_stomp_break_02",
+        "sfx_enemies_stomp_break_03",
+        "sfx_enemies_stomp_break_04",
+    }
 end
 
 function Woodlouse:update(dt)

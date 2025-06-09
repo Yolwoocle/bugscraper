@@ -1,16 +1,16 @@
-require "scripts.util"
-local Enemy = require "scripts.actor.enemy"
-local sounds = require "data.sounds"
-local images = require "data.images"
+require("scripts.util")
+local Enemy = require("scripts.actor.enemy")
+local sounds = require("data.sounds")
+local images = require("data.images")
 
-local Guns = require "data.guns"
-local Slug = require "scripts.actor.enemies.slug"
-local PongBall = require "scripts.actor.enemies.pong_ball"
+local Guns = require("data.guns")
+local Slug = require("scripts.actor.enemies.slug")
+local PongBall = require("scripts.actor.enemies.pong_ball")
 
 local SnailShelled = PongBall:inherit()
 
 function SnailShelled:init(x, y, spr)
-    SnailShelled.super.init(self, x,y, spr or images.snail_shell, 16, 16)
+    SnailShelled.super.init(self, x, y, spr or images.snail_shell, 16, 16)
     self.name = "snail_shelled"
 
     self.is_flying = true
@@ -23,9 +23,19 @@ function SnailShelled:init(x, y, spr)
 
     -- self.sound_death = "snail_shell_crack"
     -- self.sound_stomp = "snail_shell_crack"
-    
-    self.sound_death = {"sfx_enemies_stomp_break_01", "sfx_enemies_stomp_break_02", "sfx_enemies_stomp_break_03", "sfx_enemies_stomp_break_04"}
-    self.sound_stomp = {"sfx_enemies_stomp_break_01", "sfx_enemies_stomp_break_02", "sfx_enemies_stomp_break_03", "sfx_enemies_stomp_break_04"}
+
+    self.sound_death = {
+        "sfx_enemies_stomp_break_01",
+        "sfx_enemies_stomp_break_02",
+        "sfx_enemies_stomp_break_03",
+        "sfx_enemies_stomp_break_04",
+    }
+    self.sound_stomp = {
+        "sfx_enemies_stomp_break_01",
+        "sfx_enemies_stomp_break_02",
+        "sfx_enemies_stomp_break_03",
+        "sfx_enemies_stomp_break_04",
+    }
 
     self.score = 10
 end

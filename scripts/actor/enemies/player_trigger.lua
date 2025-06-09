@@ -1,10 +1,10 @@
-require "scripts.util"
-local Enemy = require "scripts.actor.enemy"
-local images = require "data.images"
-local Prop = require "scripts.actor.enemies.prop"
-local Rect = require "scripts.math.rect"
+require("scripts.util")
+local Enemy = require("scripts.actor.enemy")
+local images = require("data.images")
+local Prop = require("scripts.actor.enemies.prop")
+local Rect = require("scripts.math.rect")
 
-local utf8 = require "utf8"
+local utf8 = require("utf8")
 
 local PlayerTrigger = Prop:inherit()
 
@@ -12,15 +12,15 @@ function PlayerTrigger:init(x, y, w, h, trigger_func, params)
     params = params or {}
     PlayerTrigger.super.init(self, x, y, images.empty, w, h)
     self.name = "cutscene_trigger"
-    
+
     self.gravity = 0
     self.loot = {}
 
-	self.destroy_bullet_on_impact = false
-	self.is_immune_to_bullets = true
+    self.destroy_bullet_on_impact = false
+    self.is_immune_to_bullets = true
 
     self.trigger_func = trigger_func
-    self.min_player_trigger = param(params.min_player_trigger, 0) -- 0 = all players need to join 
+    self.min_player_trigger = param(params.min_player_trigger, 0) -- 0 = all players need to join
     self.max_triggers = param(params.triggers, 1)
     self.triggers = self.max_triggers
 
@@ -33,11 +33,11 @@ end
 function PlayerTrigger:update(dt)
     PlayerTrigger.super.update(self, dt)
 
-    self.rect = Rect:new(self.x, self.y, self.x+self.w, self.y+self.h)
+    self.rect = Rect:new(self.x, self.y, self.x + self.w, self.y + self.h)
 
     local n = 0
     for _, p in pairs(game.players) do
-        if self.rect:rectangle_intersection(Rect:new(p.x, p.y, p.x+p.w, p.y+p.h)) then
+        if self.rect:rectangle_intersection(Rect:new(p.x, p.y, p.x + p.w, p.y + p.h)) then
             n = n + 1
         end
     end

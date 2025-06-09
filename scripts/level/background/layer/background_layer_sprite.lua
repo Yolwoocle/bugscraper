@@ -1,8 +1,8 @@
-require "scripts.util"
-local BackgroundLayer = require "scripts.level.background.layer.background_layer"
-local Sprite = require "scripts.graphics.sprite"
-local images = require "data.images"
-local AnimatedSprite = require "scripts.graphics.animated_sprite"
+require("scripts.util")
+local BackgroundLayer = require("scripts.level.background.layer.background_layer")
+local Sprite = require("scripts.graphics.sprite")
+local images = require("data.images")
+local AnimatedSprite = require("scripts.graphics.animated_sprite")
 
 local BackgroundLayerSprite = BackgroundLayer:inherit()
 
@@ -11,7 +11,7 @@ function BackgroundLayerSprite:init(background, parallax, params)
     BackgroundLayerSprite.super.init(self, background, parallax)
 
     self.spr = AnimatedSprite:new({
-        normal = {params.image, params.frame_duration or 1, params.frame_count or 1},
+        normal = { params.image, params.frame_duration or 1, params.frame_count or 1 },
     }, "normal", SPRITE_ANCHOR_LEFT_TOP)
     self.x = params.x or 0
 end

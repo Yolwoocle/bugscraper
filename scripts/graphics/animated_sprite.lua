@@ -1,8 +1,8 @@
-require "scripts.util"
-local Sprite = require "scripts.graphics.sprite"
-local Animation = require "scripts.graphics.animation"
-local Timer = require "scripts.timer"
-local images = require "data.images"
+require("scripts.util")
+local Sprite = require("scripts.graphics.sprite")
+local Animation = require("scripts.graphics.animation")
+local Timer = require("scripts.timer")
+local images = require("data.images")
 
 local unpack = table.unpack or unpack
 
@@ -20,7 +20,7 @@ function AnimatedSprite:init(animations, default, anchor, params)
     self.animation = param(animations[params.default])
     self.current_animation_name = params.default
     self.frame_i = param(params.start_frame, 1)
-    self.frame_timer = Timer:new(param(params.frame_duration or 1), {loopback = true})
+    self.frame_timer = Timer:new(param(params.frame_duration or 1), { loopback = true })
     self.frame_timer:start()
 
     if default then
@@ -33,7 +33,7 @@ function AnimatedSprite:set_animation(animation_name)
         return
     end
     local anim = self.animations[animation_name]
-    assert(anim, "Animation '" .. tostring(animation_name) .. "' does not exist") 
+    assert(anim, "Animation '" .. tostring(animation_name) .. "' does not exist")
 
     self.animation = anim
     self.current_animation_name = animation_name
@@ -42,7 +42,7 @@ function AnimatedSprite:set_animation(animation_name)
     self.frame_timer:start(anim.frame_duration)
     if self.animation.is_spritesheet then
         self:set_spritesheet(self.animation.frames, self.animation.frame_count_x, self.animation.frame_count_y)
-    end 
+    end
 
     self:update_frame_sprite()
 end
@@ -65,7 +65,7 @@ function AnimatedSprite:update(dt)
 
     if self.frame_timer:update(dt) then
         self.frame_i = mod_plus_1(self.frame_i + 1, self.animation.frame_count)
-        self:update_frame_sprite() 
+        self:update_frame_sprite()
     end
 end
 

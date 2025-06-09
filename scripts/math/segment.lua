@@ -1,5 +1,5 @@
-require "scripts.util"
-local Class = require "scripts.meta.class"
+require("scripts.util")
+local Class = require("scripts.meta.class")
 
 local Segment = Class:inherit()
 

@@ -1,20 +1,20 @@
-require "scripts.util"
-local Enemy = require "scripts.actor.enemy"
-local sounds = require "data.sounds"
-local images = require "data.images"
-local ElectricRays = require "scripts.actor.enemies.electric_rays"
-local StateMachine = require "scripts.state_machine"
-local Timer = require "scripts.timer"
-local Segment = require "scripts.math.segment"
-local guns  = require "data.guns"
+require("scripts.util")
+local Enemy = require("scripts.actor.enemy")
+local sounds = require("data.sounds")
+local images = require("data.images")
+local ElectricRays = require("scripts.actor.enemies.electric_rays")
+local StateMachine = require("scripts.state_machine")
+local Timer = require("scripts.timer")
+local Segment = require("scripts.math.segment")
+local guns = require("data.guns")
 
 local W2boss = Enemy:inherit()
 
 function W2boss:init(x, y)
-    self:init_enemy(x,y, images.chipper_1, 32, 32)
-    self.name = "w2_boss"  --removeme(dont actually)
+    self:init_enemy(x, y, images.chipper_1, 32, 32)
+    self.name = "w2_boss" --removeme(dont actually)
 
-    -- Parameters 
+    -- Parameters
     self.life = 300
     self.is_flying = true
     self.gravity = 0
@@ -27,13 +27,14 @@ function W2boss:init(x, y)
 
     -- Animation
     self.anim_frame_len = 0.2
-    self.anim_frames = {images.chipper_1, images.chipper_2, images.chipper_3, images.chipper_2}
-    self.normal_anim_frames = {images.chipper_1, images.chipper_2, images.chipper_3, images.chipper_2}
-    self.attack_anim_frames = {images.chipper_attack_1, images.chipper_attack_2, images.chipper_attack_3, images.chipper_attack_2}
+    self.anim_frames = { images.chipper_1, images.chipper_2, images.chipper_3, images.chipper_2 }
+    self.normal_anim_frames = { images.chipper_1, images.chipper_2, images.chipper_3, images.chipper_2 }
+    self.attack_anim_frames =
+        { images.chipper_attack_1, images.chipper_attack_2, images.chipper_attack_3, images.chipper_attack_2 }
     self.spr:set_scale(2, 2)
-	self.flip_mode = ENEMY_FLIP_MODE_MANUAL
+    self.flip_mode = ENEMY_FLIP_MODE_MANUAL
     self.spr:set_anchor(SPRITE_ANCHOR_CENTER_CENTER)
-    
+
     -- States
     --- Wander
     -- self.wander_timer = Timer:new({5.0, 8.0})
@@ -41,7 +42,7 @@ function W2boss:init(x, y)
     self.wander_spawn_timer = Timer:new(3.0)
     self.player_detection_range = 256
     self.player_detection_width = 16
-    
+
     --- Rays
     self.rays_telegraph_duration = 1.0
     self.rays_stay_duration = 1.5
@@ -57,17 +58,17 @@ function W2boss:init(x, y)
     self.telegraph_timer = Timer:new(0.5)
     self.telegraph_source = Audio:get_sound("chipper_telegraph"):clone()
     self.telegraph_source:set_pitch(0.7)
-    
+
     --- Attack
     self.attack_speed = 100
     self.attack_bounces = 12
     self.attack_bounces_counter = self.attack_bounces
-    
+
     --- Post-attack
     self.post_attack_timer = Timer:new(0.5)
 
-    self.direction = random_range(0, pi*2)
-    self.direction_speed = random_sample({-1, 1}) * 3
+    self.direction = random_range(0, pi * 2)
+    self.direction_speed = random_sample({ -1, 1 }) * 3
 
     self.gun = guns.unlootable.W2BossGun:new(self)
     self.gun8 = guns.unlootable.W2boss8bullets:new(self)
@@ -89,25 +90,26 @@ function W2boss:init(x, y)
                 -- Shoot bullets
                 self.gun:update(dt)
                 if self.gun_target then
-                    local dx, dy = get_direction_vector(self.mid_x, self.mid_y, self.gun_target.mid_x, self.gun_target.mid_y)
+                    local dx, dy =
+                        get_direction_vector(self.mid_x, self.mid_y, self.gun_target.mid_x, self.gun_target.mid_y)
                     self.gun:shoot(dt, self, self.mid_x, self.mid_y, dx, dy)
                 end
 
-                local a = random_range(0, pi*2)
+                local a = random_range(0, pi * 2)
                 self.gun:shoot(dt, self, self.mid_x, self.mid_y, math.cos(a), math.sin(a))
 
                 -- Movement
-                self.direction_speed = random_sample({-1, 1}) * 3
-                if random_range(0, 1) < 1/10 then
+                self.direction_speed = random_sample({ -1, 1 }) * 3
+                if random_range(0, 1) < 1 / 10 then
                     self.direction_speed = -self.direction_speed
                 end
-                
+
                 self.vx = self.vx + math.cos(self.direction) * self.speed
                 self.vy = self.vy + math.sin(self.direction) * self.speed
-                
+
                 -- State management
                 if self.wander_timer:update(dt) then
-                    local r = random_sample{1, 2}
+                    local r = random_sample({ 1, 2 })
                     self.state_machine:set_state("telegraph")
                     -- if r == 1 then
                     --     self.state_machine:set_state("rays")
@@ -123,7 +125,7 @@ function W2boss:init(x, y)
                 self.angle_speed = 3
 
                 self.rays:start_activation_timer(self.rays_telegraph_duration)
-                self.rays.angle = random_range(0, pi*2)
+                self.rays.angle = random_range(0, pi * 2)
                 self.rays_activated_timer:start(self.rays_telegraph_duration + self.rays_stay_duration)
 
                 -- self.ray_target = self:get_random_player()
@@ -134,7 +136,7 @@ function W2boss:init(x, y)
                 else
                     -- self.rays.angle_speed = 0
                 end
-                
+
                 if self.rays_activated_timer:update(dt) then
                     self.rays:set_state("disabled")
                     self.state_machine:set_state("wander")
@@ -142,7 +144,7 @@ function W2boss:init(x, y)
             end,
         },
         telegraph = {
-            enter = function(state) 
+            enter = function(state)
                 self.vx = 0
                 self.vy = 0
                 self.direction_speed = 0
@@ -160,7 +162,7 @@ function W2boss:init(x, y)
                 if self.telegraph_timer:update(dt) then
                     self.state_machine:set_state("attack")
                 end
-            end
+            end,
         },
         attack = {
             enter = function()
@@ -175,7 +177,13 @@ function W2boss:init(x, y)
                 self.gun8:update(dt)
 
                 Particles:dust(self.mid_x, self.mid_y)
-                Particles:static_image(random_sample{images.particle_bit_zero, images.particle_bit_one}, self.mid_x, self.mid_y, 0, 0.25)
+                Particles:static_image(
+                    random_sample({ images.particle_bit_zero, images.particle_bit_one }),
+                    self.mid_x,
+                    self.mid_y,
+                    0,
+                    0.25
+                )
             end,
             after_collision = function(state, col)
                 if col.type == "cross" then
@@ -183,7 +191,7 @@ function W2boss:init(x, y)
                 end
 
                 game:screenshake(3)
-            	Input:vibrate_all(0.1, 0.45)
+                Input:vibrate_all(0.1, 0.45)
 
                 self.attack_bounces_counter = math.max(0, self.attack_bounces_counter - 1)
                 if self.attack_bounces_counter <= 0 then
@@ -196,11 +204,10 @@ function W2boss:init(x, y)
                 self.anim_frames = self.normal_anim_frames
                 self.post_attack_timer:start()
                 self.telegraph_source:stop()
-            
-				Audio:play_var("bullet_bounce_"..random_sample{"1","2"}, 0.2, 1.2)
+
+                Audio:play_var("bullet_bounce_" .. random_sample({ "1", "2" }), 0.2, 1.2)
                 Audio:play_var("metal_impact", 0, 1)
                 -- local s = "metalfootstep_0"..tostring(love.sume=0.5})
-
             end,
             update = function(state, dt)
                 local r = 3 * self.post_attack_timer:get_time() / self.post_attack_timer:get_duration()
@@ -214,11 +221,15 @@ function W2boss:init(x, y)
     }, "wander")
 
     self.rays:set_state("disabled")
-
 end
 
 function W2boss:detect_player_in_range()
-    local detection_segment = Segment:new(self.mid_x, self.mid_y, self.mid_x + math.cos(self.direction)*600, self.mid_y + math.sin(self.direction)*600)
+    local detection_segment = Segment:new(
+        self.mid_x,
+        self.mid_y,
+        self.mid_x + math.cos(self.direction) * 600,
+        self.mid_y + math.sin(self.direction) * 600
+    )
     self.detection_segment = detection_segment
 
     for _, p in pairs(game.players) do
@@ -233,20 +244,20 @@ end
 function W2boss:update(dt)
     self:update_enemy(dt)
 
-    self.direction = self.direction + self.direction_speed*dt
+    self.direction = self.direction + self.direction_speed * dt
     self.spr:set_rotation(self.direction)
     self.state_machine:update(dt)
 
     -- self.debug_values[1] = self.state_machine.current_state_name
     -- self.debug_values[2] = self.attack_bounces_counter
-    self.debug_values[2] = concat(self.life,"❤")
+    self.debug_values[2] = concat(self.life, "❤")
 end
-
 
 function W2boss:after_collision(col, other)
     self.state_machine:_call("after_collision", col)
     if col.type ~= "cross" then
-        local new_vx, new_vy = bounce_vector_cardinal(math.cos(self.direction), math.sin(self.direction), col.normal.x, col.normal.y)
+        local new_vx, new_vy =
+            bounce_vector_cardinal(math.cos(self.direction), math.sin(self.direction), col.normal.x, col.normal.y)
         self.direction = math.atan2(new_vy, new_vx)
 
         local a = random_range(0, pi2)

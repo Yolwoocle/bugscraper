@@ -1,18 +1,18 @@
-require "scripts.util"
-local Upgrade = require "scripts.upgrade.upgrade"
-local images = require "data.images"
+require("scripts.util")
+local Upgrade = require("scripts.upgrade.upgrade")
+local images = require("data.images")
 
 local UpgradeSoda = Upgrade:inherit()
 
 function UpgradeSoda:init()
     UpgradeSoda.super.init(self, "soda")
     self.sprite = images.upgrade_soda
-    
+
     self.strength = 1
     self:set_description(self.strength)
 
     self.color = COL_LIGHT_RED
-    self.palette = {COL_LIGHT_RED, COL_MID_BROWN, COL_DARK_BROWN}
+    self.palette = { COL_LIGHT_RED, COL_MID_BROWN, COL_DARK_BROWN }
 end
 
 function UpgradeSoda:update(dt)
@@ -25,7 +25,6 @@ function UpgradeSoda:apply_permanent(player)
     -- player.can_do_midair_jump = true
 end
 
-function UpgradeSoda:on_finish(player)
-end
+function UpgradeSoda:on_finish(player) end
 
 return UpgradeSoda

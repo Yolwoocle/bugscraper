@@ -9,10 +9,8 @@ return {
         pt = "Português Brasileiro",
     },
     steam = {
-        short_description =
-        [[Welcome to the bugscraper. Rise to the top of this pest-filled tower in this 2D shooter platformer and battle waves of enemies at every floor as they come for your skin (or rather, exoskeleton).]],
-        description =
-        [[Welcome to the bugscraper. Here, pests all around the world come to gather. Your mission: stopping them before it is too late!🐜In this platformer shooter, you take the role of Mio, a courageous ant, trying to stop the employees of a bug-filled skyscraper from corrupting the world with a deadly mushroom.🐛You will battle waves of enemies in an elevator as they come for your skin (or rather, exoskeleton) on every floor.🐝Using a wide variety of weapons and upgrades, eliminate them and prepare to battle for the next floor!🐞Play in solo, or with up to 4 friends in local co-op multiplayer.]],
+        short_description = [[Welcome to the bugscraper. Rise to the top of this pest-filled tower in this 2D shooter platformer and battle waves of enemies at every floor as they come for your skin (or rather, exoskeleton).]],
+        description = [[Welcome to the bugscraper. Here, pests all around the world come to gather. Your mission: stopping them before it is too late!🐜In this platformer shooter, you take the role of Mio, a courageous ant, trying to stop the employees of a bug-filled skyscraper from corrupting the world with a deadly mushroom.🐛You will battle waves of enemies in an elevator as they come for your skin (or rather, exoskeleton) on every floor.🐝Using a wide variety of weapons and upgrades, eliminate them and prepare to battle for the next floor!🐞Play in solo, or with up to 4 friends in local co-op multiplayer.]],
     },
     discord = { -- Text used for Discord rich presence
         state = {
@@ -34,7 +32,6 @@ return {
         win_wishlist = "Wishlist the game on Steam :)", -- "Wishlist" is a verb
         win_prompt = "[Pause to continue]",
         warning_web_controller = "Some browsers may not have proper controller support",
-
     },
     level = {
         world_prefix = "Department %s",
@@ -74,7 +71,7 @@ return {
     },
     enemy = {
         dung = "Mr. Dung",
-        bee_boss = "The Queen",        -- ADDED
+        bee_boss = "The Queen", -- ADDED
         motherboard = "The Webmaster", -- ADDED
     },
     upgrade = {
@@ -112,7 +109,7 @@ return {
         },
         hot_sauce = { -- ADDED
             title = "Hot Sauce",
-            description = "Deal x%d damage but use x%d ammo", -- First "%d" is the damage, second "%d" is ammo 
+            description = "Deal x%d damage but use x%d ammo", -- First "%d" is the damage, second "%d" is ammo
         },
         coconut_water = { -- ADDED
             title = "Coconut Water",
@@ -158,7 +155,7 @@ return {
         yes = "YES",
         no = "NO",
         quit = {
-            description = "Are you sure you want to quit?"
+            description = "Are you sure you want to quit?",
         },
         confirm_retry = {
             -- Here refers to going back to the main menu to try another run, NOT restarting the game
@@ -252,7 +249,6 @@ return {
                 screenshake = "屏幕震动",
                 skip_boss_intros = "SKIP BOSS INTROS", -- ADDED
                 show_fps_warning = "显示低帧率警告",
-
             },
             language = {
                 title = "LANGUAGE",
@@ -296,11 +292,11 @@ return {
             playtesting = "Playtesting",
             special_thanks = "Special thanks",
             asset_creators = "Asset creators",
-            tv_slideshow = "TV slideshow contributors", -- ADDED // Refers to the powerpoint TV slideshow on the title screen, which was contributed by a variety of people 
+            tv_slideshow = "TV slideshow contributors", -- ADDED // Refers to the powerpoint TV slideshow on the title screen, which was contributed by a variety of people
             tv_slideshow_submit = "Submit yours...", -- ADDED // Leads to a web page where people can submit their own slides
             licenses = "Asset & library licenses",
 
-            x_by_y =     "%s by %s", -- "ASSET_NAME by CREATOR". Used to credit assets such as sound effects
+            x_by_y = "%s by %s", -- "ASSET_NAME by CREATOR". Used to credit assets such as sound effects
             asset_item = "%s by %s / %s", -- "ASSET_NAME by CREATOR / LICENCE". Used to credit assets such as sound effects
         },
         open_source = {

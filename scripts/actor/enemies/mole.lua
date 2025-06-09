@@ -1,18 +1,18 @@
-require "scripts.util"
-local Enemy = require "scripts.actor.enemy"
-local sounds = require "data.sounds"
-local images = require "data.images"
-local Guns = require "data.guns"
-local StateMachine = require "scripts.state_machine"
-local Timer = require "scripts.timer"
-local WallWalker = require "scripts.actor.enemies.wall_walker"
-local AnimatedSprite = require "scripts.graphics.animated_sprite"
+require("scripts.util")
+local Enemy = require("scripts.actor.enemy")
+local sounds = require("data.sounds")
+local images = require("data.images")
+local Guns = require("data.guns")
+local StateMachine = require("scripts.state_machine")
+local Timer = require("scripts.timer")
+local WallWalker = require("scripts.actor.enemies.wall_walker")
+local AnimatedSprite = require("scripts.graphics.animated_sprite")
 
 local Mole = WallWalker:inherit()
 
 -- This ant will walk around corners, but this code will not work for "ledges".
 -- Please look at the code of my old project (gameaweek1) if needed
-function Mole:init(x, y) 
+function Mole:init(x, y)
     -- this hitbox is too big, but it works for walls
     -- self:init_enemy(x, y, images.mushroom_ant, 20, 20)
     Mole.super.init(self, x, y, images.mole_digging_1, 20, 20)
@@ -21,13 +21,16 @@ function Mole:init(x, y)
 
     self.spr = AnimatedSprite:new({
         digging = {
-            {images.mole_digging_1}, 0.1
+            { images.mole_digging_1 },
+            0.1,
         },
         telegraph = {
-            {images.mole_telegraph_1}, 0.1
+            { images.mole_telegraph_1 },
+            0.1,
         },
         flying = {
-            {images.mole_outside}, 0.1
+            { images.mole_outside },
+            0.1,
         },
     })
     self.spr:set_anchor(SPRITE_ANCHOR_CENTER_CENTER)
@@ -42,7 +45,7 @@ function Mole:init(x, y)
             enter = function(state)
                 self.walk_speed = 200
                 self.damage = 0
-                self.walk_dir = random_sample{-1, 1}
+                self.walk_dir = random_sample({ -1, 1 })
                 self.state_timer:start(random_range(1, 2))
                 self.spr:set_animation("digging")
 
@@ -69,13 +72,19 @@ function Mole:init(x, y)
             end,
             update = function(state, dt)
                 self.spr:update_offset(random_polar(3), random_polar(3))
-                
+
                 if self.state_timer:update(dt) then
                     return "jump"
                 end
 
                 if random_range(0, 1) < 0.2 then
-                    Particles:image(self.mid_x, self.mid_y, 1, {images.dung_particle_1, images.dung_particle_2, images.dung_particle_3}, 8)
+                    Particles:image(
+                        self.mid_x,
+                        self.mid_y,
+                        1,
+                        { images.dung_particle_1, images.dung_particle_2, images.dung_particle_3 },
+                        8
+                    )
                 end
             end,
             draw = function(state)
@@ -90,15 +99,20 @@ function Mole:init(x, y)
                 self.vy = self.up_vect.y * self.fly_speed
 
                 self.is_stompable = true
-                self.gravity = self.default_gravity/2
+                self.gravity = self.default_gravity / 2
                 self.spr:set_animation("flying")
 
-                Particles:image(self.mid_x, self.mid_y, 20, {images.dung_particle_1, images.dung_particle_2, images.dung_particle_3}, 8)
-            	Particles:jump_dust_kick(self.mid_x, self.mid_y, math.atan2(self.vy, self.vx) + pi/2)
+                Particles:image(
+                    self.mid_x,
+                    self.mid_y,
+                    20,
+                    { images.dung_particle_1, images.dung_particle_2, images.dung_particle_3 },
+                    8
+                )
+                Particles:jump_dust_kick(self.mid_x, self.mid_y, math.atan2(self.vy, self.vx) + pi / 2)
             end,
 
-            update = function(state, dt)
-            end,
+            update = function(state, dt) end,
 
             on_collision = function(state, col, other)
                 if col.type ~= "cross" then
@@ -119,18 +133,24 @@ function Mole:init(x, y)
                 self.is_stompable = true
                 self.spr:set_animation("telegraph")
 
-                Particles:image(self.mid_x, self.mid_y, 20, {images.dung_particle_1, images.dung_particle_2, images.dung_particle_3}, 8)
+                Particles:image(
+                    self.mid_x,
+                    self.mid_y,
+                    20,
+                    { images.dung_particle_1, images.dung_particle_2, images.dung_particle_3 },
+                    8
+                )
             end,
             update = function(state, dt)
-                local r = 5 * clamp((self.state_timer.time-1) / (self.state_timer.duration-1), 0, 1)
+                local r = 5 * clamp((self.state_timer.time - 1) / (self.state_timer.duration - 1), 0, 1)
                 self.spr:update_offset(random_neighbor(r), random_neighbor(r))
                 if self.state_timer:update(dt) then
                     return "dig"
                 end
             end,
-            exit = function (state)
+            exit = function(state)
                 self.spr:update_offset(0, 0)
-            end
+            end,
         },
         -- walk_around = {
         --     enter = function(state)
@@ -167,7 +187,7 @@ function Mole:init(x, y)
 
         --         self.is_affected_by_walls = false
         --         self.is_affected_by_bounds = false
-                
+
         --         self.gravity = self.default_gravity
         --         self.vy = -300
         --         state.original_y = self.y

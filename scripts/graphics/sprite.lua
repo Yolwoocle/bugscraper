@@ -1,7 +1,7 @@
-require "scripts.util"
-local Class = require "scripts.meta.class"
-local shaders = require "data.shaders"
-local images  = require "data.images"
+require("scripts.util")
+local Class = require("scripts.meta.class")
+local shaders = require("data.shaders")
+local images = require("data.images")
 
 local Sprite = Class:inherit()
 
@@ -39,9 +39,13 @@ function Sprite:init(image, anchor, params)
     if self.image then
         self.spritesheet_tile_w = self.image:getWidth()
         self.spritesheet_tile_h = self.image:getHeight()
-        self.spritesheet_quad = love.graphics.newQuad(0, 0,
-            self.image:getWidth(), self.image:getHeight(),
-            self.image:getWidth(), self.image:getHeight()
+        self.spritesheet_quad = love.graphics.newQuad(
+            0,
+            0,
+            self.image:getWidth(),
+            self.image:getHeight(),
+            self.image:getWidth(),
+            self.image:getHeight()
         )
     else
         self.spritesheet_tile_w = 1
@@ -73,7 +77,7 @@ function Sprite:set_spritesheet(image, tile_count_x, tile_count_y)
         self.spritesheet_tile = 1
         self.spritesheet_tile_count_x = tile_count_x
         self.spritesheet_tile_count_y = tile_count_y
-        self.spritesheet_tile_w = image:getWidth()  / tile_count_x
+        self.spritesheet_tile_w = image:getWidth() / tile_count_x
         self.spritesheet_tile_h = image:getHeight() / tile_count_y
 
         self.w = self.spritesheet_tile_w
@@ -91,7 +95,9 @@ function Sprite:set_spritesheet_tile(tile)
     self.spritesheet_quad:setViewport(
         self.spritesheet_tile_w * (frame0 % self.spritesheet_tile_count_x),
         self.spritesheet_tile_h * math.floor(frame0 / self.spritesheet_tile_count_x),
-        self.spritesheet_tile_w, self.spritesheet_tile_h, self.image:getDimensions()
+        self.spritesheet_tile_w,
+        self.spritesheet_tile_h,
+        self.image:getDimensions()
     )
 end
 
@@ -232,7 +238,7 @@ function Sprite:get_sprite_offset()
 end
 
 function Sprite:draw(x, y, w, h, custom_draw)
-    -- This function is HORRENDOUSLY ugly. Refactor it some day. Whatever it works 
+    -- This function is HORRENDOUSLY ugly. Refactor it some day. Whatever it works
     if not self.is_visible then
         return
     end
@@ -256,29 +262,57 @@ function Sprite:draw(x, y, w, h, custom_draw)
         old_shader = love.graphics.getShader()
         love.graphics.setShader(self.shader)
     end
-    
+
     if self.is_solid_color then
-		shaders.draw_in_color:sendColor("fillColor", self.color)
+        shaders.draw_in_color:sendColor("fillColor", self.color)
         love.graphics.setShader(shaders.draw_in_color)
     end
 
     exec_color(self.color, function()
         if self.outline then
             if self.is_spritesheet then
-                draw_spritesheet_with_outline(self.outline.color, self.outline.type, self.image, self.spritesheet_quad,
-                    x + anchor_ox, y + anchor_oy, self.rot,
-                    scale_x, scale_y, sprite_ox, sprite_oy)
-            else
-                draw_with_outline(self.outline.color, self.outline.type, self.image, x + anchor_ox, y + anchor_oy,
+                draw_spritesheet_with_outline(
+                    self.outline.color,
+                    self.outline.type,
+                    self.image,
+                    self.spritesheet_quad,
+                    x + anchor_ox,
+                    y + anchor_oy,
                     self.rot,
-                    scale_x, scale_y, sprite_ox, sprite_oy)
+                    scale_x,
+                    scale_y,
+                    sprite_ox,
+                    sprite_oy
+                )
+            else
+                draw_with_outline(
+                    self.outline.color,
+                    self.outline.type,
+                    self.image,
+                    x + anchor_ox,
+                    y + anchor_oy,
+                    self.rot,
+                    scale_x,
+                    scale_y,
+                    sprite_ox,
+                    sprite_oy
+                )
             end
         end
 
         if self.is_spritesheet then
             -- game.camera:reset_transform()
-            love.graphics.draw(self.image, self.spritesheet_quad, x + anchor_ox, y + anchor_oy, self.rot, scale_x,
-                scale_y, sprite_ox, sprite_oy)
+            love.graphics.draw(
+                self.image,
+                self.spritesheet_quad,
+                x + anchor_ox,
+                y + anchor_oy,
+                self.rot,
+                scale_x,
+                scale_y,
+                sprite_ox,
+                sprite_oy
+            )
         else
             draw_func(self.image, x + anchor_ox, y + anchor_oy, self.rot, scale_x, scale_y, sprite_ox, sprite_oy)
         end

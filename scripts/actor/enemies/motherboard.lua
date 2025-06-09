@@ -1,29 +1,29 @@
-require "scripts.util"
-local Enemy             = require "scripts.actor.enemy"
-local sounds            = require "data.sounds"
-local images            = require "data.images"
-local ElectricRays      = require "scripts.actor.enemies.electric_rays"
-local ElectricBullet    = require "scripts.actor.enemies.electric_bullet"
-local StateMachine      = require "scripts.state_machine"
-local Timer             = require "scripts.timer"
-local Segment           = require "scripts.math.segment"
-local guns              = require "data.guns"
-local ElectricArc       = require "scripts.actor.enemies.electric_arc"
-local ChipperMinion     = require "scripts.actor.enemies.chipper_minion"
-local Pendulum          = require "scripts.actor.enemies.pendulum"
-local Chipper           = require "scripts.actor.enemies.chipper"
-local BigBeelet         = require "scripts.actor.enemies.big_beelet"
-local MotherboardButton = require "scripts.actor.enemies.motherboard_button"
-local FlyingDung        = require "scripts.actor.enemies.flying_dung"
-local Fly               = require "scripts.actor.enemies.fly"
-local AnimatedSprite    = require "scripts.graphics.animated_sprite"
-local UI                = require "scripts.ui.ui"
-local Explosion         = require "scripts.actor.enemies.explosion"
-local Sprite            = require "scripts.graphics.sprite"
-local shaders           = require "data.shaders"
-local Rect              = require "scripts.math.rect"
+require("scripts.util")
+local Enemy = require("scripts.actor.enemy")
+local sounds = require("data.sounds")
+local images = require("data.images")
+local ElectricRays = require("scripts.actor.enemies.electric_rays")
+local ElectricBullet = require("scripts.actor.enemies.electric_bullet")
+local StateMachine = require("scripts.state_machine")
+local Timer = require("scripts.timer")
+local Segment = require("scripts.math.segment")
+local guns = require("data.guns")
+local ElectricArc = require("scripts.actor.enemies.electric_arc")
+local ChipperMinion = require("scripts.actor.enemies.chipper_minion")
+local Pendulum = require("scripts.actor.enemies.pendulum")
+local Chipper = require("scripts.actor.enemies.chipper")
+local BigBeelet = require("scripts.actor.enemies.big_beelet")
+local MotherboardButton = require("scripts.actor.enemies.motherboard_button")
+local FlyingDung = require("scripts.actor.enemies.flying_dung")
+local Fly = require("scripts.actor.enemies.fly")
+local AnimatedSprite = require("scripts.graphics.animated_sprite")
+local UI = require("scripts.ui.ui")
+local Explosion = require("scripts.actor.enemies.explosion")
+local Sprite = require("scripts.graphics.sprite")
+local shaders = require("data.shaders")
+local Rect = require("scripts.math.rect")
 
-local Motherboard       = Enemy:inherit()
+local Motherboard = Enemy:inherit()
 
 function Motherboard:init(x, y)
     self:init_enemy(x, y, images.motherboard, 24 * 16, 4)
@@ -80,10 +80,13 @@ function Motherboard:init(x, y)
     self.plug_y = self.h - 9
     self.plug_offset = 0
     self.plug_sprite = AnimatedSprite:new({
-        rays = { {
-            images.motherboard_plug_rays_1,
-            images.motherboard_plug_rays_2,
-        }, 0.05 },
+        rays = {
+            {
+                images.motherboard_plug_rays_1,
+                images.motherboard_plug_rays_2,
+            },
+            0.05,
+        },
         bullets = { {
             images.motherboard_plug_bullets,
         }, 0.05 },
@@ -96,8 +99,8 @@ function Motherboard:init(x, y)
     self.max_chippers = 6
     self.dung_damage = 20
     self.enemy_mix = {
-        { Chipper,    1 },
-        { Fly,        1 },
+        { Chipper, 1 },
+        { Fly, 1 },
         { FlyingDung, 2 },
     }
     self.wave_enemies = {}
@@ -123,20 +126,28 @@ function Motherboard:init(x, y)
                 self.vy = 0
 
                 for ix = self.x, self.x + self.w, 16 do
-                    Particles:image(ix, self.y + self.h, 5,
-                        { images.cabin_fragment_1, images.cabin_fragment_2, images.cabin_fragment_3 }, 4, nil, nil, nil,
+                    Particles:image(
+                        ix,
+                        self.y + self.h,
+                        5,
+                        { images.cabin_fragment_1, images.cabin_fragment_2, images.cabin_fragment_3 },
+                        4,
+                        nil,
+                        nil,
+                        nil,
                         {
                             vx1 = -50,
                             vx2 = 50,
 
                             vy1 = 80,
                             vy2 = 200,
-                        })
+                        }
+                    )
                 end
 
                 game:screenshake(8)
                 Input:vibrate_all(0.5, 0.7)
-            end
+            end,
         },
         intro_linger = {
             enter = function(state)
@@ -144,7 +155,10 @@ function Motherboard:init(x, y)
             end,
             update = function(state, dt)
                 local r = self.state_timer.time / self.state_timer.duration
-                self.spr:update_offset(self.spr_base_ox + random_neighbor(r * 8), self.spr_base_oy + random_neighbor(r * 8))
+                self.spr:update_offset(
+                    self.spr_base_ox + random_neighbor(r * 8),
+                    self.spr_base_oy + random_neighbor(r * 8)
+                )
 
                 if self.state_timer:update(dt) then
                     self:randomize_button_position()
@@ -155,7 +169,7 @@ function Motherboard:init(x, y)
             exit = function(state)
                 self.spr:update_offset(self.spr_base_ox, self.spr_base_oy)
                 game.menu_manager:set_menu("w3_boss_intro")
-            end
+            end,
         },
 
         chippers = {
@@ -165,18 +179,19 @@ function Motherboard:init(x, y)
 
                 local oy = 16 + random_range_int(0, 1) * 32
                 for _, info in pairs({
-                    { x = bounds.ax,      y = bounds.ay,      direction = 0 },
-                    { x = bounds.bx - 12, y = bounds.ay + 32, direction = 2 } }
-                ) do
+                    { x = bounds.ax, y = bounds.ay, direction = 0 },
+                    { x = bounds.bx - 12, y = bounds.ay + 32, direction = 2 },
+                }) do
                     local iy = info.y - oy
                     while iy < bounds.by do
                         if iy >= bounds.ay then
-                            local delay = 0.7 + 0.05*(14 - iy/16)
+                            local delay = 0.7 + 0.05 * (14 - iy / 16)
                             if self.hard_mode then
                                 delay = delay / 2
                             end
 
-                            local chipper = ChipperMinion:new(info.x, iy, info.direction, ternary(self.hard_mode, 150, 100), delay)
+                            local chipper =
+                                ChipperMinion:new(info.x, iy, info.direction, ternary(self.hard_mode, 150, 100), delay)
                             table.insert(self.chippers, chipper)
                             game:new_actor(chipper)
                         end
@@ -191,7 +206,7 @@ function Motherboard:init(x, y)
                 if self.state_timer:update(dt) then
                     self:transition_to_random_state()
                 end
-            end
+            end,
         },
 
         pendulum = {
@@ -204,7 +219,10 @@ function Motherboard:init(x, y)
                 self.pendulums = {}
                 for i = 1, n do
                     -- x, y, angle_range, radius, swing_speed, initial_angle_t
-                    local p = Pendulum:new((bounds.ax + bounds.bx) / 2, bounds.ay, nil,
+                    local p = Pendulum:new(
+                        (bounds.ax + bounds.bx) / 2,
+                        bounds.ay,
+                        nil,
                         ternary(i == 1, 200, 150),
                         ternary(self.hard_mode, 2.5, 2),
                         ternary(i == 1, rand * pi, (1 - rand) * pi)
@@ -251,7 +269,7 @@ function Motherboard:init(x, y)
                     c.score = 0
                     c:kill()
                 end
-            end
+            end,
         },
 
         ray_lasers = {
@@ -262,7 +280,7 @@ function Motherboard:init(x, y)
                 if self.state_timer:update(dt) then
                     self:transition_to_random_state()
                 end
-            end
+            end,
         },
 
         _template = {
@@ -273,7 +291,7 @@ function Motherboard:init(x, y)
                 if self.state_timer:update(dt) then
                     self:transition_to_random_state()
                 end
-            end
+            end,
         },
 
         transition = {
@@ -321,7 +339,7 @@ function Motherboard:init(x, y)
                 self.spr:update_offset(self.spr_base_ox, self.spr_base_oy)
 
                 self.new_button_timer:start()
-            end
+            end,
         },
 
         dying = {
@@ -345,8 +363,11 @@ function Motherboard:init(x, y)
 
             update = function(state, dt)
                 if self.explosion_timer:update(dt) then
-                    local explosion = Explosion:new(random_range(self.x, self.x + self.w),
-                        random_range(self.y - 42, self.y + self.h), { use_gun = false })
+                    local explosion = Explosion:new(
+                        random_range(self.x, self.x + self.w),
+                        random_range(self.y - 42, self.y + self.h),
+                        { use_gun = false }
+                    )
                     explosion.is_front = true
                     game:new_actor(explosion)
                     self.explosion_timer:start()
@@ -366,16 +387,19 @@ function Motherboard:init(x, y)
                     self:kill()
 
                     for r = 0, 1, 0.1 do
-                        local explosion = Explosion:new(self.x + self.w * r, random_range(self.y - 42, self.y + self.h),
-                            { use_gun = false })
+                        local explosion = Explosion:new(
+                            self.x + self.w * r,
+                            random_range(self.y - 42, self.y + self.h),
+                            { use_gun = false }
+                        )
                         explosion.is_front = true
                         game:new_actor(explosion)
                     end
                 end
 
                 self.spr:update_offset(self.spr_base_ox + random_neighbor(5), self.spr_base_oy + random_neighbor(5))
-            end
-        }
+            end,
+        },
     }, "intro")
 
     self:set_bouncy(true)
@@ -392,11 +416,11 @@ function Motherboard:transition_to_random_state(force_state)
     if not state then
         local i = 0
         while i < 10 and (not state or state == self.state_machine.current_state_name) do
-            state = random_sample {
+            state = random_sample({
                 "chippers",
                 "pendulum",
                 "big_chipper",
-            }
+            })
             i = i + 1
         end
     end
@@ -425,8 +449,8 @@ function Motherboard:update(dt)
             if not self.gun_directions[gun_type].a_lerp then
                 self.gun_directions[gun_type].a_lerp = self.gun_directions[gun_type].a
             else
-                self.gun_directions[gun_type].a_lerp = lerp_angle(self.gun_directions[gun_type].a_lerp,
-                    self.gun_directions[gun_type].a, 0.2)
+                self.gun_directions[gun_type].a_lerp =
+                    lerp_angle(self.gun_directions[gun_type].a_lerp, self.gun_directions[gun_type].a, 0.2)
             end
         end
     end
@@ -448,12 +472,12 @@ function Motherboard:spawn_button()
 end
 
 function Motherboard:randomize_button_position()
-    self.button_position = random_sample {
-        { -5 * BW,  0 },
-        { 2 * BW,   0 },
+    self.button_position = random_sample({
+        { -5 * BW, 0 },
+        { 2 * BW, 0 },
         { -11 * BW, -6 },
-        { 8 * BW,   -6 },
-    }
+        { 8 * BW, -6 },
+    })
 end
 
 function Motherboard:update_random_button(dt)
@@ -470,13 +494,26 @@ end
 function Motherboard:draw()
     self:draw_enemy()
     local x, y = self.x + 193 + self.spr.ox, self.y - 19 + self.spr.oy - 5
-    UI:draw_icon_bar(x, y, 8 * (self.life / self.max_life), 8, 0, images.motherboard_led_on, images.motherboard_led_off,
-        nil, 1)
+    UI:draw_icon_bar(
+        x,
+        y,
+        8 * (self.life / self.max_life),
+        8,
+        0,
+        images.motherboard_led_on,
+        images.motherboard_led_off,
+        nil,
+        1
+    )
 
     if self.gun_directions then
         for gun_name, gun_params in pairs(self.gun_directions) do
-            draw_centered(images.motherboard_bullet_cannon, self.mid_x, self.y + self.plug_y + self.plug_gun_offset,
-                gun_params.a_lerp)
+            draw_centered(
+                images.motherboard_bullet_cannon,
+                self.mid_x,
+                self.y + self.plug_y + self.plug_gun_offset,
+                gun_params.a_lerp
+            )
         end
     end
 

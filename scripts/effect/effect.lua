@@ -1,5 +1,5 @@
-require "scripts.util"
-local Class = require "scripts.meta.class"
+require("scripts.util")
+local Class = require("scripts.meta.class")
 
 local Effect = Class:inherit()
 
@@ -21,7 +21,7 @@ end
 function Effect:apply(player, duration, params)
     params = params or {}
     self.player = player
-    
+
     self.duration = duration
     self.duration_unit = params.duration_unit or "s"
     if self.duration_unit == "floor" then
@@ -37,7 +37,7 @@ function Effect:finish()
     self:on_finish(self.player)
     self.is_active = false
     self.player = nil
-end 
+end
 
 function Effect:update_effect(dt)
     if self.duration_unit == "s" then
@@ -52,17 +52,14 @@ function Effect:update_effect(dt)
     end
 end
 
-function Effect:on_apply(player, duration)
-end
+function Effect:on_apply(player, duration) end
 
 function Effect:update(dt)
     self:update_effect(dt)
 end
 
-function Effect:on_finish(player)
-end
+function Effect:on_finish(player) end
 
-function Effect:draw_overlay(spr_x, spr_y)
-end
+function Effect:draw_overlay(spr_x, spr_y) end
 
 return Effect

@@ -1,9 +1,9 @@
-require "scripts.util"
-local Class = require "scripts.meta.class"
-local StateMachine = require "scripts.state_machine"
-local images = require "data.images"
-local skins = require "data.skins"
-local utf8 = require "utf8"
+require("scripts.util")
+local Class = require("scripts.meta.class")
+local StateMachine = require("scripts.state_machine")
+local images = require("data.images")
+local skins = require("data.skins")
+local utf8 = require("utf8")
 
 local PlayerPreview = Class:inherit()
 
@@ -33,21 +33,31 @@ function PlayerPreview:init(player_n, x, y, w, h)
 
                 self.user = nil
                 self.prompts = {
-                    { -1, {
-                        { "join_game", INPUT_TYPE_KEYBOARD },
-                        { "join_game", INPUT_TYPE_CONTROLLER, BUTTON_STYLE_XBOX },
-                        { "join_game", INPUT_TYPE_CONTROLLER, BUTTON_STYLE_PLAYSTATION4 },
-                    }, "", COL_WHITE },
+                    {
+                        -1,
+                        {
+                            { "join_game", INPUT_TYPE_KEYBOARD },
+                            { "join_game", INPUT_TYPE_CONTROLLER, BUTTON_STYLE_XBOX },
+                            { "join_game", INPUT_TYPE_CONTROLLER, BUTTON_STYLE_PLAYSTATION4 },
+                        },
+                        "",
+                        COL_WHITE,
+                    },
                     { -1, {}, Text:text("input.prompts.join"), COL_WHITE },
                 }
             end,
             update = function(state, dt)
                 self.prompts = {
-                    { -1, {
-                        { "join_game", INPUT_TYPE_KEYBOARD },
-                        { "join_game", INPUT_TYPE_CONTROLLER, BUTTON_STYLE_XBOX },
-                        { "join_game", INPUT_TYPE_CONTROLLER, BUTTON_STYLE_PLAYSTATION4 },
-                    }, "", COL_WHITE },
+                    {
+                        -1,
+                        {
+                            { "join_game", INPUT_TYPE_KEYBOARD },
+                            { "join_game", INPUT_TYPE_CONTROLLER, BUTTON_STYLE_XBOX },
+                            { "join_game", INPUT_TYPE_CONTROLLER, BUTTON_STYLE_PLAYSTATION4 },
+                        },
+                        "",
+                        COL_WHITE,
+                    },
                     { -1, {}, Text:text("input.prompts.join"), COL_WHITE },
                 }
 
@@ -57,10 +67,16 @@ function PlayerPreview:init(player_n, x, y, w, h)
 
                     if self.player_n == Input:find_free_user_number() then
                         table.insert(self.prompts, {
-                            -1, { "split_keyboard" }, "", COL_WHITE
+                            -1,
+                            { "split_keyboard" },
+                            "",
+                            COL_WHITE,
                         })
                         table.insert(self.prompts, {
-                            -1, {}, Text:text("input.prompts.split_keyboard"), COL_WHITE
+                            -1,
+                            {},
+                            Text:text("input.prompts.split_keyboard"),
+                            COL_WHITE,
                         })
                     end
                 end
@@ -74,7 +90,7 @@ function PlayerPreview:init(player_n, x, y, w, h)
             end,
             exit = function(state)
                 self.user = Input:get_user(self.player_n)
-            end
+            end,
         },
 
         character_select = {
@@ -83,7 +99,7 @@ function PlayerPreview:init(player_n, x, y, w, h)
                 self.prompt_y_alignment = "end"
 
                 self.t = 0
-            
+
                 self.selection_n = self:find_first_free_skin(self.player_n)
                 self.selection = skins[self.selection_n]
                 self.squash = 1
@@ -120,11 +136,11 @@ function PlayerPreview:init(player_n, x, y, w, h)
 
                 if Input:action_pressed(self.player_n, "ui_left") then
                     self:increment_character_selection(-1)
-                    Audio:play_var("ui_menu_hover_{01-04}", 0.2, 1, {pitch= 1.5})
+                    Audio:play_var("ui_menu_hover_{01-04}", 0.2, 1, { pitch = 1.5 })
                 end
                 if Input:action_pressed(self.player_n, "ui_right") then
                     self:increment_character_selection(1)
-                    Audio:play_var("ui_menu_hover_{01-04}", 0.2, 1, {pitch= 1.5})
+                    Audio:play_var("ui_menu_hover_{01-04}", 0.2, 1, { pitch = 1.5 })
                 end
 
                 self.squash = move_toward(self.squash, 1, 5 * dt)
@@ -145,12 +161,27 @@ function PlayerPreview:init(player_n, x, y, w, h)
 
                 local w = 32 * self.scale
                 local palette = self.selection.color_palette
-                self:draw_rotated_rectangle(palette[3], "fill", x + self.selection_ox * 0.1, y, w, w, self.t * 2 + pi * 2)
+                self:draw_rotated_rectangle(
+                    palette[3],
+                    "fill",
+                    x + self.selection_ox * 0.1,
+                    y,
+                    w,
+                    w,
+                    self.t * 2 + pi * 2
+                )
                 self:draw_rotated_rectangle(palette[2], "fill", x + self.selection_ox * 0.3, y, w, w, -self.t + pi / 5)
                 self:draw_rotated_rectangle(palette[1], "fill", x + self.selection_ox * 0.5, y, w, w, self.t)
 
                 if self.selection then
-                    draw_centered(self.selection.img_walk_down, x + self.selection_ox, y, 0, self.squash, 1 / self.squash)
+                    draw_centered(
+                        self.selection.img_walk_down,
+                        x + self.selection_ox,
+                        y,
+                        0,
+                        self.squash,
+                        1 / self.squash
+                    )
                     local text = utf8.upper(Text:text("player.name." .. self.selection.text_key) or "")
                     print_centered_outline(palette[1], nil, text, x + 1 + self.selection_ox, y + 18 + 1)
                     print_centered_outline(palette[1], nil, text, x + 1 + self.selection_ox, y + 18)
@@ -161,21 +192,28 @@ function PlayerPreview:init(player_n, x, y, w, h)
                 -- Bottom dots
                 local total_n = #skins
                 for i = 1, total_n do
-                    local ix = x - (total_n*4)/2 + 4*(i-1)
+                    local ix = x - (total_n * 4) / 2 + 4 * (i - 1)
 
                     local _y = y + 26 + ternary(i == self.selection_n, -1, 0)
-                    rect_color(ternary(i == self.selection_n, COL_WHITE, COL_BLACK_BLUE), "fill", ix, _y - 1, 4, ternary(i == self.selection_n, 5, 3))
+                    rect_color(
+                        ternary(i == self.selection_n, COL_WHITE, COL_BLACK_BLUE),
+                        "fill",
+                        ix,
+                        _y - 1,
+                        4,
+                        ternary(i == self.selection_n, 5, 3)
+                    )
 
                     local col = skins[i].color_palette[1]
                     if not game.skin_choices[i] then
                         col = COL_BLACK_BLUE
                     end
-                    rect_color(col, "fill", ix+1, _y, 2, ternary(i == self.selection_n, 3, 1))
+                    rect_color(col, "fill", ix + 1, _y, 2, ternary(i == self.selection_n, 3, 1))
                 end
 
                 local icon_left = Input:get_action_primary_icon(self.player_n, "ui_left")
                 local icon_right = Input:get_action_primary_icon(self.player_n, "ui_right")
-                draw_centered(icon_left,  x - w * 0.8 + self.left_prompt_ox,  y + 18, 0, self.scale)
+                draw_centered(icon_left, x - w * 0.8 + self.left_prompt_ox, y + 18, 0, self.scale)
                 draw_centered(icon_right, x + w * 0.8 + self.right_prompt_ox, y + 18, 0, self.scale)
             end,
         },
@@ -184,14 +222,14 @@ function PlayerPreview:init(player_n, x, y, w, h)
             enter = function(state)
                 self.prompt_x_alignment = "start"
                 self.prompt_y_alignment = "center"
-                
+
                 self.prompts = {
                     { self.player_n, { "up", "left", "down", "right" }, "", COL_WHITE },
                     { self.player_n, {}, Text:text("input.prompts.move"), COL_WHITE },
                     { self.player_n, { "jump" }, Text:text("input.prompts.jump"), COL_WHITE },
                     { self.player_n, { "shoot" }, Text:text("input.prompts.shoot"), COL_WHITE },
                 }
-                
+
                 if self.user:get_skin() then
                     self.primary_color = self.user:get_skin().color_palette[1]
                     self.secondary_color = self.user:get_skin().color_palette[2]
@@ -214,7 +252,6 @@ function PlayerPreview:init(player_n, x, y, w, h)
     }, "waiting")
 end
 
-
 function PlayerPreview:on_player_joined(player)
     if player.n == self.player_n then
         self.state_machine:set_state("tutorial")
@@ -230,7 +267,6 @@ function PlayerPreview:on_player_joined(player)
     end
 end
 
-
 function PlayerPreview:increment_character_selection(diff)
     self.selection_n = self:find_first_free_skin(mod_plus_1(self.selection_n + diff, #skins), diff)
     self.selection = skins[self.selection_n]
@@ -244,12 +280,11 @@ function PlayerPreview:increment_character_selection(diff)
     end
 end
 
-
 function PlayerPreview:find_first_free_skin(start, diff)
     diff = diff or 1
 
     local skin_n = start
-    for i=1, #skins do
+    for i = 1, #skins do
         if game.skin_choices[skin_n] then
             return skin_n
         end
@@ -285,48 +320,48 @@ function PlayerPreview:update(dt)
 
     self.ox = lerp(self.ox, 0, 0.3)
     self.oy = lerp(self.oy, 0, 0.3)
-    if math.abs(self.ox) <= 0.1 then self.ox = 0 end
-	if math.abs(self.oy) <= 0.1 then self.oy = 0 end
+    if math.abs(self.ox) <= 0.1 then
+        self.ox = 0
+    end
+    if math.abs(self.oy) <= 0.1 then
+        self.oy = 0
+    end
 end
 
 function PlayerPreview:draw_bg_card_empty()
     local color = COL_MID_GRAY
 
-    
     if self.state_machine.current_state_name == "waiting" then
         color = COL_MID_GRAY
-        
     elseif self.state_machine.current_state_name == "character_select" then
         if self.selection then
             color = self.selection.color_palette[2]
         end
-        
     elseif self.state_machine.current_state_name == "tutorial" then
         if self.user and self.user:get_skin() then
             color = self.user:get_skin().color_palette[2]
         end
     end
 
-    exec_color(color, function() love.graphics.draw(images.player_preview_dotted, self.x + self.ox, self.y + self.oy) end)
+    exec_color(color, function()
+        love.graphics.draw(images.player_preview_dotted, self.x + self.ox, self.y + self.oy)
+    end)
 end
 
-function PlayerPreview:draw_input_prompts(promps)
-end
+function PlayerPreview:draw_input_prompts(promps) end
 
 function PlayerPreview:draw_player_abbreviation()
     local txt_top = ""
     local txt_bot = ""
     local color = COL_MID_GRAY
-    
+
     if self.state_machine.current_state_name == "waiting" then
         color = COL_MID_GRAY
-        
     elseif self.state_machine.current_state_name == "character_select" then
         txt_top = txt_top .. Text:text("player.abbreviation", self.player_n)
         color = self.selection.color_palette[2]
-        
     end
-    
+
     if self.state_machine.current_state_name == "tutorial" then
         txt_top = txt_top .. Text:text("player.abbreviation", self.player_n)
 
@@ -336,7 +371,7 @@ function PlayerPreview:draw_player_abbreviation()
         end
     end
 
-    print_color(color, txt_top, self.x + self.ox + self.w - get_text_width(txt_top) - 4, self.y)--self.oy + self.h - 16)
+    print_color(color, txt_top, self.x + self.ox + self.w - get_text_width(txt_top) - 4, self.y) --self.oy + self.h - 16)
     print_color(color, txt_bot, self.x + self.ox + self.w - get_text_width(txt_bot) - 4, self.y + self.oy + self.h - 16)
 end
 
@@ -345,11 +380,15 @@ function PlayerPreview:draw_bg_card()
     local col_dark = { col[1] - 0.3, col[2] - 0.3, col[3] - 0.3, 1.0 }
 
     local x, y = self.x + self.ox, self.y + self.oy
-    exec_color(COL_BLACK_BLUE, function() love.graphics.draw(images.player_preview_bg, x + 1, y + 2) end)
-    exec_color(self.primary_color or COL_WHITE,
-        function() love.graphics.draw(images.player_preview_bg, x, y) end)
-    exec_color(self.secondary_color or COL_LIGHT_GRAY,
-        function() love.graphics.draw(images.player_preview_detail, x, y) end)
+    exec_color(COL_BLACK_BLUE, function()
+        love.graphics.draw(images.player_preview_bg, x + 1, y + 2)
+    end)
+    exec_color(self.primary_color or COL_WHITE, function()
+        love.graphics.draw(images.player_preview_bg, x, y)
+    end)
+    exec_color(self.secondary_color or COL_LIGHT_GRAY, function()
+        love.graphics.draw(images.player_preview_detail, x, y)
+    end)
 end
 
 function PlayerPreview:draw()
@@ -358,7 +397,7 @@ function PlayerPreview:draw()
 
     local default_prompt_height = 14
     local total_height = 0
-    for _,p in pairs(self.prompts) do
+    for _, p in pairs(self.prompts) do
         total_height = total_height + (p.height or default_prompt_height)
     end
 
@@ -390,13 +429,13 @@ function PlayerPreview:draw()
             if prompt_x_alignment == "start" then
                 _x = self.x + self.padding
             elseif prompt_x_alignment == "center" then
-                _x = self.x + self.w /2 
+                _x = self.x + self.w / 2
             end
             if prompt_x_alignment == "end" then
                 _x = self.x + self.w - self.padding
             end
             Input:draw_input_prompt(player_n, actions, label, col, _x, _y, {
-    			alignment = prompt_x_alignment,
+                alignment = prompt_x_alignment,
                 background_color = item.background_color,
             })
         end

@@ -1,5 +1,5 @@
-require "scripts.util"
-local Class = require "scripts.meta.class"
+require("scripts.util")
+local Class = require("scripts.meta.class")
 
 local Sound = Class:inherit()
 
@@ -7,7 +7,7 @@ function Sound:init(source, pitch, volume, params)
     params = params or {}
     pitch = param(pitch, 1.0)
     volume = param(volume, 1.0)
-    
+
     self.source = source:clone()
     self.pitch = pitch
     self.volume = volume
@@ -17,19 +17,14 @@ function Sound:init(source, pitch, volume, params)
 end
 
 function Sound:clone(volume, pitch, params)
-    return Sound:new(
-        self.source:clone(), 
-        volume or self.pitch, 
-        pitch or self.volume, 
-        params or {
-            looping = self.is_looping,
-        }
-    )
+    return Sound:new(self.source:clone(), volume or self.pitch, pitch or self.volume, params or {
+        looping = self.is_looping,
+    })
 end
 
 function Sound:update_source()
     self.source:setVolume(self.volume)
-	self.source:setPitch(self.pitch)
+    self.source:setPitch(self.pitch)
 end
 
 function Sound:set_volume(volume)
@@ -45,12 +40,12 @@ end
 function Sound:play()
     self:update_source()
     self.is_paused = false
-	self.source:play()
+    self.source:play()
 end
 
 function Sound:pause()
     self.is_paused = true
-	self.source:pause()
+    self.source:pause()
 end
 
 function Sound:resume()
@@ -62,16 +57,16 @@ end
 
 function Sound:stop()
     self.is_paused = false
-	self.source:stop()
+    self.source:stop()
 end
 
 function Sound:seek(time)
     self.is_paused = false
-	self.source:seek(time)
+    self.source:seek(time)
 end
 
 function Sound:get_duration()
-	return self.source:getDuration()
+    return self.source:getDuration()
 end
 
 -- ---@param offset number

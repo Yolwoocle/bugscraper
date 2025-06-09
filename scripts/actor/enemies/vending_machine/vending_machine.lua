@@ -1,14 +1,14 @@
-require "scripts.util"
-local Enemy = require "scripts.actor.enemy"
-local images = require "data.images"
-local ButtonSmall = require "scripts.actor.enemies.button_small"
-local EffectSlowness = require "scripts.effect.effect_slowness"
+require("scripts.util")
+local Enemy = require("scripts.actor.enemy")
+local images = require("data.images")
+local ButtonSmall = require("scripts.actor.enemies.button_small")
+local EffectSlowness = require("scripts.effect.effect_slowness")
 
-local UpgradeEspresso = require "scripts.upgrade.upgrade_espresso"
-local UpgradeMoreLife = require "scripts.upgrade.upgrade_milk"
-local UpgradeTea = require "scripts.upgrade.upgrade_tea"
+local UpgradeEspresso = require("scripts.upgrade.upgrade_espresso")
+local UpgradeMoreLife = require("scripts.upgrade.upgrade_milk")
+local UpgradeTea = require("scripts.upgrade.upgrade_tea")
 
-local utf8 = require "utf8"
+local utf8 = require("utf8")
 
 local VendingMachine = ButtonSmall:inherit()
 
@@ -80,7 +80,7 @@ function VendingMachine:on_press()
         game:apply_upgrade(self.product)
 
         if self.do_collected_particle then
-            Particles:collected_upgrade(self.mid_x, self.mid_y, self.product.sprite, self.product.color)    
+            Particles:collected_upgrade(self.mid_x, self.mid_y, self.product.sprite, self.product.color)
         end
     end
 end
@@ -120,7 +120,7 @@ function VendingMachine:draw_text(x, y, text, col, s)
         local c = utf8.sub(text, i, i)
         local w = get_text_width(c) * s
         if t > 0 then
-            local oy = ease_out_cubic(clamp(t, 0, 1)) * (-4)
+            local oy = ease_out_cubic(clamp(t, 0, 1)) * -4
             print_outline(col, COL_BLACK_BLUE, c, text_x, y + oy, nil, nil, s)
         end
         text_x = text_x + w

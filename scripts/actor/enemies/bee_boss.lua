@@ -1,20 +1,20 @@
-require "scripts.util"
-local Enemy = require "scripts.actor.enemy"
-local sounds = require "data.sounds"
-local images = require "data.images"
-local ElectricRays = require "scripts.actor.enemies.electric_rays"
-local StateMachine = require "scripts.state_machine"
-local Timer = require "scripts.timer"
-local Segment = require "scripts.math.segment"
-local guns  = require "data.guns"
-local TimedSpikes = require "scripts.actor.enemies.timed_spikes"
-local BeeletMinion = require "scripts.actor.enemies.beelet_minion"
-local AnimatedSprite = require "scripts.graphics.animated_sprite"
+require("scripts.util")
+local Enemy = require("scripts.actor.enemy")
+local sounds = require("data.sounds")
+local images = require("data.images")
+local ElectricRays = require("scripts.actor.enemies.electric_rays")
+local StateMachine = require("scripts.state_machine")
+local Timer = require("scripts.timer")
+local Segment = require("scripts.math.segment")
+local guns = require("data.guns")
+local TimedSpikes = require("scripts.actor.enemies.timed_spikes")
+local BeeletMinion = require("scripts.actor.enemies.beelet_minion")
+local AnimatedSprite = require("scripts.graphics.animated_sprite")
 
 local BeeBoss = Enemy:inherit()
 
 function BeeBoss:init(x, y)
-    BeeBoss.super.init(self, x,y, images.bee_boss_alt_1, 32, 32)
+    BeeBoss.super.init(self, x, y, images.bee_boss_alt_1, 32, 32)
     self.name = "bee_boss"
 
     self.life = 200
@@ -29,8 +29,8 @@ function BeeBoss:init(x, y)
     self.is_immune_to_bullets = true
 
     self.spr = AnimatedSprite:new({
-        normal = {images.bee_boss_alt, 0.05, 2},
-    }, "normal", SPRITE_ANCHOR_CENTER_CENTER) 
+        normal = { images.bee_boss_alt, 0.05, 2 },
+    }, "normal", SPRITE_ANCHOR_CENTER_CENTER)
 
     self.def_friction_x = self.friction_x
     self.def_friction_y = self.friction_y
@@ -45,7 +45,7 @@ function BeeBoss:init(x, y)
     self.gravity = 0
     self.follow_player = false
 
-    self.def_target_y = game.level.cabin_rect.ay + BW*6
+    self.def_target_y = game.level.cabin_rect.ay + BW * 6
     self.thwomp_telegraph_timer = Timer:new(0.3)
 
     self.spikes = {}
@@ -54,33 +54,37 @@ function BeeBoss:init(x, y)
 
     self.ai_templates["bounce"] = {
         ready = function(ai)
-            self.pong_direction = (pi/4 + pi/2 * love.math.random(0,3)) % pi2
+            self.pong_direction = (pi / 4 + pi / 2 * love.math.random(0, 3)) % pi2
             self.pong_speed = 400
         end,
         update = function(ai, dt)
             self.pong_vx = math.cos(self.pong_direction) * self.pong_speed
             self.pong_vy = math.sin(self.pong_direction) * self.pong_speed
-            
+
             self.vx = (self.pong_vx or 0)
             self.vy = (self.pong_vy or 0)
         end,
         after_collision = function(ai, col, other)
             if col.type ~= "cross" then
-                local s = "metalfootstep_0"..tostring(love.math.random(0,4))
+                local s = "metalfootstep_0" .. tostring(love.math.random(0, 4))
                 -- Audio:play_var(s, 0.3, 1.1, {pitch=0.8, volume=0.5})
                 -- Particles:smoke(col.touch.x, col.touch.y)
-    
-                local dx, dy = bounce_vector_cardinal(math.cos(self.pong_direction), math.sin(self.pong_direction), col.normal.x, col.normal.y)
+
+                local dx, dy = bounce_vector_cardinal(
+                    math.cos(self.pong_direction),
+                    math.sin(self.pong_direction),
+                    col.normal.x,
+                    col.normal.y
+                )
                 self.pong_direction = math.atan2(dy, dx)
             end
-        end
+        end,
     }
 
     self.state_timer = Timer:new(0.0)
     self.state_machine = StateMachine:new({
         random = {
-            enter = function(state)
-            end,
+            enter = function(state) end,
             update = function(state, dt)
                 local possible_states = {
                     "pong",
@@ -93,7 +97,7 @@ function BeeBoss:init(x, y)
         },
 
         -----------------------------------------------------
-        
+
         pong = {
             enter = function(state)
                 self.pong_telegraph_timer = Timer:new(1.0)
@@ -102,10 +106,10 @@ function BeeBoss:init(x, y)
                 self.vx = 0
                 self.vy = 0
 
-                self.future_pong_dir = (pi/4 + pi/2 * love.math.random(0,3)) % pi2
-	            self.flip_mode = ENEMY_FLIP_MODE_MANUAL
+                self.future_pong_dir = (pi / 4 + pi / 2 * love.math.random(0, 3)) % pi2
+                self.flip_mode = ENEMY_FLIP_MODE_MANUAL
                 self.spr:set_flip_x(false)
-                self.spr.rot = self.future_pong_dir - pi/2
+                self.spr.rot = self.future_pong_dir - pi / 2
             end,
             update = function(state, dt)
                 local r = 3 * self.pong_telegraph_timer:get_ratio()
@@ -134,7 +138,7 @@ function BeeBoss:init(x, y)
                 end
             end,
             update = function(state, dt)
-                self.spr.rot = (self.pong_direction or 0) - pi/2
+                self.spr.rot = (self.pong_direction or 0) - pi / 2
 
                 if self.attack_bounces <= 0 then
                     self:set_state("pong_linger")
@@ -146,7 +150,7 @@ function BeeBoss:init(x, y)
             after_collision = function(state, col, other)
                 if col.type ~= "cross" then
                     self.attack_bounces = self.attack_bounces - 1
-                    
+
                     game:screenshake(4)
                     Input:vibrate_all(0.1, 0.45)
                     Audio:play_var("metal_impact", 0, 1)
@@ -170,14 +174,14 @@ function BeeBoss:init(x, y)
                     self:set_state("random")
                 end
             end,
-            exit = function (state)
+            exit = function(state)
                 self.spr.rot = 0
-            	self.flip_mode = ENEMY_FLIP_MODE_XVELOCITY
-            end
+                self.flip_mode = ENEMY_FLIP_MODE_XVELOCITY
+            end,
         },
 
         -----------------------------------------------------
-        
+
         thwomp = {
             enter = function(state)
                 self:set_spikes_pattern_times(2, 0.75, 0.25)
@@ -199,13 +203,12 @@ function BeeBoss:init(x, y)
         thwomp_flying = {
             enter = function(state)
                 self.friction_y = self.def_friction_y
-                
+
                 self.thwomp_target = self:get_random_player()
                 self.thwomp_target_x = {
-                    mid_x = random_range(game.level.cabin_inner_rect.ax + 16, game.level.cabin_inner_rect.bx - 16)
+                    mid_x = random_range(game.level.cabin_inner_rect.ax + 16, game.level.cabin_inner_rect.bx - 16),
                 }
                 self.vy = 0
-
             end,
             update = function(state, dt)
                 if self.thwomp_target then
@@ -221,8 +224,8 @@ function BeeBoss:init(x, y)
                 if self.stomps_counter <= 0 then
                     self:set_state("random")
                 end
-            end
-        }, 
+            end,
+        },
         thwomp_telegraph = {
             enter = function(state)
                 self.vx = 0
@@ -235,20 +238,19 @@ function BeeBoss:init(x, y)
                 self.speed_y = self.thwomp_speed * 0.5
 
                 self.vy = -self.speed_y
-                if self.thwomp_telegraph_timer:update(dt) then 
+                if self.thwomp_telegraph_timer:update(dt) then
                     self:set_state("thwomp_attack")
                 end
             end,
         },
         thwomp_attack = {
-            enter = function(state)
-            end,
+            enter = function(state) end,
             update = function(state, dt)
                 self.speed_x = 0
                 self.speed_y = self.thwomp_speed * 64
                 self.friction_y = 1
 
-                self.vy = self.vy + self.speed_y*dt
+                self.vy = self.vy + self.speed_y * dt
             end,
             after_collision = function(state, col)
                 if col.type ~= "cross" and col.normal.x == 0 and col.normal.y == -1 then
@@ -258,11 +260,10 @@ function BeeBoss:init(x, y)
 
                     self:set_state("thwomp_rise")
                 end
-            end
+            end,
         },
         thwomp_rise = {
-            enter = function(state)
-            end,
+            enter = function(state) end,
             update = function(state, dt)
                 self.speed_x = 0
                 self.speed_y = self.thwomp_speed * 64
@@ -273,10 +274,10 @@ function BeeBoss:init(x, y)
                     self:set_state("thwomp_flying")
                 end
             end,
-        },        
+        },
 
         -----------------------------------------------------
-        
+
         spawn_minions = {
             enter = function(state)
                 self.vx = 0
@@ -292,11 +293,11 @@ function BeeBoss:init(x, y)
                 self.friction_x = 0.8
                 self.friction_y = 0.8
 
-				self.direction = random_range(0, pi2)
+                self.direction = random_range(0, pi2)
             end,
             update = function(state, dt)
                 self.spr:update_offset(random_neighbor(2), random_neighbor(2))
-                self.spr.rot = self.spr.rot + dt*10
+                self.spr.rot = self.spr.rot + dt * 10
 
                 if self.spawn_timer:update(dt) then
                     local amount = random_range_int(0, 2)
@@ -314,8 +315,13 @@ function BeeBoss:init(x, y)
                     self:set_state("random")
                 end
             end,
-            after_collision = function(state, col)             
-                local new_vx, new_vy = bounce_vector_cardinal(math.cos(self.direction), math.sin(self.direction), col.normal.x, col.normal.y)
+            after_collision = function(state, col)
+                local new_vx, new_vy = bounce_vector_cardinal(
+                    math.cos(self.direction),
+                    math.sin(self.direction),
+                    col.normal.x,
+                    col.normal.y
+                )
                 self.direction = math.atan2(new_vy, new_vx)
             end,
             exit = function(state)
@@ -349,7 +355,7 @@ function BeeBoss:init(x, y)
                 if self.state_timer:get_time_passed() > 1.0 then
                     self.is_stompable = false
                 end
-                
+
                 if self.state_timer:update(dt) then
                     self.is_stompable = true
                     self:set_state("random")
@@ -363,15 +369,13 @@ function BeeBoss:init(x, y)
             end,
             draw = function(state)
                 if self.is_stompable then
-                    exec_color(ternary((state.t % 0.1) < 0.05, {1,1,1,1}, {1,1,1,0}), function()
-                        draw_centered(images.bee_boss_shield, self.mid_x, self.mid_y)    
+                    exec_color(ternary((state.t % 0.1) < 0.05, { 1, 1, 1, 1 }, { 1, 1, 1, 0 }), function()
+                        draw_centered(images.bee_boss_shield, self.mid_x, self.mid_y)
                     end)
                 end
-            end
+            end,
         },
-
     }, "thwomp")
-
 end
 
 function BeeBoss:ready()
@@ -383,7 +387,6 @@ function BeeBoss:set_state(state_name)
     self.previous_state_name = self.state_machine.current_state_name
     self.state_machine:set_state(state_name)
 end
-
 
 function BeeBoss:update(dt)
     BeeBoss.super.update(self, dt)
@@ -404,13 +407,13 @@ function BeeBoss:draw()
     self.state_machine:draw()
 
     if not self.is_stompable then
-        draw_centered(images.bee_boss_shield, self.mid_x, self.mid_y)    
+        draw_centered(images.bee_boss_shield, self.mid_x, self.mid_y)
     end
 end
 
 function BeeBoss:on_stomped(player)
     game:frameskip(10)
-    game:screenshake(8) 
+    game:screenshake(8)
 
     self:set_invincibility(0.5)
     self:set_harmless(0.5)
@@ -451,7 +454,7 @@ function BeeBoss:set_spikes_pattern_big_wave()
     self:set_spikes_length(64)
     self:set_spikes_pattern_times(2, 0.6, 0.25)
 
-    local wave_pos = random_sample{0, CANVAS_WIDTH}
+    local wave_pos = random_sample({ 0, CANVAS_WIDTH })
 
     for _, spike in pairs(self.spikes) do
         if spike.orientation == 0 then
@@ -465,7 +468,6 @@ function BeeBoss:set_spikes_pattern_big_wave()
         end
     end
 end
-
 
 -----------------------------------------------------
 
@@ -485,7 +487,6 @@ function BeeBoss:on_death()
     end
 end
 
-
 function BeeBoss:spawn_spikes()
     self.spikes = {}
 
@@ -494,13 +495,13 @@ function BeeBoss:spawn_spikes()
     local t_off, t_tel, t_on = 2, 0.75, 0.25
     local t_total = t_off + t_tel + t_on
     local function spawn_spike(x, y, orientation, j)
-        local spikes = TimedSpikes:new(x, y, t_off, t_tel, t_on, j*(t_total/68)*2, {
+        local spikes = TimedSpikes:new(x, y, t_off, t_tel, t_on, j * (t_total / 68) * 2, {
             orientation = orientation,
             start_after_standby = false,
         })
         spikes.spike_i = j
         spikes.timing_mode = TIMED_SPIKES_TIMING_MODE_MANUAL
-        spikes.z = 2 - j/100
+        spikes.z = 2 - j / 100
         -- spikes.debug_values[1] = j
         game:new_actor(spikes)
         table.insert(self.spikes, spikes)
@@ -508,14 +509,13 @@ function BeeBoss:spawn_spikes()
     local spikes
 
     -- Bottom
-    for i = 3, CANVAS_WIDTH/16 - 4 do
-        spawn_spike(i * BW, CANVAS_HEIGHT*0.85, 0, j)
-    
-        if i ~= CANVAS_WIDTH/16 - 4 then
+    for i = 3, CANVAS_WIDTH / 16 - 4 do
+        spawn_spike(i * BW, CANVAS_HEIGHT * 0.85, 0, j)
+
+        if i ~= CANVAS_WIDTH / 16 - 4 then
             j = j + 1
         end
     end
 end
-
 
 return BeeBoss

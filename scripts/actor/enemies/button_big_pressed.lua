@@ -1,6 +1,6 @@
-require "scripts.util"
-local Enemy = require "scripts.actor.enemy"
-local images = require "data.images"
+require("scripts.util")
+local Enemy = require("scripts.actor.enemy")
+local images = require("data.images")
 
 local ButtonBigPressed = Enemy:inherit()
 
@@ -9,14 +9,14 @@ function ButtonBigPressed:init(x, y)
 end
 
 function ButtonBigPressed:init_button_big_pressed(x, y)
-    self:init_enemy(x,y, images.big_red_button_pressed, 34, 40)
+    self:init_enemy(x, y, images.big_red_button_pressed, 34, 40)
     self.name = "button_big_pressed"
     self.follow_player = false
 
     self.max_life = 999999
     self.life = self.max_life
     self.score = 0
-    
+
     self.knockback = 0
     self.is_stompable = false
     self.is_pushable = false
@@ -29,6 +29,5 @@ function ButtonBigPressed:init_button_big_pressed(x, y)
 
     self.damage = 0
 end
-
 
 return ButtonBigPressed

@@ -41,10 +41,10 @@ return {
         win_prompt = "[Pause to continue]",
         warning_web_controller = "Some browsers may not have proper controller support",
 
-        combo = "COMBO %d", -- ADDED 
+        combo = "COMBO %d", -- ADDED
     },
     level = {
-        world_prefix = "Department %s", 
+        world_prefix = "Department %s",
 
         -- World names
         world_1 = "Bug Resources",
@@ -83,7 +83,7 @@ return {
     },
     enemy = {
         dung = "Mr. Dung",
-        bee_boss = "Her Majesty", 
+        bee_boss = "Her Majesty",
         motherboard = "The Webmaster",
     },
     upgrade = {
@@ -93,7 +93,7 @@ return {
         },
         espresso = {
             title = "Espresso",
-            description = "x%d shooting speed for %d floors", 
+            description = "x%d shooting speed for %d floors",
         },
         milk = {
             title = "Milk",
@@ -117,7 +117,7 @@ return {
         },
         hot_sauce = {
             title = "Hot Sauce",
-            description = "Deal x%d damage but use x%d ammo", -- First "%d" is the damage, second "%d" is ammo 
+            description = "Deal x%d damage but use x%d ammo", -- First "%d" is the damage, second "%d" is ammo
         },
         coconut_water = {
             title = "Coconut Water",
@@ -139,19 +139,19 @@ return {
     input = {
         prompts = {
             -- All of these may be shown as button prompts (i.e., "[X] Shoot", "[C] Jump", etc)
-            move = "Move", 
+            move = "Move",
             left = "Left",
             right = "Right",
             up = "Up",
             down = "Down",
             jump = "Jump",
             shoot = "Shoot",
-            leave_game = "Leave", 
+            leave_game = "Leave",
 
-            ui_left =  "Left (menu)",
+            ui_left = "Left (menu)",
             ui_right = "Right (menu)",
-            ui_up =    "Up (menu)",
-            ui_down =  "Down (menu)",
+            ui_up = "Up (menu)",
+            ui_down = "Down (menu)",
             ui_select = "Confirm",
             ui_back = "Back",
             pause = "Pause",
@@ -160,7 +160,7 @@ return {
             split_keyboard = "Split keyboard", -- Verb, as in "Press [key] to split the keyboard". Shown on the title screen when one keyboard player has joined. Try to keep short since space is limited there.
 
             wall_jump = "Wall jump",
-            jetpack = "Jetpack", -- Refers to "jetpacking", a move in the game. 
+            jetpack = "Jetpack", -- Refers to "jetpacking", a move in the game.
         },
     },
     dialogue = {
@@ -176,11 +176,11 @@ return {
         no = "NO",
         leave_menu = "Leave menu?", -- Generic "leave menu?"
         quit = {
-            description = "Are you sure you want to quit?"
+            description = "Are you sure you want to quit?",
         },
         confirm_retry = {
             -- Here refers to going back to the main menu to try another run, NOT restarting the game
-            description = "Retry?", 
+            description = "Retry?",
         },
         pause = {
             title = "PAUSE",
@@ -220,7 +220,7 @@ return {
                 gameplay = "Gameplay",
                 interface = "Interface",
                 global = "Global",
-                note_ui_min_button = "At least one binding is required", 
+                note_ui_min_button = "At least one binding is required",
                 note_global_keyboard = "These bindings are the same for all keyboard players",
                 note_global_controller = "These bindings are the same for all controllers",
                 subtitle_no_player = "[⚠ NO PLAYER %d]", -- Shown when navigating to player "%d"'s controller settings while no player of this number has joined yet.
@@ -228,7 +228,7 @@ return {
                 no_buttons = "[NO BUTTONS]",
                 press_button = "[PRESS BUTTON]", -- Try to keep it short
                 press_again_to_remove = "Press an already bound button to remove it",
-                
+
                 keyboard = "Keyboard",
                 keyboard_solo = "KEYBOARD (Default)",
                 keyboard_p1 = "KEYBOARD (Split 1)", -- Split is an adjective here; as in, "the 1st split keyboard user"
@@ -256,7 +256,7 @@ return {
                     max_whole = "max whole",
                 },
                 vsync = "VSYNC",
-                menu_blur = "MENU BACKGROUND BLUR", 
+                menu_blur = "MENU BACKGROUND BLUR",
                 background_speed = "BACKGROUND SPEED",
                 bullet_lightness = "BULLET BRIGHTNESS",
             },
@@ -270,7 +270,6 @@ return {
                 screenshake = "SCREENSHAKE",
                 skip_boss_intros = "SKIP BOSS INTROS",
                 show_fps_warning = "SHOW LOW FRAMERATE WARNING", -- Whether the game should show a warning when its framerate is low
-
             },
             language = {
                 title = "LANGUAGE",
@@ -290,7 +289,7 @@ return {
             time = "Time", -- The time that the player took to complete the level
             floor = "Floor", -- Which storey the player was on when they died
             score = "Score", -- ADDED
-            
+
             continue = "CONTINUE",
             quick_restart = "QUICK RESTART", --ADDED
         },
@@ -312,7 +311,7 @@ return {
         credits = {
             title = "CREDITS",
             game_by = "A game by",
-            game_by_template = "By Léo Bernard & friends", -- Used on the title screen. 
+            game_by_template = "By Léo Bernard & friends", -- Used on the title screen.
             music = "Music",
             sound_design = "Sound design",
             published_by = "Published by",
@@ -321,11 +320,11 @@ return {
             playtesting = "Playtesting",
             special_thanks = "Special thanks",
             asset_creators = "Asset creators",
-            tv_slideshow = "TV slideshow contributors", -- ADDED // Refers to the powerpoint TV slideshow on the title screen, which was contributed by a variety of people 
+            tv_slideshow = "TV slideshow contributors", -- ADDED // Refers to the powerpoint TV slideshow on the title screen, which was contributed by a variety of people
             tv_slideshow_submit = "Submit yours...", -- ADDED // Leads to a web page where people can submit their own slides
             licenses = "Asset & library licenses",
 
-            x_by_y =     "%s by %s", -- "ASSET_NAME by CREATOR". Used to credit assets such as sound effects
+            x_by_y = "%s by %s", -- "ASSET_NAME by CREATOR". Used to credit assets such as sound effects
             asset_item = "%s by %s / %s", -- "ASSET_NAME by CREATOR / LICENCE"
         },
         open_source = {

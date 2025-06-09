@@ -1,31 +1,31 @@
-require "scripts.util"
-local Enemy          = require "scripts.actor.enemy"
-local sounds         = require "data.sounds"
-local images         = require "data.images"
-local ElectricRays   = require "scripts.actor.enemies.electric_rays"
-local StateMachine   = require "scripts.state_machine"
-local Timer          = require "scripts.timer"
-local Segment        = require "scripts.math.segment"
-local guns           = require "data.guns"
-local TimedSpikes    = require "scripts.actor.enemies.timed_spikes"
-local AnimatedSprite = require "scripts.graphics.animated_sprite"
-local CollisionInfo = require "scripts.physics.collision_info"
+require("scripts.util")
+local Enemy = require("scripts.actor.enemy")
+local sounds = require("data.sounds")
+local images = require("data.images")
+local ElectricRays = require("scripts.actor.enemies.electric_rays")
+local StateMachine = require("scripts.state_machine")
+local Timer = require("scripts.timer")
+local Segment = require("scripts.math.segment")
+local guns = require("data.guns")
+local TimedSpikes = require("scripts.actor.enemies.timed_spikes")
+local AnimatedSprite = require("scripts.graphics.animated_sprite")
+local CollisionInfo = require("scripts.physics.collision_info")
 
-local Larva =              require "scripts.actor.enemies.larva"
-local Fly =                require "scripts.actor.enemies.fly"
-local SpikedFly =          require "scripts.actor.enemies.spiked_fly"
-local Woodlouse =          require "scripts.actor.enemies.woodlouse"
-local Slug =               require "scripts.actor.enemies.slug"
-local Spider =             require "scripts.actor.enemies.spider"
-local StinkBug =           require "scripts.actor.enemies.stink_bug"
-local SnailShelled =       require "scripts.actor.enemies.snail_shelled" 
-local Boomshroom =         require "scripts.actor.enemies.boomshroom" 
-local Dung =               require "scripts.actor.enemies.dung"
-local DungBeetle =         require "scripts.actor.enemies.dung_beetle"
-local DungProjectile =     require "scripts.actor.enemies.dung_projectile"
-local FlyingDung =         require "scripts.actor.enemies.flying_dung"
+local Larva = require("scripts.actor.enemies.larva")
+local Fly = require("scripts.actor.enemies.fly")
+local SpikedFly = require("scripts.actor.enemies.spiked_fly")
+local Woodlouse = require("scripts.actor.enemies.woodlouse")
+local Slug = require("scripts.actor.enemies.slug")
+local Spider = require("scripts.actor.enemies.spider")
+local StinkBug = require("scripts.actor.enemies.stink_bug")
+local SnailShelled = require("scripts.actor.enemies.snail_shelled")
+local Boomshroom = require("scripts.actor.enemies.boomshroom")
+local Dung = require("scripts.actor.enemies.dung")
+local DungBeetle = require("scripts.actor.enemies.dung_beetle")
+local DungProjectile = require("scripts.actor.enemies.dung_projectile")
+local FlyingDung = require("scripts.actor.enemies.flying_dung")
 
-local FinalBoss      = Enemy:inherit()
+local FinalBoss = Enemy:inherit()
 
 function FinalBoss:init(x, y)
     self:init_enemy(x, y, images.ceo, 90, 74)
@@ -44,19 +44,19 @@ function FinalBoss:init(x, y)
             spr = AnimatedSprite:new({
                 normal = { { images.ceo_office_desk }, 0.1 },
             }, "normal"),
-            is_visible = false
+            is_visible = false,
         },
         { -- Glass
             spr = AnimatedSprite:new({
                 normal = { { images.ceo_office_glass }, 0.1 },
             }, "normal"),
-            is_visible = false
+            is_visible = false,
         },
         { -- Legs
             spr = AnimatedSprite:new({
                 normal = { { images.ceo_office_legs }, 0.1 },
             }, "normal"),
-            is_visible = false
+            is_visible = false,
         },
     }
 
@@ -72,11 +72,11 @@ function FinalBoss:init(x, y)
     self.is_immune_to_bullets = true
 
     self.is_stompable = false
-    self.collision_info = CollisionInfo:new {
+    self.collision_info = CollisionInfo:new({
         type = COLLISION_TYPE_SEMISOLID,
         is_slidable = true,
-    }
-    
+    })
+
     self.can_be_stomped_if_falling_down = false
     self.damage_on_stomp = 5
 
@@ -136,8 +136,7 @@ function FinalBoss:init(x, y)
         },
 
         random = {
-            enter = function(state)
-            end,
+            enter = function(state) end,
             update = function(state, dt)
                 local possible_states = {
                     -- "thwomp",
@@ -157,7 +156,7 @@ function FinalBoss:init(x, y)
                 if self.state_timer:update(dt) then
                     return "random"
                 end
-            end
+            end,
         },
 
         -----------------------------------------------------
@@ -170,17 +169,17 @@ function FinalBoss:init(x, y)
 
                 self.minions = {}
                 local wave = {
-                    min = 2, 
-                    max = 4, 
+                    min = 2,
+                    max = 4,
                     enemies = {
-                        { Slug,      2 },
-                        { StinkBug,  2 },
-                        { Larva,     2 },
+                        { Slug, 2 },
+                        { StinkBug, 2 },
+                        { Larva, 2 },
                         { Woodlouse, 2 },
-                    }
+                    },
                 }
                 local amount = random_range_int(wave.min, wave.max)
-                for i=1, amount do
+                for i = 1, amount do
                     local enemy = random_weighted(wave.enemies)
                     local a = enemy:new(self.mid_x, self.mid_y)
                     table.insert(self.minions, a)
@@ -189,7 +188,7 @@ function FinalBoss:init(x, y)
             end,
             update = function(state, dt)
                 self.debug_values[2] = tostring(#self.minions)
-                for i=#self.minions, 1, -1 do
+                for i = #self.minions, 1, -1 do
                     local enemy = self.minions[i]
                     if enemy.is_removed then
                         table.remove(self.minions, i)
@@ -200,10 +199,8 @@ function FinalBoss:init(x, y)
                     self.state_machine:set_state("spawn_minions")
                 end
             end,
-            exit = function(state)
-            end,
+            exit = function(state) end,
         },
-
 
         -----------------------------------------------------
         --- JUMPING ---
@@ -254,7 +251,7 @@ function FinalBoss:init(x, y)
                     Input:vibrate_all(0.2, 0.5)
                     game:screenshake(6)
                 end
-            end
+            end,
         },
 
         -----------------------------------------------------
@@ -269,7 +266,7 @@ function FinalBoss:init(x, y)
                 if target then
                     dir = sign(target.mid_x - self.mid_x)
                 else
-                    dir = random_sample { -1, 1 }
+                    dir = random_sample({ -1, 1 })
                 end
 
                 self.friction_x = 1
@@ -334,7 +331,7 @@ function FinalBoss:init(x, y)
                     Input:vibrate_all(0.2, 0.5)
                     game:screenshake(6)
                 end
-            end
+            end,
         },
 
         -----------------------------------------------------
@@ -372,7 +369,7 @@ function FinalBoss:init(x, y)
                 if self.stomps_counter <= 0 then
                     return "waiting"
                 end
-            end
+            end,
         },
         thwomp_telegraph = {
             enter = function(state)
@@ -396,8 +393,7 @@ function FinalBoss:init(x, y)
             end,
         },
         thwomp_attack = {
-            enter = function(state)
-            end,
+            enter = function(state) end,
             update = function(state, dt)
                 self.speed_x = 0
                 self.speed_y = self.thwomp_attack_speed
@@ -418,11 +414,10 @@ function FinalBoss:init(x, y)
                     game:screenshake(6)
                     self:set_spike_waves()
                 end
-            end
+            end,
         },
         thwomp_rise = {
-            enter = function(state)
-            end,
+            enter = function(state) end,
             update = function(state, dt)
                 self.speed_x = 0
                 self.speed_y = self.thwomp_rise_speed
@@ -434,7 +429,6 @@ function FinalBoss:init(x, y)
                 end
             end,
         },
-
     }, "spawn_minions")
 end
 
@@ -560,13 +554,12 @@ function FinalBoss:spawn_spikes(tile_ox, tile_oy)
 
     -- Bottom
     for i = 3, CANVAS_WIDTH / 16 - 4 do
-        spawn_spike(tile_ox*16 + i * BW, tile_oy*16 + CANVAS_HEIGHT * 0.85, 0, j)
+        spawn_spike(tile_ox * 16 + i * BW, tile_oy * 16 + CANVAS_HEIGHT * 0.85, 0, j)
 
         if i ~= CANVAS_WIDTH / 16 - 4 then
             j = j + 1
         end
     end
-
 
     -- -- Right
     -- for i = 14, 3, -1 do

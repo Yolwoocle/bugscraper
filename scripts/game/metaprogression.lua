@@ -1,21 +1,21 @@
-require "scripts.util"
-local Class = require "scripts.meta.class"
-local upgrades = require "data.upgrades"
-local skins = require "data.skins"
-local skin_name_to_id = require "data.skin_name_to_id"
+require("scripts.util")
+local Class = require("scripts.meta.class")
+local upgrades = require("data.upgrades")
+local skins = require("data.skins")
+local skin_name_to_id = require("data.skin_name_to_id")
 
 local MetaprogressionManager = Class:inherit()
 
 function MetaprogressionManager:init()
     self.default_data = {
-        ["$version"] = METAPROGRESSION_FILE_FORMAT_VERSION, 
+        ["$version"] = METAPROGRESSION_FILE_FORMAT_VERSION,
 
         total_xp = 0,
         xp = 0,
         xp_level = 1,
 
         skins = { 1, 2, 3, 4 },
-        upgrades = { 
+        upgrades = {
             "UpgradeTea",
             "UpgradeEspresso",
             "UpgradeMilk",
@@ -29,9 +29,9 @@ function MetaprogressionManager:init()
             "UpgradeCoconutWater",
         },
 
-		has_seen_intro_credits = false,
-		has_played_tutorial = false,
-		has_seen_stomp_tutorial = false,
+        has_seen_intro_credits = false,
+        has_played_tutorial = false,
+        has_seen_stomp_tutorial = false,
     }
 
     local t = skin_name_to_id
@@ -57,7 +57,7 @@ function MetaprogressionManager:add_xp(value)
     self.old_total_xp = self:get_total_xp()
     self.old_xp_level = self:get_xp_level()
 
-    local new_xp = self:get_xp() + value 
+    local new_xp = self:get_xp() + value
     local new_level = self:get_xp_level()
 
     while new_xp >= self:get_xp_level_threshold(new_level) do
@@ -90,7 +90,7 @@ function MetaprogressionManager:grant_reward(reward)
         self:unlock_upgrade(reward.upgrade)
     end
 end
-    
+
 function MetaprogressionManager:get_xp()
     return self:get("xp")
 end
@@ -98,7 +98,7 @@ end
 function MetaprogressionManager:set_xp(value)
     self:set("xp", value)
 end
-    
+
 function MetaprogressionManager:get_total_xp()
     return self:get("total_xp")
 end
@@ -163,6 +163,5 @@ end
 function MetaprogressionManager:save_progress()
     Files:write_config_file("progress.txt", self.data)
 end
-
 
 return MetaprogressionManager

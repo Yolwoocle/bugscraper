@@ -1,7 +1,7 @@
-local Cutscene = require "scripts.game.cutscene"
-local CutsceneScene = require "scripts.game.cutscene_scene"
-local Light = require "scripts.graphics.light"
-local Rect = require "scripts.math.rect"
+local Cutscene = require("scripts.game.cutscene")
+local CutsceneScene = require("scripts.game.cutscene_scene")
+local Light = require("scripts.graphics.light")
+local Rect = require("scripts.math.rect")
 
 local cutscenes = {}
 
@@ -11,15 +11,15 @@ cutscenes.tutorial_start = Cutscene:new("tutorial_end", {
 
         duration = 3.0,
         enter = function(scene)
-            game.can_join_game = false 
+            game.can_join_game = false
             game.logo_y = -5000
             game.logo_y_target = -5000
 
             game.camera.follows_players = false
-            game.camera.min_y = -999999    
-            game.camera:set_position(0, -2200)    
+            game.camera.min_y = -999999
+            game.camera:set_position(0, -2200)
             game.camera.max_speed = 100
-            
+
             local cx, cy = DEFAULT_CAMERA_X, DEFAULT_CAMERA_Y
             if game.level.backroom and game.level.backroom.get_default_camera_position then
                 cx, cy = game.level.backroom:get_default_camera_position()
@@ -64,19 +64,17 @@ cutscenes.tutorial_start = Cutscene:new("tutorial_end", {
 
         duration = 0.1,
         enter = function(scene)
-	        game.logo_y_target = 0
+            game.logo_y_target = 0
 
             game.camera.follows_players = true
-            game.camera.min_y = 0    
+            game.camera.min_y = 0
             game.camera.max_speed = DEFAULT_CAMERA_MAX_SPEED
-            game.can_join_game = true 
+            game.can_join_game = true
 
             Metaprogression:set("has_seen_intro_credits", true)
         end,
     }),
 })
-
-
 
 cutscenes.tutorial_end_short = Cutscene:new("tutorial_end", {
     CutsceneScene:new({
@@ -90,7 +88,7 @@ cutscenes.tutorial_end_short = Cutscene:new("tutorial_end", {
                 player:reset_virtual_controller()
             end
 
-            game.can_join_game = false 
+            game.can_join_game = false
             game.logo_y_target = -70
             game.game_ui.cinematic_bars_enabled = true
         end,
@@ -100,7 +98,7 @@ cutscenes.tutorial_end_short = Cutscene:new("tutorial_end", {
         duration = 3.0,
         enter = function(scene)
             for _, player in pairs(game.players) do
-                player:set_code_input_mode_target_x(88*16 + player.n*16)
+                player:set_code_input_mode_target_x(88 * 16 + player.n * 16)
             end
         end,
     }),
@@ -135,11 +133,9 @@ cutscenes.tutorial_end_short = Cutscene:new("tutorial_end", {
                 dark_overlay_alpha_target = 0.0,
             })
             game.game_ui.cinematic_bars_enabled = false
-        end
-    })
+        end,
+    }),
 })
-
-
 
 cutscenes.tutorial_end = Cutscene:new("tutorial_end", {
     CutsceneScene:new({
@@ -153,7 +149,7 @@ cutscenes.tutorial_end = Cutscene:new("tutorial_end", {
                 player:reset_virtual_controller()
             end
 
-            game.can_join_game = false 
+            game.can_join_game = false
             game.logo_y_target = -70
             game.game_ui.cinematic_bars_enabled = true
         end,
@@ -163,7 +159,7 @@ cutscenes.tutorial_end = Cutscene:new("tutorial_end", {
         duration = 3.0,
         enter = function(scene)
             for _, player in pairs(game.players) do
-                player:set_code_input_mode_target_x(88*16 + player.n*16)
+                player:set_code_input_mode_target_x(88 * 16 + player.n * 16)
             end
         end,
     }),
@@ -182,7 +178,7 @@ cutscenes.tutorial_end = Cutscene:new("tutorial_end", {
         duration = 12.0,
         enter = function(scene)
             game.camera.follows_players = false
-            game.camera.min_y = -2000000    
+            game.camera.min_y = -2000000
             game.camera.target_y = -2350
         end,
     }),
@@ -208,11 +204,9 @@ cutscenes.tutorial_end = Cutscene:new("tutorial_end", {
                 dark_overlay_alpha_target = 0.0,
             })
             game.game_ui.cinematic_bars_enabled = false
-        end
-    })
+        end,
+    }),
 })
-
-
 
 cutscenes.enter_ceo_office = Cutscene:new("enter_ceo_office", {
     CutsceneScene:new({
@@ -232,15 +226,15 @@ cutscenes.enter_ceo_office = Cutscene:new("enter_ceo_office", {
         duration = 4.0,
         enter = function(scene)
             for _, player in pairs(game.players) do
-                if player.x < 79*16 - CANVAS_WIDTH then
-                   player.x = 79*16 - CANVAS_WIDTH
-                   Particles:smoke_big(player.mid_x, player.mid_y, COL_WHITE)
+                if player.x < 79 * 16 - CANVAS_WIDTH then
+                    player.x = 79 * 16 - CANVAS_WIDTH
+                    Particles:smoke_big(player.mid_x, player.mid_y, COL_WHITE)
                 end
             end
             -- boss min x = 79*16
-            
+
             for _, player in pairs(game.players) do
-                local target_x = 79*16 + 8 + (4-player.n) * 24 
+                local target_x = 79 * 16 + 8 + (4 - player.n) * 24
                 player:set_code_input_mode_target_x(target_x)
             end
         end,
@@ -254,14 +248,14 @@ cutscenes.enter_ceo_office = Cutscene:new("enter_ceo_office", {
 
             -- the scene is finished early
             if ok_players == game:get_number_of_alive_players() then
-                return true 
+                return true
             end
         end,
         exit = function(scene)
             for _, player in pairs(game.players) do
                 player:set_code_input_mode_target_x()
             end
-        end
+        end,
     }),
     CutsceneScene:new({
         description = "Set level walls",
@@ -299,8 +293,6 @@ cutscenes.enter_ceo_office = Cutscene:new("enter_ceo_office", {
     }),
 })
 
-
-
 cutscenes.dung_boss_enter = Cutscene:new("dung_boss_enter", {
     CutsceneScene:new({
         duration = 1.9,
@@ -314,8 +306,6 @@ cutscenes.dung_boss_enter = Cutscene:new("dung_boss_enter", {
         end,
     }),
 })
-
-
 
 cutscenes.bee_boss_enter = Cutscene:new("bee_boss_enter", {
     CutsceneScene:new({
@@ -333,49 +323,57 @@ cutscenes.bee_boss_enter = Cutscene:new("bee_boss_enter", {
     CutsceneScene:new({
         duration = 0.3,
         enter = function(scene)
-            game.light_world:new_light("center", Light:new(CANVAS_WIDTH/2, -32, {
-                angle = pi*0.5,
-                spread = pi*0.1,
-                range = 800,
-                is_active = true,
-            }))
+            game.light_world:new_light(
+                "center",
+                Light:new(CANVAS_WIDTH / 2, -32, {
+                    angle = pi * 0.5,
+                    spread = pi * 0.1,
+                    range = 800,
+                    is_active = true,
+                })
+            )
             Audio:play_var("spotlight_1", nil, 1.05)
         end,
     }),
     CutsceneScene:new({
         duration = 0.3,
         enter = function(scene)
-            game.light_world:new_light("left", Light:new(500, -32, {
-                angle = pi*0.7, 
-                spread = pi*0.05, 
-                range = 800, 
-                is_active = true,
-            }))
+            game.light_world:new_light(
+                "left",
+                Light:new(500, -32, {
+                    angle = pi * 0.7,
+                    spread = pi * 0.05,
+                    range = 800,
+                    is_active = true,
+                })
+            )
             Audio:play_var("spotlight_2", nil, 1.05)
         end,
     }),
     CutsceneScene:new({
         duration = 0.3,
         enter = function(scene)
-            game.light_world:new_light("right", Light:new(CANVAS_WIDTH - 500, -32, {
-                angle = pi*0.3, 
-                spread = pi*0.05, 
-                range = 800, 
-                is_active = true,
-            }))
+            game.light_world:new_light(
+                "right",
+                Light:new(CANVAS_WIDTH - 500, -32, {
+                    angle = pi * 0.3,
+                    spread = pi * 0.05,
+                    range = 800,
+                    is_active = true,
+                })
+            )
             Audio:play_var("spotlight_3", nil, 1.05)
         end,
     }),
     CutsceneScene:new({
         duration = 1.1,
-        enter = function(scene)
-        end,
+        enter = function(scene) end,
     }),
     CutsceneScene:new({
         duration = 1.0,
         enter = function(scene)
             -- Particles:falling_cabin_back(game.level.cabin_rect.ax, game.level.cabin_rect.by)
-        end
+        end,
     }),
     CutsceneScene:new({
         duration = 0,
@@ -390,11 +388,11 @@ cutscenes.bee_boss_enter = Cutscene:new("bee_boss_enter", {
             game.level.slowdown_timer_override = nil
             game.level.opening_door_timer_override = nil
             game.level.opened_door_timer_override = nil
-            
+
             local light_settings = {
-                ["left"] = {1, pi/12},
-                ["right"] = {0.7, pi/12},
-                ["center"] = {1.23, pi/12},
+                ["left"] = { 1, pi / 12 },
+                ["right"] = { 0.7, pi / 12 },
+                ["center"] = { 1.23, pi / 12 },
             }
 
             for name, light in pairs(game.light_world.lights) do
@@ -417,12 +415,10 @@ cutscenes.bee_boss_enter = Cutscene:new("bee_boss_enter", {
     }),
     CutsceneScene:new({
         update = function(scene, dt)
-            game.light_world.darkness_intensity = move_toward(game.light_world.darkness_intensity, 0.4, 0.3*dt)
-        end
+            game.light_world.darkness_intensity = move_toward(game.light_world.darkness_intensity, 0.4, 0.3 * dt)
+        end,
     }),
 })
-
-
 
 cutscenes.arum_titan_enter = Cutscene:new("arum_titan_enter", {
     CutsceneScene:new({
@@ -437,7 +433,5 @@ cutscenes.arum_titan_enter = Cutscene:new("arum_titan_enter", {
         end,
     }),
 })
-
-
 
 return cutscenes

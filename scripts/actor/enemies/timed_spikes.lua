@@ -1,12 +1,12 @@
-require "scripts.util"
-local Enemy = require "scripts.actor.enemy"
-local images = require "data.images"
-local Prop = require "scripts.actor.enemies.prop"
-local StateMachine = require "scripts.state_machine"
-local Timer = require "scripts.timer"
-local Sprite= require "scripts.graphics.sprite"
+require("scripts.util")
+local Enemy = require("scripts.actor.enemy")
+local images = require("data.images")
+local Prop = require("scripts.actor.enemies.prop")
+local StateMachine = require("scripts.state_machine")
+local Timer = require("scripts.timer")
+local Sprite = require("scripts.graphics.sprite")
 
-local utf8 = require "utf8"
+local utf8 = require("utf8")
 
 local TimedSpikes = Prop:inherit()
 
@@ -28,31 +28,31 @@ function TimedSpikes:init(x, y, duration_off, duration_telegraph, duration_on, s
         w, h = w, self.spike_length
     elseif self.orientation == 3 then -- left
         x, y = x - (self.spike_length - x), y
-        w, h = self.spike_length, h 
+        w, h = self.spike_length, h
     end
 
     TimedSpikes.super.init(self, x, y, images.empty, w, h)
     self.name = "timed_spikes"
-    
+
     local sprite_anchor = ({
         [0] = SPRITE_ANCHOR_CENTER_TOP, -- upwards spikes
         [1] = SPRITE_ANCHOR_RIGHT_CENTER, -- rightward
         [2] = SPRITE_ANCHOR_CENTER_BOTTOM, -- downward
-        [3] = SPRITE_ANCHOR_LEFT_CENTER, -- leftward 
+        [3] = SPRITE_ANCHOR_LEFT_CENTER, -- leftward
     })[self.orientation] or SPRITE_ANCHOR_CENTER_BOTTOM
-    self.orientation_dir_x = round(-math.cos(self.orientation * pi/2 - pi/2), 1)
-    self.orientation_dir_y = round(-math.sin(self.orientation * pi/2 - pi/2), 1)
+    self.orientation_dir_x = round(-math.cos(self.orientation * pi / 2 - pi / 2), 1)
+    self.orientation_dir_y = round(-math.sin(self.orientation * pi / 2 - pi / 2), 1)
     self.spr:set_anchor(sprite_anchor)
-    self.spr:set_rotation(self.orientation * pi/2)
+    self.spr:set_rotation(self.orientation * pi / 2)
 
     self.timing_mode = TIMED_SPIKES_TIMING_MODE_TEMPORAL
 
     self.z = 2
     self.state_order = {
         -- 2, 0.5, 0.5
-        {"off", duration_off or 4},
-        {"telegraph", duration_telegraph or 2},
-        {"on", duration_on or 1},
+        { "off", duration_off or 4 },
+        { "telegraph", duration_telegraph or 2 },
+        { "on", duration_on or 1 },
     }
 
     self.extend_speed = 10
@@ -61,12 +61,12 @@ function TimedSpikes:init(x, y, duration_off, duration_telegraph, duration_on, s
 
     self.spike_sprite = Sprite:new(images.timed_spikes_spikes)
     self.spike_sprite:set_anchor(sprite_anchor)
-    self.spike_sprite:set_rotation(self.orientation * pi/2)
+    self.spike_sprite:set_rotation(self.orientation * pi / 2)
 
     self.spike_stem_sprite = Sprite:new(images.timed_spikes_spikes_stem)
     self.spike_stem_sprite:set_anchor(sprite_anchor)
-    self.spike_stem_sprite:set_rotation(self.orientation * pi/2)
-    
+    self.spike_stem_sprite:set_rotation(self.orientation * pi / 2)
+
     self.counts_as_enemy = false
 
     -- State management
@@ -80,8 +80,8 @@ function TimedSpikes:init(x, y, duration_off, duration_telegraph, duration_on, s
                 self.damage = 0
                 if self.init_state_name == "on" then
                     self.spike_target_y = 6
-                    self.spike_sprite.color = {0.5,0.5,0.5}
-                    self.spike_stem_sprite.color = {0.5,0.5,0.5}
+                    self.spike_sprite.color = { 0.5, 0.5, 0.5 }
+                    self.spike_stem_sprite.color = { 0.5, 0.5, 0.5 }
                     self.spike_sprite.is_visible = true
                 else
                     self.spike_target_y = 0
@@ -91,7 +91,7 @@ function TimedSpikes:init(x, y, duration_off, duration_telegraph, duration_on, s
                 end
                 self.spike_y = self.spike_target_y
                 self.standby_timer:start()
-            end, 
+            end,
             update = function(state, dt)
                 -- Update timer
                 if self.standby_timer:update(dt) then
@@ -113,34 +113,34 @@ function TimedSpikes:init(x, y, duration_off, duration_telegraph, duration_on, s
 
                 self.damage = 0
                 self.spike_target_y = 0
-                self.spike_sprite.color = {0.5,0.5,0.5}
-            end, 
+                self.spike_sprite.color = { 0.5, 0.5, 0.5 }
+            end,
         },
         off = {
             enter = function(state)
                 self.damage = 0
                 self.spike_target_y = 0
-                self.spike_sprite.color = {0.5,0.5,0.5}
-            end, 
+                self.spike_sprite.color = { 0.5, 0.5, 0.5 }
+            end,
         },
         telegraph = {
             enter = function(state)
                 self.damage = 0
                 self.spike_target_y = 6
-                self.spike_sprite.color = {0.5,0.5,0.5}
-            end, 
+                self.spike_sprite.color = { 0.5, 0.5, 0.5 }
+            end,
         },
         on = {
             enter = function(state)
                 self.spike_target_y = self.spike_length
                 self.spike_sprite.color = COL_WHITE
                 -- self.spike_sprite.sy = 1.7
-            end, 
+            end,
             update = function(state, dt)
                 if self.spike_y >= self.spike_length - 8 then
                     self.damage = 1
                 end
-            end
+            end,
         },
     }, "standby")
 
@@ -177,16 +177,13 @@ function TimedSpikes:set_length(new_length)
     if self.orientation == 0 then --up
         x, y = x, y - (new_length - old_length)
         w, h = w, new_length
-
     elseif self.orientation == 1 then --right
         w, h = new_length, h
-
     elseif self.orientation == 2 then -- down
         w, h = w, new_length
-
     elseif self.orientation == 3 then -- left
         x, y = x - (new_length - old_length), y
-        w, h = new_length, h 
+        w, h = new_length, h
     end
 
     self:set_position(x, y)
@@ -227,13 +224,12 @@ function TimedSpikes:get_offset_time_and_state(time_offset)
         end
         time = time - state_duration
     end
-
 end
 
 function TimedSpikes:get_cycle_total_time()
     local s = 0
     for _, state in pairs(self.state_order) do
-        s = s + state[2] 
+        s = s + state[2]
     end
     return s
 end
@@ -257,15 +253,18 @@ function TimedSpikes:update(dt)
 
     if self.state_timer:update(dt) then
         local new_state = mod_plus_1(self.state_index + 1, #self.state_order)
-        
+
         self:set_state(new_state)
 
-        if (self.timing_mode == TIMED_SPIKES_TIMING_MODE_TEMPORAL) or (self.timing_mode == TIMED_SPIKES_TIMING_MODE_MANUAL and self.state_index ~= 1) then
+        if
+            (self.timing_mode == TIMED_SPIKES_TIMING_MODE_TEMPORAL)
+            or (self.timing_mode == TIMED_SPIKES_TIMING_MODE_MANUAL and self.state_index ~= 1)
+        then
             self.state_timer:start(self.state_order[self.state_index][2])
         end
     end
 
-    self.spike_y = move_toward(self.spike_y, self.spike_target_y, self.extend_speed*self.spike_length*dt)
+    self.spike_y = move_toward(self.spike_y, self.spike_target_y, self.extend_speed * self.spike_length * dt)
     self.spike_sprite.sy = lerp(self.spike_sprite.sy, 1, 0.1)
 
     self.spike_stem_sprite.color = self.spike_sprite.color
@@ -277,28 +276,34 @@ end
 function TimedSpikes:draw()
     -- huge hack, don't try to understand it
     -- it's not very pretty but eh fuck it, it works, life is too short to pull my hair over this shit
-    local x = self.x + self.orientation_dir_x * (self.spike_length - self.spike_y) 
-    local y = self.y + self.orientation_dir_y * (self.spike_length - self.spike_y) 
-    
+    local x = self.x + self.orientation_dir_x * (self.spike_length - self.spike_y)
+    local y = self.y + self.orientation_dir_y * (self.spike_length - self.spike_y)
+
     if self.orientation == 0 or self.orientation == 2 then
         self.spike_sprite:draw(x, y, self.w, self.h)
     else
-        x = self.x + self.orientation_dir_x * (self.spike_length - self.spike_y - self.spike_sprite.image:getHeight() + 2) 
-        y = self.y + self.orientation_dir_y * (self.spike_length - self.spike_y - self.spike_sprite.image:getHeight() + 2) 
+        x = self.x
+            + self.orientation_dir_x * (self.spike_length - self.spike_y - self.spike_sprite.image:getHeight() + 2)
+        y = self.y
+            + self.orientation_dir_y * (self.spike_length - self.spike_y - self.spike_sprite.image:getHeight() + 2)
         self.spike_sprite:draw(x, y, self.w, self.h)
     end
 
     self.spike_stem_sprite.sy = self.spike_y - self.spike_sprite.image:getHeight() + 1
     if self.orientation == 0 or self.orientation == 2 then
         self.spike_stem_sprite:draw(
-            x + self.orientation_dir_x * (self.spike_sprite.image:getHeight() - self.spike_stem_sprite.sy / 2), 
-            y + self.orientation_dir_y * (self.spike_sprite.image:getHeight() - self.spike_stem_sprite.sy / 2), 
-        self.w, self.h)
-    else 
+            x + self.orientation_dir_x * (self.spike_sprite.image:getHeight() - self.spike_stem_sprite.sy / 2),
+            y + self.orientation_dir_y * (self.spike_sprite.image:getHeight() - self.spike_stem_sprite.sy / 2),
+            self.w,
+            self.h
+        )
+    else
         self.spike_stem_sprite:draw(
-            x + self.orientation_dir_x * (self.spike_sprite.image:getHeight() - 3), 
-            y + self.orientation_dir_y * (self.spike_sprite.image:getHeight() - 3), 
-        self.w, self.h)
+            x + self.orientation_dir_x * (self.spike_sprite.image:getHeight() - 3),
+            y + self.orientation_dir_y * (self.spike_sprite.image:getHeight() - 3),
+            self.w,
+            self.h
+        )
     end
     TimedSpikes.super.draw(self)
 end

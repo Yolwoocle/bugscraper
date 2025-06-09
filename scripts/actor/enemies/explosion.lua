@@ -1,9 +1,9 @@
-require "scripts.util"
-local images = require "data.images"
-local Prop = require "scripts.actor.enemies.prop"
-local guns = require "data.guns"
+require("scripts.util")
+local images = require("data.images")
+local Prop = require("scripts.actor.enemies.prop")
+local guns = require("data.guns")
 
-local utf8 = require "utf8"
+local utf8 = require("utf8")
 
 local Explosion = Prop:inherit()
 
@@ -20,12 +20,12 @@ function Explosion:init(x, y, args)
     self.safe_margin = param(args.safe_margin, 8)
     self.resolution = param(args.resolution, 32)
     self.screenshake = param(args.screenshake, 8)
-    
+
     self.color_gradient = param(args.color_gradient, nil)
     self.do_death_effects = false
-	self.play_sfx = false
+    self.play_sfx = false
     self.gun = guns.unlootable.ExplosionGun:new(self, self.radius, self.explosion_damage, self.resolution, {
-        override_enemy_damage = self.override_enemy_damage
+        override_enemy_damage = self.override_enemy_damage,
     })
 end
 
@@ -44,11 +44,10 @@ function Explosion:update(dt)
             color_gradient = self.color_gradient,
         })
 
-        self:kill()      
+        self:kill()
     end
 end
 
-function Explosion:draw()
-end
+function Explosion:draw() end
 
 return Explosion

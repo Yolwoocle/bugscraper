@@ -1,7 +1,7 @@
-require "scripts.util"
-local Upgrade = require "scripts.upgrade.upgrade"
-local images= require "data.images"
-local EffectSlowness = require "scripts.effect.effect_slowness"
+require("scripts.util")
+local Upgrade = require("scripts.upgrade.upgrade")
+local images = require("data.images")
+local EffectSlowness = require("scripts.effect.effect_slowness")
 
 local UpgradeTea = Upgrade:inherit()
 
@@ -12,7 +12,7 @@ function UpgradeTea:init()
     self:set_description(self.number_of_hearts)
 
     self.color = COL_MID_GREEN
-    self.palette = {COL_MID_GREEN, COL_MID_DARK_GREEN, COL_DARK_GREEN}
+    self.palette = { COL_MID_GREEN, COL_MID_DARK_GREEN, COL_DARK_GREEN }
 end
 
 function UpgradeTea:update(dt)
@@ -29,9 +29,6 @@ function UpgradeTea:play_effects(player)
     Particles:image(player.mid_x, player.mid_y, self.number_of_hearts, images.particle_leaf, 5, 1.5, 0.6, 0.5)
 end
 
-function UpgradeTea:on_finish(player)
-end
-
-
+function UpgradeTea:on_finish(player) end
 
 return UpgradeTea

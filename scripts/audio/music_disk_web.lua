@@ -1,6 +1,6 @@
-require "scripts.util"
-local sounds = require "data.sounds"
-local Class = require "scripts.meta.class"
+require("scripts.util")
+local sounds = require("data.sounds")
+local Class = require("scripts.meta.class")
 
 local MusicDiskWeb = Class:inherit()
 
@@ -14,7 +14,7 @@ function MusicDiskWeb:init(music_player, music_ingame, music_pause)
     }
 
     self.volume = 1.0
-    
+
     self.music_mode = MUSIC_MODE_OFF
     self.current_source = self.sources[MUSIC_MODE_INGAME]
 end
@@ -24,7 +24,7 @@ function MusicDiskWeb:update(dt)
         if source_mode == self.music_mode then
             source:setVolume(self.volume)
         else
-            source:setVolume(0.0)   
+            source:setVolume(0.0)
         end
     end
 end
@@ -34,7 +34,7 @@ function MusicDiskWeb:set_name(name)
 end
 
 function MusicDiskWeb:pause()
-    for _, source in pairs(self.sources) do 
+    for _, source in pairs(self.sources) do
         source:pause()
     end
     -- if self.current_source ~= nil then;
@@ -43,7 +43,7 @@ function MusicDiskWeb:pause()
 end
 
 function MusicDiskWeb:play()
-    for source_mode, source in pairs(self.sources) do 
+    for source_mode, source in pairs(self.sources) do
         source:play()
         if source_mode == self.music_mode then
             source:setVolume(self.volume)
@@ -52,13 +52,13 @@ function MusicDiskWeb:play()
         end
     end
     self:update()
-    -- if self.current_source ~= nil then    
-    --     self.current_source:play()   
+    -- if self.current_source ~= nil then
+    --     self.current_source:play()
     -- end
 end
 
 function MusicDiskWeb:stop()
-    for _, source in pairs(self.sources) do 
+    for _, source in pairs(self.sources) do
         source:stop()
     end
     -- if self.current_source ~= nil then
@@ -67,15 +67,14 @@ function MusicDiskWeb:stop()
 end
 
 function MusicDiskWeb:set_mode(mode)
-	self.music_mode = mode
+    self.music_mode = mode
 
     if mode == MUSIC_MODE_OFF then
         self:stop()
-
     elseif self.current_source ~= nil then
-        for source_mode, source in pairs(self.sources) do 
+        for source_mode, source in pairs(self.sources) do
             if source_mode == mode then
-                source:setVolume(self.volume)   
+                source:setVolume(self.volume)
             else
                 source:setVolume(0.0)
             end
@@ -95,9 +94,9 @@ function MusicDiskWeb:set_volume(vol)
     self.volume = vol
     for source_mode, source in pairs(self.sources) do
         if source_mode == self.music_mode then
-            source:setVolume(vol)   
+            source:setVolume(vol)
         else
-            source:setVolume(0.0)   
+            source:setVolume(0.0)
         end
     end
 end

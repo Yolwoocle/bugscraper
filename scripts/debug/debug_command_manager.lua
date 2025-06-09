@@ -1,21 +1,21 @@
-require "scripts.util"
-local Class           = require "scripts.meta.class"
-local DebugCommand    = require "scripts.debug.debug_command"
-local enemies         = require "data.enemies"
-local utf8            = require 'utf8'
-local cutscenes       = require 'data.cutscenes'
-local upgrades        = require 'data.upgrades'
-local skins           = require "data.skins"
-local skin_name_to_id = require "data.skin_name_to_id"
+require("scripts.util")
+local Class = require("scripts.meta.class")
+local DebugCommand = require("scripts.debug.debug_command")
+local enemies = require("data.enemies")
+local utf8 = require("utf8")
+local cutscenes = require("data.cutscenes")
+local upgrades = require("data.upgrades")
+local skins = require("data.skins")
+local skin_name_to_id = require("data.skin_name_to_id")
 
-local a, b            = require "scripts.test"
+local a, b = require("scripts.test")
 print_debug("a, b", a, b)
 
 local DebugCommandManager = Class:inherit()
 
 function DebugCommandManager:init()
     self.commands = {}
-    self.commands["help"] = DebugCommand:new {
+    self.commands["help"] = DebugCommand:new({
         name = "help",
         description = "Prints help",
         args = {},
@@ -24,8 +24,8 @@ function DebugCommandManager:init()
                 local command = self.commands[command_name]
                 self:add_message(string.format("- %s: %s", command.signature, command.description))
             end
-        end
-    }
+        end,
+    })
 
     local enemies_keys = table_keys(enemies)
     local cutscenes_keys = table_keys(cutscenes)
@@ -37,7 +37,7 @@ function DebugCommandManager:init()
 
     table.sort(enemies_keys)
 
-    self.commands["listupgrades"] = DebugCommand:new {
+    self.commands["listupgrades"] = DebugCommand:new({
         name = "listupgrades",
         description = "Lists all upgrades",
         args = {},
@@ -53,8 +53,8 @@ function DebugCommandManager:init()
             end
             return true
         end,
-    }
-    self.commands["upgrade"] = DebugCommand:new {
+    })
+    self.commands["upgrade"] = DebugCommand:new({
         name = "upgrade",
         description = "Applies an upgrade",
         args = {
@@ -72,8 +72,8 @@ function DebugCommandManager:init()
 
             return true
         end,
-    }
-    self.commands["randomupgrades"] = DebugCommand:new {
+    })
+    self.commands["randomupgrades"] = DebugCommand:new({
         name = "randomupgrades",
         description = "Applies a number of random upgrades",
         args = {
@@ -99,15 +99,15 @@ function DebugCommandManager:init()
 
             return true
         end,
-    }
-    self.commands["spawn"] = DebugCommand:new {
+    })
+    self.commands["spawn"] = DebugCommand:new({
         name = "spawn",
         description = "Spawns an enemy",
         args = {
-            { "name:string",   values = enemies_keys },
+            { "name:string", values = enemies_keys },
             { "amount:number", default = 1 },
-            { "x:number",      default = CANVAS_WIDTH / 2 },
-            { "y:number",      default = CANVAS_HEIGHT / 2 },
+            { "x:number", default = CANVAS_WIDTH / 2 },
+            { "y:number", default = CANVAS_HEIGHT / 2 },
         },
         run = function(name, amount, x, y)
             local enemy_class = enemies[name]
@@ -123,8 +123,8 @@ function DebugCommandManager:init()
 
             return true
         end,
-    }
-    self.commands["cutscene"] = DebugCommand:new {
+    })
+    self.commands["cutscene"] = DebugCommand:new({
         name = "cutscene",
         description = "Plays a cutscene",
         args = {
@@ -141,8 +141,8 @@ function DebugCommandManager:init()
 
             return true
         end,
-    }
-    self.commands["kill"] = DebugCommand:new {
+    })
+    self.commands["kill"] = DebugCommand:new({
         name = "kill",
         description = "Kills a player",
         args = {
@@ -157,8 +157,8 @@ function DebugCommandManager:init()
             player:kill()
             return true
         end,
-    }
-    self.commands["say"] = DebugCommand:new {
+    })
+    self.commands["say"] = DebugCommand:new({
         name = "say",
         description = "Send a message in the chat",
         args = {
@@ -168,8 +168,8 @@ function DebugCommandManager:init()
             self:add_message(message)
             return true
         end,
-    }
-    self.commands["print"] = DebugCommand:new {
+    })
+    self.commands["print"] = DebugCommand:new({
         name = "print",
         description = "Prints text to the console",
         args = {
@@ -179,9 +179,9 @@ function DebugCommandManager:init()
             print(text)
             return true
         end,
-    }
+    })
 
-    self.commands["score"] = DebugCommand:new {
+    self.commands["score"] = DebugCommand:new({
         name = "score",
         description = "Grants some amount of score",
         args = {
@@ -195,9 +195,9 @@ function DebugCommandManager:init()
             self:add_message(concat("Added ", number, " to the score"))
             return true
         end,
-    }
+    })
 
-    self.commands["xp"] = DebugCommand:new {
+    self.commands["xp"] = DebugCommand:new({
         name = "xp",
         description = "Grants some amount of xp",
         args = {
@@ -211,9 +211,9 @@ function DebugCommandManager:init()
             self:add_message(concat("Added ", number, " to the xp"))
             return true
         end,
-    }
+    })
 
-    self.commands["menu"] = DebugCommand:new {
+    self.commands["menu"] = DebugCommand:new({
         name = "menu",
         description = "Sets the menu",
         args = {
@@ -229,10 +229,10 @@ function DebugCommandManager:init()
             self:add_message(concat("Set menu to '", name, "'"))
             return true
         end,
-    }
+    })
 
     local skin_names = table_keys(skin_name_to_id)
-    self.commands["unlock_skin"] = DebugCommand:new {
+    self.commands["unlock_skin"] = DebugCommand:new({
         name = "unlock_skin",
         description = "Unlocks a skin",
         args = {
@@ -251,25 +251,23 @@ function DebugCommandManager:init()
             self:add_message(concat("Unlocked skin '", skin_name, "'"))
             return true
         end,
-    }
+    })
 
-    self.commands["fury"] = DebugCommand:new {
+    self.commands["fury"] = DebugCommand:new({
         name = "fury",
         description = "Enables fury",
-        args = {
-        },
+        args = {},
         run = function()
             game.level.fury_bar = game.level.fury_max
             self:add_message(concat("Enabled fury"))
             return true
         end,
-    }
+    })
 
-    self.commands["_spawn_upgrades"] = DebugCommand:new {
+    self.commands["_spawn_upgrades"] = DebugCommand:new({
         name = "_spawn_upgrades",
         description = "Spawns a bunch of upgrades",
-        args = {
-        },
+        args = {},
         run = function(text)
             local upgrades_copy = copy_table_shallow(upgrades)
             table.sort(upgrades_copy)
@@ -282,12 +280,11 @@ function DebugCommandManager:init()
             end
             return true
         end,
-    }
-    self.commands["_weaken_all"] = DebugCommand:new {
+    })
+    self.commands["_weaken_all"] = DebugCommand:new({
         name = "_weaken_all",
         description = "Sets life of all enemies to 1 HP",
-        args = {
-        },
+        args = {},
         run = function()
             for _, actor in pairs(game.actors) do
                 if actor.is_enemy and actor.life then
@@ -296,12 +293,12 @@ function DebugCommandManager:init()
             end
             return true
         end,
-    }
-    self.commands["_test_sub"] = DebugCommand:new {
+    })
+    self.commands["_test_sub"] = DebugCommand:new({
         name = "_test_sub",
         description = "",
         args = {
-            { "pattern:string" }
+            { "pattern:string" },
         },
         run = function(pattern)
             local success = nil
@@ -316,7 +313,6 @@ function DebugCommandManager:init()
                     return ""
                 end
                 local len = math.max(#a_str, #b_str)
-
 
                 local a = tonumber(a_str)
                 local b = tonumber(b_str)
@@ -339,7 +335,7 @@ function DebugCommandManager:init()
             self:add_message(npattern)
             return true
         end,
-    }
+    })
 
     self.messages = {}
     self.max_messages = 18
@@ -379,11 +375,17 @@ function DebugCommandManager:get_autocomplete(input)
             return self:filter_argument_completion(last_arg, self.all_commands)
         elseif len_args >= 2 then
             local command = self.commands[args[1]]
-            if not command then return {} end
+            if not command then
+                return {}
+            end
             local arg = command.args[len_args - 1] --TODO this won't work with subcommands
 
-            if not arg then return {} end
-            if not arg.values then return {} end
+            if not arg then
+                return {}
+            end
+            if not arg.values then
+                return {}
+            end
             return self:filter_argument_completion(last_arg, arg.values)
         end
 

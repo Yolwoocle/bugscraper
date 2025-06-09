@@ -1,6 +1,6 @@
-require "scripts.util"
-local Effect = require "scripts.effect.effect"
-local images = require "data.images"
+require("scripts.util")
+local Effect = require("scripts.effect.effect")
+local images = require("data.images")
 
 local EffectSlowness = Effect:inherit()
 
@@ -25,7 +25,7 @@ end
 
 function EffectSlowness:draw_overlay(spr_x, spr_y)
     local a = clamp(self.duration - (self.duration - self.timer), 0, 1)
-    exec_with_color({1, 1, 1, a}, function()
+    exec_with_color({ 1, 1, 1, a }, function()
         love.graphics.draw(images.honey_blob, spr_x, spr_y)
     end)
 end

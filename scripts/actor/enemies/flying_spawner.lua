@@ -1,13 +1,13 @@
-require "scripts.util"
-local SinusoidalFlyer = require "scripts.actor.enemies.sinusoidal_flyer"
-local StateMachine = require "scripts.state_machine"
-local images = require "data.images"
-local Timer = require "scripts.timer"
-local Larva = require "scripts.actor.enemies.larva"
-local LarvaProjectile = require "scripts.actor.enemies.larva_projectile"
-local images = require "data.images"
-local AnimatedSprite = require "scripts.graphics.animated_sprite"
-local Sprite = require "scripts.graphics.sprite"
+require("scripts.util")
+local SinusoidalFlyer = require("scripts.actor.enemies.sinusoidal_flyer")
+local StateMachine = require("scripts.state_machine")
+local images = require("data.images")
+local Timer = require("scripts.timer")
+local Larva = require("scripts.actor.enemies.larva")
+local LarvaProjectile = require("scripts.actor.enemies.larva_projectile")
+local images = require("data.images")
+local AnimatedSprite = require("scripts.graphics.animated_sprite")
+local Sprite = require("scripts.graphics.sprite")
 
 local FlyingSpawner = SinusoidalFlyer:inherit()
 
@@ -16,7 +16,7 @@ function FlyingSpawner:init(x, y, spr, w, h)
     self.name = "flying_spawner"
 
     self.spr = AnimatedSprite:new({
-        normal = { images.flying_spawner_big, 0.06, 6 }
+        normal = { images.flying_spawner_big, 0.06, 6 },
     }, "normal", SPRITE_ANCHOR_CENTER_CENTER)
 
     self.flip_mode = ENEMY_FLIP_MODE_MANUAL
@@ -29,31 +29,31 @@ function FlyingSpawner:init(x, y, spr, w, h)
     self.larva_projectiles = {}
     self.larvae = {}
     self.max_larvae = 6
-    self.death_larva_range = {3, 5}
+    self.death_larva_range = { 3, 5 }
 
     self.larva_telegraph_spr = AnimatedSprite:new({
-        normal = { images.larva_projectile_telegraph, 0.06, 1 }
+        normal = { images.larva_projectile_telegraph, 0.06, 1 },
     }, "normal", SPRITE_ANCHOR_LEFT_TOP)
     self.shoot_telegraph_offsets = {
-        {0, 0},  -- top left 
-        {-4, 8}, -- left
-        {9, 0},  -- top right
-        {13, 8}, -- right
+        { 0, 0 }, -- top left
+        { -4, 8 }, -- left
+        { 9, 0 }, -- top right
+        { 13, 8 }, -- right
     }
     self.shoot_telegraph_ox = 0
     self.shoot_telegraph_oy = 0
     self.shoot_direction = 1
     self.directions = {
-        -3*pi/4, -- top left 
-        pi + pi/8,      -- left
-        -pi/4,   -- top right
-        -pi/8,       -- right
+        -3 * pi / 4, -- top left
+        pi + pi / 8, -- left
+        -pi / 4, -- top right
+        -pi / 8, -- right
     }
     self.flash_timer = Timer:new(2.0)
 
     self.target_y = (game.level.cabin_inner_rect.ay + game.level.cabin_inner_rect.by) / 2
     self.target_follow_speed_y = 60
-    
+
     self.score = 50
 
     self.state_machine = StateMachine:new({
@@ -70,9 +70,11 @@ function FlyingSpawner:init(x, y, spr, w, h)
                 self.spawn_larva_timer:start()
             end,
             update = function(state, dt)
-                if (#self.larvae + #self.larva_projectiles < self.max_larvae) and not self.spawn_larva_timer.is_active then
+                if
+                    (#self.larvae + #self.larva_projectiles < self.max_larvae) and not self.spawn_larva_timer.is_active
+                then
                     self.spawn_larva_timer:start()
-                end 
+                end
 
                 -- Spawn larvae at regular intervals
                 if self.spawn_larva_timer:update(dt) then
@@ -128,7 +130,6 @@ function FlyingSpawner:init(x, y, spr, w, h)
                 local flash = false
                 if self.flash_timer:get_ratio() > 0.75 then
                     flash = self.flash_timer.time % 0.1 < 0.05
-
                 elseif self.flash_timer:get_ratio() > 0.5 then
                     flash = self.flash_timer.time % 0.2 < 0.1
                 end
@@ -136,13 +137,13 @@ function FlyingSpawner:init(x, y, spr, w, h)
                 self.larva_telegraph_spr:set_flashing_white(flash)
             end,
             draw = function(state)
-                for i=1, #self.shoot_telegraph_offsets do
+                for i = 1, #self.shoot_telegraph_offsets do
                     local ox, oy = unpack(self.shoot_telegraph_offsets[i])
                     self.larva_telegraph_spr:set_flip_x(i <= 2)
                     self.larva_telegraph_spr:draw(self.x + ox, self.y + oy)
                 end
             end,
-        }
+        },
     }, "rise")
 end
 
@@ -169,7 +170,7 @@ function FlyingSpawner:spawn_larva(direction)
     local x, y = unpack(self.shoot_telegraph_offsets[direction])
     local larva_projectile = LarvaProjectile:new(self.x + x, self.y + y, angle)
     game:new_actor(larva_projectile)
-    
+
     table.insert(self.larva_projectiles, larva_projectile)
     Particles:star_splash_small(self.x + x, self.y + y)
     Particles:smoke(self.x + x, self.y + y)

@@ -1,6 +1,6 @@
-require "scripts.util"
-local Class = require "scripts.meta.class"
-local images= require "data.images"
+require("scripts.util")
+local Class = require("scripts.meta.class")
+local images = require("data.images")
 
 local Upgrade = Class:inherit()
 
@@ -10,18 +10,17 @@ function Upgrade:init(name)
 
     self.sprite = images.upgrade_coffee
 
-    self.title       = Text:text("upgrade."..tostring(self.name)..".title")
-    self.description = Text:text("upgrade."..tostring(self.name)..".description")
+    self.title = Text:text("upgrade." .. tostring(self.name) .. ".title")
+    self.description = Text:text("upgrade." .. tostring(self.name) .. ".description")
     self.color = COL_WHITE
-    self.palette = {COL_LIGHTEST_GRAY, COL_LIGHT_GRAY}
+    self.palette = { COL_LIGHTEST_GRAY, COL_LIGHT_GRAY }
 end
 
 function Upgrade:update(dt)
     self:update_upgrade(dt)
 end
 
-function Upgrade:update_upgrade(dt)
-end
+function Upgrade:update_upgrade(dt) end
 
 function Upgrade:apply(player, is_revive)
     self:apply_permanent(player, is_revive)
@@ -34,20 +33,16 @@ end
 ------------------------------------------
 
 --- [ABSTRACT]
-function Upgrade:apply_permanent(player, is_revive)
-end
+function Upgrade:apply_permanent(player, is_revive) end
 
 --- [ABSTRACT]
-function Upgrade:apply_instant(player)
-end
+function Upgrade:apply_instant(player) end
 
 --- [ABSTRACT]
-function Upgrade:play_effects(player)
-end
+function Upgrade:play_effects(player) end
 
 --- [ABSTRACT]
-function Upgrade:on_finish(player)
-end
+function Upgrade:on_finish(player) end
 
 ------------------------------------------
 
@@ -71,7 +66,7 @@ function Upgrade:get_description()
 end
 
 function Upgrade:set_description(...)
-    self.description = Text:text("upgrade."..tostring(self.name)..".description", ...)
+    self.description = Text:text("upgrade." .. tostring(self.name) .. ".description", ...)
 end
 
 return Upgrade

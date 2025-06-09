@@ -1,11 +1,11 @@
-require "scripts.util"
-local Enemy = require "scripts.actor.enemy"
-local images = require "data.images"
+require("scripts.util")
+local Enemy = require("scripts.actor.enemy")
+local images = require("data.images")
 
 local SinusoidalFlyer = Enemy:inherit()
 
 function SinusoidalFlyer:init(x, y, spr, w, h)
-    self:init_enemy(x,y, spr or images.spiked_fly, w or 20, h or 14)
+    self:init_enemy(x, y, spr or images.spiked_fly, w or 20, h or 14)
     self.name = "sinusoidal_flyer"
     self.follow_player = false
 

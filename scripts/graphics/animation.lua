@@ -1,12 +1,12 @@
-require "scripts.util"
-local Class = require "scripts.meta.class"
-local Timer = require "scripts.timer"
-local images = require "data.images"
+require("scripts.util")
+local Class = require("scripts.meta.class")
+local Timer = require("scripts.timer")
+local images = require("data.images")
 
 local Animation = Class:inherit()
 
 function Animation:init(frames, frame_duration, frame_count_x, frame_count_y, params)
-    params = params or {} 
+    params = params or {}
     frames = frames or {}
     frame_duration = frame_duration or 0.1
     frame_count_x = frame_count_x or 1
@@ -26,7 +26,6 @@ function Animation:init(frames, frame_duration, frame_count_x, frame_count_y, pa
 
     self.frame_count = self.frame_count_x * self.frame_count_y
     self.duration = self.frame_count * self.frame_duration
-
 end
 
 return Animation

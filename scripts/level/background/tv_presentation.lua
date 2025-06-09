@@ -1,39 +1,39 @@
-require "scripts.util"
-local Class          = require "scripts.meta.class"
-local AnimatedSprite = require "scripts.graphics.animated_sprite"
-local images         = require "data.images"
-local Timer          = require "scripts.timer"
+require("scripts.util")
+local Class = require("scripts.meta.class")
+local AnimatedSprite = require("scripts.graphics.animated_sprite")
+local images = require("data.images")
+local Timer = require("scripts.timer")
 
 local TvPresentation = Class:inherit()
 
 function TvPresentation:init(x, y)
     self.x = x
     self.y = y
-    
+
     self.canvas_w = 55
     self.canvas_h = 31
 
     self.default_slide_duration = 5.0
 
     local slides = {
-        ["slide_001"] = { images.tv_slideshow_001, 0 },      -- Powerpoint stats         by Sslime7 
-        ["slide_002"] = { images.tv_slideshow_002, 0 },      -- Hot dogs                 by Alexis Belmonte
-        ["slide_003"] = { images.tv_slideshow_003, 0.04 },   -- Mio rotate               by Corentin Vaillant 
-        ["slide_018"] = { images.tv_slideshow_018, 0.04 },   -- Mio explode              by Corentin Vaillant
-        ["slide_004"] = { images.tv_slideshow_004, 0 },      -- Bug with Guns            by Yolwoocle
-        ["slide_005"] = { images.tv_slideshow_005, 0 },      -- "Love, obey"             by ellraiser
-        ["slide_006"] = { images.tv_slideshow_006, 0.07 },   -- "Need your duck taped?"  by Joseph
-        ["slide_007"] = { images.tv_slideshow_007, 0.11 },   -- Starbugs green tea       by Goyome
-        ["slide_008"] = { images.tv_slideshow_008, 0.1 },    -- Binarion                 by hector_misc (Nextop Games)
-        ["slide_010"] = { images.tv_slideshow_010, 0 },      -- "injured? good"          by hector_misc (Nextop Games) 
-        ["slide_009"] = { images.tv_slideshow_009, 0.3 },    -- "No quuen?"              by behck
-        ["slide_011"] = { images.tv_slideshow_011, 0.035 },  -- Splat commercial         by Sarcose
-        ["slide_012"] = { images.tv_slideshow_012, 0.03 },   -- End toastal abuse        by clem 
-        ["slide_013"] = { images.tv_slideshow_013, 0.03 },   -- A salt rifle             by clem 
-        ["slide_014"] = { images.tv_slideshow_014, 0.08 },   -- Beatleblock              by Dimitri Sophinos (DPS2004)
-        ["slide_015"] = { images.tv_slideshow_015, 0.3 },    -- bugscrapers arent enough by pkhead / chromosoze
-        ["slide_016"] = { images.tv_slideshow_016, 0 },      -- optic studio             by pkhead / chromosoze
-        ["slide_017"] = { images.tv_slideshow_017, 0.08 },   -- Soon(tm)                 by pixelbath
+        ["slide_001"] = { images.tv_slideshow_001, 0 }, -- Powerpoint stats         by Sslime7
+        ["slide_002"] = { images.tv_slideshow_002, 0 }, -- Hot dogs                 by Alexis Belmonte
+        ["slide_003"] = { images.tv_slideshow_003, 0.04 }, -- Mio rotate               by Corentin Vaillant
+        ["slide_018"] = { images.tv_slideshow_018, 0.04 }, -- Mio explode              by Corentin Vaillant
+        ["slide_004"] = { images.tv_slideshow_004, 0 }, -- Bug with Guns            by Yolwoocle
+        ["slide_005"] = { images.tv_slideshow_005, 0 }, -- "Love, obey"             by ellraiser
+        ["slide_006"] = { images.tv_slideshow_006, 0.07 }, -- "Need your duck taped?"  by Joseph
+        ["slide_007"] = { images.tv_slideshow_007, 0.11 }, -- Starbugs green tea       by Goyome
+        ["slide_008"] = { images.tv_slideshow_008, 0.1 }, -- Binarion                 by hector_misc (Nextop Games)
+        ["slide_010"] = { images.tv_slideshow_010, 0 }, -- "injured? good"          by hector_misc (Nextop Games)
+        ["slide_009"] = { images.tv_slideshow_009, 0.3 }, -- "No quuen?"              by behck
+        ["slide_011"] = { images.tv_slideshow_011, 0.035 }, -- Splat commercial         by Sarcose
+        ["slide_012"] = { images.tv_slideshow_012, 0.03 }, -- End toastal abuse        by clem
+        ["slide_013"] = { images.tv_slideshow_013, 0.03 }, -- A salt rifle             by clem
+        ["slide_014"] = { images.tv_slideshow_014, 0.08 }, -- Beatleblock              by Dimitri Sophinos (DPS2004)
+        ["slide_015"] = { images.tv_slideshow_015, 0.3 }, -- bugscrapers arent enough by pkhead / chromosoze
+        ["slide_016"] = { images.tv_slideshow_016, 0 }, -- optic studio             by pkhead / chromosoze
+        ["slide_017"] = { images.tv_slideshow_017, 0.08 }, -- Soon(tm)                 by pixelbath
 
         ["bluescreen"] = { images.tv_bluescreen, 0 }, -- By hector_misc (Nextop Games)
     }
@@ -79,13 +79,13 @@ function TvPresentation:init(x, y)
                 self:draw_frame(old_slide, old_frame, 0, 0)
 
                 love.graphics.setStencilState("replace", "always", 1)
-    			love.graphics.setColorMask(false)
+                love.graphics.setColorMask(false)
                 love.graphics.circle("fill", self.canvas_w / 2, self.canvas_h / 2, alpha * self.canvas_w * 1.2)
-                
+
                 love.graphics.setStencilState("keep", "greater", 0)
-			    love.graphics.setColorMask(true)
+                love.graphics.setColorMask(true)
                 self:draw_frame(new_slide, new_frame, 0, 0)
-                
+
                 love.graphics.setStencilMode()
             end,
         },
@@ -99,7 +99,7 @@ function TvPresentation:init(x, y)
                         love.graphics.circle("fill", ix, iy, alpha * 15)
                     end
                 end
-                
+
                 love.graphics.setStencilState("keep", "greater", 0)
                 self:draw_frame(new_slide, new_frame, 0, 0)
 
@@ -109,11 +109,17 @@ function TvPresentation:init(x, y)
         { -- "curtains" (idk how to call it)
             draw = function(trans, old_slide, old_frame, new_slide, new_frame, alpha)
                 self:draw_frame(old_slide, old_frame, 0, 0)
-                
+
                 love.graphics.setStencilState("replace", "always", 1)
                 love.graphics.rectangle("fill", 0, 0, self.canvas_w / 2 * alpha, self.canvas_h)
-                love.graphics.rectangle("fill", self.canvas_w - self.canvas_w / 2 * alpha, 0, self.canvas_w, self.canvas_h)
-                
+                love.graphics.rectangle(
+                    "fill",
+                    self.canvas_w - self.canvas_w / 2 * alpha,
+                    0,
+                    self.canvas_w,
+                    self.canvas_h
+                )
+
                 love.graphics.setStencilState("keep", "greater", 0)
                 self:draw_frame(new_slide, new_frame, 0, 0)
 
@@ -124,12 +130,12 @@ function TvPresentation:init(x, y)
     self.current_transition = nil
     self.transition_t = 0.0
     self.transition_timer = Timer:new(0.5)
-    
+
     self.slideshow_timer = Timer:new(self.default_slide_duration):start()
-    
+
     self.canvas = love.graphics.newCanvas(self.canvas_w, self.canvas_h)
     self.buffer_canvas = love.graphics.newCanvas(self.canvas_w, self.canvas_h)
-    
+
     self.current_slide_number = random_range_int(1, #self.slide_names)
     self.old_slide_frame_i = random_range_int(1, #self.slide_names)
     self.old_slide = self.slide_names[self.current_slide_number]
@@ -154,19 +160,19 @@ function TvPresentation:update(dt)
 
     -- Transition end
     if self.transition_timer:update(dt) then
-        self.slideshow_timer:start(math.max(self.default_slide_duration, self.spr.animations[self.current_slide].duration - 1/60))
+        self.slideshow_timer:start(
+            math.max(self.default_slide_duration, self.spr.animations[self.current_slide].duration - 1 / 60)
+        )
         self.current_transition = nil
     end
-    
+
     self.spr:update(dt)
 end
-
 
 function TvPresentation:set_current_slide(slide_index)
     self.current_slide_number = slide_index
     self.current_slide = self.slide_names[self.current_slide_number]
 end
-
 
 function TvPresentation:draw_frame(slide, frame, x, y, color)
     color = color or COL_WHITE
@@ -180,11 +186,16 @@ end
 function TvPresentation:draw()
     exec_on_canvas({ self.canvas, stencil = true }, function()
         game.camera:push_origin()
-        
+
         love.graphics.clear()
         if self.current_transition then
-            self.current_transition:draw(self.old_slide, self.old_slide_frame_i, self.current_slide, 1,
-            1 - (self.transition_timer.time / self.transition_timer.duration))
+            self.current_transition:draw(
+                self.old_slide,
+                self.old_slide_frame_i,
+                self.current_slide,
+                1,
+                1 - (self.transition_timer.time / self.transition_timer.duration)
+            )
         else
             self.spr:draw(0, 0)
         end

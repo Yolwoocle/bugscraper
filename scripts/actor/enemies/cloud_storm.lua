@@ -1,23 +1,23 @@
-require "scripts.util"
-local Enemy = require "scripts.actor.enemy"
-local ElectricArc = require "scripts.actor.enemies.electric_arc"
-local images = require "data.images"
-local StateMachine = require "scripts.state_machine"
-local Timer        = require "scripts.timer"
-local Lightning = require "scripts.graphics.lightning"
-local Segment = require "scripts.math.segment"
+require("scripts.util")
+local Enemy = require("scripts.actor.enemy")
+local ElectricArc = require("scripts.actor.enemies.electric_arc")
+local images = require("data.images")
+local StateMachine = require("scripts.state_machine")
+local Timer = require("scripts.timer")
+local Lightning = require("scripts.graphics.lightning")
+local Segment = require("scripts.math.segment")
 
 local CloudStorm = Enemy:inherit()
-	
+
 function CloudStorm:init(x, y, size)
     size = size or 3
-    CloudStorm.super.init(self, x,y, images.cloud_storm, 17, 14, false)
+    CloudStorm.super.init(self, x, y, images.cloud_storm, 17, 14, false)
     self.name = "cloud_storm"
 
     self.is_flying = true
     self.do_stomp_animation = false
 
-    self.speed = random_range(7,13) --10
+    self.speed = random_range(7, 13) --10
     self.speed_x = self.speed
     self.speed_y = self.speed
 
@@ -58,28 +58,36 @@ function CloudStorm:init(x, y, size)
 
                 self.ai_template = "rotate"
                 if state.target then
-                    self.direction = get_angle_between_actors(
-                        self, {
-                            mid_x = state.target.mid_x, 
-                            mid_y = state.target.mid_y - self.vertical_target_offset
-                        }, true)
+                    self.direction = get_angle_between_actors(self, {
+                        mid_x = state.target.mid_x,
+                        mid_y = state.target.mid_y - self.vertical_target_offset,
+                    }, true)
                     if state.target.is_dead or state.target.is_removed then
                         state.target = self:get_random_player()
                     end
                 end
 
-                if (not state.no_attack_timer.is_active) and (self.state_timer:update(dt) or (
-                        state.target and state.target.y > self.y and 
-                        is_between(
-                            state.target.mid_x, self.mid_x - self.player_detection_range, self.mid_x + self.player_detection_range
+                if
+                    not state.no_attack_timer.is_active
+                    and (
+                        self.state_timer:update(dt)
+                        or (
+                            state.target
+                            and state.target.y > self.y
+                            and is_between(
+                                state.target.mid_x,
+                                self.mid_x - self.player_detection_range,
+                                self.mid_x + self.player_detection_range
+                            )
                         )
-                )) then
+                    )
+                then
                     return "telegraph"
                 end
                 -- if self.state_timer:update(dt) then
                 --     return "telegraph"
                 -- end
-            end
+            end,
         },
         telegraph = {
             enter = function(state)
@@ -92,7 +100,7 @@ function CloudStorm:init(x, y, size)
                 self.arc:set_arc_active(false)
                 self.state_timer:start(1.0)
 
-                self.lightning_angle_offset = random_neighbor(pi/12)
+                self.lightning_angle_offset = random_neighbor(pi / 12)
             end,
             update = function(state, dt)
                 Particles:flash(self.mid_x + random_polar(3), self.y + self.h + 4 + random_polar(3), 4, 1)
@@ -101,7 +109,7 @@ function CloudStorm:init(x, y, size)
                 if self.state_timer:update(dt) then
                     return "attack"
                 end
-            end
+            end,
         },
         attack = {
             enter = function(state)
@@ -116,7 +124,7 @@ function CloudStorm:init(x, y, size)
                 self.spr_oy = 12
 
                 self.buffer_pal = copy_table_deep(self.arc.lightning.palette)
-                self.arc.lightning.palette = {COL_WHITE}
+                self.arc.lightning.palette = { COL_WHITE }
                 self.arc.active_arc_min_line_width = 6
                 self.arc.active_arc_max_line_width = 12
                 self.lightning_anim_timer = Timer:new():start(0.15)
@@ -134,7 +142,7 @@ function CloudStorm:init(x, y, size)
                 Particles:flash(self.mid_x + random_polar(3), self.y + self.h + 4 + random_polar(3))
 
                 local lightning_radius = random_range(6, 10)
-                self.surround_lightning:generate(Segment:new(lightning_radius, 0, lightning_radius, pi2))        
+                self.surround_lightning:generate(Segment:new(lightning_radius, 0, lightning_radius, pi2))
 
                 if self.lightning_anim_timer:update(dt) then
                     self.arc.lightning.palette = self.buffer_pal
@@ -161,7 +169,8 @@ end
 
 function CloudStorm:after_collision(col, other)
     if col.type ~= "cross" then
-        local new_vx, new_vy = bounce_vector_cardinal(math.cos(self.direction), math.sin(self.direction), col.normal.x, col.normal.y)
+        local new_vx, new_vy =
+            bounce_vector_cardinal(math.cos(self.direction), math.sin(self.direction), col.normal.x, col.normal.y)
         self.direction = math.atan2(new_vy, new_vx)
     end
 end
@@ -170,12 +179,13 @@ function CloudStorm:update(dt)
     self.state_machine:update(dt)
 
     CloudStorm.super.update(self, dt)
-    
+
     local bounds = game.level.cabin_inner_rect
 
-    local bx = self.mid_x + math.cos(pi/2 + self.lightning_angle_offset) * 1000
-    local by = self.mid_y + math.sin(pi/2 + self.lightning_angle_offset) * 1000
-    local ax, ay, bx, by = clamp_segment_to_rectangle(Segment:new(self.mid_x, self.mid_y, bx, by), game.level.cabin_inner_rect)
+    local bx = self.mid_x + math.cos(pi / 2 + self.lightning_angle_offset) * 1000
+    local by = self.mid_y + math.sin(pi / 2 + self.lightning_angle_offset) * 1000
+    local ax, ay, bx, by =
+        clamp_segment_to_rectangle(Segment:new(self.mid_x, self.mid_y, bx, by), game.level.cabin_inner_rect)
     self.arc:set_segment(ax, ay, bx, by)
 end
 
@@ -185,7 +195,18 @@ function CloudStorm:draw()
 end
 
 function CloudStorm:on_death()
-    Particles:smoke(self.mid_x, self.mid_y, 15, {COL_MID_GRAY, COL_DARK_GRAY, COL_DARK_GRAY}, 12, 6, 4, layer, fill_mode, params)
+    Particles:smoke(
+        self.mid_x,
+        self.mid_y,
+        15,
+        { COL_MID_GRAY, COL_DARK_GRAY, COL_DARK_GRAY },
+        12,
+        6,
+        4,
+        layer,
+        fill_mode,
+        params
+    )
 end
 
 function CloudStorm:on_removed()

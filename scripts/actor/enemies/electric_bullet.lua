@@ -1,8 +1,8 @@
-require "scripts.util"
-local ElectricArc = require "scripts.actor.enemies.electric_arc"
-local Segment = require "scripts.math.segment"
+require("scripts.util")
+local ElectricArc = require("scripts.actor.enemies.electric_arc")
+local Segment = require("scripts.math.segment")
 
-local utf8 = require "utf8"
+local utf8 = require("utf8")
 
 local ElectricBullet = ElectricArc:inherit()
 
@@ -19,25 +19,21 @@ function ElectricBullet:set_properties(x, y, angle, length, speed, bounds)
     self.speed = speed
     self.bounds = bounds
 
-    local cosa, sina = math.cos(angle), math.sin(angle) 
-    self:set_segment(
-        x, y,
-        x + length * cosa, y + length * sina
-    )
+    local cosa, sina = math.cos(angle), math.sin(angle)
+    self:set_segment(x, y, x + length * cosa, y + length * sina)
 
     self.arc_vx = speed * cosa
     self.arc_vy = speed * sina
 end
 
 function ElectricBullet:update(dt)
-    
     local new_segment = Segment:new(
         self.segment.ax + self.arc_vx * dt,
         self.segment.ay + self.arc_vy * dt,
         self.segment.bx + self.arc_vx * dt,
-        self.segment.by + self.arc_vy * dt 
+        self.segment.by + self.arc_vy * dt
     )
-    
+
     self:set_segment(new_segment)
     local ax, ay, bx, by = clamp_segment_to_rectangle(new_segment, self.bounds)
     if ax then

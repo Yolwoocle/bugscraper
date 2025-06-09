@@ -1,21 +1,21 @@
-require "scripts.util"
-local Enemy = require "scripts.actor.enemy"
-local RainbowCloud = require "scripts.actor.enemies.rainbow_cloud"
-local sounds = require "data.sounds"
-local images = require "data.images"
-local AnimatedSprite = require "scripts.graphics.animated_sprite"
-local Timer = require "scripts.timer"
+require("scripts.util")
+local Enemy = require("scripts.actor.enemy")
+local RainbowCloud = require("scripts.actor.enemies.rainbow_cloud")
+local sounds = require("data.sounds")
+local images = require("data.images")
+local AnimatedSprite = require("scripts.graphics.animated_sprite")
+local Timer = require("scripts.timer")
 
 local RainbowButterfly = Enemy:inherit()
 
 function RainbowButterfly:init(x, y, spr)
-    RainbowButterfly.super.init(self, x,y, spr or images.stink_bug_1)
+    RainbowButterfly.super.init(self, x, y, spr or images.stink_bug_1)
     self.name = "rainbow_butterfly"
     self.is_flying = true
     self.life = 7
     self.follow_player = false
-    
-    self.speed = random_range(7,13) --10
+
+    self.speed = random_range(7, 13) --10
     self.speed_x = self.speed
     self.speed_y = self.speed
 
@@ -25,17 +25,17 @@ function RainbowButterfly:init(x, y, spr)
     self.friction_y = self.friction_x
 
     self.spr = AnimatedSprite:new({
-        walk = {images.stink_bug_walk, 0.2, 2},
+        walk = { images.stink_bug_walk, 0.2, 2 },
     }, "walk")
-	self.flip_mode = ENEMY_FLIP_MODE_MANUAL
+    self.flip_mode = ENEMY_FLIP_MODE_MANUAL
     self.spr:set_anchor(SPRITE_ANCHOR_CENTER_CENTER)
-    
+
     self.sound_death = "stink_bug_death"
     self.sound_stomp = "stink_bug_death"
 
     self.score = 10
 
-    self.cloud_timer = Timer:new(0.3, {loopback = true})
+    self.cloud_timer = Timer:new(0.3, { loopback = true })
     self.cloud_timer:start()
 end
 
@@ -54,22 +54,23 @@ function RainbowButterfly:update(dt)
         game:new_actor(cloud)
     end
 
-    self.direction = self.direction + random_sample({-1, 1}) * dt * 3
-    
-	self.vx = self.vx + math.cos(self.direction) * self.speed
-	self.vy = self.vy + math.sin(self.direction) * self.speed
+    self.direction = self.direction + random_sample({ -1, 1 }) * dt * 3
+
+    self.vx = self.vx + math.cos(self.direction) * self.speed
+    self.vy = self.vy + math.sin(self.direction) * self.speed
 
     self.spr:set_rotation(self.direction)
 end
 
 function RainbowButterfly:draw()
-	self:draw_enemy()
+    self:draw_enemy()
 end
 
 function RainbowButterfly:after_collision(col, other)
     -- Pong-like bounce
     if col.type ~= "cross" then
-        local new_vx, new_vy = bounce_vector_cardinal(math.cos(self.direction), math.sin(self.direction), col.normal.x, col.normal.y)
+        local new_vx, new_vy =
+            bounce_vector_cardinal(math.cos(self.direction), math.sin(self.direction), col.normal.x, col.normal.y)
         self.direction = math.atan2(new_vy, new_vx)
     end
 end

@@ -1,7 +1,7 @@
-require "scripts.util"
-local Timer = require "scripts.timer"
+require("scripts.util")
+local Timer = require("scripts.timer")
 
-local Class = require "scripts.meta.class"
+local Class = require("scripts.meta.class")
 
 local Cutscene = Class:inherit()
 
@@ -19,7 +19,7 @@ function Cutscene:init(name, scenes)
     self.is_playing = false
 end
 
-function Cutscene:set_current_scene(scene_i) 
+function Cutscene:set_current_scene(scene_i)
     if self.current_scene then
         self.current_scene:exit()
     end
@@ -47,7 +47,7 @@ function Cutscene:update(dt)
         if game.skip_scene_flag then
             game.skip_scene_flag = false
         end
-        
+
         if skip_scene or self.timer:update(dt) then
             local next_i = mod_plus_1(self.current_scene_i + 1, #self.scenes)
             if next_i ~= 1 then

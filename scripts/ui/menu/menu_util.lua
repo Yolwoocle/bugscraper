@@ -1,6 +1,6 @@
 local menu_util = {}
 
-menu_util.DEFAULT_MENU_BG_COLOR = {38/255, 43/255, 68/255, 0.8}
+menu_util.DEFAULT_MENU_BG_COLOR = { 38 / 255, 43 / 255, 68 / 255, 0.8 }
 
 menu_util.empty_func = function() end
 
@@ -18,7 +18,7 @@ end
 
 menu_util.PROMPTS_NORMAL = {
     { { "ui_select" }, "input.prompts.ui_select" },
-    { { "ui_back" },   "input.prompts.ui_back" },
+    { { "ui_back" }, "input.prompts.ui_back" },
 }
 
 menu_util.PROMPTS_GAME_OVER = {
@@ -28,7 +28,7 @@ menu_util.PROMPTS_GAME_OVER = {
 
 menu_util.PROMPTS_CONTROLS = {
     { { "ui_select" }, "input.prompts.ui_select" },
-    { { "ui_back" },   "input.prompts.ui_back" },
+    { { "ui_back" }, "input.prompts.ui_back" },
 }
 
 function menu_util.draw_elevator_progress()

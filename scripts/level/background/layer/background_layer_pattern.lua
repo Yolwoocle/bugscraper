@@ -1,26 +1,28 @@
-require "scripts.util"
-local BackgroundLayer = require "scripts.level.background.layer.background_layer"
-local Sprite = require "scripts.graphics.sprite"
-local images = require "data.images"
+require("scripts.util")
+local BackgroundLayer = require("scripts.level.background.layer.background_layer")
+local Sprite = require("scripts.graphics.sprite")
+local images = require("data.images")
 
 local BackgroundLayerPattern = BackgroundLayer:inherit()
 
 function BackgroundLayerPattern:init(background, parallax, params)
     params = params or {}
     BackgroundLayerPattern.super.init(self, background, parallax)
-    
+
     self.pattern_images = params.pattern_images or {}
     assert(#self.pattern_images > 0, "No pattern images given")
     self.pattern_image_width = self.pattern_images[1]:getWidth()
     self.pattern_image_height = self.pattern_images[1]:getHeight()
     for i, img in pairs(self.pattern_images) do
-        assert(img:getWidth() == self.pattern_image_width, "Image number "..tostring(i).." has incorrect width")
-        assert(img:getHeight() == self.pattern_image_height, "Image number "..tostring(i).." has incorrect height")
+        assert(img:getWidth() == self.pattern_image_width, "Image number " .. tostring(i) .. " has incorrect width")
+        assert(img:getHeight() == self.pattern_image_height, "Image number " .. tostring(i) .. " has incorrect height")
     end
 
-    self.pattern_x_offsets = params.pattern_x_offsets or {0}
-    self.pattern_y_offsets = params.pattern_y_offsets or {0}
-    self.determinant_function = params.determinant_function or function(_self, x, y) return true end
+    self.pattern_x_offsets = params.pattern_x_offsets or { 0 }
+    self.pattern_y_offsets = params.pattern_y_offsets or { 0 }
+    self.determinant_function = params.determinant_function or function(_self, x, y)
+        return true
+    end
     self.pattern_height = self:get_pattern_height()
     self.row_count = math.ceil(CANVAS_HEIGHT / self.pattern_height) + 2
 
@@ -45,7 +47,7 @@ function BackgroundLayerPattern:create_tiles(amount)
 
         for ix = start_x, CANVAS_WIDTH, self.pattern_image_width do
             table.insert(tiles, self:new_tile(nil, ix, iy))
-        end 
+        end
 
         iy = iy + self.pattern_image_height + self.pattern_y_offsets[(i_row % #self.pattern_y_offsets) + 1]
         i_row = i_row + 1
@@ -77,11 +79,11 @@ end
 function BackgroundLayerPattern:update(dt)
     BackgroundLayerPattern.super.update(self, dt)
 
-	for _, tile in pairs(self.tiles) do
+    for _, tile in pairs(self.tiles) do
         tile.y = tile.y + self.background:get_speed() * self.parallax * dt
 
         if tile:despawn_condition() then
-            tile.y = tile.y - self.pattern_height * self.row_count 
+            tile.y = tile.y - self.pattern_height * self.row_count
         end
     end
 end

@@ -1,15 +1,15 @@
-require "scripts.util"
-local Enemy = require "scripts.actor.enemy"
-local sounds = require "data.sounds"
-local images = require "data.images"
+require("scripts.util")
+local Enemy = require("scripts.actor.enemy")
+local sounds = require("data.sounds")
+local images = require("data.images")
 
-local Guns = require "data.guns"
-local Timer = require "scripts.timer"
+local Guns = require("data.guns")
+local Timer = require("scripts.timer")
 
 local Cocoon = Enemy:inherit()
 
 function Cocoon:init(x, y, player)
-    Cocoon.super.init(self, x,y, images.cocoon, 15, 15)
+    Cocoon.super.init(self, x, y, images.cocoon, 15, 15)
     self.name = "cocoon"
 
     self.player_n = player.n or 1
@@ -20,12 +20,12 @@ function Cocoon:init(x, y, player)
     self.life = 12
     self.damage = 0
     self.self_knockback_mult = 0.1
-    
-	self.destroy_bullet_on_impact = false
-	self.is_immune_to_bullets = true
-    
+
+    self.destroy_bullet_on_impact = false
+    self.is_immune_to_bullets = true
+
     self.knockback = 0
-    
+
     self.is_immune_to_explosions = true
     self.is_immune_to_electricity = true
     self.is_stompable = false
@@ -33,7 +33,7 @@ function Cocoon:init(x, y, player)
     self.stompable_cooldown_timer = Timer:new(0.5)
     self.stompable_cooldown_timer:start()
     -- self.stomps = 3
-    
+
     self.is_pushable = false
     self.is_knockbackable = false
     self.loot = {}
@@ -41,7 +41,7 @@ function Cocoon:init(x, y, player)
     self.has_revived = false
 
     self.gun = player.gun
-    
+
     local skin = player.skin
     self.spr:set_outline(skin.color_palette[1], "round")
 
@@ -69,11 +69,11 @@ function Cocoon:on_death(damager, reason)
     if self.has_revived then
         return
     end
-    
+
     self:revive(damager)
 end
 
-function Cocoon:revive(damager)    
+function Cocoon:revive(damager)
     if game.players[self.player_n] then
         self:kill()
         return
@@ -92,7 +92,16 @@ function Cocoon:revive(damager)
 
     self.has_revived = true
 
-    Particles:image(self.mid_x, self.mid_y, 20, {images.cocoon_fragment_1, images.cocoon_fragment_2}, self.w, nil, nil, 0.5)
+    Particles:image(
+        self.mid_x,
+        self.mid_y,
+        20,
+        { images.cocoon_fragment_1, images.cocoon_fragment_2 },
+        self.w,
+        nil,
+        nil,
+        0.5
+    )
     game:frameskip(10)
 
     -- Remove old player (if exists)
@@ -100,7 +109,7 @@ function Cocoon:revive(damager)
 
     -- Spawn new player
     local new_player = game:new_player(self.player_n, self.x, self.y)
-    game.waves_until_respawn[self.player_n] = {-1, nil}
+    game.waves_until_respawn[self.player_n] = { -1, nil }
 
     new_player:set_invincibility(new_player.max_invincible_time)
     for _, upgrade in pairs(game.upgrades) do
@@ -109,12 +118,11 @@ function Cocoon:revive(damager)
 
     if not self.is_dead then
         self:kill()
-    end  
+    end
 end
 
 function Cocoon:draw()
     self:draw_enemy()
-    
 end
 
 return Cocoon

@@ -1,20 +1,20 @@
-require "scripts.util"
-local Enemy = require "scripts.actor.enemy"
-local ArumTitanMinion = require "scripts.actor.enemies.arum_titan_minion"
-local StateMachine = require "scripts.state_machine"
-local AnimatedSprite = require "scripts.graphics.animated_sprite"
-local Timer = require "scripts.timer"
-local images = require "data.images"
+require("scripts.util")
+local Enemy = require("scripts.actor.enemy")
+local ArumTitanMinion = require("scripts.actor.enemies.arum_titan_minion")
+local StateMachine = require("scripts.state_machine")
+local AnimatedSprite = require("scripts.graphics.animated_sprite")
+local Timer = require("scripts.timer")
+local images = require("data.images")
 
 local ArumTitanBoss = Enemy:inherit()
-	
+
 function ArumTitanBoss:init(x, y, spr, w, h)
-    ArumTitanBoss.super.init(self, x,y, spr or images.arum_titan_boss, 32 or w, 32 or h)
+    ArumTitanBoss.super.init(self, x, y, spr or images.arum_titan_boss, 32 or w, 32 or h)
 
     self.name = "arum_titan_boss"
     self.is_flying = true
     self.life = 10
-    
+
     self.speed = 0
     self.speed_x = self.speed
     self.speed_y = self.speed
@@ -26,11 +26,11 @@ function ArumTitanBoss:init(x, y, spr, w, h)
     self.is_stompable = false
 
     self.spr = AnimatedSprite:new({
-        closed = {{images.arum_titan_boss_spiked}, 0.1},
-        opened = {{images.arum_titan_boss}, 0.1},
+        closed = { { images.arum_titan_boss_spiked }, 0.1 },
+        opened = { { images.arum_titan_boss }, 0.1 },
     }, "closed", SPRITE_ANCHOR_CENTER_CENTER)
 
-	self.score = 10
+    self.score = 10
     self:set_max_life(100)
     self.opened_life_threshold = 50
 
@@ -38,15 +38,15 @@ function ArumTitanBoss:init(x, y, spr, w, h)
         {
             amount = 5,
             rotate_distance = 80,
-            rotate_speed = pi2*0.1,
+            rotate_speed = pi2 * 0.1,
         },
         {
             amount = 5,
             rotate_distance = 160,
-            rotate_speed = -pi2*0.1,
-        }
+            rotate_speed = -pi2 * 0.1,
+        },
     }
-    
+
     self.minions = {}
 
     self:set_bouncy(true)
@@ -55,7 +55,7 @@ function ArumTitanBoss:init(x, y, spr, w, h)
         closed = {
             enter = function(state)
                 self:set_bouncy(true)
-                
+
                 self:spawn_minions(self.minion_layers)
                 self.spr:set_animation("closed")
                 self.is_stompable = false
@@ -69,13 +69,13 @@ function ArumTitanBoss:init(x, y, spr, w, h)
 
                 if #self.minions == 0 then
                     return "opened"
-                end 
-            end
+                end
+            end,
         },
         opened = {
             enter = function(state)
                 self:set_bouncy(false)
-                
+
                 self.spr:set_animation("opened")
                 state.reference_life = self.life
                 self.state_timer:start(10.0)
@@ -85,7 +85,7 @@ function ArumTitanBoss:init(x, y, spr, w, h)
                     return "closed"
                 end
             end,
-        }
+        },
     }, "closed")
 end
 
@@ -101,10 +101,10 @@ function ArumTitanBoss:spawn_minions(layers)
     for i_layer = 1, #layers do
         local layer = layers[i_layer]
         local amount = layer.amount
-        for i = 0, amount-1 do
+        for i = 0, amount - 1 do
             local a = ArumTitanMinion:new(0, 0, self, {
                 rotate_distance = layer.rotate_distance,
-                rotate_angle = pi2*(i/amount),
+                rotate_angle = pi2 * (i / amount),
                 rotate_speed = layer.rotate_speed,
             })
             game:new_actor(a)
@@ -115,7 +115,7 @@ function ArumTitanBoss:spawn_minions(layers)
 end
 
 function ArumTitanBoss:draw()
-    ArumTitanBoss.super.draw(self) 
+    ArumTitanBoss.super.draw(self)
 end
 
 return ArumTitanBoss

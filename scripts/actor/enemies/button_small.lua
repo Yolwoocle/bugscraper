@@ -1,8 +1,8 @@
-require "scripts.util"
-local Enemy = require "scripts.actor.enemy"
-local Timer = require "scripts.timer"
-local images = require "data.images"
-local ButtonBig = require "scripts.actor.enemies.button_big"
+require("scripts.util")
+local Enemy = require("scripts.actor.enemy")
+local Timer = require("scripts.timer")
+local images = require("data.images")
+local ButtonBig = require("scripts.actor.enemies.button_big")
 
 local ButtonSmall = ButtonBig:inherit()
 
@@ -15,8 +15,8 @@ function ButtonSmall:init_button_small(x, y, spr, w, h)
 
     self.name = "button_small"
     self.max_life = 40000000
-	self.destroy_bullet_on_impact = false
-	self.is_immune_to_bullets = true
+    self.destroy_bullet_on_impact = false
+    self.is_immune_to_bullets = true
     self.is_killed_on_stomp = false
     self.pressed_disappear_timer = Timer:new(0.5)
     self.disappear_after_press = true
@@ -45,7 +45,7 @@ end
 function ButtonSmall:on_stomp_killed(damager)
     game:screenshake(5)
     Audio:play("button_press")
-    
+
     self:press_button(damager)
 end
 
@@ -54,7 +54,7 @@ function ButtonSmall:press_button(presser)
     if self.disappear_after_press then
         self.pressed_disappear_timer:start()
     end
-    
+
     self:on_press(presser)
 end
 

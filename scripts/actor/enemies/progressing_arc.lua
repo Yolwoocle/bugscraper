@@ -1,23 +1,23 @@
-require "scripts.util"
-local Enemy = require "scripts.actor.enemy"
-local Fly = require "scripts.actor.enemies.fly"
-local Prop = require "scripts.actor.enemies.prop"
-local ElectricArc = require "scripts.actor.enemies.electric_arc"
-local Timer = require "scripts.timer"
-local sounds = require "data.sounds"
-local images = require "data.images"
+require("scripts.util")
+local Enemy = require("scripts.actor.enemy")
+local Fly = require("scripts.actor.enemies.fly")
+local Prop = require("scripts.actor.enemies.prop")
+local ElectricArc = require("scripts.actor.enemies.electric_arc")
+local Timer = require("scripts.timer")
+local sounds = require("data.sounds")
+local images = require("data.images")
 
 local ProgressingArc = Prop:inherit()
 
 function ProgressingArc:init(x, y, params)
     params = params or {}
 
-    ProgressingArc.super.init(self, x,y, images.empty, 1, 1)
+    ProgressingArc.super.init(self, x, y, images.empty, 1, 1)
     self.name = "progressing_arc"
-    
+
     self.max_life = 100
     self.life = self.max_life
-    
+
     self.counts_as_enemy = false
     self.is_immune_to_electricity = true
 
@@ -34,7 +34,7 @@ function ProgressingArc:init(x, y, params)
 
     self.progress_speed = params.progress_speed or 40.0
     self.interval_size = params.interval_size or 40.0
-    
+
     self.rays_spawned = false
 
     self.z = 10
@@ -47,10 +47,10 @@ end
 function ProgressingArc:spawn_rays()
     self.length = 0.0
 
-    for i = 1, #self.points-1 do 
+    for i = 1, #self.points - 1 do
         local ax, ay = self.points[i][1], self.points[i][2]
-        local bx, by = self.points[i+1][1], self.points[i+1][2]
-        
+        local bx, by = self.points[i + 1][1], self.points[i + 1][2]
+
         local arc = ElectricArc:new(ax, ay)
         arc:set_segment(ax, ay, bx, by)
         arc:set_active(false)
@@ -62,7 +62,7 @@ function ProgressingArc:spawn_rays()
             x = ax,
             y = ay,
             max_length = arc:get_length(),
-            direction_x = dx, 
+            direction_x = dx,
             direction_y = dy,
         }
 
@@ -70,18 +70,18 @@ function ProgressingArc:spawn_rays()
         table.insert(self.rays, arc)
         game:new_actor(arc)
     end
-    
+
     self.cur_ray_index = 1
     self:load_ray()
 end
 
 function ProgressingArc:set_bounds(a, b)
     local lower = 0.0
-    for i=1, #self.points - 1 do
+    for i = 1, #self.points - 1 do
         local ray = self.rays[i]
         local info = self.ray_info[i]
         local upper = lower + info.max_length
-        
+
         if upper < a or b < lower then
             ray:set_active(false)
         else
@@ -100,9 +100,9 @@ function ProgressingArc:set_ray_bounds(ray_index, a, b)
     if not ray then
         return
     end
-    
+
     local info = self.ray_info[ray_index]
-    assert(info ~= nil, "Ray info for ray "..tostring(ray_index).." doesn't exist")
+    assert(info ~= nil, "Ray info for ray " .. tostring(ray_index) .. " doesn't exist")
 
     ray:set_segment(
         info.x + info.direction_x * a,
@@ -116,10 +116,10 @@ function ProgressingArc:load_ray()
     self.cur_ray = self.rays[self.cur_ray_index]
 
     if not self.cur_ray then
-        return 
+        return
     end
     self.cur_ray_segment = self.cur_ray:get_segment()
-    
+
     self.cur_length = 0.0
     self.cur_max_length = self.ray_info[self.cur_ray_index].max_length
     self.cur_ray_direction_x = self.ray_info[self.cur_ray_index].direction_x
@@ -129,7 +129,7 @@ function ProgressingArc:load_ray()
 end
 
 function ProgressingArc:update(dt)
-    ProgressingArc.super.update(self, dt)    
+    ProgressingArc.super.update(self, dt)
     -- self.debug_values[1] = self.length
 
     self:update_ray(dt)
@@ -140,14 +140,15 @@ function ProgressingArc:update_ray(dt)
         return
     end
 
-    self.cur_length = self.cur_length + self.progress_speed*dt
-    self.cur_length = ((self.cur_length + self.interval_size) % (self.length + 2*self.interval_size)) - self.interval_size
+    self.cur_length = self.cur_length + self.progress_speed * dt
+    self.cur_length = ((self.cur_length + self.interval_size) % (self.length + 2 * self.interval_size))
+        - self.interval_size
 
     self:set_bounds(self.cur_length, self.cur_length + self.interval_size)
 
     -- self.cur_ray:set_segment(
-    --     self.cur_ray_segment.ax, self.cur_ray_segment.ay, 
-    --     self.cur_ray_segment.ax + self.cur_ray_direction_x * l, 
+    --     self.cur_ray_segment.ax, self.cur_ray_segment.ay,
+    --     self.cur_ray_segment.ax + self.cur_ray_direction_x * l,
     --     self.cur_ray_segment.ay + self.cur_ray_direction_y * l
     -- )
 
@@ -159,21 +160,27 @@ function ProgressingArc:update_ray(dt)
 end
 
 function ProgressingArc:draw()
-	ProgressingArc.super.draw(self)
+    ProgressingArc.super.draw(self)
 
     if game.debug.colview_mode then
-        for i = 1, #self.points-1 do
-            line_color(COL_GREEN, self.points[i][1], self.points[i][2], self.points[i+1][1], self.points[i+1][2])
+        for i = 1, #self.points - 1 do
+            line_color(COL_GREEN, self.points[i][1], self.points[i][2], self.points[i + 1][1], self.points[i + 1][2])
         end
     end
-    
-    for i = 1, #self.points-1 do
-        line_dotted(transparent_color(COL_LIGHT_YELLOW, 0.8), 
-            self.points[i][1], self.points[i][2], self.points[i+1][1], self.points[i+1][2], { 
-            spacing = 3,
-            segment_length = 3, 
-            offset = self.t * 10,
-        })
+
+    for i = 1, #self.points - 1 do
+        line_dotted(
+            transparent_color(COL_LIGHT_YELLOW, 0.8),
+            self.points[i][1],
+            self.points[i][2],
+            self.points[i + 1][1],
+            self.points[i + 1][2],
+            {
+                spacing = 3,
+                segment_length = 3,
+                offset = self.t * 10,
+            }
+        )
     end
 end
 

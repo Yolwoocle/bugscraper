@@ -1,11 +1,11 @@
-require "scripts.util"
-local Enemy = require "scripts.actor.enemy"
-local Fly = require "scripts.actor.enemies.fly"
-local sounds = require "data.sounds"
-local images = require "data.images"
+require("scripts.util")
+local Enemy = require("scripts.actor.enemy")
+local Fly = require("scripts.actor.enemies.fly")
+local sounds = require("data.sounds")
+local images = require("data.images")
 
 local Bee = Fly:inherit()
-	
+
 local PHASE_CHASE = "chase"
 local PHASE_TELEGRAPH = "telegraph"
 local PHASE_ATTACK = "attack"
@@ -13,12 +13,12 @@ local PHASE_ATTACK = "attack"
 local PHASE_TELEGRAPH_DURATION = 0.4
 
 function Bee:init(x, y)
-    Bee.super.init(self, x,y, images.mosquito1, 12, 16)
+    Bee.super.init(self, x, y, images.mosquito1, 12, 16)
     self.name = "bee"
     self.life = 5
 
     self.anim_frame_len = 0.05
-    self.anim_frames = {images.mosquito1, images.mosquito2}
+    self.anim_frames = { images.mosquito1, images.mosquito2 }
 
     self.phase = PHASE_CHASE
     self.attack_speed = 5000
@@ -41,13 +41,10 @@ function Bee:update(dt)
 
     if self.phase == PHASE_CHASE then
         self:update_phase_chase(dt)
-        
     elseif self.phase == PHASE_TELEGRAPH then
         self:update_phase_telegraph(dt)
-        
     elseif self.phase == PHASE_ATTACK then
         self:update_phase_attack(dt)
-        
     end
 end
 
@@ -59,20 +56,20 @@ end
 function Bee:update_phase_telegraph(dt)
     self.buzz_source:setPitch(1)
     self.follow_player = false
-    
+
     self.attack_target = self:get_nearest_player()
     if self.attack_target == nil then
         return
     end
-    
+
     local dir_x = self.attack_target.x - self.x
     local dir_y = self.attack_target.y - self.y
     self.attack_vector_x, self.attack_vector_y = normalize_vect(dir_x, dir_y)
-    
+
     local spr_ox = math.sin(self.t * 30) * self.attack_vector_x * 5
     local spr_oy = math.sin(self.t * 30) * self.attack_vector_y * 5
     self.spr:update_offset(spr_ox, spr_oy)
-    Particles:dust(self.mid_x + random_polar(8), self.mid_y + random_polar(8))    
+    Particles:dust(self.mid_x + random_polar(8), self.mid_y + random_polar(8))
 end
 
 function Bee:update_phase_attack(dt)
@@ -84,7 +81,7 @@ function Bee:update_phase_attack(dt)
     self.follow_player = false
     self.vx = self.vx + self.attack_vector_x * dt * self.attack_speed
     self.vy = self.vy + self.attack_vector_y * dt * self.attack_speed
-    
+
     Particles:dust(self.mid_x, self.mid_y)
 end
 
@@ -94,12 +91,10 @@ function Bee:update_phase(dt)
         if self.phase == PHASE_ATTACK then
             self.phase = PHASE_CHASE
             self.current_phase_timer = random_range(0.5, 3.0)
-            
         elseif self.phase == PHASE_CHASE then
             self.phase = PHASE_TELEGRAPH
             self.current_phase_timer = PHASE_TELEGRAPH_DURATION
             self.t = 0
-            
         elseif self.phase == PHASE_TELEGRAPH then
             self.phase = PHASE_ATTACK
             self.current_phase_timer = random_range(0.3, 0.5)
@@ -108,12 +103,11 @@ function Bee:update_phase(dt)
 end
 
 function Bee:draw()
-	self:draw_enemy()
-    
+    self:draw_enemy()
+
     -- love.graphics.flrprint(concat(self.phase), self.x, self.y-16)
     -- love.graphics.flrprint(concat(self.attack_target == nil), self.x, self.y-32)
 end
-
 
 function Bee:pause_repeating_sounds() --scotch
     self.buzz_source:setVolume(0)

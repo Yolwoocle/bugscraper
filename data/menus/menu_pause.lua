@@ -1,27 +1,32 @@
-require "scripts.util"
-local menu_util = require "scripts.ui.menu.menu_util"
-local Menu = require "scripts.ui.menu.menu"
-local backgrounds         = require "data.backgrounds"
+require("scripts.util")
+local menu_util = require("scripts.ui.menu.menu_util")
+local Menu = require("scripts.ui.menu.menu")
+local backgrounds = require("data.backgrounds")
 
 local DEFAULT_MENU_BG_COLOR = menu_util.DEFAULT_MENU_BG_COLOR
-local func_set_menu     = menu_util.func_set_menu
-local func_url          = menu_util.func_url
-local PROMPTS_NORMAL    = menu_util.PROMPTS_NORMAL
+local func_set_menu = menu_util.func_set_menu
+local func_url = menu_util.func_url
+local PROMPTS_NORMAL = menu_util.PROMPTS_NORMAL
 
 local pause_items = {
     { "" },
     { "" },
-    { "▶ {menu.pause.resume}", function() game.menu_manager:unpause() end },
-    { "🔄 {menu.pause.retry}", func_set_menu('confirm_retry') },
-    { "🎚 {menu.pause.options}", func_set_menu('options') },
+    {
+        "▶ {menu.pause.resume}",
+        function()
+            game.menu_manager:unpause()
+        end,
+    },
+    { "🔄 {menu.pause.retry}", func_set_menu("confirm_retry") },
+    { "🎚 {menu.pause.options}", func_set_menu("options") },
     { "💡 {menu.pause.feedback}", func_set_menu("feedback") },
-    { "❤ {menu.pause.credits}", func_set_menu('credits') },
+    { "❤ {menu.pause.credits}", func_set_menu("credits") },
 }
 if OPERATING_SYSTEM ~= "Web" then
     -- Disable quitting on web
-    table.insert(pause_items, { "🔚 {menu.pause.quit}", func_set_menu('quit') })
+    table.insert(pause_items, { "🔚 {menu.pause.quit}", func_set_menu("quit") })
 end
-table.insert(pause_items, {""})
+table.insert(pause_items, { "" })
 if DEMO_BUILD then
     -- Disable wishlist if not demo
     table.insert(pause_items, { "❤ {menu.win.wishlist} 🔗", func_url("steam://advertise/2957130/") })
@@ -53,33 +58,60 @@ local function debug_skipto(wave, background)
 end
 if DEBUG_MODE and false then
     table.insert(pause_items, { " " })
-    table.insert(pause_items, { "[CHEAT] Skip to world 1 boss", function()
-        debug_skipto(18)
-    end })
-    table.insert(pause_items, { "[CHEAT] Skip to world 2", function()
-        debug_skipto(20)
-    end })
-    table.insert(pause_items, { "[CHEAT] Skip to world 2 boss", function()
-        debug_skipto(38, backgrounds.BackgroundBeehive:new())
-    end })
-    table.insert(pause_items, { "[CHEAT] Skip to world 3", function()
-        debug_skipto(40)
-    end })
-    table.insert(pause_items, { "[CHEAT] Skip to world 3 boss", function()
-        debug_skipto(58, backgrounds.BackgroundBeehive:new())
-    end })
-    table.insert(pause_items, { "[CHEAT] Skip to world 4", function()
-        debug_skipto(60)
-    end })
-    table.insert(pause_items, { "[CHEAT] Skip to world 4 wave 70", function()
-        debug_skipto(70, backgrounds.BackgroundFinal:new())
-    end })
-    table.insert(pause_items, { "[CHEAT] Skip to world 4 boss", function()
-        debug_skipto(78, backgrounds.BackgroundFinal:new())
-    end })
-    table.insert(pause_items, { "[CHEAT] Skip to world 5", function()
-        debug_skipto(80, backgrounds.BackgroundFinal:new())
-    end })
+    table.insert(pause_items, {
+        "[CHEAT] Skip to world 1 boss",
+        function()
+            debug_skipto(18)
+        end,
+    })
+    table.insert(pause_items, {
+        "[CHEAT] Skip to world 2",
+        function()
+            debug_skipto(20)
+        end,
+    })
+    table.insert(pause_items, {
+        "[CHEAT] Skip to world 2 boss",
+        function()
+            debug_skipto(38, backgrounds.BackgroundBeehive:new())
+        end,
+    })
+    table.insert(pause_items, {
+        "[CHEAT] Skip to world 3",
+        function()
+            debug_skipto(40)
+        end,
+    })
+    table.insert(pause_items, {
+        "[CHEAT] Skip to world 3 boss",
+        function()
+            debug_skipto(58, backgrounds.BackgroundBeehive:new())
+        end,
+    })
+    table.insert(pause_items, {
+        "[CHEAT] Skip to world 4",
+        function()
+            debug_skipto(60)
+        end,
+    })
+    table.insert(pause_items, {
+        "[CHEAT] Skip to world 4 wave 70",
+        function()
+            debug_skipto(70, backgrounds.BackgroundFinal:new())
+        end,
+    })
+    table.insert(pause_items, {
+        "[CHEAT] Skip to world 4 boss",
+        function()
+            debug_skipto(78, backgrounds.BackgroundFinal:new())
+        end,
+    })
+    table.insert(pause_items, {
+        "[CHEAT] Skip to world 5",
+        function()
+            debug_skipto(80, backgrounds.BackgroundFinal:new())
+        end,
+    })
 end
 
 return Menu:new(game, "{menu.pause.title}", pause_items, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)

@@ -1,14 +1,14 @@
-require "scripts.util"
-local menu_util = require "scripts.ui.menu.menu_util"
-local Menu = require "scripts.ui.menu.menu"
+require("scripts.util")
+local menu_util = require("scripts.ui.menu.menu_util")
+local Menu = require("scripts.ui.menu.menu")
 
-local RangeOptionMenuItem = require "scripts.ui.menu.items.range_option_menu_item"
-local BoolOptionMenuItem  = require "scripts.ui.menu.items.bool_option_menu_item"
-local EnumOptionMenuItem  = require "scripts.ui.menu.items.enum_option_menu_item"
+local RangeOptionMenuItem = require("scripts.ui.menu.items.range_option_menu_item")
+local BoolOptionMenuItem = require("scripts.ui.menu.items.bool_option_menu_item")
+local EnumOptionMenuItem = require("scripts.ui.menu.items.enum_option_menu_item")
 
 local DEFAULT_MENU_BG_COLOR = menu_util.DEFAULT_MENU_BG_COLOR
-local func_set_menu     = menu_util.func_set_menu
-local PROMPTS_NORMAL    = menu_util.PROMPTS_NORMAL
+local func_set_menu = menu_util.func_set_menu
+local PROMPTS_NORMAL = menu_util.PROMPTS_NORMAL
 
 return Menu:new(game, "{menu.options.title}", {
     { "🌐 {menu.options.game.language}", func_set_menu("options_language") },
@@ -18,25 +18,44 @@ return Menu:new(game, "{menu.options.title}", {
     { "" },
     { "<<< {menu.options.audio.title} >>>" },
     { BoolOptionMenuItem, "🔊 {menu.options.audio.sound}", "sound_on" },
-    { RangeOptionMenuItem, "🔉 {menu.options.audio.volume}", "volume", { 0.0, 1.0 }, 0.05, "%",
+    {
+        RangeOptionMenuItem,
+        "🔉 {menu.options.audio.volume}",
+        "volume",
+        { 0.0, 1.0 },
+        0.05,
+        "%",
         function(self)
             self.is_selectable = Options:get("sound_on")
-        end
+        end,
     },
-    { RangeOptionMenuItem, "🎵 {menu.options.audio.music_volume}", "music_volume", { 0.0, 1.0 }, 0.05, "%",
+    {
+        RangeOptionMenuItem,
+        "🎵 {menu.options.audio.music_volume}",
+        "music_volume",
+        { 0.0, 1.0 },
+        0.05,
+        "%",
         function(self)
             self.is_selectable = Options:get("sound_on")
-        end
+        end,
     },
-    { BoolOptionMenuItem, "🎼 {menu.options.audio.music_pause_menu}", "play_music_on_pause_menu",
+    {
+        BoolOptionMenuItem,
+        "🎼 {menu.options.audio.music_pause_menu}",
+        "play_music_on_pause_menu",
         function(self)
             self.is_selectable = Options:get("sound_on")
-        end
+        end,
     },
     { "" },
     { "<<< {menu.options.visuals.title} >>>" },
     { BoolOptionMenuItem, "🔳 {menu.options.visuals.fullscreen}", "is_fullscreen" },
-    { EnumOptionMenuItem, "🔲 {menu.options.visuals.pixel_scale}", "pixel_scale", { "auto", "max_whole", "1", "2", "3", "4", "5", "6" },
+    {
+        EnumOptionMenuItem,
+        "🔲 {menu.options.visuals.pixel_scale}",
+        "pixel_scale",
+        { "auto", "max_whole", "1", "2", "3", "4", "5", "6" },
         function(value)
             if tonumber(value) then
                 return tostring(value)
@@ -48,15 +67,22 @@ return Menu:new(game, "{menu.options.title}", {
             if OPERATING_SYSTEM == "Web" then
                 self.is_selectable = false
             end
-        end
+        end,
     },
     { BoolOptionMenuItem, "📺 {menu.options.visuals.vsync}", "is_vsync" },
     { BoolOptionMenuItem, "💧 {menu.options.visuals.menu_blur}", "menu_blur" },
-    { RangeOptionMenuItem, "🌄 {menu.options.visuals.background_speed}", "background_speed", { 0.0, 1.0 }, 0.05, "%" },
+    {
+        RangeOptionMenuItem,
+        "🌄 {menu.options.visuals.background_speed}",
+        "background_speed",
+        { 0.0, 1.0 },
+        0.05,
+        "%",
+    },
     { RangeOptionMenuItem, "🥚 {menu.options.visuals.bullet_lightness}", "bullet_lightness", { 0.1, 1.0 }, 0.1, "%" },
     { "" },
     { "<<< {menu.options.game.title} >>>" },
-    { "🎓 {menu.options.game.tutorial}", func_set_menu("confirm_tutorial") }, 
+    { "🎓 {menu.options.game.tutorial}", func_set_menu("confirm_tutorial") },
     { RangeOptionMenuItem, "🛜 {menu.options.game.screenshake}", "screenshake", { 0.0, 1.0 }, 0.05, "%" },
     { BoolOptionMenuItem, "🕐 {menu.options.game.timer}", "timer_on" },
     { BoolOptionMenuItem, "↖ {menu.options.game.mouse_visible}", "mouse_visible" },

@@ -1,6 +1,6 @@
-require "scripts.util"
-local Upgrade = require "scripts.upgrade.upgrade"
-local images = require "data.images"
+require("scripts.util")
+local Upgrade = require("scripts.upgrade.upgrade")
+local images = require("data.images")
 
 local UpgradeEnergyDrink = Upgrade:inherit()
 
@@ -11,7 +11,7 @@ function UpgradeEnergyDrink:init()
     self.strength_fury_speed = 0.5
 
     self.color = COL_PURPLE
-    self.palette = {COL_PURPLE, COL_DARK_PURPLE, COL_DARK_GREEN}
+    self.palette = { COL_PURPLE, COL_DARK_PURPLE, COL_DARK_GREEN }
 end
 
 function UpgradeEnergyDrink:update(dt)
@@ -24,7 +24,6 @@ function UpgradeEnergyDrink:apply_permanent(player)
     game.level.has_energy_drink = true
 end
 
-function UpgradeEnergyDrink:on_finish(player)
-end
+function UpgradeEnergyDrink:on_finish(player) end
 
 return UpgradeEnergyDrink

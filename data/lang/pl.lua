@@ -10,10 +10,8 @@ return {
     },
     steam = {
         --[[TODO]]
-        short_description =
-        [[Witaj w bugscraper. Wznieś się na szyt tej wypełnionej szkodnikami wieży w tej dwuymiarowej srzelance 2D i walcz z falami wrogów na każdym piętrze, którzy przybywają po Twoją skórę (a raczej egzoszkielet).]],
-        description =
-        [[Witaj w bugscraper, to tutaj zbierają się szkodniki z całego świata. Twoja misja: powstrzymać zanim będzie już za późno!🐜W tej platformowej strzelance wcielasz się w Mio, odważną mrówkę, próbującą powstrzymać pracowników pełnego robaków drapacza chmur przed zepsuciem świata śmiercionośnym grzybem.🐛Będziesz walczyć z falami wrogów w windzie, którzy przybywają po Twoją skórę (a raczej egzoszkielet) na każdym piętrze.🐝Korzystając z szerokiej gamy broni i ulepszeń, wyeliminuj ich i przygotuj się do walki o następne piętro!🐞Graj solo lub z maksymalnie 4 znajomymi w lokalnym trybie kooperacji wieloosobowej.]]
+        short_description = [[Witaj w bugscraper. Wznieś się na szyt tej wypełnionej szkodnikami wieży w tej dwuymiarowej srzelance 2D i walcz z falami wrogów na każdym piętrze, którzy przybywają po Twoją skórę (a raczej egzoszkielet).]],
+        description = [[Witaj w bugscraper, to tutaj zbierają się szkodniki z całego świata. Twoja misja: powstrzymać zanim będzie już za późno!🐜W tej platformowej strzelance wcielasz się w Mio, odważną mrówkę, próbującą powstrzymać pracowników pełnego robaków drapacza chmur przed zepsuciem świata śmiercionośnym grzybem.🐛Będziesz walczyć z falami wrogów w windzie, którzy przybywają po Twoją skórę (a raczej egzoszkielet) na każdym piętrze.🐝Korzystając z szerokiej gamy broni i ulepszeń, wyeliminuj ich i przygotuj się do walki o następne piętro!🐞Graj solo lub z maksymalnie 4 znajomymi w lokalnym trybie kooperacji wieloosobowej.]],
     },
     discord = { -- Text used for Discord rich presence
         state = {
@@ -35,7 +33,6 @@ return {
         win_wishlist = "Dodaj grę do listy życzeń na Steam :)", -- "Wishlist" is a verb
         win_prompt = "[Pauza aby kontynuować]",
         warning_web_controller = "Niektóre przeglądarki mogą mieć niepełne wsparcie dla kontrolerów",
-
     },
     level = {
         world_prefix = "Dział %s",
@@ -44,17 +41,17 @@ return {
         world_1 = "Insekty w plikach",
         world_2 = "Maszyna do kopiowania",
         world_3 = "Serwerowy piekielnik",
-		world_4 = "The Gardens", -- ADDED
+        world_4 = "The Gardens", -- ADDED
         world_5 = "Wielki szef",
     },
     gun = {
         -- Gun names
-        machinegun = "Grosznik",       -- hard to translate to english, kinda a mix beween pea and gun
-        triple = "Paprypak",           -- it's a mix of two words pepper and pack the idea is that peppers are commonly sold in packs so it's a pack of peppers
-        burst = "Seriopyłek",          -- mix between pollen and burst
-        shotgun = "Malinada",          -- mix of raspberry and lemonade
-        minigun = "Pestkotron",        -- not even sure how to translate it to english :D it's a word made up that mixes the 'seed' (pestka) into the name
-        ring = "Jagodynator",          -- hard to translate it's a made up word that mixes berry(jagody) and word nator which I'm not even sure how to translate back to what it would mean in english
+        machinegun = "Grosznik", -- hard to translate to english, kinda a mix beween pea and gun
+        triple = "Paprypak", -- it's a mix of two words pepper and pack the idea is that peppers are commonly sold in packs so it's a pack of peppers
+        burst = "Seriopyłek", -- mix between pollen and burst
+        shotgun = "Malinada", -- mix of raspberry and lemonade
+        minigun = "Pestkotron", -- not even sure how to translate it to english :D it's a word made up that mixes the 'seed' (pestka) into the name
+        ring = "Jagodynator", -- hard to translate it's a made up word that mixes berry(jagody) and word nator which I'm not even sure how to translate back to what it would mean in english
         mushroom_cannon = "Grzybomor", -- hard to translate it back to english, in polish it's just a person who is very much into collecting mushrooms :P
     },
     player = {
@@ -75,7 +72,7 @@ return {
     },
     enemy = {
         dung = "Pan Odchodek",
-        bee_boss = "The Queen",        -- ADDED
+        bee_boss = "The Queen", -- ADDED
         motherboard = "The Webmaster", -- ADDED
     },
     upgrade = {
@@ -84,7 +81,7 @@ return {
             description = "+%d tymczasowe ❤",
         },
         espresso = {
-            title = "Espresso", 
+            title = "Espresso",
             description = "x%d prędkość strzelania przez minute", -- CHANGED
         },
         milk = {
@@ -113,7 +110,7 @@ return {
         },
         hot_sauce = { -- ADDED
             title = "Hot Sauce",
-            description = "Deal x%d damage but use x%d ammo", -- First "%d" is the damage, second "%d" is ammo 
+            description = "Deal x%d damage but use x%d ammo", -- First "%d" is the damage, second "%d" is ammo
         },
         coconut_water = { -- ADDED
             title = "Coconut Water",
@@ -159,7 +156,7 @@ return {
         yes = "TAK",
         no = "NIE",
         quit = {
-            description = "Czy aby napewno chcesz wyjść?"
+            description = "Czy aby napewno chcesz wyjść?",
         },
         confirm_retry = {
             -- Here refers to going back to the main menu to try another run, NOT restarting the game
@@ -253,7 +250,6 @@ return {
                 screenshake = "TRZĘSIENIE EKRANU",
                 skip_boss_intros = "SKIP BOSS INTROS", -- ADDED
                 show_fps_warning = "OSTRZEŻENIE O NISKIEJ LICZBIE FPS",
-
             },
             language = {
                 title = "JĘZYK",
@@ -297,13 +293,13 @@ return {
             playtesting = "Testowanie gry",
             special_thanks = "Specjalne podziękowania",
             asset_creators = "Autorzy zasobów",
-            tv_slideshow = "TV slideshow contributors", -- ADDED // Refers to the powerpoint TV slideshow on the title screen, which was contributed by a variety of people 
+            tv_slideshow = "TV slideshow contributors", -- ADDED // Refers to the powerpoint TV slideshow on the title screen, which was contributed by a variety of people
             tv_slideshow_submit = "Submit yours...", -- ADDED // Leads to a web page where people can submit their own slides
-            
+
             licenses = "Licencje na zasoby i biblioteki",
 
-			-- asset_item = "%s stworone przez %s / %s",
-            x_by_y =     "%s przez %s", -- "ASSET_NAME by CREATOR". Used to credit assets such as sound effects
+            -- asset_item = "%s stworone przez %s / %s",
+            x_by_y = "%s przez %s", -- "ASSET_NAME by CREATOR". Used to credit assets such as sound effects
             asset_item = "%s przez %s / %s", -- "ASSET_NAME by CREATOR / LICENCE". Used to credit assets such as sound effects
         },
         open_source = {

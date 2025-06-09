@@ -1,6 +1,6 @@
-require "scripts.util"
-local Upgrade = require "scripts.upgrade.upgrade"
-local images = require "data.images"
+require("scripts.util")
+local Upgrade = require("scripts.upgrade.upgrade")
+local images = require("data.images")
 
 local UpgradeBoba = Upgrade:inherit()
 
@@ -11,7 +11,7 @@ function UpgradeBoba:init()
     self:set_description(self.strength)
 
     self.color = COL_PINK
-    self.palette = {COL_PINK, COL_PURPLE, COL_DARK_BROWN}
+    self.palette = { COL_PINK, COL_PURPLE, COL_DARK_BROWN }
 end
 
 function UpgradeBoba:update(dt)
@@ -22,7 +22,6 @@ function UpgradeBoba:apply_permanent(player)
     player:multiply_max_ammo_multiplier(self.strength)
 end
 
-function UpgradeBoba:on_finish(player)
-end
+function UpgradeBoba:on_finish(player) end
 
 return UpgradeBoba

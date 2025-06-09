@@ -1,5 +1,5 @@
-require "scripts.util"
-local Class = require "scripts.meta.class"
+require("scripts.util")
+local Class = require("scripts.meta.class")
 
 local InputProfile = Class:inherit()
 
@@ -45,7 +45,7 @@ function InputProfile:get_primary_button(action, input_type)
             if button.type == input_type then
                 return button
             end
-        end 
+        end
         return nil
     end
 end

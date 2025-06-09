@@ -1,12 +1,12 @@
-require "scripts.util"
-local Enemy = require "scripts.actor.enemy"
-local Larva = require "scripts.actor.enemies.larva"
-local sounds = require "data.sounds"
-local images = require "data.images"
-local DungBeetle = require "scripts.actor.enemies.dung_beetle"
-local StateMachine = require "scripts.state_machine"
-local Timer = require "scripts.timer"
-local DungProjectile = require "scripts.actor.enemies.dung_projectile"
+require("scripts.util")
+local Enemy = require("scripts.actor.enemy")
+local Larva = require("scripts.actor.enemies.larva")
+local sounds = require("data.sounds")
+local images = require("data.images")
+local DungBeetle = require("scripts.actor.enemies.dung_beetle")
+local StateMachine = require("scripts.state_machine")
+local Timer = require("scripts.timer")
+local DungProjectile = require("scripts.actor.enemies.dung_projectile")
 
 local Dung = Enemy:inherit()
 
@@ -47,17 +47,28 @@ function Dung:init(x, y, spr, w, h)
     self.jump_speed = 500
     self.jump_flag = false
 
-    self.sound_death = {"sfx_enemies_stomp_gore_01", "sfx_enemies_stomp_gore_02", "sfx_enemies_stomp_gore_03", "sfx_enemies_stomp_gore_04"}
-    self.sound_stomp = {"sfx_enemies_stomp_gore_01", "sfx_enemies_stomp_gore_02", "sfx_enemies_stomp_gore_03", "sfx_enemies_stomp_gore_04"}
+    self.sound_death = {
+        "sfx_enemies_stomp_gore_01",
+        "sfx_enemies_stomp_gore_02",
+        "sfx_enemies_stomp_gore_03",
+        "sfx_enemies_stomp_gore_04",
+    }
+    self.sound_stomp = {
+        "sfx_enemies_stomp_gore_01",
+        "sfx_enemies_stomp_gore_02",
+        "sfx_enemies_stomp_gore_03",
+        "sfx_enemies_stomp_gore_04",
+    }
 
     self.state_machine = StateMachine:new({
         random = {
-            enter = function(state)
-            end,
+            enter = function(state) end,
             update = function(state, dt)
-                return random_sample {
-                    "chase", "bunny_hopping_telegraph", "throw_projectile"
-                }
+                return random_sample({
+                    "chase",
+                    "bunny_hopping_telegraph",
+                    "throw_projectile",
+                })
             end,
         },
         idle = {
@@ -110,7 +121,7 @@ function Dung:init(x, y, spr, w, h)
                 if self.state_timer:update(dt) then
                     return "bunny_hopping"
                 end
-            end
+            end,
         },
         bunny_hopping = {
             enter = function(state)
@@ -149,7 +160,7 @@ function Dung:init(x, y, spr, w, h)
                 if col.type ~= "cross" and self.bounces > 0 then
                     game:screenshake(4)
                 end
-            end
+            end,
         },
         throw_projectile = {
             enter = function(state)
@@ -172,7 +183,7 @@ function Dung:init(x, y, spr, w, h)
                     return "random"
                 end
             end,
-        }
+        },
     }, "idle")
 
     self:add_constant_sound("ball_roll", "ball_roll")

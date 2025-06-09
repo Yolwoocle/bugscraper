@@ -1,7 +1,7 @@
-require "scripts.util"
-local Upgrade = require "scripts.upgrade.upgrade"
-local images= require "data.images"
-local EffectSlowness = require "scripts.effect.effect_slowness"
+require("scripts.util")
+local Upgrade = require("scripts.upgrade.upgrade")
+local images = require("data.images")
+local EffectSlowness = require("scripts.effect.effect_slowness")
 
 local UpgradeAppleJuice = Upgrade:inherit()
 
@@ -12,26 +12,23 @@ function UpgradeAppleJuice:init()
     self:set_description(self.strength)
 
     self.color = COL_LIGHT_GREEN
-    self.palette = {COL_LIGHT_GREEN, COL_WHITE, COL_DARK_RED}
+    self.palette = { COL_LIGHT_GREEN, COL_WHITE, COL_DARK_RED }
 end
-    
+
 function UpgradeAppleJuice:update(dt)
     UpgradeAppleJuice.super:update(self, dt)
 end
 
-function UpgradeAppleJuice:apply_permanent(player)
-end
+function UpgradeAppleJuice:apply_permanent(player) end
 
 function UpgradeAppleJuice:apply_instant(player)
     player:heal(self.strength)
 end
 
-
 function UpgradeAppleJuice:play_effects(player)
-	Particles:word(player.mid_x, player.y, concat(self.strength, "❤"), COL_LIGHT_RED)
+    Particles:word(player.mid_x, player.y, concat(self.strength, "❤"), COL_LIGHT_RED)
 end
 
-function UpgradeAppleJuice:on_finish(player)
-end
+function UpgradeAppleJuice:on_finish(player) end
 
 return UpgradeAppleJuice

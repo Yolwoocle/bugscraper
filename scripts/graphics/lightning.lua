@@ -1,25 +1,25 @@
-require "scripts.util"
-local Enemy = require "scripts.actor.enemy"
-local images = require "data.images"
-local images = require "data.images"
-local Class = require "scripts.meta.class"
-local Rect = require "scripts.math.rect"
-local Segment = require "scripts.math.segment"
+require("scripts.util")
+local Enemy = require("scripts.actor.enemy")
+local images = require("data.images")
+local images = require("data.images")
+local Class = require("scripts.meta.class")
+local Rect = require("scripts.math.rect")
+local Segment = require("scripts.math.segment")
 
-local utf8 = require "utf8"
+local utf8 = require("utf8")
 
 local Lightning = Class:inherit()
 
 function Lightning:init(params)
     params = param(params, {})
 
-    self.min_step_size =  param(params.min_step_size, 4)
-    self.max_step_size =  param(params.max_step_size, 10)
-    self.max_steps =      param(params.max_steps, 300)
+    self.min_step_size = param(params.min_step_size, 4)
+    self.max_step_size = param(params.max_step_size, 10)
+    self.max_steps = param(params.max_steps, 300)
     self.min_line_width = param(params.min_line_width, 1)
     self.max_line_width = param(params.max_line_width, 3)
-    self.jitter_width =   param(params.jitter_width, 3)
-    self.palette =        param(params.palette, {
+    self.jitter_width = param(params.jitter_width, 3)
+    self.palette = param(params.palette, {
         COL_LIGHT_YELLOW,
         COL_ORANGE,
         COL_YELLOW_ORANGE,
@@ -68,8 +68,8 @@ function Lightning:generate(segment)
         local jitter_offset = random_neighbor(self.jitter_width)
 
         t = t + step
-        local new_x = segment.ax + dir_x*t + normal_x*jitter_offset 
-        local new_y = segment.ay + dir_y*t + normal_y*jitter_offset
+        local new_x = segment.ax + dir_x * t + normal_x * jitter_offset
+        local new_y = segment.ay + dir_y * t + normal_y * jitter_offset
 
         self:new_segment(last_x, last_y, new_x, new_y)
 
@@ -83,22 +83,30 @@ end
 function Lightning:draw(ox, oy)
     ox = param(ox, 0)
     oy = param(oy, 0)
-    
+
     if self.style == LIGHTNING_STYLE_NORMAL then
         local old_width = love.graphics.getLineWidth()
         for i, point in pairs(self.segments) do
-            love.graphics.setLineWidth(point.line_width) 
-            line_color(point.color, ox + point.segment.ax, oy + point.segment.ay, ox + point.segment.bx, oy + point.segment.by)
-        end
-    
-        love.graphics.setLineWidth(old_width)
-    
-    elseif self.style == LIGHTNING_STYLE_BITS then
-        for i, point in pairs(self.segments) do
-            local img = ternary(point.line_width < lerp(self.min_line_width, self.max_line_width, 0.5), images.particle_bit_zero_dark, images.particle_bit_one_dark)
-            love.graphics.draw(img, ox + point.segment.bx, oy + point.segment.by)
+            love.graphics.setLineWidth(point.line_width)
+            line_color(
+                point.color,
+                ox + point.segment.ax,
+                oy + point.segment.ay,
+                ox + point.segment.bx,
+                oy + point.segment.by
+            )
         end
 
+        love.graphics.setLineWidth(old_width)
+    elseif self.style == LIGHTNING_STYLE_BITS then
+        for i, point in pairs(self.segments) do
+            local img = ternary(
+                point.line_width < lerp(self.min_line_width, self.max_line_width, 0.5),
+                images.particle_bit_zero_dark,
+                images.particle_bit_one_dark
+            )
+            love.graphics.draw(img, ox + point.segment.bx, oy + point.segment.by)
+        end
     end
 end
 

@@ -1,7 +1,7 @@
-require "scripts.util"
-local Enemy = require "scripts.actor.enemy"
-local Timer = require "scripts.timer"
-local images = require "data.images"
+require("scripts.util")
+local Enemy = require("scripts.actor.enemy")
+local Timer = require("scripts.timer")
+local images = require("data.images")
 
 local Frog = Enemy:inherit()
 
@@ -15,11 +15,11 @@ function Frog:init(x, y)
     self.def_speed_x = self.speed_x
 
     self.anim_frame_len = 0.4
-    self.anim_frames = {images.slug1, images.slug2}
+    self.anim_frames = { images.slug1, images.slug2 }
 
     self.def_friction_x = self.friction_x
     self.jump_timer = Timer:new(0)
-    self.jump_delay_range = {0.5, 2.0}
+    self.jump_delay_range = { 0.5, 2.0 }
     self:reset_jump_timer()
 end
 
@@ -29,7 +29,7 @@ end
 
 function Frog:jump()
     self.vy = -random_range(100, 400)
-    self.vx = random_sample{-1, 1} * random_range(200, 400)
+    self.vx = random_sample({ -1, 1 }) * random_range(200, 400)
 end
 
 function Frog:update(dt)
@@ -41,7 +41,7 @@ function Frog:update(dt)
         self:jump()
     end
 
-    self:update_enemy(dt) 
+    self:update_enemy(dt)
 end
 
 function Frog:after_collision(col, other)

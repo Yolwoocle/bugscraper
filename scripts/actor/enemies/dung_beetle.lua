@@ -1,18 +1,18 @@
-require "scripts.util"
-local Enemy = require "scripts.actor.enemy"
-local Timer = require "scripts.timer"
-local FlyingDung = require "scripts.actor.enemies.flying_dung"
-local AnimatedSprite = require "scripts.graphics.animated_sprite"
-local Sprite = require "scripts.graphics.sprite"
-local StateMachine  = require "scripts.state_machine"
+require("scripts.util")
+local Enemy = require("scripts.actor.enemy")
+local Timer = require("scripts.timer")
+local FlyingDung = require("scripts.actor.enemies.flying_dung")
+local AnimatedSprite = require("scripts.graphics.animated_sprite")
+local Sprite = require("scripts.graphics.sprite")
+local StateMachine = require("scripts.state_machine")
 
-local sounds = require "data.sounds"
-local images = require "data.images"
+local sounds = require("data.sounds")
+local images = require("data.images")
 
 local DungBeetle = Enemy:inherit()
 
 function DungBeetle:init(x, y)
-    self:init_enemy(x,y, images.dung_beetle_1, 24, 16)
+    self:init_enemy(x, y, images.dung_beetle_1, 24, 16)
     self.name = "dung_beetle"
     self.follow_player = false
 
@@ -20,12 +20,12 @@ function DungBeetle:init(x, y)
     self.life = math.huge
 
     self.knockback = 0
-    
+
     self.is_pushable = false
     self.is_knockbackable = false
     self.is_stompable = false
     self.destroy_bullet_on_impact = false
-	self.is_immune_to_bullets = true
+    self.is_immune_to_bullets = true
     self.is_bouncy_to_bullets = true
 
     self.spawn_dung_timer = Timer:new(2.0)
@@ -37,25 +37,25 @@ function DungBeetle:init(x, y)
 
     self.spr = AnimatedSprite:new({
         idle = {
-            {images.dung_beetle_idle},
-            0.1
+            { images.dung_beetle_idle },
+            0.1,
         },
         dead = {
-            {images.dung_beetle_dead},
-            0.1
+            { images.dung_beetle_dead },
+            0.1,
         },
         run = {
             {
-                images.dung_beetle_4, 
-                images.dung_beetle_5, 
+                images.dung_beetle_4,
+                images.dung_beetle_5,
                 images.dung_beetle_6,
-                images.dung_beetle_1, 
+                images.dung_beetle_1,
                 images.dung_beetle_2,
-                images.dung_beetle_3, 
-            }, 
-            0.06
+                images.dung_beetle_3,
+            },
+            0.06,
         },
-    }, "idle") 
+    }, "idle")
 
     self.state_machine = StateMachine:new({
         chase = {
@@ -63,14 +63,13 @@ function DungBeetle:init(x, y)
                 if self.vehicle and math.abs(self.vehicle.vx) > 20 then
                     self.spr:set_animation("run")
                     self.spr:set_flip_x(self.vehicle.vx > 0)
-                    
                 else
                     if self.spr.frame_i == 1 then
                         self.spr:set_animation("idle")
                     end
                 end
                 self.anim_frame_len = 0.08
-            end
+            end,
         },
         flying = {
             enter = function(state)
@@ -79,7 +78,7 @@ function DungBeetle:init(x, y)
                 self.gravity = self.default_gravity * 0.3
 
                 self.self_knockback_mult = 0
-                
+
                 self.is_pushable = false
                 self.is_stompable = true
                 self.destroy_bullet_on_impact = true
@@ -92,14 +91,14 @@ function DungBeetle:init(x, y)
 
                 self.spr:set_animation("dead")
                 self.spr:set_anchor(SPRITE_ANCHOR_CENTER_CENTER)
-                self.vr = 9        
+                self.vr = 9
 
                 game:frameskip(25)
                 game:screenshake(8)
                 Particles:image(self.mid_x, self.mid_y, 40, images.glass_shard, self.h)
             end,
             update = function(state, dt)
-                self.spr.rot = self.spr.rot + self.vr * dt 
+                self.spr.rot = self.spr.rot + self.vr * dt
 
                 if self.y + self.h > game.level.cabin_inner_rect.by - 26 then
                     return "stuck"
@@ -107,7 +106,7 @@ function DungBeetle:init(x, y)
             end,
             draw = function(state)
                 self.dung_pile_sprite:draw(self.dung_pile_sprite_x, self.dung_pile_sprite_y)
-            end
+            end,
         },
         stuck = {
             enter = function(state)
@@ -121,20 +120,26 @@ function DungBeetle:init(x, y)
                 self.destroy_bullet_on_impact = true
                 self.is_immune_to_bullets = false
                 self.is_bouncy_to_bullets = false
-                
+
                 self.y = game.level.cabin_inner_rect.by - 26
                 self.can_be_stomped_if_on_head = false
                 self.spr.rot = pi
 
                 game:screenshake(6)
-                Particles:image(self.mid_x, self.mid_y, 40, {images.dung_particle_1, images.dung_particle_2, images.dung_particle_3}, self.h)
+                Particles:image(
+                    self.mid_x,
+                    self.mid_y,
+                    40,
+                    { images.dung_particle_1, images.dung_particle_2, images.dung_particle_3 },
+                    self.h
+                )
             end,
 
             draw = function(state)
                 self.dung_pile_sprite:draw(self.dung_pile_sprite_x, self.dung_pile_sprite_y)
-            end
+            end,
         },
-    },"chase")
+    }, "chase")
 
     self.hits = self.dung_limit
     self.life = math.huge
@@ -159,7 +164,7 @@ function DungBeetle:update(dt)
             self.spawn_dung_timer:start()
         end
     end
-    
+
     for i = #self.dungs, 1, -1 do
         local dung = self.dungs[i]
         if dung.is_removed then
@@ -181,7 +186,6 @@ function DungBeetle:on_damage(amount)
     end
 end
 
-
 function DungBeetle:on_death()
     for i = 1, #self.dungs do
         local dung = self.dungs[i]
@@ -191,9 +195,16 @@ function DungBeetle:on_death()
     game:screenshake(8)
     game:frameskip(30)
     Input:vibrate_all(0.3, 0.3)
-    
+
     Particles:ejected_player(images.dung_beetle_dead, self.mid_x, self.mid_y)
-    Particles:image(self.mid_x, self.mid_y, 100, {images.dung_particle_1, images.dung_particle_2, images.dung_particle_3}, self.h, 2)
+    Particles:image(
+        self.mid_x,
+        self.mid_y,
+        100,
+        { images.dung_particle_1, images.dung_particle_2, images.dung_particle_3 },
+        self.h,
+        2
+    )
 end
 
 function DungBeetle:draw()
@@ -209,7 +220,7 @@ end
 
 function DungBeetle:on_hit_flying_dung(flying_dung)
     self.hits = math.max(0, self.hits - 1)
-    
+
     self:do_damage(5, flying_dung)
     if self.vehicle and self.vehicle.state_machine.current_state_name ~= "bunny_hopping" then
         if sign(self.vehicle.vx) == -sign(flying_dung.vx) then
@@ -225,7 +236,7 @@ function DungBeetle:unride()
     self.is_knockbackable = true
 
     self.destroy_bullet_on_impact = true
-	self.is_immune_to_bullets = false
+    self.is_immune_to_bullets = false
     self.is_bouncy_to_bullets = false
 
     self.life = self.unridden_life
@@ -237,7 +248,7 @@ function DungBeetle:unride()
     end
 
     self.pass_to_flying_flag = true
-    
+
     self.state_machine:set_state("flying")
 end
 

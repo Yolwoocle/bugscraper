@@ -1,13 +1,13 @@
-require "scripts.util"
-local Enemy = require "scripts.actor.enemy"
-local Beelet = require "scripts.actor.enemies.beelet"
-local sounds = require "data.sounds"
-local images = require "data.images"
-local AnimatedSprite = require "scripts.graphics.animated_sprite"
-local StateMachine = require "scripts.state_machine"
-local Timer = require "scripts.timer"
-local Segment = require "scripts.math.segment"
-local guns  = require "data.guns"
+require("scripts.util")
+local Enemy = require("scripts.actor.enemy")
+local Beelet = require("scripts.actor.enemies.beelet")
+local sounds = require("data.sounds")
+local images = require("data.images")
+local AnimatedSprite = require("scripts.graphics.animated_sprite")
+local StateMachine = require("scripts.state_machine")
+local Timer = require("scripts.timer")
+local Segment = require("scripts.math.segment")
+local guns = require("data.guns")
 
 local BigBeelet = Beelet:inherit()
 
@@ -22,9 +22,9 @@ function BigBeelet:init(x, y)
     self.score = 30
 
     self.spr = AnimatedSprite:new({
-        normal = {images.big_chipper, 0.2, 4},
-        attack = {images.big_chipper_activated, 0.1, 4},
-    }, "normal", SPRITE_ANCHOR_CENTER_CENTER) 
+        normal = { images.big_chipper, 0.2, 4 },
+        attack = { images.big_chipper_activated, 0.1, 4 },
+    }, "normal", SPRITE_ANCHOR_CENTER_CENTER)
 end
 
 function BigBeelet:update(dt)

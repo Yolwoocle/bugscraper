@@ -1,7 +1,7 @@
-require "scripts.util"
-local shaders = require "data.shaders"
+require("scripts.util")
+local shaders = require("data.shaders")
 
-local Class = require "scripts.meta.class"
+local Class = require("scripts.meta.class")
 
 local Layer = Class:inherit()
 
@@ -18,8 +18,8 @@ function Layer:paint(paint_function, params)
     params = param(params, {})
     local apply_camera = param(params.apply_camera, true)
     local camera = param(params.camera, nil)
-    
-    exec_on_canvas(self.canvas, function() 
+
+    exec_on_canvas(self.canvas, function()
         if apply_camera then
             camera:push()
         end
@@ -35,7 +35,7 @@ function Layer:draw(x, y)
     y = param(y, 0)
     if self.blur then
         shaders.blur_shader:send("r", self.blur_radius)
-		exec_using_shader(shaders.blur_shader, function()
+        exec_using_shader(shaders.blur_shader, function()
             love.graphics.draw(self.canvas, x, y)
         end)
     else

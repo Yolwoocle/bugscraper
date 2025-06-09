@@ -1,21 +1,21 @@
-require "scripts.util"
-local Enemy = require "scripts.actor.enemy"
-local images = require "data.images"
-local Prop = require "scripts.actor.enemies.prop"
-local Loot = require "scripts.actor.loot"
-local Sprite = require "scripts.graphics.sprite"
-local guns = require "data.guns"
+require("scripts.util")
+local Enemy = require("scripts.actor.enemy")
+local images = require("data.images")
+local Prop = require("scripts.actor.enemies.prop")
+local Loot = require("scripts.actor.loot")
+local Sprite = require("scripts.graphics.sprite")
+local guns = require("data.guns")
 
-local utf8 = require "utf8"
+local utf8 = require("utf8")
 
 local GunDisplay = Prop:inherit()
 
 function GunDisplay:init(x, y, gun)
     GunDisplay.super.init(self, x, y, images.gun_display, 16, 16)
     self.name = "gun_display"
-    
+
     self.gun = gun or guns.Triple:new(nil)
-	self.counts_as_enemy = false
+    self.counts_as_enemy = false
 
     self.life = 15
 
@@ -33,8 +33,8 @@ function GunDisplay:init(x, y, gun)
     self.stomps = 500
     self.damage_on_stomp = 5
 
-	self.destroy_bullet_on_impact = true
-	self.is_immune_to_bullets = false
+    self.destroy_bullet_on_impact = true
+    self.is_immune_to_bullets = false
     self.can_be_stomped_if_on_head = false
 
     self.player_detection_range_x = 26
@@ -44,21 +44,21 @@ function GunDisplay:init(x, y, gun)
     self.friction_x = 0.9
     self.self_knockback_mult = 0.7
     self.vertical_bounce_multiplier = 0.8
-    
+
     self.rot_mult = 0.06
 
-	-- self.sound_damage = {"impactglass_light_001", "impactglass_light_002", "impactglass_light_003", "impactglass_light_004"}
-	self.sound_damage = "sfx_weapon_glassjump_{01-06}"
-	self.sound_death = "sfx_weapon_glassbreak"
+    -- self.sound_damage = {"impactglass_light_001", "impactglass_light_002", "impactglass_light_003", "impactglass_light_004"}
+    self.sound_damage = "sfx_weapon_glassjump_{01-06}"
+    self.sound_death = "sfx_weapon_glassbreak"
 
     self.max_dissapear_life = 10
     self.dissapear_life = self.max_dissapear_life
 
-	self.max_blink_timer = 0.1
-	self.blink_timer = self.max_blink_timer
-	self.blink_is_shown = true
+    self.max_blink_timer = 0.1
+    self.blink_timer = self.max_blink_timer
+    self.blink_is_shown = true
 
-    self.spr.rot = random_range(0, pi*2)
+    self.spr.rot = random_range(0, pi * 2)
     self.spr:set_scale(0.5, 0.5)
 
     self.gun_spr = Sprite:new(self.gun.spr)
@@ -89,23 +89,23 @@ function GunDisplay:update(dt)
     self.gun.x = self.mid_x
     self.gun.y = self.mid_y
     self.gun.rot = self.spr.rot
-    
+
     -- Copy pasted from Loot. Is this a bad coding habit? Too bad.
     self.dissapear_life = self.dissapear_life - dt
-	if self.dissapear_life < self.max_dissapear_life * 0.5 then
-		self.blink_timer = self.blink_timer - dt
-		
-		if self.blink_timer < 0 then
-			local val = self.max_blink_timer
-			if self.dissapear_life < self.max_dissapear_life * 0.25 then
-				val = self.max_blink_timer * .5
-			end
-			self.blink_timer = val
-			self.blink_is_shown = not self.blink_is_shown
-		end
-	end 
-	self.spr:set_color(ternary(self.blink_is_shown, COL_WHITE, {1,1,1, 0.5}))
-	self.gun_spr:set_color(ternary(self.blink_is_shown, COL_WHITE, {1,1,1, 0.5}))
+    if self.dissapear_life < self.max_dissapear_life * 0.5 then
+        self.blink_timer = self.blink_timer - dt
+
+        if self.blink_timer < 0 then
+            local val = self.max_blink_timer
+            if self.dissapear_life < self.max_dissapear_life * 0.25 then
+                val = self.max_blink_timer * 0.5
+            end
+            self.blink_timer = val
+            self.blink_is_shown = not self.blink_is_shown
+        end
+    end
+    self.spr:set_color(ternary(self.blink_is_shown, COL_WHITE, { 1, 1, 1, 0.5 }))
+    self.gun_spr:set_color(ternary(self.blink_is_shown, COL_WHITE, { 1, 1, 1, 0.5 }))
 
     if self.dissapear_life < 0 then
         self:remove()
@@ -119,7 +119,7 @@ function GunDisplay:draw()
         -- self.gun:draw()
         self.gun_spr:draw(self.x, self.y, self.w, self.h)
     end
-	GunDisplay.super.draw(self) 
+    GunDisplay.super.draw(self)
 end
 
 function GunDisplay:on_death(damager, reason)

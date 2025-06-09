@@ -1,10 +1,10 @@
-require "scripts.util"
-local Enemy = require "scripts.actor.enemy"
-local sounds = require "data.sounds"
-local images = require "data.images"
-local Guns = require "data.guns"
+require("scripts.util")
+local Enemy = require("scripts.actor.enemy")
+local sounds = require("data.sounds")
+local images = require("data.images")
+local Guns = require("data.guns")
 
-local Slug = require "scripts.actor.enemies.slug"
+local Slug = require("scripts.actor.enemies.slug")
 
 local PongBall = Enemy:inherit()
 
@@ -13,7 +13,7 @@ function PongBall:init(x, y, spr, w, h)
 end
 
 function PongBall:init_pong_ball(x, y, spr, w, h)
-    self:init_enemy(x,y, spr or images.snail_shell, w or 16, h or 16)
+    self:init_enemy(x, y, spr or images.snail_shell, w or 16, h or 16)
     self.name = "pong_ball"
     self.is_flying = true
     self.follow_player = false
@@ -22,16 +22,16 @@ function PongBall:init_pong_ball(x, y, spr, w, h)
     self.rot_speed = 3
 
     self.gravity = 0
-    self.friction_x = 1.0 
-    self.friction_y = self.friction_x 
+    self.friction_x = 1.0
+    self.friction_y = self.friction_x
 
     self:init_pong()
-    
+
     self.spr:set_anchor(SPRITE_ANCHOR_CENTER_CENTER)
 end
 
 function PongBall:init_pong(speed)
-    self.pong_direction = (pi/4 + pi/2 * love.math.random(0,3)) % pi2
+    self.pong_direction = (pi / 4 + pi / 2 * love.math.random(0, 3)) % pi2
     self.is_ponging = true
     self.pong_speed = speed or 100
     self.pong_vx = cos(self.pong_direction) * self.pong_speed
@@ -49,7 +49,7 @@ function PongBall:update_pong_ball(dt)
     if self.is_ponging then
         self.pong_vx = math.cos(self.pong_direction) * self.pong_speed
         self.pong_vy = math.sin(self.pong_direction) * self.pong_speed
-        
+
         self.vx = (self.pong_vx or 0)
         self.vy = (self.pong_vy or 0)
     end
@@ -63,11 +63,16 @@ function PongBall:after_collision_pong_ball(col, other)
     -- Pong-like bounce
     if col.type ~= "cross" then
         if self.is_ponging then
-            local s = "metalfootstep_0"..tostring(love.math.random(0,4))
-            Audio:play_var(s, 0.3, 1.1, {pitch=0.8, volume=0.5})
+            local s = "metalfootstep_0" .. tostring(love.math.random(0, 4))
+            Audio:play_var(s, 0.3, 1.1, { pitch = 0.8, volume = 0.5 })
             Particles:smoke(col.touch.x, col.touch.y)
 
-            local dx, dy = bounce_vector_cardinal(math.cos(self.pong_direction), math.sin(self.pong_direction), col.normal.x, col.normal.y)
+            local dx, dy = bounce_vector_cardinal(
+                math.cos(self.pong_direction),
+                math.sin(self.pong_direction),
+                col.normal.x,
+                col.normal.y
+            )
             self.pong_direction = math.atan2(dy, dx)
         end
     end

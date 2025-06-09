@@ -1,9 +1,9 @@
-require "scripts.util"
-local Enemy = require "scripts.actor.enemy"
-local images = require "data.images"
-local StaticProp = require "scripts.actor.enemies.static_prop"
+require("scripts.util")
+local Enemy = require("scripts.actor.enemy")
+local images = require("data.images")
+local StaticProp = require("scripts.actor.enemies.static_prop")
 
-local utf8 = require "utf8"
+local utf8 = require("utf8")
 
 local JumpingProp = StaticProp:inherit()
 
@@ -11,7 +11,7 @@ function JumpingProp:init(x, y, spr)
     spr = spr or images.upgrade_jar
     JumpingProp.super.init(self, x, y, spr)
     self.name = "jumping_prop"
-    
+
     self.gravity = self.default_gravity
 
     self.jump_force = 150
@@ -28,7 +28,7 @@ function JumpingProp:update(dt)
 end
 
 function JumpingProp:draw()
-	JumpingProp.super.draw(self)
+    JumpingProp.super.draw(self)
 end
 
 function JumpingProp:on_collision(col, other)

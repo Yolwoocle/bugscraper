@@ -1,20 +1,20 @@
-require "scripts.util"
-local Enemy = require "scripts.actor.enemy"
-local sounds = require "data.sounds"
-local images = require "data.images"
+require("scripts.util")
+local Enemy = require("scripts.actor.enemy")
+local sounds = require("data.sounds")
+local images = require("data.images")
 
 local Fly = Enemy:inherit()
-	
+
 function Fly:init(x, y, spr, w, h, buzzing_enabled)
     buzzing_enabled = param(buzzing_enabled, true)
-    Fly.super.init(self, x,y, spr or images.fly1, w, h)
+    Fly.super.init(self, x, y, spr or images.fly1, w, h)
 
     self.name = "fly"
     self.is_flying = true
     self.life = 10
     --self.speed_y = 0--self.speed * 0.5
-    
-    self.speed = random_range(7,13) --10
+
+    self.speed = random_range(7, 13) --10
     self.speed_x = self.speed
     self.speed_y = self.speed
 
@@ -22,19 +22,29 @@ function Fly:init(x, y, spr, w, h, buzzing_enabled)
     self.friction_y = self.friction_x
 
     self.anim_frame_len = 0.05
-    self.anim_frames = {images.fly1, images.fly2}
+    self.anim_frames = { images.fly1, images.fly2 }
 
-	self.score = 10
+    self.score = 10
 
     self.is_buzz_enabled = buzzing_enabled
     if self.is_buzz_enabled then
         self:add_constant_sound("buzz", "fly_buzz", false)
-        self:seek_constant_sound("buzz", random_range(0, self:get_constant_sound("buzz"):get_duration())) 
+        self:seek_constant_sound("buzz", random_range(0, self:get_constant_sound("buzz"):get_duration()))
     end
     self.buzz_is_started = false
 
-    self.sound_death = {"sfx_enemies_stomp_gore_01", "sfx_enemies_stomp_gore_02", "sfx_enemies_stomp_gore_03", "sfx_enemies_stomp_gore_04"}
-    self.sound_stomp = {"sfx_enemies_stomp_gore_01", "sfx_enemies_stomp_gore_02", "sfx_enemies_stomp_gore_03", "sfx_enemies_stomp_gore_04"}
+    self.sound_death = {
+        "sfx_enemies_stomp_gore_01",
+        "sfx_enemies_stomp_gore_02",
+        "sfx_enemies_stomp_gore_03",
+        "sfx_enemies_stomp_gore_04",
+    }
+    self.sound_stomp = {
+        "sfx_enemies_stomp_gore_01",
+        "sfx_enemies_stomp_gore_02",
+        "sfx_enemies_stomp_gore_03",
+        "sfx_enemies_stomp_gore_04",
+    }
 end
 
 function Fly:update(dt)

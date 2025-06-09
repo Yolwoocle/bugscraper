@@ -1,10 +1,10 @@
-require "scripts.util"
-local Enemy = require "scripts.actor.enemy"
-local sounds = require "data.sounds"
-local images = require "data.images"
-local Guns = require "data.guns"
-local Timer = require "scripts.timer"
-local PongBall = require "scripts.actor.enemies.pong_ball"
+require("scripts.util")
+local Enemy = require("scripts.actor.enemy")
+local sounds = require("data.sounds")
+local images = require("data.images")
+local Guns = require("data.guns")
+local Timer = require("scripts.timer")
+local PongBall = require("scripts.actor.enemies.pong_ball")
 
 local FlyingDung = PongBall:inherit()
 
@@ -143,7 +143,6 @@ function FlyingDung:hit_target(target)
     self:kill()
 end
 
-function FlyingDung:on_death()
-end
+function FlyingDung:on_death() end
 
 return FlyingDung

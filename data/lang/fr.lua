@@ -10,10 +10,8 @@ return {
     },
     steam = {
         --[[TODO]]
-        short_description =
-        [[Bienvenue dans le bugscraper. Gravissez les étages de cette tour remplie de parasites dans ce jeu de plateforme et de tir 2D, et combattez des vagues d'ennemis à chaque étage alors qu'ils viennent pour votre peau (ou plutôt votre exosquelette).]],
-        description =
-        [[Bienvenue dans le bugscraper. Ici, des parasites du monde entier viennent se rassembler. Votre mission : les arrêter avant qu'il ne soit trop tard ! 🐜 Dans ce jeu de tir et de plateforme, vous incarnez Mio, une fourmi courageuse, essayant d'empêcher les employés d'un gratte-ciel rempli de parasites de corrompre le monde avec un champignon mortel. 🐛 Vous affronterez des vagues d'ennemis dans un ascenseur, alors qu'ils cherchent à atteindre votre peau (ou plutôt votre exosquelette) à chaque étage. 🐝 Utilisez une grande variété d'armes et d'améliorations pour les éliminer et préparez-vous à combattre pour l'étage suivant ! 🐞 Jouez en solo ou avec jusqu'à 4 amis en coopération locale.]]
+        short_description = [[Bienvenue dans le bugscraper. Gravissez les étages de cette tour remplie de parasites dans ce jeu de plateforme et de tir 2D, et combattez des vagues d'ennemis à chaque étage alors qu'ils viennent pour votre peau (ou plutôt votre exosquelette).]],
+        description = [[Bienvenue dans le bugscraper. Ici, des parasites du monde entier viennent se rassembler. Votre mission : les arrêter avant qu'il ne soit trop tard ! 🐜 Dans ce jeu de tir et de plateforme, vous incarnez Mio, une fourmi courageuse, essayant d'empêcher les employés d'un gratte-ciel rempli de parasites de corrompre le monde avec un champignon mortel. 🐛 Vous affronterez des vagues d'ennemis dans un ascenseur, alors qu'ils cherchent à atteindre votre peau (ou plutôt votre exosquelette) à chaque étage. 🐝 Utilisez une grande variété d'armes et d'améliorations pour les éliminer et préparez-vous à combattre pour l'étage suivant ! 🐞 Jouez en solo ou avec jusqu'à 4 amis en coopération locale.]],
     },
     discord = { -- Text used for Discord rich presence
         state = {
@@ -62,7 +60,7 @@ return {
         name = {
             -- Player names
             -- No reason to change these during translation, except if:
-            --  * it's more appropriate to use a transliteration, or to use the script 
+            --  * it's more appropriate to use a transliteration, or to use the script
             --    of the concerned language (e.g. Leo -> Léo in French, or, say, using Kanji instead of roman letters)
             --  * they clash with something specific to the language/culture (please notify me if it is the case)
             mio = "Mio",
@@ -105,7 +103,7 @@ return {
             title = "Soda",
             description = "+%d saut dans les airs",
         },
-        fizzy_lemonade = { 
+        fizzy_lemonade = {
             title = "Limonade pétillante",
             description = "Maintenir saut pour planer",
         },
@@ -115,7 +113,7 @@ return {
         },
         hot_sauce = {
             title = "Sauce piquante",
-            description = "Faire x%d dégâts mais utiliser x%d munitions", 
+            description = "Faire x%d dégâts mais utiliser x%d munitions",
         },
         coconut_water = {
             title = "Eau de coco",
@@ -165,11 +163,11 @@ return {
         yes = "OUI",
         no = "NON",
         quit = {
-            description = "Êtes-vous sûr de vouloir quitter ?"
+            description = "Êtes-vous sûr de vouloir quitter ?",
         },
         confirm_retry = {
             -- Here refers to going back to the main menu to try another run, NOT restarting the game
-            description = "Réessayer?", 
+            description = "Réessayer?",
         },
         pause = {
             title = "PAUSE",
@@ -307,11 +305,11 @@ return {
             playtesting = "Playtesting",
             special_thanks = "Remerciements",
             asset_creators = "Créateur·rices d'assets",
-            tv_slideshow = "Contributeur·rices diaporama TV", 
-            tv_slideshow_submit = "Envoyez le votre...", 
+            tv_slideshow = "Contributeur·rices diaporama TV",
+            tv_slideshow_submit = "Envoyez le votre...",
             licenses = "Licences des assets & bibliothèques",
 
-            x_by_y =     "%s par %s", -- "ASSET_NAME by CREATOR". Used to credit assets such as sound effects
+            x_by_y = "%s par %s", -- "ASSET_NAME by CREATOR". Used to credit assets such as sound effects
             asset_item = "%s par %s / %s", -- "ASSET_NAME by CREATOR / LICENCE". Used to credit assets such as sound effects
         },
         open_source = {

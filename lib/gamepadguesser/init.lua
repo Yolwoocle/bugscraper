@@ -7,7 +7,6 @@
 -- Copyright © 2022 idbrii.
 -- Released under the MIT License.
 
-
 local gamepadguesser = {}
 
 gamepadguesser.CONSOLES = {
@@ -18,10 +17,18 @@ gamepadguesser.CONSOLES = {
 
 local all_patterns = {
     playstation = {
-        "%f[%w]PS%d%f[%D]", "Sony%f[%W]", "Play[Ss]tation", "Dual[Ss]ense", "Dual[Ss]hock",
+        "%f[%w]PS%d%f[%D]",
+        "Sony%f[%W]",
+        "Play[Ss]tation",
+        "Dual[Ss]ense",
+        "Dual[Ss]hock",
     },
     nintendo = {
-        "Wii%f[%L]", "%f[%u]S?NES%f[%U]", "%f[%l]s?nes%f[%L]", "%f[%u]Switch%f[%L]", "Joy[- ]Cons?%f[%L]",
+        "Wii%f[%L]",
+        "%f[%u]S?NES%f[%U]",
+        "%f[%l]s?nes%f[%L]",
+        "%f[%u]Switch%f[%L]",
+        "Joy[- ]Cons?%f[%L]",
     },
     -- Our art doesn't have sega and I don't have a sega gamepad to test with,
     -- so don't include it.
@@ -38,19 +45,17 @@ end
 function gamepadguesser.test_printAllGuesses(db_fpath)
     local f = io.open(db_fpath, "r")
     for line in f:lines() do
-        if line:match('^%x') then
+        if line:match("^%x") then
             local name = getNameFromMapping(line)
             assert(name, line)
             local console = gamepadguesser.joystickNameToConsole(name)
             if name then
-                print(console, '<-', name)
+                print(console, "<-", name)
             end
         end
     end
     f:close()
 end
-
-
 
 -- Load gamepad db to get support for more gamepads.
 --
@@ -60,11 +65,10 @@ function gamepadguesser.loadMappings(path_to_gamepadguesser)
     love.joystick.loadGamepadMappings(fpath)
 end
 
-
 -- Map a joystick name (e.g., from gamecontrollerdb) to a console.
 function gamepadguesser.joystickNameToConsole(name)
-    for console,patterns in pairs(all_patterns) do
-        for _,pat in ipairs(patterns) do
+    for console, patterns in pairs(all_patterns) do
+        for _, pat in ipairs(patterns) do
             if name:match(pat) then
                 return console
             end
@@ -91,7 +95,6 @@ function gamepadguesser.getJoystickName(joystick)
     return name
 end
 
-
 -- Map a love2d Joystick to a console.
 --
 -- Useful to get map to a folder name containing input images.
@@ -103,17 +106,16 @@ function gamepadguesser.joystickToConsole(joystick)
     return gamepadguesser.joystickNameToConsole(name)
 end
 
-
 local function Class()
     local cls = {}
     cls.__index = cls
     setmetatable(cls, {
-            __call = function(cls_, ...)
-                local obj = setmetatable({}, cls)
-                obj:ctor(...)
-                return obj
-            end
-        })
+        __call = function(cls_, ...)
+            local obj = setmetatable({}, cls)
+            obj:ctor(...)
+            return obj
+        end,
+    })
     return cls
 end
 local JoystickData = Class()
@@ -121,27 +123,27 @@ local JoystickData = Class()
 function JoystickData:ctor(path_to_gamepadguesser)
     self.joysticks = {}
     self.images = {}
-    for i,console in ipairs(gamepadguesser.CONSOLES) do
+    for i, console in ipairs(gamepadguesser.CONSOLES) do
         self.images[console] = setmetatable({}, {
-                __index = function(t, name)
-                    local prefix = name:match("(%w+)[xy]$")
-                    if prefix then
-                        name = prefix
-                    end
-                    local fmt = "%s/assets/images/%s/%s.png"
-                    local fpath = fmt:format(path_to_gamepadguesser, console, name)
-                    local im = love.graphics.newImage(fpath)
-                    t[name] = im
-                    if prefix then
-                        -- We use the same image for left, leftx, lefty since
-                        -- they're all the left stick.
-                        t[prefix.."x"] = im
-                        t[prefix.."y"] = im
-                        name = prefix
-                    end
-                    return rawget(t, name)
+            __index = function(t, name)
+                local prefix = name:match("(%w+)[xy]$")
+                if prefix then
+                    name = prefix
                 end
-            })
+                local fmt = "%s/assets/images/%s/%s.png"
+                local fpath = fmt:format(path_to_gamepadguesser, console, name)
+                local im = love.graphics.newImage(fpath)
+                t[name] = im
+                if prefix then
+                    -- We use the same image for left, leftx, lefty since
+                    -- they're all the left stick.
+                    t[prefix .. "x"] = im
+                    t[prefix .. "y"] = im
+                    name = prefix
+                end
+                return rawget(t, name)
+            end,
+        })
     end
 end
 

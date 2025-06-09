@@ -1,13 +1,13 @@
-require "scripts.util"
-local Enemy = require "scripts.actor.enemy"
-local sounds = require "data.sounds"
-local images = require "data.images"
-local Guns = require "data.guns"
+require("scripts.util")
+local Enemy = require("scripts.actor.enemy")
+local sounds = require("data.sounds")
+local images = require("data.images")
+local Guns = require("data.guns")
 
 local Prop = Enemy:inherit()
 
 function Prop:init(x, y, img, w, h)
-    Prop.super.init(self, x,y, img or images.dummy_target, w or 16, h or 16)
+    Prop.super.init(self, x, y, img or images.dummy_target, w or 16, h or 16)
     self.name = "prop"
 
     self.life = 10
@@ -23,10 +23,10 @@ function Prop:init(x, y, img, w, h)
     self.follow_player = false
     self.is_stompable = false
     self.is_killed_on_stomp = false
-	self.destroy_bullet_on_impact = false
-	self.is_immune_to_bullets = true
+    self.destroy_bullet_on_impact = false
+    self.is_immune_to_bullets = true
 
-	self.fury_bullet_damage_multiplier = 0
+    self.fury_bullet_damage_multiplier = 0
 
     self.score = 0
 end
