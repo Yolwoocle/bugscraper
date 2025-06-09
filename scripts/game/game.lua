@@ -1,4 +1,5 @@
 local TextManager = require "scripts.text"
+local ActorManager = require "scripts.game.actor_manager"
 Text = TextManager:new()
 
 local backgrounds = require "data.backgrounds"
@@ -161,13 +162,15 @@ function Game:new_game(params)
 	end
 
 	-- Actors
-	self.actor_limit = 150
 	self.actors = {}
-	local px, py, spacing
+	self.actor_manager = ActorManager:new(self, self.actors)
+
+	-- Init players
+	local px, py
+	local spacing = 16
 	if params.quick_restart then
 		px = self.level.door_rect.ax + 32
 		py = self.level.door_rect.by
-		spacing = 16
 	end
 	self:init_players(px, py, spacing)
 
@@ -185,8 +188,6 @@ function Game:new_game(params)
 		self.menu_manager:reset()
 		self.menu_manager:set_menu()
 	end
-
-	self.apply_bounds_clamping = true
 
 	self.stats = {
 		floor = 0,
@@ -390,7 +391,7 @@ function Game:update_main_game(dt)
 
 	self:update_skin_choices()
 	self:update_queued_players(dt)
-	self:update_actors(dt)
+	self.actor_manager:update(dt)
 	self:update_logo(dt)
 	self:update_debug(dt)
 	if self.cutscene then
@@ -411,45 +412,7 @@ function Game:quit()
 end
 
 function Game:get_enemy_count()
-	local enemy_count = 0
-	for _, actor in pairs(self.actors) do
-		if actor.is_active and actor.counts_as_enemy then
-			enemy_count = enemy_count + 1
-		end
-	end
-	return enemy_count
-end
-
-function Game:update_actors(dt)
-	if self.sort_actors_flag then
-		table.sort(self.actors, function(a, b)
-			if a.z == b.z then
-				return a.creation_index > b.creation_index
-			end
-			return a.z > b.z
-		end)
-		self.sort_actors_flag = false
-	end
-
-	for i = #self.actors, 1, -1 do
-		local actor = self.actors[i]
-
-		if not actor.is_removed and actor.is_active then
-			actor:update(dt)
-			if actor.is_affected_by_bounds and self.apply_bounds_clamping then
-				actor:clamp_to_bounds(self.level.cabin_inner_rect)
-			end
-
-			if not self.level.kill_zone:is_point_in_inclusive(actor.mid_x, actor.mid_y) then
-				actor:kill()
-			end
-		end
-
-		if actor.is_removed then
-			actor:final_remove()
-			table.remove(self.actors, i)
-		end
-	end
+	return self.actor_manager:get_enemy_count()
 end
 
 function Game:update_logo(dt)
@@ -791,18 +754,7 @@ function Game:set_music_volume(vol)
 end
 
 function Game:new_actor(actor, buffer_enemy)
-	if not actor then
-		return
-	end
-	if #self.actors >= self.actor_limit then
-		actor:remove()
-		actor:final_remove()
-		return actor
-	end
-
-	self.sort_actors_flag = true
-	table.insert(self.actors, actor)
-	return actor
+	self.actor_manager:new_actor(actor, buffer_enemy)
 end
 
 function Game:on_enemy_damage(enemy, n, damager)
@@ -857,30 +809,6 @@ function Game:update_timer_before_game_over(dt)
 
 	if self.timer_before_game_over <= 0 then
 		self:game_over()
-	end
-end
-
-function Game:remove_all_active_enemies()
-	for _, actor in pairs(self.actors) do
-		if actor.is_active and actor.counts_as_enemy then
-			actor:remove()
-		end
-	end
-end
-
-function Game:kill_all_active_enemies()
-	for _, actor in pairs(self.actors) do
-		if actor.is_active and actor.counts_as_enemy then
-			actor:kill()
-		end
-	end
-end
-
-function Game:kill_all_enemies()
-	for _, actor in pairs(self.actors) do
-		if actor.counts_as_enemy then
-			actor:kill()
-		end
 	end
 end
 
@@ -1148,14 +1076,6 @@ end
 function Game:play_cutscene(cutscene)
 	self.cutscene = cutscene
 	self.cutscene:play()
-end
-
-function Game:kill_actors_with_name(name)
-	for _, actor in pairs(game.actors) do
-		if actor.name == name then
-			actor:kill()
-		end
-	end
 end
 
 -----------------------------------------------------

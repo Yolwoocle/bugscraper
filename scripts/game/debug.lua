@@ -715,7 +715,7 @@ function Debug:draw_info_view()
             concat("Renderer vendor: ", renderer_vendor, ", device ", renderer_device),
             concat("game state: ", game.game_state),
             concat("nb of active audio sources: ", love.audio.getActiveSourceCount()),
-            concat("nb of actors: ", #self.game.actors, " / ", self.game.actor_limit, " | nb of enemies: ", self.game:get_enemy_count()),
+            concat("nb of actors: ", #self.game.actors, " / ", self.game.actor_manager.actor_limit, " | nb of enemies: ", self.game:get_enemy_count()),
             concat("nb collision items: ", Collision.world:countItems()),
             concat("number_of_alive_players ", self.game:get_number_of_alive_players()),
             players_str,

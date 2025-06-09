@@ -487,7 +487,7 @@ function Level:get_backroom_animation_state_machine(dt)
 		shrink = {
 			enter = function(state)
 				self.hole_stencil_mode = "hole"
-				game:remove_all_active_enemies()
+				game.actor_manager:remove_all_active_enemies()
 				
 				self:end_backroom()
 				
@@ -782,7 +782,7 @@ function Level:on_elevator_crashed()
 	self:set_bounds(Rect:new(-1, -3, 31, 18))
 	self.flash_alpha = 1.5
 
-	game:kill_all_active_enemies()
+	game.actor_manager:kill_all_active_enemies()
 	-- self.game.game_ui:flash()
 
 	self.show_rubble = true
