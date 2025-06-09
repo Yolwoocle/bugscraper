@@ -1,47 +1,5 @@
-local TextManager = require "scripts.text"
-Text = TextManager:new()
-
-local backgrounds = require "data.backgrounds"
-local LightWorld = require "scripts.graphics.light_world"
-
-local Class = require "scripts.meta.class"
-local CollisionManager = require "scripts.physics.collision"
-local Player = require "scripts.actor.player"
-local Enemies = require "data.enemies"
-local ParticleSystem = require "scripts.game.particles"
-local AudioManager = require "scripts.audio.audio"
-local MenuManager = require "scripts.ui.menu.menu_manager"
-local InputManager = require "scripts.input.input"
-local MusicPlayer = require "scripts.audio.music_player"
-local Level = require "scripts.level.level"
-local GameUI = require "scripts.ui.game_ui"
-local Debug = require "scripts.game.debug"
-local Camera = require "scripts.game.camera"
-local Layer = require "scripts.graphics.layer"
-local LightLayer = require "scripts.graphics.light_layer"
-local ScreenshotManager = require "scripts.screenshot"
-local QueuedPlayer = require "scripts.game.queued_player"
-local GunDisplay = require "scripts.actor.enemies.gun_display"
-local MetaprogressionManager = require "scripts.game.metaprogression"
-local BackroomTutorial = require "scripts.level.backrooms.backroom_tutorial"
-
-local DiscordPresence = require "scripts.meta.discord_presence"
-local Steamworks = require "scripts.meta.steamworks"
-
-local measure = require "lib.batteries.measure"
-
-local guns = require "data.guns"
-local upgrades = require "data.upgrades"
-local shaders = require "data.shaders"
-local images = require "data.images"
-local skins, skin_name_to_id = require "data.skins"
-local sounds = require "data.sounds"
-local utf8 = require "utf8"
-
-require "bugscraper_config"
-require "scripts.meta.constants"
 require "scripts.util"
-require "scripts.meta.post_constants"
+local Class = require "scripts.meta.class"
 
 local ActorManager = Class:inherit()
 
