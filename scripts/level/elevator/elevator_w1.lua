@@ -10,6 +10,13 @@ function ElevatorW1:init(level)
 
 	self.layers["cabin_bg"] = images.cabin_bg_w1
 	self.layers["walls"] = images.cabin_walls_w1
+
+	self.door:set_images(
+		images.cabin_door_left_far,
+		images.cabin_door_left_center,
+		images.cabin_door_right_far,
+		images.cabin_door_right_center
+	)
 end
 
 function ElevatorW1:update(dt)

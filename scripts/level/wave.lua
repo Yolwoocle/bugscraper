@@ -17,7 +17,6 @@ function Wave:init(params)
 	self.fixed_enemies = param(params.fixed_enemies, {})
 	self.level_geometry = param(params.level_geometry, nil)
 	self.elevator_layers = param(params.elevator_layers, {})
-	self.door_images = param(params.door_images, nil)
 	
 	self.over_title = param(params.over_title, nil)
 	self.title = param(params.title, nil)
@@ -185,6 +184,7 @@ function Wave:enable_wave_side_effects(level)
 	if self.background then
 		level:set_background(self.background)
 	end
+	
 	if self.elevator then
 		game.level:set_elevator(self.elevator:new(level))
 	end
@@ -192,17 +192,21 @@ function Wave:enable_wave_side_effects(level)
 	if self.music then
 		game.music_player:fade_out(self.music, 1.0)
 	end
+
 	if self.level_geometry then
 		self.level_geometry:apply(level)
 	end
+
 	if self.bounds then
 		level:set_bounds(self.bounds)
 	end
+
 	if self.elevator_layers then
 		for layer, value in pairs(self.elevator_layers) do
 			level.elevator:set_layer(layer, value)
 		end
 	end
+	
 	if self.run then
 		self:run(level)
 	end
@@ -223,10 +227,6 @@ function Wave:enable_wave_side_effects(level)
 
 	if self.backroom then
 		game.level:begin_backroom(self.backroom:new())
-	end
-
-	if self.door_images then
-		game.level.elevator.door:set_images(self.door_images[1], self.door_images[2], self.door_images[3], self.door_images[4])
 	end
 end
 

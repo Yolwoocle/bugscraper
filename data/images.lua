@@ -377,9 +377,9 @@ local img_names = {
 	cabin_door_left_far =            "level/cabin_door_left_far", 
 	cabin_door_left_center =         "level/cabin_door_left_center",
 	cabin_door_right_center =        "level/cabin_door_right_center",
-	cabin_door_light_left_far =      "level/cabin_door_light_left_far", 
-
 	cabin_door_right_far =           "level/cabin_door_right_far",
+	
+	cabin_door_light_left_far =      "level/cabin_door_light_left_far", 
 	cabin_door_light_left_center =   "level/cabin_door_light_left_center",
 	cabin_door_light_right_far =     "level/cabin_door_light_right_far",
 	cabin_door_light_right_center =  "level/cabin_door_light_right_center",

@@ -32,6 +32,13 @@ function ElevatorW3:init(level)
 
 	self.bg_tape_spin = 0
 	self.bg_tape_spin_speed = 2
+
+	self.door:set_images(
+		images.cabin_door_empty,
+		images.cabin_door_w3_left_center,
+		images.cabin_door_empty,
+		images.cabin_door_w3_right_center
+	)
 end
 
 function ElevatorW3:update(dt)

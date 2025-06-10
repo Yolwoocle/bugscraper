@@ -374,12 +374,6 @@ local waves = {
 		music = "w2",
 
 		elevator = ElevatorW2,
-		door_images = {
-			images.cabin_door_bee_left_far,
-			images.cabin_door_bee_left_center,
-			images.cabin_door_bee_right_far,
-			images.cabin_door_bee_right_center,
-		},
 
 		over_title = get_world_prefix(2),
 		title = get_world_name(2),
@@ -637,17 +631,10 @@ local waves = {
 		music = "w3",
 
 		elevator = ElevatorW3,
-		
+
 		elevator_layers = {
 			["bg_grid"] = true,
             ["fg_grid"] = false,
-		},
-
-		door_images = {
-			images.cabin_door_empty,
-			images.cabin_door_w3_left_center,
-			images.cabin_door_empty,
-			images.cabin_door_w3_right_center,
 		},
 
 		over_title = get_world_prefix(3),
@@ -1199,12 +1186,6 @@ local waves = {
 			
 			["bg_fan"] = true,
 			["bg_grid"] = false,
-		},
-		door_images = {
-			images.cabin_door_bee_left_far,
-			images.cabin_door_bee_left_center,
-			images.cabin_door_bee_right_far,
-			images.cabin_door_bee_right_center,
 		},
 
 		background = backgrounds.BackgroundGreenhouse:new(),
