@@ -3,10 +3,6 @@ local Class = require "scripts.meta.class"
 local ElevatorDoor = require "scripts.level.elevator_door"
 local Timer = require "scripts.timer"
 
-local teapot3d = require "data.models.teapot"
-local Renderer3D = require "scripts.graphics.3d.renderer_3d"
-local Object3D = require "scripts.graphics.3d.object_3d"
-
 local images = require "data.images"
 
 local Elevator = Class:inherit()
@@ -27,35 +23,10 @@ function Elevator:init(level)
 		["door"] = true,
 		["door_background"] = true,
 		
-		["bg_grid"] = false,
-		["fg_grid"] = false,
-		
-		["cabin_bg"] = images.cabin_bg_w1,
-		["walls"] = images.cabin_walls_w1,
-		-- ["walls"] = true,
-
-		["bg_fan"] = false,	
-		["bg_grid_brown"] = false,	
-		["w3_cabin"] = false,
-		-- ["cabin_w3"] = false,
-		-- ["walls_w3"] = false,
-
-		["cabin_w4"] = false,
+		["ambient_occlusion"] = images.cabin_bg_ambient_occlusion,
+		["cabin_bg"] = images.empty,
+		["walls"] = images.empty,
 	}
-
-	self.def_ball_scale = 5
-    self.object_3d = Object3D:new(teapot3d)
-    self.renderer_3d = Renderer3D:new({self.object_3d})
-    self.object_3d.scale:sset(self.def_ball_scale)
-    self.object_3d.position.x = 150
-    self.object_3d.position.y = 145
-	self.renderer_3d.lighting_palette = {COL_MID_DARK_GREEN, COL_MID_GREEN, COL_LIGHT_GREEN}
-	self.renderer_3d.line_color = {1, 1, 1, 0}
-
-	self.bg_fan_spin = 0
-	self.bg_fan_spin_speed = 2
-
-	self.grid_timer = Timer:new(1.5)
 
 	self.clock_ang = pi
 end
@@ -63,18 +34,8 @@ end
 function Elevator:update(dt)
 	self:update_door_animation(dt)
 
-	self.object_3d.rotation.x = self.object_3d.rotation.x + dt
-    self.object_3d.rotation.y = self.object_3d.rotation.y + dt
-	self.renderer_3d:update(dt)
-
-	self.bg_fan_spin = self.bg_fan_spin + self.bg_fan_spin_speed * dt
-	
 	if self.door_animation_timer:update(dt) then
 		self:close_door()
-	end
-
-	if self.grid_timer:update(dt) then
-		self:set_layer("fg_grid", true)
 	end
 end
 
@@ -130,14 +91,8 @@ function Elevator:draw(enemy_buffer)
 end
 
 function Elevator:draw_front()
-	local cabin_rect = self.level.cabin_rect
-
 	if self.layers["walls"] then
 		love.graphics.draw(self.layers["walls"], self.level.cabin_rect.ax, self.level.cabin_rect.ay)
-	end
-	if self.layers["fg_grid"] then
-		love.graphics.draw(images.cabin_grid_platform, cabin_rect.ax +    16, cabin_rect.ay + 6*16)
-		love.graphics.draw(images.cabin_grid_platform, cabin_rect.ax + 19*16, cabin_rect.ay + 6*16)
 	end
 end
 
@@ -152,7 +107,9 @@ function Elevator:draw_cabin()
 	if self.layers["cabin_bg"] then
 		love.graphics.draw(self.layers["cabin_bg"], cabin_rect.ax, cabin_rect.ay)
 	end
-	love.graphics.draw(images.cabin_bg_ambient_occlusion, cabin_rect.ax, cabin_rect.ay)
+	if self.layers["ambient_occlusion"] then
+		love.graphics.draw(self.layers["ambient_occlusion"], cabin_rect.ax, cabin_rect.ay)
+	end
 	
 	if self.layers["counter"] then
 		self:draw_counter()
@@ -172,11 +129,6 @@ function Elevator:draw_counter()
 	love.graphics.setFont(FONT_7SEG)
 	print_color(COL_WHITE, string.sub("00000"..tostring(self.level.floor), -3, -1), 198+16*2, 97+16*2)
 	love.graphics.setFont(FONT_REGULAR)
-end
-
-function Elevator:start_grid_timer(time)
-	self.grid_timer:set_duration(time)
-	self.grid_timer:start()
 end
 
 return Elevator

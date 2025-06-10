@@ -32,6 +32,7 @@ function Wave:init(params)
 	self.floating_text = param(params.floating_text, nil)
 	self.cutscene = param(params.cutscene, nil)
 	self.backroom = param(params.backroom, nil)
+	self.elevator = param(params.elevator, nil)
 
 	self.enable_stomp_arrow_tutorial = param(params.enable_stomp_arrow_tutorial, false)
 
@@ -184,6 +185,10 @@ function Wave:enable_wave_side_effects(level)
 	if self.background then
 		level:set_background(self.background)
 	end
+	if self.elevator then
+		game.level:set_elevator(self.elevator:new(level))
+	end
+
 	if self.music then
 		game.music_player:fade_out(self.music, 1.0)
 	end

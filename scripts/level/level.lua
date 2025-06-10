@@ -731,6 +731,10 @@ end
 
 ---------------------------------------------
 
+function Level:set_elevator(elevator)
+	self.elevator = elevator
+end
+
 function Level:on_red_button_pressed()
 	self.is_reversing_elevator = true
 	self.ending_timer:set_duration(10)

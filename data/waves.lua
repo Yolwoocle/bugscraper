@@ -11,6 +11,10 @@ local BackroomCafeteria  = require "scripts.level.backroom.backroom_cafeteria"
 local BackroomCEOOffice = require "scripts.level.backroom.backroom_ceo_office"
 local E                  = require "data.enemies"
 
+local ElevatorW1 = require "scripts.level.elevator.elevator_w1"
+local ElevatorW2 = require "scripts.level.elevator.elevator_w2"
+local ElevatorW3 = require "scripts.level.elevator.elevator_w3"
+
 local utf8 = require "utf8"
 
 RECT_ELEVATOR            = Rect:new(unpack(RECT_ELEVATOR_PARAMS))
@@ -148,6 +152,8 @@ local waves = {
 		title = get_world_name(1),
 		title_color = COL_LIGHTEST_GRAY,
 		title_outline_color = COL_BLACK_BLUE,
+
+		elevator = ElevatorW1,
 	}),
 
 
@@ -367,13 +373,7 @@ local waves = {
 		background = backgrounds.BackgroundFactory:new(),
 		music = "w2",
 
-		elevator_layers = {
-			["cabin_bg"] = images.cabin_bg_w2,
-			["walls"] = images.cabin_walls_w2,
-			
-			["bg_fan"] = true,
-			["bg_grid"] = false,
-		},
+		elevator = ElevatorW2,
 		door_images = {
 			images.cabin_door_bee_left_far,
 			images.cabin_door_bee_left_center,
@@ -636,17 +636,11 @@ local waves = {
 		background = backgrounds.BackgroundServers:new(),
 		music = "w3",
 
+		elevator = ElevatorW3,
+		
 		elevator_layers = {
-			["cabin_bg"] = images.cabin_bg_w3,
-			["walls"] = images.cabin_walls_w3,
-
-			["bg_fan"] = false,
 			["bg_grid"] = true,
-			["w3_cabin"] = true,
-
-			["door_background"] = true,
-            ["cabin"] = true,
-            ["counter"] = true,
+            ["fg_grid"] = false,
 		},
 
 		door_images = {
@@ -707,7 +701,9 @@ local waves = {
 			local cabin_rect = game.level.cabin_rect
 			Particles:falling_grid(cabin_rect.ax + 16, cabin_rect.ay + 6 * 16)
 			Particles:falling_grid(cabin_rect.bx - 7 * 16, cabin_rect.ay + 6 * 16)
-			level.elevator:start_grid_timer(2.5)
+			if level.elevator.start_grid_timer then
+				level.elevator:start_grid_timer(2.5)
+			end
 		end,
 
 		fixed_enemies = {

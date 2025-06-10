@@ -25,6 +25,9 @@ function BigBeelet:init(x, y)
         normal = {images.big_chipper, 0.2, 4},
         attack = {images.big_chipper_activated, 0.1, 4},
     }, "normal", SPRITE_ANCHOR_CENTER_CENTER) 
+
+    self.stomps = math.huge
+    self.damage_on_stomp = 5
 end
 
 function BigBeelet:update(dt)
