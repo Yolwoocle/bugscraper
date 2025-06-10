@@ -24,7 +24,7 @@ local ScreenshotManager = require "scripts.screenshot"
 local QueuedPlayer = require "scripts.game.queued_player"
 local GunDisplay = require "scripts.actor.enemies.gun_display"
 local MetaprogressionManager = require "scripts.game.metaprogression"
-local BackroomTutorial = require "scripts.level.backrooms.backroom_tutorial"
+local BackroomTutorial = require "scripts.level.backroom.backroom_tutorial"
 
 local DiscordPresence = require "scripts.meta.discord_presence"
 local Steamworks = require "scripts.meta.steamworks"

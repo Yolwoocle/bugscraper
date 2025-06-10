@@ -2,7 +2,7 @@ require "scripts.util"
 local upgrades = require "data.upgrades"
 local enemies = require "data.enemies"
 local images = require "data.images"
-local Backroom = require "scripts.level.backrooms.backroom"
+local Backroom = require "scripts.level.backroom.backroom"
 local BackgroundCafeteria = require "scripts.level.background.background_cafeteria"
 
 local BackroomCEOOffice = Backroom:inherit()

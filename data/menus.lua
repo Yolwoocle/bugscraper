@@ -11,7 +11,7 @@ local debug_draw_waves      = require "scripts.debug.draw_waves"
 local images                = require "data.images"
 local DebugCommandMenu      = require "scripts.ui.menu.debug_command_menu"
 local NewRewardMenu         = require "data.menus.menu_new_reward"
-local BackroomTutorial      = require "scripts.level.backrooms.backroom_tutorial"
+local BackroomTutorial      = require "scripts.level.backroom.backroom_tutorial"
 
 local DEFAULT_MENU_BG_COLOR = menu_util.DEFAULT_MENU_BG_COLOR
 local empty_func            = menu_util.empty_func

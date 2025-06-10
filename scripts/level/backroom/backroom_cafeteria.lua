@@ -1,6 +1,6 @@
 require "scripts.util"
 local images = require "data.images"
-local BackroomWithDoor = require "scripts.level.backrooms.backroom_with_door"
+local BackroomWithDoor = require "scripts.level.backroom.backroom_with_door"
 local BackgroundCafeteria = require "scripts.level.background.background_cafeteria"
 local Rect = require "scripts.math.rect"
 local TvPresentation    = require "scripts.level.background.tv_presentation"

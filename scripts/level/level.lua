@@ -10,10 +10,10 @@ local BackgroundBeehive = require "scripts.level.background.background_beehive"
 local BackgroundCafeteria = require "scripts.level.background.background_cafeteria"
 local BackgroundFinal = require "scripts.level.background.background_final"
 local BackgroundW1 = require "scripts.level.background.background_w1"
-local Elevator = require "scripts.level.elevator"
+local Elevator = require "scripts.level.elevator.elevator"
 local Wave = require "scripts.level.wave"
 local StateMachine = require "scripts.state_machine"
-local BackroomGroundFloor = require "scripts.level.backrooms.backroom_ground_floor"
+local BackroomGroundFloor = require "scripts.level.backroom.backroom_ground_floor"
 
 local images = require "data.images"
 local sounds = require "data.sounds"
@@ -647,7 +647,7 @@ function Level:draw()
 		self.map:draw()
 		
 		if self.show_cabin then
-			self.elevator:draw(self.enemy_buffer, self.new_wave_progress)
+			self.elevator:draw(self.enemy_buffer)
 		end
 	end)
 end

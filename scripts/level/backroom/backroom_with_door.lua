@@ -1,6 +1,6 @@
 require "scripts.util"
 local images = require "data.images"
-local Backroom = require "scripts.level.backrooms.backroom"
+local Backroom = require "scripts.level.backroom.backroom"
 local ElevatorDoor       = require "scripts.level.elevator_door"
 
 local BackroomWithDoor = Backroom:inherit()

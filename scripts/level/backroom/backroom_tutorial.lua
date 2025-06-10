@@ -1,7 +1,7 @@
 require "scripts.util"
 local images = require "data.images"
 local enemies = require "data.enemies"
-local BackroomWithDoor = require "scripts.level.backrooms.backroom_with_door"
+local BackroomWithDoor = require "scripts.level.backroom.backroom_with_door"
 local BackgroundCity = require "scripts.level.background.background_city"
 local Rect = require "scripts.math.rect"
 local Loot = require "scripts.actor.loot"
