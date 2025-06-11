@@ -12,7 +12,6 @@ function GameUI:init(game, is_visible)
 	self.game = game
 
     self.is_visible = param(is_visible, true)
-	self.stomp_arrow_target = nil
 
 	self.floating_text = ""
 	self.floating_text_y = -50
@@ -150,7 +149,6 @@ end
 
 function GameUI:draw()
 	if not self.is_visible then return end
-	self:draw_stomp_arrow()
 	if game.debug and game.debug.title_junk then
 		self:draw_timer()
 		self:draw_version()
@@ -314,24 +312,6 @@ function GameUI:draw_offscreen_indicator_for(player)
 		print_centered(player.skin.icon, x, y)
 	end)
 	print_centered_outline(player.skin.color_palette[1], player.skin.color_palette[4], Text:text("player.abbreviation", player.n), x, y - 16)
-end
-
-function GameUI:draw_stomp_arrow()
-	if self.stomp_arrow_target and self.stomp_arrow_target.is_active then
-		-- draw_centered(images.stomp_arrow, self.stomp_arrow_target.mid_x, self.stomp_arrow_target.y - 12)
-
-		if self.stomp_arrow_target.is_removed then
-			self:set_stomp_arrow_target(nil)
-			Metaprogression:set("has_seen_stomp_tutorial", true)
-		end
-	end
-end
-
-function GameUI:set_stomp_arrow_target(target)
-	if target and Metaprogression:get("has_seen_stomp_tutorial") then
-		return
-	end
-	self.stomp_arrow_target = target
 end
 
 function GameUI:draw_floating_text()

@@ -33,8 +33,6 @@ function Wave:init(params)
 	self.backroom = param(params.backroom, nil)
 	self.elevator = param(params.elevator, nil)
 
-	self.enable_stomp_arrow_tutorial = param(params.enable_stomp_arrow_tutorial, false)
-
 	self.background = param(params.background, nil)
 end
 
@@ -209,10 +207,6 @@ function Wave:enable_wave_side_effects(level)
 	
 	if self.run then
 		self:run(level)
-	end
-
-	if self.enable_stomp_arrow_tutorial then
-		game.game_ui:set_stomp_arrow_target(level.enemy_buffer[1])
 	end
 
 	if self.floating_text then
