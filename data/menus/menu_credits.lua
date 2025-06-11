@@ -51,8 +51,9 @@ return Menu:new(game, "{menu.credits.title}", {
     { "Raphytator", empty_func },      -- func_url("https://raphytator.itch.io/") },
     { "Axel 'Vlad' Born", empty_func },
     { "Jan Willem Nijman", empty_func },
-    { "Kaïs", empty_func },  -- The two who beat the game at 
+    { "Kaïs", empty_func },  -- The two who beat the game at salon du JV toulousain
     { "oat_addict", empty_func }, 
+    { "Noba", empty_func }, 
     { "Indie Game Lyon", empty_func }, -- func_url("https://www.indiegamelyon.com/")},
     { "Toulouse Game Dev", empty_func }, -- func_url("https://www.indiegamelyon.com/")},
     { "LÖVE framework", empty_func },    -- func_url("https://love2d.org/") },

@@ -101,21 +101,28 @@ function Wave:add_cocoons(enemy_classes)
 	end
 end
 
-function Wave:spawn(rect)
+function Wave:spawn(elevator)
 	local spawned_enemies = {}
 
-	self:spawn_roll(rect, self:roll(), spawned_enemies)
+	self:spawn_roll(elevator, self:roll(), spawned_enemies)
 	if self.fixed_enemies then
-		self:spawn_roll(rect, self:roll_fixed(self.fixed_enemies), spawned_enemies)
+		self:spawn_roll(elevator, self:roll_fixed(self.fixed_enemies), spawned_enemies)
 	end
 
 	return spawned_enemies
 end
 
-function Wave:spawn_roll(rect, roll, spawned_enemies)
+function Wave:spawn_roll(elevator, roll, spawned_enemies)
 	local enemy_classes = roll
 
 	for i=1, #enemy_classes do
+		local entrance_names = enemy_classes[i].entrances or elevator.entrance_names
+		assert(entrance_names and type(entrance_names) == "table" and #entrance_names > 0, "Invalid entrances table given")
+		local entrance_name = random_sample(entrance_names)
+		local entrance = elevator.entrances[entrance_name]
+		assert(entrance and entrance.rect, "Invalid entrance found")
+		local rect = entrance.rect
+
 		local x = love.math.random(rect.ax + 16, rect.bx - 16)
 		local y = love.math.random(rect.ay + 16, rect.by - 16)
 

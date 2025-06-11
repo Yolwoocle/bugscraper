@@ -2,6 +2,7 @@ require "scripts.util"
 local Class = require "scripts.meta.class"
 local ElevatorDoor = require "scripts.level.elevator_door"
 local Timer = require "scripts.timer"
+local Rect  = require "scripts.math.rect"
 
 local images = require "data.images"
 
@@ -11,6 +12,31 @@ function Elevator:init(level)
     self.level = level
 
 	self.door = ElevatorDoor:new(self.level.door_rect.ax, self.level.door_rect.ay)
+
+	self.entrances = {
+		main = {
+			door = ElevatorDoor:new(self.level.door_rect.ax, self.level.door_rect.ay),
+			rect = Rect:new(level.cabin_rect.ax+154, level.cabin_rect.ay+122, level.cabin_rect.ax+261, level.cabin_rect.ay+207)
+		},
+		left_vent = {
+			door = ElevatorDoor:new(self.level.door_rect.ax, self.level.door_rect.ay),
+			rect = Rect:new(level.cabin_rect.ax+32, level.cabin_rect.ay+153, level.cabin_rect.ax+97, level.cabin_rect.ay+202)
+		},
+		right_vent = {
+			door = ElevatorDoor:new(self.level.door_rect.ax, self.level.door_rect.ay),
+			rect = Rect:new(level.cabin_rect.ax+318, level.cabin_rect.ay+153, level.cabin_rect.ax+383, level.cabin_rect.ay+202)
+		},
+		left_trapdoor = {
+			door = ElevatorDoor:new(self.level.door_rect.ax, self.level.door_rect.ay),
+			rect = Rect:new(level.cabin_rect.ax+33, level.cabin_rect.ay+22, level.cabin_rect.ax+76, level.cabin_rect.ay+59)
+		},
+		right_trapdoor = {
+			door = ElevatorDoor:new(self.level.door_rect.ax, self.level.door_rect.ay),
+			rect = Rect:new(level.cabin_rect.ax+339, level.cabin_rect.ay+22, level.cabin_rect.ax+382, level.cabin_rect.ay+59)
+		},
+	}
+	self.entrance_names = table_keys(self.entrances)
+
 	self.door:close(false)
 
 	self.floor_progress = 0.0

@@ -88,6 +88,12 @@ local img_names = {
 	yv_wall_slide =    "actors/players/yv_wall_slide",
 	yv_dead =          "actors/players/yv_dead",
 
+	nob_idle =          "actors/players/nob_idle",
+	nob_walk_down =     "actors/players/nob_walk_down",
+	nob_airborne =      "actors/players/nob_airborne",
+	nob_wall_slide =    "actors/players/nob_wall_slide",
+	nob_dead =          "actors/players/nob_dead",
+
 	duck =             "actors/players/duck",
 
 	-- NPCs

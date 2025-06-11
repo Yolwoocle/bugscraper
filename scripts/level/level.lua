@@ -37,15 +37,13 @@ function Level:init(game, backroom)
 	self.world_generator:reset()
 	self.world_generator:generate_cabin()
 
+	self:set_bounds(Rect:new(unpack(RECT_GROUND_FLOOR_PARAMS)))
+
 	-- Cabin stats
-	local bw = BLOCK_WIDTH
 	local cabin_ax, cabin_ay = shaft_rect.ax,   shaft_rect.ay
-	local cabin_bx, cabin_by = shaft_rect.bx+1, shaft_rect.by+1
 	local door_ax, door_ay = cabin_ax*BW+154, cabin_ax*BW+122
 	local door_bx, door_by = cabin_ay*BW+261, cabin_ay*BW+207
-	self.door_rect = Rect:new(door_ax, door_ay, door_bx, door_by)
-
-	self:set_bounds(Rect:new(unpack(RECT_GROUND_FLOOR_PARAMS)))
+	self.door_rect = Rect:new(door_ax, door_ay, door_bx, door_by) 
 
 	self.kill_zone = Rect:new(-400000, -400000, 400000, CANVAS_HEIGHT + BW*6)
 
@@ -350,7 +348,7 @@ function Level:new_wave_buffer_enemies()
 	local wave_n = clamp(self.floor + 1, 1, #waves) -- floor+1 because the floor indicator changes before enemies are spawned
 	local wave = self:get_new_wave(wave_n, self.floor+1)
 	
-	self.enemy_buffer = wave:spawn(self.door_rect)
+	self.enemy_buffer = wave:spawn(self.elevator)
 	
 	wave:enable_wave_side_effects(self)
 	if self.background.change_clear_color then

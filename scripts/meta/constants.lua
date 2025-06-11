@@ -118,7 +118,7 @@ FONT_CHARACTERS =
     "{|}~ ¡¢£©®°¿ÀÁÂÃÄÅĄÆÇĆÈÉÊËĘÌÍÎÏŁÐÑŃÒÓÔÕÖØÙÚÛÜŚÝŹŻŒÞßàáâãäåąæçćèéêëęìíîïłðñńòóôõöøùúûüśýźżœþÿŸЁАБВГДЕЖЗИЙКЛМНО"..
     "ПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюяё€"
 FONT_SYMBOLS_CHARACTERS = "🔊🔉🔈🎵🎼🔳🔲📺🕐↖🛜▶⏸🔄🔘⬅➡⬆⬇⏏🔫🔚📥👆🔙🗄⌨🎮🎚❤"..
-    "✅❎🔗💡⚠🕹🫨💧🐜🐛🐝🪲🈶🌄🛅😎😈🐦𝕏🐰🐞🌐⏭🥚🥦🐧🎓"
+    "✅❎🔗💡⚠🕹🫨💧🐜🐛🐝🪲🈶🌄🛅😎😈🐦𝕏🐰🐞🌐⏭🥚🥦🐧🎓🔺🦂"
 FONT_7SEG_CHARACTERS = " 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 FONT_MINI_CHARACTERS = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_abcdefghijklmnopqrstuvwxyz{|}~ÀÁÂÃÄÅĄÆÇĆÈÉÊËĘÌÍÎÏŁÐÑŃÒÓÔÕÖØÙÚÛÜŚÝŹŻÞßàáâãäåąæçćèéêëęìíîïłðñńòóôõöøùúûüśýþÿźżŒœ⁍"
 FONT_FAT_CHARACTERS = " ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890!,.:;'\"@#$%^&*()[]{}_-=+<>/\\|~"

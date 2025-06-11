@@ -63,6 +63,18 @@ local skins = {
 		text_key = "nel",
 	},
 	{
+		anim_idle = {images.nob_idle, 0.18, 4},
+		anim_wall_slide = {images.nob_wall_slide},
+		img_walk_down = images.nob_walk_down,
+		img_airborne = images.nob_airborne,
+		img_dead = images.nob_dead,
+
+		color_palette = {color(0xb55088), color(0x68386c), color(0xf6757a), color(0x3a4466), color(0x262b44)},
+		menu_color = COL_LIGHT_RED, 
+		icon = "🦂",
+		text_key = "nob",
+	},
+	{
 		anim_idle = {images.rabbit_1, 0.2, 1},
 		anim_wall_slide = {images.rabbit_2},
 		img_walk_down = images.rabbit_1,

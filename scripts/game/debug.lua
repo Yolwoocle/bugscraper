@@ -898,6 +898,10 @@ function Debug:draw_colview()
         rect_color(COL_RED, "line", level.cabin_rect.x, level.cabin_rect.y, level.cabin_rect.w, level.cabin_rect.h)
         rect_color(COL_CYAN, "line", level.cabin_inner_rect.x, level.cabin_inner_rect.y, level.cabin_inner_rect.w,
             level.cabin_inner_rect.h)
+        
+        for _, entr in pairs(level.elevator.entrances) do
+            rect_color(COL_YELLOW, "line", entr.rect.x, entr.rect.y, entr.rect.w, entr.rect.h)
+        end
     end
 
     for _, e in pairs(self.game.actors) do

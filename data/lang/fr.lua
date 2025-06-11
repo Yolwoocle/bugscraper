@@ -70,6 +70,7 @@ return {
             zia = "Zia",
             tok = "Tok",
             nel = "Nel",
+            nob = "Nob",
             rico = "Rico",
             leo = "Léo",
             dodu = "Dodu",
