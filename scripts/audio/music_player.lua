@@ -99,8 +99,6 @@ function MusicPlayer:set_disk(disk_name, flags)
 		if self.current_disk.current_source then
 			local current_source = self.current_disk.current_source
 			previous_disk_time = current_source:tell()
-			print_debug("a", current_source:tell())
-
 		end
 	end
 	
@@ -115,7 +113,6 @@ function MusicPlayer:set_disk(disk_name, flags)
 	self:play()
 
 	if flags.continue_previous_pos and self.current_disk and self.current_disk.current_source then
-		print_debug("b", previous_disk_time)
 		local source = self.current_disk.current_source
 		source:seek(previous_disk_time)
 	end

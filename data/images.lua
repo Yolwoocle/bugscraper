@@ -373,6 +373,9 @@ local img_names = {
 	cabin_bg_w4_test =               "level/cabin_bg_w4_test",
 	cabin_bg_ambient_occlusion =     "level/cabin_bg_ambient_occlusion",
 
+	cabin_bg_w1_ventilation_shaft =  "level/cabin_bg_w1_ventilation_shaft",
+	cabin_bg_w1_trapdoor =           "level/cabin_bg_w1_trapdoor",
+
 	cabin_walls_w1 =                 "level/cabin_walls_w1",
 	cabin_walls_w2 =              	 "level/cabin_walls_w2",
 	cabin_walls_w3 =                 "level/cabin_walls_w3",

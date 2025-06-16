@@ -34,6 +34,19 @@ function Wave:init(params)
 	self.elevator = param(params.elevator, nil)
 
 	self.background = param(params.background, nil)
+
+	self.entrance_names = self:generate_entrance_names()
+end
+
+function Wave:generate_entrance_names()
+	local entrances = {}
+	for _, entry in pairs(self.enemies) do
+		local entry_entrances = entry.entrances or {"main"}
+		for _, entrance in pairs(entry_entrances) do
+			entrances[entrance] = true
+		end 
+	end
+	return table_keys(entrances)
 end
 
 function Wave:roll()
@@ -48,6 +61,16 @@ function Wave:roll()
 	return roll
 end
 
+function Wave:get_parsed_enemy_table(enemy_table)
+	return {
+		enemy_class = enemy_table[1],
+		args = enemy_table.args or {},
+		position = enemy_table.position,
+		entrances = enemy_table.entrances or {"main"},
+		ignore_position_clamp = enemy_table.ignore_position_clamp,
+	}
+end
+
 function Wave:roll_random(enemies)
 	enemies = param(enemies, self.enemies)
 	local number_of_enemies = love.math.random(self.min, self.max)
@@ -58,11 +81,7 @@ function Wave:roll_random(enemies)
 	local output = {}
 	for i=1, number_of_enemies do
 		local _, enemy_table = random_weighted(enemies)
-		table.insert(output, {
-			enemy_class = enemy_table[1],
-			args = enemy_table.args or {},
-			position = enemy_table.position,
-		})
+		table.insert(output, self:get_parsed_enemy_table(enemy_table))
 	end
 	
 	return output
@@ -74,11 +93,7 @@ function Wave:roll_fixed(enemies)
 	for i=1, #enemies do
 		local enemy_table = enemies[i]
 		for j=1, enemy_table[2] do
-			table.insert(output, {
-				enemy_class = enemy_table[1],
-				args = enemy_table.args or {},
-				position = enemy_table.position,
-			})
+			table.insert(output, self:get_parsed_enemy_table(enemy_table))
 		end
 	end
 	
@@ -123,8 +138,8 @@ function Wave:spawn_roll(elevator, roll, spawned_enemies)
 		assert(entrance and entrance.rect, "Invalid entrance found")
 		local rect = entrance.rect
 
-		local x = love.math.random(rect.ax + 16, rect.bx - 16)
-		local y = love.math.random(rect.ay + 16, rect.by - 16)
+		local x = love.math.random(rect.ax, rect.bx)
+		local y = love.math.random(rect.ay, rect.by)
 
 		local enemy_class = enemy_classes[i].enemy_class
 		local args = enemy_classes[i].args
@@ -132,9 +147,12 @@ function Wave:spawn_roll(elevator, roll, spawned_enemies)
 		
 		local enemy_instance = enemy_class:new(position[1], position[2], unpack(args))
 
-		-- Prevent collisions with floor
-		if enemy_instance.y + enemy_instance.h > rect.by then
-			enemy_instance:set_position(enemy_instance.x, rect.by - enemy_instance.h)
+		-- Center enemy & clamp position
+		if not (enemy_classes[i].position or enemy_classes[i].ignore_position_clamp) then
+			enemy_instance:set_position(
+				clamp(enemy_instance.x - enemy_instance.w/2, rect.ax, rect.bx - enemy_instance.w), 
+				clamp(enemy_instance.y - enemy_instance.h/2, rect.ay, rect.by - enemy_instance.h)
+			)
 		end
 
 		game:new_actor(enemy_instance)

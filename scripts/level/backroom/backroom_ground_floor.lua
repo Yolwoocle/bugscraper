@@ -4,7 +4,7 @@ local enemies = require "data.enemies"
 local npcs = require "data.npcs"
 local BackroomWithDoor = require "scripts.level.backroom.backroom_with_door"
 local BackgroundCafeteria = require "scripts.level.background.background_cafeteria"
-local ElevatorDoor       = require "scripts.level.elevator_door"
+local ElevatorDoorSlidingLarge = require "scripts.level.door.elevator_door_sliding_large"
 local TvPresentation    = require "scripts.level.background.tv_presentation"
 local WaterDispenser   = require "scripts.actor.enemies.vending_machine.water_dispenser"
 
@@ -15,7 +15,8 @@ function BackroomGroundFloor:init()
 	self.name = "ground_floor"
 
 	self.cafeteria_background = BackgroundCafeteria:new(self)
-	self.door = ElevatorDoor:new(186, 154, images.cabin_door_light_left_far, images.cabin_door_light_left_center, images.cabin_door_light_right_far, images.cabin_door_light_right_center)
+	self.door = ElevatorDoorSlidingLarge:new(186, 154)
+	self.door:set_images(images.cabin_door_light_left_far, images.cabin_door_light_left_center, images.cabin_door_light_right_far, images.cabin_door_light_right_center)
 
 	self.all_in_front = false
 

@@ -340,11 +340,14 @@ function Debug:init(game)
         table.insert(self.action_keys, k)
     end
     table.sort(self.action_keys)
+
+    self.t = 0.0
 end
 
 function Debug:update(dt)
     if not game.debug_mode then return end
 
+    self.t = self.t + dt
     self.frame = self.frame + 1
     if self.set_can_pause_to_true_timer and self.set_can_pause_to_true_timer > 0 then
         self.set_can_pause_to_true_timer = self.set_can_pause_to_true_timer - 1
@@ -816,6 +819,21 @@ function Debug:draw_info_view()
     -- love.graphics.draw(images.removeme_bands, 0, 0)
 
     linedottedoffset = linedottedoffset - 0.2
+
+    local a = self.t
+
+    local image = images._test_gaysquare
+    local w, h = image:getWidth(), image:getHeight()
+	local mesh_vertices = {
+		{0, 0,   0, 0,   1, 1, 1, 1},
+		{w, 0,   1, 0,   1, 1, 1, 1},
+		{w+math.cos(a)*5, h*math.sin(a),   1, 1,   1, 1, 1, 1},
+		{0-math.cos(a)*5, h*math.sin(a),   0, 1,   1, 1, 1, 1},
+	}
+
+	local mesh = love.graphics.newMesh(mesh_vertices, "fan", "dynamic")
+	mesh:setTexture(image)
+    love.graphics.draw(mesh, 100, 100)
 end
 
 

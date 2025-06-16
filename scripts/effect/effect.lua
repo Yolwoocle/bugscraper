@@ -44,7 +44,6 @@ function Effect:update_effect(dt)
         self.timer = math.max(0.0, self.timer - dt)
     elseif self.duration_unit == "floor" then
         self.timer = self.duration - (game.level.floor - self.start_floor)
-        print_debug("self.timer", self.timer)
     end
 
     if self.timer <= 0.0 then

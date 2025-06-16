@@ -202,7 +202,7 @@ function Level:get_new_wave_animation_state_machine()
 		},
 		opening = {
 			enter = function(state)
-				self.elevator:open_door(ternary(self:is_on_cafeteria(), nil, 1.4))
+				self.elevator:open_door(self.current_wave.entrance_names, ternary(self:is_on_cafeteria(), nil, 1.4))
 				self.current_wave:show_title()
 				self:increment_floor()
 				self.new_wave_progress = self.opened_door_timer_override or 1.0
@@ -524,22 +524,11 @@ function Level:on_upgrade_applied(upgrade)
 	-- Remove the upgrade from the bag
 	-- Scotch, should probably make a table instead of going through the whole table... whatever... 
 	
-	print_debug("bef upgrades:")
-	for _, up in pairs(self.upgrade_bag) do
-		print_debug("-", up[1].name)
-	end
-	print_debug("")
-
 	for i = #self.upgrade_bag, 1, -1 do
 		if self.upgrade_bag[i][1].name == upgrade.name then
 			table.remove(self.upgrade_bag, i)
 		end
 	end
-	print_debug("aft upgrades:")
-	for _, up in pairs(self.upgrade_bag) do
-		print_debug("-", up[1].name)
-	end
-	print_debug("")
 end
 
 function Level:on_upgrade_display_killed(display)

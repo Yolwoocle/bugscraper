@@ -598,8 +598,6 @@ function FallingGridParticle:update(dt)
 	end
 
 	self.y = self.orig_y - math.sin(self.rot_3d) * self.img_side:getHeight()
-	print_debug(self.orig_y, "-", math.sin(self.rot_3d), "*", self.img_side:getHeight(), 
-		"sin", math.sin(self.rot_3d), "cos", math.cos(self.rot_3d))
 end
 
 function FallingGridParticle:draw()

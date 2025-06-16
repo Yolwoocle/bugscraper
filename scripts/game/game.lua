@@ -885,7 +885,7 @@ function Game:queue_join_game(input_profile_id, joystick)
 end
 
 function Game:join_game(player_n)
-	local player = self:new_player(player_n, nil, nil, false)
+	local player = self:new_player(player_n, nil, nil)
 
 	if player then
 		self.skin_choices[player.skin.id] = false
@@ -920,7 +920,7 @@ function Game:unregister_alive_player(player_n)
 	self.players[player_n] = nil
 end
 
-function Game:new_player(player_n, x, y, put_in_buffer)
+function Game:new_player(player_n, x, y)
 	player_n = player_n or self:find_free_player_number()
 	if player_n == nil then
 		return
@@ -937,13 +937,6 @@ function Game:new_player(player_n, x, y, put_in_buffer)
 	if self.level.backroom and self.level.backroom.get_default_player_gun then
 		local gun = self.level.backroom:get_default_player_gun()
 		player:equip_gun(gun)
-	end
-	
-
-	if put_in_buffer then
-		player:set_active(false)
-		self.level:buffer_actor(player)
-		self.level.elevator:open_door(1.0)
 	end
 
 	self:new_actor(player)

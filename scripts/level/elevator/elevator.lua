@@ -1,6 +1,6 @@
 require "scripts.util"
 local Class = require "scripts.meta.class"
-local ElevatorDoor = require "scripts.level.elevator_door"
+local ElevatorDoorSlidingLarge = require "scripts.level.door.elevator_door_sliding_large"
 local Timer = require "scripts.timer"
 local Rect  = require "scripts.math.rect"
 
@@ -11,33 +11,13 @@ local Elevator = Class:inherit()
 function Elevator:init(level)
     self.level = level
 
-	self.door = ElevatorDoor:new(self.level.door_rect.ax, self.level.door_rect.ay)
-
 	self.entrances = {
 		main = {
-			door = ElevatorDoor:new(self.level.door_rect.ax, self.level.door_rect.ay),
+			door = ElevatorDoorSlidingLarge:new(self.level.door_rect.ax, self.level.door_rect.ay),
 			rect = Rect:new(level.cabin_rect.ax+154, level.cabin_rect.ay+122, level.cabin_rect.ax+261, level.cabin_rect.ay+207)
-		},
-		left_vent = {
-			door = ElevatorDoor:new(self.level.door_rect.ax, self.level.door_rect.ay),
-			rect = Rect:new(level.cabin_rect.ax+32, level.cabin_rect.ay+153, level.cabin_rect.ax+97, level.cabin_rect.ay+202)
-		},
-		right_vent = {
-			door = ElevatorDoor:new(self.level.door_rect.ax, self.level.door_rect.ay),
-			rect = Rect:new(level.cabin_rect.ax+318, level.cabin_rect.ay+153, level.cabin_rect.ax+383, level.cabin_rect.ay+202)
-		},
-		left_trapdoor = {
-			door = ElevatorDoor:new(self.level.door_rect.ax, self.level.door_rect.ay),
-			rect = Rect:new(level.cabin_rect.ax+33, level.cabin_rect.ay+22, level.cabin_rect.ax+76, level.cabin_rect.ay+59)
-		},
-		right_trapdoor = {
-			door = ElevatorDoor:new(self.level.door_rect.ax, self.level.door_rect.ay),
-			rect = Rect:new(level.cabin_rect.ax+339, level.cabin_rect.ay+22, level.cabin_rect.ax+382, level.cabin_rect.ay+59)
 		},
 	}
 	self.entrance_names = table_keys(self.entrances)
-
-	self.door:close(false)
 
 	self.floor_progress = 0.0
 	self.door_animation = false
@@ -65,26 +45,56 @@ function Elevator:update(dt)
 	end
 end
 
-function Elevator:set_door_opened(value)
-	self.door:set_opened(value)
+function Elevator:set_door_opened(entrance_name, value)
+	assert(self.entrances[entrance_name], "Invalid entrance "..tostring(entrance_name))
+	self.entrances[entrance_name].door:set_opened(value)
 end
 
-function Elevator:open_door(close_timer)
-	self.door:open()
+function Elevator:add_entrance(entrance_name, entrance)
+	self.entrances[entrance_name] = entrance
+	self.entrance_names = table_keys(self.entrances)
+end
+
+function Elevator:get_entrance(entrance_name)
+	return self.entrances[entrance_name]
+end
+
+function Elevator:get_door(entrance_name)
+	return (self.entrances[entrance_name] or {}).door
+end
+
+function Elevator:open_door(entrance_names, close_timer)
+	entrance_names = entrance_names or self.entrance_names
+	for _, entrance_name in pairs(entrance_names) do
+		local entrance = self.entrances[entrance_name]
+		if entrance then
+			entrance.door:open()
+		end
+	end
+
 	if close_timer then
 		self.door_animation_timer:set_duration(close_timer)
 		self.door_animation_timer:start()
 	end
 end
 
-function Elevator:close_door()
-	self.door:close()
+function Elevator:close_door(entrance_names)
+	entrance_names = entrance_names or self.entrance_names
+	for _, entrance_name in pairs(entrance_names) do
+		local entrance = self.entrances[entrance_name]
+		if entrance then
+			entrance.door:close()
+		end
+	end
+
 	self.door_animation_timer:stop()
 	self.level:on_door_close()
 end
 
 function Elevator:update_door_animation(dt)
-	self.door:update(dt)
+	for _, entrance in pairs(self.entrances) do
+		entrance.door:update(dt)
+	end
 	if self.floor_progress == 0 then return end
 end
 
@@ -101,9 +111,9 @@ end
 function Elevator:draw(enemy_buffer)
 	-- Door
 	if self.layers["cabin"] and self.layers["door"] and self.layers["door_background"] then
-		local x, y = self.level.door_rect.ax, self.level.door_rect.ay
-		local w, h = self.level.door_rect.bx - self.level.door_rect.ax+1, self.level.door_rect.by - self.level.door_rect.ay+1
-		rect_color(self.level.background.clear_color, "fill", x, y, w, h);
+		for _, entrance in pairs(self.entrances) do
+			rect_color(self.level.background.clear_color, "fill", entrance.rect.x, entrance.rect.y, entrance.rect.w+1, entrance.rect.h+1);
+		end
 	end
 	
 	-- Draw buffered enemies
@@ -113,6 +123,12 @@ function Elevator:draw(enemy_buffer)
 	
 	if self.layers["cabin"] then
 		self:draw_cabin()
+	end
+	
+	if self.layers["door"] then
+		for _, entrance in pairs(self.entrances) do
+			entrance.door:draw_front()
+		end
 	end
 end
 
@@ -126,7 +142,9 @@ function Elevator:draw_cabin()
 	local cabin_rect = self.level.cabin_rect
 	
 	if self.layers["door"] then
-		self.door:draw()
+		for _, entrance in pairs(self.entrances) do
+			entrance.door:draw()
+		end
 	end
 
 	-- Cabin background

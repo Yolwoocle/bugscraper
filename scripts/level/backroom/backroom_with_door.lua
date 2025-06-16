@@ -1,7 +1,7 @@
 require "scripts.util"
 local images = require "data.images"
 local Backroom = require "scripts.level.backroom.backroom"
-local ElevatorDoor       = require "scripts.level.elevator_door"
+local ElevatorDoorSlidingLarge = require "scripts.level.door.elevator_door_sliding_large"
 
 local BackroomWithDoor = Backroom:inherit()
 
@@ -9,7 +9,8 @@ function BackroomWithDoor:init()
     BackroomWithDoor.super.init(self)
 	self.name = "backroom_with_door"
 
-	self.door = ElevatorDoor:new(186, 154, images.cabin_door_light_left_far, images.cabin_door_light_left_center, images.cabin_door_light_right_far, images.cabin_door_light_right_center)
+	self.door = ElevatorDoorSlidingLarge:new(186, 154)
+	self.door:set_images(images.cabin_door_light_left_far, images.cabin_door_light_left_center, images.cabin_door_light_right_far, images.cabin_door_light_right_center)
 
 	self.all_in_front = false
 

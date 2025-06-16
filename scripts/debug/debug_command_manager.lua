@@ -8,9 +8,6 @@ local upgrades        = require 'data.upgrades'
 local skins           = require "data.skins"
 local skin_name_to_id = require "data.skin_name_to_id"
 
-local a, b            = require "scripts.test"
-print_debug("a, b", a, b)
-
 local DebugCommandManager = Class:inherit()
 
 function DebugCommandManager:init()

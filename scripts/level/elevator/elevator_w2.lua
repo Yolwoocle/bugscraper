@@ -14,7 +14,7 @@ function ElevatorW2:init(level)
 	self.bg_fan_spin = 0
 	self.bg_fan_spin_speed = 2
 
-	self.door:set_images(
+	self:get_door("main"):set_images(
 		images.cabin_door_bee_left_far,
 		images.cabin_door_bee_left_center,
 		images.cabin_door_bee_right_far,
