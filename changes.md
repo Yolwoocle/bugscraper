@@ -2,11 +2,12 @@
 
 ## 0.7
 
+- **Added**: Enemies can now spawn from multiple doors in a level! The various departments of the game have been redesigned to take this new feature into account
 - **Added**: Energy Drink upgrade: combo meter decreases more slowly
 - **Added**: Golden beetles (temporary name), will fly around and explode after you stomp them
-- **Added**: Rollopods, will walk around on the floor and charge at you when you enter their view
+- **Added**: Rollopods, will walk around on the floor and charge at you when you enter their field of view
 - **Added**: Walking Slot Machines (temporary name), will roll a random pattern when you stomp on them and produce a random effect when all 3 symbols are rolled
-- **Added**: Cloud Mother (temporary name), is an enemy with a bunch of smaller enemies following it. If you kill the mother, all the children will perish too 
+- **Added**: Cloud Mother (temporary name), is an enemy with a bunch of smaller enemies following it. If you kill the mother, all the children will panic then perish 
 - **Added**: In co-op, you will now become a ghost after dying. Ghosts can shoot small bursts of bullets that deal a little damage. Players can be respawned from ghosts by breaking cocoons that will appear a few waves later
 >>>>>>>- **Change**: New sounds from the new sound designer in the team, Verbaudet!
 - **Change**: Repawned players will now appear with full health, however cocoons appear more rarely  
