@@ -135,7 +135,7 @@ function Wave:spawn_roll(elevator, roll, spawned_enemies)
 		assert(entrance_names and type(entrance_names) == "table" and #entrance_names > 0, "Invalid entrances table given")
 		local entrance_name = random_sample(entrance_names)
 		local entrance = elevator.entrances[entrance_name]
-		assert(entrance and entrance.rect, "Invalid entrance found")
+		assert(entrance and entrance.rect, "Invalid entrance found (name '"..tostring(entrance_name).."')")
 		local rect = entrance.rect
 
 		local x = love.math.random(rect.ax, rect.bx)
@@ -150,8 +150,8 @@ function Wave:spawn_roll(elevator, roll, spawned_enemies)
 		-- Center enemy & clamp position
 		if not (enemy_classes[i].position or enemy_classes[i].ignore_position_clamp) then
 			enemy_instance:set_position(
-				clamp(enemy_instance.x - enemy_instance.w/2, rect.ax, rect.bx - enemy_instance.w), 
-				clamp(enemy_instance.y - enemy_instance.h/2, rect.ay, rect.by - enemy_instance.h)
+				clamp(enemy_instance.x, rect.ax + 0.5*enemy_instance.w, rect.bx - 1.5*enemy_instance.w) - 0.5*enemy_instance.w, 
+				clamp(enemy_instance.y, rect.ay + 0.5*enemy_instance.h, rect.by - 1.5*enemy_instance.h) - 0.5*enemy_instance.h
 			)
 		end
 
