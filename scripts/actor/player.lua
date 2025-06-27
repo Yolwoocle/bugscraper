@@ -614,8 +614,12 @@ function Player:do_damage(n, source)
 		(get_angle_between_vectors(self.mid_x, self.mid_y, (source.mid_x or source.x), (source.mid_y or source.y))) or
 		(random_range(0, pi2))
 	local scale = ternary(died, 0.8, 0.5)
+	local color = self.color_palette[1]
+	if source.name == "poison_cloud" then
+		color = COL_LIGHT_GREEN
+	end
 	Particles:static_image(images.star_big, self.mid_x, self.mid_y, a, 0.05, scale, {
-		color = self.color_palette[1]
+		color = color
 	})
 	Particles:pop_layer()
 
@@ -1553,14 +1557,14 @@ function Player:update_color(dt)
 	self.spr:set_solid(false)
 	self.blink_color = nil
 
+	if self.poison_timer > 0 then
+		self.blink_freq = 0.1
+		self.blink_color = transparent_color(COL_LIGHT_GREEN, 0.8)
+	end
+
 	if self.is_invincible and self.invincible_time > 0.1 then
 		local a = (self.invincible_time / self.max_invincible_time)*0.5 + 0.3
-		local col = COL_WHITE
-		if self.last_damage_source_name == "poison_cloud" then
-			col = COL_LIGHT_GREEN
-		end
-
-		self.blink_color = {col[1], col[2], col[3], a}
+		self.blink_color = transparent_color(COL_WHITE, a)
 	end
 	
 	if self.is_floating and self.float_timer < 1.5 then
@@ -1573,7 +1577,7 @@ function Player:update_color(dt)
 	end
 	
 	if self.blink_timer <= self.blink_freq/2 then
-		self.blink_color = COL_WHITE
+		self.blink_color = nil
 	end
 
 	if self.is_ghost then
