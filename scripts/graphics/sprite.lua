@@ -251,6 +251,21 @@ function Sprite:draw(x, y, w, h, custom_draw)
     local anchor_ox, anchor_oy = self:get_anchor_offset(w, h)
     local sprite_ox, sprite_oy = self:get_sprite_offset()
 
+    if self.outline then
+        exec_color(self.color, function()
+            if self.is_spritesheet then
+                draw_spritesheet_with_outline(self.outline.color, self.outline.type, self.image, self.spritesheet_quad,
+                    x + anchor_ox, y + anchor_oy, self.rot,
+                    scale_x, scale_y, sprite_ox, sprite_oy)
+            else
+                draw_with_outline(self.outline.color, self.outline.type, self.image, x + anchor_ox, y + anchor_oy,
+                    self.rot,
+                    scale_x, scale_y, sprite_ox, sprite_oy)
+            end
+        end)
+    end
+
+
     local old_shader
     if self.shader then
         old_shader = love.graphics.getShader()
@@ -263,18 +278,6 @@ function Sprite:draw(x, y, w, h, custom_draw)
     end
 
     exec_color(self.color, function()
-        if self.outline then
-            if self.is_spritesheet then
-                draw_spritesheet_with_outline(self.outline.color, self.outline.type, self.image, self.spritesheet_quad,
-                    x + anchor_ox, y + anchor_oy, self.rot,
-                    scale_x, scale_y, sprite_ox, sprite_oy)
-            else
-                draw_with_outline(self.outline.color, self.outline.type, self.image, x + anchor_ox, y + anchor_oy,
-                    self.rot,
-                    scale_x, scale_y, sprite_ox, sprite_oy)
-            end
-        end
-
         if self.is_spritesheet then
             -- game.camera:reset_transform()
             love.graphics.draw(self.image, self.spritesheet_quad, x + anchor_ox, y + anchor_oy, self.rot, scale_x,
