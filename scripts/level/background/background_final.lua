@@ -7,6 +7,7 @@ local BackgroundFinal = Background:inherit()
 
 function BackgroundFinal:init(level)
 	self.super.init(self, level)
+	self.name = "background_final"
 
 	self.clear_color = COL_LIGHT_BLUE
 	

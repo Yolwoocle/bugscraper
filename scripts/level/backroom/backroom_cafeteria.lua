@@ -25,6 +25,8 @@ function BackroomCafeteria:init()
 end
 
 function BackroomCafeteria:generate(world_generator)
+	game.level:set_bounds(Rect:new(unpack(RECT_CAFETERIA_PARAMS)))
+
 	world_generator:reset()
 	world_generator:write_rect(Rect:new(2, 2, 58, 15),   TILE_METAL)
 	world_generator:write_rect(Rect:new(28, 13, 41, 13), TILE_SEMISOLID)
@@ -32,7 +34,7 @@ function BackroomCafeteria:generate(world_generator)
 	world_generator:write_rect(Rect:new(51, 13, 53, 13), TILE_SEMISOLID)
 
     self:assign_cafeteria_upgrades()
-	
+
 	game.camera.max_x = CANVAS_WIDTH
 end
 

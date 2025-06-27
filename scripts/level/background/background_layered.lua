@@ -5,6 +5,7 @@ local BackgroundLayered = Background:inherit()
 
 function BackgroundLayered:init(level)
 	BackgroundLayered.super.init(self, level)
+	self.name = "background_layered"
 
 	self.layers = {}
 end

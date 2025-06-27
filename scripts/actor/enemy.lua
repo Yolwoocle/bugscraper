@@ -280,7 +280,6 @@ function Enemy:on_collision(col, other)
 				end
 			end
 		end
-		
 	end
 	
 	-- Being collider push force

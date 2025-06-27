@@ -511,7 +511,7 @@ function Game:draw_game()
 
 		-- Draw actors
 		for _, actor in pairs(self.actors) do
-			if actor.is_active and actor.is_visible then
+			if actor.is_active and actor.is_visible and self.level.show_cabin then
 				actor:draw()
 			end
 		end
@@ -754,7 +754,7 @@ function Game:set_music_volume(vol)
 end
 
 function Game:new_actor(actor, buffer_enemy)
-	self.actor_manager:new_actor(actor, buffer_enemy)
+	return self.actor_manager:new_actor(actor, buffer_enemy)
 end
 
 function Game:on_enemy_damage(enemy, n, damager)

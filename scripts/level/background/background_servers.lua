@@ -6,6 +6,7 @@ local BackgroundServers = Background:inherit()
 
 function BackgroundServers:init(level)
 	self.super.init(self, level)
+	self.name = "background_servers"
 
 	-- self.clear_color = COL_DARK_GREEN
 	self.clear_color = COL_BLACK_BLUE

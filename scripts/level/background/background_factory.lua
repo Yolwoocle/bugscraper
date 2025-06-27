@@ -8,6 +8,7 @@ local BackgroundFactory = BackgroundLayered:inherit()
 
 function BackgroundFactory:init(level)
 	BackgroundFactory.super.init(self, level)
+	self.name = "background_factory"
 
 	self.clear_color = COL_BLACK_BLUE
 

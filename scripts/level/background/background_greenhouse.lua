@@ -9,6 +9,7 @@ local BackgroundGreenhouse = BackgroundLayered:inherit()
 
 function BackgroundGreenhouse:init(level)
 	BackgroundGreenhouse.super.init(self, level)
+	self.name = "background_greenhouse"
 
 	self.clear_color = COL_BLACK_BLUE
 

@@ -11,10 +11,12 @@ local Elevator = Class:inherit()
 function Elevator:init(level)
     self.level = level
 
+	self.name = "elevator"
+
 	self.entrances = {
 		main = {
 			door = ElevatorDoorSlidingLarge:new(self.level.door_rect.ax, self.level.door_rect.ay),
-			rect = Rect:new(level.cabin_rect.ax+154, level.cabin_rect.ay+122, level.cabin_rect.ax+261, level.cabin_rect.ay+207)
+			rect = Rect:new(186, 154, 293, 239)
 		},
 	}
 	self.entrance_names = table_keys(self.entrances)

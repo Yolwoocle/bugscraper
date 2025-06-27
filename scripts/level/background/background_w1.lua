@@ -8,6 +8,7 @@ local BackgroundW1 = BackgroundLayered:inherit()
 
 function BackgroundW1:init(level)
 	BackgroundW1.super.init(self, level)
+	self.name = "background_w1"
 
 	self.clear_color = COL_BLACK_BLUE
 

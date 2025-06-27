@@ -423,6 +423,9 @@ local img_names = {
 	ground_floor =                   "level/ground_floor",
 	ground_floor_front =             "level/ground_floor_front",
 
+	ground_floor_caution_sign =          "level/props/ground_floor_caution_sign",
+	ground_floor_bucket_1 =              "level/props/ground_floor_bucket_1",
+	ground_floor_bucket_2 =              "level/props/ground_floor_bucket_2",
 	ground_floor_lamp =                  "level/props/ground_floor_lamp",
 	ground_floor_cactus =                "level/props/ground_floor_cactus",
 	ground_floor_computer_left =         "level/props/ground_floor_computer_left",

@@ -7,6 +7,7 @@ local BackgroundCafeteria = require "scripts.level.background.background_cafeter
 local ElevatorDoorSlidingLarge = require "scripts.level.door.elevator_door_sliding_large"
 local TvPresentation    = require "scripts.level.background.tv_presentation"
 local WaterDispenser   = require "scripts.actor.enemies.vending_machine.water_dispenser"
+local Rect = require "scripts.math.rect"
 
 local BackroomGroundFloor = BackroomWithDoor:inherit()
 
@@ -29,7 +30,20 @@ end
 function BackroomGroundFloor:generate(world_generator)
 	game.camera.max_x = CANVAS_WIDTH + 11*16
 	
-    world_generator:generate_ground_floor()
+    world_generator:reset()
+	world_generator:write_rect(Rect:new(2, 3, 68, 15), TILE_METAL)
+
+	-- tables
+	for _, rect in pairs({
+		Rect:new(24, 14, 27, 14), -- Desks
+		Rect:new(24+5*1, 14, 27+5*1, 14),
+		Rect:new(24+5*2, 14, 27+5*2, 14),
+		Rect:new(24+5*3, 14, 27+5*3, 14),
+		Rect:new(51, 12, 54, 12), -- Machines
+		Rect:new(64, 10, 65, 10), -- Ladder
+	}) do
+		world_generator:write_rect(rect, TILE_SEMISOLID)
+	end
 	
 	for _, prop_data in pairs({
 		{x = 482-16, y = 218-16, z = 0, img = images.ground_floor_cactus},
@@ -54,6 +68,9 @@ function BackroomGroundFloor:generate(world_generator)
 		{x = 696-16, y = 212-16, z = 1, img = images.ground_floor_stack_papers_big},
 		{x = 688-16, y = 225-16, z = 0, img = images.ground_floor_stack_papers_medium},
 		{x = 678-16, y = 225-16, z = 0, img = images.ground_floor_stack_papers_small},
+		{x = 1007-16, y = 247-16, z = 0, img = images.ground_floor_bucket_1},
+		{x = 1088-16, y = 247-16, z = 0, img = images.ground_floor_bucket_2},
+		{x = 978-16, y = 228-16, z = 0, img = images.ground_floor_caution_sign},
 	}) do
 		local prop = enemies.JumpingProp:new(prop_data.x, prop_data.y, prop_data.img)
 		if prop_data.z then
@@ -77,11 +94,11 @@ function BackroomGroundFloor:generate(world_generator)
 
 	game:new_actor(create_actor_centered(enemies.Clock, floor(440), floor(105)))
 
-	local npc = random_sample(npcs)
-	game:new_actor(enemies.NPC:new(1000, 226, {
-		animation = npc.animation,
-		dialogue_key = "dialogue.npc." .. npc.key,
-	}))
+	-- local npc = random_sample(npcs)
+	-- game:new_actor(enemies.NPC:new(1000, 226, {
+	-- 	animation = npc.animation,
+	-- 	dialogue_key = "dialogue.npc." .. npc.key,
+	-- }))
 end
 
 function BackroomGroundFloor:get_default_camera_position()

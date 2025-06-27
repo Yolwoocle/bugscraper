@@ -7,6 +7,9 @@ local BackgroundCafeteria = BackgroundCity:inherit()
 
 function BackgroundCafeteria:init(level)
 	BackgroundCafeteria.super.init(self, level)
+
+	self.name = "background_cafeteria"
+
 	self.shine_sprite = Sprite:new(images.bg_city_shine, SPRITE_ANCHOR_LEFT_TOP)
 end
 

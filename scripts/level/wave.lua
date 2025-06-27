@@ -32,6 +32,7 @@ function Wave:init(params)
 	self.cutscene = param(params.cutscene, nil)
 	self.backroom = param(params.backroom, nil)
 	self.elevator = param(params.elevator, nil)
+	self.world = param(params.world, nil)
 
 	self.background = param(params.background, nil)
 
@@ -206,10 +207,6 @@ end
 function Wave:enable_wave_side_effects(level)
 	if self.background then
 		level:set_background(self.background)
-	end
-	
-	if self.elevator then
-		game.level:set_elevator(self.elevator:new(level))
 	end
 
 	if self.music then

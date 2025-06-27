@@ -42,11 +42,10 @@ local function new_cafeteria(run_func)
 
         min = 1,
         max = 1,
-        bounds = RECT_CAFETERIA,
         enemies = {
-            { E.UpgradeDisplay, 1, position = { 474+16, 181 } },
-            { E.UpgradeDisplay, 1, position = { 530+16, 181 } },
-            { E.UpgradeDisplay, 1, position = { 586+16, 181 } },
+            { E.UpgradeDisplay, 1, position = { 474+16, 181 }, ignore_position_clamp = true },
+            { E.UpgradeDisplay, 1, position = { 530+16, 181 }, ignore_position_clamp = true },
+            { E.UpgradeDisplay, 1, position = { 586+16, 181 }, ignore_position_clamp = true },
         },
 
         backroom = BackroomCafeteria
@@ -112,8 +111,33 @@ local function get_w4_vines_points_func_1(x_offset)
     end
 end
 
-local waves = {
-    new_wave({
+local function parse_waves_table(waves) 
+    local parsed_waves = {}
+
+    local current_world = nil
+    local current_background = nil
+    local current_elevator = nil
+    local current_music = nil
+    for i = 1, #waves do
+        local wave_params = waves[i]
+
+        current_world =      wave_params.world or      current_world     
+        current_background = wave_params.background or current_background
+        current_elevator =   wave_params.elevator or   current_elevator  
+        current_music =      wave_params.music or      current_music     
+
+        wave_params.world = current_world
+        wave_params.background = current_background
+        wave_params.elevator = current_elevator
+        wave_params.music = current_music
+
+        parsed_waves[i] = new_wave(wave_params)
+    end
+    return parsed_waves
+end 
+
+local waves = parse_waves_table {
+    {
         min = 5,
         max = 5,
         enemies = {
@@ -128,29 +152,29 @@ local waves = {
         title_outline_color = COL_BLACK_BLUE,
  
         elevator = ElevatorW1,
-    }),
+    },
 
 
-    new_wave({
+    {
         -- Woodlouse intro
         min = 4,
         max = 6,
         enemies = {
-            { E.Woodlouse, 2, entrances={"left_vent"} },
+            { E.Woodlouse, 2, entrances={"main"} },
         },
-    }),
+    },
 
-    new_wave({
+    {
         min = 4,
         max = 6,
         enemies = {
-            { E.Larva,     2, entrances={"left_vent"} },
-            { E.Fly,       3, entrances={"right_vent"} },
-            { E.Woodlouse, 2, entrances={"right_vent"} },
+            { E.Larva,     2, entrances={"main"} },
+            { E.Fly,       3, entrances={"main"} },
+            { E.Woodlouse, 2, entrances={"main"} },
         },
-    }),
+    },
 
-    new_wave({
+    {
         -- Slug intro
         min = 4,
         max = 6,
@@ -159,19 +183,19 @@ local waves = {
             { E.Fly,   2 },
             { E.Slug,  4 },
         },
-    }),
+    },
 
 
-    new_wave({
+    {
         min = 3,
         max = 5,
         enemies = {
             -- Shelled Snail intro
             { E.SnailShelled, 3 },
         },
-    }),
+    },
 
-    new_wave({
+    {
         min = 6,
         max = 8,
         enemies = {
@@ -182,9 +206,9 @@ local waves = {
             { E.SnailShelled, 3 },
             { E.Slug,         2 },
         },
-    }),
+    },
 
-    new_wave({
+    {
         min = 7,
         max = 9,
         enemies = {
@@ -192,18 +216,18 @@ local waves = {
             { E.SpikedFly,    3 },
             { E.Fly,          3 },
         },
-    }),
+    },
 
-    new_wave({
+    {
         -- Mushroom ant intro
         roll_type = WAVE_ROLL_TYPE_FIXED,
         enemies = {
             { E.Fly,        2 },
             { E.Boomshroom, 4 },
         },
-    }),
+    },
 
-    new_wave({
+    {
         min = 8,
         max = 10,
         enemies = {
@@ -213,11 +237,11 @@ local waves = {
             { E.Woodlouse,    4 },
             { E.SnailShelled, 4 },
         },
-    }),
+    },
 
     new_cafeteria(),
 
-    new_wave({
+    {
         -- Spiked Fly intro
         min = 6,
         max = 8,
@@ -228,9 +252,9 @@ local waves = {
             { E.Fly,       2 },
             { E.SpikedFly, 4 },
         },
-    }),
+    },
 
-    new_wave({
+    {
         min = 6,
         max = 8,
         enemies = {
@@ -241,9 +265,9 @@ local waves = {
             { E.Slug,         2 },
             { E.SnailShelled, 2 },
         },
-    }),
+    },
 
-    new_wave({
+    {
         -- Spider intro
         min = 6,
         max = 8,
@@ -252,9 +276,9 @@ local waves = {
             { E.Slug,   2 },
             { E.Spider, 4 },
         },
-    }),
+    },
 
-    new_wave({
+    {
         min = 6,
         max = 8,
         enemies = {
@@ -262,9 +286,9 @@ local waves = {
             { E.SnailShelled, 2 },
             { E.Spider,       4 },
         },
-    }),
+    },
 
-    new_wave({
+    {
         min = 8,
         max = 9,
         enemies = {
@@ -274,18 +298,18 @@ local waves = {
             { E.Slug,         2 },
             { E.Spider,       4 },
         },
-    }),
+    },
 
-    new_wave({
+    {
         -- Stink bug intro
         min = 5,
         max = 6,
         enemies = {
             { E.StinkBug, 3 },
         },
-    }),
+    },
 
-    new_wave({
+    {
         min = 7,
         max = 9,
         enemies = {
@@ -296,9 +320,9 @@ local waves = {
             { E.Spider,       2 },
             { E.StinkBug,     4 },
         },
-    }),
+    },
 
-    new_wave({
+    {
         min = 8,
         max = 10,
         enemies = {
@@ -311,9 +335,9 @@ local waves = {
             { E.Spider,       2 },
             { E.StinkBug,     2 },
         },
-    }),
+    },
 
-    new_wave({
+    {
         -- roll_type = WAVE_ROLL_TYPE_FIXED,
         min = 1,
         max = 1,
@@ -322,7 +346,7 @@ local waves = {
         },
         music = "miniboss",
         cutscene = cutscenes.dung_boss_enter,
-    }),
+    },
 
     new_cafeteria(),
 
@@ -335,7 +359,7 @@ local waves = {
     ----------------------------------------------------------------------------------------------------------
 
 
-    new_wave({
+    {
         min = 6,
         max = 7,
 
@@ -353,9 +377,9 @@ local waves = {
         title = get_world_name(2),
         title_color = COL_LIGHT_YELLOW,
         title_outline_color = COL_BLACK_BLUE,
-    }),
+    },
 
-    new_wave({
+    {
         min = 5,
         max = 7,
 
@@ -364,18 +388,18 @@ local waves = {
             { E.Bee,       2 },
             { E.Stabee, 4 },
         },
-    }),
+    },
 
-    new_wave({
+    {
         min = 4,
         max = 4,
 
         enemies = {
             { E.Beelet, 2 },
         },
-    }),
+    },
 
-    new_wave({
+    {
         min = 8,
         max = 8,
 
@@ -385,9 +409,9 @@ local waves = {
             { E.Boomshroom, 4 },
             { E.Beelet,     2 },
         },
-    }),
+    },
 
-    new_wave({
+    {
         min = 6,
         max = 6,
 
@@ -395,9 +419,9 @@ local waves = {
             { E.Bee,         4 },
             { E.HoneypotAnt, 4 },
         },
-    }),
+    },
 
-    new_wave({
+    {
         min = 6,
         max = 6,
 
@@ -405,9 +429,9 @@ local waves = {
             { E.Bee,    4 },
             { E.Beelet, 3 },
         },
-    }),
+    },
 
-    new_wave({
+    {
         min = 6,
         max = 6,
 
@@ -419,9 +443,9 @@ local waves = {
         fixed_enemies = {
             { E.FlyingSpawner, 1 },
         }
-    }),
+    },
 
-    new_wave({
+    {
         min = 10,
         max = 10,
 
@@ -432,10 +456,10 @@ local waves = {
             { E.Stabee,    2 },
             { E.Larva,        2 },
         },
-    }),
+    },
 
 
-    new_wave({
+    {
         min = 6,
         max = 6,
 
@@ -445,13 +469,13 @@ local waves = {
         fixed_enemies = {
             { E.HoneycombFootball, 1 },
         },
-    }),
+    },
 
     ---------------------------------------------
     new_cafeteria(),
     ---------------------------------------------
 
-    new_wave({
+    {
         min = 5,
         max = 5,
 
@@ -465,9 +489,9 @@ local waves = {
         run = function(self, level)
             spawn_timed_spikes()
         end,
-    }),
+    },
 
-    new_wave({
+    {
         min = 6,
         max = 6,
 
@@ -477,9 +501,9 @@ local waves = {
             { E.HoneypotAnt, 2 },
             { E.Fly,         2 },
         },
-    }),
+    },
 
-    new_wave({
+    {
         min = 7,
         max = 7,
 
@@ -492,18 +516,18 @@ local waves = {
         fixed_enemies = {
             { E.FlyingSpawner, 1 },
         },
-    }),
+    },
 
-    new_wave({
+    {
         min = 4,
         max = 4,
 
         enemies = {
             { E.DrillBee, 3 },
         },
-    }),
+    },
 
-    new_wave({
+    {
         min = 6,
         max = 6,
 
@@ -513,9 +537,9 @@ local waves = {
             { E.Boomshroom, 20 },
             { E.DrillBee,   30 },
         },
-    }),
+    },
 
-    new_wave({
+    {
         min = 8,
         max = 8,
 
@@ -527,10 +551,10 @@ local waves = {
         fixed_enemies = {
             { E.FlyingSpawner, 1 },
         },
-    }),
+    },
 
 
-    new_wave({
+    {
         min = 7,
         max = 7,
 
@@ -539,10 +563,10 @@ local waves = {
             { E.Stabee, 3 },
             { E.DrillBee,  3 },
         },
-    }),
+    },
 
 
-    new_wave({
+    {
         min = 9,
         max = 9,
 
@@ -554,9 +578,9 @@ local waves = {
             { E.HoneypotAnt, 3 },
             { E.Boomshroom,  3 },
         },
-    }),
+    },
 
-    new_wave({
+    {
         -- roll_type = WAVE_ROLL_TYPE_FIXED,
         min = 1,
         max = 1,
@@ -574,7 +598,7 @@ local waves = {
         end,
 
         cutscene = cutscenes.bee_boss_enter,
-    }),
+    },
 
     new_cafeteria(function()
         for _, a in pairs(game.actors) do
@@ -595,7 +619,7 @@ local waves = {
     ----------------------------------------------------------------------------------------------------------
 
     -- Floor 
-    new_wave({
+    {
         min = 6,
         max = 6,
         enemies = {
@@ -615,9 +639,9 @@ local waves = {
         title = get_world_name(3),
         title_color = COL_LIGHT_GREEN,
         title_outline_color = COL_BLACK_BLUE,
-    }),
+    },
 
-    new_wave({
+    {
         min = 5,
         max = 5,
         enemies = {
@@ -627,9 +651,9 @@ local waves = {
         fixed_enemies = {
             { E.BulbBuddy, 1 },
         },
-    }),
+    },
 
-    new_wave({
+    {
         min = 5,
         max = 7,
         enemies = {
@@ -638,9 +662,9 @@ local waves = {
             { E.Chipper,   2 },
             { E.BulbBuddy, 1 },
         },
-    }),
+    },
 
-    new_wave({
+    {
         min = 6,
         max = 6,
         enemies = {
@@ -648,9 +672,9 @@ local waves = {
             { E.SnailShelled, 2 },
             { E.Woodlouse,    2 },
         },
-    }),
+    },
 
-    new_wave({
+    {
         level_geometry = LevelGeometry:new({
             { rect = Rect:new(3, 8, 8, 8),   tile = TILE_SEMISOLID },
             { rect = Rect:new(21, 8, 26, 8), tile = TILE_SEMISOLID },
@@ -687,9 +711,9 @@ local waves = {
             { E.Fly,     2 },
             { E.Chipper, 2 },
         },
-    }),
+    },
 
-    new_wave({
+    {
         min = 3,
         max = 4,
         enemies = {
@@ -706,9 +730,9 @@ local waves = {
                 end
             end
         end,
-    }),
+    },
 
-    new_wave({
+    {
         min = 5,
         max = 6,
         enemies = {
@@ -720,9 +744,9 @@ local waves = {
         fixed_enemies = {
             { E.BulbBuddy, 1 },
         }
-    }),
+    },
 
-    new_wave({
+    {
         min = 6,
         max = 7,
         enemies = {
@@ -734,9 +758,9 @@ local waves = {
         fixed_enemies = {
             { E.BulbBuddy, 1 },
         }
-    }),
+    },
 
-    new_wave({
+    {
         min = 5,
         max = 6,
         enemies = {
@@ -746,7 +770,7 @@ local waves = {
         fixed_enemies = {
             { E.BulbBuddy, 1 },
         }
-    }),
+    },
 
     ------------------------------------------------
     -- Cafeteria
@@ -755,7 +779,7 @@ local waves = {
     end),
     ------------------------------------------------
 
-    new_wave({
+    {
         min = 4,
         max = 5,
         enemies = {
@@ -781,9 +805,9 @@ local waves = {
             },
         },
         music = "w3",
-    }),
+    },
 
-    new_wave({
+    {
         min = 5,
         max = 6,
         enemies = {
@@ -791,9 +815,9 @@ local waves = {
             { E.StinkBug,           2 },
             { E.SnailShelledBouncy, 2 },
         },
-    }),
+    },
 
-    new_wave({
+    {
         min = 5,
         max = 6,
         enemies = {
@@ -804,9 +828,9 @@ local waves = {
         fixed_enemies = {
             { E.BulbBuddy, 2 }
         }
-    }),
+    },
 
-    new_wave({
+    {
         min = 5,
         max = 6,
         { E.SnailShelledBouncy, 2 },
@@ -817,9 +841,9 @@ local waves = {
         fixed_enemies = {
             { E.BulbBuddy, 1 }
         }
-    }),
+    },
 
-    new_wave({
+    {
         min = 4,
         max = 5,
         enemies = {
@@ -835,9 +859,9 @@ local waves = {
         --         game:new_actor(arc)
         --     end
         -- end,
-    }),
+    },
 
-    new_wave({
+    {
         min = 6,
         max = 7,
 
@@ -846,9 +870,9 @@ local waves = {
             { E.Fly,          2 },
             { E.SpikedFly,    2 },
         },
-    }),
+    },
 
-    new_wave({
+    {
         min = 7,
         max = 9,
 
@@ -857,9 +881,9 @@ local waves = {
             { E.MetalFly,  20 },
             { E.BulbBuddy, 5 }
         },
-    }),
+    },
 
-    new_wave({
+    {
         min = 6,
         max = 7,
 
@@ -870,10 +894,10 @@ local waves = {
             { E.Chipper,   2 },
             { E.StinkBug,  2 },
         },
-    }),
+    },
 
 
-    new_wave({
+    {
         min = 1,
         max = 1,
 
@@ -889,7 +913,7 @@ local waves = {
         end,
 
         music = "miniboss",
-    }),
+    },
 
     ------
     -- Cafeteria
@@ -908,7 +932,7 @@ local waves = {
     ----------------------------------------------------------------------------------------------------------
     ----------------------------------------------------------------------------------------------------------
 
-    new_wave({
+    {
         min = 4,
         max = 4,
 
@@ -931,10 +955,10 @@ local waves = {
         title = get_world_name(4),
         title_color = COL_LIGHT_BLUE,
         title_outline_color = COL_BLACK_BLUE,
-    }),
+    },
 
 
-    new_wave({
+    {
         min = 7,
         max = 7,
 
@@ -942,9 +966,9 @@ local waves = {
             { E.CloudStorm, 30 },
             { E.CloudEnemy, 10 },
         },
-    }),
+    },
 
-    new_wave({
+    {
         min = 3,
         max = 3,
 
@@ -954,9 +978,9 @@ local waves = {
         fixed_enemies = {
             { E.CloudEnemy, 2 },
         }
-    }),
+    },
 
-    new_wave({
+    {
         min = 7,
         max = 9,
 
@@ -965,9 +989,9 @@ local waves = {
             { E.CloudStorm,  5 },
             { E.Rollopod, 3 },
         },
-    }),
+    },
 
-    new_wave({
+    {
         min = 4,
         max = 4,
 
@@ -987,9 +1011,9 @@ local waves = {
                 progress_speed = -80,
             }}},
         }
-    }),
+    },
 
-    new_wave({
+    {
         min = 7,
         max = 7,
 
@@ -998,9 +1022,9 @@ local waves = {
             { E.Mole,        2 },
             { E.Rollopod,     1 },
         },
-    }),
+    },
 
-    new_wave({
+    {
         min = 6,
         max = 6,
 
@@ -1008,9 +1032,9 @@ local waves = {
             { E.Rollopod, 1 },
             { E.Mole,    2 },
         },
-    }),
+    },
 
-    new_wave({
+    {
         min = 6,
         max = 6,
 
@@ -1019,22 +1043,22 @@ local waves = {
             { E.Rollopod,     1 },
             { E.MushroomAnt, 2 },
         },
-    }),
+    },
 
-    new_wave({
+    {
         min = 1,
         max = 1,
 
         enemies = {
             { E.Centipede, 1, args = { 15 } },
         },
-    }),
+    },
 
     ---------------------------------------------
     new_cafeteria(),
     ---------------------------------------------
 
-    new_wave({
+    {
         min = 5,
         max = 5,
 
@@ -1044,19 +1068,19 @@ local waves = {
         },
 
         music = "w4",
-    }),
+    },
 
 
-    new_wave({
+    {
         min = 5,
         max = 5,
 
         enemies = {
             { E.Rollopod, 40 },
         },
-    }),
+    },
 
-    new_wave({
+    {
         min = 8,
         max = 8,
 
@@ -1065,9 +1089,9 @@ local waves = {
             { E.CloudStorm, 40 },
             { E.Rollopod,    40 },
         },
-    }),
+    },
 
-    new_wave({
+    {
         min = 6,
         max = 6,
 
@@ -1077,18 +1101,18 @@ local waves = {
         fixed_enemies = {
             { E.BulbBuddy, 1 },
         }
-    }),
+    },
 
-    new_wave({
+    {
         min = 1,
         max = 1,
 
         enemies = {
             { E.Centipede, 1 },
         },
-    }),
+    },
 
-    new_wave({
+    {
         min = 4,
         max = 4,
 
@@ -1096,18 +1120,18 @@ local waves = {
             { E.Bee,       2 },
             { E.Stabee, 2 },
         },
-    }),
+    },
 
-    new_wave({
+    {
         min = 5,
         max = 5,
 
         enemies = {
             { E.DrillBee, 2 },
         },
-    }),
+    },
 
-    new_wave({
+    {
         min = 7,
         max = 7,
 
@@ -1115,9 +1139,9 @@ local waves = {
             { E.StinkBug, 1 },
             { E.Spider,   1 },
         },
-    }),
+    },
 
-    new_wave({
+    {
         min = 1,
         max = 1,
 
@@ -1133,7 +1157,7 @@ local waves = {
                 end
             end
         end,
-    }),
+    },
     
     ---------------------------------------------
     new_cafeteria(),
@@ -1146,7 +1170,7 @@ local waves = {
     ----------------------------------------------------------------------------------------------------------
     ----------------------------------------------------------------------------------------------------------
 
-    new_wave({
+    {
         min = 4,
         max = 4,
 
@@ -1169,10 +1193,10 @@ local waves = {
         title = get_world_name(5),
         title_color = COL_LIGHT_BLUE,
         title_outline_color = COL_BLACK_BLUE,
-    }),
+    },
 
 
-    new_wave({
+    {
         min = 4,
         max = 5,
 
@@ -1180,9 +1204,9 @@ local waves = {
             { E.GoldenBeetle, 20 },
             { E.Rollopod, 20 },
         },
-    }),
+    },
 
-    new_wave({
+    {
         min = 6,
         max = 6,
 
@@ -1191,9 +1215,9 @@ local waves = {
             { E.GoldenBeetle, 10 },
             { E.Rollopod, 10 },
         },
-    }),
+    },
 
-    new_wave({
+    {
         min = 3,
         max = 4,
 
@@ -1203,9 +1227,9 @@ local waves = {
         fixed_enemies = {
             { E.WalkingSlotMachine, 2 },
         },
-    }),
+    },
 
-    new_wave({
+    {
         min = 5,
         max = 5,
 
@@ -1221,9 +1245,9 @@ local waves = {
                 position = {CANVAS_WIDTH/2, 3*16} 
             },
         },
-    }),
+    },
 
-    new_wave({
+    {
         min = 5,
         max = 6,
 
@@ -1231,9 +1255,9 @@ local waves = {
             { E.StinkBug, 10 },
             { E.GoldenBeetle, 10 },
         },
-    }),
+    },
 
-    new_wave({
+    {
         min = 3,
         max = 3,
 
@@ -1244,9 +1268,9 @@ local waves = {
         fixed_enemies = {
             { E.Shooter, 2 },
         },
-    }),
+    },
 
-    new_wave({
+    {
         min = 7,
         max = 7,
 
@@ -1257,9 +1281,9 @@ local waves = {
             { E.Rollopod, 10 },
 
         },
-    }),
+    },
 
-    new_wave({
+    {
         min = 8,
         max = 8,
 
@@ -1270,13 +1294,13 @@ local waves = {
             { E.Rollopod, 10 },
 
         },
-    }),
+    },
 
     ---------------------------------------------
     -- new_cafeteria(),
     ---------------------------------------------
 
-    -- new_wave({
+    -- {
     --     min = 5,
     --     max = 5,
 
@@ -1285,79 +1309,79 @@ local waves = {
     --     },
 
     --     music = "w5",
-    -- }),
+    -- },
 
-    -- new_wave({
+    -- {
     --     min = 3,
     --     max = 3,
 
     --     enemies = {
     --         { E.CloudEnemy, 10 },
     --     },
-    -- }),
+    -- },
     
-    -- new_wave({
+    -- {
     --     min = 3,
     --     max = 3,
 
     --     enemies = {
     --         { E.CloudEnemy, 10 },
     --     },
-    -- }),
+    -- },
     
-    -- new_wave({
+    -- {
     --     min = 3,
     --     max = 3,
 
     --     enemies = {
     --         { E.CloudEnemy, 10 },
     --     },
-    -- }),
+    -- },
     
-    -- new_wave({
+    -- {
     --     min = 3,
     --     max = 3,
 
     --     enemies = {
     --         { E.CloudEnemy, 10 },
     --     },
-    -- }),
+    -- },
     
-    -- new_wave({
+    -- {
     --     min = 3,
     --     max = 3,
 
     --     enemies = {
     --         { E.CloudEnemy, 10 },
     --     },
-    -- }),
+    -- },
     
-    -- new_wave({
+    -- {
     --     min = 3,
     --     max = 3,
 
     --     enemies = {
     --         { E.CloudEnemy, 10 },
     --     },
-    -- }),
+    -- },
     
-    -- new_wave({
+    -- {
     --     min = 3,
     --     max = 3,
 
     --     enemies = {
     --         { E.CloudEnemy, 10 },
     --     },
-    -- }),
+    -- },
     
-    -- new_wave({
+    -- {
     --     min = 3,
     --     max = 3,
 
     --     enemies = {
     --         { E.CloudEnemy, 10 },
     --     },
-    -- }),
+    -- },
 
 
     --]]
@@ -1366,7 +1390,7 @@ local waves = {
     --- Last wave
     -----------------------------------------------------
 
-    new_wave({
+    {
         floor_type = FLOOR_TYPE_CAFETERIA,
         roll_type = WAVE_ROLL_TYPE_FIXED,
         music = "off",
@@ -1389,10 +1413,10 @@ local waves = {
         bounds = RECT_CEO_OFFICE,
 
         backroom = BackroomCEOOffice
-    }),
+    },
 
     
-    new_wave({
+    {
         roll_type = WAVE_ROLL_TYPE_FIXED,
 
         min = 1,
@@ -1408,10 +1432,10 @@ local waves = {
                 end
             end
         end
-    }),
+    },
 
     -- Last wave
-    -- new_wave({
+    -- {
     --     min = 1,
     --     max = 1,
     --     enemies = {
@@ -1443,8 +1467,8 @@ local waves = {
 -----------------------------------------------------------------------
 
 
-local demo_waves = {
-    new_wave({
+local demo_waves = parse_waves_table {
+    {
         min = 5,
         max = 5,
         enemies = {
@@ -1456,19 +1480,19 @@ local demo_waves = {
         title = get_world_name("1"),
         title_color = COL_MID_BLUE,
         title_outline_color = COL_BLACK_BLUE,
-    }),
+    },
 
 
-    new_wave({
+    {
         -- Woodlouse intro
         min = 4,
         max = 6,
         enemies = {
             { E.Woodlouse, 2 },
         },
-    }),
+    },
 
-    new_wave({
+    {
         min = 4,
         max = 6,
         enemies = {
@@ -1476,9 +1500,9 @@ local demo_waves = {
             { E.Fly,       3 },
             { E.Woodlouse, 2 },
         },
-    }),
+    },
 
-    new_wave({
+    {
         -- Slug intro
         min = 4,
         max = 6,
@@ -1487,19 +1511,19 @@ local demo_waves = {
             { E.Fly,   2 },
             { E.Slug,  4 },
         },
-    }),
+    },
 
 
-    new_wave({
+    {
         min = 3,
         max = 5,
         enemies = {
             -- Shelled Snail intro
             { E.SnailShelled, 3 },
         },
-    }),
+    },
 
-    new_wave({
+    {
         min = 6,
         max = 8,
         enemies = {
@@ -1510,9 +1534,9 @@ local demo_waves = {
             { E.SnailShelled, 3 },
             { E.Slug,         2 },
         },
-    }),
+    },
 
-    new_wave({
+    {
         min = 7,
         max = 9,
         enemies = {
@@ -1520,18 +1544,18 @@ local demo_waves = {
             { E.SpikedFly,    3 },
             { E.Fly,          3 },
         },
-    }),
+    },
 
-    new_wave({
+    {
         -- Mushroom ant intro
         roll_type = WAVE_ROLL_TYPE_FIXED,
         enemies = {
             { E.Fly,        2 },
             { E.Boomshroom, 4 },
         },
-    }),
+    },
 
-    new_wave({
+    {
         min = 8,
         max = 10,
         enemies = {
@@ -1541,11 +1565,11 @@ local demo_waves = {
             { E.Woodlouse,    4 },
             { E.SnailShelled, 4 },
         },
-    }),
+    },
 
     new_cafeteria(),
 
-    new_wave({
+    {
         -- Spiked Fly intro
         min = 6,
         max = 8,
@@ -1556,9 +1580,9 @@ local demo_waves = {
             { E.Fly,       2 },
             { E.SpikedFly, 4 },
         },
-    }),
+    },
 
-    new_wave({
+    {
         min = 6,
         max = 8,
         enemies = {
@@ -1569,9 +1593,9 @@ local demo_waves = {
             { E.Slug,         2 },
             { E.SnailShelled, 2 },
         },
-    }),
+    },
 
-    new_wave({
+    {
         -- Spider intro
         min = 6,
         max = 8,
@@ -1580,9 +1604,9 @@ local demo_waves = {
             { E.Slug,   2 },
             { E.Spider, 4 },
         },
-    }),
+    },
 
-    new_wave({
+    {
         min = 6,
         max = 8,
         enemies = {
@@ -1590,9 +1614,9 @@ local demo_waves = {
             { E.SnailShelled, 2 },
             { E.Spider,       4 },
         },
-    }),
+    },
 
-    new_wave({
+    {
         min = 8,
         max = 9,
         enemies = {
@@ -1602,18 +1626,18 @@ local demo_waves = {
             { E.Slug,         2 },
             { E.Spider,       4 },
         },
-    }),
+    },
 
-    new_wave({
+    {
         -- Stink bug intro
         min = 5,
         max = 6,
         enemies = {
             { E.StinkBug, 3 },
         },
-    }),
+    },
 
-    new_wave({
+    {
         min = 7,
         max = 9,
         enemies = {
@@ -1624,9 +1648,9 @@ local demo_waves = {
             { E.Spider,       2 },
             { E.StinkBug,     4 },
         },
-    }),
+    },
 
-    new_wave({
+    {
         min = 8,
         max = 10,
         enemies = {
@@ -1639,9 +1663,9 @@ local demo_waves = {
             { E.Spider,       2 },
             { E.StinkBug,     2 },
         },
-    }),
+    },
 
-    new_wave({
+    {
         -- roll_type = WAVE_ROLL_TYPE_FIXED,
         min = 1,
         max = 1,
@@ -1649,18 +1673,18 @@ local demo_waves = {
             { E.Dung, 1, position = { CANVAS_WIDTH / 2 - 24 / 2, 200 } },
         },
         music = "miniboss",
-    }),
+    },
 
 
     -- Last wave
-    new_wave({
+    {
         min = 1,
         max = 1,
         enemies = {
             { E.ButtonBigGlass, 1, position = { 211, 194 } }
         },
         music = "off",
-    })
+    }
 }
 
 local function sanity_check_waves()

@@ -173,7 +173,7 @@ function Level:begin_next_wave_animation()
 		buffer_enemies = false
 	end
 	if buffer_enemies then
-		self:new_wave_buffer_enemies()
+		self:apply_new_wave()
 	end
 	self.new_wave_progress = self.slowdown_timer_override or 1.0
 	self.slowdown_timer_override = nil
@@ -273,6 +273,9 @@ function Level:on_door_close()
 end
 
 function Level:set_background(background)
+	if self.background and (background.name == self.background.name) then
+		return
+	end
 	self.background = background
 	self.background:set_level(self)
 end
@@ -337,7 +340,8 @@ function Level:buffer_actor(actor)
 	table.insert(self.enemy_buffer, actor)
 end
 
-function Level:new_wave_buffer_enemies()
+function Level:apply_new_wave()
+	-- FIXME move this from game to level
 	for i = 1, MAX_NUMBER_OF_PLAYERS do
 		if self.game.waves_until_respawn[i][1] ~= -1 then
 			self.game.waves_until_respawn[i][1] = math.max(0, self.game.waves_until_respawn[i][1] - 1)
@@ -348,9 +352,12 @@ function Level:new_wave_buffer_enemies()
 	local wave_n = clamp(self.floor + 1, 1, #waves) -- floor+1 because the floor indicator changes before enemies are spawned
 	local wave = self:get_new_wave(wave_n, self.floor+1)
 	
+	if wave.elevator then
+		self:set_elevator(wave.elevator:new(self))
+	end
 	self.enemy_buffer = wave:spawn(self.elevator)
-	
 	wave:enable_wave_side_effects(self)
+	
 	if self.background.change_clear_color then
 		self.background:change_clear_color()
 	end
@@ -492,7 +499,7 @@ function Level:get_backroom_animation_state_machine(dt)
 				self.new_wave_progress = math.huge
 				self.force_next_wave_flag = true
 				self.do_not_spawn_enemies_on_next_wave_flag = true
-				self:new_wave_buffer_enemies()
+				self:apply_new_wave()
 			end,
 			update = function(state, dt)
 				self:update_hole_stencil(dt)
@@ -631,9 +638,9 @@ function Level:draw()
 		if is_on_backroom then
 			self.background:draw()
 		end
-		self.map:draw()
 		
 		if self.show_cabin then
+			self.map:draw()
 			self.elevator:draw(self.enemy_buffer)
 		end
 	end)
@@ -719,6 +726,9 @@ end
 ---------------------------------------------
 
 function Level:set_elevator(elevator)
+	if self.elevator and (elevator.name == self.elevator.name) then
+		return
+	end
 	self.elevator = elevator
 end
 

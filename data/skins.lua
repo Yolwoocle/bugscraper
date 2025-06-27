@@ -70,7 +70,7 @@ local skins = {
 		img_dead = images.nob_dead,
 
 		color_palette = {color(0xb55088), color(0x68386c), color(0xf6757a), color(0x3a4466), color(0x262b44)},
-		menu_color = COL_LIGHT_RED, 
+		menu_color = color(0xb55088), 
 		icon = "🦂",
 		text_key = "nob",
 	},

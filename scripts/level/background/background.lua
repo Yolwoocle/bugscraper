@@ -3,6 +3,8 @@ local Class = require "scripts.meta.class"
 local Background = Class:inherit()
 
 function Background:init(level)
+	self.name = "background"
+
 	self.level = level
 	self.clear_color = COL_BLACK
 

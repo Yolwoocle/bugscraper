@@ -7,6 +7,7 @@ local BackgroundCity = Background:inherit()
 
 function BackgroundCity:init(level)
 	BackgroundCity.super.init(self, level)
+	self.name = "background_city"
 
 	self.clear_color = COL_BLACK_BLUE
 	self.t = 0

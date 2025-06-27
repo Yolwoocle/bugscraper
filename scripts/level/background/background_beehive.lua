@@ -7,6 +7,8 @@ local BackgroundBeehive = Background:inherit()
 function BackgroundBeehive:init(level)
 	self.super.init(self, level)
 
+	self.name = "background_beehive"
+
 	self.speed = 0
 	self.def_speed = 10 --TODO
 

@@ -19,6 +19,7 @@ function UpgradeDisplay:init(x, y)
     self.is_stompable = false
     self.is_killed_on_stomp = true
     self.do_stomp_animation = false
+    self.is_affected_by_bounds = false
 
     self.life = 20
     self.loot = {}

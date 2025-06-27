@@ -8,6 +8,8 @@ local ElevatorW2 = Elevator:inherit()
 function ElevatorW2:init(level)
 	ElevatorW2.super.init(self, level)
 
+	self.name = "elevator_w2"
+
 	self.layers["cabin_bg"] = images.cabin_bg_w2
 	self.layers["walls"] = images.cabin_walls_w2
 	

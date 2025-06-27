@@ -10,6 +10,7 @@ local BackgroundTest3D = Background:inherit()
 
 function BackgroundTest3D:init(level)
 	self.super.init(self, level)
+	self.name = "background_test_3d"
 
     self.def_ball_scale = 24
 	

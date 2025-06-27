@@ -186,8 +186,7 @@ function PlayerPreview:init(player_n, x, y, w, h)
                 self.prompt_y_alignment = "center"
                 
                 self.prompts = {
-                    { self.player_n, { "up", "left", "down", "right" }, "", COL_WHITE },
-                    { self.player_n, {}, Text:text("input.prompts.move"), COL_WHITE },
+                    { self.player_n, { "up" }, Text:text("input.prompts.move"), COL_WHITE },
                     { self.player_n, { "jump" }, Text:text("input.prompts.jump"), COL_WHITE },
                     { self.player_n, { "shoot" }, Text:text("input.prompts.shoot"), COL_WHITE },
                 }
@@ -198,10 +197,21 @@ function PlayerPreview:init(player_n, x, y, w, h)
                 end
 
                 self.oy = -8
+
+                state.t = 0.0
+                state.btn_i = 1
             end,
             update = function(state, dt)
                 if not self.user or not Input:get_user(self.player_n) then
                     return "waiting"
+                end
+
+                -- TODO make this generic somewhere because this is awful 🙏
+                state.t = state.t + dt
+                if state.t > 1.0 then
+                    state.t = state.t - 1.0
+                    state.btn_i = mod_plus_1(state.btn_i + 1, 4)
+                    self.prompts[1][2] = {({ "up", "left", "down", "right" })[state.btn_i]}
                 end
             end,
             draw = function(state)

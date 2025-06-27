@@ -5,6 +5,7 @@ local BackgroundPlain = Background:inherit()
 
 function BackgroundPlain:init(level)
 	self.super.init(self, level)
+	self.name = "background_plain"
 end
 -----------------------------------------------------
 
