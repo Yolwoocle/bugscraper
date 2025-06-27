@@ -621,7 +621,7 @@ function Player:do_damage(n, source)
 		(random_range(0, pi2))
 	local scale = ternary(died, 0.8, 0.5)
 	local color = self.color_palette[1]
-	if source.name == "poison_cloud" then
+	if source and source.name == "poison_cloud" then
 		color = COL_LIGHT_GREEN
 	end
 	Particles:static_image(images.star_big, self.mid_x, self.mid_y, a, 0.05, scale, {
@@ -1590,16 +1590,13 @@ function Player:update_color(dt)
 	self.spr:set_solid(false)
 	self.blink_color = nil
 
+	-- Poison
 	if self.poison_timer > 0 then
 		self.blink_freq = 0.1
 		self.blink_color = transparent_color(COL_LIGHT_GREEN, 0.8)
 	end
-
-	if self.is_invincible and self.invincible_time > 0.1 then
-		local a = (self.invincible_time / self.max_invincible_time)*0.5 + 0.3
-		self.blink_color = transparent_color(COL_WHITE, a)
-	end
 	
+	-- Fizzy lemonade running out blink
 	if self.is_floating and self.float_timer < 1.5 then
 		self.blink_freq = 0.13
 		if self.float_timer < 0.7 then
@@ -1609,7 +1606,8 @@ function Player:update_color(dt)
 		self.blink_color = transparent_color(COL_LIGHT_YELLOW, 0.8)	
 	end
 
-	if self.wall_slide_stamina > 0 and self.wall_slide_stamina < self.wall_slide_max_stamina/2 then
+	-- Wall slide stamina blink
+	if self.wall_slide_stamina < self.wall_slide_max_stamina/2 then
 		self.blink_freq = 0.2
 		if self.wall_slide_stamina < self.wall_slide_max_stamina/4 then
 			self.blink_freq = self.blink_freq / 2 
@@ -1618,7 +1616,18 @@ function Player:update_color(dt)
 		self.blink_color = transparent_color(COL_LIGHT_RED, 0.8)
 	end
 	
+	-- Invincibility blink
+	if self.is_invincible and self.invincible_time > 0.1 then
+		local a = (self.invincible_time / self.max_invincible_time)*0.5 + 0.3
+		self.blink_color = transparent_color(COL_WHITE, a)
+	end
+	
+	-- Apply blink
 	if self.blink_timer <= self.blink_freq/2 then
+		self.blink_color = nil
+	end
+	
+	if self.state_machine.current_state_name ~= "normal" then
 		self.blink_color = nil
 	end
 

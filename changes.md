@@ -2,6 +2,7 @@
 
 ## 0.7
 
+- **Added**: Wall climbing now uses a stamina system: jumping and sliding uses up stamina, and when you run out of it, you will fall 
 - **Added**: Enemies can now spawn from multiple doors in a level! The various departments of the game have been redesigned to take this new feature into account
 - **Added**: Energy Drink upgrade: combo meter decreases more slowly
 - **Added**: Golden beetles (temporary name), will fly around and explode after you stomp them
