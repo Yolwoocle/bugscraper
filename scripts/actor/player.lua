@@ -10,6 +10,7 @@ local Loot = require "scripts.actor.loot"
 local Explosion = require "scripts.actor.enemies.explosion"
 local StateMachine = require "scripts.state_machine"
 local guns         = require "data.guns"
+local Timer = require "scripts.timer"
 local shaders      = require "data.shaders"
 
 local Player = Actor:inherit()
@@ -143,6 +144,11 @@ function Player:reset(n, skin)
 	self.wall_slide_speed = 30
 	self.is_wall_sliding = false
 	self.wall_slide_particle_timer = 0
+	self.wall_slide_max_stamina = 5.0
+	self.wall_slide_stamina = 0
+	self.wall_slide_stamina_use_slide = 1.0
+	self.wall_slide_stamina_use_jump = 1.0
+	self.wall_slide_sweat_timer = Timer:new(0.7, {loopback = true}):start()
 
 	self.wall_jump_margin = 8
 
@@ -721,12 +727,18 @@ end
 
 function Player:do_wall_sliding(dt)
 	-- Check if wall sliding
+	local old_is_wall_sliding = self.is_wall_sliding
 	local old_is_walled = self.is_walled
 	self.is_wall_sliding = false
 	self.is_walled = false
 
 	self.sfx_wall_slide_volume = lerp(self.sfx_wall_slide_volume, 0, 0.3)
 	self:set_constant_sound_volume("sfx_wall_slide", self.sfx_wall_slide_volume)
+
+	-- Reset wall sliding stamina if grounded
+	if self.is_grounded then
+		self.wall_slide_stamina = self.wall_slide_max_stamina
+	end
 
 	-- Update wall variables
 	if self.wall_col then
@@ -736,8 +748,12 @@ function Player:do_wall_sliding(dt)
 		local holding_left = self:action_down('left') and col_normal.x == 1
 		local holding_right = self:action_down('right') and col_normal.x == -1
 		
-		local is_wall_sliding = is_walled and is_falling and (holding_left or holding_right) 
-			and (self.wall_col.other.collision_info and self.wall_col.other.collision_info.is_slidable)
+		local is_wall_sliding = 
+			is_walled and is_falling 
+			and (holding_left or holding_right) 
+			and self.wall_col.other.collision_info 
+			and self.wall_col.other.collision_info.is_slidable
+			and self.wall_slide_stamina > 0
 		self.is_wall_sliding = is_wall_sliding
 		self.is_walled = is_walled
 	end
@@ -766,6 +782,21 @@ function Player:do_wall_sliding(dt)
 		-- SFX
 		self.sfx_wall_slide_volume = lerp(self.sfx_wall_slide_volume, self.sfx_wall_slide_max_volume, 0.3)
 		self:set_constant_sound_volume("sfx_wall_slide", self.sfx_wall_slide_volume)
+
+		-- Stamina
+		local old_stamina = self.wall_slide_stamina
+		self.wall_slide_stamina = self.wall_slide_stamina - dt*self.wall_slide_stamina_use_slide
+
+		-- Effects
+		if self.wall_slide_stamina >= self.wall_slide_max_stamina/2 and self.wall_slide_sweat_timer.duration ~= 0.6 then
+			self.wall_slide_sweat_timer:start(0.6)
+		end
+		if self.wall_slide_stamina < self.wall_slide_max_stamina/2 and self.wall_slide_sweat_timer.duration ~= 0.2 then
+			self.wall_slide_sweat_timer:start(0.2)
+		end
+		if self.wall_slide_sweat_timer:update(dt) then
+			Particles:sweat(self.mid_x + self.dir_x * 12, self.y, self.dir_x < 0)
+		end
 	else
 		self.gravity = self.default_gravity
 	end
@@ -798,9 +829,8 @@ function Player:update_jumping(dt)
 	end
 
 	-- Coyote time
-	-- TODO FIXME scotch: if you press jump really fast, you can exploit coyote time and double jump 
 	self.coyote_time = self.coyote_time - 1
-	
+
 	if self.buffer_jump_timer > 0 then
 		-- Detect nearby walls using a collision box
 		local wall_normal = self:get_nearby_wall()
@@ -818,9 +848,11 @@ function Player:update_jumping(dt)
 			-- Conditions for a wall jump used for climbing, while sliding ("wall climb")
 			local wall_climb = self.is_wall_sliding
 
-			if left_jump or right_jump or wall_climb then
+			if (self.wall_slide_stamina > 0) and (left_jump or right_jump or wall_climb) then
 				self:wall_jump(wall_normal)
 				self:on_jump()
+
+				self.wall_slide_stamina = self.wall_slide_stamina - self.wall_slide_stamina_use_jump
 			end
 				
 		elseif not self.is_grounded and (self.jumps > 0) then 
@@ -1107,6 +1139,7 @@ function Player:on_stomp(enemy)
 	self.vy = spd
 	self:set_invincibility(0.15) --0.1
 	self.jumps = math.max(0, self.max_jumps - 1)
+	self.wall_slide_stamina = self.wall_slide_max_stamina
 
 	self.float_timer = self.float_max_duration
 	self.gun:add_ammo(math.floor(self.ammo_percent_gain_on_stomp * self.gun:get_max_ammo()))
@@ -1573,7 +1606,16 @@ function Player:update_color(dt)
 			self.blink_freq = self.blink_freq / 2 
 		end
 
-		self.blink_color = {COL_LIGHT_YELLOW[1], COL_LIGHT_YELLOW[2], COL_LIGHT_YELLOW[3], 0.8}	
+		self.blink_color = transparent_color(COL_LIGHT_YELLOW, 0.8)	
+	end
+
+	if self.wall_slide_stamina > 0 and self.wall_slide_stamina < self.wall_slide_max_stamina/2 then
+		self.blink_freq = 0.2
+		if self.wall_slide_stamina < self.wall_slide_max_stamina/4 then
+			self.blink_freq = self.blink_freq / 2 
+		end
+
+		self.blink_color = transparent_color(COL_LIGHT_RED, 0.8)
 	end
 	
 	if self.blink_timer <= self.blink_freq/2 then

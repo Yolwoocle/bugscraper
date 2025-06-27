@@ -162,6 +162,9 @@ function ImageParticle:init_image_particle(spr, x,y,s,r, vx,vy,vs,vr, life, g, i
 	self.alpha = params.alpha or 1
 	self.alpha_speed = params.alpha_speed or 0
 
+	self.flip_x = param(params.flip_x, false) and -1 or 1
+	self.flip_y = param(params.flip_y, false) and -1 or 1
+
 	self.is_solid = is_solid
 end
 function ImageParticle:update(dt)
@@ -181,7 +184,7 @@ function ImageParticle:draw()
 	end
 
 	exec_color({1, 1, 1, (self.color or {})[4] or 1}, function()
-		love.graphics.draw(self.spr, self.x, self.y, self.r, self.s, self.s, self.spr_ox, self.spr_oy)
+		love.graphics.draw(self.spr, self.x, self.y, self.r, self.flip_x*self.s, self.flip_y*self.s, self.spr_ox, self.spr_oy)
 	end)
 	
 	if self.color then
@@ -620,11 +623,6 @@ local OpenedDoorParticle = Particle:inherit()
 function OpenedDoorParticle:init(img, x,y)
 	self:init_particle(x,y,s,r, vx,vy,0,vr, 5.0, g, false)
 	self.img = img
-
-	-- self.spr_w = self.spr:getWidth()
-	-- self.spr_h = self.spr:getWidth()
-	-- self.spr_ox = self.spr_w / 2
-	-- self.spr_oy = self.spr_h / 2
 	
 	self.t = 0 
 	self.rot_3d = math.pi/2
@@ -1017,6 +1015,9 @@ function ParticleSystem:image(x, y, number, spr, spw_rad, life, vs, g, params)
 			particle_params.ignore_frameskip = params.ignore_frameskip
 		end
 
+		particle_params.flip_x = params.flip_x
+		particle_params.flip_y = params.flip_y
+
 		--spr, x,y,s,r, vx,vy,vs,vr, life, g, is_solid
 		self:add_particle(ImageParticle:new(sprite, x+dx, y+dy, scale, rot, vx,vy,vs,vr, life, g, is_solid, particle_params))
 	end
@@ -1076,13 +1077,16 @@ function ParticleSystem:bullet_vanish(x, y, rot)
 end
 
 -- FIXME: scotch
-function ParticleSystem:sweat(x, y)
+function ParticleSystem:sweat(x, y, flip_x)
+	-- x, y, rot, life, scale, params
 	self:static_image({
 		images.sweat_1,
 		images.sweat_2,
 		images.sweat_3,
 		images.sweat_4,
-	}, x, y, 0, 0.2)
+	}, x, y, 0, 0.2, nil, {
+		flip_x = flip_x
+	})
 end
 
 -- FIXME: scotch
