@@ -125,6 +125,7 @@ function Player:reset(n, skin)
 	self.stomp_jump_speed = 500
 
 	self.can_hold_jump_to_float = false
+	self.is_floating = false
 	self.float_speed = 60
 	self.float_max_duration = 3
 	self.float_timer = 0
@@ -153,10 +154,11 @@ function Player:reset(n, skin)
 	self.is_invincible = false
 	self.invincible_time = 0
 	self.max_invincible_time = 3
-	self.iframe_blink_default_freq = 0.2
-	self.iframe_blink_freq = 0.2
-	self.iframe_blink_timer = 0
-	self.iframe_blink_color = nil
+
+	self.blink_default_freq = 0.2
+	self.blink_freq = 0.2
+	self.blink_timer = 0
+	self.blink_color = nil
 
 	-- Shooting & guns (keep it or ditch for family friendliness?)	
 	self.is_shooting = false
@@ -519,8 +521,7 @@ function Player:do_invincibility(dt)
 	if self.invincible_time > 0 and game.frames_to_skip <= 0 then
 		self.is_invincible = true
 
-		self.iframe_blink_freq = (self.invincible_time > 1) and self.iframe_blink_default_freq or self.iframe_blink_default_freq/2
-		self.iframe_blink_timer = (self.iframe_blink_timer + dt) % self.iframe_blink_freq
+		self.blink_freq = (self.invincible_time > 1) and self.blink_default_freq or self.blink_default_freq/2
 	end
 end
 
@@ -831,16 +832,20 @@ function Player:update_jumping(dt)
 end
 
 function Player:do_floating(dt)
+	self.is_floating = false
 	if not self.can_hold_jump_to_float then
 		return
 	end
 	if self.is_grounded or self.is_wall_sliding then
 		self.float_timer = self.float_max_duration
+		return
 	end
 
 	if self.float_timer > 0 then
 		self.float_timer = math.max(0, self.float_timer - dt)
 		if self.vy > 0 and self:action_down("jump") then
+			self.is_floating = true
+
 			self.gravity = 0
 			self.vy = self.float_speed
 			Particles:smoke(self.mid_x, self.y+self.h, 1, transparent_color(COL_LIGHT_YELLOW, 1))
@@ -1453,11 +1458,11 @@ end
 
 function Player:draw_player()
 	self.spr:draw(self.x, self.y - self.walkbounce_oy, self.w, self.h)
-	if self.iframe_blink_color then
+	if self.blink_color then
 		local s = self.spr.is_solid_color
 		local c = self.spr.color
 		self.spr:set_solid(true)
-		self.spr:set_color(self.iframe_blink_color)
+		self.spr:set_color(self.blink_color)
 		
 		self.spr:draw(self.x, self.y - self.walkbounce_oy, self.w, self.h)
 
@@ -1542,13 +1547,11 @@ function Player:animate_walk(dt)
 end
 
 function Player:update_color(dt)
+	self.blink_timer = (self.blink_timer + dt) % self.blink_freq
+
 	self.spr:set_color{1, 1, 1, 1}
 	self.spr:set_solid(false)
-	self.iframe_blink_color = nil
-	-- if self.poison_timer > 0.1 then
-	-- 	local v = 1 - (self.poison_timer / self.poison_damage_time)
-	-- 	self.spr:set_color{v, 1, v, 1}
-	-- end
+	self.blink_color = nil
 
 	if self.is_invincible and self.invincible_time > 0.1 then
 		local a = (self.invincible_time / self.max_invincible_time)*0.5 + 0.3
@@ -1557,12 +1560,22 @@ function Player:update_color(dt)
 			col = COL_LIGHT_GREEN
 		end
 
-		if self.iframe_blink_timer > self.iframe_blink_freq/2 then
-			-- a = 0.5
-			self.iframe_blink_color = {col[1], col[2], col[3], a}
-		end
+		self.blink_color = {col[1], col[2], col[3], a}
 	end
 	
+	if self.is_floating and self.float_timer < 1.5 then
+		self.blink_freq = 0.13
+		if self.float_timer < 0.7 then
+			self.blink_freq = self.blink_freq / 2 
+		end
+
+		self.blink_color = {COL_LIGHT_YELLOW[1], COL_LIGHT_YELLOW[2], COL_LIGHT_YELLOW[3], 0.8}	
+	end
+	
+	if self.blink_timer <= self.blink_freq/2 then
+		self.blink_color = COL_WHITE
+	end
+
 	if self.is_ghost then
 		self.spr:set_color{1, 1, 1, self.ghost_opacity}
 	end

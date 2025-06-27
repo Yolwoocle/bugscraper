@@ -209,7 +209,6 @@ function Sprite:set_outline(color, type)
 end
 
 function Sprite:update(dt)
-    --
 end
 
 function Sprite:get_total_offset_position(x, y, w, h)
