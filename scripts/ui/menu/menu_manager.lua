@@ -71,7 +71,7 @@ function MenuManager:update_current_menu(dt)
 	self.cur_menu:update(dt)
 
 	-- Update current selection
-	if self.cur_menu then
+	if self.cur_menu and self.sel_n and self.sel_item then
 		self.sel_n = mod_plus_1(self.sel_n, #self.cur_menu.items)
 		self.sel_item = self.cur_menu.items[self.sel_n]
 	end
@@ -142,7 +142,7 @@ function MenuManager:set_menu(menu, params)
 	end
 	self.cur_menu:update(0)
 	
-	local sel, found = self:find_selectable_from(1, 1)
+	local sel = self:find_selectable_from(1, 1)
 	self:set_selection(sel)
 	
 	-- Reset game screenshake
@@ -199,15 +199,17 @@ function MenuManager:incr_selection(n)
 	if not self.cur_menu then return false, "no current menu" end
 
 	-- Increment selection until valid item
-	local sel, found = self:find_selectable_from(self.sel_n, n)
+	local sel = self:find_selectable_from(self.sel_n, n)
 
-	if not found then
+	if not sel then
 		self.sel_n = self.sel_n + n
 		return false, concat("no selectable item found; selection set to n + (", n, ") (", self.sel_n, ")")
 	end
 
 	-- Update new selection
-	self.sel_item:set_selected(false, n)
+	if self.sel_item then
+		self.sel_item:set_selected(false, n)
+	end
 	self.sel_n = sel
 	self.sel_item = self.cur_menu.items[self.sel_n]
 	self.sel_item:set_selected(true, n)
@@ -218,6 +220,9 @@ function MenuManager:incr_selection(n)
 end
 
 function MenuManager:find_selectable_from(n, diff)
+	if not n then 
+		return
+	end
 	diff = diff or 1
 
 	local len = #self.cur_menu.items
@@ -227,22 +232,37 @@ function MenuManager:find_selectable_from(n, diff)
 	local found = false
 	while not found and limit > 0 do
 		sel = mod_plus_1(sel + diff, len)
-		if self.cur_menu.items[sel].is_selectable then found = true end
+		if self.cur_menu.items[sel].is_selectable then 
+			found = true 
+		end
 		limit = limit - 1
 	end
 
-	return sel, found
+	if not found then
+		return nil
+	end
+	return sel
 end
 
 function MenuManager:set_selection(n)
-	if self.sel_item then self.sel_item:set_selected(false) end
-	if not self.cur_menu then return false end
+	if self.sel_item then 
+		self.sel_item:set_selected(false)
+	end
+	if not self.cur_menu then 
+		return false
+	end
 
 	self.sel_n = n
-	self.sel_item = self.cur_menu.items[self.sel_n]
-	if not self.sel_item then return false end
+	if not n then
+		self.sel_item = nil
+		return false
+	end
+	self.sel_item = self.cur_menu.items[n]
+	if not self.sel_item then 
+		return false 
+	end
+	
 	self.sel_item:set_selected(true)
-
 	return true
 end
 
