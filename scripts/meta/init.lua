@@ -4,10 +4,9 @@ require "bugscraper_config"
 local function init()
     print("====================[ Launched Bugscraper"..(DEMO_BUILD and " Demo" or "").." (v"..BUGSCRAPER_VERSION..") ]====================")
     print("LOVE version: "..string.format("%d.%d.%d - %s", love.getVersion()))
-    print("Debug mode: "..tostring(DEBUG_MODE))
     print("")
 
-    if DEBUG_MODE and PROFILE_INIT then
+    if PROFILE_INIT then
         love.profiler = require "lib.profiler.profile"
         love.profiler.start()
     end
@@ -59,7 +58,7 @@ local function init()
     love.graphics.present()
     love.graphics.origin()
 
-    if DEBUG_MODE and PROFILE_INIT then
+    if PROFILE_INIT then
         print("")
         print("---[[ LOAD PROFILER REPORT ]]---")
         print(love.profiler.report(20))

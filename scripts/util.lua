@@ -757,6 +757,14 @@ function table_2d_0(w, h, val)
 	return t
 end
 
+function table_to_set(tab)
+	local out = {}
+	for k, v in pairs(tab) do
+		out[v] = true
+	end
+	return out
+end
+
 function strtobool(str)
 	return str ~= "false" -- Anything other than "false" returns as true
 end

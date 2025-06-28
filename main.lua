@@ -12,7 +12,16 @@ local Measure = require "scripts.debug.measure"
 
 game = nil
 
-function love.load(arg)
+function love.load(args)
+	LAUNCH_ARGUMENTS_RAW = args or {}
+	print_table(LAUNCH_ARGUMENTS_RAW)
+
+	LAUNCH_ARGUMENTS = {}
+	for i=1, #LAUNCH_ARGUMENTS_RAW do
+		LAUNCH_ARGUMENTS[LAUNCH_ARGUMENTS_RAW[i]] = true
+	end
+	DEBUG_MODE = DEBUG_MODE or (LAUNCH_ARGUMENTS["--debug"] or LAUNCH_ARGUMENTS["-d"])
+
 	game = Game:new()
 end
 
