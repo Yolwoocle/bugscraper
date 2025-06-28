@@ -1369,21 +1369,26 @@ end
 function Player:draw_hud()
 	if self.is_removed or self.is_dead then    return    end
 	if not self.show_hud then    return    end
-	if not self.gun or not self.gun.show_hud then
-		return 
-	end
 
 	local ui_x = floor(self.ui_x)
 	local ui_y = floor(self.ui_y) - self.spr.h - 12
 
-	self:draw_life_bar(ui_x, ui_y)
-	self:draw_ammo_bar(ui_x, ui_y)
+	if self.gun and self.gun.show_hud then
+		self:draw_ammo_bar(ui_x, ui_y)
+		self:draw_life_bar(ui_x, ui_y)
+	end
 
 	if game.game_state == GAME_STATE_WAITING then
+		local controls_y = self.ui_y + self.controls_oy - 10
 		if Input:get_number_of_users() > 1 then
 			print_centered_outline(self.color_palette[1], nil, Text:text("player.abbreviation", self.n), ui_x, ui_y- 8)
+			controls_y = controls_y - 16
 		end
-		self:draw_controls()
+
+		if self.gun.show_hud then
+			controls_y = controls_y - 25 -- SCOTCCHHHHHHH
+		end
+		self:draw_controls(controls_y)
 	end
 	
 	if self.combo >= self.min_combo_visual_trigger then
@@ -1475,7 +1480,7 @@ function Player:get_controls_text_color(i)
 	return color or COL_WHITE
 end
 
-function Player:draw_controls()
+function Player:draw_controls(y)
 	if game.debug and not game.debug.title_junk then
 		return 
 	end
@@ -1483,7 +1488,6 @@ function Player:draw_controls()
 	local tutorials = self:get_controls_tutorial_values()
 
 	local x = self.ui_x
-	local y = self.ui_y - 45 + self.controls_oy
 	for i, tuto in ipairs(tutorials) do
 		y = y - 16
 		Input:draw_input_prompt(self.n, tuto[1], tuto[2], self:get_controls_text_color(i), x, y, {
