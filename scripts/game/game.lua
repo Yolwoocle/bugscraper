@@ -511,7 +511,7 @@ function Game:draw_game()
 
 		-- Draw actors
 		for _, actor in pairs(self.actors) do
-			if actor.is_active and actor.is_visible and self.level.show_cabin then
+			if actor.is_active and actor.is_visible then
 				actor:draw()
 			end
 		end

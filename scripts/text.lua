@@ -8,11 +8,11 @@ function TextManager:init()
     local start = love.timer.getTime()
     self.languages = {
         en = require "data.lang.en",
-        es = require "data.lang.es",
         fr = require "data.lang.fr",
+        -- es = require "data.lang.es",
         -- zh = require "data.lang.zh",
-        pl = require "data.lang.pl",
-        pt = require "data.lang.pt",
+        -- pl = require "data.lang.pl",
+        -- pt = require "data.lang.pt",
     }
     self.locale_to_language = {
         ["en"] = "en",
@@ -27,11 +27,11 @@ function TextManager:init()
         -- ["zh_CN"] = "zh",
         -- ["zh_SG"] = "zh",
 
-        ["pl"] = "pl",
-        ["pl_PL"] = "pl",
+        -- ["pl"] = "pl",
+        -- ["pl_PL"] = "pl",
 
-        ["pt"] = "pt",
-        ["pt_BR"] = "pt",
+        -- ["pt"] = "pt",
+        -- ["pt_BR"] = "pt",
     }
 
     for lang_name, lang_values in pairs(self.languages) do

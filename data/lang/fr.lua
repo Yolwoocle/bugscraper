@@ -165,6 +165,7 @@ return {
         see_more = "plus d'infos...",
         yes = "OUI",
         no = "NON",
+        leave_menu = "Quitter le menu ?", -- Generic "leave menu?"
         quit = {
             description = "Êtes-vous sûr de vouloir quitter ?"
         },
@@ -252,6 +253,7 @@ return {
             },
             game = {
                 title = "Jeu",
+                tutorial = "TUTORIEL...",
                 language = "LANGUE...",
                 timer = "CHRONOMÈTRE",
                 mouse_visible = "AFFICHER LE CURSEUR",
@@ -305,6 +307,7 @@ return {
             sound_design = "Sound design",
             published_by = "Publié par",
             localization = "Localisation",
+            additional_art = "Art supplémentaire",
             playtesting = "Playtesting",
             special_thanks = "Remerciements",
             asset_creators = "Créateur·rices d'assets",

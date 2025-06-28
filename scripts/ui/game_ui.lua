@@ -239,7 +239,7 @@ function GameUI:draw_version()
 	end
 	local x = math.floor(CANVAS_WIDTH - get_text_width(text) - 2)
 	local y = self.game.logo_y
-	print_outline(COL_DARK_GRAY, COL_VERY_DARK_GRAY, text, x, y)
+	print_color(COL_DARK_GRAY, text, x, y)
 	love.graphics.setFont(old_font)
 
 	-- if OPERATING_SYSTEM == "Web" and not game.has_seen_controller_warning then
