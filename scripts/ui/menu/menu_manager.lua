@@ -202,7 +202,6 @@ function MenuManager:incr_selection(n)
 	local sel = self:find_selectable_from(self.sel_n, n)
 
 	if not sel then
-		self.sel_n = self.sel_n + n
 		return false, concat("no selectable item found; selection set to n + (", n, ") (", self.sel_n, ")")
 	end
 
