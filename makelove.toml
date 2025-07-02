@@ -9,12 +9,6 @@ love_files = [
     "+*",
     "-*/.*",
     "-./_*",
-    "-./_export/*",
-    "-./_dyn/*",
-    "-./_tools/*",
-    "-./_readme/*", 
-    "-./_tools/*", 
-    "-./_trash/*",
     "-*.aseprite",
     "-*.lnk",
 
@@ -22,10 +16,10 @@ love_files = [
     "-./steam_api64.dll",
 ]
 
-# love_version = "12.0" 
+love_version = "12.0" 
 
 [win64]
-love_binaries = "/mnt/d/docs/dev/gamedev/love2d/love12-builds/win64"
+love_binaries = "/mnt/c/docs/gamedev/love2d/love12-builds/win64"
 
 [windows]
 # The files specified here will be added in addition to the ones specified on top level.
@@ -40,10 +34,10 @@ love_binaries = "/mnt/d/docs/dev/gamedev/love2d/love12-builds/win64"
 # and the values in the comments are the original values in love.exe
 # If you are not doing a versioned build, 0.4 is empty.
 [windows.exe_metadata]
-FileDescription = "Bugscraper: Rise to the top of a bug-filled tower" # "LÖVE {löve version}"
-FileVersion = "0.6" # "{löve version}"
+FileDescription = "Bugscraper: Rise to the top of a bug-filled skyscraper" # "LÖVE {löve version}"
+FileVersion = "0.7" # "{löve version}"
 CompanyName = "Léo Bernard" # "LÖVE World Domination Inc."
-LegalCopyright = "Copyright © 2024 Léo Bernard" # "Copyright © 2006-2020 LÖVE Development Team" or ""
+LegalCopyright = "Copyright © 2025 Léo Bernard" # "Copyright © 2006-2020 LÖVE Development Team" or ""
 ProductName = "Bugscraper" # "LÖVE"
 # ProductVersion = "<same as FileVersion>"
 OriginalFilename = "bugscraper.exe" # "love.exe"
@@ -52,7 +46,7 @@ OriginalFilename = "bugscraper.exe" # "love.exe"
 [macos]
 # optionally, you can include a mac-specific icon, if not mac will use the same icon as other targets
 icon_file = "icon.png"  # or macIcon.icns
-love_binaries = "/mnt/d/docs/dev/gamedev/love2d/love12-builds/macos"
+love_binaries = "/mnt/c/docs/gamedev/love2d/love12-builds/macos"
 
 # The files specified here will be added in addition to the ones specified on top level.
 # All specified files will be copied to the <name>/Contents/Resources/ directory of the .app file.
@@ -65,11 +59,11 @@ love_binaries = "/mnt/d/docs/dev/gamedev/love2d/love12-builds/macos"
 [macos.app_metadata]
 # CFBundleName = "<same as the name from the main config>"
 CFBundleIdentifier = "com.yolwoocle.bugscraper"
-NSHumanReadableCopyright = "Copyright © 2024 Léo Bernard"
-CFBundleShortVersionString = "0.6"
+NSHumanReadableCopyright = "Copyright © 2025 Léo Bernard"
+CFBundleShortVersionString = "0.7"
 
 [appimage]
-source_appimage = "/mnt/d/docs/dev/gamedev/love2d/love12-builds/love-12.0-x86_64.AppImage"
+source_appimage = "/mnt/c/docs/gamedev/love2d/love12-builds/love-12.0-x86_64.AppImage"
 
 [linux]
 # [linux.archive_files]
@@ -79,7 +73,7 @@ source_appimage = "/mnt/d/docs/dev/gamedev/love2d/love12-builds/love-12.0-x86_64
 
 # These values are included in the .desktop file
 [linux.desktop_file_metadata]
-Comment="Bugscraper: Rise to the top of a bug-filled tower"
+Comment="Bugscraper: Rise to the top of a bug-filled skyscraper"
 Categories="Game;" # Default is "Game;" (semicolon is separator and terminator)
 
 [lovejs]

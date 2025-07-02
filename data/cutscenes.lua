@@ -30,33 +30,41 @@ cutscenes.tutorial_start = Cutscene:new("tutorial_end", {
     CutsceneScene:new({
         description = "",
 
-        duration = 5.0,
+        duration = 4.2,
         enter = function(scene)
-            game.game_ui:start_title("Ninesliced", "", "{menu.credits.game_by}", 0.5, 4.0, 0.5)
+            game.game_ui:start_title("Léo Bernard", "Yolwoocle", "{menu.credits.game_by}", 0.5, 3.2, 0.5)
         end,
     }),
     CutsceneScene:new({
         description = "",
 
-        duration = 5.0,
+        duration = 4.2,
         enter = function(scene)
-            game.game_ui:start_title("Léo Bernard", "Yolwoocle", "{menu.credits.game_by}", 0.5, 4.0, 0.5)
+            game.game_ui:start_title("Alexandre Mercier", "OLX", "{menu.credits.music}", 0.5, 3.2, 0.5)
         end,
     }),
     CutsceneScene:new({
         description = "",
 
-        duration = 5.0,
+        duration = 4.2,
         enter = function(scene)
-            game.game_ui:start_title("OLX", "Alexandre Mercier", "{menu.credits.music}", 0.5, 4.0, 0.5)
+            game.game_ui:start_title("Martin Domergue", "Verbaudet", "{menu.credits.sound_design}", 0.5, 3.2, 0.5)
         end,
     }),
     CutsceneScene:new({
         description = "",
 
-        duration = 6.0,
+        duration = 4.2,
         enter = function(scene)
-            game.game_ui:start_title("Martin Domergue", "Verbaudet", "{menu.credits.sound_design}", 0.5, 4.0, 0.5)
+            game.game_ui:start_title("Noam Goldfarb", "SSlime7", "{menu.credits.additional_art}", 0.5, 3.2, 0.5)
+        end,
+    }),
+    CutsceneScene:new({
+        description = "",
+
+        duration = 4.2,
+        enter = function(scene)
+            game.game_ui:start_title("Ninesliced", "", "{menu.credits.game_by}", 0.5, 3.2, 0.5)
         end,
     }),
     CutsceneScene:new({

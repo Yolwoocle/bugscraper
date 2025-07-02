@@ -149,7 +149,7 @@ function ExitSign:update_smash_easter_egg(dt)
 
     if self.is_in_smash_easter_egg then
         self.spring_y = self.retracted_spring_ideal_length
-        self:lerp_camera(self.x + CANVAS_HEIGHT + 200, self.y - CANVAS_HEIGHT/4)
+        self:lerp_camera(self.x - 30, self.y - CANVAS_HEIGHT/4)
         
         self:update_star()
     end

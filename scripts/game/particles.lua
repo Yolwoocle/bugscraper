@@ -500,7 +500,8 @@ function SmashedPlayerParticle:update(dt)
 		self:remove()
 	end
 
-	Particles:dust(self.x, self.y, COL_WHITE, nil, nil, nil, true)
+	-- (x, y, col, size, rnd_pos, sizevar, params)
+	Particles:dust(self.x, self.y, COL_WHITE, nil, nil, nil)
 end
 function SmashedPlayerParticle:draw()
 	love.graphics.draw(self.spr, self.x + self.ox, self.y + self.oy, self.r, self.s, self.s, self.spr_ox, self.spr_oy)

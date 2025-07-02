@@ -248,7 +248,7 @@ function GameUI:draw_version()
 end
 
 function GameUI:draw_timer()
-	if not Options:get("timer_on") then
+	if not Options:get("timer_on") then 
 		return
 	end
 

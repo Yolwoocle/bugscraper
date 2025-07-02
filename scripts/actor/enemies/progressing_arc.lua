@@ -39,6 +39,8 @@ function ProgressingArc:init(x, y, params)
 
     self.progress_speed = params.progress_speed or 40.0
     self.interval_size = params.interval_size or 40.0
+
+    self.arc_params = params.arc_params
     
     self.rays_spawned = false
 
@@ -56,7 +58,7 @@ function ProgressingArc:spawn_rays()
         local ax, ay = self.points[i][1], self.points[i][2]
         local bx, by = self.points[i+1][1], self.points[i+1][2]
         
-        local arc = ElectricArc:new(ax, ay)
+        local arc = ElectricArc:new(ax, ay, self.arc_params)
         arc:set_segment(ax, ay, bx, by)
         arc:set_active(false)
 
@@ -90,14 +92,15 @@ function ProgressingArc:set_bounds(a, b)
         if upper < a or b < lower then
             ray:set_active(false)
         else
-            ray:set_active(true)
             local clamped_a = clamp(a, lower, upper)
             local clamped_b = clamp(b, lower, upper)
             self:set_ray_bounds(i, clamped_a - lower, clamped_b - lower)
+            ray:set_active(true)
         end
 
         lower = upper
     end
+    print("--------")
 end
 
 function ProgressingArc:set_ray_bounds(ray_index, a, b)
@@ -109,6 +112,12 @@ function ProgressingArc:set_ray_bounds(ray_index, a, b)
     local info = self.ray_info[ray_index]
     assert(info ~= nil, "Ray info for ray "..tostring(ray_index).." doesn't exist")
 
+    print(
+        tostring(round(info.x + info.direction_x * a))..","..
+        tostring(round(info.y + info.direction_y * a))..","..
+        tostring(round(info.x + info.direction_x * b))..","..
+        tostring(round(info.y + info.direction_y * b))
+    )
     ray:set_segment(
         info.x + info.direction_x * a,
         info.y + info.direction_y * a,

@@ -111,6 +111,16 @@ function Debug:init(game)
                 points = points,
                 interval_size = 150,
                 progress_speed = 80,
+                arc_params = {
+                    lightning_params = {
+                        style = LIGHTNING_STYLE_THORNS, 
+                        min_step_size = 10,
+                        max_step_size = 10,
+                        min_line_width = 0,
+                        max_line_width = 0,
+                        jitter_width = 0,
+                    }
+                }
             })
             game:new_actor(e)
 

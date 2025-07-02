@@ -9,17 +9,20 @@ local func_url          = menu_util.func_url
 local PROMPTS_NORMAL    = menu_util.PROMPTS_NORMAL
 
 return Menu:new(game, "{menu.credits.title}", {
-    { "<<< " .. Text:text("menu.credits.game_by") .. " >>>" },
+    { "<<< {menu.credits.game_by} >>>" },
     { "Léo Bernard (Yolwoocle) 🔗", func_url("https://yolwoocle.com/") },
     { "" },
-    { "<<< " .. Text:text("menu.credits.music") .. " >>>" },
+    { "<<< {menu.credits.music} >>>" },
     { "Alexandre Mercier (OLX) 🔗", func_url("https://www.youtube.com/@olxdotwav") },
+    { "" },
+    { "<<< {menu.credits.sound_design} >>>" },
+    { "Martin Domergue (Verbaudet) 🔗", func_url("https://linktr.ee/martindomerguesd") },
     { "" },
     { "<<< {menu.credits.additional_art} >>>" },
     { "Noam Goldfarb (SSlime7)", empty_func }, 
     { "Colin Roullé (OHX)", empty_func }, 
     { "" },
-    { "<<< " .. Text:text("menu.credits.localization") .. " >>>" },
+    { "<<< {menu.credits.localization} >>>" },
     { "Jakub Piłasiewicz", empty_func },
     { "Nicole Sanches (rhysuki)", empty_func },
     { "Alejandro Alzate Sánchez", empty_func }, -- https://github.com/alejandro-alzate
@@ -95,6 +98,5 @@ return Menu:new(game, "{menu.credits.title}", {
     { "Zlib 🔗", func_url("https://www.zlib.net/zlib_license.html") },
     { "OFL-1.1 🔗", func_url("https://spdx.org/licenses/OFL-1.1.html") },
     { "" },
-    -- { random_sample({ "🐜", "🐛", "🐝", "🪲", "🐰" }) .. "❤" },
     { "🐜❤" },
 }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)

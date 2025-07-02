@@ -5,6 +5,7 @@ local images = require "data.images"
 local Class = require "scripts.meta.class"
 local Rect = require "scripts.math.rect"
 local Segment = require "scripts.math.segment"
+local shaders = require "data.shaders"
 
 local utf8 = require "utf8"
 
@@ -13,24 +14,26 @@ local Lightning = Class:inherit()
 function Lightning:init(params)
     params = param(params, {})
 
-    self.min_step_size =  param(params.min_step_size, 4)
-    self.max_step_size =  param(params.max_step_size, 10)
-    self.max_steps =      param(params.max_steps, 300)
-    self.min_line_width = param(params.min_line_width, 1)
-    self.max_line_width = param(params.max_line_width, 3)
-    self.jitter_width =   param(params.jitter_width, 3)
-    self.palette =        param(params.palette, {
+    self.min_step_size =   param(params.min_step_size, 4)
+    self.max_step_size =   param(params.max_step_size, 10)
+    self.max_steps =       param(params.max_steps, 300)
+    self.min_line_width =  param(params.min_line_width, 1)
+    self.max_line_width =  param(params.max_line_width, 3)
+    self.jitter_width =    param(params.jitter_width, 3)
+    self.palette =         param(params.palette, {
         COL_LIGHT_YELLOW,
         COL_ORANGE,
         COL_YELLOW_ORANGE,
         COL_WHITE,
     })
+    self.style =           param(params.style, LIGHTNING_STYLE_NORMAL)
+    self.animation =       param(params.style, LIGHTNING_ANIMATION_JITTER)
     self.coordinate_mode = param(params.coordinate_mode, LIGHNING_COORDINATE_MODE_CARTESIAN)
 
     self.color = self.palette[1]
     self.segments = {}
 
-    self.style = LIGHTNING_STYLE_NORMAL
+    self.debug_col = {random_range(0, 1), random_range(0, 1), random_range(0, 1), 1}
 end
 
 function Lightning:convert_segment(ax, ay, bx, by)
@@ -98,7 +101,20 @@ function Lightning:draw(ox, oy)
             local img = ternary(point.line_width < lerp(self.min_line_width, self.max_line_width, 0.5), images.particle_bit_zero_dark, images.particle_bit_one_dark)
             love.graphics.draw(img, ox + point.segment.bx, oy + point.segment.by)
         end
+        
+    elseif self.style == LIGHTNING_STYLE_THORNS then
+        shaders.draw_in_color:sendColor("fillColor", self.debug_col)
+        love.graphics.setShader(shaders.draw_in_color)
 
+        for i, point in pairs(self.segments) do
+            draw_centered(images.dung_projectile, ox + point.segment.ax, oy + point.segment.ay)
+        end
+        local point = self.segments[#self.segments]
+        if point then
+            draw_centered(images.dung_projectile, ox + point.segment.bx, oy + point.segment.by)
+        end
+       
+        love.graphics.setShader()
     end
 end
 

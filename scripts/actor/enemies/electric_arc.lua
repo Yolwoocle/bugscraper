@@ -12,7 +12,8 @@ local utf8 = require "utf8"
 
 local ElectricArc = Prop:inherit()
 
-function ElectricArc:init(x, y, is_active, activation_delay)
+function ElectricArc:init(x, y, params)
+    params = params or {} 
     ElectricArc.super.init(self, x, y, images.empty, 1, 1)
     self.name = "electric_arc"
 
@@ -31,10 +32,10 @@ function ElectricArc:init(x, y, is_active, activation_delay)
     self.arc_target_player_n = nil
     self.hitbox_expand = 2
 
-    self.lightning = Lightning:new()
+    self.lightning = Lightning:new(params.lightning_params)
 
     self.is_immune_to_electricity = true
-    self.is_arc_active = param(is_active, true)
+    self.is_arc_active = param(params.is_active, true)
     -- self.particle_probability = 0.005
     self.particle_probability = 0.001
 
@@ -43,8 +44,8 @@ function ElectricArc:init(x, y, is_active, activation_delay)
     self.inactive_arc_min_line_width = 0.1
     self.inactive_arc_max_line_width = 0.5
 
-    self.activation_timer = Timer:new(activation_delay or 0)
-    if activation_delay then
+    self.activation_timer = Timer:new(params.activation_delay or 0)
+    if params.activation_delay then
         self.activation_timer:start()
     end
     self.disable_timer = Timer:new()
@@ -93,6 +94,12 @@ function ElectricArc:set_segment(ax_or_seg, ay, bx, by)
 end
 
 function ElectricArc:update(dt)
+    self.debug_values[1] = ""
+    self.debug_values[2] = ""
+    self.debug_values[3] = ""
+    self.debug_values[4] = ""
+    self.debug_values[5] = ""
+    self.debug_values[6] = concat(round(self.segment.ax), " ", round(self.segment.ay), " ", round(self.segment.bx), " ", round(self.segment.by))
     ElectricArc.super.update(self, dt)
 
     -- Timers
