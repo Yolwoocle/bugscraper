@@ -842,6 +842,10 @@ end
 --- print(index)  -- prints the index of the selected element, e.g., 2
 --- ```
 function random_weighted(li, rng)
+	if #li == 0 then
+		return 
+	end
+	
 	local sum_w = 0
 	for _, e in ipairs(li) do
 		sum_w = sum_w + e[2]

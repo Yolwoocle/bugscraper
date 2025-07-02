@@ -392,7 +392,7 @@ function Enemy:kill(damager, reason)
 	game:on_kill(self)
 	self:remove()
 	
-	self:drop_loot()
+	self:drop_random_loot()
 	self:on_death(damager, reason)
 
 	if damager then
