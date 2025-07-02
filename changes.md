@@ -1,5 +1,9 @@
 # Bugscraper changelog
 
+### 0.7.1
+
+- **Fix**: fixed issue where enemies would not drop any loot
+
 ## 0.7
 
 New update!!! Please report any issues you run into! DM for Steam keys!
