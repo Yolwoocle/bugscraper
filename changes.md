@@ -2,16 +2,16 @@
 
 ## 0.7
 
-New update!!! Please report any issues you run into! 
+New update!!! Please report any issues you run into! DM for Steam keys!
 
-This is a small update with some of the content that I've been working on. From now on, I will limit the amount of new content I add (apart from the upcoming dept. 4) as I start heading towards the release of the game, hopefully towards the end of August (no guarantees, though). Sorry for the lack of news, I had a lot in my life and didn't want to rush things out too quickly. :)
+This is a small update with some of the content that I've been working on. From now on, I will limit the amount of new content I add (apart from the upcoming dept. 4) as I start heading towards the release of the game, hopefully towards the end of August (no guarantees, though). Sorry for the lack of news, I had a lot in my life and didn't want to rush things out. Please be patient, thank you for waiting. :)
 
 I'm sorry to say that this update will reset your progress, I've made it so that it doesn't boot up the whole tutorial animation, but as I said last time I'll work on a more permanent solution in the future.
 
 - **Added**: Wall climbing now uses a stamina system: jumping and sliding uses up stamina, and when you run out of it, you will fall 
 - **Added**: Energy Drink upgrade: combo meter decreases more slowly
 - **Added**: In co-op, you will now become a ghost after dying. Ghosts can shoot small bursts of bullets that deal a little damage. Players can be respawned from ghosts by breaking cocoons that will appear a few waves later
-- **Change**: New sounds from the new sound designer in the team, Verbaudet! More are to come in future updates
+- **Added**: New sounds from the new sound designer in the team, Verbaudet! More sounds are to come in future updates!
 - **Change**: Respawned players will now appear with full health, however cocoons appear more rarely  
 - **Change**: Espresso now lasts for 20 floors (prev. 10)
 - **Change**: Hot chocolate now affects natural recharging (the recharging that happens after waiting for a few seconds)
