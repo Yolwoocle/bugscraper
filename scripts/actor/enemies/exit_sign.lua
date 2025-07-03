@@ -127,7 +127,7 @@ function ExitSign:activate_smash_easter_egg(player)
 
     self.old_camera_x, self.old_camera_y = game:get_camera_position()
     self.smash_unzoom_timer = 0.9
-    game:set_zoom(2)
+    game.camera:set_zoom(2)
     game:set_ui_visible(false)
     game.menu_manager:set_can_pause(false)
     game.camera:set_y_locked(false)
@@ -149,7 +149,7 @@ function ExitSign:update_smash_easter_egg(dt)
 
     if self.is_in_smash_easter_egg then
         self.spring_y = self.retracted_spring_ideal_length
-        self:lerp_camera(self.x - 30, self.y - CANVAS_HEIGHT/4)
+        self:lerp_camera(self.mid_x - CANVAS_WIDTH/2, self.mid_y - CANVAS_HEIGHT/2 - 20)
         
         self:update_star()
     end
@@ -174,8 +174,8 @@ function ExitSign:update_smash_effect_end(dt)
         -- End smash effect
         if distsqr(self.old_camera_x, self.old_camera_y, game:get_camera_position()) <= 0.1 then
             self.pan_camera_to_default = false
-            game:set_camera_position(self.old_camera_x, self.old_camera_y)
-            game:set_zoom(1)
+            game.camera:set_position(self.old_camera_x, self.old_camera_y)
+            game.camera:set_zoom(1)
             game.camera:set_y_locked(true)
             
             game.menu_manager:set_can_pause(true)
@@ -217,13 +217,13 @@ function ExitSign:lerp_camera(x, y)
     local camx, camy = game:get_camera_position()
     camx = lerp(camx, x,  0.2)
     camy = lerp(camy, y, 0.2)
-    game:set_camera_position(camx, camy)
+    game.camera:set_position(camx, camy)
 end
 
 function ExitSign:lerp_zoom(dest)
-    local z = game:get_zoom()
+    local z = game.camera:get_zoom()
     z = lerp(z, dest, 0.2)
-    game:set_zoom(z)
+    game.camera:set_zoom(z)
 end
 
 function ExitSign:generate_star_points(x, y, size)

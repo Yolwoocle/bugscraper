@@ -430,18 +430,6 @@ function Game:get_camera_position()
 	return self.camera:get_position()
 end
 
-function Game:set_camera_position(x, y)
-	self.camera:set_position(x, y)
-end
-
-function Game:get_zoom()
-	return self.camera:get_zoom()
-end
-
-function Game:set_zoom(zoom)
-	self.camera:set_zoom(zoom)
-end
-
 function Game:update_debug(dt)
 
 end

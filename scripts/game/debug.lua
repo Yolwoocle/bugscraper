@@ -279,27 +279,27 @@ function Debug:init(game)
         end },
 
         ["z"] = { "zoom -", function()
-            self.game:set_zoom(self.game:get_zoom() - 0.1)
+            self.game.camera:set_zoom(self.game.camera:get_zoom() - 0.1)
         end },
         ["x"] = { "zoom +", function()
-            self.game:set_zoom(self.game:get_zoom() + 0.1)
+            self.game.camera:set_zoom(self.game.camera:get_zoom() + 0.1)
         end },
 
         -- ["left"] = {"move camera left", function()
         --     local cam_x, cam_y = self.game:get_camera_position()
-        --     self.game:set_camera_position(cam_x - 8, cam_y)
+        --     self.game.camera:set_position(cam_x - 8, cam_y)
         -- end},
         -- ["right"] = {"move camera right", function()
         --     local cam_x, cam_y = self.game:get_camera_position()
-        --     self.game:set_camera_position(cam_x + 8, cam_y)
+        --     self.game.camera:set_position(cam_x + 8, cam_y)
         -- end},
         -- ["up"] = {"move camera up", function()
         --     local cam_x, cam_y = self.game:get_camera_position()
-        --     self.game:set_camera_position(cam_x, cam_y - 8)
+        --     self.game.camera:set_position(cam_x, cam_y - 8)
         -- end},
         -- ["down"] = {"move camera down", function()
         --     local cam_x, cam_y = self.game:get_camera_position()
-        --     self.game:set_camera_position(cam_x, cam_y + 8)
+        --     self.game.camera:set_position(cam_x, cam_y + 8)
         -- end},
         ["space"] = { "screenshot", function()
             game:screenshot()

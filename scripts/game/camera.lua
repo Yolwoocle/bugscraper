@@ -207,7 +207,10 @@ function Camera:push()
     local x, y = self:get_real_position()
     love.graphics.rotate(self.rot)
 	love.graphics.scale(self.zoom)
-	love.graphics.translate(math.floor(-x), math.floor(-y))
+	love.graphics.translate(
+        math.floor(-(x + self.w/2 - self.w/(2 * self.zoom))), 
+        math.floor(-(y + self.h/2 - self.h/(2 * self.zoom)))
+    )
 end
 
 return Camera

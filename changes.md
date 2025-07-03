@@ -1,10 +1,17 @@
 # Bugscraper changelog
 
+### 0.7.2
+(*2025-07-03*)
+
+- **Fix**: fixed issue where ground floor easter egg would crash the game
+
 ### 0.7.1
+(*2025-07-03*)
 
 - **Fix**: fixed issue where enemies would not drop any loot
 
 ## 0.7
+(*2025-07-02*)
 
 New update!!! Please report any issues you run into! DM for Steam keys!
 
