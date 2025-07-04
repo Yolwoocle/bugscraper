@@ -1,19 +1,19 @@
 # Bugscraper changelog
 
 ### 0.7.2
-(*2025-07-03*)
 
-- **Fix**: fixed issue where ground floor easter egg would crash the game
+- **Fix**: Fixed issue where ground floor easter egg would crash the game
+- **Fix**: Removed dept. 4 (planned for a future update) 
 
 ### 0.7.1
 (*2025-07-03*)
 
-- **Fix**: fixed issue where enemies would not drop any loot
+- **Fix**: Fixed issue where enemies would not drop any loot
 
 ## 0.7
-(*2025-07-02*)
+(*2025-07-01*)
 
-New update!!! Please report any issues you run into! DM for Steam keys!
+New update!!! Please report any issues you run into!
 
 This is a small update with some of the content that I've been working on. From now on, I will limit the amount of new content I add (apart from the upcoming dept. 4) as I start heading towards the release of the game, hopefully towards the end of August (no guarantees, though). Sorry for the lack of news, I had a lot in my life and didn't want to rush things out. Please be patient, thank you for waiting. :)
 

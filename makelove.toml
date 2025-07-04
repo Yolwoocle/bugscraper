@@ -1,7 +1,6 @@
 name = "bugscraper"
 # default_targets = ["lovejs", "win32", "win64", "macos", "appimage"]
-default_targets = ["win64", "macos", "appimage"]
-# default_targets = []
+default_targets = ["win64", "macos"]
 build_directory = "_export"
 icon_file = "icon.png"
 
@@ -17,6 +16,14 @@ love_files = [
 ]
 
 love_version = "12.0" 
+
+[archive_files]
+"changes.md" = "changes.md"
+
+[hooks]
+postbuild = [
+    "bash post_build.sh {build_directory} {version}",
+]
 
 [win64]
 love_binaries = "/mnt/c/docs/gamedev/love2d/love12-builds/win64"
@@ -35,7 +42,6 @@ love_binaries = "/mnt/c/docs/gamedev/love2d/love12-builds/win64"
 # If you are not doing a versioned build, 0.4 is empty.
 [windows.exe_metadata]
 FileDescription = "Bugscraper: Rise to the top of a bug-filled skyscraper" # "LÖVE {löve version}"
-FileVersion = "0.7.1" # "{löve version}"
 CompanyName = "Léo Bernard" # "LÖVE World Domination Inc."
 LegalCopyright = "Copyright © 2025 Léo Bernard" # "Copyright © 2006-2020 LÖVE Development Team" or ""
 ProductName = "Bugscraper" # "LÖVE"
@@ -60,7 +66,6 @@ love_binaries = "/mnt/c/docs/gamedev/love2d/love12-builds/macos"
 # CFBundleName = "<same as the name from the main config>"
 CFBundleIdentifier = "com.yolwoocle.bugscraper"
 NSHumanReadableCopyright = "Copyright © 2025 Léo Bernard"
-CFBundleShortVersionString = "0.7.1"
 
 [appimage]
 source_appimage = "/mnt/c/docs/gamedev/love2d/love12-builds/love-12.0-x86_64.AppImage"
