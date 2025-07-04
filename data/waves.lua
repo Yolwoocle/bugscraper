@@ -916,6 +916,7 @@ local waves = parse_waves_table {
     },
 
     ------
+    --[[
     -- Cafeteria
     new_cafeteria(function()
         -- for _, actor in pairs(game.actors) do
@@ -1157,6 +1158,7 @@ local waves = parse_waves_table {
             end
         end,
     },
+    --]]
     --[[
     
     ---------------------------------------------
