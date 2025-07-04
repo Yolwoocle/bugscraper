@@ -16,10 +16,10 @@ love_files = [
     "-./steam_api64.dll",
 ]
 
-love_version = "12.0" 
+love_version = "11.5" 
 
 [win64]
-love_binaries = "$[LOVE_BINARIES_win64]"
+love_binaries = "$[LOVE_BINARIES_windows-x64]"
 
 [windows]
 # The files specified here will be added in addition to the ones specified on top level.
@@ -35,7 +35,7 @@ love_binaries = "$[LOVE_BINARIES_win64]"
 # If you are not doing a versioned build, 0.4 is empty.
 [windows.exe_metadata]
 FileDescription = "Bugscraper: Rise to the top of a bug-filled skyscraper" # "LÖVE {löve version}"
-FileVersion = "0.7.1" # "{löve version}"
+FileVersion = "$[BUGSCRAPER_VERSION]" # "{löve version}"
 CompanyName = "Léo Bernard" # "LÖVE World Domination Inc."
 LegalCopyright = "Copyright © 2025 Léo Bernard" # "Copyright © 2006-2020 LÖVE Development Team" or ""
 ProductName = "Bugscraper" # "LÖVE"
