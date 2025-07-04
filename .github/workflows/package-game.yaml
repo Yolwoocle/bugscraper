@@ -53,8 +53,6 @@ jobs:
 
           mv "${LOVE_BINARIES_DIR}/macos/"*.zip "${LOVE_BINARIES_DIR}/macos/love.zip"
 
-          cat makelove.toml
-
       - name: Build and install makelove
         run: |
           mkdir -p "${MAKELOVE_DIR}"
