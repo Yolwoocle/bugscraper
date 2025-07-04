@@ -1,0 +1,61 @@
+name: Produce platform-dependent packages for publishing
+
+env:
+  LOVE_BINARIES_DIR: /tmp/love-binaries
+  LOVE_PLATFORMS: windows-x64 linux-X64.AppImage macos
+
+  MAKELOVE_DIR: /tmp/makelove
+
+jobs:
+  build-packages:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Update base system
+        run: |
+          sudo apt update -y
+          sudo apt upgrade -y
+
+          sudo apt install -y \
+            curl unzip python3 python3-pip
+
+      - name: Build using makelove
+        run: |
+          for platform in ${LOVE_PLATFORMS[@]}; do
+            mkdir -p "${LOVE_BINARIES_DIR}/${platform}"
+
+            curl -L \
+              -o "${LOVE_BINARIES_DIR}/${platform}/love-${platform}.zip" \
+              "https://nightly.link/love2d/love/workflows/main/main/love-${platform}.zip"
+
+            unzip -o \
+              "${LOVE_BINARIES_DIR}/${platform}/love-${platform}.zip" \
+              -d "${LOVE_BINARIES_DIR}/${platform}"
+
+            rm "${LOVE_BINARIES_DIR}/${platform}/love-${platform}.zip"
+
+            binary_path="$(ls "${LOVE_BINARIES_DIR}/${platform}/*${platform}*" | head -n 1)"
+            sed -i 's%$[LOVE_BINARIES_'"${platform}"']%'"${binary_path}"'%' makelove.toml
+          done
+
+          cat makelove.toml
+
+      - name: Build and install makelove
+        run: |
+          mkdir -p "${MAKELOVE_DIR}"
+          cd "${MAKELOVE_DIR}"
+
+          python3 -m venv .env
+          source .env/bin/activate
+          pip install --upgrade pip
+
+          pip install makelove
+
+      - name: Build platform-dependent packages
+        run: |
+          source "${MAKELOVE_DIR}/.env/bin/activate"
+
+          bugscraper_version="$(grep -Po 'BUGSCRAPER_VERSION\s*=\s*"\K[^"]+' bugscraper_config.lua")
+          makelove --version "${bugscraper_version}"
