@@ -18,8 +18,9 @@ jobs:
           sudo apt update -y
           sudo apt upgrade -y
 
+          sudo add-apt-repository universe
           sudo apt install -y \
-            curl unzip python3 python3-pip
+            curl unzip python3 python3-pip wine libfuse2t64
 
       - name: Build using makelove
         run: |
@@ -27,18 +28,32 @@ jobs:
             mkdir -p "${LOVE_BINARIES_DIR}/${platform}"
 
             curl -L \
-              -o "${LOVE_BINARIES_DIR}/${platform}/love-${platform}.zip" \
+              -o "${LOVE_BINARIES_DIR}/love-${platform}.zip" \
               "https://nightly.link/love2d/love/workflows/main/main/love-${platform}.zip"
 
             unzip -o \
-              "${LOVE_BINARIES_DIR}/${platform}/love-${platform}.zip" \
+              "${LOVE_BINARIES_DIR}/love-${platform}.zip" \
               -d "${LOVE_BINARIES_DIR}/${platform}"
 
-            rm "${LOVE_BINARIES_DIR}/${platform}/love-${platform}.zip"
+            rm "${LOVE_BINARIES_DIR}/love-${platform}.zip"
 
-            binary_path="$(ls -d "${LOVE_BINARIES_DIR}/${platform}"/* | head -n 1)"
+            if [[ "${platform}" == "linux-X64.AppImage" ]]; then
+              binary_path="$(ls -d "${LOVE_BINARIES_DIR}/${platform}"/* | head -n 1)"
+            else
+              binary_path="${LOVE_BINARIES_DIR}/${platform}"
+            fi
+
             sed -i 's%\$\[LOVE_BINARIES_'"${platform}"'\]%'"${binary_path}"'%' makelove.toml
           done
+
+          mv "${LOVE_BINARIES_DIR}/windows-x64/"love*.exe "${LOVE_BINARIES_DIR}/windows-x64/love.exe"
+          curl -L \
+            -o "${LOVE_BINARIES_DIR}/windows-x64/license.txt" \
+            'https://raw.githubusercontent.com/love2d/love/refs/heads/main/license.txt'
+
+          mv "${LOVE_BINARIES_DIR}/macos/"*.zip "${LOVE_BINARIES_DIR}/macos/love.zip"
+
+          cat makelove.toml
 
       - name: Build and install makelove
         run: |
@@ -62,3 +77,9 @@ jobs:
           makelove
 
           find . -type f
+
+      - name: Create platform-specific package artefact bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: bugscraper-packages
+          path: _export
