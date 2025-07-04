@@ -1,8 +1,9 @@
 # Bugscraper changelog
 
 ### 0.7.2
+(*2025-07-04*)
 
-- **Fix**: Fixed issue where ground floor easter egg would crash the game
+- **Fix**: Fixed issue where a certain easter egg would crash the game
 - **Fix**: Removed dept. 4 (planned for a future update) 
 - **Fix**: Linux version is now correctly supported
 

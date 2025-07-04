@@ -35,7 +35,7 @@ function TvPresentation:init(x, y)
         ["slide_016"] = { images.tv_slideshow_016, 0 },      -- optic studio             by pkhead / chromosoze
         ["slide_017"] = { images.tv_slideshow_017, 0.08 },   -- Soon(tm)                 by pixelbath
 
-        ["bluescreen"] = { images.tv_bluescreen, 0 }, -- By hector_misc (Nextop Games)
+        ["bluescreen"] = { images.tv_bluescreen, math.huge } -- By hector_misc (Nextop Games)
     }
     self.slide_names = {}
     for name, slide_info in pairs(slides) do
@@ -47,6 +47,13 @@ function TvPresentation:init(x, y)
         slides[name][4] = math.floor(slides[name][1]:getHeight() / self.canvas_h)
     end
     shuffle_table(self.slide_names)
+
+    
+    self.bluescreen_probability = TV_BLUESCREEN_PROBABILITY
+    self.is_bluescreened = (random_range(0, 1) < self.bluescreen_probability)
+    if self.is_bluescreened then
+        self.slide_names = {"bluescreen"}
+    end
 
     self.transitions = {
         { -- fade
@@ -136,12 +143,14 @@ function TvPresentation:init(x, y)
     self.current_slide = self.slide_names[self.current_slide_number]
 
     self.spr = AnimatedSprite:new(slides, self.current_slide, SPRITE_ANCHOR_LEFT_TOP)
-
-    self.bluescreen_probability = TV_BLUESCREEN_PROBABILITY
-    self.is_bluescreened = (random_range(0, 1) < self.bluescreen_probability)
 end
 
 function TvPresentation:update(dt)
+    if self.is_bluescreened then
+        self.spr:update(dt)
+        return
+    end
+
     -- Slide end
     if self.slideshow_timer:update(dt) then
         self.transition_timer:start()
