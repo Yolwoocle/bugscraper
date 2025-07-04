@@ -4,6 +4,7 @@
 
 - **Fix**: Fixed issue where ground floor easter egg would crash the game
 - **Fix**: Removed dept. 4 (planned for a future update) 
+- **Fix**: Linux version is now correctly supported
 
 ### 0.7.1
 (*2025-07-03*)
