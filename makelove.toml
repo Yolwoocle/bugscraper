@@ -1,7 +1,6 @@
 name = "bugscraper"
 # default_targets = ["lovejs", "win32", "win64", "macos", "appimage"]
-default_targets = ["win64", "macos", "appimage"]
-# default_targets = []
+default_targets = ["win64", "macos"]
 build_directory = "_export"
 icon_file = "icon.png"
 
@@ -17,6 +16,14 @@ love_files = [
 ]
 
 love_version = "11.5" 
+
+[archive_files]
+"changes.md" = "changes.md"
+
+[hooks]
+postbuild = [
+    "bash post_build.sh {build_directory} {version}",
+]
 
 [win64]
 love_binaries = "$[LOVE_BINARIES_windows-x64]"
@@ -60,7 +67,6 @@ love_binaries = "$[LOVE_BINARIES_macos]"
 # CFBundleName = "<same as the name from the main config>"
 CFBundleIdentifier = "com.yolwoocle.bugscraper"
 NSHumanReadableCopyright = "Copyright © 2025 Léo Bernard"
-CFBundleShortVersionString = "0.7.1"
 
 [appimage]
 source_appimage = "$[LOVE_BINARIES_linux-X64.AppImage]"
