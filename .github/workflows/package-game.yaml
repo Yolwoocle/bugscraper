@@ -1,4 +1,5 @@
 name: Produce platform-dependent packages for publishing
+on: workflow_dispatch
 
 env:
   APPIMAGETOOL_DIR: /tmp/appimagetool
