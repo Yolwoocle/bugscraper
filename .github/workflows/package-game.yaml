@@ -58,6 +58,9 @@ jobs:
 
             if [[ "${platform}" == "linux-X64.AppImage" ]]; then
               binary_path="$(ls -d "${LOVE_BINARIES_DIR}/${platform}"/* | head -n 1)"
+            elif [[ "${platform}" == "windows-x64" ]]; then
+              binary_path="$(ls -d "${LOVE_BINARIES_DIR}/${platform}"/*-win64.exe | head -n 1)"
+              binary_path="${binary_path%.exe}.zip"
             else
               binary_path="${LOVE_BINARIES_DIR}/${platform}"
             fi
@@ -67,6 +70,10 @@ jobs:
 
       - name: Prepare LÖVE binaries
         run: |
+          mv "${LOVE_BINARIES_DIR}/windows-x64/"love*.zip "${LOVE_BINARIES_DIR}/love-windows-x64.zip"
+          unzip "${LOVE_BINARIES_DIR}/love-windows-x64.zip" \
+            -d "${LOVE_BINARIES_DIR}/windows-x64/"
+
           mv "${LOVE_BINARIES_DIR}/windows-x64/"love*.exe "${LOVE_BINARIES_DIR}/windows-x64/love.exe"
           curl -L \
             -o "${LOVE_BINARIES_DIR}/windows-x64/license.txt" \
