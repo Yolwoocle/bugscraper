@@ -56,11 +56,8 @@ jobs:
 
             rm "${LOVE_BINARIES_DIR}/love-${platform}.zip"
 
-            if [[ "${platform}" == "linux-X64.AppImage" ]]; then
-              binary_path="$(ls -d "${LOVE_BINARIES_DIR}/${platform}"/* | head -n 1)"
-            elif [[ "${platform}" == "windows-x64" ]]; then
-              binary_path="$(ls -d "${LOVE_BINARIES_DIR}/${platform}"/*-win64.exe | head -n 1)"
-              binary_path="${binary_path%.exe}.zip"
+            if [[ "${platform}" == "windows-x64" ]]; then
+              binary_path="${LOVE_BINARIES_DIR}/${platform}"
             else
               binary_path="${LOVE_BINARIES_DIR}/${platform}"
             fi
@@ -73,11 +70,10 @@ jobs:
           mv "${LOVE_BINARIES_DIR}/windows-x64/"love*.zip "${LOVE_BINARIES_DIR}/love-windows-x64.zip"
           unzip "${LOVE_BINARIES_DIR}/love-windows-x64.zip" \
             -d "${LOVE_BINARIES_DIR}/windows-x64/"
-
-          mv "${LOVE_BINARIES_DIR}/windows-x64/"love*.exe "${LOVE_BINARIES_DIR}/windows-x64/love.exe"
-          curl -L \
-            -o "${LOVE_BINARIES_DIR}/windows-x64/license.txt" \
-            'https://raw.githubusercontent.com/love2d/love/refs/heads/main/license.txt'
+          rm "${LOVE_BINARIES_DIR}/love-windows-x64.zip"
+          love_win_subdir="$(find "${LOVE_BINARIES_DIR}/windows-x64/" -maxdepth 1 -type d -name 'love*')"
+          mv "${love_win_subdir}"/* "${LOVE_BINARIES_DIR}/windows-x64/"
+          rmdir "${love_win_subdir}"
 
           mv "${LOVE_BINARIES_DIR}/macos/"*.zip "${LOVE_BINARIES_DIR}/macos/love.zip"
 
@@ -103,7 +99,11 @@ jobs:
           export PATH="${APPIMAGETOOL_PREFIX}/bin:${PATH}"
           makelove
 
-          find . -type f
+      - name: Add a Steam-centric version of the game
+        run: |
+          mkdir -p _export/steam
+          unzip _export/win64/*.zip -d _export/steam/win64
+          unzip _export/macos/*.zip -d _export/steam/macos
 
       - name: Create platform-specific package artefact bundle
         uses: actions/upload-artifact@v4
