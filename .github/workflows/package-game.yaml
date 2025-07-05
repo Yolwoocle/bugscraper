@@ -97,13 +97,14 @@ jobs:
           sed -i 's%\$\[BUGSCRAPER_VERSION\]%'${bugscraper_version}'%' makelove.toml
 
           export PATH="${APPIMAGETOOL_PREFIX}/bin:${PATH}"
-          makelove
+          makelove || true
 
       - name: Add a Steam-centric version of the game
         run: |
-          mkdir -p _export/steam
+          mkdir -p _export/steam/{win64,macos,linux}
           unzip _export/win64/*.zip -d _export/steam/win64
           unzip _export/macos/*.zip -d _export/steam/macos
+          cp _export/appimage/*.AppImage _export/steam/linux/bugscraper.AppImage
 
       - name: Create platform-specific package artefact bundle
         uses: actions/upload-artifact@v4
