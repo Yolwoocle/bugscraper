@@ -56,8 +56,8 @@ jobs:
 
             rm "${LOVE_BINARIES_DIR}/love-${platform}.zip"
 
-            if [[ "${platform}" == "windows-x64" ]]; then
-              binary_path="${LOVE_BINARIES_DIR}/${platform}"
+            if [[ "${platform}" == "linux-X64.AppImage" ]]; then
+              binary_path="$(ls -d "${LOVE_BINARIES_DIR}/${platform}"/* | head -n 1)"
             else
               binary_path="${LOVE_BINARIES_DIR}/${platform}"
             fi
@@ -97,7 +97,7 @@ jobs:
           sed -i 's%\$\[BUGSCRAPER_VERSION\]%'${bugscraper_version}'%' makelove.toml
 
           export PATH="${APPIMAGETOOL_PREFIX}/bin:${PATH}"
-          makelove || true
+          makelove
 
       - name: Add a Steam-centric version of the game
         run: |
