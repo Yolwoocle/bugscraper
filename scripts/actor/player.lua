@@ -268,7 +268,8 @@ function Player:get_state_machine()
 			update = function(state, dt)
 				self:update_upgrades(dt)
 				self:update_effects(dt)
-				self:move(dt)
+				local dir = self:get_movement_dir()
+				self:move(dir, dt)
 				self.is_affected_by_semisolids = not self:action_pressed("down")
 				self:do_wall_sliding(dt)
 				self:update_jumping(dt)
@@ -356,8 +357,11 @@ function Player:get_state_machine()
 
 				self.spr:set_color({1,1,1,0.7})
 				self.spr:set_rotation(0)
+				self.spr:set_anchor(SPRITE_ANCHOR_CENTER_CENTER)
 
+				state.is_spinning = false
 				state.goal_r = nil
+				state.spin_effect_spr = AnimatedSprite:new({normal = {images.spin_whoosh_sheet, 5, 0.05}}, "normal") 
 			end,
 			update = function(state, dt)
 				self.friction_x = self.default_friction
@@ -366,16 +370,20 @@ function Player:get_state_machine()
 				self.gun:update(dt)
 				self:shoot(dt, false)
 				
-				self:move(dt)
+				local dir = self:get_movement_dir()
+				self:move(dir, dt)
 				Player.super.update(self, dt)				
 
-				if self:action_pressed("jump") then
-					state.goal_r = pi2
+				if self:action_pressed("jump") and not state.is_spinning then
+					state.is_spinning = true
+					state.goal_r = pi2 * self.dir_x
+					Particles:spin_whoosh(self.mid_x, self.mid_y, self.dir_x > 0, self)
 				end
 
-				if state.goal_r then
-					self.spr:set_rotation(lerp(self.spr.rot, state.goal_r, 0.15))
+				if state.is_spinning then
+					self.spr:set_rotation(lerpmax(self.spr.rot, state.goal_r, 0.1, 0.3))
 					if abs(self.spr.rot - state.goal_r) < 0.15 then
+						state.is_spinning = false
 						state.goal_r = nil
 						self.spr:set_rotation(0)
 					end
@@ -690,26 +698,32 @@ end
 ------------------------------------------
 --- Physics ---
 
-function Player:move(dt)
+function Player:get_movement_dir(blocked)
+	if blocked then
+		return {x=0, y=0}
+	end
 	-- compute movement dir
 	local dir = {x=0, y=0}
-	if self:action_down('left') then    dir.x = dir.x - 1   end
-	if self:action_down('right') then   dir.x = dir.x + 1   end
+	if self:action_down('left') then       dir.x = dir.x - 1   end
+	if self:action_down('right') then      dir.x = dir.x + 1   end
 	if self.debug_god_mode or self.can_move_360 then
 		if self:action_down('up') then     dir.y = dir.y - 1   end
 		if self:action_down('down') then   dir.y = dir.y + 1   end
 	end
+	if dir.x == 0 and dir.y == 0 then
+		return dir
+	end
+
+	dir.x, dir.y = normalize_vect(dir.x, dir.y)
 
 	if dir.x ~= 0 then
 		self.dir_x = dir.x
-
-		-- If not shooting, update shooting direction
-		if not self.is_shooting then
-			-- self.shoot_dir_x = dir.x
-			-- self.shoot_dir
-		end
 	end
 
+	return dir
+end
+
+function Player:move(dir, dt)
 	-- Apply velocity 
 	self.vx = self.vx + dir.x * self:get_speed()
 	self.vy = self.vy + dir.y * self:get_speed()
@@ -1513,6 +1527,8 @@ function Player:draw_player()
 
 	local post_x, post_y = self.spr:get_total_offset_position(self.x, self.y, self.w, self.h)
 	self:post_draw(post_x, post_y)
+
+	self.state_machine:draw()
 
 	if game.debug_mode then
 		local i = 0
