@@ -166,6 +166,8 @@ function ImageParticle:init_image_particle(spr, x,y,s,r, vx,vy,vs,vr, life, g, i
 	self.flip_y = param(params.flip_y, false) and -1 or 1
 
 	self.is_solid = is_solid
+
+	self.follow_actor = params.follow_actor
 end
 function ImageParticle:update(dt)
 	self:update_particle(dt)
@@ -175,6 +177,11 @@ function ImageParticle:update(dt)
 	if self.is_animated then
 		local frame_i = clamp(math.ceil(#self.spr_table * (1 - self.life/self.max_life)), 1, #self.spr_table)
 		self.spr = self.spr_table[frame_i]
+	end
+
+	if self.follow_actor then
+		self.x = self.follow_actor.mid_x
+		self.y = self.follow_actor.mid_y
 	end
 end
 function ImageParticle:draw()
@@ -1015,9 +1022,11 @@ function ParticleSystem:image(x, y, number, spr, spw_rad, life, vs, g, params)
 		if params.ignore_frameskip ~= nil then
 			particle_params.ignore_frameskip = params.ignore_frameskip
 		end
-
+		
 		particle_params.flip_x = params.flip_x
 		particle_params.flip_y = params.flip_y
+		
+		particle_params.follow_actor = params.follow_actor
 
 		--spr, x,y,s,r, vx,vy,vs,vr, life, g, is_solid
 		self:add_particle(ImageParticle:new(sprite, x+dx, y+dy, scale, rot, vx,vy,vs,vr, life, g, is_solid, particle_params))
@@ -1026,23 +1035,25 @@ end
 
 -- FIXME: scotch scotch scotch ugly ugly ugly ugly!!!
 function ParticleSystem:static_image(img, x, y, rot, life, scale, params)
+	params = params or {}
 	local final_params = {
 		is_solid = false,
 		rot = rot,
-		vx1 = 0,
-		vx2 = 0,
-		vy1 = 0,
-		vy2 = 0,
+		vx1 = params.vx1 or 0,
+		vx2 = params.vx2 or 0,
+		vy1 = params.vy1 or 0,
+		vy2 = params.vy2 or 0,
 		vr1 = 0,
 		vr2 = 0,
 		life = life or 0.12,
 		is_animated = true,
 		scale = scale,
+		follow_actor = follow_actor,
 	}
 	for k, v in pairs(params or {}) do
 		final_params[k] = v 
 	end
-	Particles:image(x, y, 1, img, 0, nil, 0, 0, final_params)
+	self:image(x, y, 1, img, 0, nil, 0, 0, final_params)
 end
 
 -- scottttcccchhhh
@@ -1129,6 +1140,23 @@ function ParticleSystem:bubble_fizz_cloud(x, y, radius, amount)
 		}, x + random_neighbor(radius), y + random_neighbor(radius))
 	end
 end
+
+
+-- FIXME: scotch
+function ParticleSystem:spin_whoosh(x, y, flip_x, follow_actor)
+	-- x, y, rot, life, scale, params
+	self:static_image({
+		images.spin_whoosh_1,
+		images.spin_whoosh_2,
+		images.spin_whoosh_3,
+		images.spin_whoosh_4,
+		images.spin_whoosh_5,
+	}, x, y, 0, 0.25, nil, {
+		flip_x = flip_x,
+		follow_actor = follow_actor,
+	})
+end
+
 
 function ParticleSystem:stomped_enemy(x, y, spr)
 	self:add_particle(StompedEnemyParticle:new(x, y, spr))
