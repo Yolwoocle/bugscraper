@@ -1,6 +1,6 @@
 name = "bugscraper"
 # default_targets = ["lovejs", "win32", "win64", "macos", "appimage"]
-default_targets = ["win64", "macos"]
+default_targets = ["win64", "macos", "appimage"]
 build_directory = "_export"
 icon_file = "icon.png"
 
