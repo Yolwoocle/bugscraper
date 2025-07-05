@@ -1,0 +1,113 @@
+name: Produce platform-dependent packages for publishing
+on: workflow_dispatch
+
+env:
+  APPIMAGETOOL_DIR: /tmp/appimagetool
+  APPIMAGETOOL_PREFIX: /opt/appimagetool
+
+  LOVE_BINARIES_DIR: /tmp/love-binaries
+  LOVE_PLATFORMS: windows-x64 linux-X64.AppImage macos
+
+  MAKELOVE_DIR: /tmp/makelove
+
+jobs:
+  build-packages:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Update base system
+        run: |
+          sudo apt update -y
+          sudo apt upgrade -y
+
+          sudo add-apt-repository -y universe
+          sudo apt install -y \
+            git cmake ninja-build curl unzip python3 python3-pip wine squashfs-tools desktop-file-utils \
+            libglib2.0-dev libgpgme-dev libgcrypt20-dev libfuse2 libcurl4-openssl-dev
+
+      - name: Setup and install appimagetool
+        run: |
+          git clone 'https://github.com/AppImage/appimagetool' "${APPIMAGETOOL_DIR}"
+
+          mkdir -p "${APPIMAGETOOL_DIR}-build"
+          cd "${APPIMAGETOOL_DIR}"
+
+          cmake \
+            -DCMAKE_INSTALL_PREFIX="${APPIMAGETOOL_PREFIX}" \
+            -DCMAKE_GENERATOR=Ninja \
+            -DCMAKE_BUILD_TYPE=Release "${APPIMAGETOOL_DIR}"
+          cmake --build .
+          cmake --install .
+
+      - name: Gather official binaries from nightly
+        run: |
+          for platform in ${LOVE_PLATFORMS[@]}; do
+            mkdir -p "${LOVE_BINARIES_DIR}/${platform}"
+
+            curl -L \
+              -o "${LOVE_BINARIES_DIR}/love-${platform}.zip" \
+              "https://nightly.link/love2d/love/workflows/main/main/love-${platform}.zip"
+
+            unzip -o \
+              "${LOVE_BINARIES_DIR}/love-${platform}.zip" \
+              -d "${LOVE_BINARIES_DIR}/${platform}"
+
+            rm "${LOVE_BINARIES_DIR}/love-${platform}.zip"
+
+            if [[ "${platform}" == "linux-X64.AppImage" ]]; then
+              binary_path="$(ls -d "${LOVE_BINARIES_DIR}/${platform}"/* | head -n 1)"
+            else
+              binary_path="${LOVE_BINARIES_DIR}/${platform}"
+            fi
+
+            sed -i 's%\$\[LOVE_BINARIES_'"${platform}"'\]%'"${binary_path}"'%' makelove.toml
+          done
+
+      - name: Prepare LÖVE binaries
+        run: |
+          mv "${LOVE_BINARIES_DIR}/windows-x64/"love*.zip "${LOVE_BINARIES_DIR}/love-windows-x64.zip"
+          unzip "${LOVE_BINARIES_DIR}/love-windows-x64.zip" \
+            -d "${LOVE_BINARIES_DIR}/windows-x64/"
+          rm "${LOVE_BINARIES_DIR}/love-windows-x64.zip"
+          love_win_subdir="$(find "${LOVE_BINARIES_DIR}/windows-x64/" -maxdepth 1 -type d -name 'love*')"
+          mv "${love_win_subdir}"/* "${LOVE_BINARIES_DIR}/windows-x64/"
+          rmdir "${love_win_subdir}"
+
+          mv "${LOVE_BINARIES_DIR}/macos/"*.zip "${LOVE_BINARIES_DIR}/macos/love.zip"
+
+      - name: Build and install makelove
+        run: |
+          mkdir -p "${MAKELOVE_DIR}"
+          cd "${MAKELOVE_DIR}"
+
+          python3 -m venv .env
+          source .env/bin/activate
+          pip install --upgrade pip
+
+          # This has the necessary patches to support LÖVE 12
+          pip install git+https://github.com/kongeor/makelove
+
+      - name: Build platform-dependent packages
+        run: |
+          source "${MAKELOVE_DIR}/.env/bin/activate"
+
+          bugscraper_version="$(grep -Po 'BUGSCRAPER_VERSION\s*=\s*"\K[^"]+' bugscraper_config.lua)"
+          sed -i 's%\$\[BUGSCRAPER_VERSION\]%'${bugscraper_version}'%' makelove.toml
+
+          export PATH="${APPIMAGETOOL_PREFIX}/bin:${PATH}"
+          makelove || true
+
+      - name: Add a Steam-centric version of the game
+        run: |
+          mkdir -p _export/steam/{win64,macos,linux}
+          unzip _export/win64/*.zip -d _export/steam/win64
+          unzip _export/macos/*.zip -d _export/steam/macos
+          cp _export/appimage/*.AppImage _export/steam/linux/bugscraper.AppImage
+
+      - name: Create platform-specific package artefact bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: bugscraper-packages
+          path: _export
