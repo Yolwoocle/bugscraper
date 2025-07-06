@@ -372,7 +372,7 @@ function Player:get_state_machine()
 				
 				local dir = self:get_movement_dir()
 				self:move(dir, dt)
-				Player.super.update(self, dt)				
+				Player.super.update(self, dt)
 
 				if self:action_pressed("jump") and not state.is_spinning then
 					state.is_spinning = true
