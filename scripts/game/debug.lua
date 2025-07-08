@@ -730,7 +730,7 @@ function Debug:draw_info_view()
             concat("nb of active audio sources: ", love.audio.getActiveSourceCount()),
             concat("nb of actors: ", #self.game.actors, " / ", self.game.actor_manager.actor_limit, " | nb of enemies: ", self.game:get_enemy_count()),
             concat("nb collision items: ", Collision.world:countItems()),
-            concat("number_of_alive_players ", self.game:get_number_of_alive_players()),
+            concat("number_of_alive_players ", self.game:get_number_of_alive_players(), " / number_of_kb_users ", Input:get_number_of_users(INPUT_TYPE_KEYBOARD), " / global_user.ui_actions_enabled ", Input:get_user(GLOBAL_INPUT_USER_PLAYER_N).ui_actions_enabled),
             players_str,
             users_str,
             joystick_user_str,

@@ -149,6 +149,7 @@ function PlayerPreview:init(player_n, x, y, w, h)
                 self:draw_rotated_rectangle(palette[2], "fill", x + self.selection_ox * 0.3, y, w, w, -self.t + pi / 5)
                 self:draw_rotated_rectangle(palette[1], "fill", x + self.selection_ox * 0.5, y, w, w, self.t)
 
+                -- Draw skin
                 if self.selection then
                     draw_centered(self.selection.img_walk_down, x + self.selection_ox, y, 0, self.squash, 1 / self.squash)
                     local text = utf8.upper(Text:text("player.name." .. self.selection.text_key) or "")

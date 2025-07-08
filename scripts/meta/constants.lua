@@ -270,13 +270,13 @@ RAW_INPUT_MAP_DEFAULT_GLOBAL = {
     jump =      {},
     shoot =     {},
     
-    pause =     {},
-    ui_select = {},
-    ui_back =   {},
-    ui_left =   {},
-    ui_right =  {},
-    ui_up =     {},
-    ui_down =   {},
+    pause =     {"k_escape", "k_p"},
+    ui_select = {"k_c", "k_b", "k_z", "k_l", "k_return"},
+    ui_back =   {"k_x", "k_v", "k_n", "k_k", "k_escape", "k_backspace"},
+    ui_left =   {"k_left",  "k_a"},
+    ui_right =  {"k_right", "k_d"},
+    ui_up =     {"k_up",    "k_w"},
+    ui_down =   {"k_down",  "k_s"},
     ui_reset_keys = {},
     split_keyboard = {"k_y"},
     leave_game = {},
@@ -377,7 +377,7 @@ RAW_INPUT_MAP_DEFAULT_SPLIT_KEYBOARD_P2 = {
     debug = {},
 }
 
-UI_ACTIONS = {"ui_up", "ui_down", "ui_left", "ui_right", "ui_select", "ui_back", "pause", "join_game"}
+UI_ACTIONS = {"ui_up", "ui_down", "ui_left", "ui_right", "ui_select", "ui_back", "pause"}
 
 AXIS_TABLE = {
     leftxpos =  true,

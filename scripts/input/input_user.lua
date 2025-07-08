@@ -26,6 +26,8 @@ function InputUser:init(n, input_profile_id, is_global)
     self.vibration_strength_left  = 0.0
     self.vibration_strength_right = 0.0
 
+    self.ui_actions_enabled = true
+
     -- Game specifics
     self.skin = nil
 end
@@ -113,8 +115,12 @@ function InputUser:action_down(action)
         return false
     end
 
+    local is_ui_action = is_in_table(UI_ACTIONS, action)
+    if not self.ui_actions_enabled and is_ui_action then
+        return false
+    end
+
 	for _, button in pairs(buttons) do
-        local is_ui_action = is_in_table(UI_ACTIONS, action)
 		if self:is_button_down(button, is_ui_action) then
 			return true
 		end

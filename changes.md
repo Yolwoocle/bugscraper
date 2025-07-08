@@ -1,5 +1,9 @@
 # Bugscraper changelog
 
+### 0.7.3
+
+- **Added**: Added new easter egg for title screen TV 
+
 ### 0.7.2
 (*2025-07-04*)
 

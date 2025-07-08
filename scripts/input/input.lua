@@ -85,6 +85,13 @@ function InputManager:update(dt)
     for i, user in pairs(self.users) do
         user:update(dt)
     end
+    
+    self:update_global_user_ui_action_enabled()
+end
+
+function InputManager:update_global_user_ui_action_enabled()
+    local keyboard_users_present = (self:get_number_of_users(INPUT_TYPE_KEYBOARD) > 0)
+    self:get_user(GLOBAL_INPUT_USER_PLAYER_N).ui_actions_enabled = not keyboard_users_present
 end
 
 function InputManager:mark_all_actions_as_handled()
@@ -124,6 +131,9 @@ function InputManager:new_user(n, input_profile_id, is_global)
 
     local user = InputUser:new(n, input_profile_id, is_global)
     self.users[n] = user
+
+    self:update_global_user_ui_action_enabled()
+
     return user
 end
 
@@ -137,6 +147,8 @@ function InputManager:remove_user(n)
         self.joystick_to_user_map[user.joystick] = nil
     end
     self.users[n] = nil
+
+    self:update_global_user_ui_action_enabled()
 end
 
 function InputManager:assign_joystick(user_n, joystick)
@@ -682,7 +694,7 @@ function InputManager:load_control_file(profile_id, profile)
     
     -- Verify correct file version
     local tab = split_str(lines[1], ":")
-    if tab[1] ~= "$version" or tab[2] ~= INPUT_FILE_FORMAT_VERSION then
+    if tab[1] ~= "$version" or tonumber(tab[2]) ~= INPUT_FILE_FORMAT_VERSION then
         print(string.format("Error reading %s: line 1 is ' %s ' (current file version = %s), updating file and deleting previous bindings", filename, lines[1], INPUT_FILE_FORMAT_VERSION))
         file:close()
     
@@ -743,8 +755,25 @@ function InputManager:update_all_controls_files()
     end
 end
 
+function InputManager:update_global_controls(profile_id)
+    -- Hardcoded interaction to update the global UI actions from the solo keyboard user
+    if profile_id ~= "keyboard_solo" then
+        return
+    end
+
+    local ui_actions = {"ui_up", "ui_down", "ui_left", "ui_right", "ui_select", "ui_back", "pause"}
+    local kb_solo_mappings = self.input_profiles["keyboard_solo"]:get_mappings()
+    local global_profile = self.input_profiles["global"]
+    for _, action in pairs(ui_actions) do
+        global_profile:set_action_buttons(action, kb_solo_mappings[action])
+    end
+
+    self:update_controls_file("global")
+end
 
 function InputManager:update_controls_file(profile_id)
+    self:update_global_controls(profile_id)
+
     local filename = concat("inputprofile_",profile_id,".txt")
     local controlsfile = love.filesystem.openFile(filename, "w")
     print(concat("Creating or updating ", filename, " file"))
@@ -768,26 +797,24 @@ function InputManager:on_quit()
 end
 
 function InputManager:load_global_mappings()
-    -- local actions = {
-    --     "pause",
-    --     "ui_select",
-    --     "ui_back",
-    --     "ui_left",
-    --     "ui_right",
-    --     "ui_up",
-    --     "ui_down",
-    --     "ui_reset_keys",
-    -- }
-    -- local users = {
-    --     "pause",
-    --     "ui_select",
-    --     "ui_back",
-    --     "ui_left",
-    --     "ui_right",
-    --     "ui_up",
-    --     "ui_down",
-    --     "ui_reset_keys",
-    -- }
+    local actions = {
+        "pause",
+        "ui_select",
+        "ui_back",
+        "ui_left",
+        "ui_right",
+        "ui_up",
+        "ui_down",
+    }
+
+    local global_profile = self.input_profiles["global"]
+    local kb_solo_profile = self.input_profiles["keyboard_solo"]
+    
+    for _, action in pairs(actions) do
+        global_profile.mappings[action] = copy_table_deep(kb_solo_profile.mappings[action])
+    end
+
+    self:update_controls_file("global") 
 
     -- for _, user in pairs(users) do
     --     for __, action in pairs(actions) do
