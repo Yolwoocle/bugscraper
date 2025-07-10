@@ -3,6 +3,7 @@
 ### 0.7.3
 
 - **Added**: Added new easter egg for title screen TV 
+- **Change**: You can now use keyboard inputs to navigate menus even if no keyboard user is present
 
 ### 0.7.2
 (*2025-07-04*)

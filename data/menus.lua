@@ -139,11 +139,10 @@ local function generate_menus()
 
     ------------------------------------------------------------
     
-    local create_solo_keyboard_controls_menu = require "data.menus.create_solo_keyboard_controls_menu"
     local create_keyboard_controls_menu = require "data.menus.create_keyboard_controls_menu"
     local create_controller_controls_menu = require "data.menus.create_controller_controls_menu"
 
-    menus.controls_keyboard_solo = create_solo_keyboard_controls_menu(Text:text("menu.options.input_submenu.keyboard_solo"),
+    menus.controls_keyboard_solo = create_keyboard_controls_menu(Text:text("menu.options.input_submenu.keyboard_solo"),
         "keyboard_solo")
     menus.controls_keyboard_split_p1 = create_keyboard_controls_menu(Text:text("menu.options.input_submenu.keyboard_p1"),
         "keyboard_split_p1")
