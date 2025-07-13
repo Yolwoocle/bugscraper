@@ -144,7 +144,7 @@ function Player:reset(n, skin)
 	self.wall_slide_speed = 30
 	self.is_wall_sliding = false
 	self.wall_slide_particle_timer = 0
-	self.wall_slide_max_stamina = 5.0
+	self.wall_slide_max_stamina = 7.0
 	self.wall_slide_stamina = 0
 	self.wall_slide_stamina_use_slide = 1.0
 	self.wall_slide_stamina_use_jump = 1.0

@@ -151,8 +151,8 @@ function Wave:spawn_roll(elevator, roll, spawned_enemies)
 		-- Center enemy & clamp position
 		if not (enemy_classes[i].position or enemy_classes[i].ignore_position_clamp) then
 			enemy_instance:set_position(
-				clamp(enemy_instance.x, rect.ax + 0.5*enemy_instance.w, rect.bx - 1.5*enemy_instance.w) - 0.5*enemy_instance.w, 
-				clamp(enemy_instance.y, rect.ay + 0.5*enemy_instance.h, rect.by - 1.5*enemy_instance.h) - 0.5*enemy_instance.h
+				math.floor(clamp(enemy_instance.x, rect.ax + 0.5*enemy_instance.w, rect.bx - 1.5*enemy_instance.w) - 0.5*enemy_instance.w), 
+				math.floor(clamp(enemy_instance.y, rect.ay + 0.5*enemy_instance.h, rect.by - 1.5*enemy_instance.h) - 0.5*enemy_instance.h)
 			)
 		end
 

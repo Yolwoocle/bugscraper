@@ -17,6 +17,8 @@ function Loot:init_loot(spr, x, y, w, h, val, vx, vy, params)
 	self:init_actor(x, y, w, h, spr)
 	self.is_loot = true
 
+	self.z = -90
+
 	self.vx = vx or 0
 	self.vy = vy or 0
 

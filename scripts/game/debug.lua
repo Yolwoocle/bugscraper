@@ -206,11 +206,10 @@ function Debug:init(game)
             cloud:set_position(cloud.x - cloud.w/2, cloud.y - cloud.h/2)
             game:new_actor(cloud)
         end },
-        ["o"] = { "spike offset", function()
-            for _, actor in pairs(game.actors) do
-                if actor.name == "timed_spikes" then
-                    actor:set_time_offset(-dist(actor.mid_x, actor.mid_y, CANVAS_CENTER[1], CANVAS_CENTER[2]) * 0.01 + 3)
-                end
+        ["o"] = { "toggle invincibility", function()
+            for _, player in pairs(game.players) do
+                player.invincible_time = math.huge
+                player.max_invincible_time = math.huge
             end
         end },
         ["r"] = { "start game", function()
