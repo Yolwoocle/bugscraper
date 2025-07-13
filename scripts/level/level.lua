@@ -313,7 +313,7 @@ function Level:new_endless_wave()
 	})
 end
 
-function Level:get_new_wave(wave_n, unclamped_wave_n) --scotch: there shouldn't be unclamped_wave_n
+function Level:get_new_wave(wave_n) --scotch: there shouldn't be unclamped_wave_n
 	local wave = waves[wave_n]
 	if self.game.endless_mode then
 		wave = self:new_endless_wave()
@@ -350,7 +350,7 @@ function Level:apply_new_wave()
 
 	-- Spawn a bunch of enemies
 	local wave_n = clamp(self.floor + 1, 1, #waves) -- floor+1 because the floor indicator changes before enemies are spawned
-	local wave = self:get_new_wave(wave_n, self.floor+1)
+	local wave = self:get_new_wave(wave_n)
 	
 	if wave.elevator then
 		self:set_elevator(wave.elevator:new(self))
