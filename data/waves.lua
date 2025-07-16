@@ -487,6 +487,8 @@ local waves = parse_waves_table {
         enemies = {
             { E.DrillBee, 3 },
         },
+        
+        music = "w2",
     },
 
     {
@@ -497,8 +499,6 @@ local waves = parse_waves_table {
             { E.Bee,   3 },
             { E.Larva, 3 },
         },
-
-        music = "w2",
 
         run = function(self, level)
             spawn_timed_spikes()
@@ -513,7 +513,6 @@ local waves = parse_waves_table {
             { E.Bee,         3 },
             { E.Larva,       3 },
             { E.HoneypotAnt, 2 },
-            { E.Fly,         2 },
         },
     },
 
@@ -522,8 +521,7 @@ local waves = parse_waves_table {
         max = 7,
 
         enemies = {
-            { E.Bee,         3 },
-            { E.Larva,       3 },
+            { E.Stabee,  10 },
             { E.HoneypotAnt, 2 },
         },
     },
@@ -548,7 +546,6 @@ local waves = parse_waves_table {
         max = 8,
 
         enemies = {
-            { E.Larva,       3 },
             { E.Bee,         3 },
             { E.HoneypotAnt, 3 },
         },
@@ -564,7 +561,6 @@ local waves = parse_waves_table {
 
         enemies = {
             { E.Bee,       3 },
-            { E.Stabee, 3 },
             { E.DrillBee,  3 },
         },
     },
