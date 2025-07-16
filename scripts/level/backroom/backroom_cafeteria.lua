@@ -22,6 +22,10 @@ function BackroomCafeteria:init()
 		images.cabin_door_brown_right_far,
 		images.cabin_door_brown_right_center
 	)
+
+	self.cafeteria_glass_hole = false
+	self.cafeteria_glass_hole_x = nil
+	self.cafeteria_glass_hole_y = nil
 end
 
 function BackroomCafeteria:generate(world_generator)
@@ -75,13 +79,23 @@ end
 
 
 function BackroomCafeteria:draw_background()
-	self.cafeteria_background:draw()
+	self.cafeteria_background:draw() 
 	love.graphics.draw(images.elevator_through_door, self.door.x, self.door.y)
+	
+	Particles:draw_layer(PARTICLE_LAYER_CAFETERIA_BACKGROUND)
+	for _, actor in pairs(game.actors) do
+		if actor.draw_behind_windows_in_cafeterias then
+			actor:draw()
+		end
+	end
 end
 
 function BackroomCafeteria:draw_items()
 	self.door:draw()
 	love.graphics.draw(images.cafeteria, -16, -16)
+	if self.cafeteria_glass_hole then
+		love.graphics.draw(images.cafeteria_glass_hole, self.cafeteria_glass_hole_x, self.cafeteria_glass_hole_y)
+	end
 	game.level.elevator:draw_counter()
 	
 	self.tv_presentation:draw()

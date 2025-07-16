@@ -36,6 +36,7 @@ function GameUI:init(game, is_visible)
 	self.cinematic_bar_scroll_speed = -14
 	self.cinematic_bar_current_height = 0
 	self.cinematic_bar_height = 24
+	self.cinematic_bar_color = nil
 
 	self.fury_previous_value = 0
 	self.fury_visual_width = 0
@@ -396,7 +397,7 @@ function GameUI:draw_cinematic_bars()
 		self.cinematic_bar_current_height, 
 		self.cinematic_bar_scroll, 
 		{
-			color = COL_BLACK_BLUE, 
+			color = self.cinematic_bar_color or COL_BLACK_BLUE, 
 			image_top = images.sawtooth_separator_small, 
 			image_bottom = images.sawtooth_separator_small
 		}

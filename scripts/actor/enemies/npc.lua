@@ -12,10 +12,11 @@ function NPC:init(x, y, params)
     params = params or {}
     NPC.super.init(self, x, y, images.empty)
     self.name = "npc"
+    self.npc_name = params.npc_name or ""
     
     self.gravity = self.default_gravity
 
-    self.spr = AnimatedSprite:new({
+    self.spr = AnimatedSprite:new(params.animations or {
         normal = params.animation or {images.npc_brown, 0.2, 4},
     }, "normal")
 
@@ -26,6 +27,9 @@ function NPC:init(x, y, params)
     self.interact_actions = {"up"}
     self.interaction_margin = 32
     self.interaction_delay = 4.0
+    
+    self.flip_mode = ENEMY_FLIP_MODE_MANUAL
+    self.spr:set_flip_x(param(params.flip_x, false))
 end
 
 function NPC:update(dt)

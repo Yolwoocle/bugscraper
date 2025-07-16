@@ -11,6 +11,9 @@ function Cutscene:init(name, scenes)
     self.current_scene = nil
     self.current_scene_i = -1
     self.total_duration = 0
+
+    self.data = {} -- Table that can be freely written to by scenes for storing data
+
     for _, scene in pairs(self.scenes) do
         self.total_duration = self.total_duration + scene.duration
     end
@@ -21,16 +24,17 @@ end
 
 function Cutscene:set_current_scene(scene_i) 
     if self.current_scene then
-        self.current_scene:exit()
+        self.current_scene:exit(self.data)
     end
     self.current_scene_i = scene_i
     self.current_scene = self.scenes[self.current_scene_i]
-    self.current_scene:enter()
+    self.current_scene:enter(self.data)
 
     self.timer:start(self.current_scene.duration)
 end
 
 function Cutscene:play()
+    self.data = {}
     self:set_current_scene(1)
     self.is_playing = true
     self.total_time = 0
@@ -43,7 +47,7 @@ end
 
 function Cutscene:update(dt)
     if self.is_playing then
-        local skip_scene = self.current_scene:update(dt) or game.skip_scene_flag
+        local skip_scene = self.current_scene:update(self.data, dt) or game.skip_scene_flag
         if game.skip_scene_flag then
             game.skip_scene_flag = false
         end

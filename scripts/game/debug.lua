@@ -98,31 +98,50 @@ function Debug:init(game)
             -- self.actor_info_view = not self.actor_info_view
         end, do_not_require_ctrl = true },
         
+        ["u"] = { "spawn ceo", function()
+            local ac = game:new_actor(enemies.NPC:new(866, 223, {
+                npc_name = "ceo",
+                animations = {
+                    normal = {images.ceo_npc_idle, 0.2, 4},
+                    airborne = {images.ceo_npc_airborne, 0.2, 1},
+                    jetpack = {images.ceo_npc_jetpack, 0.2, 1},
+                },
+                dialogue_key = "dialogue.npc.noba",
+                flip_x = true,
+            }))
+            ac.gravity = 0
+        end},
         ["v"] = { "__jackofalltrades", function()
-            local points = {}
-            local cx = game.level.door_rect.ax / 2 + game.level.door_rect.bx / 2
-            local cy = game.level.door_rect.ay / 2 + game.level.door_rect.by / 2
-            
-            for i=0, 19 do
-                table.insert(points, {cx + math.cos(pi/2 + pi2*i/20)* 100, cy + math.sin(pi/2 + pi2*i/20)* 100})
-            end
+            game:play_cutscene(cutscenes["ceo_escape_w1"])
 
-            local e = enemies.ProgressingArc:new(100, 100, {
-                points = points,
-                interval_size = 150,
-                progress_speed = 80,
-                arc_params = {
-                    lightning_params = {
-                        style = LIGHTNING_STYLE_THORNS, 
-                        min_step_size = 10,
-                        max_step_size = 10,
-                        min_line_width = 0,
-                        max_line_width = 0,
-                        jitter_width = 0,
-                    }
-                }
-            })
-            game:new_actor(e)
+            ------------------------------
+
+            -- local points = {}
+            -- local cx = game.level.door_rect.ax / 2 + game.level.door_rect.bx / 2
+            -- local cy = game.level.door_rect.ay / 2 + game.level.door_rect.by / 2
+            
+            -- for i=0, 19 do
+            --     table.insert(points, {cx + math.cos(pi/2 + pi2*i/20)* 100, cy + math.sin(pi/2 + pi2*i/20)* 100})
+            -- end
+
+            -- local e = enemies.ProgressingArc:new(100, 100, {
+            --     points = points,
+            --     interval_size = 150,
+            --     progress_speed = 80,
+            --     arc_params = {
+            --         lightning_params = {
+            --             style = LIGHTNING_STYLE_THORNS, 
+            --             min_step_size = 10,
+            --             max_step_size = 10,
+            --             min_line_width = 0,
+            --             max_line_width = 0,
+            --             jitter_width = 0,
+            --         }
+            --     }
+            -- })
+            -- game:new_actor(e)
+
+            -----------------------------
 
             -- Particles:dead_player(200, 200, images.mio_dead, {COL_RED}, 1)
 
@@ -194,9 +213,9 @@ function Debug:init(game)
             self.debug_menu = not self.debug_menu
         end },
 
-        ["u"] = { "toggle title junk ui", function()
-            self.title_junk = not self.title_junk
-        end },
+        -- ["u"] = { "toggle title junk ui", function()
+        --     self.title_junk = not self.title_junk
+        -- end },
         ["c"] = { "skip cutscene", function()
             game.skip_scene_flag = true
         end },

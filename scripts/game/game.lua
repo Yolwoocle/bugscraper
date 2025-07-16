@@ -485,6 +485,14 @@ function Game:draw_game()
 
 	self:draw_on_layer(LAYER_BACKGROUND, function()
 		love.graphics.clear()
+
+		-- Draw actors
+		for _, actor in pairs(self.actors) do
+			if actor.is_active and actor.is_visible then
+				actor:draw()
+			end
+		end
+
 		self.level:draw()
 
 		Particles:draw_layer(PARTICLE_LAYER_BACK_SHADOWLESS)

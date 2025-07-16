@@ -140,6 +140,9 @@ local img_names = {
 	ceo_office_glass =         "actors/enemies/ceo_office_glass",
 	ceo_normal =               "actors/enemies/ceo_normal",
 	ceo_telegraph_arrow =      "actors/enemies/ceo_telegraph_arrow",
+	ceo_npc_idle =             "actors/enemies/ceo_npc_idle",
+	ceo_npc_airborne =         "actors/enemies/ceo_npc_airborne",
+	ceo_npc_jetpack =          "actors/enemies/ceo_npc_jetpack",
 	chipper_attack_1 =         "actors/enemies/chipper_attack_1",
 	chipper_attack_2 =         "actors/enemies/chipper_attack_2",
 	chipper_attack_3 =         "actors/enemies/chipper_attack_3",
@@ -426,6 +429,7 @@ local img_names = {
 
 	cafeteria =                      "level/cafeteria",
 	cafeteria_front =                "level/cafeteria_front",
+	cafeteria_glass_hole =           "level/cafeteria_glass_hole",
 	elevator_through_door =          "level/elevator_through_door",
 	ground_floor =                   "level/ground_floor",
 	ground_floor_front =             "level/ground_floor_front",

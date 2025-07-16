@@ -99,6 +99,11 @@ function BackroomGroundFloor:generate(world_generator)
 	-- 	animation = npc.animation,
 	-- 	dialogue_key = "dialogue.npc." .. npc.key,
 	-- }))
+	game:new_actor(enemies.NPC:new(900, 226, {
+		npc_name = "ceo",
+		animation = {images.ceo_npc_idle, 0.2, 4},
+		dialogue_key = "dialogue.npc.noba",
+	}))
 end
 
 function BackroomGroundFloor:get_default_camera_position()
