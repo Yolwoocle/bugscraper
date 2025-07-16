@@ -3,7 +3,8 @@ local Class = require "scripts.meta.class"
 
 local Backroom = Class:inherit()
 
-function Backroom:init()
+function Backroom:init(params)
+    params = params or {}
     self.name = "backroom"
     
     self.background = nil

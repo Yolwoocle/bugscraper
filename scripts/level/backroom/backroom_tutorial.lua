@@ -11,8 +11,9 @@ local guns = require "data.guns"
 
 local BackroomTutorial = BackroomWithDoor:inherit()
 
-function BackroomTutorial:init()
-    BackroomTutorial.super.init(self)
+function BackroomTutorial:init(params)
+	params = params or {}
+    BackroomTutorial.super.init(self, params)
 	self.name = "tutorial"
 
 	self.cafeteria_background = BackgroundCity:new(self)

@@ -5,8 +5,9 @@ local ElevatorDoorSlidingLarge = require "scripts.level.door.elevator_door_slidi
 
 local BackroomWithDoor = Backroom:inherit()
 
-function BackroomWithDoor:init()
-    BackroomWithDoor.super.init(self)
+function BackroomWithDoor:init(params)
+	params = params or {}
+    BackroomWithDoor.super.init(self, params)
 	self.name = "backroom_with_door"
 
 	self.door = ElevatorDoorSlidingLarge:new(186, 154)

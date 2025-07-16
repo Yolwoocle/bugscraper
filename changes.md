@@ -1,8 +1,8 @@
 # Bugscraper changelog
 
-### 0.7.3
+### 0.8
 
-- **Added**: Added new easter egg for title screen TV 
+- **Added**: Added a new easter egg 👀 
 - **Change**: You can now use keyboard inputs to navigate menus even if no keyboard user is present
 
 ### 0.7.2

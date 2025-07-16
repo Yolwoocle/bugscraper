@@ -11,8 +11,9 @@ local Rect = require "scripts.math.rect"
 
 local BackroomGroundFloor = BackroomWithDoor:inherit()
 
-function BackroomGroundFloor:init()
-    BackroomGroundFloor.super.init(self)
+function BackroomGroundFloor:init(params)
+	params = params or {}
+    BackroomGroundFloor.super.init(self, params)
 	self.name = "ground_floor"
 
 	self.cafeteria_background = BackgroundCafeteria:new(self)
@@ -99,11 +100,12 @@ function BackroomGroundFloor:generate(world_generator)
 	-- 	animation = npc.animation,
 	-- 	dialogue_key = "dialogue.npc." .. npc.key,
 	-- }))
-	game:new_actor(enemies.NPC:new(900, 226, {
-		npc_name = "ceo",
-		animation = {images.ceo_npc_idle, 0.2, 4},
-		dialogue_key = "dialogue.npc.noba",
+	local npc = game:new_actor(enemies.NPC:new(780, 226, {
+		npc_name = "brown",
+		animation = {images.npc_brown, 0.2, 4},
+		flip_x = true,
 	}))
+	npc.z = -2
 end
 
 function BackroomGroundFloor:get_default_camera_position()

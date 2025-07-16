@@ -47,7 +47,7 @@ end
 
 function Cutscene:update(dt)
     if self.is_playing then
-        local skip_scene = self.current_scene:update(self.data, dt) or game.skip_scene_flag
+        local skip_scene = (self.current_scene:update(self.data, dt) == true) or game.skip_scene_flag
         if game.skip_scene_flag then
             game.skip_scene_flag = false
         end

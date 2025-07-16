@@ -31,6 +31,7 @@ function Wave:init(params)
 	self.floating_text = param(params.floating_text, nil)
 	self.cutscene = param(params.cutscene, nil)
 	self.backroom = param(params.backroom, nil)
+	self.backroom_params = param(params.backroom_params, nil)
 	self.elevator = param(params.elevator, nil)
 	self.world = param(params.world, nil)
 
@@ -242,7 +243,7 @@ function Wave:enable_wave_side_effects(level)
 	end
 
 	if self.backroom then
-		game.level:begin_backroom(self.backroom:new())
+		game.level:begin_backroom(self.backroom:new(self.backroom_params))
 	end
 end
 

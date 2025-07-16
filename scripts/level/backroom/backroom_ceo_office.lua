@@ -7,8 +7,9 @@ local BackgroundCafeteria = require "scripts.level.background.background_cafeter
 
 local BackroomCEOOffice = Backroom:inherit()
 
-function BackroomCEOOffice:init()
-    BackroomCEOOffice.super.init(self)
+function BackroomCEOOffice:init(params)
+	params = params or {}
+    BackroomCEOOffice.super.init(self, params)
 	self.name = "ceo_office"
 
 	self.cafeteria_background = BackgroundCafeteria:new(self)

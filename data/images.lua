@@ -141,6 +141,7 @@ local img_names = {
 	ceo_normal =               "actors/enemies/ceo_normal",
 	ceo_telegraph_arrow =      "actors/enemies/ceo_telegraph_arrow",
 	ceo_npc_idle =             "actors/enemies/ceo_npc_idle",
+	ceo_npc_shocked =          "actors/enemies/ceo_npc_shocked",
 	ceo_npc_airborne =         "actors/enemies/ceo_npc_airborne",
 	ceo_npc_jetpack =          "actors/enemies/ceo_npc_jetpack",
 	chipper_attack_1 =         "actors/enemies/chipper_attack_1",
@@ -364,6 +365,8 @@ local img_names = {
 	spin_whoosh_4 =               "particles/spin_whoosh_4",
 	spin_whoosh_5 =               "particles/spin_whoosh_5",
 
+	surprise_effect =             "particles/surprise_effect",
+
 	-----------------------------------------------------
 	
 	-- level
@@ -448,6 +451,8 @@ local img_names = {
 	ground_floor_stack_papers_medium =   "level/props/ground_floor_stack_papers_medium",
 	ground_floor_stack_papers_medium_b = "level/props/ground_floor_stack_papers_medium_b",
 	ground_floor_stack_papers_small =    "level/props/ground_floor_stack_papers_small",
+	ground_floor_boba =                  "level/props/ground_floor_boba",
+	ground_floor_laptop =                "level/props/ground_floor_laptop",
 	
 	ceo_office_room =   "level/ceo_office_room",
 	boss_door =         "level/boss_door",

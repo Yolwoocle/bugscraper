@@ -21,8 +21,10 @@ RECT_ELEVATOR            = Rect:new(unpack(RECT_ELEVATOR_PARAMS))
 RECT_CAFETERIA           = Rect:new(unpack(RECT_CAFETERIA_PARAMS))
 RECT_CEO_OFFICE          = Rect:new(unpack(RECT_CEO_OFFICE_PARAMS))
 
-local function new_cafeteria(run_func)
-    run_func = run_func or function(...) end
+local function new_cafeteria(params)
+    params = params or {}
+    
+    local run_func = params.run_func or function(...) end
     return Wave:new({
         floor_type = FLOOR_TYPE_CAFETERIA,
         roll_type = WAVE_ROLL_TYPE_FIXED,
@@ -36,7 +38,7 @@ local function new_cafeteria(run_func)
                     actor:remove()
                 end
             end
-            
+
             run_func(self, level)
         end,
 
@@ -48,7 +50,10 @@ local function new_cafeteria(run_func)
             { E.UpgradeDisplay, 1, position = { 586+16, 181 }, ignore_position_clamp = true },
         },
 
-        backroom = BackroomCafeteria
+        backroom = BackroomCafeteria,
+        backroom_params = {
+            w1_ceo =    params.w1_ceo
+        },
     })
 end
 
@@ -348,7 +353,7 @@ local waves = parse_waves_table {
         cutscene = cutscenes.dung_boss_enter,
     },
 
-    new_cafeteria(),
+    new_cafeteria({w1_ceo = true}),
 
 
 
@@ -476,6 +481,15 @@ local waves = parse_waves_table {
     ---------------------------------------------
 
     {
+        min = 4,
+        max = 4,
+
+        enemies = {
+            { E.DrillBee, 3 },
+        },
+    },
+
+    {
         min = 5,
         max = 5,
 
@@ -511,19 +525,6 @@ local waves = parse_waves_table {
             { E.Bee,         3 },
             { E.Larva,       3 },
             { E.HoneypotAnt, 2 },
-            { E.Fly,         2 },
-        },
-        fixed_enemies = {
-            { E.FlyingSpawner, 1 },
-        },
-    },
-
-    {
-        min = 4,
-        max = 4,
-
-        enemies = {
-            { E.DrillBee, 3 },
         },
     },
 
@@ -537,6 +538,9 @@ local waves = parse_waves_table {
             { E.Boomshroom, 20 },
             { E.DrillBee,   30 },
         },
+        fixed_enemies = {
+            { E.DrillBee, 2 },
+        }
     },
 
     {
@@ -600,7 +604,7 @@ local waves = parse_waves_table {
         cutscene = cutscenes.bee_boss_enter,
     },
 
-    new_cafeteria(function()
+    new_cafeteria({run_func = function()
         for _, a in pairs(game.actors) do
             if a.name == "timed_spikes" then
                 a:remove()
@@ -608,7 +612,7 @@ local waves = parse_waves_table {
         end
 
         game.is_light_on = true
-    end),
+    end}),
 
     ------
 
@@ -774,9 +778,9 @@ local waves = parse_waves_table {
 
     ------------------------------------------------
     -- Cafeteria
-    new_cafeteria(function()
+    new_cafeteria({run_func = function()
         game.actor_manager:kill_actors_with_name("electric_rays")
-    end),
+    end}),
     ------------------------------------------------
 
     {

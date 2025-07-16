@@ -95,7 +95,7 @@ function Debug:init(game)
             end
         end, do_not_require_ctrl = true },
         ["f8"] = { "toggle actor info view mode", function()
-            -- self.actor_info_view = not self.actor_info_view
+            self.actor_info_view = not self.actor_info_view
         end, do_not_require_ctrl = true },
         
         ["u"] = { "spawn ceo", function()
@@ -913,7 +913,7 @@ function Debug:draw_actor_info_view()
 
         Text:push_font(FONT_MINI)
         if e.life then
-            print_outline(COL_WHITE, COL_DARK_BLUE, concat(round(e.life, 1), "HP"), self.x, self.y-6)
+            print_outline(COL_WHITE, COL_DARK_BLUE, concat(round(e.life, 1), "HP"), e.x, e.y-3)
         end
 		Text:pop_font()
     end

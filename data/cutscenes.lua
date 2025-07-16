@@ -12,15 +12,17 @@ cutscenes.ceo_escape_w1 = Cutscene:new("ceo_escape_w1", {
         
         duration = 0.01,
         enter = function(scene, data)
-            game.menu_manager:set_can_pause(false)
-            game.game_ui.cinematic_bars_enabled = true
-            game.game_ui.cinematic_bar_color = COL_VERY_DARK_GRAY
-            game.camera:set_target_offset(10000, 0)
-
-            for _, player in pairs(game.players) do
-                player:set_input_mode(PLAYER_INPUT_MODE_CODE)
-                player:reset_virtual_controller()
-            end
+            if not Metaprogression:get("has_seen_w1_transition_cutscene") then
+                game.menu_manager:set_can_pause(false)
+                game.game_ui.cinematic_bars_enabled = true
+                game.game_ui.cinematic_bar_color = COL_VERY_DARK_GRAY
+                game.camera:set_target_offset(10000, 0)
+    
+                for _, player in pairs(game.players) do
+                    player:set_input_mode(PLAYER_INPUT_MODE_CODE)
+                    player:reset_virtual_controller()
+                end
+            end 
 
             for _, actor in pairs(game.actors) do
                 if actor.name == "npc" and actor.npc_name == "ceo" then
@@ -34,26 +36,43 @@ cutscenes.ceo_escape_w1 = Cutscene:new("ceo_escape_w1", {
     CutsceneScene:new({
         description = "",
         
-        duration = 0.5,
+        duration = 0,
         enter = function(scene, data)
             data.ceo.gravity = 0
         end,
     }),
     CutsceneScene:new({
-        description = "",
+        description = "Wait for a bit",
         
-        duration = 1.0,
+        duration = 1.5,
         enter = function(scene, data)
         end,
         update = function(scene, data, dt)
-            data.ceo.spr:update_offset(random_neighbor(3), random_neighbor(3))
-        end,
-        exit = function(scene, data)
-            data.ceo.spr:update_offset(0, 0)
+            if Metaprogression:get("has_seen_w1_transition_cutscene") then
+                return true
+            end
         end,
     }),
     CutsceneScene:new({
-        description = "",
+        description = "Shocked",
+        
+        duration = 1.5,
+        enter = function(scene, data)
+            data.ceo.spr:set_animation("shocked")
+            data.shake = 3.0
+
+            Particles:static_image(images.surprise_effect, data.ceo.x - 16, data.ceo.y - 30, 0, 0.3)
+        end,
+        update = function(scene, data, dt)
+            data.ceo.spr:update_offset(random_neighbor(data.shake), random_neighbor(data.shake))
+            data.shake = math.max(0, data.shake - dt* 6)
+        end,
+        exit = function(scene, data)
+            data.ceo.spr:update_offset(0, 0)
+        end
+    }),
+    CutsceneScene:new({
+        description = "Jump out of window",
         
         duration = 0.93,
         enter = function(scene, data)
@@ -89,16 +108,20 @@ cutscenes.ceo_escape_w1 = Cutscene:new("ceo_escape_w1", {
     }),
     
     CutsceneScene:new({
-        description = "",
+        description = "Give back control to players",
         duration = 0,
         enter = function(scene, data)
-            game.menu_manager:set_can_pause(true)
-            game.game_ui.cinematic_bars_enabled = false
-            game.camera:set_target_offset(0, 0)
+            if not Metaprogression:get("has_seen_w1_transition_cutscene") then
+                game.menu_manager:set_can_pause(true)
+                game.game_ui.cinematic_bars_enabled = false
+                game.camera:set_target_offset(0, 0)
+    
+                for _, player in pairs(game.players) do
+                    player:set_input_mode(PLAYER_INPUT_MODE_USER)
+                    player:reset_virtual_controller()
+                end
 
-            for _, player in pairs(game.players) do
-                player:set_input_mode(PLAYER_INPUT_MODE_USER)
-                player:reset_virtual_controller()
+                Metaprogression:set("has_seen_w1_transition_cutscene", true)
             end
         end
     }),
