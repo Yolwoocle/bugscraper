@@ -143,6 +143,10 @@ function HoneycombFootball:update_renderer(dt)
     self.renderer:update(dt)
 end
 
+function HoneycombFootball:on_position_set(x, y)
+    self:update_renderer(0)
+end
+
 function HoneycombFootball:on_stomped()
     self.pong_speed = self.pong_speed + 60
 

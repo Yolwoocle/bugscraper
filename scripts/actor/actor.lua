@@ -452,6 +452,10 @@ function Actor:set_position(x, y)
 	self:update_mid_position()
 
 	Collision:update(self, self.x, self.y)
+	self:on_position_set(x, y)
+end
+
+function Actor:on_position_set(x, y)
 end
 
 function Actor:set_rider(actor)
