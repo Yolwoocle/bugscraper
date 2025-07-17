@@ -1,18 +1,21 @@
 require "scripts.util"
-local menu_util = require "scripts.ui.menu.menu_util"
-local Menu = require "scripts.ui.menu.menu"
-local backgrounds         = require "data.backgrounds"
+local menu_util             = require "scripts.ui.menu.menu_util"
+local Menu                  = require "scripts.ui.menu.menu"
+local backgrounds           = require "data.backgrounds"
 
 local DEFAULT_MENU_BG_COLOR = menu_util.DEFAULT_MENU_BG_COLOR
-local func_set_menu     = menu_util.func_set_menu
-local func_url          = menu_util.func_url
-local PROMPTS_NORMAL    = menu_util.PROMPTS_NORMAL
+local func_set_menu         = menu_util.func_set_menu
+local func_url              = menu_util.func_url
+local PROMPTS_NORMAL        = menu_util.PROMPTS_NORMAL
 
-local pause_items = {
+local pause_items           = {
     { "" },
     { "" },
     { "▶ {menu.pause.resume}", function() game.menu_manager:unpause() end },
-    { "🔄 {menu.pause.retry}", func_set_menu('confirm_retry') },
+    { "🔄 {menu.pause.return_to_ground_floor}", func_set_menu('confirm_retry') },
+    -- { "🔄 {menu.game_over.quick_restart}", function()
+    --     game:new_game({ quick_restart = true })
+    -- end },
     { "🎚 {menu.pause.options}", func_set_menu('options') },
     { "💡 {menu.pause.feedback}", func_set_menu("feedback") },
     { "❤ {menu.pause.credits}", func_set_menu('credits') },
@@ -21,7 +24,7 @@ if OPERATING_SYSTEM ~= "Web" then
     -- Disable quitting on web
     table.insert(pause_items, { "🔚 {menu.pause.quit}", func_set_menu('quit') })
 end
-table.insert(pause_items, {""})
+table.insert(pause_items, { "" })
 if DEMO_BUILD then
     -- Disable wishlist if not demo
     table.insert(pause_items, { "❤ {menu.win.wishlist} 🔗", func_url("steam://advertise/2957130/") })

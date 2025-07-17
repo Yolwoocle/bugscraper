@@ -69,7 +69,7 @@ local function generate_menus()
     )
 
     menus.confirm_retry = Menu:new(game, "", {
-        { "{menu.confirm_retry.description}" },
+        { "{menu.leave_menu}" },
         { "{menu.no}", function()
             game.menu_manager:back()
         end },

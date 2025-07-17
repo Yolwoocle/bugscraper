@@ -537,7 +537,7 @@ local waves = parse_waves_table {
             { E.DrillBee,   30 },
         },
         fixed_enemies = {
-            { E.DrillBee, 2 },
+            { E.DrillBee, 1 },
         }
     },
 
