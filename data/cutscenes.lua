@@ -56,7 +56,7 @@ cutscenes.ceo_escape_w1 = Cutscene:new("ceo_escape_w1", {
     CutsceneScene:new({
         description = "Shocked",
         
-        duration = 1.5,
+        duration = 0.5,
         enter = function(scene, data)
             data.ceo.spr:set_animation("shocked")
             data.shake = 3.0
@@ -65,12 +65,24 @@ cutscenes.ceo_escape_w1 = Cutscene:new("ceo_escape_w1", {
         end,
         update = function(scene, data, dt)
             data.ceo.spr:update_offset(random_neighbor(data.shake), random_neighbor(data.shake))
-            data.shake = math.max(0, data.shake - dt* 6)
+            data.shake = math.max(0, data.shake - dt*6)
         end,
         exit = function(scene, data)
             data.ceo.spr:update_offset(0, 0)
         end
     }),
+    CutsceneScene:new({
+        description = "Shocked",
+        
+        duration = 1.0,
+        enter = function(scene, data)
+        end,
+        update = function(scene, data, dt)
+            if Metaprogression:get("has_seen_w1_transition_cutscene") then
+                return true
+            end
+        end,
+    }), 
     CutsceneScene:new({
         description = "Jump out of window",
         
