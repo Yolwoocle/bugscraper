@@ -271,8 +271,8 @@ return {
         },
         feedback = {
             title = "RETOURS",
-            bugs = "SIGNALER UN BUG 🔗",
-            features = "SUGGÉRER UNE FONCTIONNALITÉ 🔗",
+            bugs = "SIGNALER UN BUG",
+            features = "SUGGÉRER UNE FONCTIONNALITÉ",
         },
         game_over = {
             title = "GAME OVER!",

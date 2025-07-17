@@ -265,8 +265,8 @@ return {
         },
         feedback = {
             title = "ZOSTAW OPINIE",
-            bugs = "ZGŁOŚ BŁĄD 🔗",
-            features = "ZGŁOŚ PROPOZYCJE 🔗",
+            bugs = "ZGŁOŚ BŁĄD",
+            features = "ZGŁOŚ PROPOZYCJE",
         },
         game_over = {
             title = "KONIEC GRY!",

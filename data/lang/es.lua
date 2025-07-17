@@ -262,8 +262,8 @@ return {
 		},
 		feedback = {
 			title = "COMENTARIOS", -- comments
-			bugs = "REPORTAR UN PROBLEMA 🔗",
-			features = "PROPONER UNA IDEA 🔗",
+			bugs = "REPORTAR UN PROBLEMA",
+			features = "PROPONER UNA IDEA",
 		},
 		game_over = {
 			title = "JUEGO TERMINADO!", -- *sigh* Europeans use `fin de la partida` but the latam version `game over` (literally 1:1) fits better

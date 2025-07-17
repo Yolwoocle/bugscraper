@@ -252,8 +252,8 @@ return {
         },
         feedback = {
             title = "FEEDBACK",
-            bugs = "DENUNCIAR ERRO 🔗",
-            features = "SUGERIR UMA FUNCIONALIDADE 🔗",
+            bugs = "DENUNCIAR ERRO",
+            features = "SUGERIR UMA FUNCIONALIDADE",
         },
         game_over = {
             title = "FIM DE JOGO!",

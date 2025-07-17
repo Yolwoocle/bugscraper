@@ -264,8 +264,8 @@ return {
         },
         feedback = {
             title = "FEEDBACK",
-            bugs = "REPORT A BUG 🔗",
-            features = "SUGGEST A FEATURE 🔗",
+            bugs = "REPORT A BUG",
+            features = "SUGGEST A FEATURE",
         },
         game_over = {
             title = "GAME OVER!",
