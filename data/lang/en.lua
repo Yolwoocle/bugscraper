@@ -326,6 +326,7 @@ return {
             tv_slideshow = "TV slideshow contributors", -- ADDED // Refers to the powerpoint TV slideshow on the title screen, which was contributed by a variety of people 
             tv_slideshow_submit = "Submit yours...", -- ADDED // Leads to a web page where people can submit their own slides
             licenses = "Asset & library licenses",
+            more = "And many more...", -- ADDED // For the people that I might have forgotten in the special thanks section
 
             x_by_y =     "%s by %s", -- "ASSET_NAME by CREATOR". Used to credit assets such as sound effects
             asset_item = "%s by %s / %s", -- "ASSET_NAME by CREATOR / LICENCE"

@@ -40,6 +40,7 @@ return Menu:new(game, "{menu.credits.title}", {
     { "Tom Le Ber", empty_func },
     { "Guillaume Tran", empty_func },
     { "Lucas Froehlinger 😎", empty_func },
+    { "{menu.credits.more}", empty_func },
     { "" },
     { "<<< {menu.credits.special_thanks} >>>" },
     { "Alexis Belmonte", empty_func },
