@@ -26,7 +26,8 @@ function Animation:init(frames, frame_duration, frame_count_x, frame_count_y, pa
 
     self.frame_count = self.frame_count_x * self.frame_count_y
     self.duration = self.frame_count * self.frame_duration
-
+    
+    self.looping = param(params.looping, true) 
 end
 
 return Animation

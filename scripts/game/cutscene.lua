@@ -24,11 +24,11 @@ end
 
 function Cutscene:set_current_scene(scene_i) 
     if self.current_scene then
-        self.current_scene:exit(self.data)
+        self.current_scene:exit(self, self.data)
     end
     self.current_scene_i = scene_i
     self.current_scene = self.scenes[self.current_scene_i]
-    self.current_scene:enter(self.data)
+    self.current_scene:enter(self, self.data)
 
     self.timer:start(self.current_scene.duration)
 end
@@ -47,7 +47,7 @@ end
 
 function Cutscene:update(dt)
     if self.is_playing then
-        local skip_scene = (self.current_scene:update(self.data, dt) == true) or game.skip_scene_flag
+        local skip_scene = (self.current_scene:update(self, self.data, dt) == true) or game.skip_scene_flag
         if game.skip_scene_flag then
             game.skip_scene_flag = false
         end

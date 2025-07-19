@@ -64,7 +64,11 @@ function AnimatedSprite:update(dt)
     self.super.update(self, dt)
 
     if self.frame_timer:update(dt) then
-        self.frame_i = mod_plus_1(self.frame_i + 1, self.animation.frame_count)
+        if self.animation.looping then
+            self.frame_i = mod_plus_1(self.frame_i + 1, self.animation.frame_count)
+        else
+            self.frame_i = min(self.frame_i + 1, self.animation.frame_count)
+        end
         self:update_frame_sprite() 
     end
 end

@@ -111,6 +111,9 @@ local img_names = {
 	big_bug_1 =                "actors/enemies/big_bug_1",
 	big_chipper =              "actors/enemies/big_chipper",
 	big_chipper_activated =    "actors/enemies/big_chipper_activated",
+	bee =                      "actors/enemies/bee",
+	bee_1 =                    "actors/enemies/bee_1",
+	bee_2 =                    "actors/enemies/bee_2",
 	boomshroom_1 =             "actors/enemies/boomshroom_1",
 	boomshroom_2 =             "actors/enemies/boomshroom_2",
 	boomshroom_3 =             "actors/enemies/boomshroom_3",
@@ -141,6 +144,7 @@ local img_names = {
 	ceo_normal =               "actors/enemies/ceo_normal",
 	ceo_telegraph_arrow =      "actors/enemies/ceo_telegraph_arrow",
 	ceo_npc_idle =             "actors/enemies/ceo_npc_idle",
+	ceo_npc_clap_hand =        "actors/enemies/ceo_npc_clap_hand",
 	ceo_npc_shocked =          "actors/enemies/ceo_npc_shocked",
 	ceo_npc_airborne =         "actors/enemies/ceo_npc_airborne",
 	ceo_npc_jetpack =          "actors/enemies/ceo_npc_jetpack",
@@ -188,8 +192,6 @@ local img_names = {
 	mole_digging_1 =           "actors/enemies/mole_digging_1",
 	mole_telegraph_1 =         "actors/enemies/mole_telegraph_1",
 	mole_outside =             "actors/enemies/mole_outside",
-	mosquito1 =                "actors/enemies/mosquito1",
-	mosquito2 =                "actors/enemies/mosquito2",
 	motherboard =              "actors/enemies/motherboard",
 	motherboard_button =       "actors/enemies/motherboard_button",
 	motherboard_button_front = "actors/enemies/motherboard_button_front",
@@ -366,6 +368,7 @@ local img_names = {
 	spin_whoosh_5 =               "particles/spin_whoosh_5",
 
 	surprise_effect =             "particles/surprise_effect",
+	clap_effect =                 "particles/clap_effect",
 
 	-----------------------------------------------------
 	
@@ -441,6 +444,7 @@ local img_names = {
 	ground_floor_bucket_1 =              "level/props/ground_floor_bucket_1",
 	ground_floor_bucket_2 =              "level/props/ground_floor_bucket_2",
 	ground_floor_lamp =                  "level/props/ground_floor_lamp",
+	ground_floor_chcolate_mug =          "level/props/ground_floor_chcolate_mug",
 	ground_floor_cactus =                "level/props/ground_floor_cactus",
 	ground_floor_computer_left =         "level/props/ground_floor_computer_left",
 	ground_floor_computer_right =        "level/props/ground_floor_computer_right",

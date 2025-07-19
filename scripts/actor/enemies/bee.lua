@@ -13,12 +13,12 @@ local PHASE_ATTACK = "attack"
 local PHASE_TELEGRAPH_DURATION = 0.4
 
 function Bee:init(x, y)
-    Bee.super.init(self, x,y, images.mosquito1, 12, 16)
+    Bee.super.init(self, x,y, images.bee_1, 12, 16)
     self.name = "bee"
     self.life = 5
 
     self.anim_frame_len = 0.05
-    self.anim_frames = {images.mosquito1, images.mosquito2}
+    self.anim_frames = {images.bee_1, images.bee_2}
 
     self.phase = PHASE_CHASE
     self.attack_speed = 5000

@@ -16,16 +16,16 @@ function CutsceneScene:init(params)
     self.exit_func = param(params.exit, function(scene) end)
 end
 
-function CutsceneScene:enter(cutscene)
-    self:enter_func(cutscene)
+function CutsceneScene:enter(...)
+    self.enter_func(...)
 end
 
-function CutsceneScene:exit(cutscene)
-    self:exit_func(cutscene)
+function CutsceneScene:exit(...)
+    self.exit_func(...)
 end
 
-function CutsceneScene:update(cutscene, dt)
-    return self:update_func(cutscene, dt)
+function CutsceneScene:update(...)
+    return self.update_func(...)
 end
 
 return CutsceneScene

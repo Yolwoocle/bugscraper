@@ -1,29 +1,29 @@
 require "scripts.util"
-local backgrounds        = require "data.backgrounds"
-local enemies            = require "data.enemies"
-local cutscenes          = require "data.cutscenes"
-local images             = require "data.images"
+local backgrounds       = require "data.backgrounds"
+local enemies           = require "data.enemies"
+local cutscenes         = require "data.cutscenes"
+local images            = require "data.images"
 
-local Rect               = require "scripts.math.rect"
-local LevelGeometry      = require "scripts.level.level_geometry"
-local Wave               = require "scripts.level.wave"
-local BackroomCafeteria  = require "scripts.level.backroom.backroom_cafeteria"
+local Rect              = require "scripts.math.rect"
+local LevelGeometry     = require "scripts.level.level_geometry"
+local Wave              = require "scripts.level.wave"
+local BackroomCafeteria = require "scripts.level.backroom.backroom_cafeteria"
 local BackroomCEOOffice = require "scripts.level.backroom.backroom_ceo_office"
-local E                  = require "data.enemies"
+local E                 = require "data.enemies"
 
-local ElevatorW1 = require "scripts.level.elevator.elevator_w1"
-local ElevatorW2 = require "scripts.level.elevator.elevator_w2"
-local ElevatorW3 = require "scripts.level.elevator.elevator_w3"
+local ElevatorW1        = require "scripts.level.elevator.elevator_w1"
+local ElevatorW2        = require "scripts.level.elevator.elevator_w2"
+local ElevatorW3        = require "scripts.level.elevator.elevator_w3"
 
-local utf8 = require "utf8"
+local utf8              = require "utf8"
 
-RECT_ELEVATOR            = Rect:new(unpack(RECT_ELEVATOR_PARAMS))
-RECT_CAFETERIA           = Rect:new(unpack(RECT_CAFETERIA_PARAMS))
-RECT_CEO_OFFICE          = Rect:new(unpack(RECT_CEO_OFFICE_PARAMS))
+RECT_ELEVATOR           = Rect:new(unpack(RECT_ELEVATOR_PARAMS))
+RECT_CAFETERIA          = Rect:new(unpack(RECT_CAFETERIA_PARAMS))
+RECT_CEO_OFFICE         = Rect:new(unpack(RECT_CEO_OFFICE_PARAMS))
 
 local function new_cafeteria(params)
     params = params or {}
-    
+
     local run_func = params.run_func or function(...) end
     return Wave:new({
         floor_type = FLOOR_TYPE_CAFETERIA,
@@ -45,14 +45,14 @@ local function new_cafeteria(params)
         min = 1,
         max = 1,
         enemies = {
-            { E.UpgradeDisplay, 1, position = { 474+16, 181 }, ignore_position_clamp = true },
-            { E.UpgradeDisplay, 1, position = { 530+16, 181 }, ignore_position_clamp = true },
-            { E.UpgradeDisplay, 1, position = { 586+16, 181 }, ignore_position_clamp = true },
+            { E.UpgradeDisplay, 1, position = { 474 + 16, 181 }, ignore_position_clamp = true },
+            { E.UpgradeDisplay, 1, position = { 530 + 16, 181 }, ignore_position_clamp = true },
+            { E.UpgradeDisplay, 1, position = { 586 + 16, 181 }, ignore_position_clamp = true },
         },
 
         backroom = BackroomCafeteria,
         backroom_params = {
-            w1_ceo =    params.w1_ceo
+            ceo_info = params.ceo_info,
         },
     })
 end
@@ -107,16 +107,16 @@ local function get_w4_vines_points_func_1(x_offset)
 
         local iy = 0
         while iy < game.level.cabin_rect.by + 32 do
-            table.insert(pts, {center - x_offset + random_neighbor(8), iy})
+            table.insert(pts, { center - x_offset + random_neighbor(8), iy })
             iy = iy + random_range(10, 40)
         end
-        table.insert(pts, {center - x_offset + random_neighbor(8), game.level.cabin_rect.by + 32})
-        
+        table.insert(pts, { center - x_offset + random_neighbor(8), game.level.cabin_rect.by + 32 })
+
         return pts
     end
 end
 
-local function parse_waves_table(waves) 
+local function parse_waves_table(waves)
     local parsed_waves = {}
 
     local current_world = nil
@@ -126,10 +126,10 @@ local function parse_waves_table(waves)
     for i = 1, #waves do
         local wave_params = waves[i]
 
-        current_world =      wave_params.world or      current_world     
+        current_world = wave_params.world or current_world
         current_background = wave_params.background or current_background
-        current_elevator =   wave_params.elevator or   current_elevator  
-        current_music =      wave_params.music or      current_music     
+        current_elevator = wave_params.elevator or current_elevator
+        current_music = wave_params.music or current_music
 
         wave_params.world = current_world
         wave_params.background = current_background
@@ -139,14 +139,14 @@ local function parse_waves_table(waves)
         parsed_waves[i] = new_wave(wave_params)
     end
     return parsed_waves
-end 
+end
 
 local waves = parse_waves_table {
     {
         min = 5,
         max = 5,
         enemies = {
-            { E.Larva, 3, entrances={"main"} },
+            { E.Larva, 3, entrances = { "main" } },
             -- { E.Fly,   3 },
         },
         music = "w1",
@@ -155,7 +155,7 @@ local waves = parse_waves_table {
         title = get_world_name(1),
         title_color = COL_LIGHTEST_GRAY,
         title_outline_color = COL_BLACK_BLUE,
- 
+
         elevator = ElevatorW1,
     },
 
@@ -165,7 +165,7 @@ local waves = parse_waves_table {
         min = 4,
         max = 6,
         enemies = {
-            { E.Woodlouse, 2, entrances={"main"} },
+            { E.Woodlouse, 2, entrances = { "main" } },
         },
     },
 
@@ -173,9 +173,9 @@ local waves = parse_waves_table {
         min = 4,
         max = 6,
         enemies = {
-            { E.Larva,     2, entrances={"main"} },
-            { E.Fly,       3, entrances={"main"} },
-            { E.Woodlouse, 2, entrances={"main"} },
+            { E.Larva,     2, entrances = { "main" } },
+            { E.Fly,       3, entrances = { "main" } },
+            { E.Woodlouse, 2, entrances = { "main" } },
         },
     },
 
@@ -353,7 +353,7 @@ local waves = parse_waves_table {
         cutscene = cutscenes.dung_boss_enter,
     },
 
-    new_cafeteria({w1_ceo = true}),
+    new_cafeteria({ ceo_info = 1 }),
 
 
 
@@ -389,8 +389,8 @@ local waves = parse_waves_table {
         max = 7,
 
         enemies = {
-            { E.Larva,     2 },
-            { E.Bee,       2 },
+            { E.Larva,  2 },
+            { E.Bee,    2 },
             { E.Stabee, 4 },
         },
     },
@@ -443,7 +443,7 @@ local waves = parse_waves_table {
         enemies = {
             { E.Bee,         3 },
             { E.HoneypotAnt, 4 },
-            { E.Stabee,   3 },
+            { E.Stabee,      3 },
         },
         fixed_enemies = {
             { E.FlyingSpawner, 1 },
@@ -458,7 +458,7 @@ local waves = parse_waves_table {
             { E.SnailShelled, 1 },
             { E.Bee,          3 },
             { E.HoneypotAnt,  1 },
-            { E.Stabee,    2 },
+            { E.Stabee,       2 },
             { E.Larva,        2 },
         },
     },
@@ -487,7 +487,7 @@ local waves = parse_waves_table {
         enemies = {
             { E.DrillBee, 3 },
         },
-        
+
         music = "w2",
     },
 
@@ -521,7 +521,7 @@ local waves = parse_waves_table {
         max = 7,
 
         enemies = {
-            { E.Stabee,  10 },
+            { E.Stabee,      10 },
             { E.HoneypotAnt, 2 },
         },
     },
@@ -532,7 +532,7 @@ local waves = parse_waves_table {
 
         enemies = {
             { E.Bee,        20 },
-            { E.Stabee,  10 },
+            { E.Stabee,     10 },
             { E.Boomshroom, 20 },
             { E.DrillBee,   30 },
         },
@@ -560,8 +560,8 @@ local waves = parse_waves_table {
         max = 7,
 
         enemies = {
-            { E.Bee,       3 },
-            { E.DrillBee,  3 },
+            { E.Bee,      3 },
+            { E.DrillBee, 3 },
         },
     },
 
@@ -573,7 +573,7 @@ local waves = parse_waves_table {
         enemies = {
             { E.Larva,       3 },
             { E.Bee,         3 },
-            { E.Stabee,   3 },
+            { E.Stabee,      3 },
             { E.DrillBee,    3 },
             { E.HoneypotAnt, 3 },
             { E.Boomshroom,  3 },
@@ -585,7 +585,7 @@ local waves = parse_waves_table {
         min = 1,
         max = 1,
         enemies = {
-            { E.BeeBoss, 1, position = { 240-16, 200 } },
+            { E.BeeBoss, 1, position = { 240 - 16, 200 } },
         },
         music = "miniboss",
 
@@ -600,7 +600,7 @@ local waves = parse_waves_table {
         cutscene = cutscenes.bee_boss_enter,
     },
 
-    new_cafeteria({run_func = function()
+    new_cafeteria({ run_func = function()
         for _, a in pairs(game.actors) do
             if a.name == "timed_spikes" then
                 a:remove()
@@ -608,7 +608,9 @@ local waves = parse_waves_table {
         end
 
         game.is_light_on = true
-    end}),
+    end,
+        ceo_info = 2,
+    }),
 
     ------
 
@@ -618,7 +620,7 @@ local waves = parse_waves_table {
     ----------------------------------------------------------------------------------------------------------
     ----------------------------------------------------------------------------------------------------------
 
-    -- Floor 
+    -- Floor
     {
         min = 6,
         max = 6,
@@ -774,9 +776,9 @@ local waves = parse_waves_table {
 
     ------------------------------------------------
     -- Cafeteria
-    new_cafeteria({run_func = function()
+    new_cafeteria({ run_func = function()
         game.actor_manager:kill_actors_with_name("electric_rays")
-    end}),
+    end }),
     ------------------------------------------------
 
     {
@@ -1149,7 +1151,7 @@ local waves = parse_waves_table {
             { E.ArumTitanBoss, 1, position = {CANVAS_WIDTH/2 - 16, CANVAS_HEIGHT/2}},
         },
 
-        cutscene = cutscenes.arum_titan_enter, 
+        cutscene = cutscenes.arum_titan_enter,
         run = function(self, level)
             for _, actor in pairs(game.actors) do
                 if actor.name == "pendulum" then
@@ -1160,12 +1162,12 @@ local waves = parse_waves_table {
     },
     --]]
     --[[
-    
+
     ---------------------------------------------
     new_cafeteria(),
     ---------------------------------------------
 
-    
+
     ----------------------------------------------------------------------------------------------------------
     ----------------------------------------------------------------------------------------------------------
     --- W5: executive
@@ -1183,7 +1185,7 @@ local waves = parse_waves_table {
         elevator_layers = {
             ["cabin_bg"] = images.cabin_bg_w2,
             ["walls"] = images.cabin_walls_w2,
-            
+
             ["bg_fan"] = true,
             ["bg_grid"] = false,
         },
@@ -1241,10 +1243,10 @@ local waves = parse_waves_table {
         },
 
         fixed_enemies = {
-            { 
-                E.Pendulum, 1, 
-                args = {pi/3, 200, 1}, 
-                position = {CANVAS_WIDTH/2, 3*16} 
+            {
+                E.Pendulum, 1,
+                args = {pi/3, 200, 1},
+                position = {CANVAS_WIDTH/2, 3*16}
             },
         },
     },
@@ -1321,7 +1323,7 @@ local waves = parse_waves_table {
     --         { E.CloudEnemy, 10 },
     --     },
     -- },
-    
+
     -- {
     --     min = 3,
     --     max = 3,
@@ -1330,7 +1332,7 @@ local waves = parse_waves_table {
     --         { E.CloudEnemy, 10 },
     --     },
     -- },
-    
+
     -- {
     --     min = 3,
     --     max = 3,
@@ -1339,7 +1341,7 @@ local waves = parse_waves_table {
     --         { E.CloudEnemy, 10 },
     --     },
     -- },
-    
+
     -- {
     --     min = 3,
     --     max = 3,
@@ -1348,7 +1350,7 @@ local waves = parse_waves_table {
     --         { E.CloudEnemy, 10 },
     --     },
     -- },
-    
+
     -- {
     --     min = 3,
     --     max = 3,
@@ -1357,7 +1359,7 @@ local waves = parse_waves_table {
     --         { E.CloudEnemy, 10 },
     --     },
     -- },
-    
+
     -- {
     --     min = 3,
     --     max = 3,
@@ -1366,7 +1368,7 @@ local waves = parse_waves_table {
     --         { E.CloudEnemy, 10 },
     --     },
     -- },
-    
+
     -- {
     --     min = 3,
     --     max = 3,
@@ -1375,7 +1377,7 @@ local waves = parse_waves_table {
     --         { E.CloudEnemy, 10 },
     --     },
     -- },
-    
+
     -- {
     --     min = 3,
     --     max = 3,
@@ -1398,7 +1400,7 @@ local waves = parse_waves_table {
         roll_type = WAVE_ROLL_TYPE_FIXED,
         music = "off",
 
-        run = function(self, level) 
+        run = function(self, level)
             for _, actor in pairs(game.actors) do
                 if actor.name == "poison_cloud" then
                     actor.lifespan = 1
@@ -1418,14 +1420,14 @@ local waves = parse_waves_table {
         backroom = BackroomCEOOffice
     },
 
-    
+
     {
         roll_type = WAVE_ROLL_TYPE_FIXED,
 
         min = 1,
         max = 1,
         enemies = {
-            {E.FinalBoss, 1, position = {87*16, 14*16}}
+            { E.FinalBoss, 1, position = { 87 * 16, 14 * 16 } }
         },
 
         run = function(self, level)
