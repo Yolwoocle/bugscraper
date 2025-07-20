@@ -42,7 +42,6 @@ function GameUI:init(game, is_visible)
 	self.fury_visual_width = 0
 	self.fury_flash_timer = 0
 	self.fury_flash_max_timer = 0.2
-	self.fury_is_flashing = false
 
 	self.offscreen_indicators_enabled = true
 	
@@ -65,6 +64,7 @@ function GameUI:init(game, is_visible)
 	self.dark_overlay_alpha_target = 0.0
 
 	self.boss_bar_value = 1.0
+	self.boss_bar_buffer_canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
 
 	self.t = 0
 end
@@ -440,23 +440,27 @@ end
 --- FURY
 
 function GameUI:update_fury(dt)
-	local target = math.max((game.level.fury_bar - game.level.fury_threshold) * 32, 0)
+	local ratio = (game.level.fury_bar - game.level.fury_threshold) / (game.level.fury_max - game.level.fury_threshold)
+	local w = 64
+	local target = math.max(ratio * w, 0)
+	local old_fury_visual_width = self.fury_visual_width
 	self.fury_visual_width = lerp(self.fury_visual_width, target, 0.3)
 	if math.abs(self.fury_visual_width) <= 1 then
 		self.fury_visual_width = 0
 	end
+	self.is_fury_bar_increasing = self.fury_visual_width - old_fury_visual_width > 0.1 
 
 	self.fury_flash_timer = self.fury_flash_timer - dt
 	if self.fury_flash_timer < 0.0 then
 		self.fury_flash_timer = self.fury_flash_timer + self.fury_flash_max_timer 
 	end
-	self.fury_is_flashing = (self.fury_flash_timer < self.fury_flash_max_timer/2)
 end
 
 
 function GameUI:draw_fury()
 	-- print_centered_outline(nil, nil, concat(round(game.level.fury_bar, 1), " / ", game.level.fury_max, " (", game.level.fury_threshold, ")"), CANVAS_WIDTH/2, 24)
 	if self.fury_visual_width <= 0 then
+		self:draw_post_fury_effect()
 		return
 	end	
 	
@@ -464,21 +468,59 @@ function GameUI:draw_fury()
 	local y = CANVAS_HEIGHT - 12
 	local w = math.min(self.fury_visual_width, math.huge)
 	local h = 8
-	-- local col = ternary(self.fury_is_flashing, COL_YELLOW_ORANGE, COL_ORANGE)
 
-	local col, text_col = COL_YELLOW_ORANGE, COL_LIGHT_YELLOW
+	local light_col, col, shad_col = COL_LIGHT_YELLOW, COL_YELLOW_ORANGE, COL_ORANGE
 	if game.level.has_energy_drink then
-		col, text_col = COL_MID_BLUE, COL_LIGHT_BLUE
+		light_col, col, shad_col = COL_LIGHT_BLUE, COL_MID_BLUE, COL_DARK_BLUE
 	end
 	
-	rect_color(col, "fill", CANVAS_WIDTH/2 - w, y-h/2, w*2, h)
-	print_wavy_centered_outline_text(
-		text_col, nil, 
-		Text:text("game.combo", game.level.fury_combo), 
-		-- concat(game.level.fury_combo), 
-		CANVAS_WIDTH/2, y-h/2, nil, self.t, 2, 9, 0.8
-	)
+	exec_on_canvas(self.boss_bar_buffer_canvas, function()
+		love.graphics.clear()
+		rect_color(self.is_fury_bar_increasing and COL_WHITE or shad_col,  "fill", CANVAS_WIDTH/2 - w*1.5,  y-h*0.5*0.5,  w*2*1.5,  h*0.5)
+		rect_color(self.is_fury_bar_increasing and COL_WHITE or col,       "fill", CANVAS_WIDTH/2 - w*1.25, y-h*0.75*0.5, w*2*1.25, h*0.75)
+		rect_color(self.is_fury_bar_increasing and COL_WHITE or light_col, "fill", CANVAS_WIDTH/2 - w,      y-h/2,        w*2,      h)
+		rect_color(self.is_fury_bar_increasing and COL_WHITE or col,       "fill", CANVAS_WIDTH/2 - w,      y+h/2-2,      w*2,      2)
+	end)
 
+	for ox=-1, 1 do
+		for oy=-1, 1 do
+			exec_color(COL_BLACK_BLUE, function()		
+				love.graphics.draw(self.boss_bar_buffer_canvas, ox, oy)
+			end)
+		end
+	end
+	love.graphics.draw(self.boss_bar_buffer_canvas, 0, 0)
+
+	exec_on_canvas(self.boss_bar_buffer_canvas, function()
+		love.graphics.clear()
+		print_wavy_centered_outline_text(
+			shad_col, shad_col, 
+			Text:text("game.combo", game.level.fury_combo), 
+			CANVAS_WIDTH/2, y-h/2, nil, self.t+0.2, 2, 9, 0.8
+		)
+		print_wavy_centered_outline_text(
+			col, col, 
+			Text:text("game.combo", game.level.fury_combo), 
+			CANVAS_WIDTH/2, y-h/2, nil, self.t+0.1, 2, 9, 0.8
+		)
+		print_wavy_centered_outline_text(
+			COL_WHITE, COL_TRANSPARENT, 
+			Text:text("game.combo", game.level.fury_combo), 
+			CANVAS_WIDTH/2, y-h/2, nil, self.t, 2, 9, 0.8
+		)
+	end)
+	
+	for ox=-1, 1 do
+		for oy=-1, 1 do
+			exec_color(COL_BLACK_BLUE, function()		
+				love.graphics.draw(self.boss_bar_buffer_canvas, ox, oy)
+			end)
+		end
+	end
+	love.graphics.draw(self.boss_bar_buffer_canvas, 0, 0)
+end
+
+function GameUI:draw_post_fury_effect()
 end
 
 function GameUI:draw_boss_bar()

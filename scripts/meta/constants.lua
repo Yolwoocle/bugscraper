@@ -136,6 +136,7 @@ COL_GREEN = {0, 1, 0, 1}
 COL_CYAN = {0, 1, 1, 1}
 COL_BLUE = {0, 0, 1, 1}
 COL_MAGENTA = {1, 0, 1, 1}
+COL_TRANSPARENT = {1, 1, 1, 0}
 
 -- Reference is EDG32 palette
 COL_VERY_DARK_GRAY = color(0x262b44)
