@@ -139,7 +139,11 @@ function GameUI:update_boss_bar(dt)
 		self.boss_bar_value = 1
 		return
 	end
+
+	local old_val = self.boss_bar_value
 	self.boss_bar_value = lerp(self.boss_bar_value, game:get_boss().life / game:get_boss().max_life, 0.3)
+
+	self.boss_bar_is_changing = (math.abs(self.boss_bar_value - old_val) > 0.001)
 end
 
 function GameUI:update_floating_text(dt)
@@ -484,9 +488,13 @@ function GameUI:draw_boss_bar()
 	end
 
 	local w = 256
+	local col = nil
+	if self.boss_bar_is_changing then
+		col = COL_WHITE
+	end
 	Ui:draw_progress_bar(CANVAS_CENTER[1] - w/2, 8, w, 4, 
 						self.boss_bar_value, 1, 
-						COL_LIGHT_RED, COL_BLACK_BLUE, COL_DARK_RED, "")
+						col or COL_LIGHT_RED, COL_BLACK_BLUE, col or COL_DARK_RED, "")
 end
 
 return GameUI
