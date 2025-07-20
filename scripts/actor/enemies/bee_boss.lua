@@ -17,7 +17,10 @@ function BeeBoss:init(x, y)
     BeeBoss.super.init(self, x,y, images.bee_boss_alt_1, 32, 32)
     self.name = "bee_boss"
 
-    self.life = 200
+    self.is_boss = true
+
+    self:set_max_life(200)
+
     self.stomps = math.huge
     self.is_stompable = true
     self.damage_on_stomp = 10

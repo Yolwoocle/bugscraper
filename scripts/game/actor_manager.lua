@@ -57,6 +57,9 @@ function ActorManager:new_actor(actor)
     
 	self.sort_actors_flag = true
 	table.insert(self.actors, actor)
+
+	game:on_new_actor(actor)
+
 	return actor
 end
 

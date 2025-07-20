@@ -95,6 +95,8 @@ function Enemy:init_enemy(x,y, img, w,h)
 	self.is_pushable = true
 	self.is_knockbackable = true -- Multiplicator when knockback is applied to
 
+    self.is_boss = false
+
 	self.damage = 1
 	self.knockback = 1200
 	self.self_knockback_mult = 1 -- Basically weight (?)

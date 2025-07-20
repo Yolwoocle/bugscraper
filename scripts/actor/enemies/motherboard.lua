@@ -29,6 +29,8 @@ function Motherboard:init(x, y)
     self:init_enemy(x, y, images.motherboard, 24 * 16, 4)
     self.name = "motherboard"
 
+    self.is_boss = true
+
     self.damage = 0
     self.spr_base_ox = 0
     self.spr_base_oy = 10

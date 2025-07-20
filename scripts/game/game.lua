@@ -165,6 +165,8 @@ function Game:new_game(params)
 	self.actors = {}
 	self.actor_manager = ActorManager:new(self, self.actors)
 
+	self.boss = nil
+
 	-- Init players
 	local px, py
 	local spacing = 16
@@ -753,6 +755,16 @@ function Game:new_actor(actor, buffer_enemy)
 	return self.actor_manager:new_actor(actor, buffer_enemy)
 end
 
+function Game:on_new_actor(actor)
+	if actor and actor.is_boss then
+		self.boss = actor
+	end
+end
+
+function Game:get_boss()
+	return self.boss
+end
+
 function Game:on_enemy_damage(enemy, n, damager)
 	self.level:on_enemy_damage(enemy, n, damager)
 end
@@ -770,6 +782,12 @@ function Game:on_kill(actor)
 
 	if actor.is_player then
 		self:on_player_death(actor)
+	end
+end
+
+function Game:on_remove(actor)
+	if actor and actor.is_boss then
+		self.boss = nil
 	end
 end
 

@@ -15,7 +15,9 @@ function Dung:init(x, y, spr, w, h)
     self.name = "dung"
     self.follow_player = false
 
-    self.life = 90
+    self.is_boss = true
+
+    self:set_max_life(90)
 
     self.friction_x = 0.999
     self.speed_x = 1

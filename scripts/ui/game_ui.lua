@@ -64,6 +64,8 @@ function GameUI:init(game, is_visible)
 	self.dark_overlay_alpha = 0.0
 	self.dark_overlay_alpha_target = 0.0
 
+	self.boss_bar_value = 1.0
+
 	self.t = 0
 end
 
@@ -79,6 +81,7 @@ function GameUI:update(dt)
 	self:update_fury(dt)
 	self:update_convention_video(dt)
 	self:update_title(dt)
+	self:update_boss_bar(dt)
 	self.dark_overlay_alpha = move_toward(self.dark_overlay_alpha, self.dark_overlay_alpha_target, dt)
 
 	self.t = self.t + dt
@@ -131,6 +134,14 @@ function GameUI:update_title(dt)
 	end
 end
 
+function GameUI:update_boss_bar(dt)
+	if not game:get_boss() then
+		self.boss_bar_value = 1
+		return
+	end
+	self.boss_bar_value = lerp(self.boss_bar_value, game:get_boss().life / game:get_boss().max_life, 0.3)
+end
+
 function GameUI:update_floating_text(dt)
 	self.floating_text_y = lerp(self.floating_text_y, self.floating_text_target_y, 0.05)
 end
@@ -162,6 +173,7 @@ function GameUI:draw()
 	self:draw_player_previews()
 	self:draw_cinematic_bars()
 	self:draw_fury()
+	self:draw_boss_bar()
 	
 	self:draw_titles()
 	if self.dark_overlay_alpha > 0 then
@@ -330,7 +342,7 @@ end
 function GameUI:draw_upgrades()
 	local item_size = 20
 	local i = 1
-	local y = 4 + item_size/2
+	local y = CANVAS_HEIGHT - 4 - item_size/2
 	for _, upgrade in pairs(game.upgrades) do
 		local x = self:get_upgrade_preview_position(i)
 		draw_centered(upgrade.sprite, x, y)
@@ -443,7 +455,7 @@ function GameUI:draw_fury()
 	if self.fury_visual_width <= 0 then
 		return
 	end	
-
+	
 	-- local y = 12
 	local y = CANVAS_HEIGHT - 12
 	local w = math.min(self.fury_visual_width, math.huge)
@@ -454,7 +466,7 @@ function GameUI:draw_fury()
 	if game.level.has_energy_drink then
 		col, text_col = COL_MID_BLUE, COL_LIGHT_BLUE
 	end
-
+	
 	rect_color(col, "fill", CANVAS_WIDTH/2 - w, y-h/2, w*2, h)
 	print_wavy_centered_outline_text(
 		text_col, nil, 
@@ -463,6 +475,18 @@ function GameUI:draw_fury()
 		CANVAS_WIDTH/2, y-h/2, nil, self.t, 2, 9, 0.8
 	)
 
+end
+
+function GameUI:draw_boss_bar()
+	local boss = game:get_boss()
+	if not boss then
+		return
+	end
+
+	local w = 256
+	Ui:draw_progress_bar(CANVAS_CENTER[1] - w/2, 8, w, 4, 
+						self.boss_bar_value, 1, 
+						COL_LIGHT_RED, COL_BLACK_BLUE, COL_DARK_RED, "")
 end
 
 return GameUI

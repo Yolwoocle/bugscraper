@@ -94,12 +94,6 @@ function ElectricArc:set_segment(ax_or_seg, ay, bx, by)
 end
 
 function ElectricArc:update(dt)
-    self.debug_values[1] = ""
-    self.debug_values[2] = ""
-    self.debug_values[3] = ""
-    self.debug_values[4] = ""
-    self.debug_values[5] = ""
-    self.debug_values[6] = concat(round(self.segment.ax), " ", round(self.segment.ay), " ", round(self.segment.bx), " ", round(self.segment.by))
     ElectricArc.super.update(self, dt)
 
     -- Timers

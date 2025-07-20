@@ -432,6 +432,7 @@ function Actor:remove()
 			self.vehicle:remove_rider()
 		end
 	end
+	game:on_remove(self)
 end
 
 function Actor:final_remove()
