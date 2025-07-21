@@ -164,7 +164,7 @@ return {
             feedback = "FEEDBACK",
             quit = "SAIR",
             website = "WEBSITE OFICIAL",
-            discord = "ENTRAR NO DISCORD",
+            discord = "DISCORD",
         },
         options = {
             title = "OPÇÕES",

@@ -172,7 +172,8 @@ return {
 			feedback = "COMENTARIOS",
 			quit = "SALIR",
 			website = "SITIO OFICIAL",
-			discord = "UNIRSE AL DISCORD",
+			discord = "DISCORD",
+            github = "GITHUB", -- ADDED
 		},
 		options = {
 			title = "OPCIONES",

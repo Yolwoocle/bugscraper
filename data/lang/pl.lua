@@ -176,7 +176,7 @@ return {
             feedback = "ZOSTAW OPINIE",
             quit = "WYJDŹ",
             website = "OFICJALNA STRONA",
-            discord = "DOŁĄCZ NA DISCORDZIE",
+            discord = "DISCORD",
             twitter = "ZAOBSERWUJ NA TWITTERZE (𝕏)",
         },
         options = {

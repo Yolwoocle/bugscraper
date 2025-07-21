@@ -193,7 +193,7 @@ return {
             feedback = "FEEDBACK",
             quit = "QUIT",
             website = "OFFICIAL WEBSITE",
-            discord = "JOIN ON DISCORD",
+            discord = "DISCORD",
             github = "GITHUB", -- ADDED
         },
         options = {
