@@ -42,6 +42,11 @@ function GameUI:init(game, is_visible)
 	self.fury_visual_width = 0
 	self.fury_flash_timer = 0
 	self.fury_flash_max_timer = 0.2
+	self.fury_text_oy = 0.0
+	self.fury_text_wave_height = 2.0
+	self.displayed_combo = 0 
+	self.time_since_fury_end = math.huge
+	self.max_time_since_fury_end = 5.0
 
 	self.offscreen_indicators_enabled = true
 	
@@ -454,15 +459,29 @@ function GameUI:update_fury(dt)
 	if self.fury_flash_timer < 0.0 then
 		self.fury_flash_timer = self.fury_flash_timer + self.fury_flash_max_timer 
 	end
+
+	-- if fury ended
+	local old_is_in_combo = self.is_in_combo
+	if game.level.fury_bar < game.level.fury_threshold then
+		self.is_in_combo = false
+		self.fury_text_oy = lerp(self.fury_text_oy, -4, 0.1)
+		self.displayed_combo = game.level.last_fury_combo
+		self.time_since_fury_end = self.time_since_fury_end + dt
+	else
+		self.is_in_combo = true
+		self.fury_text_oy = 0
+		self.displayed_combo = game.level.fury_combo
+		self.time_since_fury_end = 0
+	end
+
+	if not self.is_in_combo and old_is_in_combo then
+		self.fury_text_oy = 32
+	end
 end
 
 
 function GameUI:draw_fury()
 	-- print_centered_outline(nil, nil, concat(round(game.level.fury_bar, 1), " / ", game.level.fury_max, " (", game.level.fury_threshold, ")"), CANVAS_WIDTH/2, 24)
-	if self.fury_visual_width <= 0 then
-		self:draw_post_fury_effect()
-		return
-	end	
 	
 	-- local y = 12
 	local y = CANVAS_HEIGHT - 12
@@ -471,7 +490,7 @@ function GameUI:draw_fury()
 
 	local light_col, col, shad_col = COL_LIGHT_YELLOW, COL_YELLOW_ORANGE, COL_ORANGE
 	if game.level.has_energy_drink then
-		light_col, col, shad_col = COL_LIGHT_BLUE, COL_MID_BLUE, COL_DARK_BLUE
+		light_col, col, shad_col = COL_PINK, COL_PURPLE, COL_DARK_PURPLE
 	end
 	
 	exec_on_canvas(self.boss_bar_buffer_canvas, function()
@@ -482,45 +501,42 @@ function GameUI:draw_fury()
 		rect_color(self.is_fury_bar_increasing and COL_WHITE or col,       "fill", CANVAS_WIDTH/2 - w,      y+h/2-2,      w*2,      2)
 	end)
 
-	for ox=-1, 1 do
-		for oy=-1, 1 do
-			exec_color(COL_BLACK_BLUE, function()		
-				love.graphics.draw(self.boss_bar_buffer_canvas, ox, oy)
-			end)
-		end
-	end
-	love.graphics.draw(self.boss_bar_buffer_canvas, 0, 0)
+	draw_with_outline(COL_BLACK_BLUE, "square", self.boss_bar_buffer_canvas, 0, 0)
 
 	exec_on_canvas(self.boss_bar_buffer_canvas, function()
+		local text = Text:text("game.combo", self.displayed_combo)
+		if self.is_in_combo then
+			text = tostring(self.displayed_combo)
+		end
+
 		love.graphics.clear()
 		print_wavy_centered_outline_text(
 			shad_col, shad_col, 
-			Text:text("game.combo", game.level.fury_combo), 
-			CANVAS_WIDTH/2, y-h/2, nil, self.t+0.2, 2, 9, 0.8
+			text, 
+			CANVAS_WIDTH/2, y-h/2+self.fury_text_oy, nil, self.t+0.14, self.fury_text_wave_height, 9, 0.8
 		)
 		print_wavy_centered_outline_text(
 			col, col, 
-			Text:text("game.combo", game.level.fury_combo), 
-			CANVAS_WIDTH/2, y-h/2, nil, self.t+0.1, 2, 9, 0.8
+			text, 
+			CANVAS_WIDTH/2, y-h/2+self.fury_text_oy, nil, self.t+0.07, self.fury_text_wave_height, 9, 0.8
 		)
 		print_wavy_centered_outline_text(
 			COL_WHITE, COL_TRANSPARENT, 
-			Text:text("game.combo", game.level.fury_combo), 
-			CANVAS_WIDTH/2, y-h/2, nil, self.t, 2, 9, 0.8
+			text, 
+			CANVAS_WIDTH/2, y-h/2+self.fury_text_oy, nil, self.t, self.fury_text_wave_height, 9, 0.8
 		)
 	end)
-	
-	for ox=-1, 1 do
-		for oy=-1, 1 do
-			exec_color(COL_BLACK_BLUE, function()		
-				love.graphics.draw(self.boss_bar_buffer_canvas, ox, oy)
-			end)
-		end
-	end
-	love.graphics.draw(self.boss_bar_buffer_canvas, 0, 0)
-end
 
-function GameUI:draw_post_fury_effect()
+	local show_text = true
+	if self.time_since_fury_end > self.max_time_since_fury_end then
+		show_text = false
+	elseif self.time_since_fury_end > self.max_time_since_fury_end *0.75 then
+		show_text = (self.time_since_fury_end % 0.1) < 0.05
+	end
+	
+	if show_text then
+		draw_with_outline(COL_BLACK_BLUE, "square", self.boss_bar_buffer_canvas, 0, 0)
+	end
 end
 
 function GameUI:draw_boss_bar()

@@ -116,7 +116,7 @@ function Level:init(game, backroom)
 	self.fury_bar_deactivate_debuff = 5.0
 	self.fury_threshold = 3.0
 	self.def_fury_max = 8.0
-	self.fury_damage_malus = 5.0
+	self.fury_damage_malus = 8.0
 	self.fury_max = self.def_fury_max
 	self.fury_speed = 0.9
 
@@ -864,11 +864,8 @@ function Level:on_fury_activate()
 end
 
 function Level:on_fury_deactivate()
+	self.last_fury_combo = self.fury_combo
 	self.fury_bar = self.fury_bar - self.fury_bar_deactivate_debuff
-
-	Particles:push_layer(PARTICLE_LAYER_HUD)
-	Particles:word(CANVAS_WIDTH/2, CANVAS_HEIGHT + 34, Text:text("game.combo", self.fury_combo), COL_LIGHT_YELLOW, 1)
-	Particles:pop_layer()
 	self.fury_combo = 0
 end
 
