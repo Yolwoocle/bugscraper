@@ -4,13 +4,27 @@
 
 - **Added**: Added a new easter egg 👀 
 - **Change**: You can now use keyboard inputs to navigate menus even if no keyboard user is present
+- **Change**: Added visual effect to ghosts' spinning
+- **Change**: Slightly increased wall sliding stamina limit
+- **Change**: Weapons and hearts will always render in front of enemies
+- **Fix**: Fixed minor visual artifact that sometimes happened when enemies spawn from the elevator door
+- **Added**: Added two small animations on floors 20 and 40. I'll let you discover them... 
+- **Change**: Slight adjustments to dept. 2 waves to make them feel less punishing 
+- **Change**: Minor tweak to splash screen graphic
+- **Change**: Slight improvements to some backgrounds
+- **Fix**: Fixed bug where the 3D graphics of the Comball would not appear at the right location while in the elevator door
+- **Change**: Renamed "retry" option to "return to ground floor"
+- **Change**: Changed feedback menu
+- **Added**: Boss bars!
+- **Change**: Minor tweaks to bee boss (temporary name)
+- **Change**: Various changes to combos. They are easier to start and keep, and the visuals have received a glow-up
 
 ### 0.7.2
 (*2025-07-04*)
 
 - **Fix**: Fixed issue where a certain easter egg would crash the game
 - **Fix**: Removed dept. 4 (planned for a future update) 
-- **Fix**: Linux version is now correctly supported
+- **Fix**: Linux version is now correctly supported on Steam
 
 ### 0.7.1
 (*2025-07-03*)
