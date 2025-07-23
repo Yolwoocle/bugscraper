@@ -1,6 +1,7 @@
 # Bugscraper changelog
 
 ### 0.8
+(*2025-07-23*)
 
 - **Change**: You can now use keyboard inputs to navigate menus even if no keyboard player joined the game
 - **Change**: Slightly increased wall sliding stamina limit
@@ -22,6 +23,7 @@ Misc
 - **Change**: Renamed "retry" option to "return to ground floor"
 - **Change**: Changed feedback menu
 - **Change**: Minor tweaks to bee boss (temporary name)
+- **Change**: Buttons are no longer selectable during the game over animation
 
 
 ### 0.7.2
