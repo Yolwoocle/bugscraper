@@ -80,14 +80,20 @@ local game_over_items       = {
                     item.text = concat(shown_xp)
                 end
 
-                -- Finish animation 
+                -- Finish animation
                 if item.augment_xp_delay <= 0 and (
                     shown_level_threshold == math.huge or
                     (actual_level == item.shown_level and math.abs(item.value - Metaprogression:get_xp()) < 0.1)
                 ) then
-                    game.has_finished_game_over_animation = true
+                    if not game.has_finished_game_over_animation then
+                        game.has_finished_game_over_animation = true
+                    end 
                 end
-            end, 
+
+                if game.has_finished_game_over_animation and not game.menu_manager.sel_item then
+                    game.menu_manager:set_selection(1, true)
+                end
+            end,
             init_value = function(item)
                 local threshold = Metaprogression:get_xp_level_threshold(Metaprogression.old_xp_level)
                 item.value = Metaprogression.old_xp
@@ -110,24 +116,31 @@ local game_over_items       = {
         }
     },
     { "" },
-    { "🔄 {menu.game_over.quick_restart}", function(item)
-        if game.has_finished_game_over_animation then
-            game.has_seen_controller_warning = true
-            game:new_game({ quick_restart = true })
+    { "🔄 {menu.game_over.quick_restart}",
+        function(item)
+            if game.has_finished_game_over_animation then
+                game.has_seen_controller_warning = true
+                game:new_game({ quick_restart = true })
+            end
+        end,
+        function(item)
+            item.is_selectable = game.has_finished_game_over_animation
+            -- item.is_selectable = not Options:get("convention_mode")
+            item.is_visible = not Options:get("convention_mode")
         end
-    end,
-    function(item)
-        item.is_selectable = not Options:get("convention_mode")
-        item.is_visible =    not Options:get("convention_mode")
-    end
     },
-    { "▶ {menu.game_over.continue}", function(item)
-        -- scotch
-        if game.has_finished_game_over_animation then
-            game.has_seen_controller_warning = true
-            game:new_game()
-        end
-    end },
+    { "▶ {menu.pause.return_to_ground_floor}",
+        function(item)
+            -- scotch
+            if game.has_finished_game_over_animation then
+                game.has_seen_controller_warning = true
+                game:new_game()
+            end
+        end,
+        function(item)
+            item.is_selectable = game.has_finished_game_over_animation
+        end,
+    },
 }
 if DEMO_BUILD then
     table.insert(game_over_items,
@@ -140,7 +153,8 @@ end
 local GameOverMenu = Menu:inherit()
 
 function GameOverMenu:init(game)
-    GameOverMenu.super.init(self, game, "{menu.game_over.title}", game_over_items, DEFAULT_MENU_BG_COLOR, PROMPTS_GAME_OVER, nil)
+    GameOverMenu.super.init(self, game, "{menu.game_over.title}", game_over_items, DEFAULT_MENU_BG_COLOR,
+        PROMPTS_GAME_OVER, nil)
 
     self.is_backable = false
 

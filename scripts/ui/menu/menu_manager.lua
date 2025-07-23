@@ -142,6 +142,7 @@ function MenuManager:set_menu(menu, params)
 	end
 	self.cur_menu:update(0)
 	
+	self:remove_selection()
 	local sel = self:find_selectable_from(1, 1)
 	self:set_selection(sel)
 	
@@ -195,23 +196,23 @@ function MenuManager:unpause()
 	game:on_unpause()
 end
 
-function MenuManager:incr_selection(n)
+function MenuManager:incr_selection(delta)
 	if not self.cur_menu then return false, "no current menu" end
 
 	-- Increment selection until valid item
-	local sel = self:find_selectable_from(self.sel_n, n)
+	local sel = self:find_selectable_from(mod_plus_1(self.sel_n + delta, #self.cur_menu.items), delta)
 
 	if not sel then
-		return false, concat("no selectable item found; selection set to n + (", n, ") (", self.sel_n, ")")
+		return false, concat("no selectable item found")
 	end
 
 	-- Update new selection
 	if self.sel_item then
-		self.sel_item:set_selected(false, n)
+		self.sel_item:set_selected(false, delta)
 	end
 	self.sel_n = sel
 	self.sel_item = self.cur_menu.items[self.sel_n]
-	self.sel_item:set_selected(true, n)
+	self.sel_item:set_selected(true, delta)
 	
 	Audio:play_var("ui_menu_hover_{01-04}", 0.2, 1, {pitch = 2.0})
 
@@ -228,7 +229,7 @@ function MenuManager:find_selectable_from(n, diff)
 	local sel = n
 
 	local limit = len
-	local found = false
+	local found = self.cur_menu.items[sel].is_selectable
 	while not found and limit > 0 do
 		sel = mod_plus_1(sel + diff, len)
 		if self.cur_menu.items[sel].is_selectable then 
@@ -243,25 +244,45 @@ function MenuManager:find_selectable_from(n, diff)
 	return sel
 end
 
-function MenuManager:set_selection(n)
-	if self.sel_item then 
-		self.sel_item:set_selected(false)
+function MenuManager:remove_selection()
+	if not self.cur_menu then
+		return
 	end
+	for _, item in pairs(self.cur_menu.items) do
+		if item.set_selected then
+			item:set_selected(false)
+		end 
+	end
+	self.sel_n = nil
+	self.sel_item = nil
+end
+
+function MenuManager:set_selection(n, find_first_valid_selectable)
 	if not self.cur_menu then 
+		return false
+	end	
+	if not n then
 		return false
 	end
 
-	self.sel_n = n
+	if find_first_valid_selectable then
+		n = self:find_selectable_from(n, 1)
+	end 
 	if not n then
-		self.sel_item = nil
 		return false
 	end
-	self.sel_item = self.cur_menu.items[n]
-	if not self.sel_item then 
+
+	if not self.cur_menu.items[n] or not self.cur_menu.items[n].is_selectable then 
 		return false 
+	end	
+
+	if self.sel_item then 
+		self.sel_item:set_selected(false)
 	end
-	
+	self.sel_n = n
+	self.sel_item = self.cur_menu.items[n]
 	self.sel_item:set_selected(true)
+	
 	return true
 end
 

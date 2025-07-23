@@ -43,6 +43,7 @@ function GameUI:init(game, is_visible)
 	self.fury_flash_timer = 0
 	self.fury_flash_max_timer = 0.2
 	self.fury_text_oy = 0.0
+	self.fury_text_oy_target = 0.0
 	self.fury_text_wave_height = 2.0
 	self.displayed_combo = 0 
 	self.time_since_fury_end = math.huge
@@ -464,17 +465,23 @@ function GameUI:update_fury(dt)
 	local old_is_in_combo = self.is_in_combo
 	if game.level.fury_bar < game.level.fury_threshold then
 		self.is_in_combo = false
-		self.fury_text_oy = lerp(self.fury_text_oy, -4, 0.1)
+		if self.time_since_fury_end > self.max_time_since_fury_end then
+			self.fury_text_oy_target = 32
+		else
+			self.fury_text_oy_target = -4
+		end
 		self.displayed_combo = game.level.last_fury_combo
 		self.time_since_fury_end = self.time_since_fury_end + dt
 	else
 		self.is_in_combo = true
 		self.fury_text_oy = 0
+		self.fury_text_oy_target = 0
 		self.displayed_combo = game.level.fury_combo
 		self.time_since_fury_end = 0
 	end
+	self.fury_text_oy = lerp(self.fury_text_oy, self.fury_text_oy_target, 0.1)
 
-	if not self.is_in_combo and old_is_in_combo then
+	if old_is_in_combo and not self.is_in_combo then
 		self.fury_text_oy = 32
 	end
 end
@@ -527,16 +534,7 @@ function GameUI:draw_fury()
 		)
 	end)
 
-	local show_text = true
-	if self.time_since_fury_end > self.max_time_since_fury_end then
-		show_text = false
-	elseif self.time_since_fury_end > self.max_time_since_fury_end *0.75 then
-		show_text = (self.time_since_fury_end % 0.1) < 0.05
-	end
-	
-	if show_text then
-		draw_with_outline(COL_BLACK_BLUE, "square", self.boss_bar_buffer_canvas, 0, 0)
-	end
+	draw_with_outline(COL_BLACK_BLUE, "square", self.boss_bar_buffer_canvas, 0, 0)
 end
 
 function GameUI:draw_boss_bar()
