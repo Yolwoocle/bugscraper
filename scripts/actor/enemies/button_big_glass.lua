@@ -3,6 +3,7 @@ local images = require "data.images"
 
 local BreakableCrate = require "scripts.actor.enemies.breakable_crate"
 local Button = require "scripts.actor.enemies.button_big"
+local CollisionInfo = require "scripts.physics.collision_info"
 
 local ButtonBigGlass = BreakableCrate:inherit()
 
@@ -21,6 +22,12 @@ function ButtonBigGlass:init(x, y, img, w, h)
 
     self.max_life = 80
     self.life = self.max_life
+
+    self.collision_info = CollisionInfo:new {
+        type = COLLISION_TYPE_SEMISOLID,
+        is_slidable = true,
+        walk_sound = "sfx_player_footstep_glass_{01-06}",
+    }
 end
 
 return ButtonBigGlass

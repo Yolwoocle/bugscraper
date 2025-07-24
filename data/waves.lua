@@ -678,8 +678,8 @@ local waves = parse_waves_table {
 
     {
         level_geometry = LevelGeometry:new({
-            { rect = Rect:new(3, 8, 8, 8),   tile = TILE_SEMISOLID },
-            { rect = Rect:new(21, 8, 26, 8), tile = TILE_SEMISOLID },
+            { rect = Rect:new(3, 8, 8, 8),   tile = TILE_METAL_SEMISOLID },
+            { rect = Rect:new(21, 8, 26, 8), tile = TILE_METAL_SEMISOLID },
         }),
         elevator_layers = {
             ["bg_grid"] = false,

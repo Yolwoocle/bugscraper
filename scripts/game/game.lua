@@ -135,13 +135,6 @@ function Game:new_game(params)
 	self.music_player:play()
 	Options:update_volume()
 
-	self.sfx_elevator_bg            = sounds.elevator_bg.source
-	self.sfx_elevator_bg_volume     = self.sfx_elevator_bg:getVolume()
-	self.sfx_elevator_bg_def_volume = self.sfx_elevator_bg:getVolume()
-	-- self.music_source:setVolume(options:get("music_volume"))
-	self.sfx_elevator_bg:setVolume(0)
-	self.sfx_elevator_bg:play()
-
 	-- Players
 	self.waves_until_respawn = {}
 	for i = 1, MAX_NUMBER_OF_PLAYERS do
@@ -728,7 +721,6 @@ function Game:on_unpause()
 end
 
 function Game:pause_repeating_sounds()
-	self.sfx_elevator_bg:pause()
 	for k, a in pairs(self.actors) do
 		a:pause_constant_sounds()
 	end
@@ -740,7 +732,6 @@ end
 
 function Game:on_unmenu()
 	self.music_player:on_unmenu()
-	self.sfx_elevator_bg:play()
 
 	for k, a in pairs(self.actors) do
 		a:resume_constant_sounds()
@@ -1035,19 +1026,6 @@ function Game:start_game()
 	self:remove_queued_players()
 
 	self.menu_manager:set_can_pause(true)
-end
-
-function Game:on_red_button_pressed()
-	self:save_stats()
-	self.game_state = GAME_STATE_ELEVATOR_BURNING
-	self.menu_manager:set_can_pause(false)
-	self.level:on_red_button_pressed()
-end
-
-function Game:on_elevator_crashed()
-	self.game_state = GAME_STATE_WIN
-	self.menu_manager:set_can_pause(true)
-	self.level:on_elevator_crashed()
 end
 
 function Game:apply_upgrade(upgrade)

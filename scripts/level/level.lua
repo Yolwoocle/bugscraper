@@ -97,11 +97,6 @@ function Level:init(game, backroom)
 	self.hole_stencil_radius_progress = 0
 	self.hole_stencil_radius_progress_speed = 0.5
 
-	-- Sounds
-	self.elevator_crashing_sound = sounds.elev_burning.source
-	self.elevator_alarm_sound = sounds.elev_siren.source
-	self.elevator_crash_sound = sounds.elev_crash.source
-
 	-- Misc
 	self.upgrade_bag = {}
 	for _, upgrade_name in pairs(Metaprogression:get("upgrades")) do
@@ -148,7 +143,6 @@ function Level:update(dt)
 	end
 
 	self.flash_alpha = max(self.flash_alpha - dt, 0)
-	self:update_ending(dt)
 	
 	self.backroom_animation_state_machine:update(dt)
 end
@@ -731,86 +725,6 @@ function Level:set_elevator(elevator)
 	end
 	self.elevator = elevator
 end
-
-function Level:on_red_button_pressed()
-	self.is_reversing_elevator = true
-	self.ending_timer:set_duration(10)
-	self.ending_timer:start()
-	self.elevator_crashing_sound:play()
-	self.elevator_alarm_sound:play()
-end
-
-
-function Level:update_ending(dt)
-	if game.game_state == GAME_STATE_ELEVATOR_BURNING then
-		self.level_speed = math.max(self.level_speed - 5, -self.def_level_speed*2)
-		if self.background.change_clear_color then
-			self.background:change_clear_color({COL_ORANGE, {COL_LIGHT_RED, COL_DARK_RED, COL_LIGHT_YELLOW}})
-		end
-		
-		if self.level_speed < 0 then
-			game:screenshake(math.abs(self.level_speed)/200)
-			local r = self.level_speed / self.def_level_speed
-			self.elevator_crashing_sound:setVolume(r)
-			self.elevator_alarm_sound:setVolume(r)
-		end
-
-		if self.ending_timer:update(dt) then
-			game:on_elevator_crashed()
-		end
-		
-	elseif game.game_state == GAME_STATE_WIN then
-		self.level_speed = 0
-		self:update_win_screen()
-	end
-end
-
-
-function Level:on_elevator_crashed()
-	if self.background.set_clear_color then
-		self.background:set_clear_color({COL_BLACK_BLUE, {COL_VERY_DARK_GRAY, COL_DARK_GRAY}})
-	end
-	if self.background.init_bg_particles then
-		self.background:init_bg_particles()
-	end
-	self.elevator_crashing_sound:stop()
-	self.elevator_alarm_sound:stop()
-	self.elevator_crash_sound:play()
-
-	self.game:screenshake(30)
-	self.world_generator:generate_end_rubble()
-	self.level_speed = 0
-	self:set_bounds(Rect:new(-1, -3, 31, 18))
-	self.flash_alpha = 1.5
-
-	game.actor_manager:kill_all_active_enemies()
-	-- self.game.game_ui:flash()
-
-	self.show_rubble = true
-	self.show_cabin = false
-	self.is_reversing_elevator = false
-end
-
-
-function Level:update_win_screen(dt)
-	for i = 2, #self.world_generator.end_rubble_slices do
-		local slice = self.world_generator.end_rubble_slices[i]
-		local slice_up = self.world_generator.end_rubble_slices[i+1]
-		for ix = slice.ax, slice.bx do
-			if (random_range(0, 1) <= 0.1) and ((not slice_up) or (slice_up and not slice_up:is_point_in_inclusive(ix, slice.ay-1))) then
-				Particles:fire(ix*BW + random_range(0, BW), slice.ay*BW, 5, nil, nil, -60)
-			end
-		end
-	end 
-end
-
--- function Level:do_exploding_elevator(dt)
--- 	local x,y = random_range(self.cabin_ax, self.cabin_bx), 16*BW
--- 	local mw = CANVAS_WIDTH/2
--- 	y = 16*BW-8 - max(0, lerp(BW*4-8, -16, abs(mw-x)/mw))
--- 	local size = random_range(4, 8)
--- 	Particles:fire(x,y,size, nil, 80, -5)
--- end
 
 function Level:get_floor()
 	return self.floor

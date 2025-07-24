@@ -177,7 +177,7 @@ function Dung:init(x, y, spr, w, h)
         }
     }, "idle")
 
-    self:add_constant_sound("ball_roll", "ball_roll")
+    self:set_constant_sound("ball_roll", "ball_roll")
     self:set_constant_sound_volume("ball_roll", 0)
 
     local beetle = DungBeetle:new(self.x, self.y - 16)

@@ -199,6 +199,10 @@ end
 function MenuManager:incr_selection(delta)
 	if not self.cur_menu then return false, "no current menu" end
 
+	if not self.sel_n then
+		self.sel_n = 1
+	end
+	
 	-- Increment selection until valid item
 	local sel = self:find_selectable_from(mod_plus_1(self.sel_n + delta, #self.cur_menu.items), delta)
 

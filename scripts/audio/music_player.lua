@@ -24,17 +24,12 @@ function MusicPlayer:init()
 		["game_over"] =       disk_class:new(self, sounds.music_game_over.source, sounds.music_game_over.source),
 		["cafeteria"] =       disk_class:new(self, sounds.music_cafeteria_ingame.source, sounds.music_cafeteria_paused.source),
 		["cafeteria_empty"] = disk_class:new(self, sounds.music_cafeteria_empty_ingame.source, sounds.music_cafeteria_paused.source),
-		["miniboss"] =        disk_class:new(self, sounds.music_miniboss_ingame.source, sounds.music_miniboss_paused.source),
+		["miniboss"] =        disk_class:new(self, sounds.music_boss_w1_ingame.source, sounds.music_boss_w1_paused.source),
 	}
 	for name, disk in pairs(self.disks) do
 		disk:set_name(name)
 	end
 
-	-- self.music_source    = sounds.music_galaxy_trip[1] 
-	-- self.sfx_elevator_bg = sounds.elevator _bg[1]
-	-- self.sfx_elevator_bg_volume     = self.sfx_elevator_bg:getVolume()
-	-- self.sfx_elevator_bg_def_volume = self.sfx_elevator_bg:getVolume()
-	
 	self.volume = Options:get("music_volume")
 
 	self.music_mode = MUSIC_MODE_INGAME

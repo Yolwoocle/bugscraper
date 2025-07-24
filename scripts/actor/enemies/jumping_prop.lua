@@ -7,15 +7,18 @@ local utf8 = require "utf8"
 
 local JumpingProp = StaticProp:inherit()
 
-function JumpingProp:init(x, y, spr)
+function JumpingProp:init(x, y, spr, sound)
     spr = spr or images.upgrade_jar
     JumpingProp.super.init(self, x, y, spr)
     self.name = "jumping_prop"
-    
+
     self.gravity = self.default_gravity
 
-    self.jump_force = 150
+    self.sound = sound
+    self.jump_force = 350
     self.cur_jump_force = self.jump_force
+
+    self.can_jump = true
 end
 
 function JumpingProp:update(dt)
@@ -28,18 +31,28 @@ function JumpingProp:update(dt)
 end
 
 function JumpingProp:draw()
-	JumpingProp.super.draw(self)
+    JumpingProp.super.draw(self)
 end
 
 function JumpingProp:on_collision(col, other)
-    if col.other.is_player and dist(col.other.vx, col.other.vy) > 100 and self.is_grounded then
+    if col.other.is_player and dist(col.other.vx, col.other.vy) > 100 and self.is_grounded and self.can_jump then
+        self.can_jump = false
         self.buffer_jump = true
         self.cur_jump_force = self.jump_force
+
+        if self.sound then
+            Audio:play_var(self.sound, 0.2, 1.2)
+            print_debug("WOW")
+        end
     end
 
-    if col.type ~= "cross" and col.normal.y == -1 and self.cur_jump_force > self.jump_force * 0.2 then
-        self.buffer_jump = true
-        self.cur_jump_force = self.cur_jump_force * 0.5
+    if col.type ~= "cross" and col.normal.y == -1 then
+        if self.cur_jump_force > self.jump_force * 0.2 then
+            self.buffer_jump = true
+            self.cur_jump_force = self.cur_jump_force * 0.5
+        else
+            self.can_jump = true
+        end
     end
 end
 
