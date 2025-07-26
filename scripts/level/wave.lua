@@ -112,6 +112,7 @@ function Wave:add_cocoons(enemy_classes)
 			table.insert(enemy_classes, {
 				enemy_class = Enemies.Cocoon,
 				args = {game.waves_until_respawn[i][2]},
+				entrances = {"main"},
 			})
 			game.waves_until_respawn[i] = {-1, nil}
 		end

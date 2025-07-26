@@ -44,13 +44,13 @@ local sfxnames = {
 	["sfx_player_wall_slide_stone_{01-02}"] = {"sfx/actor/player/slide/stone/sfx_player_wall_slide_stone_{}.ogg", "static", { looping = true }},
 	["sfx_player_wall_slide_glass_{01-02}"] = {"sfx/actor/player/slide/glass/sfx_player_wall_slide_glass_{}.ogg", "static", { looping = true }},
 
-	["sfx_player_wall_slide_stamina_low"] = {"sfx/actor/player/slide/sfx_player_wall_slide_stamina_low.ogg", "static", { looping = true }},
+	["sfx_player_wall_slide_stamina_low"] =      {"sfx/actor/player/slide/sfx_player_wall_slide_stamina_low.ogg", "static", { looping = true }},
 	["sfx_player_wall_slide_stamina_very_low"] = {"sfx/actor/player/slide/sfx_player_wall_slide_stamina_very_low.ogg", "static", { looping = true }},
 
-	["sfx_player_damage_normal"] = {"sfx/actor/player/sfx_player_damage_normal.ogg", "static"},
-	["sfx_player_damage_poison"] = {"sfx/actor/player/sfx_player_damage_poison.ogg", "static"},
-	["sfx_player_death"] = {"sfx/actor/player/sfx_player_death.ogg", "static"},
-	["sfx_player_leave_game"] = {"sfx/actor/player/sfx_player_leave_game.ogg", "static"},
+	["sfx_player_damage_normal"] =         {"sfx/actor/player/sfx_player_damage_normal.ogg", "static"},
+	["sfx_player_damage_poison"] =         {"sfx/actor/player/sfx_player_damage_poison.ogg", "static"},
+	["sfx_player_death"] =                 {"sfx/actor/player/sfx_player_death.ogg", "static"},
+	["sfx_player_leave_game"] =            {"sfx/actor/player/sfx_player_leave_game.ogg", "static"},
 	["sfx_player_leave_game_easter_egg"] = {"sfx/actor/player/sfx_player_leave_game_easter_egg.mp3", "static"},
 	
 	["sfx_player_jumplong"] = {"sfx/actor/player/jump/sfx_player_jumplong.ogg", "static"},
@@ -58,9 +58,40 @@ local sfxnames = {
 	-- ACTORS
 	-- Jumping props
 	["sfx_actor_jumping_prop_paper_stack_{01-04}"] = {"sfx/actor/jumping_prop/sfx_actor_jumping_prop_paper_stack_{}.ogg", "static"},
-	["sfx_actor_jumping_prop_mug_{01-02}"] = {"sfx/actor/jumping_prop/sfx_actor_jumping_prop_mug_{}.ogg", "static"},
+	["sfx_actor_jumping_prop_mug_{01-02}"] =         {"sfx/actor/jumping_prop/sfx_actor_jumping_prop_mug_{}.ogg", "static"},
 	["sfx_actor_jumping_prop_plant_small_{01-03}"] = {"sfx/actor/jumping_prop/sfx_actor_jumping_prop_plant_small_{}.ogg", "static"},
-	["sfx_actor_jumping_prop_screen_{01-04}"] = {"sfx/actor/jumping_prop/sfx_actor_jumping_prop_screen_{}.ogg", "static"},
+	["sfx_actor_jumping_prop_screen_{01-04}"] =      {"sfx/actor/jumping_prop/sfx_actor_jumping_prop_screen_{}.ogg", "static"},
+
+	-- Cocoon
+	["sfx_actor_cocoon_damage_{01-07}"] = {"sfx/actor/cocoon/sfx_actor_cocoon_damage_{}.ogg", "static"},
+	["sfx_actor_cocoon_break_{01-02}"] = {"sfx/actor/cocoon/sfx_actor_cocoon_break_{}.ogg", "static"},
+
+	-- Upgrade display 
+	["sfx_actor_upgrade_display_break_{01-04}"] = {"sfx/upgrades/sfx_actor_upgrade_display_break_{}.ogg", "static"},
+
+	-- Health pickup
+	["sfx_loot_health_collect"] = {"sfx/sfx_loot_health_collect.ogg", "static"},
+
+	-- ENEMIES 
+	-- Snail
+	["sfx_enemy_snail_bounce_{01-06}"] = {"sfx/enemy/snail/sfx_enemy_snail_bounce_{}.ogg", "static"},
+
+	-- Boomshroom
+	["sfx_enemy_boomshroom_explosion_{01-06}"] = {"sfx/enemy/boomshroom/sfx_enemy_boomshroom_explosion_{}.ogg", "static"},
+	["sfx_enemy_boomshroom_flashing"] = {"sfx/enemy/boomshroom/sfx_enemy_boomshroom_flashing.ogg", "static"},
+	["sfx_enemy_boomshroom_inflate_{01-07}"] = {"sfx/enemy/boomshroom/sfx_enemy_boomshroom_inflate_{}.ogg", "static"},
+	["sfx_enemy_boomshroom_inflate_instant_{01-06}"] = {"sfx/enemy/boomshroom/sfx_enemy_boomshroom_inflate_instant_{}.ogg", "static"},
+
+	-- Stink bug
+	["sfx_enemy_poison_cloud_spawn_{01-04}"] = {"sfx/enemy/poison/sfx_enemy_poison_cloud_spawn_{}.ogg", "static"},
+
+	-- Boss W1    
+	["sfx_boss_mrdung_boss_activate"] = {"sfx/enemy/mrdung/sfx_boss_mrdung_boss_activate.ogg", "static"},
+	["sfx_boss_mrdung_death"] = {"sfx/enemy/mrdung/sfx_boss_mrdung_death.ogg", "static"},
+	["sfx_boss_mrdung_dying"] = {"sfx/enemy/mrdung/sfx_boss_mrdung_dying.ogg", "static"},
+	["sfx_boss_mrdung_land_in_dung"] = {"sfx/enemy/mrdung/sfx_boss_mrdung_land_in_dung.ogg", "static"},
+	["sfx_boss_mrdung_roll"] = {"sfx/enemy/mrdung/sfx_boss_mrdung_roll.ogg", "static", { looping = true }},
+	["sfx_boss_mrdung_ball_hit_{01-08}"] = {"sfx/enemy/mrdung/ball/sfx_boss_mrdung_ball_hit_{}.ogg", "static"},
 
 	["fly_buzz"] = {"empty.ogg", "static"}, -- TODO change to actual sound
 }
@@ -86,7 +117,6 @@ for key, params in pairs(sfxnames) do
     else
         -- If no pattern, just apply the function directly
 		sounds[key] = new_source(unpack(params))
-		print_debug("Added sound ", key)
     end
 end
 

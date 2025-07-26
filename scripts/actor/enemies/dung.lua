@@ -72,7 +72,8 @@ function Dung:init(x, y, spr, w, h)
                 game:frameskip(15)
                 game:screenshake(8)
 
-                Audio:play_var("glass_fracture", 0.1, 1.1)
+                Audio:play_var("sfx_actor_upgrade_display_break_{01-04}", 0.1, 1.1)
+                Audio:play_var("sfx_boss_mrdung_boss_activate", 0.1, 1.1)
                 if self.rider then
                     Particles:image(self.rider.mid_x, self.rider.mid_y, 15, images.glass_shard, self.rider.h)
                 end
@@ -177,7 +178,7 @@ function Dung:init(x, y, spr, w, h)
         }
     }, "idle")
 
-    self:set_constant_sound("ball_roll", "ball_roll")
+    self:set_constant_sound("ball_roll", "sfx_boss_mrdung_roll")
     self:set_constant_sound_volume("ball_roll", 0)
 
     local beetle = DungBeetle:new(self.x, self.y - 16)
@@ -218,8 +219,8 @@ function Dung:update_dung(dt)
 
     if self.is_grounded and math.abs(self.vx) > 20 then
         Particles:dust(self.mid_x, self.y + self.h)
+        self:set_constant_sound_volume("ball_roll", math.abs(self.vx) / 400)
     end
-    self:set_constant_sound_volume(math.abs(self.vx) / 400)
 end
 
 function Dung:on_damage(amount)

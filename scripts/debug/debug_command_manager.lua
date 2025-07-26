@@ -284,11 +284,13 @@ function DebugCommandManager:init()
         name = "_weaken_all",
         description = "Sets life of all enemies to 1 HP",
         args = {
+            { "hp:number", default = 1 },
         },
-        run = function()
+        run = function(hp)
+            hp = hp or 1
             for _, actor in pairs(game.actors) do
                 if actor.is_enemy and actor.life then
-                    actor.life = 1
+                    actor.life = hp
                 end
             end
             return true

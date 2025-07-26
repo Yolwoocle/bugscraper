@@ -249,7 +249,7 @@ end
 function Loot.Life:on_collect(player)
 	local success, overflow = player:heal(self.value)
 	Particles:smoke(self.mid_x, self.mid_y, nil, COL_LIGHT_RED)
-	Audio:play("item_collect")
+	Audio:play("sfx_loot_health_collect")
 
 	Particles:word(self.mid_x, self.y, concat(self.value,"❤"), COL_LIGHT_RED)
 

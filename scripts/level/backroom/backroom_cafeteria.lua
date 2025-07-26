@@ -37,7 +37,7 @@ function BackroomCafeteria:generate(world_generator)
 	game.level:set_bounds(Rect:new(unpack(RECT_CAFETERIA_PARAMS)))
 
 	world_generator:reset()
-	world_generator:write_rect(Rect:new(2, 2, 58, 15), TILE_STONE)
+	world_generator:write_rect(Rect:new(2, 2, 58, 15), TILE_METAL)
 	world_generator:write_rect(Rect:new(2, 15, 58, 15), TILE_WOOD)
 	world_generator:write_rect(Rect:new(28, 13, 41, 13), TILE_WOOD_SEMISOLID) -- Desk
 	world_generator:write_rect(Rect:new(46, 13, 48, 13), TILE_METAL_SEMISOLID)

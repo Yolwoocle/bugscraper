@@ -26,6 +26,8 @@ function PongBall:init_pong_ball(x, y, spr, w, h)
     self.friction_y = self.friction_x 
 
     self:init_pong()
+
+    self.sound_pong_bounce = "sfx_enemy_snail_bounce_{01-06}"
     
     self.spr:set_anchor(SPRITE_ANCHOR_CENTER_CENTER)
 end
@@ -63,7 +65,7 @@ function PongBall:after_collision_pong_ball(col, other)
     -- Pong-like bounce
     if col.type ~= "cross" then
         if self.is_ponging then
-            local s = "metalfootstep_0"..tostring(love.math.random(0,4))
+            local s = self.sound_pong_bounce
             Audio:play_var(s, 0.3, 1.1, {pitch=0.8, volume=0.5})
             Particles:smoke(col.touch.x, col.touch.y)
 

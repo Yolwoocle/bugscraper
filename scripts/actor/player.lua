@@ -210,6 +210,8 @@ function Player:reset(n, skin)
 	self.controls_oy = 0
 
 	-- SFX
+	self:stop_constant_sounds()
+
 	self.sfx_wall_slide_volume = 0
 	self.sfx_wall_slide_max_volume = 1.0
 	self:set_constant_sound_volume("sfx_wall_slide", 0)
@@ -292,11 +294,13 @@ function Player:get_state_machine()
 			end,
 			on_grounded = function(state)
 				self:on_grounded_normal()
+				self:stop_constant_sounds()
 			end
 		},
 		dying = {
 			enter = function(state)
 				self:reset()
+				self:stop_constant_sounds()
 
 				self.is_ghost = true
 
@@ -1639,7 +1643,7 @@ function Player:update_color(dt)
 	end
 
 	-- Wall slide stamina blink
-	if self.wall_slide_stamina < self.wall_slide_max_stamina/2 then
+	if self.state_machine.current_state_name == "normal" and self.wall_slide_stamina < self.wall_slide_max_stamina/2 then
 		self.stamina_blinking_state = 2
 		self.blink_freq = 0.2
 
