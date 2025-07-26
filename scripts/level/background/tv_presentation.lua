@@ -19,14 +19,13 @@ function TvPresentation:init(x, y)
         ["slide_001"] = { images.tv_slideshow_001, 0 },      -- Powerpoint stats         by Sslime7 
         ["slide_002"] = { images.tv_slideshow_002, 0 },      -- Hot dogs                 by Alexis Belmonte
         ["slide_003"] = { images.tv_slideshow_003, 0.04 },   -- Mio rotate               by Corentin Vaillant 
-        ["slide_018"] = { images.tv_slideshow_018, 0.04 },   -- Mio explode              by Corentin Vaillant
         ["slide_004"] = { images.tv_slideshow_004, 0 },      -- Bug with Guns            by Yolwoocle
         ["slide_005"] = { images.tv_slideshow_005, 0 },      -- "Love, obey"             by ellraiser
         ["slide_006"] = { images.tv_slideshow_006, 0.07 },   -- "Need your duck taped?"  by Joseph
         ["slide_007"] = { images.tv_slideshow_007, 0.11 },   -- Starbugs green tea       by Goyome
         ["slide_008"] = { images.tv_slideshow_008, 0.1 },    -- Binarion                 by hector_misc (Nextop Games)
-        ["slide_010"] = { images.tv_slideshow_010, 0 },      -- "injured? good"          by hector_misc (Nextop Games) 
         ["slide_009"] = { images.tv_slideshow_009, 0.3 },    -- "No quuen?"              by behck
+        ["slide_010"] = { images.tv_slideshow_010, 0 },      -- "injured? good"          by hector_misc (Nextop Games) 
         ["slide_011"] = { images.tv_slideshow_011, 0.035 },  -- Splat commercial         by Sarcose
         ["slide_012"] = { images.tv_slideshow_012, 0.03 },   -- End toastal abuse        by clem 
         ["slide_013"] = { images.tv_slideshow_013, 0.03 },   -- A salt rifle             by clem 
@@ -34,6 +33,8 @@ function TvPresentation:init(x, y)
         ["slide_015"] = { images.tv_slideshow_015, 0.3 },    -- bugscrapers arent enough by pkhead / chromosoze
         ["slide_016"] = { images.tv_slideshow_016, 0 },      -- optic studio             by pkhead / chromosoze
         ["slide_017"] = { images.tv_slideshow_017, 0.08 },   -- Soon(tm)                 by pixelbath
+        ["slide_018"] = { images.tv_slideshow_018, 0.04 },   -- Mio explode              by Corentin Vaillant
+        ["slide_019"] = { images.tv_slideshow_019, 0.04 },   -- Mio explode              by hector_misc (Nextop Games)
 
         ["bluescreen"] = { images.tv_bluescreen, math.huge } -- By hector_misc (Nextop Games)
     }
