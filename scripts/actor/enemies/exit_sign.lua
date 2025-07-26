@@ -85,7 +85,7 @@ function ExitSign:activate(player)
             images.star_small_1,
             images.star_small_2,
         }, player.mid_x, player.mid_y, random_range_int(7, 10), 0, 0.25, 1, 120, 0.95)
-        Audio:play("exit_sign_activate")
+        Audio:play("sfx_player_leave_game")
         
         self.spring_active = true
         self.spring_retract_timer = 2.0
@@ -137,7 +137,7 @@ function ExitSign:activate_smash_easter_egg(player)
     game:leave_game(player.n)
     game:screenshake(14)
     Particles:smashed_player(player.skin.img_dead, impact_x, impact_y)
-    Audio:play("smash_easter_egg")
+    Audio:play("sfx_player_leave_game_easter_egg")
     
     self.spring_active = true
     self.spring_retract_timer = 2.0

@@ -16,12 +16,12 @@ end
 
 function Tiles:init()
 	self.tiles = {}
-	
+
 	-- Air
 	self.tiles[TILE_AIR] = make_tile(function(self, x, y, w)
 		self:init_tile(x, y, w)
 		self.id = TILE_AIR
-		
+
 		self.name = "air"
 		self.spr = nil
 	end)
@@ -32,10 +32,29 @@ function Tiles:init()
 		self.id = TILE_METAL
 		self.name = "metal"
 		self.spr = nil
+
 		
 		self.collision_info = CollisionInfo:new {
 			type = COLLISION_TYPE_SOLID,
 			is_slidable = true,
+			walk_sound = "sfx_player_footstep_metal_{01-10}",
+			slide_sound = "sfx_player_wall_slide_metal_{01-02}",
+		}
+	end)
+
+	-- Semi-solid metal
+	self.tiles[TILE_METAL_SEMISOLID] = make_tile(function(self, x, y, w)
+		self:init_tile(x, y, w)
+		self.id = TILE_METAL_SEMISOLID
+		self.name = "metal_semisolid"
+		self.spr = nil
+
+		
+		self.collision_info = CollisionInfo:new {
+			type = COLLISION_TYPE_SEMISOLID,
+			is_slidable = false,
+			walk_sound = "sfx_player_footstep_metal_{01-10}",
+			slide_sound = "sfx_player_wall_slide_metal_{01-02}",
 		}
 	end)
 
@@ -44,23 +63,10 @@ function Tiles:init()
 		self:init_tile(x, y, w)
 		self.id = TILE_RUBBLE
 		self.name = "rubble"
-		self.spr = images.empty
-		
+		self.spr = nil
+
 		self.collision_info = CollisionInfo:new {
 			type = COLLISION_TYPE_SOLID,
-			is_slidable = false,
-		}
-	end)
-
-	-- Semi-solid
-	self.tiles[TILE_SEMISOLID] = make_tile(function(self, x, y, w)
-		self:init_tile(x, y, w)
-		self.id = TILE_SEMISOLID
-		self.name = "semisolid"
-		-- self.spr = images.semisolid
-		
-		self.collision_info = CollisionInfo:new {
-			type = COLLISION_TYPE_SEMISOLID,
 			is_slidable = false,
 		}
 	end)
@@ -111,13 +117,96 @@ function Tiles:init()
 		}
 	end)
 
-	-- self.tiles[5] = make_tile(function(self, x, y, w)
-	-- 	self:init_tile(x, y, w)
-	-- 	self.id = 5
+	
+	-- Carpet
+	self.tiles[TILE_CARPET] = make_tile(function(self, x, y, w)
+		self:init_tile(x, y, w)
+		self.id = TILE_CARPET
+		self.name = "carpet"
+		self.spr = nil
+
+		self.collision_info = CollisionInfo:new {
+			type = COLLISION_TYPE_SOLID,
+			is_slidable = true,
+			walk_sound = "sfx_player_footstep_carpet_{01-10}",
+			slide_sound = "sfx_player_wall_slide_metal_{01-02}",
+		}
+	end)
+	
+	-- Sand
+	self.tiles[TILE_SAND] = make_tile(function(self, x, y, w)
+		self:init_tile(x, y, w)
+		self.id = TILE_SAND
+		self.name = "sand"
+		self.spr = nil
 		
-	-- 	self.name = "bg_plate"
-	-- 	self.spr = images.bg_plate
-	-- end)
+		self.collision_info = CollisionInfo:new {
+			type = COLLISION_TYPE_SOLID,
+			is_slidable = true,
+			walk_sound = "sfx_player_footstep_sand_{01-10}",
+			slide_sound = "sfx_player_wall_slide_stone_{01-02}",
+		}
+	end)
+
+	-- Stone
+	self.tiles[TILE_STONE] = make_tile(function(self, x, y, w)
+		self:init_tile(x, y, w)
+		self.id = TILE_STONE
+		self.name = "stone"
+		self.spr = nil
+
+		self.collision_info = CollisionInfo:new {
+			type = COLLISION_TYPE_SOLID,
+			is_slidable = true,
+			walk_sound = "sfx_player_footstep_stone_{01-10}",
+			slide_sound = "sfx_player_wall_slide_stone_{01-02}",
+		}
+	end)
+
+	-- Wood
+	self.tiles[TILE_WOOD] = make_tile(function(self, x, y, w)
+		self:init_tile(x, y, w)
+		self.id = TILE_WOOD
+		self.name = "wood"
+		self.spr = nil
+		
+		self.collision_info = CollisionInfo:new {
+			type = COLLISION_TYPE_SOLID,
+			is_slidable = true,
+			walk_sound = "sfx_player_footstep_wood_{01-06}",
+			slide_sound = "sfx_player_wall_slide_metal_{01-02}",
+		}
+	end)
+
+	-- Semi-solid Wood
+	self.tiles[TILE_WOOD_SEMISOLID] = make_tile(function(self, x, y, w)
+		self:init_tile(x, y, w)
+		self.id = TILE_WOOD_SEMISOLID
+		self.name = "wood_semisolid"
+		self.spr = nil
+		
+		self.collision_info = CollisionInfo:new {
+			type = COLLISION_TYPE_SEMISOLID,
+			is_slidable = false,
+			walk_sound = "sfx_player_footstep_wood_{01-06}",
+			slide_sound = "sfx_player_wall_slide_metal_{01-02}",
+		}
+	end)
+	
+	-- Glass
+	self.tiles[TILE_GLASS] = make_tile(function(self, x, y, w)
+		self:init_tile(x, y, w)
+		self.id = TILE_GLASS
+		self.name = "glass"
+		self.spr = nil
+		
+		self.collision_info = CollisionInfo:new {
+			type = COLLISION_TYPE_SOLID,
+			is_slidable = true,
+			walk_sound = "sfx_player_footstep_glass_{01-06}",
+			slide_sound = "sfx_player_wall_slide_glass_{01-02}",
+		}
+	end)
 end
 
 function Tiles:new_tile(n, x, y, w, ...)

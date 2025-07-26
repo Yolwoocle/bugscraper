@@ -21,8 +21,8 @@ function Cocoon:init(x, y, player)
     self.damage = 0
     self.self_knockback_mult = 0.1
     
-	self.destroy_bullet_on_impact = false
-	self.is_immune_to_bullets = true
+	-- self.destroy_bullet_on_impact = false
+	-- self.is_immune_to_bullets = true
     
     self.knockback = 0
     
@@ -32,7 +32,7 @@ function Cocoon:init(x, y, player)
     self.do_stomp_animation = false
     self.stompable_cooldown_timer = Timer:new(0.5)
     self.stompable_cooldown_timer:start()
-    -- self.stomps = 3
+    -- self.stomps = 3 
     
     self.is_pushable = false
     self.is_knockbackable = false
@@ -47,8 +47,9 @@ function Cocoon:init(x, y, player)
 
     self.sweat_timer = Timer:new(0.7):start()
 
-    -- self.sound_damage = {"cloth1", "cloth2", "cloth3"}
-    -- self.sound_death = "cloth_drop"
+    self.sound_damage = "sfx_actor_cocoon_damage_{01-07}"
+    self.sound_death = "sfx_actor_cocoon_break_{01-02}"
+    self.sound_death = "sfx_actor_cocoon_break_{01-02}"
     -- self.sound_stomp = "cloth_drop"
 end
 

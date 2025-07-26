@@ -19,6 +19,8 @@ function Tile:init_tile(x, y, w, spr)
 	self.h = w
 	self.spr = spr
 
+	self.walk_sound = nil
+
 	self.collision_info = nil
 end
 

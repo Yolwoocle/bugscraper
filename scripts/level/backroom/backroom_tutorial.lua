@@ -25,25 +25,28 @@ function BackroomTutorial:generate(world_generator)
 	-- Collision 
 	world_generator:reset()
 
-	world_generator:write_rect_fill(Rect:new(0,  2,  2,  20), TILE_METAL) -- a
-	world_generator:write_rect_fill(Rect:new(3,  13, 7,  20), TILE_METAL) -- b
-	world_generator:write_rect_fill(Rect:new(8,  14, 8,  20), TILE_METAL) -- c
-	world_generator:write_rect_fill(Rect:new(6,  15, 96, 20), TILE_METAL) -- d
-	world_generator:write_rect_fill(Rect:new(25, 13, 65, 14), TILE_METAL) -- e
-	world_generator:write_rect_fill(Rect:new(32, 6,  32, 12), TILE_METAL) -- f
-	world_generator:write_rect_fill(Rect:new(47, 0,  47, 5),  TILE_METAL) -- g
-	world_generator:write_rect_fill(Rect:new(54, 6,  56, 6),  TILE_SEMISOLID) -- h
-	world_generator:write_rect_fill(Rect:new(60, 9,  61, 12), TILE_METAL) -- i
-	world_generator:write_rect_fill(Rect:new(62, 10, 62, 12), TILE_METAL) -- j
-	world_generator:write_rect_fill(Rect:new(63, 11, 63, 12), TILE_METAL) -- k
-	world_generator:write_rect_fill(Rect:new(64, 12, 64, 12), TILE_METAL) -- l
-	world_generator:write_rect_fill(Rect:new(66, 14, 100, 14), TILE_METAL) -- m
-	world_generator:write_rect_fill(Rect:new(95, 0,  96, 13), TILE_BORDER) -- n
-	world_generator:write_rect_fill(Rect:new(57, 6,  60, 6),  TILE_METAL) -- o
-	world_generator:write_rect_fill(Rect:new(60, 7,  60, 8),  TILE_METAL) -- p
-	world_generator:write_rect_fill(Rect:new(85, 8,  94, 8),  TILE_METAL) -- q
+	world_generator:write_rect_fill(Rect:new(0,  2,  2,  20),  TILE_STONE) -- A / brick house
+	world_generator:write_rect_fill(Rect:new(3,  13, 7,  20),  TILE_STONE) -- B / cobblestone house front
+	world_generator:write_rect_fill(Rect:new(8,  14, 8,  20),  TILE_STONE) -- C / cobblestone stairs
+	world_generator:write_rect_fill(Rect:new(6,  15, 96, 20),  TILE_STONE) -- D / cobblestone plaza
+	world_generator:write_rect_fill(Rect:new(25, 13, 32, 14),  TILE_STONE) -- E / concrete raised part
+	world_generator:write_rect_fill(Rect:new(32, 6,  32, 12),  TILE_STONE) -- F / brick wall
+	world_generator:write_rect_fill(Rect:new(47, 0,  47, 5),   TILE_STONE) -- G / brick wall top
+	world_generator:write_rect_fill(Rect:new(54, 6,  56, 6),   TILE_METAL_SEMISOLID) -- H / metal platform overhang
+	world_generator:write_rect_fill(Rect:new(60, 9,  61, 12),  TILE_STONE) -- I / concrete block stairs
+	world_generator:write_rect_fill(Rect:new(62, 10, 62, 12),  TILE_STONE) -- J / concrete block stairs
+	world_generator:write_rect_fill(Rect:new(63, 11, 63, 12),  TILE_STONE) -- K / concrete block stairs
+	world_generator:write_rect_fill(Rect:new(64, 12, 64, 12),  TILE_STONE) -- L / concrete block stairs
+	world_generator:write_rect_fill(Rect:new(66, 14, 100, 14), TILE_STONE) -- M / cobble stone plaza
+	world_generator:write_rect_fill(Rect:new(95, 0,  96, 13),  TILE_BORDER) -- N / invisible wall for building
+	world_generator:write_rect_fill(Rect:new(57, 6,  60, 6),   TILE_METAL) -- O / metal overhang solid part
+	world_generator:write_rect_fill(Rect:new(60, 7,  60, 8),   TILE_STONE) -- P / concrete brick holding up metal overhang 
+	world_generator:write_rect_fill(Rect:new(85, 8,  94, 8),   TILE_STONE) -- Q / Entrance overhang
+	world_generator:write_rect_fill(Rect:new(33, 13, 59, 14),  TILE_SAND) -- R / sand pit
+	world_generator:write_rect_fill(Rect:new(60, 13, 65, 14),  TILE_STONE) -- S / concrete block stairs
 
-	world_generator:write_rect_fill(Rect:new(3, 8, 3, 8),  TILE_SEMISOLID) -- d1
+
+	world_generator:write_rect_fill(Rect:new(3, 8, 3, 8),  TILE_WOOD_SEMISOLID) -- d1 / house balcony 
 	
 	-- Walls, dummies
 	game:new_actor(enemies.BreakableWall:new(47*16, 6*16))

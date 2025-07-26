@@ -8,6 +8,9 @@ function CollisionInfo:init(params)
     self.enabled =     param(params.enabled, true)
     self.is_slidable = param(params.is_slidable, true)
     self.affected_by_solid = param(params.affected_by_solid, false)
+
+    self.walk_sound = param(params.walk_sound, nil)
+    self.slide_sound = param(params.slide_sound, nil)
 end
 
 return CollisionInfo

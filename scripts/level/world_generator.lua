@@ -73,7 +73,7 @@ function WorldGenerator:generate_ground_floor()
 		Rect:new(24+5*3, 14, 27+5*3, 14),
 		Rect:new(51, 12, 54, 12), -- Machines
 	}) do
-		self:write_rect(rect, TILE_SEMISOLID)
+		self:write_rect(rect, TILE_METAL_SEMISOLID)
 	end
 end
 

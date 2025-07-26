@@ -473,13 +473,18 @@ function Actor:remove_rider()
 	self.rider = nil
 end
 
-function Actor:add_constant_sound(name, sound_name, play, volume, pitch, params)
+function Actor:set_constant_sound(name, sound_name, play, volume, pitch, params)
 	play = param(play, true)
+    volume = param(volume, 1.0)
+    pitch = param(pitch, 1.0)
+	params = params or {}
 
 	local sound = Audio:get_sound(sound_name)
 	if not sound then
 		return
 	end
+
+	self:remove_constant_sound(name)
 
 	local new_sound = sound:clone(volume, pitch, params)
 	self.constant_sounds[name] = new_sound
@@ -497,10 +502,13 @@ function Actor:set_constant_sound_volume(name, volume)
 	if not sound then return end
 
 	sound:set_volume(volume)
-	-- sound
 end
 
 function Actor:remove_constant_sound(name)
+	if not self.constant_sounds[name] then
+		return
+	end
+	self.constant_sounds[name]:stop()
 	self.constant_sounds[name] = nil
 end
 

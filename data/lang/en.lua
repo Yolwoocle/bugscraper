@@ -180,14 +180,13 @@ return {
             description = "Are you sure you want to quit?"
         },
         confirm_retry = {
-            -- Here refers to going back to the main menu to try another run, NOT restarting the game
             description = "Retry?", 
         },
         pause = {
             title = "PAUSE",
             resume = "RESUME",
             retry = "RETRY",
-            return_to_ground_floor = "RETURN TO GROUND FLOOR", --ADDED
+            return_to_ground_floor = "RETURN TO GROUND FLOOR", -- This correspons to floor 0 in the game. To different cultures, "ground floor" might usually mean "floor 1", so please make sure to avoid ambiguity when translating.  
             options = "OPTIONS",
             credits = "CREDITS",
             feedback = "FEEDBACK",

@@ -38,9 +38,10 @@ function BackroomCafeteria:generate(world_generator)
 
 	world_generator:reset()
 	world_generator:write_rect(Rect:new(2, 2, 58, 15), TILE_METAL)
-	world_generator:write_rect(Rect:new(28, 13, 41, 13), TILE_SEMISOLID)
-	world_generator:write_rect(Rect:new(46, 13, 48, 13), TILE_SEMISOLID)
-	world_generator:write_rect(Rect:new(51, 13, 53, 13), TILE_SEMISOLID)
+	world_generator:write_rect(Rect:new(2, 15, 58, 15), TILE_WOOD)
+	world_generator:write_rect(Rect:new(28, 13, 41, 13), TILE_WOOD_SEMISOLID) -- Desk
+	world_generator:write_rect(Rect:new(46, 13, 48, 13), TILE_METAL_SEMISOLID)
+	world_generator:write_rect(Rect:new(51, 13, 53, 13), TILE_METAL_SEMISOLID)
 
 	self:assign_cafeteria_upgrades()
 

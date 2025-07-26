@@ -14,6 +14,8 @@ function Boomshroom:init(x, y)
     self.max_life = 15
     self.life = self.max_life
     
+    self.boomshroom_size = 1
+    
     self.is_killed_on_negative_life = false
     self.is_killed_on_stomp = false
     self.do_stomp_animation = false
@@ -59,7 +61,11 @@ function Boomshroom:init(x, y)
                 self.vy = self.vy + math.sin(self.direction) * self.speed + self.weight * self.weight_vy_multiplier
 
                 -- You don't need to understand this.
-                self:set_size(clamp(math.ceil((#self.sizes-1) * (1 - self.life / self.max_life)), 1, #self.sizes - 1)) 
+                local new_size = clamp(math.ceil((#self.sizes-1) * (1 - self.life / self.max_life)), 1, #self.sizes - 1)
+                if new_size ~= self.boomshroom_size then
+                    Audio:play("sfx_enemy_boomshroom_inflate_0" .. tostring(new_size))
+                end
+                self:set_size(new_size)
             end
         }, 
             
@@ -79,7 +85,7 @@ function Boomshroom:init(x, y)
                 self.flash_timer:start(0.5)
 
                 self:set_size(#self.sizes)
-                Audio:play("stomp2")
+                Audio:play("sfx_enemy_boomshroom_flashing")
             end,
             update = function(state, dt)
                 if self.flash_timer:update(dt) then
@@ -92,7 +98,10 @@ function Boomshroom:init(x, y)
                 end
 
                 if self.exploding_timer:update(dt) then                    
-                    local explosion = Explosion:new(self.mid_x, self.mid_y, {radius = self.explosion_radius})
+                    local explosion = Explosion:new(self.mid_x, self.mid_y, {
+                        radius = self.explosion_radius,
+                        sound = "sfx_enemy_boomshroom_explosion_{01-06}"
+                    })
                     game:new_actor(explosion)
                     self:kill()
                 end
@@ -127,6 +136,7 @@ end
 
 function Boomshroom:set_size(size)
     size = clamp(size, 1, #self.sizes) 
+    self.boomshroom_size = size
     self.spr:set_image(self.sizes[size].sprite)
     self:set_dimensions(self.sizes[size].w, self.sizes[size].h)
 end
@@ -136,6 +146,7 @@ function Boomshroom:on_negative_life()
 end
 
 function Boomshroom:on_stomp_killed()
+    Audio:play_var("sfx_enemy_boomshroom_inflate_instant_{01-06}", 0.2, 1.2)
     self:start_exploding()
 end
 

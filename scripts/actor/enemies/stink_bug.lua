@@ -30,8 +30,8 @@ function StinkBug:init(x, y, spr)
 	self.flip_mode = ENEMY_FLIP_MODE_MANUAL
     self.spr:set_anchor(SPRITE_ANCHOR_CENTER_CENTER)
     
-    self.sound_death = "stink_bug_death"
-    self.sound_stomp = "stink_bug_death"
+    self.sound_death = "sfx_enemy_poison_cloud_spawn_{01-04}"
+    self.sound_stomp = "sfx_enemy_poison_cloud_spawn_{01-04}"
 
     self.score = 10
 end

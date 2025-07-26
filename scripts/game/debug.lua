@@ -97,6 +97,13 @@ function Debug:init(game)
         ["f8"] = { "toggle actor info view mode", function()
             self.actor_info_view = not self.actor_info_view
         end, do_not_require_ctrl = true },
+        ["f12"] = { "get draw info", function()
+            print("-----------------------")
+            for key, val in pairs(__times) do
+                print(key, ":", round(100 * (val.t) / (1/60), 2), "%")
+            end
+            print("-----------------------")
+        end },
         
         ["u"] = { "spawn ceo", function()
             local ac = game:new_actor(enemies.NPC:new(866, 223, {

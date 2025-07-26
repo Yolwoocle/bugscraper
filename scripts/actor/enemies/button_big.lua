@@ -42,7 +42,7 @@ end
 
 function ButtonBig:on_stomp_killed(damager)
     game:screenshake(10)
-    game:on_red_button_pressed()
+    -- game:on_red_button_pressed()
     Audio:play("button_press")
     
     -- TODO: smoke particles

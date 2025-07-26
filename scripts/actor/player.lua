@@ -21,7 +21,7 @@ function Player:init(n, x, y, skin)
 	y = y or 0
 	self:init_actor(x, y, 14, 14, images.ant1)
 
-	self:add_constant_sound("sfx_wall_slide", "sliding_wall_metal")
+	self:set_constant_sound("sfx_wall_slide", "sfx_player_wall_slide_metal_{01-02}")
 
 	self:reset(n, skin)
 	self.wall_collision_box = { --Move this to a seperate class if needed
@@ -150,6 +150,9 @@ function Player:reset(n, skin)
 	self.wall_slide_stamina_use_jump = 1.0
 	self.wall_slide_sweat_timer = Timer:new(0.7, {loopback = true}):start()
 
+	self.old_stamina_blinking_state = 1 -- 1: off, 2: low, 3: very_low
+	self.stamina_blinking_state = 1
+
 	self.wall_jump_margin = 8
 
 	-- Visuals
@@ -207,8 +210,10 @@ function Player:reset(n, skin)
 	self.controls_oy = 0
 
 	-- SFX
+	self:stop_constant_sounds()
+
 	self.sfx_wall_slide_volume = 0
-	self.sfx_wall_slide_max_volume = 0.1
+	self.sfx_wall_slide_max_volume = 1.0
 	self:set_constant_sound_volume("sfx_wall_slide", 0)
 
 	-- Combo / fury
@@ -289,11 +294,13 @@ function Player:get_state_machine()
 			end,
 			on_grounded = function(state)
 				self:on_grounded_normal()
+				self:stop_constant_sounds()
 			end
 		},
 		dying = {
 			enter = function(state)
 				self:reset()
+				self:stop_constant_sounds()
 
 				self.is_ghost = true
 
@@ -315,7 +322,7 @@ function Player:get_state_machine()
 				game:frameskip(30)
 
 				self.timer_before_death = self.max_timer_before_death
-				Audio:play("death")
+				Audio:play("sfx_player_death")
 			end,
 			update = function(state, dt)
 				local goal_r = 5*sign(self.dir_x)*pi2
@@ -565,7 +572,7 @@ function Player:kill()
 	game:on_kill(self)
 	
 	self.timer_before_death = self.max_timer_before_death
-	Audio:play("death")
+	Audio:play("sfx_player_death")
 
 	self.is_dead = true
 	self:remove()
@@ -593,7 +600,12 @@ function Player:do_damage(n, source)
 	game:frameskip(12)
 	game:screenshake(7)
 	Input:vibrate(self.n, 0.3, 0.45)
-	Audio:play("hurt")
+
+	local damage_sfx = "sfx_player_damage_normal"
+	if source and source.name == "poison_cloud" then
+		damage_sfx = "sfx_player_damage_poison"
+	end
+	Audio:play(damage_sfx)
 	-- Particles:word(self.mid_x, self.y, concat("-",n), COL_LIGHT_RED)
 	
 	if self.is_knockbackable and source then
@@ -604,7 +616,6 @@ function Player:do_damage(n, source)
 	local old_life = self.life
 	local old_temporary_life = self.temporary_life
 	self:subtract_life(n)
-	local permanent_life_diff = old_life - self.life
 	local temporary_life_diff = old_temporary_life - self.temporary_life
 	if temporary_life_diff > 0 then
 		Particles:image(self.ui_x, self.ui_y - 16, temporary_life_diff, images.particle_leaf, 5, 1.5, 0.6, 0.5)
@@ -746,9 +757,6 @@ function Player:do_wall_sliding(dt)
 	self.is_wall_sliding = false
 	self.is_walled = false
 
-	self.sfx_wall_slide_volume = lerp(self.sfx_wall_slide_volume, 0, 0.3)
-	self:set_constant_sound_volume("sfx_wall_slide", self.sfx_wall_slide_volume)
-
 	-- Reset wall sliding stamina if grounded
 	if self.is_grounded then
 		self.wall_slide_stamina = self.wall_slide_max_stamina
@@ -775,7 +783,15 @@ function Player:do_wall_sliding(dt)
 	-- Reduce jumps if leave wall 
 	if old_is_walled and not self.is_walled then
 		self.jumps = math.max(0, self.jumps-1)
+		self:remove_constant_sound("sfx_wall_slide")
 	end
+
+	-- If just started wall sliding 
+	if not old_is_wall_sliding and self.is_wall_sliding and self.wall_col and self.wall_col.other.collision_info then
+		self:set_constant_sound("sfx_wall_slide", self.wall_col.other.collision_info.slide_sound)
+	end
+	self.sfx_wall_slide_volume = lerp(self.sfx_wall_slide_volume, 0, 0.3)
+	self:set_constant_sound_volume("sfx_wall_slide", self.sfx_wall_slide_volume)
 
 	-- Perform wall sliding
 	if self.is_wall_sliding then
@@ -941,7 +957,7 @@ function Player:jump(dt, multiplier)
 	Particles:smoke(self.mid_x, self.y+self.h)
 	-- Particles:jump_dust_kick(self.mid_x, self.y+self.h - 12, 0)
 	Particles:jump_dust_kick(self.mid_x, self.y+self.h - 12, math.atan2(self.vy, self.vx) + pi/2)
-	Audio:play_var("jump", 0, 1.2)
+	Audio:play_var("sfx_player_jumplong", 0, 1.2)
 	self.jump_squash = 1/3
 end
 
@@ -950,7 +966,7 @@ function Player:wall_jump(normal)
 	self.vy = -self.jump_speed * self.jump_speed_mult
 	
 	Particles:jump_dust_kick(self.mid_x, self.y+self.h - 12, math.atan2(self.vy, self.vx) + pi/2)
-	Audio:play_var("jump", 0, 1.2)
+	Audio:play_var("sfx_player_jumplong", 0, 1.2)
 	self.jump_squash = 1/3
 end
 
@@ -987,11 +1003,11 @@ end
 
 function Player:on_grounded_normal()
 	-- On land
-	local s = "char_walk_metal_{001-010}"
-	if self.grounded_col and self.grounded_col.other.name == "rubble" then
-		s = "gravel_footstep_"..tostring(love.math.random(1,6))
+	local s = nil
+	if self.grounded_col and self.grounded_col.other.collision_info then
+		s = self.grounded_col.other.collision_info.walk_sound
 	end
-	Audio:play_var(s, 0.3, 1, {pitch=0.5, volume=0.5})
+	Audio:play_var(s, 0.3, 1, {pitch=1.0, volume=1.0})
 
 	self.jump_squash = 1.5
 	self.spr:set_animation("idle")
@@ -1594,12 +1610,12 @@ function Player:animate_walk(dt)
 	self.bounce_vy = old_bounce - self.walkbounce_y
 	
 	-- Walk SFX
-	if sign(self.old_bounce_vy) == 1 and sign(self.bounce_vy) == -1 then
-		local s = "char_walk_metal_{001-010}"
-		if self.grounded_col and self.grounded_col.other.name == "rubble" then
-			s = "gravel_footstep_"..tostring(love.math.random(1,6))
+	if self.is_grounded and sign(self.old_bounce_vy) == 1 and sign(self.bounce_vy) == -1 then
+		local s = nil
+		if self.grounded_col and self.grounded_col.other.collision_info then
+			s = self.grounded_col.other.collision_info.walk_sound
 		end
-		Audio:play_var(s, 0.3, 1.1, {pitch=1.0, volume=0.5})
+		Audio:play_var(s, 0.2, 1.2, {pitch=1.0, volume=1.0})
 	end
 end
 
@@ -1627,14 +1643,29 @@ function Player:update_color(dt)
 	end
 
 	-- Wall slide stamina blink
-	if self.wall_slide_stamina < self.wall_slide_max_stamina/2 then
+	if self.state_machine.current_state_name == "normal" and self.wall_slide_stamina < self.wall_slide_max_stamina/2 then
+		self.stamina_blinking_state = 2
 		self.blink_freq = 0.2
+
 		if self.wall_slide_stamina < self.wall_slide_max_stamina/4 then
+			self.stamina_blinking_state = 3
 			self.blink_freq = self.blink_freq / 2 
 		end
-
+		
 		self.blink_color = transparent_color(COL_LIGHT_RED, 0.8)
+		
+		-- Sound
+		if self.old_stamina_blinking_state ~= self.stamina_blinking_state then
+			self:set_constant_sound("stamina_low", "sfx_player_wall_slide_stamina_low", true)
+			if self.stamina_blinking_state == 3 then
+				self:set_constant_sound("stamina_low", "sfx_player_wall_slide_stamina_very_low", true)
+			end
+		end
+	else
+		self.stamina_blinking_state = 1
+		self:remove_constant_sound("stamina_low")
 	end
+	self.old_stamina_blinking_state = self.stamina_blinking_state
 	
 	-- Invincibility blink
 	if self.is_invincible and self.invincible_time > 0.1 then
