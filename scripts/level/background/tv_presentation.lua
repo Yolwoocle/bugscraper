@@ -34,9 +34,11 @@ function TvPresentation:init(x, y)
         ["slide_016"] = { images.tv_slideshow_016, 0 },      -- optic studio             by pkhead / chromosoze
         ["slide_017"] = { images.tv_slideshow_017, 0.08 },   -- Soon(tm)                 by pixelbath
         ["slide_018"] = { images.tv_slideshow_018, 0.04 },   -- Mio explode              by Corentin Vaillant
-        ["slide_019"] = { images.tv_slideshow_019, 0.04 },   -- Mio explode              by hector_misc (Nextop Games)
-
-        ["bluescreen"] = { images.tv_bluescreen, math.huge } -- By hector_misc (Nextop Games)
+        ["slide_019"] = { images.tv_slideshow_019, 0.04 },   -- Snail Ball Run           by hector_misc (Nextop Games)
+        ["slide_020"] = { images.tv_slideshow_020, 0.5 },   -- You are a Bug             by kiwisky 
+        
+        ["bluescreen"] = { random_sample {images.tv_bluescreen, images.tv_bluescreen_2}, math.huge } 
+        -- By hector_misc (Nextop Games) & 418cat
     }
     self.slide_names = {}
     for name, slide_info in pairs(slides) do
