@@ -42,7 +42,7 @@ function Chipper:init(x, y, spr)
     self.player_detection_range = 256
     self.player_detection_width = 16
     self.telegraph_timer = Timer:new(0.5)
-    self.telegraph_source = Audio:get_sound("chipper_telegraph"):clone()
+    self.telegraph_source = Audio:get_sound("empty"):clone()
     self.attack_speed = 100
     self.post_attack_timer = Timer:new(0.5)
     self.score = 10

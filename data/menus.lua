@@ -40,13 +40,17 @@ local function generate_menus()
     })
 
     menus.w2_boss_intro = BossIntroMenu:new(game, { 38 / 255, 43 / 255, 68 / 255, 0.8 }, Text:text("enemy.bee_boss"), {
-        { image = images.boss_intro_bee_layer5, z_mult = 0.3 },
-        { image = images.boss_intro_bee_layer4, z_mult = 0.5 },
-        { image = images.boss_intro_bee_layer3, z_mult = 0.7 },
-        { image = images.boss_intro_bee_layer2, z_mult = 0.9 },
-        { image = images.boss_intro_bee_layer1, z_mult = 1.4 },
-        { image = images.boss_intro_bee_layer0, z_mult = 1.5 },
+        { image = images.boss_intro_bee_layer7, z_mult = 0.2 },
+        { image = images.boss_intro_bee_layer6, z_mult = 0.4 },
+        { image = images.boss_intro_bee_layer5, z_mult = 0.5 },
+        { image = images.boss_intro_bee_layer4, z_mult = 0.95 },
+        { image = images.boss_intro_bee_layer3, z_mult = 1.0 },
+        { image = images.boss_intro_bee_layer2, z_mult = 1.05 },
+        { image = images.boss_intro_bee_layer1, z_mult = 1.5 },
+        { image = images.boss_intro_bee_layer0, z_mult = 1.6 },
     })
+
+    menus.w2 = menus.w2_boss_intro
 
     menus.w3_boss_intro = BossIntroMenu:new(game, { 38 / 255, 43 / 255, 68 / 255, 0.8 }, Text:text("enemy.motherboard"),
         {

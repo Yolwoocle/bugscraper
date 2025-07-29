@@ -119,7 +119,8 @@ function Debug:init(game)
             ac.gravity = 0
         end},
         ["v"] = { "__jackofalltrades", function()
-            game:play_cutscene(cutscenes["ceo_escape_w1"])
+            -- game:play_cutscene(cutscenes["ceo_escape_w1"])
+            game.menu_manager:set_menu("w2_boss_intro")
 
             ------------------------------
 

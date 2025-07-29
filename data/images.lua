@@ -482,8 +482,10 @@ local img_names = {
 	tv_slideshow_017 = "level/tv_slideshow/tv_slideshow_017",
 	tv_slideshow_018 = "level/tv_slideshow/tv_slideshow_018",
 	tv_slideshow_019 = "level/tv_slideshow/tv_slideshow_019",
+	tv_slideshow_020 = "level/tv_slideshow/tv_slideshow_020",
 	tv_slideshow_999 = "level/tv_slideshow/tv_slideshow_999",
 	tv_bluescreen = "level/tv_slideshow/tv_bluescreen",
+	tv_bluescreen_2 = "level/tv_slideshow/tv_bluescreen_2",
 
 	clock = "actors/enemies/clock",
 
@@ -534,6 +536,8 @@ local img_names = {
 	boss_intro_bee_layer3 = "ui/boss_intro/bee_boss/boss_intro_bee_layer3",
 	boss_intro_bee_layer4 = "ui/boss_intro/bee_boss/boss_intro_bee_layer4",
 	boss_intro_bee_layer5 = "ui/boss_intro/bee_boss/boss_intro_bee_layer5",
+	boss_intro_bee_layer6 = "ui/boss_intro/bee_boss/boss_intro_bee_layer6",
+	boss_intro_bee_layer7 = "ui/boss_intro/bee_boss/boss_intro_bee_layer7",
 
 	player_preview_bg = "ui/player_preview/player_preview_bg",
 	player_preview_detail = "ui/player_preview/player_preview_detail",

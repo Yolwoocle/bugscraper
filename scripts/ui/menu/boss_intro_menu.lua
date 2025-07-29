@@ -38,11 +38,11 @@ function BossIntroMenu:init_boss_intro()
 
 	self.title_padding = 16
 	
-	self.layers_scroll = CANVAS_WIDTH * 2.5
+	self.layers_scroll = CANVAS_WIDTH * 3.5
 	self.layers_scroll_enter_speed = 2500
-	self.layers_scroll_linger_speed = 32
+	self.layers_scroll_linger_speed = 20
 	self.layers_linger_zone = 38
-	self.layers_scroll_exit_speed = 2500
+	self.layers_scroll_exit_speed = 3000
 	self.layers_scroll_speed = self.layers_scroll_enter_speed
 end
 
@@ -72,7 +72,7 @@ function BossIntroMenu:update(dt)
 	self.layers_scroll = self.layers_scroll - dt * self.layers_scroll_speed
 	self.border_scroll = (self.border_scroll + self.border_scroll_speed * dt) % self.border_loop_threshold
 
-	if self.layers_scroll < -CANVAS_WIDTH * 1.5 then
+	if self.layers_scroll < -CANVAS_WIDTH * 2.5 then
 		game.menu_manager:set_menu()
 
 	end
