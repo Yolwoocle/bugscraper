@@ -7,6 +7,7 @@
       occasional gamers would try their hand at the game, so try to avoid english gamer terms like 
       "kills", "checkpoint", etc, except if it's the normal established term for the word (e.g. "jetpack", etc). 
     * It is very easy for me to add more characters if needed, just tell me and I'll do it.
+    * Please notify me if there are any special technical requirements. (e.g. text rendering specifics, etc) 
 ]]
 
 return {

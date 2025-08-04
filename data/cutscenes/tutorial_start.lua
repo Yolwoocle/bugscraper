@@ -31,7 +31,7 @@ return Cutscene:new("tutorial_start", {
 
         duration = 4.2,
         enter = function(cutscene, data)
-            game.game_ui:start_title("Léo Bernard", "Yolwoocle", "{menu.credits.game_by}", 0.5, 3.2, 0.5)
+            game.game_ui:start_title("Léo Bernard", "🦋 @yolwoocle.com", "{menu.credits.game_by}", 0.5, 3.2, 0.5)
         end,
     }),
     CutsceneScene:new({
@@ -55,7 +55,7 @@ return Cutscene:new("tutorial_start", {
 
         duration = 4.2,
         enter = function(cutscene, data)
-            game.game_ui:start_title("Noam Goldfarb", "SSlime7", "{menu.credits.additional_art}", 0.5, 3.2, 0.5)
+            game.game_ui:start_title("Noam Goldfarb", "𝕏 @SSlime7", "{menu.credits.additional_art}", 0.5, 3.2, 0.5)
         end,
     }),
     CutsceneScene:new({
@@ -63,7 +63,7 @@ return Cutscene:new("tutorial_start", {
 
         duration = 4.2,
         enter = function(cutscene, data)
-            game.game_ui:start_title("Ninesliced", "", "{menu.credits.game_by}", 0.5, 3.2, 0.5)
+            game.game_ui:start_title("Ninesliced", "🦋 @ninesliced.com", "{menu.credits.game_by}", 0.5, 3.2, 0.5)
         end,
     }),
     CutsceneScene:new({
