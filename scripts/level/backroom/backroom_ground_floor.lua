@@ -32,7 +32,7 @@ function BackroomGroundFloor:generate(world_generator)
 	game.camera.max_x = CANVAS_WIDTH + 11*16
 	
     world_generator:reset()
-	world_generator:write_rect(Rect:new(2, 3, 68, 15), TILE_METAL)
+	world_generator:write_rect(Rect:new(2, 3, 68, 15), TILE_STONE)
 	world_generator:write_rect(Rect:new(2, 15, 68, 15), TILE_CARPET)
 
 	-- tables

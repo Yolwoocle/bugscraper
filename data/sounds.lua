@@ -51,16 +51,17 @@ local sfxnames = {
 	["sfx_player_damage_poison"] =         {"sfx/actor/player/sfx_player_damage_poison.ogg", "static"},
 	["sfx_player_death"] =                 {"sfx/actor/player/sfx_player_death.ogg", "static"},
 	["sfx_player_leave_game"] =            {"sfx/actor/player/sfx_player_leave_game.ogg", "static"},
-	["sfx_player_leave_game_easter_egg"] = {"sfx/actor/player/sfx_player_leave_game_easter_egg.mp3", "static"},
+	["sfx_player_leave_game_easter_egg"] = {"sfx/actor/player/sfx_player_leave_game_easter_egg.ogg", "static"},
 	
 	["sfx_player_jumplong"] = {"sfx/actor/player/jump/sfx_player_jumplong.ogg", "static"},
 
 	-- ACTORS
 	-- Jumping props
-	["sfx_actor_jumping_prop_paper_stack_{01-04}"] = {"sfx/actor/jumping_prop/sfx_actor_jumping_prop_paper_stack_{}.ogg", "static"},
-	["sfx_actor_jumping_prop_mug_{01-02}"] =         {"sfx/actor/jumping_prop/sfx_actor_jumping_prop_mug_{}.ogg", "static"},
-	["sfx_actor_jumping_prop_plant_small_{01-03}"] = {"sfx/actor/jumping_prop/sfx_actor_jumping_prop_plant_small_{}.ogg", "static"},
-	["sfx_actor_jumping_prop_screen_{01-04}"] =      {"sfx/actor/jumping_prop/sfx_actor_jumping_prop_screen_{}.ogg", "static"},
+	["sfx_actor_jumping_prop_paper_stack_{01-06}"] = {"sfx/actor/jumping_prop/paper_stack/sfx_actor_jumping_prop_paper_stack_{}.ogg", "static"},
+	["sfx_actor_jumping_prop_mug_{01-06}"] =         {"sfx/actor/jumping_prop/mug/sfx_actor_jumping_prop_mug_{}.ogg", "static"},
+	-- ["sfx_actor_jumping_prop_plant_small_{01-03}"] = {"sfx/actor/jumping_prop/plant_small/sfx_actor_jumping_prop_plant_small_{}.ogg", "static"},
+	["sfx_actor_jumping_prop_screen_{01-06}"] =      {"sfx/actor/jumping_prop/screen/sfx_actor_jumping_prop_screen_{}.ogg", "static"},
+	["sfx_actor_jumping_prop_boba_{01-06}"] =        {"sfx/actor/jumping_prop/boba/sfx_actor_jumping_prop_boba_{}.ogg", "static"},
 
 	-- Cocoon
 	["sfx_actor_cocoon_damage_{01-07}"] = {"sfx/actor/cocoon/sfx_actor_cocoon_damage_{}.ogg", "static"},
@@ -91,7 +92,10 @@ local sfxnames = {
 	["sfx_boss_mrdung_dying"] = {"sfx/enemy/mrdung/sfx_boss_mrdung_dying.ogg", "static"},
 	["sfx_boss_mrdung_land_in_dung"] = {"sfx/enemy/mrdung/sfx_boss_mrdung_land_in_dung.ogg", "static"},
 	["sfx_boss_mrdung_roll"] = {"sfx/enemy/mrdung/sfx_boss_mrdung_roll.ogg", "static", { looping = true }},
-	["sfx_boss_mrdung_ball_hit_{01-08}"] = {"sfx/enemy/mrdung/ball/sfx_boss_mrdung_ball_hit_{}.ogg", "static"},
+	["sfx_boss_mrdung_ball_hit_{01-06}"] = {"sfx/enemy/mrdung/ball/sfx_boss_mrdung_ball_hit_{}.ogg", "static"},
+
+	-- Fly 
+	["sfx_enemy_fly_ambient_{01-02}"] = {"sfx/enemy/fly/sfx_enemy_fly_ambient_{}.ogg", "static", { looping = true }},
 
 	["fly_buzz"] = {"empty.ogg", "static"}, -- TODO change to actual sound
 }

@@ -40,7 +40,7 @@ function Explosion:update(dt)
         game:screenshake(self.screenshake)
         game:frameskip(5)
         Input:vibrate_all(0.3, 0.5)
-        Audio:play_var(self.sound, 0.2, 1.2)
+        Audio:play_var(self.sound)
         Particles:explosion(self.mid_x, self.mid_y, self.radius + self.safe_margin, {
             color_gradient = self.color_gradient,
         })

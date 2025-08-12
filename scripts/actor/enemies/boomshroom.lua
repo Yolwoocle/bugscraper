@@ -34,6 +34,8 @@ function Boomshroom:init(x, y)
     self.follow_player = false
     self.direction = random_range(0, pi2)
 
+	self.fury_stomp_multiplier = 2.0
+
     self.anim_frames = nil
 
     self.sizes = {
@@ -102,6 +104,7 @@ function Boomshroom:init(x, y)
                         radius = self.explosion_radius,
                         sound = "sfx_enemy_boomshroom_explosion_{01-06}"
                     })
+                    game.level:add_fury(1.0)
                     game:new_actor(explosion)
                     self:kill()
                 end

@@ -96,8 +96,15 @@ function DungBeetle:init(x, y)
 
                 game:frameskip(25)
                 game:screenshake(8)
+
+                Particles:push_layer(PARTICLE_LAYER_BACK)
+                Particles:static_image(images.star_big, self.mid_x, self.mid_y, 0, 0.05, 1, {
+                    color = COL_LIGHT_RED
+                })
+                Particles:pop_layer()
+
                 Particles:image(self.mid_x, self.mid_y, 40, images.glass_shard, self.h)
-                Audio:play("sfx_boss_mrdung_death")
+                Audio:play("sfx_boss_mrdung_dying")
                 Audio:play_var("sfx_actor_upgrade_display_break_{01-04}", 0.1, 1.1)
             end,
             update = function(state, dt)
@@ -197,7 +204,7 @@ function DungBeetle:on_death()
     
     Particles:ejected_player(images.dung_beetle_dead, self.mid_x, self.mid_y)
     Particles:image(self.mid_x, self.mid_y, 100, {images.dung_particle_1, images.dung_particle_2, images.dung_particle_3}, self.h, 2)
-    Audio:play("sfx_boss_mrdung_dying")
+    Audio:play("sfx_boss_mrdung_death")
 end
 
 function DungBeetle:draw()
@@ -215,7 +222,7 @@ function DungBeetle:on_hit_flying_dung(flying_dung)
     self.hits = math.max(0, self.hits - 1)
     
     self:do_damage(5, flying_dung)
-    Audio:play_var("sfx_boss_mrdung_ball_hit_{01-08}", 0.2, 1.2)
+    Audio:play("sfx_boss_mrdung_ball_hit_{01-06}")
 
     if self.vehicle and self.vehicle.state_machine.current_state_name ~= "bunny_hopping" then
         if sign(self.vehicle.vx) == -sign(flying_dung.vx) then
