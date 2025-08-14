@@ -11,6 +11,7 @@ function CollisionInfo:init(params)
 
     self.walk_sound = param(params.walk_sound, nil)
     self.slide_sound = param(params.slide_sound, nil)
+    self.land_sound = param(params.land_sound, nil)
 end
 
 return CollisionInfo

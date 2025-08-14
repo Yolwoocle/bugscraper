@@ -30,7 +30,7 @@ local function generate_menus()
 
     menus.debug_command = DebugCommandMenu:new(game)
 
-    menus.w1_boss_intro = BossIntroMenu:new(game, { 38 / 255, 43 / 255, 68 / 255, 0.8 }, Text:text("enemy.dung"), {
+    menus.w1_boss_intro = BossIntroMenu:new(game, { 38 / 255, 43 / 255, 68 / 255, 0.8 }, Text:text("enemy.dung"), "sfx_boss_intro_mrdung", {
         { image = images.boss_intro_dung_layer5, z_mult = 0.3 },
         { image = images.boss_intro_dung_layer4, z_mult = 0.5 },
         { image = images.boss_intro_dung_layer3, z_mult = 0.7 },
@@ -39,7 +39,7 @@ local function generate_menus()
         { image = images.boss_intro_dung_layer0, z_mult = 1.5 },
     })
 
-    menus.w2_boss_intro = BossIntroMenu:new(game, { 38 / 255, 43 / 255, 68 / 255, 0.8 }, Text:text("enemy.bee_boss"), {
+    menus.w2_boss_intro = BossIntroMenu:new(game, { 38 / 255, 43 / 255, 68 / 255, 0.8 }, Text:text("enemy.bee_boss"), "", {
         { image = images.boss_intro_bee_layer7, z_mult = 0.2 },
         { image = images.boss_intro_bee_layer6, z_mult = 0.4 },
         { image = images.boss_intro_bee_layer5, z_mult = 0.5 },
@@ -52,12 +52,12 @@ local function generate_menus()
 
     menus.w2 = menus.w2_boss_intro
 
-    menus.w3_boss_intro = BossIntroMenu:new(game, { 38 / 255, 43 / 255, 68 / 255, 0.8 }, Text:text("enemy.motherboard"),
+    menus.w3_boss_intro = BossIntroMenu:new(game, { 38 / 255, 43 / 255, 68 / 255, 0.8 }, Text:text("enemy.motherboard"), "",
         {
             { image = images.motherboard, z_mult = 0.7 },
         })
     
-    menus.w4_boss_intro = BossIntroMenu:new(game, { 38 / 255, 43 / 255, 68 / 255, 0.8 }, "Boss 4", {
+    menus.w4_boss_intro = BossIntroMenu:new(game, { 38 / 255, 43 / 255, 68 / 255, 0.8 }, "Boss 4", "", {
         { image = images.empty, z_mult = 1.0 },
     })
 

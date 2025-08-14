@@ -150,6 +150,7 @@ function Dung:init(x, y, spr, w, h)
             end,
             after_collision = function(state, col)
                 if col.type ~= "cross" and self.bounces > 0 then
+                    Audio:play_var("sfx_boss_mrdung_jump_{01-06}", 0.1, 1.1) -- TODO make it play when you LAND on the floor
                     game:screenshake(4)
                 end
             end

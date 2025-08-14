@@ -1005,9 +1005,9 @@ function Player:on_grounded_normal()
 	-- On land
 	local s = nil
 	if self.grounded_col and self.grounded_col.other.collision_info then
-		s = self.grounded_col.other.collision_info.walk_sound
+		s = self.grounded_col.other.collision_info.land_sound
 	end
-	Audio:play_var(s, 0.3, 1, {pitch=1.0, volume=1.0})
+	Audio:play_var(s, 0.2, 1.2, {pitch=1.0, volume=1.0})
 
 	self.jump_squash = 1.5
 	self.spr:set_animation("idle")

@@ -6,9 +6,10 @@ local ui = require "scripts.ui.ui"
 
 local BossIntroMenu = Menu:inherit()
 
-function BossIntroMenu:init(game, bg_color, title, layers)
+function BossIntroMenu:init(game, bg_color, title, sound, layers)
 	BossIntroMenu.super.init(self, game, "", {{""}}, bg_color, nil, nil)
 
+	self.sound = sound
 	self.boss_title = title
 	self.layers = layers
 	self.draw_sawtooth_border = false
@@ -21,6 +22,7 @@ end
 
 function BossIntroMenu:on_set()
 	BossIntroMenu.super.on_set(self)
+	Audio:play(self.sound)
 	self:init_boss_intro()
 end
 

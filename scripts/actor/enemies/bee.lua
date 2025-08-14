@@ -96,6 +96,7 @@ function Bee:update_phase(dt)
             self.current_phase_timer = random_range(0.5, 3.0)
             
         elseif self.phase == PHASE_CHASE then
+            Audio:play_var("sfx_enemy_bee_attack_{01-05}", 0.1, 1.1)
             self.phase = PHASE_TELEGRAPH
             self.current_phase_timer = PHASE_TELEGRAPH_DURATION
             self.t = 0

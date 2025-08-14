@@ -95,7 +95,7 @@ function Stabee:init(x, y, spr)
 
         stuck = {
             enter = function(state)
-                Audio:play_var("stabee_land_"..tostring(random_range_int(1, 3)), 0.1, 1.1)
+                Audio:play_var("sfx_enemy_stabee_land_{01-04}", 0.1, 1.1)
 				Audio:play_var("bullet_bounce_"..random_sample{"1","2"}, 0.2, 1.2, {pitch = 0.8})
 
                 self.stuck_oscillation_t = 0.0
@@ -139,6 +139,7 @@ function Stabee:init(x, y, spr)
                 self.is_affected_by_bounds = true
                 self.is_affected_by_walls = true
                 self:set_position(self.x, self.y - self.stuck_spr_oy)
+                Audio:play_var("sfx_enemy_stabee_unstuck_{01-04}", 0.2, 1.2)
 
                 local y0 = self.y + self.h
                 local vx = random_range(40, 60)

@@ -296,6 +296,17 @@ function DebugCommandManager:init()
             return true
         end,
     }
+    self.commands["_set_smashbros_probability"] = DebugCommand:new {
+        name = "_weaken_all",
+        description = "Sets the probability of occurence of the Smash Bros easter egg",
+        args = {
+            { "prob:number" },
+        },
+        run = function(prob)
+            SMASH_EASTER_EGG_PROBABILITY = prob
+            return true
+        end,
+    }
     self.commands["_test_sub"] = DebugCommand:new {
         name = "_test_sub",
         description = "",

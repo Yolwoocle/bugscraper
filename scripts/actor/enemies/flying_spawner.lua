@@ -54,6 +54,12 @@ function FlyingSpawner:init(x, y, spr, w, h)
     self.target_y = (game.level.cabin_inner_rect.ay + game.level.cabin_inner_rect.by) / 2
     self.target_follow_speed_y = 60
     
+    self:set_constant_sound("flap", "sfx_enemy_flying_nest_ambient_lp", false)
+    self:seek_constant_sound("flap", random_range(0, self:get_constant_sound("flap"):get_duration())) 
+    self:play_constant_sound("flap")
+
+    self.sound_death = "sfx_enemy_flying_nest_death"
+
     self.score = 50
 
     self.state_machine = StateMachine:new({
@@ -173,6 +179,7 @@ function FlyingSpawner:spawn_larva(direction)
     table.insert(self.larva_projectiles, larva_projectile)
     Particles:star_splash_small(self.x + x, self.y + y)
     Particles:smoke(self.x + x, self.y + y)
+    Audio:play_var("sfx_enemy_flying_nest_shoot_larva_{01-03}", 0.2, 1.2)
 end
 
 function FlyingSpawner:draw()

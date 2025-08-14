@@ -39,6 +39,7 @@ function Tiles:init()
 			is_slidable = true,
 			walk_sound = "sfx_player_footstep_metal_{01-10}",
 			slide_sound = "sfx_player_wall_slide_metal_{01-02}",
+			land_sound = "sfx_player_footstep_land_metal_{01-04}",
 		}
 	end)
 
@@ -55,6 +56,7 @@ function Tiles:init()
 			is_slidable = false,
 			walk_sound = "sfx_player_footstep_metal_{01-10}",
 			slide_sound = "sfx_player_wall_slide_metal_{01-02}",
+			land_sound = "sfx_player_footstep_land_metal_{01-04}",
 		}
 	end)
 
@@ -130,9 +132,10 @@ function Tiles:init()
 			is_slidable = true,
 			walk_sound = "sfx_player_footstep_carpet_{01-10}",
 			slide_sound = "sfx_player_wall_slide_metal_{01-02}",
+			land_sound = "sfx_player_footstep_land_carpet_{01-04}",
 		}
 	end)
-	
+
 	-- Sand
 	self.tiles[TILE_SAND] = make_tile(function(self, x, y, w)
 		self:init_tile(x, y, w)
@@ -145,6 +148,7 @@ function Tiles:init()
 			is_slidable = true,
 			walk_sound = "sfx_player_footstep_sand_{01-10}",
 			slide_sound = "sfx_player_wall_slide_stone_{01-02}",
+			land_sound = "sfx_player_footstep_land_sand_{01-04}",
 		}
 	end)
 
@@ -160,6 +164,7 @@ function Tiles:init()
 			is_slidable = true,
 			walk_sound = "sfx_player_footstep_stone_{01-10}",
 			slide_sound = "sfx_player_wall_slide_stone_{01-02}",
+			land_sound = "sfx_player_footstep_land_stone_{01-04}",
 		}
 	end)
 
@@ -174,7 +179,8 @@ function Tiles:init()
 			type = COLLISION_TYPE_SOLID,
 			is_slidable = true,
 			walk_sound = "sfx_player_footstep_wood_{01-06}",
-			slide_sound = "sfx_player_wall_slide_metal_{01-02}",
+			slide_sound = "sfx_player_wall_slide_metal_{01-02}", -- Make wood slide sound if needed 
+			land_sound = "sfx_player_footstep_land_wood_{01-04}",
 		}
 	end)
 
@@ -190,6 +196,7 @@ function Tiles:init()
 			is_slidable = false,
 			walk_sound = "sfx_player_footstep_wood_{01-06}",
 			slide_sound = "sfx_player_wall_slide_metal_{01-02}",
+			land_sound = "sfx_player_footstep_land_wood_{01-04}",
 		}
 	end)
 	
@@ -205,6 +212,7 @@ function Tiles:init()
 			is_slidable = true,
 			walk_sound = "sfx_player_footstep_glass_{01-06}",
 			slide_sound = "sfx_player_wall_slide_glass_{01-02}",
+			land_sound = "sfx_player_footstep_glass_{01-06}",
 		}
 	end)
 end

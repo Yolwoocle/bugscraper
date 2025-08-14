@@ -40,6 +40,12 @@ local sfxnames = {
 	["sfx_player_footstep_wood_{01-06}"] =   {"sfx/actor/player/walk/wood/sfx_player_footstep_wood_{}.ogg", "static"},
 	["sfx_player_footstep_glass_{01-06}"] =  {"sfx/actor/player/walk/glass/sfx_player_footstep_glass_{}.ogg", "static"},
 
+	["sfx_player_footstep_land_metal_{01-04}"] = {"sfx/actor/player/land/metal/sfx_player_footstep_land_metal_{}.ogg", "static"},
+	["sfx_player_footstep_land_carpet_{01-04}"] = {"sfx/actor/player/land/carpet/sfx_player_footstep_land_carpet_{}.ogg", "static"},
+	["sfx_player_footstep_land_sand_{01-04}"] = {"sfx/actor/player/land/sand/sfx_player_footstep_land_sand_{}.ogg", "static"},
+	["sfx_player_footstep_land_stone_{01-04}"] = {"sfx/actor/player/land/stone/sfx_player_footstep_land_stone_{}.ogg", "static"},
+	["sfx_player_footstep_land_wood_{01-04}"] = {"sfx/actor/player/land/wood/sfx_player_footstep_land_wood_{}.ogg", "static"},
+
 	["sfx_player_wall_slide_metal_{01-02}"] = {"sfx/actor/player/slide/metal/sfx_player_wall_slide_metal_{}.ogg", "static", { looping = true }},
 	["sfx_player_wall_slide_stone_{01-02}"] = {"sfx/actor/player/slide/stone/sfx_player_wall_slide_stone_{}.ogg", "static", { looping = true }},
 	["sfx_player_wall_slide_glass_{01-02}"] = {"sfx/actor/player/slide/glass/sfx_player_wall_slide_glass_{}.ogg", "static", { looping = true }},
@@ -73,6 +79,11 @@ local sfxnames = {
 	-- Health pickup
 	["sfx_loot_health_collect"] = {"sfx/sfx_loot_health_collect.ogg", "static"},
 
+	-- Button small
+	["sfx_actor_button_small_glass_damage_{01-06}"] = {"sfx/actor/button/glass/sfx_actor_button_small_glass_damage_{}.ogg", "static"},
+	["sfx_actor_button_small_glass_break"] = {"sfx/actor/button/glass/sfx_actor_button_small_glass_break.ogg", "static"},
+	["sfx_actor_button_small_pressed"] = {"sfx/actor/button/sfx_actor_button_small_pressed.ogg", "static"},
+
 	-- ENEMIES 
 	-- Snail
 	["sfx_enemy_snail_bounce_{01-06}"] = {"sfx/enemy/snail/sfx_enemy_snail_bounce_{}.ogg", "static"},
@@ -86,16 +97,44 @@ local sfxnames = {
 	-- Stink bug
 	["sfx_enemy_poison_cloud_spawn_{01-04}"] = {"sfx/enemy/poison/sfx_enemy_poison_cloud_spawn_{}.ogg", "static"},
 
+	-- Fly 
+	["sfx_enemy_fly_ambient_{01-02}"] = {"sfx/enemy/fly/sfx_enemy_fly_ambient_{}.ogg", "static", { looping = true }},
+
 	-- Boss W1    
+	["sfx_boss_intro_mrdung"] = {"sfx/enemy/mrdung/sfx_boss_intro_mrdung.ogg", "static"},
 	["sfx_boss_mrdung_boss_activate"] = {"sfx/enemy/mrdung/sfx_boss_mrdung_boss_activate.ogg", "static"},
 	["sfx_boss_mrdung_death"] = {"sfx/enemy/mrdung/sfx_boss_mrdung_death.ogg", "static"},
 	["sfx_boss_mrdung_dying"] = {"sfx/enemy/mrdung/sfx_boss_mrdung_dying.ogg", "static"},
 	["sfx_boss_mrdung_land_in_dung"] = {"sfx/enemy/mrdung/sfx_boss_mrdung_land_in_dung.ogg", "static"},
 	["sfx_boss_mrdung_roll"] = {"sfx/enemy/mrdung/sfx_boss_mrdung_roll.ogg", "static", { looping = true }},
+	["sfx_boss_mrdung_jump_{01-06}"] = {"sfx/enemy/mrdung/jump/sfx_boss_mrdung_jump_{}.ogg", "static"},
 	["sfx_boss_mrdung_ball_hit_{01-06}"] = {"sfx/enemy/mrdung/ball/sfx_boss_mrdung_ball_hit_{}.ogg", "static"},
 
-	-- Fly 
-	["sfx_enemy_fly_ambient_{01-02}"] = {"sfx/enemy/fly/sfx_enemy_fly_ambient_{}.ogg", "static", { looping = true }},
+	-- W2	
+	-- Bee
+	["sfx_enemy_bee_attack_{01-05}"] = {"sfx/enemy/bee/sfx_enemy_bee_attack_{}.ogg", "static"},
+
+	-- Stabee
+	["sfx_enemy_stabee_land_{01-04}"] = {"sfx/enemy/stabee/sfx_enemy_stabee_land_{}.ogg", "static"},
+	["sfx_enemy_stabee_unstuck_{01-04}"] = {"sfx/enemy/stabee/sfx_enemy_stabee_unstuck_{}.ogg", "static"},
+
+	-- Drill bee
+	["sfx_enemy_drill_bee_attack_{01-04}"] = {"sfx/enemy/drill_bee/sfx_enemy_drill_bee_attack_{}.ogg", "static"},
+	["sfx_enemy_drill_bee_explosion_{01-03}"] = {"sfx/enemy/drill_bee/sfx_enemy_drill_bee_explosion_{}.ogg", "static"},
+	
+	-- Beelet
+	["sfx_enemy_beelet_telegraph_{01-04}"] = {"sfx/enemy/beelet/sfx_enemy_beelet_telegraph_{}.ogg", "static"},
+	["sfx_enemy_beelet_attack_{01-04}"] = {"sfx/enemy/beelet/sfx_enemy_beelet_attack_{}.ogg", "static"},
+	["sfx_enemy_beelet_bounce_{01-04}"] = {"sfx/enemy/beelet/sfx_enemy_beelet_bounce_{}.ogg", "static"},
+
+	-- Flying nest 
+	["sfx_enemy_flying_nest_ambient_lp"] = {"sfx/enemy/flying_nest/sfx_enemy_flying_nest_ambient_lp.ogg", "static", { looping = true }},
+	["sfx_enemy_flying_nest_death"] = {"sfx/enemy/flying_nest/sfx_enemy_flying_nest_death.ogg", "static"},
+	["sfx_enemy_flying_nest_shoot_larva_{01-03}"] = {"sfx/enemy/flying_nest/sfx_enemy_flying_nest_shoot_larva_{}.ogg", "static"},
+	
+	-- Comball
+	["sfx_enemy_comball_bounce_{01-06}"] = {"sfx/enemy/comball/sfx_enemy_comball_bounce_{}.ogg", "static"},
+
 
 	["fly_buzz"] = {"empty.ogg", "static"}, -- TODO change to actual sound
 }
