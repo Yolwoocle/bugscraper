@@ -16,6 +16,7 @@ local sounds = {}
 local sfxnames = {
 	["empty"] =                             { "empty.ogg", "static" },
 
+	-- MUSIC
 	["music_ground_floor_players_paused"] = { "music/music_ground_floor_players_paused.ogg", "stream", { looping = true } },
 	["music_ground_floor_empty_ingame"] =   { "music/music_ground_floor_empty_ingame.ogg", "stream", { looping = true } },
 	["music_ground_floor_empty_paused"] =   { "music/music_ground_floor_empty_paused.ogg", "stream", { looping = true } },
@@ -32,7 +33,16 @@ local sfxnames = {
 	["music_boss_w1_ingame"] =              { "music/music_boss_w1_ingame.ogg", "stream", { looping = true } },
 	["music_boss_w1_paused"] =              { "music/music_boss_w1_paused.ogg", "stream", { looping = true } },
 
-	-- Player
+	-- GUNS
+	["sfx_weapon_peagun_shoot_{01-08}"] =           {"sfx/weapons/peagun/sfx_weapon_peagun_shoot_{}.ogg", "static"},
+	["sfx_weapon_pollenburst_shoot_{01-06}"] =      {"sfx/weapons/pollenburst/sfx_weapon_pollenburst_shoot_{}.ogg", "static"},
+	["sfx_weapon_seedminigun_shoot_{01-10}"] =      {"sfx/weapons/seedminigun/sfx_weapon_seedminigun_shoot_{}.ogg", "static"},
+	["sfx_weapon_mushroomcannon_shoot_{01-04}"] =   {"sfx/weapons/mushroomcannon/sfx_weapon_mushroomcannon_shoot_{}.ogg", "static"},
+	["sfx_weapon_bigberry_shoot_{01-04}"] =         {"sfx/weapons/bigberry/sfx_weapon_bigberry_shoot_{}.ogg", "static"},
+	["sfx_weapon_raspberryshotgun_shoot_{01-10}"] = {"sfx/weapons/raspberryshotgun/sfx_weapon_raspberryshotgun_shoot_{}.ogg", "static"},
+	["sfx_weapon_triplepepper_shoot_{01-08}"] =     {"sfx/weapons/triplepepper/sfx_weapon_triplepepper_shoot_{}.ogg", "static"},
+
+	-- PLAYER
 	["sfx_player_footstep_metal_{01-10}"] =  {"sfx/actor/player/walk/metal/sfx_player_footstep_metal_{}.ogg", "static"},
 	["sfx_player_footstep_carpet_{01-10}"] = {"sfx/actor/player/walk/carpet/sfx_player_footstep_carpet_{}.ogg", "static"},
 	["sfx_player_footstep_sand_{01-10}"] =   {"sfx/actor/player/walk/sand/sfx_player_footstep_sand_{}.ogg", "static"},
@@ -134,6 +144,8 @@ local sfxnames = {
 	
 	-- Comball
 	["sfx_enemy_comball_bounce_{01-06}"] = {"sfx/enemy/comball/sfx_enemy_comball_bounce_{}.ogg", "static"},
+	["sfx_enemy_comball_flash_{01-06}"] = {"sfx/enemy/comball/sfx_enemy_comball_flash_{}.ogg", "static"},
+	["sfx_enemy_comball_death"] = {"sfx/enemy/comball/sfx_enemy_comball_death.ogg", "static"},
 
 
 	["fly_buzz"] = {"empty.ogg", "static"}, -- TODO change to actual sound

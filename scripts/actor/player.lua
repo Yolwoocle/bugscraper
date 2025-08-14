@@ -602,8 +602,12 @@ function Player:do_damage(n, source)
 	Input:vibrate(self.n, 0.3, 0.45)
 
 	local damage_sfx = "sfx_player_damage_normal"
-	if source and source.name == "poison_cloud" then
-		damage_sfx = "sfx_player_damage_poison"
+	if source then
+		if source.name == "poison_cloud" then
+			damage_sfx = "sfx_player_damage_poison"
+		elseif source.name == "timed_spikes" then
+			damage_sfx = "sfx_enemy_timed_spikes_extend"	
+		end
 	end
 	Audio:play(damage_sfx)
 	-- Particles:word(self.mid_x, self.y, concat("-",n), COL_LIGHT_RED)

@@ -25,8 +25,9 @@ function HoneycombFootball:init(x, y, spr)
     self.is_bouncy_to_bullets = true
     self.is_immune_to_bullets = true
 
-    self.sound_death = "snail_shell_crack"
-    self.sound_stomp = "snail_shell_crack"
+    self.sound_death = "sfx_enemy_comball_death"
+    self.sound_stomp = "sfx_enemy_comball_death"
+    self.sound_pong_bounce = "sfx_enemy_comball_bounce_{01-06}"
 
     self.stomps = 5
     self.damage_on_stomp = 0.1

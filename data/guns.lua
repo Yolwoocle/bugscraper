@@ -18,7 +18,7 @@ function Guns:init()
 		self:init_gun(user)
 		
 		self.color = COL_WHITE
-		self.sfx = "mushroom_ant_pop"
+		self.sfx = "empty"
 
 		self.spr = images.empty
 		self.damage = 0
@@ -36,7 +36,7 @@ function Guns:init()
 		self:init_gun(user)
 		
 		self.color = COL_LIGHT_YELLOW
-		self.sfx = "mushroom_ant_pop"
+		self.sfx = "sfx_weapon_peagun_shoot_{01-08}"
 
 		self.damage = 1.5
 		self.max_ammo = 25
@@ -67,8 +67,7 @@ function Guns:init()
 		self.damage = 1.5
 		self.is_auto = true
 		self.spr = images.gun_triple
-		self.sfx = "triple_pop"
-		self.sfx_pitch = 0.9
+		self.sfx = "sfx_weapon_triplepepper_shoot_{01-08}"
 		self.cooldown = 0.2
 		self.bullet_number = 3
 		self.random_angle_offset = 0
@@ -93,8 +92,7 @@ function Guns:init()
 		self.color = COL_ORANGE
 
 		self.spr = images.gun_burst
-		self.sfx = "mushroom_ant_pop"
-		self.sfx_pitch = 1.1
+		self.sfx = "sfx_weapon_pollenburst_shoot_{01-06}"
 		self.bullet_spread = 0.2
 		
 		self.is_auto = false
@@ -121,8 +119,7 @@ function Guns:init()
 		self.spr = images.gun_shotgun
 		self.color = COL_LIGHT_BLUE
 
-		self.sfx = "mushroom_ant_pop"
-		self.sfx_pitch = 0.6
+		self.sfx = "sfx_weapon_raspberryshotgun_shoot_{01-10}"
 		self.is_auto = false
 
 		self.damage = 1
@@ -163,8 +160,7 @@ function Guns:init()
 		self.damage = 2.5
 		self.is_auto = true
 		self.spr = images.gun_minigun
-		self.sfx = "mushroom_ant_pop"
-		self.sfx_pitch = 1.2
+		self.sfx = "sfx_weapon_seedminigun_shoot_{01-10}"
 
 		self.cooldown = 0.06
 		self.jetpack_force = 300
@@ -198,10 +194,7 @@ function Guns:init()
 		self.damage = 1.5
 		self.is_auto = true
 		self.spr = images.gun_ring
-		self.sfx = {"gunshot_ring_1", "gunshot_ring_2", "gunshot_ring_3"}
-		self.sfx2 = "pop_ring"
-		self.sfx_volume = 1
-		self.sfx_pitch = 1.4
+		self.sfx = "sfx_weapon_bigberry_shoot_{01-04}"
 		
 		self.cooldown = 0.5
 		self.jetpack_force = 1000
@@ -223,8 +216,7 @@ function Guns:init()
 		
 		self.color = COL_YELLOW_ORANGE
 		
-		self.sfx = "mushroom_ant_pop"
-		self.sfx_pitch = 0.7
+		self.sfx = "sfx_weapon_mushroomcannon_shoot_{01-04}"
 		self.damage = 4
 		self.is_auto = true
 		self.spr = images.gun_mushroom_cannon
