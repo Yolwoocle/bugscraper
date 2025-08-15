@@ -216,6 +216,7 @@ return {
                 title = "Audio",
                 sound = "SOM",
                 volume = "VOLUME",
+                sfx_volume = "VOLUME DOS EFEITOS SONOROS", -- ADDED
                 music_volume = "VOLUME DA MÚSICA",
                 music_pause_menu = "MÚSICA NO MENU DE PAUSA",
             },

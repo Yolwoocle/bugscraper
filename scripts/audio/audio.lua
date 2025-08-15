@@ -6,12 +6,19 @@ local sounds = require "data.sounds"
 local AudioManager = Class:inherit()
 
 function AudioManager:init()
+	-- Music is managed outside AudioManager so no need to assign it a layer 
+	self.layers = {
+		"sfx"
+	}
 end
 
 function AudioManager:update(dt)
 end
 
-function AudioManager:play(snd, volume, pitch)
+function AudioManager:play(snd, volume, pitch, params)
+	params = params or {}
+	local layer = params.layer or "sfx"
+	local layer_volume = Options:get(layer .. "_volume") or 1.0
     -- Formalize inputs
     local sndname = snd
 	if type(snd) == "table" then
@@ -38,38 +45,19 @@ function AudioManager:play(snd, volume, pitch)
 	-- end
 
 	local new_sound = sound:clone()
-	new_sound:set_volume(volume * sound.volume)
+	new_sound:set_volume(volume * sound.volume * layer_volume)
 	new_sound:set_pitch(pitch * sound.pitch)
 	new_sound:play()
 end
 
-function AudioManager:play_pitch(snd, pitch, object)
-	if not snd then      return   end
-	if pitch <= 0 then   return   end
-
-	local sfx = sounds[snd]
-	if not sfx then   return   end
-	sfx:setPitch(pitch)
-	if object then self:set_source_position_relative_to_object(sfx, object) end
-	self:play(sfx)
-	--snd:setPitch(1)
-end
-
-function AudioManager:play_random_pitch(snd, var, object)
-	var = var or 0.2
-	local pitch = random_range(1/var, var)
-	self:play_pitch(snd, pitch, object)
-end
-
-function AudioManager:play_var(snd, vol_var, pitch_var, parms)
-	parms = parms or {}
-	var = var or 0.2
+function AudioManager:play_var(snd, vol_var, pitch_var, params)
+	params = params or {}
 	vol_var = vol_var or 0
 	pitch_var = pitch_var or 1
-	local def_vol = parms.volume or 1
+	local def_vol = params.volume or 1
 	local volume = random_range(def_vol-vol_var, def_vol)
-	local pitch = random_range(1/pitch_var, pitch_var) * (parms.pitch or 1)
-	self:play(snd, volume, pitch, parms.object)
+	local pitch = random_range(1/pitch_var, pitch_var) * (params.pitch or 1)
+	self:play(snd, volume, pitch, params)
 end
 
 function AudioManager:set_music(name)

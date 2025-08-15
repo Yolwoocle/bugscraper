@@ -246,6 +246,7 @@ return {
                 title = "Audio",
                 sound = "SOUND",
                 volume = "VOLUME",
+                sfx_volume = "SOUND EFFECT VOLUME", -- ADDED // Can also be translated as "effects volume" or "SFX volume", if it makes sense in the language 
                 music_volume = "MUSIC VOLUME",
                 music_pause_menu = "MUSIC ON PAUSE MENU", -- Whether music should play on the pause menu
             },

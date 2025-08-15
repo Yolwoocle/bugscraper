@@ -25,7 +25,7 @@ function FlyingSpawner:init(x, y, spr, w, h)
 
     self.is_killed_on_negative_life = false
 
-    self.spawn_larva_timer = Timer:new({ 1, 2 })
+    self.spawn_larva_timer = Timer:new(2)
     self.larva_projectiles = {}
     self.larvae = {}
     self.max_larvae = 6
@@ -135,7 +135,7 @@ function FlyingSpawner:init(x, y, spr, w, h)
                 if self.flash_timer:get_ratio() > 0.75 then
                     flash = self.flash_timer.time % 0.1 < 0.05
 
-                elseif self.flash_timer:get_ratio() > 0.5 then
+                elseif self.flash_timer:get_ratio() > 0 then
                     flash = self.flash_timer.time % 0.2 < 0.1
                 end
                 self.spr:set_flashing_white(flash)

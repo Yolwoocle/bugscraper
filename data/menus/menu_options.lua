@@ -23,7 +23,12 @@ return Menu:new(game, "{menu.options.title}", {
             self.is_selectable = Options:get("sound_on")
         end
     },
-    { RangeOptionMenuItem, "🎵 {menu.options.audio.music_volume}", "music_volume", { 0.0, 1.0 }, 0.05, "%",
+    { RangeOptionMenuItem, "  🔈 {menu.options.audio.sfx_volume}", "sfx_volume", { 0.0, 1.0 }, 0.05, "%",
+        function(self)
+            self.is_selectable = Options:get("sound_on")
+        end
+    },
+    { RangeOptionMenuItem, "  🎵 {menu.options.audio.music_volume}", "music_volume", { 0.0, 1.0 }, 0.05, "%",
         function(self)
             self.is_selectable = Options:get("sound_on")
         end
