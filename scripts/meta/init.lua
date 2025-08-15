@@ -54,7 +54,9 @@ local function init()
     -- Splash screen
     love.graphics.clear()
     love.graphics.setDefaultFilter("nearest", "nearest")
+    love.graphics.setScissor(CANVAS_OX, CANVAS_OY, CANVAS_WIDTH*scale, CANVAS_HEIGHT*scale)
     love.graphics.draw(love.graphics.newImage('images/splash.png'), CANVAS_OX, CANVAS_OY, 0, scale)
+    love.graphics.setScissor()
     love.graphics.present()
     love.graphics.origin()
 
