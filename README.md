@@ -33,7 +33,7 @@ If it does not fit that description please [contact me first](https://yolwoocle.
 
 ## Running
 To run the game, please follow the instructions on the [LÖVE Getting started page](https://love2d.org/wiki/Getting_Started).   
-To export the game, looks at the [LÖVE wiki page](https://love2d.org/wiki/Game_Distribution) on the subject.
+To export the game, look at the [LÖVE wiki page](https://love2d.org/wiki/Game_Distribution) on the subject.
 
 <div align="center">
   🐜🐜🐜🐜🐜
