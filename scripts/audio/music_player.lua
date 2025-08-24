@@ -51,15 +51,19 @@ end
 
 function MusicPlayer:update(dt)
 	if self.current_disk ~= nil then
-		self.current_disk:set_volume(self:get_total_volume())
-		self.current_disk:update(dt)
-		
-		if not Options:get("play_music_on_pause_menu") and self.music_mode == MUSIC_MODE_PAUSE then
-			self.current_disk:set_volume(0)
-		end
+		self:update_current_disk(dt)
 	end
 
 	self:update_fadeout(dt)
+end
+
+function MusicPlayer:update_current_disk(dt)
+	self.current_disk:set_volume(self:get_total_volume())
+	self.current_disk:update(dt)
+	
+	if not Options:get("play_music_on_pause_menu") and self.music_mode == MUSIC_MODE_PAUSE then
+		self.current_disk:set_volume(0)
+	end
 end
 
 function MusicPlayer:update_fadeout(dt)
@@ -106,6 +110,7 @@ function MusicPlayer:set_disk(disk_name, flags)
 		self:set_music_mode(self.music_mode)
 	end
 	self:play()
+	self:update_current_disk()
 
 	if flags.continue_previous_pos and self.current_disk and self.current_disk.current_source then
 		local source = self.current_disk.current_source
