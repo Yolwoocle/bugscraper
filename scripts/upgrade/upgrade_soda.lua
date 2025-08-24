@@ -1,3 +1,4 @@
+
 require "scripts.util"
 local Upgrade = require "scripts.upgrade.upgrade"
 local images = require "data.images"
@@ -13,6 +14,8 @@ function UpgradeSoda:init()
 
     self.color = COL_LIGHT_RED
     self.palette = {COL_LIGHT_RED, COL_MID_BROWN, COL_DARK_BROWN}
+
+    self.activate_sound = "sfx_upgrades_soda_pickedup"
 end
 
 function UpgradeSoda:update(dt)

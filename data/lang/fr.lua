@@ -205,7 +205,7 @@ return {
                 },
                 deadzone = "ZONE MORTE DU JOYSTICK",
                 vibration = "VIBRATION",
-                low_deadzone_warning = "⚠ Des valeurs faibles peuvent causer des problèmes",
+                low_deadzone_warning = "Des valeurs faibles peuvent causer des problèmes",
                 note_deadzone = "Les paramètres de zone morte seront appliqués en quittant ce menu",
 
                 gameplay = "Gameplay",

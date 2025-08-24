@@ -606,7 +606,8 @@ function Player:do_damage(n, source)
 		if source.name == "poison_cloud" then
 			damage_sfx = "sfx_player_damage_poison"
 		elseif source.name == "timed_spikes" then
-			damage_sfx = "sfx_enemy_timed_spikes_extend"	
+			damage_sfx = "sfx_enemy_timed_spikes_hit_{01-05}"	
+			Audio:play("sfx_player_damage_normal")
 		end
 	end
 	Audio:play(damage_sfx)

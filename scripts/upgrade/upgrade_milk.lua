@@ -13,6 +13,8 @@ function UpgradeMilk:init()
     
     self.color = COL_MID_BLUE
     self.palette = {COL_MID_BLUE, COL_WHITE, COL_DARK_BLUE}
+
+    self.activate_sound = "sfx_upgrades_milk_pickedup"
 end
 
 function UpgradeMilk:update(dt)

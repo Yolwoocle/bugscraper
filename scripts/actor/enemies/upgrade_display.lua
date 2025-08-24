@@ -80,6 +80,9 @@ function UpgradeDisplay:update_focus(dt)
         self.is_focused = false
         
     elseif (not self.has_player_in_range and in_range) or has_new_target then
+        if not self.is_focused then
+            self:on_focus()
+        end
         self.is_focused = true
         for _, enemy in pairs(game.actors) do
             if self ~= enemy and enemy.name == "upgrade_display" then
@@ -96,6 +99,10 @@ end
 
 function UpgradeDisplay:set_focused(value)
     self.is_focused = value
+end
+
+function UpgradeDisplay:on_focus()
+    Audio:play("sfx_upgrades_general_hover")
 end
 
 function UpgradeDisplay:is_player_in_range()
@@ -132,6 +139,8 @@ end
 
 function UpgradeDisplay:apply()
     if self.product then
+        Audio:play(self.product.activate_sound)
+
         game:apply_upgrade(self.product)
         game.level:on_upgrade_display_killed(self)
         

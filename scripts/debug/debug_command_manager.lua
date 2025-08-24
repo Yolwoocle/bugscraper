@@ -272,7 +272,7 @@ function DebugCommandManager:init()
             table.sort(upgrades_copy)
             local i = 0
             for name, upgrade in pairs(upgrades_copy) do
-                local a = enemies.UpgradeDisplay:new(128 + i * 42, 300)
+                local a = enemies.UpgradeDisplay:new(128 + i * 42, 220)
                 game:new_actor(a)
                 a:assign_upgrade(upgrade:new())
                 i = i + 1

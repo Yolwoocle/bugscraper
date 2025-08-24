@@ -76,6 +76,7 @@ function BackroomCafeteria:spawn_ceo()
 
 		game:new_actor(enemies.JumpingProp:new(827, 190, images.ground_floor_boba, "sfx_actor_jumping_prop_boba_{01-06}"))
 		game:new_actor(enemies.JumpingProp:new(833, 190, images.ground_floor_laptop, "sfx_actor_jumping_prop_screen_{01-06}"))
+
 	elseif self.ceo_info == 2 then
 		game:new_actor(enemies.PlayerTrigger:new(46 * 16, 3 * 16, 2 * 16, 12 * 16, function()
 			game:play_cutscene(cutscenes.ceo_escape_w2)
@@ -118,9 +119,9 @@ function BackroomCafeteria:spawn_ceo()
 		bee3.z = -1
 
 		local prop
-		prop = game:new_actor(enemies.JumpingProp:new(827, 190, images.ground_floor_chcolate_mug))
+		prop = game:new_actor(enemies.JumpingProp:new(827, 190, images.ground_floor_chcolate_mug, "sfx_actor_jumping_prop_mug_{01-06}"))
 		prop.z = -2
-		prop = game:new_actor(enemies.JumpingProp:new(833, 190, images.ground_floor_laptop))
+		prop = game:new_actor(enemies.JumpingProp:new(833, 190, images.ground_floor_laptop, "sfx_actor_jumping_prop_screen_{01-06}"))
 		prop.z = -2
 	end
 end

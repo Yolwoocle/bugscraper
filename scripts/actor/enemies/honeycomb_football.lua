@@ -159,6 +159,7 @@ function HoneycombFootball:on_stomped()
 
     game:frameskip(10)
     game:screenshake(8)
+    Audio:play_var("sfx_enemy_comball_flash_{01-06}", 0.2, 1.2)
 
     self:set_invincibility(0.5)
     self:set_harmless(0.5)

@@ -30,7 +30,7 @@ local function create_controller_controls_menu(title, input_profile_id, player_n
             "menu.options.input_submenu.controller_button_style_value"
         },
         { RangeOptionMenuItem, "🫨 {menu.options.input_submenu.vibration}",
-            "vibration_p" .. tostring(player_n), { 0.0, 1.0 }, 0.2, "%", nil,
+            "vibration_p" .. tostring(player_n), { 0.0, 1.0 }, 0.05, "%", nil,
             function(self)
                 Input:vibrate(player_n, 0.4, 1.0)
             end

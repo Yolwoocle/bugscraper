@@ -13,6 +13,8 @@ function UpgradeTea:init()
 
     self.color = COL_MID_GREEN
     self.palette = {COL_MID_GREEN, COL_MID_DARK_GREEN, COL_DARK_GREEN}
+
+    self.activate_sound = "sfx_upgrades_tea_pickedup"
 end
 
 function UpgradeTea:update(dt)

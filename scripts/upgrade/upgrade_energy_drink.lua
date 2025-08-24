@@ -12,6 +12,8 @@ function UpgradeEnergyDrink:init()
 
     self.color = COL_PURPLE
     self.palette = {COL_PURPLE, COL_DARK_PURPLE, COL_DARK_GREEN}
+
+    self.activate_sound = "sfx_upgrades_energydrink_pickedup"
 end
 
 function UpgradeEnergyDrink:update(dt)

@@ -11,6 +11,8 @@ function UpgradeWater:init()
 
     self.color = COL_LIGHT_BLUE
     self.palette = {COL_LIGHT_BLUE, COL_MID_BLUE, COL_DARK_BLUE}
+
+    self.activate_sound = "sfx_upgrades_water_pickedup"
 end
 
 function UpgradeWater:update(dt)

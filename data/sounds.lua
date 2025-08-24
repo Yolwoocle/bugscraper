@@ -84,7 +84,7 @@ local sfxnames = {
 	["sfx_actor_cocoon_break_{01-02}"] = {"sfx/actor/cocoon/sfx_actor_cocoon_break_{}.ogg", "static"},
 
 	-- Upgrade display 
-	["sfx_actor_upgrade_display_break_{01-04}"] = {"sfx/upgrades/sfx_actor_upgrade_display_break_{}.ogg", "static"},
+	["sfx_actor_upgrade_display_break_{01-04}"] = {"sfx/upgrades/display_break/sfx_actor_upgrade_display_break_{}.ogg", "static"},
 
 	-- Health pickup
 	["sfx_loot_health_collect"] = {"sfx/sfx_loot_health_collect.ogg", "static"},
@@ -121,6 +121,9 @@ local sfxnames = {
 	["sfx_boss_mrdung_ball_hit_{01-06}"] = {"sfx/enemy/mrdung/ball/sfx_boss_mrdung_ball_hit_{}.ogg", "static"},
 
 	-- W2	
+	-- Timed spikes
+	["sfx_enemy_timed_spikes_hit_{01-04}"] = {"sfx/enemy/timed_spikes/sfx_enemy_timed_spikes_hit_{}.ogg", "static"},
+
 	-- Bee
 	["sfx_enemy_bee_attack_{01-05}"] = {"sfx/enemy/bee/sfx_enemy_bee_attack_{}.ogg", "static"},
 
@@ -147,8 +150,18 @@ local sfxnames = {
 	["sfx_enemy_comball_flash_{01-06}"] = {"sfx/enemy/comball/sfx_enemy_comball_flash_{}.ogg", "static"},
 	["sfx_enemy_comball_death"] = {"sfx/enemy/comball/sfx_enemy_comball_death.ogg", "static"},
 
-
 	["fly_buzz"] = {"empty.ogg", "static"}, -- TODO change to actual sound
+
+	-- UPGRADES
+	["sfx_upgrades_energydrink_pickedup"] = {"sfx/upgrades/sfx_upgrades_energydrink_pickedup.ogg", "static"},
+	["sfx_upgrades_espresso_pickedup"] = {"sfx/upgrades/sfx_upgrades_espresso_pickedup.ogg", "static"},
+	["sfx_upgrades_milk_pickedup"] = {"sfx/upgrades/sfx_upgrades_milk_pickedup.ogg", "static"},
+	["sfx_upgrades_peanut_pickedup"] = {"sfx/upgrades/sfx_upgrades_peanut_pickedup.ogg", "static"},
+	["sfx_upgrades_soda_pickedup"] = {"sfx/upgrades/sfx_upgrades_soda_pickedup.ogg", "static"},
+	["sfx_upgrades_tea_pickedup"] = {"sfx/upgrades/sfx_upgrades_tea_pickedup.ogg", "static"},
+	["sfx_upgrades_water_pickedup"] = {"sfx/upgrades/sfx_upgrades_water_pickedup.ogg", "static"},
+
+	["sfx_upgrades_general_hover"] = {"sfx/upgrades/sfx_upgrades_general_hover.ogg", "static"},
 }
 
 for key, params in pairs(sfxnames) do

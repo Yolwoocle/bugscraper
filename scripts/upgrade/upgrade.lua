@@ -14,6 +14,8 @@ function Upgrade:init(name)
     self.description = Text:text("upgrade."..tostring(self.name)..".description")
     self.color = COL_WHITE
     self.palette = {COL_LIGHTEST_GRAY, COL_LIGHT_GRAY}
+
+    self.activate_sound = "empty"
 end
 
 function Upgrade:update(dt)

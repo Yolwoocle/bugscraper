@@ -34,6 +34,7 @@ function DrillBee:init(x, y, spr)
     self.sound_death = nil
 
     self.spr:set_anchor(SPRITE_ANCHOR_CENTER_CENTER)
+    self:set_constant_sound("buzz", "empty")
 
     self.stuck_spr_oy = 8
     -- self.anim_frame_len = 0.05

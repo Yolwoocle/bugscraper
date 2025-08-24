@@ -2,6 +2,7 @@ require "scripts.util"
 local Enemy = require "scripts.actor.enemy"
 local sounds = require "data.sounds"
 local images = require "data.images"
+local skins  = require "data.skins"
 
 local Guns = require "data.guns"
 local Timer = require "scripts.timer"
@@ -12,7 +13,7 @@ function Cocoon:init(x, y, player)
     Cocoon.super.init(self, x,y, images.cocoon, 15, 15)
     self.name = "cocoon"
 
-    self.player_n = player.n or 1
+    self.player_n = player and (player.n or 1) or 1
 
     self.follow_player = false
     self.counts_as_enemy = false
@@ -40,17 +41,16 @@ function Cocoon:init(x, y, player)
 
     self.has_revived = false
 
-    self.gun = player.gun
+    self.gun = player and (player.gun) or nil
     
-    local skin = player.skin
+    local skin = player and (player.skin) or (skins[1])
     self.spr:set_outline(skin.color_palette[1], "round")
 
     self.sweat_timer = Timer:new(0.7):start()
 
     self.sound_damage = "sfx_actor_cocoon_damage_{01-07}"
     self.sound_death = "sfx_actor_cocoon_break_{01-02}"
-    self.sound_death = "sfx_actor_cocoon_break_{01-02}"
-    -- self.sound_stomp = "cloth_drop"
+    self.sound_stomp = "sfx_actor_cocoon_break_{01-02}"
 end
 
 function Cocoon:update(dt)

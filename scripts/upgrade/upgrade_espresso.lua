@@ -14,6 +14,8 @@ function UpgradeEspresso:init()
 
     self.color = COL_MID_BROWN
     self.palette = {COL_MID_BROWN, COL_LIGHT_BROWN, COL_DARK_BROWN}
+
+    self.activate_sound = "sfx_upgrades_espresso_pickedup"
 end
 
 function UpgradeEspresso:update(dt)
