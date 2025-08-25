@@ -3,6 +3,7 @@
 ### 0.8
 (*2025-07-23*)
 
+- **Change**: Sound design has been completely reworked, thanks to the work of Martin Domergue. Please take a listen!
 - **Change**: You can now use keyboard inputs to navigate menus even if no keyboard player joined the game
 - **Change**: Slightly increased wall sliding stamina limit
 - **Change**: Various changes to combos. They are easier to start and keep, and the visuals have received a glow-up
@@ -10,6 +11,7 @@
 - **Change**: Slight adjustments to dept. 2 waves to make them feel less punishing 
 - **Added**: Boss bars!
 - **Added**: Added a new easter egg 👀 
+- **Added**: Added "SFX Volume" option
 
 Graphics
 - **Change**: Weapons and hearts will now always render in front of enemies
@@ -24,6 +26,9 @@ Misc
 - **Change**: Changed feedback menu
 - **Change**: Minor tweaks to bee boss (temporary name)
 - **Change**: Buttons are no longer selectable during the game over animation
+- **Fix**: Fixed issue where splash screen would not be cut if width of window is very large
+- **Fix**: Fixed issue where the music would play for a single frame when starting the game if the music volume was set to 0 
+- **Fix**: Fixed issue where the window could be completely dark if scaled down while pixel scale was set to "max whole" 
 
 
 ### 0.7.2

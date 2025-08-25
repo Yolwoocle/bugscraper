@@ -108,7 +108,7 @@ function Gun:update(dt)
 	-- Burst
 	self.burst_delay_timer = max(0, self.burst_delay_timer - dt)
 
-	if self.is_burst and   self.burst_counter > 0 and self.burst_delay_timer <= 0 then
+	if self.is_burst and self.burst_counter > 0 and self.burst_delay_timer <= 0 then
 		self.burst_delay_timer = self.burst_delay
 
 		-- Force shoot

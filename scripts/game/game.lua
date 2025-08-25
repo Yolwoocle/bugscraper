@@ -319,7 +319,7 @@ function Game:update_screen()
 	if pixel_scale_mode == "auto" then
 		scale = auto_scale
 	elseif pixel_scale_mode == "max_whole" then
-		scale = math.floor(auto_scale)
+		scale = math.max(1, math.floor(auto_scale))
 	elseif type(tonumber(pixel_scale_mode)) == "number" then
 		scale = math.min(tonumber(pixel_scale_mode), auto_scale)
 	else

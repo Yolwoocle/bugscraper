@@ -1637,16 +1637,6 @@ function Player:update_color(dt)
 		self.blink_color = transparent_color(COL_LIGHT_GREEN, 0.8)
 	end
 	
-	-- Fizzy lemonade running out blink
-	if self.is_floating and self.float_timer < 1.5 then
-		self.blink_freq = 0.13
-		if self.float_timer < 0.7 then
-			self.blink_freq = self.blink_freq / 2 
-		end
-
-		self.blink_color = transparent_color(COL_LIGHT_YELLOW, 0.8)	
-	end
-
 	-- Wall slide stamina blink
 	if self.state_machine.current_state_name == "normal" and self.wall_slide_stamina < self.wall_slide_max_stamina/2 then
 		self.stamina_blinking_state = 2
@@ -1671,6 +1661,16 @@ function Player:update_color(dt)
 		self:remove_constant_sound("stamina_low")
 	end
 	self.old_stamina_blinking_state = self.stamina_blinking_state
+	
+	-- Fizzy lemonade running out blink
+	if self.is_floating and self.float_timer < 1.5 then
+		self.blink_freq = 0.13
+		if self.float_timer < 0.7 then
+			self.blink_freq = self.blink_freq / 2 
+		end
+
+		self.blink_color = transparent_color(COL_LIGHT_YELLOW, 0.8)	
+	end
 	
 	-- Invincibility blink
 	if self.is_invincible and self.invincible_time > 0.1 then
