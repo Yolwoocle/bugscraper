@@ -8,7 +8,7 @@ return Cutscene:new("ceo_escape_w1", {
     CutsceneScene:new({
         description = "",
         
-        duration = 0.01,
+        duration = 0,
         enter = function(cutscene, data)
             if not Metaprogression:get("has_seen_w1_transition_cutscene") then
                 game.menu_manager:set_can_pause(false)

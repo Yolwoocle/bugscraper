@@ -25,6 +25,15 @@ local function new_cafeteria(params)
     params = params or {}
 
     local run_func = params.run_func or function(...) end
+    local wave_enemies = {
+        { E.UpgradeDisplay, 1, position = { 474 + 16, 181 }, ignore_position_clamp = true },
+        { E.UpgradeDisplay, 1, position = { 530 + 16, 181 }, ignore_position_clamp = true },
+        { E.UpgradeDisplay, 1, position = { 586 + 16, 181 }, ignore_position_clamp = true },
+    }
+    if params.empty_cafeteria then
+        wave_enemies = {}
+    end
+
     return Wave:new({
         floor_type = FLOOR_TYPE_CAFETERIA,
         roll_type = WAVE_ROLL_TYPE_FIXED,
@@ -44,15 +53,12 @@ local function new_cafeteria(params)
 
         min = 1,
         max = 1,
-        enemies = {
-            { E.UpgradeDisplay, 1, position = { 474 + 16, 181 }, ignore_position_clamp = true },
-            { E.UpgradeDisplay, 1, position = { 530 + 16, 181 }, ignore_position_clamp = true },
-            { E.UpgradeDisplay, 1, position = { 586 + 16, 181 }, ignore_position_clamp = true },
-        },
+        enemies = wave_enemies,
 
         backroom = BackroomCafeteria,
         backroom_params = {
             ceo_info = params.ceo_info,
+            empty_cafeteria = param(params.empty_cafeteria, false)
         },
     })
 end
@@ -918,15 +924,14 @@ local waves = parse_waves_table {
     },
 
     ------
-    --[[
     -- Cafeteria
-    new_cafeteria(function()
-        -- for _, actor in pairs(game.actors) do
-        --     if actor.name == "electric_rays" then
-        --         actor:kill()
-        --     end
-        -- end
-    end),
+    new_cafeteria({ 
+        run_func = function()
+            game.actor_manager:kill_actors_with_name("electric_rays")
+        end, 
+        ceo_info = 3,
+        empty_cafeteria = true
+    }),
 
     ----------------------------------------------------------------------------------------------------------
     ----------------------------------------------------------------------------------------------------------

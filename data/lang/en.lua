@@ -64,6 +64,8 @@ return {
         minigun = "Seed Minigun",
         ring = "Big Berry",
         mushroom_cannon = "Mushroom Cannon",
+
+        resignation_letter = "Resignation Letter" -- don't ask why it's a gun. you'd have to question my coding.
     },
     player = {
         name = {

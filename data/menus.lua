@@ -55,11 +55,18 @@ local function generate_menus()
     menus.w3_boss_intro = BossIntroMenu:new(game, { 38 / 255, 43 / 255, 68 / 255, 0.8 }, Text:text("enemy.motherboard"), "",
         {
             { image = images.motherboard, z_mult = 0.7 },
-        })
+        }
+    )
     
     menus.w4_boss_intro = BossIntroMenu:new(game, { 38 / 255, 43 / 255, 68 / 255, 0.8 }, "Boss 4", "", {
         { image = images.empty, z_mult = 1.0 },
     })
+
+    menus.ceo_slap = BossIntroMenu:new(game, { 38 / 255, 43 / 255, 68 / 255, 0.8 }, "", "",
+        {
+            { image = images.boss_intro_ceo_slap0, z_mult = 0.7 },
+        }
+    )
 
     menus.new_reward = NewRewardMenu:new(game)
 

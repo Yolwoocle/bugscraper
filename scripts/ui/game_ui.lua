@@ -72,6 +72,16 @@ function GameUI:init(game, is_visible)
 	self.boss_bar_value = 1.0
 	self.boss_bar_buffer_canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
 
+	self.iris_transition_canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
+	self.iris_transition_on = false
+	self.iris_transition_x = CANVAS_WIDTH/2
+	self.iris_transition_y = CANVAS_HEIGHT/2
+	self.iris_transition_radius = 50
+	self.iris_transition_original_radius = 0
+	self.iris_transition_target_radius = 0
+	self.iris_transition_t = 0
+	self.iris_transition_target_t = 0
+
 	self.t = 0
 end
 
@@ -88,6 +98,7 @@ function GameUI:update(dt)
 	self:update_convention_video(dt)
 	self:update_title(dt)
 	self:update_boss_bar(dt)
+	self:update_iris_transition(dt)
 	self.dark_overlay_alpha = move_toward(self.dark_overlay_alpha, self.dark_overlay_alpha_target, dt)
 
 	self.t = self.t + dt
@@ -182,6 +193,7 @@ function GameUI:draw()
 	self:draw_convention_video()
 	self:draw_player_previews()
 	self:draw_cinematic_bars()
+	self:draw_iris_transition()
 	self:draw_fury()
 	self:draw_boss_bar()
 	
@@ -424,6 +436,63 @@ function GameUI:draw_cinematic_bars()
 			image_bottom = images.sawtooth_separator_small
 		}
 	)	
+end
+
+
+--- IRIS TRANSITION 
+
+-- self.iris_transition_on
+-- self.iris_transition_x
+-- self.iris_transition_y
+-- self.iris_transition_radius
+-- self.iris_transition_original_radius
+-- self.iris_transition_target_radius
+-- self.iris_transition_t
+-- self.iris_transition_target_t
+function GameUI:set_iris(value)
+	self.iris_transition_on = value
+end
+
+function GameUI:start_iris_transition(x, y, duration, original, target)
+	self.iris_transition_on = true
+
+	self.iris_transition_x = x
+	self.iris_transition_y = y
+
+	self.iris_transition_t = 0
+	self.iris_transition_target_t = duration
+
+	self.iris_transition_original_radius = original or self.iris_transition_radius
+	self.iris_transition_target_radius = target
+end
+
+function GameUI:update_iris_transition(dt)
+	self.iris_transition_t = math.min(self.iris_transition_t + dt, self.iris_transition_target_t)
+
+	local t = self.iris_transition_t / self.iris_transition_target_t
+	self.iris_transition_radius = easeinoutquart(self.iris_transition_original_radius, self.iris_transition_target_radius, t)
+end
+
+function GameUI:draw_iris_transition()
+	if not self.iris_transition_on then 
+		return
+	end
+	
+	exec_on_canvas({self.iris_transition_canvas, stencil=true}, function()
+		love.graphics.clear()
+
+        love.graphics.setStencilState("replace", "always", 1)
+        love.graphics.setColorMask(false)
+		love.graphics.circle("fill", self.iris_transition_x, self.iris_transition_y, self.iris_transition_radius)
+
+        love.graphics.setStencilState("keep", "less", 1)
+        love.graphics.setColorMask(true)
+		
+		rect_color(COL_BLACK_BLUE, "fill", 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
+		love.graphics.setStencilState()
+	end)
+
+	love.graphics.draw(self.iris_transition_canvas, 0, 0)
 end
 
 --- SPLASH

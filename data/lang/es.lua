@@ -54,6 +54,8 @@ return {
 		minigun = "Ametralladora de semillas",
 		ring = "Baya grande",
 		mushroom_cannon = "Cañón de champiñones",
+
+        resignation_letter = "Resignation Letter" -- ADDED // don't ask why it's a gun. you'd have to question my coding.
 	},
 	player = {
 		name = {

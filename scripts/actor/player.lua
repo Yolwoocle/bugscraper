@@ -76,7 +76,7 @@ function Player:reset(n, skin)
 		self.virtual_controller.actions[action] = false
 	end
 	self.code_input_mode_target_x = nil
-	self.input_mode_code_target_x_margin = 4
+	self.input_mode_code_target_x_margin = 8
 	
 	-- Animation
 	self.color_palette = skin.color_palette

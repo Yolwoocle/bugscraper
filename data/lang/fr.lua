@@ -57,6 +57,8 @@ return {
         minigun = "Minigun pépin",
         ring = "Grosse baie",
         mushroom_cannon = "Canon champi",
+
+        resignation_letter = "Lettre de Démission" 
     },
     player = {
         name = {

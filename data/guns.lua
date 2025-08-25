@@ -597,6 +597,25 @@ function Guns:init()
 
 		self.screenshake = 1
 	end
+
+	-----
+	
+	
+	self.unlootable.ResignationLetter = Gun:inherit()
+
+	function self.unlootable.ResignationLetter:init(user)
+		self.name = "resignation_letter"
+		self:init_gun(user)
+		
+		self.color = COL_WHITE
+		self.sfx = "empty"
+
+		self.spr = images.resignation_letter
+		self.damage = 0
+		self.max_ammo = 0
+
+		self.show_hud = false
+	end
 end
 
 local guns_instance = Guns:new()

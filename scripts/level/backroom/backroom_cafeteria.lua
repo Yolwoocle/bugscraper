@@ -7,6 +7,8 @@ local TvPresentation      = require "scripts.level.background.tv_presentation"
 local upgrades            = require "data.upgrades"
 local enemies             = require "data.enemies"
 local cutscenes           = require "data.cutscenes"
+local Loot = require "scripts.actor.loot"
+local guns = require "data.guns"
 
 local BackroomCafeteria   = BackroomWithDoor:inherit()
 
@@ -31,17 +33,20 @@ function BackroomCafeteria:init(params)
 	self.cafeteria_glass_hole_y = nil
 
 	self.ceo_info = params.ceo_info
+	self.empty_cafeteria = param(params.empty_cafeteria, false)
 end
 
 function BackroomCafeteria:generate(world_generator)
 	game.level:set_bounds(Rect:new(unpack(RECT_CAFETERIA_PARAMS)))
 
 	world_generator:reset()
-	world_generator:write_rect(Rect:new(2, 2, 58, 15), TILE_STONE)
-	world_generator:write_rect(Rect:new(2, 15, 58, 15), TILE_WOOD)
-	world_generator:write_rect(Rect:new(28, 13, 41, 13), TILE_WOOD_SEMISOLID) -- Desk
-	world_generator:write_rect(Rect:new(46, 13, 48, 13), TILE_METAL_SEMISOLID)
-	world_generator:write_rect(Rect:new(51, 13, 53, 13), TILE_METAL_SEMISOLID)
+	world_generator:write_rect(Rect:new(2, 2, 58, 15), TILE_STONE) -- Walls
+	world_generator:write_rect(Rect:new(2, 15, 58, 15), TILE_WOOD) -- Floor
+	world_generator:write_rect(Rect:new(28, 13, 41, 13), TILE_WOOD_SEMISOLID) -- Counter
+	if not self.empty_cafeteria then
+		world_generator:write_rect(Rect:new(46, 13, 48, 13), TILE_METAL_SEMISOLID) -- Tables
+		world_generator:write_rect(Rect:new(51, 13, 53, 13), TILE_METAL_SEMISOLID)
+	end
 
 	self:assign_cafeteria_upgrades()
 
@@ -55,7 +60,14 @@ function BackroomCafeteria:spawn_ceo()
 		return
 	end
 
-	local ceo = game:new_actor(enemies.NPC:new(866, 223, {
+	local ceo_x = 866
+	local ceo_y = 223
+	if self.ceo_info == 3 then
+		ceo_x = 805
+		ceo_y = 240
+	end
+
+	local ceo = game:new_actor(enemies.NPC:new(ceo_x, ceo_y, {
 		npc_name = "ceo",
 		animations = {
 			normal = { images.ceo_npc_idle, 0.2, 4 },
@@ -63,6 +75,8 @@ function BackroomCafeteria:spawn_ceo()
 			airborne = { images.ceo_npc_airborne, 0.2, 1 },
 			jetpack = { images.ceo_npc_jetpack, 0.2, 1 },
 			clap = { images.ceo_npc_clap_hand, 0.02, 3, nil, { looping = false } },
+			tangled_wires = {images.ceo_tangled_wires, 0.1, 1},
+			tangled_wires_shocked = {images.ceo_tangled_wires_shocked, 0.1, 1},
 		},
 		flip_x = true,
 	}))
@@ -123,6 +137,30 @@ function BackroomCafeteria:spawn_ceo()
 		prop.z = -2
 		prop = game:new_actor(enemies.JumpingProp:new(833, 190, images.ground_floor_laptop, "sfx_actor_jumping_prop_screen_{01-06}"))
 		prop.z = -2
+	
+	elseif self.ceo_info == 3 then
+		ceo.spr:set_animation("tangled_wires")
+		ceo.gravity = ceo.default_gravity	
+		ceo.is_affected_by_bounds = true
+
+		game:new_actor(enemies.PlayerTrigger:new(46 * 16, 3 * 16, 2 * 16, 12 * 16, function()
+			game:play_cutscene(cutscenes.ceo_escape_w3)
+		end, { 
+			min_player_trigger = 1,
+			condition_func = function()
+				for _, p in pairs(game.players) do
+					if p.gun.name == "resignation_letter" then
+						return true
+					end
+				end
+				return false
+			end
+		}))
+
+		game:new_actor(Loot.Gun:new(35*16, 12*16, nil, 0, 0, guns.unlootable.ResignationLetter:new(), {
+			life = math.huge,
+			min_attract_dist = -1,
+		}), 440, 105)
 	end
 end
 
@@ -180,12 +218,26 @@ function BackroomCafeteria:draw_items()
 		love.graphics.draw(images.cafeteria_glass_hole, self.cafeteria_glass_hole_x, self.cafeteria_glass_hole_y)
 	end
 	game.level.elevator:draw_counter()
+	
+	-- Tables
+	if not self.empty_cafeteria then
+		love.graphics.draw(images.cafeteria_table_foot, 764-16, 229-16)
+		love.graphics.draw(images.cafeteria_table_foot, 844-16, 229-16)
 
+		love.graphics.draw(images.cafeteria_chair_left, 731-16, 220-16)
+		love.graphics.draw(images.cafeteria_chair_left, 815-16, 220-16)
+		love.graphics.draw(images.cafeteria_chair_right, 875-16, 220-16)
+	end
 	self.tv_presentation:draw()
 end
 
 function BackroomCafeteria:draw_front_walls()
 	love.graphics.draw(images.cafeteria_front, -16, -16)
+	
+	if not self.empty_cafeteria then
+		love.graphics.draw(images.cafeteria_table_head, 46*16, 13*16)
+		love.graphics.draw(images.cafeteria_table_head, 51*16, 13*16)
+	end
 end
 
 return BackroomCafeteria

@@ -22,6 +22,7 @@ function PlayerTrigger:init(x, y, w, h, trigger_func, params)
     self.trigger_func = trigger_func
     self.min_player_trigger = param(params.min_player_trigger, 0) -- 0 = all players need to join 
     self.max_triggers = param(params.triggers, 1)
+    self.condition_func = param(params.condition_func, function() return true end)
     self.triggers = self.max_triggers
 
     self.is_affected_by_bounds = false
@@ -44,7 +45,8 @@ function PlayerTrigger:update(dt)
 
     local cond_all = (self.min_player_trigger == 0 and n == game:get_number_of_alive_players())
     local cond_min = (self.min_player_trigger > 0 and n >= self.min_player_trigger)
-    if (n > 0) and (cond_all or cond_min) then
+    local cond_extra = self.condition_func()
+    if (n > 0) and (cond_all or cond_min) and cond_extra then
         self:trigger()
     end
 end

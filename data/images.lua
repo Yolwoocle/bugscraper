@@ -148,6 +148,8 @@ local img_names = {
 	ceo_npc_shocked =          "actors/enemies/ceo_npc_shocked",
 	ceo_npc_airborne =         "actors/enemies/ceo_npc_airborne",
 	ceo_npc_jetpack =          "actors/enemies/ceo_npc_jetpack",
+	ceo_tangled_wires =        "actors/enemies/ceo_tangled_wires",
+	ceo_tangled_wires_shocked = "actors/enemies/ceo_tangled_wires_shocked",
 	chipper_attack_1 =         "actors/enemies/chipper_attack_1",
 	chipper_attack_2 =         "actors/enemies/chipper_attack_2",
 	chipper_attack_3 =         "actors/enemies/chipper_attack_3",
@@ -281,6 +283,7 @@ local img_names = {
 	gun_minigun =         "guns/gun_minigun",
 	gun_mushroom_cannon = "guns/gun_mushroom_cannon",
 	gun_ring =            "guns/gun_ring",
+	resignation_letter =  "guns/resignation_letter",
 	
 	-----------------------------------------------------
 	
@@ -436,6 +439,10 @@ local img_names = {
 	cafeteria =                      "level/cafeteria",
 	cafeteria_front =                "level/cafeteria_front",
 	cafeteria_glass_hole =           "level/cafeteria_glass_hole",
+	cafeteria_table_head =           "level/cafeteria_table_head",
+	cafeteria_table_foot =           "level/cafeteria_table_foot",
+	cafeteria_chair_left =           "level/cafeteria_chair_left",
+	cafeteria_chair_right =          "level/cafeteria_chair_right",
 	elevator_through_door =          "level/elevator_through_door",
 	ground_floor =                   "level/ground_floor",
 	ground_floor_front =             "level/ground_floor_front",
@@ -538,6 +545,8 @@ local img_names = {
 	boss_intro_bee_layer5 = "ui/boss_intro/bee_boss/boss_intro_bee_layer5",
 	boss_intro_bee_layer6 = "ui/boss_intro/bee_boss/boss_intro_bee_layer6",
 	boss_intro_bee_layer7 = "ui/boss_intro/bee_boss/boss_intro_bee_layer7",
+
+	boss_intro_ceo_slap0 = "ui/boss_intro/ceo_slap/boss_intro_ceo_slap0",
 
 	player_preview_bg = "ui/player_preview/player_preview_bg",
 	player_preview_detail = "ui/player_preview/player_preview_detail",

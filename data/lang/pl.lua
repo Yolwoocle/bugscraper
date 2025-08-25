@@ -56,6 +56,8 @@ return {
         minigun = "Pestkotron",        -- not even sure how to translate it to english :D it's a word made up that mixes the 'seed' (pestka) into the name
         ring = "Jagodynator",          -- hard to translate it's a made up word that mixes berry(jagody) and word nator which I'm not even sure how to translate back to what it would mean in english
         mushroom_cannon = "Grzybomor", -- hard to translate it back to english, in polish it's just a person who is very much into collecting mushrooms :P
+
+        resignation_letter = "Resignation Letter" -- ADDED // don't ask why it's a gun. you'd have to question my coding.
     },
     player = {
         name = {
