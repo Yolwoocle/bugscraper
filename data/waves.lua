@@ -148,6 +148,16 @@ local function parse_waves_table(waves)
 end
 
 local waves = parse_waves_table {
+    
+    -- Cafeteria
+    new_cafeteria({ 
+        run_func = function()
+            game.actor_manager:kill_actors_with_name("electric_rays")
+        end, 
+        ceo_info = 3,
+        empty_cafeteria = true
+    }),
+
     {
         min = 5,
         max = 5,
@@ -939,6 +949,7 @@ local waves = parse_waves_table {
     ----------------------------------------------------------------------------------------------------------
     ----------------------------------------------------------------------------------------------------------
 
+    --[[
     {
         min = 4,
         max = 4,
@@ -1393,12 +1404,9 @@ local waves = parse_waves_table {
     -- },
 
 
-    --]]
-
     -----------------------------------------------------
     --- Last wave
     -----------------------------------------------------
-    --]]
 
     {
         floor_type = FLOOR_TYPE_CAFETERIA,
@@ -1453,6 +1461,7 @@ local waves = parse_waves_table {
     --     },
     --     music = "off",
     -- })
+    --]]
 }
 
 

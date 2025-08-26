@@ -5,6 +5,18 @@ local Rect          = require "scripts.math.rect"
 local images        = require "data.images"
 local guns          = require "data.guns"
 
+local function dust_particles(data)
+    -- local vx = random_range(40, 60)
+    -- Particles:dust(data.ceo.x, data.ceo.y, COL_WHITE, 8, nil, 0, {
+    --     vx1 = -vx, vx2 = -vx, vy1 = 0, vy2 = 0
+    -- })
+    -- Particles:dust(data.ceo.x, data.ceo.y, COL_WHITE, 8, nil, 0, {
+    --     vx1 = vx, vx2 = vx, vy1 = 0, vy2 = 0
+    -- })
+
+	Particles:smoke(data.ceo.x, data.ceo.y)
+end
+
 return Cutscene:new("ceo_escape_w2", {
     CutsceneScene:new({
         description = "",
@@ -78,6 +90,7 @@ return Cutscene:new("ceo_escape_w2", {
         enter = function(cutscene, data)
             data.ceo.spr:set_animation("tangled_wires")
             data.shake = 3.0
+			Particles:sweat(data.ceo.x - 15, data.ceo.y - 30, true)
         end,
         update = function(cutscene, data, dt)
             data.ceo.spr:update_offset(random_neighbor(data.shake), 0)
@@ -95,6 +108,7 @@ return Cutscene:new("ceo_escape_w2", {
         enter = function(cutscene, data)
             data.ceo.spr:set_animation("tangled_wires_shocked")
             data.ceo.vy = -200
+            dust_particles(data)
         end,
     }),
     CutsceneScene:new({
@@ -103,6 +117,7 @@ return Cutscene:new("ceo_escape_w2", {
         duration = 0.5,
         enter = function(cutscene, data)
             data.ceo.vy = -200
+            dust_particles(data)
         end,
     }),
     CutsceneScene:new({
@@ -111,6 +126,7 @@ return Cutscene:new("ceo_escape_w2", {
         duration = 0.5,
         enter = function(cutscene, data)
             data.ceo.vy = -200
+            dust_particles(data)
         end,
     }),
 
@@ -129,6 +145,7 @@ return Cutscene:new("ceo_escape_w2", {
         enter = function(cutscene, data)
             data.ceo.vx = 200
             data.ceo.vy = -200
+            dust_particles(data)
         end,
     }),
 
@@ -147,6 +164,7 @@ return Cutscene:new("ceo_escape_w2", {
         enter = function(cutscene, data)
             data.ceo.vx = 200
             data.ceo.vy = -200
+            dust_particles(data)
         end,
     }),
     CutsceneScene:new({
@@ -156,6 +174,7 @@ return Cutscene:new("ceo_escape_w2", {
         enter = function(cutscene, data)
             data.ceo.vx = 200
             data.ceo.vy = -200
+            dust_particles(data)
         end,
     }),
 
@@ -174,6 +193,7 @@ return Cutscene:new("ceo_escape_w2", {
         enter = function(cutscene, data)
             data.ceo.vx = 200
             data.ceo.vy = -200
+            dust_particles(data)
         end,
     }),
     CutsceneScene:new({
@@ -183,6 +203,7 @@ return Cutscene:new("ceo_escape_w2", {
         enter = function(cutscene, data)
             data.ceo.vx = 200
             data.ceo.vy = -200
+            dust_particles(data)
         end,
     }),
     CutsceneScene:new({
@@ -192,6 +213,7 @@ return Cutscene:new("ceo_escape_w2", {
         enter = function(cutscene, data)
             data.ceo.vx = 200
             data.ceo.vy = -200
+            dust_particles(data)
         end,
     }),
     CutsceneScene:new({
@@ -204,7 +226,7 @@ return Cutscene:new("ceo_escape_w2", {
     }),
 
     CutsceneScene:new({
-        description = "Big ass slap in the face",
+        description = "Big ass slap in the face (jump)",
 
         duration = 0.35,
         enter = function(cutscene, data)
@@ -222,7 +244,7 @@ return Cutscene:new("ceo_escape_w2", {
         end,
     }),
     CutsceneScene:new({
-        description = "Big ass slap in the face",
+        description = "Big ass slap in the face (bammm)",
 
         duration = 0.3,
         enter = function(cutscene, data)
@@ -235,6 +257,8 @@ return Cutscene:new("ceo_escape_w2", {
                 color = COL_WHITE
             })
             Particles:pop_layer()
+
+            data.ceo.spr:set_animation("tangled_wires")
         end,
         update = function(cutscene, data, dt)
             data.ceo.spr:update_offset(random_neighbor(3), random_neighbor(3))
@@ -261,10 +285,51 @@ return Cutscene:new("ceo_escape_w2", {
     CutsceneScene:new({
         description = "Wait for a bit",
 
-        duration = 3.0,
+        duration = 1.0,
         enter = function(cutscene, data)
         end,
     }),
+
+    CutsceneScene:new({
+        description = "Blink (closed)",
+
+        duration = 0.05,
+        enter = function(cutscene, data)
+            data.ceo.spr:set_animation("tangled_wires")
+        end,
+    }),
+    CutsceneScene:new({
+        description = "Blink (open)",
+
+        duration = 0.2,
+        enter = function(cutscene, data)
+            data.ceo.spr:set_animation("tangled_wires_shocked")
+        end,
+    }),
+    CutsceneScene:new({
+        description = "Blink (closed)",
+
+        duration = 0.05,
+        enter = function(cutscene, data)
+            data.ceo.spr:set_animation("tangled_wires")
+        end,
+    }),
+    CutsceneScene:new({
+        description = "Blink (open)",
+
+        duration = 0.2,
+        enter = function(cutscene, data)
+            data.ceo.spr:set_animation("tangled_wires_shocked")
+        end,
+    }),
+    CutsceneScene:new({
+        description = "Wait for a bit",
+
+        duration = 1.5,
+        enter = function(cutscene, data)
+        end,
+    }),
+
     CutsceneScene:new({
         description = "Resigning player goes away",
 
@@ -293,6 +358,7 @@ return Cutscene:new("ceo_escape_w2", {
         duration = 0.4,
         enter = function(cutscene, data)
             data.ceo.vy = -200
+            dust_particles(data)
         end,
     }),
     CutsceneScene:new({
@@ -301,6 +367,7 @@ return Cutscene:new("ceo_escape_w2", {
         duration = 0.4,
         enter = function(cutscene, data)
             data.ceo.vy = -200
+            dust_particles(data)
         end,
     }),
 
@@ -322,6 +389,7 @@ return Cutscene:new("ceo_escape_w2", {
         duration = 0.4,
         enter = function(cutscene, data)
             data.ceo.vy = -200
+            dust_particles(data)
         end,
     }),
     CutsceneScene:new({
@@ -330,6 +398,7 @@ return Cutscene:new("ceo_escape_w2", {
         duration = 0.4,
         enter = function(cutscene, data)
             data.ceo.vy = -200
+            dust_particles(data)
         end,
     }),
     CutsceneScene:new({
@@ -338,6 +407,7 @@ return Cutscene:new("ceo_escape_w2", {
         duration = 0.4,
         enter = function(cutscene, data)
             data.ceo.vy = -200
+            dust_particles(data)
         end,
     }),
 

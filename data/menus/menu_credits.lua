@@ -58,6 +58,7 @@ return Menu:new(game, "{menu.credits.title}", {
     { "Kaïs", empty_func },  -- The two who beat the game at salon du JV toulousain
     { "oat_addict", empty_func }, 
     { "Noba", empty_func }, 
+    { "Solluco", empty_func }, 
     { "Indie Game Lyon", empty_func }, -- func_url("https://www.indiegamelyon.com/")},
     { "Toulouse Game Dev", empty_func }, -- func_url("https://www.indiegamelyon.com/")},
     { "LÖVE framework", empty_func },    -- func_url("https://love2d.org/") },
