@@ -79,24 +79,7 @@ function GameUI:init(game, is_visible)
 	self.tv_grid_columns = 4
 	self.tv_grid_x_spacing = 82
 	self.tv_grid_y_spacing = 64
-	local sx = CANVAS_WIDTH/2 - (self.tv_grid_columns-1) * self.tv_grid_x_spacing * 0.5
-	local sy = CANVAS_HEIGHT/2 - (self.tv_grid_rows-1) * self.tv_grid_y_spacing * 0.5
-	for ix = 1, self.tv_grid_columns do
-		for iy = 1, self.tv_grid_rows do
-			table.insert(self.title_tvs, {
-				tv = TvPresentation:new(
-					sx + (ix-1) * self.tv_grid_x_spacing - TV_WIDTH/2,
-					sy + (iy-1) * self.tv_grid_y_spacing - TV_HEIGHT/2,
-					{
-						shuffle_table = false,
-						default_slide_duration = 50.0,
-					}
-				),
-				enabled = false,
-				subtext = "test",
-			})
-		end
-	end
+	self:init_tv_grid()
 
 	self.dark_overlay_alpha = 0.0
 	self.dark_overlay_alpha_target = 0.0
@@ -161,6 +144,27 @@ function GameUI:start_title(title, subtitle, overtitle, intro_dur, stay_dur, out
 	self.title_state = "intro"
 
 	self.title_state_timer:start(self.title_intro_duration)
+end
+
+function GameUI:init_tv_grid()
+	local sx = CANVAS_WIDTH/2 - (self.tv_grid_columns-1) * self.tv_grid_x_spacing * 0.5
+	local sy = CANVAS_HEIGHT/2 - (self.tv_grid_rows-1) * self.tv_grid_y_spacing * 0.5
+	for ix = 1, self.tv_grid_columns do
+		for iy = 1, self.tv_grid_rows do
+			table.insert(self.title_tvs, {
+				tv = TvPresentation:new(
+					sx + (ix-1) * self.tv_grid_x_spacing - TV_WIDTH/2,
+					sy + (iy-1) * self.tv_grid_y_spacing - TV_HEIGHT/2,
+					{
+						shuffle_table = false,
+						default_slide_duration = 50.0,
+					}
+				),
+				enabled = false,
+				subtext = "test",
+			})
+		end
+	end
 end
 
 function GameUI:start_title_tv(tvs, intro_dur, stay_dur, outro_dur)
