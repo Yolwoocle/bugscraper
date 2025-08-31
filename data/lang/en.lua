@@ -316,16 +316,17 @@ return {
         },
         credits = {
             title = "CREDITS",
-            game_by = "A game by",
-            game_by_template = "By Léo Bernard & friends", -- Used on the title screen. 
+            ninesliced_presents = "Ninesliced presents", -- ADDED / Ninesliced with a capital letter ONLY on the N
+            game_by = "A game by", -- As in, "A game by / John". If it is not possible to have the name *after* this, translate as "Creator" ("Creator / John")
+            leo_bernard = "Léo Bernard", -- Please do not change this
             music = "Music",
             sound_design = "Sound design",
-            published_by = "Published by",
             localization = "Localization",
             additional_art = "Additional art",
             playtesting = "Playtesting",
             special_thanks = "Special thanks",
-            asset_creators = "Asset creators",
+            trailer = "Trailer", -- ADDED
+            asset_creators = "Asset creators", -- ADDED
             tv_slideshow = "TV slideshow contributors", -- ADDED // Refers to the powerpoint TV slideshow on the title screen, which was contributed by a variety of people 
             tv_slideshow_submit = "Submit yours...", -- ADDED // Leads to a web page where people can submit their own slides
             licenses = "Asset & library licenses",

@@ -293,8 +293,9 @@ return {
         },
         credits = {
             title = "TWÓRCY",
-            game_by = "Gra autorstwa",
-            game_by_template = "Léo Bernard & przyjaciele", -- Used on the title screen.
+            ninesliced_presents = "Ninesliced presents", -- ADDED / Ninesliced with a capital letter ONLY on the N
+            game_by = "Gra autorstwa", -- As in, "A game by / John". If it is not possible to have the name *after* this, translate as "Creator" ("Creator / John")
+            leo_bernard = "Léo Bernard", -- Please do not change this
             music = "Muzyka",
             sound_design = "Projektowanie dźwięku", -- ADDED
             localization = "Lokalizacja",

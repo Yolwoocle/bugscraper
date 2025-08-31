@@ -69,9 +69,9 @@ function BackroomTutorial:generate(world_generator)
 	-- Exit trigger
 	game:new_actor(enemies.PlayerTrigger:new(87*16, 9*16, 8*16, 5*16, function()
 		if Metaprogression:get("has_played_tutorial") then
-			game:play_cutscene(cutscenes.tutorial_end_short)
+			game:play_cutscene("tutorial_end_short")
 		else
-			game:play_cutscene(cutscenes.tutorial_end)
+			game:play_cutscene("tutorial_end")
 		end
 		game.game_ui.offscreen_indicators_enabled = false
 
@@ -86,7 +86,7 @@ function BackroomTutorial:generate(world_generator)
 
 	-- Start cutscene
 	if not Metaprogression:get("has_seen_intro_credits") then
-		game:play_cutscene(cutscenes.tutorial_start)
+		game:play_cutscene("tutorial_start")
 	end
 end
 
@@ -112,12 +112,6 @@ end
 
 function BackroomTutorial:can_exit()
 	return false
-	-- for _, a in pairs(game.actors) do
-	-- 	if a.name == "upgrade_display" then
-	-- 	end
-	-- end
-
-	-- return BackroomTutorial.super.can_exit(self)
 end
 
 function BackroomTutorial:update(dt)

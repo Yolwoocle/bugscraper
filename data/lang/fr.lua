@@ -304,15 +304,16 @@ return {
         },
         credits = {
             title = "CRÉDITS",
-            game_by = "Un jeu par",
+            ninesliced_presents = "Ninesliced présente", -- Ninesliced with a capital letter ONLY on the N
+            game_by = "Un jeu par", -- As in, "A game by / John". If it is not possible to have the name *after* this, translate as "Creator" ("Creator / John")
             game_by_template = "Par Léo Bernard & amis", -- Utilisé sur l'écran titre
             music = "Musique",
             sound_design = "Sound design",
-            published_by = "Publié par",
             localization = "Localisation",
             additional_art = "Art supplémentaire",
             playtesting = "Playtesting",
             special_thanks = "Remerciements",
+            trailer = "Bande-annonce",
             asset_creators = "Créateur·rices d'assets",
             tv_slideshow = "Contributeur·rices diaporama TV", 
             tv_slideshow_submit = "Envoyez le votre...", 

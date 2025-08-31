@@ -292,13 +292,15 @@ return {
 			-- not all people understand the symbol `&` I would like to get away with it
 			-- but better play it safe, if you desire you can replace `y` for `&`and get away with it
 			title = "CREDITOS",
-			game_by = "Un juego por",
-			game_by_template = "By Léo Bernard y sus amigos", -- Used on the title screen.
+            ninesliced_presents = "Ninesliced presents", -- ADDED / Ninesliced with a capital letter ONLY on the N
+			game_by = "Un juego por", -- As in, "A game by / John". If it is not possible to have the name *after* this, translate as "Creator" ("Creator / John")
+            leo_bernard = "Léo Bernard", -- Please do not change this
 			music = "Musica",                        -- auditive design because sound design sounds weird
 			sound_design = "Diseño auditivo",        -- auditive design because sound design sounds weird
 			localization = "Localización",
 			playtesting = "Probadores de Jugabilidad",
 			special_thanks = "Agradecimentos especiales",
+            trailer = "Trailer", -- ADDED
 			asset_creators = "Creadores de recursos",
 			tv_slideshow = "Contribuciones de la presentación en la TV", -- Refers to the powerpoint TV slideshow on the title screen, which was contributed by a variety of people
 			tv_slideshow_submit = "Añade el tuyo...",           -- Leads to a web page where people can submit their own slides

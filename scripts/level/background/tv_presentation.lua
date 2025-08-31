@@ -6,14 +6,15 @@ local Timer          = require "scripts.timer"
 
 local TvPresentation = Class:inherit()
 
-function TvPresentation:init(x, y)
+function TvPresentation:init(x, y, params)
+    params = params or {}
     self.x = x
     self.y = y
     
-    self.canvas_w = 55
-    self.canvas_h = 31
+    self.canvas_w = TV_WIDTH
+    self.canvas_h = TV_HEIGHT
 
-    self.default_slide_duration = 5.0
+    self.default_slide_duration = param(params.default_slide_duration, 5.0)
 
     local slides = {
         ["slide_001"] = { images.tv_slideshow_001, 0 },      -- Powerpoint stats         by Sslime7 
@@ -49,7 +50,9 @@ function TvPresentation:init(x, y)
         slides[name][3] = math.floor(slides[name][1]:getWidth() / self.canvas_w)
         slides[name][4] = math.floor(slides[name][1]:getHeight() / self.canvas_h)
     end
-    shuffle_table(self.slide_names)
+    if param(params.shuffle_table, true) then
+        shuffle_table(self.slide_names)
+    end
 
     
     self.bluescreen_probability = TV_BLUESCREEN_PROBABILITY
@@ -173,6 +176,20 @@ function TvPresentation:update(dt)
     self.spr:update(dt)
 end
 
+function TvPresentation:set_current_slide_from_name(slide_name)
+    -- just do a linear search because ehhhh fuck it good enough
+    local i = 1
+    local found = -1
+    while i <= #self.slide_names do
+        if self.slide_names[i] == slide_name then
+            found = i
+            i = math.huge
+        end
+        i = i + 1
+    end 
+    self.current_slide_number = found
+    self.current_slide = self.slide_names[self.current_slide_number]
+end
 
 function TvPresentation:set_current_slide(slide_index)
     self.current_slide_number = slide_index

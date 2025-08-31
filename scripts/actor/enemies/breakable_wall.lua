@@ -1,12 +1,7 @@
 require "scripts.util"
 local images = require "data.images"
-local sounds = require "data.sounds"
-local cutscenes = require "data.cutscenes"
 
 local BreakableActor = require "scripts.actor.enemies.breakable_actor"
-local Guns = require "data.guns"
-local Button = require "scripts.actor.enemies.button_big"
-local CollisionInfo = require "scripts.physics.collision_info"
 
 local BreakableWall = BreakableActor:inherit()
 

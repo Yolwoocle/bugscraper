@@ -1,13 +1,13 @@
 # Bugscraper changelog
 
 ### 0.8
-(*2025-07-23*)
+(*2025-??*)
 
-- **Change**: Sound design has been completely reworked, thanks to the work of Martin Domergue. Please take a listen!
+- **Change**: Sound design has been completely reworked, thanks to the work of Martin Domergue. Please take a listen!!
 - **Change**: You can now use keyboard inputs to navigate menus even if no keyboard player joined the game
 - **Change**: Slightly increased wall sliding stamina limit
 - **Change**: Various changes to combos. They are easier to start and keep, and the visuals have received a glow-up
-- **Added**: Added two small animations on floors 20 and 40. I'll let you discover them... 
+- **Added**: Added two small animations on floors 20, 40, and 60. I'll let you discover them... 
 - **Change**: Slight adjustments to dept. 2 waves to make them feel less punishing 
 - **Added**: Boss bars!
 - **Added**: Added a new easter egg 👀 

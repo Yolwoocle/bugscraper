@@ -604,6 +604,9 @@ WAVE_ROLL_TYPE_FIXED = "fixed"
 LIGHNING_COORDINATE_MODE_CARTESIAN = "cartesian" -- x, y 
 LIGHNING_COORDINATE_MODE_POLAR = "polar" -- radius, angle
 
+TV_WIDTH = 55
+TV_HEIGHT = 31
+
 --------------------------------------------- 
 
 -- Super secret settings :)

@@ -133,7 +133,7 @@ function DebugCommandManager:init()
                 return false, "Cutscene '" .. name .. "' not found"
             end
 
-            game:play_cutscene(cutscene)
+            game:play_cutscene(name)
             self:add_message("Played cutscene '" .. name .. "'")
 
             return true

@@ -366,7 +366,7 @@ local waves = parse_waves_table {
             { E.Dung, 1, position = { CANVAS_WIDTH / 2 - 24 / 2, 200 } },
         },
         music = "miniboss",
-        cutscene = cutscenes.dung_boss_enter,
+        cutscene = "dung_boss_enter",
     },
 
     new_cafeteria({ ceo_info = 1 }),
@@ -613,7 +613,7 @@ local waves = parse_waves_table {
             end
         end,
 
-        cutscene = cutscenes.bee_boss_enter,
+        cutscene = "bee_boss_enter",
     },
 
     new_cafeteria({ run_func = function()

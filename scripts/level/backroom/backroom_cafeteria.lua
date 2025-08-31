@@ -43,6 +43,7 @@ function BackroomCafeteria:generate(world_generator)
 	world_generator:write_rect(Rect:new(2, 2, 58, 15), TILE_STONE) -- Walls
 	world_generator:write_rect(Rect:new(2, 15, 58, 15), TILE_WOOD) -- Floor
 	world_generator:write_rect(Rect:new(28, 13, 41, 13), TILE_WOOD_SEMISOLID) -- Counter
+	world_generator:write_rect(Rect:new(4, 13, 8, 13), TILE_WOOD_SEMISOLID) -- Armoire
 	if not self.empty_cafeteria then
 		world_generator:write_rect(Rect:new(46, 13, 48, 13), TILE_METAL_SEMISOLID) -- Tables
 		world_generator:write_rect(Rect:new(51, 13, 53, 13), TILE_METAL_SEMISOLID)
@@ -85,7 +86,7 @@ function BackroomCafeteria:spawn_ceo()
 
 	if self.ceo_info == 1 then
 		game:new_actor(enemies.PlayerTrigger:new(46 * 16, 3 * 16, 2 * 16, 12 * 16, function()
-			game:play_cutscene(cutscenes.ceo_escape_w1)
+			game:play_cutscene("ceo_escape_w1")
 		end, { min_player_trigger = 1 }))
 
 		game:new_actor(enemies.JumpingProp:new(827, 190, images.ground_floor_boba, "sfx_actor_jumping_prop_boba_{01-06}"))
@@ -93,7 +94,7 @@ function BackroomCafeteria:spawn_ceo()
 
 	elseif self.ceo_info == 2 then
 		game:new_actor(enemies.PlayerTrigger:new(46 * 16, 3 * 16, 2 * 16, 12 * 16, function()
-			game:play_cutscene(cutscenes.ceo_escape_w2)
+			game:play_cutscene("ceo_escape_w2")
 		end, { min_player_trigger = 1 }))
 
 		local bee1 = game:new_actor(enemies.NPC:new(854, 270, {
@@ -144,7 +145,7 @@ function BackroomCafeteria:spawn_ceo()
 		ceo.is_affected_by_bounds = true
 
 		game:new_actor(enemies.PlayerTrigger:new(46 * 16, 3 * 16, 2 * 16, 12 * 16, function()
-			game:play_cutscene(cutscenes.ceo_escape_w3)
+			game:play_cutscene("ceo_escape_w3")
 		end, { 
 			min_player_trigger = 1,
 			condition_func = function()

@@ -4,6 +4,7 @@ local Light         = require "scripts.graphics.light"
 local Rect          = require "scripts.math.rect"
 local images        = require "data.images"
 local guns          = require "data.guns"
+local BackroomCredits = require "scripts.level.backroom.backroom_credits"
 
 local function dust_particles(data)
     -- local vx = random_range(40, 60)
@@ -17,7 +18,7 @@ local function dust_particles(data)
 	Particles:smoke(data.ceo.x, data.ceo.y)
 end
 
-return Cutscene:new("ceo_escape_w2", {
+return Cutscene:new("ceo_escape_w3", {
     CutsceneScene:new({
         description = "",
 
@@ -258,6 +259,8 @@ return Cutscene:new("ceo_escape_w2", {
             })
             Particles:pop_layer()
 
+            data.resigning_player:equip_gun(guns.unlootable.EmptyGun:new(data.resigning_player))
+
             data.ceo.spr:set_animation("tangled_wires")
         end,
         update = function(cutscene, data, dt)
@@ -273,9 +276,11 @@ return Cutscene:new("ceo_escape_w2", {
         duration = 0.5,
         enter = function(cutscene, data)
             game.menu_manager:set_menu("ceo_slap")
+            data.timer = 0.5
         end,
         update = function(cutscene, data, dt)
-            data.ceo.spr:update_offset(random_neighbor(3), random_neighbor(3))
+            data.ceo.spr:update_offset(random_neighbor(data.timer*6), random_neighbor(data.timer*6))
+            data.timer = math.max(0.0, data.timer - dt)
         end,
         exit = function(cutscene, data)
             data.ceo.spr:update_offset(0, 0)
@@ -335,7 +340,6 @@ return Cutscene:new("ceo_escape_w2", {
 
         duration = 1.0,
         enter = function(cutscene, data)
-            data.resigning_player:equip_gun(guns.unlootable.EmptyGun:new(data.resigning_player))
             data.resigning_player:set_code_input_mode_target_x(420) -- Nice.
         end,
     }),
@@ -425,7 +429,7 @@ return Cutscene:new("ceo_escape_w2", {
     CutsceneScene:new({
         description = "Wait",
 
-        duration = 1.5,
+        duration = 3.0,
         enter = function(cutscene, data)
         end,
     }),
@@ -433,9 +437,12 @@ return Cutscene:new("ceo_escape_w2", {
     CutsceneScene:new({
         description = "Credits",
 
-        duration = 3.0,
+        duration = 0,
         enter = function(cutscene, data)
-            game.game_ui:start_title("Léo Bernard", "Yolwoocle", "{menu.credits.game_by}", 0, 3.2, 0)
+            game:new_game({ 
+                backroom = BackroomCredits:new(),
+                iris_params = {0, 0, 0, 0, 0}
+            })
         end,
     }),
 })

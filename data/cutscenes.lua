@@ -16,5 +16,6 @@ cutscenes.enter_ceo_office = require "data.cutscenes.enter_ceo_office"
 cutscenes.dung_boss_enter = require "data.cutscenes.dung_boss_enter"
 cutscenes.bee_boss_enter = require "data.cutscenes.bee_boss_enter"
 cutscenes.arum_titan_enter = require "data.cutscenes.arum_titan_enter"
+cutscenes.credits = require "data.cutscenes.credits"
 
 return cutscenes

@@ -496,6 +496,9 @@ local img_names = {
 
 	clock = "actors/enemies/clock",
 
+	credits_building = "level/credits/credits_building",
+	credits_removeme_characters = "level/credits/credits_removeme_characters",
+
 	-----------------------------------------------------
 
 	-- hud

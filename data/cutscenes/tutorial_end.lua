@@ -17,7 +17,7 @@ return Cutscene:new("tutorial_end", {
             end
 
             game.can_join_game = false 
-            game.logo_y_target = -70
+            game.game_ui.logo_y_target = -70
             game.game_ui.cinematic_bars_enabled = true
         end,
     }),

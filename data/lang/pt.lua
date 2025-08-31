@@ -279,8 +279,9 @@ return {
         },
         credits = {
             title = "CRÉDITOS",
+            ninesliced_presents = "Ninesliced presents", -- ADDED / Ninesliced with a capital letter ONLY on the N
             game_by = "Um jogo por",
-            game_by_template = "Por Léo Bernard & amigos", -- Used on the title screen.
+            leo_bernard = "Léo Bernard", -- Please do not change this
             music = "Música",
             sound_design = "Design de som",
             localization = "Localização",

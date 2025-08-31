@@ -21,6 +21,7 @@ local Class            = require "scripts.meta.class"
 local AnimatedSprite   = require "scripts.graphics.animated_sprite"
 local Sprite           = require "scripts.graphics.sprite"
 local skins            = require "data.skins"
+local BackroomCredits = require "scripts.level.backroom.backroom_credits"
 
 local Debug            = Class:inherit()
 
@@ -119,7 +120,10 @@ function Debug:init(game)
             ac.gravity = 0
         end},
         ["v"] = { "__jackofalltrades", function()
-            game.game_ui:start_iris_transition(120, 200, 3.0, CANVAS_WIDTH, 50)
+            game:new_game({ 
+                backroom = BackroomCredits:new(),
+                iris_params = {0, 0, 0, 0, 0}
+            })
 
             ------------------------------
 

@@ -1,5 +1,6 @@
 local TextManager = require "scripts.text"
 local ActorManager = require "scripts.game.actor_manager"
+local cutscenes    = require "data.cutscenes"
 Text = TextManager:new()
 
 local backgrounds = require "data.backgrounds"
@@ -85,6 +86,7 @@ function Game:init()
 	if not Metaprogression:get("has_played_tutorial") then
 		backroom = BackroomTutorial:new()
 	end
+	self.start_with_splash = true
 	self:new_game({backroom = backroom})
 
 	self.debug = Debug:new(self)
@@ -100,8 +102,6 @@ function Game:init()
 	self.steamworks = Steamworks
 
 	self.debug_mode = DEBUG_MODE
-
-	self.show_splash = true
 end
 
 function Game:new_game(params)
@@ -174,8 +174,6 @@ function Game:new_game(params)
 	self.msg_log = {}
 
 	-- Logo
-	self.logo_y = 0
-	self.logo_y_target = 0
 	self.jetpack_tutorial_y = -30
 	self.move_jetpack_tutorial = false
 
@@ -226,6 +224,9 @@ function Game:new_game(params)
 
 	-- UI
 	self.game_ui = GameUI:new(self, self.is_game_ui_visible)
+	if params.iris_params then
+		self.game_ui:start_iris_transition(unpack(params.iris_params))
+	end
 	self.game_ui.dark_overlay_alpha =        param(params.dark_overlay_alpha, self.game_ui.dark_overlay_alpha)
 	self.game_ui.dark_overlay_alpha_target = param(params.dark_overlay_alpha_target, self.game_ui.dark_overlay_alpha_target)
 	self.menu_blur = 1
@@ -247,7 +248,7 @@ function Game:new_game(params)
 		self.level.force_backroom_end_flag = true
 		self.camera.x = DEFAULT_CAMERA_X
 		self.camera.y = DEFAULT_CAMERA_Y
-		self.logo_y = -70 -- SCOTCH
+		self.game_ui.logo_y = -70 -- SCOTCH
 		
 		self:start_game()
 	end
@@ -411,9 +412,6 @@ function Game:get_enemy_count()
 end
 
 function Game:update_logo(dt)
-	self.logo_y = lerp(self.logo_y, self.logo_y_target, 0.1)
-	self.logo_y = clamp(self.logo_y, -70, 0)
-
 	if self.move_jetpack_tutorial then
 		self.jetpack_tutorial_y = lerp(self.jetpack_tutorial_y, 70, 0.1)
 	else
@@ -1018,7 +1016,7 @@ function Game:enable_endless_mode()
 end
 
 function Game:start_game()
-	self.logo_y_target = -70
+	self.game_ui.logo_y_target = -70
 	self.game_state = GAME_STATE_PLAYING
 	self.music_player:set_disk("w1")
 	self.level:activate_enemy_buffer()
@@ -1058,7 +1056,8 @@ function Game:new_gun_display(x, y)
 	return GunDisplay:new(x, y, gun)
 end
 
-function Game:play_cutscene(cutscene)
+function Game:play_cutscene(cutscene_name)
+	local cutscene = cutscenes[cutscene_name]
 	self.cutscene = cutscene
 	self.cutscene:play()
 end

@@ -11,8 +11,8 @@ return Cutscene:new("tutorial_start", {
         duration = 3.0,
         enter = function(cutscene, data)
             game.can_join_game = false 
-            game.logo_y = -5000
-            game.logo_y_target = -5000
+            game.game_ui.logo_y = -5000
+            game.game_ui.logo_y_target = -5000
 
             game.camera.follows_players = false
             game.camera.min_y = -999999    
@@ -31,7 +31,7 @@ return Cutscene:new("tutorial_start", {
 
         duration = 4.2,
         enter = function(cutscene, data)
-            game.game_ui:start_title("Ninesliced", "", "{menu.credits.game_by}", 0.5, 3.2, 0.5)
+            game.game_ui:start_title("{menu.credits.ninesliced_presents}", "", "", 0.5, 3.2, 0.5)
         end,
     }),
     CutsceneScene:new({
@@ -63,7 +63,7 @@ return Cutscene:new("tutorial_start", {
 
         duration = 4.2,
         enter = function(cutscene, data)
-            game.game_ui:start_title("Noam Goldfarb", "𝕏 @SSlime7", "{menu.credits.additional_art}", 0.5, 3.2, 0.5)
+            game.game_ui:start_title("Noam Goldfarb", "SSlime7", "{menu.credits.additional_art}", 0.5, 3.2, 0.5)
         end,
     }),
     CutsceneScene:new({
@@ -71,7 +71,7 @@ return Cutscene:new("tutorial_start", {
 
         duration = 0.1,
         enter = function(cutscene, data)
-	        game.logo_y_target = 0
+	        game.game_ui.logo_y_target = 0
 
             game.camera.follows_players = true
             game.camera.min_y = 0    

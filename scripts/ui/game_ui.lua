@@ -5,6 +5,7 @@ local PlayerPreview = require "scripts.ui.player_preview"
 local shaders = require "data.shaders"
 local Ui = require "scripts.ui.ui"
 local Timer = require "scripts.timer"
+local TvPresentation = require "scripts.level.background.tv_presentation"
 
 local GameUI = Class:inherit()
 
@@ -12,6 +13,9 @@ function GameUI:init(game, is_visible)
 	self.game = game
 
     self.is_visible = param(is_visible, true)
+
+	self.logo_y = 0
+	self.logo_y_target = 0
 
 	self.floating_text = ""
 	self.floating_text_y = -50
@@ -30,6 +34,9 @@ function GameUI:init(game, is_visible)
 	self.splash_x = 0
 	self.splash_vx = 0
 	self.show_splash = true
+	if not game.start_with_splash then
+		self.show_splash = false
+	end
 
 	self.cinematic_bar_loop_threshold = 14
 	self.cinematic_bar_scroll = 0
@@ -42,8 +49,8 @@ function GameUI:init(game, is_visible)
 	self.fury_visual_width = 0
 	self.fury_flash_timer = 0
 	self.fury_flash_max_timer = 0.2
-	self.fury_text_oy = 0.0
-	self.fury_text_oy_target = 0.0
+	self.fury_text_oy = 32
+	self.fury_text_oy_target = 32
 	self.fury_text_wave_height = 2.0
 	self.displayed_combo = 0 
 	self.time_since_fury_end = math.huge
@@ -52,19 +59,44 @@ function GameUI:init(game, is_visible)
 	self.offscreen_indicators_enabled = true
 	
 	self.title_buffer_canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
-	self.title = "Léo Bernard"
+	self.titles = {"Léo Bernard"}
 	self.subtitle = "Yolwoocle"
 	self.overtitle = "A game by"
 	self.title_alpha = 0.0
 	self.title_alpha_target = 1.0
-
+	
 	self.title_intro_duration = 0.5
 	self.title_stay_duration = 1.0
 	self.title_outro_duration = 0.5
-
+	
 	self.title_state = "intro"
 	self.title_state_timer = Timer:new(0.0)
 	self.current_title_state_duration = "intro"
+	
+	self.title_tv_grid = nil
+	self.title_tvs = {}
+	self.tv_grid_rows = 2
+	self.tv_grid_columns = 4
+	self.tv_grid_x_spacing = 82
+	self.tv_grid_y_spacing = 64
+	local sx = CANVAS_WIDTH/2 - (self.tv_grid_columns-1) * self.tv_grid_x_spacing * 0.5
+	local sy = CANVAS_HEIGHT/2 - (self.tv_grid_rows-1) * self.tv_grid_y_spacing * 0.5
+	for ix = 1, self.tv_grid_columns do
+		for iy = 1, self.tv_grid_rows do
+			table.insert(self.title_tvs, {
+				tv = TvPresentation:new(
+					sx + (ix-1) * self.tv_grid_x_spacing - TV_WIDTH/2,
+					sy + (iy-1) * self.tv_grid_y_spacing - TV_HEIGHT/2,
+					{
+						shuffle_table = false,
+						default_slide_duration = 50.0,
+					}
+				),
+				enabled = false,
+				subtext = "test",
+			})
+		end
+	end
 
 	self.dark_overlay_alpha = 0.0
 	self.dark_overlay_alpha_target = 0.0
@@ -89,8 +121,11 @@ function GameUI:update(dt)
 	self:update_floating_text(dt)
 	for i, preview in pairs(self.player_previews) do
 		preview:update(dt)
-		preview.y = preview.base_y - self.game.logo_y
+		preview.y = preview.base_y - self.logo_y
 	end
+
+	self.logo_y = lerp(self.logo_y, self.logo_y_target, 0.1)
+	self.logo_y = clamp(self.logo_y, -70, 0)
 
 	self:update_cinematic_bars(dt)
 	self:update_splash(dt)
@@ -105,7 +140,17 @@ function GameUI:update(dt)
 end
 
 function GameUI:start_title(title, subtitle, overtitle, intro_dur, stay_dur, outro_dur)
-	self.title = Text:parse(title)
+	local titles = {}
+	if type(title) == "string" then
+		titles = {title}
+	elseif type(title) == "table" then
+		titles = copy_table_shallow(title)
+	end
+
+	for i = 1, #titles do
+		titles[i] = Text:parse(titles[i])
+	end
+	self.titles = titles
 	self.subtitle = Text:parse(subtitle)
 	self.overtitle = Text:parse(overtitle)
 
@@ -116,6 +161,14 @@ function GameUI:start_title(title, subtitle, overtitle, intro_dur, stay_dur, out
 	self.title_state = "intro"
 
 	self.title_state_timer:start(self.title_intro_duration)
+end
+
+function GameUI:start_title_tv(tvs, intro_dur, stay_dur, outro_dur)
+	self:start_title("", "", "", intro_dur, stay_dur, outro_dur)
+	
+	for i=1, #tvs do
+		self.title_tvs[i].tv:set_current_slide_from_name(tvs[i][1])
+	end
 end
 
 function GameUI:update_title(dt)
@@ -130,7 +183,7 @@ function GameUI:update_title(dt)
 
 		elseif self.title_state == "outro" then
 			self.title_state = "off"
-			self.title = nil
+			self.titles = nil
 			self.subtitle = nil
 			self.overtitle = nil
 		end
@@ -220,25 +273,48 @@ function GameUI:draw_titles()
 	exec_on_canvas(self.title_buffer_canvas, function()
 		love.graphics.clear()
 
+		local title_line_height = get_text_height()
+		local titles_height = 0
+		if self.titles then 
+			titles_height = #self.titles * title_line_height
+		end
+
 		Text:push_font(FONT_REGULAR)
-		if self.title then
-			print_centered_outline(nil, nil, self.title, CANVAS_CENTER[1], CANVAS_CENTER[2])
+		if self.titles then
+			for i=1, #self.titles do
+				print_centered_outline(nil, nil, 
+					self.titles[i], 
+					CANVAS_CENTER[1], 
+					CANVAS_CENTER[2] - (title_line_height*(#self.titles - 1))/2 + title_line_height*(i-1)
+				)
+			end
 		end
 		Text:pop_font()
 	
 		Text:push_font(FONT_MINI)
 		if self.subtitle then
-			print_centered_outline(nil, nil, self.subtitle, CANVAS_CENTER[1], CANVAS_CENTER[2] + 12)
+			print_centered_outline(nil, nil, self.subtitle, CANVAS_CENTER[1], CANVAS_CENTER[2] + titles_height/2 + 5)
 		end
 		if self.overtitle then
-			print_centered_outline(COL_LIGHTEST_GRAY, nil, self.overtitle, CANVAS_CENTER[1], CANVAS_CENTER[2] - 16)
+			print_centered_outline(COL_LIGHTEST_GRAY, nil, self.overtitle, CANVAS_CENTER[1], CANVAS_CENTER[2] - titles_height/2 - 9)
 		end
 		Text:pop_font()
+
+		self:draw_title_tv_grid()
 	end)
 
 	exec_color({1, 1, 1, self.title_alpha}, function()		
 		love.graphics.draw(self.title_buffer_canvas, 0, 0)
 	end)
+end
+
+function GameUI:draw_title_tv_grid()	
+	Text:push_font(FONT_MINI)
+	for i = 1, #self.title_tvs do
+		self.title_tvs[i].tv:draw()	
+		print_centered_outline(COL_WHITE, COL_BLACK_BLUE, self.title_tvs[i].subtext, self.title_tvs[i].tv.x + TV_WIDTH/2, self.title_tvs[i].tv.y + TV_HEIGHT/2 + 24)
+	end
+	Text:pop_font()
 end
 
 function GameUI:draw_logo()
@@ -253,12 +329,12 @@ function GameUI:draw_logo()
 			img = images.logo_noshad
 		end
 		love.graphics.setColor(col)
-		love.graphics.draw(img, math.floor(logo_x + ox), math.floor(game.logo_y + oy))
+		love.graphics.draw(img, math.floor(logo_x + ox), math.floor(self.logo_y + oy))
 		if DEMO_BUILD then
 			if i == 4 then
-				print_outline(COL_WHITE, COL_BLACK_BLUE, Text:text("game.demo"), logo_x + ox + 90, game.logo_y + oy + 19)
+				print_outline(COL_WHITE, COL_BLACK_BLUE, Text:text("game.demo"), logo_x + ox + 90, self.logo_y + oy + 19)
 			else
-				print_outline(col, col, Text:text("game.demo"), logo_x + ox + 90, game.logo_y + oy + 19)
+				print_outline(col, col, Text:text("game.demo"), logo_x + ox + 90, self.logo_y + oy + 19)
 			end
 		end
 	end
@@ -273,7 +349,7 @@ function GameUI:draw_version()
 		text = "Beta build: game might be unstable and change in the future - "..text
 	end
 	local x = math.floor(CANVAS_WIDTH - get_text_width(text) - 2)
-	local y = self.game.logo_y
+	local y = self.logo_y
 	print_color(COL_DARK_GRAY, text, x, y)
 	love.graphics.setFont(old_font)
 
@@ -498,15 +574,18 @@ end
 --- SPLASH
 
 function GameUI:update_splash(dt)
+	if self.splash_x < -1 then
+		game.start_with_splash = false
+	end
 	if self.splash_x < -CANVAS_WIDTH*2 then
-		game.show_splash = false
+		self.show_splash = false
 	end
 	self.splash_vx = self.splash_vx - dt*500 
 	self.splash_x = self.splash_x + self.splash_vx * dt
 end
 
 function GameUI:draw_splash_animation()
-	if not game.show_splash then 
+	if not self.show_splash then 
 		return
 	end
 	love.graphics.draw(images.splash, self.splash_x, 0)
