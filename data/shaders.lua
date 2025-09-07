@@ -83,6 +83,17 @@ shaders.blur_shader = love.graphics.newShader[[
 	}
 ]]
 
+shaders.dither = love.graphics.newShader([[
+    vec4 effect(vec4 color, Image texture, vec2 textureCoords, vec2 screenCoords) {
+		float m = mod(floor(screenCoords.x) + floor(screenCoords.y), 2.0);
+		if (m < 1) {
+			return Texel(texture, textureCoords) * color;
+		} else {
+			return vec4(1, 1, 1, 0);
+		}
+    }
+]])
+
 -----------------------------------------------------
 
 -- Palette swap, thanks to Keyslam on the LÖVE discord server

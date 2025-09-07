@@ -39,7 +39,7 @@ function NPC:update(dt)
 end
 
 function NPC:on_interact(player)
-	Particles:word(self.mid_x, self.y - 32, self.dialogue, COL_LIGHT_RED, self.interaction_delay-1.0, nil, nil, 0.02)
+	Particles:word(self.mid_x, self.y - 32, self.dialogue, COL_WHITE, self.interaction_delay-1.0, nil, nil, 0.02)
 end
 
 function NPC:draw()

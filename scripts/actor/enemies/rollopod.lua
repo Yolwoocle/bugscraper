@@ -13,7 +13,7 @@ function Rollopod:init(x, y, spr, w, h)
     Rollopod.super.init(self, x,y, spr or images.larva1, w or 18, h or 12)
     self.name = "rollopod"
     self.follow_player = false
-    self.is_pushable = false
+    self.is_pushable = true
     
     self.life = 30
     self.friction_x = 1

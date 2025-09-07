@@ -611,10 +611,32 @@ function Guns:init()
 		self.sfx = "empty"
 
 		self.spr = images.resignation_letter
-		self.damage = 0
-		self.max_ammo = 0
+		self.damage = 5
+		self.max_ammo = math.huge
 
 		self.show_hud = false
+		
+		self.color = COL_LIGHT_BLUE
+		
+		self.max_ammo = 8
+		self.max_reload_timer = 0.6
+		self.bullet_number = 1
+		self.bullet_friction = 0
+		self.random_angle_offset = 0
+		self.knockback = 150
+
+		self.random_angle_offset = 0
+		self.is_auto = true
+		self.sfx = "sfx_weapon_bigberry_shoot_{01-04}"
+		
+		self.cooldown = 0.5
+		self.jetpack_force = 1000
+		
+		self.bullet_spr = images.bullet_ring
+		self.bul_w = 10
+		self.bul_h = 10
+
+		self.screenshake = 4
 	end
 end
 

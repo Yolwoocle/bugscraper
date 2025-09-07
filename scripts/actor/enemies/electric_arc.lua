@@ -91,6 +91,7 @@ function ElectricArc:set_segment(ax_or_seg, ay, bx, by)
 
     self:set_position(ax, ay)
     self.segment:set_bounds(ax, ay, bx, by)
+    self:update_lightning(0)
 end
 
 function ElectricArc:update(dt)
@@ -203,6 +204,14 @@ end
 
 function ElectricArc:start_activation_timer(duration)
     self.activation_timer:start(duration)
+end
+
+function ElectricArc:draw_back()
+    ElectricArc.super.draw_back(self)
+
+    if self.lightning.style == LIGHTNING_STYLE_THORNS then
+        self.lightning:draw(0, 0, {thorns_outline = COL_BLACK_BLUE})
+    end
 end
 
 function ElectricArc:draw()

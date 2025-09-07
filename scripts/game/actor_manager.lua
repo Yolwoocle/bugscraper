@@ -33,7 +33,7 @@ function ActorManager:update(dt)
 				actor:clamp_to_bounds(self.game.level.cabin_inner_rect)
 			end
 
-			if not self.game.level.kill_zone:is_point_in_inclusive(actor.mid_x, actor.mid_y) then
+			if actor.kill and actor.is_vulnerable_to_kill_zone and not self.game.level.kill_zone:is_point_in_inclusive(actor.mid_x, actor.mid_y) then
 				actor:kill()
 			end
 		end

@@ -37,6 +37,7 @@ function ButtonSmallGlass:init(x, y)
         type = COLLISION_TYPE_SEMISOLID,
         is_slidable = true,
         walk_sound = "sfx_player_footstep_glass_{01-06}",
+        land_sound = "sfx_player_footstep_land_glass_{01-04}"
     }
 end
 

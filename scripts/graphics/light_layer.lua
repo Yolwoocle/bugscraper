@@ -1,7 +1,5 @@
 require "scripts.util"
 local shaders = require "data.shaders"
-local Light = require "scripts.graphics.light"
-local Rect = require "scripts.math.rect"
 
 local Layer = require "scripts.graphics.layer"
 

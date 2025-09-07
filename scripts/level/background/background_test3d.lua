@@ -43,7 +43,7 @@ function BackgroundTest3D:update(dt)
 end
 
 function BackgroundTest3D:draw()
-	self.super.draw(self)
+	BackgroundTest3D.super.draw(self)
 	self.renderer:draw()
 end
 

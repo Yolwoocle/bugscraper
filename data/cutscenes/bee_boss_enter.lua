@@ -1,6 +1,6 @@
 local Cutscene = require "scripts.game.cutscene"
 local CutsceneScene = require "scripts.game.cutscene_scene"
-local Light = require "scripts.graphics.light"
+local LightSpotlight = require "scripts.graphics.light.light_spotlight"
 local Rect = require "scripts.math.rect"
 local images = require "data.images"
 
@@ -20,7 +20,7 @@ return Cutscene:new("bee_boss_enter", {
     CutsceneScene:new({
         duration = 0.3,
         enter = function(cutscene, data)
-            game.light_world:new_light("center", Light:new(CANVAS_WIDTH/2, -32, {
+            game.light_world:new_light("center", LightSpotlight:new(CANVAS_WIDTH/2, -32, {
                 angle = pi*0.5,
                 spread = pi*0.1,
                 range = 800,
@@ -32,7 +32,7 @@ return Cutscene:new("bee_boss_enter", {
     CutsceneScene:new({
         duration = 0.3,
         enter = function(cutscene, data)
-            game.light_world:new_light("left", Light:new(500, -32, {
+            game.light_world:new_light("left", LightSpotlight:new(500, -32, {
                 angle = pi*0.7, 
                 spread = pi*0.05, 
                 range = 800, 
@@ -44,7 +44,7 @@ return Cutscene:new("bee_boss_enter", {
     CutsceneScene:new({
         duration = 0.3,
         enter = function(cutscene, data)
-            game.light_world:new_light("right", Light:new(CANVAS_WIDTH - 500, -32, {
+            game.light_world:new_light("right", LightSpotlight:new(CANVAS_WIDTH - 500, -32, {
                 angle = pi*0.3, 
                 spread = pi*0.05, 
                 range = 800, 

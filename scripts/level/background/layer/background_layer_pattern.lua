@@ -64,7 +64,11 @@ function BackgroundLayerPattern:new_tile(p, x, y)
     p.visible = self:determinant_function(x, y + self.layer_y)
 
     p.despawn_condition = function(_self)
-        return _self.y - _self.spr.h > CANVAS_HEIGHT
+        if self.background:get_speed() > 0 then
+            return _self.y - _self.spr.h > CANVAS_HEIGHT 
+        else
+            return _self.y + _self.spr.h < 0 
+        end
     end
 
     p.draw = function(_self)
@@ -81,7 +85,11 @@ function BackgroundLayerPattern:update(dt)
         tile.y = tile.y + self.background:get_speed() * self.parallax * dt
 
         if tile:despawn_condition() then
-            tile.y = tile.y - self.pattern_height * self.row_count 
+            if self.background:get_speed() > 0 then
+                tile.y = tile.y - self.pattern_height * self.row_count 
+            else
+                tile.y = tile.y + self.pattern_height * self.row_count 
+            end
         end
     end
 end

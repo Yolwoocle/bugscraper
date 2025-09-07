@@ -68,12 +68,13 @@ function CloudStorm:init(x, y, size)
                     end
                 end
 
-                if (not state.no_attack_timer.is_active) and (self.state_timer:update(dt) or (
-                        state.target and state.target.y > self.y and 
-                        is_between(
-                            state.target.mid_x, self.mid_x - self.player_detection_range, self.mid_x + self.player_detection_range
-                        )
-                )) then
+                if (not state.no_attack_timer.is_active) and (self.state_timer:update(dt) 
+                        -- or (
+                        -- state.target and state.target.y > self.y 
+                        -- and is_between(
+                        --     state.target.mid_x, self.mid_x - self.player_detection_range, self.mid_x + self.player_detection_range
+                        -- ))
+                ) then
                     return "telegraph"
                 end
                 -- if self.state_timer:update(dt) then

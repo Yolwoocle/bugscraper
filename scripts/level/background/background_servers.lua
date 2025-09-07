@@ -198,7 +198,7 @@ end
 -----------------------------------------------------
 
 function BackgroundServers:draw()
-	self.super.draw(self)
+	BackgroundServers.super.draw(self)
 
 	for i, edge in ipairs(self.all_edges) do
 		local row_y = edge.row.y

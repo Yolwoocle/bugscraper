@@ -105,7 +105,8 @@ BULLET_BOUNCE_MODE_NORMAL = "normal"
 
 RECT_ELEVATOR_PARAMS = {2, 2, 28, 16}
 RECT_CAFETERIA_PARAMS = {2, 2, 59, 16}
-RECT_CEO_OFFICE_PARAMS = {2, 2, 104, 16}
+RECT_CEO_OFFICE_PARAMS = {2, 2, 104, 24}
+RECT_BASEMENT = {2, -4, 104, 16}
 -- RECT_GROUND_FLOOR_PARAMS = {2, 2, 58, 16}
 -- RECT_GROUND_FLOOR_PARAMS = {2, 2, 100, 16}
 RECT_GROUND_FLOOR_PARAMS = {2, 3, 111, 16}
@@ -126,7 +127,7 @@ FONT_CHARACTERS =
     "ПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюяё€"
 FONT_SYMBOLS_CHARACTERS = "🔊🔉🔈🎵🎼🔳🔲📺🕐↖🛜▶⏸🔄🔘⬅➡⬆⬇⏏🔫🔚📥👆🔙🗄⌨🎮🎚❤"..
     "✅❎🔗💡⚠🕹🫨💧🐜🐛🐝🪲🈶🌄🛅😎😈🐦𝕏🦋🐰🐞🌐⏭🥚🥦🐧🎓🔺🦂"
-FONT_7SEG_CHARACTERS = " 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+FONT_7SEG_CHARACTERS = " 0123456789-abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 FONT_MINI_CHARACTERS = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_abcdefghijklmnopqrstuvwxyz{|}~ÀÁÂÃÄÅĄÆÇĆÈÉÊËĘÌÍÎÏŁÐÑŃÒÓÔÕÖØÙÚÛÜŚÝŹŻÞßàáâãäåąæçćèéêëęìíîïłðñńòóôõöøùúûüśýþÿźżŒœ⁍🦋𝕏"
 FONT_FAT_CHARACTERS = " ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890!,.:;'\"@#$%^&*()[]{}_-=+<>/\\|~"
 FONT_CHINESE_CHARACTERS = require "fonts.font_chinese_characters"
@@ -611,4 +612,4 @@ TV_HEIGHT = 31
 
 -- Super secret settings :)
 SMASH_EASTER_EGG_PROBABILITY = 0.02
-TV_BLUESCREEN_PROBABILITY = 0.05
+TV_BLUESCREEN_PROBABILITY = 1.05

@@ -42,7 +42,7 @@ function BackgroundFinal:update(dt)
 end
 
 function BackgroundFinal:draw()
-	self.super.draw(self)
+	BackgroundFinal.super.draw(self)
 
 	love.graphics.setColor(COL_WHITE)
 

@@ -55,6 +55,7 @@ local sfxnames = {
 	["sfx_player_footstep_land_sand_{01-04}"] = {"sfx/actor/player/land/sand/sfx_player_footstep_land_sand_{}.ogg", "static"},
 	["sfx_player_footstep_land_stone_{01-04}"] = {"sfx/actor/player/land/stone/sfx_player_footstep_land_stone_{}.ogg", "static"},
 	["sfx_player_footstep_land_wood_{01-04}"] = {"sfx/actor/player/land/wood/sfx_player_footstep_land_wood_{}.ogg", "static"},
+	["sfx_player_footstep_land_glass_{01-04}"] = {"sfx/actor/player/land/glass/sfx_player_footstep_land_glass_{}.ogg", "static"},
 
 	["sfx_player_wall_slide_metal_{01-02}"] = {"sfx/actor/player/slide/metal/sfx_player_wall_slide_metal_{}.ogg", "static", { looping = true }},
 	["sfx_player_wall_slide_stone_{01-02}"] = {"sfx/actor/player/slide/stone/sfx_player_wall_slide_stone_{}.ogg", "static", { looping = true }},
@@ -153,6 +154,8 @@ local sfxnames = {
 	["fly_buzz"] = {"empty.ogg", "static"}, -- TODO change to actual sound
 
 	-- UPGRADES
+	["sfx_upgrades_apple_juice_pickedup"] = {"sfx/upgrades/sfx_upgrades_apple_juice_pickedup.ogg", "static"},
+	["sfx_upgrades_boba_pickedup"] = {"sfx/upgrades/sfx_upgrades_boba_pickedup.ogg", "static"},
 	["sfx_upgrades_energydrink_pickedup"] = {"sfx/upgrades/sfx_upgrades_energydrink_pickedup.ogg", "static"},
 	["sfx_upgrades_espresso_pickedup"] = {"sfx/upgrades/sfx_upgrades_espresso_pickedup.ogg", "static"},
 	["sfx_upgrades_milk_pickedup"] = {"sfx/upgrades/sfx_upgrades_milk_pickedup.ogg", "static"},

@@ -49,8 +49,10 @@ local enemies = {
 	Mole =               require "scripts.actor.enemies.mole", 
 	CloudEnemy =         require "scripts.actor.enemies.cloud_enemy",
 	CloudStorm =         require "scripts.actor.enemies.cloud_storm",
+	Rollopod =           require "scripts.actor.enemies.rollopod", --*
 	Centipede =          require "scripts.actor.enemies.centipede", 
 	Shooter =            require "scripts.actor.enemies.shooter", 
+	GoldenBeetle =       require "scripts.actor.enemies.golden_beetle", --*
 	ArumTitanBoss =      require "scripts.actor.enemies.arum_titan_boss", 
 	ArumTitanMinion =    require "scripts.actor.enemies.arum_titan_minion", 
 	
@@ -62,13 +64,12 @@ local enemies = {
 	Frog =               require "scripts.actor.enemies.frog", --*
 	SwitchBug =          require "scripts.actor.enemies.switch_bug", --*
 	W2boss =             require "scripts.actor.enemies.w2boss", --*
-	GoldenBeetle =       require "scripts.actor.enemies.golden_beetle", --*
-	Rollopod =           require "scripts.actor.enemies.rollopod", --*
 	RainbowButterfly =   require "scripts.actor.enemies.rainbow_butterfly", --*
 	SquidMother =        require "scripts.actor.enemies.squid_mother", --*
 	SquidChild =         require "scripts.actor.enemies.squid_child", --*
 	WalkingSlotMachine = require "scripts.actor.enemies.walking_slot_machine", --*
 	
+	-- Misc
 	StaticProp =         require "scripts.actor.enemies.static_prop",
 	JumpingProp =        require "scripts.actor.enemies.jumping_prop",
 	Dummy =              require "scripts.actor.enemies.dummy",
@@ -77,7 +78,6 @@ local enemies = {
 
 	FinalBoss =          require "scripts.actor.enemies.final_boss",
 
-	-- Misc
 	BossDoor =           require "scripts.actor.enemies.boss_door",
 	BreakableWall =      require "scripts.actor.enemies.breakable_wall",
 	ButtonBigPressed =   require "scripts.actor.enemies.button_big_pressed",
@@ -85,6 +85,7 @@ local enemies = {
 	ButtonBigGlass =     require "scripts.actor.enemies.button_big_glass",
 	ButtonSmallGlass =   require "scripts.actor.enemies.button_small_glass",
 	ButtonSmall =        require "scripts.actor.enemies.button_small",
+	ButtonSmallRocket =  require "scripts.actor.enemies.button_small_rocket",
 	ExitSign =           require "scripts.actor.enemies.exit_sign",
 	UpgradeDisplay =     require "scripts.actor.enemies.upgrade_display",
 	GunDisplay =         require "scripts.actor.enemies.gun_display",

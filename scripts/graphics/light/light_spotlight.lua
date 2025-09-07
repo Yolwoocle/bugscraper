@@ -1,15 +1,14 @@
 require "scripts.util"
-local Class = require "scripts.meta.class"
+local Light = require "scripts.graphics.light.light"
 local vec2 = require "lib.batteries.vec2"
 local Segment = require "scripts.math.segment"
 
-local Light = Class:inherit()
+local LightSpotlight = Light:inherit()
 
-function Light:init(x, y, params)
-    -- angle, spread, range, rect, is_active
+function LightSpotlight:init(x, y, params)
+    LightSpotlight.super.init(self, x, y, params)
     params = params or {}
 
-    self.position = vec2(x, y)
     self.angle = param(params.angle, 0)
     self.spread = param(params.spread, pi/8)
     self.range = param(params.range, 800)
@@ -20,12 +19,10 @@ function Light:init(x, y, params)
     self.oscillation_angle_offset = 0
     self.oscillation_angle_value = 0
 
-    self.is_active = param(params.is_active, true)
-
-    self.target = nil
+    self.target = param(params.target, nil)
 end
 
-function Light:update(dt)
+function LightSpotlight:update(dt)
     if self.target then
         local a = math.atan2(self.target.mid_y - self.position.y, self.target.mid_x - self.position.x)
         self.angle = a
@@ -36,11 +33,7 @@ function Light:update(dt)
     end
 end
 
-function Light:set_active(value)
-    self.is_active = value
-end
-
-function Light:get_segments(bounds)
+function LightSpotlight:get_segments(bounds)
     local angle = self.angle + self.oscillation_angle_offset
     local s1 = Segment:new(self.position.x, self.position.y, self.position.x + math.cos(angle + self.spread) * self.range, self.position.y + math.sin(angle + self.spread) * self.range)
     local s2 = Segment:new(self.position.x, self.position.y, self.position.x + math.cos(angle - self.spread) * self.range, self.position.y + math.sin(angle - self.spread) * self.range)
@@ -52,7 +45,7 @@ function Light:get_segments(bounds)
     end
 end
 
-function Light:draw(bounds)
+function LightSpotlight:draw(bounds)
     if not self.is_active then
         return
     end
@@ -63,4 +56,4 @@ function Light:draw(bounds)
     end
 end
 
-return Light
+return LightSpotlight

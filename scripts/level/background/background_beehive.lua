@@ -190,7 +190,7 @@ end
 -----------------------------------------------------
 
 function BackgroundBeehive:draw()
-	self.super.draw(self)
+	BackgroundBeehive.super.draw(self)
 
 	for i,o in pairs(self.bg_particles) do
 		self:draw_particle(o)

@@ -240,13 +240,12 @@ function Enemy:is_flashing_white()
 end
 
 function Enemy:draw_enemy()
-	self:draw_actor()
+	Enemy.super.draw(self)
 end
 
 function Enemy:draw()
 	self:draw_enemy()
 end
-
 
 --- Called when bump.lua collides with an object.
 function Enemy:on_collision(col, other)

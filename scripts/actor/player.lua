@@ -191,6 +191,7 @@ function Player:reset(n, skin)
 		guns.unlootable.Machinegun:new(self),
 		guns.unlootable.DebugGun:new(self),
 		guns.unlootable.EmptyGun:new(self),
+		guns.unlootable.ResignationLetter:new(self),
 		guns.Triple:new(self),
 		guns.Burst:new(self),
 		guns.Shotgun:new(self),
@@ -228,6 +229,8 @@ function Player:reset(n, skin)
 	self.fury_gun_damage_multiplier = 1.5
 	self.fury_speed_mult = 1.3
 
+	self.do_fury_trail = true
+
 	-- Upgrades
 	self.upgrades = {}
 
@@ -261,7 +264,7 @@ function Player:get_state_machine()
 				self.show_gun = true
 				self.show_hud = true
 
-				self.gravity = self.default_gravity
+				self.gravity = self:get_total_gravity()
 				self.can_move_360 = false
 
 				self.friction_x = self.default_friction
@@ -432,7 +435,6 @@ function Player:update(dt)
 
 	-- MISC
 	self.flag_has_jumped_on_current_frame = false
-	self:update_debug(dt)
 end
 
 ------------------------------------------
@@ -714,6 +716,10 @@ end
 ------------------------------------------
 --- Physics ---
 
+function Player:get_total_gravity()
+	return self.default_gravity * self.gravity_mult
+end
+
 function Player:get_movement_dir(blocked)
 	if blocked then
 		return {x=0, y=0}
@@ -833,7 +839,7 @@ function Player:do_wall_sliding(dt)
 			Particles:sweat(self.mid_x + self.dir_x * 12, self.y, self.dir_x < 0)
 		end
 	else
-		self.gravity = self.default_gravity
+		self.gravity = self:get_total_gravity()
 	end
 end
 
@@ -1360,6 +1366,7 @@ end
 
 -----------------------------------------------------
 --- Visuals ---
+-----------------------------------------------------
 
 function Player:update_visuals()
 	self.jump_squash       = lerp(self.jump_squash,       1, 0.15)
@@ -1372,14 +1379,14 @@ function Player:update_visuals()
 		Particles:dust(self.mid_x + random_neighbor(7), self.mid_y + random_neighbor(7), random_sample{color(0x3e8948), color(0x265c42), color(0x193c3e)})
 	end
 
-	if (game.level.fury_active) and self.frame % 2 == 0 and not self.is_ghost then
+	if (game.level.fury_active) and self.frame % 2 == 0 and not self.is_ghost and self.do_fury_trail then
 		Particles:push_layer(PARTICLE_LAYER_BACK_SHADOWLESS)
 		
 		local x, y = self.spr:get_total_centered_offset_position(self.x, self.y, self.w, self.h)
 		Particles:static_image(self.skin.img_walk_down, x, y, 0, 0.12, 1, {
 			color = transparent_color(self.skin.color_palette[1], 0.5),
 			alpha = 0.3,
-			sx = self.spr.sx * ternary(self.dir_x, -1, 1),
+			sx = self.spr.sx * ternary(self.dir_x > 0, -1, 1),
 			sy = self.spr.sy,
 		})
 		
@@ -1738,7 +1745,7 @@ function Player:do_particles(dt)
 	end
 end
 
-function Player:update_debug(dt)
+function Player:update_debug_god_mode(dt)
 	if self.debug_god_mode then
 		self.is_affected_by_bounds = false
 		self.is_affected_by_walls = false

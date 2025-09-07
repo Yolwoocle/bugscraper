@@ -45,6 +45,7 @@ function GameUI:init(game, is_visible)
 	self.cinematic_bar_height = 24
 	self.cinematic_bar_color = nil
 
+	self.show_fury = true
 	self.fury_previous_value = 0
 	self.fury_visual_width = 0
 	self.fury_flash_timer = 0
@@ -81,6 +82,7 @@ function GameUI:init(game, is_visible)
 	self.tv_grid_y_spacing = 64
 	self:init_tv_grid()
 
+	self.dark_overlay_color_override = nil
 	self.dark_overlay_alpha = 0.0
 	self.dark_overlay_alpha_target = 0.0
 
@@ -96,6 +98,8 @@ function GameUI:init(game, is_visible)
 	self.iris_transition_target_radius = 0
 	self.iris_transition_t = 0
 	self.iris_transition_target_t = 0
+
+	self.ending_counter_text = nil
 
 	self.t = 0
 end
@@ -256,7 +260,7 @@ function GameUI:draw()
 	
 	self:draw_titles()
 	if self.dark_overlay_alpha > 0 then
-		rect_color(transparent_color(COL_BLACK_BLUE, self.dark_overlay_alpha), "fill", 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
+		rect_color(transparent_color(self.dark_overlay_color_override or COL_BLACK_BLUE, self.dark_overlay_alpha), "fill", 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
 	end
 
 	self:draw_splash_animation()
@@ -303,13 +307,20 @@ function GameUI:draw_titles()
 			print_centered_outline(COL_LIGHTEST_GRAY, nil, self.overtitle, CANVAS_CENTER[1], CANVAS_CENTER[2] - titles_height/2 - 9)
 		end
 		Text:pop_font()
-
+		
 		self:draw_title_tv_grid()
+		
 	end)
-
+	
 	exec_color({1, 1, 1, self.title_alpha}, function()		
 		love.graphics.draw(self.title_buffer_canvas, 0, 0)
 	end)
+
+	if self.ending_counter_text then
+		Text:push_font(FONT_7SEG)
+		print_centered_outline(COL_WHITE, nil, self.ending_counter_text, CANVAS_CENTER[1], 70, 2, 0, 2)
+		Text:pop_font()
+	end
 end
 
 function GameUI:draw_title_tv_grid()	
@@ -394,8 +405,8 @@ function GameUI:draw_offscreen_indicators()
 	end
 	local cam_x, cam_y = self.game.camera:get_position()
 	for i, player in pairs(self.game.all_players) do
-		if (player.x + player.w < cam_x) or (cam_x + CANVAS_WIDTH < player.x) 
-			or (player.y + player.h < cam_y) or (cam_y + CANVAS_HEIGHT < player.y) then 
+		if (player.x + player.w < cam_x) or (cam_x + CANVAS_WIDTH < player.x) then
+			-- or (player.y + player.h < cam_y) or (cam_y + CANVAS_HEIGHT < player.y) then 
 			self:draw_offscreen_indicator_for(player)
 		end
 	end
@@ -431,7 +442,7 @@ end
 
 function GameUI:draw_floating_text()
 	if #self.floating_text > 0 then
-		print_centered_outline(nil, nil, self.floating_text, CANVAS_WIDTH/2, self.floating_text_y)
+		print_centered_outline(nil, nil, Text:parse(self.floating_text), CANVAS_WIDTH/2, self.floating_text_y)
 	end
 end
 
@@ -521,14 +532,6 @@ end
 
 --- IRIS TRANSITION 
 
--- self.iris_transition_on
--- self.iris_transition_x
--- self.iris_transition_y
--- self.iris_transition_radius
--- self.iris_transition_original_radius
--- self.iris_transition_target_radius
--- self.iris_transition_t
--- self.iris_transition_target_t
 function GameUI:set_iris(value)
 	self.iris_transition_on = value
 end
@@ -641,6 +644,9 @@ end
 
 function GameUI:draw_fury()
 	-- print_centered_outline(nil, nil, concat(round(game.level.fury_bar, 1), " / ", game.level.fury_max, " (", game.level.fury_threshold, ")"), CANVAS_WIDTH/2, 24)
+	if not self.show_fury then
+		return
+	end
 	
 	-- local y = 12
 	local y = CANVAS_HEIGHT - 12

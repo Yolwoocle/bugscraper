@@ -56,9 +56,9 @@ end
 
 function WorldGenerator:generate_ceo_office()
 	self:reset()
-	self:write_rect(Rect:new(2, 2, 79+24, 15), TILE_METAL)
-	self:write_rect(Rect:new(27, 3, 54+24, 8), TILE_METAL)
-	self:write_rect(Rect:new(78, 9, 78, 9), TILE_METAL)
+	self:write_rect(Rect:new(2, 2, 79+24, 15), TILE_CARPET)
+	self:write_rect(Rect:new(27, 3, 54+24, 8), TILE_CARPET)
+	self:write_rect(Rect:new(78, 9, 78, 9), TILE_CARPET)
 end
 
 function WorldGenerator:generate_ground_floor()

@@ -74,6 +74,13 @@ function Sound:get_duration()
 	return self.source:getDuration()
 end
 
+function Sound:set_effect(effect_name)
+    if not effect_name then
+        return
+    end
+	return self.source:setEffect(effect_name)
+end
+
 -- ---@param offset number
 -- ---@param unit "seconds"|"samples"
 -- function Sound:seek(offset, unit)

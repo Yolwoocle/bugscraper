@@ -22,6 +22,7 @@ local AnimatedSprite   = require "scripts.graphics.animated_sprite"
 local Sprite           = require "scripts.graphics.sprite"
 local skins            = require "data.skins"
 local BackroomCredits = require "scripts.level.backroom.backroom_credits"
+local shaders         = require "data.shaders"
 
 local Debug            = Class:inherit()
 
@@ -120,37 +121,50 @@ function Debug:init(game)
             ac.gravity = 0
         end},
         ["v"] = { "__jackofalltrades", function()
-            game:new_game({ 
-                backroom = BackroomCredits:new(),
-                iris_params = {0, 0, 0, 0, 0}
-            })
+            game.level:set_bounds(Rect:new(unpack(RECT_CEO_OFFICE_PARAMS)))
+            game:play_cutscene("enter_ceo_office")
+
+            -- game.is_light_on = true
+            -- game.level.backroom.show_basement_bg = true
+
+            -- game.game_ui.ending_counter_text = "12345"
+            -- Particles:speed_line(game.players[1].x, game.players[1].y, 1)
+
+            ------------------------------
+            ---
+            -- game:new_game({ 
+            --     backroom = BackroomCredits:new(),
+            --     iris_params = {0, 0, 0, 0, 0}
+            -- })
 
             ------------------------------
 
-            -- local points = {}
-            -- local cx = game.level.door_rect.ax / 2 + game.level.door_rect.bx / 2
-            -- local cy = game.level.door_rect.ay / 2 + game.level.door_rect.by / 2
+            --[[
+            local points = {}
+            local cx = game.level.door_rect.ax / 2 + game.level.door_rect.bx / 2
+            local cy = game.level.door_rect.ay / 2 + game.level.door_rect.by / 2
             
-            -- for i=0, 19 do
-            --     table.insert(points, {cx + math.cos(pi/2 + pi2*i/20)* 100, cy + math.sin(pi/2 + pi2*i/20)* 100})
-            -- end
+            for i=0, 19 do
+                table.insert(points, {cx + math.cos(pi/2 + pi2*i/20)* 100, cy + math.sin(pi/2 + pi2*i/20)* 100})
+            end
 
-            -- local e = enemies.ProgressingArc:new(100, 100, {
-            --     points = points,
-            --     interval_size = 150,
-            --     progress_speed = 80,
-            --     arc_params = {
-            --         lightning_params = {
-            --             style = LIGHTNING_STYLE_THORNS, 
-            --             min_step_size = 10,
-            --             max_step_size = 10,
-            --             min_line_width = 0,
-            --             max_line_width = 0,
-            --             jitter_width = 0,
-            --         }
-            --     }
-            -- })
-            -- game:new_actor(e)
+            local e = enemies.ProgressingArc:new(100, 100, {
+                points = points,
+                interval_size = 150,
+                progress_speed = 80,
+                arc_params = {
+                    lightning_params = {
+                        style = LIGHTNING_STYLE_THORNS, 
+                        min_step_size = 10,
+                        max_step_size = 10,
+                        min_line_width = 0,
+                        max_line_width = 0,
+                        jitter_width = 0,
+                    }
+                }
+            })
+            game:new_actor(e)
+            --]]
 
             -----------------------------
 
@@ -271,6 +285,7 @@ function Debug:init(game)
         ["i"] = { "toggle god mode", function()
             for _, player in pairs(game.players) do
                 player.debug_god_mode = not player.debug_god_mode
+                player:update_debug_god_mode(0)
             end
         end },
 
@@ -755,7 +770,7 @@ function Debug:draw_info_view()
             concat("LOVE version: ", string.format("%d.%d.%d - %s", love.getVersion())),
             concat("Renderer info: ", renderer_name, " (v", renderer_version, ")"),
             concat("Renderer vendor: ", renderer_vendor, ", device ", renderer_device),
-            concat("game state: ", game.game_state),
+            concat("game state: ", game.game_state, " / camera pos: (", game.camera.x, ", ", game.camera.y, ")"),
             concat("nb of active audio sources: ", love.audio.getActiveSourceCount()),
             concat("nb of actors: ", #self.game.actors, " / ", self.game.actor_manager.actor_limit, " | nb of enemies: ", self.game:get_enemy_count()),
             concat("nb collision items: ", Collision.world:countItems()),
@@ -837,7 +852,7 @@ function Debug:draw_info_view()
         rect_color(COL_WHITE, "line", 0, 0, total_w, 16)
     end
 
-    -- self:test_info_view_3d_renderer()
+    self:test_info_view_3d_renderer()
 
     -- local w = 255
     -- local col_a = color(0x0c00b8)
@@ -859,20 +874,11 @@ function Debug:draw_info_view()
 
     linedottedoffset = linedottedoffset - 0.2
 
-    local a = self.t
-
-    local image = images._test_gaysquare
-    local w, h = image:getWidth(), image:getHeight()
-	local mesh_vertices = {
-		{0, 0,   0, 0,   1, 1, 1, 1},
-		{w, 0,   1, 0,   1, 1, 1, 1},
-		{w+math.cos(a)*5, h*math.sin(a),   1, 1,   1, 1, 1, 1},
-		{0-math.cos(a)*5, h*math.sin(a),   0, 1,   1, 1, 1, 1},
-	}
-
-	local mesh = love.graphics.newMesh(mesh_vertices, "fan", "dynamic")
-	mesh:setTexture(image)
-    love.graphics.draw(mesh, 100, 100)
+    pos = {x=100, y=100}
+    exec_using_shader(shaders.dither, function()
+        circle_color({1,1,1,0.5}, "fill", pos.x, pos.y, 32)
+    end)
+    circle_color({1,1,1,1},   "fill", pos.x, pos.y, 32 - 8)
 end
 
 

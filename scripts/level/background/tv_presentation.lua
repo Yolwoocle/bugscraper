@@ -37,6 +37,7 @@ function TvPresentation:init(x, y, params)
         ["slide_018"] = { images.tv_slideshow_018, 0.04 },   -- Mio explode              by Corentin Vaillant
         ["slide_019"] = { images.tv_slideshow_019, 0.04 },   -- Snail Ball Run           by hector_misc (Nextop Games)
         ["slide_020"] = { images.tv_slideshow_020, 0.5 },   -- You are a Bug             by kiwisky 
+        ["slide_021"] = { images.tv_slideshow_021, 0.5 },   -- Empty Knight: Clothmusic  by yolwoocle 
         
         ["bluescreen"] = { random_sample {images.tv_bluescreen, images.tv_bluescreen_2}, math.huge } 
         -- By hector_misc (Nextop Games) & 418cat

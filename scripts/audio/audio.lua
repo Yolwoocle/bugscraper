@@ -10,6 +10,16 @@ function AudioManager:init()
 	self.layers = {
 		"sfx"
 	}
+
+	love.audio.setEffect("echo", {
+		type = "echo",
+		delay = 0.18, -- [0, 0.207]
+		tapdelay = 0.35, -- [0, 0.404]
+		damping = 0.99, -- [0, 0.99]
+		feedback = 0.1, -- [0, 1]   
+		spread = 0.7 , -- [-1, 1] 
+	})
+	self.current_effect = nil
 end
 
 function AudioManager:update(dt)
@@ -48,6 +58,13 @@ function AudioManager:play(snd, volume, pitch, params)
 	new_sound:set_volume(volume * sound.volume * layer_volume)
 	new_sound:set_pitch(pitch * sound.pitch)
 	new_sound:play()
+	
+	if self.current_effect == "echo" then
+		local echo_sound = sound:clone()
+		echo_sound:set_volume(volume * sound.volume * layer_volume * 0.3)
+		echo_sound:set_effect("echo")
+		echo_sound:play()
+	end
 end
 
 function AudioManager:play_var(snd, vol_var, pitch_var, params)
@@ -118,6 +135,10 @@ function AudioManager:get_sound(name)
 	end
 
 	return sounds[name]
+end
+
+function AudioManager:set_effect(effect_name)
+	self.current_effect = effect_name
 end
 
 return AudioManager

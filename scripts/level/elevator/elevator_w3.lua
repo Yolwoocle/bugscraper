@@ -110,7 +110,7 @@ function ElevatorW3:draw_counter()
 	
 	-- Level counter
 	love.graphics.setFont(FONT_7SEG)
-	print_color(COL_WHITE, string.sub("00000"..tostring(self.level.floor), -3, -1), 198+16*2, 97+16*2)
+	print_color(COL_WHITE, elevator_counter_format(self.level.floor), 198+16*2, 97+16*2)
 	love.graphics.setFont(FONT_REGULAR)
 end
 

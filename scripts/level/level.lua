@@ -756,7 +756,11 @@ end
 function Level:update_fury(dt)
 	local final_fury_speed = self.fury_speed
 
-	if game:get_enemy_count() > 0 and not game.level:is_on_cafeteria() then
+	local c = true
+	if game.level.backroom then
+		c = game.level.backroom.freeze_fury
+	end
+	if (game:get_enemy_count() > 0) and not (game.level:is_on_cafeteria() and c) then
 		self.fury_bar = math.max(0.0, self.fury_bar - dt*final_fury_speed)
 	end
 	self.fury_bar = clamp(self.fury_bar, 0.0, self.fury_max)

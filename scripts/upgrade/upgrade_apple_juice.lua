@@ -8,11 +8,13 @@ local UpgradeAppleJuice = Upgrade:inherit()
 function UpgradeAppleJuice:init()
     UpgradeAppleJuice.super.init(self, "apple_juice")
     self.sprite = images.upgrade_apple_juice
-    self.strength = 1
+    self.strength = 2
     self:set_description(self.strength)
 
     self.color = COL_LIGHT_GREEN
     self.palette = {COL_LIGHT_GREEN, COL_WHITE, COL_DARK_RED}
+
+    self.activate_sound = "sfx_upgrades_apple_juice_pickedup"
 end
     
 function UpgradeAppleJuice:update(dt)

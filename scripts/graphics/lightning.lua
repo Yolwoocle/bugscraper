@@ -83,9 +83,10 @@ function Lightning:generate(segment)
     self:new_segment(last_x, last_y, segment.bx, segment.by)
 end
 
-function Lightning:draw(ox, oy)
+function Lightning:draw(ox, oy, params)
     ox = param(ox, 0)
     oy = param(oy, 0)
+    params = param(params, {})
     
     if self.style == LIGHTNING_STYLE_NORMAL then
         local old_width = love.graphics.getLineWidth()
@@ -102,19 +103,29 @@ function Lightning:draw(ox, oy)
             love.graphics.draw(img, ox + point.segment.bx, oy + point.segment.by)
         end
         
-    elseif self.style == LIGHTNING_STYLE_THORNS then
-        shaders.draw_in_color:sendColor("fillColor", self.debug_col)
-        love.graphics.setShader(shaders.draw_in_color)
+    elseif self.style == LIGHTNING_STYLE_THORNS then        
+        local draw = function(oox, ooy)
+            for i, point in pairs(self.segments) do
+                draw_centered(images.thorn_ball, oox + ox + point.segment.ax, ooy + oy + point.segment.ay)
+            end
+            local point = self.segments[#self.segments]
+            if point then
+                draw_centered(images.thorn_ball, oox + ox + point.segment.bx, ooy + oy + point.segment.by)
+            end
+        end
 
-        for i, point in pairs(self.segments) do
-            draw_centered(images.dung_projectile, ox + point.segment.ax, oy + point.segment.ay)
+        love.graphics.setShader(shaders.draw_in_color)
+        if params.thorns_outline then
+            shaders.draw_in_color:sendColor("fillColor", params.thorns_outline)
+            draw(-1, 0)
+            draw(1, 0)
+            draw(0, 1)
+            draw(0, -1)
         end
-        local point = self.segments[#self.segments]
-        if point then
-            draw_centered(images.dung_projectile, ox + point.segment.bx, oy + point.segment.by)
-        end
-       
+
         love.graphics.setShader()
+        draw(0, 0)
+        -- shaders.draw_in_color:sendColor("fillColor", self.debug_col)
     end
 end
 

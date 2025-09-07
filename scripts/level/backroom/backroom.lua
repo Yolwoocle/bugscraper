@@ -8,6 +8,7 @@ function Backroom:init(params)
     self.name = "backroom"
     
     self.background = nil
+    self.freeze_fury = true
 end
 
 --- (Abstract) Generate the map for this backroom.

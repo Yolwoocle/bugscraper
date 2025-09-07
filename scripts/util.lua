@@ -1380,6 +1380,10 @@ end
 -- https://easings.net/#easeOutBack
 -- https://www.lexaloffle.com/bbs/?tid=40577
 
+function xerp(func, a, b, t)
+	return func(t) * (b - a) + a
+end
+
 function easeinoutquart(a, b, t)
 	if t<.5 then
 		return a + (b-a) * (8*t*t*t*t)
@@ -1532,4 +1536,12 @@ function generate_star_shape(params)
 	-- end
 
     return points
+end
+
+function elevator_counter_format(number)
+	if number < 0 then
+		return "-" .. string.sub("000"..tostring(round(-number)), -2, -1)
+	else
+		return string.sub("000"..tostring(round(number)), -3, -1)
+	end
 end

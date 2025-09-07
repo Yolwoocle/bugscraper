@@ -33,7 +33,7 @@ function Renderer3D:project_vertex(vertex)
 	if self.orthographic then
 		return self.render_offset + Vec2(vertex.x, vertex.y)
 	else
-		return self.render_offset + self.fov * Vec2(vertex.x, vertex.y) / vertex.z
+		return self.render_offset + self.fov * Vec2(vertex.x, vertex.y):scalar_div(vertex.z)
 	end
 end
 
@@ -53,42 +53,62 @@ end
 
 function Renderer3D:draw_object(object)
 	local camera_vec = Vec3(0, 0, 1)
-	local projected_faces = {}
+	local projected_vertices = {}
+	local drawn_faces = {}
 	for i_face = 1, #object.model.faces do
 		local face = object.model.faces[i_face]
-		local projected_face = {}
 		local normal = object:get_face_normal(i_face)
 		local dot = normal:dot(camera_vec)
 		if dot < 0 then
 			for i_point = 1, #face do
-				local vertex = object.transformed_vertices[face[i_point]]
-				local projected_vertex = self:project_vertex(vertex)
-				table.insert(projected_face, projected_vertex.x)
-				table.insert(projected_face, projected_vertex.y)
-	
+				local i_vertex = face[i_point]
+				if not projected_vertices[i_vertex] then
+					local vertex = object.transformed_vertices[i_vertex]
+					local projected_vertex = self:project_vertex(vertex)
+					projected_vertices[i_vertex] = projected_vertex
+				end
 			end
-	
+			
 			if not self.wireframe then
+				local projected_face = {}
+				for i_point = 1, #face do
+					table.insert(projected_face, projected_vertices[face[i_point]].x)
+					table.insert(projected_face, projected_vertices[face[i_point]].y)
+				end
 				exec_color(self:get_shading_color(normal), function()
 					love.graphics.polygon("fill", projected_face)
 				end)
 			end
-			table.insert(projected_faces, projected_face) -- TODO FIXME: there is a lot of repetition 
+			table.insert(drawn_faces, i_face) -- TODO FIXME: there is a lot of repetition 
 		end
-
-		
-		-- local n1 = self:project_vertex(self.object.transformed_vertices[face[1]])
-		-- local n2 = self:project_vertex(self.object.transformed_vertices[face[1]]:vadd(normal))
-		-- line_color(COL_WHITE, n1.x, n1.y, n2.x, n2.y)
-
+	end
+	
+	for i_edge = 1, #object.model.edges do
+		local edge = object.model.edges[i_edge]
+		for i=1, #edge do
+			local i_vertex = edge[i]
+			if not projected_vertices[i_vertex] then
+				local vertex = object.transformed_vertices[i_vertex]
+				local projected_vertex = self:project_vertex(vertex)
+				projected_vertices[i_vertex] = projected_vertex
+			end
+		end
 	end
 
 	exec_color(self.line_color, function()
-		for _, face in pairs(projected_faces) do
-			for i=1, #face-2, 2 do
-				love.graphics.line(face[i], face[i+1], face[i+2], face[i+3])
+		for _, face_i in pairs(drawn_faces) do
+			local face = object.model.faces[face_i]
+			for i=1, #face do
+				local a = projected_vertices[face[i]]
+				local b = projected_vertices[face[mod_plus_1(i+1, #face)]]
+				love.graphics.line(a.x, a.y, b.x, b.y)
 			end
-			love.graphics.line(face[1], face[2], face[#face-1], face[#face])
+		end
+
+		for _, edge in pairs(object.model.edges) do
+			local a = projected_vertices[edge[1]]
+			local b = projected_vertices[edge[2]]
+			love.graphics.line(a.x, a.y, b.x, b.y)
 		end
 	end)
 end

@@ -5,7 +5,8 @@ local BreakableActor = require "scripts.actor.enemies.breakable_actor"
 
 local BossDoor = BreakableActor:inherit()
 
-function BossDoor:init(x, y)
+function BossDoor:init(x, y, params)
+    params = params or {}
     BossDoor.super.init(self, x,y, images.boss_door, 16, 16*5)
     self.name = "button_big_glass"
 
@@ -16,6 +17,8 @@ function BossDoor:init(x, y)
 
     self.max_life = 30
     self.life = self.max_life
+
+    self.cutscene = params.cutscene
 end
 
 function BossDoor:on_death()
@@ -24,7 +27,9 @@ function BossDoor:on_death()
     game.camera:set_target_offset(1000, 0)
     game.camera.max_x = 76*16
 
-    game:play_cutscene("enter_ceo_office")
+    if self.cutscene then
+        game:play_cutscene(self.cutscene)
+    end
 end
 
 return BossDoor

@@ -5,8 +5,8 @@
     * Even though my target audience is people who already play games, since the game supports 
       local co-op and has very simple, accessible controls, it's not absurd to think that more 
       occasional gamers would try their hand at the game, so try to avoid english gamer terms like 
-      "kills", "checkpoint", etc, except if it's the normal established term for the word (e.g. "jetpack", etc). 
-    * It is very easy for me to add more characters if needed, just tell me and I'll do it.
+      "kills", "checkpoint", etc, except if it's already the established term for the word.
+    * It is very easy for me to add more glyphs if needed, just tell me and I'll do it.
     * Please notify me if there are any special technical requirements. (e.g. text rendering specifics, etc) 
 ]]
 
@@ -57,6 +57,7 @@ return {
     gun = {
         -- Gun names
         -- You can stay close to the original, but please feel free to have a more creative interpretation if you wish!
+        -- Look at google doc for image references
         machinegun = "Pea Gun",
         triple = "Triple Pepper",
         burst = "Pollen Burst",
@@ -169,7 +170,7 @@ return {
     },
     dialogue = {
         npc = {
-            hornet = "I'm still waiting for my sister...",
+            hornet = "I might have taken the wrong stag.",
             brown = "This is probably not healthy.",
             noba = "zerzer",
         },
@@ -317,8 +318,8 @@ return {
         credits = {
             title = "CREDITS",
             ninesliced_presents = "Ninesliced presents", -- ADDED / Ninesliced with a capital letter ONLY on the N
-            game_by = "A game by", -- As in, "A game by / John". If it is not possible to have the name *after* this, translate as "Creator" ("Creator / John")
-            leo_bernard = "Léo Bernard", -- Please do not change this
+            game_by = "A game by", -- As in, "A game by [newline] John". If it is not possible to have the name *after* this, translate as "Creator" ("Creator [newline] John")
+            leo_bernard = "Léo Bernard", -- Please do not touch this (this is there so i can use my chinese name in chinese)
             music = "Music",
             sound_design = "Sound design",
             localization = "Localization",

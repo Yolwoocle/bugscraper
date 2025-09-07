@@ -156,7 +156,10 @@ function Motherboard:init(x, y)
             end,
             exit = function(state)
                 self.spr:update_offset(self.spr_base_ox, self.spr_base_oy)
-                game.menu_manager:set_menu("w3_boss_intro")
+                
+                if not Options:get("skip_boss_intros") then
+                    game.menu_manager:set_menu("w3_boss_intro")
+                end
             end
         },
 

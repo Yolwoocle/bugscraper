@@ -122,6 +122,20 @@ local function get_w4_vines_points_func_1(x_offset)
     end
 end
 
+local function get_w4_vines_points_func_2()
+    return function()
+        local pts = {}
+        local center = (game.level.cabin_inner_rect.ax + game.level.cabin_inner_rect.bx) / 2
+
+        local ix = 0
+        for ix = 0, CANVAS_WIDTH, 16 do
+            table.insert(pts, { ix, game.level.cabin_inner_rect.by + math.cos((ix-CANVAS_WIDTH/2)/32) * 32 })
+        end
+
+        return pts
+    end
+end
+
 local function parse_waves_table(waves)
     local parsed_waves = {}
 
@@ -147,16 +161,63 @@ local function parse_waves_table(waves)
     return parsed_waves
 end
 
+local thorns_arc_params = {
+    lightning_params = {
+        style = LIGHTNING_STYLE_THORNS, 
+        min_step_size = 10,
+        max_step_size = 10,
+        min_line_width = 0,
+        max_line_width = 0,
+        jitter_width = 0,
+    }
+}
+
 local waves = parse_waves_table {
     
     -- Cafeteria
-    new_cafeteria({ 
-        run_func = function()
-            game.actor_manager:kill_actors_with_name("electric_rays")
-        end, 
-        ceo_info = 3,
-        empty_cafeteria = true
-    }),
+    -- new_cafeteria({ 
+    --     run_func = function()
+    --         game.actor_manager:kill_actors_with_name("electric_rays")
+    --     end, 
+    --     ceo_info = 3,
+    --     empty_cafeteria = true
+    -- }),
+
+
+    {
+        min = 1,
+        max = 1,
+        enemies = {{ E.Larva, 3 }},
+        elevator = ElevatorW1,
+
+    },
+    {
+        floor_type = FLOOR_TYPE_CAFETERIA,
+        roll_type = WAVE_ROLL_TYPE_FIXED,
+        music = "off",
+
+        run = function(self, level)
+            for _, actor in pairs(game.actors) do
+                if actor.name == "poison_cloud" then
+                    actor.lifespan = 1
+                end
+                if actor.name == "floor_hole_spawner" or actor.name == "pendulum" then
+                    actor:remove()
+                end
+            end
+        end,
+
+        min = 1,
+        max = 1,
+        enemies = {},
+
+        bounds = RECT_CEO_OFFICE,
+
+        backroom = BackroomCEOOffice
+    },
+
+    -------------------------------------------
+
 
     {
         min = 5,
@@ -949,7 +1010,6 @@ local waves = parse_waves_table {
     ----------------------------------------------------------------------------------------------------------
     ----------------------------------------------------------------------------------------------------------
 
-    --[[
     {
         min = 4,
         max = 4,
@@ -1022,33 +1082,36 @@ local waves = parse_waves_table {
                 points = get_w4_vines_points_func_1(-64),
                 interval_size = 150,
                 progress_speed = 80,
+                arc_params = thorns_arc_params
             }}},
             {E.ProgressingArc, 1, args = {{
                 points = get_w4_vines_points_func_1(64),
                 interval_size = 150,
                 progress_speed = -80,
+                arc_params = thorns_arc_params
             }}},
         }
     },
 
     {
-        min = 7,
-        max = 7,
+        min = 4,
+        max = 4,
 
         enemies = {
             { E.MushroomAnt, 2 },
-            { E.Mole,        2 },
-            { E.Rollopod,     1 },
         },
     },
 
     {
-        min = 6,
-        max = 6,
+        min = 5,
+        max = 5,
 
         enemies = {
             { E.Rollopod, 1 },
-            { E.Mole,    2 },
+            { E.CloudStorm, 1 },
+        },
+        fixed_enemies = {
+            { E.MushroomAnt, 2 },
         },
     },
 
@@ -1070,6 +1133,10 @@ local waves = parse_waves_table {
         enemies = {
             { E.Centipede, 1, args = { 15 } },
         },
+
+        run = function()
+            game.actor_manager:kill_actors_with_name("progressing_arc")
+        end, 
     },
 
     ---------------------------------------------
@@ -1077,12 +1144,11 @@ local waves = parse_waves_table {
     ---------------------------------------------
 
     {
-        min = 5,
-        max = 5,
+        min = 3,
+        max = 3,
 
         enemies = {
-            { E.CloudStorm, 20 },
-            { E.CloudEnemy, 20 },
+            { E.Shooter, 20 },
         },
 
         music = "w4",
@@ -1095,6 +1161,7 @@ local waves = parse_waves_table {
 
         enemies = {
             { E.Rollopod, 40 },
+            { E.Shooter, 40 },
         },
     },
 
@@ -1114,29 +1181,8 @@ local waves = parse_waves_table {
         max = 6,
 
         enemies = {
-            { E.Chipper, 20 },
-        },
-        fixed_enemies = {
-            { E.BulbBuddy, 1 },
-        }
-    },
-
-    {
-        min = 1,
-        max = 1,
-
-        enemies = {
-            { E.Centipede, 1 },
-        },
-    },
-
-    {
-        min = 4,
-        max = 4,
-
-        enemies = {
-            { E.Bee,       2 },
-            { E.Stabee, 2 },
+            { E.MushroomAnt, 20 },
+            { E.Shooter, 20 },
         },
     },
 
@@ -1145,7 +1191,36 @@ local waves = parse_waves_table {
         max = 5,
 
         enemies = {
-            { E.DrillBee, 2 },
+            { E.CloudEnemy, 1 },
+            { E.CloudStorm, 1 },
+        },
+        
+        fixed_enemies = {
+            {E.ProgressingArc, 1, args = {{
+                points = get_w4_vines_points_func_2(),
+                interval_size = 150,
+                progress_speed = 80,
+                arc_params = thorns_arc_params
+            }}},
+        },
+    },
+
+    {
+        min = 4,
+        max = 4,
+
+        enemies = {
+            { E.Shooter, 2 },
+        },
+    },
+
+    {
+        min = 5,
+        max = 5,
+
+        enemies = {
+            { E.Rollopod, 2 },
+            { E.CloudEnemy, 2 },
         },
     },
 
@@ -1154,28 +1229,54 @@ local waves = parse_waves_table {
         max = 7,
 
         enemies = {
-            { E.StinkBug, 1 },
-            { E.Spider,   1 },
+            { E.Shooter, 1 },
+            { E.MushroomAnt, 1 },
         },
     },
 
     {
-        min = 1,
-        max = 1,
+        min = 4,
+        max = 4,
 
         enemies = {
-            { E.ArumTitanBoss, 1, position = {CANVAS_WIDTH/2 - 16, CANVAS_HEIGHT/2}},
+            { E.Shooter, 3 },
+        },
+
+        fixed_enemies = {
+            { E.HoneycombFootball, 3 },
         },
 
         cutscene = cutscenes.arum_titan_enter,
         run = function(self, level)
+        end,
+    },
+
+    
+    {
+        floor_type = FLOOR_TYPE_CAFETERIA,
+        roll_type = WAVE_ROLL_TYPE_FIXED,
+        music = "off",
+
+        run = function(self, level)
             for _, actor in pairs(game.actors) do
-                if actor.name == "pendulum" then
+                if actor.name == "poison_cloud" then
+                    actor.lifespan = 1
+                end
+                if actor.name == "floor_hole_spawner" or actor.name == "pendulum" then
                     actor:remove()
                 end
             end
         end,
+
+        min = 1,
+        max = 1,
+        enemies = {},
+
+        bounds = RECT_CEO_OFFICE,
+
+        backroom = BackroomCEOOffice
     },
+
     --]]
     --[[
 

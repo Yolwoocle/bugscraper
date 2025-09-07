@@ -112,6 +112,8 @@ function Game:new_game(params)
 		love.audio.stop()
 	end
 
+	Audio.current_effect = nil
+
 	-- Reset global systems
 	Collision = CollisionManager:new()
 	Particles = ParticleSystem:new()
@@ -157,6 +159,7 @@ function Game:new_game(params)
 	-- Actors
 	self.actors = {}
 	self.actor_manager = ActorManager:new(self, self.actors)
+	self.actor_draw_color = nil
 
 	self.boss = nil
 
@@ -479,13 +482,6 @@ function Game:draw_game()
 	self:draw_on_layer(LAYER_BACKGROUND, function()
 		love.graphics.clear()
 
-		-- Draw actors
-		for _, actor in pairs(self.actors) do
-			if actor.is_active and actor.is_visible then
-				actor:draw()
-			end
-		end
-
 		self.level:draw()
 
 		Particles:draw_layer(PARTICLE_LAYER_BACK_SHADOWLESS)
@@ -497,6 +493,12 @@ function Game:draw_game()
 		love.graphics.clear()
 
 		Particles:draw_layer(PARTICLE_LAYER_BACK)
+
+		for _, actor in pairs(self.actors) do
+			if actor.is_active and actor.is_visible then
+				actor:draw_back()
+			end
+		end
 
 		-- Draw actors
 		for _, actor in pairs(self.actors) do
@@ -530,6 +532,9 @@ function Game:draw_game()
 	self:draw_on_layer(LAYER_SHADOW, function()
 		love.graphics.clear()
 
+		if not self.draw_shadows then
+			return
+		end
 		exec_color({ 0, 0, 0, 0.5 }, function()
 			-- love.graphics.cl
 			love.graphics.draw(self:get_layer(LAYER_OBJECTS).canvas, self.shadow_ox, self.shadow_oy)
@@ -557,10 +562,8 @@ function Game:draw_game()
 	-----------------------------------------------------
 
 	self:draw_on_layer(LAYER_LIGHT, function()
-		-- love.graphics.clear({0, 0, 0, 0.85})
-		local c = copy_table_deep(COL_BLACK_BLUE)
-		c[4] = self.light_world.darkness_intensity
-		rect_color(c, "fill", -CANVAS_WIDTH, -CANVAS_HEIGHT, CANVAS_WIDTH * 3, CANVAS_HEIGHT * 3)
+		local c = transparent_color(self.light_world.custom_fill_color or COL_BLACK_BLUE, self.light_world.darkness_intensity)
+		rect_color(c, "fill", -CANVAS_WIDTH, -CANVAS_HEIGHT, CANVAS_WIDTH * 4, CANVAS_HEIGHT * 3)
 	end)
 
 	-----------------------------------------------------
@@ -1058,6 +1061,9 @@ end
 
 function Game:play_cutscene(cutscene_name)
 	local cutscene = cutscenes[cutscene_name]
+	if not cutscene then
+		return
+	end
 	self.cutscene = cutscene
 	self.cutscene:play()
 end
@@ -1180,6 +1186,12 @@ function Game:update_skin_choices()
 	for i, player in pairs(self.all_players) do
 		self.skin_choices[player.skin.id] = false
 	end
+end
+
+function Game:set_actor_draw_color(col)
+	self.layers[LAYER_OBJECTS].draw_color = col
+	self.layers[LAYER_OBJECT_SHADOWLESS].draw_color = col
+	self.layers[LAYER_FRONT].draw_color = col
 end
 
 return Game

@@ -1,6 +1,5 @@
 local Cutscene = require "scripts.game.cutscene"
 local CutsceneScene = require "scripts.game.cutscene_scene"
-local Light = require "scripts.graphics.light"
 local Rect = require "scripts.math.rect"
 local images = require "data.images"
 

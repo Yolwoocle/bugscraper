@@ -12,6 +12,8 @@ function UpgradeBoba:init()
 
     self.color = COL_PINK
     self.palette = {COL_PINK, COL_PURPLE, COL_DARK_BROWN}
+
+    self.activate_sound = "sfx_upgrades_boba_pickedup"
 end
 
 function UpgradeBoba:update(dt)

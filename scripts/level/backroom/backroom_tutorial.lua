@@ -17,6 +17,7 @@ function BackroomTutorial:init(params)
 	self.name = "tutorial"
 
 	self.cafeteria_background = BackgroundCity:new(self)
+	self.freeze_fury = false
 end
 
 function BackroomTutorial:generate(world_generator)

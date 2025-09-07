@@ -84,6 +84,7 @@ function Actor:init_actor(x, y, w, h, spr, args)
 	self.is_affected_by_bounds = true
 	self.is_affected_by_walls = true
 	self.is_affected_by_semisolids = true
+	self.is_vulnerable_to_kill_zone = true
 
 	self.collision_filter = function(item, other)
 		-- By default, do not react to collisions
@@ -285,11 +286,10 @@ function Actor:update(dt)
 	self:check_for_interactions(dt)
 end
 
-function Actor:draw()
-	error("draw not implemented")
+function Actor:draw_back()
 end
 
-function Actor:draw_actor()
+function Actor:draw()
 	if self.is_removed then return end
 
 	if self.spr then

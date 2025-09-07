@@ -44,6 +44,8 @@ function ProgressingArc:init(x, y, params)
     
     self.rays_spawned = false
 
+    self.outline_color = nil
+
     self.z = 10
 end
 
@@ -96,11 +98,15 @@ function ProgressingArc:set_bounds(a, b)
             local clamped_b = clamp(b, lower, upper)
             self:set_ray_bounds(i, clamped_a - lower, clamped_b - lower)
             ray:set_active(true)
+            -- ray.debug_values[1] = ""
+            -- ray.debug_values[2] = ""
+            -- ray.debug_values[3] = ""
+            -- ray.debug_values[5] = concat("[", i, "]: ", clamped_a - lower, ", ", clamped_b - lower)
         end
 
         lower = upper
     end
-    print("--------")
+    -- print_debug("--------")
 end
 
 function ProgressingArc:set_ray_bounds(ray_index, a, b)
@@ -112,12 +118,13 @@ function ProgressingArc:set_ray_bounds(ray_index, a, b)
     local info = self.ray_info[ray_index]
     assert(info ~= nil, "Ray info for ray "..tostring(ray_index).." doesn't exist")
 
-    print(
-        tostring(round(info.x + info.direction_x * a))..","..
-        tostring(round(info.y + info.direction_y * a))..","..
-        tostring(round(info.x + info.direction_x * b))..","..
-        tostring(round(info.y + info.direction_y * b))
-    )
+    -- print_debug(
+    --     "[", ray_index, "]: ", round(a, 1), " -> ", round(b, 1), " || ",
+    --     tostring(round(info.x + info.direction_x * a))..","..
+    --     tostring(round(info.y + info.direction_y * a))..","..
+    --     tostring(round(info.x + info.direction_x * b))..","..
+    --     tostring(round(info.y + info.direction_y * b))
+    -- )
     ray:set_segment(
         info.x + info.direction_x * a,
         info.y + info.direction_y * a,
@@ -182,7 +189,7 @@ function ProgressingArc:draw()
     end
     
     for i = 1, #self.points-1 do
-        line_dotted(transparent_color(COL_LIGHT_YELLOW, 0.8), 
+        line_dotted(transparent_color(COL_MID_GREEN, 0.8), 
             self.points[i][1], self.points[i][2], self.points[i+1][1], self.points[i+1][2], { 
             spacing = 3,
             segment_length = 3, 

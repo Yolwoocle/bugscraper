@@ -1,9 +1,5 @@
 local Cutscene      = require "scripts.game.cutscene"
 local CutsceneScene = require "scripts.game.cutscene_scene"
-local Light         = require "scripts.graphics.light"
-local Rect          = require "scripts.math.rect"
-local images        = require "data.images"
-local guns          = require "data.guns"
 
 return Cutscene:new("credits", {
     --[[
@@ -205,12 +201,14 @@ return Cutscene:new("credits", {
                 "Alexis Belmonte",
                 "Axel 'Vlad' Born",
                 "Bettina Delaveaud",
+
                 "Corentin Vaillant",
                 "Fabien Delpiano",
+                "Fantine Delpiano-Manfrini",
+
                 "Feishiko",
                 "Gaspard Delpiano-Manfrini",
                 "Guillaume Tran",
-                "Herweins",
             }, "", "{menu.credits.special_thanks}", 0.5, 7.0, 0.5)
         end,
     }),
@@ -221,15 +219,17 @@ return Cutscene:new("credits", {
         duration = 6.0,
         enter = function(cutscene, data)
             game.game_ui:start_title({
+                "Herweins",
                 "Indie Game Lyon",
                 "Jan Willem Nijman",
+
                 "Kaïs",
                 "Léo Lanteri Thauvin",
+                "LinkyLorelei",
+                
                 "Louie Chapman",
                 "LÖVE contributors",
                 "LÖVE Discord members",
-                "Maman & Papa ❤",
-                "Noba",
             }, "", "{menu.credits.special_thanks}", 0.5, 7.0, 0.5)
         end,
     }),
@@ -240,13 +240,27 @@ return Cutscene:new("credits", {
         duration = 6.0,
         enter = function(cutscene, data)
             game.game_ui:start_title({
-                "Nolan Carlisi",
+                "Maman & Papa ❤",
+                "Noba",
+                "Nolan Carlisi (arkanyota)",
+                
                 "oat_addict",
                 "Quentin Picault",
                 "Raphytator",
+                
                 "Solluco",
                 "Tahina Dombrowski",
                 "Théodore Billotte",
+            }, "", "{menu.credits.special_thanks}", 0.5, 7.0, 0.5)
+        end,
+    }),
+    CutsceneScene:new({
+        description = "",
+
+        duration = 6.0,
+        enter = function(cutscene, data)
+            game.game_ui:start_title({
+                "Thomas Saurel",
                 "Toulouse Game Dev",
             }, "", "{menu.credits.special_thanks}", 0.5, 7.0, 0.5)
         end,

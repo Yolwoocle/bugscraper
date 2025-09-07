@@ -101,9 +101,19 @@ function BackroomGroundFloor:generate(world_generator)
 	-- 	animation = npc.animation,
 	-- 	dialogue_key = "dialogue.npc." .. npc.key,
 	-- }))
-	local npc = game:new_actor(enemies.NPC:new(780, 226, {
+	local npc = game:new_actor(enemies.NPC:new(880, 226, {
+		npc_name = "hornet",
+		animation = {images.npc_hornet, 0.2, 4},
+		-- dialogue_key = "dialogue.npc.hornet",
+
+		flip_x = true,
+	}))
+	npc.z = -2
+
+	local npc = game:new_actor(enemies.NPC:new(905, 226, {
 		npc_name = "brown",
 		animation = {images.npc_brown, 0.2, 4},
+
 		flip_x = true,
 	}))
 	npc.z = -2

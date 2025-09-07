@@ -152,6 +152,8 @@ function Camera:set_position(x, y)
     self:set_target_position(x, y)
     self.x = x
     self.y = y
+
+    self:clamp_camera_position(0)
 end
 
 function Camera:get_zoom()

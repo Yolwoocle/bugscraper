@@ -8,4 +8,5 @@ return {
     BackgroundCafeteria =  require("scripts.level.background.background_cafeteria"),
     BackgroundFinal =      require("scripts.level.background.background_final"),
     BackgroundGreenhouse = require("scripts.level.background.background_greenhouse"),
+    BackgroundW0 =         require("scripts.level.background.background_w0"),
 }

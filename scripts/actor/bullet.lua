@@ -113,7 +113,7 @@ function Bullet:update(dt)
 end
 
 function Bullet:draw()
-	self:draw_actor()
+	Bullet.super.draw(self)
 	
 	if self.renderer_3d then
 		self.renderer_3d:draw()

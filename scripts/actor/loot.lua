@@ -107,7 +107,7 @@ function Loot:update(dt)
 end
 
 function Loot:draw()
-	self:draw_actor()
+	Loot.super.draw(self)
 	--love.graphics.draw(self.spr, self.x, self.y)
 end
 

@@ -676,14 +676,16 @@ end
 
 local SparkParticle = Particle:inherit()
 
-function SparkParticle:init(x,y, life, g, is_solid)
-	local vx, vy = random_neighbor(150), -70 + random_neighbor(15)
+function SparkParticle:init(x,y, life, g, is_solid, params)
+	params = params or {}
+	local vx = params.vx or (random_neighbor(150)) 
+	local vy = params.vy or (-70 + random_neighbor(15))
 	local life = life or 1
-	local g = 10 + random_neighbor(3)
+	local g = g or (10 + random_neighbor(3))
 	self:init_particle(x,y,__s,__r, vx,vy,0,1, life, g, is_solid)
 
 	self.is_solid = false --param(is_solid, true)
-	self.color = random_sample{COL_WHITE, COL_WHITE, COL_WHITE, COL_LIGHT_YELLOW, COL_YELLOW_ORANGE}
+	self.color = random_sample(params.colors or {COL_WHITE, COL_WHITE, COL_WHITE, COL_LIGHT_YELLOW, COL_YELLOW_ORANGE})
 end
 function SparkParticle:update(dt)
 	self:update_particle(dt)
@@ -1235,7 +1237,7 @@ function ParticleSystem:falling_grid_side(x, y)
 	self:pop_layer()
 end
 
-function ParticleSystem:spark(x, y, amount)
+function ParticleSystem:spark(x, y, amount, params)
 	amount = param(amount, 1)
 	local life = 1 + random_neighbor(0.2)
 	local g = nil
@@ -1243,6 +1245,22 @@ function ParticleSystem:spark(x, y, amount)
 	self:push_layer(PARTICLE_LAYER_FRONT)
 	for i=1, amount do 
 		self:add_particle(SparkParticle:new(x,y, life, g, is_solid))
+	end
+	self:pop_layer()
+end
+
+function ParticleSystem:speed_line(x, y, amount)
+	amount = param(amount, 1)
+	local life = 1 + random_neighbor(0.2)
+	local g = 0
+	local is_solid = false
+	self:push_layer(PARTICLE_LAYER_FRONT)
+	for i=1, amount do 
+		self:add_particle(SparkParticle:new(x,y, life, g, is_solid, {
+			vx = 0,
+			vy = random_range(-800, -400),
+			colors = {COL_WHITE, COL_LIGHTEST_GRAY, COL_LIGHT_GRAY}
+		}))
 	end
 	self:pop_layer()
 end

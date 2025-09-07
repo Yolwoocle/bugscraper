@@ -42,6 +42,10 @@ function UpgradeDisplay:init(x, y)
     self.collision_info = CollisionInfo:new {
         type = COLLISION_TYPE_SEMISOLID,
         is_slidable = true,
+
+        walk_sound = "sfx_player_footstep_metal_{01-10}",
+        slide_sound = "sfx_player_wall_slide_metal_{01-02}",
+        land_sound = "sfx_player_footstep_land_metal_{01-04}",
     }
 end
 
