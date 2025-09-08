@@ -108,6 +108,8 @@ function Cocoon:revive(damager)
         new_player:apply_upgrade(upgrade, true)
     end
 
+    new_player:set_life(new_player.max_life)
+
     if not self.is_dead then
         self:kill()
     end  

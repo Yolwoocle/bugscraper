@@ -139,7 +139,7 @@ function BackroomCafeteria:spawn_ceo()
 		prop = game:new_actor(enemies.JumpingProp:new(833, 190, images.ground_floor_laptop, "sfx_actor_jumping_prop_screen_{01-06}"))
 		prop.z = -2
 	
-	elseif self.ceo_info == 3 then
+	elseif self.ceo_info == 5 then
 		ceo.spr:set_animation("tangled_wires")
 		ceo.gravity = ceo.default_gravity	
 		ceo.is_affected_by_bounds = true

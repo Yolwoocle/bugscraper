@@ -20,7 +20,7 @@ end
 
 function BackroomWithDoor:can_exit()
 	-- By default, axit if all players are on the door 
-	if #game.players == 0 then
+	if game:get_number_of_alive_players() == 0 then
 		return false
 	end
 	for _, p in pairs(game.players) do
