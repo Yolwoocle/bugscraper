@@ -676,12 +676,12 @@ function GameUI:draw_fury()
 
 		love.graphics.clear()
 		print_wavy_centered_outline_text(
-			shad_col, shad_col, 
+			col, col, 
 			text, 
 			CANVAS_WIDTH/2, y-h/2+self.fury_text_oy, nil, self.t+0.14, self.fury_text_wave_height, 9, 0.8
 		)
 		print_wavy_centered_outline_text(
-			col, col, 
+			shad_col, shad_col, 
 			text, 
 			CANVAS_WIDTH/2, y-h/2+self.fury_text_oy, nil, self.t+0.07, self.fury_text_wave_height, 9, 0.8
 		)

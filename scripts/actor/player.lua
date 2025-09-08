@@ -1418,6 +1418,8 @@ function Player:draw_hud()
 	if self.gun and self.gun.show_hud then
 		self:draw_ammo_bar(ui_x, ui_y)
 		self:draw_life_bar(ui_x, ui_y)
+	else
+		ui_y = ui_y + 20
 	end
 
 	if game.game_state == GAME_STATE_WAITING then
