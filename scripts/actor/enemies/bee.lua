@@ -31,6 +31,9 @@ function Bee:init(x, y)
     self.buzz_source = sounds.fly_buzz.source:clone()
     self.buzz_source:setPitch(1.5)
 
+    self.sound_death = "sfx_enemy_kill_general_crush_{01-10}"
+    self.sound_stomp = "sfx_enemy_kill_general_crush_{01-10}"
+
     self.spr:set_anchor(SPRITE_ANCHOR_CENTER_CENTER)
     self.score = 10
 end

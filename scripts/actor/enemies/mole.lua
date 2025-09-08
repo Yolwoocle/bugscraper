@@ -36,6 +36,9 @@ function Mole:init(x, y)
     self.is_stompable = true
     self.score = 10
 
+    self.sound_death = "sfx_enemy_kill_general_gore_{01-10}"
+    self.sound_stomp = "sfx_enemy_kill_general_gore_{01-10}"
+
     self.state_timer = Timer:new()
     self.state_machine = StateMachine:new({
         dig = {

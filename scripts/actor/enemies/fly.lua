@@ -33,8 +33,8 @@ function Fly:init(x, y, spr, w, h, buzzing_enabled)
     end
     self.buzz_is_started = false
 
-    self.sound_death = {"sfx_enemies_stomp_gore_01", "sfx_enemies_stomp_gore_02", "sfx_enemies_stomp_gore_03", "sfx_enemies_stomp_gore_04"}
-    self.sound_stomp = {"sfx_enemies_stomp_gore_01", "sfx_enemies_stomp_gore_02", "sfx_enemies_stomp_gore_03", "sfx_enemies_stomp_gore_04"}
+    self.sound_death = "sfx_enemy_kill_general_gore_{01-10}"
+    self.sound_stomp = "sfx_enemy_kill_general_gore_{01-10}"
 end
 
 function Fly:update(dt)

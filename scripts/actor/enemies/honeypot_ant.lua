@@ -18,6 +18,9 @@ function HoneypotAnt:init(x, y)
     
     self.fury_damage_multiplier = 2.0
     self.score = 10
+
+    self.sound_death = "sfx_enemy_kill_general_gore_{01-10}"
+    self.sound_stomp = "sfx_enemy_kill_general_gore_{01-10}"
 end
 
 function HoneypotAnt:update(dt)

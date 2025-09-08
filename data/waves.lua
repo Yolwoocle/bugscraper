@@ -184,37 +184,37 @@ local waves = parse_waves_table {
     -- }),
 
 
-    {
-        min = 1,
-        max = 1,
-        enemies = {{ E.Larva, 3 }},
-        elevator = ElevatorW1,
+    -- {
+    --     min = 1,
+    --     max = 1,
+    --     enemies = {{ E.Larva, 3 }},
+    --     elevator = ElevatorW1,
 
-    },
-    {
-        floor_type = FLOOR_TYPE_CAFETERIA,
-        roll_type = WAVE_ROLL_TYPE_FIXED,
-        music = "off",
+    -- },
+    -- {
+    --     floor_type = FLOOR_TYPE_CAFETERIA,
+    --     roll_type = WAVE_ROLL_TYPE_FIXED,
+    --     music = "off",
 
-        run = function(self, level)
-            for _, actor in pairs(game.actors) do
-                if actor.name == "poison_cloud" then
-                    actor.lifespan = 1
-                end
-                if actor.name == "floor_hole_spawner" or actor.name == "pendulum" then
-                    actor:remove()
-                end
-            end
-        end,
+    --     run = function(self, level)
+    --         for _, actor in pairs(game.actors) do
+    --             if actor.name == "poison_cloud" then
+    --                 actor.lifespan = 1
+    --             end
+    --             if actor.name == "floor_hole_spawner" or actor.name == "pendulum" then
+    --                 actor:remove()
+    --             end
+    --         end
+    --     end,
 
-        min = 1,
-        max = 1,
-        enemies = {},
+    --     min = 1,
+    --     max = 1,
+    --     enemies = {},
 
-        bounds = RECT_CEO_OFFICE,
+    --     bounds = RECT_CEO_OFFICE,
 
-        backroom = BackroomCEOOffice
-    },
+    --     backroom = BackroomCEOOffice
+    -- },
 
     -------------------------------------------
 

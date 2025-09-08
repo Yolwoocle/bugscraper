@@ -54,6 +54,9 @@ function Rollopod:init(x, y, spr, w, h)
         normal = {images.skid_effect, 0.01, 28}
     }, "normal", SPRITE_ANCHOR_CENTER_BOTTOM)
 
+    self.sound_death = "sfx_enemy_kill_general_stomp_{01-10}"
+    self.sound_stomp = "sfx_enemy_kill_general_stomp_{01-10}"
+
     self.state_timer = Timer:new(1.0)
     self.state_machine = StateMachine:new({
         wander = {

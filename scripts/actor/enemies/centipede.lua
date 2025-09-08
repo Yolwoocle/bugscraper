@@ -61,8 +61,8 @@ function Centipede:init(x, y, length, parent, params)
     self.flip_mode = ENEMY_FLIP_MODE_MANUAL
     self.spr:set_anchor(SPRITE_ANCHOR_CENTER_CENTER)
 
-    self.sound_death = "stink_bug_death"
-    self.sound_stomp = "stink_bug_death"
+    self.sound_death = "sfx_enemy_kill_general_stomp_{01-10}"
+    self.sound_stomp = "sfx_enemy_kill_general_stomp_{01-10}"
 end
 
 function Centipede:init_centipede_head()

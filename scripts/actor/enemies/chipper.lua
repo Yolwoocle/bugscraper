@@ -47,6 +47,9 @@ function Chipper:init(x, y, spr)
     self.post_attack_timer = Timer:new(0.5)
     self.score = 10
 
+    self.sound_death = "sfx_enemy_kill_general_glitch_{01-10}"
+    self.sound_stomp = "sfx_enemy_kill_general_glitch_{01-10}"
+
     self.state_machine = StateMachine:new({
         wander = {
             enter = function(state)

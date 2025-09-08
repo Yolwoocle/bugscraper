@@ -29,6 +29,9 @@ function Grasshopper:init(x, y)
 
     self.jump_speed = 300
     self.score = 10
+
+    self.sound_death = "sfx_enemy_kill_general_stomp_{01-10}"
+    self.sound_stomp = "sfx_enemy_kill_general_stomp_{01-10}"
     -- self.jump_speed = 200
 end
 

@@ -28,6 +28,9 @@ function BigBeelet:init(x, y)
 
     self.stomps = math.huge
     self.damage_on_stomp = 5
+
+    self.sound_death = "sfx_enemy_kill_general_glitch_{01-10}"
+    self.sound_stomp = "sfx_enemy_kill_general_glitch_{01-10}"
 end
 
 function BigBeelet:update(dt)

@@ -410,6 +410,8 @@ function Level:end_backroom()
 	self.elevator:close_door()
 	self.new_wave_animation_state_machine:set_state("closing")
 
+	game:stop_cutscene()
+
 	game.camera:set_x_locked(true)
 	game.camera:set_y_locked(true)
 	game.camera:set_target_position(DEFAULT_CAMERA_X, DEFAULT_CAMERA_Y)

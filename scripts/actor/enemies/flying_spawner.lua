@@ -59,6 +59,7 @@ function FlyingSpawner:init(x, y, spr, w, h)
     self:play_constant_sound("flap")
 
     self.sound_death = "sfx_enemy_flying_nest_death"
+    self.sound_stomp = "sfx_enemy_kill_general_gore_{01-10}"
 
     self.score = 50
 

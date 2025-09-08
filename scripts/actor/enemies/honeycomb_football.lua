@@ -151,8 +151,6 @@ end
 function HoneycombFootball:on_stomped()
     self.pong_speed = self.pong_speed + 60
 
-    self:set_harmless(1.0)
-    self:set_invincibility(1.0)
     if math.sin(self.pong_direction) < 0 then
         self.pong_direction = math.atan2(math.abs(math.sin(self.pong_direction)), math.cos(self.pong_direction))
     end

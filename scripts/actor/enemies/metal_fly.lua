@@ -35,6 +35,9 @@ function MetalFly:init(x, y)
 
     self.electrified_flash = random_range(0, 1)
     self.score = 10
+
+    self.sound_death = "sfx_enemy_kill_general_glitch_{01-10}"
+    self.sound_stomp = "sfx_enemy_kill_general_glitch_{01-10}"
 end
 
 function MetalFly:update(dt)

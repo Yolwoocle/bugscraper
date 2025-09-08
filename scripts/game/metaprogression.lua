@@ -33,6 +33,9 @@ function MetaprogressionManager:init()
 		has_seen_stomp_tutorial = false,
 
         has_seen_w1_transition_cutscene = false,
+        has_seen_w2_transition_cutscene = false,
+        has_seen_w3_transition_cutscene = false,
+        has_seen_w4_transition_cutscene = false,
     }
 
     local t = skin_name_to_id

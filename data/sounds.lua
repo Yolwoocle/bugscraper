@@ -96,6 +96,10 @@ local sfxnames = {
 	["sfx_actor_button_small_pressed"] = {"sfx/actor/button/sfx_actor_button_small_pressed.ogg", "static"},
 
 	-- ENEMIES 
+	["sfx_enemy_kill_general_crush_{01-10}"] = {"sfx/enemy/death_temp/crush/sfx_enemy_kill_general_crush_{}.ogg", "static"},
+	["sfx_enemy_kill_general_glitch_{01-10}"] = {"sfx/enemy/death_temp/glitch/sfx_enemy_kill_general_glitch_{}.ogg", "static"},
+	["sfx_enemy_kill_general_gore_{01-10}"] = {"sfx/enemy/death_temp/gore/sfx_enemy_kill_general_gore_{}.ogg", "static"},
+
 	-- Snail
 	["sfx_enemy_snail_bounce_{01-06}"] = {"sfx/enemy/snail/sfx_enemy_snail_bounce_{}.ogg", "static"},
 

@@ -42,6 +42,8 @@ end
 
 function Cutscene:stop()
     self.is_playing = false
+    self.current_scene = nil
+    self.current_scene_i = -1
     self.timer:stop()
 end
 

@@ -1068,6 +1068,14 @@ function Game:play_cutscene(cutscene_name)
 	self.cutscene:play()
 end
 
+function Game:stop_cutscene()
+	if not self.cutscene then
+		return
+	end
+	self.cutscene:stop()
+	self.cutscene = nil
+end
+
 -----------------------------------------------------
 -----------------------------------------------------
 -----------------------------------------------------

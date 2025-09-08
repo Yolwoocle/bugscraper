@@ -25,8 +25,8 @@ function SnailShelledBouncy:init_snail_shelled(x, y, spr)
     self.is_bouncy_to_bullets = true
     self.is_immune_to_bullets = true
 
-    self.sound_death = "snail_shell_crack"
-    self.sound_stomp = "snail_shell_crack"
+    self.sound_death = "sfx_enemy_kill_general_stomp_{01-10}"
+    self.sound_stomp = "sfx_enemy_kill_general_stomp_{01-10}"
 
     self.score = 10
 end

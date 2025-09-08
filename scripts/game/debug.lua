@@ -793,7 +793,8 @@ function Debug:draw_info_view()
                     game.cutscene.timer.duration, 
                     game.cutscene.current_scene.description, 
                     game.cutscene.total_duration
-                )
+                ), " / ",
+                "has_seen_w2_transition_cutscene: ", Metaprogression:get("has_seen_w2_transition_cutscene")
             ),
             concat("score: ", game.score) .. " / ".. concat("xp: ", Metaprogression:get_xp()) .. " / " .. concat("xp_level: ", Metaprogression:get_xp_level()),
             concat("unlocked_skins: ", skininfo),
@@ -873,12 +874,6 @@ function Debug:draw_info_view()
     -- love.graphics.draw(images.removeme_bands, 0, 0)
 
     linedottedoffset = linedottedoffset - 0.2
-
-    pos = {x=100, y=100}
-    exec_using_shader(shaders.dither, function()
-        circle_color({1,1,1,0.5}, "fill", pos.x, pos.y, 32)
-    end)
-    circle_color({1,1,1,1},   "fill", pos.x, pos.y, 32 - 8)
 end
 
 

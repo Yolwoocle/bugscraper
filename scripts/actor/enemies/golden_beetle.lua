@@ -40,8 +40,8 @@ function GoldenBeetle:init(x, y, spr)
     self.is_killed_on_negative_life = false
     self.is_killed_on_stomp = false
 
-    self.sound_death = "stink_bug_death"
-    self.sound_stomp = "stink_bug_death"
+    self.sound_death = "sfx_enemy_kill_general_stomp_{01-10}"
+    self.sound_stomp = "sfx_enemy_kill_general_stomp_{01-10}"
 
     self.exploding = false
     self.exploding_timer = Timer:new(2.0)

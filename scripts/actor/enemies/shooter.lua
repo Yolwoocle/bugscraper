@@ -26,6 +26,9 @@ function Shooter:init(x, y)
     self.gun = guns.unlootable.SixBullets:new(self)
     self.score = 10
 
+    self.sound_death = "sfx_enemy_kill_general_gore_{01-10}"
+    self.sound_stomp = "sfx_enemy_kill_general_gore_{01-10}"
+
     self.state_timer = Timer:new(0.0)
     self.state_machine = StateMachine:new({
         normal = {

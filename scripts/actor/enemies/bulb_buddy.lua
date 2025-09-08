@@ -47,9 +47,11 @@ function BulbBuddy:init(x, y, is_child)
     end
 
 	-- self.sound_damage = "glass_fracture"
-	self.sound_damage = {"impactglass_light_001", "impactglass_light_002", "impactglass_light_003", "impactglass_light_004"}
-	self.sound_death = "glass_break_weak"
-	self.sound_stomp = "glass_break_weak"
+	self.sound_damage = "sfx_actor_button_small_glass_damage_{01-06}"
+	self.sound_death = "sfx_actor_button_small_glass_break"
+	self.sound_stomp = "sfx_actor_button_small_glass_break"
+
+
 end
 
 function BulbBuddy:update(dt)
