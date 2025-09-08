@@ -54,8 +54,7 @@ function BackroomTutorial:generate(world_generator)
 	game:new_actor(enemies.Dummy:new(72*16, 13*16))
 	game:new_actor(enemies.Dummy:new(75*16, 13*16))
 	game:new_actor(enemies.Dummy:new(78*16, 13*16))
-	game:new_actor(Loot.Gun:new(40*16, 12*16, nil, 0, 0, guns.unlootable.Machinegun:new(), {
-		remove_on_collect = false,
+	self.gun = game:new_actor(Loot.Gun:new(40*16, 12*16, nil, 0, 0, guns.unlootable.Machinegun:new(), {
 		life = math.huge,
 		min_attract_dist = -1,
 		player_filter = function(player)
@@ -117,6 +116,16 @@ end
 
 function BackroomTutorial:update(dt)
 	BackroomTutorial.super.update(self, dt)
+
+	if self.gun and self.gun.is_removed then
+		self.gun = game:new_actor(Loot.Gun:new(40*16, 12*16, nil, 0, 0, guns.unlootable.Machinegun:new(), {
+			life = math.huge,
+			min_attract_dist = -1,
+			player_filter = function(player)
+				return player.gun and player.gun.name == "empty_gun"
+			end
+		}), 440, 105)
+	end
 end
 
 function BackroomTutorial:on_fully_entered()

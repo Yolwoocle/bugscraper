@@ -108,7 +108,8 @@ function Wave:add_cocoons(enemy_classes)
 	end
 
 	for i = 1, MAX_NUMBER_OF_PLAYERS do
-		if game.waves_until_respawn[i][1] ~= -1 and game.waves_until_respawn[i][1] == 0 then
+		local cond = (game.waves_until_respawn[i][1] == 0 or self.floor_type == FLOOR_TYPE_CAFETERIA)
+		if game.waves_until_respawn[i][1] ~= -1 and cond then
 			table.insert(enemy_classes, {
 				enemy_class = Enemies.Cocoon,
 				args = {game.waves_until_respawn[i][2]},

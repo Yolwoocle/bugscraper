@@ -48,6 +48,12 @@ local function new_cafeteria(params)
                 end
             end
 
+            for i=1, MAX_NUMBER_OF_PLAYERS do
+                if game.waves_until_respawn[i][2] then
+                    game.waves_until_respawn[i][1] = -1
+                end
+            end
+
             run_func(self, level)
         end,
 
