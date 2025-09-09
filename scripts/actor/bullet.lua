@@ -108,7 +108,10 @@ function Bullet:update(dt)
 		self.renderer_3d:update(dt)
 	end
 
-	local v = Options:get("bullet_lightness") or 1
+	local v = 1
+	if self.player and self.player.is_player then
+		v = Options:get("bullet_lightness") or 1
+	end
 	self.spr:set_color({v, v, v})
 end
 

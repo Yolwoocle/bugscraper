@@ -972,6 +972,24 @@ function Game:remove_player(player_n)
 	self:unregister_player(player_n)
 end
 
+function Game:revive_player(player_n, x, y)
+    -- Remove old player (if exists)
+    self:remove_player(player_n)
+
+    -- Spawn new player
+    local new_player = game:new_player(player_n, x, y)
+    self.waves_until_respawn[player_n] = {-1, nil}
+
+    new_player:set_invincibility(new_player.max_invincible_time)
+    for _, upgrade in pairs(game.upgrades) do
+        new_player:apply_upgrade(upgrade, true)
+    end
+
+    new_player:set_life(new_player.max_life)
+
+	return new_player
+end
+
 function Game:leave_game(player_n)
 	if self.all_players[player_n] == nil then
 		return

@@ -27,6 +27,12 @@ function BossDoor:on_death()
     game.camera:set_target_offset(1000, 0)
     game.camera.max_x = 76*16
 
+    for _, actor in pairs(game.actors) do
+        if actor.name == "cocoon" then
+            actor:revive(nil)
+        end
+    end
+
     if self.cutscene then
         game:play_cutscene(self.cutscene)
     end

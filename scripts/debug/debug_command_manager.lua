@@ -152,6 +152,27 @@ function DebugCommandManager:init()
             end
 
             player:kill()
+            self:add_message("Killed player " .. tostring(player_n) .. "")
+
+            return true
+        end,
+    }
+    self.commands["revive"] = DebugCommand:new {
+        name = "revive",
+        description = "Revives a player",
+        args = {
+            { "player_n:number", default = 1 },
+            { "x:number", default = CANVAS_CENTER[1] },
+            { "y:number", default = CANVAS_CENTER[2] },
+        },
+        run = function(player_n, x, y)
+            if not Input:get_user(player_n) then
+                return false, "User " .. tostring(player_n) .. " doesn't exist"
+            end
+
+            game:revive_player(player_n, x, y)
+            self:add_message("Revived player " .. tostring(player_n) .. "")
+
             return true
         end,
     }

@@ -197,18 +197,9 @@ function Debug:init(game)
             --]]
         end },
         ["j"] = { "longer", function()
-            for _, e in pairs(game.actors) do
-                if e.name == "timed_spikes" then
-                    e:set_length(e.spike_length + 16)
-                end
-            end
+            game:frameskip(60)
         end },
         ["k"] = { "shorter", function()
-            for _, e in pairs(game.actors) do
-                if e.name == "timed_spikes" then
-                    e:set_length(e.spike_length - 16)
-                end
-            end
         end },
         ["f"] = { "toggle FPS", function()
             self.view_fps = not self.view_fps

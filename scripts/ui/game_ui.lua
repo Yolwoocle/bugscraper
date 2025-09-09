@@ -423,7 +423,7 @@ function GameUI:draw_offscreen_indicator_for(player)
 	local rot = math.atan2(player.mid_y - (y + cam_y), player.mid_x - (x + cam_x))
 	
 	local scale = 0.5
-	exec_color(player.skin.color_palette[3], function()
+	exec_color(player.skin.color_palette[2], function()
 		draw_centered(images.offscreen_indicator, x+1, y, rot, scale, scale)
 		draw_centered(images.offscreen_indicator, x-1, y, rot, scale, scale)
 		draw_centered(images.offscreen_indicator, x, y+1, rot, scale, scale)
@@ -433,11 +433,11 @@ function GameUI:draw_offscreen_indicator_for(player)
 		draw_centered(images.offscreen_indicator, x, y, rot, scale, scale)
 	end)
 	
-	shaders.draw_in_color:sendColor("fillColor", player.skin.color_palette[4])
-	exec_color(player.skin.color_palette[4], function()
+	shaders.draw_in_color:sendColor("fillColor", player.skin.color_palette[2])
+	exec_color(player.skin.color_palette[2], function()
 		print_centered(player.skin.icon, x, y)
 	end)
-	print_centered_outline(player.skin.color_palette[1], player.skin.color_palette[4], Text:text("player.abbreviation", player.n), x, y - 16)
+	print_centered_outline(player.skin.color_palette[1], player.skin.color_palette[2], Text:text("player.abbreviation", player.n), x, y - 16)
 end
 
 function GameUI:draw_floating_text()
