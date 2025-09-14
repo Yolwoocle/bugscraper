@@ -82,8 +82,14 @@ function TextMenuItem:draw_textitem()
 		local y = math.floor(self.y + self.oy - 6)
 		local w = math.floor(CANVAS_WIDTH - MENU_PADDING*2)
 		local h = 16
-
+		
 		draw_3_slice(images.selection_left, images.selection_right, col, x, y, w, h)
+		
+		if Input:get_number_of_users() > 1 then
+			local last_player_n = Input:get_last_ui_user_n()
+			local t = Text:text("player.abbreviation", last_player_n)
+			print_outline(nil, col, t, x - get_text_width(t), y)
+		end
 	end
 	
 	if type(self.value) == "nil" then
