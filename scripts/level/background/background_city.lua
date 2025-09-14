@@ -23,12 +23,16 @@ function BackgroundCity:init(level)
 		{sprite = Sprite:new(images.bg_city_3, SPRITE_ANCHOR_LEFT_TOP), y = 64, z = 4},
 	}
 	
-	self.offset_x = 0.0
-	self.offset_y = 0.0
+	self.offset_x = nil
+	self.offset_y = nil
 end
 
 function BackgroundCity:update(dt)
 	BackgroundCity.super.update(self, dt)
+end
+
+function BackgroundCity:get_default_y_offset()
+	return game.level.floor * 2
 end
 
 -----------------------------------------------------
@@ -37,8 +41,8 @@ function BackgroundCity:draw()
 	BackgroundCity.super.draw(self)
 
 	local cam_x, cam_y = game.camera:get_real_position()
-	cam_x = math.floor(cam_x + self.offset_x)
-	cam_y = math.floor(cam_y + self.offset_y)
+	cam_x = math.floor(cam_x + (self.offset_x or 0.0))
+	cam_y = math.floor(cam_y + (self.offset_y or self:get_default_y_offset()))
 	for i, layer in pairs(self.layers) do
 		local z = layer.z
 		local x = cam_x * (1 - 1/z)

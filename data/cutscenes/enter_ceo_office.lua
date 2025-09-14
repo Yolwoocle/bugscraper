@@ -492,6 +492,7 @@ return Cutscene:new("enter_ceo_office", {
             data.fake_counter = 80
         end,
         update = function(cutscene, data, dt)
+            game.level.backroom.bg_w4.offset_y = 160
             game.level.backroom.bg_w4.speed = -1000
             game.level.backroom.bg_w4:update(dt)
             data.update_fall(dt, true)
