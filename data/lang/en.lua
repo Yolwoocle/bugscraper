@@ -151,6 +151,7 @@ return {
             down = "Down",
             jump = "Jump",
             shoot = "Shoot",
+            interact = "Interact", -- ADDED
             leave_game = "Leave", 
 
             ui_left =  "Left (menu)",

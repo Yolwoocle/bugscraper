@@ -125,7 +125,7 @@ FONT_CHARACTERS =
     " !\"#$%&'()*+,-·./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz"..
     "{|}~ ¡¢£©®°¿ÀÁÂÃÄÅĄÆÇĆÈÉÊËĘÌÍÎÏŁÐÑŃÒÓÔÕÖØÙÚÛÜŚÝŹŻŒÞßàáâãäåąæçćèéêëęìíîïłðñńòóôõöøùúûüśýźżœþÿŸЁАБВГДЕЖЗИЙКЛМНО"..
     "ПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюяё€"
-FONT_SYMBOLS_CHARACTERS = "🔊🔉🔈🎵🎼🔳🔲📺🕐↖🛜▶⏸🔄🔘⬅➡⬆⬇⏏🔫🔚📥👆🔙🗄⌨🎮🎚❤"..
+FONT_SYMBOLS_CHARACTERS = "🔊🔉🔈🎵🎼🔳🔲📺🕐↖🛜▶⏸✓🔄🔘⬅➡⬆⬇⏏🔫🔚📥👆🔙🗄⌨🎮🎚❤"..
     "✅❎🔗💡⚠🕹🫨💧🐜🐛🐝🪲🈶🌄🛅😎😈🐦𝕏🦋🐰🐞🌐⏭🥚🥦🐧🎓🔺🦂"
 FONT_7SEG_CHARACTERS = " 0123456789-abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 FONT_MINI_CHARACTERS = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_abcdefghijklmnopqrstuvwxyz{|}~ÀÁÂÃÄÅĄÆÇĆÈÉÊËĘÌÍÎÏŁÐÑŃÒÓÔÕÖØÙÚÛÜŚÝŹŻÞßàáâãäåąæçćèéêëęìíîïłðñńòóôõöøùúûüśýþÿźżŒœ⁍🦋𝕏"
@@ -255,6 +255,7 @@ RAW_INPUT_MAP_DEFAULT_EMPTY = {
     down =      {},
     jump =      {},
     shoot =     {},
+    interact =  {},
     
     pause =     {},
     ui_select = {},
@@ -263,9 +264,7 @@ RAW_INPUT_MAP_DEFAULT_EMPTY = {
     ui_right =  {},
     ui_up =     {},
     ui_down =   {},
-    ui_reset_keys = {},
     split_keyboard = {},
-    leave_game = {},
     join_game = {},
 
     debug = {}
@@ -278,18 +277,17 @@ RAW_INPUT_MAP_DEFAULT_GLOBAL = {
     down =      {},
     jump =      {},
     shoot =     {},
+    interact =  {},
     
     pause =     {"k_escape", "k_p"},
-    ui_select = {"k_c", "k_b", "k_z", "k_l", "k_return"},
-    ui_back =   {"k_x", "k_v", "k_n", "k_k", "k_escape", "k_backspace"},
+    ui_select = {"k_c", "k_z", "k_j", "k_l", "k_return"},
+    ui_back =   {"k_x", "k_k", "k_escape", "k_backspace"},
     ui_left =   {"k_left",  "k_a"},
     ui_right =  {"k_right", "k_d"},
     ui_up =     {"k_up",    "k_w"},
     ui_down =   {"k_down",  "k_s"},
-    ui_reset_keys = {},
     split_keyboard = {"k_y"},
-    leave_game = {},
-    join_game = {"k_c", "k_b", "k_z", "k_l", "c_a"},
+    join_game = {"k_c", "k_z", "k_j", "k_l", "k_return", "c_a", "c_b"},
 
     debug = {"k_f1", "c_back"},
 }
@@ -299,8 +297,9 @@ RAW_INPUT_MAP_DEFAULT_CONTROLLER = {
     right =     {"c_leftxpos", "c_dpright"},
     up =        {"c_leftyneg", "c_dpup"},
     down =      {"c_leftypos", "c_dpdown"},
-    jump =      {"c_a", "c_b"},
-    shoot =     {"c_x", "c_y", "c_triggerright"},
+    jump =      {"c_a"},
+    shoot =     {"c_x", "c_triggerright"},
+    interact =  {"c_b"},
     
     pause =     {"c_start"},
     ui_select = {"c_a"},
@@ -309,9 +308,7 @@ RAW_INPUT_MAP_DEFAULT_CONTROLLER = {
     ui_right =  {"c_leftxpos", "c_dpright"},
     ui_up =     {"c_leftyneg", "c_dpup"},
     ui_down =   {"c_leftypos", "c_dpdown"},
-    ui_reset_keys = {"c_triggerleft"},
     split_keyboard = {},
-    leave_game = {"c_triggerleft"},
     join_game = {},
 
     debug = {},
@@ -322,19 +319,18 @@ RAW_INPUT_MAP_DEFAULT_KEYBOARD_SOLO = {
     right =     {"k_right", "k_d"},
     up =        {"k_up",    "k_w"},
     down =      {"k_down",  "k_s"},
-    jump =      {"k_c", "k_b", "k_z", "k_l"},
-    shoot =     {"k_x", "k_v", "k_n", "k_k"},
+    jump =      {"k_c", "k_j"},
+    shoot =     {"k_x", "k_k"},
+    interact =  {"k_z", "k_l"},
     
     pause =     {"k_escape", "k_p"},
-    ui_select = {"k_c", "k_b", "k_z", "k_l", "k_return"},
-    ui_back =   {"k_x", "k_v", "k_n", "k_k", "k_escape", "k_backspace"},
+    ui_select = {"k_c", "k_z", "k_j", "k_l", "k_return"},
+    ui_back =   {"k_x", "k_k", "k_escape", "k_backspace"},
     ui_left =   {"k_left",  "k_a"},
     ui_right =  {"k_right", "k_d"},
     ui_up =     {"k_up",    "k_w"},
     ui_down =   {"k_down",  "k_s"},
-    ui_reset_keys = {"k_tab"},
     split_keyboard = {},
-    leave_game = {"k_tab"},
     join_game = {},
 
     debug = {},
@@ -347,40 +343,38 @@ RAW_INPUT_MAP_DEFAULT_SPLIT_KEYBOARD_P1 = {
     down =      {"k_s"},
     jump =      {"k_f"},
     shoot =     {"k_g"},
+    interact =  {"k_h"},
     
     pause =     {"k_escape", "k_p"},    
-    ui_select = {"k_f"},
+    ui_select = {"k_f", "k_h"},
     ui_back =   {"k_g", "k_escape"},
     ui_left =   {"k_a"},
     ui_right =  {"k_d"},
     ui_up =     {"k_w"},
     ui_down =   {"k_s"},
-    ui_reset_keys = {"k_tab"},
     split_keyboard = {},
-    leave_game = {"k_tab"},
     join_game = {},
 
     debug = {},
 }
 
 RAW_INPUT_MAP_DEFAULT_SPLIT_KEYBOARD_P2 = {
-    left =      {"k_left"},--"k_h"
-    right =     {"k_right"},--"k_k"
-    up =        {"k_up"},--"k_u"
-    down =      {"k_down"},--"k_j"
+    left =      {"k_left"},
+    right =     {"k_right"},
+    up =        {"k_up"},
+    down =      {"k_down"},
     jump =      {"k_l"},
     shoot =     {"k_k"},
+    interact =  {"k_j"},
     
     pause =     {"k_escape", "k_p"},
-    ui_select = {"k_l", "k_return"},
+    ui_select = {"k_l", "k_j", "k_return"},
     ui_back =   {"k_k", "k_backspace"},
     ui_left =   {"k_left"},
     ui_right =  {"k_right"},
     ui_up =     {"k_up"},
     ui_down =   {"k_down"},
-    ui_reset_keys = {"k_o"},
     split_keyboard = {},
-    leave_game = {"k_o"},
     join_game = {},
 
     debug = {},

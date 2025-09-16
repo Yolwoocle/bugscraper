@@ -146,6 +146,7 @@ return {
             down = "Bas",
             jump = "Sauter",
             shoot = "Tirer",
+            interact = "Intéragir", -- ADDED
             leave_game = "Quitter",
 
             ui_left = "Gauche (menu)",

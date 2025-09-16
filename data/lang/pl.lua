@@ -140,6 +140,7 @@ return {
             down = "Dół",
             jump = "Skok",
             shoot = "Strzał",
+            interact = "Interact", -- ADDED
             leave_game = "Wyjdź",
 
             ui_left = "Lewo (Menu)",

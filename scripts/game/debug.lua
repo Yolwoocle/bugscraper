@@ -504,6 +504,7 @@ function Debug:draw_input_view_for(user, x)
         "down",
         "jump",
         "shoot",
+        "interact",
         "pause",
         "ui_select",
         "ui_back",
@@ -511,9 +512,7 @@ function Debug:draw_input_view_for(user, x)
         "ui_right",
         "ui_up",
         "ui_down",
-        "ui_reset_keys",
         "split_keyboard",
-        "leave_game",
         "debug",
     }
     for i, a in ipairs(actions) do

@@ -139,6 +139,7 @@ return {
             down = "下",
             jump = "跳跃",
             shoot = "射击",
+            interact = "Interact", -- ADDED
             leave_game = "退出",
 
             ui_left = "Menu left",

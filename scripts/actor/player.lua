@@ -1296,7 +1296,7 @@ function Player:leave_game_if_possible(dt)
 	self.is_touching_exit_sign = is_touching
 	if is_touching then
 		self.controls_oy = lerp(self.controls_oy, 0, 0.3)
-		if self:action_pressed("leave_game") and game.game_state == GAME_STATE_WAITING then
+		if self:action_pressed("interact") and game.game_state == GAME_STATE_WAITING then
 			exit_sign.other:activate(self)
 		end
 	else
@@ -1504,7 +1504,7 @@ end
 function Player:get_controls_tutorial_values()
 	if self.is_touching_exit_sign then
 		return {
-			{{"leave_game"}, "input.prompts.leave_game"},
+			{{"interact"}, "input.prompts.leave_game"},
 		}
 	end
 	return {}

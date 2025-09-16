@@ -129,6 +129,7 @@ return {
             down = "Baixo",
             jump = "Pular",
             shoot = "Atirar",
+            interact = "Interact", -- ADDED
             leave_game = "Sair",
 
             ui_left = "Esquerda (menu)",
