@@ -8,13 +8,16 @@ return Cutscene:new("bee_boss_enter", {
     CutsceneScene:new({
         duration = 1.5,
         enter = function(cutscene, data)
-            game.light_world.darkness_intensity = 0.85
-
             game.level.slowdown_timer_override = 3.0
             game.level.opened_door_timer_override = 1.0
             game.is_light_on = false
-
-            -- game.level.elevator:set_layer("door_background", false)
+            
+            game.light_world.darkness_intensity = 0.0
+            data.t = 0.0
+        end,
+        update = function(cutscene, data, dt)
+            data.t = clamp(0.0, 1.0, data.t + dt)
+            game.light_world.darkness_intensity = lerp(0, 0.85, data.t)
         end,
     }),
     CutsceneScene:new({
@@ -57,12 +60,6 @@ return Cutscene:new("bee_boss_enter", {
         duration = 1.1,
         enter = function(cutscene, data)
         end,
-    }),
-    CutsceneScene:new({
-        duration = 1.0,
-        enter = function(cutscene, data)
-            -- Particles:falling_cabin_back(game.level.cabin_rect.ax, game.level.cabin_rect.by)
-        end
     }),
     CutsceneScene:new({
         duration = 0,
