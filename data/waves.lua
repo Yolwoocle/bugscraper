@@ -1248,7 +1248,7 @@ local waves = parse_waves_table {
         },
 
         fixed_enemies = {
-            { E.HoneycombFootball, 3 },
+            { E.Centipede, 1, args = { 15 } }, 
         },
 
         cutscene = cutscenes.arum_titan_enter,

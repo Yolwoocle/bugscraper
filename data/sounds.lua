@@ -169,6 +169,12 @@ local sfxnames = {
 	["sfx_upgrades_water_pickedup"] = {"sfx/upgrades/sfx_upgrades_water_pickedup.ogg", "static"},
 
 	["sfx_upgrades_general_hover"] = {"sfx/upgrades/sfx_upgrades_general_hover.ogg", "static"},
+
+	-- UI
+	["ui_menu_pause"] = {"ui/ui_menu_pause.ogg", "static"},
+	["ui_menu_unpause"] = {"ui/ui_menu_unpause.ogg", "static"},
+	["ui_menu_hover_{01-04}"] = {"ui/ui_menu_hover_{}.ogg", "static"},
+	["ui_menu_select_{01-04}"] = {"ui/ui_menu_select_{}.ogg", "static"},
 }
 
 for key, params in pairs(sfxnames) do
