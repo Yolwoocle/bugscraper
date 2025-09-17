@@ -372,6 +372,9 @@ return Cutscene:new("enter_ceo_office", {
                 Particles:push_layer(PARTICLE_LAYER_BACK)
                 for _, player in pairs(game.players) do
                     local a = random_range(0, pi2)
+                    Particles:static_image(images.star_big, player.mid_x, player.mid_y, a, 0.05, 1.0, {
+                        color = COL_WHITE
+                    })
                     Particles:static_image(images.star_big, player.mid_x, player.mid_y, a, 0.05, 0.8, {
                         color = player.color_palette[1]
                     })

@@ -646,6 +646,9 @@ function Player:do_damage(n, source)
 	if source and source.name == "poison_cloud" then
 		color = COL_LIGHT_GREEN
 	end
+	Particles:static_image(images.star_big, self.mid_x, self.mid_y, a, 0.05, scale*1.3, {
+		color = COL_WHITE
+	})
 	Particles:static_image(images.star_big, self.mid_x, self.mid_y, a, 0.05, scale, {
 		color = color
 	})

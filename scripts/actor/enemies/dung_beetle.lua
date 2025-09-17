@@ -98,6 +98,9 @@ function DungBeetle:init(x, y)
                 game:screenshake(8)
 
                 Particles:push_layer(PARTICLE_LAYER_BACK)
+                Particles:static_image(images.star_big, self.mid_x, self.mid_y, 0, 0.05, 1.3, {
+                    color = COL_WHITE
+                })
                 Particles:static_image(images.star_big, self.mid_x, self.mid_y, 0, 0.05, 1, {
                     color = COL_LIGHT_RED
                 })
