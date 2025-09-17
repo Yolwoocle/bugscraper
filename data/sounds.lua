@@ -175,6 +175,11 @@ local sfxnames = {
 	["ui_menu_unpause"] = {"ui/ui_menu_unpause.ogg", "static"},
 	["ui_menu_hover_{01-04}"] = {"ui/ui_menu_hover_{}.ogg", "static"},
 	["ui_menu_select_{01-04}"] = {"ui/ui_menu_select_{}.ogg", "static"},
+
+	-- LEVEL
+	["sfx_door_open"] = {"sfx/level/door/sfx_door_open.ogg", "static"},
+	["sfx_door_close"] = {"sfx/level/door/sfx_door_close.ogg", "static"},
+	["sfx_door_ding"] = {"sfx/level/door/sfx_door_ding.ogg", "static"},
 }
 
 for key, params in pairs(sfxnames) do

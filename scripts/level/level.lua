@@ -276,7 +276,7 @@ end
 
 function Level:increment_floor()
 	local pitch = 0.8 + 0.5 * clamp(self.floor / self.max_floor, 0, 2)
-	Audio:play("elev_ding", 0.8, pitch)
+	Audio:play("sfx_door_ding", 0.8, pitch)
 
 	self.floor = self.floor + 1
 end

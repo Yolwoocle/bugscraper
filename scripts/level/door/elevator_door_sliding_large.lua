@@ -14,8 +14,8 @@ function ElevatorDoorSlidingLarge:init(x, y)
 		images.cabin_door_right_center
 	)
 	
-    self.sound_open = "elev_door_open"
-    self.sound_close = "elev_door_close"
+    self.sound_open = "sfx_door_open"
+    self.sound_close = "sfx_door_close"
 end
 
 return ElevatorDoorSlidingLarge
