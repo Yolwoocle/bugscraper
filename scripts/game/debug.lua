@@ -121,8 +121,11 @@ function Debug:init(game)
             ac.gravity = 0
         end},
         ["v"] = { "__jackofalltrades", function()
-            game.level:set_bounds(Rect:new(unpack(RECT_CEO_OFFICE_PARAMS)))
-            game:play_cutscene("enter_ceo_office")
+            local sk = enemies.Shopkeeper:new(35*16, 13*16)
+            game:new_actor(sk)
+
+            -- game.level:set_bounds(Rect:new(unpack(RECT_CEO_OFFICE_PARAMS)))
+            -- game:play_cutscene("enter_ceo_office")
 
             -- game.is_light_on = true
             -- game.level.backroom.show_basement_bg = true
@@ -196,7 +199,7 @@ function Debug:init(game)
             -- game:new_actor(cloud)
             --]]
         end },
-        ["j"] = { "longer", function()
+        ["j"] = { "frameskip", function()
             game:frameskip(60)
         end },
         ["k"] = { "shorter", function()

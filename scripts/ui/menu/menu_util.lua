@@ -17,18 +17,18 @@ function menu_util.func_url(url)
 end
 
 menu_util.PROMPTS_NORMAL = {
-    { { "ui_select" }, "input.prompts.ui_select" },
-    { { "ui_back" },   "input.prompts.ui_back" },
+    { { "ui_select" }, "{input.prompts.ui_select}" },
+    { { "ui_back" },   "{input.prompts.ui_back}" },
 }
 
 menu_util.PROMPTS_GAME_OVER = {
-    { { "ui_select" }, "input.prompts.ui_select" },
+    { { "ui_select" }, "{input.prompts.ui_select}" },
     {},
 }
 
 menu_util.PROMPTS_CONTROLS = {
-    { { "ui_select" }, "input.prompts.ui_select" },
-    { { "ui_back" },   "input.prompts.ui_back" },
+    { { "ui_select" }, "{input.prompts.ui_select}" },
+    { { "ui_back" },   "{input.prompts.ui_back}" },
 }
 
 function menu_util.draw_elevator_progress()

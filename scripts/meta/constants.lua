@@ -220,7 +220,7 @@ DEFAULT_CAMERA_MAX_SPEED = 300
 -- Input
 MAX_ASSIGNABLE_BUTTONS = 8
 
-PLAYER_INPUT_MODE_USER = "user" -- The player is controlled with normal buttons
+PLAYER_INPUT_MODE_USER = "user" -- The player is controlled by the user (with a keyboard, controller, etc) 
 PLAYER_INPUT_MODE_CODE = "code" -- The player is controlled via code (for example, for cutscenes)
 
 INPUT_TYPE_KEYBOARD = "k"

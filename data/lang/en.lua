@@ -153,6 +153,7 @@ return {
             shoot = "Shoot",
             interact = "Interact", -- ADDED
             leave_game = "Leave", 
+            open = "Open", -- ADDED / As in, "open menu", and NOT for, say, opening chests.
 
             ui_left =  "Left (menu)",
             ui_right = "Right (menu)",
@@ -171,9 +172,6 @@ return {
     },
     dialogue = {
         npc = {
-            hornet = "I might have taken the wrong stag.",
-            brown = "This is probably not healthy.",
-            noba = "zerzer",
         },
     },
     menu = {
@@ -197,7 +195,7 @@ return {
             feedback = "FEEDBACK",
             quit = "QUIT",
             website = "OFFICIAL WEBSITE",
-            discord = "DISCORD",
+            discord = "DISCORD", -- CHANGED
             github = "GITHUB", -- ADDED
         },
         options = {

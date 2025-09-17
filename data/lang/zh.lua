@@ -141,6 +141,7 @@ return {
             shoot = "射击",
             interact = "Interact", -- ADDED
             leave_game = "退出",
+            open = "Open", -- ADDED / As in, "open menu", and NOT for, say, opening chests.
 
             ui_left = "Menu left",
             ui_right = "Menu right",

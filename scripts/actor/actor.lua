@@ -136,10 +136,19 @@ function Actor:init_actor(x, y, w, h, spr, args)
 	self.has_run_ready = false
 
 	self.is_interactible = false
-    self.interact_actions = {"up"}
+	self.show_interaction_prompt = true
+    self.interact_actions = {"interact"}
+	self.interact_label = "{input.prompts.interact}"
+	self.interact_label_color = COL_WHITE
     self.interaction_margin = 0
 	self.interaction_delay = 3.0
-	self.interaction_delay_timer =0
+	self.interact_prompt_oy = -32
+	
+	self.interaction_delay_timer = 0
+	self.interaction_hovering_player_n = nil
+	self.last_interaction_hovering_player_n = nil
+	self.interact_prompt_anim_t = 0
+	self.interact_prompt_anim_t_target = 0
 
 	self.t = 0.0
 end
@@ -308,26 +317,62 @@ function Actor:draw()
 	end
 end
 
+function Actor:draw_hud()
+	if not Input:get_user(self.last_interaction_hovering_player_n) then
+		return
+	end
+	if not self.show_interaction_prompt then 
+		return
+	end
+
+	if self.is_interactible and self.last_interaction_hovering_player_n and self.interact_prompt_anim_t > 0 then
+		local x = self.mid_x
+		local y = self.y + lerp(self.interact_prompt_oy + 4, self.interact_prompt_oy, self.interact_prompt_anim_t)
+
+		Input:draw_input_prompt(self.last_interaction_hovering_player_n, self.interact_actions, self.interact_label, self.interact_label_color, x, y, {
+			alignment = "center",
+			background_color = transparent_color(COL_BLACK_BLUE, 0.5),
+		})
+	end 
+end
+
 function Actor:check_for_interactions(dt)
 	self.interaction_delay_timer = max(0.0, self.interaction_delay_timer - dt)
+	self.interact_prompt_anim_t = move_toward(self.interact_prompt_anim_t, self.interact_prompt_anim_t_target, dt*15)
 
 	if not (self.is_interactible and game and game.players and self.interaction_delay_timer <= 0) then
 		return 
 	end
-	
+
+	local old_interaction_hovering_player_n = self.interaction_hovering_player_n
+	self.interaction_hovering_player_n = nil
 	for _, player in pairs(game.players) do
 		local intersects = player:get_rect(self.interaction_margin):rectangle_intersection(self:get_rect())
-		local action_pressed = false
-		for _, action in pairs(self.interact_actions) do
-			if player:action_pressed(action) then
-				action_pressed = true
+		
+		if intersects then
+			if not old_interaction_hovering_player_n or player.n == old_interaction_hovering_player_n then
+				self.interaction_hovering_player_n = player.n
+			end
+
+			local action_pressed = false
+			for _, action in pairs(self.interact_actions) do
+				if player:action_pressed(action) then
+					action_pressed = true
+				end
+			end
+
+			if action_pressed then
+				self:on_interact(player)
+				self.interaction_delay_timer = self.interaction_delay
 			end
 		end
+	end
 
-		if intersects and action_pressed then
-			self:on_interact(player)
-			self.interaction_delay_timer = self.interaction_delay
-		end
+	self.last_interaction_hovering_player_n = self.interaction_hovering_player_n or self.last_interaction_hovering_player_n
+	if self.interaction_hovering_player_n then
+		self.interact_prompt_anim_t_target = 1.0
+	else
+		self.interact_prompt_anim_t_target = 0.0
 	end
 end
 

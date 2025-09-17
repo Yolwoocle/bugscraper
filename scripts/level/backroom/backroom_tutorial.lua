@@ -154,7 +154,7 @@ function BackroomTutorial:draw_items()
 	-- 	alignment = "center",
 	-- 	background_color = transparent_color(COL_BLACK_BLUE, 0.5),
 	-- })
-	Input:draw_input_prompt(1, {}, "🈶 "..Text:text("input.prompts.jetpack"), COL_WHITE, 54*16, 4*16, {
+	Input:draw_input_prompt(1, {}, "🈶 {input.prompts.jetpack}", COL_WHITE, 54*16, 4*16, {
 		alignment = "center",
 		background_color = transparent_color(COL_BLACK_BLUE, 0.5),
 	})

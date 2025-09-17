@@ -242,9 +242,6 @@ function Player:reset(n, skin)
 
 	self.spawn_explosion_on_damage = false
 
-	-- Exiting 
-	self.is_touching_exit_sign = false
-
 	self.is_ghost = false
 	self.ghost_opacity = 0.7
 	
@@ -289,7 +286,6 @@ function Player:get_state_machine()
 				self.is_walking = self.is_grounded and abs(self.vx) > 50
 				self:do_invincibility(dt)
 				self:update_poison(dt)
-				self:leave_game_if_possible(dt)
 
 				self.gun:update(dt)
 				self:shoot(dt, false)
@@ -481,8 +477,8 @@ function Player:reset_virtual_controller()
 	end
 end
 
-function Player:action_down(action)
-	if self.input_mode == PLAYER_INPUT_MODE_USER then
+function Player:action_down(action, force_test_for_user_input_mode)
+	if self.input_mode == PLAYER_INPUT_MODE_USER or force_test_for_user_input_mode then
 		return Input:action_down(self.n, action)
 
 	elseif self.input_mode == PLAYER_INPUT_MODE_CODE then
@@ -491,8 +487,8 @@ function Player:action_down(action)
 	end
 end
 
-function Player:action_pressed(action)
-	if self.input_mode == PLAYER_INPUT_MODE_USER then
+function Player:action_pressed(action, force_test_for_user_input_mode)
+	if self.input_mode == PLAYER_INPUT_MODE_USER or force_test_for_user_input_mode then
 		return Input:action_pressed(self.n, action)
 
 	elseif self.input_mode == PLAYER_INPUT_MODE_CODE then
@@ -1290,20 +1286,6 @@ function Player:update_poison(dt)
 	end
 end
 
-function Player:leave_game_if_possible(dt)
-	local is_touching, exit_sign = self:is_touching_collider(function(col) return col.other.is_exit_sign end)
-
-	self.is_touching_exit_sign = is_touching
-	if is_touching then
-		self.controls_oy = lerp(self.controls_oy, 0, 0.3)
-		if self:action_pressed("interact") and game.game_state == GAME_STATE_WAITING then
-			exit_sign.other:activate(self)
-		end
-	else
-		self.controls_oy = lerp(self.controls_oy, 0, 0.3)
-	end
-end
-
 ------------------------------------------
 --- Combos & score
 ------------------------------------------
@@ -1409,6 +1391,8 @@ function Player:draw()
 end
 
 function Player:draw_hud()
+	Player.super.draw_hud(self)
+
 	if self.is_removed or self.is_dead then    return    end
 	if not self.show_hud then    return    end
 
@@ -1502,22 +1486,14 @@ function Player:draw_ammo_bar(ui_x, ui_y)
 end
 
 function Player:get_controls_tutorial_values()
-	if self.is_touching_exit_sign then
-		return {
-			{{"interact"}, "input.prompts.leave_game"},
-		}
-	end
+	-- Example : {{"interact"}, "{input.prompts.leave_game}"},
 	return {}
 end
 
 function Player:get_controls_text_color(i)
 	local color
 	if Input:get_number_of_users() == 1 then
-		if self.is_touching_exit_sign then
-			color = COL_LIGHT_GREEN
-		else
-			color = LOGO_COLS[i]
-		end
+		color = LOGO_COLS[i]
 	else
 		color = self.color_palette[1] 
 	end 

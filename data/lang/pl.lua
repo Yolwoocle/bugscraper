@@ -142,6 +142,7 @@ return {
             shoot = "Strzał",
             interact = "Interact", -- ADDED
             leave_game = "Wyjdź",
+            open = "Open", -- ADDED / As in, "open menu", and NOT for, say, opening chests.
 
             ui_left = "Lewo (Menu)",
             ui_right = "Prawo (Menu)",

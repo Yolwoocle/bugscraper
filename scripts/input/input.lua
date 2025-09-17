@@ -64,7 +64,7 @@ end
 
 function InputManager:get_primary_input_type(player_n)
     local user = self.users[player_n]
-    assert(user ~= nil, concat("user ", player_n, " doesn't exist"))
+    assert(user ~= nil, concat("user ", tostring(player_n), " doesn't exist"))
     return user.primary_input_type
 end
 
@@ -605,7 +605,7 @@ function InputManager:draw_input_prompt(player_n, actions, label, label_color, x
     end
     
     
-    local text = Text:text(label)
+    local text = Text:parse(label)
     local text_w = get_text_width(text)
     local total_w = text_w + ox
 
@@ -622,7 +622,7 @@ function InputManager:draw_input_prompt(player_n, actions, label, label_color, x
         rect_color(params.outline_color, "line", x-3, y, total_w+6, get_text_height()+3)
     end
     for _, icon_data in pairs(icons) do
-        love.graphics.draw(icon_data.icon, math.floor(x + icon_data.x), y)
+        love.graphics.draw(icon_data.icon, math.floor(x + icon_data.x), math.floor(y))
     end
     print_outline(label_color, COL_BLACK_BLUE, text, x + ox, y)
 

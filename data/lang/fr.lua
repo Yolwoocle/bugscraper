@@ -148,6 +148,7 @@ return {
             shoot = "Tirer",
             interact = "Intéragir", -- ADDED
             leave_game = "Quitter",
+            open = "Ouvrir", -- ADDED / As in, "open menu", and NOT for, say, opening chests.
 
             ui_left = "Gauche (menu)",
             ui_right = "Droite (menu)",
@@ -186,7 +187,8 @@ return {
             feedback = "RETOURS",
             quit = "QUITTER",
             website = "SITE OFFICIEL",
-            discord = "REJOINDRE LE DISCORD",
+            discord = "DISCORD",
+            github = "GITHUB",
         },
         options = {
             title = "OPTIONS",
@@ -307,7 +309,7 @@ return {
             title = "CRÉDITS",
             ninesliced_presents = "Ninesliced présente", -- Ninesliced with a capital letter ONLY on the N
             game_by = "Un jeu par", -- As in, "A game by / John". If it is not possible to have the name *after* this, translate as "Creator" ("Creator / John")
-            game_by_template = "Par Léo Bernard & amis", -- Utilisé sur l'écran titre
+            leo_bernard = "Léo Bernard", -- Please do not touch this (this is there so i can use my chinese name in chinese)
             music = "Musique",
             sound_design = "Sound design",
             localization = "Localisation",
@@ -319,6 +321,7 @@ return {
             tv_slideshow = "Contributeur·rices diaporama TV", 
             tv_slideshow_submit = "Envoyez le votre...", 
             licenses = "Licences des assets & bibliothèques",
+            more = "Et bien plus...", -- For the people that I might have forgotten in the special thanks section
 
             x_by_y =     "%s par %s", -- "ASSET_NAME by CREATOR". Used to credit assets such as sound effects
             asset_item = "%s par %s / %s", -- "ASSET_NAME by CREATOR / LICENCE". Used to credit assets such as sound effects

@@ -44,6 +44,14 @@ function ExitSign:init(x, y)
     self.smash_unzoom_timer = 0.0
 
     self.loot = {}
+
+	self.is_interactible = true
+    self.interact_actions = {"interact"}
+	self.interact_label = "{input.prompts.leave_game}"
+	self.interact_label_color = COL_LIGHT_GREEN
+    self.interaction_margin = 0
+	self.interaction_delay = 0.1
+	self.interact_prompt_oy = -32
 end
 
 function ExitSign:update(dt)
@@ -69,6 +77,14 @@ function ExitSign:on_collision(col, other)
 	if col.other.is_player then
 		self.is_touching_player = true
 	end
+end
+
+function ExitSign:on_interact(player)
+    if game.game_state ~= GAME_STATE_WAITING then
+        return
+    end
+
+    self:activate(player)
 end
 
 function ExitSign:activate(player)
