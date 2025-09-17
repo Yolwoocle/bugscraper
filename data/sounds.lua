@@ -118,7 +118,7 @@ local sfxnames = {
 	-- Boss W1    
 	["sfx_boss_intro_mrdung"] = {"sfx/enemy/mrdung/sfx_boss_intro_mrdung.ogg", "static"},
 	["sfx_boss_mrdung_boss_activate"] = {"sfx/enemy/mrdung/sfx_boss_mrdung_boss_activate.ogg", "static"},
-	["sfx_boss_mrdung_death"] = {"sfx/enemy/mrdung/sfx_boss_mrdung_death.ogg", "static"},
+	["sfx_boss_mrdung_death_{01-03}"] = {"sfx/enemy/mrdung/death/sfx_boss_mrdung_death_{}.ogg", "static"},
 	["sfx_boss_mrdung_dying"] = {"sfx/enemy/mrdung/sfx_boss_mrdung_dying.ogg", "static"},
 	["sfx_boss_mrdung_land_in_dung"] = {"sfx/enemy/mrdung/sfx_boss_mrdung_land_in_dung.ogg", "static"},
 	["sfx_boss_mrdung_roll"] = {"sfx/enemy/mrdung/sfx_boss_mrdung_roll.ogg", "static", { looping = true }},

@@ -207,7 +207,7 @@ function DungBeetle:on_death()
     
     Particles:ejected_player(images.dung_beetle_dead, self.mid_x, self.mid_y)
     Particles:image(self.mid_x, self.mid_y, 100, {images.dung_particle_1, images.dung_particle_2, images.dung_particle_3}, self.h, 2)
-    Audio:play("sfx_boss_mrdung_death")
+    Audio:play("sfx_boss_mrdung_death_{01-03}")
 end
 
 function DungBeetle:draw()
@@ -225,7 +225,7 @@ function DungBeetle:on_hit_flying_dung(flying_dung)
     self.hits = math.max(0, self.hits - 1)
     
     self:do_damage(5, flying_dung)
-    Audio:play("sfx_boss_mrdung_ball_hit_{01-06}")
+    Audio:play("sfx_boss_mrdung_ball_hit_{01-06}", 1.0)
 
     if self.vehicle and self.vehicle.state_machine.current_state_name ~= "bunny_hopping" then
         if sign(self.vehicle.vx) == -sign(flying_dung.vx) then
