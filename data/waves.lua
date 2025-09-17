@@ -26,9 +26,10 @@ local function new_cafeteria(params)
 
     local run_func = params.run_func or function(...) end
     local wave_enemies = {
-        { E.UpgradeDisplay, 1, position = { 474 + 16, 181 }, ignore_position_clamp = true },
-        { E.UpgradeDisplay, 1, position = { 530 + 16, 181 }, ignore_position_clamp = true },
-        { E.UpgradeDisplay, 1, position = { 586 + 16, 181 }, ignore_position_clamp = true },
+        -- { E.UpgradeDisplay, 1, position = { 474 + 16, 181 }, ignore_position_clamp = true },
+        -- { E.UpgradeDisplay, 1, position = { 530 + 16, 181 }, ignore_position_clamp = true },
+        -- { E.UpgradeDisplay, 1, position = { 586 + 16, 181 }, ignore_position_clamp = true },
+        { E.Shopkeeper, 1, position = { 35*16, 13*16 }, ignore_position_clamp = true },
     }
     if params.empty_cafeteria then
         wave_enemies = {}

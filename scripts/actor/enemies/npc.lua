@@ -23,7 +23,7 @@ function NPC:init(x, y, params)
     self.dialogue_key = params.dialogue_key or ""
     self.dialogue = (params.dialogue or Text:text(self.dialogue_key)) or ""
 
-    self.is_interactible = true
+    self.is_interactible = false
     self.interact_actions = {"up"}
     self.interaction_margin = 32
     self.interaction_delay = 4.0

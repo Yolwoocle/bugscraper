@@ -122,9 +122,10 @@ function Debug:init(game)
         end},
         
         ["v"] = { "__jackofalltrades", function()
-            Audio:play("sfx_boss_mrdung_ball_hit_{01-06}", 2.0)
-            -- local sk = enemies.Shopkeeper:new(35*16, 13*16)
-            -- game:new_actor(sk)
+            -- Audio:play("sfx_boss_mrdung_ball_hit_{01-06}", 2.0)
+            
+            local sk = enemies.Shopkeeper:new(35*16, 13*16)
+            game:new_actor(sk)
 
             -- game.level:set_bounds(Rect:new(unpack(RECT_CEO_OFFICE_PARAMS)))
             -- game:play_cutscene("enter_ceo_office")

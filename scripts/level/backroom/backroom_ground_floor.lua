@@ -101,14 +101,14 @@ function BackroomGroundFloor:generate(world_generator)
 	-- 	animation = npc.animation,
 	-- 	dialogue_key = "dialogue.npc." .. npc.key,
 	-- }))
-	local npc = game:new_actor(enemies.NPC:new(880, 226, {
-		npc_name = "hornet",
-		animation = {images.npc_hornet, 0.2, 4},
-		-- dialogue_key = "dialogue.npc.hornet",
-
-		flip_x = true,
-	}))
-	npc.z = -2
+	if random_range(0, 1) < HORNET_EASTER_EGG_PROBABILITY then
+		local npc = game:new_actor(enemies.NPC:new(880, 226, {
+			npc_name = "hornet",
+			animation = {images.npc_hornet, 0.15, 4},
+			flip_x = true,
+		}))
+		npc.z = -2
+	end
 
 	local npc = game:new_actor(enemies.NPC:new(905, 226, {
 		npc_name = "brown",

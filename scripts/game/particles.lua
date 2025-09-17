@@ -969,7 +969,7 @@ function ParticleSystem:image(x, y, number, spr, spw_rad, life, vs, g, params)
 		local rot = random_neighbor(pi)
 		local vx = random_neighbor(100)
 		local vy = -random_range(40, 80)
-		local vs = vs or random_range(1, 0.5)
+		local vs = (vs or random_range(1, 0.5)) * random_range(1, 0.8)
 		local vr = random_neighbor(1)
 		local life = life + random_neighbor(0.5)
 		local g = (g or 1) * 3

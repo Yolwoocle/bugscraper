@@ -167,7 +167,7 @@ end
 
 function BackroomCafeteria:can_exit()
 	for _, a in pairs(game.actors) do
-		if a.name == "upgrade_display" then
+		if a.name == "shopkeeper" then
 			return false
 		end
 	end
@@ -188,14 +188,19 @@ end
 function BackroomCafeteria:assign_cafeteria_upgrades()
 	local bag = copy_table_shallow(game.level.upgrade_bag)
 
-	for _, actor in pairs(game.actors) do
-		if actor.name == "upgrade_display" then
-			local upgrade, _, i = random_weighted(bag)
+	local number_of_upgrades = 3
+	local roll = {}
+	for i=1, number_of_upgrades do
+		local upgrade, _, i = random_weighted(bag)
+		if upgrade then
 			table.remove(bag, i)
-
-			if upgrade then
-				actor:assign_upgrade(upgrade)
-			end
+			table.insert(roll, upgrade)
+		end
+	end
+	
+	for _, actor in pairs(game.actors) do
+		if actor.name == "shopkeeper" then
+			actor:assign_products(roll)
 		end
 	end
 end

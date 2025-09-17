@@ -17,8 +17,12 @@ function Shopkeeper:init(x, y, w, h)
     Shopkeeper.super.init(self, x, y, images.vending_machine, w or 1, h or 1)
     self.name = "shopkeeper"
 
+    self.is_affected_by_bounds = false
+    self.is_affected_by_walls = false
+
     self.is_interactible = true
     self.show_interaction_prompt = true
+	self.interact_label = "{input.prompts.open}"
     self.interaction_margin = 32
     self.interaction_delay = 1.0
     self.interact_prompt_oy = -64
@@ -129,6 +133,11 @@ function Shopkeeper:update(dt)
     self.state_machine:update(dt)
 end
 
+function Shopkeeper:assign_products(products)
+    self.products = products
+    self:set_selection(self.selected_product_index)
+end
+
 function Shopkeeper:on_interact(player)
     if self.state_machine.current_state_name == "normal" then
         self:start_interaction(player)
@@ -150,6 +159,9 @@ function Shopkeeper:increment_selection(diff)
     self:set_selection(mod_plus_1(self.selected_product_index + diff, #self.products))
 
     self.star_pattern_ox = diff*20
+
+    local r = (self.selected_product_index - 1)/(#self.products - 1)
+    Audio:play_var("ui_menu_hover_{01-04}", 0.2, 1.0, {pitch = lerp(1.8, 2.2, r)})
 end
 
 function Shopkeeper:start_interaction(player)
@@ -169,9 +181,15 @@ function Shopkeeper:end_interaction()
 end
 
 function Shopkeeper:apply_current_product()
+    Audio:play(self.selected_product.activate_sound)
     game:apply_upgrade(self.selected_product)
+    game.level:on_upgrade_display_killed(self)
+    game:screenshake(6)
+
     self.is_interactible = false
     Particles:collected_upgrade(self.mid_x, self.mid_y, self.selected_product.sprite, self.selected_product.color)
+
+    self:kill()
 end
 
 function Shopkeeper:draw_products()
@@ -179,7 +197,7 @@ function Shopkeeper:draw_products()
     local x = self.mid_x - ((#self.products - 1)*sep)/2
     local sel_x = x + (self.selected_product_index-1)*sep
     local y = self.mid_y - 85
-    local s = ease_out_cubic(clamp(self.animation_t, 0, 1))
+    local s = ease_out_elastic(clamp(self.animation_t, 0, 1))
 
     if self.selected_product then
         love.graphics.setColor(self.selected_product.palette[3])
@@ -232,6 +250,12 @@ function Shopkeeper:draw_text(x, y, text, col, s)
         end
         text_x = text_x + w
     end
+end
+
+function Shopkeeper:on_death()
+    Audio:play_var("sfx_actor_button_small_glass_break", 0.1, 1.1)
+
+    Particles:image(self.mid_x, self.mid_y - 32, 150, images.glass_shard, 32, 120, 0.3)
 end
 
 return Shopkeeper

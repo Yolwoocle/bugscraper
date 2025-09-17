@@ -604,6 +604,7 @@ TV_HEIGHT = 31
 
 --------------------------------------------- 
 
--- Super secret settings :)
+-- Super secret easter egg stuff :)
 SMASH_EASTER_EGG_PROBABILITY = 0.02
 TV_BLUESCREEN_PROBABILITY = 0.05
+HORNET_EASTER_EGG_PROBABILITY = 0.05
