@@ -85,9 +85,13 @@ local function generate_menus()
             game.menu_manager:back()
         end },
         { "{menu.yes}", function()
-            game:new_game({
-                backroom = game.start_params.backroom,
-            })
+            if game.level and game.level.backroom and game.level.backroom.name == "tutorial" and Metaprogression:get("has_played_tutorial") then
+                game:new_game({})
+            else
+                game:new_game({
+                    backroom = game.start_params.backroom,
+                })
+            end
         end },
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
 
