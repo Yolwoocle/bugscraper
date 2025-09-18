@@ -129,6 +129,7 @@ function Game:new_game(params)
 
 	-- Remove old queued players
 	self:remove_queued_players()
+	self:remove_inactive_joysticks()
 
 	-- Music
 	if self.music_player then self.music_player:stop() end
@@ -698,6 +699,16 @@ function Game:remove_queued_players()
 		end
 	end
 	self.queued_players = {}
+end
+
+function Game:remove_inactive_joysticks()
+	for n=1, MAX_NUMBER_OF_PLAYERS do
+		local user = Input:get_user(n)
+		
+		if user and user.joystick and not user.joystick:isConnected() then
+			self:leave_game(n)
+		end
+	end
 end
 
 function Game:unsplit_keyboard_and_kick_second_player()
