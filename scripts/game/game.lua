@@ -343,8 +343,11 @@ function Game:update(dt)
 	self.camera:update_screenshake(dt)
 
 	self.frames_to_skip = max(0, self.frames_to_skip - 1)
+	-- BUG: pressing and releasing a button during a frameskip period will not register it  
+	if self.frames_to_skip <= 0 then 
+		Input:update(dt)
+	end
 
-	Input:update(dt)
 	self.music_player:update(dt)
 
 	-- Menus
