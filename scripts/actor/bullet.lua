@@ -204,7 +204,7 @@ function Bullet:on_collision(col)
 			end
 
 			col.other:on_bullet_bounced(self, col)
-			-- Audio:play_var("bullet_bounce", 0.2, 1.5)
+			Audio:play_var("sfx_bullet_bounce_{01-02}", 0.2, 1.5)
 		end
 	end
 	

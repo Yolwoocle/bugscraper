@@ -36,19 +36,26 @@ function BackroomGroundFloor:init(params)
     self.object_3d.position.y = -120
     self.object_3d.position.z = 40
     self.object_3d.rotation.y = pi/2
-	self.ball_lighting_palette = {color(0xf77622), color(0xfeae34), color(0xfee761), color(0xfee761), COL_WHITE}
 
 	self.renderer.orthographic = false
 	self.renderer.fov = 300
 	self.renderer.render_offset.x = 200
 	self.renderer.render_offset.y = 200
-	self.renderer.line_color = color(0x202035)
+	self.renderer.line_color = COL_DARKEST_GRAY
+
+	self.rocket_y = 82
 
 	self.renderer:update(0)
 
 	self.show_basement_bg = false
 
 	self.number_of_exited_players = 0 -- TODO
+	self.exited_players = {}
+	self.last_exited_player_n = nil
+
+	self.bg_particles = {}
+
+	self.tutorial_timer = math.huge
 end
 
 function BackroomGroundFloor:generate(world_generator)
@@ -57,6 +64,8 @@ function BackroomGroundFloor:generate(world_generator)
 	game.camera.max_x = CANVAS_WIDTH + 11*16
 	
     world_generator:reset()
+	world_generator:write_rect(Rect:new(2, -1, 2, 15), TILE_METAL) -- Wall left
+	world_generator:write_rect(Rect:new(68, -1, 68, 15), TILE_METAL) -- Wall right
 	world_generator:write_rect(Rect:new(2, 0, 68, 15), TILE_METAL) -- Wall
 	world_generator:write_rect(Rect:new(2, 15, 68, 15), TILE_STONE) -- Floor
 
@@ -64,14 +73,31 @@ function BackroomGroundFloor:generate(world_generator)
 	b.spawned_actor = enemies.ButtonSmallRocket
 	game:new_actor(b)
 
-	game:new_actor(enemies.PlayerTrigger:new(3 * 16, -16, 64 * 16, 16, function()
+	game:new_actor(enemies.PlayerTrigger:new(3 * 16, -16, 66 * 16, 16, function()
 		for _, player in pairs(game.players) do
 			if player.y < 0 then
 				player.gravity_mult = 0
-				player.vy = -30
+				player.vy = -300
 
                 player:set_input_mode(PLAYER_INPUT_MODE_CODE)
                 player:reset_virtual_controller()
+
+				if not self.exited_players[player.n] then
+					self.number_of_exited_players = self.number_of_exited_players + 1
+					self.exited_players[player.n] = {
+						y = -10.0,
+						vy = 0.0,
+						shake_x = 0.0,
+						shake_y = 0.0,
+						sprite = player.skin.img_airborne,
+
+						ox = random_neighbor(8),
+					}
+
+					if self.number_of_exited_players >= game:get_number_of_alive_players() then
+						self.last_exited_player_n = player.n
+					end
+				end 
 			end
 		end
 	end, { 
@@ -104,11 +130,74 @@ function BackroomGroundFloor:update(dt)
     self.renderer.render_offset.x = CANVAS_WIDTH/2 + cx
     self.object_3d.position.x = -cx * 0.1 + 20
 
+	-- Update exiting players
+	for n, exited_player in pairs(self.exited_players) do
+		exited_player.vy = exited_player.vy + 5*dt
+		exited_player.y = exited_player.y + exited_player.vy*dt
+
+		exited_player.shake_x = random_neighbor(1)
+		exited_player.shake_y = random_neighbor(1)
+
+		if random_range(0, 1) < 0.4 then
+			table.insert(self.bg_particles, {
+				x = exited_player.ox + random_neighbor(2),
+				y = exited_player.y,
+				life = random_range(0.2, 0.8),
+				type = "point",
+			})
+		end
+		
+		if exited_player.y > self.rocket_y + 32 then
+			self.exited_players[n] = nil
+
+			game:screenshake(2)
+			for i=1, 10 do
+				table.insert(self.bg_particles, {
+					x = exited_player.ox + random_neighbor(6),
+					y = exited_player.y + random_neighbor(6),
+					life = random_range(0.2, 0.8),
+					type = "circle",
+				})
+			end
+
+			if n == self.last_exited_player_n then
+				game:play_cutscene("basement_zoom_into_rocket")
+			end
+		end
+	end 
+
+	print_debug(self.number_of_exited_players, ", ",  game:get_number_of_alive_players())
+
+	-- Update particles
+	for i, ptc in pairs(self.bg_particles) do
+		ptc.life = ptc.life - dt
+		if ptc.life < 0 then
+			table.remove(self.bg_particles, i)
+		end
+	end
+
+	-- Tutorial 
+	self.tutorial_timer = self.tutorial_timer - dt
+	if self.tutorial_timer <= 0 then
+        game.game_ui:enable_floating_text("🈶 {input.prompts.jetpack}")
+		self.tutorial_timer = math.huge
+	end
+
+	if self.number_of_exited_players > 0 then
+		game.game_ui:disable_floating_text()
+	end
+
+	-- Update 3D renderer
 	self.renderer:update(dt)
 end
 
 function BackroomGroundFloor:draw_background()
 	love.graphics.clear(COL_VERY_DARK_GRAY)
+end
+
+function BackroomGroundFloor:get_rocket_x()
+	local cx, cy = math.floor(game.camera:get_real_position())
+	return math.floor(227 + cx*0.965)
 end
 
 function BackroomGroundFloor:draw_items()
@@ -117,9 +206,30 @@ function BackroomGroundFloor:draw_items()
 	end 
 	
     self.renderer:draw()
-	local cx, cy = math.floor(game.camera:get_real_position())
 	-- love.graphics.draw(images.basement,        round(-16 + cx*0.9), -16)
-	love.graphics.draw(images.basement_rocket, math.floor(227 + cx*0.965), 80, 0, 0.5, 0.5)
+	local rocket_x = self:get_rocket_x()
+
+	for i, ptc in pairs(self.bg_particles) do
+		local px = rocket_x + images.basement_rocket_small:getWidth()/2 + ptc.x
+		if ptc.type == "point" then
+			local col = ternary(ptc.life < 0.2, COL_DARKEST_GRAY, COL_BLACK_BLUE)
+			rect_color(col, "fill", px, ptc.y, 1, 1)
+		end
+	end
+
+	for n, exited_player in pairs(self.exited_players) do
+		local px = rocket_x + images.basement_rocket_small:getWidth()/2 + exited_player.ox
+		rect_color(COL_BLACK_BLUE, "fill", px + exited_player.shake_x, exited_player.y + exited_player.shake_y, 2, 2)
+	end 
+
+	love.graphics.draw(images.basement_rocket_small, rocket_x, self.rocket_y, 0)
+	
+	for i, ptc in pairs(self.bg_particles) do
+		local px = rocket_x + images.basement_rocket_small:getWidth()/2 + ptc.x
+		if ptc.type == "circle" then
+			circle_color(COL_DARKEST_GRAY, "fill", px, ptc.y, ptc.life * 4)
+		end
+	end
 end
 
 function BackroomGroundFloor:draw_front_walls()

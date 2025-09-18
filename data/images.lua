@@ -440,6 +440,7 @@ local img_names = {
 
 	basement =                       "level/basement",
 	basement_rocket =                "level/basement_rocket",
+	basement_rocket_small =          "level/basement_rocket_small",
 	basement_front =                 "level/basement_front",
 	cafeteria =                      "level/cafeteria",
 	cafeteria_front =                "level/cafeteria_front",

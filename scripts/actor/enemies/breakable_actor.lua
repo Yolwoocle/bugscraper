@@ -47,7 +47,7 @@ function BreakableActor:init(x, y, img, w, h)
 
     self.sound_fracture = {"glass_fracture"}
     self.sound_break = {"glass_break"}
-    self.sounds_impact = {"impactglass_light_001", "impactglass_light_002", "impactglass_light_003", "impactglass_light_004"}
+    self.sounds_impact = "sfx_impactglass_light_{001-005}"
     self.volume_fracture = 1
     -- self.pitch_fracture = 0.5
     self.volume_break = 1

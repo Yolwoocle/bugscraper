@@ -327,7 +327,7 @@ function Loot.Gun:on_collect(player)
 	player:equip_gun(self.gun)
 	
 	Particles:smoke(self.mid_x, self.mid_y, 10, COL_LIGHT_BROWN)
-	Audio:play("item_collect")
+	Audio:play("sfx_loot_health_collect")
 
 	local old_life = self.life
 	Particles:word(self.mid_x, self.y, utf8.upper(self.gun.display_name or self.gun.name), self.gun.color or COL_LIGHT_YELLOW)

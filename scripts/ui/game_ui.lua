@@ -390,7 +390,7 @@ function GameUI:draw_FPS()
 	
 	local t = "⚠ "..Text:text("game.fps", love.timer.getFPS())
 	
-	if game.t > 2 and love.timer.getFPS() <= 50 then
+	if game.t > 2 and love.timer.getFPS() <= 55 then
 		print_outline(nil, nil, t, CANVAS_WIDTH - get_text_width(t) - 3, 3)
 		-- if game.menu_manager.cur_menu ~= nil then
 		-- 	t = "⚠ "..Text:text("game.fps_warning")
@@ -539,8 +539,8 @@ end
 function GameUI:start_iris_transition(x, y, duration, original, target)
 	self.iris_transition_on = true
 
-	self.iris_transition_x = x
-	self.iris_transition_y = y
+	self.iris_transition_x = x or self.iris_transition_x
+	self.iris_transition_y = y or self.iris_transition_y
 
 	self.iris_transition_t = 0
 	self.iris_transition_target_t = duration

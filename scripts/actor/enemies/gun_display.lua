@@ -47,9 +47,9 @@ function GunDisplay:init(x, y, gun)
     
     self.rot_mult = 0.06
 
-	-- self.sound_damage = {"impactglass_light_001", "impactglass_light_002", "impactglass_light_003", "impactglass_light_004"}
-	self.sound_damage = "sfx_weapon_glassjump_{01-06}"
-	self.sound_death = "sfx_weapon_glassbreak"
+	-- self.sound_damage = "sfx_weapon_glassjump_{01-06}"
+	self.sound_damage = "sfx_actor_button_small_glass_damage_{01-06}"
+	self.sound_death = "sfx_actor_button_small_glass_break"
 
     self.max_dissapear_life = 10
     self.dissapear_life = self.max_dissapear_life

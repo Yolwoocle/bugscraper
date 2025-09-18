@@ -67,6 +67,9 @@ end
 function ButtonSmallRocket:on_press(presser)
     print_debug("LIGHTS ON")
     game:play_cutscene("basement_light_on")
+    if game.level.backroom then
+        game.level.backroom.tutorial_timer = 10.0
+    end
 end
 
 function ButtonSmallRocket:on_death(damager, reason)

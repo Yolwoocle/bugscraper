@@ -39,9 +39,10 @@ return Cutscene:new("tutorial_end", {
     CutsceneScene:new({
         description = "Pan camera up",
 
-        duration = 12.0,
+        duration = 4.0,
         enter = function(cutscene, data)
             game.camera.follows_players = false
+            game.camera.max_speed = DEFAULT_CAMERA_MAX_SPEED*4
             game.camera.min_y = -2000000    
             game.camera.target_y = -2350
         end,
@@ -68,6 +69,8 @@ return Cutscene:new("tutorial_end", {
                 dark_overlay_alpha_target = 0.0,
             })
             game.game_ui.cinematic_bars_enabled = false
+
+            game.camera.max_speed = DEFAULT_CAMERA_MAX_SPEED
         end
     })
 })

@@ -96,7 +96,7 @@ function Stabee:init(x, y, spr)
         stuck = {
             enter = function(state)
                 Audio:play_var("sfx_enemy_stabee_land_{01-04}", 0.1, 1.1)
-				Audio:play_var("bullet_bounce_"..random_sample{"1","2"}, 0.2, 1.2, {pitch = 0.8})
+				Audio:play_var("sfx_bullet_bounce_{01-02}", 0.2, 1.2, {pitch = 0.8})
 
                 self.stuck_oscillation_t = 0.0
                 self.stuck_oscillation_amplitude = 1.0

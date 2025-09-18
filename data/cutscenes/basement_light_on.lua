@@ -78,14 +78,9 @@ return Cutscene:new("enter_ceo_office", {
         duration = 7.0,
         enter = function(cutscene, data)
         	game.level.world_generator:write_rect(Rect:new(2, 0, 68, 0), TILE_AIR) -- Wall
-        end,
-    }),
-
-    CutsceneScene:new({
-        description = "Wait",
-        duration = 0,
-        enter = function(cutscene, data)
-            game.game_ui:enable_floating_text("🈶 {input.prompts.jetpack}")
+            
+            game.level.world_generator:write_rect(Rect:new(2, -1, 2, 15), TILE_METAL) -- Wall left
+            game.level.world_generator:write_rect(Rect:new(68, -1, 68, 15), TILE_METAL) -- Wall right
         end,
     }),
 })

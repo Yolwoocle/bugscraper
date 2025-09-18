@@ -180,6 +180,9 @@ local sfxnames = {
 	["sfx_door_open"] = {"sfx/level/door/sfx_door_open.ogg", "static"},
 	["sfx_door_close"] = {"sfx/level/door/sfx_door_close.ogg", "static"},
 	["sfx_door_ding"] = {"sfx/level/door/sfx_door_ding.ogg", "static"},
+
+
+	["sfx_bullet_bounce_{01-02}"] = {"placeholder/sfx_bullet_bounce_{}.ogg", "static"},
 }
 
 for key, params in pairs(sfxnames) do

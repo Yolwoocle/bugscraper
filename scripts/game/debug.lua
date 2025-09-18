@@ -42,6 +42,7 @@ function Debug:init(game)
     self.joystick_view = false
     self.bound_view = false
     self.view_fps = false
+    self.show_fps = false
 
     self.instant_end = false
     self.layer_view = false
@@ -99,6 +100,10 @@ function Debug:init(game)
         ["f8"] = { "toggle actor info view mode", function()
             self.actor_info_view = not self.actor_info_view
         end, do_not_require_ctrl = true },
+        ["f11"] = { "toggle FPS", function()
+            self.show_fps = not self.show_fps
+        end, do_not_require_ctrl = true },
+        
         ["f12"] = { "get draw info", function()
             print("-----------------------")
             for key, val in pairs(__times) do
@@ -124,14 +129,13 @@ function Debug:init(game)
         ["v"] = { "__jackofalltrades", function()
             -- Audio:play("sfx_boss_mrdung_ball_hit_{01-06}", 2.0)
             
-            local sk = enemies.Shopkeeper:new(35*16, 13*16)
-            game:new_actor(sk)
+            -- local sk = enemies.Shopkeeper:new(35*16, 13*16)
+            -- game:new_actor(sk)
 
-            -- game.level:set_bounds(Rect:new(unpack(RECT_CEO_OFFICE_PARAMS)))
-            -- game:play_cutscene("enter_ceo_office")
-
-            -- game.is_light_on = true
-            -- game.level.backroom.show_basement_bg = true
+            game.level:set_bounds(Rect:new(unpack(RECT_CEO_OFFICE_PARAMS)))
+            game:play_cutscene("enter_ceo_office")
+            game.is_light_on = true
+            game.level.backroom.show_basement_bg = true
 
             -- game.game_ui.ending_counter_text = "12345"
             -- Particles:speed_line(game.players[1].x, game.players[1].y, 1)
@@ -471,10 +475,9 @@ function Debug:draw()
     if self.input_view then
         self:draw_input_view()
     end
-
-    if self.view_fps then
-        local t = concat(love.timer.getFPS(), "FPS\n")
-        print_outline(nil, nil, t, CANVAS_WIDTH - get_text_width(t), 0)
+    if self.show_fps then    
+	    local t = Text:text("game.fps", love.timer.getFPS())
+		print_outline(nil, nil, t, CANVAS_WIDTH - get_text_width(t) - 3, 3)
     end
 
     game.camera:push()

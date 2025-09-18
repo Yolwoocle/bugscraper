@@ -153,7 +153,7 @@ function Beelet:init(x, y)
 
                 self.post_attack_timer:start()
             
-				Audio:play_var("bullet_bounce_"..random_sample{"1","2"}, 0.2, 1.2)
+				Audio:play_var("sfx_bullet_bounce_{01-02}", 0.2, 1.2)
                 Audio:play_var("metal_impact", 0, 1)
                 -- local s = "metalfootstep_0"..tostring(love.sume=0.5})
 

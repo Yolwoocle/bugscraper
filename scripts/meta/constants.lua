@@ -146,6 +146,7 @@ COL_MAGENTA = {1, 0, 1, 1}
 COL_TRANSPARENT = {1, 1, 1, 0}
 
 -- Reference is EDG32 palette
+COL_DARKEST_GRAY = color(0x202035) -- This is not in the palette but is used in the basement
 COL_VERY_DARK_GRAY = color(0x262b44)
 COL_DARK_GRAY = color(0x3a4466)
 COL_MID_GRAY = color(0x5a6988)
