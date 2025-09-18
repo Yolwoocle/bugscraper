@@ -297,8 +297,8 @@ RAW_INPUT_MAP_DEFAULT_CONTROLLER = {
     right =     {"c_leftxpos", "c_dpright"},
     up =        {"c_leftyneg", "c_dpup"},
     down =      {"c_leftypos", "c_dpdown"},
-    jump =      {"c_a"},
-    shoot =     {"c_x", "c_triggerright"},
+    jump =      {"c_a", "c_triggerleft", "c_leftshoulder"},
+    shoot =     {"c_x", "c_triggerright", "c_rightshoulder"},
     interact =  {"c_b"},
     
     pause =     {"c_start"},

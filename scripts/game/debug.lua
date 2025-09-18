@@ -538,6 +538,7 @@ function Debug:draw_joystick_view()
 end
 
 function Debug:draw_joystick_view_for(joystick, x, y, axis_x, axis_y, is_first)
+    Text:push_font(FONT_MINI)
     local user_n = Input:get_joystick_user_n(joystick)
     local name = concat(utf8.sub(joystick:getName(), 1, 10), "...", utf8.sub(joystick:getName(), -10, -1))
 
@@ -634,6 +635,7 @@ function Debug:draw_joystick_view_for(joystick, x, y, axis_x, axis_y, is_first)
         local txt = concat(key, " ", ternary(j:isGamepadDown(key), "✅", "❎"))
         print_outline(COL_WHITE, COL_BLACK_BLUE, txt, ox - 20, oy + 90 + 10 * i)
     end
+    Text:pop_font(FONT_MINI)
 end
 
 function Debug:draw_debug_menu()

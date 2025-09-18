@@ -68,4 +68,5 @@ return Menu:new(game, "{menu.options.title}", {
     { BoolOptionMenuItem, "🛅 {menu.options.game.pause_on_unfocus}", "pause_on_unfocus" },
     { BoolOptionMenuItem, "⏭ {menu.options.game.skip_boss_intros}", "skip_boss_intros" },
     { BoolOptionMenuItem, "⚠ {menu.options.game.show_fps_warning}", "show_fps_warning" },
+    { BoolOptionMenuItem, "⚠ convention_mode", "convention_mode" },
 }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)

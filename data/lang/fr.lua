@@ -146,9 +146,10 @@ return {
             down = "Bas",
             jump = "Sauter",
             shoot = "Tirer",
-            interact = "Intéragir", -- ADDED
+            interact = "Intéragir",
             leave_game = "Quitter",
-            open = "Ouvrir", -- ADDED / As in, "open menu", and NOT for, say, opening chests.
+            open = "Ouvrir", -- As in, "open menu", and NOT for, say, opening chests.
+            collect = "Collecter", -- As in, "collect item", "collect gun", etc
 
             ui_left = "Gauche (menu)",
             ui_right = "Droite (menu)",

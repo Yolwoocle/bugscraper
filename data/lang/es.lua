@@ -138,6 +138,7 @@ return {
             interact = "Interact", -- ADDED
 			leave_game = "Salir",
             open = "Open", -- ADDED / As in, "open menu", and NOT for, say, opening chests.
+            collect = "Collect", -- ADDED / As in, "collect item", "collect gun", etc
 
 			ui_left = "Izquierda (menu)",
 			ui_right = "Derecha (menu)",

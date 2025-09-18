@@ -26,7 +26,23 @@ function Loot:init_loot(spr, x, y, w, h, val, vx, vy, params)
 	self.max_life = 10
 
 	self.min_attract_dist = param(params.min_attract_dist, math.huge)
-	self.player_filter = param(params.player_filter, function(player) return true end)
+	local filter = param(params.player_filter, function(player) return true end)
+	self.player_filter = filter
+
+	self.requires_interaction = param(params.requires_interaction, false)
+	self.interacted_players = {}
+	if self.requires_interaction then
+		self.is_interactible = true
+		self.player_filter = function(player)
+			return self.interacted_players[player.n] and filter(player)
+		end
+	end
+	self.show_interaction_prompt = param(params.show_interaction_prompt, true)
+	self.interact_actions = param(params.interact_actions, {"interact"})
+	self.interact_label = param(params.interact_label, "{input.prompts.collect}")
+	self.interact_label_color = param(params.interact_label_color, COL_WHITE)
+	self.interaction_margin = param(params.interaction_margin, 16)
+	self.interact_prompt_oy = param(params.interact_prompt_oy, -64)
 
 	self:reset()
 end
@@ -104,6 +120,10 @@ function Loot:update_loot(dt)
 end
 function Loot:update(dt)
 	self:update_loot(dt)
+end
+
+function Loot:on_interact(player)
+	self.interacted_players[player.n] = true
 end
 
 function Loot:draw()
@@ -265,6 +285,8 @@ Loot.Gun = Loot:inherit()
 
 function Loot.Gun:init(x, y, val, vx, vy, gun, params)
 	params = params or {}
+	params.requires_interaction = param(params.requires_interaction, true)
+
 	if gun then
 		self.gun = gun
 	else
