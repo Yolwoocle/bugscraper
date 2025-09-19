@@ -75,7 +75,7 @@ return {
             dodu = "Dodu",
             yv = "Y.V.",
         },
-        abbreviation = "P%d",
+        abbreviation = "%dP",
     },
     enemy = {
         dung = "屎先生",

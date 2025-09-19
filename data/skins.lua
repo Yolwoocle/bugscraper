@@ -34,7 +34,8 @@ local skins = {
 		img_dead = images.zia_dead,
 		
 		color_palette = {color(0xfee761), color(0xfeae34), color(0x743f39), color(0x3f2832), color(0xc0cbdc), color(0x9e2835)},
-		menu_color = color(0x743f39),
+		menu_color = color(0xfee761),
+		text_color = COL_BLACK_BLUE,
 		icon = "🐝",
 		text_key = "zia",
 	},
@@ -82,7 +83,8 @@ local skins = {
 		img_dead = images.rabbit_dead,
 
 		color_palette = {COL_WHITE, COL_LIGHTEST_GRAY, COL_MID_GRAY, COL_DARK_GRAY, COL_BLACK_BLUE},
-		menu_color = COL_MID_GRAY, 
+		menu_color = COL_WHITE, 
+		text_color = COL_BLACK_BLUE,
 		icon = "🐰",
 		text_key = "rico",
 	},
@@ -94,7 +96,8 @@ local skins = {
 		img_dead = images.yv_dead,
 
 		color_palette = {COL_WHITE, COL_LIGHTEST_GRAY, COL_MID_GRAY, COL_DARK_GRAY, COL_BLACK_BLUE},
-		menu_color = COL_MID_GRAY, 
+		menu_color = COL_WHITE, 
+		text_color = COL_BLACK_BLUE,
 		icon = "🔺",
 		text_key = "yv",
 	},

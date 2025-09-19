@@ -66,7 +66,7 @@ function TextMenuItem:draw_textitem()
 	local text_height = get_text_height(self.label_text)
 	
 	-- if self.is_selected then
-	-- 	local col = Input:get_last_ui_player_color()
+	-- 	local col = Input:get_last_ui_player_colors()
 	-- 	local x = math.floor(self.x - MENU_PADDING - 8)
 	-- 	local y = math.floor(self.y + self.oy - 6)
 	-- 	local w = math.floor(MENU_PADDING*2 + 16)
@@ -77,7 +77,7 @@ function TextMenuItem:draw_textitem()
 	-- end
 	
 	if self.is_selected and self.label_text ~= "" then
-		local col = Input:get_last_ui_player_color()
+		local col = Input:get_last_ui_player_colors()
 		local x = math.floor(MENU_PADDING)
 		local y = math.floor(self.y + self.oy - 6)
 		local w = math.floor(CANVAS_WIDTH - MENU_PADDING*2)
@@ -88,6 +88,11 @@ function TextMenuItem:draw_textitem()
 		if Input:get_number_of_users() > 1 then
 			local last_player_n = Input:get_last_ui_user_n()
 			local t = Text:text("player.abbreviation", last_player_n)
+
+			local user = Input:get_user(last_player_n)
+			if user and user:get_skin() then
+				t = t .. " " .. user:get_skin().icon
+			end
 			print_outline(nil, col, t, x - get_text_width(t), y)
 		end
 	end
@@ -122,35 +127,35 @@ end
 
 -- this is awful. please ffs change it
 function TextMenuItem:get_leftjustified_text_draw_function()
-	local col = Input:get_last_ui_player_color()
-	local draw_func = ternary(self.is_selected,
-		function(...) print_ycentered_outline(nil, col, ...) end,
-		function(...) print_ycentered(...) end
-	)
-
-	return draw_func
+	return print_ycentered
 end
 
-function TextMenuItem:draw_without_value(text_color)
-	local col = Input:get_last_ui_player_color()
-	local draw_func = ternary(self.is_selected,
-		function(...) print_centered_outline(text_color, col, ...) end,
-		function(...) print_centered(...) end
-	)
+function TextMenuItem:draw_without_value()
+	local text_color = COL_WHITE
 
-	if not self.is_selectable then
-		love.graphics.setColor(COL_LIGHTEST_GRAY)
+	if self.is_selected then
+		local _, skin_text_color = Input:get_last_ui_player_colors()
+		text_color = skin_text_color
 	end
+	if not self.is_selectable then
+		text_color = COL_LIGHTEST_GRAY
+	end
+	text_color = text_color or COL_WHITE
+
+	love.graphics.setColor(text_color)
 	print_centered(self.label_text, self.x, self.y + self.oy)
 end
 
 function TextMenuItem:draw_with_value()
 	local draw_func = self:get_leftjustified_text_draw_function()
 
+	if self.is_selected then
+		local _, skin_text_color = Input:get_last_ui_player_colors()
+		love.graphics.setColor(skin_text_color or COL_WHITE)
+	end
 	if not self.is_selectable then
 		love.graphics.setColor(COL_LIGHTEST_GRAY)
 	end
-	-- draw_func(self.label_text, self.x + MENU_PADDING, self.y + self.oy)
 	draw_func(self.label_text, MENU_PADDING + 16, self.y + self.oy)
 
 	self:draw_value_text()

@@ -488,14 +488,14 @@ function InputManager:get_button_style(player_n)
     return user_brand or BUTTON_STYLE_XBOX
 end
 
-function InputManager:get_last_ui_player_color()
+function InputManager:get_last_ui_player_colors()
     local user = Input:get_user(self.last_ui_user_n)
     if user and user:get_skin() then
         return user:get_skin().menu_color, user:get_skin().text_color or COL_WHITE
     end
     return COL_LIGHT_RED, COL_WHITE
 end
-  
+
 function InputManager:get_last_ui_user_n()
     return self.last_ui_user_n
 end
