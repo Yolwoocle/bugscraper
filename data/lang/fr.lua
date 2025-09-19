@@ -83,7 +83,7 @@ return {
         abbreviation = "J%d",
     },
     enemy = {
-        dung = "J. De Bouse",
+        dung = "Jean-Darmes De Bouse",
         bee_boss = "Sa Majesté",
         motherboard = "La Webmaster",
     },

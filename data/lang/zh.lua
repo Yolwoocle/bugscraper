@@ -1,6 +1,17 @@
+--[[
+    TO TRANSLATORS:
+    * Reference document for all enemies, players, levels, etc: 
+      https://docs.google.com/document/d/13UntpWqoTXgYnBm5HL0pZmjBDwMStIN8YB1IPdi7hlA
+    * Even though my target audience is people who already play games, since the game supports 
+      local co-op and has very simple, accessible controls, it's not absurd to think that more 
+      occasional gamers would try their hand at the game, so try to avoid english gamer terms like 
+      "kills", "checkpoint", etc, except if it's already the established term for the word.
+    * It is very easy for me to add more glyphs if needed, just tell me and I'll do it.
+    * Please notify me if there are any special technical requirements. (e.g. text rendering specifics, etc) 
+]]
+
 return {
     language = {
-        -- These should be kept untranslated in their original language ("english", "français", "中文", etc)
         en = "English",
         es = "Español",
         fr = "Français",
@@ -8,62 +19,51 @@ return {
         pl = "Polski",
         pt = "Português Brasileiro",
     },
-    steam = {
-        short_description =
-        [[Welcome to the bugscraper. Rise to the top of this pest-filled tower in this 2D shooter platformer and battle waves of enemies at every floor as they come for your skin (or rather, exoskeleton).]],
-        description =
-        [[Welcome to the bugscraper. Here, pests all around the world come to gather. Your mission: stopping them before it is too late!🐜In this platformer shooter, you take the role of Mio, a courageous ant, trying to stop the employees of a bug-filled skyscraper from corrupting the world with a deadly mushroom.🐛You will battle waves of enemies in an elevator as they come for your skin (or rather, exoskeleton) on every floor.🐝Using a wide variety of weapons and upgrades, eliminate them and prepare to battle for the next floor!🐞Play in solo, or with up to 4 friends in local co-op multiplayer.]],
-    },
-    discord = { -- Text used for Discord rich presence
+    discord = {
         state = {
-            solo = "Playing solo",
-            local_multiplayer = "Local multiplayer",
+            solo = "单人游戏",
+            local_multiplayer = "本地多人",
         },
         details = {
-            waiting = "In lobby",
-            playing = "In game (floor %d/%d)",
-            dying = "Defeated (floor %d/%d)",
-            win = "Victory screen",
+            waiting = "在大厅中",
+            playing = "游戏中（第 %d/%d 层）",
+            dying = "已被击败（第 %d/%d 层）",
+            win = "胜利画面",
         },
     },
     game = {
-        demo = "DEMO", -- Chip added to the game logo to indicate that this version is a demo
-        fps = "%d FPS",
-        congratulations = "CONGRATULATIONS!",
-        win_thanks = "Thank you for playing the demo",
-        win_wishlist = "Wishlist the game on Steam :)", -- "Wishlist" is a verb
-        win_prompt = "[Pause to continue]",
-        warning_web_controller = "Some browsers may not have proper controller support",
+        demo = "试玩版",
+        fps = "%d 帧率",
+        congratulations = "恭喜通关！",
+        win_thanks = "感谢游玩试玩版",
+        win_wishlist = "请在 Steam 上加入愿望单 :)", 
+        win_prompt = "[按暂停继续]",
+        warning_web_controller = "某些浏览器可能不支持手柄",
 
+        combo = "连击 %d",
     },
     level = {
-        world_prefix = "Department %s",
+        world_prefix = "部门 %s", 
 
-        -- World names
-        world_1 = "Bug resources",
-        world_2 = "The factory",
-        world_3 = "The server room",
-        world_4 = "The Gardens",
-        world_5 = "Executive",
+        world_1 = "虫虫资源部",
+        world_2 = "蜜蜂工厂",
+        world_3 = "服务器机房",
+        world_4 = "花园",
+        world_5 = "高管区",
     },
     gun = {
-        -- Gun names
-        machinegun = "pea gun",
-        triple = "triple pepper",
-        burst = "pollen burst",
-        shotgun = "raspberry shotgun",
-        minigun = "seed minigun",
-        ring = "big berry",
-        mushroom_cannon = "mushroom cannon",
-        
-        resignation_letter = "Resignation Letter" -- ADDED // don't ask why it's a gun. you'd have to question my coding.
+        machinegun = "豌豆枪",
+        triple = "三重辣椒",
+        burst = "花粉爆发",
+        shotgun = "树莓霰弹枪",
+        minigun = "种子机枪",
+        ring = "大浆果",
+        mushroom_cannon = "蘑菇炮",
+
+        resignation_letter = "辞职信",
     },
     player = {
         name = {
-            -- Player names
-            -- No reason to change these during translation, except if:
-            --  * it's more appropriate to use a transliteration, or to use the script of the concerned language (e.g. Using the Chinese script)
-            --  * they clash with something specific to the language/culture (please notify me if it is the case)
             mio = "Mio",
             cap = "Cap",
             zia = "Zia",
@@ -72,246 +72,262 @@ return {
             nob = "Nob",
             rico = "Rico",
             leo = "Leo",
+            dodu = "Dodu",
+            yv = "Y.V.",
         },
-        abbreviation = "P%d", -- Short appreviation to denote players by their number. Example: in english, "P1" means "Player 1", in french "J1" means "Joueur 1".
+        abbreviation = "P%d",
     },
     enemy = {
-        dung = "Mr. Dung",
-        bee_boss = "The Queen",        -- ADDED
-        motherboard = "The Webmaster", -- ADDED
+        dung = "屎先生",
+        bee_boss = "蜂后陛下", 
+        motherboard = "网络主宰",
     },
     upgrade = {
         tea = {
-            title = "Green Tea",
-            description = "+%d temporary ❤",
+            title = "绿茶",
+            description = "+%d 临时 ❤",
         },
         espresso = {
-            title = "Espresso",
-            description = "x%d shooting speed for a minute", -- CHANGED
+            title = "浓缩咖啡",
+            description = "射速 x%d，持续 %d 层", 
         },
         milk = {
-            title = "Milk",
-            description = "+%d permanent ❤", -- CHANGED: "+1 maximum ❤"
+            title = "牛奶",
+            description = "+%d 最大 ❤",
         },
         boba = {
-            title = "Boba",
-            description = "x%d maximum ammo",
-        },
-        energy_drink = {
-            title = "Energy Drink",
-            description = "Fury bar decays slower",
+            title = "珍珠奶茶",
+            description = "最大弹药 x%d",
         },
         soda = {
-            title = "Soda",
-            description = "+%d midair jump",
+            title = "汽水",
+            description = "+%d 次空中跳跃",
         },
-        fizzy_lemonade = { -- ADDED
-            title = "Fizzy Lemonade",
-            description = "Hold jump to glide",
+        fizzy_lemonade = {
+            title = "气泡柠檬水",
+            description = "长按跳跃滑翔",
         },
-        apple_juice = { -- ADDED
-            title = "Apple Juice",
-            description = "Heal +%d ❤",
+        apple_juice = {
+            title = "苹果汁",
+            description = "回复 +%d ❤",
         },
-        hot_sauce = { -- ADDED
-            title = "Hot Sauce",
-            description = "Deal x%d damage but use x%d ammo", -- First "%d" is the damage, second "%d" is ammo 
+        hot_sauce = {
+            title = "辣椒酱",
+            description = "造成 x%d 伤害，但消耗 x%d 弹药", 
         },
-        coconut_water = { -- ADDED
-            title = "Coconut Water",
-            description = "Stomping enemies gives back %d%% ammo",
+        coconut_water = {
+            title = "椰子水",
+            description = "踩敌人可返还 %d%% 弹药",
         },
-        hot_chocolate = { -- ADDED
-            title = "Hot Chocolate",
-            description = "x%d reloading speed",
+        hot_chocolate = {
+            title = "热巧克力",
+            description = "更快的装填速度",
+        },
+        pomegranate_juice = {
+            title = "石榴汁",
+            description = "受伤时产生爆炸",
         },
         energy_drink = {
-            title = "Energy Drink", -- ADDED
-            description = "Combo meter decreases more slowly", -- ADDED
+            title = "能量饮料",
+            description = "连击槽下降更慢",
         },
     },
     input = {
         prompts = {
-            move = "移动",
+            move = "移动", 
             left = "左",
             right = "右",
             up = "上",
             down = "下",
             jump = "跳跃",
             shoot = "射击",
-            interact = "Interact", -- ADDED
-            leave_game = "退出",
-            open = "Open", -- ADDED / As in, "open menu", and NOT for, say, opening chests.
-            collect = "Collect", -- ADDED / As in, "collect item", "collect gun", etc
+            interact = "互动",
+            leave_game = "退出", 
+            open = "打开",
+            collect = "收集",
 
-            ui_left = "Menu left",
-            ui_right = "Menu right",
-            ui_up = "Menu up",
-            ui_down = "Menu down",
+            ui_left =  "左（菜单）",
+            ui_right = "右（菜单）",
+            ui_up =    "上（菜单）",
+            ui_down =  "下（菜单）",
             ui_select = "确认",
-            ui_back = "取消",
-            pause = "Pause",
+            ui_back = "返回",
+            pause = "暂停",
 
             join = "加入",
-            split_keyboard = "共享键盘",
-            unsplit_keyboard = "Unsplit keyboard",
+            split_keyboard = "分割键盘",
 
-            jetpack = "Jetpack",
+            wall_jump = "墙跳",
+            jetpack = "喷气背包", 
+        },
+    },
+    dialogue = {
+        npc = {
         },
     },
     menu = {
-        see_more = "see more...",
-        yes = "YES",
-        no = "NO",
+        see_more = "查看更多...",
+        yes = "是",
+        no = "否",
+        leave_menu = "要离开菜单吗？",
         quit = {
-            description = "Are you sure you want to quit?"
+            description = "确定要退出吗？"
         },
         confirm_retry = {
-            -- Here refers to going back to the main menu to try another run, NOT restarting the game
-            description = "Retry?", -- ADDED
+            description = "重试？", 
         },
         pause = {
             title = "暂停",
             resume = "继续",
             retry = "重试",
-            return_to_ground_floor = "RETURN TO GROUND FLOOR", --ADDE
-            options = "设置",
-            credits = "致谢",
+            return_to_ground_floor = "返回第 0 层",
+            options = "选项",
+            credits = "制作人员",
             feedback = "反馈",
             quit = "退出",
-            website = "OFFICIAL WEBSITE",
-            discord = "加入 DISCORD",
-            twitter = "FOLLOW ON TWITTER (𝕏)",
+            website = "官方网站",
+            discord = "Discord",
+            github = "GitHub",
         },
         options = {
-            title = "设置",
+            title = "选项",
 
             input = {
                 title = "输入",
                 input = "输入设置...",
             },
             input_submenu = {
-                title = "INPUT SETTINGS",
-                reset_controls = "RESET CONTROLS",
-                controller_button_style = "BUTTON STYLE",
+                title = "输入设置",
+                reset_controls = "重置按键",
+                controller_button_style = "按键样式",
                 controller_button_style_value = {
-                    detect = "detect",
+                    detect = "自动检测",
                     switch = "Switch",
                     playstation4 = "PlayStation 4",
                     playstation5 = "PlayStation 5",
                     xbox = "Xbox",
                 },
-                deadzone = "JOYSTICK DEADZONE",
-                vibration = "VIBRATION",
-                low_deadzone_warning = "Low values may cause issues",
-                note_deadzone = "Deadzone settings will be applied after leaving this menu",
+                deadzone = "摇杆死区",
+                vibration = "震动",
+                low_deadzone_warning = "数值过低可能导致问题",
+                note_deadzone = "离开菜单后生效",
 
-                gameplay = "Gameplay",
-                interface = "Interface",
-                global = "Global",
-                note_ui_min_button = "At least one binding is required",
-                note_global_keyboard = "These bindings are the same for all keyboard players",
-                note_global_controller = "These bindings are the same for all controllers",
-                subtitle_no_player = "[⚠ NO PLAYER %d]",
-                subtitle_no_controller = "[⚠ NO CONTROLLER CONNECTED]",
-                no_buttons = "[NO BUTTONS]",
-                press_button = "[PRESS BUTTON]",
-                press_again_to_remove = "Press an already bound button to remove it",
+                gameplay = "玩法",
+                interface = "界面",
+                global = "全局",
+                note_ui_min_button = "至少需要一个绑定",
+                note_global_keyboard = "这些绑定对所有键盘玩家通用",
+                note_global_controller = "这些绑定对所有手柄通用",
+                subtitle_no_player = "[⚠ 没有玩家 %d]",
+                subtitle_no_controller = "[⚠ 未连接手柄]",
+                no_buttons = "[无按键]",
+                press_button = "[请按键]",
+                press_again_to_remove = "再次按下已绑定的键来移除",
+                
+                keyboard = "键盘",
+                keyboard_solo = "键盘（默认）",
+                keyboard_p1 = "键盘（分割 1）",
+                keyboard_p2 = "键盘（分割 2）",
 
-                keyboard = "Keyboard",
-                keyboard_solo = "KEYBOARD (Default)",
-                keyboard_p1 = "KEYBOARD (Split 1)",
-                keyboard_p2 = "KEYBOARD (Split 2)",
-
-                controller = "Controller",
-                controller_p1 = "CONTROLLER (Player 1)",
-                controller_p2 = "CONTROLLER (Player 2)",
-                controller_p3 = "CONTROLLER (Player 3)",
-                controller_p4 = "CONTROLLER (Player 4)",
+                controller = "手柄",
+                controller_p1 = "手柄（玩家 1）",
+                controller_p2 = "手柄（玩家 2）",
+                controller_p3 = "手柄（玩家 3）",
+                controller_p4 = "手柄（玩家 4）",
             },
             audio = {
-                title = "声音",
-                sound = "声音",
+                title = "音频",
+                sound = "音效",
                 volume = "音量",
+                sfx_volume = "音效音量",
                 music_volume = "音乐音量",
-                music_pause_menu = "音乐暂停菜单",
+                music_pause_menu = "暂停菜单音乐",
             },
             visuals = {
-                title = "视频",
+                title = "画面",
                 fullscreen = "全屏",
-                pixel_scale = "像素比例尺",
+                pixel_scale = "像素缩放",
                 pixel_scale_value = {
                     auto = "自动",
-                    max_whole = "最大整数值",
+                    max_whole = "最大整数",
                 },
                 vsync = "垂直同步",
-                menu_blur = "菜单背景模糊",
+                menu_blur = "菜单背景模糊", 
                 background_speed = "背景速度",
-                bullet_lightness = "BULLET BRIGHTNESS", -- ADDED
+                bullet_lightness = "子弹亮度",
             },
             game = {
                 title = "游戏",
+                tutorial = "教程...",
                 language = "语言...",
                 timer = "计时器",
                 mouse_visible = "显示鼠标指针",
-                pause_on_unfocus = "失去焦点时暂停",
+                pause_on_unfocus = "失焦时暂停",
                 screenshake = "屏幕震动",
-                skip_boss_intros = "SKIP BOSS INTROS", -- ADDED
+                skip_boss_intros = "跳过 Boss 开场",
                 show_fps_warning = "显示低帧率警告",
 
             },
             language = {
-                title = "LANGUAGE",
+                title = "语言",
             },
             confirm_language = {
-                description = "Restart the game to apply new language?",
+                description = "重启游戏以应用新语言？",
             },
         },
         feedback = {
-            title = "FEEDBACK",
-            bugs = "REPORT A BUG",
-            features = "SUGGEST A FEATURE",
+            title = "反馈",
+            bugs = "报告漏洞",
+            features = "提出建议",
         },
         game_over = {
-            title = "GAME OVER!",
-            kills = "Enemies killed",
-            time = "Time",
-            floor = "Floor",
-            -- max_combo = "Max combo",
-            continue = "CONTINUE",
-            quick_restart = "QUICK RESTART", --ADDED
+            title = "游戏结束！",
+            kills = "击败敌人数量",
+            time = "时间",
+            floor = "层数",
+            score = "得分",
+            
+            continue = "继续",
+            quick_restart = "快速重开",
+        },
+        new_reward = {
+            new_skin = "新角色！",
+            new_upgrade = "新升级！",
         },
         win = {
-            title = "CONGRATULATIONS!",
-            wishlist = "WISHLIST ON STEAM", -- "wishlist" is a verb
-            continue = "CONTINUE",
+            title = "恭喜通关！",
+            wishlist = "加入 Steam 愿望单",
+            continue = "继续",
         },
         joystick_removed = {
-            title = "CONTROLLER DISCONNECTED",
-            description = "Please plug in the following controllers:",
-            continue = "CONTINUE ANYWAY",
-            item = "Player %d (%s)",
+            title = "手柄已断开",
+            description = "请插入以下手柄：",
+            continue = "仍然继续",
+            item = "玩家 %d（%s）",
         },
         credits = {
-            title = "CREDITS",
-            ninesliced_presents = "Ninesliced presents", -- ADDED / Ninesliced with a capital letter ONLY on the N
-            game_by = "A game by",
-            leo_bernard = "Léo Bernard 曹宇", -- Please do not change this
-            music = "Music",
-            sound_design = "Sound design",
+            title = "制作人员",
+            ninesliced_presents = "Ninesliced 出品",
+            game_by = "制作人",
+            leo_bernard = "曹宇 Léo Bernard",
+            music = "音乐",
+            sound_design = "音效设计",
             localization = "本地化",
-            playtesting = "Playtesting",
-            special_thanks = "Special thanks",
-            asset_creators = "Asset creators",
-            tv_slideshow = "TV slideshow contributors", -- ADDED // Refers to the powerpoint TV slideshow on the title screen, which was contributed by a variety of people 
-            tv_slideshow_submit = "Submit yours...", -- ADDED // Leads to a web page where people can submit their own slides
-            licenses = "Asset & library licenses",
+            additional_art = "额外美术",
+            playtesting = "测试",
+            special_thanks = "特别感谢",
+            trailer = "预告片",
+            asset_creators = "素材作者",
+            tv_slideshow = "电视幻灯片贡献者",
+            tv_slideshow_submit = "提交你的作品...",
+            licenses = "素材与库授权",
+            more = "以及更多...", 
 
-            x_by_y =     "%s by %s", -- "ASSET_NAME by CREATOR". Used to credit assets such as sound effects
-            asset_item = "%s by %s / %s", -- "ASSET_NAME by CREATOR / LICENCE". Used to credit assets such as sound effects
+            x_by_y =     "%s 作者：%s",
+            asset_item = "%s 作者：%s / %s",
         },
         open_source = {
-            title = "Open source libraries",
+            title = "开源库",
         },
     },
 }

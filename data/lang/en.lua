@@ -87,6 +87,10 @@ return {
         abbreviation = "P%d", -- Short appreviation to denote players by their number. Example: in english, "P1" means "Player 1", in french "J1" means "Joueur 1".
     },
     enemy = {
+        -- These are the boss names. Please look at the Gdocs for reference.
+        -- Feel free to pick funny or interesting names, even if they don't translate directly.
+        -- (for example, the french name for Mr. Dung is "Jean-Darmes De Bouse", which is a 
+        -- play on words with firebug and dung)
         dung = "Mr. Dung",
         bee_boss = "Her Majesty", 
         motherboard = "The Webmaster",
@@ -109,7 +113,7 @@ return {
             description = "x%d maximum ammo",
         },
         soda = {
-            title = "Soda",
+            title = "Soda", -- As in Coca-cola.
             description = "+%d midair jump",
         },
         fizzy_lemonade = {

@@ -77,6 +77,7 @@ function Game:init()
 	FONT_PAINT =   love.graphics.newFont("fonts/NicoPaint-Regular.ttf", 16)
 
 	FONT_REGULAR:setFallbacks(FONT_SYMBOLS, FONT_CHINESE)
+	FONT_MINI:setFallbacks(FONT_REGULAR, FONT_CHINESE)
     Text:push_font(FONT_REGULAR)
 
 	-- Audio ===> Moved to OptionsManager

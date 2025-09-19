@@ -212,7 +212,7 @@ function Shopkeeper:draw_products()
         love.graphics.setColor(COL_WHITE)
         
         self:draw_text(self.mid_x + self.star_pattern_ox * 5, y - 55, self.selected_product:get_title(), self.selected_product.color, 2)
-        self:draw_text(self.mid_x + self.star_pattern_ox * 2.5, y - 33, self.selected_product:get_description())
+        self:draw_text(self.mid_x + self.star_pattern_ox * 2.5, y - 30, self.selected_product:get_description())
     end
 
     for i=1, #self.products do

@@ -308,7 +308,7 @@ function GameUI:draw_titles()
 		end
 		Text:pop_font()
 		
-		self:draw_title_tv_grid()
+		-- self:draw_title_tv_grid()
 		
 	end)
 	

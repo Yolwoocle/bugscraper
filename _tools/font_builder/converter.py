@@ -7,6 +7,7 @@ import os
 font_path = "AntParty.ttf"     # Replace with your font path
 output_image = "font_AntParty.png"       # Output image file name
 output_text = "font_AntParty_characters.lua"    # Output text file for character list
+
 # output_format = "return \"{}\"" # If not None, is the format of the contents of the output txt file
 output_format = "{}"
 # language_file_path = r"/mnt/d/docs/dev/gamedev/bugscraper/bugscraper/data/lang/zh.lua"
