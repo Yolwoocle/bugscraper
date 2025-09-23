@@ -44,4 +44,10 @@ end
 function Backroom:draw_front()
 end
 
+function Backroom:on_player_join(player_n)
+end
+
+function Backroom:on_player_leave(player_n)
+end
+
 return Backroom

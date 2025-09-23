@@ -148,6 +148,8 @@ function BackroomGroundFloor:on_player_leave()
 			game.music_player:set_disk("ground_floor_empty", {
 				continue_previous_pos = true,
 			})
+			local cx, cy = self:get_default_camera_position()
+			game.camera:set_target_position(cx, cy)
 		end
 	end
 end
@@ -165,6 +167,7 @@ function BackroomGroundFloor:update(dt)
 
 	if game.can_start_game and not self.has_opened_door then
 		self:open_door()
+		game.camera:set_target_offset(-100000, 0)
 		self.has_opened_door = true
 	end
 end

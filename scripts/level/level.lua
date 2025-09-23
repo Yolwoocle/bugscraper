@@ -258,6 +258,9 @@ function Level:on_player_joined(player)
 end
 
 function Level:on_player_leave(player_n)
+	if self.backroom and self.backroom.on_player_leave then
+		self.backroom:on_player_leave(player_n)
+	end
 end
 
 function Level:on_door_close()

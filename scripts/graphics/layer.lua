@@ -35,6 +35,7 @@ end
 function Layer:draw(x, y)
     x = param(x, 0)
     y = param(y, 0)
+    
     if self.blur then
         shaders.blur_shader:send("r", self.blur_radius)
 		exec_using_shader(shaders.blur_shader, function()
