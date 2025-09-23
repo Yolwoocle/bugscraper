@@ -77,7 +77,7 @@ function TextMenuItem:draw_textitem()
 	-- end
 	
 	if self.is_selected and self.label_text ~= "" then
-		local col = Input:get_last_ui_player_colors()
+		local col, text_col = Input:get_last_ui_player_colors()
 		local x = math.floor(MENU_PADDING)
 		local y = math.floor(self.y + self.oy - 6)
 		local w = math.floor(CANVAS_WIDTH - MENU_PADDING*2)
@@ -93,7 +93,7 @@ function TextMenuItem:draw_textitem()
 			if user and user:get_skin() then
 				t = t .. " " .. user:get_skin().icon
 			end
-			print_outline(nil, col, t, x - get_text_width(t), y)
+			print_outline(text_col, col, t, x - get_text_width(t), y)
 		end
 	end
 	
