@@ -199,16 +199,16 @@ return Cutscene:new("credits", {
         enter = function(cutscene, data)
             game.game_ui:start_title({
                 "Alexis Belmonte",
+                "AuramoBalzoni",
                 "Axel 'Vlad' Born",
+                
                 "Bettina Delaveaud",
-
                 "Corentin Vaillant",
                 "Fabien Delpiano",
+                
                 "Fantine Delpiano-Manfrini",
-
                 "Feishiko",
                 "Gaspard Delpiano-Manfrini",
-                "Guillaume Tran",
             }, "", "{menu.credits.special_thanks}", 0.5, 7.0, 0.5)
         end,
     }),
@@ -219,17 +219,17 @@ return Cutscene:new("credits", {
         duration = 6.0,
         enter = function(cutscene, data)
             game.game_ui:start_title({
+                "Guillaume Tran",
                 "Herweins",
                 "Indie Game Lyon",
+                
                 "Jan Willem Nijman",
-
                 "Kaïs",
                 "Léo Lanteri Thauvin",
-                "LinkyLorelei",
                 
+                "LinkyLorelei",
                 "Louie Chapman",
                 "LÖVE contributors",
-                "LÖVE Discord members",
             }, "", "{menu.credits.special_thanks}", 0.5, 7.0, 0.5)
         end,
     }),
@@ -240,26 +240,30 @@ return Cutscene:new("credits", {
         duration = 6.0,
         enter = function(cutscene, data)
             game.game_ui:start_title({
-                "Maman & Papa ❤",
+                "LÖVE Discord members",
+                "Maman & Papa ❤",      
+                "MatthJ4",
+                
                 "Noba",
                 "Nolan Carlisi (arkanyota)",
-                
                 "oat_addict",
+                
+                "Play Sorbonne Université",
                 "Quentin Picault",
                 "Raphytator",
-                
+            }, "", "{menu.credits.special_thanks}", 0.5, 7.0, 0.5)
+        end,
+    }),
+    CutsceneScene:new({
+        description = "",
+        
+        duration = 6.0,
+        enter = function(cutscene, data)
+            game.game_ui:start_title({
                 "Solluco",
                 "Tahina Dombrowski",
                 "Théodore Billotte",
-            }, "", "{menu.credits.special_thanks}", 0.5, 7.0, 0.5)
-        end,
-    }),
-    CutsceneScene:new({
-        description = "",
-
-        duration = 6.0,
-        enter = function(cutscene, data)
-            game.game_ui:start_title({
+                
                 "Thomas Saurel",
                 "Toulouse Game Dev",
             }, "", "{menu.credits.special_thanks}", 0.5, 7.0, 0.5)
