@@ -1060,6 +1060,7 @@ function Game:start_game()
 	self:remove_queued_players()
 
 	self.menu_manager:set_can_pause(true)
+	self.camera:set_target_offset(0, 0)
 end
 
 function Game:apply_upgrade(upgrade)
