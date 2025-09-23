@@ -125,6 +125,13 @@ function Gun:draw(flip_x, flip_y, rot)
 	love.graphics.draw(self.spr, floor(self.x), floor(self.y), self.rot, flip_x, flip_y, ox, oy)
 end
 
+function Gun:get_gun_tip_position(x, y, ang)
+	local gunw = self.shoot_offset_x or max(0, self.spr:getWidth())
+	local new_x = floor(x + cos(ang) * gunw)
+	local new_y = floor(y + sin(ang) * gunw)
+	return new_x, new_y
+end
+
 function Gun:shoot(dt, player, x, y, dx, dy, is_burst)
 	dx = dx or 0
 	dy = dy or 0
@@ -132,12 +139,15 @@ function Gun:shoot(dt, player, x, y, dx, dy, is_burst)
 	local d = dist(dx, dy)
 	dx = dx/d
 	dy = dy/d
+	local ang = atan2(dy, dx)
 	local is_first_fire = not is_burst
+
+	x, y = self:get_gun_tip_position(x, y, ang)
 
 	-- Sanity checks
 	-- + reloading
 	if self.ammo <= 0 then
-		return false
+		return false, "no_ammo"
 	end
 
 	-- If first shot but cooldown too big, escape
@@ -180,11 +190,6 @@ function Gun:shoot(dt, player, x, y, dx, dy, is_burst)
 	self.natural_recharge_delay_timer = self.natural_recharge_delay
 	self.natural_recharge_progress = 0
 	self.original_natural_recharge_ammo = self.ammo
-
-	local ang = atan2(dy, dx)
-	local gunw = self.shoot_offset_x or max(0, self.spr:getWidth() - 8)
-	local x = floor(x + cos(ang) * gunw)
-	local y = floor(y + sin(ang) * gunw)
 
 	-- Update Burst
 	self:update_burst(dt, player, x, y, dx, dy, ang)

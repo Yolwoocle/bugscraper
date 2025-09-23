@@ -1050,13 +1050,19 @@ function Player:shoot(dt, is_burst)
 
 		local ox = dx * self.gun.bul_w
 		local oy = dy * self.gun.bul_h
-		local success = self.gun:shoot(dt, self, self.mid_x + ox, self.y + oy, dx, dy, is_burst)
+		local success, failure_reason = self.gun:shoot(dt, self, self.mid_x + ox, self.y + oy, dx, dy, is_burst)
 
 		if success then
 			-- screenshake
 			game:screenshake(self.gun.screenshake)
 			if dx ~= 0 then
 				self.vx = self.vx - self.dir_x * self.gun.recoil_force
+			end
+		else
+			if failure_reason == "no_ammo" and self:action_pressed("shoot") then
+				local ang = math.atan2(dy, dx)
+				local tip_x, tip_y = self.gun:get_gun_tip_position(self.mid_x + ox, self.y + oy, ang)
+				Particles:bullet_vanish(tip_x, tip_y, ang + pi/2)
 			end
 		end
 
