@@ -194,7 +194,7 @@ return {
             title = "PAUSE",
             resume = "RESUME",
             retry = "RETRY",
-            return_to_ground_floor = "RETURN TO GROUND FLOOR", -- This correspons to floor 0 in the game. To different cultures, "ground floor" might usually mean "floor 1", so please make sure to avoid ambiguity when translating.  
+            return_to_ground_floor = "RETURN TO GROUND FLOOR", -- This correspons to floor 0 in the game. To different cultures, "ground floor" might usually mean "floor 1", so please make sure to avoid ambiguity when translating. (You can also use "main lobby" or something like it)   
             options = "OPTIONS",
             credits = "CREDITS",
             feedback = "FEEDBACK",
