@@ -200,11 +200,10 @@ function Bullet:on_collision(col)
 				Particles:bullet_vanish(self.mid_x, self.y, ang + pi/2)
 			end
 			if self.play_sfx then
-				Audio:play_var("sfx_weapon_bulletbounce_0"..tostring(random_range_int(1,6)), 0.2, 1.2)
+				Audio:play_var("sfx_bullet_bounce_{01-02}", 0.2, 1.5)
 			end
 
 			col.other:on_bullet_bounced(self, col)
-			Audio:play_var("sfx_bullet_bounce_{01-02}", 0.2, 1.5)
 		end
 	end
 	
