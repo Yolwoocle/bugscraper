@@ -227,7 +227,7 @@ function DungBeetle:on_hit_flying_dung(flying_dung)
     self:do_damage(5, flying_dung)
     Audio:play("sfx_boss_mrdung_ball_hit_{01-06}", 1.0)
 
-    if self.vehicle and self.vehicle.state_machine.current_state_name ~= "bunny_hopping" then
+    if self.vehicle then
         if sign(self.vehicle.vx) == -sign(flying_dung.vx) then
             self.vehicle:do_knockback(self.vehicle.self_knockback_mult, sign(flying_dung.vx) * 20, 0)
         end

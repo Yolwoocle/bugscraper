@@ -190,10 +190,6 @@ function Dung:init(x, y, spr, w, h)
 end
 
 function Dung:update(dt)
-    self:update_dung(dt)
-end
-
-function Dung:update_dung(dt)
     self.state_machine:update(dt)
 
     -- scotch
@@ -203,18 +199,13 @@ function Dung:update_dung(dt)
     end
     self.vx = clamp(self.vx, -self.max_vx, self.max_vx)
 
-    -- if self.jump_timer:update(dt) then
-    --     self.jump_timer:start(random_range(2, 6))
-    --     self:jump()
-    -- end
-
     -- scotch
     if self.jump_flag then
         self.vy = -self.jump_speed
         self.jump_flag = false
     end
 
-    self:update_enemy(dt)
+    Dung.super.update_enemy(self, dt)
 
     self.spr:set_rotation(self.spr.rot + self.vx * self.rot_mult * dt)
 
