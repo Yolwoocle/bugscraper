@@ -157,6 +157,34 @@ function DebugCommandManager:init()
             return true
         end,
     }
+    
+    self.commands["kick"] = DebugCommand:new {
+        name = "kick",
+        description = "Kicks a player",
+        args = {
+            { "player_n:number", default = 0 },
+        },
+        run = function(player_n)
+            if player_n == 0  then
+                for i=1, MAX_NUMBER_OF_PLAYERS do
+                    game:leave_game(i)
+                    self:add_message("Kicked player " .. tostring(player_n) .. "")
+                end
+                return true
+
+            end
+            local player = game.players[player_n]
+            if not player then
+                return false, "Player " .. tostring(player_n) .. " doesn't exist"
+            end
+
+            self:add_message("Kicked player " .. tostring(player_n) .. "")
+
+            game:leave_game(player_n)
+
+            return true
+        end,
+    }
     self.commands["revive"] = DebugCommand:new {
         name = "revive",
         description = "Revives a player",
