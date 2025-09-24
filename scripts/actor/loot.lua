@@ -25,6 +25,8 @@ function Loot:init_loot(spr, x, y, w, h, val, vx, vy, params)
 	self.value = val
 	self.max_life = 10
 
+	self.life_decrease_rate = param(params.life_decrease_rate, 1.0)
+
 	self.min_attract_dist = param(params.min_attract_dist, math.huge)
 	local filter = param(params.player_filter, function(player) return true end)
 	self.player_filter = filter
@@ -87,7 +89,7 @@ function Loot:update_loot(dt)
 	self.uncollectable_timer = math.max(self.uncollectable_timer - dt, 0)
 	self.is_collectable = self.uncollectable_timer <= 0
 
-	self.life = self.life - dt
+	self.life = self.life - dt*self.life_decrease_rate
 	self.ghost_timer = self.ghost_timer - dt
 	if self.is_collectable then
 		if self.target_player and not self.target_player.is_dead then
@@ -184,6 +186,7 @@ function Loot:assign_attract_player(dt)
 	-- self.vx = self.vx * 0.1
 	-- self.vy = self.vy * 0.1
 	self:set_flying(true)
+	self.life_decrease_rate = 0.0
 
 	return true, ""
 end
@@ -293,7 +296,7 @@ function Loot.Gun:init(x, y, val, vx, vy, gun, params)
 		gun = Guns:get_random_gun()
 		self.gun = gun
 	end
-	params.min_attract_dist = params.min_attract_dist or 16
+	params.min_attract_dist = params.min_attract_dist or 32
 	
 	self:init_loot(gun.spr, x, y, 2, 2, val, vx, vy, params)
 

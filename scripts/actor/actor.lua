@@ -140,6 +140,8 @@ function Actor:init_actor(x, y, w, h, spr, args)
     self.interact_actions = {"interact"}
 	self.interact_label = "{input.prompts.interact}"
 	self.interact_label_color = COL_WHITE
+	self.interact_caption = ""
+	self.interact_caption_color = COL_WHITE
     self.interaction_margin = 0
 	self.interaction_delay = 3.0
 	self.interact_prompt_oy = -32
@@ -330,6 +332,11 @@ function Actor:draw_hud()
 		local y = self.y + lerp(self.interact_prompt_oy + 4, self.interact_prompt_oy, self.interact_prompt_anim_t)
 
 		Input:draw_input_prompt(self.last_interaction_hovering_player_n, self.interact_actions, self.interact_label, self.interact_label_color, x, y, {
+			alignment = "center",
+			background_color = transparent_color(COL_BLACK_BLUE, 0.5),
+		})
+
+		Input:draw_input_prompt(self.last_interaction_hovering_player_n, {}, self.interact_caption, self.interact_caption_color, x, y - get_text_height() - 4, {
 			alignment = "center",
 			background_color = transparent_color(COL_BLACK_BLUE, 0.5),
 		})
