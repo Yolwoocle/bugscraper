@@ -310,6 +310,7 @@ function Loot.Gun:reset()
 	self:reset_loot()
 	
 	self.life = self.max_life
+	self.interact_caption = self.gun.display_name
 
 	self.vx = 0
 	self.vy = 0
@@ -336,14 +337,11 @@ function Loot.Gun:on_collect(player)
 	Particles:word(self.mid_x, self.y, utf8.upper(self.gun.display_name or self.gun.name), self.gun.color or COL_LIGHT_YELLOW)
 	self:reset()
 	
-	-- local new_loot = Loot.Gun:new(self.x, self.y, self.value, 0, 0)
-	-- new_loot.life = old_life
-	-- new_loot.gun = old_gun
-	-- new_loot:set_image(old_gun.spr)
-	-- game:new_actor(new_loot)
+	local new_loot = Loot.Gun:new(self.x, self.y, self.value, 0, 0, old_gun)
+	new_loot.life = old_life
+	game:new_actor(new_loot)
 
-	-- self.uncollectable_timer = 1.0
-	-- self:remove()
+	self.uncollectable_timer = 1.0
 
 	if self.remove_on_collect then
 		self:remove()
