@@ -45,8 +45,10 @@ return {
         world_1 = "Ressources parasites",
         world_2 = "Chambre de production",
         world_3 = "Salle des serveurs",
-        world_4 = "Les jardins",
+        world_4 = "Jardins",
         world_5 = "Éxécutif",
+        
+        world_0 = "Sous-sol",
     },
     gun = {
         -- Noms des armes

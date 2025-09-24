@@ -140,7 +140,7 @@ function Actor:init_actor(x, y, w, h, spr, args)
     self.interact_actions = {"interact"}
 	self.interact_label = "{input.prompts.interact}"
 	self.interact_label_color = COL_WHITE
-	self.interact_caption = ""
+	self.interact_caption = nil
 	self.interact_caption_color = COL_WHITE
     self.interaction_margin = 0
 	self.interaction_delay = 3.0
@@ -336,10 +336,12 @@ function Actor:draw_hud()
 			background_color = transparent_color(COL_BLACK_BLUE, 0.5),
 		})
 
-		Input:draw_input_prompt(self.last_interaction_hovering_player_n, {}, self.interact_caption, self.interact_caption_color, x, y - get_text_height() - 4, {
-			alignment = "center",
-			background_color = transparent_color(COL_BLACK_BLUE, 0.5),
-		})
+		if self.interact_caption and #self.interact_caption > 0 then
+			Input:draw_input_prompt(self.last_interaction_hovering_player_n, {}, self.interact_caption, self.interact_caption_color, x, y - get_text_height() - 4, {
+				alignment = "center",
+				background_color = transparent_color(COL_BLACK_BLUE, 0.5),
+			})
+		end
 	end 
 end
 

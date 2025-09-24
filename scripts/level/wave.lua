@@ -35,6 +35,8 @@ function Wave:init(params)
 	self.elevator = param(params.elevator, nil)
 	self.world = param(params.world, nil)
 
+	self.counter_display_func = param(params.counter_display_func, nil)
+
 	self.background = param(params.background, nil)
 
 	self.entrance_names = self:generate_entrance_names()
@@ -246,6 +248,10 @@ function Wave:enable_wave_side_effects(level)
 
 	if self.backroom then
 		game.level:begin_backroom(self.backroom:new(self.backroom_params))
+	end
+	
+	if self.counter_display_func then
+		game.level.elevator.counter_display_func = self.counter_display_func
 	end
 end
 

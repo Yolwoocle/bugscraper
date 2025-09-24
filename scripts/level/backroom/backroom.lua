@@ -9,6 +9,8 @@ function Backroom:init(params)
     
     self.background = nil
     self.freeze_fury = true
+
+    self.stop_cutscene_on_exit = true
 end
 
 --- (Abstract) Generate the map for this backroom.

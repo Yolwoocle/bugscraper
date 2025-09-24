@@ -771,7 +771,7 @@ function Debug:draw_info_view()
             concat("LOVE version: ", string.format("%d.%d.%d - %s", love.getVersion())),
             concat("Renderer info: ", renderer_name, " (v", renderer_version, ")"),
             concat("Renderer vendor: ", renderer_vendor, ", device ", renderer_device),
-            concat("game state: ", game.game_state, " / camera pos: (", game.camera.x, ", ", game.camera.y, ")"),
+            concat("game state: ", game.game_state, " / newwave state: ", game.level.new_wave_animation_state_machine.current_state_name, " / backroom anim state: ", game.level.backroom_animation_state_machine.current_state_name, " / camera pos: (", round(game.camera.x, 2), ", ", round(game.camera.y, 2), ")"),
             concat("nb of active audio sources: ", love.audio.getActiveSourceCount()),
             concat("nb of actors: ", #self.game.actors, " / ", self.game.actor_manager.actor_limit, " | nb of enemies: ", self.game:get_enemy_count()),
             concat("nb collision items: ", Collision.world:countItems()),
@@ -783,7 +783,7 @@ function Debug:draw_info_view()
             wave_resp_str,
             concat("backroom ", (game.level.backroom == nil) and "nil" or game.level.backroom.name),
             concat("queued_players ", queued_players_str),
-            concat("level_speed ", game.level.level_speed),
+            concat("level.floor ", game.level.floor, " / level_speed ", game.level.level_speed),
             concat("menu_stack size: ", #game.menu_manager.menu_stack) .. " / " .. concat("cur_menu_name ", game.menu_manager.cur_menu_name),
             concat("cur_cutscene ", (game.cutscene == nil) and "[nil]" or 
                 string.format("%s: [%d/%d] (%.1f s/%.1f s) '%s' / (total: %.1f s)", 

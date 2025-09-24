@@ -42,10 +42,12 @@ return {
 
         -- World names
         world_1 = "Insekty w plikach",
-        world_2 = "Maszyna do kopiowania",
-        world_3 = "Serwerowy piekielnik",
-		world_4 = "The Gardens", -- ADDED
+        world_2 = "Maszyna do kopiowania", -- CHANGED
+        world_3 = "Serwerowy piekielnik", -- CHANGED
+		world_4 = "The Gardens", -- ADDED 
         world_5 = "Wielki szef",
+        
+        world_0 = "Basement", -- ADDED
     },
     gun = {
         -- Gun names

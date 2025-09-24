@@ -8,7 +8,7 @@ local BackroomBasement = require "scripts.level.backroom.backroom_basement"
 local LightPoint      = require "scripts.graphics.light.light_point"
 
 return Cutscene:new("enter_ceo_office", {
-    --[[
+    -- [[
     CutsceneScene:new({
         description = "Setup scene",
         duration = 0.0,

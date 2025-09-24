@@ -311,6 +311,7 @@ function Loot.Gun:reset()
 	
 	self.life = self.max_life
 	self.interact_caption = self.gun.display_name
+	self.interact_caption_color = self.gun.color or COL_WHITE
 
 	self.vx = 0
 	self.vy = 0

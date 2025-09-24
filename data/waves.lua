@@ -1272,7 +1272,7 @@ local waves = parse_waves_table {
                     actor:remove()
                 end
             end
-        end,
+        end, 
 
         min = 1,
         max = 1,
@@ -1283,19 +1283,227 @@ local waves = parse_waves_table {
         backroom = BackroomCEOOffice
     },
 
-    --]]
-    --[[
-
-    ---------------------------------------------
-    new_cafeteria(),
-    ---------------------------------------------
-
-
     ----------------------------------------------------------------------------------------------------------
     ----------------------------------------------------------------------------------------------------------
     --- W5: executive
     ----------------------------------------------------------------------------------------------------------
     ----------------------------------------------------------------------------------------------------------
+
+    
+    {
+        min = 5,
+        max = 5,
+        enemies = {
+            { E.Larva, 3, entrances = { "main" } },
+        },
+        music = "w0",
+
+        over_title = get_world_prefix(0),
+        title = get_world_name(0),
+        title_color = COL_LIGHTEST_GRAY,
+        title_outline_color = COL_BLACK_BLUE,
+
+        counter_display_func = function(number)
+            return 5*(number-84)
+        end,
+
+        elevator = ElevatorW1,
+    },
+    
+    {
+        min = 5,
+        max = 5,
+        enemies = {
+            { E.Larva, 3, entrances = { "main" } },
+        },
+    },
+    
+    {
+        min = 5,
+        max = 5,
+        enemies = {
+            { E.Larva, 3, entrances = { "main" } },
+        },
+    },
+    
+    {
+        min = 5,
+        max = 5,
+        enemies = {
+            { E.Larva, 3, entrances = { "main" } },
+        },
+
+        over_title = get_world_prefix(1),
+        title = get_world_name(1),
+        title_color = COL_LIGHTEST_GRAY,
+        title_outline_color = COL_BLACK_BLUE,
+    },
+    
+    {
+        min = 5,
+        max = 5,
+        enemies = {
+            { E.Larva, 3, entrances = { "main" } },
+        },
+    },
+    
+    {
+        min = 5,
+        max = 5,
+        enemies = {
+            { E.Larva, 3, entrances = { "main" } },
+        },
+    },
+    
+    {
+        min = 5,
+        max = 5,
+        enemies = {
+            { E.Larva, 3, entrances = { "main" } },
+        },
+    },
+    
+    {
+        min = 5,
+        max = 5,
+        enemies = {
+            { E.Larva, 3, entrances = { "main" } },
+        },
+        
+        over_title = get_world_prefix(2),
+        title = get_world_name(2),
+        title_color = COL_LIGHT_YELLOW,
+        title_outline_color = COL_BLACK_BLUE,
+    },
+    
+    {
+        min = 5,
+        max = 5,
+        enemies = {
+            { E.Larva, 3, entrances = { "main" } },
+        },
+    },
+    
+    {
+        min = 5,
+        max = 5,
+        enemies = {
+            { E.Larva, 3, entrances = { "main" } },
+        },
+    },
+    
+    {
+        min = 5,
+        max = 5,
+        enemies = {
+            { E.Larva, 3, entrances = { "main" } },
+        },
+    },
+    
+    {
+        min = 5,
+        max = 5,
+        enemies = {
+            { E.Larva, 3, entrances = { "main" } },
+        },
+
+        over_title = get_world_prefix(3),
+        title = get_world_name(3),
+        title_color = COL_LIGHT_GREEN,
+        title_outline_color = COL_BLACK_BLUE,
+    },
+    
+    {
+        min = 5,
+        max = 5,
+        enemies = {
+            { E.Larva, 3, entrances = { "main" } },
+        },
+    },
+    
+    {
+        min = 5,
+        max = 5,
+        enemies = {
+            { E.Larva, 3, entrances = { "main" } },
+        },
+    },
+    
+    {
+        min = 5,
+        max = 5,
+        enemies = {
+            { E.Larva, 3, entrances = { "main" } },
+        },
+    },
+    
+    {
+        min = 5,
+        max = 5,
+        enemies = {
+            { E.Larva, 3, entrances = { "main" } },
+        },
+
+        over_title = get_world_prefix(4),
+        title = get_world_name(4),
+        title_color = COL_LIGHT_BLUE,
+        title_outline_color = COL_BLACK_BLUE,
+    },
+    
+    
+    {
+        min = 5,
+        max = 5,
+        enemies = {
+            { E.Larva, 3, entrances = { "main" } },
+        },
+    },
+    
+    
+    {
+        min = 5,
+        max = 5,
+        enemies = {
+            { E.Larva, 3, entrances = { "main" } },
+        },
+    },
+    
+    
+    {
+        min = 5,
+        max = 5,
+        enemies = {
+            { E.Larva, 3, entrances = { "main" } },
+        },
+    },
+    
+
+    {
+        roll_type = WAVE_ROLL_TYPE_FIXED,
+
+        min = 1,
+        max = 1,
+        enemies = {
+            { E.FinalBoss, 1, position = { 87 * 16, 14 * 16 } }
+        },
+
+        run = function(self, level)
+            for _, actor in pairs(game.actors) do
+                if actor.name == "final_boss" then
+                    actor.state_machine:set_state("standby")
+                end
+            end
+        end
+    },
+    
+    
+    --]]
+    ----------------------------------------------------------------------------------------------------------
+    ----------------------------------------------------------------------------------------------------------
+    --- W5: executive
+    ----------------------------------------------------------------------------------------------------------
+    ----------------------------------------------------------------------------------------------------------
+    --[[
 
     {
         min = 4,

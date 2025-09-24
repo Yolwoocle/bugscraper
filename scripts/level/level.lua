@@ -50,6 +50,7 @@ function Level:init(game, backroom)
 	-- Level info
 	self.floor = 0 --Floor n°
 	self.max_floor = #waves
+	self.max_display_floor = MAX_DISPLAY_FLOOR
 	self.current_wave = nil
 	self.next_wave_to_set = nil
 	
@@ -400,7 +401,8 @@ end
 
 
 
-function Level:end_backroom()
+function Level:end_backroom(params)
+	params = params or {}
 	self.world_generator:generate_cabin()
 
 	self.new_wave_progress = 1.0
@@ -413,7 +415,9 @@ function Level:end_backroom()
 	self.elevator:close_door()
 	self.new_wave_animation_state_machine:set_state("closing")
 
-	game:stop_cutscene()
+	if param(params.stop_cutscene, true) then
+		game:stop_cutscene()
+	end
 
 	game.camera:set_x_locked(true)
 	game.camera:set_y_locked(true)
@@ -483,7 +487,6 @@ function Level:get_backroom_animation_state_machine(dt)
 				self:update_hole_stencil(dt)
 
 				if self:can_exit_backroom() then
-					self.backroom:on_exit()
 					return "shrink"
 				end
 			end
@@ -491,9 +494,11 @@ function Level:get_backroom_animation_state_machine(dt)
 		shrink = {
 			enter = function(state)
 				self.hole_stencil_mode = "hole"
+				
+				self.backroom:on_exit()
 				game.actor_manager:remove_all_active_enemies()
 				
-				self:end_backroom()
+				self:end_backroom({stop_cutscene = self.backroom.stop_cutscene_on_exit})
 				
 				self.new_wave_progress = math.huge
 				self.force_next_wave_flag = true
@@ -551,7 +556,7 @@ function Level:on_upgrade_display_killed(display)
         time = current_source:tell()
 	end
 	
-	game.music_player:set_disk("cafeteria_empty")
+	-- game.music_player:set_disk("cafeteria_empty")
 	if game.music_player.current_disk and game.music_player.current_disk.current_source then
 		local source = game.music_player.current_disk.current_source
 		source:seek(time)

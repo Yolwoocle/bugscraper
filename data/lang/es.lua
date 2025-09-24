@@ -40,10 +40,12 @@ return {
 
 		-- World names
 		world_1 = "Recursos de Depuracionces", -- The pun is lost (Debugging resources)
-		world_2 = "La fabrica",
-		world_3 = "La sala de servidores",
-		world_4 = "Los jardines",
+		world_2 = "La fabrica", -- CHANGED
+		world_3 = "La sala de servidores", -- CHANGED
+		world_4 = "Los jardines", -- CHANGED
 		world_5 = "Ejecutivo",
+
+        world_0 = "Basement", -- ADDED
 	},
 	gun = {
 		-- Gun names

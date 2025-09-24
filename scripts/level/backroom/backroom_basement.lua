@@ -56,6 +56,9 @@ function BackroomGroundFloor:init(params)
 	self.bg_particles = {}
 
 	self.tutorial_timer = math.huge
+
+	self.can_exit_basement = false
+	self.stop_cutscene_on_exit = false
 end
 
 function BackroomGroundFloor:generate(world_generator)
@@ -115,8 +118,7 @@ function BackroomGroundFloor:get_default_camera_position()
 end
 
 function BackroomGroundFloor:can_exit()
-	return false
-	-- return BackroomGroundFloor.super.can_exit(self)
+	return self.can_exit_basement
 end
 
 function BackroomGroundFloor:on_exit()
@@ -165,8 +167,6 @@ function BackroomGroundFloor:update(dt)
 			end
 		end
 	end 
-
-	print_debug(self.number_of_exited_players, ", ",  game:get_number_of_alive_players())
 
 	-- Update particles
 	for i, ptc in pairs(self.bg_particles) do

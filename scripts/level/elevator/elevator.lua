@@ -37,6 +37,10 @@ function Elevator:init(level)
 	}
 
 	self.clock_ang = pi
+
+	self.counter_display_func = function(number)
+		return number
+	end
 end
 
 function Elevator:update(dt)
@@ -167,13 +171,13 @@ function Elevator:draw_counter()
 	
 	-- Level counter clock thing
 	local x1, y1 = door_x + 54.5, door_y - 33
-	self.clock_ang = lerp(self.clock_ang, pi + clamp(self.level.floor / self.level.max_floor, 0, 1) * pi, 0.1)
+	self.clock_ang = lerp(self.clock_ang, pi + clamp(self.counter_display_func(self.level.floor) / self.level.max_display_floor, 0, 1) * pi, 0.1)
 	local a = self.clock_ang
 	love.graphics.line(x1, y1, x1 + cos(a)*11, y1 + sin(a)*11)
 	
-	-- Level counter
+	-- Level counter<
 	love.graphics.setFont(FONT_7SEG)
-	print_color(COL_WHITE, elevator_counter_format(self.level.floor), 198+16*2, 97+16*2)
+	print_color(COL_WHITE, elevator_counter_format(self.counter_display_func(self.level.floor)), 198+16*2, 97+16*2)
 	love.graphics.setFont(FONT_REGULAR)
 end
 

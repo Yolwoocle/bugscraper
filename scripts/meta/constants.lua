@@ -216,6 +216,8 @@ DEFAULT_CAMERA_Y = 8
 DEFAULT_CAMERA_FOLLOW_SPEED = 5
 DEFAULT_CAMERA_MAX_SPEED = 300
 
+MAX_DISPLAY_FLOOR = 80 -- Maximum floor of the bugscraper (and not the maximum number of waves)
+
 ---------------------------------------------
 
 -- Input

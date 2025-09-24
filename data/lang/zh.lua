@@ -50,6 +50,8 @@ return {
         world_3 = "服务器机房",
         world_4 = "花园",
         world_5 = "高管区",
+
+        world_0 = "Basement",
     },
     gun = {
         machinegun = "豌豆枪",
