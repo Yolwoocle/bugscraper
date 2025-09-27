@@ -24,8 +24,8 @@ local sfxnames = {
 	["music_w1_ingame"] =                   { "music/music_w1_ingame.ogg", "stream", { looping = true } },
 	["music_w1_paused"] =                   { "music/music_w1_paused.ogg", "stream", { looping = true } },
 	["music_w2_ingame"] =                   { "music/music_w2_ingame.ogg", "stream", { looping = true } },
-	["music_w3_ingame"] =                   { "music/music_w3_ingame.mp3", "stream", { looping = true } },
-	["music_w3_paused"] =                   { "music/music_w3_paused.mp3", "stream", { looping = true } },
+	["music_w3_ingame"] =                   { "music/music_w3_ingame.ogg", "stream", { looping = true } },
+	["music_w3_paused"] =                   { "music/music_w3_ingame.ogg", --[[<- CHANGEME]] "stream", { looping = true } },
 	["music_game_over"] =                   { "music/music_game_over.ogg", "stream", { looping = true } },
 	["music_cafeteria_ingame"] =            { "music/music_cafeteria_ingame.ogg", "stream", { looping = true } },
 	["music_cafeteria_paused"] =            { "music/music_cafeteria_paused.ogg", "stream", { looping = true } },
@@ -183,6 +183,8 @@ local sfxnames = {
 
 
 	["sfx_bullet_bounce_{01-02}"] = {"placeholder/sfx_bullet_bounce_{}.ogg", "static"},
+	["chipper_telegraph"] = {"placeholder/chipper_telegraph.ogg", "static"},
+	["sfx_enemy_death"] = {"placeholder/sfx_enemy_death.ogg", "static"},
 }
 
 for key, params in pairs(sfxnames) do

@@ -781,6 +781,8 @@ end
 
 function Game:on_kill(actor)
 	if actor.counts_as_enemy then
+		Audio:play_var("sfx_enemy_death", 0.2, 1.2) --REMOVEME SCOTCH
+
 		self.kills = self.kills + 1
 		self.score = self.score + (actor.score or 0)
 		-- Particles:word(actor.x, actor.y, tostring(actor.score or 0))
