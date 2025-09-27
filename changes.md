@@ -1,7 +1,7 @@
 # Bugscraper changelog
 
 ### 0.8
-(*2025-??*)
+(*2025-09-27*)
 
 #### Highlights
 - 🔊 **Sound design** has been completely reworked from scratch, thanks to the work of the new sound designer in the team, Martin Domergue!! Please do not hesitate to send feedback and criticism.
@@ -17,6 +17,7 @@
 - **Change**: Slight adjustments to dept. 2 waves to make them feel less punishing 
 - **Change**: Slightly increased wall sliding stamina limit
 - **Change**: Minor tweaks to Her Majesty boss
+- **Change**: Made guns slightly more pleasant to use by making bullets spawn from the base of guns
 - **Added**: Added a new easter egg 👀 
 
 #### Graphics
@@ -50,6 +51,7 @@
 - **Fix**: Partially fixed issue where you could not press certain buttons during a time freeze 
 - **Fix**: Fixed issue where "return to ground floor" would not return players to the ground floor in the tutorial
 - **Fix**: Fixed issue where Mr. Dung couldn't be damaged when bunny hopping
+- **Fix**: Fixed minor graphical issue where the timer & cinematic bar would clash sometimes
 
 
 ### 0.7.2
