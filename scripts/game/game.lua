@@ -1054,7 +1054,7 @@ end
 function Game:start_game()
 	self.game_ui.logo_y_target = -70
 	self.game_state = GAME_STATE_PLAYING
-	self.music_player:set_disk("w1")
+	self.music_player:fade_out("w1", 1.0)
 	self.level:activate_enemy_buffer()
 	self.level:begin_next_wave_animation()
 	self:remove_queued_players()
