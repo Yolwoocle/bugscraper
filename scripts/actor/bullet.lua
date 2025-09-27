@@ -18,7 +18,7 @@ function Bullet:init(gun, player, damage, x, y, w, h, vx, vy, args)
 	self.gun = gun
 	self.player = player
 	self.is_bullet = true
-	self.z = -1
+	self.z = -2
 
 	--target_type: what kind of enemy the bullet can target: "player", "enemy", "everyone"
 	self.target_type = args.target_type or ternary(player.is_enemy, "player", "enemy") 
@@ -72,6 +72,13 @@ function Bullet:init(gun, player, damage, x, y, w, h, vx, vy, args)
 		self.object_3d_rot_speed = param(args.object_3d_rot_speed, 1)
 		self.renderer_3d = Renderer3D:new({Object3D:new(self.bullet_model)})
 	end
+
+	self.spawn_x = x
+	self.spawn_y = y
+	self.hide_radius = param(args.hide_radius, 0)
+	if self.hide_radius > 0 then
+		self.is_visible = false
+	end
 end
 
 function Bullet:update(dt)
@@ -113,6 +120,10 @@ function Bullet:update(dt)
 		v = Options:get("bullet_lightness") or 1
 	end
 	self.spr:set_color({v, v, v})
+
+	if not self.is_visible and self.hide_radius > 0 and distsqr(self.x, self.y, self.spawn_x, self.spawn_y) > sqr(self.hide_radius) then
+		self.is_visible = true
+	end
 end
 
 function Bullet:draw()

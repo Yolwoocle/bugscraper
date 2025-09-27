@@ -142,7 +142,7 @@ function Gun:shoot(dt, player, x, y, dx, dy, is_burst)
 	local ang = atan2(dy, dx)
 	local is_first_fire = not is_burst
 
-	x, y = self:get_gun_tip_position(x, y, ang)
+	local visual_x, visual_y = self:get_gun_tip_position(x, y, ang)
 
 	-- Sanity checks
 	-- + reloading
@@ -168,7 +168,7 @@ function Gun:shoot(dt, player, x, y, dx, dy, is_burst)
 		end
 	end
 	if self.do_particles then
-		Particles:image(x , y, 1, images.bullet_casing, 4, nil, nil, nil, {
+		Particles:image(visual_x, visual_y, 1, images.bullet_casing, 4, nil, nil, nil, {
 			vx1 = -dx * 40,
 			vx2 = -dx * 100,
 
@@ -211,12 +211,14 @@ function Gun:update_burst(dt, player, x, y, dx, dy, ang)
 		self.burst_counter = self.burst_counter - 1
 	end
 
+	local visual_x, visual_y = self:get_gun_tip_position(x, y, ang)
+		
 	if self.bullet_number == 1 then
 		-- If only fire 1 bullet 
 		local ang = ang + random_neighbor(self.random_angle_offset)
 		dx, dy = cos(ang), sin(ang)
 		if self.do_particles then
-			Particles:flash(x, y)
+			Particles:flash(visual_x, visual_y)
 		end
 		self:fire_bullet(dt, player, x, y, self.bul_w, self.bul_h, dx, dy)
 	else
@@ -229,7 +231,7 @@ function Gun:update_burst(dt, player, x, y, dx, dy, ang)
 			local dx = cos(a)
 			local dy = sin(a)
 			if self.do_particles then
-				Particles:flash(x, y)
+				Particles:flash(visual_x, visual_y)
 			end
 			self:fire_bullet(dt, player, x, y, self.bul_w, self.bul_h, dx, dy)
 		end
@@ -285,6 +287,10 @@ function Gun:fire_bullet(dt, user, x, y, bul_w, bul_h, dx, dy)
 	if type(rot_3d_speed) == "table" and #rot_3d_speed >= 2 then
 		rot_3d_speed = random_range(rot_3d_speed[1], rot_3d_speed[2])
 	end
+
+	local ang = atan2(dy, dx)
+	local tip_x, tip_y = self:get_gun_tip_position(x, y, ang)
+
 	local bullet = Bullet:new(self, user, self:get_damage(user), x, y, bul_w, bul_h, spd_x, spd_y, {
 		life = self.bullet_life,
 		range = self.bullet_range,
@@ -296,7 +302,8 @@ function Gun:fire_bullet(dt, user, x, y, bul_w, bul_h, dx, dy)
 		bullet_model = self.bullet_model,
 		object_3d_rot_speed = rot_3d_speed,
 		object_3d_scale = self.object_3d_scale,
-		destroy_on_damage = self.destroy_bullet_on_damage
+		destroy_on_damage = self.destroy_bullet_on_damage,
+		hide_radius = dist(x, y, tip_x, tip_y)
 	})
 	game:new_actor(bullet)
 end
