@@ -3,32 +3,53 @@
 ### 0.8
 (*2025-??*)
 
-- **Change**: Sound design has been completely reworked, thanks to the work of Martin Domergue. Please take a listen!!
-- **Change**: You can now use keyboard inputs to navigate menus even if no keyboard player joined the game
-- **Change**: Slightly increased wall sliding stamina limit
-- **Change**: Various changes to combos. They are easier to start and keep, and the visuals have received a glow-up
-- **Added**: Added two small animations on floors 20, 40, and 60. I'll let you discover them... 
-- **Change**: Slight adjustments to dept. 2 waves to make them feel less punishing 
-- **Added**: Boss bars!
-- **Added**: Added a new easter egg 👀 
-- **Added**: Added "SFX Volume" option
+#### Highlights
+- 🔊 **Sound design** has been completely reworked from scratch, thanks to the work of the new sound designer in the team, Martin Domergue!! Please do not hesitate to send feedback and criticism.
+- 🪴 **New department 4!** Please note that this is still a work in progress and a lot of sprites are still placeholders. 
+- 🔘 **New "interact" button!** This button is used to open up the new cafeteria interface, to exit the game, or to collect guns. Unfortunately this will reset your custom remappings, I'm sorry :(
 
-Graphics
+#### Gameplay
+- **Added**: Added two small animations on floors 20, 40. I'll let you discover them... 
+- **Added**: Boss bars!
+- **Change**: Various changes to combos. They are easier to start and keep, and the visuals have received a glow-up
+- **Change**: In co-op, respawn cocoons now appear at every cafeteria
+- **Change**: Camera now pans to the left after opening the door
+- **Change**: Slight adjustments to dept. 2 waves to make them feel less punishing 
+- **Change**: Slightly increased wall sliding stamina limit
+- **Change**: Minor tweaks to Her Majesty boss
+- **Added**: Added a new easter egg 👀 
+
+#### Graphics
 - **Change**: Weapons and hearts will now always render in front of enemies
 - **Change**: Added visual effect to ghosts' spinning
 - **Change**: Minor tweak to splash screen graphic
 - **Change**: Slight improvements to some backgrounds
+- **Change**: The city background display lower down the higher up you are 
+- **Change**: The currently active user is shown in menus in co-op 
+- **Added**: Added a few TV slides
+- Various other minor graphical changes 
+
+#### Menus
+- **Added**: Added "SFX Volume" option
+- **Change**: You can now use keyboard inputs to navigate menus even if no keyboard player joined the game
+- **Added**: Added simplified chinese localisation. Right now it's all machine-translated but I do plan on adding manual translations later on.
+- **Change**: Renamed "retry" to "return to ground floor"
+- **Change**: Changed feedback menu
+- **Change**: Buttons are no longer selectable during the game over animation
+
+#### Fixes
 - **Fix**: Fixed bug where the 3D graphics of the Comball would not appear at the right location while in the elevator door
 - **Fix**: Fixed minor visual artifact that sometimes happened when enemies spawn from the elevator door
-
-Misc 
-- **Change**: Renamed "retry" option to "return to ground floor"
-- **Change**: Changed feedback menu
-- **Change**: Minor tweaks to bee boss (temporary name)
-- **Change**: Buttons are no longer selectable during the game over animation
-- **Fix**: Fixed issue where splash screen would not be cut if width of window is very large
+- **Fix**: Fixed issue where splash screen would not be correctly cut if width of window is very large
 - **Fix**: Fixed issue where the music would play for a single frame when starting the game if the music volume was set to 0 
 - **Fix**: Fixed issue where the window could be completely dark if scaled down while pixel scale was set to "max whole" 
+- **Fix**: Fixed issue where you could not start a game if there was no player 1
+- **Fix**: Fixed issue where in co-op, you would not respawn with all your hearts if you had the milk upgrade
+- **Fix**: Fixed issue where the "bullet lightness" option would affect non-player bullets
+- **Fix**: Fixed issue where disconnecting your controller while in a game and pressing "continue anyway" could sometimes softlock you 
+- **Fix**: Partially fixed issue where you could not press certain buttons during a time freeze 
+- **Fix**: Fixed issue where "return to ground floor" would not return players to the ground floor in the tutorial
+- **Fix**: Fixed issue where Mr. Dung couldn't be damaged when bunny hopping
 
 
 ### 0.7.2
