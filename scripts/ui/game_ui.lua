@@ -379,8 +379,8 @@ function GameUI:draw_timer()
 	end
 
 	local text = time_to_string(game.time)
-	rect_color({0,0,0,0.5}, "fill", 0, 10, get_text_width(text) + 16, 12)
-	love.graphics.flrprint(text, 8, 8)
+	rect_color({0,0,0,0.5}, "fill", 0, 8, get_text_width(text) + 16, 12)
+	love.graphics.flrprint(text, 8, 6)
 end
 
 function GameUI:draw_FPS()
