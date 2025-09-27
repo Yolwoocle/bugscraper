@@ -243,10 +243,7 @@ end
 
 function GameUI:draw()
 	if not self.is_visible then return end
-	if game.debug and game.debug.title_junk then
-		self:draw_timer()
-		self:draw_version()
-	end 
+	self:draw_version()
 	self:draw_offscreen_indicators()
 	self:draw_floating_text()
 	self:draw_upgrades()
@@ -257,6 +254,7 @@ function GameUI:draw()
 	self:draw_iris_transition()
 	self:draw_fury()
 	self:draw_boss_bar()
+	self:draw_timer()
 	
 	self:draw_titles()
 	if self.dark_overlay_alpha > 0 then
