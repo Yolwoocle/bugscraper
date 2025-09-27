@@ -14,6 +14,7 @@ local E                 = require "data.enemies"
 local ElevatorW1        = require "scripts.level.elevator.elevator_w1"
 local ElevatorW2        = require "scripts.level.elevator.elevator_w2"
 local ElevatorW3        = require "scripts.level.elevator.elevator_w3"
+local ElevatorW4        = require "scripts.level.elevator.elevator_w4"
 
 local utf8              = require "utf8"
 
@@ -1026,14 +1027,12 @@ local waves = parse_waves_table {
 
         elevator_layers = {
             ["bg_grid"] = false,
-            ["w3_cabin"] = false,
-
-            ["cabin_bg"] = images.cabin_bg_w4_test,
-            ["walls"] = images.empty,
         },
 
         background = backgrounds.BackgroundGreenhouse:new(),
         music = "w4",
+
+        elevator = ElevatorW4,
 
         over_title = get_world_prefix(4),
         title = get_world_name(4),
@@ -1298,8 +1297,10 @@ local waves = parse_waves_table {
         },
         music = "w0",
 
-        over_title = get_world_prefix(0),
-        title = get_world_name(0),
+        -- over_title = get_world_prefix(0),
+        -- title = get_world_name(0),
+        over_title = "I haven't made the rest yet",
+        title = "Yay you finished the game",
         title_color = COL_LIGHTEST_GRAY,
         title_outline_color = COL_BLACK_BLUE,
 
@@ -1310,6 +1311,7 @@ local waves = parse_waves_table {
         elevator = ElevatorW1,
     },
     
+    --[[
     {
         min = 5,
         max = 5,

@@ -31,20 +31,23 @@ function ProgressingArc:init(x, y, params)
     self.rays = {}
     self.ray_info = {}
 
-    self.cur_length = 0.0
+    self.progress_speed = params.progress_speed or 40.0
+    self.interval_size = params.interval_size or 40.0
+
+    self.cur_length = 0
     self.cur_max_length = 0.0
     self.cur_ray_index = 1
     self.cur_ray = nil
     self.cur_ray_direction = nil
-
-    self.progress_speed = params.progress_speed or 40.0
-    self.interval_size = params.interval_size or 40.0
 
     self.arc_params = params.arc_params
     
     self.rays_spawned = false
 
     self.outline_color = nil
+
+    self.arc_enabled = false
+    self.arc_enabled_timer = 3.0
 
     self.z = 10
 end
@@ -160,11 +163,24 @@ function ProgressingArc:update_ray(dt)
     if not self.cur_ray then
         return
     end
-
-    self.cur_length = self.cur_length + self.progress_speed*dt
+    
+    if self.arc_enabled_timer <= 0 then       
+        self.cur_length = self.cur_length + self.progress_speed*dt
+    end
     self.cur_length = ((self.cur_length + self.interval_size) % (self.length + 2*self.interval_size)) - self.interval_size
 
     self:set_bounds(self.cur_length, self.cur_length + self.interval_size)
+
+    if self.arc_enabled_timer > 0 then
+        self.arc_enabled_timer = math.max(0, self.arc_enabled_timer - dt)
+
+        for i=1, #self.points - 1 do
+            local ray = self.rays[i]
+            ray:set_arc_active(false)
+ 
+            ray:set_visible(self.arc_enabled_timer % 0.2 < 0.1)
+        end
+    end
 
     -- self.cur_ray:set_segment(
     --     self.cur_ray_segment.ax, self.cur_ray_segment.ay, 

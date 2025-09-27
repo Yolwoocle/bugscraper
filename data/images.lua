@@ -423,9 +423,14 @@ local img_names = {
 	cabin_door_brown_left_center =   "level/cabin_door_brown_left_center",
 	cabin_door_brown_right_far =     "level/cabin_door_brown_right_far",
 	cabin_door_brown_right_center =  "level/cabin_door_brown_right_center",
-
+	
 	cabin_door_w3_left_center =      "level/cabin_door_w3_left_center",
 	cabin_door_w3_right_center =     "level/cabin_door_w3_right_center",
+
+	cabin_door_w4_left_far =         "level/cabin_door_w4_left_far", 
+	cabin_door_w4_left_center =      "level/cabin_door_w4_left_center",
+	cabin_door_w4_right_far =        "level/cabin_door_w4_right_far",
+	cabin_door_w4_right_center =     "level/cabin_door_w4_right_center",
 	
 	cabin_rubble =                   "level/cabin_rubble",
 	cabin_grid =                     "level/cabin_grid",

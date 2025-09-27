@@ -159,6 +159,10 @@ end
 function Actor:ready()
 end
 
+function Actor:set_visible(val)
+	self.is_visible = val
+end
+
 function Actor:set_active(val)
 	self.is_active = val
 end
