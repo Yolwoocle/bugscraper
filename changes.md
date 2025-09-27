@@ -4,8 +4,8 @@
 (*2025-09-27*)
 
 #### Highlights
-- 🔊 **Sound design** has been completely reworked from scratch, thanks to the work of the new sound designer in the team, Martin Domergue!! Please note that this is still a work in progress, and do not hesitate to send feedback and criticism.
-- 🪴 **New department 4!** Please note that this is still a work in progress and a lot of sprites are still placeholders.
+- 🔊 **Sound design** has been completely reworked from scratch, thanks to the work of the new sound designer in the team, Martin Domergue!! Please note that this is still a work in progress, and do not hesitate to send feedback and criticism, it is highly appreciated.
+- 🪴 **New 4th department!** The Gardens are the Bugscraper's highest area, a luxurious place where reside the company's highest ranked executives. Please note that it is still a work in progress and a lot of things are still placeholders.
 - 🔘 **New "interact" button!** This button is used to open up the new cafeteria interface, to exit the game, or to collect guns. Unfortunately this will reset your custom remappings, I'm sorry :(
 
 #### Gameplay
