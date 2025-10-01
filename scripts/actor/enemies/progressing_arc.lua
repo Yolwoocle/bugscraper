@@ -180,6 +180,11 @@ function ProgressingArc:update_ray(dt)
  
             ray:set_visible(self.arc_enabled_timer % 0.2 < 0.1)
         end
+    else
+        for i=1, #self.points - 1 do
+            local ray = self.rays[i]
+            ray:set_arc_active(true)
+        end
     end
 
     -- self.cur_ray:set_segment(
