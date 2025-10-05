@@ -1,5 +1,11 @@
 # Bugscraper changelog
 
+### 0.8.1
+(*2025-10-01*)
+
+- **Fix**: Fixed issue where vines (placeholder name) would not deal any damage 
+- **Fix**: Fixed issue where Chippers would not play their telegraph sound  
+
 ### 0.8
 (*2025-09-27*)
 
