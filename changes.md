@@ -1,5 +1,11 @@
 # Bugscraper changelog
 
+### 0.9
+(*???*)
+
+- **Fix**: Fixed issue where Bulb Buddies would sometimes spawn outside of the elevator door
+
+
 ### 0.8.1
 (*2025-10-01*)
 

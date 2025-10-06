@@ -154,11 +154,18 @@ function Wave:spawn_roll(elevator, roll, spawned_enemies)
 		local enemy_instance = enemy_class:new(position[1], position[2], unpack(args))
 
 		-- Center enemy & clamp position
-		if not (enemy_classes[i].position or enemy_classes[i].ignore_position_clamp) then
-			enemy_instance:set_position(
-				math.floor(clamp(enemy_instance.x, rect.ax + 0.5*enemy_instance.w, rect.bx - 1.5*enemy_instance.w) - 0.5*enemy_instance.w), 
-				math.floor(clamp(enemy_instance.y, rect.ay + 0.5*enemy_instance.h, rect.by - 1.5*enemy_instance.h) - 0.5*enemy_instance.h)
+		local function clamp_actor(actor)
+			if actor.is_removed then
+				return
+			end
+			actor:set_position(
+				math.floor(clamp(actor.x, rect.ax, rect.bx - actor.w)), 
+				math.floor(clamp(actor.y, rect.ay, rect.by - actor.h))
 			)
+		end
+
+		if not (enemy_classes[i].position or enemy_classes[i].ignore_position_clamp) then
+			clamp_actor(enemy_instance)
 		end
 
 		game:new_actor(enemy_instance)
@@ -182,8 +189,10 @@ function Wave:spawn_roll(elevator, roll, spawned_enemies)
 
 			for _, extra_enemy in pairs(enemy.spawned_actors or {}) do
 				table.insert(spawned_enemies, extra_enemy)
-				extra_enemy:set_active(false)
 				add_spawned_actors(extra_enemy)
+				extra_enemy:set_active(false)
+
+				clamp_actor(extra_enemy)
 			end
 		end
 		add_spawned_actors(enemy_instance)
