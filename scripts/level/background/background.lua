@@ -17,6 +17,9 @@ end
 
 -----------------------------------------------------
 
+function Background:on_background_set()
+end
+
 function Background:update(dt)
 end
 

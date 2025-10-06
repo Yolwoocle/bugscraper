@@ -4,6 +4,9 @@ local vec3 = require "lib.batteries.vec3"
 
 local BackgroundServers = Background:inherit()
 
+-- This background doesn't use BackgroundLayer3D because it was made even before Renderer3D.
+-- I don't feel like porting everything to the new system so this shall do. 
+
 function BackgroundServers:init(level)
 	self.super.init(self, level)
 	self.name = "background_servers"

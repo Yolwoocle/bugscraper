@@ -275,6 +275,7 @@ function Level:set_background(background)
 		return
 	end
 	self.background = background
+	self.background:on_background_set()
 	self.background:set_level(self)
 end
 

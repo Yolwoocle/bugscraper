@@ -147,7 +147,7 @@ function TextManager:text(code, ...)
     return output
 
     -- assert(v ~= nil, "Text value for key '"..tostring(code).."' doesn't exist") 
-    -- print_debug("/!\\ TextManager:text - value for key '"..tostring(code).."' doesn't exist)");
+    -- print _debug("/!\\ TextManager:text - value for key '"..tostring(code).."' doesn't exist)");
 end
 
 function TextManager:text_fallback(code, fallback, ...)

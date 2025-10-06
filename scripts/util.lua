@@ -115,15 +115,16 @@ function bounce_vector(incoming_x, incoming_y, normal_x, normal_y)
 	return incoming_x - vx, incoming_y - vy
 end
 
-function color(hex)
+function color(hex, alpha)
+	alpha = alpha or 1
 	-- thanks to chatgpt :saluting_face:
-	if not hex then return { 1, 1, 1 } end
+	if not hex then return { 1, 1, 1, 1 } end
 	assert(type(hex) == "number", "incorrect type for 'hex' (" .. type(hex) .. "), argument given should be number")
 
 	local r = math.floor(hex / 65536) % 256
 	local g = math.floor(hex / 256) % 256
 	local b = hex % 256
-	return { r / 255, g / 255, b / 255, 1.0 }
+	return { r / 255, g / 255, b / 255, alpha }
 end
 
 function round(num, num_dec)

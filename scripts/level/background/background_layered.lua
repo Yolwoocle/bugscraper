@@ -10,6 +10,12 @@ function BackgroundLayered:init(level)
 	self.layers = {}
 end
 
+function BackgroundLayered:on_background_set()
+	for _, layer in pairs(self.layers) do
+		layer.layer_y = layer.initial_y
+	end
+end
+
 function BackgroundLayered:add_layer(layer)
 	table.insert(self.layers, layer)
 end

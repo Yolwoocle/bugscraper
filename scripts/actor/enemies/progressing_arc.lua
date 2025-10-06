@@ -109,7 +109,7 @@ function ProgressingArc:set_bounds(a, b)
 
         lower = upper
     end
-    -- print_debug("--------")
+    -- print _debug("--------")
 end
 
 function ProgressingArc:set_ray_bounds(ray_index, a, b)
@@ -121,7 +121,7 @@ function ProgressingArc:set_ray_bounds(ray_index, a, b)
     local info = self.ray_info[ray_index]
     assert(info ~= nil, "Ray info for ray "..tostring(ray_index).." doesn't exist")
 
-    -- print_debug(
+    -- print _debug(
     --     "[", ray_index, "]: ", round(a, 1), " -> ", round(b, 1), " || ",
     --     tostring(round(info.x + info.direction_x * a))..","..
     --     tostring(round(info.y + info.direction_y * a))..","..

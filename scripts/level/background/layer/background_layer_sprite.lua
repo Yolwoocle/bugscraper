@@ -8,12 +8,11 @@ local BackgroundLayerSprite = BackgroundLayer:inherit()
 
 function BackgroundLayerSprite:init(background, parallax, params)
     params = params or {}
-    BackgroundLayerSprite.super.init(self, background, parallax)
+    BackgroundLayerSprite.super.init(self, background, parallax, params)
 
     self.spr = AnimatedSprite:new({
         normal = {params.image, params.frame_duration or 1, params.frame_count or 1},
     }, "normal", SPRITE_ANCHOR_LEFT_TOP)
-    self.x = params.x or 0
 end
 
 function BackgroundLayerSprite:update(dt)

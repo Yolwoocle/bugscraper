@@ -620,6 +620,10 @@ local img_names = {
 	bg_element_w1_06 = "level/background/bg_element_w1_06",
 	bg_element_w1_07 = "level/background/bg_element_w1_07",
 
+	bg_w4_platform_1 = "level/background/w4/bg_w4_platform_1",
+	bg_w4_platform_1_back = "level/background/w4/bg_w4_platform_1_back",
+	bg_w4_base = "level/background/w4/bg_w4_base",
+
 	bg_walls_w4 = "level/background/bg_walls_w4",
 
 	-----------------------------------------------------
