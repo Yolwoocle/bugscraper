@@ -1,10 +1,10 @@
 # Bugscraper changelog
 
-### 0.9
+### 0.?
 (*???*)
 
 - **Fix**: Fixed issue where Bulb Buddies would sometimes spawn outside of the elevator door
-
+- **Fix**: Fixed issue where Rollopods could sometimes be pushed around after rolling
 
 ### 0.8.1
 (*2025-10-01*)
@@ -21,6 +21,12 @@
 - 🔘 **New "interact" button!** This button is used to open up the new cafeteria interface, to exit the game, or to collect guns. Unfortunately this will reset your custom remappings, I'm sorry :(
 
 #### Gameplay
+- **Change**: Sound design has been completely reworked from scratch, thanks to the work of the new sound designer in the team, Martin Domergue
+- **Added**: New department 4. The Gardens are the Bugscraper's highest area, a luxurious place where reside the company's highest ranked executives. Please note that it is still a work in progress and a lot of things are still placeholders.
+- **Added**: Added a "interact" button, mapped by default to "Z" on keyboard and the right action button (Nintendo A, Xbox B, Playstation circle) on controllers. This addition also changes the default mappings and removes the "exit game" action. Unfortunately this will reset any custom remappings you might have had. 
+- **Change**: The exit sign now uses the interact button
+- **Change**: You now need to use the interact button to collect guns
+- **Added**: A new interface for the cafeteria upgrades has been added, and the previous upgrade jars have been removed.
 - **Added**: Added two small animations on floors 20, 40. I'll let you discover them... 
 - **Added**: Boss bars!
 - **Change**: Various changes to combos. They are easier to start and keep, and the visuals have received a glow-up

@@ -65,6 +65,7 @@ function Rollopod:init(x, y, spr, w, h)
                 self.state_timer:start(1.0)
 
                 self.spr:set_animation("normal")
+                self.is_pushable = true
             end,
             update = function(state, dt)
                 self.vx = self.speed * self.walk_dir_x
@@ -115,6 +116,7 @@ function Rollopod:init(x, y, spr, w, h)
             enter = function(state)
                 self.attack_speed = self.def_attack_speed + random_neighbor(self.attack_speed_randomness)
                 self.vx = self.attack_speed * self.walk_dir_x
+                self.is_pushable = false
             end,
             after_collision = function(state, col, other)
                 if col.normal.y == 0 then
@@ -151,6 +153,7 @@ function Rollopod:init(x, y, spr, w, h)
                 self.state_timer:start(self.linger_duration + random_neighbor(self.linger_duration_randomness))
                 
                 self.vy = -self.jump_force 
+                self.is_pushable = false
             end,
             update = function(state, dt)
                 if self.state_timer:update(dt)   then
