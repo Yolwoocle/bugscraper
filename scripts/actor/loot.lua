@@ -300,7 +300,7 @@ function Loot.Gun:init(x, y, val, vx, vy, gun, params)
 	
 	self:init_loot(gun.spr, x, y, 2, 2, val, vx, vy, params)
 
-	self.remove_on_collect = param(params.remove_on_collect, true) 
+	self.remove_on_collect = param(params.remove_on_collect, false) 
 	
 	self.max_life = param(params.life, 8)
 	self.life = self.max_life
@@ -334,19 +334,19 @@ function Loot.Gun:on_collect(player)
 	Particles:smoke(self.mid_x, self.mid_y, 10, COL_LIGHT_BROWN)
 	Audio:play("sfx_loot_health_collect")
 
-	local old_life = self.life
-	Particles:word(self.mid_x, self.y, utf8.upper(self.gun.display_name or self.gun.name), self.gun.color or COL_LIGHT_YELLOW)
-	self:reset()
+	if not self.remove_on_collect then
+		local old_life = self.life
+		Particles:word(self.mid_x, self.y, utf8.upper(self.gun.display_name or self.gun.name), self.gun.color or COL_LIGHT_YELLOW)
+		self:reset()
+		
+		local new_loot = Loot.Gun:new(self.x, self.y, self.value, 0, 0, old_gun)
+		new_loot.life = old_life
+		game:new_actor(new_loot)
 	
-	local new_loot = Loot.Gun:new(self.x, self.y, self.value, 0, 0, old_gun)
-	new_loot.life = old_life
-	game:new_actor(new_loot)
-
-	self.uncollectable_timer = 1.0
-
-	if self.remove_on_collect then
-		self:remove()
+		self.uncollectable_timer = 1.0
 	end
+
+	self:remove()
 end
 
 function Loot.Gun:update(dt)
