@@ -111,11 +111,12 @@ function PlayerPreview:init(player_n, x, y, w, h)
 
                 self.t = self.t + dt
                 self.is_pressed = Input:action_pressed(self.player_n, "ui_select")
-                if self.t > 0.1 and Input:action_pressed(self.player_n, "ui_select") then
-                    self:confirm_character_select()
-                end
-                if self.t > 0.1 and Input:action_pressed(self.player_n, "ui_back") then
-                    self:cancel_character_select()
+                if self.t > 0.1 then 
+                    if Input:action_pressed(self.player_n, "ui_select") then
+                        self:confirm_character_select()
+                    elseif Input:action_pressed(self.player_n, "ui_back") then
+                        self:cancel_character_select()
+                    end
                 end
 
                 if Input:action_pressed(self.player_n, "ui_left") then
