@@ -221,8 +221,8 @@ function Shopkeeper:draw_products()
 
     local icon_left = Input:get_action_primary_icon(self.selected_player.n, "ui_left")
     local icon_right = Input:get_action_primary_icon(self.selected_player.n, "ui_right")
-    draw_centered(icon_left,  self.mid_x - sep * (#self.products + 1)/2 + self.left_prompt_ox,  y, 0, s)
-    draw_centered(icon_right, self.mid_x + sep * (#self.products + 1)/2 + self.right_prompt_ox, y, 0, s)
+    draw_centered(icon_left,  self.mid_x - sep * (#self.products + 1)/2 - 8 + self.left_prompt_ox,  y, 0, s)
+    draw_centered(icon_right, self.mid_x + sep * (#self.products + 1)/2 + 8 + self.right_prompt_ox, y, 0, s)
 
     if self.animation_t >= 0.5 then
         local prompt_x = math.floor(x - 38)
