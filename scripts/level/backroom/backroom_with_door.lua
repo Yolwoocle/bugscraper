@@ -19,12 +19,17 @@ function BackroomWithDoor:init(params)
 end
 
 function BackroomWithDoor:can_exit()
+	if not self.door_rect then
+		self.door_rect = game.level.door_rect:clone()
+	    self.door_rect:set_bounds(self.door_rect.ax + 8, self.ay, self.door_rect.bx - 8, self.by)
+	end
+
 	-- By default, axit if all players are on the door 
 	if game:get_number_of_alive_players() == 0 then
 		return false
 	end
 	for _, p in pairs(game.players) do
-		if not is_point_in_rect(p.mid_x, p.mid_y, game.level.door_rect) then
+		if not is_point_in_rect(p.mid_x, p.mid_y, self.door_rect) then
 			return false
 		end
 	end
