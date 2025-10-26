@@ -101,10 +101,17 @@ function Rollopod:init(x, y, spr, w, h)
             enter = function(state)
                 self.vx = 0
                 self.state_timer:start(self.telegraph_duration)
+                self.is_pushable = false
                 
                 self.spr:set_animation("rolled")
 
                 self.vy = -self.jump_force 
+
+                if self.walk_dir_x < 0 then
+                    Particles:static_image(images.surprise_effect, self.x - 8, self.y - 4, 0, 0.1)
+                else
+                    Particles:static_image(images.surprise_effect, self.x + self.w + 8, self.y - 4, 0, 0.1, nil, {flip_x = true})
+                end
             end,
             update = function(state, dt)
                 if self.state_timer:update(dt) then
