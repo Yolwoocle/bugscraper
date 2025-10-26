@@ -453,7 +453,8 @@ end
 function GameUI:draw_upgrades()
 	local item_size = 20
 	local i = 1
-	local y = CANVAS_HEIGHT - 4 - item_size/2
+	-- local y = CANVAS_HEIGHT - 4 - item_size/2
+	local y = 4 + item_size/2
 	for _, upgrade in pairs(game.upgrades) do
 		local x = self:get_upgrade_preview_position(i)
 		draw_centered(upgrade.sprite, x, y)
