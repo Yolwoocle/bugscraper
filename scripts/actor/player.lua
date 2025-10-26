@@ -1062,7 +1062,7 @@ function Player:shoot(dt, is_burst)
 			if failure_reason == "no_ammo" and self:action_pressed("shoot") then
 				local ang = math.atan2(dy, dx)
 				local tip_x, tip_y = self.gun:get_gun_tip_position(self.mid_x + ox, self.y + oy, ang)
-				Particles:bullet_vanish(tip_x, tip_y, ang + pi/2)
+				-- TODO Play "empty gun" sound
 			end
 		end
 
