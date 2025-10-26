@@ -59,7 +59,8 @@ function BackroomTutorial:generate(world_generator)
 		min_attract_dist = -1,
 		player_filter = function(player)
 			return player.gun and player.gun.name == "empty_gun"
-		end
+		end,
+		remove_on_collect = true,
 	}), 440, 105)
 	
 	-- Exit sign
@@ -123,7 +124,8 @@ function BackroomTutorial:update(dt)
 			min_attract_dist = -1,
 			player_filter = function(player)
 				return player.gun and player.gun.name == "empty_gun"
-			end
+			end,
+			remove_on_collect = true,
 		}), 440, 105)
 	end
 end
