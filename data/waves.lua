@@ -1297,10 +1297,8 @@ local waves = parse_waves_table {
         },
         music = "w0",
 
-        -- over_title = get_world_prefix(0),
-        -- title = get_world_name(0),
-        over_title = "I haven't made the rest yet",
-        title = "Yay you finished the game",
+        over_title = get_world_prefix(0),
+        title = get_world_name(0),
         title_color = COL_LIGHTEST_GRAY,
         title_outline_color = COL_BLACK_BLUE,
 
@@ -1311,7 +1309,7 @@ local waves = parse_waves_table {
         elevator = ElevatorW1,
     },
     
-    --[[
+    -- [[
     {
         min = 5,
         max = 5,
