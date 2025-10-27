@@ -251,6 +251,7 @@ local img_names = {
 	punching_glove =           "actors/enemies/punching_glove",
 	spring =                   "actors/enemies/spring",
 
+	vending_machine =          "actors/enemies/vending_machine",
 	water_dispenser =          "actors/enemies/water_dispenser",
 	machine_coffee =           "actors/enemies/machine_coffee",
 	machine_coffee_pressed =   "actors/enemies/machine_coffee_pressed",

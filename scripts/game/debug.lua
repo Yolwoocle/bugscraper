@@ -129,7 +129,7 @@ function Debug:init(game)
         ["v"] = { "__jackofalltrades", function()
             -- Audio:play("sfx_boss_mrdung_ball_hit_{01-06}", 2.0)
             
-            -- local sk = enemies.Shopkeeper:new(35*16, 13*16)
+            -- local sk = enemies.Shop:new(35*16, 13*16)
             -- game:new_actor(sk)
 
             game.level:set_bounds(Rect:new(unpack(RECT_CEO_OFFICE_PARAMS)))
@@ -875,9 +875,33 @@ function Debug:draw_info_view()
     -- love.graphics.draw(images.removeme_bands, 0, 0)
 
     linedottedoffset = linedottedoffset - 0.2
+
+    --
+    self:test_spiral_removeme()
 end
 
+function Debug:test_spiral_removeme()
+    
+    local pts = {}
+    local cx = (game.level.cabin_inner_rect.ax + game.level.cabin_inner_rect.bx) / 2
+    local cy = (game.level.cabin_inner_rect.ay + game.level.cabin_inner_rect.by) / 2
 
+    local i = 0
+    local itheta = 0
+    local ir = 0
+    for i = 0, 20, 1 do
+        local ix, iy = math.cos(itheta) * ir, math.sin(itheta) * ir
+        table.insert(pts, {cx + ix, cy + iy})
+
+        ir = ir + 10
+        itheta = itheta + 1/ir
+    end
+
+    for i=1, #pts-1 do
+        circle_color(COL_RED, "fill", pts[i][1], pts[i][2], 3)
+        line_color(COL_RED, pts[i][1], pts[i][2], pts[i+1][1], pts[i+1][2])
+    end
+end
 
 function Debug:test_info_view_3d_renderer()
 end

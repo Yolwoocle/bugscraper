@@ -15,6 +15,7 @@ local ElevatorW1        = require "scripts.level.elevator.elevator_w1"
 local ElevatorW2        = require "scripts.level.elevator.elevator_w2"
 local ElevatorW3        = require "scripts.level.elevator.elevator_w3"
 local ElevatorW4        = require "scripts.level.elevator.elevator_w4"
+local ElevatorW0        = require "scripts.level.elevator.elevator_w0"
 
 local utf8              = require "utf8"
 
@@ -30,7 +31,7 @@ local function new_cafeteria(params)
         -- { E.UpgradeDisplay, 1, position = { 474 + 16, 181 }, ignore_position_clamp = true },
         -- { E.UpgradeDisplay, 1, position = { 530 + 16, 181 }, ignore_position_clamp = true },
         -- { E.UpgradeDisplay, 1, position = { 586 + 16, 181 }, ignore_position_clamp = true },
-        { E.Shopkeeper, 1, position = { 35*16, 13*16 }, ignore_position_clamp = true },
+        { E.ShopCafeteria, 1, position = { 35*16, 13*16 }, ignore_position_clamp = true },
     }
     if params.empty_cafeteria then
         wave_enemies = {}
@@ -138,6 +139,27 @@ local function get_w4_vines_points_func_2()
         local ix = 0
         for ix = 0, CANVAS_WIDTH, 16 do
             table.insert(pts, { ix, game.level.cabin_inner_rect.by + math.cos((ix-CANVAS_WIDTH/2)/32) * 32 })
+        end
+
+        return pts
+    end
+end
+
+local function get_w4_vines_points_func_3()
+    return function()
+        local pts = {}
+        local cx = (game.level.cabin_inner_rect.ax + game.level.cabin_inner_rect.bx) / 2
+        local cy = (game.level.cabin_inner_rect.ay + game.level.cabin_inner_rect.by) / 2
+
+        local i = 0
+        local itheta = 0
+        local ir = 0
+        for i = 0, 20, 1 do
+            local ix, iy = math.cos(itheta) * ir, math.sin(itheta) * ir
+            table.insert(pts, {cx + ix, cy + iy})
+
+            ir = ir + 10
+            itheta = itheta + 1/ir
         end
 
         return pts
@@ -1288,196 +1310,332 @@ local waves = parse_waves_table {
 
     ----------------------------------------------------------------------------------------------------------
     ----------------------------------------------------------------------------------------------------------
-    --- W5: executive
+    --- W0 to W4
     ----------------------------------------------------------------------------------------------------------
     ----------------------------------------------------------------------------------------------------------
 
+    -- { E.Larva, 3 },
+    -- { E.Woodlouse, 2 },
+    -- { E.Fly, 3 },
+    -- { E.Slug,  4 },
+    -- { E.SnailShelled, 3 },
+    -- { E.SpikedFly,    3 },
+    -- { E.Boomshroom, 4 },
+    -- { E.Spider, 4 },
     
     {
-        min = 5,
-        max = 5,
+        min = 7,
+        max = 7,
         enemies = {
-            { E.Larva, 3, entrances = { "main" } },
+            { E.Larva, 3 },
+            { E.Woodlouse, 2 },
         },
         music = "w0",
 
         over_title = get_world_prefix(0),
         title = get_world_name(0),
-        title_color = COL_LIGHTEST_GRAY,
+        over_title_color = COL_MID_GRAY,
+        title_color = {COL_MID_GRAY, COL_LIGHT_GRAY, COL_DARKEST_GRAY, COL_DARKEST_GRAY, stacked=true},
         title_outline_color = COL_BLACK_BLUE,
 
         counter_display_func = function(number)
             return 5*(number-84)
         end,
 
-        elevator = ElevatorW1,
+        background = backgrounds.BackgroundW0:new(),
+        elevator = ElevatorW0,
+
+        run = function()
+            game.level.do_level_slowdown_on_new_wave = false
+        end
     },
     
     -- [[
     {
-        min = 5,
-        max = 5,
+        min = 7,
+        max = 7,
         enemies = {
-            { E.Larva, 3, entrances = { "main" } },
+            { E.Woodlouse, 3 },
+            { E.Larva, 3 },
+            { E.Fly,       3 },
         },
     },
     
     {
-        min = 5,
-        max = 5,
+        min = 8,
+        max = 8,
         enemies = {
-            { E.Larva, 3, entrances = { "main" } },
+            { E.Woodlouse, 2 },
+            { E.Slug,  2 },
+            { E.Larva, 3 },
+            { E.Fly, 3 },
         },
     },
     
+    -- W1
+
     {
-        min = 5,
-        max = 5,
+        min = 10,
+        max = 10,
         enemies = {
-            { E.Larva, 3, entrances = { "main" } },
+            { E.SpikedFly, 3 },
+            { E.Woodlouse, 2 },
+            { E.Slug,  2 },
+            { E.Larva, 3 },
+            { E.Fly, 3 },
         },
 
         over_title = get_world_prefix(1),
         title = get_world_name(1),
-        title_color = COL_LIGHTEST_GRAY,
+        over_title_color = COL_LIGHT_GRAY,
+        title_color = {COL_LIGHTEST_GRAY, COL_WHITE, COL_MID_GRAY, COL_MID_GRAY, stacked=true},
         title_outline_color = COL_BLACK_BLUE,
+
+        background = backgrounds.BackgroundW1:new(),
     },
     
     {
-        min = 5,
-        max = 5,
+        min = 10,
+        max = 10,
         enemies = {
+            { E.SpikedFly,    3 },
+            { E.Fly, 2 },
+            { E.SnailShelled, 3 },
+            { E.Spider, 5 },
             { E.Larva, 3, entrances = { "main" } },
+            { E.Boomshroom, 6 },
         },
     },
     
     {
-        min = 5,
-        max = 5,
+        min = 12,
+        max = 12,
         enemies = {
-            { E.Larva, 3, entrances = { "main" } },
+            { E.Spider, 3 },
+            { E.StinkBug, 2 },
+            { E.Slug,  4 },
+            { E.Fly,  2 },
+            { E.Larva,  2 },
         },
     },
     
     {
-        min = 5,
-        max = 5,
+        min = 15,
+        max = 15,
         enemies = {
-            { E.Larva, 3, entrances = { "main" } },
+            { E.Fly,          2 },
+            { E.Slug,         2 },
+            { E.Woodlouse,    2 },
+            { E.SpikedFly,    2 },
+            { E.Boomshroom,   2 },
+            { E.SnailShelled, 2 },
+            { E.Spider,       2 },
+            { E.StinkBug,     2 },
+
         },
     },
     
+    -- W2
+
     {
-        min = 5,
-        max = 5,
+        min = 8,
+        max = 8,
         enemies = {
-            { E.Larva, 3, entrances = { "main" } },
+            { E.Larva, 2 },
+            { E.Bee,   2 },
+            { E.Stabee, 4 },
         },
         
         over_title = get_world_prefix(2),
         title = get_world_name(2),
         title_color = COL_LIGHT_YELLOW,
         title_outline_color = COL_BLACK_BLUE,
+
+        background = backgrounds.BackgroundFactory:new(),
+
+        run = function(self, level)
+            spawn_timed_spikes()
+        end,
     },
     
     {
-        min = 5,
-        max = 5,
+        min = 8,
+        max = 8,
         enemies = {
-            { E.Larva, 3, entrances = { "main" } },
+            { E.Larva, 2 },
+            { E.Bee,   2 },
+            { E.Beelet, 2 },
+            { E.Stabee, 4 },
         },
     },
     
     {
-        min = 5,
-        max = 5,
+        min = 12,
+        max = 12,
         enemies = {
-            { E.Larva, 3, entrances = { "main" } },
+            { E.Larva, 2 },
+            { E.Stabee, 2 },
+            { E.HoneypotAnt, 4 },
+            { E.DrillBee, 3 },
+        },
+        fixed_enemies = {
+            { E.FlyingSpawner, 1 },
         },
     },
     
     {
-        min = 5,
-        max = 5,
+        min = 12,
+        max = 12,
         enemies = {
             { E.Larva, 3, entrances = { "main" } },
+            { E.Beelet, 3, entrances = { "main" } },
+            { E.Stabee, 2 },
+            { E.HoneypotAnt, 4 },
+            
         },
+        
+        fixed_enemies = {
+            { E.HoneycombFootball, 1 },
+        },
+
+        run = function()
+            for _, a in pairs(game.actors) do
+                if a.name == "timed_spikes" then
+                    a:remove()
+                end
+            end
+        end,
     },
     
+    -- W3
+
     {
-        min = 5,
-        max = 5,
+        min = 8,
+        max = 8,
         enemies = {
-            { E.Larva, 3, entrances = { "main" } },
+            { E.Chipper, 2 },
+            { E.Grasshopper, 2 },
+        },
+        fixed_enemies = {            
+            {
+                E.ElectricRays,
+                1,
+                position = { CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + 8 },
+                args = { {
+                    n_rays = 1,
+                    activation_delay = 2,
+                    init_angle = pi / 2,
+                    angle_speed = 0.75,
+                } }
+            },
         },
 
         over_title = get_world_prefix(3),
         title = get_world_name(3),
-        title_color = COL_LIGHT_GREEN,
+        over_title_color = COL_MID_GREEN,
+        title_color = {COL_LIGHT_GREEN, COL_WHITE, COL_MID_GREEN, COL_MID_GREEN, stacked=true},
         title_outline_color = COL_BLACK_BLUE,
+
+        background = backgrounds.BackgroundServers:new(),
     },
     
     {
-        min = 5,
-        max = 5,
+        min = 10,
+        max = 10,
         enemies = {
-            { E.Larva, 3, entrances = { "main" } },
+            { E.Chipper, 3 },
+            { E.StinkBug, 3 },
+            { E.MetalFly, 4 },
+        },
+        
+        fixed_enemies = {
+            { E.BulbBuddy, 1 },
         },
     },
     
     {
-        min = 5,
-        max = 5,
+        min = 12,
+        max = 12,
         enemies = {
-            { E.Larva, 3, entrances = { "main" } },
+            { E.Chipper, 2 },
+            { E.SnailShelledBouncy, 2 },
+            { E.MetalFly,    4 },
+            { E.Grasshopper, 2 },
+            { E.StinkBug, 2 },
         },
     },
     
     {
-        min = 5,
-        max = 5,
+        min = 15,
+        max = 15,
         enemies = {
-            { E.Larva, 3, entrances = { "main" } },
+            { E.SpikedFly, 2 },
+            { E.MetalFly,    4 },
+            { E.Chipper, 2 },
+            { E.SnailShelledBouncy, 2 },
+            { E.Grasshopper, 2 },
+            { E.StinkBug, 2 },
         },
     },
+
+    -- W4
     
     {
-        min = 5,
-        max = 5,
+        min = 10,
+        max = 10,
         enemies = {
-            { E.Larva, 3, entrances = { "main" } },
+            { E.CloudStorm, 2 },
+            { E.CloudEnemy, 2 },
+            { E.Rollopod, 2 },
         },
 
         over_title = get_world_prefix(4),
         title = get_world_name(4),
-        title_color = COL_LIGHT_BLUE,
+        over_title_color = COL_MID_GREEN,
+        title_color = {COL_MID_GREEN, COL_LIGHT_GREEN, COL_DARK_GREEN, COL_DARK_GREEN, stacked=true},
         title_outline_color = COL_BLACK_BLUE,
+
+        background = backgrounds.BackgroundGreenhouse:new(),
+
+        run = function()
+            game.actor_manager:kill_actors_with_name("electric_rays")
+        end
     },
-    
-    
+        
     {
-        min = 5,
-        max = 5,
+        min = 10,
+        max = 10,
         enemies = {
-            { E.Larva, 3, entrances = { "main" } },
+            { E.MushroomAnt, 2 },
+            { E.CloudStorm, 2 },
+            { E.CloudEnemy, 2 },
+            { E.Rollopod, 2 },
         },
     },
     
     
     {
-        min = 5,
-        max = 5,
+        min = 10,
+        max = 10,
         enemies = {
-            { E.Larva, 3, entrances = { "main" } },
+            { E.Shooter, 1 },
+            
+            { E.CloudStorm, 2 },
+            { E.CloudEnemy, 2 },
+            { E.Rollopod, 2 },
+        },
+        fixed_enemies = {
+            { E.Centipede, 1, args = { 15 } }, 
         },
     },
     
     
     {
-        min = 5,
-        max = 5,
+        min = 1,
+        max = 1,
         enemies = {
-            { E.Larva, 3, entrances = { "main" } },
+            { E.ShopVendingMachine, 1, position = { CANVAS_WIDTH / 2, 16*15 } },
+
         },
     },
     

@@ -1,0 +1,38 @@
+require "scripts.util"
+local Shop = require "scripts.actor.enemies.shop"
+local StateMachine = require "scripts.state_machine"
+local Timer = require "scripts.timer"
+local images = require "data.images"
+
+local UpgradeEspresso = require "scripts.upgrade.upgrade_espresso"
+local UpgradeMoreLife = require "scripts.upgrade.upgrade_milk"
+local UpgradeTea = require "scripts.upgrade.upgrade_tea"
+
+local utf8 = require "utf8"
+
+local ShopCafeteria = Shop:inherit()
+
+function ShopCafeteria:init(x, y, w, h)
+    ShopCafeteria.super.init(self, x, y, w or 1, h or 1, {assign_random_upgrades = true})
+    self.name = "shop_cafeteria"
+end
+
+function ShopCafeteria:apply_current_product()
+    ShopCafeteria.super.apply_current_product(self)
+
+    game.level:on_upgrade_display_killed(self)
+
+    Audio:play(self.selected_product.activate_sound)
+    Particles:collected_upgrade(self.mid_x, self.mid_y, self.selected_product.sprite, self.selected_product.color)
+    game:screenshake(6)
+
+    self:kill()
+end
+
+function ShopCafeteria:on_death()
+    Audio:play_var("sfx_actor_button_small_glass_break", 0.1, 1.1)
+
+    Particles:image(self.mid_x, self.mid_y - 32, 150, images.glass_shard, 32, 120, 0.3)
+end
+
+return ShopCafeteria

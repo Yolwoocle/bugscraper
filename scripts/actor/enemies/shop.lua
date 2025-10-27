@@ -11,11 +11,15 @@ local UpgradeTea = require "scripts.upgrade.upgrade_tea"
 
 local utf8 = require "utf8"
 
-local Shopkeeper = StaticProp:inherit()
+local Shop = StaticProp:inherit()
 
-function Shopkeeper:init(x, y, w, h)
-    Shopkeeper.super.init(self, x, y, images.vending_machine, w or 1, h or 1)
-    self.name = "shopkeeper"
+function Shop:init(x, y, w, h, params)
+    params = params or {}
+    Shop.super.init(self, x, y, params.spr or images.empty, w or 1, h or 1)
+    self.name = "shop"
+    self.is_shop = true
+
+    self.ui_oy = 85
 
     self.is_affected_by_bounds = false
     self.is_affected_by_walls = false
@@ -42,6 +46,10 @@ function Shopkeeper:init(x, y, w, h)
     self.right_prompt_ox = 0.0
 
     self.animation_t = 0.0
+
+    if param(params.assign_random_upgrades, false) then
+        self:assign_random_upgrades()
+    end
 
     self.state_machine = StateMachine:new({
         normal = {
@@ -127,35 +135,51 @@ function Shopkeeper:init(x, y, w, h)
     }, 'normal')
 end
 
-function Shopkeeper:update(dt)
-    Shopkeeper.super.update(self, dt)
+function Shop:assign_random_upgrades()
+    local bag = copy_table_shallow(game.level.upgrade_bag)
+
+	local number_of_upgrades = 3
+	local roll = {}
+	for i=1, number_of_upgrades do
+		local upgrade, _, i = random_weighted(bag)
+		if upgrade then
+			table.remove(bag, i)
+			table.insert(roll, upgrade)
+		end
+	end
+	
+    self:assign_products(roll)
+end
+
+function Shop:update(dt)
+    Shop.super.update(self, dt)
 
     self.state_machine:update(dt)
 end
 
-function Shopkeeper:assign_products(products)
+function Shop:assign_products(products)
     self.products = products
     self:set_selection(self.selected_product_index)
 end
 
-function Shopkeeper:on_interact(player)
+function Shop:on_interact(player)
     if self.state_machine.current_state_name == "normal" then
         self:start_interaction(player)
     end
 end
 
-function Shopkeeper:draw()
-    Shopkeeper.super.draw(self)
+function Shop:draw()
+    Shop.super.draw(self)
     
     self.state_machine:draw()
 end
 
-function Shopkeeper:set_selection(n)
+function Shop:set_selection(n)
     self.selected_product_index = n
     self.selected_product = self.products[n]
 end
 
-function Shopkeeper:increment_selection(diff)
+function Shop:increment_selection(diff)
     self:set_selection(mod_plus_1(self.selected_product_index + diff, #self.products))
 
     self.star_pattern_ox = diff*20
@@ -164,14 +188,14 @@ function Shopkeeper:increment_selection(diff)
     Audio:play_var("ui_menu_hover_{01-04}", 0.2, 1.0, {pitch = lerp(1.8, 2.2, r)})
 end
 
-function Shopkeeper:start_interaction(player)
+function Shop:start_interaction(player)
     player:set_input_mode(PLAYER_INPUT_MODE_CODE)
     self.selected_player = player
 
     self.state_machine:set_state("opening")
 end
 
-function Shopkeeper:end_interaction()
+function Shop:end_interaction()
     if not self.selected_player then
         return
     end
@@ -180,23 +204,16 @@ function Shopkeeper:end_interaction()
     self.selected_player = nil
 end
 
-function Shopkeeper:apply_current_product()
-    Audio:play(self.selected_product.activate_sound)
+function Shop:apply_current_product()
     game:apply_upgrade(self.selected_product)
-    game.level:on_upgrade_display_killed(self)
-    game:screenshake(6)
-
     self.is_interactible = false
-    Particles:collected_upgrade(self.mid_x, self.mid_y, self.selected_product.sprite, self.selected_product.color)
-
-    self:kill()
 end
 
-function Shopkeeper:draw_products()
+function Shop:draw_products()
     local sep = 32
     local x = self.mid_x - ((#self.products - 1)*sep)/2
     local sel_x = x + (self.selected_product_index-1)*sep
-    local y = self.mid_y - 85
+    local y = self.mid_y - self.ui_oy
     local s = ease_out_elastic(clamp(self.animation_t, 0, 1))
 
     if self.selected_product then
@@ -234,7 +251,7 @@ function Shopkeeper:draw_products()
 end
 
 
-function Shopkeeper:draw_text(x, y, text, col, s)
+function Shop:draw_text(x, y, text, col, s)
     col = param(col, COL_WHITE)
     s = param(s, 1)
 
@@ -252,10 +269,4 @@ function Shopkeeper:draw_text(x, y, text, col, s)
     end
 end
 
-function Shopkeeper:on_death()
-    Audio:play_var("sfx_actor_button_small_glass_break", 0.1, 1.1)
-
-    Particles:image(self.mid_x, self.mid_y - 32, 150, images.glass_shard, 32, 120, 0.3)
-end
-
-return Shopkeeper
+return Shop

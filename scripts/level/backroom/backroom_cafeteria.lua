@@ -167,7 +167,7 @@ end
 
 function BackroomCafeteria:can_exit()
 	for _, a in pairs(game.actors) do
-		if a.name == "shopkeeper" then
+		if a.is_shop then
 			return false
 		end
 	end
@@ -199,7 +199,7 @@ function BackroomCafeteria:assign_cafeteria_upgrades()
 	end
 	
 	for _, actor in pairs(game.actors) do
-		if actor.name == "shopkeeper" then
+		if actor.is_shop then
 			actor:assign_products(roll)
 		end
 	end

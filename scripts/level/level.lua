@@ -55,6 +55,7 @@ function Level:init(game, backroom)
 	self.next_wave_to_set = nil
 	
 	self.new_wave_animation_state_machine = self:get_new_wave_animation_state_machine()
+	self.do_level_slowdown_on_new_wave = true
 	self.new_wave_progress = 0.0
 	self.level_speed = 0
 	self.def_level_speed = 400
@@ -182,6 +183,9 @@ function Level:get_new_wave_animation_state_machine()
 		off = {
 			enter = function(state)
 				self.new_wave_progress = 0.0
+				if not self.do_level_slowdown_on_new_wave then
+					self.level_speed = self.def_level_speed
+				end
 			end,
 			update = function(state, dt)
 				self:check_for_next_wave(dt)
@@ -189,7 +193,9 @@ function Level:get_new_wave_animation_state_machine()
 		},
 		slowdown = {	
 			update = function(state, dt)
-				self.level_speed = max(0, self.level_speed - 18)
+				if self.do_level_slowdown_on_new_wave then
+					self.level_speed = max(0, self.level_speed - 18)
+				end
 		
 				if self.new_wave_progress <= 0 then
 					return "opening"
@@ -236,7 +242,9 @@ function Level:get_new_wave_animation_state_machine()
 				self.new_wave_progress = 1.0
 			end,
 			update = function(state, dt)
-				self.level_speed = min(self.level_speed + 10, self.def_level_speed)
+				if self.do_level_slowdown_on_new_wave then
+					self.level_speed = min(self.level_speed + 10, self.def_level_speed)
+				end
 		
 				if self.new_wave_progress <= 0 then
 					return "off"
@@ -544,7 +552,7 @@ function Level:on_upgrade_applied(upgrade)
 	end
 end
 
-function Level:on_upgrade_display_killed(display)
+function Level:on_upgrade_display_killed(display) -- alsp works for shops
 	for _, actor in pairs(game.actors) do
 		if actor ~= self and actor.name == "upgrade_display" then
 			actor:kill()

@@ -60,6 +60,16 @@ function Rect:set_by(by)
     self:set_bounds(self.ax, self.ay, self.bx, by)
 end
 
+function Rect:get_x_center()
+    return (self.ax + self.bx) / 2
+end
+function Rect:get_y_center()
+    return (self.ay + self.by) / 2
+end
+function Rect:get_center()
+    return self:get_x_center(), self:get_y_center()
+end
+
 function Rect:clone()
     return Rect:new(self.ax, self.ay, self.bx, self.by)
 end
