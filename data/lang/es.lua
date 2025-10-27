@@ -279,6 +279,8 @@ return {
 			kills = "Enemigos matados", -- The amount of enemies the player has killed
 			time = "Tiempo transcurrido", -- The time that the player took to complete the level
 			floor = "Piso",      -- Which storey the player was on when they died
+            max_combo = "Max combo", -- ADDED
+			
 			continue = "CONTINUAR",
 			quick_restart = "REINICIO RÁPIDO",
 		},

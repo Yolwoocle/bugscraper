@@ -115,7 +115,8 @@ function Level:init(game, backroom)
 	self.fury_damage_malus = 8.0
 	self.fury_max = self.def_fury_max
 	self.fury_speed = 0.9
-
+	
+	self.max_fury_combo = 0
 	self.fury_combo = 0
 	self.has_energy_drink = false
 end
@@ -795,6 +796,7 @@ end
 function Level:on_fury_deactivate()
 	self.last_fury_combo = self.fury_combo
 	self.fury_bar = self.fury_bar - self.fury_bar_deactivate_debuff
+	self.max_fury_combo = max(self.max_fury_combo, self.fury_combo)
 	self.fury_combo = 0
 end
 

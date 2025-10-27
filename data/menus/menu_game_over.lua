@@ -13,21 +13,20 @@ local PROMPTS_GAME_OVER     = menu_util.PROMPTS_GAME_OVER
 local game_over_items       = {
     { "" },
     { "" },
-    { StatsMenuItem, Text:text("menu.game_over.kills"), function(self)
+    { StatsMenuItem, Text:parse("💀 {menu.game_over.kills}"), function(self)
         return
             game.stats.kills
     end },
-    { StatsMenuItem, Text:text("menu.game_over.time"), function(self)
+    { StatsMenuItem, Text:parse("🕐 {menu.game_over.time}"), function(self)
         return time_to_string(game.stats.time)
     end },
-    { StatsMenuItem, Text:text("menu.game_over.floor"), function(self)
-        return concat(game.stats.floor, "/",
-            game.level.max_floor)
+    { StatsMenuItem, Text:parse("⏰ {menu.game_over.floor}"), function(self)
+        return concat(game.stats.floor)
     end },
-    { StatsMenuItem, Text:text("menu.game_over.score"), function(self)
+    { StatsMenuItem, Text:parse("🔥 {menu.game_over.max_combo}"), function(self) return concat(game.stats.max_combo) end },
+    { StatsMenuItem, Text:parse("⭐ {menu.game_over.score}"), function(self)
         return concat(game.stats.score)
     end },
-    -- { StatsMenuItem, Text:text("menu.game_over.max_combo"), function(self) return concat(game.stats.max_combo) end },
     { "" },
     { ProgressBarMenuItem,
         {

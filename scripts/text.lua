@@ -150,6 +150,24 @@ function TextManager:text(code, ...)
     -- print _debug("/!\\ TextManager:text - value for key '"..tostring(code).."' doesn't exist)");
 end
 
+function TextManager:text_params(code, params, ...)
+    params = params or {}
+
+    local t = self:text(code, ...)
+    
+    if params.uppercase then
+        t = utf8.upper(t)
+    end
+    if params.lowercase then
+        t = utf8.lower(t)
+    end
+    if params.capitalized then
+        t = utf8.upper(utf8.sub(t, 1, 1)) .. utf8.lower(utf8.sub(t, 2, -1))
+    end
+
+    return t
+end
+
 function TextManager:text_fallback(code, fallback, ...)
     if not self:value_exists(code) then
         return fallback or code

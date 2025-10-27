@@ -281,7 +281,8 @@ return {
             kills = "Zabici wrogowie",
             time = "Czas",
             floor = "Piętro",
-            -- max_combo = "Maks combo",
+            max_combo = "Maks combo",
+            
             continue = "KONTYNUUJ",
             quick_restart = "QUICK RESTART", --ADDED
         },

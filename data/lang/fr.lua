@@ -289,6 +289,7 @@ return {
             time = "Temps",
             floor = "Étage",
             score = "Score",
+            max_combo = "Combo max",
 
             continue = "CONTINUER",
             quick_restart = "REDÉMARRAGE RAPIDE",

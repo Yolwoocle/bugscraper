@@ -288,6 +288,7 @@ return {
             time = "时间",
             floor = "层数",
             score = "得分",
+            max_combo = "Max combo", -- ADDED
             
             continue = "继续",
             quick_restart = "快速重开",

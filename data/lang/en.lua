@@ -302,7 +302,8 @@ return {
             time = "Time", -- The time that the player took to complete the level
             floor = "Floor", -- Which storey the player was on when they died
             score = "Score", -- ADDED
-            
+            max_combo = "Max combo", -- ADDED
+
             continue = "CONTINUE",
             quick_restart = "QUICK RESTART", --ADDED
         },

@@ -218,11 +218,6 @@ function Player:reset(n, skin)
 	self:set_constant_sound_volume("sfx_wall_slide", 0)
 
 	-- Combo / fury
-	self.combo = 0
-	self.min_combo_visual_trigger = 5
-	self.max_combo = 0
-	self.combo_reward_heart_threshold = 30
-
 	self.fury_stomp_value = 0.8 -- How much is added to the fury bar when stomping an enemy
 	self.fury_bullet_damage_value_multiplier = 0.18  -- Percentage of the bullet damage that is added to the fury bar when hitting an enemy 
 	self.fury_gun_cooldown_multiplier = 0.8
@@ -423,8 +418,6 @@ function Player:update(dt)
 	else
 		self.frames_since_land = 0
 	end
-
-	self:update_combo(dt)
 
 	self.ui_x = lerp(self.ui_x, floor(self.mid_x), 0.2)
 	self.ui_y = lerp(self.ui_y, floor(self.y), 0.2)
@@ -1190,8 +1183,6 @@ function Player:on_stomp(enemy)
 	self.float_timer = self.float_max_duration
 	self.gun:add_ammo(math.floor(self.ammo_percent_gain_on_stomp * self.gun:get_max_ammo()))
 
-	self:increase_combo((enemy or {}).x, (enemy or {}).y)
-
 	game.level:add_fury(self.fury_stomp_value * enemy.fury_stomp_multiplier)
 end
 
@@ -1218,9 +1209,6 @@ end
 
 --- When the player kills an enemy
 function Player:on_kill_other(enemy, reason)
-	-- if reason ~= "stomped" then
-	-- 	self:increase_combo((enemy or {}).x, (enemy or {}).y)
-	-- end
 end
 
 ------------------------------------------
@@ -1295,66 +1283,6 @@ function Player:update_poison(dt)
 	end
 end
 
-------------------------------------------
---- Combos & score
-------------------------------------------
-
-function Player:update_combo(dt)
-	if self.frames_since_land > 4 and not game.level:is_on_cafeteria() then
-		self:end_combo()
-	end
-end
-
-function Player:increase_combo(x, y)
-	if true then return end -- Removed combo for now, remove this line if ever needed 
-	self.combo = self.combo + 1
-	
-	-- Rewards 
-	local text_color, is_special, reward_text = self:grant_combo_rewards(self.combo)
-
-	if self.combo >= self.min_combo_visual_trigger then
-		-- str, col, stay_time, text_scale, outline_color, letter_time_spacing, params
-		local s = tostring(self.combo) 
-		if is_special then
-			s = Text:text("game.combo_special", self.combo)
-			if reward_text then
-				s = s .. " (" .. reward_text .. ")"
-			end
-		end 
-		local fnt = ternary(is_special, FONT_REGULAR, FONT_MINI)
-		Particles:word(x or self.mid_x, y or self.mid_y, s, text_color, nil, nil, nil, nil, {font = fnt})
-	end
-end
-
-function Player:grant_combo_rewards(value)
-	local color, special, reward_text = COL_LIGHT_YELLOW, false, nil
-	if value <= 0 then
-		return color, special
-	end
-	
-	
-	if value % self.combo_reward_heart_threshold == 0 then
-		color = COL_YELLOW_ORANGE
-		special = true
-		reward_text = "+1❤"
-
-		local vx = random_neighbor(300)
-		local vy = random_range(-200, -500)
-		local instance = Loot.Life:new(self.mid_x, self.mid_y, 1, vx, vy)
-
-		game:new_actor(instance)
-	end 
-	return color, special, reward_text
-end
-
-function Player:end_combo()
-	if self.combo >= self.min_combo_visual_trigger then
-		Particles:word(self.mid_x, self.y, Text:text("game.combo_end", self.combo), COL_ORANGE)
-	end
-	self.max_combo = math.max(self.combo, self.max_combo)
-	self.combo = 0 
-end
-
 -----------------------------------------------------
 --- Visuals ---
 -----------------------------------------------------
@@ -1426,17 +1354,7 @@ function Player:draw_hud()
 			controls_y = controls_y - 25 -- SCOTCCHHHHHHH
 		end
 		self:draw_controls(controls_y)
-	end
-	
-	if self.combo >= self.min_combo_visual_trigger then
-		Text:push_font(FONT_MINI)
-		
-		local s = tostring(self.combo)
-		if game.level:is_on_cafeteria() then s = "["..s.."]" end
-		print_centered_outline(COL_LIGHT_YELLOW, nil, s, ui_x, ui_y- 8)
-		
-		Text:pop_font()
-	end
+	end	
 end
 
 function Player:draw_life_bar(ui_x, ui_y)

@@ -268,6 +268,8 @@ return {
             kills = "Abates", -- CHANGED: enemies killed
             time = "Tempo",
             floor = "Andar",
+            max_combo = "Max combo", -- ADDED
+            
             continue = "CONTINUAR",
             quick_restart = "QUICK RESTART", --ADDED
         },

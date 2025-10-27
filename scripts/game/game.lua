@@ -195,7 +195,6 @@ function Game:new_game(params)
 	}
 	self.kills = 0
 	self.time = 0
-	self.max_combo = 0
 	self.score = 0
 
 	self.frames_to_skip = 0
@@ -839,7 +838,7 @@ function Game:save_stats()
 	self.stats.time = self.time
 	self.stats.floor = self.level.floor
 	self.stats.kills = self.kills
-	self.stats.max_combo = self.max_combo
+	self.stats.max_combo = self.level.max_fury_combo
 	self.stats.score = self.score
 end
 
