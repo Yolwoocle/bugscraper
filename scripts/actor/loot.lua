@@ -46,6 +46,8 @@ function Loot:init_loot(spr, x, y, w, h, val, vx, vy, params)
 	self.interaction_margin = param(params.interaction_margin, 16)
 	self.interact_prompt_oy = param(params.interact_prompt_oy, -64)
 
+	self.collect_instantly_on_interact = param(params.collect_instantly_on_interact, false)
+
 	self:reset()
 end
 
@@ -125,6 +127,10 @@ function Loot:update(dt)
 end
 
 function Loot:on_interact(player)
+	if self.collect_instantly_on_interact then
+		self:on_collect(player)
+		return
+	end
 	self.interacted_players[player.n] = true
 end
 
@@ -289,6 +295,7 @@ Loot.Gun = Loot:inherit()
 function Loot.Gun:init(x, y, val, vx, vy, gun, params)
 	params = params or {}
 	params.requires_interaction = param(params.requires_interaction, true)
+	params.collect_instantly_on_interact = param(params.collect_instantly_on_interact, true)
 
 	if gun then
 		self.gun = gun
