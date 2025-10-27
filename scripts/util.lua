@@ -884,20 +884,29 @@ function print_color(col, text, x, y, r, s)
 end
 
 function print_outline(col_in, col_out, text, x, y, radius, r, s)
-	col_in = param(col_in, COL_WHITE)
+	local colors_in = {}
+	if not col_in or not col_in.stacked then
+		colors_in[1] = param(col_in, COL_WHITE)
+	elseif col_in.stacked then
+		colors_in = col_in
+	end
+	local stacked_offset = #colors_in - 1
 	col_out = param(col_out, COL_BLACK_BLUE)
 	radius = param(radius, 1)
 	r = param(r, 0)
 	s = param(s, 1)
 
 	for ix = -radius, radius do
-		for iy = -radius, radius do
+		for iy = -radius, radius + stacked_offset do
 			if not (ix == 0 and iy == 0) then
 				print_color(col_out, text, x + ix, y + iy, r, s)
 			end
 		end
 	end
-	print_color(col_in, text, x, y, r, s)
+
+	for i=#colors_in, 1, -1 do
+		print_color(colors_in[i], text, x, y + (i-1), r, s)
+	end
 end
 
 function print_label(text, x, y, col_txt, col_label)
@@ -1246,21 +1255,20 @@ function range_table(a, b)
 end
 
 function time_to_string(time)
-	local secs = round(time % 60, 1)
+	local millis = round(((time % 60) - floor(time % 60)), 2) * 100
+	local secs = floor(time % 60)
 	local mins = floor(time / 60) % 60
 	local hours = floor(time / 3600)
 
-	if secs == floor(secs) then
-		secs = tostring(secs) .. ".0"
-	end
-	local ss = utf8.sub("00" .. tostring(secs), -4, -1)
+	local ms = utf8.sub("00" .. tostring(millis), -2, -1)
+	local ss = utf8.sub("00" .. tostring(secs), -2, -1)
 	local mm = utf8.sub("00" .. tostring(mins), -2, -1)
 	local hh = utf8.sub("00" .. tostring(hours), -max(#tostring(hours), 2), -1)
 
 	if hours > 0 then
-		return concat(hh, ":", mm, ":", ss)
+		return concat(hh, ":", mm, ":", ss, ".", ms)
 	end
-	return concat(mm, ":", ss)
+	return concat(mm, ":", ss, ".", ms)
 end
 
 function get_left_vec(x, y)

@@ -238,7 +238,8 @@ local waves = parse_waves_table {
 
         over_title = get_world_prefix(1),
         title = get_world_name(1),
-        title_color = COL_LIGHTEST_GRAY,
+        over_title_color = COL_LIGHT_GRAY,
+        title_color = {COL_LIGHTEST_GRAY, COL_WHITE, COL_MID_GRAY, COL_MID_GRAY, stacked=true},
         title_outline_color = COL_BLACK_BLUE,
 
         elevator = ElevatorW1,
@@ -465,7 +466,8 @@ local waves = parse_waves_table {
 
         over_title = get_world_prefix(2),
         title = get_world_name(2),
-        title_color = COL_LIGHT_YELLOW,
+        over_title_color = COL_ORANGE,
+        title_color = {COL_LIGHT_YELLOW, COL_WHITE, COL_ORANGE, COL_ORANGE, stacked=true},
         title_outline_color = COL_BLACK_BLUE,
     },
 
@@ -724,7 +726,8 @@ local waves = parse_waves_table {
 
         over_title = get_world_prefix(3),
         title = get_world_name(3),
-        title_color = COL_LIGHT_GREEN,
+        over_title_color = COL_MID_GREEN,
+        title_color = {COL_LIGHT_GREEN, COL_WHITE, COL_MID_GREEN, COL_MID_GREEN, stacked=true},
         title_outline_color = COL_BLACK_BLUE,
     },
 
@@ -1036,7 +1039,8 @@ local waves = parse_waves_table {
 
         over_title = get_world_prefix(4),
         title = get_world_name(4),
-        title_color = COL_LIGHT_BLUE,
+        over_title_color = COL_MID_GREEN,
+        title_color = {COL_MID_GREEN, COL_LIGHT_GREEN, COL_DARK_GREEN, COL_DARK_GREEN, stacked=true},
         title_outline_color = COL_BLACK_BLUE,
     },
 

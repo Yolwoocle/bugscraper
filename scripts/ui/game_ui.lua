@@ -376,7 +376,7 @@ function GameUI:draw_timer()
 		return
 	end
 
-	local text = time_to_string(game.time)
+	local text = concat(time_to_string(game.time), " · ⏰ ", game.level.floor)
 	rect_color({0,0,0,0.5}, "fill", 0, 8, get_text_width(text) + 16, 12)
 	love.graphics.flrprint(text, 8, 6)
 end
@@ -658,11 +658,19 @@ function GameUI:draw_fury()
 	end
 	
 	exec_on_canvas(self.boss_bar_buffer_canvas, function()
+		-- This is horrendous.
 		love.graphics.clear()
-		rect_color(self.is_fury_bar_increasing and COL_WHITE or shad_col,  "fill", CANVAS_WIDTH/2 - w*1.5,  y-h*0.5*0.5,  w*2*1.5,  h*0.5)
-		rect_color(self.is_fury_bar_increasing and COL_WHITE or col,       "fill", CANVAS_WIDTH/2 - w*1.25, y-h*0.75*0.5, w*2*1.25, h*0.75)
-		rect_color(self.is_fury_bar_increasing and COL_WHITE or light_col, "fill", CANVAS_WIDTH/2 - w,      y-h/2,        w*2,      h)
-		rect_color(self.is_fury_bar_increasing and COL_WHITE or col,       "fill", CANVAS_WIDTH/2 - w,      y+h/2-2,      w*2,      2)
+		rect_color(self.is_fury_bar_increasing and COL_WHITE or shad_col,  "fill", CANVAS_WIDTH/2 - w*1.35,  y-h*0.5/2,  w*2*1.35,  h*0.5)
+
+		rect_color(self.is_fury_bar_increasing and COL_WHITE or col,       "fill", CANVAS_WIDTH/2 - w*1.25, y-h*0.75/2, w*2*1.25, h*0.75)
+		exec_using_shader(shaders.dither, function()
+			rect_color(self.is_fury_bar_increasing and COL_WHITE or shad_col, "fill", CANVAS_WIDTH/2 - w*1.25, y+h*0.75/2-2, w*2*1.25, 2)
+		end)
+
+		rect_color(self.is_fury_bar_increasing and COL_WHITE or light_col, "fill", CANVAS_WIDTH/2 - w,    y-h/2,        w*2,      h)
+		exec_using_shader(shaders.dither, function()
+			rect_color(self.is_fury_bar_increasing and COL_WHITE or col, "fill", CANVAS_WIDTH/2 - w,      y+h/2-2,      w*2,      2)
+		end)
 	end)
 
 	draw_with_outline(COL_BLACK_BLUE, "square", self.boss_bar_buffer_canvas, 0, 0)

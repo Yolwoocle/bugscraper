@@ -23,6 +23,7 @@ function Wave:init(params)
 	self.title_x = param(params.title_x, CANVAS_WIDTH/2)
 	self.title_y = param(params.title_y, CANVAS_HEIGHT/2)
 	self.title_color = param(params.title_color, COL_BLACK_BLUE)
+	self.over_title_color = param(params.over_title_color, self.title_color)
 	self.title_stay_time = param(params.title_stay_time, 3)
 	self.title_scale = param(params.title_scale, 2)
 	self.title_outline_color = param(params.title_outline_color, COL_WHITE)
@@ -209,7 +210,7 @@ function Wave:show_title()
 	if self.title then
 		Particles:word(
 			self.title_x, self.title_y - 16, 
-			self.over_title, self.title_color, self.title_stay_time, 1, self.title_outline_color
+			self.over_title, self.over_title_color, self.title_stay_time, 1, self.title_outline_color
 		)
 		Particles:word(
 			self.title_x, self.title_y, 

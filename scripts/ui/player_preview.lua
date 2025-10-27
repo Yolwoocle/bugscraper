@@ -191,6 +191,10 @@ function PlayerPreview:init(player_n, x, y, w, h)
                     { self.player_n, { "up" }, Text:text("input.prompts.move"), COL_WHITE },
                     { self.player_n, { "jump" }, Text:text("input.prompts.jump"), COL_WHITE },
                     { self.player_n, { "shoot" }, Text:text("input.prompts.shoot"), COL_WHITE },
+                    -- { self.player_n, { "interact" }, 
+                    --     Text:text_params("menu.pause.options", {capitalized=true}), 
+                    --     COL_WHITE 
+                    -- },
                 }
                 
                 if self.user:get_skin() then
