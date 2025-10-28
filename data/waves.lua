@@ -204,6 +204,27 @@ local thorns_arc_params = {
 
 local waves = parse_waves_table {
     
+
+    {
+        roll_type = WAVE_ROLL_TYPE_FIXED,
+
+        min = 1,
+        max = 1,
+        enemies = {
+            { E.FinalBoss, 1, position = { 87 * 16, 14 * 16 } }
+        },
+
+        run = function(self, level)
+            for _, actor in pairs(game.actors) do
+                if actor.name == "final_boss" then
+                    actor.state_machine:set_state("standby")
+                end
+            end
+        end,
+
+        elevator = ElevatorW1,
+    },
+
     -- Cafeteria
     -- new_cafeteria({ 
     --     run_func = function()
@@ -1637,11 +1658,15 @@ local waves = parse_waves_table {
             { E.ShopVendingMachine, 1, position = { CANVAS_WIDTH / 2, 16*15 } },
 
         },
+
+        music = "off",
     },
     
 
     {
         roll_type = WAVE_ROLL_TYPE_FIXED,
+
+        music = "miniboss",
 
         min = 1,
         max = 1,

@@ -28,35 +28,41 @@ local FlyingDung =         require "scripts.actor.enemies.flying_dung"
 local FinalBoss      = Enemy:inherit()
 
 function FinalBoss:init(x, y)
-    self:init_enemy(x, y, images.ceo, 90, 74)
+    self:init_enemy(x, y, images.ceo, 86, 68)
     self.name = "final_boss"
 
+    self.is_boss = true
+
     self.spr = AnimatedSprite:new({
-        introduction = { { images.ceo_normal }, 0.1 },
-        fight = { { images.ceo }, 0.1 },
+        introduction = { images.ceo_npc_idle, 0.2, 4 },
+        fight = { images.ceo_npc_idle, 0.2, 4 },
     }, "introduction")
 
     self.score = 1000
 
     self.layers = {
-        { spr = self.spr, is_visible = true },
+        { 
+            spr = self.spr, 
+            is_visible = true, 
+            offset = {x = 0, y = -16}
+        },
         { -- Desk
             spr = AnimatedSprite:new({
                 normal = { { images.ceo_office_desk }, 0.1 },
             }, "normal"),
-            is_visible = false
+            is_visible = true,
         },
         { -- Glass
             spr = AnimatedSprite:new({
                 normal = { { images.ceo_office_glass }, 0.1 },
             }, "normal"),
-            is_visible = false
+            is_visible = true
         },
         { -- Legs
             spr = AnimatedSprite:new({
                 normal = { { images.ceo_office_legs }, 0.1 },
             }, "normal"),
-            is_visible = false
+            is_visible = true
         },
     }
 
@@ -76,6 +82,7 @@ function FinalBoss:init(x, y)
         type = COLLISION_TYPE_SEMISOLID,
         is_slidable = true,
     }
+    self.is_pushable = false
     
     self.can_be_stomped_if_falling_down = false
     self.damage_on_stomp = 5
@@ -130,7 +137,7 @@ function FinalBoss:init(x, y)
                 end
             end,
             update = function(state, dt)
-                -- self:spawn_spikes(76, 0)
+                self:spawn_spikes(0, 0)
                 return "random"
             end,
         },
@@ -140,12 +147,11 @@ function FinalBoss:init(x, y)
             end,
             update = function(state, dt)
                 local possible_states = {
-                    -- "thwomp",
-                    -- "charge",
-                    -- "bunny_hopping_telegraph",
-                    "spawn_minions",
+                    "thwomp",
+                    "charge",
+                    "bunny_hopping_telegraph",
                 }
-                self.state_machine:set_state(random_sample(possible_states))
+                self.state_machine:set_state(random_sample_no_repeat(possible_states))
             end,
         },
 
@@ -159,51 +165,6 @@ function FinalBoss:init(x, y)
                 end
             end
         },
-
-        -----------------------------------------------------
-        --- SPAWN ENEMIES ---
-        -----------------------------------------------------
-        spawn_minions = {
-            enter = function(state)
-                self.vx = 0
-                self.vy = 0
-
-                self.minions = {}
-                local wave = {
-                    min = 2, 
-                    max = 4, 
-                    enemies = {
-                        { Slug,      2 },
-                        { StinkBug,  2 },
-                        { Larva,     2 },
-                        { Woodlouse, 2 },
-                    }
-                }
-                local amount = random_range_int(wave.min, wave.max)
-                for i=1, amount do
-                    local enemy = random_weighted(wave.enemies)
-                    local a = enemy:new(self.mid_x, self.mid_y)
-                    table.insert(self.minions, a)
-                    game:new_actor(a)
-                end
-            end,
-            update = function(state, dt)
-                self.debug_values[2] = tostring(#self.minions)
-                for i=#self.minions, 1, -1 do
-                    local enemy = self.minions[i]
-                    if enemy.is_removed then
-                        table.remove(self.minions, i)
-                    end
-                end
-
-                if #self.minions <= 0 then
-                    self.state_machine:set_state("spawn_minions")
-                end
-            end,
-            exit = function(state)
-            end,
-        },
-
 
         -----------------------------------------------------
         --- JUMPING ---
@@ -441,7 +402,7 @@ end
 function FinalBoss:update(dt)
     self:update_enemy(dt)
 
-    self.debug_values[2] = tostring(self.state_machine.current_state_name)
+    self.debug_values[1] = "state ".. tostring(self.state_machine.current_state_name)
 
     self.state_machine:update(dt)
 
@@ -462,10 +423,6 @@ function FinalBoss:update(dt)
     for _, layer in pairs(self.layers) do
         layer.spr:update_offset(self.spr.ox, self.spr.oy)
     end
-
-    -- self.debug_values[1] = concat(self.state_machine.current_state_name)
-    self.debug_values[1] = ""
-    self.debug_values[2] = concat(self.life, "❤")
 end
 
 function FinalBoss:on_stomped(player)
@@ -499,7 +456,14 @@ function FinalBoss:draw()
     for i, layer in pairs(self.layers) do
         if layer.is_visible then
             self.spr = layer.spr
+            
+            if layer.offset then
+                self.spr:update_offset(self.spr.ox + layer.offset.x, self.spr.oy + layer.offset.y)
+            end
             self:draw_enemy()
+            if layer.offset then
+                self.spr:update_offset(self.spr.ox - layer.offset.x, self.spr.oy - layer.offset.y)
+            end
         end
     end
     self.spr = def_spr
