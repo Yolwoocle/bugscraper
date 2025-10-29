@@ -41,6 +41,8 @@ local function new_cafeteria(params)
         floor_type = FLOOR_TYPE_CAFETERIA,
         roll_type = WAVE_ROLL_TYPE_FIXED,
         music = "cafeteria",
+        ambience = "cafeteria",
+
         run = function(self, level)
             for _, actor in pairs(game.actors) do
                 if actor.name == "poison_cloud" then
@@ -278,6 +280,7 @@ local waves = parse_waves_table {
             -- { E.Fly,   3 },
         },
         music = "w1",
+        ambience = "w1",
 
         over_title = get_world_prefix(1),
         title = get_world_name(1),
@@ -504,6 +507,7 @@ local waves = parse_waves_table {
 
         background = backgrounds.BackgroundFactory:new(),
         music = "w2",
+        ambience = "w2",
 
         elevator = ElevatorW2,
 
@@ -759,6 +763,7 @@ local waves = parse_waves_table {
         },
         background = backgrounds.BackgroundServers:new(),
         music = "w3",
+        ambience = "w3",
 
         elevator = ElevatorW3,
 

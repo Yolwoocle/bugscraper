@@ -1,44 +1,48 @@
-local TextManager = require "scripts.text"
-local ActorManager = require "scripts.game.actor_manager"
-local cutscenes    = require "data.cutscenes"
-Text = TextManager:new()
+local TextManager            = require "scripts.text"
+local ActorManager           = require "scripts.game.actor_manager"
+local cutscenes              = require "data.cutscenes"
+local music_disks            = require "data.music_disks"
+local ambience_disks         = require "data.ambience_disks"
+Text                         = TextManager:new()
 
-local backgrounds = require "data.backgrounds"
-local LightWorld = require "scripts.graphics.light_world"
+local backgrounds            = require "data.backgrounds"
+local LightWorld             = require "scripts.graphics.light_world"
 
-local Class = require "scripts.meta.class"
-local CollisionManager = require "scripts.physics.collision"
-local Player = require "scripts.actor.player"
-local Enemies = require "data.enemies"
-local ParticleSystem = require "scripts.game.particles"
-local AudioManager = require "scripts.audio.audio"
-local MenuManager = require "scripts.ui.menu.menu_manager"
-local InputManager = require "scripts.input.input"
-local MusicPlayer = require "scripts.audio.music_player"
-local Level = require "scripts.level.level"
-local GameUI = require "scripts.ui.game_ui"
-local Debug = require "scripts.game.debug"
-local Camera = require "scripts.game.camera"
-local Layer = require "scripts.graphics.layer"
-local LightLayer = require "scripts.graphics.light_layer"
-local ScreenshotManager = require "scripts.screenshot"
-local QueuedPlayer = require "scripts.game.queued_player"
-local GunDisplay = require "scripts.actor.enemies.gun_display"
+local Class                  = require "scripts.meta.class"
+local CollisionManager       = require "scripts.physics.collision"
+local Player                 = require "scripts.actor.player"
+local Enemies                = require "data.enemies"
+local ParticleSystem         = require "scripts.game.particles"
+local AudioManager           = require "scripts.audio.audio"
+local MenuManager            = require "scripts.ui.menu.menu_manager"
+local InputManager           = require "scripts.input.input"
+local MusicPlayer            = require "scripts.audio.music_player"
+local Level                  = require "scripts.level.level"
+local GameUI                 = require "scripts.ui.game_ui"
+local Debug                  = require "scripts.game.debug"
+local Camera                 = require "scripts.game.camera"
+local Layer                  = require "scripts.graphics.layer"
+local LightLayer             = require "scripts.graphics.light_layer"
+local ScreenshotManager      = require "scripts.screenshot"
+local QueuedPlayer           = require "scripts.game.queued_player"
+local GunDisplay             = require "scripts.actor.enemies.gun_display"
 local MetaprogressionManager = require "scripts.game.metaprogression"
-local BackroomTutorial = require "scripts.level.backroom.backroom_tutorial"
+local BackroomTutorial       = require "scripts.level.backroom.backroom_tutorial"
+local MusicDisk              = require "scripts.audio.music_disk"
+local MusicDiskWeb           = require "scripts.audio.music_disk_web"
 
-local DiscordPresence = require "scripts.meta.discord_presence"
-local Steamworks = require "scripts.meta.steamworks"
+local DiscordPresence        = require "scripts.meta.discord_presence"
+local Steamworks             = require "scripts.meta.steamworks"
 
-local measure = require "lib.batteries.measure"
+local measure                = require "lib.batteries.measure"
 
-local guns = require "data.guns"
-local upgrades = require "data.upgrades"
-local shaders = require "data.shaders"
-local images = require "data.images"
+local guns                   = require "data.guns"
+local upgrades               = require "data.upgrades"
+local shaders                = require "data.shaders"
+local images                 = require "data.images"
 local skins, skin_name_to_id = require "data.skins"
-local sounds = require "data.sounds"
-local utf8 = require "utf8"
+local sounds                 = require "data.sounds"
+local utf8                   = require "utf8"
 
 require "bugscraper_config"
 require "scripts.meta.constants"
@@ -71,14 +75,14 @@ function Game:init()
 	FONT_REGULAR = love.graphics.newImageFont("fonts/hope_gold.png", FONT_CHARACTERS)
 	FONT_SYMBOLS = love.graphics.newImageFont("fonts/font_symbols.png", FONT_SYMBOLS_CHARACTERS)
 	FONT_CHINESE = love.graphics.newImageFont("fonts/font_chinese.png", FONT_CHINESE_CHARACTERS)
-	FONT_7SEG =    love.graphics.newImageFont("fonts/7seg_font.png", FONT_7SEG_CHARACTERS)
-	FONT_MINI =    love.graphics.newImageFont("fonts/font_ant_party.png", FONT_MINI_CHARACTERS)
-	FONT_FAT =     love.graphics.newImageFont("fonts/font_counting_apples.png", FONT_FAT_CHARACTERS)
-	FONT_PAINT =   love.graphics.newFont("fonts/NicoPaint-Regular.ttf", 16)
+	FONT_7SEG = love.graphics.newImageFont("fonts/7seg_font.png", FONT_7SEG_CHARACTERS)
+	FONT_MINI = love.graphics.newImageFont("fonts/font_ant_party.png", FONT_MINI_CHARACTERS)
+	FONT_FAT = love.graphics.newImageFont("fonts/font_counting_apples.png", FONT_FAT_CHARACTERS)
+	FONT_PAINT = love.graphics.newFont("fonts/NicoPaint-Regular.ttf", 16)
 
 	FONT_REGULAR:setFallbacks(FONT_SYMBOLS, FONT_CHINESE)
 	FONT_MINI:setFallbacks(FONT_REGULAR, FONT_CHINESE)
-    Text:push_font(FONT_REGULAR)
+	Text:push_font(FONT_REGULAR)
 
 	-- Audio ===> Moved to OptionsManager
 	Options:set("volume", Options:get("volume"))
@@ -88,7 +92,7 @@ function Game:init()
 		backroom = BackroomTutorial:new()
 	end
 	self.start_with_splash = true
-	self:new_game({backroom = backroom})
+	self:new_game({ backroom = backroom })
 
 	self.debug = Debug:new(self)
 	self.menu_manager = MenuManager:new(self)
@@ -120,7 +124,7 @@ function Game:new_game(params)
 	Particles = ParticleSystem:new()
 	Input:mark_all_actions_as_handled()
 	if Options:get("convention_mode") then
-		for i=1, MAX_NUMBER_OF_PLAYERS do
+		for i = 1, MAX_NUMBER_OF_PLAYERS do
 			Input:remove_user(i)
 		end
 	end
@@ -132,22 +136,30 @@ function Game:new_game(params)
 	self:remove_queued_players()
 	self:remove_inactive_joysticks()
 
-	-- Music
+	-- Music & ambience
 	if self.music_player then self.music_player:stop() end
-	self.music_player = MusicPlayer:new()
-	self.music_player:set_disk("ground_floor_empty")
+	self.music_player = MusicPlayer:new(music_disks, "ground_floor_empty", {processes_pause = true, volume = Options:get("music_volume")})
+	self:set_music_volume(Options:get("music_volume"))
+	self.music_player:set_disk("ground_floor_empty") -- TODO put correct disk depending on nb of players
 	self.music_player:play()
+
+	if self.ambience_player then self.ambience_player:stop() end
+	self.ambience_player = MusicPlayer:new(ambience_disks, "cafeteria", {})
+	self.ambience_player:set_disk("lobby")
+	self.ambience_player:play()
+	self:set_ambience_volume(Options:get("sfx_volume"))
+
 	Options:update_volume()
 
 	-- Players
 	self.waves_until_respawn = {}
 	for i = 1, MAX_NUMBER_OF_PLAYERS do
-		self.waves_until_respawn[i] = {-1, nil}
+		self.waves_until_respawn[i] = { -1, nil }
 	end
 
 	-- Camera
 	self.camera = Camera:new()
-	
+
 	-- Level
 	self.level = Level:new(self, params.backroom)
 
@@ -231,8 +243,9 @@ function Game:new_game(params)
 	if params.iris_params then
 		self.game_ui:start_iris_transition(unpack(params.iris_params))
 	end
-	self.game_ui.dark_overlay_alpha =        param(params.dark_overlay_alpha, self.game_ui.dark_overlay_alpha)
-	self.game_ui.dark_overlay_alpha_target = param(params.dark_overlay_alpha_target, self.game_ui.dark_overlay_alpha_target)
+	self.game_ui.dark_overlay_alpha = param(params.dark_overlay_alpha, self.game_ui.dark_overlay_alpha)
+	self.game_ui.dark_overlay_alpha_target = param(params.dark_overlay_alpha_target,
+		self.game_ui.dark_overlay_alpha_target)
 	self.menu_blur = 1
 	self.max_menu_blur = 3
 
@@ -253,10 +266,10 @@ function Game:new_game(params)
 		self.camera.x = DEFAULT_CAMERA_X
 		self.camera.y = DEFAULT_CAMERA_Y
 		self.game_ui.logo_y = -70 -- SCOTCH
-		
+
 		self:start_game()
 	end
-	
+
 	_G_t_test = love.timer.getTime()
 end
 
@@ -343,12 +356,13 @@ function Game:update(dt)
 	self.camera:update_screenshake(dt)
 
 	self.frames_to_skip = max(0, self.frames_to_skip - 1)
-	-- BUG: pressing and releasing a button during a frameskip period will not register it  
-	if self.frames_to_skip <= 0 then 
+	-- BUG: pressing and releasing a button during a frameskip period will not register it
+	if self.frames_to_skip <= 0 then
 		Input:update(dt)
 	end
 
 	self.music_player:update(dt)
+	self.ambience_player:update(dt)
 
 	-- Menus
 	self.menu_manager:update(dt)
@@ -362,7 +376,7 @@ function Game:update(dt)
 
 	for i = 1, #self.layers - 1 do
 		self.layers[i].blur = Options:get("menu_blur") and (self.menu_manager.cur_menu ~= nil) and
-		(self.menu_manager.cur_menu.blur_enabled)
+			(self.menu_manager.cur_menu.blur_enabled)
 	end
 
 	self.discord_presence:update(dt)
@@ -452,7 +466,7 @@ function Game:draw_on_layer(layer_id, paint_function, params)
 end
 
 function Game:draw()
-	local tic_gamedraw = love.timer.getTime()		
+	local tic_gamedraw = love.timer.getTime()
 
 	-- Using a canvas for that sweet, resizable pixel art
 	love.graphics.setCanvas(main_canvas)
@@ -476,7 +490,6 @@ function Game:draw()
 
 	__gamedraw_dur = love.timer.getTime() - tic_gamedraw
 end
-
 
 function Game:draw_game()
 	exec_on_canvas(self.smoke_canvas, love.graphics.clear)
@@ -545,7 +558,7 @@ function Game:draw_game()
 			love.graphics.draw(self:get_layer(LAYER_HUD).canvas, self.shadow_ox, self.shadow_oy)
 		end)
 	end, { apply_camera = false })
- 
+
 	-----------------------------------------------------
 
 	self:draw_on_layer(LAYER_FRONT, function()
@@ -566,7 +579,8 @@ function Game:draw_game()
 	-----------------------------------------------------
 
 	self:draw_on_layer(LAYER_LIGHT, function()
-		local c = transparent_color(self.light_world.custom_fill_color or COL_BLACK_BLUE, self.light_world.darkness_intensity)
+		local c = transparent_color(self.light_world.custom_fill_color or COL_BLACK_BLUE,
+			self.light_world.darkness_intensity)
 		rect_color(c, "fill", -CANVAS_WIDTH, -CANVAS_HEIGHT, CANVAS_WIDTH * 4, CANVAS_HEIGHT * 3)
 	end)
 
@@ -685,7 +699,7 @@ function Game:listen_for_player_join(dt)
 end
 
 function Game:remove_queued_player(player_n)
-    local queued_player = self.queued_players[player_n]
+	local queued_player = self.queued_players[player_n]
 	if not queued_player then
 		return
 	end
@@ -705,9 +719,9 @@ function Game:remove_queued_players()
 end
 
 function Game:remove_inactive_joysticks()
-	for n=1, MAX_NUMBER_OF_PLAYERS do
+	for n = 1, MAX_NUMBER_OF_PLAYERS do
 		local user = Input:get_user(n)
-		
+
 		if user and user.joystick and not user.joystick:isConnected() then
 			self:leave_game(n)
 		end
@@ -724,6 +738,7 @@ end
 
 function Game:on_menu()
 	self.music_player:on_menu()
+	self.ambience_player:on_menu()
 	self:pause_repeating_sounds()
 end
 
@@ -743,10 +758,12 @@ end
 
 function Game:on_button_glass_spawn(button)
 	self.music_player:stop()
+	self.ambience_player:stop()
 end
 
 function Game:on_unmenu()
 	self.music_player:on_unmenu()
+	self.ambience_player:on_unmenu()
 
 	for k, a in pairs(self.actors) do
 		a:resume_constant_sounds()
@@ -755,6 +772,10 @@ end
 
 function Game:set_music_volume(vol)
 	self.music_player:set_volume(vol)
+end
+
+function Game:set_ambience_volume(vol)
+	self.ambience_player:set_volume(vol)
 end
 
 function Game:new_actor(actor, buffer_enemy)
@@ -774,6 +795,7 @@ end
 function Game:on_enemy_damage(enemy, n, damager)
 	self.level:on_enemy_damage(enemy, n, damager)
 end
+
 function Game:on_player_damage(player, n, source)
 	self.level:on_player_damage(player, n, source)
 end
@@ -801,7 +823,7 @@ end
 
 function Game:on_player_death(player)
 	self:unregister_alive_player(player.n)
-	self.waves_until_respawn[player.n] = {5, player}
+	self.waves_until_respawn[player.n] = { 5, player }
 
 	if self:get_number_of_alive_players() <= 0 then
 		self:on_last_player_death(player)
@@ -844,7 +866,7 @@ end
 
 function Game:game_over()
 	Metaprogression:add_xp(self.score)
-    self.score = 0
+	self.score = 0
 
 	self.menu_manager:set_menu("game_over")
 end
@@ -862,9 +884,9 @@ function Game:set_floor(val)
 end
 
 function Game:init_players(x, y, spacing)
-	spacing = spacing or (5*16)
+	spacing = spacing or (5 * 16)
 	self.all_players = {} -- All players, including dead/ghost ones
-	self.players = {} -- Only alive players
+	self.players = {}  -- Only alive players
 
 	if Options:get("convention_mode") then
 		return
@@ -874,15 +896,14 @@ function Game:init_players(x, y, spacing)
 		if Input:get_user(i) ~= nil then
 			local px, py
 			if x and y and spacing then
-				px = x + spacing*(i - 1)
+				px = x + spacing * (i - 1)
 				py = y
 			end
-			
+
 			self:new_player(i, px, py)
 		end
 	end
 end
-
 
 function Game:queue_join_game(input_profile_id, joystick)
 	local player_n = Input:find_free_user_number()
@@ -913,7 +934,7 @@ function Game:join_game(player_n)
 		self.skin_choices[player.skin.id] = false
 		Particles:smoke_big(player.mid_x, player.mid_y, COL_WHITE)
 	end
-	
+
 	self.level:on_player_joined(player)
 	self.game_ui:on_player_joined(player)
 end
@@ -922,7 +943,7 @@ function Game:get_default_player_position(player_n)
 	if self.level.backroom and self.level.backroom.get_default_player_position then
 		return self.level.backroom:get_default_player_position(player_n)
 	end
-	return 26*16 + (5*16)*(player_n - 1), CANVAS_HEIGHT - 3*16 + 4
+	return 26 * 16 + (5 * 16) * (player_n - 1), CANVAS_HEIGHT - 3 * 16 + 4
 end
 
 --- Registers a player into the table of alive players, and the table of all players
@@ -951,11 +972,11 @@ function Game:new_player(player_n, x, y)
 	local def_x, def_y = self:get_default_player_position(player_n)
 	x = param(x, def_x)
 	y = param(y, def_y)
-				
+
 	local player = Player:new(player_n, x, y, Input:get_user(player_n):get_skin() or skins["mio"])
 	self:register_player(player_n, player)
 
-	self.waves_until_respawn[player_n] = {-1, nil}
+	self.waves_until_respawn[player_n] = { -1, nil }
 	if self.level.backroom and self.level.backroom.get_default_player_gun then
 		local gun = self.level.backroom:get_default_player_gun()
 		player:equip_gun(gun)
@@ -963,7 +984,7 @@ function Game:new_player(player_n, x, y)
 
 	self:new_actor(player)
 
-	if self.level.backroom then 
+	if self.level.backroom then
 		if self.level.backroom.get_x_target_after_join_game then
 			player.show_hud = false
 			player:set_input_mode(PLAYER_INPUT_MODE_CODE)
@@ -989,19 +1010,19 @@ function Game:remove_player(player_n)
 end
 
 function Game:revive_player(player_n, x, y)
-    -- Remove old player (if exists)
-    self:remove_player(player_n)
+	-- Remove old player (if exists)
+	self:remove_player(player_n)
 
-    -- Spawn new player
-    local new_player = game:new_player(player_n, x, y)
-    self.waves_until_respawn[player_n] = {-1, nil}
+	-- Spawn new player
+	local new_player = game:new_player(player_n, x, y)
+	self.waves_until_respawn[player_n] = { -1, nil }
 
-    new_player:set_invincibility(new_player.max_invincible_time)
-    for _, upgrade in pairs(game.upgrades) do
-        new_player:apply_upgrade(upgrade, true)
-    end
+	new_player:set_invincibility(new_player.max_invincible_time)
+	for _, upgrade in pairs(game.upgrades) do
+		new_player:apply_upgrade(upgrade, true)
+	end
 
-    new_player:set_life(new_player.max_life)
+	new_player:set_life(new_player.max_life)
 
 	return new_player
 end
@@ -1056,6 +1077,7 @@ function Game:start_game()
 	self.game_ui.logo_y_target = -70
 	self.game_state = GAME_STATE_PLAYING
 	self.music_player:fade_out("w1", 1.0)
+	self.ambience_player:fade_out("w1", 1.0)
 	self.level:activate_enemy_buffer()
 	self.level:begin_next_wave_animation()
 	self:remove_queued_players()
@@ -1188,7 +1210,7 @@ function Game:mousereleased(x, y, button, istouch, presses)
 	if self.menu_manager then self.menu_manager:mousereleased(x, y, button, istouch, presses) end
 end
 
-function Game:textinput( text )
+function Game:textinput(text)
 	if self.menu_manager then self.menu_manager:textinput(text) end
 end
 

@@ -9,6 +9,7 @@ function Wave:init(params)
 	self.floor_type = param(params.floor_type, FLOOR_TYPE_NORMAL)
 	self.roll_type = param(params.roll_type, WAVE_ROLL_TYPE_RANDOM)
 	self.music = param(params.music, nil)
+	self.ambience = param(params.ambience, nil)
 	self.bounds = param(params.bounds, Rect:new(unpack(RECT_ELEVATOR_PARAMS)))
 
 	self.min = param(params.min, 1)
@@ -226,6 +227,10 @@ function Wave:enable_wave_side_effects(level)
 
 	if self.music then
 		game.music_player:fade_out(self.music, 1.0)
+	end
+
+	if self.ambience then
+		game.ambience_player:fade_out(self.ambience, 1.0)
 	end
 
 	if self.level_geometry then

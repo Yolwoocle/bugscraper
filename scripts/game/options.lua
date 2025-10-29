@@ -15,6 +15,7 @@ function OptionsManager:init()
 		sfx_volume = 1.0,
 		screenshake = 1.0,
 		sound_on = true,
+		ambience_on = true,
 		disable_background_noise = false,
 		play_music_on_pause_menu = true,
 
@@ -66,6 +67,9 @@ function OptionsManager:init()
 		volume = function(value) 
 			love.audio.setVolume(value)
 		end,
+		sfx_volume = function(value)
+			game:set_ambience_volume(ternary(self:get("ambience_on"), value, 0.0))
+		end,
 		music_volume = function(value)
 			game:set_music_volume(value)
 		end,
@@ -73,6 +77,9 @@ function OptionsManager:init()
 			if value then
                 game.music_player:play() --TODO test this
             end
+		end,
+		ambience_on = function(value)
+			game:set_ambience_volume(ternary(value, self:get("sfx_volume"), 0.0))
 		end,
 
 		is_fullscreen = function(value)

@@ -83,6 +83,7 @@ function BackroomTutorial:generate(world_generator)
 	-- Camera, music, stuff
 	game.camera.max_x = 67*16
 	game.music_player:set_disk("off")
+	game.ambience_player:set_disk("tutorial")
 	game.level.show_cabin = false
 
 	-- Start cutscene
