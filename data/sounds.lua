@@ -42,6 +42,8 @@ local sfxnames = {
 	["sfx_weapon_raspberryshotgun_shoot_{01-10}"] = {"sfx/weapons/raspberryshotgun/sfx_weapon_raspberryshotgun_shoot_{}.ogg", "static"},
 	["sfx_weapon_triplepepper_shoot_{01-08}"] =     {"sfx/weapons/triplepepper/sfx_weapon_triplepepper_shoot_{}.ogg", "static"},
 
+	["sfx_weapon_dry_shoot_{01-06}"] =              {"sfx/weapons/dry/sfx_weapon_dry_shoot_{}.ogg", "static"},
+
 	-- PLAYER
 	["sfx_player_footstep_metal_{01-10}"] =  {"sfx/actor/player/walk/metal/sfx_player_footstep_metal_{}.ogg", "static"},
 	["sfx_player_footstep_carpet_{01-10}"] = {"sfx/actor/player/walk/carpet/sfx_player_footstep_carpet_{}.ogg", "static"},
@@ -117,13 +119,14 @@ local sfxnames = {
 
 	-- Boss W1    
 	["sfx_boss_intro_mrdung"] = {"sfx/enemy/mrdung/sfx_boss_intro_mrdung.ogg", "static"},
-	["sfx_boss_mrdung_boss_activate"] = {"sfx/enemy/mrdung/sfx_boss_mrdung_boss_activate.ogg", "static"},
+	["sfx_boss_mrdung_boss_activate_{01-08}"] = {"sfx/enemy/mrdung/activate/sfx_boss_mrdung_boss_activate_{}.ogg", "static"},
 	["sfx_boss_mrdung_death_{01-03}"] = {"sfx/enemy/mrdung/death/sfx_boss_mrdung_death_{}.ogg", "static"},
 	["sfx_boss_mrdung_dying"] = {"sfx/enemy/mrdung/sfx_boss_mrdung_dying.ogg", "static"},
 	["sfx_boss_mrdung_land_in_dung"] = {"sfx/enemy/mrdung/sfx_boss_mrdung_land_in_dung.ogg", "static"},
 	["sfx_boss_mrdung_roll"] = {"sfx/enemy/mrdung/sfx_boss_mrdung_roll.ogg", "static", { looping = true }},
 	["sfx_boss_mrdung_jump_{01-06}"] = {"sfx/enemy/mrdung/jump/sfx_boss_mrdung_jump_{}.ogg", "static"},
 	["sfx_boss_mrdung_ball_hit_{01-06}"] = {"sfx/enemy/mrdung/ball/sfx_boss_mrdung_ball_hit_{}.ogg", "static"},
+	["sfx_boss_mrdung_bump_{01-02}"] = {"sfx/enemy/mrdung/bump/sfx_boss_mrdung_bump_{}.ogg", "static"},
 
 	-- W2	
 	-- Timed spikes
@@ -185,6 +188,14 @@ local sfxnames = {
 	["sfx_bullet_bounce_{01-02}"] = {"placeholder/sfx_bullet_bounce_{}.ogg", "static"},
 	["chipper_telegraph"] = {"placeholder/chipper_telegraph.ogg", "static"},
 	["sfx_enemy_death"] = {"placeholder/sfx_enemy_death.ogg", "static"},
+
+	-- Ambience
+	["amb_pad_cafeteria_lp"] = {"sfx/ambience/amb_pad_cafeteria_lp.ogg", "static", {looping = true}},
+	["amb_pad_lobby_lp"] = {"sfx/ambience/amb_pad_lobby_lp.ogg", "static", {looping = true}},
+	["amb_pad_tutorial_lp"] = {"sfx/ambience/amb_pad_tutorial_lp.ogg", "static", {looping = true}},
+	["amb_pad_world1_lp"] = {"sfx/ambience/amb_pad_world1_lp.ogg", "static", {looping = true}},
+	["amb_pad_world2_lp"] = {"sfx/ambience/amb_pad_world2_lp.ogg", "static", {looping = true}},
+	["amb_pad_world3_lp"] = {"sfx/ambience/amb_pad_world3_lp.ogg", "static", {looping = true}},
 }
 
 for key, params in pairs(sfxnames) do

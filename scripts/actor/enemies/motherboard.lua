@@ -137,7 +137,7 @@ function Motherboard:init(x, y)
                 end
 
                 game:screenshake(8)
-                Input:vibrate_all(0.5, 0.7)
+                Input:vibrate_all(0.5, 1.0)
             end
         },
         intro_linger = {

@@ -45,6 +45,9 @@ end
 function ButtonSmall:on_stomp_killed(damager)
     game:screenshake(5)
     Audio:play("sfx_actor_button_small_pressed")
+    if damager.is_player then
+        Input:vibrate(damager.n, 0.4, 0.4)
+    end
     
     self:press_button(damager)
 end

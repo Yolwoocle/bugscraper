@@ -11,8 +11,6 @@ local func_set_menu     = menu_util.func_set_menu
 local PROMPTS_NORMAL    = menu_util.PROMPTS_NORMAL
 
 return Menu:new(game, "{menu.options.title}", {
-    { "🌐 {menu.options.game.language}", func_set_menu("options_language") },
-    { "" },
     { "<<< {menu.options.input.title} >>>" },
     { "🔘 {menu.options.input.input}", func_set_menu("options_input") },
     { "" },
@@ -61,8 +59,14 @@ return Menu:new(game, "{menu.options.title}", {
     { RangeOptionMenuItem, "🥚 {menu.options.visuals.bullet_lightness}", "bullet_lightness", { 0.1, 1.0 }, 0.1, "%" },
     { "" },
     { "<<< {menu.options.game.title} >>>" },
+    { "🌐 {menu.options.game.language}", func_set_menu("options_language") },
     { "🎓 {menu.options.game.tutorial}", func_set_menu("confirm_tutorial") }, 
-    { RangeOptionMenuItem, "🛜 {menu.options.game.screenshake}", "screenshake", { 0.0, 1.0 }, 0.05, "%" },
+    { RangeOptionMenuItem, "🛜 {menu.options.game.screenshake}", "screenshake", { 0.0, 2.0 }, 0.05, function(value)
+        if value == 2.0 then
+            return "Vlambeer"
+        end
+		return string.format("%d%%", round(value * 100)) 
+	end },
     { BoolOptionMenuItem, "🕐 {menu.options.game.timer}", "timer_on" },
     { BoolOptionMenuItem, "↖ {menu.options.game.mouse_visible}", "mouse_visible" },
     { BoolOptionMenuItem, "🛅 {menu.options.game.pause_on_unfocus}", "pause_on_unfocus" },

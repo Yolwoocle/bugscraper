@@ -1056,6 +1056,8 @@ function Player:shoot(dt, is_burst)
 				local ang = math.atan2(dy, dx)
 				local tip_x, tip_y = self.gun:get_gun_tip_position(self.mid_x + ox, self.y + oy, ang)
 				-- TODO Play "empty gun" sound
+				Audio:play_var("sfx_weapon_dry_shoot_{01-06}", 0.1, 1.1)
+				Particles:smoke(tip_x, tip_y, 3, COL_WHITE, 6, 4, 2)
 			end
 		end
 

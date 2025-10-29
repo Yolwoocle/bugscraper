@@ -177,6 +177,7 @@ end
 
 function TextMenuItem:after_click()
 	Audio:play_var("ui_menu_select_{01-04}", 0.1, 1.2)
+	Input:vibrate(Input:get_last_ui_user_n(), 0.03, 0.1)
 	self.oy = -4
 end
 

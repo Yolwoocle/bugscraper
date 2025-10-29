@@ -44,6 +44,7 @@ function ButtonBig:on_stomp_killed(damager)
     game:screenshake(10)
     -- game:on_red_button_pressed()
     Audio:play("button_press")
+    Input:vibrate_all(0.4, 0.4)
     
     -- TODO: smoke particles
     -- local b = ButtonPressed:new(CANVAS_WIDTH/2, game.world_generator.box_rby)
@@ -55,6 +56,7 @@ function ButtonBig:on_death(damager, reason)
     if reason ~= "stomped" then
         game:screenshake(15)
         Audio:play("glass_fracture", 0.7, 0.2)
+
         game:enable_endless_mode()
         -- particles:image(self.mid_x, self.mid_y, 100, images.glass_shard, self.h)
         Particles:image(self.mid_x, self.mid_y, 300, images.button_fragments, self.h, 6, 0.05, 0)

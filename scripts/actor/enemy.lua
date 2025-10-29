@@ -373,7 +373,7 @@ function Enemy:kill(damager, reason)
 		Particles:star_splash(self.mid_x, self.mid_y)
 
 		if player then
-			Input:vibrate(player.n, 0.05, 0.05)
+			Input:vibrate(player.n, 0.05, 0.3)
 	
 			Particles:floating_image({
 				images.star_small_1,
