@@ -39,7 +39,7 @@ function Larva:update_larva(dt)
     -- self.audio_delay = self.audio_delay - dt
     -- if self.audio_delay <= 0 then
     -- 	self.audio_delay = love.math.random(0.3, 1.5)
-    -- 	audio:play({
+    -- 	self:play_sound({
     -- 		"larva_damage1",
     -- 		"larva_damage2",
     -- 		"larva_damage3",

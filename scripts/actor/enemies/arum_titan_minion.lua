@@ -104,7 +104,7 @@ function ArumTitanMinion:init(x, y, parent, params)
                 self.exploding_timer:start()
                 self.flash_timer:start(0.5)
 
-                Audio:play("stomp2")
+                self:play_sound("stomp2")
             end,
             update = function(state, dt)
                 self:rotate_around_parent(dt)

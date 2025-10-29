@@ -18,7 +18,7 @@ function Actor:init_actor(x, y, w, h, spr, args)
 	self.is_active = true
 	self.x = x or 0
 	self.y = y or 0
-	self.z = 0
+	self.z = 0 -- +Z points AWAY from the viewer
 	self.w = w or 32
 	self.h = h or 32
 
@@ -635,6 +635,20 @@ end
 
 function Actor:set_sprite_scale(s)
 	self.spr:set_scale(s, s)
+end
+
+function Actor:play_sound(snd, volume, pitch, params)
+	params = params or {}
+	params.x = params.x or self.mid_x
+	params.y = params.y or self.mid_y
+	Audio:play(snd, volume, pitch, params)
+end
+
+function Actor:play_sound_var(snd, vol_var, pitch_var, params)
+	params = params or {}
+	params.x = params.x or self.mid_x
+	params.y = params.y or self.mid_y
+	Audio:play_var(snd, vol_var, pitch_var, params)
 end
 
 return Actor

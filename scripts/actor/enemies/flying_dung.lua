@@ -87,7 +87,7 @@ function FlyingDung:begin_targeting()
 
     self.state = "targeting"
     self.is_ponging = false
-    Audio:play_var("flying_dung_death", 0, 1.2)
+    self:play_sound_var("flying_dung_death", 0, 1.2)
 
     self.is_pushable = false
     self.is_stompable = false

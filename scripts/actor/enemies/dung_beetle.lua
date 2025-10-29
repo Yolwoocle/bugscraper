@@ -107,8 +107,8 @@ function DungBeetle:init(x, y)
                 Particles:pop_layer()
 
                 Particles:image(self.mid_x, self.mid_y, 40, images.glass_shard, self.h)
-                Audio:play("sfx_boss_mrdung_dying")
-                Audio:play_var("sfx_actor_upgrade_display_break_{01-04}", 0.1, 1.1)
+                self:play_sound("sfx_boss_mrdung_dying")
+                self:play_sound_var("sfx_actor_upgrade_display_break_{01-04}", 0.1, 1.1)
             end,
             update = function(state, dt)
                 self.spr.rot = self.spr.rot + self.vr * dt 
@@ -140,7 +140,7 @@ function DungBeetle:init(x, y)
 
                 game:screenshake(6)
                 Particles:image(self.mid_x, self.mid_y, 40, {images.dung_particle_1, images.dung_particle_2, images.dung_particle_3}, self.h)
-                Audio:play_var("sfx_boss_mrdung_land_in_dung", 0.1, 1.1)
+                self:play_sound_var("sfx_boss_mrdung_land_in_dung", 0.1, 1.1)
             end,
 
             draw = function(state)
@@ -207,7 +207,7 @@ function DungBeetle:on_death()
     
     Particles:ejected_player(images.dung_beetle_dead, self.mid_x, self.mid_y)
     Particles:image(self.mid_x, self.mid_y, 100, {images.dung_particle_1, images.dung_particle_2, images.dung_particle_3}, self.h, 2)
-    Audio:play("sfx_boss_mrdung_death_{01-03}")
+    self:play_sound("sfx_boss_mrdung_death_{01-03}")
 end
 
 function DungBeetle:draw()
@@ -225,7 +225,7 @@ function DungBeetle:on_hit_flying_dung(flying_dung)
     self.hits = math.max(0, self.hits - 1)
     
     self:do_damage(5, flying_dung)
-    Audio:play("sfx_boss_mrdung_ball_hit_{01-06}", 1.0)
+    self:play_sound("sfx_boss_mrdung_ball_hit_{01-06}", 1.0)
 
     if self.vehicle then
         if sign(self.vehicle.vx) == -sign(flying_dung.vx) then

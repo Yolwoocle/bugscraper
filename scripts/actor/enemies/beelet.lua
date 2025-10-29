@@ -100,7 +100,7 @@ function Beelet:init(x, y)
 
                 self.spr:set_animation("attack")
                 self.telegraph_timer:start()
-                Audio:play_var("sfx_enemy_beelet_telegraph_{01-04}", 0.1, 1.2)
+                self:play_sound_var("sfx_enemy_beelet_telegraph_{01-04}", 0.1, 1.2)
 
                 self.s = 2
                 self.target_s = 1
@@ -115,7 +115,7 @@ function Beelet:init(x, y)
             enter = function()
                 self.spr:set_animation("attack")
                 self.attack_bounces_counter = self.attack_bounces
-                Audio:play_var("sfx_enemy_beelet_attack_{01-04}", 0.2, 1.2)
+                self:play_sound_var("sfx_enemy_beelet_attack_{01-04}", 0.2, 1.2)
 
                 self.size_t = 0.0
             end,
@@ -139,7 +139,7 @@ function Beelet:init(x, y)
 
                 game:screenshake(3)
             	Input:vibrate_all(0.1, 0.45)
-                Audio:play_var("sfx_enemy_beelet_bounce_{01-04}", 0.2, 1.2)
+                self:play_sound_var("sfx_enemy_beelet_bounce_{01-04}", 0.2, 1.2)
 
                 self.attack_bounces_counter = math.max(0, self.attack_bounces_counter - 1)
                 if self.attack_bounces_counter <= 0 then
@@ -153,8 +153,8 @@ function Beelet:init(x, y)
 
                 self.post_attack_timer:start()
             
-				Audio:play_var("sfx_bullet_bounce_{01-02}", 0.2, 1.2)
-                Audio:play_var("metal_impact", 0, 1)
+				self:play_sound_var("sfx_bullet_bounce_{01-02}", 0.2, 1.2)
+                self:play_sound_var("metal_impact", 0, 1)
                 -- local s = "metalfootstep_0"..tostring(love.sume=0.5})
 
                 self.s = 2

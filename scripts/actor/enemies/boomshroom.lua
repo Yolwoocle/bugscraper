@@ -65,7 +65,7 @@ function Boomshroom:init(x, y)
                 -- You don't need to understand this.
                 local new_size = clamp(math.ceil((#self.sizes-1) * (1 - self.life / self.max_life)), 1, #self.sizes - 1)
                 if new_size ~= self.boomshroom_size then
-                    Audio:play("sfx_enemy_boomshroom_inflate_0" .. tostring(new_size))
+                    self:play_sound("sfx_enemy_boomshroom_inflate_0" .. tostring(new_size))
                 end
                 self:set_size(new_size)
             end
@@ -87,7 +87,7 @@ function Boomshroom:init(x, y)
                 self.flash_timer:start(0.5)
 
                 self:set_size(#self.sizes)
-                Audio:play("sfx_enemy_boomshroom_flashing")
+                self:play_sound("sfx_enemy_boomshroom_flashing")
             end,
             update = function(state, dt)
                 if self.flash_timer:update(dt) then
@@ -149,7 +149,7 @@ function Boomshroom:on_negative_life()
 end
 
 function Boomshroom:on_stomp_killed()
-    Audio:play_var("sfx_enemy_boomshroom_inflate_instant_{01-06}", 0.2, 1.2)
+    self:play_sound_var("sfx_enemy_boomshroom_inflate_instant_{01-06}", 0.2, 1.2)
     self:start_exploding()
 end
 

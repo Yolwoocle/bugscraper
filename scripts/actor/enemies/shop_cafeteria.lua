@@ -22,7 +22,7 @@ function ShopCafeteria:apply_current_product()
 
     game.level:on_upgrade_display_killed(self)
 
-    Audio:play(self.selected_product.activate_sound)
+    self:play_sound(self.selected_product.activate_sound)
     Particles:collected_upgrade(self.mid_x, self.mid_y, self.selected_product.sprite, self.selected_product.color)
     game:screenshake(6)
 
@@ -30,7 +30,7 @@ function ShopCafeteria:apply_current_product()
 end
 
 function ShopCafeteria:on_death()
-    Audio:play_var("sfx_actor_button_small_glass_break", 0.1, 1.1)
+    self:play_sound_var("sfx_actor_button_small_glass_break", 0.1, 1.1)
 
     Particles:image(self.mid_x, self.mid_y - 32, 150, images.glass_shard, 32, 120, 0.3)
 end

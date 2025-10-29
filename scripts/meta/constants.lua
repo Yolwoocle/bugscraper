@@ -579,6 +579,11 @@ MUSIC_MODE_PAUSE = "pause"
 
 --------------------------------------------- 
 
+-- Audio
+AUDIO_3D_RANGE = 0.2 
+
+--------------------------------------------- 
+
 -- Upgrade
 UPGRADE_TYPE_TEMPORARY = "temporary"
 UPGRADE_TYPE_INSTANT = "instant"

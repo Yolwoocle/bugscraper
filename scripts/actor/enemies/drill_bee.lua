@@ -104,7 +104,7 @@ function DrillBee:init(x, y, spr)
                 self.is_affected_by_walls = true
                 self.speed = 300
 
-                Audio:play_var("sfx_enemy_drill_bee_attack_{01-04}", 0.2, 1.2)
+                self:play_sound_var("sfx_enemy_drill_bee_attack_{01-04}", 0.2, 1.2)
             end,
             update = function(state, dt)
                 Particles:dust(self.mid_x, self.mid_y)
