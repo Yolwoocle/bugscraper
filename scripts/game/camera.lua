@@ -42,7 +42,6 @@ function Camera:update(dt)
     end
     self:clamp_camera_position(dt)
     self:follow_target(dt)
-
     -- self:update_screenshake(dt)
 end
 

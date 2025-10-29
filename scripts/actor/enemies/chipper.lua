@@ -111,8 +111,8 @@ function Chipper:init(x, y, spr)
                 self.post_attack_timer:start()
                 self.telegraph_source:stop()
             
-				Audio:play_var("sfx_bullet_bounce_{01-02}", 0.2, 1.2)
-                Audio:play_var("metal_impact", 0, 1)
+				self:play_sound_var("sfx_bullet_bounce_{01-02}", 0.2, 1.2)
+                self:play_sound_var("metal_impact", 0, 1)
                 -- local s = "metalfootstep_0"..tostring(love.sume=0.5})
 
             end,

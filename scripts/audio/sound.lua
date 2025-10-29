@@ -14,6 +14,12 @@ function Sound:init(source, pitch, volume, params)
     self.is_looping = param(params.looping, false)
 
     self.is_paused = false
+
+    self.x = 0
+    self.y = 0
+    self.z = 0
+
+    self:update_source()
 end
 
 function Sound:clone(volume, pitch, params)
@@ -30,6 +36,9 @@ end
 function Sound:update_source()
     self.source:setVolume(self.volume)
 	self.source:setPitch(self.pitch)
+    if self.source:getChannelCount() == 1 then
+        self.source:setPosition(self.x, self.y, self.z)
+    end
 end
 
 function Sound:set_volume(volume)
@@ -39,6 +48,13 @@ end
 
 function Sound:set_pitch(pitch)
     self.pitch = pitch
+    self:update_source()
+end
+
+function Sound:set_position(x, y, z)
+    self.x = x
+    self.y = y
+    self.z = z
     self:update_source()
 end
 

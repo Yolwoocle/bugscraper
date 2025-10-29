@@ -341,7 +341,7 @@ function Enemy:do_damage(n, damager)
 	end
 	self.damaged_flash_timer = self.damaged_flash_max
 	
-	if self.play_sfx then   Audio:play_var(self.sound_damage, 0.3, 1.1)   end
+	if self.play_sfx then   self:play_sound_var(self.sound_damage, 0.3, 1.1)   end
 	self.life = self.life - n
 	self:on_damage(n)
 
@@ -383,9 +383,9 @@ function Enemy:kill(damager, reason)
 	end
 	if self.play_sfx then
 		if reason == "stomped" then
-			Audio:play_var(self.sound_stomp, 0.3, 1.1)
+			self:play_sound_var(self.sound_stomp, 0.3, 1.1)
 		else
-			Audio:play_var(self.sound_death, 0.3, 1.1)
+			self:play_sound_var(self.sound_death, 0.3, 1.1)
 		end
 	end
 

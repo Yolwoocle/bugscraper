@@ -74,7 +74,7 @@ end
 function Grasshopper:on_grounded()
     self.squash = self.landing_squash
     self.vy = -self.jump_speed
-    Audio:play_var("jump_short", 0.2, 1.2, {pitch=0.4})
+    self:play_sound_var("jump_short", 0.2, 1.2, {pitch=0.4})
 end
 
 return Grasshopper

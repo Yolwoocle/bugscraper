@@ -106,7 +106,7 @@ function UpgradeDisplay:set_focused(value)
 end
 
 function UpgradeDisplay:on_focus()
-    Audio:play("sfx_upgrades_general_hover")
+    self:play_sound("sfx_upgrades_general_hover")
 end
 
 function UpgradeDisplay:is_player_in_range()
@@ -143,7 +143,7 @@ end
 
 function UpgradeDisplay:apply()
     if self.product then
-        Audio:play(self.product.activate_sound)
+        self:play_sound(self.product.activate_sound)
 
         game:apply_upgrade(self.product)
         game.level:on_upgrade_display_killed(self)

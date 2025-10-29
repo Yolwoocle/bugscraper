@@ -44,7 +44,7 @@ end
 
 function ButtonSmallRocket:on_stomp_killed(damager)
     game:screenshake(5)
-    Audio:play("sfx_actor_button_small_pressed")
+    self:play_sound("sfx_actor_button_small_pressed")
     
     self:press_button(damager)
 end

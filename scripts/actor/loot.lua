@@ -243,7 +243,7 @@ end
 
 function Loot.Ammo:on_collect(player)
 	Particles:smoke(self.mid_x, self.mid_y, nil, COL_LIGHT_BLUE)
-	Audio:play("item_collect")
+	self:play_sound("item_collect")
 	
 	local success, overflow = player.gun:add_ammo(self.value)
 	if not success then
@@ -278,7 +278,7 @@ end
 function Loot.Life:on_collect(player)
 	local success, overflow = player:heal(self.value)
 	Particles:smoke(self.mid_x, self.mid_y, nil, COL_LIGHT_RED)
-	Audio:play("sfx_loot_health_collect")
+	self:play_sound("sfx_loot_health_collect")
 
 	Particles:word(self.mid_x, self.y, concat(self.value,"❤"), COL_LIGHT_RED)
 
@@ -339,7 +339,7 @@ function Loot.Gun:on_collect(player)
 	player:equip_gun(self.gun)
 	
 	Particles:smoke(self.mid_x, self.mid_y, 10, COL_LIGHT_BROWN)
-	Audio:play("sfx_loot_health_collect")
+	self:play_sound("sfx_loot_health_collect")
 
 	if not self.remove_on_collect then
 		local old_life = self.life

@@ -66,7 +66,7 @@ function PongBall:after_collision_pong_ball(col, other)
     if col.type ~= "cross" then
         if self.is_ponging then
             local s = self.sound_pong_bounce
-            Audio:play_var(s, 0.3, 1.1, {pitch=1.0, volume=0.7})
+            self:play_sound_var(s, 0.3, 1.1, {pitch=1.0, volume=0.7})
             Particles:smoke(col.touch.x, col.touch.y)
 
             local dx, dy = bounce_vector_cardinal(math.cos(self.pong_direction), math.sin(self.pong_direction), col.normal.x, col.normal.y)

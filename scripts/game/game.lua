@@ -147,7 +147,7 @@ function Game:new_game(params)
 	self.ambience_player = MusicPlayer:new(ambience_disks, "cafeteria", {})
 	self.ambience_player:set_disk("lobby")
 	self.ambience_player:play()
-	self:set_ambience_volume(Options:get("sfx_volume"))
+	self:set_ambience_volume(Options:get("ambience_on") and Options:get("sfx_volume") or 0)
 
 	Options:update_volume()
 

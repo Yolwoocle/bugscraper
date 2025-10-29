@@ -6,6 +6,8 @@ local sounds = require "data.sounds"
 local AudioManager = Class:inherit()
 
 function AudioManager:init()
+	love.audio.setOrientation( 0, 0, 1, 0, -1, 0 )
+
 	-- Music is managed outside AudioManager so no need to assign it a layer 
 	self.layers = {
 		"sfx"
@@ -43,20 +45,25 @@ function AudioManager:play(snd, volume, pitch, params)
     local sound = self:get_sound(sndname)
     if sound == nil then   return   end
 	
-	-- for i, s in ipairs(snd_table) do
-	-- 	if not s:isPlaying() then
-	-- 		local source = s
-	-- 		source:setVolume(volume * snd_table.volume)
-	-- 		source:setPitch(pitch   * snd_table.pitch)
-	-- 		source:play()
-
-	-- 		return
-	-- 	end
-	-- end
-
 	local new_sound = sound:clone()
 	new_sound:set_volume(volume * sound.volume * layer_volume)
 	new_sound:set_pitch(pitch * sound.pitch)
+
+	-- Sound position
+	if game and game.camera then
+		local cx, cy = game.camera:get_real_position()
+		local x = ((params.x or CANVAS_WIDTH/2 ) - cx) / CANVAS_WIDTH
+		local y = ((params.y or CANVAS_HEIGHT/2) - cy) / CANVAS_WIDTH
+		local z = params.z or 1
+
+		-- Convert from [0, 1] range to [-1, 1] range 
+		x = (x*2 - 1) * AUDIO_3D_RANGE
+		y = (y*2 - 1) * AUDIO_3D_RANGE
+		z = 1
+		print_debug(string.format("%.2f %.2f %.2f %s", x, y, z, snd))
+		new_sound:set_position(x, y, z)
+	end
+
 	new_sound:play()
 	
 	if self.current_effect == "echo" then
@@ -106,16 +113,6 @@ end
 
 function AudioManager:on_unpause()
 	self:play_music()
-end
-
-function AudioManager:set_source_position_relative_to_object(source, obj)
-	if not source then print("AudioManager:set_source_position_relative_to_object : No source defined!") return end
-	if not obj then print("AudioManager:set_source_position_relative_to_object : No object defined!") return end
-	local mult = 0.05
-	source:setPosition(
-		mult * (obj.x - CANVAS_WIDTH*.5) / (CANVAS_WIDTH),
-		mult * (obj.y - CANVAS_HEIGHT*.5) / (CANVAS_HEIGHT)
-	)
 end
 
 function AudioManager:get_sound(name)

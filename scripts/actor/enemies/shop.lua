@@ -185,7 +185,7 @@ function Shop:increment_selection(diff)
     self.star_pattern_ox = diff*20
 
     local r = (self.selected_product_index - 1)/(#self.products - 1)
-    Audio:play_var("ui_menu_hover_{01-04}", 0.2, 1.0, {pitch = lerp(1.8, 2.2, r)})
+    self:play_sound_var("ui_menu_hover_{01-04}", 0.2, 1.0, {pitch = lerp(1.8, 2.2, r)})
 end
 
 function Shop:start_interaction(player)

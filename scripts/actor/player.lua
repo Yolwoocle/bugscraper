@@ -316,7 +316,7 @@ function Player:get_state_machine()
 				game:frameskip(30)
 
 				self.timer_before_death = self.max_timer_before_death
-				Audio:play("sfx_player_death")
+				self:play_sound("sfx_player_death")
 			end,
 			update = function(state, dt)
 				local goal_r = 5*sign(self.dir_x)*pi2
@@ -330,7 +330,7 @@ function Player:get_state_machine()
 					game:screenshake(10)
 					Input:vibrate_all(0.3, 0.5)
 					
-					Audio:play("explosion")
+					self:play_sound("explosion")
 
 					Particles:splash(self.mid_x, state.death_y - state.death_oy + self.h/2, 40, {COL_LIGHT_YELLOW, COL_ORANGE, COL_LIGHT_RED, COL_WHITE})
 					Particles:star_splash(self.mid_x, state.death_y-state.death_oy + self.h/2)
@@ -563,7 +563,7 @@ function Player:kill()
 	game:on_kill(self)
 	
 	self.timer_before_death = self.max_timer_before_death
-	Audio:play("sfx_player_death")
+	self:play_sound("sfx_player_death")
 
 	self.is_dead = true
 	self:remove()
@@ -598,10 +598,10 @@ function Player:do_damage(n, source)
 			damage_sfx = "sfx_player_damage_poison"
 		elseif source.name == "timed_spikes" then
 			damage_sfx = "sfx_enemy_timed_spikes_hit_{01-05}"	
-			Audio:play("sfx_player_damage_normal")
+			self:play_sound("sfx_player_damage_normal")
 		end
 	end
-	Audio:play(damage_sfx)
+	self:play_sound(damage_sfx)
 	-- Particles:word(self.mid_x, self.y, concat("-",n), COL_LIGHT_RED)
 	
 	if self.is_knockbackable and source then
@@ -960,7 +960,7 @@ function Player:jump(dt, multiplier)
 	Particles:smoke(self.mid_x, self.y+self.h)
 	-- Particles:jump_dust_kick(self.mid_x, self.y+self.h - 12, 0)
 	Particles:jump_dust_kick(self.mid_x, self.y+self.h - 12, math.atan2(self.vy, self.vx) + pi/2)
-	Audio:play_var("sfx_player_jumplong", 0, 1.2)
+	self:play_sound_var("sfx_player_jumplong", 0, 1.2)
 	self.jump_squash = 1/3
 end
 
@@ -969,7 +969,7 @@ function Player:wall_jump(normal)
 	self.vy = -self.jump_speed * self.jump_speed_mult
 	
 	Particles:jump_dust_kick(self.mid_x, self.y+self.h - 12, math.atan2(self.vy, self.vx) + pi/2)
-	Audio:play_var("sfx_player_jumplong", 0, 1.2)
+	self:play_sound_var("sfx_player_jumplong", 0, 1.2)
 	self.jump_squash = 1/3
 end
 
@@ -1010,7 +1010,7 @@ function Player:on_grounded_normal()
 	if self.grounded_col and self.grounded_col.other.collision_info then
 		s = self.grounded_col.other.collision_info.land_sound
 	end
-	Audio:play_var(s, 0.2, 1.2, {pitch=1.0, volume=1.0})
+	self:play_sound_var(s, 0.2, 1.2, {pitch=1.0, volume=1.0})
 
 	self.jump_squash = 1.5
 	self.spr:set_animation("idle")
@@ -1056,7 +1056,7 @@ function Player:shoot(dt, is_burst)
 				local ang = math.atan2(dy, dx)
 				local tip_x, tip_y = self.gun:get_gun_tip_position(self.mid_x + ox, self.y + oy, ang)
 				-- TODO Play "empty gun" sound
-				Audio:play_var("sfx_weapon_dry_shoot_{01-06}", 0.1, 1.1)
+				self:play_sound_var("sfx_weapon_dry_shoot_{01-06}", 0.1, 1.1)
 				Particles:smoke(tip_x, tip_y, 3, COL_WHITE, 6, 4, 2)
 			end
 		end
@@ -1534,7 +1534,7 @@ function Player:animate_walk(dt)
 		if self.grounded_col and self.grounded_col.other.collision_info then
 			s = self.grounded_col.other.collision_info.walk_sound
 		end
-		Audio:play_var(s, 0.2, 1.2, {pitch=1.0, volume=1.0})
+		self:play_sound_var(s, 0.2, 1.2, {pitch=1.0, volume=1.0})
 	end
 end
 

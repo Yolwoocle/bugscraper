@@ -180,7 +180,7 @@ function FlyingSpawner:spawn_larva(direction)
     table.insert(self.larva_projectiles, larva_projectile)
     Particles:star_splash_small(self.x + x, self.y + y)
     Particles:smoke(self.x + x, self.y + y)
-    Audio:play_var("sfx_enemy_flying_nest_shoot_larva_{01-03}", 0.2, 1.2)
+    self:play_sound_var("sfx_enemy_flying_nest_shoot_larva_{01-03}", 0.2, 1.2)
 end
 
 function FlyingSpawner:draw()

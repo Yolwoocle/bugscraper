@@ -73,21 +73,21 @@ function BreakableActor:on_damage(amount)
     local new_state = floor(self.life / part)
 
     local pitch = random_range(1/1.1, 1.1) - 0.5*self.life/self.max_life
-    Audio:play(self.sounds_impact, 1, pitch)
+    self:play_sound(self.sounds_impact, 1, pitch)
     
     if old_state ~= new_state then
         self.break_state = new_state
         
         game:screenshake(self.change_break_state_screenshake)
         Particles:image(self.mid_x, self.mid_y, self.change_break_state_num_particles, self.change_break_state_particle_image, self.h)
-        Audio:play_var(self.sound_fracture, 0.1, 1.1)
+        self:play_sound_var(self.sound_fracture, 0.1, 1.1)
     end
 
     game:screenshake(self.damage_screenshake)
 end
 
 function BreakableActor:on_death()
-    Audio:play(self.sound_break, self.volume_break)
+    self:play_sound(self.sound_break, self.volume_break)
     game:screenshake(self.break_screenshake)
 
     local vol = (self.w/16) * (self.h/16)

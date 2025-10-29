@@ -72,8 +72,8 @@ function Dung:init(x, y, spr, w, h)
                 game:frameskip(15)
                 game:screenshake(8)
 
-                Audio:play_var("sfx_actor_upgrade_display_break_{01-04}", 0.1, 1.1)
-                Audio:play_var("sfx_boss_mrdung_boss_activate_{01-08}", 0.1, 1.1)
+                self:play_sound_var("sfx_actor_upgrade_display_break_{01-04}", 0.1, 1.1)
+                self:play_sound_var("sfx_boss_mrdung_boss_activate_{01-08}", 0.1, 1.1)
                 if self.rider then
                     Particles:image(self.rider.mid_x, self.rider.mid_y, 15, images.glass_shard, self.rider.h)
                 end
@@ -150,7 +150,7 @@ function Dung:init(x, y, spr, w, h)
             end,
             after_collision = function(state, col)
                 if col.type ~= "cross" and self.bounces > 0 then
-                    Audio:play_var("sfx_boss_mrdung_jump_{01-06}", 0.1, 1.1) -- TODO make it play when you LAND on the floor
+                    self:play_sound_var("sfx_boss_mrdung_jump_{01-06}", 0.1, 1.1) -- TODO make it play when you LAND on the floor
                     game:screenshake(4)
                 end
             end
@@ -240,7 +240,7 @@ function Dung:after_collision(col, other)
 
             print(math.abs(self.vx))
             if math.abs(self.vx) > 50 then
-                Audio:play_var("sfx_boss_mrdung_bump_{01-02}", 0.2, 1.1, {volume= (math.abs(self.vx) - 50)/50})
+                self:play_sound_var("sfx_boss_mrdung_bump_{01-02}", 0.2, 1.1, {volume= (math.abs(self.vx) - 50)/50})
                 game:screenshake(3)
                 Input:vibrate_all(0.1, 0.5)
             end

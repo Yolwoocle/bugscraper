@@ -31,6 +31,7 @@ return Menu:new(game, "{menu.options.title}", {
             self.is_selectable = Options:get("sound_on")
         end
     },
+    { BoolOptionMenuItem, "🔊 {menu.options.audio.ambience}", "ambience_on" },
     { BoolOptionMenuItem, "🎼 {menu.options.audio.music_pause_menu}", "play_music_on_pause_menu",
         function(self)
             self.is_selectable = Options:get("sound_on")

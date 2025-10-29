@@ -41,7 +41,7 @@ function JumpingProp:on_collision(col, other)
         self.cur_jump_force = self.jump_force
 
         if self.sound then
-            Audio:play_var(self.sound, 0.2, 1.2)
+            self:play_sound_var(self.sound, 0.2, 1.2)
         end
     end
 

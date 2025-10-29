@@ -80,7 +80,7 @@ function Stabee:init(x, y, spr)
             enter = function(state)
                 self.spr:update_offset(0, 0)
 
-                Audio:play_var("stabee_attack", 0.1, 1.1)
+                self:play_sound_var("stabee_attack", 0.1, 1.1)
             end,
             update = function(state, dt)
                 self.speed_x = 0
@@ -95,8 +95,8 @@ function Stabee:init(x, y, spr)
 
         stuck = {
             enter = function(state)
-                Audio:play_var("sfx_enemy_stabee_land_{01-04}", 0.1, 1.1)
-				Audio:play_var("sfx_bullet_bounce_{01-02}", 0.2, 1.2, {pitch = 0.8})
+                self:play_sound_var("sfx_enemy_stabee_land_{01-04}", 0.1, 1.1)
+				self:play_sound_var("sfx_bullet_bounce_{01-02}", 0.2, 1.2, {pitch = 0.8})
 
                 self.stuck_oscillation_t = 0.0
                 self.stuck_oscillation_amplitude = 1.0
@@ -139,7 +139,7 @@ function Stabee:init(x, y, spr)
                 self.is_affected_by_bounds = true
                 self.is_affected_by_walls = true
                 self:set_position(self.x, self.y - self.stuck_spr_oy)
-                Audio:play_var("sfx_enemy_stabee_unstuck_{01-04}", 0.2, 1.2)
+                self:play_sound_var("sfx_enemy_stabee_unstuck_{01-04}", 0.2, 1.2)
 
                 local y0 = self.y + self.h
                 local vx = random_range(40, 60)

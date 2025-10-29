@@ -82,7 +82,7 @@ function Dummy:disable_dummy()
     self.destroy_bullet_on_impact = false
 	self.is_immune_to_bullets = true
 
-    Audio:play_var(self.sound_death, 0.1, 1.2)
+    self:play_sound_var(self.sound_death, 0.1, 1.2)
 end
 
 function Dummy:on_death()

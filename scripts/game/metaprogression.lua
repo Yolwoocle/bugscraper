@@ -44,6 +44,7 @@ function MetaprogressionManager:init()
         { threshold = 5000, rewards = { { type = "skin", skin = t.nel } } },
         { threshold = 5000, rewards = { { type = "skin", skin = t.rico } } },
         { threshold = 5000, rewards = { { type = "skin", skin = t.nob } } },
+        { threshold = 5000, rewards = { { type = "skin", skin = t.amb } } },
         { threshold = 5000, rewards = { { type = "upgrade", upgrade = "UpgradePomegranateJuice" } } },
         { threshold = 5000, rewards = { { type = "skin", skin = t.dodu } } },
         { threshold = 5000, rewards = { { type = "skin", skin = t.leo } } },

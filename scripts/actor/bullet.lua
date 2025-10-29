@@ -161,7 +161,7 @@ function Bullet:on_collision(col)
 		-- Solid collision
 		local s = "metalfootstep_0"..tostring(love.math.random(0,4))
 		if self.play_sfx then
-			Audio:play_var(s, 0.3, 1, {pitch=0.7, volume=0.5})
+			self:play_sound_var(s, 0.3, 1, {pitch=0.7, volume=0.5})
 		end
 		self:kill()
 	end
@@ -179,7 +179,7 @@ function Bullet:on_collision(col)
 		if col.other.destroy_bullet_on_impact and self.destroy_on_damage then
 			local s = "metalfootstep_0"..tostring(love.math.random(0,4))
 			if self.play_sfx then
-				Audio:play_var(s, 0.3, 1, {pitch=0.7, volume=0.5})
+				self:play_sound_var(s, 0.3, 1, {pitch=0.7, volume=0.5})
 			end
 			self:kill()
 		end
@@ -211,7 +211,7 @@ function Bullet:on_collision(col)
 				Particles:bullet_vanish(self.mid_x, self.y, ang + pi/2)
 			end
 			if self.play_sfx then
-				Audio:play_var("sfx_bullet_bounce_{01-02}", 0.2, 1.5)
+				self:play_sound_var("sfx_bullet_bounce_{01-02}", 0.2, 1.5)
 			end
 
 			col.other:on_bullet_bounced(self, col)
@@ -222,7 +222,7 @@ function Bullet:on_collision(col)
 end
 
 function Bullet:kill()
-	-- Audio:play_var("bullet_bounce", 0.2, 1.2)
+	-- self:play_sound_var("bullet_bounce", 0.2, 1.2)
 	if self.do_particles then
 		Particles:smoke(self.x + self.w/2, self.y + self.h/2, 4)
 		Particles:bullet_vanish(self.x + self.w/2, self.y + self.h/2, self.spr.rot - pi/2)
