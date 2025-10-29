@@ -52,14 +52,14 @@ function AudioManager:play(snd, volume, pitch, params)
 	-- Sound position
 	if game and game.camera then
 		local cx, cy = game.camera:get_real_position()
-		local x = (params.x or CANVAS_WIDTH/2) / CANVAS_WIDTH
-		local y = (params.y or CANVAS_HEIGHT/2) / CANVAS_WIDTH
+		local x = ((params.x or CANVAS_WIDTH/2 ) - cx) / CANVAS_WIDTH
+		local y = ((params.y or CANVAS_HEIGHT/2) - cy) / CANVAS_WIDTH
 		local z = params.z or 1
 
 		-- Convert from [0, 1] range to [-1, 1] range 
 		x = (x*2 - 1) * AUDIO_3D_RANGE
 		y = (y*2 - 1) * AUDIO_3D_RANGE
-		z = z * AUDIO_3D_RANGE
+		z = 1
 		print_debug(string.format("%.2f %.2f %.2f %s", x, y, z, snd))
 		new_sound:set_position(x, y, z)
 	end
