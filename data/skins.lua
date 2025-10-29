@@ -76,6 +76,19 @@ local skins = {
 		text_key = "nob",
 	},
 	{
+		anim_idle = {images.amb_idle, 0.14, 4},
+		anim_wall_slide = {images.amb_wall_slide},
+		img_walk_down = images.amb_walk_down,
+		img_airborne = images.amb_airborne,
+		img_dead = images.amb_dead,
+
+		color_palette = {color(0xfeae34), color(0xf77622), color(0xfee761), color(0x3a4466), color(0x262b44)},
+		menu_color = color(0xfeae34), 
+		text_color = COL_BLACK_BLUE,
+		icon = "🍊",
+		text_key = "amb",
+	},
+	{
 		anim_idle = {images.rabbit_1, 0.2, 1},
 		anim_wall_slide = {images.rabbit_2},
 		img_walk_down = images.rabbit_1,

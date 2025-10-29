@@ -71,6 +71,7 @@ return {
 			tok = "Tok",
 			nel = "Nel",
             nob = "Nob", --ADDED
+            amb = "Amb", --ADDED
 			rico = "Rico",
 			leo = "Leo",
 		},

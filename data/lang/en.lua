@@ -81,6 +81,7 @@ return {
             tok = "Tok",
             nel = "Nel",
             nob = "Nob",
+            amb = "Amb",
             rico = "Rico",
             leo = "Leo",
             dodu = "Dodu",
