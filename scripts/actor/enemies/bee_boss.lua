@@ -19,7 +19,8 @@ function BeeBoss:init(x, y)
 
     self.is_boss = true
 
-    self:set_max_life(200)
+    -- self:set_max_life(200)
+    self:set_max_life(150)
 
     self.stomps = math.huge
     self.is_stompable = true
@@ -27,9 +28,9 @@ function BeeBoss:init(x, y)
 
     self.self_knockback_mult = 0.0
 
-    self.destroy_bullet_on_impact = false
-    self.is_bouncy_to_bullets = true
-    self.is_immune_to_bullets = true
+    self.destroy_bullet_on_impact = true
+    self.is_bouncy_to_bullets = false
+    self.is_immune_to_bullets = false
 
     self.spr = AnimatedSprite:new({
         normal = {images.bee_boss_alt, 0.05, 2},
@@ -83,6 +84,9 @@ function BeeBoss:init(x, y)
     self.state_machine = StateMachine:new({
         random = {
             enter = function(state)
+                self.destroy_bullet_on_impact = true
+                self.is_bouncy_to_bullets = false
+                self.is_immune_to_bullets = false
             end,
             update = function(state, dt)
                 local possible_states = {
@@ -351,6 +355,10 @@ function BeeBoss:init(x, y)
 
                 if self.state_timer:get_time_passed() > 1.0 then
                     self.is_stompable = false
+
+                    self.destroy_bullet_on_impact = false
+                    self.is_bouncy_to_bullets = true
+                    self.is_immune_to_bullets = true
                 end
                 
                 if self.state_timer:update(dt) then
@@ -500,6 +508,7 @@ function BeeBoss:spawn_spikes()
         local spikes = TimedSpikes:new(x, y, t_off, t_tel, t_on, j*(t_total/68)*2, {
             orientation = orientation,
             start_after_standby = false,
+            do_circular_timing = false,
         })
         spikes.spike_i = j
         spikes.timing_mode = TIMED_SPIKES_TIMING_MODE_MANUAL
