@@ -401,13 +401,13 @@ function DebugCommandManager:init()
     }
 
     self.messages = {}
-    self.max_messages = 18
+    self.max_messages = 28
 
     self.all_commands = table_keys(self.commands)
     table.sort(self.all_commands)
 
     self:add_message("Please do NOT report to me any bugs related to the debug menu. I will NOT fix them!")
-    self:add_message("Type /help for help")
+    self:add_message("Type 'help' for help")
 end
 
 function DebugCommandManager:filter_argument_completion(argument, possible_values)

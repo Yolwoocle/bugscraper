@@ -1229,7 +1229,6 @@ end
 
 function Game:frameskip(q)
 	self.frames_to_skip = math.max(self.frames_to_skip, q)
-	self.frames_to_skip = math.min(60, self.frames_to_skip)
 end
 
 function Game:slow_mo(q)

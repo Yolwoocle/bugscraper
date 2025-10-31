@@ -27,6 +27,11 @@ local FlyingDung =         require "scripts.actor.enemies.flying_dung"
 
 local FinalBoss      = Enemy:inherit()
 
+local LAYER_CEO = 1
+local LAYER_DESK = 2
+local LAYER_GLASS = 3
+local LAYER_ROBOT_LEGS = 4
+
 function FinalBoss:init(x, y)
     self:init_enemy(x, y, images.ceo, 86, 68)
     self.name = "final_boss"
@@ -36,6 +41,13 @@ function FinalBoss:init(x, y)
     self.spr = AnimatedSprite:new({
         introduction = { images.ceo_npc_idle, 0.2, 4 },
         fight = { images.ceo_npc_idle, 0.2, 4 },
+
+        shocked = { images.ceo_npc_shocked, 0.2, 1 },
+        airborne = { images.ceo_npc_airborne, 0.2, 1 },
+        jetpack = { images.ceo_npc_jetpack, 0.2, 1 },
+        clap = { images.ceo_npc_clap_hand, 0.02, 3, nil, { looping = false } },
+        tangled_wires = {images.ceo_tangled_wires, 0.1, 1},
+        tangled_wires_shocked = {images.ceo_tangled_wires_shocked, 0.1, 1},
     }, "introduction")
 
     self.score = 1000
@@ -78,6 +90,7 @@ function FinalBoss:init(x, y)
 
     self.is_stompable = false
     self.is_pushable = false
+    self.is_killed_on_negative_life = false
     
     self.can_be_stomped_if_falling_down = false
     self.damage_on_stomp = 5
@@ -391,6 +404,54 @@ function FinalBoss:init(x, y)
             end,
         },
 
+        -----------------------------------------------------
+        --- FINAL SECTION ---
+        -----------------------------------------------------
+
+        death_animation = {
+            enter = function(state)
+                self:reset_spikes()
+                self.vx = 0
+                self.vy = 0
+                self.friction_x = 0
+                self.gravity = self.default_gravity
+                self.damage = 0 
+                self.life = 0
+                self.invincible_timer = math.huge
+
+                Particles:push_layer(PARTICLE_LAYER_BACK)
+                Particles:static_image(images.star_big, self.mid_x, self.mid_y, 0, 0.05, 1, {
+                    color = COL_WHITE
+                })
+                Particles:static_image(images.star_big, self.mid_x, self.mid_y, 0, 0.05, 0.9, {
+                    color = COL_LIGHT_RED
+                })
+                Particles:pop_layer()
+                
+                Particles:image(self.mid_x, self.mid_y, 80, images.glass_shard, self.h)
+
+                self.spr:set_animation("shocked")
+                self.layers[LAYER_GLASS].spr:set_visible(false)
+                
+                self.layers[LAYER_CEO].offset.y = -16
+
+                game:frameskip(60*1.5)
+                game:screenshake(15)
+                
+                game.music_player:set_disk("off")
+
+                state.f = 2
+            end,
+
+            update = function(state, dt)
+                state.f = state.f - 1
+                if state.f == 0 then
+                    self.spr:set_visible(false)
+                    Particles:ejected_player(images.dung_beetle_dead, self.mid_x, self.mid_y)
+                end
+            end
+        },     
+        
     }, "spawn_minions")
 end
 
@@ -424,10 +485,15 @@ function FinalBoss:update(dt)
         self.glass_break_state = new_glass_break_state
         Particles:image(self.mid_x, self.mid_y, 40, images.glass_shard, self.h)
 
-        self.layers[3].spr:set_animation("break_"..tostring(new_glass_break_state))
+        self.layers[LAYER_GLASS].spr:set_animation("break_"..tostring(clamp(new_glass_break_state, 0, 3)))
         game:screenshake(4)
         Input:vibrate_all(0.1, 0.3)
+        self:play_sound_var("sfx_actor_upgrade_display_break_{01-04}", 0.1, 1.1)
     end
+end
+
+function FinalBoss:on_negative_life()
+    self.state_machine:set_state("death_animation")
 end
 
 function FinalBoss:wait_then_random_wave()
@@ -552,34 +618,6 @@ function FinalBoss:spawn_spikes(tile_ox, tile_oy)
             j = j + 1
         end
     end
-
-
-    -- -- Right
-    -- for i = 14, 3, -1 do
-    --     spawn_spike(tile_ox*16 + CANVAS_WIDTH - 32, tile_oy*16 + i * BW, 3, j)
-
-    --     if i ~= 3 then
-    --         j = j + 1
-    --     end
-    -- end
-
-    -- -- Top
-    -- for i = CANVAS_WIDTH / 16 - 4, 3, -1 do
-    --     spawn_spike(tile_ox*16 + i * BW, tile_oy*16 + BW * 3, 2, j)
-
-    --     if i ~= 3 then
-    --         j = j + 1
-    --     end
-    -- end
-
-    -- -- Left
-    -- for i = 3, 14 do
-    --     spawn_spike(tile_ox*16 + 3, tile_oy*16 + i * BW, 1, j)
-
-    --     if i ~= 14 then
-    --         j = j + 1
-    --     end
-    -- end
 end
 
 return FinalBoss
