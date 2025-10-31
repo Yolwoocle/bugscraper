@@ -240,6 +240,7 @@ return {
                 sfx_volume = "GŁOŚNOŚĆ EFEKTÓW", -- ADDED
                 music_volume = "GŁOŚNOŚĆ MUZYKI",
                 music_pause_menu = "MUZYKA W MENU PAUZY",
+                ambience = "AMBIENCE SOUNDS", -- ADDED
             },
             visuals = {
                 title = "Elementy wizualne",

@@ -247,6 +247,7 @@ return {
                 sfx_volume = "VOLUME DES EFFETS SONORES",
                 music_volume = "VOLUME DE LA MUSIQUE",
                 music_pause_menu = "MUSIQUE DANS LE MENU DE PAUSE",
+                ambience = "SONS D'AMBIANCE", 
             },
             visuals = {
                 title = "Visuels",

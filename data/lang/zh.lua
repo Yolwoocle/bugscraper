@@ -245,6 +245,7 @@ return {
                 sfx_volume = "音效音量",
                 music_volume = "音乐音量",
                 music_pause_menu = "暂停菜单音乐",
+                ambience = "AMBIENCE SOUNDS", -- ADDED
             },
             visuals = {
                 title = "画面",

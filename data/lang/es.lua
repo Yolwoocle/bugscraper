@@ -236,6 +236,7 @@ return {
                 sfx_volume = "VOLUMEN DE LOS EFECTOS DE SONIDO", -- ADDED
 				music_volume = "VOLUMEN DE LA MÚSICA",
 				music_pause_menu = "REPRODUCIR MÚSICA DURANTE EL MENU DE PAUSA", -- Whether music should play on the pause menu
+                ambience = "AMBIENCE SOUNDS", -- ADDED
 			},
 			visuals = {
 				title = "Gráficos",
