@@ -54,8 +54,11 @@ function FinalBoss:init(x, y)
         },
         { -- Glass
             spr = AnimatedSprite:new({
-                normal = { { images.ceo_office_glass }, 0.1 },
-            }, "normal"),
+                break_0 = { { images.ceo_office_glass }, 0.1 },
+                break_1 = { { images.ceo_office_glass_break_1 }, 0.1 },
+                break_2 = { { images.ceo_office_glass_break_2 }, 0.1 },
+                break_3 = { { images.ceo_office_glass_break_3 }, 0.1 },
+            }, "break_0"),
             is_visible = true
         },
         { -- Legs
@@ -68,20 +71,12 @@ function FinalBoss:init(x, y)
 
     -- Parameters
     self.def_friction_y = self.friction_y
-    self.life = 170
+    self:set_max_life(170)
     self.is_flying = true
     self.gravity = 0
     self.attack_radius = 64
 
-    self.destroy_bullet_on_impact = false
-    self.is_bouncy_to_bullets = true
-    self.is_immune_to_bullets = true
-
     self.is_stompable = false
-    self.collision_info = CollisionInfo:new {
-        type = COLLISION_TYPE_SEMISOLID,
-        is_slidable = true,
-    }
     self.is_pushable = false
     
     self.can_be_stomped_if_falling_down = false
@@ -121,6 +116,8 @@ function FinalBoss:init(x, y)
 
     self.flip_mode = ENEMY_FLIP_MODE_MANUAL
 
+    self.glass_break_state = 0
+
     -- State machine
     self.state_machine = StateMachine:new({
         introduction = {
@@ -138,6 +135,7 @@ function FinalBoss:init(x, y)
             end,
             update = function(state, dt)
                 self:spawn_spikes(0, 0)
+                self:reset_spikes()
                 return "random"
             end,
         },
@@ -151,7 +149,7 @@ function FinalBoss:init(x, y)
                     "charge",
                     "bunny_hopping_telegraph",
                 }
-                self.state_machine:set_state(random_sample_no_repeat(possible_states))
+                self.state_machine:set_state(random_sample_no_repeat(possible_states, self.previous_state))
             end,
         },
 
@@ -171,8 +169,6 @@ function FinalBoss:init(x, y)
         -----------------------------------------------------
         bunny_hopping_telegraph = {
             enter = function(state)
-                self:reset_spikes()
-
                 self.speed_x = 0
                 self.state_timer:start(0.7)
 
@@ -210,7 +206,7 @@ function FinalBoss:init(x, y)
             end,
             after_collision = function(state, col)
                 if col.normal.y == -1 then
-                    self.state_machine:set_state("waiting")
+                    self:wait_then_random_wave()
                     self.vx = 0
                     Input:vibrate_all(0.2, 0.5)
                     game:screenshake(6)
@@ -223,8 +219,6 @@ function FinalBoss:init(x, y)
         -----------------------------------------------------
         charge = {
             enter = function(state)
-                self:reset_spikes()
-
                 local target = self:get_random_player()
                 local dir
                 if target then
@@ -291,7 +285,7 @@ function FinalBoss:init(x, y)
             end,
             after_collision = function(state, col)
                 if col.type ~= "cross" and math.abs(col.normal.x) == 1 then
-                    self.state_machine:set_state("waiting")
+                    self:wait_then_random_wave()
                     Input:vibrate_all(0.2, 0.5)
                     game:screenshake(6)
                 end
@@ -331,7 +325,8 @@ function FinalBoss:init(x, y)
                 end
 
                 if self.stomps_counter <= 0 then
-                    return "waiting"
+                    self:wait_then_random_wave()
+                    return
                 end
             end
         },
@@ -371,7 +366,7 @@ function FinalBoss:init(x, y)
                     self.stomps_counter = self.stomps_counter - 1
 
                     if self.stomps_counter <= 0 then
-                        self.state_machine:set_state("waiting")
+                        self:wait_then_random_wave()
                     else
                         self.state_machine:set_state("thwomp_rise")
                     end
@@ -408,7 +403,6 @@ function FinalBoss:update(dt)
 
     if self.unstompable_timer:update(dt) then
         self.spr:set_color(COL_WHITE)
-        self.is_stompable = true
         self.damage = 1
     end
     if self.unstompable_timer.is_active then
@@ -422,12 +416,39 @@ function FinalBoss:update(dt)
 
     for _, layer in pairs(self.layers) do
         layer.spr:update_offset(self.spr.ox, self.spr.oy)
+        layer.spr:set_flashing_white(self.spr.is_flashing_white)
     end
+
+    local new_glass_break_state = floor(4 * (1 - self.life / self.max_life))
+    if new_glass_break_state ~= self.glass_break_state then
+        self.glass_break_state = new_glass_break_state
+        Particles:image(self.mid_x, self.mid_y, 40, images.glass_shard, self.h)
+
+        self.layers[3].spr:set_animation("break_"..tostring(new_glass_break_state))
+        game:screenshake(4)
+        Input:vibrate_all(0.1, 0.3)
+    end
+end
+
+function FinalBoss:wait_then_random_wave()
+    self.previous_state = ({
+        bunny_hopping_telegraph = "bunny_hopping_telegraph",
+        bunny_hopping = "bunny_hopping_telegraph",
+        charge = "", --it's fine to repeat multiple charges
+        charge_telegraph = "",
+        charging = "",
+        thwomp = "thwomp",
+        thwomp_flying = "thwomp",
+        thwomp_telegraph = "thwomp",
+        thwomp_attack = "thwomp",
+        thwomp_rise = "thwomp",
+    })[self.state_machine.current_state_name]
+    
+    self.state_machine:set_state("waiting")
 end
 
 function FinalBoss:on_stomped(player)
     self.unstompable_timer:start()
-    self.is_stompable = false
     self.damage = 0
 
     game:frameskip(10)
@@ -506,12 +527,13 @@ function FinalBoss:spawn_spikes(tile_ox, tile_oy)
 
     local j = 0
 
-    local t_off, t_tel, t_on = 2, 0.75, 0.25
+    local t_off, t_tel, t_on = 2.0, 0.75, 0.25
     local t_total = t_off + t_tel + t_on
     local function spawn_spike(x, y, orientation, j)
         local spikes = TimedSpikes:new(x, y, t_off, t_tel, t_on, j * (t_total / 68) * 2, {
             orientation = orientation,
             start_after_standby = false,
+            do_circular_timing = false,
         })
         spikes.spike_i = j
         spikes.timing_mode = TIMED_SPIKES_TIMING_MODE_MANUAL

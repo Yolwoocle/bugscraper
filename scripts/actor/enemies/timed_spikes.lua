@@ -46,6 +46,7 @@ function TimedSpikes:init(x, y, duration_off, duration_telegraph, duration_on, s
     self.spr:set_rotation(self.orientation * pi/2)
 
     self.timing_mode = TIMED_SPIKES_TIMING_MODE_TEMPORAL
+    self.do_circular_timing = param(args.do_circular_timing, true) -- whether the cycle loops back after finishing
 
     self.z = 2
     self.state_order = {
@@ -219,7 +220,10 @@ function TimedSpikes:get_offset_time_and_state(time_offset)
         total_time = total_time + state[2]
     end
 
-    local time = time_offset % total_time
+    local time = time_offset
+    if self.do_circular_timing then
+        time = time % total_time
+    end
     for i_state = 1, #self.state_order do
         local state_duration = self.state_order[i_state][2]
         if time <= state_duration then
@@ -246,6 +250,10 @@ function TimedSpikes:freeze()
     self.state_timer:stop()
 end
 
+function TimedSpikes:disable_spikes()
+    self.state_machine:set_state("disabled")
+end
+
 function TimedSpikes:set_state(index)
     self.state_index = mod_plus_1(index, #self.state_order)
     local state = self.state_order[self.state_index]
@@ -255,15 +263,7 @@ end
 function TimedSpikes:update(dt)
     TimedSpikes.super.update(self, dt)
 
-    if self.state_timer:update(dt) then
-        local new_state = mod_plus_1(self.state_index + 1, #self.state_order)
-        
-        self:set_state(new_state)
-
-        if (self.timing_mode == TIMED_SPIKES_TIMING_MODE_TEMPORAL) or (self.timing_mode == TIMED_SPIKES_TIMING_MODE_MANUAL and self.state_index ~= 1) then
-            self.state_timer:start(self.state_order[self.state_index][2])
-        end
-    end
+    self:update_spike_state(dt)
 
     self.spike_y = move_toward(self.spike_y, self.spike_target_y, self.extend_speed*self.spike_length*dt)
     self.spike_sprite.sy = lerp(self.spike_sprite.sy, 1, 0.1)
@@ -272,6 +272,26 @@ function TimedSpikes:update(dt)
     self.spike_stem_sprite.is_visible = self.spike_sprite.is_visible
 
     self.state_machine:update(dt)
+end
+
+function TimedSpikes:update_spike_state(dt)
+    if self.state_timer:update(dt) then
+        local new_state = self.state_index + 1
+        if self.do_circular_timing then
+            new_state = mod_plus_1(new_state, #self.state_order)
+        else
+            if new_state > #self.state_order then
+                self:disable_spikes()
+                return
+            end
+        end
+        
+        self:set_state(new_state)
+
+        if (self.timing_mode == TIMED_SPIKES_TIMING_MODE_TEMPORAL) or (self.timing_mode == TIMED_SPIKES_TIMING_MODE_MANUAL and self.state_index ~= 1) then
+            self.state_timer:start(self.state_order[self.state_index][2])
+        end
+    end
 end
 
 function TimedSpikes:draw()

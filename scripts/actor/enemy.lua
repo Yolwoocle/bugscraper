@@ -462,6 +462,7 @@ function Enemy:on_hit_bullet(bul, col)
 		return false
 	end
 	local dmg = self:get_bullet_damage(bul)
+	
 	self:do_damage(dmg, bul)
 	
 	if self.is_knockbackable then

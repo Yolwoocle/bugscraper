@@ -205,15 +205,13 @@ local thorns_arc_params = {
 }
 
 local waves = parse_waves_table {
-    
-
     {
         roll_type = WAVE_ROLL_TYPE_FIXED,
 
         min = 1,
         max = 1,
         enemies = {
-            { E.FinalBoss, 1, position = { 87 * 16, 14 * 16 } }
+            { E.FinalBoss, 1, position = { CANVAS_WIDTH/2 - 43, 11 * 16 - 4 } }
         },
 
         run = function(self, level)
