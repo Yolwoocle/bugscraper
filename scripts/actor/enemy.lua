@@ -445,12 +445,24 @@ function Enemy:drop_loot(loot, params)
 	game:new_actor(instance)
 end
 
+
+function Enemy:get_bullet_damage(bul)
+	if bul.override_enemy_damage then
+		return bul.override_enemy_damage 
+	end
+	if self.is_boss and bul.boss_damage then
+		return bul.boss_damage
+	end
+	return bul.damage
+end
+
 --- Function called when a bullet hits the enemy 
 function Enemy:on_hit_bullet(bul, col)
 	if self.is_immune_to_bullets then
 		return false
 	end
-	self:do_damage(bul.override_enemy_damage or bul.damage, bul)
+	local dmg = self:get_bullet_damage(bul)
+	self:do_damage(dmg, bul)
 	
 	if self.is_knockbackable then
 		local ang = atan2(bul.vy, bul.vx)

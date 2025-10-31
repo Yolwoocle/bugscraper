@@ -39,6 +39,7 @@ function Guns:init()
 		self.sfx = "sfx_weapon_peagun_shoot_{01-08}"
 
 		self.damage = 1.5
+		self.boss_damage = 1.5
 		self.max_ammo = 25
 		self.max_reload_timer = 1.5
 		self.is_auto = true
@@ -65,6 +66,7 @@ function Guns:init()
 		self.max_ammo = 15
 
 		self.damage = 1.5
+		self.boss_damage = 0.8
 		self.is_auto = true
 		self.spr = images.gun_triple
 		self.sfx = "sfx_weapon_triplepepper_shoot_{01-08}"
@@ -99,6 +101,7 @@ function Guns:init()
 		self.is_burst = true
 		
 		self.damage = 1.5
+		self.boss_damage = 0.6
 		self.cooldown = 0.4
 		self.burst_count = 5
 		self.burst_delay = 0.05
@@ -123,6 +126,7 @@ function Guns:init()
 		self.is_auto = false
 
 		self.damage = 1
+		self.boss_damage = 0.3
 		self.cooldown = 0.4
 		self.bullet_speed = 500 --800 --def: 400
 		self.bullet_number = 12
@@ -158,6 +162,7 @@ function Guns:init()
 
 		self.random_angle_offset = 0.5
 		self.damage = 2.5
+		self.boss_damage = 0.4
 		self.is_auto = true
 		self.spr = images.gun_minigun
 		self.sfx = "sfx_weapon_seedminigun_shoot_{01-10}"
@@ -192,6 +197,7 @@ function Guns:init()
 
 		self.random_angle_offset = 0
 		self.damage = 1.5
+		self.boss_damage = 0.3
 		self.is_auto = true
 		self.spr = images.gun_ring
 		self.sfx = "sfx_weapon_bigberry_shoot_{01-04}"
@@ -218,6 +224,7 @@ function Guns:init()
 		
 		self.sfx = "sfx_weapon_mushroomcannon_shoot_{01-04}"
 		self.damage = 4
+		self.boss_damage = 4
 		self.is_auto = true
 		self.spr = images.gun_mushroom_cannon
 		self.bullet_spr = images.mushroom_yellow

@@ -44,6 +44,7 @@ function Gun:init_gun(user)
 	-- Damage
 	self.damage = 2
 	self.harmless_time = 0 
+	self.boss_damage = 2 -- Boss dealth to bosses by bullet
 	
 	-- Ammo
 	self.max_ammo = 100
@@ -298,6 +299,7 @@ function Gun:fire_bullet(dt, user, x, y, bul_w, bul_h, dx, dy)
 		play_sfx = self.play_sfx,
 		target_type = ternary(self.bullet_target_type == "default", nil, self.bullet_target_type),
 		override_enemy_damage = self.override_enemy_damage,
+		boss_damage = self:get_boss_damage(user),
 		is_explosion = self.is_explosion,
 		bullet_model = self.bullet_model,
 		object_3d_rot_speed = rot_3d_speed,
@@ -308,12 +310,20 @@ function Gun:fire_bullet(dt, user, x, y, bul_w, bul_h, dx, dy)
 	game:new_actor(bullet)
 end
 
-function Gun:get_damage(user)
-	local value = self.damage
+function Gun:get_damage_multiplier(user)
+	local value = 1
 	if user and user.get_total_gun_damage_multiplier then
 		value = value * user:get_total_gun_damage_multiplier()
 	end
 	return value
+end
+
+function Gun:get_damage(user)
+	return self.damage * self:get_damage_multiplier()
+end
+
+function Gun:get_boss_damage(user)
+	return (self.boss_damage or self.damage) * self:get_damage_multiplier()
 end
 
 function Gun:add_ammo(quantity)

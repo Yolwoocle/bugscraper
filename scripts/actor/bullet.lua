@@ -44,6 +44,7 @@ function Bullet:init(gun, player, damage, x, y, w, h, vx, vy, args)
 	self.play_sfx = param(args.play_sfx, true)
 
 	self.damage = damage
+	self.boss_damage = args.boss_damage or damage
 	self.override_enemy_damage = args.override_enemy_damage -- Damage value that overrides the `damage` 
 	self.knockback = gun.knockback or 500
 	self.harmless_timer = Timer:new(gun.harmless_time or 0.0) 
