@@ -31,8 +31,6 @@ function BackgroundW1:init(level)
 
 	self:add_layer(BackgroundLayerPattern:new(self, 0.07, {
 		pattern_images = {images.bg_w1_back_bricks},
-		pattern_x_offsets = {0, 8},
-		-- pattern_y_offsets = {-7, -7},
 	}))
 
 	self:add_layer(BackgroundLayerParticles:new(self, 0.07, {
