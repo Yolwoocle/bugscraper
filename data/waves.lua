@@ -97,6 +97,16 @@ local function spawn_timed_spikes()
     end
 end
 
+local function spawn_timed_spikes_w5()
+    local j = 0
+    for ix = 3, CANVAS_WIDTH / 16 - 4 do
+        local spikes = enemies.TimedSpikes:new(ix * BW, CANVAS_HEIGHT * 0.85, 4, 0.5, 0.2, j * 0.1 + 2.0)
+        spikes.z = 3 - j / 100
+        game:new_actor(spikes)
+        j = j + 1
+    end
+end
+
 local function debug_wave()
     return new_wave({
         min = 1,
@@ -205,25 +215,25 @@ local thorns_arc_params = {
 }
 
 local waves = parse_waves_table {
-    {
-        roll_type = WAVE_ROLL_TYPE_FIXED,
+    -- {
+    --     roll_type = WAVE_ROLL_TYPE_FIXED,
 
-        min = 1,
-        max = 1,
-        enemies = {
-            { E.FinalBoss, 1, position = { CANVAS_WIDTH/2 - 43, 11 * 16 - 4 } }
-        },
+    --     min = 1,
+    --     max = 1,
+    --     enemies = {
+    --         { E.FinalBoss, 1, position = { CANVAS_WIDTH/2 - 43, 11 * 16 - 4 } }
+    --     },
 
-        run = function(self, level)
-            for _, actor in pairs(game.actors) do
-                if actor.name == "final_boss" then
-                    actor.state_machine:set_state("standby")
-                end
-            end
-        end,
+    --     run = function(self, level)
+    --         for _, actor in pairs(game.actors) do
+    --             if actor.name == "final_boss" then
+    --                 actor.state_machine:set_state("standby")
+    --             end
+    --         end
+    --     end,
 
-        elevator = ElevatorW1,
-    },
+    --     elevator = ElevatorW1,
+    -- },
 
     -- Cafeteria
     -- new_cafeteria({ 
@@ -1478,7 +1488,7 @@ local waves = parse_waves_table {
         background = backgrounds.BackgroundFactory:new(),
 
         run = function(self, level)
-            spawn_timed_spikes()
+            spawn_timed_spikes_w5()
         end,
     },
     
@@ -1521,14 +1531,6 @@ local waves = parse_waves_table {
         fixed_enemies = {
             { E.HoneycombFootball, 1 },
         },
-
-        run = function()
-            for _, a in pairs(game.actors) do
-                if a.name == "timed_spikes" then
-                    a:remove()
-                end
-            end
-        end,
     },
     
     -- W3
@@ -1561,6 +1563,14 @@ local waves = parse_waves_table {
         title_outline_color = COL_BLACK_BLUE,
 
         background = backgrounds.BackgroundServers:new(),
+
+        run = function()
+            for _, a in pairs(game.actors) do
+                if a.name == "timed_spikes" then
+                    a:remove()
+                end
+            end
+        end,
     },
     
     {
