@@ -420,7 +420,7 @@ function DeadPlayerParticle:update(dt)
 		game:screenshake(10)
 		Input:vibrate_all(0.3, 0.5)
 		
-		Audio:play("explosion")
+		Audio:play("explosion", nil, nil, {x=self.x, y=self.y})
 		Particles:splash(self.x, self.y - self.oy, 40, {COL_LIGHT_YELLOW, COL_ORANGE, COL_LIGHT_RED, COL_WHITE})
 		Particles:star_splash(self.x, self.y-self.oy)
 		self:remove()

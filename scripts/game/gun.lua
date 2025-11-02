@@ -163,9 +163,9 @@ function Gun:shoot(dt, player, x, y, dx, dy, is_burst)
 	-- Now, FIRE!!
 	-- SFX & Particles
 	if self.play_sfx then
-		Audio:play_var(self.sfx, 0.2, 1.2, {pitch=self.sfx_pitch})
+		Audio:play_var(self.sfx, 0.2, 1.2, {pitch=self.sfx_pitch, x=x, y=y})
 		if self.sfx2 then
-			Audio:play_var(self.sfx2, 0.2, 1.2, {pitch=self.sfx_pitch})
+			Audio:play_var(self.sfx2, 0.2, 1.2, {pitch=self.sfx_pitch, x=x, y=y})
 		end
 	end
 	if self.do_particles then

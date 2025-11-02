@@ -244,7 +244,7 @@ return Cutscene:new("enter_ceo_office", {
         duration = 0.7,
 
         enter = function(cutscene, data)
-            Audio:play("sfx_actor_button_small_glass_damage_{01-06}")
+            Audio:play("sfx_actor_button_small_glass_damage_{01-06}", {x=data.button.mid_x, y=data.button.mid_y})
             Particles:image(data.button.mid_x, data.button.mid_y, 40, images.glass_shard, 8, 400, 0.3)
             data.button.spr:set_animation("cracked")
         end,
@@ -264,7 +264,7 @@ return Cutscene:new("enter_ceo_office", {
         duration = 0.04,
 
         enter = function(cutscene, data)
-            Audio:play("sfx_actor_button_small_glass_break")
+            Audio:play("sfx_actor_button_small_glass_break", {x=data.button.mid_x, y=data.button.mid_y})
             Particles:image(data.button.mid_x, data.button.mid_y, 60, images.glass_shard, 8, 400, 0.3)
             data.button.spr:set_animation("pressed")
             data.t = 0
@@ -275,7 +275,7 @@ return Cutscene:new("enter_ceo_office", {
             data.ceo.y = lerp(data.ceo_y_start, data.ceo_y_start + 8, data.t)
         end,
         exit = function(cutscene, data)
-            Audio:play("sfx_actor_button_small_pressed")
+            Audio:play("sfx_actor_button_small_pressed", {x=data.button.mid_x, y=data.button.mid_y})
             game:screenshake(5)
         end
     }),

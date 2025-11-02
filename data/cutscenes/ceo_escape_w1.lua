@@ -102,7 +102,7 @@ return Cutscene:new("ceo_escape_w1", {
                 game:screenshake(10)
                 game:frameskip(5)
                 Particles:image(data.ceo.mid_x, data.ceo.mid_y, 150, images.glass_shard, 32, 400, 0.3)
-                Audio:play("glass_break", 1.0, 0.8)
+                Audio:play("glass_break", 1.0, 0.8, {x=data.ceo.x, y=data.ceo.y})
 
                 if game.level.backroom then
                     game.level.backroom.cafeteria_glass_hole = true

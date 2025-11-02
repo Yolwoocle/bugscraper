@@ -127,7 +127,6 @@ function Debug:init(game)
         end},
         
         ["v"] = { "__jackofalltrades", function()
-            -- Audio:play("sfx_boss_mrdung_ball_hit_{01-06}", 2.0)
             
             -- local sk = enemies.Shop:new(35*16, 13*16)
             -- game:new_actor(sk)
