@@ -133,9 +133,6 @@ function Dung:init(x, y, spr, w, h)
                     self.bounces = self.bounces - 1
                     self:jump()
 
-                    if self.bounces <= 0 then
-                        self.state_timer:start(3.0)
-                    end
                 end
 
                 if self.state_timer:update(dt) then
@@ -149,9 +146,14 @@ function Dung:init(x, y, spr, w, h)
                 end
             end,
             after_collision = function(state, col)
-                if col.type ~= "cross" and self.bounces > 0 then
-                    self:play_sound_var("sfx_boss_mrdung_jump_{01-06}", 0.1, 1.1) -- TODO make it play when you LAND on the floor
+                if col.type ~= "cross" and self.bounces < 2 and not self.state_timer.is_active then
+                    self:play_sound_var("sfx_boss_mrdung_jump_{01-06}", 0.1, 1.1) 
                     game:screenshake(4)
+                    Input:vibrate_all(0.1, 0.3)
+
+                    if self.bounces <= 0 then
+                        self.state_timer:start(3.0)
+                    end
                 end
             end
         },
