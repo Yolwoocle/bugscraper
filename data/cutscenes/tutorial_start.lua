@@ -26,7 +26,7 @@ return Cutscene:new("tutorial_start", {
     CutsceneScene:new({
         description = "",
 
-        duration = 4.2,
+        duration = 5.0,
         enter = function(cutscene, data)
             game.game_ui:start_title("{menu.credits.ninesliced_presents}", "", "", 0.5, 3.2, 0.5)
         end,
@@ -34,7 +34,7 @@ return Cutscene:new("tutorial_start", {
     CutsceneScene:new({
         description = "",
 
-        duration = 4.2,
+        duration = 5.0,
         enter = function(cutscene, data)
             game.game_ui:start_title("{menu.credits.leo_bernard}", "Yolwoocle", "{menu.credits.game_by}", 0.5, 3.2, 0.5)
         end,
@@ -42,7 +42,7 @@ return Cutscene:new("tutorial_start", {
     CutsceneScene:new({
         description = "",
 
-        duration = 4.2,
+        duration = 5.0,
         enter = function(cutscene, data)
             game.game_ui:start_title("Alexandre Mercier", "OLX", "{menu.credits.music}", 0.5, 3.2, 0.5)
         end,
@@ -50,7 +50,7 @@ return Cutscene:new("tutorial_start", {
     CutsceneScene:new({
         description = "",
 
-        duration = 4.2,
+        duration = 5.0,
         enter = function(cutscene, data)
             game.game_ui:start_title("Martin Domergue", "Verbaudet", "{menu.credits.sound_design}", 0.5, 3.2, 0.5)
         end,
