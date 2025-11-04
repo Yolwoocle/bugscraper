@@ -637,7 +637,7 @@ function Player:do_damage(n, source)
 	local scale = ternary(died, 0.8, 0.5)
 	local color = self.color_palette[1]
 	if source and source.name == "poison_cloud" then
-		color = COL_LIGHT_GREEN
+		color = COL_LIGHT_YELLOW
 	end
 	Particles:static_image(images.star_big, self.mid_x, self.mid_y, a, 0.05, scale*1.3, {
 		color = COL_WHITE
@@ -1297,7 +1297,7 @@ function Player:update_visuals()
 	self.spr:set_scale(self.squash, 1/self.squash)
 
 	if self:is_in_poison_cloud() then
-		Particles:dust(self.mid_x + random_neighbor(7), self.mid_y + random_neighbor(7), random_sample{color(0x3e8948), color(0x265c42), color(0x193c3e)})
+		Particles:dust(self.mid_x + random_neighbor(7), self.mid_y + random_neighbor(7), random_sample{COL_LIGHT_YELLOW, COL_YELLOW_ORANGE, COL_ORANGE})
 	end
 
 	if (game.level.fury_active) and self.frame % 2 == 0 and not self.is_ghost and self.do_fury_trail then
@@ -1548,7 +1548,7 @@ function Player:update_color(dt)
 	-- Poison
 	if self.poison_timer > 0 then
 		self.blink_freq = 0.1
-		self.blink_color = transparent_color(COL_LIGHT_GREEN, 0.8)
+		self.blink_color = transparent_color(COL_LIGHT_YELLOW, 0.8)
 	end
 	
 	-- Wall slide stamina blink

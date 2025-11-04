@@ -651,7 +651,7 @@ function Game:draw_smoke_canvas()
 		love.graphics.draw(self.smoke_buffer_canvas, 0, 0)
 	end)
 
-	love.graphics.setColor(1, 1, 1, 0.7)
+	love.graphics.setColor(1, 1, 1, 0.5)
 	love.graphics.draw(self.smoke_canvas, 0, 0)
 	love.graphics.setColor(1, 1, 1, 1)
 
