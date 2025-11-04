@@ -587,7 +587,9 @@ function FallingGridParticle:init(img_side, img_top, x,y, params)
 	self.rot_3d_vel = 0 
 	self.rot_3d_acc = params.rot_3d_acc or -6
 	self.rot_3d_bounce = 0.5
-	self.bounce_vel_threshold = params.bounce_vel_threshold or 3
+	self.bounce_vel_threshold = params.bounce_vel_threshold or 1
+
+	self:update(0)
 end
 
 function FallingGridParticle:update(dt)
@@ -617,7 +619,7 @@ function FallingGridParticle:draw()
 	local scale_side = math.sin(self.rot_3d)
 	local scale_top = math.cos(self.rot_3d)
 
-	local oy = scale_side * h_top
+	local oy = scale_top * h_top
 
 	love.graphics.draw(self.img_side, self.x, self.y + oy, 0, 1, scale_side)
 	love.graphics.draw(self.img_top,  self.x, self.y,      0, 1, scale_top)

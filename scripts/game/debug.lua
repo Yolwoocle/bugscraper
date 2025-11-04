@@ -127,14 +127,18 @@ function Debug:init(game)
         end},
         
         ["v"] = { "__jackofalltrades", function()
+            local cabin_rect = game.level.cabin_rect
+            Particles:falling_grid(cabin_rect.ax + 16, cabin_rect.ay + 6 * 16)
+            Particles:falling_grid(cabin_rect.bx - 7 * 16, cabin_rect.ay + 6 * 16)
+
             
             -- local sk = enemies.Shop:new(35*16, 13*16)
             -- game:new_actor(sk)
 
-            game.level:set_bounds(Rect:new(unpack(RECT_CEO_OFFICE_PARAMS)))
-            game:play_cutscene("enter_ceo_office")
-            game.is_light_on = true
-            game.level.backroom.show_basement_bg = true
+            -- game.level:set_bounds(Rect:new(unpack(RECT_CEO_OFFICE_PARAMS)))
+            -- game:play_cutscene("enter_ceo_office")
+            -- game.is_light_on = true
+            -- game.level.backroom.show_basement_bg = true
 
             -- game.game_ui.ending_counter_text = "12345"
             -- Particles:speed_line(game.players[1].x, game.players[1].y, 1)

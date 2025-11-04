@@ -418,6 +418,7 @@ function FinalBoss:init(x, y)
                 self.damage = 0 
                 self.life = 0
                 self.invincible_timer = math.huge
+                self.destroy_bullet_on_impact = false
 
                 Particles:push_layer(PARTICLE_LAYER_BACK)
                 Particles:static_image(images.star_big, self.mid_x, self.mid_y, 0, 0.05, 1, {
@@ -447,7 +448,7 @@ function FinalBoss:init(x, y)
                 state.f = state.f - 1
                 if state.f == 0 then
                     self.spr:set_visible(false)
-                    Particles:ejected_player(images.dung_beetle_dead, self.mid_x, self.mid_y)
+                    Particles:ejected_player(images.ceo_npc_fainted_single, self.mid_x, self.mid_y)
                 end
             end
         },     
@@ -457,8 +458,6 @@ end
 
 function FinalBoss:update(dt)
     self:update_enemy(dt)
-
-    self.debug_values[1] = "state ".. tostring(self.state_machine.current_state_name)
 
     self.state_machine:update(dt)
 
