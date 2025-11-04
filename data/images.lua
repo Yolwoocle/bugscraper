@@ -412,6 +412,7 @@ local img_names = {
 	cabin_walls_w1 =                 "level/cabin_walls_w1",
 	cabin_walls_w2 =              	 "level/cabin_walls_w2",
 	cabin_walls_w3 =                 "level/cabin_walls_w3",
+	cabin_walls_w4 =                 "level/cabin_walls_w4",
 	cabin_walls_no_floor =           "level/cabin_walls_no_floor",
 
 	cabin_door_empty =               "level/cabin_door_empty",

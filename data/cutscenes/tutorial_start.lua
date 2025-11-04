@@ -58,14 +58,6 @@ return Cutscene:new("tutorial_start", {
     CutsceneScene:new({
         description = "",
 
-        duration = 4.2,
-        enter = function(cutscene, data)
-            game.game_ui:start_title("Noam Goldfarb", "SSlime7", "{menu.credits.additional_art}", 0.5, 3.2, 0.5)
-        end,
-    }),
-    CutsceneScene:new({
-        description = "",
-
         duration = 0.1,
         enter = function(cutscene, data)
 	        game.game_ui.logo_y_target = 0

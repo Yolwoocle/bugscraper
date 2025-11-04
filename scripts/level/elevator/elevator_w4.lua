@@ -15,7 +15,7 @@ function ElevatorW4:init(level)
 	level:set_bounds(Rect:new(unpack(RECT_ELEVATOR_PARAMS)))
 
 	self.layers["cabin_bg"] = images.cabin_bg_w4
-	self.layers["walls"] = images.cabin_bg_w4_test_walls
+	self.layers["walls"] = images.cabin_walls_w4
 
 	self:get_door("main"):set_images(
 		images.cabin_door_w4_left_far,

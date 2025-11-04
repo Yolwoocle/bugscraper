@@ -52,27 +52,8 @@ function BackgroundGreenhouse:init(level)
 		object_z = 1000,
 	}))
 
-	
-	-- self:add_layer(BackgroundLayerParticles:new(self, 0.3, {
-	-- 	y_range = {0, 0},
-	-- 	particles = {
-	-- 		{
-	-- 			images = {images.bg_w4_platform_1_back},
-	-- 			x_anchor = "center",
-	-- 		}, 
-	-- 	},
-	-- 	amount = 1,
-	-- }))
-
-	
-
 	self:add_layer(BackgroundLayerPattern:new(self, 0.3, {
 		pattern_images = {images.bg_w4_platform_1_back},
-	}))
-	
-	self:add_layer(BackgroundLayerSprite:new(self, 0.5, { 
-		initial_y = (CANVAS_HEIGHT - 480) / 0.5,
-		image = images.bg_w4_base,
 	}))
 	
 	self:add_layer(BackgroundLayerParticles:new(self, 0.8, {
