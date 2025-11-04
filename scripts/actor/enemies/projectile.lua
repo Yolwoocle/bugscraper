@@ -9,6 +9,7 @@ local Projectile = Enemy:inherit()
 	
 function Projectile:init(x, y, image, w, h, invul_duration, angle, min_speed, max_speed)
     -- Changing this to self.super.init causes a stack overflow. I HAVE NO FUCKING CLUE WHY.
+    -- Update: I now know why. But I can't be bothered to change it.
     self:init_enemy(x,y, image or images.dung_projectile, w or 8, h or 8)
     self.name = "projectile"
     self.spr:set_anchor(SPRITE_ANCHOR_CENTER_CENTER)

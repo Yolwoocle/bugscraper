@@ -285,7 +285,6 @@ local waves = parse_waves_table {
         max = 5,
         enemies = {
             { E.Larva, 3, entrances = { "main" } },
-            -- { E.Fly,   3 },
         },
         music = "w1",
         ambience = "w1",
