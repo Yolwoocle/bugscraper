@@ -11,13 +11,12 @@ function LarvaProjectile:init(x, y, angle)
     self.name = "larva_projectile"
 
     self.larva = nil
-    self.spr.rot = random_range(0, pi2)
+    self.spr.rot = random_range_int(0, 3) * pi/2
 end
 
 function LarvaProjectile:update(dt)
     LarvaProjectile.super.update(self, dt)
     
-    self.spr.rot = self.spr.rot + dt
     Particles:push_layer(PARTICLE_LAYER_BACK)
     Particles:dust(self.mid_x, self.mid_y)
     Particles:pop_layer()
