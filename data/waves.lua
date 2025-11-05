@@ -1417,7 +1417,7 @@ local waves = parse_waves_table {
             { E.Slug,  2 },
             { E.Larva, 3 },
             { E.Fly, 3 },
-        },
+        }, 
 
         over_title = get_world_prefix(1),
         title = get_world_name(1),
