@@ -817,6 +817,29 @@ function random_sample_no_repeat(t, avoided_value)
 	return val
 end
 
+--- Takes as input a table and returns n random elements from that table
+---@param t table
+---@param n number
+function random_subtable(t, n)
+    local result = {}
+    local copy = copy_table_shallow(t) 
+    local len = #copy
+
+    if n > len then
+		n = len
+	end
+
+    for i = 1, n do
+        local idx = math.random(len)
+        table.insert(result, copy[idx])
+        table.remove(copy, idx)
+        len = len - 1
+    end
+
+    return result
+end
+
+
 function random_str(a, b)
 	return tostring(love.math.random(a, b))
 end

@@ -104,6 +104,9 @@ local img_names = {
 
 	-- NPCs
 	npc_brown =        "actors/npc/npc_brown",
+	npc_bee_tea =      "actors/npc/npc_bee_tea",
+	npc_gagagougou =   "actors/npc/npc_gagagougou",
+	npc_jalapenos =    "actors/npc/npc_jalapenos",
 	npc_noba =         "actors/npc/npc_noba",
 	npc_hornet =       "actors/npc/npc_hornet",
 

@@ -96,18 +96,12 @@ function BackroomGroundFloor:generate(world_generator)
 
 	game:new_actor(create_actor_centered(enemies.Clock, floor(440), floor(105)))
 
-	-- local npc = random_sample(npcs)
-	-- game:new_actor(enemies.NPC:new(1000, 226, {
-	-- 	animation = npc.animation,
-	-- 	dialogue_key = "dialogue.npc." .. npc.key,
-	-- }))
 	if random_range(0, 1) < HORNET_EASTER_EGG_PROBABILITY then
 		local npc = game:new_actor(enemies.NPC:new(880, 226, {
 			npc_name = "hornet",
 			animation = {images.npc_hornet, 0.15, 4},
 			flip_x = true,
 		}))
-		npc.z = -2
 	end
 
 	local npc = game:new_actor(enemies.NPC:new(905, 226, {

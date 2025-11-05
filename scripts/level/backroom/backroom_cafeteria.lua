@@ -9,6 +9,7 @@ local enemies             = require "data.enemies"
 local cutscenes           = require "data.cutscenes"
 local Loot = require "scripts.actor.loot"
 local guns = require "data.guns"
+local npcs = require "data.npcs"
 
 local BackroomCafeteria   = BackroomWithDoor:inherit()
 
@@ -54,6 +55,29 @@ function BackroomCafeteria:generate(world_generator)
 	game.camera.max_x = CANVAS_WIDTH
 
 	self:spawn_ceo()
+
+	local loc_data = {
+		{x = 683, y = 226, flip_x = "rand"},
+		{x = 510, y = 226, flip_x = "rand"},
+		{x = 510, y = 226, flip_x = "rand"},
+		{x = 630, y = 226, flip_x = "rand"},
+		{x = 790, y = 226, flip_x = "rand"},
+		{x = 880, y = 226, flip_x = true},
+	}
+	local nb_npcs = random_range_int(1, 3)
+	local sampled_loc_data = random_subtable(loc_data, nb_npcs)
+	local sampled_spr_data = random_subtable(npcs, nb_npcs)
+
+	for i=1, nb_npcs do
+		local loc_data = sampled_loc_data[i]
+		local spr_data = sampled_spr_data[i]
+		local npc = game:new_actor(enemies.NPC:new(loc_data.x, loc_data.y, {
+			npc_name = spr_data.key,
+			animation = spr_data.animation,
+			flip_x = ternary(loc_data.flip_x == "rand", random_sample{true, false}, loc_data.flip_x),
+		}))
+		npc.z = -2
+	end
 end
 
 function BackroomCafeteria:spawn_ceo()
