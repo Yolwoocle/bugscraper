@@ -57,14 +57,17 @@ function BackroomCafeteria:generate(world_generator)
 	self:spawn_ceo()
 
 	local loc_data = {
-		{x = 683, y = 226, flip_x = "rand"},
-		{x = 510, y = 226, flip_x = "rand"},
-		{x = 510, y = 226, flip_x = "rand"},
-		{x = 630, y = 226, flip_x = "rand"},
+		{x = 683, y = 226, flip_x = false},
+		{x = 720, y = 226, flip_x = "rand"},
+		{x = 770, y = 226, flip_x = "rand"},
 		{x = 790, y = 226, flip_x = "rand"},
-		{x = 880, y = 226, flip_x = true},
 	}
-	local nb_npcs = random_range_int(1, 3)
+	
+	if not self.ceo_info then
+		table.insert(loc_data, {x = 845, y = 226, flip_x = false})
+		table.insert(loc_data, {x = 880, y = 226, flip_x = true})
+	end
+	local nb_npcs = random_range_int(1, 2)
 	local sampled_loc_data = random_subtable(loc_data, nb_npcs)
 	local sampled_spr_data = random_subtable(npcs, nb_npcs)
 

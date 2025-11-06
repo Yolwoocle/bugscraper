@@ -17,4 +17,16 @@ return {
         key = "jalapenos",
         animation = {images.npc_jalapenos, 0.12, 4},
     },
+    {
+        key = "boba",
+        animation = {images.npc_boba, 0.12, 8},
+    },
+    {
+        key = "disco",
+        animation = {images.npc_disco, 0.21, 4},
+    },
+    {
+        key = "lizard",
+        animation = {images.npc_lizard, 0.31, 4},
+    },
 }

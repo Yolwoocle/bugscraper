@@ -886,18 +886,21 @@ end
 function Debug:test_spiral_removeme()
     
     local pts = {}
-    local cx = (game.level.cabin_inner_rect.ax + game.level.cabin_inner_rect.bx) / 2
-    local cy = (game.level.cabin_inner_rect.ay + game.level.cabin_inner_rect.by) / 2
+    -- local cx = (game.level.cabin_inner_rect.ax + game.level.cabin_inner_rect.bx) / 2
+    -- local cy = (game.level.cabin_inner_rect.ay + game.level.cabin_inner_rect.by) / 2
+    local cx = CANVAS_CENTER[1]
+    local cy = CANVAS_CENTER[2]
 
     local i = 0
     local itheta = 0
     local ir = 0
-    for i = 0, 20, 1 do
+    for i = 1, 50, 1 do
+        local ii = i * 500
+        ir = math.sqrt(ii)
+        itheta = itheta + math.asin(1 / ii) * 4000
+
         local ix, iy = math.cos(itheta) * ir, math.sin(itheta) * ir
         table.insert(pts, {cx + ix, cy + iy})
-
-        ir = ir + 10
-        itheta = itheta + 1/ir
     end
 
     for i=1, #pts-1 do
