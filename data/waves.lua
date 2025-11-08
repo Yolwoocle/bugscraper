@@ -1195,7 +1195,7 @@ local waves = parse_waves_table {
         max = 1,
 
         enemies = {
-            { E.Centipede, 1, args = { 15 } },
+            { E.Centipede, 1, args = { 15 }, position = { CANVAS_WIDTH / 2 - 10 / 2, 200 } },
         },
 
         run = function()
@@ -1307,12 +1307,14 @@ local waves = parse_waves_table {
         },
 
         fixed_enemies = {
-            { E.Centipede, 1, args = { 15 } }, 
+            { E.CentipedeBoss, 1, args = { 15 }, position = { CANVAS_WIDTH / 2 - 20 / 2, 200 } }, 
         },
 
         cutscene = cutscenes.arum_titan_enter,
         run = function(self, level)
         end,
+
+        music = "miniboss",
     },
 
     

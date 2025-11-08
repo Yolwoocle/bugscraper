@@ -96,6 +96,7 @@ function Enemy:init_enemy(x,y, img, w,h)
 	self.is_knockbackable = true -- Multiplicator when knockback is applied to
 
     self.is_boss = false
+	self.do_boss_gun_damage = true
 
 	self.damage = 1
 	self.knockback = 1200
@@ -450,7 +451,7 @@ function Enemy:get_bullet_damage(bul)
 	if bul.override_enemy_damage then
 		return bul.override_enemy_damage 
 	end
-	if self.is_boss and bul.boss_damage then
+	if (self.is_boss and self.do_boss_gun_damage) and bul.boss_damage then
 		return bul.boss_damage
 	end
 	return bul.damage
