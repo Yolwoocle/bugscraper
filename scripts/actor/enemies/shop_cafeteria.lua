@@ -31,8 +31,6 @@ end
 
 function ShopCafeteria:on_death()
     self:play_sound_var("sfx_actor_button_small_glass_break", 0.1, 1.1)
-
-    Particles:image(self.mid_x, self.mid_y - 32, 150, images.glass_shard, 32, 120, 0.3)
 end
 
 return ShopCafeteria

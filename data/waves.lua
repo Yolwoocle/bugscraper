@@ -28,9 +28,6 @@ local function new_cafeteria(params)
 
     local run_func = params.run_func or function(...) end
     local wave_enemies = {
-        -- { E.UpgradeDisplay, 1, position = { 474 + 16, 181 }, ignore_position_clamp = true },
-        -- { E.UpgradeDisplay, 1, position = { 530 + 16, 181 }, ignore_position_clamp = true },
-        -- { E.UpgradeDisplay, 1, position = { 586 + 16, 181 }, ignore_position_clamp = true },
         { E.ShopCafeteria, 1, position = { 35*16, 13*16 }, ignore_position_clamp = true },
     }
     if params.empty_cafeteria then
@@ -89,8 +86,11 @@ end
 
 local function spawn_timed_spikes()
     local j = 0
-    for ix = 3, CANVAS_WIDTH / 16 - 4 do
-        local spikes = enemies.TimedSpikes:new(ix * BW, CANVAS_HEIGHT * 0.85, 4, 1, 0.5, j * 0.2)
+    local x2 = CANVAS_WIDTH / 16 - 4
+    for ix = 3, x2 do
+        local spikes = enemies.TimedSpikes:new(ix * BW, CANVAS_HEIGHT * 0.85, 4, 1, 0.5, j * 0.2, {
+            do_standby_warning = x2 - 4 <= ix
+        })
         spikes.z = 3 - j / 100
         game:new_actor(spikes)
         j = j + 1
@@ -1195,7 +1195,7 @@ local waves = parse_waves_table {
         max = 1,
 
         enemies = {
-            { E.Centipede, 1, args = { 15 } },
+            { E.Centipede, 1, args = { 15 }, position = { CANVAS_WIDTH / 2 - 10 / 2, 200 } },
         },
 
         run = function()
@@ -1307,12 +1307,14 @@ local waves = parse_waves_table {
         },
 
         fixed_enemies = {
-            { E.Centipede, 1, args = { 15 } }, 
+            { E.CentipedeBoss, 1, args = { 15 }, position = { CANVAS_WIDTH / 2 - 20 / 2, 200 } }, 
         },
 
         cutscene = cutscenes.arum_titan_enter,
         run = function(self, level)
         end,
+
+        music = "miniboss",
     },
 
     
@@ -1328,8 +1330,9 @@ local waves = parse_waves_table {
                 end
                 if actor.name == "floor_hole_spawner" or actor.name == "pendulum" then
                     actor:remove()
-                end
+                end   
             end
+            game.actor_manager:kill_actors_with_name("progressing_arc")
         end, 
 
         min = 1,
@@ -1416,7 +1419,7 @@ local waves = parse_waves_table {
             { E.Slug,  2 },
             { E.Larva, 3 },
             { E.Fly, 3 },
-        },
+        }, 
 
         over_title = get_world_prefix(1),
         title = get_world_name(1),

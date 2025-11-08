@@ -3,6 +3,33 @@
 ### 0.?
 (*???*)
 
+- **Added**: Added NPCs in cafeterias! They don't do anything, they're just here to chill.
+- **Change**: Larva projectiles coming from flying spawners (placeholder name) are now visually spiky  
+- **Fix**: Fixed bug where vines weren't removed after wave 80
+- **Added**: Added warning signs before spikes in dept. 2 appear
+- **Fix**: Fixed minor graphical issue with dept. 3's falling grid animation
+- **Change**: Grahpical changes to dept. 4's visuals
+- **Change**: Grahpical changes to poison and stink bugs, which are now yellow, to make them more consistent 
+- **Change**: Minor optimization
+- **Added**: Her Majesty is now attackable by guns, hopefully making her fight more enjoyable
+- **Added**: New "Buglatro" TV slide by 8lueskii 
+- **Added**: New character, Amb! She's a shy harworking bug, usually messing around in the Server Room.
+- **Added**: Spatial audio! I recommend using headphones to fully enjoy it.
+- **Added**: Ambiance sounds! Can be disabled in options.
+- **Added**: Added some gamepad vibrations in menus
+- **Change**: More sound design changes!
+- **Added**: (WIP) Last area for the game, including the final boss. I will not spoil it...
+- **Change**: Minor graphical improvement to the title that plays when you enter a new department
+- **Change**: Added 'Max combo' stat to the Game Over screen
+- **Change**: Guns are now instantly collected when you press the 'interact' button
+- **Change**: Removed credits from pause menu (for now)
+- **Change**: Added a particle to Rollopods when they notice you
+- **Fix**: Fixed issue where you could have multiple players
+- **Change**: Slight tweaks to various UI
+- **Change**: Moved upgrades HUD position to top right instead of bottom right
+- **Change**: Slightly buffed ghosts' puff attack
+- **Fix**: Fixed issue where the Pea Gun could duplicate in the tutorial
+- **Fix**: Fixed issue where player could slightly clip through the elevator door when exiting cafeterias 
 - **Fix**: Fixed issue where Bulb Buddies would sometimes spawn outside of the elevator door
 - **Fix**: Fixed issue where Rollopods could sometimes be pushed around after rolling
 

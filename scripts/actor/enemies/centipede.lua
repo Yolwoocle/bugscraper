@@ -24,7 +24,8 @@ function Centipede:init(x, y, length, parent, params)
     self.spawn_center_y = params.center_y
     self.spawn_angle = params.angle
 
-    Centipede.super.init(self, x, y, images.centipede_body, 10, 10)
+    local w = params.w or 10
+    Centipede.super.init(self, x, y, images.centipede_body, w, w)
     self.name = "centipede"
     self.spr = AnimatedSprite:new({
         head = {images.centipede_head, 1},
@@ -70,14 +71,18 @@ function Centipede:init_centipede_head()
     self.spr:set_animation("head")
 end
 
+function Centipede:get_self_class()
+    return Centipede
+end
+
 function Centipede:init_centipede_body()
     self.centipede_type = "body"
     self.spr:set_animation("body")
 
-    local child = Centipede:new(self.x, self.y, self.centipede_length - 1, self, {
+    local child = self:get_self_class():new(self.x, self.y, self.centipede_length - 1, self, {
         center_x = self.spawn_center_x,
         center_y = self.spawn_center_y,
-        angle = (self.spawn_angle or 0) + 0.6,
+        angle = (self.spawn_angle or 0) + math.asin(1 / self.centipede_length) * 10,
     })
     game:new_actor(child)
     self.centipede_child = child
@@ -109,8 +114,12 @@ function Centipede:update_child_total_length(total_length)
     end
 end
 
+function Centipede:get_centipede_speed()
+    return 10 + (20 - clamp(0, self.total_centipede_length, 20))
+end
+
 function Centipede:update_speed()
-    self.speed = 10 + (20 - clamp(0, self.total_centipede_length, 20))
+    self.speed = self:get_centipede_speed()
     self.speed_x = self.speed
     self.speed_y = self.speed
 end
@@ -129,13 +138,16 @@ function Centipede:update(dt)
     end
 
     if self.centipede_type == "body" then
+        -- Body 
         if self.centipede_child then
             local ang = math.atan2(self.centipede_child.y - self.y, self.centipede_child.x - self.x)
             self.direction = ang --move_toward_angle(self.direction, , 1)
 
             self:follow_direction(dt * 20)
         end
+
     else
+        -- Head
         local target = self:get_nearest_player()
         local a
         if target then
@@ -189,20 +201,6 @@ function Centipede:after_collision(col, other)
             col.normal.y)
         self.direction = math.atan2(new_vy, new_vx)
     end
-end
-
-function Centipede:on_death()
-    -- for i = 1, random_range_int(3, 5) do
-    --     local spawn_x = clamp(self.mid_x - 10, game.level.cabin_rect.ax, game.level.cabin_rect.bx - 20)
-    --     local spawn_y = clamp(self.mid_y - 10, game.level.cabin_rect.ay, game.level.cabin_rect.by - 20)
-    --     local cloud = PoisonCloud:new(spawn_x, spawn_y)
-
-    --     local d = random_range(0, pi2)
-    --     local r = random_range(0, 200)
-    --     cloud.vx = math.cos(d) * r
-    --     cloud.vy = math.sin(d) * r
-    --     game:new_actor(cloud)
-    -- end
 end
 
 return Centipede

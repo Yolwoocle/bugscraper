@@ -48,6 +48,8 @@ function TimedSpikes:init(x, y, duration_off, duration_telegraph, duration_on, s
     self.timing_mode = TIMED_SPIKES_TIMING_MODE_TEMPORAL
     self.do_circular_timing = param(args.do_circular_timing, true) -- whether the cycle loops back after finishing
 
+    self.do_standby_warning = param(args.do_standby_warning, false)
+
     self.z = 2
     self.state_order = {
         -- 2, 0.5, 0.5
@@ -320,7 +322,12 @@ function TimedSpikes:draw()
             y + self.orientation_dir_y * (self.spike_sprite.image:getHeight() - 3), 
         self.w, self.h)
     end
+
     TimedSpikes.super.draw(self)
+
+    if self.do_standby_warning and self.state_machine.current_state_name == "standby" and self.t % 0.2 < 0.1 then
+        print_centered_outline(COL_LIGHT_GRAY, nil, "⚠", self.mid_x, self.mid_y)
+    end
 end
 
 return TimedSpikes

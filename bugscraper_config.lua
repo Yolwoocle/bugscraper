@@ -6,4 +6,4 @@ DEMO_BUILD = false
 BETA_BUILD = true
 
 DEBUG_MODE = true
-PROFILE_INIT = true
+PROFILE_INIT = false

@@ -55,6 +55,7 @@ local enemies = {
 	GoldenBeetle =       require "scripts.actor.enemies.golden_beetle", --*
 	ArumTitanBoss =      require "scripts.actor.enemies.arum_titan_boss", 
 	ArumTitanMinion =    require "scripts.actor.enemies.arum_titan_minion", 
+	CentipedeBoss =      require "scripts.actor.enemies.centipede_boss", 
 	
 	-- Unused
 	ProgressingArc =     require "scripts.actor.enemies.progressing_arc", 
