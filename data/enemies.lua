@@ -74,6 +74,7 @@ local enemies = {
 	StaticProp =         require "scripts.actor.enemies.static_prop",
 	JumpingProp =        require "scripts.actor.enemies.jumping_prop",
 	Dummy =              require "scripts.actor.enemies.dummy",
+	InvisibleDummy =     require "scripts.actor.enemies.invisible_dummy",
 
 	NPC =                require "scripts.actor.enemies.npc",
 

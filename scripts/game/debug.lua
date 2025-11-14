@@ -127,9 +127,11 @@ function Debug:init(game)
         end},
         
         ["v"] = { "__jackofalltrades", function()
-            local cabin_rect = game.level.cabin_rect
-            Particles:falling_grid(cabin_rect.ax + 16, cabin_rect.ay + 6 * 16)
-            Particles:falling_grid(cabin_rect.bx - 7 * 16, cabin_rect.ay + 6 * 16)
+            game.menu_manager:set_menu("w2_boss_intro")
+
+            -- local cabin_rect = game.level.cabin_rect
+            -- Particles:falling_grid(cabin_rect.ax + 16, cabin_rect.ay + 6 * 16)
+            -- Particles:falling_grid(cabin_rect.bx - 7 * 16, cabin_rect.ay + 6 * 16)
 
             
             -- local sk = enemies.Shop:new(35*16, 13*16)

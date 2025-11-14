@@ -32,6 +32,10 @@ local sfxnames = {
 	["music_cafeteria_empty_ingame"] =      { "music/music_cafeteria_empty_ingame.ogg", "stream", { looping = true } },
 	["music_boss_w1_ingame"] =              { "music/music_boss_w1_ingame.ogg", "stream", { looping = true } },
 	["music_boss_w1_paused"] =              { "music/music_boss_w1_paused.ogg", "stream", { looping = true } },
+	["music_boss_w2_ingame"] =              { "music/music_boss_w2_paused.mp3", "stream", { looping = true } },
+	["music_boss_w2_paused"] =              { "music/music_boss_w2_paused.mp3", "stream", { looping = true } },
+	["music_boss_w3_ingame"] =              { "music/music_boss_w3_paused.ogg", "stream", { looping = true } },
+	["music_boss_w3_paused"] =              { "music/music_boss_w3_paused.ogg", "stream", { looping = true } },
 
 	-- GUNS
 	["sfx_weapon_peagun_shoot_{01-08}"] =           {"sfx/weapons/peagun/sfx_weapon_peagun_shoot_{}.ogg", "static"},
