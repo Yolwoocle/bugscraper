@@ -61,6 +61,20 @@ local function generate_menus()
     menus.w4_boss_intro = BossIntroMenu:new(game, { 38 / 255, 43 / 255, 68 / 255, 0.8 }, "Boss 4", "", {
         { image = images.empty, z_mult = 1.0 },
     })
+    
+    menus.w5_boss_intro = BossIntroMenu:new(game, { 38 / 255, 43 / 255, 68 / 255, 0.8 }, "Boss 5", "", {
+        { image = images.boss_intro_ceo_layer0, z_mult = 0.75 },
+        { image = images.boss_intro_ceo_layer1, z_mult = 1.0 },
+        { image = images.boss_intro_ceo_layer2, z_mult = 0.85 },
+        { image = images.boss_intro_ceo_layer3, z_mult = 0.95 },
+        { image = images.boss_intro_ceo_layer4, z_mult = 1.0 },
+        { image = images.boss_intro_ceo_layer5, z_mult = 1.05 },
+        { image = images.boss_intro_ceo_layer6, z_mult = 1.1 },
+        { image = images.boss_intro_ceo_layer7, z_mult = 1.1 },
+        { image = images.boss_intro_ceo_layer8, z_mult = 1.1 },
+        { image = images.boss_intro_ceo_layer9, z_mult = 1.4 },
+        { image = images.boss_intro_ceo_layer10, z_mult = 1.4 },
+    })
 
     menus.ceo_slap = BossIntroMenu:new(game, { 38 / 255, 43 / 255, 68 / 255, 0.8 }, "", "",
         {

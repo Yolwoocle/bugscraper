@@ -581,6 +581,18 @@ local img_names = {
 	boss_intro_bee_layer6 = "ui/boss_intro/bee_boss/boss_intro_bee_layer6",
 	boss_intro_bee_layer7 = "ui/boss_intro/bee_boss/boss_intro_bee_layer7",
 
+	boss_intro_ceo_layer0 = "ui/boss_intro/final_boss/boss_intro_ceo_layer0",
+	boss_intro_ceo_layer1 = "ui/boss_intro/final_boss/boss_intro_ceo_layer1",
+	boss_intro_ceo_layer2 = "ui/boss_intro/final_boss/boss_intro_ceo_layer2",
+	boss_intro_ceo_layer3 = "ui/boss_intro/final_boss/boss_intro_ceo_layer3",
+	boss_intro_ceo_layer4 = "ui/boss_intro/final_boss/boss_intro_ceo_layer4",
+	boss_intro_ceo_layer5 = "ui/boss_intro/final_boss/boss_intro_ceo_layer5",
+	boss_intro_ceo_layer6 = "ui/boss_intro/final_boss/boss_intro_ceo_layer6",
+	boss_intro_ceo_layer7 = "ui/boss_intro/final_boss/boss_intro_ceo_layer7",
+	boss_intro_ceo_layer8 = "ui/boss_intro/final_boss/boss_intro_ceo_layer8",
+	boss_intro_ceo_layer9 = "ui/boss_intro/final_boss/boss_intro_ceo_layer9",
+	boss_intro_ceo_layer10 = "ui/boss_intro/final_boss/boss_intro_ceo_layer10",
+
 	boss_intro_ceo_slap0 = "ui/boss_intro/ceo_slap/boss_intro_ceo_slap0",
 
 	player_preview_bg = "ui/player_preview/player_preview_bg",
