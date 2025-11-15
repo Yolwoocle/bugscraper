@@ -139,7 +139,7 @@ function Beelet:init(x, y)
 
                 game:screenshake(3)
             	Input:vibrate_all(0.1, 0.45)
-                self:play_sound_var("sfx_enemy_beelet_bounce_{01-04}", 0.2, 1.2)
+                self:play_sound_var("sfx_enemy_beelet_bounce_{01-06}", 0.2, 1.2)
 
                 self.attack_bounces_counter = math.max(0, self.attack_bounces_counter - 1)
                 if self.attack_bounces_counter <= 0 then

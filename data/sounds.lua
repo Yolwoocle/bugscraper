@@ -98,6 +98,8 @@ local sfxnames = {
 	["sfx_actor_button_small_pressed"] = {"sfx/actor/button/sfx_actor_button_small_pressed.ogg", "static"},
 
 	-- ENEMIES 
+	["sfx_enemy_damage"] = {"sfx/enemy/sfx_enemy_damage.ogg", "static"},
+
 	["sfx_enemy_kill_general_crush_{01-10}"] = {"sfx/enemy/death_temp/crush/sfx_enemy_kill_general_crush_{}.ogg", "static"},
 	["sfx_enemy_kill_general_glitch_{01-10}"] = {"sfx/enemy/death_temp/glitch/sfx_enemy_kill_general_glitch_{}.ogg", "static"},
 	["sfx_enemy_kill_general_gore_{01-10}"] = {"sfx/enemy/death_temp/gore/sfx_enemy_kill_general_gore_{}.ogg", "static"},
@@ -125,8 +127,10 @@ local sfxnames = {
 	["sfx_boss_mrdung_land_in_dung"] = {"sfx/enemy/mrdung/sfx_boss_mrdung_land_in_dung.ogg", "static"},
 	["sfx_boss_mrdung_roll"] = {"sfx/enemy/mrdung/sfx_boss_mrdung_roll.ogg", "static", { looping = true }},
 	["sfx_boss_mrdung_jump_{01-06}"] = {"sfx/enemy/mrdung/jump/sfx_boss_mrdung_jump_{}.ogg", "static"},
+	["sfx_boss_mrdung_ball_triggered_{01-08}"] = {"sfx/enemy/mrdung/ball_triggered/sfx_boss_mrdung_ball_triggered_{}.ogg", "static"},
 	["sfx_boss_mrdung_ball_hit_{01-06}"] = {"sfx/enemy/mrdung/ball/sfx_boss_mrdung_ball_hit_{}.ogg", "static"},
 	["sfx_boss_mrdung_bump_{01-02}"] = {"sfx/enemy/mrdung/bump/sfx_boss_mrdung_bump_{}.ogg", "static"},
+	["sfx_boss_mrdung_jump_moment_{01-06}"] = {"sfx/enemy/mrdung/jump_moment/sfx_boss_mrdung_jump_moment_{}.ogg", "static"},
 
 	-- W2	
 	-- Timed spikes
@@ -146,7 +150,7 @@ local sfxnames = {
 	-- Beelet
 	["sfx_enemy_beelet_telegraph_{01-04}"] = {"sfx/enemy/beelet/sfx_enemy_beelet_telegraph_{}.ogg", "static"},
 	["sfx_enemy_beelet_attack_{01-04}"] = {"sfx/enemy/beelet/sfx_enemy_beelet_attack_{}.ogg", "static"},
-	["sfx_enemy_beelet_bounce_{01-04}"] = {"sfx/enemy/beelet/sfx_enemy_beelet_bounce_{}.ogg", "static"},
+	["sfx_enemy_beelet_bounce_{01-06}"] = {"sfx/enemy/beelet/sfx_enemy_beelet_bounce_{}.ogg", "static"},
 
 	-- Flying nest 
 	["sfx_enemy_flying_nest_ambient_lp"] = {"sfx/enemy/flying_nest/sfx_enemy_flying_nest_ambient_lp.ogg", "static", { looping = true }},
@@ -157,6 +161,11 @@ local sfxnames = {
 	["sfx_enemy_comball_bounce_{01-06}"] = {"sfx/enemy/comball/sfx_enemy_comball_bounce_{}.ogg", "static"},
 	["sfx_enemy_comball_flash_{01-06}"] = {"sfx/enemy/comball/sfx_enemy_comball_flash_{}.ogg", "static"},
 	["sfx_enemy_comball_death"] = {"sfx/enemy/comball/sfx_enemy_comball_death.ogg", "static"},
+
+	-- Her Majesty
+	["sfx_boss_intro_majesty"] = {"sfx/enemy/majesty/sfx_boss_intro_majesty.ogg", "static"},
+	["sfx_boss_intro_spotlights_{01-03}"] = {"sfx/enemy/majesty/spotlights/sfx_boss_intro_spotlights_{}.ogg", "static"},
+	["sfx_boss_majesty_hit_{01-06}"] = {"sfx/enemy/majesty/hit/sfx_boss_majesty_hit_{}.ogg", "static"},
 
 	["fly_buzz"] = {"empty.ogg", "static"}, -- TODO change to actual sound
 

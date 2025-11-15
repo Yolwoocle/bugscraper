@@ -39,7 +39,7 @@ local function generate_menus()
         { image = images.boss_intro_dung_layer0, z_mult = 1.5 },
     })
 
-    menus.w2_boss_intro = BossIntroMenu:new(game, { 38 / 255, 43 / 255, 68 / 255, 0.8 }, Text:text("enemy.bee_boss"), "", {
+    menus.w2_boss_intro = BossIntroMenu:new(game, { 38 / 255, 43 / 255, 68 / 255, 0.8 }, Text:text("enemy.bee_boss"), "sfx_boss_intro_majesty", {
         { image = images.boss_intro_bee_layer7, z_mult = 0.2 },
         { image = images.boss_intro_bee_layer6, z_mult = 0.4 },
         { image = images.boss_intro_bee_layer5, z_mult = 0.5 },

@@ -56,6 +56,9 @@ function BeeBoss:init(x, y)
     self.minions = {}
     self.max_minions = 10
 
+    self.damage_sound_cooldown = 0.0
+    self.damage_sound_cooldown_max = 1.0
+
     self.ai_templates["bounce"] = {
         ready = function(ai)
             self.pong_direction = (pi/4 + pi/2 * love.math.random(0,3)) % pi2
@@ -407,6 +410,8 @@ function BeeBoss:update(dt)
             table.remove(self.minions, i)
         end
     end
+
+    self.damage_sound_cooldown = max(0.0, self.damage_sound_cooldown - dt)
 end
 
 function BeeBoss:draw()
@@ -496,6 +501,14 @@ function BeeBoss:on_death()
     end
 end
 
+
+function BeeBoss:on_damage()
+    if self.damage_sound_cooldown == 0.0 then
+        self:play_sound_var("sfx_boss_majesty_hit_{01-06}", 0.1, 1.1)
+        
+        self.damage_sound_cooldown = self.damage_sound_cooldown_max
+    end
+end
 
 function BeeBoss:spawn_spikes()
     self.spikes = {}

@@ -132,6 +132,7 @@ function Dung:init(x, y, spr, w, h)
                 if self.is_grounded and self.bounces > 0 then
                     self.bounces = self.bounces - 1
                     self:jump()
+                    self:play_sound("sfx_boss_mrdung_jump_moment_{01-06}")
 
                 end
 
