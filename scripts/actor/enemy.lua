@@ -111,7 +111,7 @@ function Enemy:init_enemy(x,y, img, w,h)
 	self.squash_target = 1
 	
 	self.play_sfx = true
-	self.sound_damage = "enemy_damage"
+	self.sound_damage = "sfx_enemy_damage"
 	self.sound_death = "stomp2"
 	self.sound_stomp = "stomp2"
 

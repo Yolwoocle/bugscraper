@@ -87,7 +87,7 @@ function FlyingDung:begin_targeting()
 
     self.state = "targeting"
     self.is_ponging = false
-    self:play_sound_var("flying_dung_death", 0, 1.2)
+    self:play_sound_var("sfx_boss_mrdung_ball_triggered_{01-08}", 0, 1.2)
 
     self.is_pushable = false
     self.is_stompable = false

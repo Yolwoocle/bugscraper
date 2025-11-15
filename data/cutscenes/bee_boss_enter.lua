@@ -29,7 +29,7 @@ return Cutscene:new("bee_boss_enter", {
                 range = 800,
                 is_active = true,
             }))
-            Audio:play_var("spotlight_1", nil, 1.05)
+            Audio:play_var("sfx_boss_intro_spotlights_01", nil, 1.05)
         end,
     }),
     CutsceneScene:new({
@@ -41,7 +41,7 @@ return Cutscene:new("bee_boss_enter", {
                 range = 800, 
                 is_active = true,
             }))
-            Audio:play_var("spotlight_2", nil, 1.05)
+            Audio:play_var("sfx_boss_intro_spotlights_02", nil, 1.05)
         end,
     }),
     CutsceneScene:new({
@@ -53,7 +53,7 @@ return Cutscene:new("bee_boss_enter", {
                 range = 800, 
                 is_active = true,
             }))
-            Audio:play_var("spotlight_3", nil, 1.05)
+            Audio:play_var("sfx_boss_intro_spotlights_03", nil, 1.05)
         end,
     }),
     CutsceneScene:new({
