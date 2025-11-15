@@ -51,8 +51,16 @@ return {
         [MUSIC_MODE_INGAME] = sounds.music_cafeteria_empty_ingame.source,
         [MUSIC_MODE_PAUSE] = sounds.music_cafeteria_paused.source,
     }),
-    ["miniboss"] = disk_class:new({
+    ["boss_w1"] = disk_class:new({
         [MUSIC_MODE_INGAME] = sounds.music_boss_w1_ingame.source,
         [MUSIC_MODE_PAUSE] = sounds.music_boss_w1_paused.source,
+    }),
+    ["boss_w2"] = disk_class:new({
+        [MUSIC_MODE_INGAME] = sounds.music_boss_w2_ingame.source,
+        [MUSIC_MODE_PAUSE] = sounds.music_boss_w2_paused.source
+    }),
+    ["boss_w3"] = disk_class:new({
+        [MUSIC_MODE_INGAME] = sounds.music_boss_w3_ingame.source,
+        [MUSIC_MODE_PAUSE] = sounds.music_boss_w3_paused.source,
     }),
 }

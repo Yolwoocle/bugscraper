@@ -32,6 +32,8 @@ function Grasshopper:init(x, y)
 
     self.sound_death = "sfx_enemy_kill_general_stomp_{01-10}"
     self.sound_stomp = "sfx_enemy_kill_general_stomp_{01-10}"
+
+    self.sfx_cooldown = 0.0
     -- self.jump_speed = 200
 end
 
@@ -45,6 +47,8 @@ function Grasshopper:update(dt)
 
     self.spr:set_scale(1/self.squash, self.squash)
     self.spr:set_image(ternary(math.abs(self.vy) > 150, images.grasshopper, images.grasshopper_fall))
+
+    self.sfx_cooldown = max(0, self.sfx_cooldown - dt)
 end
 
 function Grasshopper:draw()    
@@ -74,7 +78,11 @@ end
 function Grasshopper:on_grounded()
     self.squash = self.landing_squash
     self.vy = -self.jump_speed
-    self:play_sound_var("jump_short", 0.2, 1.2, {pitch=0.4})
+    
+    if self.sfx_cooldown > 0 then
+        self:play_sound_var("sfx_player_jumplong", 0.2, 1.2, {pitch=0.4})
+        self.sfx_cooldown = 0.1
+    end
 end
 
 return Grasshopper

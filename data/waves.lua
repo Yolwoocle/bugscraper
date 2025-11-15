@@ -123,7 +123,7 @@ local function debug_wave()
             end
         end,
 
-        music = "miniboss",
+        music = "boss_w1",
     })
 end
 
@@ -488,7 +488,7 @@ local waves = parse_waves_table {
         enemies = {
             { E.Dung, 1, position = { CANVAS_WIDTH / 2 - 24 / 2, 200 } },
         },
-        music = "miniboss",
+        music = "boss_w1",
         cutscene = "dung_boss_enter",
     },
 
@@ -728,7 +728,7 @@ local waves = parse_waves_table {
         enemies = {
             { E.BeeBoss, 1, position = { 240 - 16, 200 } },
         },
-        music = "miniboss",
+        music = "boss_w2",
 
         run = function(self, level)
             for _, actor in pairs(level.game.actors) do
@@ -1057,7 +1057,7 @@ local waves = parse_waves_table {
             end
         end,
 
-        music = "miniboss",
+        music = "boss_w3",
     },
 
     ------
@@ -1314,7 +1314,7 @@ local waves = parse_waves_table {
         run = function(self, level)
         end,
 
-        music = "miniboss",
+        music = "boss_w1",
     },
 
     
@@ -1681,7 +1681,7 @@ local waves = parse_waves_table {
     {
         roll_type = WAVE_ROLL_TYPE_FIXED,
 
-        music = "miniboss",
+        music = "boss_w1",
 
         min = 1,
         max = 1,
@@ -2208,7 +2208,7 @@ local demo_waves = parse_waves_table {
         enemies = {
             { E.Dung, 1, position = { CANVAS_WIDTH / 2 - 24 / 2, 200 } },
         },
-        music = "miniboss",
+        music = "boss_w1",
     },
 
 
