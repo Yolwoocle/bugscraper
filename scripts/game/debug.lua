@@ -127,7 +127,18 @@ function Debug:init(game)
         end},
         
         ["v"] = { "__jackofalltrades", function()
-            game.menu_manager:set_menu("w2_boss_intro")
+            if love.keyboard.isDown("1") then
+                game.menu_manager:set_menu("w1_boss_intro")
+            elseif love.keyboard.isDown("2") then
+                game.menu_manager:set_menu("w2_boss_intro")
+            elseif love.keyboard.isDown("3") then
+                game.menu_manager:set_menu("w3_boss_intro")
+            elseif love.keyboard.isDown("4") then
+                game.menu_manager:set_menu("w4_boss_intro")
+            elseif love.keyboard.isDown("5") then
+                game.menu_manager:set_menu("w5_boss_intro")
+            end
+                
 
             -- local cabin_rect = game.level.cabin_rect
             -- Particles:falling_grid(cabin_rect.ax + 16, cabin_rect.ay + 6 * 16)

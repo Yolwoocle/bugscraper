@@ -59,7 +59,10 @@ function MotherboardButton:after_collision(col, other)
             explosion_damage = 0,
             override_enemy_damage = 0,
             use_gun = false,
+            particle_layer = PARTICLE_LAYER_HUD,
         }))
+
+        game.level:add_fury(3.5)
     end
 end
 

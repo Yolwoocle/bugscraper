@@ -802,7 +802,9 @@ end
 
 function Game:on_kill(actor)
 	if actor.counts_as_enemy then
-		Audio:play_var("sfx_enemy_death", 0.2, 1.2) --REMOVEME SCOTCH
+		if actor.play_sfx then --REMOVEME SCOTCH
+			Audio:play_var("sfx_enemy_death", 0.2, 1.2)--REMOVEME SCOTCH
+		end --REMOVEME SCOTCH
 
 		self.kills = self.kills + 1
 		self.score = self.score + (actor.score or 0)

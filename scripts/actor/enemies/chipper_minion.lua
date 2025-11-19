@@ -56,6 +56,7 @@ end
 
 function ChipperMinion:after_collision(col, other)
     if col.type ~= "cross" then
+        self.death_counts_for_fury_combo = false
         self:kill()
     end
 end

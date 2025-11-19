@@ -254,6 +254,7 @@ function Motherboard:init(x, y)
             exit = function(state)
                 for _, c in pairs(self.big_chippers) do
                     c.score = 0
+                    c.death_counts_for_fury_combo = false
                     c:kill()
                 end
             end
@@ -303,25 +304,26 @@ function Motherboard:init(x, y)
                 self.hard_mode = true
 
                 self.state_timer:start(2.0)
-                self.spr.color = { 1.0, 0.4, 0.4 }
 
                 self.new_button_timer:stop()
 
                 self.button.score = 0
                 self.button:kill()
                 self.button = nil
-
-                game:frameskip(10)
             end,
 
             update = function(state, dt)
-                self.spr:update_offset(self.spr_base_ox + random_neighbor(5), self.spr_base_oy + random_neighbor(5))
+                self.spr:set_flashing_white(self.t % 0.2 < 0.1)
+
+                self.spr:update_offset(self.spr_base_ox + random_neighbor(2), self.spr_base_oy + random_neighbor(2))
                 if self.state_timer:update(dt) then
                     self:transition_to_random_state()
                 end
             end,
 
             exit = function(state)
+                self.spr:set_flashing_white(false)
+
                 self.spr.color = COL_WHITE
                 self.spr:update_offset(self.spr_base_ox, self.spr_base_oy)
 
@@ -351,7 +353,7 @@ function Motherboard:init(x, y)
             update = function(state, dt)
                 if self.explosion_timer:update(dt) then
                     local explosion = Explosion:new(random_range(self.x, self.x + self.w),
-                        random_range(self.y - 42, self.y + self.h), { use_gun = false })
+                        random_range(self.y - 42, self.y + self.h), { use_gun = false, particle_layer = PARTICLE_LAYER_HUD })
                     explosion.is_front = true
                     game:new_actor(explosion)
                     self.explosion_timer:start()
@@ -408,13 +410,6 @@ function Motherboard:transition_to_random_state(force_state)
 
     self.next_state = state
     self.state_machine:set_state("transition")
-    self.plug_sprite:set_visible(false)
-    -- if state == "rays" then
-    --     self.plug_sprite:set_animation("rays")
-    -- elseif state == "shoot_lasers" then
-    -- elseif state == "bullets" then
-    --     self.plug_sprite:set_animation("bullets")
-    -- end
 end
 
 function Motherboard:on_hit_flying_dung(dung)
@@ -442,8 +437,54 @@ function Motherboard:update(dt)
         self.has_done_midpoint_animation = true
         self:transition_to_random_state("mid_transition")
     end
-
+    self:do_low_hp_particles()
+    
     self.shield_sprite:set_scale(nil, lerp(self.shield_sprite.sy, 1, 0.05))
+end
+
+function Motherboard:do_low_hp_particles()
+    if self.life <= self.max_life / 2 then
+        local p1 = ternary(self.life <= self.max_life / 4, 0.3, 1)
+        local p2 = ternary(self.life <= self.max_life / 4, 0.05, 0.4)
+        local gradient = {
+            type = "gradient",
+            COL_DARK_GRAY, COL_BLACK_BLUE
+        }
+        if self.life <= self.max_life / 4 then
+            gradient = {
+                type = "gradient",
+                COL_WHITE, COL_YELLOW, COL_ORANGE, COL_DARK_RED, COL_DARK_GRAY, COL_BLACK_BLUE
+            }
+        end
+
+        if random_range(0, 1) < p1 then
+            Particles:push_layer(PARTICLE_LAYER_HUD)
+            local params = {
+                vx = 0, 
+                vx_variation = 20, 
+                vy = -50, 
+                vy_variation = 10,
+                min_spawn_delay = 0,
+                max_spawn_delay = 0.1,
+            }
+            Particles:smoke_big(349, 40, gradient, 8, 1, params)
+            Particles:smoke_big(170, 30, gradient, 8, 1, params)
+            Particles:smoke_big(60, 40, gradient, 8, 1, params)
+            if self.life <= self.max_life / 4 then
+                Particles:smoke_big(117, 57, gradient, 8, 1, params)
+                Particles:smoke_big(257, 25, gradient, 8, 1, params)
+                Particles:smoke_big(430, 40, gradient, 8, 1, params)
+            end
+            Particles:pop_layer()
+        end
+        if random_range(0, 1) < p2 then
+            Particles:spark(random_range(self.x, self.x + self.w), self.mid_y, 1)
+        end
+    end
+
+    if self.life <= self.max_life / 4 then
+        self.spr:update_offset(self.spr_base_ox + random_neighbor(1), self.spr_base_oy + random_neighbor(1))
+    end
 end
 
 function Motherboard:spawn_button()
@@ -486,8 +527,6 @@ function Motherboard:draw()
     end
 
     self.state_machine:draw()
-    self.plug_sprite:draw(self.mid_x, self.y + self.plug_y + self.plug_offset, 0, 0)
-    -- self.shield_sprite:draw(self.mid_x, self.y - 6, 0, 0)
 
     if DEBUG_MODE then
         -- print_outline(nil, nil, self.state_machine.current_state_name, self.x, self.y + 128)
@@ -503,6 +542,8 @@ function Motherboard:on_death()
     end
 
     self.rays:kill()
+
+    game.level:add_fury(3.5)
 end
 
 function Motherboard:on_negative_life()
