@@ -758,6 +758,9 @@ end
 ----------------------------------------------------------------------------------------
 
 function Level:on_enemy_death(enemy)
+	if not enemy.death_counts_for_fury_combo then
+		return
+	end
 	self.fury_combo = self.fury_combo + 1
 end
 

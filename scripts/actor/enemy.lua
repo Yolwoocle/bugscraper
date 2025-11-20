@@ -128,6 +128,7 @@ function Enemy:init_enemy(x,y, img, w,h)
 
 	self.fury_damage_multiplier = 1.0
 	self.fury_stomp_multiplier = 1.0
+	self.death_counts_for_fury_combo = true
 
 	self.has_run_ready = false
 

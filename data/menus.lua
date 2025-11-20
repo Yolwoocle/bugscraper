@@ -54,7 +54,35 @@ local function generate_menus()
 
     menus.w3_boss_intro = BossIntroMenu:new(game, { 38 / 255, 43 / 255, 68 / 255, 0.8 }, Text:text("enemy.motherboard"), "",
         {
-            { image = images.motherboard, z_mult = 0.7 },
+            -- Zeros
+            { image = images.boss_intro_motherboard_layer0, z_mult = 0.5 },
+
+            -- Button bases
+            { image = images.boss_intro_motherboard_layer2, z_mult = 0.8 },
+            { image = images.boss_intro_motherboard_layer3, z_mult = 0.9 },
+            { image = images.boss_intro_motherboard_layer4, z_mult = 1.0 },
+
+            -- legs back 
+            { image = images.boss_intro_motherboard_layer5, z_mult = 0.8 }, 
+            { image = images.boss_intro_motherboard_layer6, z_mult = 0.85 },
+
+            -- legs front
+            { image = images.boss_intro_motherboard_layer7, z_mult = 1.02 },
+            { image = images.boss_intro_motherboard_layer8, z_mult = 1.04 },
+            { image = images.boss_intro_motherboard_layer9, z_mult = 1.06 },
+            { image = images.boss_intro_motherboard_layer10, z_mult = 1.08 },
+
+            -- bases
+            { image = images.boss_intro_motherboard_layer11, z_mult = 0.9 },
+            { image = images.boss_intro_motherboard_layer12, z_mult = 1.0 },
+            { image = images.boss_intro_motherboard_layer15, z_mult = 1.0 },
+            { image = images.boss_intro_motherboard_layer13, z_mult = 0.95 },
+
+            -- zeros front
+            { image = images.boss_intro_motherboard_layer1, z_mult = 1.3 },
+
+            -- lightning
+            { image = images.boss_intro_motherboard_layer14, z_mult = 1.5 },
         }
     )
     

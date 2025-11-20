@@ -55,8 +55,8 @@ function BossIntroMenu:update(dt)
 	self.bg_color[4] = lerp(self.bg_color[4], self.bg_alpha_target, 0.08)
 
 	if self.layers_scroll <= -self.layers_linger_zone then
-		self.border_width_target = -self.title_border_add
-		self.bg_alpha_target = 0.0
+		self.border_width_target = -self.title_border_add*2
+		self.bg_alpha_target = -0.5
 	end
 	
 	if self.layers_scroll > self.layers_linger_zone then

@@ -35,6 +35,9 @@ function InvisibleDummy:init(x, y)
     self.sound_damage = "empty" 
     self.sound_death = "empty"
     self.sound_stomp = "empty"
+
+    self.do_death_effects = false
+    self.play_sfx = false
 end
 
 function InvisibleDummy:update(dt)
@@ -78,8 +81,6 @@ function InvisibleDummy:disable_dummy()
 end
 
 function InvisibleDummy:on_death()
-    Particles:image(self.mid_x, self.mid_y, 20, {images.dummy_fragment_1, images.dummy_fragment_2}, self.w, nil, nil, 0.5)
-    --number, spr, spw_rad, life, vs, g
 end
 
 return InvisibleDummy

@@ -14,7 +14,7 @@ local BigBeelet = Beelet:inherit()
 function BigBeelet:init(x, y)
     BigBeelet.super.init(self, x, y)
     self.name = "big_beelet"
-    self:set_dimensions(24, 24)
+    self:set_dimensions(18, 18)
     self.attack_bounces = 8
     self.life = 40
 

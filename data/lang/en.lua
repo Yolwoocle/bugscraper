@@ -74,7 +74,7 @@ return {
         name = {
             -- Player names
             -- If the native name clashes with something specific to the language/culture, please notify me.
-            -- You can also use translitations into the script of the language if needed (i.e. Leo -> Léo)
+            -- You can also use translitations into the script of the language if needed (e.g. Mio -> ミオ)
             mio = "Mio",
             cap = "Cap",
             zia = "Zia",

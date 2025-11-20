@@ -28,6 +28,9 @@ function Explosion:init(x, y, params)
     self.gun = guns.unlootable.ExplosionGun:new(self, self.radius, self.explosion_damage, self.resolution, {
         override_enemy_damage = self.override_enemy_damage
     })
+    self.particle_layer = param(params.particle_layer, nil)
+
+    self.death_counts_for_fury_combo = false
 end
 
 function Explosion:update(dt)
@@ -41,9 +44,16 @@ function Explosion:update(dt)
         game:frameskip(5)
         Input:vibrate_all(0.3, 0.5)
         self:play_sound_var(self.sound)
+
+        if self.particle_layer then
+            Particles:push_layer(self.particle_layer)
+        end
         Particles:explosion(self.mid_x, self.mid_y, self.radius + self.safe_margin, {
             color_gradient = self.color_gradient,
         })
+        if self.particle_layer then
+            Particles:pop_layer()
+        end
 
         self:kill()      
     end
