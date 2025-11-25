@@ -1088,7 +1088,7 @@ local waves = parse_waves_table {
         run_func = function()
             game.actor_manager:kill_actors_with_name("electric_rays")
         end, 
-        -- ceo_info = 3,
+        ceo_info = 3,
     }),
 
     ----------------------------------------------------------------------------------------------------------

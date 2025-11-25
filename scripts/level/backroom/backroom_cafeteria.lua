@@ -90,7 +90,7 @@ function BackroomCafeteria:spawn_ceo()
 
 	local ceo_x = 866
 	local ceo_y = 223
-	if self.ceo_info == 3 then
+	if self.ceo_info == 5 then
 		ceo_x = 805
 		ceo_y = 240
 	end
@@ -166,13 +166,21 @@ function BackroomCafeteria:spawn_ceo()
 		prop = game:new_actor(enemies.JumpingProp:new(833, 190, images.ground_floor_laptop, "sfx_actor_jumping_prop_screen_{01-06}"))
 		prop.z = -2
 	
+	
+	elseif self.ceo_info == 3 then
+		game:new_actor(enemies.PlayerTrigger:new(46 * 16, 3 * 16, 2 * 16, 12 * 16, function()
+			game:play_cutscene("ceo_escape_w3")
+		end, { min_player_trigger = 1 }))
+		ceo.is_affected_by_bounds = false
+		ceo.is_affected_by_walls = false
+
 	elseif self.ceo_info == 5 then
 		ceo.spr:set_animation("tangled_wires")
 		ceo.gravity = ceo.default_gravity	
 		ceo.is_affected_by_bounds = true
 
 		game:new_actor(enemies.PlayerTrigger:new(46 * 16, 3 * 16, 2 * 16, 12 * 16, function()
-			game:play_cutscene("ceo_escape_w3")
+			game:play_cutscene("ceo_escape_w5")
 		end, { 
 			min_player_trigger = 1,
 			condition_func = function()
