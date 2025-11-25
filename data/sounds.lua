@@ -39,12 +39,18 @@ local sfxnames = {
 
 	-- GUNS
 	["sfx_weapon_peagun_shoot_{01-08}"] =           {"sfx/weapons/peagun/sfx_weapon_peagun_shoot_{}.ogg", "static"},
+	["sfx_weapon_peagun_pickedup"] =                {"sfx/weapons/peagun/sfx_weapon_peagun_pickedup.ogg", "static"},
 	["sfx_weapon_pollenburst_shoot_{01-06}"] =      {"sfx/weapons/pollenburst/sfx_weapon_pollenburst_shoot_{}.ogg", "static"},
+	["sfx_weapon_pollenburst_pickedup"] =           {"sfx/weapons/pollenburst/sfx_weapon_pollenburst_pickedup.ogg", "static"},
 	["sfx_weapon_seedminigun_shoot_{01-10}"] =      {"sfx/weapons/seedminigun/sfx_weapon_seedminigun_shoot_{}.ogg", "static"},
+	["sfx_weapon_seedminigun_pickedup"] =           {"sfx/weapons/seedminigun/sfx_weapon_seedminigun_pickedup.ogg", "static"},
 	["sfx_weapon_mushroomcannon_shoot_{01-04}"] =   {"sfx/weapons/mushroomcannon/sfx_weapon_mushroomcannon_shoot_{}.ogg", "static"},
 	["sfx_weapon_bigberry_shoot_{01-04}"] =         {"sfx/weapons/bigberry/sfx_weapon_bigberry_shoot_{}.ogg", "static"},
+	["sfx_weapon_bigberry_pickedup"] =              {"sfx/weapons/bigberry/sfx_weapon_bigberry_pickedup.ogg", "static"},
 	["sfx_weapon_raspberryshotgun_shoot_{01-10}"] = {"sfx/weapons/raspberryshotgun/sfx_weapon_raspberryshotgun_shoot_{}.ogg", "static"},
+	["sfx_weapon_raspberryshotgun_pickedup"] =      {"sfx/weapons/raspberryshotgun/sfx_weapon_raspberryshotgun_pickedup.ogg", "static"},
 	["sfx_weapon_triplepepper_shoot_{01-08}"] =     {"sfx/weapons/triplepepper/sfx_weapon_triplepepper_shoot_{}.ogg", "static"},
+	["sfx_weapon_triplepepper_pickedup"] =          {"sfx/weapons/triplepepper/sfx_weapon_triplepepper_pickedup.ogg", "static"},
 
 	["sfx_weapon_dry_shoot_{01-06}"] =              {"sfx/weapons/dry/sfx_weapon_dry_shoot_{}.ogg", "static"},
 
@@ -139,6 +145,7 @@ local sfxnames = {
 	-- W2	
 	-- Timed spikes
 	["sfx_enemy_timed_spikes_hit_{01-04}"] = {"sfx/enemy/timed_spikes/sfx_enemy_timed_spikes_hit_{}.ogg", "static"},
+	["sfx_enemy_timed_spikes_unearth_{01-05}"] = {"sfx/enemy/timed_spikes/sfx_enemy_timed_spikes_unearth_{}.ogg", "static"},
 
 	-- Bee
 	["sfx_enemy_bee_attack_{01-05}"] = {"sfx/enemy/bee/sfx_enemy_bee_attack_{}.ogg", "static"},
@@ -170,6 +177,11 @@ local sfxnames = {
 	["sfx_boss_intro_majesty"] = {"sfx/enemy/majesty/sfx_boss_intro_majesty.ogg", "static"},
 	["sfx_boss_intro_spotlights_{01-03}"] = {"sfx/enemy/majesty/spotlights/sfx_boss_intro_spotlights_{}.ogg", "static"},
 	["sfx_boss_majesty_hit_{01-06}"] = {"sfx/enemy/majesty/hit/sfx_boss_majesty_hit_{}.ogg", "static"},
+	["sfx_boss_majesty_thwomp_impact_{01-03}"] = {"sfx/enemy/majesty/thwomp/sfx_boss_majesty_thwomp_impact_{}.ogg", "static"},
+	["sfx_boss_majesty_crowd_happy_{01-04}"] = {"sfx/enemy/majesty/crowd/sfx_boss_majesty_crowd_happy_{}.ogg", "static"},
+	["sfx_boss_majesty_crowd_sad_{01-05}"] = {"sfx/enemy/majesty/crowd/sfx_boss_majesty_crowd_sad_{}.ogg", "static"},
+	["sfx_boss_majesty_crowd_cheer_{01-04}"] = {"sfx/enemy/majesty/crowd/sfx_boss_majesty_crowd_cheer_{}.ogg", "static"},
+
 
 	["fly_buzz"] = {"empty.ogg", "static"}, -- TODO change to actual sound
 

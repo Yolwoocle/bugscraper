@@ -264,6 +264,7 @@ function BeeBoss:init(x, y)
                 if col.type ~= "cross" and col.normal.x == 0 and col.normal.y == -1 then
                     game:screenshake(6)
                     self:set_spike_waves(0)
+                    self:play_sound_var("sfx_boss_majesty_thwomp_impact_{01-03}", 0.1, 1.1)
                     self.stomps_counter = self.stomps_counter - 1
 
                     self:set_state("thwomp_rise")
@@ -430,6 +431,11 @@ function BeeBoss:on_stomped(player)
 
     self:set_invincibility(0.5)
     self:set_harmless(0.5)
+
+    Audio:play_var("sfx_boss_majesty_crowd_happy_{01-04}", 0.1, 1.1)
+end
+
+function BeeBoss:on_damage_player(player, damage)
 end
 
 -----------------------------------------------------
