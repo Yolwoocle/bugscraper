@@ -44,9 +44,6 @@ return Cutscene:new("ceo_escape_w1", {
         enter = function(cutscene, data)
         end,
         update = function(cutscene, data, dt)
-            if Metaprogression:get("has_seen_w1_transition_cutscene") then
-                return true
-            end
         end,
     }),
     CutsceneScene:new({

@@ -3,6 +3,7 @@ local cutscenes = {}
 cutscenes.ceo_escape_w1 = require "data.cutscenes.ceo_escape_w1"
 cutscenes.ceo_escape_w2 = require "data.cutscenes.ceo_escape_w2"
 cutscenes.ceo_escape_w3 = require "data.cutscenes.ceo_escape_w3"
+cutscenes.ceo_escape_w5 = require "data.cutscenes.ceo_escape_w5"
 cutscenes.tutorial_start = require "data.cutscenes.tutorial_start"
 cutscenes.tutorial_end = require "data.cutscenes.tutorial_end"
 cutscenes.tutorial_end_short = require "data.cutscenes.tutorial_end_short"
