@@ -229,6 +229,7 @@ function Guns:init()
 		self.color = COL_YELLOW_ORANGE
 		
 		self.sfx = "sfx_weapon_mushroomcannon_shoot_{01-04}"
+		self.sound_pickup = "sfx_weapon_mushroomcannon_pickedup"
 		self.damage = 4
 		self.boss_damage = 4
 		self.is_auto = true

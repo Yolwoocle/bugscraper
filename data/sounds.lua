@@ -45,6 +45,7 @@ local sfxnames = {
 	["sfx_weapon_seedminigun_shoot_{01-10}"] =      {"sfx/weapons/seedminigun/sfx_weapon_seedminigun_shoot_{}.ogg", "static"},
 	["sfx_weapon_seedminigun_pickedup"] =           {"sfx/weapons/seedminigun/sfx_weapon_seedminigun_pickedup.ogg", "static"},
 	["sfx_weapon_mushroomcannon_shoot_{01-04}"] =   {"sfx/weapons/mushroomcannon/sfx_weapon_mushroomcannon_shoot_{}.ogg", "static"},
+	["sfx_weapon_mushroomcannon_pickedup"] =        {"sfx/weapons/mushroomcannon/sfx_weapon_mushroomcannon_pickedup.ogg", "static"},
 	["sfx_weapon_bigberry_shoot_{01-04}"] =         {"sfx/weapons/bigberry/sfx_weapon_bigberry_shoot_{}.ogg", "static"},
 	["sfx_weapon_bigberry_pickedup"] =              {"sfx/weapons/bigberry/sfx_weapon_bigberry_pickedup.ogg", "static"},
 	["sfx_weapon_raspberryshotgun_shoot_{01-10}"] = {"sfx/weapons/raspberryshotgun/sfx_weapon_raspberryshotgun_shoot_{}.ogg", "static"},
