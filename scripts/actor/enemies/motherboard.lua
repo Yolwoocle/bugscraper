@@ -445,7 +445,7 @@ end
 function Motherboard:do_low_hp_particles()
     if self.life <= self.max_life / 2 then
         local p1 = ternary(self.life <= self.max_life / 4, 0.3, 1)
-        local p2 = ternary(self.life <= self.max_life / 4, 0.05, 0.4)
+        local p2 = ternary(self.life <= self.max_life / 4, 0.04, 0.05)
         local gradient = {
             type = "gradient",
             COL_DARK_GRAY, COL_BLACK_BLUE
