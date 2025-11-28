@@ -68,7 +68,7 @@ return Cutscene:new("credits", {
 
         duration = 6.0,
         enter = function(cutscene, data)
-            game.game_ui:start_title("Alexandre Mercier", "OLX", "{menu.credits.music}", 0.5, 5.0, 0.5)
+            game.game_ui:start_title("OLX", "", "{menu.credits.music}", 0.5, 5.0, 0.5)
         end,
     }),
 
