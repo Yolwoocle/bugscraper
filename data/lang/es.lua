@@ -40,12 +40,12 @@ return {
 
 		-- World names
 		world_1 = "Recursos de Depuracionces", -- The pun is lost (Debugging resources)
-		world_2 = "La fabrica", -- CHANGED
+		world_2 = "La fábrica",          -- CHANGED
 		world_3 = "La sala de servidores", -- CHANGED
-		world_4 = "Los jardines", -- CHANGED
+		world_4 = "Los jardines",        -- CHANGED
 		world_5 = "Ejecutivo",
 
-        world_0 = "Basement", -- ADDED
+		world_0 = "Sótano", -- CHANGED
 	},
 	gun = {
 		-- Gun names
@@ -57,7 +57,8 @@ return {
 		ring = "Baya grande",
 		mushroom_cannon = "Cañón de champiñones",
 
-        resignation_letter = "Resignation Letter" -- ADDED // don't ask why it's a gun. you'd have to question my coding.
+		resignation_letter =
+		"Carta de Resignación" -- CHANGED // don't ask why it's a gun. you'd have to question my coding.
 	},
 	player = {
 		name = {
@@ -65,13 +66,13 @@ return {
 			-- No reason to change these during translation, except if:
 			--  * it's more appropriate to use a transliteration, or to use the script of the concerned language (e.g. Leo -> Léo in French)
 			--  * they clash with something specific to the language/culture (please notify me if it is the case)
-			mio = "Mio", -- `Mío` = `mine`; mino = means nothing
+			mio = "Mino", -- `Mío` = `mine`; mino = means nothing
 			cap = "Cap",
 			zia = "Zia",
 			tok = "Tok",
 			nel = "Nel",
-            nob = "Nob", --ADDED
-            amb = "Amb", --ADDED
+			nob = "Nob", -- UNCHANGED (remove this line on the next commit)
+			amb = "Amb", -- UNCHANGED (remove this line on the next commit)
 			rico = "Rico",
 			leo = "Leo",
 		},
@@ -88,7 +89,7 @@ return {
 			description = "+%d ❤ temporales",
 		},
 		espresso = {
-			title = "Espresso", -- Foreign word that is used as is here
+			title = "Espresso",                                              -- Foreign word that is used as is here
 			description = "Multiplica x%d la velocidad de disparo durante un minuto", -- CHANGED
 		},
 		milk = {
@@ -124,9 +125,9 @@ return {
 			description = "x%d Velocidad de recarga", -- CHANGED
 		},
 		energy_drink = {
-            title = "Bebida Energizante",
-            description = "El medidor del combo baja mas lento",
-        },
+			title = "Bebida Energizante",
+			description = "El medidor del combo baja mas lento",
+		},
 	},
 	input = {
 		prompts = {
@@ -138,10 +139,10 @@ return {
 			down = "Abajo",
 			jump = "Saltar",
 			shoot = "Disparar",
-            interact = "Interact", -- ADDED
+			interact = "Interactuar", -- CHANGED
 			leave_game = "Salir",
-            open = "Open", -- ADDED / As in, "open menu", and NOT for, say, opening chests.
-            collect = "Collect", -- ADDED / As in, "collect item", "collect gun", etc
+			open = "Abrir",  -- CHANGED / As in, "open menu", and NOT for, say, opening chests.
+			collect = "Recolectar", -- CHANGED / As in, "collect item", "collect gun", etc
 
 			ui_left = "Izquierda (menu)",
 			ui_right = "Derecha (menu)",
@@ -174,14 +175,14 @@ return {
 			title = "PAUSAR",
 			resume = "CONTINUAR",
 			retry = "REINTENTAR",
-            return_to_ground_floor = "VOLVER AL PRIMER PISO",
+			return_to_ground_floor = "VOLVER AL PRIMER PISO",
 			options = "OPCIONES",
 			credits = "CREDITOS",
 			feedback = "COMENTARIOS",
 			quit = "SALIR",
 			website = "SITIO OFICIAL",
 			discord = "DISCORD",
-            github = "GITHUB", -- ADDED
+			github = "GITHUB", -- UNCHANGED works as is.
 		},
 		options = {
 			title = "OPCIONES",
@@ -233,10 +234,10 @@ return {
 				title = "Audio", -- works as is
 				sound = "SONIDO",
 				volume = "VOLUMEN",
-                sfx_volume = "VOLUMEN DE LOS EFECTOS DE SONIDO", -- ADDED
+				sfx_volume = "VOLUMEN DE LOS EFECTOS DE SONIDO",     -- UNCHANGED (Accurate)
 				music_volume = "VOLUMEN DE LA MÚSICA",
 				music_pause_menu = "REPRODUCIR MÚSICA DURANTE EL MENU DE PAUSA", -- Whether music should play on the pause menu
-                ambience = "AMBIENCE SOUNDS", -- ADDED
+				ambience = "SONIDOS AMBIENTALES",                    -- CHANGED
 			},
 			visuals = {
 				title = "Gráficos",
@@ -245,7 +246,7 @@ return {
 				pixel_scale_value = {
 					auto = "automática",
 					-- max_whole = "Escala máxima entera", -- Max integer scale
-					max_whole = "maximo entero",
+					max_whole = "máximo entero",
 				},
 				vsync = "VSYNC", -- Sincronización vertical; if you want to be fancy but nobody really does that tbh
 				menu_blur = "DIFUMINAR FONDO DEL MENU",
@@ -281,8 +282,8 @@ return {
 			kills = "Enemigos matados", -- The amount of enemies the player has killed
 			time = "Tiempo transcurrido", -- The time that the player took to complete the level
 			floor = "Piso",      -- Which storey the player was on when they died
-            max_combo = "Max combo", -- ADDED
-			
+			max_combo = "Combo Máximo", -- CHANGED
+
 			continue = "CONTINUAR",
 			quick_restart = "REINICIO RÁPIDO",
 		},
@@ -301,15 +302,15 @@ return {
 			-- not all people understand the symbol `&` I would like to get away with it
 			-- but better play it safe, if you desire you can replace `y` for `&`and get away with it
 			title = "CREDITOS",
-            ninesliced_presents = "Ninesliced presents", -- ADDED / Ninesliced with a capital letter ONLY on the N
-			game_by = "Un juego por", -- As in, "A game by / John". If it is not possible to have the name *after* this, translate as "Creator" ("Creator / John")
-            leo_bernard = "Léo Bernard", -- Please do not change this
-			music = "Musica",                        -- auditive design because sound design sounds weird
-			sound_design = "Diseño auditivo",        -- auditive design because sound design sounds weird
+			ninesliced_presents = "Ninesliced presenta", -- CHANGED / Ninesliced with a capital letter ONLY on the N
+			game_by = "Un juego por",           -- As in, "A game by / John". If it is not possible to have the name *after* this, translate as "Creator" ("Creator / John")
+			leo_bernard = "Léo Bernard",        -- Please do not change this
+			music = "Musica",                   -- auditive design because sound design sounds weird
+			sound_design = "Diseño auditivo",   -- auditive design because sound design sounds weird
 			localization = "Localización",
 			playtesting = "Probadores de Jugabilidad",
 			special_thanks = "Agradecimentos especiales",
-            trailer = "Trailer", -- ADDED
+			trailer = "Tráiler",                                -- CHANGED (Barely) it only needs an accent on the á to make it work
 			asset_creators = "Creadores de recursos",
 			tv_slideshow = "Contribuciones de la presentación en la TV", -- Refers to the powerpoint TV slideshow on the title screen, which was contributed by a variety of people
 			tv_slideshow_submit = "Añade el tuyo...",           -- Leads to a web page where people can submit their own slides
