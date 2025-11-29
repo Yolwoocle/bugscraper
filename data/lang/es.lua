@@ -34,7 +34,11 @@ return {
 		win_prompt = "[Pausa para continuar]",
 		warning_web_controller = "Algunos navegadores no tienen el soporte de mandos necesario",
 
+		combo = "%d COMBO",
+
 	},
+
+
 	level = {
 		world_prefix = "Departmento %s",
 
@@ -58,7 +62,7 @@ return {
 		mushroom_cannon = "Cañón de champiñones",
 
 		resignation_letter =
-		"Carta de Resignación" -- CHANGED // don't ask why it's a gun. you'd have to question my coding.
+		"Carta de Resignación", -- CHANGED // don't ask why it's a gun. you'd have to question my coding.
 	},
 	player = {
 		name = {
@@ -75,6 +79,8 @@ return {
 			amb = "Amb", -- UNCHANGED (remove this line on the next commit)
 			rico = "Rico",
 			leo = "Leo",
+			dodu = "Dodu",
+			yv = "Iv",  -- using Y at the start of a word is pronounced as a consonant
 		},
 		abbreviation = "J%d", -- Short appreviation to denote players by their number. Example: in english, "P1" means "Player 1", in french "J1" means "Joueur 1".
 	},
@@ -124,6 +130,10 @@ return {
 			title = "Chocolate caliente",
 			description = "x%d Velocidad de recarga", -- CHANGED
 		},
+		pomegranate_juice = {
+			title = "Jugo de granada",
+			description = "Crea una explosión cuando recibes daño",
+		},
 		energy_drink = {
 			title = "Bebida Energizante",
 			description = "El medidor del combo baja mas lento",
@@ -158,12 +168,14 @@ return {
 
 			-- Keep as is, there's no good way to use a word here
 			jetpack = "Jetpack", -- Refers to "jetpackking", a move in the game
+			wall_jump = "Salto de pared",
 		},
 	},
 	menu = {
 		see_more = "ver maś...",
 		yes = "SÍ",
 		no = "NO", -- The same thing here hehe
+		leave_menu = "¿Salir del menú?",
 		quit = {
 			description = "¿Seguro que quieres salir?"
 		},
@@ -255,6 +267,7 @@ return {
 			},
 			game = {
 				title = "Juego",
+				tutorial = "TUTORIAL...",
 				language = "IDIOMA...",
 				timer = "TEMPORIZADOR DE PARTIDA", -- round timer; timer as is sounds weird with no context
 				mouse_visible = "MOSTRAR PUNTERO DEL RATÓN", -- /!\ GOTCHA /!\: latam uses `mouse` but the goddamn europeans use `rat`
@@ -263,7 +276,7 @@ return {
 				skip_boss_intros = "OMITIR INTRODUCCIÓN DE JEFES",
 				-- `Warn about low performance`
 				show_fps_warning = "AVISAR DE BAJO RENDIMIENTO", -- Whether the game should show a warning when its framerate is low
-
+				combo = "%d Combo",                  -- ADDED
 			},
 			language = {
 				title = "IDIOMA",
@@ -283,9 +296,13 @@ return {
 			time = "Tiempo transcurrido", -- The time that the player took to complete the level
 			floor = "Piso",      -- Which storey the player was on when they died
 			max_combo = "Combo Máximo", -- CHANGED
-
+			score = "Puntaje",
 			continue = "CONTINUAR",
 			quick_restart = "REINICIO RÁPIDO",
+		},
+		new_reward = {
+			new_skin = "Nuevo Carácter!",
+			new_upgrade = "Nueva Mejora!",
 		},
 		win = {
 			title = "FELICITACIONES!",
@@ -308,6 +325,7 @@ return {
 			music = "Musica",                   -- auditive design because sound design sounds weird
 			sound_design = "Diseño auditivo",   -- auditive design because sound design sounds weird
 			localization = "Localización",
+			additional_art = "Arte adicional",
 			playtesting = "Probadores de Jugabilidad",
 			special_thanks = "Agradecimentos especiales",
 			trailer = "Tráiler",                                -- CHANGED (Barely) it only needs an accent on the á to make it work
@@ -315,6 +333,7 @@ return {
 			tv_slideshow = "Contribuciones de la presentación en la TV", -- Refers to the powerpoint TV slideshow on the title screen, which was contributed by a variety of people
 			tv_slideshow_submit = "Añade el tuyo...",           -- Leads to a web page where people can submit their own slides
 			licenses = "Recursos y Lisencias de librerías",
+			more = "Y muchos mas...",
 
 			x_by_y = "%s por %s", -- "ASSET_NAME by CREATOR". Used to credit assets such as sound effects
 			asset_item = "%s por %s / %s", -- "ASSET_NAME by CREATOR / LICENCE". Used to credit assets such as sound effects
