@@ -9,7 +9,7 @@ function TextManager:init()
     self.languages = {
         en = require "data.lang.en",
         fr = require "data.lang.fr",
-        -- es = require "data.lang.es",
+        es = require "data.lang.es",
         zh = require "data.lang.zh",
         -- pl = require "data.lang.pl",
         -- pt = require "data.lang.pt",
@@ -26,6 +26,8 @@ function TextManager:init()
         ["zh"] = "zh",
         ["zh_CN"] = "zh",
         ["zh_SG"] = "zh",
+        
+        ["es"] = "es",
 
         -- ["pl"] = "pl",
         -- ["pl_PL"] = "pl",
