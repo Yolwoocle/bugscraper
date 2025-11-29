@@ -13,9 +13,21 @@ function MusicDisk:init(sources, params)
     self.last_advancement = 0
     self.music_mode = MUSIC_MODE_OFF
     self.current_source = self.sources[MUSIC_MODE_INGAME]
+
+    -- Sources are assumed to be looping
+    self.loop_start = param(params.loop_start, nil)
+    self.loop_end = param(params.loop_end, nil)
 end
 
 function MusicDisk:update(dt)
+    -- Update loop
+    if self.current_source then
+        local tell = self.current_source:tell()
+        if self.loop_end and tell > self.loop_end then
+            local start = self.loop_start or 0.0
+            self.current_source:seek(start + (tell - self.loop_end))
+        end
+    end
 end
 
 function MusicDisk:set_name(name)
