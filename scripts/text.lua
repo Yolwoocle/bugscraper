@@ -16,17 +16,9 @@ function TextManager:init()
     }
     self.locale_to_language = {
         ["en"] = "en",
-        ["en_US"] = "en", 
-        ["en_GB"] = "en",
-
         ["fr"] = "fr",
-        ["fr_FR"] = "fr",
-        ["fr_CA"] = "fr",
-
         ["zh"] = "zh",
-        ["zh_CN"] = "zh",
-        ["zh_SG"] = "zh",
-        
+        -- ["zh_TW"] = "zh_Hant"
         ["es"] = "es",
 
         -- ["pl"] = "pl",
@@ -36,7 +28,15 @@ function TextManager:init()
         -- ["pt_BR"] = "pt",
     }
 
+    self.language_metadata = {}
+
     for lang_name, lang_values in pairs(self.languages) do
+        self.language_metadata[lang_name] = lang_values["__meta"]
+        lang_values["__meta"] = nil
+
+        print_debug("LANG META ", lang_name, self.language_metadata[lang_name])
+        print_table(self.language_metadata[lang_name])
+
         self.languages[lang_name] = self:unpack(lang_values)
     end
 
@@ -45,7 +45,7 @@ function TextManager:init()
         self:sanity_check_languages(self.default_lang)
     end
 
-    self.language = self:get_locale()
+    self.language = self:find_default_locale()
     self.values = self:unpack(self.languages[self.language or self.default_lang] or self.languages[self.default_lang])
 
     local words = 0
@@ -61,20 +61,31 @@ function TextManager:init()
     self.font_stack = {}
 end
 
-function TextManager:get_locale()
+function TextManager:find_default_locale()
     local option = Options:get("language")
 
     if not option or option == "default" then
-        local locales = love.system.getPreferredLocales() -- TODO if first language not supported, look for others
-        print("User preferred locales :", table_to_str(locales))
+        local user_locales = love.system.getPreferredLocales()
+        print("User preferred locales :", table_to_str(user_locales))
 
-        local lang = self.locale_to_language[locales[1] or "_____"]
-        if lang then
-            option = lang
+        for i = 1, #user_locales do
+            local lang_code = user_locales[i]:match("^(.-)_")
+
+            local lang = self.locale_to_language[user_locales[i]] or self.locale_to_language[lang_code]
+            if lang then
+                return lang
+            end
         end
-    end 
 
-    return option
+        return "en"
+
+    else
+        return option or "en"
+    end 
+end
+
+function TextManager:get_meta()
+    return self.language_metadata[self.language]
 end
 
 --- Unpacks a table to be used as text keys. Example:

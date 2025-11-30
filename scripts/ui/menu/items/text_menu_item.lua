@@ -65,22 +65,11 @@ function TextMenuItem:draw_textitem()
 	love.graphics.setColor(1, 1, 1, 1)
 	local text_height = get_text_height(self.label_text)
 	
-	-- if self.is_selected then
-	-- 	local col = Input:get_last_ui_player_colors()
-	-- 	local x = math.floor(self.x - MENU_PADDING - 8)
-	-- 	local y = math.floor(self.y + self.oy - 6)
-	-- 	local w = math.floor(MENU_PADDING*2 + 16)
-	-- 	local h = math.floor(14)
-	-- 	circle_color(col, "fill", x,   y+h/2, h/2)
-	-- 	circle_color(col, "fill", x+w, y+h/2, h/2)
-	-- 	rect_color(col, "fill", x, y, w, h)
-	-- end
-	
 	if self.is_selected and self.label_text ~= "" then
 		local col, text_col = Input:get_last_ui_player_colors()
-		local x = math.floor(MENU_PADDING)
+		local x = math.floor(game.menu_manager:get_menu_padding())
 		local y = math.floor(self.y + self.oy - 6)
-		local w = math.floor(CANVAS_WIDTH - MENU_PADDING*2)
+		local w = math.floor(CANVAS_WIDTH - game.menu_manager:get_menu_padding()*2)
 		local h = 16
 		
 		draw_3_slice(images.selection_left, images.selection_right, col, x, y, w, h)
@@ -110,7 +99,6 @@ end
 
 function TextMenuItem:draw_annotation()
 	if self.is_selected and self.annotation then
-		-- local w = math.floor(CANVAS_WIDTH - MENU_PADDING*2)
 		local w = get_text_width(self.annotation) + 64
 		local h = math.floor(16)
 
@@ -156,7 +144,7 @@ function TextMenuItem:draw_with_value()
 	if not self.is_selectable then
 		love.graphics.setColor(COL_LIGHTEST_GRAY)
 	end
-	draw_func(self.label_text, MENU_PADDING + 16, self.y + self.oy)
+	draw_func(self.label_text, game.menu_manager:get_menu_padding() + 16, self.y + self.oy)
 
 	self:draw_value_text()
 end
@@ -165,7 +153,7 @@ function TextMenuItem:draw_value_text()
 	local draw_func = self:get_leftjustified_text_draw_function()
 	local value_text_width = get_text_width(self.value_text)
 	
-	draw_func(self.value_text, CANVAS_WIDTH - MENU_PADDING - value_text_width - 16 + self.ox, self.y + self.oy)
+	draw_func(self.value_text, CANVAS_WIDTH - game.menu_manager:get_menu_padding() - value_text_width - 16 + self.ox, self.y + self.oy)
 end
 
 function TextMenuItem:set_selected(val, diff)

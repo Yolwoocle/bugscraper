@@ -4,14 +4,15 @@
       https://docs.google.com/document/d/13UntpWqoTXgYnBm5HL0pZmjBDwMStIN8YB1IPdi7hlA
     * Even though my target audience is people who already play games, since the game supports 
       local co-op and has very simple, accessible controls, it's not absurd to think that more 
-      occasional gamers would try their hand at the game, so try to avoid english gamer terms like 
-      "kills", "checkpoint", etc, except if it's already the established term for the word.
+      occasional gamers would try their hand at the game.
     * It is very easy for me to add more glyphs if needed, just tell me and I'll do it.
     * Please notify me if there are any special technical requirements. (e.g. text rendering specifics, etc) 
 ]]
 
 return {
-    __test_DONOTTRANSLATE = [[  Welcome to the bugscraper. Rise to the top of this pest-filled tower in this roguelike shooter and battle waves of enemies at every floor on your way to your boss's office. Welcome to the bugscraper. 🐜 In this roguelike shooter, you play as Mio and his friends, employees of a bug-filled skyscraper, who are fed up with their jobs. 🐛 On your way to your boss's office, you'll have to face waves of enemies on each floor in a tight elevator. 🐝 With a wide variety of weapons and upgrades, eliminate them and prepare to battle for the next floor!🐞 Play solo, or with up to 4 friends in local co-op multiplayer.]],
+    __meta = {
+        menu_padding = 0.18
+    },
     language = {
         -- These should be kept untranslated in their original language ("English", "Français", "简体中文", etc)
         en = "English",

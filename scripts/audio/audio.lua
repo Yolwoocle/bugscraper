@@ -60,7 +60,6 @@ function AudioManager:play(snd, volume, pitch, params)
 		x = (x*2 - 1) * AUDIO_3D_RANGE
 		y = (y*2 - 1) * AUDIO_3D_RANGE
 		z = 1
-		print_debug(string.format("%.2f %.2f %.2f %s", x, y, z, snd))
 		new_sound:set_position(x, y, z)
 	end
 

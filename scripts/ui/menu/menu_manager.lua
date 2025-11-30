@@ -401,4 +401,8 @@ function MenuManager:update_joystick_wait_mode(dt)
 	end
 end
 
+function MenuManager:get_menu_padding()
+	return Text:get_meta().menu_padding or DEFAULT_MENU_PADDING
+end
+
 return MenuManager

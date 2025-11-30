@@ -48,8 +48,7 @@ function ControlsMenuItem:update(dt)
 end
 
 function ControlsMenuItem:draw_value_text()
-	-- local right_bound = self.x + MENU_PADDING + self.ox
-	local right_bound = CANVAS_WIDTH - MENU_PADDING + self.ox - 16
+	local right_bound = CANVAS_WIDTH - game.menu_manager:get_menu_padding() + self.ox - 16
 	local y = math.floor(self.y + self.oy + 2)
 
 	local draw_func = self:get_leftjustified_text_draw_function()
