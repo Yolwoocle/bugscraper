@@ -49,12 +49,17 @@ return {
         world_prefix = "Department %s", 
 
         -- World names
-        world_1 = "Bug Resources",
+        -- This can be any vaguely office-y name (I just chose this in english because of the word play), 
+        -- because this department just represents a generic office department.
+        world_1 = "Bug Resources", 
+        -- This world is a factory themed after bees, with grungy metallic environment
         world_2 = "Factory",
+        -- This is a moody, dark and mysterious room filled with endless racks of servers 
         world_3 = "Server Room",
+        -- This is the highest department of the bugscraper, filled with lofty gardens and clean, white, modern architecture
         world_4 = "Gardens",
-        world_5 = "Executive",
 
+        -- This is an underground secret department below the bugscraper. It contains a huge hangar with a large rocket. 
         world_0 = "Basement",
     },
     gun = {
