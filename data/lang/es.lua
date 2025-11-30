@@ -28,10 +28,6 @@ return {
 			local_multiplayer = "Multijugador local",
 		},
 		details = {
-			-- Yolwoocle note:
-			-- I should have mentionned, but if you can please avoid english video gamy terms ("checkpoint", etc),
-			-- except if they are the normal word for saying the thing;
-			-- this is because this game might be played by non-gamers especially in local co-op
 			waiting = "En el vestíbulo", -- *sigh* The europeans. (no one uses vestibulo on latam but better play it safe)
 			playing = "Jugando (Piso %d/%d)",
 			dying = "Derrotado (Piso %d/%d)",
