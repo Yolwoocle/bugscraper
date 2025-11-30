@@ -11,7 +11,7 @@
 
 return {
 	__meta = {
-        menu_padding = 0.01
+        menu_padding = 0.1
     },
 	language = {
 		-- These should be kept untranslated in their original language ("english", "français", "中文", etc)
