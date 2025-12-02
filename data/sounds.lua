@@ -24,6 +24,7 @@ local sfxnames = {
 	["music_w1_ingame"] =                   { "music/music_w1_ingame.ogg", "stream", { looping = true } },
 	["music_w1_paused"] =                   { "music/music_w1_paused.ogg", "stream", { looping = true } },
 	["music_w2_ingame"] =                   { "music/music_w2_ingame.ogg", "stream", { looping = true } },
+	["music_w2_paused"] =                   { "music/music_w2_paused.ogg", "stream", { looping = true } },
 	["music_w3_ingame"] =                   { "music/music_w3_ingame.ogg", "stream", { looping = true } },
 	["music_w3_paused"] =                   { "music/music_w3_paused.ogg", "stream", { looping = true } },
 	["music_game_over"] =                   { "music/music_game_over.ogg", "stream", { looping = true } },

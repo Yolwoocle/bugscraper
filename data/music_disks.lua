@@ -20,7 +20,7 @@ return {
     }),
     ["w2"] = disk_class:new({
         [MUSIC_MODE_INGAME] = sounds.music_w2_ingame.source,
-        [MUSIC_MODE_PAUSE] = sounds.music_w2_ingame.source,
+        [MUSIC_MODE_PAUSE] = sounds.music_w2_paused.source,
     }),
     ["w3"] = disk_class:new({
         [MUSIC_MODE_INGAME] = sounds.music_w3_ingame.source,
