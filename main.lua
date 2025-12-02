@@ -3,6 +3,8 @@ local init = require "scripts.meta.init"
 init()
 ----------
 
+assert(love.graphics.newImage("images/bugscraper.png"))
+
 require "scripts.util"
 require "lib.please_work_error_explorer.error_explorer" {
 	source_font = love.graphics.newFont("fonts/FiraCode-Regular.ttf", 12)
@@ -46,7 +48,7 @@ local function fixed_update()
 
 	_G_fixed_frame = _G_fixed_frame + 1
 	game:update(fixed_dt)
-	
+
 	if _G_speedup then
 		_G_fixed_frame = _G_fixed_frame + 1
 		for i = 1, _G_frame_repeat-1 do
@@ -59,7 +61,7 @@ _G_do_fixed_framerate = true
 
 function love.update(dt)
 	_G_t = math.min(_G_t + dt, max_frame_buffer_duration)
-	local cap = 1 
+	local cap = 1
 	local i = 0
 	local update_fixed_dt = fixed_dt
 	while (not _G_do_fixed_framerate or _G_t > update_fixed_dt) and cap > 0 do
@@ -92,7 +94,7 @@ function love.keypressed(key, scancode, isrepeat)
 		if Options then
 			Options:toggle("is_fullscreen")
 		end
-	
+
 	elseif scancode == "f9" then
 		if _G_frame_by_frame_mode then
 			_frame_by_frame_mode_advance_flag = true
@@ -178,7 +180,7 @@ local function __tick(label, col, layer)
 	__times[label].tic = love.timer.getTime()
 	__times[label].label = label
 	__times[label].col = col or COL_WHITE
-	
+
 	__times_i[layer] = __times_i[layer] + 1
 end
 local function __tock(label)
@@ -187,7 +189,7 @@ local function __tock(label)
 	__times[label].total_t = __times[label].total_t + __times[label].t
 	__times[label].calls = __times[label].calls + 1
 	__times[label].avg_t = __times[label].total_t / __times[label].calls
-	
+
 	if __time_log_calls % 60*5 then
 		__times[label].total_t = __times[label].avg_t
 		__times[label].calls = 1
@@ -207,7 +209,7 @@ function love.run()
 		__times_i = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 		-- __times = {}
 		__tick("run", {0.5, 0.5, 0.6, 1}, 1)
-		
+
 		__tick("event", COL_YELLOW, 2)
 		-- Process events.
 		if love.event then
@@ -239,11 +241,11 @@ function love.run()
 			__tick("cl", COL_ORANGE, 3)
 			love.graphics.clear(love.graphics.getBackgroundColor())
 			__tock("cl")
-			
+
 			__tick("dr", COL_YELLOW, 3)
 			if love.draw then love.draw() end
 			__tock("dr")
-			
+
 			__tick("p", COL_GREEN, 3)
 			love.graphics.present()
 			__tock("p")
@@ -254,8 +256,8 @@ function love.run()
 			-- love.graphics.present()
 		end
 		__tock("draw")
-		
-		if love.timer then love.timer.sleep(0.001) end		
+
+		if love.timer then love.timer.sleep(0.001) end
 		__tock("run")
 
 		__buf_times = __times
