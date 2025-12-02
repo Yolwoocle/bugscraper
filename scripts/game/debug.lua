@@ -125,6 +125,10 @@ function Debug:init(game)
             }))
             ac.gravity = 0
         end},
+
+        ["t"] = {"add +10s to music", function()
+            game.music_player.current_disk.current_source:seek(game.music_player.current_disk.current_source:tell() + 10)
+        end},
         
         ["v"] = { "__jackofalltrades", function()
             if love.keyboard.isDown("1") then
@@ -719,14 +723,6 @@ local linedottedoffset = 0.0
 function Debug:draw_info_view()
     love.graphics.setFont(FONT_MINI)
 
-    self.test_sprite_t = self.test_sprite_t + 1 / 60
-    if self.test_sprite_t > 0.3 then
-        self.test_sprite_t = 0.0
-        self.test_sprite:set_spritesheet_tile(mod_plus_1(self.test_sprite.spritesheet_tile + 1,
-            self.test_sprite.spritesheet_tile_count_x))
-    end
-    -- self.test_sprite:draw(200, 100)
-
     do
         local players_str = "players: "
         for k, player in pairs(self.game.players) do
@@ -788,7 +784,7 @@ function Debug:draw_info_view()
             concat("Renderer info: ", renderer_name, " (v", renderer_version, ")"),
             concat("Renderer vendor: ", renderer_vendor, ", device ", renderer_device),
             concat("game state: ", game.game_state, " / newwave state: ", game.level.new_wave_animation_state_machine.current_state_name, " / backroom anim state: ", game.level.backroom_animation_state_machine.current_state_name, " / camera pos: (", round(game.camera.x, 2), ", ", round(game.camera.y, 2), ")"),
-            concat("nb of active audio sources: ", love.audio.getActiveSourceCount()),
+            concat("nb of active audio sources: ", love.audio.getActiveSourceCount(), " / music: ", round(game.music_player.current_disk.current_source:tell(), 2), "s/", round(game.music_player.current_disk.current_source:getDuration(), 2), "s" ),
             concat("nb of actors: ", #self.game.actors, " / ", self.game.actor_manager.actor_limit, " | nb of enemies: ", self.game:get_enemy_count()),
             concat("nb collision items: ", Collision.world:countItems()),
             concat("number_of_alive_players ", self.game:get_number_of_alive_players(), " / number_of_kb_users ", Input:get_number_of_users(INPUT_TYPE_KEYBOARD), " / global_user.ui_actions_enabled ", Input:get_user(GLOBAL_INPUT_USER_PLAYER_N).ui_actions_enabled),
@@ -893,7 +889,6 @@ function Debug:draw_info_view()
     linedottedoffset = linedottedoffset - 0.2
 
     --
-    self:test_spiral_removeme()
 end
 
 function Debug:test_spiral_removeme()

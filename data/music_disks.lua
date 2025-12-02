@@ -17,7 +17,7 @@ return {
     ["w1"] = disk_class:new({
         [MUSIC_MODE_INGAME] = sounds.music_w1_ingame.source,
         [MUSIC_MODE_PAUSE] = sounds.music_w1_paused.source,
-    }),
+    }, { loop_start = 13.708, loop_end = 60+54.857 }),
     ["w2"] = disk_class:new({
         [MUSIC_MODE_INGAME] = sounds.music_w2_ingame.source,
         [MUSIC_MODE_PAUSE] = sounds.music_w2_paused.source,
@@ -62,5 +62,6 @@ return {
     ["boss_w3"] = disk_class:new({
         [MUSIC_MODE_INGAME] = sounds.music_boss_w3_ingame.source,
         [MUSIC_MODE_PAUSE] = sounds.music_boss_w3_paused.source,
-    }),
+    -- }, { loop_start = 5.741, loop_end = 60+58.333 }),
+    }, { loop_start = 5.741, loop_end = 60+58.333 }),
 }
