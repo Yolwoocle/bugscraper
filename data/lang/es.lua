@@ -44,9 +44,9 @@ return {
 
 		-- World names
 		world_1 = "Recursos de Depuracionces", -- The pun is lost (Debugging resources)
-		world_2 = "La fábrica",          -- CHANGED
-		world_3 = "La sala de servidores", -- CHANGED
-		world_4 = "Los jardines",        -- CHANGED
+		world_2 = "Fábrica",          -- CHANGED
+		world_3 = "Servidores", -- CHANGED
+		world_4 = "Jardines",        -- CHANGED
 		world_5 = "Ejecutivo",
 
 		world_0 = "Sótano", -- CHANGED
@@ -70,7 +70,7 @@ return {
 			-- No reason to change these during translation, except if:
 			--  * it's more appropriate to use a transliteration, or to use the script of the concerned language (e.g. Leo -> Léo in French)
 			--  * they clash with something specific to the language/culture (please notify me if it is the case)
-			mio = "Mino", -- `Mío` = `mine`; mino = means nothing
+			mio = "Mio", -- `Mío` = `mine`; mino = means nothing
 			cap = "Cap",
 			zia = "Zia",
 			tok = "Tok",
@@ -80,7 +80,7 @@ return {
 			rico = "Rico",
 			leo = "Leo",
 			dodu = "Dodu",
-			yv = "Iv",  -- using Y at the start of a word is pronounced as a consonant
+			yv = "Y.V.",  -- yung venuz
 		},
 		abbreviation = "J%d", -- Short appreviation to denote players by their number. Example: in english, "P1" means "Player 1", in french "J1" means "Joueur 1".
 	},
@@ -92,7 +92,7 @@ return {
 	upgrade = {
 		tea = {
 			title = "Té verde",
-			description = "+%d ❤ temporales",
+			description = "+%d ❤ extra",
 		},
 		espresso = {
 			title = "Espresso",                                              -- Foreign word that is used as is here
