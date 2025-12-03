@@ -8,3 +8,5 @@
 steam_api64.dll
 libsteam_api_osx.dylib
 libsteam_api_linux64.so
+#Generate it by running `lua _tools/language_validation/make_spreadsheet.lua`
+_tools/language_validation/lang.csv
