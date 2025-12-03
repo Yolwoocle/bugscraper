@@ -138,6 +138,8 @@ function TimedSpikes:init(x, y, duration_off, duration_telegraph, duration_on, s
                 self.spike_target_y = self.spike_length
                 self.spike_sprite.color = COL_WHITE
                 -- self.spike_sprite.sy = 1.7
+
+                self:play_sound_var("sfx_enemy_timed_spikes_unearth_{01-05}", 0.2, 1.2, {volume=0.3})
             end, 
             update = function(state, dt)
                 if self.spike_y >= self.spike_length - 8 then

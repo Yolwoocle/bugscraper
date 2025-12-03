@@ -37,6 +37,7 @@ function Guns:init()
 		
 		self.color = COL_LIGHT_YELLOW
 		self.sfx = "sfx_weapon_peagun_shoot_{01-08}"
+		self.sound_pickup = "sfx_weapon_peagun_pickedup"
 
 		self.damage = 1.5
 		self.boss_damage = 1.5
@@ -70,6 +71,7 @@ function Guns:init()
 		self.is_auto = true
 		self.spr = images.gun_triple
 		self.sfx = "sfx_weapon_triplepepper_shoot_{01-08}"
+		self.sound_pickup = "sfx_weapon_triplepepper_pickedup"
 		self.cooldown = 0.2
 		self.bullet_number = 3
 		self.random_angle_offset = 0
@@ -95,6 +97,7 @@ function Guns:init()
 
 		self.spr = images.gun_burst
 		self.sfx = "sfx_weapon_pollenburst_shoot_{01-06}"
+		self.sound_pickup = "sfx_weapon_pollenburst_pickedup"
 		self.bullet_spread = 0.2
 		
 		self.is_auto = false
@@ -123,6 +126,7 @@ function Guns:init()
 		self.color = COL_LIGHT_BLUE
 
 		self.sfx = "sfx_weapon_raspberryshotgun_shoot_{01-10}"
+		self.sound_pickup = "sfx_weapon_raspberryshotgun_pickedup"
 		self.is_auto = false
 
 		self.damage = 1
@@ -166,6 +170,7 @@ function Guns:init()
 		self.is_auto = true
 		self.spr = images.gun_minigun
 		self.sfx = "sfx_weapon_seedminigun_shoot_{01-10}"
+		self.sound_pickup = "sfx_weapon_seedminigun_pickedup"
 
 		self.cooldown = 0.06
 		self.jetpack_force = 300
@@ -201,6 +206,7 @@ function Guns:init()
 		self.is_auto = true
 		self.spr = images.gun_ring
 		self.sfx = "sfx_weapon_bigberry_shoot_{01-04}"
+		self.sound_pickup = "sfx_weapon_bigberry_pickedup"
 		
 		self.cooldown = 0.5
 		self.jetpack_force = 1000
@@ -223,6 +229,7 @@ function Guns:init()
 		self.color = COL_YELLOW_ORANGE
 		
 		self.sfx = "sfx_weapon_mushroomcannon_shoot_{01-04}"
+		self.sound_pickup = "sfx_weapon_mushroomcannon_pickedup"
 		self.damage = 4
 		self.boss_damage = 4
 		self.is_auto = true

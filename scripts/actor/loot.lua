@@ -339,7 +339,7 @@ function Loot.Gun:on_collect(player)
 	player:equip_gun(self.gun)
 	
 	Particles:smoke(self.mid_x, self.mid_y, 10, COL_LIGHT_BROWN)
-	self:play_sound("sfx_loot_health_collect")
+	self:play_sound(self.gun.sound_pickup)
 
 	if not self.remove_on_collect then
 		local old_life = self.life
