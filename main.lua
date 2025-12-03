@@ -3,6 +3,8 @@ local init = require "scripts.meta.init"
 init()
 ----------
 
+assert(love.graphics.newImage("images/bugscraper.png"))
+
 require "scripts.util"
 require "lib.please_work_error_explorer.error_explorer" {
 	source_font = love.graphics.newFont("fonts/FiraCode-Regular.ttf", 12)

@@ -44,18 +44,22 @@ return {
 		win_prompt = "[Pausa para continuar]",
 		warning_web_controller = "Algunos navegadores no tienen el soporte de mandos necesario",
 
+		combo = "%d COMBO",
+
 	},
+
+
 	level = {
 		world_prefix = "Departmento %s",
 
 		-- World names
 		world_1 = "Recursos de Depuracionces", -- The pun is lost (Debugging resources)
-		world_2 = "La fabrica", -- CHANGED
-		world_3 = "La sala de servidores", -- CHANGED
-		world_4 = "Los jardines", -- CHANGED
+		world_2 = "Fábrica",          -- CHANGED
+		world_3 = "Servidores", -- CHANGED
+		world_4 = "Jardines",        -- CHANGED
 		world_5 = "Ejecutivo",
 
-        world_0 = "Basement", -- ADDED
+		world_0 = "Sótano", -- CHANGED
 	},
 	gun = {
 		-- Gun names
@@ -67,7 +71,8 @@ return {
 		ring = "Baya grande",
 		mushroom_cannon = "Cañón de champiñones",
 
-        resignation_letter = "Resignation Letter" -- ADDED // don't ask why it's a gun. you'd have to question my coding.
+		resignation_letter =
+		"Carta de Resignación", -- CHANGED // don't ask why it's a gun. you'd have to question my coding.
 	},
 	player = {
 		name = {
@@ -80,10 +85,12 @@ return {
 			zia = "Zia",
 			tok = "Tok",
 			nel = "Nel",
-            nob = "Nob", --ADDED
-            amb = "Amb", --ADDED
+			nob = "Nob", -- UNCHANGED (remove this line on the next commit)
+			amb = "Amb", -- UNCHANGED (remove this line on the next commit)
 			rico = "Rico",
 			leo = "Leo",
+			dodu = "Dodu",
+			yv = "Y.V.",  -- yung venuz
 		},
 		abbreviation = "J%d", -- Short appreviation to denote players by their number. Example: in english, "P1" means "Player 1", in french "J1" means "Joueur 1".
 	},
@@ -95,10 +102,10 @@ return {
 	upgrade = {
 		tea = {
 			title = "Té verde",
-			description = "+%d ❤ temporales",
+			description = "+%d ❤ extra",
 		},
 		espresso = {
-			title = "Espresso", -- Foreign word that is used as is here
+			title = "Espresso",                                              -- Foreign word that is used as is here
 			description = "Multiplica x%d la velocidad de disparo durante un minuto", -- CHANGED
 		},
 		milk = {
@@ -133,10 +140,14 @@ return {
 			title = "Chocolate caliente",
 			description = "x%d Velocidad de recarga", -- CHANGED
 		},
+		pomegranate_juice = {
+			title = "Jugo de granada",
+			description = "Crea una explosión cuando recibes daño",
+		},
 		energy_drink = {
-            title = "Bebida Energizante",
-            description = "El medidor del combo baja mas lento",
-        },
+			title = "Bebida Energizante",
+			description = "El medidor del combo baja mas lento",
+		},
 	},
 	input = {
 		prompts = {
@@ -148,10 +159,10 @@ return {
 			down = "Abajo",
 			jump = "Saltar",
 			shoot = "Disparar",
-            interact = "Interact", -- ADDED
+			interact = "Interactuar", -- CHANGED
 			leave_game = "Salir",
-            open = "Open", -- ADDED / As in, "open menu", and NOT for, say, opening chests.
-            collect = "Collect", -- ADDED / As in, "collect item", "collect gun", etc
+			open = "Abrir",  -- CHANGED / As in, "open menu", and NOT for, say, opening chests.
+			collect = "Recolectar", -- CHANGED / As in, "collect item", "collect gun", etc
 
 			ui_left = "Izquierda (menu)",
 			ui_right = "Derecha (menu)",
@@ -167,12 +178,14 @@ return {
 
 			-- Keep as is, there's no good way to use a word here
 			jetpack = "Jetpack", -- Refers to "jetpackking", a move in the game
+			wall_jump = "Salto de pared",
 		},
 	},
 	menu = {
 		see_more = "ver maś...",
 		yes = "SÍ",
 		no = "NO", -- The same thing here hehe
+		leave_menu = "¿Salir del menú?",
 		quit = {
 			description = "¿Seguro que quieres salir?"
 		},
@@ -184,14 +197,14 @@ return {
 			title = "PAUSAR",
 			resume = "CONTINUAR",
 			retry = "REINTENTAR",
-            return_to_ground_floor = "VOLVER AL PRIMER PISO",
+			return_to_ground_floor = "VOLVER AL PRIMER PISO",
 			options = "OPCIONES",
 			credits = "CREDITOS",
 			feedback = "COMENTARIOS",
 			quit = "SALIR",
 			website = "SITIO OFICIAL",
 			discord = "DISCORD",
-            github = "GITHUB", -- ADDED
+			github = "GITHUB", -- UNCHANGED works as is.
 		},
 		options = {
 			title = "OPCIONES",
@@ -243,10 +256,10 @@ return {
 				title = "Audio", -- works as is
 				sound = "SONIDO",
 				volume = "VOLUMEN",
-                sfx_volume = "VOLUMEN DE LOS EFECTOS DE SONIDO", -- ADDED
+				sfx_volume = "VOLUMEN DE LOS EFECTOS DE SONIDO",     -- UNCHANGED (Accurate)
 				music_volume = "VOLUMEN DE LA MÚSICA",
 				music_pause_menu = "REPRODUCIR MÚSICA DURANTE EL MENU DE PAUSA", -- Whether music should play on the pause menu
-                ambience = "AMBIENCE SOUNDS", -- ADDED
+				ambience = "SONIDOS AMBIENTALES",                    -- CHANGED
 			},
 			visuals = {
 				title = "Gráficos",
@@ -255,7 +268,7 @@ return {
 				pixel_scale_value = {
 					auto = "automática",
 					-- max_whole = "Escala máxima entera", -- Max integer scale
-					max_whole = "maximo entero",
+					max_whole = "máximo entero",
 				},
 				vsync = "VSYNC", -- Sincronización vertical; if you want to be fancy but nobody really does that tbh
 				menu_blur = "DIFUMINAR FONDO DEL MENU",
@@ -264,6 +277,7 @@ return {
 			},
 			game = {
 				title = "Juego",
+				tutorial = "TUTORIAL...",
 				language = "IDIOMA...",
 				timer = "TEMPORIZADOR DE PARTIDA", -- round timer; timer as is sounds weird with no context
 				mouse_visible = "MOSTRAR PUNTERO DEL RATÓN", -- /!\ GOTCHA /!\: latam uses `mouse` but the goddamn europeans use `rat`
@@ -272,7 +286,7 @@ return {
 				skip_boss_intros = "OMITIR INTRODUCCIÓN DE JEFES",
 				-- `Warn about low performance`
 				show_fps_warning = "AVISAR DE BAJO RENDIMIENTO", -- Whether the game should show a warning when its framerate is low
-
+				combo = "%d Combo",                  -- ADDED
 			},
 			language = {
 				title = "IDIOMA",
@@ -291,10 +305,14 @@ return {
 			kills = "Enemigos matados", -- The amount of enemies the player has killed
 			time = "Tiempo transcurrido", -- The time that the player took to complete the level
 			floor = "Piso",      -- Which storey the player was on when they died
-            max_combo = "Max combo", -- ADDED
-			
+			max_combo = "Combo Máximo", -- CHANGED
+			score = "Puntaje",
 			continue = "CONTINUAR",
 			quick_restart = "REINICIO RÁPIDO",
+		},
+		new_reward = {
+			new_skin = "Nuevo Carácter!",
+			new_upgrade = "Nueva Mejora!",
 		},
 		win = {
 			title = "FELICITACIONES!",
@@ -311,19 +329,21 @@ return {
 			-- not all people understand the symbol `&` I would like to get away with it
 			-- but better play it safe, if you desire you can replace `y` for `&`and get away with it
 			title = "CREDITOS",
-            ninesliced_presents = "Ninesliced presents", -- ADDED / Ninesliced with a capital letter ONLY on the N
-			game_by = "Un juego por", -- As in, "A game by / John". If it is not possible to have the name *after* this, translate as "Creator" ("Creator / John")
-            leo_bernard = "Léo Bernard", -- Please do not change this
-			music = "Musica",                        -- auditive design because sound design sounds weird
-			sound_design = "Diseño auditivo",        -- auditive design because sound design sounds weird
+			ninesliced_presents = "Ninesliced presenta", -- CHANGED / Ninesliced with a capital letter ONLY on the N
+			game_by = "Un juego por",           -- As in, "A game by / John". If it is not possible to have the name *after* this, translate as "Creator" ("Creator / John")
+			leo_bernard = "Léo Bernard",        -- Please do not change this
+			music = "Musica",                   -- auditive design because sound design sounds weird
+			sound_design = "Diseño auditivo",   -- auditive design because sound design sounds weird
 			localization = "Localización",
+			additional_art = "Arte adicional",
 			playtesting = "Probadores de Jugabilidad",
 			special_thanks = "Agradecimentos especiales",
-            trailer = "Trailer", -- ADDED
+			trailer = "Tráiler",                                -- CHANGED (Barely) it only needs an accent on the á to make it work
 			asset_creators = "Creadores de recursos",
 			tv_slideshow = "Contribuciones de la presentación en la TV", -- Refers to the powerpoint TV slideshow on the title screen, which was contributed by a variety of people
 			tv_slideshow_submit = "Añade el tuyo...",           -- Leads to a web page where people can submit their own slides
 			licenses = "Recursos y Lisencias de librerías",
+			more = "Y muchos mas...",
 
 			x_by_y = "%s por %s", -- "ASSET_NAME by CREATOR". Used to credit assets such as sound effects
 			asset_item = "%s por %s / %s", -- "ASSET_NAME by CREATOR / LICENCE". Used to credit assets such as sound effects
