@@ -94,7 +94,7 @@ return {
     upgrade = {
         tea = {
             title = "Chá Verde",
-            description = "+%d ❤ temporários",
+            description = "+%d ❤ temporários", -- CHANGED: "+%d extra ❤"
         },
         espresso = {
             title = "Expresso",

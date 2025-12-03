@@ -88,18 +88,20 @@ return {
             nel = "Nel",
             nob = "Nob",
             amb = "Amb",
-            rico = "Rico",
+
+            -- These are guest characters from other games so please stay close to the original.
+            rico = "Rico", -- From 'The Bullet Hopper'
             leo = "Leo",
-            dodu = "Dodu",
-            yv = "Y.V.",
+            dodu = "Dodu", 
+            yv = "Y.V.", -- From 'Nuclear Throne'
         },
         abbreviation = "P%d", -- Short appreviation to denote players by their number. Example: in english, "P1" means "Player 1", in french "J1" means "Joueur 1".
     },
     enemy = {
         -- These are the boss names. Please look at the Gdocs for reference.
         -- Feel free to pick funny or interesting names, even if they don't translate directly.
-        -- (for example, the french name for Mr. Dung is "Jean-Darmes De Bouse", which is a 
-        -- play on words with firebug and dung)
+        -- (for example, the french name for Mr. Dung is "J. De Bouse", which is a 
+        -- play on words with the french word for 'dung' and a famous french humorist)
         dung = "Mr. Dung",
         bee_boss = "Her Majesty", 
         motherboard = "The Webmaster",
@@ -107,7 +109,7 @@ return {
     upgrade = {
         tea = {
             title = "Green Tea",
-            description = "+%d temporary ❤",
+            description = "+%d extra ❤", 
         },
         espresso = {
             title = "Espresso",
@@ -203,7 +205,10 @@ return {
             title = "PAUSE",
             resume = "RESUME",
             retry = "RETRY",
-            return_to_ground_floor = "RETURN TO GROUND FLOOR", -- This correspons to floor 0 in the game. To different cultures, "ground floor" might usually mean "floor 1", so please make sure to avoid ambiguity when translating. (You can also use "main lobby" or something like it)   
+            -- This correspons to floor 0 in the game. To different cultures, "ground floor" 
+            -- might usually mean "floor 1", so please make sure to avoid ambiguity when translating. 
+            -- (You can also use "main lobby" or something like it)   
+            return_to_ground_floor = "RETURN TO GROUND FLOOR", 
             options = "OPTIONS",
             credits = "CREDITS",
             feedback = "FEEDBACK",
