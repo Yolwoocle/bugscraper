@@ -58,7 +58,7 @@ function BeeBoss:init(x, y)
 
     self.damaged_player_throw_speed_x = 2000
     self.damaged_player_throw_speed_y = -300
-    self.damaged_player_invincibility = 1.0
+    self.damaged_player_invincibility = 1.5
 
     self.ai_templates["bounce"] = {
         ready = function(ai)
