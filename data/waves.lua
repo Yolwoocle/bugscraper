@@ -751,6 +751,7 @@ local waves = parse_waves_table {
             { E.BeeBoss, 1, position = { 240 - 16, 200 } },
         },
         music = "boss_w2",
+        ambience = "bee_boss_crowd_normal",
 
         run = function(self, level)
             for _, actor in pairs(level.game.actors) do

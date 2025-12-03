@@ -24,9 +24,16 @@ return {
     ["w2"] = disk_class:new({
         [MUSIC_MODE_INGAME] = sounds.amb_pad_world2_lp.source,
     }, { volume = 0.3 }),
+    
+    ["bee_boss_crowd_normal"] = disk_class:new({
+        [MUSIC_MODE_INGAME] = sounds.sfx_boss_majesty_crowd_ambient.source,
+    }, { volume = 1.0 }),
+    
+    ["bee_boss_crowd_cheer"] = disk_class:new({
+        [MUSIC_MODE_INGAME] = sounds.sfx_boss_majesty_crowd_cheer.source,
+    }, { volume = 1.0 }),
 
     ["w3"] = disk_class:new({
         [MUSIC_MODE_INGAME] = sounds.amb_pad_world3_lp.source,
     }, { volume = 0.3 }),
-
 }

@@ -28,9 +28,9 @@ function BeeBoss:init(x, y)
 
     self.self_knockback_mult = 0.0
 
-    self.destroy_bullet_on_impact = true
-    self.is_bouncy_to_bullets = false
-    self.is_immune_to_bullets = false
+    self.destroy_bullet_on_impact = false
+    self.is_bouncy_to_bullets = true
+    self.is_immune_to_bullets = true
 
     self.spr = AnimatedSprite:new({
         normal = {images.bee_boss_alt, 0.05, 2},
@@ -56,8 +56,9 @@ function BeeBoss:init(x, y)
     self.minions = {}
     self.max_minions = 10
 
-    self.damage_sound_cooldown = 0.0
-    self.damage_sound_cooldown_max = 1.0
+    self.damaged_player_throw_speed_x = 2000
+    self.damaged_player_throw_speed_y = -300
+    self.damaged_player_invincibility = 1.0
 
     self.ai_templates["bounce"] = {
         ready = function(ai)
@@ -87,9 +88,6 @@ function BeeBoss:init(x, y)
     self.state_machine = StateMachine:new({
         random = {
             enter = function(state)
-                self.destroy_bullet_on_impact = true
-                self.is_bouncy_to_bullets = false
-                self.is_immune_to_bullets = false
             end,
             update = function(state, dt)
                 local possible_states = {
@@ -116,6 +114,8 @@ function BeeBoss:init(x, y)
 	            self.flip_mode = ENEMY_FLIP_MODE_MANUAL
                 self.spr:set_flip_x(false)
                 self.spr.rot = self.future_pong_dir - pi/2
+
+                self:play_sound_var("sfx_boss_majesty_pong_telegraph_{01-04}", 0.1, 1.1)
             end,
             update = function(state, dt)
                 local r = 3 * self.pong_telegraph_timer:get_ratio()
@@ -159,7 +159,8 @@ function BeeBoss:init(x, y)
                     
                     game:screenshake(4)
                     Input:vibrate_all(0.1, 0.45)
-                    self:play_sound_var("metal_impact", 0, 1)
+                    self:play_sound_var("sfx_boss_mrdung_bump_{01-02}", 0.2, 1.2)
+                    self:play_sound_var("sfx_boss_majesty_pong_bounce_{01-10}", 0.1, 1.1)
                 end
             end,
         },
@@ -239,6 +240,8 @@ function BeeBoss:init(x, y)
                 self.vy = 0
 
                 self.thwomp_telegraph_timer:start()
+                
+                self:play_sound_var("sfx_boss_majesty_thwomp_attack_{01-07}", 0.1, 1.1)
             end,
             update = function(state, dt)
                 self.speed_x = 0
@@ -317,6 +320,8 @@ function BeeBoss:init(x, y)
                             a.z = self.z + 1
                             table.insert(self.minions, a)
                             game:new_actor(a)
+
+                            self:play_sound_var("sfx_boss_majesty_minions_spawn_{01-08}", 0.2, 1.2)
                         end
                     end
                     self.spawn_timer:start()
@@ -359,10 +364,6 @@ function BeeBoss:init(x, y)
 
                 if self.state_timer:get_time_passed() > 1.0 then
                     self.is_stompable = false
-
-                    self.destroy_bullet_on_impact = false
-                    self.is_bouncy_to_bullets = true
-                    self.is_immune_to_bullets = true
                 end
                 
                 if self.state_timer:update(dt) then
@@ -411,8 +412,6 @@ function BeeBoss:update(dt)
             table.remove(self.minions, i)
         end
     end
-
-    self.damage_sound_cooldown = max(0.0, self.damage_sound_cooldown - dt)
 end
 
 function BeeBoss:draw()
@@ -433,6 +432,15 @@ function BeeBoss:on_stomped(player)
     self:set_harmless(0.5)
 
     Audio:play_var("sfx_boss_majesty_crowd_happy_{01-04}", 0.1, 1.1)
+    self:play_sound_var("sfx_boss_majesty_hit_{01-06}", 0.1, 1.1)
+
+    player:set_invincibility(self.damaged_player_invincibility)
+    player.vy = self.damaged_player_throw_speed_y
+    if player.mid_x < CANVAS_WIDTH/2 then
+        player.vx = self.damaged_player_throw_speed_x
+    else
+        player.vx = -self.damaged_player_throw_speed_x
+    end
 end
 
 function BeeBoss:on_damage_player(player, damage)
@@ -505,15 +513,8 @@ function BeeBoss:on_death()
     for _, actor in pairs(self.spikes) do
         actor:remove()
     end
-end
 
-
-function BeeBoss:on_damage()
-    if self.damage_sound_cooldown == 0.0 then
-        self:play_sound_var("sfx_boss_majesty_hit_{01-06}", 0.1, 1.1)
-        
-        self.damage_sound_cooldown = self.damage_sound_cooldown_max
-    end
+    game.ambience_player:fade_out("bee_boss_crowd_cheer", 0.4)
 end
 
 function BeeBoss:spawn_spikes()

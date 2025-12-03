@@ -178,10 +178,14 @@ local sfxnames = {
 	["sfx_boss_intro_majesty"] = {"sfx/enemy/majesty/sfx_boss_intro_majesty.ogg", "static"},
 	["sfx_boss_intro_spotlights_{01-03}"] = {"sfx/enemy/majesty/spotlights/sfx_boss_intro_spotlights_{}.ogg", "static"},
 	["sfx_boss_majesty_hit_{01-06}"] = {"sfx/enemy/majesty/hit/sfx_boss_majesty_hit_{}.ogg", "static"},
+	["sfx_boss_majesty_thwomp_attack_{01-07}"] = {"sfx/enemy/majesty/thwomp/sfx_boss_majesty_thwomp_attack_{}.ogg", "static"},
 	["sfx_boss_majesty_thwomp_impact_{01-03}"] = {"sfx/enemy/majesty/thwomp/sfx_boss_majesty_thwomp_impact_{}.ogg", "static"},
-	["sfx_boss_majesty_crowd_happy_{01-04}"] = {"sfx/enemy/majesty/crowd/sfx_boss_majesty_crowd_happy_{}.ogg", "static"},
-	["sfx_boss_majesty_crowd_sad_{01-05}"] = {"sfx/enemy/majesty/crowd/sfx_boss_majesty_crowd_sad_{}.ogg", "static"},
-	["sfx_boss_majesty_crowd_cheer_{01-04}"] = {"sfx/enemy/majesty/crowd/sfx_boss_majesty_crowd_cheer_{}.ogg", "static"},
+	["sfx_boss_majesty_pong_telegraph_{01-04}"] = {"sfx/enemy/majesty/pong/sfx_boss_majesty_pong_telegraph_{}.ogg", "static"},
+	["sfx_boss_majesty_pong_bounce_{01-10}"] = {"sfx/enemy/majesty/pong/sfx_boss_majesty_pong_bounce_{}.ogg", "static"},
+	["sfx_boss_majesty_minions_spawn_{01-08}"] = {"sfx/enemy/majesty/minions_spawn/sfx_boss_majesty_minions_spawn_{}.ogg", "static"},
+	["sfx_boss_majesty_crowd_happy_{01-04}"] = {"sfx/enemy/majesty/crowd/happy/sfx_boss_majesty_crowd_happy_{}.ogg", "static"},
+	["sfx_boss_majesty_crowd_ambient"] = {"sfx/enemy/majesty/crowd/sfx_boss_majesty_crowd_ambient.ogg", "static"},
+	["sfx_boss_majesty_crowd_cheer"] = {"sfx/enemy/majesty/crowd/sfx_boss_majesty_crowd_cheer.ogg", "static"},
 
 
 	["fly_buzz"] = {"empty.ogg", "static"}, -- TODO change to actual sound
