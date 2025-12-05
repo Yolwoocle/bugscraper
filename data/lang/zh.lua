@@ -316,7 +316,7 @@ return {
             title = "制作人员",
             ninesliced_presents = "Ninesliced 出品",
             game_by = "制作人",
-            leo_bernard = "曹宇 Léo Bernard",
+            leo_bernard = "Léo Bernard 曹宇",
             music = "音乐",
             sound_design = "音效设计",
             localization = "本地化",
