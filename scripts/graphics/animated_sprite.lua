@@ -24,11 +24,12 @@ function AnimatedSprite:init(animations, default, anchor, params)
     self.frame_timer:start()
 
     if default then
-        self:set_animation(default)
+        self:set_animation(default, {default_frame = self.frame_i})
     end
 end
 
-function AnimatedSprite:set_animation(animation_name)
+function AnimatedSprite:set_animation(animation_name, params)
+    params = params or {}
     if self.current_animation_name == animation_name then
         return
     end
@@ -37,7 +38,7 @@ function AnimatedSprite:set_animation(animation_name)
 
     self.animation = anim
     self.current_animation_name = animation_name
-    self.frame_i = 1
+    self.frame_i = params.default_frame or 1
 
     self.frame_timer:start(anim.frame_duration)
     if self.animation.is_spritesheet then

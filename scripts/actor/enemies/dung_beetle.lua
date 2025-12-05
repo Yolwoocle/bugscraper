@@ -109,6 +109,8 @@ function DungBeetle:init(x, y)
                 Particles:image(self.mid_x, self.mid_y, 40, images.glass_shard, self.h)
                 self:play_sound("sfx_boss_mrdung_dying")
                 self:play_sound_var("sfx_actor_upgrade_display_break_{01-04}", 0.1, 1.1)
+
+                game.music_player:set_disk("off")
             end,
             update = function(state, dt)
                 self.spr.rot = self.spr.rot + self.vr * dt 

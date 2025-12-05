@@ -19,8 +19,8 @@ function BeeBoss:init(x, y)
 
     self.is_boss = true
 
-    -- self:set_max_life(200)
     self:set_max_life(150)
+    self.is_killed_on_negative_life = false
 
     self.stomps = math.huge
     self.is_stompable = true
@@ -386,6 +386,38 @@ function BeeBoss:init(x, y)
             end
         },
 
+        dying = {
+            enter = function(state)
+                self.vx = 0
+                self.vy = 0
+
+                self.state_timer:start(1.0)
+                
+                Particles:push_layer(PARTICLE_LAYER_BACK)
+                Particles:static_image(images.star_big, self.mid_x, self.mid_y, 0, 0.05, 1, {
+                    color = COL_WHITE
+                })
+                Particles:static_image(images.star_big, self.mid_x, self.mid_y, 0, 0.05, 0.8, {
+                    color = COL_LIGHT_RED
+                })
+                Particles:pop_layer()
+
+                game:frameskip(30)
+                game:screenshake(8)
+                Input:vibrate_all(0.3, 0.7)
+
+                game.music_player:set_disk("off")
+            end,
+            update = function(state, dt)
+                if self.state_timer:update(dt) then
+                    self:kill()
+                    
+                    Particles:ejected_player(images.bee_boss_dead, self.mid_x, self.mid_y)
+
+                end
+            end,
+        }
+
     }, "thwomp")
 
 end
@@ -433,6 +465,11 @@ function BeeBoss:on_stomped(player)
 
     Audio:play_var("sfx_boss_majesty_crowd_happy_{01-04}", 0.1, 1.1)
     self:play_sound_var("sfx_boss_majesty_hit_{01-06}", 0.1, 1.1)
+    game.level:add_fury(1.5)
+
+    if game.level.elevator and game.level.elevator.cheer_audience then
+        game.level.elevator:cheer_audience(2.0)
+    end
 
     player:set_invincibility(self.damaged_player_invincibility)
     player.vy = self.damaged_player_throw_speed_y
@@ -441,6 +478,24 @@ function BeeBoss:on_stomped(player)
     else
         player.vx = -self.damaged_player_throw_speed_x
     end
+end
+
+function BeeBoss:on_negative_life()
+    for _, actor in pairs(self.minions) do
+        actor:kill()
+    end
+
+    for _, actor in pairs(self.spikes) do
+        actor:remove()
+    end
+
+    game.ambience_player:fade_out("bee_boss_crowd_cheer", 0.4)
+    game.level.elevator:cheer_audience(200000000.0)
+
+    self.state_machine:set_state("dying")
+end
+
+function BeeBoss:on_death()
 end
 
 function BeeBoss:on_damage_player(player, damage)
@@ -503,18 +558,6 @@ function BeeBoss:after_collision(col, other)
     if col.type ~= "cross" then
         self.state_machine:_call("after_collision", col)
     end
-end
-
-function BeeBoss:on_death()
-    for _, actor in pairs(self.minions) do
-        actor:kill()
-    end
-
-    for _, actor in pairs(self.spikes) do
-        actor:remove()
-    end
-
-    game.ambience_player:fade_out("bee_boss_crowd_cheer", 0.4)
 end
 
 function BeeBoss:spawn_spikes()

@@ -14,6 +14,8 @@ return Cutscene:new("bee_boss_enter", {
             
             game.light_world.darkness_intensity = 0.0
             data.t = 0.0
+
+            game.level.elevator.audience_oy_target = 0
         end,
         update = function(cutscene, data, dt)
             data.t = clamp(0.0, 1.0, data.t + dt)

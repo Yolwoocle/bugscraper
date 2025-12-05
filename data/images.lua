@@ -120,6 +120,7 @@ local img_names = {
 	arum_titan_minion_spiked = "actors/enemies/arum_titan_minion_spiked",
 	bee_boss_alt =             "actors/enemies/bee_boss_alt",
 	bee_boss_shield =          "actors/enemies/bee_boss_shield",
+	bee_boss_dead =            "actors/enemies/bee_boss_dead",
 	big_bug_1 =                "actors/enemies/big_bug_1",
 	big_chipper =              "actors/enemies/big_chipper",
 	big_chipper_activated =    "actors/enemies/big_chipper_activated",
@@ -455,6 +456,9 @@ local img_names = {
 	cabin_grid =                     "level/cabin_grid",
 	cabin_grid_brown =               "level/cabin_grid_brown",
 	cabin_grid_platform =            "level/cabin_grid_platform",
+
+	audience_bee =                   "level/misc/audience_bee",
+	audience_bee_big =               "level/misc/audience_bee_big",
 
 	building =                       "level/building",
 	tutorial_house =                 "level/tutorial_house",
