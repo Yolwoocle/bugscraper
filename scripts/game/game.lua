@@ -141,7 +141,6 @@ function Game:new_game(params)
 	self.music_player = MusicPlayer:new(music_disks, "ground_floor_empty", {processes_pause = true, volume = Options:get("music_volume")})
 	self:set_music_volume(Options:get("music_volume"))
 	self.music_player:set_disk("ground_floor_empty") -- TODO put correct disk depending on nb of players
-	self.music_player:play()
 
 	if self.ambience_player then self.ambience_player:stop() end
 	self.ambience_player = MusicPlayer:new(ambience_disks, "cafeteria", {})

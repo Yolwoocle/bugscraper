@@ -29,6 +29,9 @@ function MusicPlayer:init(disks, default_disk, params)
 
 	self.processes_pause = param(params.processes_pause, false)
 
+	self.buffer_playback_position = nil
+	self.load_buffer_playback_position_after_fadeout = false
+
 	self:reset()
 	self:update()
 end
@@ -62,6 +65,11 @@ function MusicPlayer:update_fadeout(dt)
 	if self.fadeout_timer:update(dt) then
 		self:set_disk(self.queued_disk)
 		self:set_fadeout_volume(1.0)
+		if self.load_buffer_playback_position_after_fadeout and self.buffer_playback_position then
+			self.current_disk.current_source:seek(self.buffer_playback_position)
+			self.load_buffer_playback_position_after_fadeout = false
+			self.buffer_playback_position = nil
+		end
 	end
 end
 
@@ -106,9 +114,17 @@ function MusicPlayer:set_disk(disk_name, flags)
 	end
 end
 
-function MusicPlayer:fade_out(new_disk, duration)
+function MusicPlayer:fade_out(new_disk, duration, params)
+	params = params or {}
 	if self.current_disk and new_disk == self.current_disk.name then 
 		return 
+	end
+
+	if params.push_playback_position and self.current_disk then
+		self.buffer_playback_position = self.current_disk.current_source:tell()
+	end
+	if params.pull_playback_position and self.current_disk then
+		self.load_buffer_playback_position_after_fadeout = true
 	end
 
 	self.fadeout_timer:set_duration(duration)

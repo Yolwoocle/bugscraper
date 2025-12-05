@@ -39,6 +39,7 @@ local function new_cafeteria(params)
         roll_type = WAVE_ROLL_TYPE_FIXED,
         music = "cafeteria",
         ambience = "cafeteria",
+        push_music_buffer = true, 
 
         run = function(self, level)
             for _, actor in pairs(game.actors) do
@@ -412,6 +413,7 @@ local waves = parse_waves_table {
         min = 6,
         max = 8,
         music = "w1",
+        pull_music_buffer = true, 
 
         enemies = {
             { E.Larva,     1 },
@@ -652,6 +654,7 @@ local waves = parse_waves_table {
         },
 
         music = "w2",
+        pull_music_buffer = true, 
     },
 
     {
@@ -973,6 +976,7 @@ local waves = parse_waves_table {
             },
         },
         music = "w3",
+        pull_music_buffer = true, 
     },
 
     {
@@ -1239,6 +1243,7 @@ local waves = parse_waves_table {
         },
 
         music = "w4",
+        pull_music_buffer = true, 
     },
 
 

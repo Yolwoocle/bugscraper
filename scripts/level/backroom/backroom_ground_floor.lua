@@ -111,6 +111,8 @@ function BackroomGroundFloor:generate(world_generator)
 		flip_x = true,
 	}))
 	npc.z = -2
+
+	game.music_player:play()
 end
 
 function BackroomGroundFloor:get_default_camera_position()
