@@ -9,7 +9,7 @@ function ProgressBarMenuItem:init(i, x, y, params)
 	ProgressBarMenuItem.super.init(self, i, x, y)
 	self.ox = 0
 	self.oy = 0
-	self.w = CANVAS_WIDTH - DEFAULT_MENU_PADDING*2
+	self.w = CANVAS_WIDTH - 250
 
 	self.type = "progress_bar"
 
