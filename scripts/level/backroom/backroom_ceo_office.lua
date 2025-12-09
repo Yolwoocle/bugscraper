@@ -2,14 +2,15 @@ require "scripts.util"
 local upgrades = require "data.upgrades"
 local enemies = require "data.enemies"
 local images = require "data.images"
-local Backroom = require "scripts.level.backroom.backroom"
+local BackroomWithDoor = require "scripts.level.backroom.backroom_with_door"
 local BackgroundCafeteria = require "scripts.level.background.background_cafeteria"
 local backgrounds = require "data.backgrounds"
+local Rect = require "scripts.math.rect"
 
 local Loot = require "scripts.actor.loot"
 local guns = require "data.guns"
 
-local BackroomCEOOffice = Backroom:inherit()
+local BackroomCEOOffice = BackroomWithDoor:inherit()
 
 function BackroomCEOOffice:init(params)
 	params = params or {}
@@ -29,7 +30,14 @@ function BackroomCEOOffice:init(params)
 end
 
 function BackroomCEOOffice:generate(world_generator)
-    world_generator:generate_ceo_office()
+	world_generator:reset()
+	world_generator:write_rect(Rect:new(2, 2, 79+24, 15), TILE_CARPET)
+	world_generator:write_rect(Rect:new(27, 3, 54+24, 8), TILE_CARPET)
+	world_generator:write_rect(Rect:new(78, 9, 78, 9), TILE_CARPET)
+
+	world_generator:write_rect(Rect:new(4, 13, 8, 13), TILE_WOOD_SEMISOLID)
+	world_generator:write_rect(Rect:new(27, 9, 27, 9), TILE_CARPET)
+	world_generator:write_rect(Rect:new(78, 9, 78, 9), TILE_CARPET)
 	
 	game.camera.max_x = 50*16
 
@@ -121,10 +129,10 @@ function BackroomCEOOffice:draw()
 	if self.background_state == "normal" then
 		self.cafeteria_background:draw()
 		love.graphics.draw(images.ceo_office_room, -16, -16)
-		rect_color(COL_VERY_DARK_GRAY, "fill", 76*16, 16*16, 105*16, 30*16)
+		rect_color(COL_BLACK_BLUE, "fill", 76*16, 16*16, 105*16, 30*16)
 		
 	elseif self.background_state == "void" then
-		rect_color(COL_VERY_DARK_GRAY, "fill", -16, -16, CANVAS_WIDTH+32, CANVAS_HEIGHT+32)
+		rect_color(COL_BLACK_BLUE, "fill", -16, -16, CANVAS_WIDTH+32, CANVAS_HEIGHT+32)
 		
 	elseif self.background_state == "w4" then
 		self.bg_w4:draw()

@@ -23,6 +23,7 @@ return Cutscene:new("enter_ceo_office", {
             end
 
             game.game_ui.cinematic_bars_enabled = true
+            game.game_ui.cinematic_bar_color = COL_VERY_DARK_GRAY
             game.game_ui.show_fury = false
             game.game_ui.offscreen_indicators_enabled = false
 
@@ -674,6 +675,7 @@ return Cutscene:new("enter_ceo_office", {
 
             game.music_player:set_disk("off")
             game.game_ui.cinematic_bars_enabled = false
+            game.game_ui.cinematic_bar_color = nil
 
             game.camera:set_position(math.huge, 0)
             game.camera.follow_speed = DEFAULT_CAMERA_FOLLOW_SPEED

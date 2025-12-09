@@ -54,29 +54,6 @@ function WorldGenerator:generate_cabin()
 	end
 end
 
-function WorldGenerator:generate_ceo_office()
-	self:reset()
-	self:write_rect(Rect:new(2, 2, 79+24, 15), TILE_CARPET)
-	self:write_rect(Rect:new(27, 3, 54+24, 8), TILE_CARPET)
-	self:write_rect(Rect:new(78, 9, 78, 9), TILE_CARPET)
-end
-
-function WorldGenerator:generate_ground_floor()
-	self:reset()
-	self:write_rect(Rect:new(2, 3, 68, 15), TILE_METAL)
-
-	-- tables
-	for _, rect in pairs({
-		Rect:new(24, 14, 27, 14), -- Desks
-		Rect:new(24+5*1, 14, 27+5*1, 14),
-		Rect:new(24+5*2, 14, 27+5*2, 14),
-		Rect:new(24+5*3, 14, 27+5*3, 14),
-		Rect:new(51, 12, 54, 12), -- Machines
-	}) do
-		self:write_rect(rect, TILE_METAL_SEMISOLID)
-	end
-end
-
 function WorldGenerator:generate_end_rubble()
 	self:reset()
 

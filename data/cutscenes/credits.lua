@@ -89,6 +89,7 @@ return Cutscene:new("credits", {
             game.game_ui:start_title({
                 "Noam Goldfarb (Sslime7)",
                 "Colin Roullé (OHX)",
+                "caridescent",
             }, "", "{menu.credits.additional_art}", 0.5, 5.0, 0.5)
         end,
     }),
@@ -114,6 +115,7 @@ return Cutscene:new("credits", {
         enter = function(cutscene, data)
             game.game_ui:start_title({
                 "LinkyLorelei",
+                "{menu.credits.leo_bernard} (Yolwoocle)"
             }, "", "{menu.credits.trailer}", 0.5, 5.0, 0.5)
         end,
     }),
