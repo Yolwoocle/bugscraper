@@ -50,11 +50,11 @@ return {
         -- World names
         world_1 = "Recursos Insetos",
         world_2 = "A Fábrica", -- CHANGED
-        world_3 = "A Sala de Server", -- CHANGED
-		world_4 = "The Gardens", -- ADDED 
+        world_3 = "A Sala do Servidor", -- CHANGED
+		world_4 = "O Jardim", -- ADDED 
         world_5 = "Executivo",
         
-        world_0 = "Basement", -- ADDED
+        world_0 = "Porão", -- ADDED
     },
     gun = {
         -- Gun names
@@ -66,7 +66,7 @@ return {
         ring = "Bagonazona",
         mushroom_cannon = "Canhão de Cogumelo",
         
-        resignation_letter = "Resignation Letter" -- ADDED // don't ask why it's a gun. you'd have to question my coding.
+        resignation_letter = "Carta de demissão" -- CHANGED // don't ask why it's a gun. you'd have to question my coding.
     },
     player = {
         name = {
@@ -88,8 +88,8 @@ return {
     },
     enemy = {
         dung = "Sr. Esterco",
-        bee_boss = "The Queen",        -- ADDED
-        motherboard = "The Webmaster", -- ADDED
+        bee_boss = "A Rainha",        -- ADDED
+        motherboard = "Mestre da web", -- ADDED
     },
     upgrade = {
         tea = {
@@ -113,28 +113,28 @@ return {
             description = "+%d pulo no ar",
         },
         fizzy_lemonade = { -- ADDED
-            title = "Fizzy Lemonade",
-            description = "Hold jump to glide",
+            title = "Limonada Fizzy",   -- CHANGED
+            description = "Aperte o pulo para planar", -- Hold jump to glide
         },
         apple_juice = { -- ADDED
-            title = "Apple Juice",
-            description = "Heal +%d ❤",
+            title = "Suco de Maçã", -- CHANGED
+            description = "Recupera +%d ❤",
         },
         hot_sauce = { -- ADDED
-            title = "Hot Sauce",
-            description = "Deal x%d damage but use x%d ammo", -- First "%d" is the damage, second "%d" is ammo 
+            title = "Molho de Pimenta", -- CHANGED
+            description = "Da x%d de dano, mas usando x%d balas", -- First "%d" is the damage, second "%d" is ammo  (Deal x%d damage but use x%d ammo)
         },
         coconut_water = { -- ADDED
-            title = "Coconut Water",
-            description = "Stomping enemies gives back %d%% ammo",
+            title = "Agua de Coco",
+            description = "Pistear nos inimigos da %d%% de munição",
         },
         hot_chocolate = { -- ADDED
-            title = "Hot Chocolate",
-            description = "x%d reloading speed", -- -- CHANGED
+            title = "Chocolate Quente",
+            description = "Melhora em x%d a velocidade de recarga", -- -- CHANGED
         },
         energy_drink = {
-            title = "Energy Drink", -- ADDED
-            description = "Combo meter decreases more slowly", -- ADDED
+            title = "Energetico", -- CHANGED
+            description = "Contador de combo diminui lentamente", -- ADDED
         },
     },
     input = {
@@ -146,10 +146,10 @@ return {
             down = "Baixo",
             jump = "Pular",
             shoot = "Atirar",
-            interact = "Interact", -- ADDED
+            interact = "Interagir", -- CHANGED
             leave_game = "Sair",
-            open = "Open", -- ADDED / As in, "open menu", and NOT for, say, opening chests.
-            collect = "Collect", -- ADDED / As in, "collect item", "collect gun", etc
+            open = "Abrir", -- ADDED / As in, "open menu", and NOT for, say, opening chests.
+            collect = "Coletar", -- ADDED / As in, "collect item", "collect gun", etc
 
             ui_left = "Esquerda (menu)",
             ui_right = "Direita (menu)",
@@ -174,13 +174,13 @@ return {
         },
         confirm_retry = {
             -- Here refers to going back to the main menu to try another run, NOT restarting the game
-            description = "Retry?", -- ADDED
+            description = "Tentar de novo?", -- CHANGED
         },
         pause = {
             title = "PAUSA",
             resume = "RETOMAR",
             retry = "TENTAR DE NOVO",
-            return_to_ground_floor = "RETURN TO GROUND FLOOR", --ADDED
+            return_to_ground_floor = "RETORNAR AO TERREO", --CHANGED
             options = "OPÇÕES",
             credits = "CRÉDITOS",
             feedback = "FEEDBACK",
@@ -241,7 +241,7 @@ return {
                 sfx_volume = "VOLUME DOS EFEITOS SONOROS", -- ADDED
                 music_volume = "VOLUME DA MÚSICA",
                 music_pause_menu = "MÚSICA NO MENU DE PAUSA",
-                ambience = "AMBIENCE SOUNDS", -- ADDED
+                ambience = "SONS AMBIENTE", -- CHANGED
             },
             visuals = {
                 title = "Visuais",
@@ -254,7 +254,7 @@ return {
                 vsync = "SINCRONIZAÇÃO VERTICAL",
                 menu_blur = "DESFOQUE DO FUNDO DO MENU",
                 background_speed = "VELOCIDADE DO FUNDO",
-                bullet_lightness = "BULLET BRIGHTNESS", -- ADDED
+                bullet_lightness = "BRILHO DOS PROJETEIS", -- CHANGED
             },
             game = {
                 title = "Jogo",
@@ -284,10 +284,10 @@ return {
             kills = "Abates", -- CHANGED: enemies killed
             time = "Tempo",
             floor = "Andar",
-            max_combo = "Max combo", -- ADDED
+            max_combo = "Combo Máximo", -- CHANGED
             
             continue = "CONTINUAR",
-            quick_restart = "QUICK RESTART", --ADDED
+            quick_restart = "REINICIO RÁPIDO", --CHANGED
         },
         win = {
             title = "PARABÉNS!",
@@ -312,7 +312,7 @@ return {
             special_thanks = "Agradecimentos especiais",
             asset_creators = "Criadores de recursos",
             tv_slideshow = "TV slideshow contributors", -- ADDED // Refers to the powerpoint TV slideshow on the title screen, which was contributed by a variety of people 
-            tv_slideshow_submit = "Submit yours...", -- ADDED // Leads to a web page where people can submit their own slides
+            tv_slideshow_submit = "Envie seu slideshow", -- CHANGED //  Direct to the point of what the button does // Leads to a web page where people can submit their own slides
             licenses = "Licensas de bibliotecas & recursos",
 
             x_by_y =     "%s por %s", -- "ASSET_NAME by CREATOR". Used to credit assets such as sound effects
