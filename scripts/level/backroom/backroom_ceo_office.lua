@@ -27,6 +27,13 @@ function BackroomCEOOffice:init(params)
 
 	self.background_state = "normal"
 	self.freeze_fury = false
+	
+	self.door:set_images(
+		images.cabin_door_w4_left_far,
+		images.cabin_door_w4_left_center,
+		images.cabin_door_w4_right_far,
+		images.cabin_door_w4_right_center
+	)
 end
 
 function BackroomCEOOffice:generate(world_generator)
@@ -39,16 +46,16 @@ function BackroomCEOOffice:generate(world_generator)
 	world_generator:write_rect(Rect:new(27, 9, 27, 9), TILE_CARPET)
 	world_generator:write_rect(Rect:new(78, 9, 78, 9), TILE_CARPET)
 	
-	game.camera.max_x = 50*16
+	game.camera.max_x = 49*16
 
-	game:new_actor(Loot.Gun:new(44*16, 12*16, nil, 0, 0, guns.unlootable.ResignationLetter:new(), {
-		life = math.huge,
-		min_attract_dist = -1,
-	}), 440, 105)
+	-- game:new_actor(Loot.Gun:new(44*16, 12*16, nil, 0, 0, guns.unlootable.ResignationLetter:new(), {
+	-- 	life = math.huge,
+	-- 	min_attract_dist = -1,
+	-- }), 440, 105)
 
-	local upgrade_display = enemies.UpgradeDisplay:new(62*16, 14*16)
-	game:new_actor(upgrade_display)
-	upgrade_display:assign_upgrade(upgrades.UpgradeAppleJuice:new())
+	-- local upgrade_display = enemies.UpgradeDisplay:new(62*16, 14*16)
+	-- game:new_actor(upgrade_display)
+	-- upgrade_display:assign_upgrade(upgrades.UpgradeAppleJuice:new())
 
 	game:new_actor(enemies.BossDoor:new(78*16, 10*16, {cutscene = "enter_ceo_office"}))
 
@@ -122,13 +129,17 @@ function BackroomCEOOffice:can_exit()
 end
 
 function BackroomCEOOffice:update(dt)
+	BackroomCEOOffice.super.update(self, dt)
 
 end
 
 function BackroomCEOOffice:draw()
+
 	if self.background_state == "normal" then
 		self.cafeteria_background:draw()
+		BackroomCEOOffice.super.draw(self)
 		love.graphics.draw(images.ceo_office_room, -16, -16)
+		game.level.elevator:draw_counter()
 		rect_color(COL_BLACK_BLUE, "fill", 76*16, 16*16, 105*16, 30*16)
 		
 	elseif self.background_state == "void" then

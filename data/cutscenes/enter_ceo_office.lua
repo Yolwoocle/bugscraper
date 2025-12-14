@@ -36,7 +36,7 @@ return Cutscene:new("enter_ceo_office", {
             end
             if not data.resigning_player then
                 data.resigning_player = game.players[1] or game.players[2] or game.players[3] or game.players[4] or game.players[5] or game.players[6] or game.players[7] or game.players[8]
-                data.resigning_player:equip_gun(guns.unlootable.ResignationLetter:new(data.resigning_player))
+                -- data.resigning_player:equip_gun(guns.unlootable.ResignationLetter:new(data.resigning_player))
             end
 
             -- Teleport faraway players

@@ -384,6 +384,10 @@ local img_names = {
 	brick_fragment_2 =            "particles/brick_fragment_2",
 	brick_fragment_3 =            "particles/brick_fragment_3",
 
+	wood_fragment_1 =             "particles/wood_fragment_1",
+	wood_fragment_2 =             "particles/wood_fragment_2",
+	wood_fragment_3 =             "particles/wood_fragment_3",
+
 	spin_whoosh_sheet =           "particles/spin_whoosh_sheet",
 	spin_whoosh_1 =               "particles/spin_whoosh_1",
 	spin_whoosh_2 =               "particles/spin_whoosh_2",
