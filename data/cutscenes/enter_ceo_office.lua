@@ -121,6 +121,7 @@ return Cutscene:new("enter_ceo_office", {
             data.shake = 3.0
 
             Particles:static_image(images.surprise_effect, data.ceo.x - 16, data.ceo.y - 30, 0, 0.3)
+            data.ceo:play_sound("sfx_w1_cutscene_surprise")
         end,
         update = function(cutscene, data, dt)
             data.ceo.spr:update_offset(random_neighbor(data.shake), random_neighbor(data.shake))

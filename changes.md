@@ -1,6 +1,6 @@
 # Bugscraper changelog
 
-### 0.?
+### 0.9
 (*???*)
 
 - **Added**: Added NPCs in cafeterias! They don't do anything, they're just here to chill.

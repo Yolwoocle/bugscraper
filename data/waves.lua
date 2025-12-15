@@ -1350,6 +1350,7 @@ local waves = parse_waves_table {
         floor_type = FLOOR_TYPE_CAFETERIA,
         roll_type = WAVE_ROLL_TYPE_FIXED,
         music = "off",
+        ambience = "off",
 
         run = function(self, level)
             for _, actor in pairs(game.actors) do

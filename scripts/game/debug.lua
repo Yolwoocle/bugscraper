@@ -131,8 +131,6 @@ function Debug:init(game)
         end},
         
         ["v"] = { "__jackofalltrades", function()
-            Audio:play("sfx_boss_majesty_death")
-
             if love.keyboard.isDown("1") then
                 game.menu_manager:set_menu("w1_boss_intro")
             elseif love.keyboard.isDown("2") then

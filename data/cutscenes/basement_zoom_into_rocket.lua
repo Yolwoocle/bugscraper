@@ -60,7 +60,7 @@ return Cutscene:new("basement_zoom_into_rocket", {
         end
     }),
     CutsceneScene:new({
-        duration = 3.0,
+        duration = 2.0,
         enter = function(cutscene, data)
             game.game_ui.ending_counter_text = nil
 
@@ -123,11 +123,6 @@ return Cutscene:new("basement_zoom_into_rocket", {
         enter = function(cutscene, data)
             local x = lerp(game.level.door_rect.ax, game.level.door_rect.bx, 0.5)
             game.game_ui:start_iris_transition(x, game.level.door_rect.by, 1.0, 0, 64)
-        end,
-    }),
-    CutsceneScene:new({
-        duration = 1.0,
-        enter = function(cutscene, data)
         end,
     }),
     CutsceneScene:new({

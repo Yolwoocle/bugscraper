@@ -39,7 +39,7 @@ end
 function BackroomCEOOffice:generate(world_generator)
 	world_generator:reset()
 	world_generator:write_rect(Rect:new(2, 2, 79+24, 15), TILE_CARPET)
-	world_generator:write_rect(Rect:new(27, 3, 54+24, 8), TILE_CARPET)
+	world_generator:write_rect_fill(Rect:new(27, 3, 54+24, 8), TILE_CARPET)
 	world_generator:write_rect(Rect:new(78, 9, 78, 9), TILE_CARPET)
 
 	world_generator:write_rect(Rect:new(4, 13, 8, 13), TILE_WOOD_SEMISOLID)
