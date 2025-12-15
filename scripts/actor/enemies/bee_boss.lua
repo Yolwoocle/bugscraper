@@ -58,7 +58,7 @@ function BeeBoss:init(x, y)
 
     self.damaged_player_throw_speed_x = 2000
     self.damaged_player_throw_speed_y = -300
-    self.damaged_player_invincibility = 1.5
+    self.damaged_player_invincibility = 1.0
 
     self.ai_templates["bounce"] = {
         ready = function(ai)
@@ -391,7 +391,7 @@ function BeeBoss:init(x, y)
                 self.vx = 0
                 self.vy = 0
 
-                self.state_timer:start(1.0)
+                self.state_timer:start(2.0)
                 
                 Particles:push_layer(PARTICLE_LAYER_BACK)
                 Particles:static_image(images.star_big, self.mid_x, self.mid_y, 0, 0.05, 1, {
@@ -410,10 +410,10 @@ function BeeBoss:init(x, y)
             end,
             update = function(state, dt)
                 if self.state_timer:update(dt) then
-                    self:kill()
-                    
+                    self:play_sound("sfx_boss_majesty_death")    
                     Particles:ejected_player(images.bee_boss_dead, self.mid_x, self.mid_y)
-
+                    
+                    self:kill()
                 end
             end,
         }

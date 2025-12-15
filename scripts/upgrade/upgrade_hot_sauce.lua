@@ -13,6 +13,8 @@ function UpgradeHotSauce:init()
     self.ammo_usage = 2.0
     self.damage_mult = 2.0
     self:set_description(self.damage_mult, self.ammo_usage)
+
+    self.activate_sound = "sfx_upgrades_hot_sauce_pickedup"
 end
 
 function UpgradeHotSauce:update(dt)

@@ -55,6 +55,7 @@ return Cutscene:new("ceo_escape_w1", {
             data.shake = 3.0
 
             Particles:static_image(images.surprise_effect, data.ceo.x - 16, data.ceo.y - 30, 0, 0.3)
+            data.ceo:play_sound("sfx_w1_cutscene_surprise")
         end,
         update = function(cutscene, data, dt)
             data.ceo.spr:update_offset(random_neighbor(data.shake), random_neighbor(data.shake))
@@ -99,7 +100,8 @@ return Cutscene:new("ceo_escape_w1", {
                 game:screenshake(10)
                 game:frameskip(5)
                 Particles:image(data.ceo.mid_x, data.ceo.mid_y, 150, images.glass_shard, 32, 400, 0.3)
-                Audio:play("glass_break", 1.0, 0.8, {x=data.ceo.x, y=data.ceo.y})
+
+                data.ceo:play_sound("sfx_w1_cutscene_glass_break")
 
                 if game.level.backroom then
                     game.level.backroom.cafeteria_glass_hole = true
@@ -152,6 +154,7 @@ return Cutscene:new("ceo_escape_w1", {
             data.ceo.gravity = 0
 
             data.ceo.spr:set_animation("jetpack")
+            Audio:play("sfx_w1_cutscene_jetpack")
         end,
         update = function(cutscene, data, dt)
             Particles:push_layer(PARTICLE_LAYER_CAFETERIA_BACKGROUND)

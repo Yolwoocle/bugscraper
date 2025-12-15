@@ -143,6 +143,11 @@ local sfxnames = {
 	["sfx_boss_mrdung_ball_hit_{01-06}"] = {"sfx/enemy/mrdung/ball/sfx_boss_mrdung_ball_hit_{}.ogg", "static"},
 	["sfx_boss_mrdung_bump_{01-02}"] = {"sfx/enemy/mrdung/bump/sfx_boss_mrdung_bump_{}.ogg", "static"},
 	["sfx_boss_mrdung_jump_moment_{01-06}"] = {"sfx/enemy/mrdung/jump_moment/sfx_boss_mrdung_jump_moment_{}.ogg", "static"},
+	
+	-- W1 CEO escape cutscene
+	["sfx_w1_cutscene_surprise"] = {"sfx/cutscene/sfx_w1_cutscene_surprise.ogg", "static"},
+	["sfx_w1_cutscene_glass_break"] = {"sfx/cutscene/sfx_w1_cutscene_glass_break.ogg", "static"},
+	["sfx_w1_cutscene_jetpack"] = {"sfx/cutscene/sfx_w1_cutscene_jetpack.ogg", "static"},
 
 	-- W2	
 	-- Timed spikes
@@ -184,10 +189,10 @@ local sfxnames = {
 	["sfx_boss_majesty_pong_telegraph_{01-04}"] = {"sfx/enemy/majesty/pong/sfx_boss_majesty_pong_telegraph_{}.ogg", "static"},
 	["sfx_boss_majesty_pong_bounce_{01-10}"] = {"sfx/enemy/majesty/pong/sfx_boss_majesty_pong_bounce_{}.ogg", "static"},
 	["sfx_boss_majesty_minions_spawn_{01-08}"] = {"sfx/enemy/majesty/minions_spawn/sfx_boss_majesty_minions_spawn_{}.ogg", "static"},
+	["sfx_boss_majesty_death"] = {"sfx/enemy/majesty/sfx_boss_majesty_death.ogg", "static"},
 	["sfx_boss_majesty_crowd_happy_{01-04}"] = {"sfx/enemy/majesty/crowd/happy/sfx_boss_majesty_crowd_happy_{}.ogg", "static"},
 	["sfx_boss_majesty_crowd_ambient"] = {"sfx/enemy/majesty/crowd/sfx_boss_majesty_crowd_ambient.ogg", "static"},
 	["sfx_boss_majesty_crowd_cheer"] = {"sfx/enemy/majesty/crowd/sfx_boss_majesty_crowd_cheer.ogg", "static"},
-
 
 	["fly_buzz"] = {"empty.ogg", "static"}, -- TODO change to actual sound
 
@@ -200,6 +205,11 @@ local sfxnames = {
 	["sfx_upgrades_peanut_pickedup"] = {"sfx/upgrades/sfx_upgrades_peanut_pickedup.ogg", "static"},
 	["sfx_upgrades_soda_pickedup"] = {"sfx/upgrades/sfx_upgrades_soda_pickedup.ogg", "static"},
 	["sfx_upgrades_tea_pickedup"] = {"sfx/upgrades/sfx_upgrades_tea_pickedup.ogg", "static"},
+	["sfx_upgrades_hot_sauce_pickedup"] = {"sfx/upgrades/sfx_upgrades_hot_sauce_pickedup.ogg", "static"},
+	["sfx_upgrades_coconut_water_pickedup"] = {"sfx/upgrades/sfx_upgrades_coconut_water_pickedup.ogg", "static"},
+	["sfx_upgrades_hot_chocolate_pickedup"] = {"sfx/upgrades/sfx_upgrades_hot_chocolate_pickedup.ogg", "static"},
+	["sfx_upgrades_pomegranate_juice_pickedup"] = {"sfx/upgrades/sfx_upgrades_pomegranate_juice_pickedup.ogg", "static"},
+	["sfx_upgrades_fizzy_lemonade_pickedup"] = {"sfx/upgrades/sfx_upgrades_fizzy_lemonade_pickedup.ogg", "static"},
 	["sfx_upgrades_water_pickedup"] = {"sfx/upgrades/sfx_upgrades_water_pickedup.ogg", "static"},
 
 	["sfx_upgrades_general_hover"] = {"sfx/upgrades/sfx_upgrades_general_hover.ogg", "static"},
@@ -215,7 +225,10 @@ local sfxnames = {
 	["sfx_door_close"] = {"sfx/level/door/sfx_door_close.ogg", "static"},
 	["sfx_door_ding"] = {"sfx/level/door/sfx_door_ding.ogg", "static"},
 
+	["sfx_tutorial_wall_damage_{01-03}"] = {"sfx/tutorial/sfx_tutorial_wall_damage_{}.ogg", "static"},
+	["sfx_tutorial_wall_destroy"] = {"sfx/tutorial/sfx_tutorial_wall_destroy.ogg", "static"},
 
+	-- PLACEHOLDER
 	["sfx_bullet_bounce_{01-02}"] = {"placeholder/sfx_bullet_bounce_{}.ogg", "static"},
 	["chipper_telegraph"] = {"placeholder/chipper_telegraph.ogg", "static"},
 	["sfx_enemy_death"] = {"placeholder/sfx_enemy_death.ogg", "static"},

@@ -14,6 +14,8 @@ function UpgradeHotChocolate:init()
 
     self.color = COL_LIGHT_BROWN
     self.palette = {COL_LIGHT_BROWN, COL_WHITE, COL_MID_BROWN}
+
+    self.activate_sound = "sfx_upgrades_hot_chocolate_pickedup"
 end
 
 function UpgradeHotChocolate:update(dt)

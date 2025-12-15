@@ -31,9 +31,10 @@ function UpgradeDisplay:init(x, y)
     self.player_detection_range_y = 64
     self.target_players = {}
     
-	self.sound_damage = "glass_fracture"
+	-- self.sound_damage = "glass_fracture"
 	-- self.sound_death = "glass_break_weak"
-	self.sound_death = "sfx_actor_upgrade_display_break_{01-04}"
+	-- self.sound_death = "sfx_actor_upgrade_display_break_{01-04}"
+    self.play_sfx = false
 
     self.animation_t = 0
     self.is_animation_exiting = false
@@ -106,7 +107,7 @@ function UpgradeDisplay:set_focused(value)
 end
 
 function UpgradeDisplay:on_focus()
-    self:play_sound("sfx_upgrades_general_hover")
+    -- self:play_sound("sfx_upgrades_general_hover")
 end
 
 function UpgradeDisplay:is_player_in_range()

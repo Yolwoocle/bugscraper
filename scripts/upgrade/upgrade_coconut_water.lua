@@ -13,6 +13,8 @@ function UpgradeCoconutWater:init()
 
     self.color = COL_WHITE
     self.palette = {COL_WHITE, COL_MID_BROWN, COL_DARK_BROWN}
+
+    self.activate_sound = "sfx_upgrades_coconut_water_pickedup"
 end
 
 function UpgradeCoconutWater:update(dt)
