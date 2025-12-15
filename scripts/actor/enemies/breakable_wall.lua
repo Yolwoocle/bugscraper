@@ -24,8 +24,8 @@ function BreakableWall:init(x, y)
         images.brick_fragment_3,
     }
     self.sound_fracture = {}
-    self.sound_break = {}
-    self.sounds_impact = {}
+    self.sound_break = "sfx_tutorial_wall_destroy"
+    self.sounds_impact = "sfx_tutorial_wall_damage_{01-03}"
 
     self.max_life = 15
     self.life = self.max_life

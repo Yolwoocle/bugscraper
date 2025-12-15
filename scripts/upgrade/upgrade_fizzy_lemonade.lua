@@ -11,6 +11,8 @@ function UpgradeFizzyLemonade:init()
 
     self.color = COL_LIGHT_YELLOW
     self.palette = {COL_LIGHT_BEIGE, COL_LIGHT_YELLOW, COL_YELLOW_ORANGE}
+
+    self.activate_sound = "sfx_upgrades_fizzy_lemonade_pickedup"
 end
 
 function UpgradeFizzyLemonade:update(dt)

@@ -11,6 +11,8 @@ function UpgradePomegranateJuice:init()
 
     self.color = COL_PURPLE
     self.palette = {COL_PURPLE, COL_DARK_RED, COL_DARK_PURPLE}
+
+    self.activate_sound = "sfx_upgrades_pomegranate_juice_pickedup"
 end
 
 function UpgradePomegranateJuice:update(dt)
