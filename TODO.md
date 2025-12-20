@@ -11,7 +11,6 @@ Bugs
 - [ ] (mineur) ghost parfois quand tu tournes puis change de direction ça tourne pas entièrement 
 - [ ] (mineur) elevator background in cafeteria should change w world
 - [ ] (mineur) BUG hign DPI diagonal artifact
-- [ ] bug: cannot bind "join game" keyboard binding
 - [ ] bug: you can jump super high on larva when holding jump for some reason
 
 Visu
@@ -126,6 +125,7 @@ La barre de vie des boss est un peu petite.
 
 DONE
 
+- [x] bug: cannot bind "join game" keyboard binding
 - [x] joueurs croient que tu peux stomp les larves volantes -> remplacer le sprite par un petit cocon piquant
 - [x] petit avertissement avant que les Spike apparaissent au monde 2
 - [x] Pour le shop : On peut sortir de l'ascenseur avant qu'il ne s'ouvre. On traverse un peu le mur, c'est pas super choquant. 
