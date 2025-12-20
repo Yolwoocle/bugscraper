@@ -206,7 +206,7 @@ function ControlsMenuItem:remove_action_button(button_to_remove)
 	local new_bindings = {}
 	
 	for _, button in pairs(old_buttons) do
-		if (button.type == self.input_type) and (button.key_name ~= button_to_remove.key_name) then
+		if button.key_name ~= button_to_remove.key_name then
 			table.insert(new_bindings, button)
 		end
 	end
