@@ -46,7 +46,6 @@ local enemies = {
 	-- W4
 	WallWalker =         require "scripts.actor.enemies.wall_walker", 
 	MushroomAnt =        require "scripts.actor.enemies.mushroom_ant", 
-	Mole =               require "scripts.actor.enemies.mole", 
 	CloudEnemy =         require "scripts.actor.enemies.cloud_enemy",
 	CloudStorm =         require "scripts.actor.enemies.cloud_storm",
 	Rollopod =           require "scripts.actor.enemies.rollopod", --*
@@ -56,6 +55,8 @@ local enemies = {
 	ArumTitanBoss =      require "scripts.actor.enemies.arum_titan_boss", 
 	ArumTitanMinion =    require "scripts.actor.enemies.arum_titan_minion", 
 	CentipedeBoss =      require "scripts.actor.enemies.centipede_boss", 
+	Mole =               require "scripts.actor.enemies.mole", 
+	MoleBoss =           require "scripts.actor.enemies.mole_boss", 
 	
 	-- Unused
 	ProgressingArc =     require "scripts.actor.enemies.progressing_arc", 

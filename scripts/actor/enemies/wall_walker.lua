@@ -37,10 +37,10 @@ function WallWalker:update(dt)
         self.vy = walk_y * self.walk_speed
         
         self.target_rot = atan2(self.up_vect.y, self.up_vect.x) + pi/2
-    end
 
-    self.spr:set_rotation(lerp_angle(self.spr.rot, self.target_rot, 0.4))
-    self.spr:set_flip_x(self.walk_dir == -1)
+        self.spr:set_rotation(lerp_angle(self.spr.rot, self.target_rot, 0.4))
+        self.spr:set_flip_x(self.walk_dir == -1)
+    end
 end
 
 function WallWalker:after_collision(col, other)

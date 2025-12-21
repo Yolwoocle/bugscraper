@@ -147,7 +147,7 @@ function InputUser:is_button_down(button, is_ui_action)
         self.last_pressed_button = button
     end
     return is_down
-end      
+end
 
 function InputUser:is_joystick_down(button, joystick, is_ui_action)
     joystick = param(joystick, self.joystick)
