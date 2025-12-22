@@ -143,10 +143,7 @@ return {
             title = "Hot Chocolate",
             description = "x%d reloading speed", -- -- CHANGED
         },
-        energy_drink = {
-            title = "Energy Drink", -- ADDED
-            description = "Combo meter decreases more slowly", -- ADDED
-        },
+         -- REMOVED Enery drink index (duplicated index)
     },
     input = {
         prompts = {
