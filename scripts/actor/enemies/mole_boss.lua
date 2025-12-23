@@ -43,7 +43,9 @@ function MoleBoss:init(x, y)
     self.def_walk_speed = 300
     self.def_roll_speed = 300
     self.is_stompable = true
-    self.score = 10
+    self.damage_on_stomp = 10
+    
+    self.score = 500
 
     self.sound_death = "sfx_enemy_kill_general_gore_{01-10}"
     self.sound_stomp = "sfx_enemy_kill_general_gore_{01-10}"

@@ -18,6 +18,7 @@ function BeeBoss:init(x, y)
     self.name = "bee_boss"
 
     self.is_boss = true
+    self.score = 500
 
     self:set_max_life(150)
     self.is_killed_on_negative_life = false

@@ -57,6 +57,7 @@ function Level:init(game, backroom)
 	self.new_wave_animation_state_machine = self:get_new_wave_animation_state_machine()
 	self.do_level_slowdown_on_new_wave = true
 	self.new_wave_progress = 0.0
+	self.new_wave_animation_speed_mutliplier = 1.0
 	self.level_speed = 0
 	self.def_level_speed = 400
 	self.elev_x, self.elev_y = 0, 0
@@ -198,6 +199,7 @@ function Level:get_new_wave_animation_state_machine()
 				end
 		
 				if self.new_wave_progress <= 0 then
+					self.level_speed = 0
 					return "opening"
 				end
 			end
@@ -247,6 +249,7 @@ function Level:get_new_wave_animation_state_machine()
 				end
 		
 				if self.new_wave_progress <= 0 then
+					self.level_speed = self.def_level_speed
 					return "off"
 				end
 			end,
@@ -256,7 +259,7 @@ end
 
 
 function Level:update_elevator_progress(dt)
-	self.new_wave_progress = math.max(0, self.new_wave_progress - dt)
+	self.new_wave_progress = math.max(0, self.new_wave_progress - dt * self.new_wave_animation_speed_mutliplier)
 	self.new_wave_animation_state_machine:update(dt)
 
 end
@@ -530,7 +533,7 @@ function Level:get_backroom_animation_state_machine(dt)
 end
 
 function Level:update_hole_stencil(dt)
-	self.hole_stencil_radius_progress = clamp(self.hole_stencil_radius_progress + dt*self.hole_stencil_radius_progress_speed, 0, 1)
+	self.hole_stencil_radius_progress = clamp(self.hole_stencil_radius_progress + dt*self.hole_stencil_radius_progress_speed*self.new_wave_animation_speed_mutliplier, 0, 1)
 	
 	self.hole_stencil_radius = easeinoutquart(self.hole_stencil_radius_source, self.hole_stencil_radius_target, self.hole_stencil_radius_progress)
 	self.hole_stencil_radius = clamp(self.hole_stencil_radius, 0, self.hole_stencil_max_radius)

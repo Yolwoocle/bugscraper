@@ -44,7 +44,6 @@ function Debug:init(game)
     self.view_fps = false
     self.show_fps = false
 
-    self.instant_end = false
     self.layer_view = false
     self.input_view = false
     self.title_junk = true
@@ -111,6 +110,14 @@ function Debug:init(game)
             end
             print("-----------------------")
         end },
+
+        ["`"] = {"speed up wave animations", function()
+            if game.level.new_wave_animation_speed_mutliplier == 1.0 then
+                game.level.new_wave_animation_speed_mutliplier = 20.0
+            else
+                game.level.new_wave_animation_speed_mutliplier = 1.0
+            end
+        end},
         
         ["u"] = { "spawn ceo", function()
             local ac = game:new_actor(enemies.NPC:new(866, 223, {
@@ -300,9 +307,6 @@ function Debug:init(game)
             end
         end },
 
-        -- ["i"] = {"toggle instant end", function()
-        --     self.instant_end = not self.instant_end
-        -- end},
         ["i"] = { "toggle god mode", function()
             for _, player in pairs(game.players) do
                 player.debug_god_mode = not player.debug_god_mode

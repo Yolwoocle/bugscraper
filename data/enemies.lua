@@ -57,6 +57,7 @@ local enemies = {
 	CentipedeBoss =      require "scripts.actor.enemies.centipede_boss", 
 	Mole =               require "scripts.actor.enemies.mole", 
 	MoleBoss =           require "scripts.actor.enemies.mole_boss", 
+	MoleMinion =         require "scripts.actor.enemies.mole_minion", 
 	
 	-- Unused
 	ProgressingArc =     require "scripts.actor.enemies.progressing_arc", 

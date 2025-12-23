@@ -16,6 +16,8 @@ function DungBeetle:init(x, y)
     self.name = "dung_beetle"
     self.follow_player = false
 
+    self.score = 500
+
     self.damage = 1
     self.life = math.huge
 
@@ -32,8 +34,6 @@ function DungBeetle:init(x, y)
     self.spawn_dung_timer:start()
     self.dung_limit = 6
     self.dungs = {}
-
-    self.score = 500
 
     self.spr = AnimatedSprite:new({
         idle = {
