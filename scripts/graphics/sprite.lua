@@ -24,13 +24,25 @@ function Sprite:init(image, anchor, params)
     self.sx = 1
     self.sy = 1
 
+    self.do_squash = true
+	self.squash = 1.0
+	self.squash_lerp_speed = 0.15
+
+    self.scale_target = nil
+    self.scale_target_move_speed = 1.0
+
+    self.do_shake = true
+    self.shake = 0.0
+    self.shake_decrease_speed = 0.0
+    self.shake_x, self.shake_y = 0, 0
+
     self.flip_x = false
     self.flip_y = false
 
     self.color = COL_WHITE
     self.outline = nil
     self.shader = nil
-    self.white_flash_timer = shaders.white_shader
+    self.white_flash_shader = shaders.white_shader
 
     self.is_spritesheet = false
     self.spritesheet_tile = 1
@@ -116,7 +128,33 @@ end
 
 function Sprite:set_scale(sx, sy)
     self.sx = sx or self.sx
-    self.sy = sy or self.sy
+    self.sy = (sy or sx) or self.sy
+end
+
+function Sprite:get_scale()
+    return self.sx, self.sy
+end
+
+function Sprite:get_final_scale()
+    return self.sx * self.squash, self.sy / self.squash
+end
+
+function Sprite:animate_scale(scale_start, scale_target, scale_target_move_speed)
+    self:set_scale(scale_start)
+    self.scale_target = scale_target
+    self.scale_target_move_speed = scale_target_move_speed
+end
+
+function Sprite:set_squash(squash)
+    self.squash = squash
+end
+
+function Sprite:set_shake(shake)
+    self.shake = shake
+end
+
+function Sprite:set_shake_decrease_speed(shake_decrease_speed)
+    self.shake_decrease_speed = shake_decrease_speed
 end
 
 function Sprite:set_flip_x(flip_x)
@@ -187,7 +225,7 @@ end
 function Sprite:set_flashing_white(value)
     self.is_flashing_white = value
     if value then
-        self:set_shader(self.white_flash_timer)
+        self:set_shader(self.white_flash_shader)
     else
         self:reset_shader()
     end
@@ -208,14 +246,33 @@ function Sprite:set_outline(color, type)
     end
 end
 
-function Sprite:update(dt)
+function Sprite:update(dt)    
+	if self.do_squash then
+		self.squash = lerp(self.squash, 1.0, self.squash_lerp_speed)
+	end
+
+    if self.do_shake then
+        self.shake_x = random_neighbor(self.shake)
+        self.shake_y = random_neighbor(self.shake)
+        self.shake = max(0.0, self.shake - dt * self.shake_decrease_speed)
+    else
+        self.shake_x, self.shake_y = 0, 0
+    end
+    
+    if self.scale_target then
+        self:set_scale(move_toward(self.sx, self.scale_target, self.scale_target_move_speed * dt))
+        if math.abs(self.sx - self.scale_target) < 0.0001 then
+            self:set_scale(self.scale_target)
+            self.scale_target = nil
+        end 
+    end
 end
 
 function Sprite:get_total_offset_position(x, y, w, h)
     local anchor_ox, anchor_oy = self:get_anchor_offset(w, h)
     local sprite_ox, sprite_oy = self:get_sprite_offset()
 
-    return x + anchor_ox - sprite_ox, y + anchor_oy - sprite_oy
+    return x + anchor_ox - sprite_ox + self.shake_x, y + anchor_oy - sprite_oy + self.shake_y
 end
 
 function Sprite:get_total_centered_offset_position(x, y, w, h)
@@ -244,8 +301,9 @@ function Sprite:draw(x, y, w, h, custom_draw)
     local spr_w = self.w
     local spr_h = self.h
 
-    local scale_x = ternary(self.flip_x, -1, 1) * self.sx
-    local scale_y = ternary(self.flip_y, -1, 1) * self.sy
+    local unflipped_sx, unflipped_sy = self:get_final_scale()
+    local scale_x = ternary(self.flip_x, -1, 1) * unflipped_sx
+    local scale_y = ternary(self.flip_y, -1, 1) * unflipped_sy
 
     local anchor_ox, anchor_oy = self:get_anchor_offset(w, h)
     local sprite_ox, sprite_oy = self:get_sprite_offset()
@@ -277,15 +335,14 @@ function Sprite:draw(x, y, w, h, custom_draw)
     end
 
     exec_color(self.color, function()
+        local final_x = x + anchor_ox + self.shake_x
+        local final_y = y + anchor_oy + self.shake_y
         if self.is_spritesheet then
-            -- game.camera:reset_transform()
-            love.graphics.draw(self.image, self.spritesheet_quad, x + anchor_ox, y + anchor_oy, self.rot, scale_x,
+            love.graphics.draw(self.image, self.spritesheet_quad, final_x, final_y, self.rot, scale_x,
                 scale_y, sprite_ox, sprite_oy)
         else
-            draw_func(self.image, x + anchor_ox, y + anchor_oy, self.rot, scale_x, scale_y, sprite_ox, sprite_oy)
+            draw_func(self.image, final_x, final_y, self.rot, scale_x, scale_y, sprite_ox, sprite_oy)
         end
-
-        -- draw_func(self.image, x + anchor_ox, y + anchor_oy, self.rot, scale_x, scale_y, spr_w/2, spr_h)
     end)
     if self.shader or self.is_solid_color then
         love.graphics.setShader(old_shader)

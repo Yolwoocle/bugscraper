@@ -186,7 +186,7 @@ function CloudStorm:draw()
 end
 
 function CloudStorm:on_death()
-    Particles:smoke(self.mid_x, self.mid_y, 15, {COL_MID_GRAY, COL_DARK_GRAY, COL_DARK_GRAY}, 12, 6, 4, layer, fill_mode, params)
+    Particles:smoke(self.mid_x, self.mid_y, 15, {COL_MID_GRAY, COL_DARK_GRAY, COL_DARK_GRAY}, 12, 6, 4, fill_mode, params)
 end
 
 function CloudStorm:on_removed()

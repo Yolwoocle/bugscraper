@@ -54,7 +54,7 @@ function Motherboard:init(x, y)
     -- Graphics
     self.flash_white_shader = shaders.multiply_color
     self.flash_white_shader:send("multColor", { 3, 3, 3, 1 })
-    self.spr.white_flash_timer = self.flash_white_shader
+    self.spr.white_flash_shader = self.flash_white_shader
 
     -- Rays and arcs
     self.rays = ElectricRays:new(self.mid_x, self.y + self.h + 24, {

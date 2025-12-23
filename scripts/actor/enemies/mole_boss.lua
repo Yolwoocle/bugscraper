@@ -50,6 +50,9 @@ function MoleBoss:init(x, y)
     self.sound_death = "sfx_enemy_kill_general_gore_{01-10}"
     self.sound_stomp = "sfx_enemy_kill_general_gore_{01-10}"
 
+    self.is_immune_to_bullets = true
+    self.destroy_bullet_on_impact = false
+
     self.state_timer = Timer:new()
     self.state_machine = StateMachine:new({
         dig_linger = {
@@ -57,19 +60,40 @@ function MoleBoss:init(x, y)
                 self.walk_speed = 0
                 self.damage = 0
                 self.state_timer:start(0.5)
-                self.spr:set_animation("digging")
 
                 self.gravity = 0
                 self.is_stompable = false
                 self.is_wall_walking = true
 
-                self.destroy_bullet_on_impact = false
-                self.is_immune_to_bullets = true
+                self.is_bouncy_to_bullets = false
+
+                self.spr:set_rotation(self.target_rot)
+                self.spr:set_shake(3)
+                self.spr:set_shake_decrease_speed(6)
+                
+                local ptc_x = self.mid_x - self.up_vect.x * self.w/2
+                local ptc_y = self.mid_y - self.up_vect.y * self.w/2
+                Particles:image(ptc_x, ptc_y, 30, {images.dung_particle_1, images.dung_particle_2, images.dung_particle_3}, 8)
+                
+                local ptc_x = self.mid_x - self.up_vect.x * self.w/4
+                local ptc_y = self.mid_y - self.up_vect.y * self.w/4
+                Particles:smoke(ptc_x, ptc_y, 40, {COL_WHITE, COL_LIGHTEST_GRAY, COL_LIGHT_GRAY}, --[[spw_rad]] self.w/2, --[[size]] 8, --[[sizevar]] 5)
             end,
             update = function(state, dt)
+                if self.state_timer:get_time_passed() < 0.1 then
+                    self.spr:set_scale(lerp(1.0, 0.7, self.state_timer:get_time_passed()/0.1))    
+                else
+                    self.spr:set_scale(1.0)
+                    self.spr:set_animation("digging")
+                end
+
                 if self.state_timer:update(dt) then
                     return "dig"
                 end
+            end,
+            exit = function(state)
+                self.spr:set_shake(0)
+                self.spr:set_shake_decrease_speed(0)
             end,
         },
         dig = {
@@ -82,9 +106,7 @@ function MoleBoss:init(x, y)
 
                 self.is_stompable = false
                 self.is_wall_walking = true
-
-                self.destroy_bullet_on_impact = false
-                self.is_immune_to_bullets = true
+                self.is_bouncy_to_bullets = false
 
                 state.override_walk_dir = nil                
             end,
@@ -104,8 +126,6 @@ function MoleBoss:init(x, y)
                 end
             end,
             exit = function(state)
-                self.destroy_bullet_on_impact = true
-                self.is_immune_to_bullets = false
             end
         },
         telegraph = {
@@ -116,15 +136,12 @@ function MoleBoss:init(x, y)
                 self.spr:set_animation("telegraph")
                 self.gravity = 0
 
-                self.destroy_bullet_on_impact = false
-                self.is_immune_to_bullets = true
-
-                self.is_stompable = true
+                self.is_stompable = false
+                self.is_bouncy_to_bullets = false
                 self.state_timer:start(0.5)
+                self.spr:set_shake(3)
             end,
             update = function(state, dt)
-                self.spr:update_offset(random_polar(3), random_polar(3))
-                
                 if self.state_timer:update(dt) then
                     return "jump"
                 end
@@ -136,6 +153,9 @@ function MoleBoss:init(x, y)
             draw = function(state)
                 self.spr:update_offset(0, 0)
             end,
+            exit = function(state)
+                self.spr:set_shake(0)
+            end,
         },
         jump = {
             enter = function(state)
@@ -144,18 +164,33 @@ function MoleBoss:init(x, y)
                 self.vx = self.up_vect.x * self.fly_speed
                 self.vy = self.up_vect.y * self.fly_speed
 
-                self.destroy_bullet_on_impact = true
-                self.is_immune_to_bullets = false
-
                 self.is_stompable = true
+                self.is_bouncy_to_bullets = true
+
                 self.gravity = self.default_gravity/2
                 self.spr:set_animation("flying")
 
-                Particles:image(self.mid_x, self.mid_y, 20, {images.dung_particle_1, images.dung_particle_2, images.dung_particle_3}, 8)
-            	Particles:jump_dust_kick(self.mid_x, self.mid_y, math.atan2(self.vy, self.vx) + pi/2)
-            end,
+                local ptc_x = self.mid_x - self.up_vect.x * self.w/2
+                local ptc_y = self.mid_y - self.up_vect.y * self.w/2
+                Particles:image(ptc_x, ptc_y, 20, {images.dung_particle_1, images.dung_particle_2, images.dung_particle_3}, 8)
+            	Particles:jump_dust_kick(ptc_x, ptc_y, math.atan2(self.vy, self.vx) + pi/2)
 
+                local ptc_x = self.mid_x - self.up_vect.x * self.w/4
+                local ptc_y = self.mid_y - self.up_vect.y * self.w/4
+                local side_x, side_y = get_orthogonal(self.up_vect.x, self.up_vect.y)
+                local params = {
+                    vx = self.up_vect.x * 100,
+                    vy = self.up_vect.y * 100,
+                    vx_variation = math.abs(self.up_vect.x) * 50 + math.abs(side_x) * 20,
+                    vy_variation = math.abs(self.up_vect.y) * 50 + math.abs(side_y) * 20,
+                }
+                Particles:smoke(ptc_x, ptc_y, 40, {COL_WHITE, COL_LIGHTEST_GRAY, COL_LIGHT_GRAY}, --[[spw_rad]] self.w/2, --[[size]] 8, --[[sizevar]] 5, params)
+
+                self.spr:set_scale(0.5)
+            end,
+            
             update = function(state, dt)
+                self.spr:set_scale(lerp(self.spr.sx, 1.0, 0.3))
             end,
 
             on_collision = function(state, col, other)
@@ -174,16 +209,20 @@ function MoleBoss:init(x, y)
         },
         linger = {
             enter = function(state)
-                self.is_stompable = true
-                self.is_wall_walking = true
                 self.walk_speed = 0
                 self.state_timer:start(1.0)
                 self.spr:set_animation("flying")
+                
+                self.is_wall_walking = true
+                self.is_stompable = true
+                self.is_bouncy_to_bullets = true
 
-                self.destroy_bullet_on_impact = true
-                self.is_immune_to_bullets = false
+                -- local ptc_x = self.mid_x - self.up_vect.x * self.w/2
+                -- local ptc_y = self.mid_y - self.up_vect.y * self.w/2
+                -- Particles:image(ptc_x, ptc_y, 20, {images.dung_particle_1, images.dung_particle_2, images.dung_particle_3}, 8)
 
-                Particles:image(self.mid_x, self.mid_y, 20, {images.dung_particle_1, images.dung_particle_2, images.dung_particle_3}, 8)
+                self.spr.squash = 1.5
+                self.spr:set_rotation(0)
             end,
             update = function(state, dt)
                 local r = 4 * clamp((self.state_timer.time-1) / (self.state_timer.duration-1), 0, 1)
@@ -200,21 +239,27 @@ function MoleBoss:init(x, y)
             enter = function(state)
                 state.dir = ternary(self.mid_x < CANVAS_WIDTH/2, 1, -1)
 
-                self.is_stompable = false
+                self.is_stompable = true
                 self.is_wall_walking = false
+                self.is_bouncy_to_bullets = true
+
                 self.walk_speed = self.def_roll_speed
-                self.unstompable_timer = Timer:new(0.5):start()
+                self.unstompable_timer = Timer:new(0.3):start()
                 self.state_timer:start(2.0)
                 self.spr:set_animation("rolling")
+
+                self.spr:animate_scale(1.3, 1.0, 1.5)
             end,
             update = function(state, dt)
                 self.vx = state.dir * self.walk_speed
                 self.spr:set_rotation(self.spr.rot + (self.vx * dt) / (self.h * 0.5))
+                
                 if self.unstompable_timer:update(dt) then
                     self.is_stompable = false
                 end
             end,
             on_collision = function(state, col, other)
+                self.spr:set_scale(1.0)
                 if col.type ~= "cross" and col.normal.y == 0 then
                     if col.normal.x == 1 then
                         state.override_walk_dir = -1 
@@ -284,7 +329,6 @@ end
 function MoleBoss:update(dt)
     self.state_machine:update(dt)
 
-    self.debug_values[1] = self.state_machine.current_state_name
     MoleBoss.super.update(self, dt)
 end
 

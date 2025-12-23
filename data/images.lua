@@ -217,6 +217,7 @@ local img_names = {
 	mole_boss_telegraph_1 =    "actors/enemies/mole_boss_telegraph_1",
 	mole_boss_outside =        "actors/enemies/mole_boss_outside",
 	mole_boss_roll =           "actors/enemies/mole_boss_roll",
+	mole_minion =              "actors/enemies/mole_minion",
 	motherboard =              "actors/enemies/motherboard",
 	motherboard_button =       "actors/enemies/motherboard_button",
 	motherboard_button_front = "actors/enemies/motherboard_button_front",

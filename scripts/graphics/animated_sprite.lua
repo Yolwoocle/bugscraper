@@ -62,7 +62,7 @@ function AnimatedSprite:set_frame_index(frame_i)
 end
 
 function AnimatedSprite:update(dt)
-    self.super.update(self, dt)
+    AnimatedSprite.super.update(self, dt)
 
     if self.frame_timer:update(dt) then
         if self.animation.looping then

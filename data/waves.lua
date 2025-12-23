@@ -218,6 +218,8 @@ local thorns_arc_params = {
 local waves = parse_waves_table {
     {
         roll_type = WAVE_ROLL_TYPE_FIXED,
+        background = backgrounds.BackgroundGreenhouse:new(),
+        elevator = ElevatorW4,
 
         min = 1,
         max = 1,
@@ -227,8 +229,6 @@ local waves = parse_waves_table {
 
         run = function(self, level)
         end,
-
-        elevator = ElevatorW1,
     },
 
     -- Cafeteria

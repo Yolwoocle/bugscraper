@@ -832,13 +832,14 @@ function ParticleSystem:smoke_big(x, y, col, rad, quantity, params)
 	self:smoke(x, y, quantity or 15, col or COL_WHITE, rad or 16, 8, 4, nil, nil, params)
 end
 
-function ParticleSystem:smoke(x, y, number, col, spw_rad, size, sizevar, __UNUSED_REMOVEME__, fill_mode, params)
+function ParticleSystem:smoke(x, y, number, col, spw_rad, size, sizevar, params)
 	params = params or {}
 
 	number = param(number, 10)
 	spw_rad = param(spw_rad, 8)
 	size = param(size, 4)
 	sizevar = param(sizevar, 2)
+	local fill_mode = param(params.fill_mode, nil)
 	local min_spawn_delay = param(params.min_spawn_delay, 0)
 	local max_spawn_delay = param(params.max_spawn_delay, 0)
 

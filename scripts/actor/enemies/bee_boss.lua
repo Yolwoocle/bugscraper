@@ -76,8 +76,6 @@ function BeeBoss:init(x, y)
         after_collision = function(ai, col, other)
             if col.type ~= "cross" then
                 local s = "metalfootstep_0"..tostring(love.math.random(0,4))
-                -- self:play_sound_var(s, 0.3, 1.1, {pitch=0.8, volume=0.5})
-                -- Particles:smoke(col.touch.x, col.touch.y)
     
                 local dx, dy = bounce_vector_cardinal(math.cos(self.pong_direction), math.sin(self.pong_direction), col.normal.x, col.normal.y)
                 self.pong_direction = math.atan2(dy, dx)
