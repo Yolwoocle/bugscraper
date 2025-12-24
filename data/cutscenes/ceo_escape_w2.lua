@@ -98,6 +98,7 @@ return Cutscene:new("ceo_escape_w2", {
         duration = 1.0,
         enter = function(cutscene, data)
             Particles:static_image(images.clap_effect, math.floor(data.ceo.x), math.floor(data.ceo.y - 32), 0, 0.3)
+            data.ceo:play_sound("sfx_w2_cutscene_clap")
 
             data.shake = 3.0
         end,
@@ -117,6 +118,7 @@ return Cutscene:new("ceo_escape_w2", {
         end,
         update = function(cutscene, data, dt)
             game:screenshake(3)
+            Audio:play("sfx_w2_cutscene_rumble")
         end,
     }),
     CutsceneScene:new({
@@ -129,6 +131,8 @@ return Cutscene:new("ceo_escape_w2", {
             data.bee3.vy = -340
 
             data.sweat_timer = 0
+
+            data.bee1:play_sound("sfx_w2_cutscene_bees_beeingbees")
         end,
         update = function(cutscene, data, dt)
             data.bee1.vy = math.min(data.bee1.vy + 1000 * dt, 20)
@@ -190,6 +194,8 @@ return Cutscene:new("ceo_escape_w2", {
                         vy2 = 200,
                     }
                 )
+
+                data.ceo:play_sound("sfx_w2_cutscene_roof_breaking")
             end
         end,
     }),

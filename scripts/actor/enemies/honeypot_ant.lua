@@ -31,6 +31,7 @@ function HoneypotAnt:on_death()
     local liquid = HoneypotLiquid:new(self.x, self.y)
     liquid.vy = 0
     game:new_actor(liquid)
+    self:play_sound_var("sfx_enemy_honeypot_liquid_falling_{01-04}", 0.2, 1.2)
 end
 
 return HoneypotAnt
