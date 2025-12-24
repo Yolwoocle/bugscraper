@@ -30,6 +30,8 @@ end
 
 function HoneypotLiquid:on_death()
     Particles:image(self.mid_x, self.mid_y, 15, {images.honey_fragment_1, images.honey_fragment_2}, 13, nil, 0, 10) 
+
+    self:play_sound_var("sfx_enemy_honeypot_liquid_splash_{01-04}", 0.1, 1.1)
 end
 
 

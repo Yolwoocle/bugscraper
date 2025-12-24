@@ -109,6 +109,11 @@ local sfxnames = {
 	["sfx_actor_button_small_glass_break"] = {"sfx/actor/button/glass/sfx_actor_button_small_glass_break.ogg", "static"},
 	["sfx_actor_button_small_pressed"] = {"sfx/actor/button/sfx_actor_button_small_pressed.ogg", "static"},
 
+	-- Dummy
+	["sfx_actor_dummy_damage_{01-06}"] = {"sfx/tutorial/dummy/sfx_actor_dummy_damage_{}.ogg", "static"},
+	["sfx_actor_dummy_stomp_{01-03}"] = {"sfx/tutorial/dummy/sfx_actor_dummy_stomp_{}.ogg", "static"},
+	["sfx_actor_dummy_death_{01-03}"] = {"sfx/tutorial/dummy/sfx_actor_dummy_death_{}.ogg", "static"},
+
 	-- ENEMIES 
 	["sfx_enemy_damage"] = {"sfx/enemy/sfx_enemy_damage.ogg", "static"},
 
@@ -145,9 +150,15 @@ local sfxnames = {
 	["sfx_boss_mrdung_jump_moment_{01-06}"] = {"sfx/enemy/mrdung/jump_moment/sfx_boss_mrdung_jump_moment_{}.ogg", "static"},
 	
 	-- W1 CEO escape cutscene
-	["sfx_w1_cutscene_surprise"] = {"sfx/cutscene/sfx_w1_cutscene_surprise.ogg", "static"},
-	["sfx_w1_cutscene_glass_break"] = {"sfx/cutscene/sfx_w1_cutscene_glass_break.ogg", "static"},
-	["sfx_w1_cutscene_jetpack"] = {"sfx/cutscene/sfx_w1_cutscene_jetpack.ogg", "static"},
+	["sfx_w1_cutscene_surprise"] =        {"sfx/cutscene/sfx_w1_cutscene_surprise.ogg", "static"},
+	["sfx_w1_cutscene_glass_break"] =     {"sfx/cutscene/sfx_w1_cutscene_glass_break.ogg", "static"},
+	["sfx_w1_cutscene_jetpack"] =         {"sfx/cutscene/sfx_w1_cutscene_jetpack.ogg", "static"},
+	
+	-- W2 CEO escape cutscene
+	["sfx_w2_cutscene_rumble"] =          {"sfx/cutscene/sfx_w2_cutscene_rumble.ogg", "static"},
+	["sfx_w2_cutscene_clap"] =            {"sfx/cutscene/sfx_w2_cutscene_clap.ogg", "static"},
+	["sfx_w2_cutscene_bees_beeingbees"] = {"sfx/cutscene/sfx_w2_cutscene_bees_beeingbees.ogg", "static"},
+	["sfx_w2_cutscene_roof_breaking"] =   {"sfx/cutscene/sfx_w2_cutscene_roof_breaking.ogg", "static"},
 
 	-- W2	
 	-- Timed spikes
@@ -179,6 +190,10 @@ local sfxnames = {
 	["sfx_enemy_comball_bounce_{01-06}"] = {"sfx/enemy/comball/sfx_enemy_comball_bounce_{}.ogg", "static"},
 	["sfx_enemy_comball_flash_{01-06}"] = {"sfx/enemy/comball/sfx_enemy_comball_flash_{}.ogg", "static"},
 	["sfx_enemy_comball_death"] = {"sfx/enemy/comball/sfx_enemy_comball_death.ogg", "static"},
+
+	-- Honeypot ant 
+	["sfx_enemy_honeypot_liquid_splash_{01-04}"] = {"sfx/enemy/honeypot/splash/sfx_enemy_honeypot_liquid_splash_{}.ogg", "static"},
+	["sfx_enemy_honeypot_liquid_falling_{01-04}"] = {"sfx/enemy/honeypot/falling/sfx_enemy_honeypot_liquid_falling_{}.ogg", "static"},
 
 	-- Her Majesty
 	["sfx_boss_intro_majesty"] = {"sfx/enemy/majesty/sfx_boss_intro_majesty.ogg", "static"},

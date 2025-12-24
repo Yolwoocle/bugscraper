@@ -32,9 +32,9 @@ function Dummy:init(x, y)
 	self.fury_bullet_damage_multiplier = 0
     self.fury_stomp_multiplier = 0
 
-    self.sound_damage = {"cloth1", "cloth2", "cloth3"}
-    self.sound_death = "cloth_drop"
-    self.sound_stomp = "cloth_drop"
+    self.sound_damage = "sfx_actor_dummy_damage_{01-06}"
+    self.sound_stomp = "sfx_actor_dummy_stomp_{01-03}"
+    self.sound_death = "sfx_actor_dummy_death_{01-03}"
 end
 
 function Dummy:update(dt)
