@@ -42,8 +42,11 @@ function MoleBoss:init(x, y)
     self.fly_speed = 350
     self.def_walk_speed = 300
     self.def_roll_speed = 300
+
     self.is_stompable = true
     self.damage_on_stomp = 10
+    self.can_be_stomped_if_falling_down = false
+    self.head_ratio = 0.33
     
     self.score = 500
 
@@ -52,6 +55,14 @@ function MoleBoss:init(x, y)
 
     self.is_immune_to_bullets = true
     self.destroy_bullet_on_impact = false
+
+    self.damaged_player_throw_speed_x = 2000
+    self.damaged_player_throw_speed_y = -500
+    self.damaged_player_invincibility = 1.0
+
+    self.dig_phase_player_see_range = 16*2
+
+    self.reburrow_when_possible = false
 
     self.state_timer = Timer:new()
     self.state_machine = StateMachine:new({
@@ -64,6 +75,9 @@ function MoleBoss:init(x, y)
                 self.gravity = 0
                 self.is_stompable = false
                 self.is_wall_walking = true
+
+                self.can_burrow_back = false
+                self.reburrow_when_possible = false
 
                 self.is_bouncy_to_bullets = false
 
@@ -101,12 +115,13 @@ function MoleBoss:init(x, y)
                 self.walk_speed = self.def_walk_speed
                 self.damage = 0
                 self.walk_dir = state.override_walk_dir or random_sample{-1, 1}
-                self.state_timer:start(random_range(0.5, 2))
+                self.state_timer:start(random_range(0.5, 2.5))
                 self.spr:set_animation("digging")
 
                 self.is_stompable = false
                 self.is_wall_walking = true
                 self.is_bouncy_to_bullets = false
+                self.can_burrow_back = false
 
                 state.override_walk_dir = nil                
             end,
@@ -121,7 +136,7 @@ function MoleBoss:init(x, y)
                     vy2 = 100,
                 })
 
-                if self.state_timer:update(dt) then
+                if self.state_timer:update(dt) or (self.state_timer:get_time_passed() > 1.0 and self:find_player_in_dig_phase()) then
                     return "telegraph"
                 end
             end,
@@ -138,6 +153,8 @@ function MoleBoss:init(x, y)
 
                 self.is_stompable = false
                 self.is_bouncy_to_bullets = false
+                self.can_burrow_back = false
+
                 self.state_timer:start(0.5)
                 self.spr:set_shake(3)
             end,
@@ -166,6 +183,7 @@ function MoleBoss:init(x, y)
 
                 self.is_stompable = true
                 self.is_bouncy_to_bullets = true
+                self.can_burrow_back = false
 
                 self.gravity = self.default_gravity/2
                 self.spr:set_animation("flying")
@@ -216,6 +234,7 @@ function MoleBoss:init(x, y)
                 self.is_wall_walking = true
                 self.is_stompable = true
                 self.is_bouncy_to_bullets = true
+                self.can_burrow_back = true
 
                 -- local ptc_x = self.mid_x - self.up_vect.x * self.w/2
                 -- local ptc_y = self.mid_y - self.up_vect.y * self.w/2
@@ -242,9 +261,10 @@ function MoleBoss:init(x, y)
                 self.is_stompable = true
                 self.is_wall_walking = false
                 self.is_bouncy_to_bullets = true
+                self.can_burrow_back = true
 
                 self.walk_speed = self.def_roll_speed
-                self.unstompable_timer = Timer:new(0.3):start()
+                self.unstompable_timer = Timer:new(0.1):start()
                 self.state_timer:start(2.0)
                 self.spr:set_animation("rolling")
 
@@ -328,8 +348,13 @@ end
 
 function MoleBoss:update(dt)
     self.state_machine:update(dt)
+    if self.reburrow_when_possible and self.can_burrow_back then
+        self.state_machine:set_state("dig_linger")
+    end
 
     MoleBoss.super.update(self, dt)
+
+    self.debug_values[1] = self.can_burrow_back
 end
 
 function MoleBoss:on_collision(col, other)
@@ -339,6 +364,40 @@ end
 
 function MoleBoss:draw()
     MoleBoss.super.draw(self)
+end
+
+function MoleBoss:find_player_in_dig_phase()
+    if self.up_vect.x ~= 0 then
+        return false
+    end
+
+    for _, player in pairs(game.players) do
+        if math.abs(player.mid_x - self.mid_x) <= self.dig_phase_player_see_range then
+            return true 
+        end
+    end
+    return false
+end
+
+function MoleBoss:on_stomped(player)
+    MoleBoss.super.on_stomped(self, player)
+    
+    game:frameskip(10)
+    game:screenshake(8) 
+    game.level:add_fury(2.5)
+
+    self:set_invincibility(0.5)
+    self:set_harmless(0.5)
+    
+    self.reburrow_when_possible = true
+
+    player:set_invincibility(self.damaged_player_invincibility)
+    player.vy = self.damaged_player_throw_speed_y
+    if player.mid_x < CANVAS_WIDTH/2 then
+        player.vx = -self.damaged_player_throw_speed_x
+    else
+        player.vx = self.damaged_player_throw_speed_x
+    end
 end
 
 return MoleBoss

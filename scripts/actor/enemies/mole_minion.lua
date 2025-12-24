@@ -36,6 +36,10 @@ function MoleMinion:init(x, y)
 
     self.sfx_cooldown = 0.0
     -- self.jump_speed = 200
+
+    self.damaged_player_throw_speed_x = 2000
+    self.damaged_player_throw_speed_y = -300
+    self.damaged_player_invincibility = 1.0
     
     self.state_machine = StateMachine:new({
         jumping = {
