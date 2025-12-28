@@ -793,6 +793,8 @@ end
 ---@param a number
 ---@param b number
 function random_range(a, b)
+	a = a or 0
+	b = b or 1
 	if b < a then
 		a, b = b, a
 	end

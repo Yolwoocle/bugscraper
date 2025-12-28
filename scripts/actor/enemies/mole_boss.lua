@@ -33,7 +33,7 @@ function MoleBoss:init(x, y)
         rolling = {
             {images.mole_boss_roll}, 0.1
         },
-    })
+    }, "flying")
     self.spr:set_anchor(SPRITE_ANCHOR_CENTER_CENTER)
 
     self:set_max_life(300)
@@ -120,6 +120,7 @@ function MoleBoss:init(x, y)
 
                 self.is_stompable = false
                 self.is_wall_walking = true
+                self.is_on_wall = true
                 self.is_bouncy_to_bullets = false
                 self.can_burrow_back = false
 
@@ -155,7 +156,7 @@ function MoleBoss:init(x, y)
                 self.is_bouncy_to_bullets = false
                 self.can_burrow_back = false
 
-                self.state_timer:start(0.5)
+                self.state_timer:start(0.4)
                 self.spr:set_shake(3)
             end,
             update = function(state, dt)
@@ -242,13 +243,19 @@ function MoleBoss:init(x, y)
 
                 self.spr.squash = 1.5
                 self.spr:set_rotation(0)
+
+                self:play_sound_var("sfx_boss_mrdung_jump_{01-06}", 0.1, 1.1) 
             end,
             update = function(state, dt)
                 local r = 4 * clamp((self.state_timer.time-1) / (self.state_timer.duration-1), 0, 1)
                 self.spr:update_offset(random_neighbor(r), random_neighbor(r))
+                
                 if self.state_timer:update(dt) then
+                    if random_range(0, 1) < 0.5 then
+                        return "bunny_hopping_telegraph"
+                    end
                     return "walk_to_wall"
-                end
+                end 
             end,
             exit = function (state)
                 self.spr:update_offset(0, 0)
@@ -287,63 +294,86 @@ function MoleBoss:init(x, y)
                         state.override_walk_dir = 1 
                     end
 
+                    self.up_vect.x = col.normal.x
+                    self.up_vect.y = col.normal.y
                     self.state_machine:set_state("dig_linger")
                 end
             end,
         },
         
-        -- walk_around = {
-        --     enter = function(state)
-        --         self.walk_speed = 200
-        --         self.damage = 0
+        --------------------------------------------------------
+        
+        
+        bunny_hopping_telegraph = {
+            enter = function(state)
+                self.state_timer:start(1.0)
 
-        --         -- get random x target location that is far enough from enemy
-        --         local tries = 10
-        --         state.target_x = self.x
-        --         while tries > 0 and math.abs(state.target_x - self.x) <= 64 do
-        --             state.target_x = random_range(game.level.cabin_inner_rect.ax + 16, game.level.cabin_inner_rect.bx - self.w - 16)
-        --             tries = tries - 1
-        --         end
-        --         state.dir_sign = sign(state.target_x - self.x)
-        --         self.vx = state.dir_sign * self.walk_speed
-        --         self.spr:set_animation("flying")
+                self.is_stompable = false
+                self.is_wall_walking = false
 
-        --         self.gravity = self.default_gravity
-        --         self.is_stompable = true
-        --         self.is_wall_walking = false
-        --     end,
-        --     update = function(state, dt)
-        --         if (state.dir_sign == 1 and self.x > state.target_x) or (state.dir_sign == -1 and self.x < state.target_x)then
-        --             return "jump_in"
-        --         end
-        --     end,
-        -- },
-        -- jump_in = {
-        --     enter = function(state)
-        --         self.is_stompable = true
-        --         self.vx = 0
-        --         self.state_timer:start(0.4)
-        --         self.spr:set_animation("flying")
+                self.gravity = self.default_gravity
+            end,
+            update = function(state, dt)
+                self.spr:update_offset(random_neighbor(3), random_neighbor(3))
 
-        --         self.is_affected_by_walls = false
-        --         self.is_affected_by_bounds = false
+                if self.state_timer:update(dt) then
+                    return "bunny_hopping"
+                end
+            end
+        },
+        bunny_hopping = {
+            enter = function(state)
+                self.is_wall_walking = false
                 
-        --         self.gravity = self.default_gravity
-        --         self.vy = -300
-        --         state.original_y = self.y
-        --         state.oy_threshold = 16
-        --     end,
-        --     update = function(state, dt)
-        --         if self.y > state.original_y + state.oy_threshold then
-        --             return "dig"
-        --         end
-        --     end,
-        --     exit = function (state)
-        --         self.is_affected_by_walls = true
-        --         self.is_affected_by_bounds = true
-        --     end
-        -- },
-    }, "dig")
+                self.friction_x = 1
+                
+                self.jump_speed = 500
+                self.gravity = self.default_gravity
+
+                self.max_bounces = 4
+                self.bounces = self.max_bounces
+
+                self.vx = random_sample{-1, 1} * 250
+            end,
+            update = function(state, dt)
+                if self.is_grounded and self.bounces > 0 then
+                    self.bounces = self.bounces - 1
+                    self.jump_flag = true
+
+                    self:play_sound("sfx_boss_mrdung_jump_moment_{01-06}")
+                end
+
+                if self.state_timer:update(dt) then
+                    return "dig_linger"
+                end
+            end,
+            exit = function(state)
+                self.spr:update_offset(0, 0)
+                
+                self.gravity = 0
+                self.friction_x = 1
+                self.friction_y = 1
+            end,
+            after_collision = function(state, col)
+                if col.type ~= "cross" then
+                    if self.bounces < self.max_bounces and not self.state_timer.is_active then
+                        self:play_sound_var("sfx_boss_mrdung_jump_{01-06}", 0.1, 1.1) 
+                        game:screenshake(4)
+                        Input:vibrate_all(0.1, 0.3)
+                    
+                        if self.bounces <= 0 then
+                            self.state_timer:start(0.5)
+                            self.vx = 0
+                        end
+                    end
+                    if col.normal.y == 0 then
+                        -- scotch scotch scotch
+                        self.buffer_vx = math.abs(self.vx) * col.normal.x
+                    end
+                end
+            end
+        },
+    }, "bunny_hopping_telegraph")
 end
 
 function MoleBoss:update(dt)
@@ -352,14 +382,34 @@ function MoleBoss:update(dt)
         self.state_machine:set_state("dig_linger")
     end
 
+    if self.buffer_vx then
+        self.vx = self.buffer_vx
+        self.buffer_vx = nil
+    end
+
+    -- scotch
+    if self.jump_flag then
+        self.vy = -self.jump_speed
+        self.jump_flag = false
+    end
+
     MoleBoss.super.update(self, dt)
 
-    self.debug_values[1] = self.can_burrow_back
+    self.debug_values[1] = self.state_machine.current_state_name
+    self.debug_values[2] = "self.walk_dir "..tostring(self.walk_dir)
+    self.debug_values[3] = "self.walk_speed "..tostring(self.walk_speed)
+    self.debug_values[4] = "self.up.x "..tostring(self.up_vect.x).." self.up.y "..tostring(self.up_vect.y)
+
 end
 
 function MoleBoss:on_collision(col, other)
     MoleBoss.super.on_collision(self, col, other)
     self.state_machine:_call("on_collision", col, other)
+end
+
+function MoleBoss:after_collision(col, other)
+    MoleBoss.super.after_collision(self, col, other)
+    self.state_machine:_call("after_collision", col, other)
 end
 
 function MoleBoss:draw()

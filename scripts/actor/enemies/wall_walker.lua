@@ -32,6 +32,7 @@ function WallWalker:update(dt)
     WallWalker.super.update(self, dt)
     
     if self.is_on_wall and self.is_wall_walking then
+        print_debug("IS WALL WALKING ", random_neighbor(1))
         local walk_x, walk_y = get_orthogonal(self.up_vect.x, self.up_vect.y, self.walk_dir)
         self.vx = walk_x * self.walk_speed
         self.vy = walk_y * self.walk_speed
@@ -44,7 +45,7 @@ function WallWalker:update(dt)
 end
 
 function WallWalker:after_collision(col, other)
-    if col.type ~= "cross" then
+    if col.type ~= "cross" and self.is_wall_walking then
         self.is_on_wall = true
 
         self.up_vect.x = col.normal.x
@@ -58,9 +59,11 @@ end
 
 function WallWalker:on_grounded()
     -- After gounded, reset to floating
-    self.gravity = 0
-    self.friction_x = 1
-    self.friction_y = 1
+    if self.is_wall_walking then
+        self.gravity = 0
+        self.friction_x = 1
+        self.friction_y = 1
+    end
 end
 
 return WallWalker

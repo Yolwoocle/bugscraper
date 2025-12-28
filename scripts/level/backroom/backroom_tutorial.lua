@@ -62,6 +62,8 @@ function BackroomTutorial:generate(world_generator)
 		end,
 		remove_on_collect = true,
 	}), 440, 105)
+
+	-- TODO add wrning sign at 418 181
 	
 	-- Exit sign
 	local sign = game:new_actor(enemies.ExitSign:new(50, 160))
