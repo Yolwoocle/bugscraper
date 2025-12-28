@@ -41,7 +41,7 @@ function BackroomGroundFloor:init(params)
 	self.renderer.fov = 300
 	self.renderer.render_offset.x = 200
 	self.renderer.render_offset.y = 200
-	self.renderer.line_color = COL_DARKEST_GRAY
+	self.renderer.line_color = COL_DARK_GRAY
 
 	self.rocket_y = 82
 
@@ -59,6 +59,8 @@ function BackroomGroundFloor:init(params)
 
 	self.can_exit_basement = false
 	self.stop_cutscene_on_exit = false
+
+	self.background_clear_color = COL_VERY_DARK_GRAY
 end
 
 function BackroomGroundFloor:generate(world_generator)
@@ -171,6 +173,13 @@ function BackroomGroundFloor:update(dt)
 	-- Update particles
 	for i, ptc in pairs(self.bg_particles) do
 		ptc.life = ptc.life - dt
+		if ptc.dx then
+			ptc.x = ptc.x + ptc.dx * dt
+		end
+		if ptc.dy then
+			ptc.y = ptc.y + ptc.dy * dt
+		end
+		end
 		if ptc.life < 0 then
 			table.remove(self.bg_particles, i)
 		end
@@ -192,7 +201,7 @@ function BackroomGroundFloor:update(dt)
 end
 
 function BackroomGroundFloor:draw_background()
-	love.graphics.clear(COL_VERY_DARK_GRAY)
+	love.graphics.clear(self.background_clear_color)
 end
 
 function BackroomGroundFloor:get_rocket_x()
@@ -227,7 +236,11 @@ function BackroomGroundFloor:draw_items()
 	for i, ptc in pairs(self.bg_particles) do
 		local px = rocket_x + images.basement_rocket_small:getWidth()/2 + ptc.x
 		if ptc.type == "circle" then
-			circle_color(COL_DARKEST_GRAY, "fill", px, ptc.y, ptc.life * 4)
+			local col = ptc.color or COL_LIGHT_GRAY
+			if col.type == "gradient" then
+				col = col[clamp(round(ptc.life*4), 1, #col)]
+			end
+			circle_color(col, "fill", px, ptc.y, ptc.life * 4)
 		end
 	end
 end

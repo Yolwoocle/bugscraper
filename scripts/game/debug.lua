@@ -23,6 +23,7 @@ local Sprite           = require "scripts.graphics.sprite"
 local skins            = require "data.skins"
 local BackroomCredits = require "scripts.level.backroom.backroom_credits"
 local shaders         = require "data.shaders"
+local BackroomBasement = require "scripts.level.backroom.backroom_basement"
 
 local Debug            = Class:inherit()
 
@@ -240,6 +241,10 @@ function Debug:init(game)
         end },
         ["f"] = { "toggle FPS", function()
             self.view_fps = not self.view_fps
+        end },
+        ["\\"] = { "enable BackroomBasement", function()
+            game.level:begin_backroom(BackroomBasement:new())
+            game.level:set_backroom_on()
         end },
         ["1"] = { "damage P1", func_damage(1) },
         ["2"] = { "damage P2", func_damage(2) },

@@ -9,6 +9,7 @@ local LightPoint      = require "scripts.graphics.light.light_point"
 
 return Cutscene:new("basement_zoom_into_rocket", {
     CutsceneScene:new({
+        description = "",
         duration = 1.5,
         enter = function(cutscene, data)
         end,
@@ -16,6 +17,7 @@ return Cutscene:new("basement_zoom_into_rocket", {
         end
     }),
     CutsceneScene:new({
+        description = "",
         duration = 3.0,
         enter = function(cutscene, data)
         end,
@@ -24,6 +26,7 @@ return Cutscene:new("basement_zoom_into_rocket", {
         end
     }),
     CutsceneScene:new({
+        description = "",
         duration = 1.0,
         enter = function(cutscene, data)
             game.game_ui.ending_counter_text = "3"
@@ -33,6 +36,7 @@ return Cutscene:new("basement_zoom_into_rocket", {
         end
     }),
     CutsceneScene:new({
+        description = "",
         duration = 1.0,
         enter = function(cutscene, data)
             game.game_ui.ending_counter_text = "2"
@@ -42,6 +46,7 @@ return Cutscene:new("basement_zoom_into_rocket", {
         end
     }),
     CutsceneScene:new({
+        description = "",
         duration = 1.0,
         enter = function(cutscene, data)
             game.game_ui.ending_counter_text = "1"
@@ -51,6 +56,7 @@ return Cutscene:new("basement_zoom_into_rocket", {
         end
     }),
     CutsceneScene:new({
+        description = "",
         duration = 1.0,
         enter = function(cutscene, data)
             game.game_ui.ending_counter_text = "0"
@@ -60,6 +66,7 @@ return Cutscene:new("basement_zoom_into_rocket", {
         end
     }),
     CutsceneScene:new({
+        description = "Rocket rise",
         duration = 2.0,
         enter = function(cutscene, data)
             game.game_ui.ending_counter_text = nil
@@ -68,13 +75,28 @@ return Cutscene:new("basement_zoom_into_rocket", {
             data.rocket_ay = -20.0
         end,
         update = function(cutscene, data, dt)
-            data.rocket_vy = data.rocket_vy - data.rocket_ay * dt
-            game.level.backroom.rocket_y = game.level.backroom.rocket_y - data.rocket_vy * dt
+            data.new_rocket_ptc = function()
+                data.rocket_vy = data.rocket_vy - data.rocket_ay * dt
+                game.level.backroom.rocket_y = game.level.backroom.rocket_y - data.rocket_vy * dt
+                --  = game.level.backroom.rocket_y - data.rocket_vy * dt
+                table.insert(game.level.backroom.bg_particles, {
+                    x = random_neighbor(6),
+                    y = game.level.backroom.rocket_y + images.basement_rocket_small:getHeight() + random_neighbor(6),
+                    life = random_range(0.8, 1.5),
+                    type = "circle",
+                    color = {
+                        type = "gradient",
+                        COL_WHITE, COL_YELLOW, COL_ORANGE, COL_DARK_RED, COL_DARK_GRAY, COL_BLACK_BLUE
+                    }, 
+                })
+            end
+            data.new_rocket_ptc()
 
             game:screenshake(4)
         end
     }),
     CutsceneScene:new({
+        description = "",
         duration = 1.0,
         enter = function(cutscene, data)
             game.game_ui.ending_counter_text = nil
@@ -89,9 +111,11 @@ return Cutscene:new("basement_zoom_into_rocket", {
             game.level.backroom.rocket_y = game.level.backroom.rocket_y - data.rocket_vy * dt
 
             game:screenshake(4)
+            data.new_rocket_ptc()
         end
     }),
     CutsceneScene:new({
+        description = "",
         duration = 1.0,
         enter = function(cutscene, data)
         	Audio:set_effect(nil)
@@ -99,6 +123,7 @@ return Cutscene:new("basement_zoom_into_rocket", {
     }),
 
     CutsceneScene:new({
+        description = "",
         duration = 1.0,
         enter = function(cutscene, data)
             game.level.slowdown_timer_override = 2.0
@@ -119,6 +144,7 @@ return Cutscene:new("basement_zoom_into_rocket", {
     }),
     
     CutsceneScene:new({
+        description = "",
         duration = 1.0,
         enter = function(cutscene, data)
             local x = lerp(game.level.door_rect.ax, game.level.door_rect.bx, 0.5)
@@ -126,6 +152,7 @@ return Cutscene:new("basement_zoom_into_rocket", {
         end,
     }),
     CutsceneScene:new({
+        description = "",
         duration = 1.0,
         enter = function(cutscene, data)
             game.game_ui:start_iris_transition(nil, nil, 1.0, nil, CANVAS_WIDTH)            
@@ -133,6 +160,7 @@ return Cutscene:new("basement_zoom_into_rocket", {
         end,
     }),
     CutsceneScene:new({
+        description = "",
         duration = 1.0,
         enter = function(cutscene, data)
             game.game_ui:set_iris(false)

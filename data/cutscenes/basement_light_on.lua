@@ -11,12 +11,14 @@ local function on(opacity)
     game.light_world.darkness_intensity = opacity
 	game:set_actor_draw_color(nil)
     game.level.backroom.show_basement_bg = true
+    game.level.backroom.background_clear_color = COL_MID_GRAY
 end
 
 local function off()
     game.light_world.darkness_intensity = 1.0
 	game:set_actor_draw_color(COL_BLACK_BLUE)
     game.level.backroom.show_basement_bg = false
+    game.level.backroom.background_clear_color = COL_VERY_DARK_GRAY
 end
 
 return Cutscene:new("enter_ceo_office", {

@@ -7,6 +7,7 @@ local cutscenes       = require 'data.cutscenes'
 local upgrades        = require 'data.upgrades'
 local skins           = require "data.skins"
 local skin_name_to_id = require "data.skin_name_to_id"
+local BackroomBasement = require "scripts.level.backroom.backroom_basement"
 
 local DebugCommandManager = Class:inherit()
 
@@ -307,6 +308,20 @@ function DebugCommandManager:init()
         run = function()
             game.level.fury_bar = game.level.fury_max
             self:add_message(concat("Enabled fury"))
+            return true
+        end,
+    }
+
+    self.commands["_rocket_backroom"] = DebugCommand:new {
+        name = "_rocket_backroom",
+        description = "Enables rocket backroom",
+        args = {
+        },
+        run = function()
+            game.level:begin_backroom(BackroomBasement:new())
+            game.level:set_backroom_on()
+
+            self:add_message(concat("Enabled rocket backroom"))
             return true
         end,
     }
