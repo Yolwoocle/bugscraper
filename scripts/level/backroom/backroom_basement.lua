@@ -179,7 +179,6 @@ function BackroomGroundFloor:update(dt)
 		if ptc.dy then
 			ptc.y = ptc.y + ptc.dy * dt
 		end
-		end
 		if ptc.life < 0 then
 			table.remove(self.bg_particles, i)
 		end

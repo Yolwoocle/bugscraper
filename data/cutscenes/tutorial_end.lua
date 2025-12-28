@@ -39,12 +39,17 @@ return Cutscene:new("tutorial_end", {
     CutsceneScene:new({
         description = "Pan camera up",
 
-        duration = 4.0,
+        duration = 6.0,
         enter = function(cutscene, data)
             game.camera.follows_players = false
-            game.camera.max_speed = DEFAULT_CAMERA_MAX_SPEED*4
+            game.camera.max_speed = DEFAULT_CAMERA_MAX_SPEED*2
             game.camera.min_y = -2000000    
             game.camera.target_y = -2350
+
+            for _, player in pairs(game.players) do
+                player:set_code_input_mode_target_x(nil)
+                player:reset_virtual_controller()
+            end
         end,
     }),
     CutsceneScene:new({

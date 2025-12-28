@@ -54,7 +54,7 @@ function BackroomGroundFloor:generate(world_generator)
 		{x = 454-16, y = 232-16, z = 0, img = images.ground_floor_mug,                   sound = "sfx_actor_jumping_prop_mug_{01-02}"},
 		{x = 79-16,  y = 213-16, z = 0, img = images.ground_floor_potted_tree,           sound = "empty"},
 		{x = 146,    y = 213-16, z = 0, img = images.ground_floor_potted_plant,          sound = "empty"},
-		{x = 644-16, y = 222-16, z = 0, img = images.ground_floor_lamp,                  sound = "empty"},
+		{x = 644-16, y = 222-16, z = 0, img = images.ground_floor_lamp,                  sound = "sfx_actor_jumping_prop_screen_{01-04}"},
 		{x = 574-16, y = 222-16, z = 0, img = images.ground_floor_computer_right,        sound = "sfx_actor_jumping_prop_screen_{01-04}"},
 		{x = 651-16, y = 222-16, z = 0, img = images.ground_floor_computer_right,        sound = "sfx_actor_jumping_prop_screen_{01-04}"},
 		{x = 386-16, y = 211-16, z = 2, img = images.ground_floor_stack_papers_big,      sound = "sfx_actor_jumping_prop_paper_stack_{01-04}"},
@@ -70,8 +70,8 @@ function BackroomGroundFloor:generate(world_generator)
 		{x = 696-16, y = 212-16, z = 1, img = images.ground_floor_stack_papers_big,      sound = "sfx_actor_jumping_prop_paper_stack_{01-04}"},
 		{x = 688-16, y = 225-16, z = 0, img = images.ground_floor_stack_papers_medium,   sound = "sfx_actor_jumping_prop_paper_stack_{01-04}"},
 		{x = 678-16, y = 225-16, z = 0, img = images.ground_floor_stack_papers_small,    sound = "sfx_actor_jumping_prop_paper_stack_{01-04}"},
-		{x = 1007-16, y = 247-16, z = 0, img = images.ground_floor_bucket_1,             sound = "empty"},
-		{x = 1088-16, y = 247-16, z = 0, img = images.ground_floor_bucket_2,             sound = "empty"},
+		{x = 1007-16, y = 247-16, z = 0, img = images.ground_floor_bucket_1,             sound = "sfx_actor_jumping_prop_boba_{01-06}"},
+		{x = 1088-16, y = 247-16, z = 0, img = images.ground_floor_bucket_2,             sound = "sfx_actor_jumping_prop_boba_{01-06}"},
 		{x = 978-16, y = 228-16, z = 0, img = images.ground_floor_caution_sign,          sound = "empty"},
 	}) do
 		local prop = enemies.JumpingProp:new(prop_data.x, prop_data.y, prop_data.img, prop_data.sound)
