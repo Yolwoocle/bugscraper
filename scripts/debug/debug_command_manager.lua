@@ -317,10 +317,11 @@ function DebugCommandManager:init()
         args = {
         },
         run = function(text)
-            local upgrades_copy = copy_table_shallow(upgrades)
-            table.sort(upgrades_copy)
+            local upgrades_keys = copy_table_shallow(table_keys(upgrades))
+            table.sort(upgrades_keys)
             local i = 0
-            for name, upgrade in pairs(upgrades_copy) do
+            for _, name in pairs(upgrades_keys) do
+                local upgrade = upgrades[name]
                 local a = enemies.UpgradeDisplay:new(128 + i * 42, 220)
                 game:new_actor(a)
                 a:assign_upgrade(upgrade:new())
