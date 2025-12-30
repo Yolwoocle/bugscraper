@@ -216,20 +216,20 @@ local thorns_arc_params = {
 }
 
 local waves = parse_waves_table {
-    {
-        roll_type = WAVE_ROLL_TYPE_FIXED,
-        background = backgrounds.BackgroundGreenhouse:new(),
-        elevator = ElevatorW4,
+    -- {
+    --     roll_type = WAVE_ROLL_TYPE_FIXED,
+    --     background = backgrounds.BackgroundGreenhouse:new(),
+    --     elevator = ElevatorW4,
 
-        min = 1,
-        max = 1,
-        enemies = {
-            { E.MoleBoss, 1, --[[position = { CANVAS_WIDTH/2 - 43, 11 * 16 - 4 } ]]}
-        },
+    --     min = 1,
+    --     max = 1,
+    --     enemies = {
+    --         { E.MoleBoss, 1, --[[position = { CANVAS_WIDTH/2 - 43, 11 * 16 - 4 } ]]}
+    --     },
 
-        run = function(self, level)
-        end,
-    },
+    --     run = function(self, level)
+    --     end,
+    -- },
 
     -- Cafeteria
     -- new_cafeteria({ 

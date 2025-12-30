@@ -790,8 +790,8 @@ function random_range_int(a, b)
 end
 
 --- Returns a FLOAT between in the range [a, b[. (a included, b excluded)
----@param a number
----@param b number
+---@param a number?
+---@param b number?
 function random_range(a, b)
 	a = a or 0
 	b = b or 1

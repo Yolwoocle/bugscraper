@@ -18,10 +18,10 @@ Visu
 
 Musique
 - [ ] bug: ground floor music can be heard quickly when quick restarting
-- [ ] intros de musique
-- [ ] musique devrait pas reprendre du début après une cafétéria
 - [ ] musique incorrecte se joue au RDC quand tu restart une game 
 - [ ] (mineur) transition musique café après avoir pris une upgrade t'en a pas c'est pas ouf
+- [x] musique devrait pas reprendre du début après une cafétéria
+- [x] intros de musique
 
 Menus
 - [ ] option to invert buttons for ui_confirm and ui_back
@@ -66,18 +66,14 @@ Son
 PlayerSorbonne playtest
 
 - [ ] rajouter plus de trucs dans les cafets
-- [-] viser en analogue avec le joystick ? (Un peu d'autoaim à la limite ?)
 - [ ] effet plus pompesque quand tu revive
 - [ ] effet de particules quand tu prends un cœur ?
 - [ ] enseigner aux joueurs ce que fait le fantôme ptêtre ?
 - [ ] rendre les joueurs fantôme plus utiles 
-- [ ] la lettre de démission devrait être dans la second main
 - [ ] quand tu mets en pause dans le noir, les persos sont pas noirs
 - [ ] vague avec les chippers pour le boss du M3 est trop dur
 - [ ] y decrait pas y avoir de screenshake sur l'écran de pause
 - [ ] pas intuitif que tu peux pas stomp les larves du flying spawner
-- [ ] stink bug pas assez visible M3
-- [ ] lettre de démission devrait despawn quand tu la prends
 
 Playtest lins
 - [ ] Pour certaines armes le rocket jump emmène directement tout en haut c'est dur de jauger.
@@ -124,6 +120,11 @@ La barre de vie des boss est un peu petite.
 ---------------------------------------
 
 DONE
+
+- [-] viser en analogue avec le joystick ? (Un peu d'autoaim à la limite ?)
+- [-] la lettre de démission devrait être dans la second main
+- [x] stink bug pas assez visible M3
+- [-] lettre de démission devrait despawn quand tu la prends
 
 - [x] bug: cannot bind "join game" keyboard binding
 - [x] joueurs croient que tu peux stomp les larves volantes -> remplacer le sprite par un petit cocon piquant

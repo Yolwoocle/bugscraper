@@ -117,7 +117,7 @@ function Player:reset(n, skin)
 	self.can_do_midair_jump = false
 	self.max_jumps = 1
 	self.jumps = self.max_jumps
-	self.jump_speed = 450
+	self.jump_speed = 455 -- NE PAS TOUCHER CA FAIT 5 BLOCS EXACTMEENT MERCI GASPARD DELPIANO--MANFRINI POUR CET AJOUT NECESSAIRE
 	self.jump_speed_mult = 1.0
 	self.buffer_jump_timer = 0
 	self.max_buffer_jump_timer = 8

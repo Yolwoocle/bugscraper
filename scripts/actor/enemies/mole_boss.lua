@@ -27,26 +27,33 @@ function MoleBoss:init(x, y)
         telegraph = {
             {images.mole_boss_telegraph_1}, 0.1
         },
+        telegraph_spiked = {
+            {images.mole_boss_telegraph_spiked}, 0.1
+        },
         flying = {
             {images.mole_boss_outside}, 0.1
         },
         rolling = {
             {images.mole_boss_roll}, 0.1
         },
+        jump_telegraph = {
+            {images.mole_boss_eyes_closed}, 0.1
+        },
     }, "flying")
     self.spr:set_anchor(SPRITE_ANCHOR_CENTER_CENTER)
 
-    self:set_max_life(300)
-    self.is_killed_on_stomp = false
+    self:set_max_life(150)
 
-    self.fly_speed = 350
-    self.def_walk_speed = 300
+    self.fly_speed = 500
+    self.def_walk_speed = 500
     self.def_roll_speed = 300
 
+    self.is_killed_on_stomp = false
     self.is_stompable = true
     self.damage_on_stomp = 10
     self.can_be_stomped_if_falling_down = false
     self.head_ratio = 0.33
+    self.do_stomp_animation = false
     
     self.score = 500
 
@@ -115,14 +122,16 @@ function MoleBoss:init(x, y)
                 self.walk_speed = self.def_walk_speed
                 self.damage = 0
                 self.walk_dir = state.override_walk_dir or random_sample{-1, 1}
-                self.state_timer:start(random_range(0.5, 2.5))
-                self.spr:set_animation("digging")
-
+                self.state_timer:start(random_range(0.2, 1.5))
+                state.attack_player_minimum_burrow_time = 0.5 -- how much time the boss needs to have burrowed before attacking a player
+                
                 self.is_stompable = false
                 self.is_wall_walking = true
                 self.is_on_wall = true
                 self.is_bouncy_to_bullets = false
                 self.can_burrow_back = false
+                
+                self.spr:set_animation("digging")
 
                 state.override_walk_dir = nil                
             end,
@@ -137,7 +146,7 @@ function MoleBoss:init(x, y)
                     vy2 = 100,
                 })
 
-                if self.state_timer:update(dt) or (self.state_timer:get_time_passed() > 1.0 and self:find_player_in_dig_phase()) then
+                if self.state_timer:update(dt) or (self.state_timer:get_time_passed() > state.attack_player_minimum_burrow_time and self:find_player_in_dig_phase()) then
                     return "telegraph"
                 end
             end,
@@ -149,7 +158,6 @@ function MoleBoss:init(x, y)
                 self.walk_speed = 0
                 self.damage = 0
                 self.spr:update_offset(0, 0)
-                self.spr:set_animation("telegraph")
                 self.gravity = 0
 
                 self.is_stompable = false
@@ -158,6 +166,9 @@ function MoleBoss:init(x, y)
 
                 self.state_timer:start(0.4)
                 self.spr:set_shake(3)
+
+                self.is_spiked_on_exit = (random_range() < 1/3)
+                self.spr:set_animation(self.is_spiked_on_exit and "telegraph_spiked" or "telegraph")
             end,
             update = function(state, dt)
                 if self.state_timer:update(dt) then
@@ -182,12 +193,12 @@ function MoleBoss:init(x, y)
                 self.vx = self.up_vect.x * self.fly_speed
                 self.vy = self.up_vect.y * self.fly_speed
 
-                self.is_stompable = true
+                self.is_stompable = not self.is_spiked_on_exit
                 self.is_bouncy_to_bullets = true
                 self.can_burrow_back = false
 
-                self.gravity = self.default_gravity/2
-                self.spr:set_animation("flying")
+                self.gravity = self.default_gravity
+                self.spr:set_animation(self.is_spiked_on_exit and "rolling" or "flying")
 
                 local ptc_x = self.mid_x - self.up_vect.x * self.w/2
                 local ptc_y = self.mid_y - self.up_vect.y * self.w/2
@@ -229,11 +240,11 @@ function MoleBoss:init(x, y)
         linger = {
             enter = function(state)
                 self.walk_speed = 0
-                self.state_timer:start(1.0)
-                self.spr:set_animation("flying")
+                self.state_timer:start(0.5)
+                self.spr:set_animation(self.is_spiked_on_exit and "rolling" or "flying")
                 
                 self.is_wall_walking = true
-                self.is_stompable = true
+                self.is_stompable = not self.is_spiked_on_exit
                 self.is_bouncy_to_bullets = true
                 self.can_burrow_back = true
 
@@ -265,7 +276,7 @@ function MoleBoss:init(x, y)
             enter = function(state)
                 state.dir = ternary(self.mid_x < CANVAS_WIDTH/2, 1, -1)
 
-                self.is_stompable = true
+                self.is_stompable = not self.is_spiked_on_exit
                 self.is_wall_walking = false
                 self.is_bouncy_to_bullets = true
                 self.can_burrow_back = true
@@ -308,10 +319,10 @@ function MoleBoss:init(x, y)
             enter = function(state)
                 self.state_timer:start(1.0)
 
-                self.is_stompable = false
                 self.is_wall_walking = false
 
                 self.gravity = self.default_gravity
+                self.spr:set_animation("jump_telegraph")
             end,
             update = function(state, dt)
                 self.spr:update_offset(random_neighbor(3), random_neighbor(3))
@@ -324,6 +335,8 @@ function MoleBoss:init(x, y)
         bunny_hopping = {
             enter = function(state)
                 self.is_wall_walking = false
+                self.is_stompable = false
+                self.spr:set_animation("rolling")
                 
                 self.friction_x = 1
                 
@@ -333,6 +346,8 @@ function MoleBoss:init(x, y)
                 self.max_bounces = 4
                 self.bounces = self.max_bounces
 
+                self.burrow_back_on_grounded = false
+
                 self.vx = random_sample{-1, 1} * 250
             end,
             update = function(state, dt)
@@ -341,6 +356,10 @@ function MoleBoss:init(x, y)
                     self.jump_flag = true
 
                     self:play_sound("sfx_boss_mrdung_jump_moment_{01-06}")
+                end
+
+                if not self.state_timer.is_active then
+                    self.spr:set_rotation(self.spr.rot + dt*3)
                 end
 
                 if self.state_timer:update(dt) then
@@ -362,18 +381,29 @@ function MoleBoss:init(x, y)
                         Input:vibrate_all(0.1, 0.3)
                     
                         if self.bounces <= 0 then
-                            self.state_timer:start(0.5)
-                            self.vx = 0
+                            self.burrow_back_on_grounded = "wait"
                         end
                     end
                     if col.normal.y == 0 then
                         -- scotch scotch scotch
                         self.buffer_vx = math.abs(self.vx) * col.normal.x
                     end
+                    if col.normal.y == -1 and self.burrow_back_on_grounded == "wait" then
+                        self.burrow_back_on_grounded = "burrow"
+                        self.vx = 0
+                        self.state_timer:start(0.5)
+
+                        self.is_stompable = true
+                        self.spr:set_animation("flying")
+                        self.damage = 1
+
+                        self.spr:set_shake(5)
+                        self.spr:set_shake_decrease_speed(15)
+                    end
                 end
             end
         },
-    }, "bunny_hopping_telegraph")
+    }, "dig")
 end
 
 function MoleBoss:update(dt)
@@ -395,10 +425,11 @@ function MoleBoss:update(dt)
 
     MoleBoss.super.update(self, dt)
 
-    self.debug_values[1] = self.state_machine.current_state_name
-    self.debug_values[2] = "self.walk_dir "..tostring(self.walk_dir)
-    self.debug_values[3] = "self.walk_speed "..tostring(self.walk_speed)
-    self.debug_values[4] = "self.up.x "..tostring(self.up_vect.x).." self.up.y "..tostring(self.up_vect.y)
+    self.debug_values[1] = self.is_stompable
+    -- self.debug_values[1] = self.state_machine.current_state_name
+    -- self.debug_values[2] = "self.walk_dir "..tostring(self.walk_dir)
+    -- self.debug_values[3] = "self.walk_speed "..tostring(self.walk_speed)
+    -- self.debug_values[4] = "self.up.x "..tostring(self.up_vect.x).." self.up.y "..tostring(self.up_vect.y)
 
 end
 
