@@ -1254,17 +1254,24 @@ function ParticleSystem:spark(x, y, amount, params)
 	self:pop_layer()
 end
 
-function ParticleSystem:speed_line(x, y, amount)
-	amount = param(amount, 1)
-	local life = 1 + random_neighbor(0.2)
+function ParticleSystem:speed_line(x, y, params)
+	params = params or {}
+	local amount = param(params.amount, 1)
+	local life = params.life or (1 + random_neighbor(0.2))
 	local g = 0
 	local is_solid = false
-	self:push_layer(PARTICLE_LAYER_FRONT)
+
+	local final_x = x
+	local final_y = y
+	if params.random_x then   final_x = final_x + random_neighbor(params.random_x)   end
+	if params.random_y then   final_y = final_y + random_neighbor(params.random_y)   end
+
+	self:push_layer(params.particle_layer or PARTICLE_LAYER_FRONT)
 	for i=1, amount do 
-		self:add_particle(SparkParticle:new(x,y, life, g, is_solid, {
-			vx = 0,
-			vy = random_range(-800, -400),
-			colors = {COL_WHITE, COL_LIGHTEST_GRAY, COL_LIGHT_GRAY}
+		self:add_particle(SparkParticle:new(final_x, final_y, life, g, is_solid, {
+			vx = (params.vx or 0),
+			vy = (params.vy or random_range(-800, -400)),
+			colors = params.colors or {COL_WHITE, COL_LIGHTEST_GRAY, COL_LIGHT_GRAY}
 		}))
 	end
 	self:pop_layer()

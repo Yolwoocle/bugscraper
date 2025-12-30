@@ -59,7 +59,8 @@ function Level:init(game, backroom)
 	self.new_wave_progress = 0.0
 	self.new_wave_animation_speed_mutliplier = 1.0
 	self.level_speed = 0
-	self.def_level_speed = 400
+	self.default_level_speed = 400
+	self.level_speed_advancing = self.default_level_speed
 	self.elev_x, self.elev_y = 0, 0
 	self.elev_vx, self.elev_vy = 0, 0
     
@@ -75,7 +76,13 @@ function Level:init(game, backroom)
 
 	-- Background
 	self.background = BackgroundW1:new(self)
-	self.background:set_def_speed(self.def_level_speed)
+	self.background:set_def_speed(self.level_speed_advancing)
+	self.background_transition_on = false
+	self.background_transition_y = 0
+	self.background_transition_background = nil
+	self.background_transition_speed_mult = 1
+
+	self.background_speed_lines = false
 	
 	-- Backroom
 	self.backroom = backroom or BackroomGroundFloor:new()
@@ -132,14 +139,16 @@ function Level:update(dt)
 	if not self.has_run_ready then
 		self:ready()
 	end
-
+	
 	self:update_elevator_progress(dt)
 	self.elevator:set_floor_progress(self.new_wave_progress)
 	self.background:set_speed(self.level_speed)
-	self.background:set_def_speed(self.def_level_speed)
-
+	self.background:set_def_speed(self.level_speed_advancing)
+	
 	self:update_fury(dt)
 	self.map:update(dt)
+	self:update_background_speed_lines(dt)
+	self:update_background_transition(dt)
 	self.background:update(dt)
 	self.elevator:update(dt)
 	if self.backroom then
@@ -185,7 +194,7 @@ function Level:get_new_wave_animation_state_machine()
 			enter = function(state)
 				self.new_wave_progress = 0.0
 				if not self.do_level_slowdown_on_new_wave then
-					self.level_speed = self.def_level_speed
+					self.level_speed = self.level_speed_advancing
 				end
 			end,
 			update = function(state, dt)
@@ -199,7 +208,6 @@ function Level:get_new_wave_animation_state_machine()
 				end
 		
 				if self.new_wave_progress <= 0 then
-					self.level_speed = 0
 					return "opening"
 				end
 			end
@@ -245,11 +253,11 @@ function Level:get_new_wave_animation_state_machine()
 			end,
 			update = function(state, dt)
 				if self.do_level_slowdown_on_new_wave then
-					self.level_speed = min(self.level_speed + 10, self.def_level_speed)
+					self.level_speed = min(self.level_speed + 10, self.level_speed_advancing)
 				end
 		
 				if self.new_wave_progress <= 0 then
-					self.level_speed = self.def_level_speed
+					self.level_speed = self.level_speed_advancing
 					return "off"
 				end
 			end,
@@ -289,6 +297,63 @@ function Level:set_background(background)
 	self.background = background
 	self.background:on_background_set()
 	self.background:set_level(self)
+end
+
+function Level:start_background_transition(background, direction)
+	direction = direction or -1
+	self.background_transition_on = true
+	self.background_transition_y = ternary(
+		direction == 1, 
+		-images.background_world_transition:getHeight(),
+		CANVAS_HEIGHT + images.background_world_transition:getHeight()
+	)
+	self.background_transition_background = background
+	self.background_transition_speed_mult = direction
+end
+
+
+function Level:update_background_transition(dt)
+	if not self.background_transition_on then
+		return 
+	end
+
+	local old_bg_y = self.background_transition_y
+	self.background_transition_y = self.background_transition_y + dt * self.background:get_speed() * self.background_transition_speed_mult
+	
+	if 
+		(self.background_transition_speed_mult == 1 and self.background_transition_y > CANVAS_HEIGHT and old_bg_y <= CANVAS_HEIGHT) or
+		(self.background_transition_speed_mult == -1 and self.background_transition_y < 0 and old_bg_y >= 0) 
+	then
+		self:set_background(self.background_transition_background)
+	end
+
+	local y1 = -images.background_world_transition:getHeight()*2
+	local y2 = CANVAS_HEIGHT*2 + images.background_world_transition:getHeight()
+	if self.background_transition_y > y2 or y1 < self.background_transition_y then
+		self.background_transition_on = false
+	end
+end
+
+function Level:draw_background_transition()
+	if not self.background_transition_on then
+		return
+	end
+
+	love.graphics.draw(images.background_world_transition, -16, self.background_transition_y)
+	rect_color(COL_BLACK_BLUE, "fill", -16, self.background_transition_y - CANVAS_HEIGHT, CANVAS_WIDTH + 32, CANVAS_HEIGHT+1)
+	love.graphics.draw(images.background_world_transition, -16, self.background_transition_y - CANVAS_HEIGHT, 0, 1, -1)
+end
+
+
+function Level:update_background_speed_lines(dt)
+	if not self.background_speed_lines then
+		return
+	end
+
+	Particles:speed_line(random_range(0, CANVAS_WIDTH), -64, {
+		vy = self.background_transition_speed_mult * random_range(800, 1200),
+		particle_layer = PARTICLE_LAYER_BACKGROUND,
+	})
 end
 
 function Level:increment_floor()
@@ -649,6 +714,8 @@ function Level:draw()
 		end
 	else
 		self.background:draw()
+		self:draw_background_transition()
+		Particles:draw_layer(PARTICLE_LAYER_BACKGROUND)
 	end
 	
 	self:draw_with_hole(function()

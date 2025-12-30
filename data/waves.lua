@@ -100,8 +100,11 @@ end
 
 local function spawn_timed_spikes_w5()
     local j = 0
-    for ix = 3, CANVAS_WIDTH / 16 - 4 do
-        local spikes = enemies.TimedSpikes:new(ix * BW, CANVAS_HEIGHT * 0.85, 4, 0.5, 0.2, j * 0.1 + 2.0)
+    local x2 = CANVAS_WIDTH / 16 - 4
+    for ix = 3, x2 do
+        local spikes = enemies.TimedSpikes:new(ix * BW, CANVAS_HEIGHT * 0.85, 4, 0.5, 0.2, j * 0.1 + 2.0, {
+            do_standby_warning = x2 - 4 <= ix
+        })
         spikes.z = 3 - j / 100
         game:new_actor(spikes)
         j = j + 1
@@ -190,16 +193,19 @@ local function parse_waves_table(waves)
         local wave_params = waves[i]
 
         current_world = wave_params.world or current_world
-        current_background = wave_params.background or current_background
+        -- current_background = wave_params.background or current_background
         current_elevator = wave_params.elevator or current_elevator
         current_music = wave_params.music or current_music
 
         wave_params.world = current_world
-        wave_params.background = current_background
+        -- wave_params.background = current_background
         wave_params.elevator = current_elevator
         wave_params.music = current_music
 
+        -- current_background = wave_params.backgroud_transition or current_background
+
         parsed_waves[i] = new_wave(wave_params)
+
     end
     return parsed_waves
 end
@@ -1321,16 +1327,27 @@ local waves = parse_waves_table {
         },
     },
 
+
     {
-        min = 4,
-        max = 4,
+    --     roll_type = WAVE_ROLL_TYPE_FIXED,
+    --     background = backgrounds.BackgroundGreenhouse:new(),
+    --     elevator = ElevatorW4,
+
+    --     min = 1,
+    --     max = 1,
+    --     enemies = {
+    --         { E.MoleBoss, 1, --[[position = { CANVAS_WIDTH/2 - 43, 11 * 16 - 4 } ]]}
+    --     },
+
+    --     run = function(self, level)
+    --     end,
+    -- },
+    {
+        min = 1,
+        max = 1,
 
         enemies = {
-            { E.Shooter, 3 },
-        },
-
-        fixed_enemies = {
-            { E.CentipedeBoss, 1, args = { 15 }, position = { CANVAS_WIDTH / 2 - 20 / 2, 200 } }, 
+            { E.MoleBoss, 1 }, 
         },
 
         cutscene = cutscenes.arum_titan_enter,
@@ -1403,10 +1420,12 @@ local waves = parse_waves_table {
         end,
 
         background = backgrounds.BackgroundW0:new(),
+        background_speed_multiplier = 2.2,
         elevator = ElevatorW0,
 
         run = function()
             game.level.do_level_slowdown_on_new_wave = false
+            game.level.background_speed_lines = true
         end
     },
     
@@ -1451,7 +1470,7 @@ local waves = parse_waves_table {
         title_color = {COL_LIGHTEST_GRAY, COL_WHITE, COL_MID_GRAY, COL_MID_GRAY, stacked=true},
         title_outline_color = COL_BLACK_BLUE,
 
-        background = backgrounds.BackgroundW1:new(),
+        background_transition = backgrounds.BackgroundW1:new(),
     },
     
     {
@@ -1505,13 +1524,14 @@ local waves = parse_waves_table {
             { E.Bee,   2 },
             { E.Stabee, 4 },
         },
-        
+
         over_title = get_world_prefix(2),
         title = get_world_name(2),
-        title_color = COL_LIGHT_YELLOW,
+        over_title_color = COL_ORANGE,
+        title_color = {COL_LIGHT_YELLOW, COL_WHITE, COL_ORANGE, COL_ORANGE, stacked=true},
         title_outline_color = COL_BLACK_BLUE,
 
-        background = backgrounds.BackgroundFactory:new(),
+        background_transition = backgrounds.BackgroundFactory:new(),
 
         run = function(self, level)
             spawn_timed_spikes_w5()
@@ -1588,7 +1608,7 @@ local waves = parse_waves_table {
         title_color = {COL_LIGHT_GREEN, COL_WHITE, COL_MID_GREEN, COL_MID_GREEN, stacked=true},
         title_outline_color = COL_BLACK_BLUE,
 
-        background = backgrounds.BackgroundServers:new(),
+        background_transition = backgrounds.BackgroundServers:new(),
 
         run = function()
             for _, a in pairs(game.actors) do
@@ -1655,7 +1675,7 @@ local waves = parse_waves_table {
         title_color = {COL_MID_GREEN, COL_LIGHT_GREEN, COL_DARK_GREEN, COL_DARK_GREEN, stacked=true},
         title_outline_color = COL_BLACK_BLUE,
 
-        background = backgrounds.BackgroundGreenhouse:new(),
+        background_transition = backgrounds.BackgroundGreenhouse:new(),
 
         run = function()
             game.actor_manager:kill_actors_with_name("electric_rays")

@@ -42,6 +42,8 @@ function Wave:init(params)
 	self.counter_display_func = param(params.counter_display_func, nil)
 
 	self.background = param(params.background, nil)
+	self.background_transition = param(params.background_transition, nil)
+	self.background_speed_multiplier = param(params.background_speed_multiplier, nil)
 
 	self.entrance_names = self:generate_entrance_names()
 end
@@ -225,6 +227,12 @@ end
 function Wave:enable_wave_side_effects(level)
 	if self.background then
 		level:set_background(self.background)
+	end
+	if self.background_transition then
+		level:start_background_transition(self.background_transition)
+	end
+	if self.background_speed_multiplier then
+		level.level_speed_advancing = level.default_level_speed * self.background_speed_multiplier
 	end
 
 	if self.music then
