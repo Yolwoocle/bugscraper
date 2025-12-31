@@ -254,6 +254,7 @@ function MoleBoss:init(x, y)
 
                 self.spr.squash = 1.5
                 self.spr:set_rotation(0)
+                self.spr:set_scale(1)
 
                 self:play_sound_var("sfx_boss_mrdung_jump_{01-06}", 0.1, 1.1) 
             end,

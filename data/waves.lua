@@ -1327,21 +1327,6 @@ local waves = parse_waves_table {
         },
     },
 
-
-    {
-    --     roll_type = WAVE_ROLL_TYPE_FIXED,
-    --     background = backgrounds.BackgroundGreenhouse:new(),
-    --     elevator = ElevatorW4,
-
-    --     min = 1,
-    --     max = 1,
-    --     enemies = {
-    --         { E.MoleBoss, 1, --[[position = { CANVAS_WIDTH/2 - 43, 11 * 16 - 4 } ]]}
-    --     },
-
-    --     run = function(self, level)
-    --     end,
-    -- },
     {
         min = 1,
         max = 1,
@@ -1350,7 +1335,6 @@ local waves = parse_waves_table {
             { E.MoleBoss, 1 }, 
         },
 
-        cutscene = cutscenes.arum_titan_enter,
         run = function(self, level)
         end,
 
