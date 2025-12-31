@@ -14,7 +14,7 @@ function BackgroundPlain:update(dt)
 end
 
 function BackgroundPlain:draw()
-	love.graphics.clear(COL_LIGHT_GRAY)
+	love.graphics.clear(COL_BLACK_BLUE)
 end
 
 return BackgroundPlain

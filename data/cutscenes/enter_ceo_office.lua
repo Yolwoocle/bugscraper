@@ -6,6 +6,7 @@ local images = require "data.images"
 local guns = require "data.guns"
 local BackroomBasement = require "scripts.level.backroom.backroom_basement"
 local LightPoint      = require "scripts.graphics.light.light_point"
+local backgrounds = require "data.backgrounds"
 
 return Cutscene:new("enter_ceo_office", {
     -- [[
@@ -26,6 +27,7 @@ return Cutscene:new("enter_ceo_office", {
             game.game_ui.cinematic_bar_color = COL_VERY_DARK_GRAY
             game.game_ui.show_fury = false
             game.game_ui.offscreen_indicators_enabled = false
+            game.game_ui.show_upgrades = false
 
             -- Find resigning player
             data.resigning_player = nil
@@ -59,6 +61,13 @@ return Cutscene:new("enter_ceo_office", {
                     data.big_glove = actor
                 end
             end
+
+            -- Init backgrounds
+            data.bg_w1 = backgrounds.BackgroundW1:new(game.level)
+            data.bg_w2 = backgrounds.BackgroundFactory:new(game.level)
+            data.bg_w3 = backgrounds.BackgroundServers:new(game.level)
+            data.bg_w4 = backgrounds.BackgroundGreenhouse:new(game.level)
+            data.bg_w0 = backgrounds.BackgroundPlain:new(game.level)
         end,
     }),
     CutsceneScene:new({
@@ -480,6 +489,19 @@ return Cutscene:new("enter_ceo_office", {
                     data.fake_counter = max(-20, data.fake_counter - dt*10)
                     game.game_ui.ending_counter_text = elevator_counter_format(data.fake_counter)
                 end
+
+                game.level.override_background_transition_speed = 1500
+
+                data.bg_w4.speed = -1500
+                data.bg_w3.speed = -1500
+                data.bg_w2.speed = -1500
+                data.bg_w1.speed = -1500
+                data.bg_w0.speed = -1500
+                data.bg_w4:update(dt)
+                data.bg_w3:update(dt)
+                data.bg_w2:update(dt)
+                data.bg_w1:update(dt)
+                data.bg_w0:update(dt)
             end
         end,
         update = function(cutscene, data, dt)
@@ -493,13 +515,14 @@ return Cutscene:new("enter_ceo_office", {
         duration = 2.0,
 
         enter = function(cutscene, data)
-            game.level.backroom.background_state = "w4"
+            game.level:set_background(backgrounds.BackgroundPlain:new(game.level))
+            game.level:start_background_transition(data.bg_w4, -1)
             data.fake_counter = 80
+            game.level.backroom.background_state = "bg"
         end,
         update = function(cutscene, data, dt)
-            game.level.backroom.bg_w4.offset_y = 160
-            game.level.backroom.bg_w4.speed = -1000
-            game.level.backroom.bg_w4:update(dt)
+            data.bg_w4.offset_y = 160
+            data.bg_w4.speed = -1000
             data.update_fall(dt, true)
         end,
     }),
@@ -511,11 +534,10 @@ return Cutscene:new("enter_ceo_office", {
         duration = 2.0,
 
         enter = function(cutscene, data)
-            game.level.backroom.background_state = "w3"
+            game.level:start_background_transition(data.bg_w3, -1)
         end,
         update = function(cutscene, data, dt)
-            game.level.backroom.bg_w3.speed = -1000
-            game.level.backroom.bg_w3:update(dt)
+            data.bg_w3.speed = -1000
             data.update_fall(dt, true)
         end,
     }),
@@ -526,11 +548,10 @@ return Cutscene:new("enter_ceo_office", {
         duration = 2.0,
 
         enter = function(cutscene, data)
-            game.level.backroom.background_state = "w2"
+            game.level:start_background_transition(data.bg_w2, -1)
         end,
         update = function(cutscene, data, dt)
-            game.level.backroom.bg_w2.speed = -1000
-            game.level.backroom.bg_w2:update(dt)
+            data.bg_w2.speed = -1000
             data.update_fall(dt, true)
         end,
     }),
@@ -541,11 +562,10 @@ return Cutscene:new("enter_ceo_office", {
         duration = 2.0,
 
         enter = function(cutscene, data)
-            game.level.backroom.background_state = "w1"
+            game.level:start_background_transition(data.bg_w1, -1)
         end,
         update = function(cutscene, data, dt)
-            game.level.backroom.bg_w1.speed = -1000
-            game.level.backroom.bg_w1:update(dt)
+            data.bg_w1.speed = -1000
             data.update_fall(dt, true)
         end,
     }),
@@ -556,12 +576,11 @@ return Cutscene:new("enter_ceo_office", {
         duration = 2.0,
 
         enter = function(cutscene, data)
-            game.level.backroom.background_state = "w0"
+            game.level:start_background_transition(data.bg_w0, -1)
             data.spd = 0
         end,
         update = function(cutscene, data, dt)
-            game.level.backroom.bg_w0.speed = -1000
-            game.level.backroom.bg_w0:update(dt)
+            data.bg_w0.speed = -1000
 
             data.update_fall(dt, true)
             if data.fake_counter < 10 then
@@ -589,7 +608,6 @@ return Cutscene:new("enter_ceo_office", {
         duration = 3.0,
 
         enter = function(cutscene, data)
-            game.level.backroom.background_state = "w0"
             data.spd = 0
 
             for ix = CANVAS_WIDTH/2 - 4*16, CANVAS_WIDTH/2 + 4*16, 16 do
@@ -617,6 +635,7 @@ return Cutscene:new("enter_ceo_office", {
 
         enter = function(cutscene, data)
             game.game_ui.ending_counter_text = nil
+            game.game_ui.cinematic_bars_enabled = false
         end,
         update = function(cutscene, data, dt)
         end,
@@ -656,8 +675,8 @@ return Cutscene:new("enter_ceo_office", {
 				player.vx = 0
                 player.is_vulnerable_to_kill_zone = true
                 player.show_gun = true
-                player.show_hud = true
-                player.do_fury_trail = true
+                player.show_hud = false
+                player.do_fury_trail = false
 
                 local x = px + (player.n-1)*16
                 player:set_position(x, data.py)
@@ -675,8 +694,6 @@ return Cutscene:new("enter_ceo_office", {
             data.px = avg / nbplayer
 
             game.music_player:set_disk("off")
-            game.game_ui.cinematic_bars_enabled = false
-            game.game_ui.cinematic_bar_color = nil
 
             game.camera:set_position(math.huge, 0)
             game.camera.follow_speed = DEFAULT_CAMERA_FOLLOW_SPEED
@@ -707,9 +724,9 @@ return Cutscene:new("enter_ceo_office", {
             game.camera.follows_players = true
             game.camera.target_ox = 0.0
 
-            game.game_ui.show_fury = true
             game.game_ui.offscreen_indicators_enabled = true
             game.game_ui.dark_overlay_color_override = nil
+            game.game_ui.cinematic_bar_color = nil
 
             game.draw_shadows = false
 

@@ -27,7 +27,7 @@ function BackroomGroundFloor:init(params)
 	self.tv_presentation = TvPresentation:new(715, 100)
 
 	self.has_opened_door = false
-	self.freeze_fury = false
+	self.freeze_fury = true
 
     self.def_3d_scale = 140
     self.object_3d = Object3D:new(hangar)
@@ -75,6 +75,9 @@ function BackroomGroundFloor:generate(world_generator)
 	world_generator:write_rect(Rect:new(2, 15, 68, 15), TILE_STONE) -- Floor
 
 	local b = create_actor_centered(enemies.ButtonSmallGlass, floor(15*16), floor(15*16))
+	b.fury_damage_multiplier = 0.0
+	b.fury_stomp_multiplier = 0.0
+	b.death_counts_for_fury_combo = false
 	b.spawned_actor = enemies.ButtonSmallRocket
 	game:new_actor(b)
 

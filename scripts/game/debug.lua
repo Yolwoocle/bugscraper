@@ -793,7 +793,7 @@ function Debug:draw_info_view()
             concat("Renderer info: ", renderer_name, " (v", renderer_version, ")"),
             concat("Renderer vendor: ", renderer_vendor, ", device ", renderer_device),
             concat("game state: ", game.game_state, " / newwave state: ", game.level.new_wave_animation_state_machine.current_state_name, " / backroom anim state: ", game.level.backroom_animation_state_machine.current_state_name, " / camera pos: (", round(game.camera.x, 2), ", ", round(game.camera.y, 2), ")"),
-            concat("nb of active audio sources: ", love.audio.getActiveSourceCount(), " / music: ", round(game.music_player.current_disk.current_source:tell(), 2), "s/", round(game.music_player.current_disk.current_source:getDuration(), 2), "s" ),
+            concat("nb of active audio sources: ", love.audio.getActiveSourceCount(), " / music: ", round(game.music_player.current_disk and game.music_player.current_disk.current_source:tell() or 0, 2), "s/", round(game.music_player.current_disk and game.music_player.current_disk.current_source:getDuration() or 0, 2), "s" ),
             concat("nb of actors: ", #self.game.actors, " / ", self.game.actor_manager.actor_limit, " | nb of enemies: ", self.game:get_enemy_count()),
             concat("nb collision items: ", Collision.world:countItems()),
             concat("number_of_alive_players ", self.game:get_number_of_alive_players(), " / number_of_kb_users ", Input:get_number_of_users(INPUT_TYPE_KEYBOARD), " / global_user.ui_actions_enabled ", Input:get_user(GLOBAL_INPUT_USER_PLAYER_N).ui_actions_enabled),
@@ -815,12 +815,12 @@ function Debug:draw_info_view()
                     game.cutscene.timer.duration, 
                     game.cutscene.current_scene.description, 
                     game.cutscene.total_duration
-                ), " / ",
-                "has_seen_w2_transition_cutscene: ", Metaprogression:get("has_seen_w2_transition_cutscene")
+                )
             ),
             concat("score: ", game.score) .. " / ".. concat("xp: ", Metaprogression:get_xp()) .. " / " .. concat("xp_level: ", Metaprogression:get_xp_level()),
             concat("unlocked_skins: ", skininfo),
-            concat("unlocked_upgrades: ", upgradeinfo),
+            -- concat("unlocked_upgrades: ", upgradeinfo),
+            concat("background_transition: on ", game.level.background_transition_on, " / y ", game.level.background_transition_y, " / speed_mult ", game.level.background_transition_speed_mult),
             "",
         }
 

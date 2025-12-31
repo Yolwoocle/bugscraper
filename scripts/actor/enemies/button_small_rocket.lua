@@ -20,6 +20,7 @@ function ButtonSmallRocket:init_button_small(x, y, spr, w, h)
     self.is_killed_on_stomp = false
     self.pressed_disappear_timer = Timer:new(0.5)
     self.disappear_after_press = true
+    self.death_counts_for_fury_combo = false
 
     self.sprite_pressed = images.small_button_pressed
     self.sprite_unpressed = images.small_button

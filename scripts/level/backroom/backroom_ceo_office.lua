@@ -19,14 +19,8 @@ function BackroomCEOOffice:init(params)
 
 	self.cafeteria_background = BackgroundCafeteria:new(self)
 
-	self.bg_w1 = backgrounds.BackgroundW1:new(self)
-	self.bg_w2 = backgrounds.BackgroundFactory:new(self)
-	self.bg_w3 = backgrounds.BackgroundServers:new(self)
-	self.bg_w4 = backgrounds.BackgroundGreenhouse:new(self)
-	self.bg_w0 = backgrounds.BackgroundW0:new(self)
-
 	self.background_state = "normal"
-	self.freeze_fury = false
+	self.freeze_fury = true
 	
 	self.door:set_images(
 		images.cabin_door_w4_left_far,
@@ -145,20 +139,9 @@ function BackroomCEOOffice:draw()
 	elseif self.background_state == "void" then
 		rect_color(COL_BLACK_BLUE, "fill", -16, -16, CANVAS_WIDTH+32, CANVAS_HEIGHT+32)
 		
-	elseif self.background_state == "w4" then
-		self.bg_w4:draw()
-		
-	elseif self.background_state == "w3" then
-		self.bg_w3:draw()
-		
-	elseif self.background_state == "w2" then
-		self.bg_w2:draw()
-		
-	elseif self.background_state == "w1" then
-		self.bg_w1:draw()
-		
-	elseif self.background_state == "w0" then
-		self.bg_w0:draw()
+	elseif self.background_state == "bg" then
+		game.level.background:draw()
+		game.level:draw_background_transition()
 
 	end
 end

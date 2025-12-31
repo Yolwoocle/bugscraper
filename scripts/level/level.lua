@@ -81,6 +81,7 @@ function Level:init(game, backroom)
 	self.background_transition_y = 0
 	self.background_transition_background = nil
 	self.background_transition_speed_mult = 1
+	self.override_background_transition_speed = nil
 
 	self.background_speed_lines = false
 	
@@ -300,12 +301,12 @@ function Level:set_background(background)
 end
 
 function Level:start_background_transition(background, direction)
-	direction = direction or -1
+	direction = direction or 1
 	self.background_transition_on = true
 	self.background_transition_y = ternary(
 		direction == 1, 
 		-images.background_world_transition:getHeight(),
-		CANVAS_HEIGHT + images.background_world_transition:getHeight()
+		2*CANVAS_HEIGHT + images.background_world_transition:getHeight()
 	)
 	self.background_transition_background = background
 	self.background_transition_speed_mult = direction
@@ -318,18 +319,21 @@ function Level:update_background_transition(dt)
 	end
 
 	local old_bg_y = self.background_transition_y
-	self.background_transition_y = self.background_transition_y + dt * self.background:get_speed() * self.background_transition_speed_mult
+	self.background_transition_y = self.background_transition_y + dt * (self.override_background_transition_speed or self.background:get_speed()) * self.background_transition_speed_mult
 	
 	if 
-		(self.background_transition_speed_mult == 1 and self.background_transition_y > CANVAS_HEIGHT and old_bg_y <= CANVAS_HEIGHT) or
-		(self.background_transition_speed_mult == -1 and self.background_transition_y < 0 and old_bg_y >= 0) 
+		(self.background_transition_speed_mult > 0 and self.background_transition_y > CANVAS_HEIGHT and old_bg_y <= CANVAS_HEIGHT) or
+		(self.background_transition_speed_mult < 0 and self.background_transition_y < CANVAS_HEIGHT and old_bg_y >= CANVAS_HEIGHT) 
 	then
 		self:set_background(self.background_transition_background)
 	end
 
 	local y1 = -images.background_world_transition:getHeight()*2
 	local y2 = CANVAS_HEIGHT*2 + images.background_world_transition:getHeight()
-	if self.background_transition_y > y2 or y1 < self.background_transition_y then
+	if 
+		(self.background_transition_speed_mult > 0 and y2 > self.background_transition_y) or 
+		(self.background_transition_speed_mult < 0 and self.background_transition_y < y1) 
+	then
 		self.background_transition_on = false
 	end
 end
