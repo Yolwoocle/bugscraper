@@ -38,6 +38,8 @@ function GameUI:init(game, is_visible)
 		self.show_splash = false
 	end
 
+	self.show_upgrades = true
+
 	self.cinematic_bar_loop_threshold = 14
 	self.cinematic_bar_scroll = 0
 	self.cinematic_bar_scroll_speed = -14
@@ -451,6 +453,10 @@ function GameUI:get_upgrade_preview_position(i)
 end
 
 function GameUI:draw_upgrades()
+	if not self.show_upgrades then
+		return
+	end
+
 	local item_size = 20
 	local i = 1
 	for _, upgrade in pairs(game.upgrades) do

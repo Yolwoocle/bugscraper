@@ -19,10 +19,11 @@ function BackgroundServers:init(level)
 	self.speed = 0
 
 	self.fov = 1.0
-	self.row_min_y = -CANVAS_HEIGHT*5
-	self.edge_max_y =  CANVAS_HEIGHT*5
 	self.max_z = 10
 	self.row_height = 60
+	self.row_min_y = -CANVAS_HEIGHT*5
+	self.edge_max_y = CANVAS_HEIGHT*5
+	self.row_max_y = self.row_min_y + self.row_height * math.floor((self.edge_max_y - self.row_min_y) / self.row_height)
 	self.column_width = 1
 	self.server_rows = {}
 	self:init_edges()
@@ -190,8 +191,13 @@ function BackgroundServers:update(dt)
 		row.y = row.y + speed
 
 		local screen_y = CANVAS_HEIGHT/2 + self.fov * row.y/self.max_z
-		if screen_y > CANVAS_HEIGHT then
-			local new_y = self.row_min_y - self.row_height
+		if (speed > 0 and screen_y > CANVAS_HEIGHT) or (speed < 0 and screen_y < 0) then
+			local new_y
+			if speed > 0 then
+				new_y = self.row_min_y - self.row_height
+			else
+				new_y = self.row_max_y + self.row_height
+			end
 			row.y = new_y
 			self.row_min_y = new_y
 		end

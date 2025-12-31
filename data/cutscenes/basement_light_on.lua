@@ -12,6 +12,13 @@ local function on(opacity)
 	game:set_actor_draw_color(nil)
     game.level.backroom.show_basement_bg = true
     game.level.backroom.background_clear_color = COL_MID_GRAY
+
+    game.game_ui.show_fury = true
+    game.game_ui.show_upgrades = true
+    for _, player in pairs(game.players) do
+        player.do_fury_trail = true
+        player.show_hud = true
+    end
 end
 
 local function off()
@@ -19,6 +26,13 @@ local function off()
 	game:set_actor_draw_color(COL_BLACK_BLUE)
     game.level.backroom.show_basement_bg = false
     game.level.backroom.background_clear_color = COL_VERY_DARK_GRAY
+
+    game.game_ui.show_fury = false
+    game.game_ui.show_upgrades = false
+    for _, player in pairs(game.players) do
+        player.do_fury_trail = false
+        player.show_hud = false
+    end
 end
 
 return Cutscene:new("enter_ceo_office", {
