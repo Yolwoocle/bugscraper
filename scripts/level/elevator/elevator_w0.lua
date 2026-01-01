@@ -10,7 +10,7 @@ local ElevatorW0 = Elevator:inherit()
 
 function ElevatorW0:init(level)
 	ElevatorW0.super.init(self, level)
-	self.name = "elevator_w1"
+	self.name = "elevator_w0"
 
 	level:set_bounds(Rect:new(unpack(RECT_ELEVATOR_PARAMS)))
 

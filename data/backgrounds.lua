@@ -9,4 +9,5 @@ return {
     BackgroundFinal =      require("scripts.level.background.background_final"),
     BackgroundGreenhouse = require("scripts.level.background.background_greenhouse"),
     BackgroundW0 =         require("scripts.level.background.background_w0"),
+    BackgroundAboveCity =  require("scripts.level.background.background_above_city"),
 }

@@ -3,6 +3,7 @@ local backgrounds       = require "data.backgrounds"
 local enemies           = require "data.enemies"
 local cutscenes         = require "data.cutscenes"
 local images            = require "data.images"
+local bit               = require "bit"
 
 local Rect              = require "scripts.math.rect"
 local LevelGeometry     = require "scripts.level.level_geometry"
@@ -16,6 +17,7 @@ local ElevatorW2        = require "scripts.level.elevator.elevator_w2"
 local ElevatorW3        = require "scripts.level.elevator.elevator_w3"
 local ElevatorW4        = require "scripts.level.elevator.elevator_w4"
 local ElevatorW0        = require "scripts.level.elevator.elevator_w0"
+local ElevatorRocket    = require "scripts.level.elevator.elevator_rocket"
 
 local utf8              = require "utf8"
 
@@ -1405,7 +1407,7 @@ local waves = parse_waves_table {
 
         background = backgrounds.BackgroundW0:new(),
         background_speed_multiplier = 2.2,
-        elevator = ElevatorW0,
+        elevator = ElevatorRocket,
 
         run = function()
             game.level.do_level_slowdown_on_new_wave = false
@@ -1714,8 +1716,16 @@ local waves = parse_waves_table {
         min = 1,
         max = 1,
         enemies = {
-            { E.FinalBoss, 1, position = { 87 * 16, 14 * 16 } }
+            { E.FinalBoss, 1, position = { 12.5 * 16, 10 * 16 + 8 } }
         },
+
+        background_transition = backgrounds.BackgroundAboveCity:new(),
+
+        counter_display_func = function(_)
+            local frame = math.floor(game.frame / 5)
+            local nb = (32849 * frame) % 999
+            return math.floor(clamp(nb, 100, 999))
+        end,
 
         run = function(self, level)
             for _, actor in pairs(game.actors) do
@@ -1723,6 +1733,8 @@ local waves = parse_waves_table {
                     actor.state_machine:set_state("standby")
                 end
             end
+
+            game:screenshake(14)
         end
     },
     

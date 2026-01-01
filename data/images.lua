@@ -423,6 +423,7 @@ local img_names = {
 	cabin_bg_w4 =                        "level/cabin_bg_w4",
 	cabin_bg_w4_test =                   "level/cabin_bg_w4_test",
 	cabin_bg_ambient_occlusion =         "level/cabin_bg_ambient_occlusion",
+	cabin_bg_rocket =                    "level/cabin_bg_rocket",
     
 	cabin_bg_w1_ventilation_shaft =      "level/cabin_bg_w1_ventilation_shaft",
 	cabin_bg_w1_trapdoor =               "level/cabin_bg_w1_trapdoor",
@@ -431,6 +432,7 @@ local img_names = {
 	cabin_walls_w2 =              	     "level/cabin_walls_w2",
 	cabin_walls_w3 =                     "level/cabin_walls_w3",
 	cabin_walls_w4 =                     "level/cabin_walls_w4",
+	cabin_walls_rocket =                 "level/cabin_walls_rocket",
 	cabin_walls_no_floor =               "level/cabin_walls_no_floor",
     
 	cabin_door_empty =                   "level/cabin_door_empty",

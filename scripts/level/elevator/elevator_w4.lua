@@ -1,16 +1,16 @@
 require "scripts.util"
-local Elevator = require "scripts.level.elevator.elevator"
+local Elevator                 = require "scripts.level.elevator.elevator"
 local ElevatorDoorSlidingLarge = require "scripts.level.door.elevator_door_sliding_large"
-local ElevatorDoorTrapdoor = require "scripts.level.door.elevator_door_trapdoor"
-local Rect  = require "scripts.math.rect"
+local ElevatorDoorTrapdoor     = require "scripts.level.door.elevator_door_trapdoor"
+local Rect                     = require "scripts.math.rect"
 
-local images = require "data.images"
+local images                   = require "data.images"
 
-local ElevatorW4 = Elevator:inherit()
+local ElevatorW4               = Elevator:inherit()
 
 function ElevatorW4:init(level)
 	ElevatorW4.super.init(self, level)
-	self.name = "elevator_w1"
+	self.name = "elevator_w4"
 
 	level:set_bounds(Rect:new(unpack(RECT_ELEVATOR_PARAMS)))
 
