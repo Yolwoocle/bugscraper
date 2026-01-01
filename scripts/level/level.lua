@@ -331,7 +331,7 @@ function Level:update_background_transition(dt)
 	local y1 = -images.background_world_transition:getHeight()*2
 	local y2 = CANVAS_HEIGHT*2 + images.background_world_transition:getHeight()
 	if 
-		(self.background_transition_speed_mult > 0 and y2 > self.background_transition_y) or 
+		(self.background_transition_speed_mult > 0 and self.background_transition_y > y2) or 
 		(self.background_transition_speed_mult < 0 and self.background_transition_y < y1) 
 	then
 		self.background_transition_on = false

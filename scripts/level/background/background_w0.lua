@@ -13,11 +13,11 @@ function BackgroundW0:init(level)
 	self.clear_color = COL_BLACK_BLUE
 
 	
-	self:add_layer(BackgroundLayerPattern:new(self, 0.07, {
+	self:add_layer(BackgroundLayerPattern:new(self, 0.2, {
 		pattern_images = {images.bg_w1_back_bricks},
 	}))
 
-	self:add_layer(BackgroundLayerParticles:new(self, 0.07, {
+	self:add_layer(BackgroundLayerParticles:new(self, 0.2, {
 		y_range = {-CANVAS_HEIGHT, 0},
 		particles = {
 			{
@@ -28,7 +28,7 @@ function BackgroundW0:init(level)
 		amount = 3,
 	}))
 
-	self:add_layer(BackgroundLayerParticles:new(self, 0.2, {
+	self:add_layer(BackgroundLayerParticles:new(self, 0.5, {
 		y_range = {-CANVAS_HEIGHT*2, 0},
 		particles = {
 			{
