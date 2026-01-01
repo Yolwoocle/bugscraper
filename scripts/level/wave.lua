@@ -56,6 +56,9 @@ function Wave:generate_entrance_names()
 			entrances[entrance] = true
 		end 
 	end
+	if self.floor_type == FLOOR_TYPE_CAFETERIA then
+		entrances["main"] = true
+	end
 	return table_keys(entrances)
 end
 

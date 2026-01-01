@@ -32,7 +32,6 @@ function WallWalker:update(dt)
     WallWalker.super.update(self, dt)
     
     if self.is_on_wall and self.is_wall_walking then
-        print_debug("IS WALL WALKING ", random_neighbor(1))
         local walk_x, walk_y = get_orthogonal(self.up_vect.x, self.up_vect.y, self.walk_dir)
         self.vx = walk_x * self.walk_speed
         self.vy = walk_y * self.walk_speed

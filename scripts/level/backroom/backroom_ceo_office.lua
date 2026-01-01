@@ -21,7 +21,8 @@ function BackroomCEOOffice:init(params)
 
 	self.background_state = "normal"
 	self.freeze_fury = true
-	
+
+	self:open_door(false)
 	self.door:set_images(
 		images.cabin_door_w4_left_far,
 		images.cabin_door_w4_left_center,
@@ -118,6 +119,10 @@ function BackroomCEOOffice:generate(world_generator)
 	-- end
 end
 
+function BackroomCEOOffice:on_fully_entered()
+	self:close_door()
+end
+
 function BackroomCEOOffice:can_exit()
 	return false
 end
@@ -131,6 +136,7 @@ function BackroomCEOOffice:draw()
 
 	if self.background_state == "normal" then
 		self.cafeteria_background:draw()
+		love.graphics.draw(images.elevator_through_door, self.door.x, self.door.y)
 		BackroomCEOOffice.super.draw(self)
 		love.graphics.draw(images.ceo_office_room, -16, -16)
 		game.level.elevator:draw_counter()
