@@ -110,7 +110,7 @@ Le canon champignon j'ai pas trouvé ça ouf, par contre le minigun pépin  et l
 
 La jauge de combo super plaisante mais je pense qu'il y a un truc que j'ai pas compris. A 2 reprises j'ai tué des mobs alors que j'allais perdre mon combo (la jauge était basse) et ça s'est pas rempli. La première fois c'était en écrasant une punaise.
 
- On se sent un peu victime de l'aléatoire pour les cœurs. Par exemple : Je n'ai pas l'impression d'avoir fait une bonne run si je ne me suis fait touché que 1-2 fois jusqu'à l'étage 50, je n'ai aucun avantage par rapport à une run ou je me suis fait touché 8 fois (sauf peut être le combo + le fait de ne pas prendre les cœurs temporaires).  Peut-être faire en sorte de pouvoir récupérer des cœurs en shop en alternative à une amélioration ? -> permet de récompenser les bonnes runs avec des amélios à chaque shop et permet de ne pas dépendre de l'aléatoire pour la récup de cœur. 
+On se sent un peu victime de l'aléatoire pour les cœurs. Par exemple : Je n'ai pas l'impression d'avoir fait une bonne run si je ne me suis fait touché que 1-2 fois jusqu'à l'étage 50, je n'ai aucun avantage par rapport à une run ou je me suis fait touché 8 fois (sauf peut être le combo + le fait de ne pas prendre les cœurs temporaires).  Peut-être faire en sorte de pouvoir récupérer des cœurs en shop en alternative à une amélioration ? -> permet de récompenser les bonnes runs avec des amélios à chaque shop et permet de ne pas dépendre de l'aléatoire pour la récup de cœur. 
 
 
 La barre de vie des boss est un peu petite. 
