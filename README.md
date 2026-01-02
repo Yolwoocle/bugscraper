@@ -43,7 +43,7 @@ To export the game, look at the [LÖVE wiki page](https://love2d.org/wiki/Game_D
 
 Please note that I was in highschool when I began this project. I am basically the only maintainer and I did not always plan for the future or make the best code design choices. The code is almost not documented and there are many, many, many things I would do differently if I were to start from scratch. You have been warned. 
 
-For any questions you can [contact me](https://yolwoocle.com/about), by email (`leo@yolwoocle.com`) or on Discord (`@yolwoocle`) preferably.
+For any questions you can [contact me](https://yolwoocle.com/about), by email (`leo@yolwoocle.com`) preferably.
 
 <div align="center">
   🐝🐝🐝🐝🐝
