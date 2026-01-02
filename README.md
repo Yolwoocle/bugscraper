@@ -6,7 +6,7 @@
 [**Website**](https://bugscraper.net) ·
 [**Steam**](https://s.team/a/2957130) ·
 [**itch.io**](https://yolwoocle.itch.io/bugscraper) ·
-[**GitHub**](https://github.com/yolwoocle/bugscraper)
+[**GitHub**](https://github.com/yolwoocle/bugscraper) 
 
 Welcome to the bugscraper.
 
