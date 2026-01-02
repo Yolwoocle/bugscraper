@@ -266,7 +266,7 @@ function Game:new_game(params)
 		self.camera.y = DEFAULT_CAMERA_Y
 		self.game_ui.logo_y = -70 -- SCOTCH
 
-		self:start_game()
+		self:start_game(true)
 	end
 
 	_G_t_test = love.timer.getTime()
@@ -1074,14 +1074,20 @@ function Game:enable_endless_mode()
 	self.music_player:play()
 end
 
-function Game:start_game()
+function Game:start_game(is_quickstart)
 	self.game_ui.logo_y_target = -70
 	self.game_state = GAME_STATE_PLAYING
-	self.music_player:fade_out("w1", 1.0)
-	self.ambience_player:fade_out("w1", 1.0)
 	self.level:activate_enemy_buffer()
 	self.level:begin_next_wave_animation()
 	self:remove_queued_players()
+	
+	if is_quickstart then
+		self.music_player:set_disk("w1")
+		self.ambience_player:set_disk("w1")
+	else
+		self.music_player:fade_out("w1", 1.0)
+		self.ambience_player:fade_out("w1", 1.0)
+	end
 
 	self.menu_manager:set_can_pause(true)
 	self.camera:set_target_offset(0, 0)

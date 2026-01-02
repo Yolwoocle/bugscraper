@@ -313,6 +313,7 @@ local waves = parse_waves_table {
             { E.Larva, 3, entrances = { "main" } },
         },
         music = "w1",
+        fade_out_music = false,
         ambience = "w1",
 
         over_title = get_world_prefix(1),
@@ -980,6 +981,8 @@ local waves = parse_waves_table {
         },
         music = "w3",
         pull_music_buffer = true, 
+
+        floating_text = "🈶 {input.prompts.jetpack}"
     },
 
     {
@@ -990,6 +993,8 @@ local waves = parse_waves_table {
             { E.StinkBug,           2 },
             { E.SnailShelledBouncy, 2 },
         },
+
+        floating_text = nil,
     },
 
     {
