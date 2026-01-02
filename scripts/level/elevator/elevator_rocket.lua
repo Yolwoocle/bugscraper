@@ -41,6 +41,12 @@ end
 
 function ElevatorRocket:draw_cabin()
 	ElevatorRocket.super.draw_cabin(self)
+	
+	local cabin_rect = self.level.cabin_rect
+
+	exec_color({1, 1, 1, ternary(_G_fixed_frame % 4 < 2, 0.2, 0.7)}, function()
+		love.graphics.draw(images.cabin_bg_w3_scanlines, cabin_rect.ax + 283, cabin_rect.ay + 143)
+	end)
 end
 
 return ElevatorRocket

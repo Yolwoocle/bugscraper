@@ -1124,8 +1124,8 @@ local waves = parse_waves_table {
 
         over_title = get_world_prefix(4),
         title = get_world_name(4),
-        over_title_color = COL_MID_GREEN,
-        title_color = {COL_MID_GREEN, COL_LIGHT_GREEN, COL_DARK_GREEN, COL_DARK_GREEN, stacked=true},
+        over_title_color = COL_DARK_PURPLE,
+        title_color = {COL_PURPLE, COL_PINK, COL_DARK_PURPLE, COL_DARK_PURPLE, stacked=true},
         title_outline_color = COL_BLACK_BLUE,
     },
 
@@ -1657,8 +1657,8 @@ local waves = parse_waves_table {
 
         over_title = get_world_prefix(4),
         title = get_world_name(4),
-        over_title_color = COL_MID_GREEN,
-        title_color = {COL_MID_GREEN, COL_LIGHT_GREEN, COL_DARK_GREEN, COL_DARK_GREEN, stacked=true},
+        over_title_color = COL_DARK_PURPLE,
+        title_color = {COL_PURPLE, COL_PINK, COL_DARK_PURPLE, COL_DARK_PURPLE, stacked=true},
         title_outline_color = COL_BLACK_BLUE,
 
         background_transition = backgrounds.BackgroundGreenhouse:new(),
@@ -1705,6 +1705,10 @@ local waves = parse_waves_table {
         },
 
         music = "off",
+
+        run = function(self, level)
+            level.freeze_fury_override = true
+        end,
     },
     
 
@@ -1735,6 +1739,8 @@ local waves = parse_waves_table {
             end
 
             game:screenshake(14)
+
+            level.freeze_fury_override = false
         end
     },
     
