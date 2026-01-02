@@ -664,7 +664,7 @@ function Debug:draw_joystick_view_for(joystick, x, y, axis_x, axis_y, is_first)
             -- "touchpad",
         })
     for i, key in ipairs(keys) do
-        local txt = concat(key, " ", ternary(j:isGamepadDown(key), "✅", "❎"))
+        local txt = concat(key, " ", ternary(j:isGamepadDown(key), "O", "-"))
         print_outline(COL_WHITE, COL_BLACK_BLUE, txt, ox - 20, oy + 90 + 10 * i)
     end
     Text:pop_font(FONT_MINI)

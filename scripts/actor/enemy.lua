@@ -425,7 +425,6 @@ function Enemy:ajust_loot_probabilities()
 	local min_life_ratio = math.huge
 	for _, player in pairs(game.players) do
 		min_life_ratio = min(min_life_ratio, clamp(player:get_total_life() / player.max_life, 0, 1))
-		print_debug("min_life_ratio ", min_life_ratio)
 	end
 	for _, item in pairs(self.loot) do
 		if item.loot_type == "life" then
@@ -435,11 +434,9 @@ function Enemy:ajust_loot_probabilities()
 			-- * 0%:   x2 drop probability 
 
 			local p = item[2] * (2 * (-min_life_ratio + 1))
-			print_debug("w: ", item[2], " -> ", p)
 			item[2] = p
 		end
 	end
-	print_debug(" ")
 end
 
 --- Drops random loot from the enemy

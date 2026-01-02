@@ -91,13 +91,15 @@ function BackroomCEOOffice:generate(world_generator)
 	button.is_visible = false
 	button.z = -1
 
-	local big_glove = game:new_actor(enemies.NPC:new(88*16, 1*16, {
-		npc_name = "big_glove",
-		animation = { images.big_punching_glove, 0.2, 1 },
-	}))
-	big_glove.z = -2
-	big_glove.gravity = 0
-	big_glove.is_affected_by_bounds = false
+	for i=0, MAX_NUMBER_OF_PLAYERS-1 do
+		local big_glove = game:new_actor(enemies.NPC:new(84*16 + 16 + (MAX_NUMBER_OF_PLAYERS-i)*24, 1*16, {
+			npc_name = "big_glove_"..tostring(i),
+			animation = { images.big_punching_glove, 0.2, 1 },
+		}))
+		big_glove.z = -2
+		big_glove.gravity = 0
+		big_glove.is_affected_by_bounds = false
+	end
 	button.is_affected_by_walls = false
 
 	-- Start button

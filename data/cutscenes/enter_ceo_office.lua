@@ -29,18 +29,6 @@ return Cutscene:new("enter_ceo_office", {
             game.game_ui.offscreen_indicators_enabled = false
             game.game_ui.show_upgrades = false
 
-            -- Find resigning player
-            data.resigning_player = nil
-            for _, player in pairs(game.players) do
-                if player.gun.name == "resignation_letter" then
-                    data.resigning_player = player
-                end
-            end
-            if not data.resigning_player then
-                data.resigning_player = game.players[1] or game.players[2] or game.players[3] or game.players[4] or game.players[5] or game.players[6] or game.players[7] or game.players[8]
-                -- data.resigning_player:equip_gun(guns.unlootable.ResignationLetter:new(data.resigning_player))
-            end
-
             -- Teleport faraway players
             for _, player in pairs(game.players) do
                 if player.x < 79*16 - CANVAS_WIDTH then
@@ -50,6 +38,7 @@ return Cutscene:new("enter_ceo_office", {
             end
 
             -- Find CEO
+            data.all_big_gloves = {}
             for _, actor in pairs(game.actors) do
                 if actor.name == "npc" and actor.npc_name == "ceo" then
                     data.ceo = actor
@@ -57,8 +46,8 @@ return Cutscene:new("enter_ceo_office", {
                 if actor.name == "npc" and actor.npc_name == "button" then
                     data.button = actor
                 end
-                if actor.name == "npc" and actor.npc_name == "big_glove" then
-                    data.big_glove = actor
+                if actor.name == "npc" and string.sub(actor.npc_name, 1, -3) == "big_glove" then
+                    data.all_big_gloves[actor.npc_name] = actor
                 end
             end
 
@@ -81,16 +70,22 @@ return Cutscene:new("enter_ceo_office", {
         description = "Wait for all players walk into position",
         duration = 4.0,
         enter = function(cutscene, data)
-            data.resigning_player:set_code_input_mode_target_x(84*16 + 8 + MAX_NUMBER_OF_PLAYERS*24)
+            data.big_gloves = {}
+            data.first_glove = nil
 
             -- Put players to code input mode
-            local n = 1
+            local n = 0
             for _, player in pairs(game.players) do
-                if player ~= data.resigning_player then
-                    local target_x = 84*16 + 8 + (MAX_NUMBER_OF_PLAYERS-n) * 24
-                    player:set_code_input_mode_target_x(target_x)
-                    n = n + 1
+                local target_x = 84*16 + 8 + (MAX_NUMBER_OF_PLAYERS-n) * 24
+                player:set_code_input_mode_target_x(target_x)
+
+                local glove =  "big_glove_"..tostring(n)
+                if data.all_big_gloves[glove] then
+                    data.big_gloves[glove] = data.all_big_gloves[glove]
+                    data.first_glove = data.all_big_gloves[glove]
                 end
+
+                n = n + 1
             end
         end,
         update = function(cutscene, data, dt)
@@ -343,7 +338,7 @@ return Cutscene:new("enter_ceo_office", {
         duration = 2.0,
 
         enter = function(cutscene, data)
-            data.big_glove_init_y = data.big_glove.y 
+            data.big_glove_init_y = data.first_glove.y 
             data.t = 0
 
             data.has_shot_players = false
@@ -353,8 +348,8 @@ return Cutscene:new("enter_ceo_office", {
 
             Input:vibrate_all(0.5, 1.0)
 
-            for ix = data.big_glove.x - 5*16, data.big_glove.x + 5*16, 16 do
-                Particles:image(ix, 3*16, 5,
+            for _, big_glove in pairs(data.big_gloves) do
+                Particles:image(big_glove.x, 3*16, 5,
                     { images.cabin_fragment_1, images.cabin_fragment_2, images.cabin_fragment_3 }, 4, nil, nil, nil,
                     {
                         vx1 = -50,
@@ -362,19 +357,21 @@ return Cutscene:new("enter_ceo_office", {
 
                         vy1 = 80,
                         vy2 = 200,
-                    })
+                    }
+                )
             end
-
         end,
         update = function(cutscene, data, dt)
             data.t = clamp(data.t + 2*dt, 0, 1)
 
             -- Update glove
             local target = 14.5*16
-            data.big_glove.y = xerp(ease_out_overshoot, data.big_glove_init_y, target, data.t) 
+            for _, big_glove in pairs(data.big_gloves) do
+                big_glove.y = xerp(ease_out_overshoot, data.big_glove_init_y, target, data.t) 
+            end
 
             -- KICK PLAYERS
-            if data.big_glove.y > target and not data.has_shot_players then
+            if data.first_glove.y > target and not data.has_shot_players then
                 -- Effects
                 game:frameskip(25)
                 game:screenshake(15)
@@ -412,7 +409,9 @@ return Cutscene:new("enter_ceo_office", {
             end
         end,
         exit = function(cutscene, data)
-            data.big_glove.y = 14.5*16
+            for _, big_glove in pairs(data.big_gloves) do
+                big_glove.y = 14.5*16
+            end
         end,
     }),
     
@@ -433,7 +432,9 @@ return Cutscene:new("enter_ceo_office", {
             end
         end,
         update = function(cutscene, data, dt)
-            data.big_glove.y = 14.5*16
+            for _, big_glove in pairs(data.big_gloves) do
+                big_glove.y = 14.5*16
+            end
 
             data.cam_speed = data.cam_speed + dt*600
             game.camera.y = game.camera.y + data.cam_speed * dt
@@ -457,13 +458,10 @@ return Cutscene:new("enter_ceo_office", {
             game.camera:set_position(0, 0)
 
             local num_players = game:get_number_of_alive_players()
+            local n = 0
             for _, player in pairs(game.players) do
-                local r = 0
                 local sp = 32
-                if num_players > 1 then
-                    r = (player.n - 1) / (num_players - 1)
-                end
-                player:set_position(CANVAS_WIDTH/2 - sp*(num_players-1)*0.5 + r*sp, CANVAS_HEIGHT)
+                player:set_position(CANVAS_WIDTH/2 - sp*(num_players-1)*0.5 + n*sp, CANVAS_HEIGHT)
 				player.gravity_mult = 0
                 player.is_visible = true
                 player.friction_x = 0.0
@@ -474,6 +472,8 @@ return Cutscene:new("enter_ceo_office", {
                 player.spr:set_rotation(random_range_int(0, 3) * pi/2)
 
                 player:reset_virtual_controller()
+
+                n = n + 1
             end
 
             data.update_fall = function(dt, update_fake_counter)
