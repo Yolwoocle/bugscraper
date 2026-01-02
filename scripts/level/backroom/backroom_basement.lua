@@ -90,6 +90,8 @@ function BackroomGroundFloor:generate(world_generator)
                 player:set_input_mode(PLAYER_INPUT_MODE_CODE)
                 player:reset_virtual_controller()
 
+				player.wall_slide_stamina = player.wall_slide_max_stamina
+
 				if not self.exited_players[player.n] then
 					self.number_of_exited_players = self.number_of_exited_players + 1
 					self.exited_players[player.n] = {
