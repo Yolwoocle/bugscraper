@@ -137,8 +137,6 @@ function Enemy:init_enemy(x,y, img, w,h)
 end
 
 function Enemy:ready()
-	self:ajust_loot_probabilities()
-
 	if self.ai_template and self.ai_templates[self.ai_template] and self.ai_templates[self.ai_template].ready then
 		self.ai_templates[self.ai_template]:ready()
 	end
@@ -409,20 +407,44 @@ end
 
 --- Ajusts loot table according to the number of players
 function Enemy:ajust_loot_probabilities()
-	if Input:get_number_of_users() == 1 then
+	if #game.players == 0 then
 		return
 	end
-
-	for _, item in pairs(self.loot) do
-		if item[1] ~= nil then
-			local p = item[2] * (1 + MULTIPLAYER_LOOT_PROBABILITY_MULTIPLIER * (Input:get_number_of_users() - 1))
-			item[2] = p 
+	
+	-- Ajust for multiplayer
+	if Input:get_number_of_users() > 1 then
+		for _, item in pairs(self.loot) do
+			if item[1] ~= nil then
+				local p = item[2] * (1 + MULTIPLAYER_LOOT_PROBABILITY_MULTIPLIER * (Input:get_number_of_users() - 1))
+				item[2] = p 
+			end
 		end
 	end
+
+	-- Ajust depending on player health
+	local min_life_ratio = math.huge
+	for _, player in pairs(game.players) do
+		min_life_ratio = min(min_life_ratio, clamp(player:get_total_life() / player.max_life, 0, 1))
+		print_debug("min_life_ratio ", min_life_ratio)
+	end
+	for _, item in pairs(self.loot) do
+		if item.loot_type == "life" then
+			-- Depending on health of player with the least health: 
+			-- * 100%: x0 drop probability 
+			-- * 50%:  x1 drop probability 
+			-- * 0%:   x2 drop probability 
+
+			local p = item[2] * (2 * (-min_life_ratio + 1))
+			print_debug("w: ", item[2], " -> ", p)
+			item[2] = p
+		end
+	end
+	print_debug(" ")
 end
 
 --- Drops random loot from the enemy
 function Enemy:drop_random_loot()
+	self:ajust_loot_probabilities()
 	local loot, params = random_weighted(self.loot)
 	if not loot then
 		return		
