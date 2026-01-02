@@ -128,6 +128,42 @@ function GameUI:update(dt)
 	self.t = self.t + dt
 end
 
+
+function GameUI:draw()
+	if not self.is_visible then return end
+	self:draw_version()
+	self:draw_offscreen_indicators()
+	self:draw_floating_text()
+	self:draw_upgrades()
+
+	self:draw_convention_video()
+	self:draw_player_previews()
+	self:draw_cinematic_bars()
+	self:draw_iris_transition()
+	self:draw_fury()
+	self:draw_boss_bar()
+	
+	self:draw_titles()
+	if self.dark_overlay_alpha > 0 then
+		rect_color(transparent_color(self.dark_overlay_color_override or COL_BLACK_BLUE, self.dark_overlay_alpha), "fill", 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
+	end
+
+	self:draw_splash_animation()
+	-- local r
+    -- r = game.level.cabin_inner_rect
+    -- rect_color(COL_GREEN, "line", r.ax, r.ay, r.w, r.h)
+	-- r = game.level.cabin_rect
+    -- rect_color(COL_RED, "line", r.ax, r.ay, r.w, r.h)
+end
+
+function GameUI:draw_front()
+	if not self.is_visible then return end
+
+	self:draw_FPS()
+	self:draw_timer()
+end
+
+
 function GameUI:start_title(title, subtitle, overtitle, intro_dur, stay_dur, outro_dur)
 	local titles = {}
 	if type(title) == "string" then
@@ -241,40 +277,6 @@ end
 
 function GameUI:set_visible(bool)
     self.is_visible = bool
-end
-
-function GameUI:draw()
-	if not self.is_visible then return end
-	self:draw_version()
-	self:draw_offscreen_indicators()
-	self:draw_floating_text()
-	self:draw_upgrades()
-
-	self:draw_convention_video()
-	self:draw_player_previews()
-	self:draw_cinematic_bars()
-	self:draw_iris_transition()
-	self:draw_fury()
-	self:draw_boss_bar()
-	self:draw_timer()
-	
-	self:draw_titles()
-	if self.dark_overlay_alpha > 0 then
-		rect_color(transparent_color(self.dark_overlay_color_override or COL_BLACK_BLUE, self.dark_overlay_alpha), "fill", 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
-	end
-
-	self:draw_splash_animation()
-	-- local r
-    -- r = game.level.cabin_inner_rect
-    -- rect_color(COL_GREEN, "line", r.ax, r.ay, r.w, r.h)
-	-- r = game.level.cabin_rect
-    -- rect_color(COL_RED, "line", r.ax, r.ay, r.w, r.h)
-end
-
-function GameUI:draw_front()
-	if not self.is_visible then return end
-
-	self:draw_FPS()
 end
 
 function GameUI:draw_titles()
