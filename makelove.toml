@@ -35,13 +35,14 @@ love_binaries = "$[LOVE_BINARIES_windows-x64]"
 "steam_appid.txt" = "steam_appid.txt"
 "luasteam.dll" = "luasteam.dll"
 "steam_api64.dll" = "steam_api64.dll"
+"READ_ME_IF_CRACKED_GAME.txt" = "data/READ_ME_IF_CRACKED_GAME.txt"
 
 # Exe metadata is specified as a version string (key) and it's value
 # The values shown here are the ones set by makelove by default (you can overwrite them here)
 # and the values in the comments are the original values in love.exe
 # If you are not doing a versioned build, 0.4 is empty.
 [windows.exe_metadata]
-FileDescription = "Bugscraper: Rise to the top of a bug-filled skyscraper" # "LÖVE {löve version}"
+FileDescription = "Bugscraper: Rise to the last floor of a bug filled skyscraper" # "LÖVE {löve version}"
 FileVersion = "$[BUGSCRAPER_VERSION]" # "{löve version}"
 CompanyName = "Léo Bernard" # "LÖVE World Domination Inc."
 LegalCopyright = "Copyright © 2025 Léo Bernard" # "Copyright © 2006-2020 LÖVE Development Team" or ""
@@ -61,6 +62,7 @@ love_binaries = "$[LOVE_BINARIES_macos]"
 "steam_appid.txt" = "steam_appid.txt"
 "_dyn/osx/luasteam.so" = "luasteam.so"
 "_dyn/osx/libsteam_api.dylib" = "libsteam_api.dylib"
+"READ_ME_IF_CRACKED_GAME.txt" = "data/READ_ME_IF_CRACKED_GAME.txt"
 
 
 [macos.app_metadata]
@@ -79,7 +81,7 @@ source_appimage = "$[LOVE_BINARIES_linux-X64.AppImage]"
 
 # These values are included in the .desktop file
 [linux.desktop_file_metadata]
-Comment="Bugscraper: Rise to the top of a bug-filled skyscraper"
+Comment="Bugscraper: Rise to the last floor of a bug filled skyscraper"
 Categories="Game;" # Default is "Game;" (semicolon is separator and terminator)
 
 [lovejs]
