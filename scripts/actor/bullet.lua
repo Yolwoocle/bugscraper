@@ -19,6 +19,7 @@ function Bullet:init(gun, player, damage, x, y, w, h, vx, vy, args)
 	self.player = player
 	self.is_bullet = true
 	self.z = -2
+	self.spr:set_anchor(SPRITE_ANCHOR_CENTER_CENTER)
 
 	--target_type: what kind of enemy the bullet can target: "player", "enemy", "everyone"
 	self.target_type = args.target_type or ternary(player.is_enemy, "player", "enemy") 

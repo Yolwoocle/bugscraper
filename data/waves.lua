@@ -820,8 +820,7 @@ local waves = parse_waves_table {
         min = 5,
         max = 5,
         enemies = {
-            { E.Woodlouse, 2 },
-            { E.Fly,       2 },
+            { E.Chipper,   2 },
         },
         fixed_enemies = {
             { E.BulbBuddy, 1 },
@@ -880,10 +879,10 @@ local waves = parse_waves_table {
             },
         },
 
-        min = 4,
-        max = 6,
+        min = 6,
+        max = 7,
         enemies = {
-            { E.Fly,     2 },
+            { E.Grasshopper, 2 },
             { E.Chipper, 2 },
         },
     },
@@ -936,10 +935,11 @@ local waves = parse_waves_table {
     },
 
     {
-        min = 5,
-        max = 6,
+        min = 8,
+        max = 8,
         enemies = {
-            { E.SpikedFly, 2 },
+            { E.MetalFly,    4 },
+            { E.Chipper,     4 },
             { E.StinkBug,  2 },
         },
         fixed_enemies = {
@@ -1002,7 +1002,7 @@ local waves = parse_waves_table {
         max = 6,
         enemies = {
             { E.SnailShelledBouncy, 2 },
-            { E.Fly,                2 },
+            { E.Chipper,            2 },
             { E.Boomshroom,         2 },
         },
         fixed_enemies = {
@@ -1011,12 +1011,12 @@ local waves = parse_waves_table {
     },
 
     {
-        min = 5,
-        max = 6,
-        { E.SnailShelledBouncy, 2 },
+        min = 7,
+        max = 7,
         enemies = {
+            { E.SnailShelledBouncy, 2 },
             { E.Boomshroom,  2 },
-            { E.Grasshopper, 2 },
+            { E.DrillBee,  1 },
         },
         fixed_enemies = {
             { E.BulbBuddy, 1 }
@@ -1024,8 +1024,8 @@ local waves = parse_waves_table {
     },
 
     {
-        min = 4,
-        max = 5,
+        min = 7,
+        max = 7,
         enemies = {
             { E.Chipper,  2 },
             { E.StinkBug, 2 },
@@ -1047,33 +1047,39 @@ local waves = parse_waves_table {
 
         enemies = {
             { E.SnailShelled, 2 },
-            { E.Fly,          2 },
-            { E.SpikedFly,    2 },
+            { E.Chipper, 2 },
+            { E.DrillBee, 1 },
         },
     },
 
     {
         min = 7,
-        max = 9,
+        max = 7,
 
         enemies = {
             { E.Spider,    20 },
             { E.MetalFly,  20 },
             { E.BulbBuddy, 5 }
         },
+        fixed_enemies = {
+            { E.BulbBuddy, 1 }
+        }
     },
 
     {
-        min = 6,
-        max = 7,
+        min = 8,
+        max = 8,
 
         enemies = {
             { E.Spider,    2 },
-            { E.Fly,       2 },
+            { E.MetalFly,  2 },
             { E.SpikedFly, 2 },
             { E.Chipper,   2 },
             { E.StinkBug,  2 },
         },
+        fixed_enemies = {
+            { E.BulbBuddy, 1 }
+        }
     },
 
 
