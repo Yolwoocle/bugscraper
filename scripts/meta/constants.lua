@@ -112,6 +112,7 @@ RECT_BASEMENT = {2, -4, 104, 16}
 -- RECT_GROUND_FLOOR_PARAMS = {2, 2, 100, 16}
 RECT_GROUND_FLOOR_PARAMS = {2, 3, 111, 16}
 RECT_TUTORIAL_PARAMS = {2, 0, 96, 16}
+RECT_CREDITS_PARAMS = {3, -2, 31, 16}
 
 --------------------------------------------- 
 
@@ -610,6 +611,34 @@ LIGHNING_COORDINATE_MODE_POLAR = "polar" -- radius, angle
 
 TV_WIDTH = 55
 TV_HEIGHT = 31
+
+TV_CREDITS = {
+    ["slide_001"] = "Sslime7",
+    ["slide_002"] = "Alexis Belmonte",
+    ["slide_003"] = "Corentin Vaillant",
+    ["slide_004"] = "Yolwoocle",
+    ["slide_005"] = "ellraiser",
+    ["slide_006"] = "Joseph",
+    ["slide_007"] = "Guillaume Tran",
+    ["slide_008"] = "Hector SK (Nextop Games)",
+    ["slide_009"] = "behck",
+    ["slide_010"] = "Hector SK (Nextop Games)",
+    ["slide_011"] = "Sarcose",
+    ["slide_012"] = "clem",
+    ["slide_013"] = "clem",
+    ["slide_014"] = "Dimitri Sophinos (DPS2004)",
+    ["slide_015"] = "pkhead",
+    ["slide_016"] = "pkhead",
+    ["slide_017"] = "pixelbath",
+    ["slide_018"] = "Corentin Vaillant",
+    ["slide_019"] = "Hector SK (Nextop Games)",
+    ["slide_020"] = "kiwisky",
+    ["slide_021"] = "Yolwoocle",
+    ["slide_022"] = "8lueskii",
+    
+    ["bluescreen_1"] = "Hector SK (Nextop Games)",
+    ["bluescreen_2"] = "418cat",
+}
 
 --------------------------------------------- 
 

@@ -329,6 +329,7 @@ return {
             tv_slideshow_submit = "提交你的作品...",
             licenses = "素材与库授权",
             more = "以及更多...", 
+            thank_you_for_playing = "Thank you for playing!", -- ADDED / Shown at the end of the credits
 
             x_by_y =     "%s 作者：%s",
             asset_item = "%s 作者：%s / %s",

@@ -8,6 +8,7 @@ local upgrades        = require 'data.upgrades'
 local skins           = require "data.skins"
 local skin_name_to_id = require "data.skin_name_to_id"
 local BackroomBasement = require "scripts.level.backroom.backroom_basement"
+local BackroomCredits = require "scripts.level.backroom.backroom_credits"
 
 local DebugCommandManager = Class:inherit()
 
@@ -308,6 +309,22 @@ function DebugCommandManager:init()
         run = function()
             game.level.fury_bar = game.level.fury_max
             self:add_message(concat("Enabled fury"))
+            return true
+        end,
+    }
+
+    self.commands["_credits"] = DebugCommand:new {
+        name = "_credits",
+        description = "Starts credits",
+        args = {
+        },
+        run = function()
+            game:new_game({ 
+                backroom = BackroomCredits:new(),
+                iris_params = {0, 0, 0, 0, 0}
+            })
+
+            self:add_message(concat("Enabled rocket backroom"))
             return true
         end,
     }

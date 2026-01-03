@@ -76,6 +76,7 @@ function GameUI:init(game, is_visible)
 	self.title_state_timer = Timer:new(0.0)
 	self.current_title_state_duration = "intro"
 	
+	self.title_tvs_on = false
 	self.title_tv_grid = nil
 	self.title_tvs = {}
 	self.tv_grid_rows = 2
@@ -102,6 +103,8 @@ function GameUI:init(game, is_visible)
 	self.iris_transition_target_t = 0
 
 	self.ending_counter_text = nil
+
+	self.show_timer = true
 
 	self.t = 0
 end
@@ -182,6 +185,7 @@ function GameUI:start_title(title, subtitle, overtitle, intro_dur, stay_dur, out
 	self.title_intro_duration = intro_dur
 	self.title_stay_duration = stay_dur
 	self.title_outro_duration = outro_dur
+	self.title_tvs_on = false
 
 	self.title_state = "intro"
 
@@ -195,15 +199,16 @@ function GameUI:init_tv_grid()
 		for iy = 1, self.tv_grid_rows do
 			table.insert(self.title_tvs, {
 				tv = TvPresentation:new(
-					sx + (ix-1) * self.tv_grid_x_spacing - TV_WIDTH/2,
-					sy + (iy-1) * self.tv_grid_y_spacing - TV_HEIGHT/2,
+					math.floor(sx + (ix-1) * self.tv_grid_x_spacing - TV_WIDTH/2),
+					math.floor(sy + (iy-1) * self.tv_grid_y_spacing - TV_HEIGHT/2),
 					{
 						shuffle_table = false,
 						default_slide_duration = 50.0,
+						do_slideshow = false
 					}
 				),
 				enabled = false,
-				subtext = "test",
+				subtext = "",
 			})
 		end
 	end
@@ -211,27 +216,34 @@ end
 
 function GameUI:start_title_tv(tvs, intro_dur, stay_dur, outro_dur)
 	self:start_title("", "", "", intro_dur, stay_dur, outro_dur)
+	self.title_tvs_on = true
 	
 	for i=1, #tvs do
 		self.title_tvs[i].tv:set_current_slide_from_name(tvs[i][1])
+		self.title_tvs[i].subtext = TV_CREDITS[tvs[i][1]]
 	end
 end
 
 function GameUI:update_title(dt)
+	-- print_debug(self.title_tvs_on)
 	if self.title_state_timer:update(dt) then
 		if self.title_state == "intro" then
+			print_debug("intro")
 			self.title_state = "stay"
 			self.title_state_timer:start(self.title_stay_duration)
 			
 		elseif self.title_state == "stay" then
+			print_debug("stay")
 			self.title_state = "outro"
 			self.title_state_timer:start(self.title_outro_duration)
 
 		elseif self.title_state == "outro" then
+			print_debug("outro")
 			self.title_state = "off"
 			self.titles = nil
 			self.subtitle = nil
 			self.overtitle = nil
+			self.title_tvs_on = false
 		end
 	end
 
@@ -247,6 +259,10 @@ function GameUI:update_title(dt)
 			a, b = 1, 0
 		end
 		self.title_alpha = lerp(a, b, self.title_state_timer:get_ratio())
+	end
+
+	for _, tv in pairs(self.title_tvs) do
+		tv.tv:update(dt)
 	end
 end
 
@@ -310,7 +326,7 @@ function GameUI:draw_titles()
 		end
 		Text:pop_font()
 		
-		-- self:draw_title_tv_grid()
+		self:draw_title_tv_grid()
 		
 	end)
 	
@@ -326,6 +342,10 @@ function GameUI:draw_titles()
 end
 
 function GameUI:draw_title_tv_grid()	
+	if not self.title_tvs_on then
+		return
+	end
+	
 	Text:push_font(FONT_MINI)
 	for i = 1, #self.title_tvs do
 		self.title_tvs[i].tv:draw()	
@@ -376,7 +396,7 @@ function GameUI:draw_version()
 end
 
 function GameUI:draw_timer()
-	if not Options:get("timer_on") then 
+	if not Options:get("timer_on") or not self.show_timer then 
 		return
 	end
 

@@ -326,6 +326,7 @@ return {
             asset_creators = "Autorzy zasobów",
             tv_slideshow = "TV slideshow contributors", -- ADDED // Refers to the powerpoint TV slideshow on the title screen, which was contributed by a variety of people 
             tv_slideshow_submit = "Submit yours...", -- ADDED // Leads to a web page where people can submit their own slides
+            thank_you_for_playing = "Thank you for playing!", -- ADDED / Shown at the end of the credits
             
             licenses = "Licencje na zasoby i biblioteki",
 

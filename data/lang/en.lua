@@ -338,8 +338,8 @@ return {
         credits = {
             title = "CREDITS",
             ninesliced_presents = "Ninesliced presents", -- ADDED / Ninesliced with a capital letter ONLY on the N
-            game_by = "A game by", -- As in, "A game by [newline] John". If it is not possible to have the name *after* this, translate as "Creator" ("Creator [newline] John")
-            leo_bernard = "Léo Bernard", -- Please do not touch this (this is there so i can use my chinese name in chinese)
+            game_by = "A game by", -- As in, "A game by [newline] John". If it is not possible to have the name *after* this, one idea could be to translate as "Creator" (as in, "Creator [newline] John")
+            leo_bernard = "Léo Bernard", -- Please do not touch this
             music = "Music",
             sound_design = "Sound design",
             localization = "Localization",
@@ -352,6 +352,7 @@ return {
             tv_slideshow_submit = "Submit yours...", -- ADDED // Leads to a web page where people can submit their own slides
             licenses = "Asset & library licenses",
             more = "And many more...", -- ADDED // For the people that I might have forgotten in the special thanks section
+            thank_you_for_playing = "Thank you for playing!", -- ADDED / Shown at the end of the credits
 
             x_by_y =     "%s by %s", -- "ASSET_NAME by CREATOR". Used to credit assets such as sound effects
             asset_item = "%s by %s / %s", -- "ASSET_NAME by CREATOR / LICENCE"

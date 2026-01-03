@@ -344,6 +344,7 @@ return {
 			tv_slideshow_submit = "Añade el tuyo...",           -- Leads to a web page where people can submit their own slides
 			licenses = "Recursos y Lisencias de librerías",
 			more = "Y muchos mas...",
+            thank_you_for_playing = "Thank you for playing!", -- ADDED / Shown at the end of the credits
 
 			x_by_y = "%s por %s", -- "ASSET_NAME by CREATOR". Used to credit assets such as sound effects
 			asset_item = "%s por %s / %s", -- "ASSET_NAME by CREATOR / LICENCE". Used to credit assets such as sound effects

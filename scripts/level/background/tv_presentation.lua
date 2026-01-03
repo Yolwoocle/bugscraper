@@ -24,28 +24,32 @@ function TvPresentation:init(x, y, params)
         ["slide_005"] = { images.tv_slideshow_005, 0 },      -- "Love, obey"             by ellraiser
         ["slide_006"] = { images.tv_slideshow_006, 0.07 },   -- "Need your duck taped?"  by Joseph
         ["slide_007"] = { images.tv_slideshow_007, 0.11 },   -- Starbugs green tea       by Goyome
-        ["slide_008"] = { images.tv_slideshow_008, 0.1 },    -- Binarion                 by hector_misc (Nextop Games)
+        ["slide_008"] = { images.tv_slideshow_008, 0.1 },    -- Binarion                 by Hector SK (Nextop Games)
         ["slide_009"] = { images.tv_slideshow_009, 0.3 },    -- "No quuen?"              by behck
-        ["slide_010"] = { images.tv_slideshow_010, 0 },      -- "injured? good"          by hector_misc (Nextop Games) 
+        ["slide_010"] = { images.tv_slideshow_010, 0 },      -- "injured? good"          by Hector SK (Nextop Games) 
         ["slide_011"] = { images.tv_slideshow_011, 0.035 },  -- Splat commercial         by Sarcose
         ["slide_012"] = { images.tv_slideshow_012, 0.03 },   -- End toastal abuse        by clem 
         ["slide_013"] = { images.tv_slideshow_013, 0.03 },   -- A salt rifle             by clem 
         ["slide_014"] = { images.tv_slideshow_014, 0.08 },   -- Beatleblock              by Dimitri Sophinos (DPS2004)
-        ["slide_015"] = { images.tv_slideshow_015, 0.3 },    -- bugscrapers arent enough by pkhead / chromosoze
-        ["slide_016"] = { images.tv_slideshow_016, 0 },      -- optic studio             by pkhead / chromosoze
+        ["slide_015"] = { images.tv_slideshow_015, 0.3 },    -- bugscrapers arent enough by pkhead
+        ["slide_016"] = { images.tv_slideshow_016, 0 },      -- optic studio             by pkhead
         ["slide_017"] = { images.tv_slideshow_017, 0.08 },   -- Soon(tm)                 by pixelbath
         ["slide_018"] = { images.tv_slideshow_018, 0.04 },   -- Mio explode              by Corentin Vaillant
-        ["slide_019"] = { images.tv_slideshow_019, 0.04 },   -- Snail Ball Run           by hector_misc (Nextop Games)
+        ["slide_019"] = { images.tv_slideshow_019, 0.04 },   -- Snail Ball Run           by Hector SK (Nextop Games)
         ["slide_020"] = { images.tv_slideshow_020, 0.5 },   -- You are a Bug             by kiwisky 
         ["slide_021"] = { images.tv_slideshow_021, 0.5 },   -- Empty Knight: Clothmusic  by yolwoocle 
         ["slide_022"] = { images.tv_slideshow_022, 0.1 },   -- Buglatro                  by 8lueskii 
         
-        ["bluescreen"] = { random_sample {images.tv_bluescreen, images.tv_bluescreen_2}, math.huge } 
-        -- By hector_misc (Nextop Games) & 418cat
+        ["bluescreen"] = { random_sample {images.tv_bluescreen, images.tv_bluescreen_2}, math.huge } ,
+        -- By Hector SK (Nextop Games) & 418cat
+
+        ["bluescreen_1"] = {images.tv_bluescreen, 0.0},
+        ["bluescreen_2"] = {images.tv_bluescreen_2, 0.0},
+        ["empty"] = {images.empty, 1.0}
     }
     self.slide_names = {}
     for name, slide_info in pairs(slides) do
-        if name ~= "bluescreen" then
+        if name ~= "bluescreen" and name ~= "bluescreen_1" and name ~= "bluescreen_2" and name ~= "empty" then
             table.insert(self.slide_names, name)
         end
 
@@ -56,6 +60,7 @@ function TvPresentation:init(x, y, params)
         shuffle_table(self.slide_names)
     end
 
+    self.do_slideshow = param(params.do_slideshow, true)
     
     self.bluescreen_probability = TV_BLUESCREEN_PROBABILITY
     self.is_bluescreened = (random_range(0, 1) < self.bluescreen_probability)
@@ -160,7 +165,7 @@ function TvPresentation:update(dt)
     end
 
     -- Slide end
-    if self.slideshow_timer:update(dt) then
+    if self.do_slideshow and self.slideshow_timer:update(dt) then
         self.transition_timer:start()
         self.current_transition = random_sample(self.transitions)
 
@@ -170,7 +175,7 @@ function TvPresentation:update(dt)
     end
 
     -- Transition end
-    if self.transition_timer:update(dt) then
+    if self.do_slideshow and self.transition_timer:update(dt) then
         self.slideshow_timer:start(math.max(self.default_slide_duration, self.spr.animations[self.current_slide].duration - 1/60))
         self.current_transition = nil
     end
@@ -179,23 +184,20 @@ function TvPresentation:update(dt)
 end
 
 function TvPresentation:set_current_slide_from_name(slide_name)
-    -- just do a linear search because ehhhh fuck it good enough
-    local i = 1
-    local found = -1
-    while i <= #self.slide_names do
-        if self.slide_names[i] == slide_name then
-            found = i
-            i = math.huge
-        end
-        i = i + 1
-    end 
-    self.current_slide_number = found
-    self.current_slide = self.slide_names[self.current_slide_number]
+    -- this will NOT update the slide index number
+    -- self.current_slide_number = slide_index
+    self.current_slide = slide_name 
+    if self.current_slide then
+        self.spr:set_animation(self.current_slide)
+    end
 end
 
 function TvPresentation:set_current_slide(slide_index)
     self.current_slide_number = slide_index
     self.current_slide = self.slide_names[self.current_slide_number]
+    if self.current_slide then
+        self.spr:set_animation(self.current_slide)
+    end
 end
 
 

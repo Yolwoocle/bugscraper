@@ -14,7 +14,7 @@ function TextManager:init()
         -- pl = require "data.lang.pl",
         -- pt = require "data.lang.pt",
     }
-    self.locale_to_language = {
+    self.locale_to_language = { -- Some pre-defined default values.    
         ["en"] = "en",
         ["fr"] = "fr",
         ["zh"] = "zh",
@@ -34,7 +34,6 @@ function TextManager:init()
         self.language_metadata[lang_name] = lang_values["__meta"]
         lang_values["__meta"] = nil
 
-        print_debug("LANG META ", lang_name, self.language_metadata[lang_name])
         print_table(self.language_metadata[lang_name])
 
         self.languages[lang_name] = self:unpack(lang_values)

@@ -129,6 +129,8 @@ local function generate_menus()
         { "{menu.yes}", function()
             if game.level and game.level.backroom and game.level.backroom.name == "tutorial" and Metaprogression:get("has_played_tutorial") then
                 game:new_game({})
+            elseif game.level and game.level.backroom and game.level.backroom.name == "credits" then
+                game:new_game({})
             else
                 game:new_game({
                     backroom = game.start_params.backroom,

@@ -20,11 +20,12 @@ function BackroomCredits:init(params)
 end
 
 function BackroomCredits:generate(world_generator)
-	game.level:set_bounds(Rect:new(unpack(RECT_TUTORIAL_PARAMS)))
+	game.level:set_bounds(Rect:new(unpack(RECT_CREDITS_PARAMS)))
 
 	-- Collision 
 	world_generator:reset()
-	world_generator:write_rect(Rect:new(19, 15, 29, 16), TILE_STONE) -- Walls
+	world_generator:write_rect(Rect:new(4, 15, 32, 16), TILE_STONE) -- Walls
+	world_generator:write_rect(Rect:new(19, 13, 32, 15), TILE_STONE) -- Walls
 
 	game.game_ui.logo_y = -70
 	game.game_ui.logo_y_target = -70
@@ -40,7 +41,7 @@ function BackroomCredits:get_default_player_position(player_n)
 end
 
 function BackroomCredits:get_default_player_gun()
-	return guns.unlootable.EmptyGun:new()
+	return guns.unlootable.Machinegun:new()
 end
 
 function BackroomCredits:get_default_camera_position()
@@ -70,11 +71,11 @@ function BackroomCredits:draw_background()
 end
 
 function BackroomCredits:draw_items()
+	-- love.graphics.draw(images.credits_removeme_characters, 320, 144)
 end
 
 function BackroomCredits:draw_front_walls()
-	love.graphics.draw(images.credits_building, 301, 240)
-	love.graphics.draw(images.credits_removeme_characters, 320, 176)
+	love.graphics.draw(images.credits_building, 48, 208)
 end
 
 return BackroomCredits

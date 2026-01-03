@@ -329,7 +329,7 @@ return {
             title = "CRÉDITS",
             ninesliced_presents = "Ninesliced présente", -- Ninesliced with a capital letter ONLY on the N
             game_by = "Un jeu par", -- As in, "A game by / John". If it is not possible to have the name *after* this, translate as "Creator" ("Creator / John")
-            leo_bernard = "Léo Bernard", -- Please do not touch this (this is there so i can use my chinese name in chinese)
+            leo_bernard = "Léo Bernard", -- Please do not touch this 
             music = "Musique",
             sound_design = "Sound design",
             localization = "Localisation",
@@ -342,6 +342,7 @@ return {
             tv_slideshow_submit = "Envoyez le votre...", 
             licenses = "Licences des assets & bibliothèques",
             more = "Et bien plus...", -- For the people that I might have forgotten in the special thanks section
+            thank_you_for_playing = "Merci pour avoir joué ! ❤", -- ADDED / Shown at the end of the credits
 
             x_by_y =     "%s par %s", -- "ASSET_NAME by CREATOR". Used to credit assets such as sound effects
             asset_item = "%s par %s / %s", -- "ASSET_NAME by CREATOR / LICENCE". Used to credit assets such as sound effects

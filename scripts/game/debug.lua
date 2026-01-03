@@ -169,13 +169,6 @@ function Debug:init(game)
             -- Particles:speed_line(game.players[1].x, game.players[1].y, 1)
 
             ------------------------------
-            ---
-            -- game:new_game({ 
-            --     backroom = BackroomCredits:new(),
-            --     iris_params = {0, 0, 0, 0, 0}
-            -- })
-
-            ------------------------------
 
             --[[
             local points = {}
