@@ -46,8 +46,8 @@ function Guns:init()
 		self.is_auto = true
 		self.spr = images.gun_machinegun
 		self.bullet_spr = images.bullet_pea
-		self.bul_w = 10
-		self.bul_h = 10
+		self.bul_w = 14
+		self.bul_h = 14
 
 		self.cooldown = 0.1
 		self.jetpack_force = 440
@@ -74,6 +74,8 @@ function Guns:init()
 		self.sound_pickup = "sfx_weapon_triplepepper_pickedup"
 		self.cooldown = 0.2
 		self.bullet_number = 3
+		self.bul_w = 14
+		self.bul_h = 14
 		self.random_angle_offset = 0
 		self.jetpack_force = self.default_jetpack_force * 2
 
@@ -99,6 +101,8 @@ function Guns:init()
 		self.sfx = "sfx_weapon_pollenburst_shoot_{01-06}"
 		self.sound_pickup = "sfx_weapon_pollenburst_pickedup"
 		self.bullet_spread = 0.2
+		self.bul_w = 14
+		self.bul_h = 14
 		
 		self.is_auto = false
 		self.is_burst = true
@@ -134,6 +138,8 @@ function Guns:init()
 		self.cooldown = 0.4
 		self.bullet_speed = 500 --800 --def: 400
 		self.bullet_number = 12
+		self.bul_w = 14
+		self.bul_h = 14
 
 		self.max_ammo = 7
 		self.max_reload_timer = 1.5
@@ -199,6 +205,8 @@ function Guns:init()
 		self.bullet_friction = 0.9
 		self.random_angle_offset = 0
 		self.knockback = 150
+		self.bul_w = 14
+		self.bul_h = 14
 
 		self.random_angle_offset = 0
 		self.damage = 1.5
@@ -212,8 +220,6 @@ function Guns:init()
 		self.jetpack_force = 1000
 		
 		self.bullet_spr = images.bullet_ring
-		self.bul_w = 10
-		self.bul_h = 10
 
 		self.screenshake = 4
 	end
@@ -230,7 +236,7 @@ function Guns:init()
 		
 		self.sfx = "sfx_weapon_mushroomcannon_shoot_{01-04}"
 		self.sound_pickup = "sfx_weapon_mushroomcannon_pickedup"
-		self.damage = 4
+		self.damage = 6
 		self.boss_damage = 4
 		self.is_auto = true
 		self.spr = images.gun_mushroom_cannon
