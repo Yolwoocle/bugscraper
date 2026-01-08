@@ -91,7 +91,7 @@ function CloudStorm:init(x, y, size)
                 self.vy = 0
                 self.arc:set_active(true)
                 self.arc:set_arc_active(false)
-                self.state_timer:start(1.0)
+                self.state_timer:start(0.5)
 
                 self.lightning_angle_offset = random_neighbor(pi/12)
             end,
@@ -129,7 +129,7 @@ function CloudStorm:init(x, y, size)
                     coordinate_mode = LIGHNING_COORDINATE_MODE_POLAR,
                 })
 
-                self.is_stompable = false
+                self.is_stompable = true
             end,
             update = function(state, dt)
                 Particles:flash(self.mid_x + random_polar(3), self.y + self.h + 4 + random_polar(3))
@@ -154,7 +154,7 @@ function CloudStorm:init(x, y, size)
                 self.is_stompable = true
             end,
             draw = function(state)
-                self.surround_lightning:draw(self.mid_x, self.mid_y)
+                -- self.surround_lightning:draw(self.mid_x, self.mid_y)
             end,
         },
     }, "wander")

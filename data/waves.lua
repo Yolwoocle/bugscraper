@@ -1121,7 +1121,7 @@ local waves = parse_waves_table {
         max = 4,
 
         enemies = {
-            { E.CloudEnemy, 20 },
+            { E.CloudDropper, 20 },
         },
 
         elevator_layers = {
@@ -1147,7 +1147,7 @@ local waves = parse_waves_table {
 
         enemies = {
             { E.CloudStorm, 30 },
-            { E.CloudEnemy, 10 },
+            { E.CloudDropper, 10 },
         },
     },
 
@@ -1159,7 +1159,7 @@ local waves = parse_waves_table {
             { E.Rollopod, 1 },
         },
         fixed_enemies = {
-            { E.CloudEnemy, 2 },
+            { E.CloudDropper, 2 },
         }
     },
 
@@ -1168,7 +1168,7 @@ local waves = parse_waves_table {
         max = 9,
 
         enemies = {
-            { E.CloudEnemy,  5 },
+            { E.CloudDropper,  5 },
             { E.CloudStorm,  5 },
             { E.Rollopod, 3 },
         },
@@ -1179,7 +1179,7 @@ local waves = parse_waves_table {
         max = 4,
 
         enemies = {
-            { E.CloudEnemy, 2 },
+            { E.CloudDropper, 2 },
         },
 
         fixed_enemies = {
@@ -1276,7 +1276,7 @@ local waves = parse_waves_table {
         max = 8,
 
         enemies = {
-            { E.CloudEnemy, 20 },
+            { E.CloudDropper, 20 },
             { E.CloudStorm, 40 },
             { E.Rollopod,    40 },
         },
@@ -1297,7 +1297,7 @@ local waves = parse_waves_table {
         max = 5,
 
         enemies = {
-            { E.CloudEnemy, 1 },
+            { E.CloudDropper, 1 },
             { E.CloudStorm, 1 },
         },
         
@@ -1326,7 +1326,7 @@ local waves = parse_waves_table {
 
         enemies = {
             { E.Rollopod, 2 },
-            { E.CloudEnemy, 2 },
+            { E.CloudDropper, 2 },
         },
     },
 
@@ -1662,7 +1662,7 @@ local waves = parse_waves_table {
         max = 10,
         enemies = {
             { E.CloudStorm, 2 },
-            { E.CloudEnemy, 2 },
+            { E.CloudDropper, 2 },
             { E.Rollopod, 2 },
         },
 
@@ -1685,7 +1685,7 @@ local waves = parse_waves_table {
         enemies = {
             { E.MushroomAnt, 2 },
             { E.CloudStorm, 2 },
-            { E.CloudEnemy, 2 },
+            { E.CloudDropper, 2 },
             { E.Rollopod, 2 },
         },
     },
@@ -1698,7 +1698,7 @@ local waves = parse_waves_table {
             { E.Shooter, 1 },
             
             { E.CloudStorm, 2 },
-            { E.CloudEnemy, 2 },
+            { E.CloudDropper, 2 },
             { E.Rollopod, 2 },
         },
         fixed_enemies = {
@@ -1805,7 +1805,7 @@ local waves = parse_waves_table {
         max = 6,
 
         enemies = {
-            { E.CloudEnemy, 10 },
+            { E.CloudDropper, 10 },
             { E.GoldenBeetle, 10 },
             { E.Rollopod, 10 },
         },
@@ -1828,7 +1828,7 @@ local waves = parse_waves_table {
         max = 5,
 
         enemies = {
-            { E.CloudEnemy, 10 },
+            { E.CloudDropper, 10 },
             { E.Rollopod, 10 },
         },
 
@@ -1856,7 +1856,7 @@ local waves = parse_waves_table {
         max = 3,
 
         enemies = {
-            { E.CloudEnemy, 10 },
+            { E.CloudDropper, 10 },
             { E.StinkBug, 10 },
         },
         fixed_enemies = {
@@ -1899,7 +1899,7 @@ local waves = parse_waves_table {
     --     max = 5,
 
     --     enemies = {
-    --         { E.CloudEnemy, 20 },
+    --         { E.CloudDropper, 20 },
     --     },
 
     --     music = "w5",
@@ -1910,7 +1910,7 @@ local waves = parse_waves_table {
     --     max = 3,
 
     --     enemies = {
-    --         { E.CloudEnemy, 10 },
+    --         { E.CloudDropper, 10 },
     --     },
     -- },
 
@@ -1919,7 +1919,7 @@ local waves = parse_waves_table {
     --     max = 3,
 
     --     enemies = {
-    --         { E.CloudEnemy, 10 },
+    --         { E.CloudDropper, 10 },
     --     },
     -- },
 
@@ -1928,7 +1928,7 @@ local waves = parse_waves_table {
     --     max = 3,
 
     --     enemies = {
-    --         { E.CloudEnemy, 10 },
+    --         { E.CloudDropper, 10 },
     --     },
     -- },
 
@@ -1937,7 +1937,7 @@ local waves = parse_waves_table {
     --     max = 3,
 
     --     enemies = {
-    --         { E.CloudEnemy, 10 },
+    --         { E.CloudDropper, 10 },
     --     },
     -- },
 
@@ -1946,7 +1946,7 @@ local waves = parse_waves_table {
     --     max = 3,
 
     --     enemies = {
-    --         { E.CloudEnemy, 10 },
+    --         { E.CloudDropper, 10 },
     --     },
     -- },
 
@@ -1955,7 +1955,7 @@ local waves = parse_waves_table {
     --     max = 3,
 
     --     enemies = {
-    --         { E.CloudEnemy, 10 },
+    --         { E.CloudDropper, 10 },
     --     },
     -- },
 
@@ -1964,7 +1964,7 @@ local waves = parse_waves_table {
     --     max = 3,
 
     --     enemies = {
-    --         { E.CloudEnemy, 10 },
+    --         { E.CloudDropper, 10 },
     --     },
     -- },
 
@@ -1973,7 +1973,7 @@ local waves = parse_waves_table {
     --     max = 3,
 
     --     enemies = {
-    --         { E.CloudEnemy, 10 },
+    --         { E.CloudDropper, 10 },
     --     },
     -- },
 

@@ -79,6 +79,11 @@ function DebugCommandMenu:keypressed(key, scancode, isrepeat)
 	if key == 'down' then
 		self:move_autocompletion_cursor(1)
 	end
+
+	if key == 'v' and (love.keyboard.isDown("lctrl") or love.keyboard.isDown("rctrl")) then
+		local clipboard = love.system.getClipboardText() or ""
+		self:textinput(clipboard)
+	end
 end
 
 function DebugCommandMenu:send_input()

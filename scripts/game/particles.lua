@@ -828,8 +828,9 @@ function ParticleSystem:explosion(x, y, radius, args)
 	-- x, y, number, col, spw_rad, size, sizevar, layer, fill_mode, params
 end
 
-function ParticleSystem:smoke_big(x, y, col, rad, quantity, params)
-	self:smoke(x, y, quantity or 15, col or COL_WHITE, rad or 16, 8, 4, nil, nil, params)
+function ParticleSystem:smoke_big(x, y, col, spawn_rad, quantity, params)
+	params = params or {}
+	self:smoke(x, y, quantity or 15, col or COL_WHITE, spawn_rad or 16, params.size or 8, 4, nil, nil, params)
 end
 
 function ParticleSystem:smoke(x, y, number, col, spw_rad, size, sizevar, params)
