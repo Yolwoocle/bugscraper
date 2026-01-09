@@ -22,8 +22,8 @@ I added a "⭐" emoji next to highlights to make this changelog easier to read.
 - **Added**: New "Buglatro" TV slide by 8lueskii 
 - **Added**: Added warning signs before spikes in dept. 2 appear
 - **Changed**: Various polishes to the tutorial 
-- **Changed**: Various improvements to the ||post wave 80 rocket section||
-- **Changed**: Visual improvements to ||the CEO's office and its associated cutscene||
+- **Changed**: Various improvements to the post wave 80 rocket section
+- **Changed**: Visual improvements to the CEO's office and its associated cutscene
 - **Changed**: Various polishes to Her Majesty, including a new crowd that reacts to the fight  
 - **Changed**: Minor graphical improvements to cafeterias
 - **Changed**: Larva projectiles coming from flying spawners (placeholder name) are now visually spiky  
@@ -65,7 +65,7 @@ I added a "⭐" emoji next to highlights to make this changelog easier to read.
 - **Fixed**: Fixed issue where player could slightly clip through the elevator door when exiting cafeterias 
 - **Fixed**: Fixed issue where Bulb Buddies would sometimes spawn outside of the elevator door
 - **Fixed**: Fixed issue where Rollopods could sometimes be pushed around after rolling
-- **Fixed**: Wall jumping to ||the rocket cutscene|| would not remove the low stamina beep
+- **Fixed**: Wall jumping to the rocket cutscene would not remove the low stamina beep
 - **Fixed**: Fixed bug related to the music not fading in correctly when quick restarting the game
 - **Fixed**: Removing an action from "join game" with a certain input type (i.e. keyboard or controller) would remove actions from all other input types 
 - **Fixed**: Fixed issue where you could assign 0 buttons to "join game"
