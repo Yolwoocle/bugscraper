@@ -1,7 +1,7 @@
 # Bugscraper changelog
 
 ### 0.9
-(*???*)
+(*2026-01-09*)
 
 I added a "⭐" emoji next to highlights to make this changelog easier to read.
 
