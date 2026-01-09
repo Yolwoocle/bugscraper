@@ -3,35 +3,89 @@
 ### 0.9
 (*???*)
 
-- **Added**: Added NPCs in cafeterias! They don't do anything, they're just here to chill.
-- **Change**: Larva projectiles coming from flying spawners (placeholder name) are now visually spiky  
-- **Fix**: Fixed bug where vines weren't removed after wave 80
-- **Added**: Added warning signs before spikes in dept. 2 appear
-- **Fix**: Fixed minor graphical issue with dept. 3's falling grid animation
-- **Change**: Grahpical changes to dept. 4's visuals
-- **Change**: Grahpical changes to poison and stink bugs, which are now yellow, to make them more consistent 
-- **Change**: Minor optimization
-- **Added**: Her Majesty is now attackable by guns, hopefully making her fight more enjoyable
+I added a "⭐" emoji next to highlights to make this changelog easier to read.
+
+#### Gameplay 
+- ⭐ **Added**: New character, Amb! She's a shy harworking bug, usually messing around in the Server Room.
+- ⭐ **Added**: New enemy, the 'Dropper' (placeholder name): spawns in dept. 4, flies around randomly and drops down as soon as it is damaged, spawning 4 projectiles when hitting the floor  
+- ⭐ **Added**: New Boss for dept 4! Please not that this is still a WIP
+- ⭐ **Added**: Last area for the game, including the final boss. I will not spoil it... Please not that this is still a WIP
+- ⭐ **Changed**: Heart loot probability now depends on the health of the player with the least health: they depend linearly (full health = x0 probability, half health = x1, low health = close to x2)
+- ⭐ **Added**: Added NPCs in cafeterias! They don't do anything, they're just here to chill.
+- **Changed**: Ajusted the difficulty of dept. 3
+- **Changed**: Slightly buffed ghosts' puff attack
+- **Changed**: Made bullets' hitboxes slightly bigger
+- **Changed**: Guns are now instantly collected when you press the 'interact' button
+
+#### Visuals
+- **Changed**: Improved & polished Webmaster boss
 - **Added**: New "Buglatro" TV slide by 8lueskii 
-- **Added**: New character, Amb! She's a shy harworking bug, usually messing around in the Server Room.
-- **Added**: Spatial audio! I recommend using headphones to fully enjoy it.
-- **Added**: Ambiance sounds! Can be disabled in options.
+- **Added**: Added warning signs before spikes in dept. 2 appear
+- **Changed**: Various polishes to the tutorial 
+- **Changed**: Various improvements to the ||post wave 80 rocket section||
+- **Changed**: Visual improvements to ||the CEO's office and its associated cutscene||
+- **Changed**: Various polishes to Her Majesty, including a new crowd that reacts to the fight  
+- **Changed**: Minor graphical improvements to cafeterias
+- **Changed**: Larva projectiles coming from flying spawners (placeholder name) are now visually spiky  
+- **Changed**: Minor graphical improvement to the title that plays when you enter a new department
+- **Changed**: Added a particle to Rollopods when they notice you
+- **Changed**: Grahpical changes to dept. 4's visuals
+- **Changed**: Grahpical changes to poison and stink bugs, which are now yellow, to make them more consistent 
+- **Changed**: Small change to the ground floor sprite
+
+#### UI
+- **Changed**: Moved upgrades UI position to the top right
+- **Changed**: Changed the UI layout of upgrades to be vertical
+- **Changed**: The timer now display in front of the UI when paused
+- **Changed**: Added 'Max combo' stat to the Game Over screen
+- **Changed**: Removed credits from pause menu (for now)
+- **Changed**: Slight tweaks to various UI elements
+- **Removed**: Removed convention mode from options
+
+#### Sound
+- ⭐ **Added**: New music! Including pause music for dept 2 and bosses, and various changes to the music of the game (Including Dept. 1 & Dept. 3). Courtesy of OLX.
+- ⭐ **Added/Changed**: New sounds! Courtesy of Martin Domergue
+    - Various enemy sounds including honeypot ants & grasshoppers
+    - Weapon pick up sounds
+    - Improved gun sounds
+    - Mr Dung sounds
+    - Her Majesty sounds
+    - Spike sounds
+    - New upgrade sounds
+    - Various cutscene sounds
+    - Many more other sound improvements and additions 
+- ⭐ **Added**: Spatial audio! I recommend using headphones to fully enjoy it.
+- ⭐**Added**: Ambiance sounds! Can be disabled in options.
+- **Added**: Added intros to music loops: music will now have an intro before their main loop
+- **Changed**: Music will now play back to its previous point when exiting a cafeteria
+
+#### Fixes
+- **Fixed**: Fixed issue where you could spawn multiple players
+- **Fixed**: Fixed issue where the Pea Gun could duplicate in the tutorial
+- **Fixed**: Fixed issue where player could slightly clip through the elevator door when exiting cafeterias 
+- **Fixed**: Fixed issue where Bulb Buddies would sometimes spawn outside of the elevator door
+- **Fixed**: Fixed issue where Rollopods could sometimes be pushed around after rolling
+- **Fixed**: Wall jumping to ||the rocket cutscene|| would not remove the low stamina beep
+- **Fixed**: Fixed bug related to the music not fading in correctly when quick restarting the game
+- **Fixed**: Removing an action from "join game" with a certain input type (i.e. keyboard or controller) would remove actions from all other input types 
+- **Fixed**: Fixed issue where you could assign 0 buttons to "join game"
+- **Fixed**: Fixed padding issue with Spanish 
+- **Fixed**: Fixed bug where vines weren't removed after wave 80
+- **Fixed**: Fixed minor graphical issue with dept. 3's falling grid animation
+
+#### Localization 
+- **Changed**: Minor changes to some localized text
+- **Changed**: The game now takes into account all user locales
+- **Changed**: Added a menu padding parameter to locales
+- **Changed**: Updated Spanish translations, courtesy of Alejandro Alzate Sánchez
+
+#### Misc
+- **Added**: Added a new CEO escape cutscene after dept. 3
 - **Added**: Added some gamepad vibrations in menus
-- **Change**: More sound design changes!
-- **Added**: (WIP) Last area for the game, including the final boss. I will not spoil it...
-- **Change**: Minor graphical improvement to the title that plays when you enter a new department
-- **Change**: Added 'Max combo' stat to the Game Over screen
-- **Change**: Guns are now instantly collected when you press the 'interact' button
-- **Change**: Removed credits from pause menu (for now)
-- **Change**: Added a particle to Rollopods when they notice you
-- **Fix**: Fixed issue where you could have multiple players
-- **Change**: Slight tweaks to various UI
-- **Change**: Moved upgrades HUD position to top right instead of bottom right
-- **Change**: Slightly buffed ghosts' puff attack
-- **Fix**: Fixed issue where the Pea Gun could duplicate in the tutorial
-- **Fix**: Fixed issue where player could slightly clip through the elevator door when exiting cafeterias 
-- **Fix**: Fixed issue where Bulb Buddies would sometimes spawn outside of the elevator door
-- **Fix**: Fixed issue where Rollopods could sometimes be pushed around after rolling
+- **Changed**: The game will no longer boot if bugscraper.png is not present, courtesy of Alejandro Alzate Sánchez
+
+And many other various optimizations, improvements and fixes.
+
 
 ### 0.8.1
 (*2025-10-01*)

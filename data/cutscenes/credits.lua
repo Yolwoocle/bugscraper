@@ -105,6 +105,7 @@ return Cutscene:new("credits", {
                 "Jakub Piłasiewicz",
                 "Nicole Sanches (rhysuki)",
                 "Alejandro Alzate Sánchez",
+                "itzKiwiSky",
                 "Polyglot Project"
             }, "", "{menu.credits.localization}", 0.5, 7.0, 0.5)
         end,
