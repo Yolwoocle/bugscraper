@@ -104,8 +104,8 @@ return Cutscene:new("credits", {
             game.game_ui:start_title({
                 "Jakub Piłasiewicz",
                 "Nicole Sanches (rhysuki)",
-                "Alejandro Alzate Sánchez",
                 "itzKiwiSky",
+                "Alejandro Alzate Sánchez",
                 "Polyglot Project"
             }, "", "{menu.credits.localization}", 0.5, 7.0, 0.5)
         end,

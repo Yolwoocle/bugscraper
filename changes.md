@@ -78,6 +78,7 @@ I added a "⭐" emoji next to highlights to make this changelog easier to read.
 - **Changed**: The game now takes into account all user locales
 - **Changed**: Added a menu padding parameter to locales
 - **Changed**: Updated Spanish translations, courtesy of Alejandro Alzate Sánchez
+- **Changed**: Some updates to Portugese Brazilian translations, courtesy of itzKiwiSky
 
 #### Misc
 - **Added**: Added a new CEO escape cutscene after dept. 3
