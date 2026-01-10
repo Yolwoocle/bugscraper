@@ -123,6 +123,23 @@ jobs:
           unzip _export/macos/*.zip -d _export/steam/macos
           cp _export/appimage/*.AppImage _export/steam/linux/bugscraper.AppImage
 
+          cat <<EOF >"_export/steam/linux/bugscraper.sh"
+          #!/bin/bash
+          # Please do not the bug. Please don't check https://yolwoocle.com/noba as well.
+
+          working_directory="\$(dirname "\$(realpath "\$0")")"
+
+          # Steamworks doesn't expose the system /usr/bin/fusermount.
+          # Since the game is small in size, we won't go in the trouble of shipping
+          # a full-blown FUSE binary package, and we just let it extract
+          # temporarily on the disk instead.
+          export APPIMAGE_EXTRACT_AND_RUN=1
+
+          "\${working_directory}/bugscraper.AppImage" \$@
+          
+          EOF
+          chmod +x "_export/steam/linux/bugscraper.sh"
+
       - name: Create platform-specific package artefact bundle
         uses: actions/upload-artifact@v4
         with:
