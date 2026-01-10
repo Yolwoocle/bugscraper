@@ -4,6 +4,7 @@ on: workflow_dispatch
 env:
   APPIMAGETOOL_DIR: /tmp/appimagetool
   APPIMAGETOOL_PREFIX: /opt/appimagetool
+  APPIMAGETOOL_WRAPPER: /opt/appimagetool-wrapper
 
   LOVE_BINARIES_DIR: /tmp/love-binaries
   LOVE_PLATFORMS: windows-x64 linux-X64.AppImage macos
@@ -40,6 +41,22 @@ jobs:
             -DCMAKE_BUILD_TYPE=Release "${APPIMAGETOOL_DIR}"
           cmake --build .
           cmake --install .
+
+      - name: Create appimagetool wrapper script
+        run: |
+          mkdir -p "${APPIMAGETOOL_WRAPPER}"
+
+          cat <<EOF >"${APPIMAGETOOL_WRAPPER}/appimagetool"
+          #!/bin/bash
+          
+          APPIMAGETOOL_EXTRA_ARGS="--comp gzip"
+
+          "${APPIMAGETOOL_PREFIX}/bin/appimagetool" \\
+            \$APPIMAGETOOL_EXTRA_ARGS \\
+            \$@
+          EOF
+
+          chmod +x "${APPIMAGETOOL_WRAPPER}/appimagetool"
 
       - name: Gather official binaries from nightly
         run: |
@@ -96,7 +113,7 @@ jobs:
           bugscraper_version="$(grep -Po 'BUGSCRAPER_VERSION\s*=\s*"\K[^"]+' bugscraper_config.lua)"
           sed -i 's%\$\[BUGSCRAPER_VERSION\]%'${bugscraper_version}'%' makelove.toml
 
-          export PATH="${APPIMAGETOOL_PREFIX}/bin:${PATH}"
+          export PATH="${APPIMAGETOOL_WRAPPER}:${PATH}"
           makelove || true
 
       - name: Add a Steam-centric version of the game
