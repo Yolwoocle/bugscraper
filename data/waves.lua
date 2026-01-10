@@ -1344,6 +1344,8 @@ local waves = parse_waves_table {
         min = 1,
         max = 1,
 
+        cutscene = "mole_boss_enter",
+        
         enemies = {
             { E.MoleBoss, 1 }, 
         },
