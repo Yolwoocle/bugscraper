@@ -127,7 +127,7 @@ jobs:
           #!/bin/bash
           # Please do not the bug. Please don't check https://yolwoocle.com/noba as well.
 
-          working_directory="$(dirname "$(realpath "$0")")"
+          working_directory="\$(dirname "\$(realpath "\$0")")"
 
           # Steamworks doesn't expose the system /usr/bin/fusermount.
           # Since the game is small in size, we won't go in the trouble of shipping
@@ -135,7 +135,7 @@ jobs:
           # temporarily on the disk instead.
           export APPIMAGE_EXTRACT_AND_RUN=1
 
-          "${working_directory}/bugscraper.AppImage" $@
+          "\${working_directory}/bugscraper.AppImage" \$@
           
           EOF
           chmod +x "_export/steam/linux/bugscraper.sh"
