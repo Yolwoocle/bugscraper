@@ -308,6 +308,7 @@ function Loot.Gun:init(x, y, val, vx, vy, gun, params)
 	self:init_loot(gun.spr, x, y, 2, 2, val, vx, vy, params)
 
 	self.remove_on_collect = param(params.remove_on_collect, false) 
+	self.run_on_collect = param(params.run_on_collect, nil)
 	
 	self.max_life = param(params.life, 8)
 	self.life = self.max_life
@@ -351,6 +352,10 @@ function Loot.Gun:on_collect(player)
 		game:new_actor(new_loot)
 	
 		self.uncollectable_timer = 1.0
+	end
+
+	if self.run_on_collect then
+		self.run_on_collect(self)
 	end
 
 	self:remove()

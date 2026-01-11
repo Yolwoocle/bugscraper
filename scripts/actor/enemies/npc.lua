@@ -27,6 +27,8 @@ function NPC:init(x, y, params)
     self.interact_actions = {"up"}
     self.interaction_margin = 32
     self.interaction_delay = 4.0
+
+    self.extra_update = param(params.extra_update, nil)
     
     self.flip_mode = ENEMY_FLIP_MODE_MANUAL
     self.spr:set_flip_x(param(params.flip_x, false))
@@ -35,7 +37,9 @@ end
 function NPC:update(dt)
     NPC.super.update(self, dt)
 
-    -- self:check_interaction()
+    if self.extra_update then
+        self.extra_update(self, dt)
+    end
 end
 
 function NPC:on_interact(player)

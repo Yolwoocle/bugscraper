@@ -24,6 +24,7 @@ local skins            = require "data.skins"
 local BackroomCredits = require "scripts.level.backroom.backroom_credits"
 local shaders         = require "data.shaders"
 local BackroomBasement = require "scripts.level.backroom.backroom_basement"
+local BackroomEnding  = require "scripts.level.backroom.backroom_ending"
 
 local Debug            = Class:inherit()
 
@@ -150,6 +151,10 @@ function Debug:init(game)
             elseif love.keyboard.isDown("5") then
                 game.menu_manager:set_menu("w5_boss_intro")
             end
+
+            game:new_game({ 
+                backroom = BackroomEnding:new(),
+            })
                 
 
             -- local cabin_rect = game.level.cabin_rect

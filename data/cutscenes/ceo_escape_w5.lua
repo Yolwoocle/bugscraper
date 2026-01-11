@@ -3,6 +3,8 @@ local CutsceneScene = require "scripts.game.cutscene_scene"
 local images        = require "data.images"
 local guns          = require "data.guns"
 local BackroomCredits = require "scripts.level.backroom.backroom_credits"
+local Rect = require "scripts.math.rect"
+
 
 local function dust_particles(data)
     -- local vx = random_range(40, 60)
@@ -17,34 +19,28 @@ local function dust_particles(data)
 end
 
 return Cutscene:new("ceo_escape_w5", {
+    
     CutsceneScene:new({
         description = "",
 
-        duration = 0.01,
+        duration = 0.0,
         enter = function(cutscene, data)
+            data.init_ceo_x = 20*16
+
             game.menu_manager:set_can_pause(false)
             game.game_ui.cinematic_bars_enabled = true
-            game.game_ui.cinematic_bar_color = COL_VERY_DARK_GRAY
+            game.game_ui.cinematic_bar_color = COL_BLACK_BLUE
             game.game_ui.offscreen_indicators_enabled = false
             game.camera:set_target_offset(10000, 0)
 
             data.resigning_player = nil
             for _, player in pairs(game.players) do
+                player.show_hud = false
                 if player.gun.name == "resignation_letter" then
                     data.resigning_player = player
                 end
             end
             assert(data.resigning_player ~= nil)
-            data.resigning_player:set_code_input_mode_target_x(47 * 16)
-
-            local n = 1
-            for _, player in pairs(game.players) do
-                player:set_input_mode(PLAYER_INPUT_MODE_CODE)
-                player:reset_virtual_controller()
-                if player ~= data.resigning_player then
-                    player:set_code_input_mode_target_x(47 * 16 - n * 16)
-                end
-            end
 
             for _, actor in pairs(game.actors) do
                 if actor.name == "npc" and actor.npc_name == "ceo" then
@@ -56,7 +52,25 @@ return Cutscene:new("ceo_escape_w5", {
     CutsceneScene:new({
         description = "Wait for a bit",
 
+        duration = 1.0,
+    }),
+    CutsceneScene:new({
+        description = "Wait for a bit",
+
         duration = 1.5,
+        
+        enter = function(cutscene, data)
+            data.resigning_player:set_code_input_mode_target_x(data.init_ceo_x - 64)
+
+            local n = 1
+            for _, player in pairs(game.players) do
+                player:set_input_mode(PLAYER_INPUT_MODE_CODE)
+                player:reset_virtual_controller()
+                if player ~= data.resigning_player then
+                    player:set_code_input_mode_target_x(data.init_ceo_x - 64 - n * 16)
+                end
+            end
+        end,
     }),
     CutsceneScene:new({
         description = "Shocked",
@@ -134,7 +148,7 @@ return Cutscene:new("ceo_escape_w5", {
 
         duration = 1.0,
         enter = function(cutscene, data)
-            data.resigning_player:set_code_input_mode_target_x(48 * 16)
+            data.resigning_player:set_code_input_mode_target_x(data.init_ceo_x - 32)
         end,
     }),
     CutsceneScene:new({
@@ -153,7 +167,7 @@ return Cutscene:new("ceo_escape_w5", {
 
         duration = 1.0,
         enter = function(cutscene, data)
-            data.resigning_player:set_code_input_mode_target_x(49 * 16)
+            data.resigning_player:set_code_input_mode_target_x(data.init_ceo_x - 16)
         end,
     }),
     CutsceneScene:new({
@@ -182,7 +196,7 @@ return Cutscene:new("ceo_escape_w5", {
 
         duration = 1.0,
         enter = function(cutscene, data)
-            data.resigning_player:set_code_input_mode_target_x(51 * 16)
+            data.resigning_player:set_code_input_mode_target_x(data.init_ceo_x + 16)
         end,
     }),
     CutsceneScene:new({
@@ -220,7 +234,7 @@ return Cutscene:new("ceo_escape_w5", {
 
         duration = 1.0,
         enter = function(cutscene, data)
-            data.resigning_player:set_code_input_mode_target_x(53 * 16)
+            data.resigning_player:set_code_input_mode_target_x(data.init_ceo_x + 16 * 3)
         end,
     }),
 
@@ -338,18 +352,41 @@ return Cutscene:new("ceo_escape_w5", {
 
         duration = 1.0,
         enter = function(cutscene, data)
-            data.resigning_player:set_code_input_mode_target_x(420) -- Nice.
+            game.level:set_bounds(Rect:new(unpack({-10, -2, 31, 16})))
+
+            data.resigning_player:equip_gun(guns.unlootable.Machinegun:new(data.resigning_player))
+            data.resigning_player:set_code_input_mode_target_x(-100) -- Nice.
         end,
     }),
     CutsceneScene:new({
         description = "Remaining players go away",
 
-        duration = 3.0,
+        duration = 2.5,
         enter = function(cutscene, data)
-            for _, player in pairs(game.players) do
+            for _, player in pairs(game.players) do            
                 if player ~= data.resigning_player then
-                    player:set_code_input_mode_target_x(420)
+                    player:equip_gun(guns.unlootable.Machinegun:new(player))
+                    player:set_code_input_mode_target_x(-100)
                 end
+            end
+        end,
+
+        update = function(cutscene, data, dt)
+            for _, player in pairs(game.players) do
+                player.virtual_controller.actions["down"] = true
+                player.virtual_controller.actions["shoot"] = true
+            end
+        end,
+    }),
+
+    CutsceneScene:new({
+        description = "Stop shooting from players",
+
+        duration = 0.0,
+        enter = function(cutscene, data)
+            for _, player in pairs(game.players) do            
+                player.virtual_controller.actions["down"] = false
+                player.virtual_controller.actions["shoot"] = false
             end
         end,
     }),

@@ -550,6 +550,7 @@ local img_names = {
 
 	clock = "actors/enemies/clock",
 
+	ending_building = "level/credits/ending_building",
 	credits_building = "level/credits/credits_building",
 	credits_removeme_characters = "level/credits/credits_removeme_characters",
 
