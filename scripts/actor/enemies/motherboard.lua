@@ -181,7 +181,7 @@ function Motherboard:init(x, y)
                                 delay = delay / 2
                             end
 
-                            local chipper = ChipperMinion:new(info.x, iy, info.direction, ternary(self.hard_mode, 150, 100), delay)
+                            local chipper = ChipperMinion:new(info.x, iy, info.direction, ternary(self.hard_mode, 140, 100), delay)
                             table.insert(self.chippers, chipper)
                             game:new_actor(chipper)
                         end

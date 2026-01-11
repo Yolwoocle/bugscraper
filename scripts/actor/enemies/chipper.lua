@@ -51,6 +51,14 @@ function Chipper:init(x, y, spr)
     self.sound_stomp = "sfx_enemy_kill_general_glitch_{01-10}"
 
     self.state_machine = StateMachine:new({
+        idle = {
+            enter = function(state)
+            end,
+            update = function(state, dt)
+                self.vx = 0 
+                self.vy = 0 
+            end,
+        },
         wander = {
             enter = function(state)
                 self.anim_frames = self.normal_anim_frames

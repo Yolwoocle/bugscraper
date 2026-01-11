@@ -793,8 +793,8 @@ local waves = parse_waves_table {
 
     -- Floor
     {
-        min = 6,
-        max = 6,
+        min = 4,
+        max = 4,
         enemies = {
             { E.Chipper, 1 },
         },

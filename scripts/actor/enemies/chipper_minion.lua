@@ -26,13 +26,20 @@ function ChipperMinion:init(x, y, direction, attack_speed, wait_duration)
     self.score = 0
 
     self.damage = 0
-    self.telegraph_timer:set_duration(wait_duration)
+    self.wait_timer = Timer:new(wait_duration)
+    self.wait_timer:start()
+    -- self.telegraph_timer:set_duration(wait_duration)
+    self.state_machine:set_state("idle")
 end
 
 function ChipperMinion:update(dt)
     ChipperMinion.super.update(self, dt)    
 
-    if self.state_machine.current_state_name == "telegraph" then
+    if self.wait_timer:update(dt) then
+        self.state_machine:set_state("telegraph")
+    end
+
+    if --[[self.state_machine.current_state_name == "telegraph" or]] self.state_machine.current_state_name == "idle" then
         self.damage = 0
         self.spr:set_color({1, 1, 1, ternary(self.t % 0.2 < 0.1, 1, 0.5)})
         
@@ -47,7 +54,7 @@ function ChipperMinion:get_random_walk_duration()
 end
 
 function ChipperMinion:detect_player_in_range()
-    return true
+    return false
 end
 
 function ChipperMinion:draw()
