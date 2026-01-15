@@ -348,6 +348,12 @@ function Motherboard:init(x, y)
                 self.is_immune_to_bullets = true
 
                 self.can_spawn_button = false
+
+                for _, a in pairs(game.actors) do
+                    if a.name == "chipper_minion" then
+                        a:kill()
+                    end
+                end
             end,
 
             update = function(state, dt)
