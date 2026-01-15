@@ -66,7 +66,7 @@ end
 function ActorManager:get_enemy_count()
     local enemy_count = 0
 	for _, actor in pairs(self.actors) do
-		if actor.is_active and actor.counts_as_enemy then
+		if actor.is_active and (actor.counts_as_enemy and actor.counts_for_enemy_count) then
 			enemy_count = enemy_count + 1
 		end
 	end

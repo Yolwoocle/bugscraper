@@ -15,6 +15,7 @@ function Boomshroom:init(x, y)
     self.life = self.max_life
     
     self.boomshroom_size = 1
+    self.death_counts_for_fury_combo = true
     
     self.is_killed_on_negative_life = false
     self.is_killed_on_stomp = false
@@ -73,10 +74,11 @@ function Boomshroom:init(x, y)
             
         exploding = {
             enter = function(state)
+                self.counts_for_enemy_count = false
+
                 self.is_immune_to_bullets = true
                 self.is_stompable = false
                 self.destroy_bullet_on_impact = false
-                self.counts_as_enemy = false -- FIXME: check if this affects the "kills" stat
                 self.speed = 0
                 self.speed_x = 0
                 self.speed_y = 0

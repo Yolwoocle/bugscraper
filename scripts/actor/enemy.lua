@@ -24,6 +24,7 @@ function Enemy:init_enemy(x,y, img, w,h)
 	self.invincible_timer = 0.0
 	
 	self.counts_as_enemy = true -- don't count in the enemy counter
+	self.counts_for_enemy_count = true
 	self.is_being = true 
 	self.is_enemy = true
 	self.is_flying = false
