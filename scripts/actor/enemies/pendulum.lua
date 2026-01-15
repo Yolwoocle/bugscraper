@@ -75,9 +75,10 @@ function Pendulum:update(dt)
 
     self.no_damage_timer:update(dt)
     if self.no_damage_timer.is_active then
-        self.spr.color = ternary(self.t % 0.2 < 0.1, COL_WHITE, {1, 1, 1, 0.5})
+        local flash = self.t % 0.2 < 0.1
+        self.spr.color = ternary(flash, COL_WHITE, {1, 1, 1, 0.3})
         self.damage = 0
-
+        
         self:update_pendulum_position(0)
     else 
         self.damage = 1
