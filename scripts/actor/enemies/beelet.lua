@@ -60,6 +60,8 @@ function Beelet:init(x, y)
     self.base_scale = 1
     self.score = 10
 
+    self.size_sine_anim_mult = 1
+
     self.state_machine = StateMachine:new({
         wander = {
             enter = function(state)
@@ -121,7 +123,7 @@ function Beelet:init(x, y)
             end,
             update = function(state, dt)
                 self.size_t = self.size_t + dt * 20
-                local s = 1 + math.sin(self.size_t) * 0.2 
+                local s = 1 + math.sin(self.size_t) * 0.2 * self.size_sine_anim_mult
                 self.s = s
                 self.target_s = s
 
