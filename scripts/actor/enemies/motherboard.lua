@@ -332,7 +332,7 @@ function Motherboard:init(x, y)
                 self.spr.color = COL_WHITE
                 self.spr:update_offset(self.spr_base_ox, self.spr_base_oy)
 
-                self.new_button_timer:start()
+                self.new_button_timer:start(0.4)
             end
         },
 
