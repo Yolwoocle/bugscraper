@@ -11,7 +11,8 @@ local Object3D = require "scripts.graphics.3d.object_3d"
 
 local Pendulum = Enemy:inherit()
 	
-function Pendulum:init(x, y, angle_range, radius, swing_speed, initial_angle_t)
+function Pendulum:init(x, y, params) --angle_range, radius, swing_speed, initial_angle_t)
+    params = params or {}
     Pendulum.super.init(self, x,y, images.dung_beetle_shield, 32, 32)
     self.name = "pendulum"
     self.is_flying = true
@@ -28,12 +29,12 @@ function Pendulum:init(x, y, angle_range, radius, swing_speed, initial_angle_t)
     
     self.anchor_x = x
     self.anchor_y = y
-    self.angle_range = angle_range or pi/3
-    self.radius = radius or 200
-    self.swing_speed = swing_speed or 2
+    self.angle_range = param(params.angle_range, pi/3)
+    self.radius = param(params.radius, 200)
+    self.swing_speed = param(params.swing_speed, 2)
 
     self.angle = 0.0
-    self.angle_t = initial_angle_t or (random_range_int(0, 1) * pi)
+    self.angle_t = param(params.initial_angle_t, (random_range_int(0, 1) * pi))
 
     self.gravity = 0
     self.friction_y = self.friction_x
@@ -45,7 +46,7 @@ function Pendulum:init(x, y, angle_range, radius, swing_speed, initial_angle_t)
     -- self.anim_frames = {images.fly1, images.fly2}
 
     self.damage = 0
-    self.no_damage_timer = Timer:new(1.0)
+    self.no_damage_timer = Timer:new(param(params.no_damage_time, 1.5))
     self.no_damage_timer:start()
     self.t = 0.0
 

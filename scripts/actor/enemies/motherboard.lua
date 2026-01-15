@@ -209,10 +209,15 @@ function Motherboard:init(x, y)
                 self.pendulums = {}
                 for i = 1, n do
                     -- x, y, angle_range, radius, swing_speed, initial_angle_t
-                    local p = Pendulum:new((bounds.ax + bounds.bx) / 2, bounds.ay, nil,
-                        ternary(i == 1, 200, 150),
-                        ternary(self.hard_mode, 2.5, 2),
-                        ternary(i == 1, rand * pi, (1 - rand) * pi)
+                    local p = Pendulum:new(
+                        (bounds.ax + bounds.bx) / 2, 
+                        bounds.ay, 
+                        { 
+                            radius = ternary(i == 1, 200, 150),
+                            swing_speed = ternary(self.hard_mode, 2.5, 2),
+                            initial_angle_t = ternary(i == 1, rand * pi, (1 - rand) * pi),
+                            no_damage_time = ternary(self.hard_mode, 1.0, 1.5), 
+                        }
                     )
                     game:new_actor(p)
                     table.insert(self.pendulums, p)
