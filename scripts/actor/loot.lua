@@ -48,6 +48,8 @@ function Loot:init_loot(spr, x, y, w, h, val, vx, vy, params)
 
 	self.collect_instantly_on_interact = param(params.collect_instantly_on_interact, false)
 
+	self.only_collect_by_target = param(params.only_collect_by_target, false)
+
 	self:reset()
 end
 
@@ -215,7 +217,11 @@ function Loot:on_collision(col, other)
 		return
 	end
 
-	if col.other.is_player and self.ghost_timer <= 0 and self.player_filter(col.other) then
+	if col.other.is_player 
+		and self.ghost_timer <= 0 
+		and self.player_filter(col.other) 
+		and ternary(self.only_collect_by_target, col.other == self.target_player, true) 
+	then
 		self:on_collect(other)
 	end
 
@@ -262,15 +268,21 @@ end
 
 Loot.Life = Loot:inherit()
 
-function Loot.Life:init(x, y, val, vx, vy)
+function Loot.Life:init(x, y, val, vx, vy, params)
+	params = params or {}
 	val = val or 1
-	self:init_loot(images.loot_life, x, y, 2, 2, val, vx, vy)
+	self:init_loot(images.loot_life, x, y, 2, 2, val, vx, vy, params)
 	self.loot_type = "life"
 	self.value = val
+
+	self.target_player = param(params.target_player, nil)
 end
 
 function Loot.Life:get_player_score_function()
 	return function(player)
+		if self.target_player then
+			return ternary(self.target_player == player, 1, 0)
+		end
 		return player:get_total_life()
 	end
 end

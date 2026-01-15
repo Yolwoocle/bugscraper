@@ -10,6 +10,7 @@ local cutscenes           = require "data.cutscenes"
 local Loot = require "scripts.actor.loot"
 local guns = require "data.guns"
 local npcs = require "data.npcs"
+local HeartJar = require "scripts.actor.enemies.heart_jar"
 
 local BackroomCafeteria   = BackroomWithDoor:inherit()
 
@@ -49,6 +50,10 @@ function BackroomCafeteria:generate(world_generator)
 		world_generator:write_rect(Rect:new(46, 13, 48, 13), TILE_METAL_SEMISOLID) -- Tables
 		world_generator:write_rect(Rect:new(51, 13, 53, 13), TILE_METAL_SEMISOLID)
 	end
+
+	game:new_actor(
+		HeartJar:new(31*16, 10*16)
+	)
 
 	self:assign_cafeteria_upgrades()
 

@@ -262,6 +262,7 @@ local img_names = {
 	poison_cloud =             "actors/enemies/poison_cloud_1",
 
 	upgrade_jar =              "actors/enemies/upgrade_jar",
+	heart_jar =                "actors/enemies/heart_jar",
 	gun_display =              "actors/enemies/gun_display",
 	big_red_button_crack0 =    "actors/enemies/big_red_button_crack0",
 	big_red_button_crack1 =    "actors/enemies/big_red_button_crack1",

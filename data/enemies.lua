@@ -94,6 +94,7 @@ local enemies = {
 	ButtonSmallRocket =  require "scripts.actor.enemies.button_small_rocket",
 	ExitSign =           require "scripts.actor.enemies.exit_sign",
 	UpgradeDisplay =     require "scripts.actor.enemies.upgrade_display",
+	HeartJar =           require "scripts.actor.enemies.heart_jar",
 	GunDisplay =         require "scripts.actor.enemies.gun_display",
 	VendingMachine =     require "scripts.actor.enemies.vending_machine.vending_machine",
 	WaterDispenser =     require "scripts.actor.enemies.vending_machine.water_dispenser",
