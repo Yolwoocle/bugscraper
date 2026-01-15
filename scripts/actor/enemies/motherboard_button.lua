@@ -21,6 +21,9 @@ function MotherboardButton:init(x, y, parent)
     self.is_immune_to_bullets = true
 
     self.parent_damage = 20
+
+    self.player_throw_speed_y = 4000
+    self.damaged_player_invincibility = 1.2
     
     -- self.front_spr = Sprite:new(images.motherboard_button_front, SPRITE_ANCHOR_CENTER_TOP)
 
@@ -53,7 +56,11 @@ function MotherboardButton:after_collision(col, other)
         self.parent:do_damage(self.parent_damage)
         self.parent:on_motherboard_button_pressed(self)
 
-        col.other:apply_force_from(2000, {x = col.other.x, y = self.y})
+        -- col.other:apply_force_from(2000, {x = col.other.x, y = self.y})
+
+        col.other:set_invincibility(self.damaged_player_invincibility)
+        col.other.vy = self.player_throw_speed_y
+
 
         game:new_actor(Explosion:new(self.mid_x, self.mid_y, {
             explosion_damage = 0,
