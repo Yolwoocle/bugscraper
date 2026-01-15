@@ -189,7 +189,7 @@ function Motherboard:init(x, y)
                     end
                 end
 
-                self.state_timer:start(2.5)
+                self.state_timer:start(2.8)
             end,
 
             update = function(state, dt)
