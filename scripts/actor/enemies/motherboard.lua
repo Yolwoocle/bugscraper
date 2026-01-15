@@ -68,7 +68,7 @@ function Motherboard:init(x, y)
     self.state_timer = Timer:new(0)
     self.ray_timer = Timer:new(1.0)
     self.spawn_timer = Timer:new({ 0.5, 1.5 })
-    self.new_button_timer = Timer:new(1.0)
+    self.new_button_timer = Timer:new(2.5)
 
     -- state management
     self.next_state = nil
