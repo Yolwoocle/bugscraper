@@ -1,5 +1,26 @@
 # Bugscraper changelog
 
+### 0.9.1
+
+- **Fixed**: Fixed issues related to Linux, courtesy of Alexis Belmonte
+- **Added**: Added for now empty boss intro for boss 4
+- **Changed**: Slightly reduce the amount of Chippers in wave 41
+- **Changed**: Tweaks to boss 3 (the Webmaster)
+    - Slightly increased the spawn delay for Chipper minions
+    - Increased the Chipper minion phase's duration
+    - All Chipper minions are killed when the boss is killed
+    - Increased the time interval between button spawns 
+    - Buttons now eject the player down & gives them invincibility
+    - Made the pendulum spawning animation longer during the 1st phase of the boss
+    - Buttons spawn faster immediately after the middle transition animation
+- **Added**: Heart jars in cafeterias, which give a heart to every player in the game
+- **Removed**: Removed the pink "Boba" NPC
+- **Fixed**: Boomshrooms would not count into the combo counter
+
+**Minor fixes:**
+- Big chippers no longer have the scaling anim
+- Small tweak to pendulum animation
+
 ### 0.9
 (*2026-01-09*)
 
@@ -94,6 +115,7 @@ And many other various optimizations, improvements and fixes.
 - **Fix**: Fixed issue where vines (placeholder name) would not deal any damage 
 - **Fix**: Fixed issue where Chippers would not play their telegraph sound  
 
+
 ### 0.8
 (*2025-09-27*)
 
@@ -161,10 +183,12 @@ And many other various optimizations, improvements and fixes.
 - **Fix**: Removed dept. 4 (planned for a future update) 
 - **Fix**: Linux version is now correctly supported on Steam
 
+
 ### 0.7.1
 (*2025-07-03*)
 
 - **Fix**: Fixed issue where enemies would not drop any loot
+
 
 ## 0.7
 (*2025-07-01*)
@@ -191,6 +215,7 @@ I'm sorry to say that this update will reset your progress, I've made it so that
 - **Fix**: Partial fix to an issue where some enemies like boomshrooms, stink bugs' clouds, and larvae spawned from projectiles, would clip into the ground and teleport. This might still happen, just hopefully to a lesser degree
 - **Fix**: Fixed visual bugs related to TV presentation
 
+
 ## 0.6 
 (*2025-03-22*)
 
@@ -209,5 +234,6 @@ First Steam beta release (after a year of development, never too late..!) If you
 - **Fix**: Drill bees (temporary name) now give some fury when exploding
 - **Fix**: Ground floor music no longer plays when reviving a player 
 
+
 ## Older versions
-I didn't write changelogs for older versions, but you can probably access these versions at [yolwoocle.itch.io/bugscraper](https://yolwoocle.itch.io/bugscraper) and look for the changes yourself.
+I didn't write changelogs for older versions, but you can probably access these versions at [yolwoocle.itch.io/bugscraper](https://yolwoocle.itch.io/bugscraper), or look through the GitHub commit history ([github.com/yolwoocle/bugscraper](https://github.com/yolwoocle/bugscraper)) and look for the changes yourself.
