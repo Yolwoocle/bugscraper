@@ -1,10 +1,12 @@
 # Bugscraper changelog
 
 ### 0.9.1
+(*2026-01-17*)
 
-- **Fixed**: Fixed issues related to Linux, courtesy of Alexis Belmonte
+- **Added**: Heart jars in cafeterias, which give a heart to every player in the game
+- **Fixed**: Boomshrooms would not count into the combo counter
 - **Added**: Added for now empty boss intro for boss 4
-- **Changed**: Slightly reduce the amount of Chippers in wave 41
+- **Changed**: Slightly reduced the amount of Chippers in wave 41
 - **Changed**: Tweaks to boss 3 (the Webmaster)
     - Slightly increased the spawn delay for Chipper minions
     - Increased the Chipper minion phase's duration
@@ -13,9 +15,8 @@
     - Buttons now eject the player down & gives them invincibility
     - Made the pendulum spawning animation longer during the 1st phase of the boss
     - Buttons spawn faster immediately after the middle transition animation
-- **Added**: Heart jars in cafeterias, which give a heart to every player in the game
 - **Removed**: Removed the pink "Boba" NPC
-- **Fixed**: Boomshrooms would not count into the combo counter
+- **Fixed**: Fixed issues related to Linux, courtesy of Alexis Belmonte
 
 **Minor fixes:**
 - Big chippers no longer have the scaling anim
