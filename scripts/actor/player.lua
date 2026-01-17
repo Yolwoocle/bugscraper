@@ -1609,7 +1609,7 @@ end
 function Player:update_sprite(dt)
 	-- Outline color
 	if Input:get_number_of_users() > 1 and not self.is_ghost then
-		self.spr:set_outline(self.color_palette[1], "round")
+		self.spr:set_outline(self.outline_color_override or self.color_palette[1], "round")
 	else
 		self.spr:set_outline(nil)
 	end

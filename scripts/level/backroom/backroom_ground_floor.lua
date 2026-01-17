@@ -26,6 +26,8 @@ function BackroomGroundFloor:init(params)
 	self.tv_presentation = TvPresentation:new(715, 100)
 
 	self.has_opened_door = false
+	self.highlight_number_of_players_in_door = true
+	self.door_anim_o = 0
 end
 
 function BackroomGroundFloor:generate(world_generator)
@@ -166,11 +168,58 @@ function BackroomGroundFloor:update(dt)
 		game.camera:set_target_offset(-100000, 0)
 		self.has_opened_door = true
 	end
+
+	self.door_anim_o = move_toward(self.door_anim_o, ternary(self.number_of_players_in_door > 0, 0, 8), dt*130)
+
+	for _, p in pairs(game.players) do
+		p.outline_color_override = nil 
+	end
+	
+	if self:should_show_player_door_outlines() then
+		for p, is_in in pairs(self.players_in_door) do
+			p.outline_color_override = ternary(is_in, COL_WHITE, nil)
+		end
+	end
 end
 
 function BackroomGroundFloor:draw_background()
 	self.cafeteria_background:draw()
 	love.graphics.draw(images.elevator_through_door, self.door.x, self.door.y)
+end
+
+function BackroomGroundFloor:should_show_player_door_outlines()
+	if not (self.has_opened_door and self.number_of_players_in_door > 0) then
+		return false
+	end
+	if game:get_number_of_alive_players() <= 1 then
+		return false
+	end
+	if game.game_state == GAME_STATE_PLAYING then
+		return false
+	end
+	return true
+end
+
+function BackroomGroundFloor:draw_door_outline()
+	if not self:should_show_player_door_outlines() then 
+		return
+	end
+	local entr = game.level.elevator.entrances["main"]
+	if entr then
+		-- rect_color(
+		-- 	COL_WHITE, 
+		-- 	"line", 
+		-- 	entr.rect.x - self.door_anim_o, 
+		-- 	entr.rect.y - self.door_anim_o, 
+		-- 	entr.rect.w + self.door_anim_o*2,
+		-- 	entr.rect.h + self.door_anim_o*2
+		-- )
+		print_centered(
+			concat(self.number_of_players_in_door, "/", game:get_number_of_alive_players()), 
+			entr.rect.x + entr.rect.w / 2, 
+			entr.rect.y + 8 - self.door_anim_o
+		)
+	end
 end
 
 function BackroomGroundFloor:draw_items()
@@ -183,6 +232,7 @@ end
 
 function BackroomGroundFloor:draw_front_walls()
 	love.graphics.draw(images.ground_floor_front, -16, -16)
+	self:draw_door_outline()
 end
 
 return BackroomGroundFloor
