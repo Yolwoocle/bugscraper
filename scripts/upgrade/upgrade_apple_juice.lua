@@ -17,8 +17,8 @@ function UpgradeAppleJuice:init()
     self.activate_sound = "sfx_upgrades_apple_juice_pickedup"
 end
     
-function UpgradeAppleJuice:update(dt)
-    UpgradeAppleJuice.super:update(self, dt)
+function UpgradeAppleJuice:update(player, dt)
+    UpgradeAppleJuice.super:update(self, player, dt)
 end
 
 function UpgradeAppleJuice:apply_permanent(player)

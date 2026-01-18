@@ -18,11 +18,11 @@ function Upgrade:init(name)
     self.activate_sound = "empty"
 end
 
-function Upgrade:update(dt)
-    self:update_upgrade(dt)
+function Upgrade:update(player, dt)
+    self:update_upgrade(player, dt)
 end
 
-function Upgrade:update_upgrade(dt)
+function Upgrade:update_upgrade(player, dt)
 end
 
 function Upgrade:apply(player, is_revive)

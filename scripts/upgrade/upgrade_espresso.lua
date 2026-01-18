@@ -18,8 +18,8 @@ function UpgradeEspresso:init()
     self.activate_sound = "sfx_upgrades_espresso_pickedup"
 end
 
-function UpgradeEspresso:update(dt)
-    UpgradeEspresso.super:update(self, dt)
+function UpgradeEspresso:update(player, dt)
+    UpgradeEspresso.super:update(self, player, dt)
 end
 
 function UpgradeEspresso:apply_instant(player)

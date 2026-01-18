@@ -18,8 +18,8 @@ function UpgradeSoda:init()
     self.activate_sound = "sfx_upgrades_soda_pickedup"
 end
 
-function UpgradeSoda:update(dt)
-    UpgradeSoda.super:update(self, dt)
+function UpgradeSoda:update(player, dt)
+    UpgradeSoda.super:update(self, player, dt)
 end
 
 function UpgradeSoda:apply_permanent(player)

@@ -17,8 +17,8 @@ function UpgradeTea:init()
     self.activate_sound = "sfx_upgrades_tea_pickedup"
 end
 
-function UpgradeTea:update(dt)
-    UpgradeTea.super:update(self, dt)
+function UpgradeTea:update(player, dt)
+    UpgradeTea.super:update(self, player, dt)
 end
 
 function UpgradeTea:apply_instant(player)

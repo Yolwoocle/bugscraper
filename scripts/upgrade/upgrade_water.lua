@@ -15,8 +15,8 @@ function UpgradeWater:init()
     self.activate_sound = "sfx_upgrades_water_pickedup"
 end
 
-function UpgradeWater:update(dt)
-    UpgradeWater.super:update(self, dt)
+function UpgradeWater:update(player, dt)
+    UpgradeWater.super:update(self, player, dt)
 end
 
 function UpgradeWater:apply_instant(player)

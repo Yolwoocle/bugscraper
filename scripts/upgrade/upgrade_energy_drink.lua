@@ -16,8 +16,8 @@ function UpgradeEnergyDrink:init()
     self.activate_sound = "sfx_upgrades_energydrink_pickedup"
 end
 
-function UpgradeEnergyDrink:update(dt)
-    UpgradeEnergyDrink.super:update(self, dt)
+function UpgradeEnergyDrink:update(player, dt)
+    UpgradeEnergyDrink.super:update(self, player, dt)
 end
 
 function UpgradeEnergyDrink:apply_permanent(player)

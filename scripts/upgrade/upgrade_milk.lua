@@ -17,8 +17,8 @@ function UpgradeMilk:init()
     self.activate_sound = "sfx_upgrades_milk_pickedup"
 end
 
-function UpgradeMilk:update(dt)
-    UpgradeMilk.super:update(self, dt)
+function UpgradeMilk:update(player, dt)
+    UpgradeMilk.super:update(self, player, dt)
 end
 
 function UpgradeMilk:apply_permanent(player)

@@ -17,8 +17,8 @@ function UpgradeHotSauce:init()
     self.activate_sound = "sfx_upgrades_hot_sauce_pickedup"
 end
 
-function UpgradeHotSauce:update(dt)
-    UpgradeHotSauce.super:update(self, dt)
+function UpgradeHotSauce:update(player, dt)
+    UpgradeHotSauce.super:update(self, player, dt)
 end
 
 function UpgradeHotSauce:apply_permanent(player)

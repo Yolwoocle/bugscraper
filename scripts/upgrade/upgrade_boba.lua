@@ -16,8 +16,8 @@ function UpgradeBoba:init()
     self.activate_sound = "sfx_upgrades_boba_pickedup"
 end
 
-function UpgradeBoba:update(dt)
-    UpgradeBoba.super:update(self, dt)
+function UpgradeBoba:update(player, dt)
+    UpgradeBoba.super:update(self, player, dt)
 end
 
 function UpgradeBoba:apply_permanent(player)

@@ -7,9 +7,9 @@ local UpgradeCoconutWater = Upgrade:inherit()
 function UpgradeCoconutWater:init()
     UpgradeCoconutWater.super.init(self, "coconut_water")
     self.sprite = images.upgrade_coconut_water
-    self.value = 0.5
+    self.value = 0.25
 
-    self:set_description(self.value * 100)
+    self:set_description(round(self.value * 100))
 
     self.color = COL_WHITE
     self.palette = {COL_WHITE, COL_MID_BROWN, COL_DARK_BROWN}
@@ -17,8 +17,8 @@ function UpgradeCoconutWater:init()
     self.activate_sound = "sfx_upgrades_coconut_water_pickedup"
 end
 
-function UpgradeCoconutWater:update(dt)
-    UpgradeCoconutWater.super:update(self, dt)
+function UpgradeCoconutWater:update(player, dt)
+    UpgradeCoconutWater.super:update(self, player, dt)
 end
 
 function UpgradeCoconutWater:apply_instant(player)

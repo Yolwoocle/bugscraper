@@ -15,8 +15,8 @@ function UpgradeFizzyLemonade:init()
     self.activate_sound = "sfx_upgrades_fizzy_lemonade_pickedup"
 end
 
-function UpgradeFizzyLemonade:update(dt)
-    UpgradeFizzyLemonade.super:update(self, dt)
+function UpgradeFizzyLemonade:update(player, dt)
+    UpgradeFizzyLemonade.super:update(self, player, dt)
 end
 
 function UpgradeFizzyLemonade:apply_permanent(player)

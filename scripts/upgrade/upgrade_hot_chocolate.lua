@@ -18,8 +18,8 @@ function UpgradeHotChocolate:init()
     self.activate_sound = "sfx_upgrades_hot_chocolate_pickedup"
 end
 
-function UpgradeHotChocolate:update(dt)
-    UpgradeHotChocolate.super:update(self, dt)
+function UpgradeHotChocolate:update(player, dt)
+    UpgradeHotChocolate.super:update(self, player, dt)
 end
 
 function UpgradeHotChocolate:apply_instant(player)

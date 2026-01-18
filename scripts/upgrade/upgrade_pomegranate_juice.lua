@@ -15,8 +15,8 @@ function UpgradePomegranateJuice:init()
     self.activate_sound = "sfx_upgrades_pomegranate_juice_pickedup"
 end
 
-function UpgradePomegranateJuice:update(dt)
-    UpgradePomegranateJuice.super:update(self, dt)
+function UpgradePomegranateJuice:update(player, dt)
+    UpgradePomegranateJuice.super:update(self, player, dt)
 end
 
 function UpgradePomegranateJuice:apply_permanent(player, is_revive)
