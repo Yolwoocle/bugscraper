@@ -15,12 +15,13 @@ function HeartJar:init(x, y, params)
     self.name = "heart_jar"
 
     self.images_cracked = {images.heart_jar}
-    self.life = 20
+    self.life = 10
 
     self.sounds_impact = "sfx_actor_button_small_glass_damage_{01-06}"
     self.sound_fracture = ""
     self.sound_break = "sfx_actor_button_small_glass_break"
 
+    self.break_screenshake = 8
     self.break_num_particles = 50
 
     self.collision_info = CollisionInfo:new {
