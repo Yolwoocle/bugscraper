@@ -64,6 +64,8 @@ function Enemy:init_enemy(x,y, img, w,h)
 	self.is_immune_to_electricity = false
 	self.is_bouncy_to_bullets = false
 	self.bullet_bounce_mode = BULLET_BOUNCE_MODE_RADIAL
+
+	self.max_frames_since_land_for_stomping = 7
 	
 	self.harmless_timer = 0
 
@@ -267,7 +269,7 @@ function Enemy:on_collision(col, other)
 
 		local is_on_head      = (feet_y <= self.y + self.h * self.head_ratio) and self.can_be_stomped_if_on_head
 		local is_falling_down = (player.vy > 0.0001) and self.can_be_stomped_if_falling_down
-		local recently_landed = (0 < player.frames_since_land) and (player.frames_since_land <= 7)
+		local recently_landed = (0 < player.frames_since_land) and (player.frames_since_land <= self.max_frames_since_land_for_stomping)
 		local stomp_condition = (is_on_head or is_falling_down or recently_landed)
 		
 		if self.invincible_timer <= 0 and self.is_stompable and stomp_condition then

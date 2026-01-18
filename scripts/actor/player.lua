@@ -1233,7 +1233,7 @@ end
 
 function Player:update_upgrades(dt)
 	for i, upgrade in pairs(self.upgrades) do
-		upgrade:update(dt)
+		upgrade:update(self, dt)
 	end
 end
 
