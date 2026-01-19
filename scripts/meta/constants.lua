@@ -633,7 +633,7 @@ TV_CREDITS = {
     ["slide_018"] = "Corentin Vaillant",
     ["slide_019"] = "Hector SK (Nextop Games)",
     ["slide_020"] = "kiwisky",
-    ["slide_021"] = "Yolwoocle",
+    ["slide_021"] = "LinkyLorelei",
     ["slide_022"] = "8lueskii",
     
     ["bluescreen_1"] = "Hector SK (Nextop Games)",

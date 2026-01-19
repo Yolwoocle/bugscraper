@@ -16,7 +16,7 @@ function TvPresentation:init(x, y, params)
 
     self.default_slide_duration = param(params.default_slide_duration, 5.0)
 
-    local slides = {
+    self.slides_data = {
         ["slide_001"] = { images.tv_slideshow_001, 0 },      -- Powerpoint stats         by Sslime7 
         ["slide_002"] = { images.tv_slideshow_002, 0 },      -- Hot dogs                 by Alexis Belmonte
         ["slide_003"] = { images.tv_slideshow_003, 0.04 },   -- Mio rotate               by Corentin Vaillant 
@@ -37,7 +37,9 @@ function TvPresentation:init(x, y, params)
         ["slide_018"] = { images.tv_slideshow_018, 0.04 },   -- Mio explode              by Corentin Vaillant
         ["slide_019"] = { images.tv_slideshow_019, 0.04 },   -- Snail Ball Run           by Hector SK (Nextop Games)
         ["slide_020"] = { images.tv_slideshow_020, 0.5 },   -- You are a Bug             by kiwisky 
-        ["slide_021"] = { images.tv_slideshow_021, 0.5 },   -- Empty Knight: Clothmusic  by yolwoocle 
+        ["slide_021"] = { images.tv_slideshow_021, 0.075, default_slide_duration = 0 },   -- Roaring Knight            by Linky 
+        ["slide_021_b"] = { images.tv_slideshow_021, 0.075/2, default_slide_duration = 0 },   -- Roaring Knight            by Linky 
+        ["slide_021_c"] = { images.tv_slideshow_021, 0.075/4, default_slide_duration = 0 },   -- Roaring Knight            by Linky 
         ["slide_022"] = { images.tv_slideshow_022, 0.1 },   -- Buglatro                  by 8lueskii 
         
         ["bluescreen"] = { random_sample {images.tv_bluescreen, images.tv_bluescreen_2}, math.huge } ,
@@ -48,16 +50,24 @@ function TvPresentation:init(x, y, params)
         ["empty"] = {images.empty, 1.0}
     }
     self.slide_names = {}
-    for name, slide_info in pairs(slides) do
-        if name ~= "bluescreen" and name ~= "bluescreen_1" and name ~= "bluescreen_2" and name ~= "empty" then
+    for name, slide_info in pairs(self.slides_data) do
+        if not is_in_table({"bluescreen", "bluescreen_1", "bluescreen_2", "empty", "slide_021_b", "slide_021_c"}, name) then
             table.insert(self.slide_names, name)
         end
 
-        slides[name][3] = math.floor(slides[name][1]:getWidth() / self.canvas_w)
-        slides[name][4] = math.floor(slides[name][1]:getHeight() / self.canvas_h)
+        self.slides_data[name][3] = math.floor(self.slides_data[name][1]:getWidth() / self.canvas_w)
+        self.slides_data[name][4] = math.floor(self.slides_data[name][1]:getHeight() / self.canvas_h)
     end
     if param(params.shuffle_table, true) then
         shuffle_table(self.slide_names)
+    end
+
+    -- Add RAARRR b and c
+    for i = 1, #self.slide_names do
+        if self.slide_names[i] == "slide_021" then
+            table.insert(self.slide_names, i+1, "slide_021_b")
+            table.insert(self.slide_names, i+2, "slide_021_c")
+        end
     end
 
     self.do_slideshow = param(params.do_slideshow, true)
@@ -155,7 +165,7 @@ function TvPresentation:init(x, y, params)
     self.old_slide = self.slide_names[self.current_slide_number]
     self.current_slide = self.slide_names[self.current_slide_number]
 
-    self.spr = AnimatedSprite:new(slides, self.current_slide, SPRITE_ANCHOR_LEFT_TOP)
+    self.spr = AnimatedSprite:new(copy_table_shallow(self.slides_data), self.current_slide, SPRITE_ANCHOR_LEFT_TOP)
 end
 
 function TvPresentation:update(dt)
@@ -176,7 +186,14 @@ function TvPresentation:update(dt)
 
     -- Transition end
     if self.do_slideshow and self.transition_timer:update(dt) then
-        self.slideshow_timer:start(math.max(self.default_slide_duration, self.spr.animations[self.current_slide].duration - 1/60))
+        local default_slide_duration = self.slides_data[self.current_slide].default_slide_duration
+        print_table(self.slides_data[self.slide_names [self.current_slide_number]])
+        self.slideshow_timer:start(
+            math.max(
+                default_slide_duration or self.default_slide_duration, 
+                self.spr.animations[self.current_slide].duration - 1/60
+            )
+        )
         self.current_transition = nil
     end
     
