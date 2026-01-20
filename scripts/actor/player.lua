@@ -1174,7 +1174,7 @@ end
 
 function Player:on_stomp(enemy)
 	local spd = -self.stomp_jump_speed
-	if self:action_down("jump") or self.buffer_jump_timer > 0 then
+	if (self:action_down("jump") or self.buffer_jump_timer > 0) and not self.is_grounded then
 		spd = spd * 1.3
 	end
 	self.vy = spd

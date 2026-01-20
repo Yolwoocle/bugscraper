@@ -100,7 +100,7 @@ function TimedSpikes:init(x, y, duration_off, duration_telegraph, duration_on, s
                 if self.standby_timer:update(dt) then
                     self.state_machine:set_state(self.init_state_name)
                     self.state_timer:start()
-                end
+                end 
             end,
             exit = function(state)
                 self.spr:set_scale(1, 1)
@@ -219,15 +219,17 @@ function TimedSpikes:set_time_offset(time_offset)
 end
 
 function TimedSpikes:get_offset_time_and_state(time_offset)
+    -- Calculate total time
     local total_time = 0
     for _, state in pairs(self.state_order) do
         total_time = total_time + state[2]
     end
 
+    -- 
     local time = time_offset
-    if self.do_circular_timing then
-        time = time % total_time
-    end
+    time = time % total_time
+    -- if self.do_circular_timing then
+    -- end
     for i_state = 1, #self.state_order do
         local state_duration = self.state_order[i_state][2]
         if time <= state_duration then
@@ -235,7 +237,6 @@ function TimedSpikes:get_offset_time_and_state(time_offset)
         end
         time = time - state_duration
     end
-
 end
 
 function TimedSpikes:get_cycle_total_time()

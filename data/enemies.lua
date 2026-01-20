@@ -21,12 +21,16 @@ local enemies = {
 	Beelet =             require "scripts.actor.enemies.beelet", 
 	Stabee =             require "scripts.actor.enemies.stabee", 
 	DrillBee =           require "scripts.actor.enemies.drill_bee", 
+	DrillBeeMinion =     require "scripts.actor.enemies.drill_bee_minion", 
 	HoneycombFootball =  require "scripts.actor.enemies.honeycomb_football", 
 	HoneypotAnt =        require "scripts.actor.enemies.honeypot_ant",
 	TimedSpikes =        require "scripts.actor.enemies.timed_spikes",
 	FlyingSpawner =      require "scripts.actor.enemies.flying_spawner",
 	LarvaSpawner =       require "scripts.actor.enemies.larva_spawner", --*
 	BeeBoss =            require "scripts.actor.enemies.bee_boss",
+	BeeBossRework =      require "scripts.actor.enemies.bee_boss_rework",
+	HerMajesty =         require "scripts.actor.enemies.her_majesty",
+	HoneyPatch =         require "scripts.actor.enemies.honey_patch",
 
 	-- W3
 	ElectricArc =        require "scripts.actor.enemies.electric_arc", 

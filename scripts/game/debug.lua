@@ -286,7 +286,7 @@ function Debug:init(game)
         end },
         ["r"] = { "start game", function()
             for _, p in pairs(game.players) do
-                p:set_position(CANVAS_CENTER[1], CANVAS_CENTER[2])
+                p:set_position(CANVAS_CENTER[1], CANVAS_CENTER[2] + 64)
             end
             game.can_start_game = true
             game.camera:reset()
@@ -347,11 +347,28 @@ function Debug:init(game)
             game:new_actor(instance)
         end },
 
-        ["z"] = { "zoom -", function()
-            self.game.camera:set_zoom(self.game.camera:get_zoom() - 0.1)
-        end },
-        ["x"] = { "zoom +", function()
-            self.game.camera:set_zoom(self.game.camera:get_zoom() + 0.1)
+        -- ["z"] = { "zoom -", function()
+        --     self.game.camera:set_zoom(self.game.camera:get_zoom() - 0.1)
+        -- end },
+        -- ["x"] = { "zoom +", function()
+        --     self.game.camera:set_zoom(self.game.camera:get_zoom() + 0.1)
+        -- end },
+        ["0"] = { "zoom +", function()
+            local loot, parms = random_weighted({
+                { Loot.Life, 3, loot_type = "life", value = 1 },
+            })
+            if not loot then return end
+
+            local x, y = CANVAS_WIDTH / 2, CANVAS_HEIGHT * 0.8
+            local instance
+            local vx = random_neighbor(300)
+            local vy = random_range(-200, -500)
+            local loot_type = parms.loot_type
+            if loot_type == "ammo" or loot_type == "life" or loot_type == "gun" then
+                instance = loot:new(x, y, parms.value, vx, vy)
+            end
+
+            game:new_actor(instance)
         end },
 
         -- ["left"] = {"move camera left", function()
@@ -384,7 +401,7 @@ function Debug:init(game)
             save_canvas_as_file(canvas_, os.date('bugscraper_waves_%Y-%m-%d_%H-%M-%S.png'), "png")
         end },
 
-        ["n"] = { "toggle frame-by-frame", function()
+        ["x"] = { "toggle frame-by-frame", function()
             _G_frame_by_frame_mode = not _G_frame_by_frame_mode
         end },
 
@@ -439,7 +456,7 @@ end
 function Debug:debug_action(key, scancode, isrepeat)
     local action = self.actions[scancode]
     if action then
-        if not action.do_not_require_ctrl and not love.keyboard.isScancodeDown("lctrl") then
+        if not action.do_not_require_ctrl and not (love.keyboard.isScancodeDown("lctrl") or  love.keyboard.isScancodeDown("rctrl")) then
             return
         end
 

@@ -7,7 +7,7 @@ local images = require "data.images"
 local HoneypotLiquid = Enemy:inherit()
 	
 function HoneypotLiquid:init(x, y)
-    self:init_enemy(x,y, images.honeypot_liquid, 14, 14)
+    self:init_enemy(x,y, images.honeypot_liquid, 20, 10)
     self.name = "honeypot_liquid"
 
     self.gravity_mult = 0.3
