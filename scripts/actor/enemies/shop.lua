@@ -8,7 +8,6 @@ local UpgradeEspresso = require "scripts.upgrade.upgrade_espresso"
 local UpgradeMoreLife = require "scripts.upgrade.upgrade_milk"
 local UpgradeTea = require "scripts.upgrade.upgrade_tea"
 
-
 local utf8 = require "utf8"
 
 local Shop = StaticProp:inherit()

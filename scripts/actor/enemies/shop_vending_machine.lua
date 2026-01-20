@@ -22,8 +22,6 @@ end
 function ShopVendingMachine:apply_current_product()
     ShopVendingMachine.super.apply_current_product(self)
 
-    game.level:on_upgrade_display_killed(self)
-
     self:play_sound(self.selected_product.activate_sound)
     Particles:collected_upgrade(self.mid_x, self.mid_y, self.selected_product.sprite, self.selected_product.color)
     game:screenshake(6)

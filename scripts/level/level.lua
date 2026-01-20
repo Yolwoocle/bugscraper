@@ -625,13 +625,7 @@ function Level:on_upgrade_applied(upgrade)
 	end
 end
 
-function Level:on_upgrade_display_killed(display) -- alsp works for shops
-	for _, actor in pairs(game.actors) do
-		if actor ~= self and actor.name == "upgrade_display" then
-			actor:kill()
-		end
-	end
-
+function Level:on_shop_killed(display) -- alsp works for shops
 	local current_disk = game.music_player.current_disk
 	local time = 0.0
 	if current_disk and current_disk.current_source then
@@ -639,14 +633,10 @@ function Level:on_upgrade_display_killed(display) -- alsp works for shops
         time = current_source:tell()
 	end
 	
-	-- game.music_player:set_disk("cafeteria_empty")
+	game.music_player:set_disk("cafeteria_empty")
 	if game.music_player.current_disk and game.music_player.current_disk.current_source then
 		local source = game.music_player.current_disk.current_source
 		source:seek(time)
-	end
-
-	if self.backroom and self.backroom.name == "cafeteria" then
-		self.backroom:open_door()	
 	end
 end
 

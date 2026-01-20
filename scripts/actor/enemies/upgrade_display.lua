@@ -147,7 +147,7 @@ function UpgradeDisplay:apply()
         self:play_sound(self.product.activate_sound)
 
         game:apply_upgrade(self.product)
-        -- game.level:on_upgrade_display_killed(self)
+        -- game.level:on_shop_killed(self)
         
         Particles:collected_upgrade(self.mid_x, self.mid_y, self.product.sprite, self.product.color)
     end
