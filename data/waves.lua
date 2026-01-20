@@ -224,6 +224,50 @@ local thorns_arc_params = {
 }
 
 local waves = parse_waves_table {
+    
+    -- {
+    --     -- roll_type = WAVE_ROLL_TYPE_FIXED,
+    --     min = 1,
+    --     max = 1,
+    --     enemies = {
+    --         { E.BeeBossRework, 1, position = { 240 - 16, 200 } },
+    --     },
+    --     music = "boss_w2",
+    --     ambience = "bee_boss_crowd_normal",
+
+    --     run = function(self, level)
+    --         for _, actor in pairs(level.game.actors) do
+    --             if actor.name == "timed_spikes" then
+    --                 actor:remove()
+    --             end
+    --         end
+    --     end,
+
+    --     elevator = ElevatorW2,
+    -- },
+    
+    -- {
+    --     -- roll_type = WAVE_ROLL_TYPE_FIXED,
+    --     min = 1,
+    --     max = 1,
+    --     enemies = {
+    --         { E.HerMajesty, 1, position = { 240 - 16, 200 } },
+    --     },
+    --     music = "boss_w2",
+    --     ambience = "bee_boss_crowd_normal",
+
+    --     run = function(self, level)
+    --         for _, actor in pairs(level.game.actors) do
+    --             if actor.name == "timed_spikes" then
+    --                 actor:remove()
+    --             end
+    --         end
+    --     end,
+
+    --     elevator = ElevatorW2,
+    -- },
+
+
     -- {
     --     roll_type = WAVE_ROLL_TYPE_FIXED,
     --     background = backgrounds.BackgroundGreenhouse:new(),
@@ -238,70 +282,6 @@ local waves = parse_waves_table {
     --     run = function(self, level)
     --     end,
     -- },
-
-    -- Cafeteria
-    -- new_cafeteria({ 
-    --     run_func = function()
-    --         game.actor_manager:kill_actors_with_name("electric_rays")
-    --     end, 
-    --     ceo_info = 3,
-    --     empty_cafeteria = true
-    -- }),
-
-
-    -- {
-    --     min = 1,
-    --     max = 1,
-    --     enemies = {{ E.Larva, 3 }},
-    --     elevator = ElevatorW1,
-
-    -- },
-    -- {
-    --     floor_type = FLOOR_TYPE_CAFETERIA,
-    --     roll_type = WAVE_ROLL_TYPE_FIXED,
-    --     music = "off",
-
-    --     run = function(self, level)
-    --         for _, actor in pairs(game.actors) do
-    --             if actor.name == "poison_cloud" then
-    --                 actor.lifespan = 1
-    --             end
-    --             if actor.name == "floor_hole_spawner" or actor.name == "pendulum" then
-    --                 actor:remove()
-    --             end
-    --         end
-    --     end,
-
-    --     min = 1,
-    --     max = 1,
-    --     enemies = {},
-
-    --     bounds = RECT_CEO_OFFICE,
-
-    --     backroom = BackroomCEOOffice
-    -- },
-
-
-
-    -- {
-    --     min = 1,
-    --     max = 1,
-
-    --     enemies = {
-    --         { E.Motherboard, 1, position = { 3 * 16, -40 } },
-    --     },
-    --     run = function(self, level)
-    --         for _, actor in pairs(game.actors) do
-    --             if actor.name == "electric_arc" then
-    --                 actor:start_disable_timer(1)
-    --             end
-    --         end
-    --     end,
-
-    --     music = "boss_w3",
-    --     elevator = ElevatorW3,
-    -- },
-
 
     -------------------------------------------
 

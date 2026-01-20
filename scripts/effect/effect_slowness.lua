@@ -4,18 +4,25 @@ local images = require "data.images"
 
 local EffectSlowness = Effect:inherit()
 
-function EffectSlowness:init()
+function EffectSlowness:init(sleep_mult, jump_speed_mult)
     self:init_effect()
     self.name = "effect_slowness"
+
+    self.sleep_mult = sleep_mult or 0.3
+    self.jump_speed_mult = jump_speed_mult or 0.5
 end
 
 function EffectSlowness:on_apply(player, duration)
-    player.speed_mult = 0.3
-    player.jump_speed_mult = 0.5
 end
 
 function EffectSlowness:update(dt)
     self:update_effect(dt)
+
+    if self.player then
+        self.player.speed_mult = self.sleep_mult
+        self.player.jump_speed_mult = self.jump_speed_mult
+    end
+    
 end
 
 function EffectSlowness:on_finish(player)

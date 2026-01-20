@@ -187,7 +187,6 @@ function TvPresentation:update(dt)
     -- Transition end
     if self.do_slideshow and self.transition_timer:update(dt) then
         local default_slide_duration = self.slides_data[self.current_slide].default_slide_duration
-        print_table(self.slides_data[self.slide_names [self.current_slide_number]])
         self.slideshow_timer:start(
             math.max(
                 default_slide_duration or self.default_slide_duration, 
