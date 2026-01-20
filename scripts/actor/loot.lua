@@ -28,6 +28,7 @@ function Loot:init_loot(spr, x, y, w, h, val, vx, vy, params)
 	self.life_decrease_rate = param(params.life_decrease_rate, 1.0)
 
 	self.min_attract_dist = param(params.min_attract_dist, math.huge)
+	self.min_attract_dist_func = param(params.min_attract_dist_func, function(player) return self.min_attract_dist end)
 	local filter = param(params.player_filter, function(player) return true end)
 	self.player_filter = filter
 
@@ -48,7 +49,7 @@ function Loot:init_loot(spr, x, y, w, h, val, vx, vy, params)
 
 	self.collect_instantly_on_interact = param(params.collect_instantly_on_interact, false)
 
-	self.only_collect_by_target = param(params.only_collect_by_target, false)
+	self.only_collect_by_target = param(params.only_collect_by_target, true)
 
 	self:reset()
 end
@@ -159,7 +160,8 @@ function Loot:get_attract_candidates(score_function)
 	for _, player in pairs(game.players) do
 		local score = score_function(player)
 		local d = distsqr(self.mid_x, self.mid_y, player.mid_x, player.mid_y)
-		if score <= min_score and d <= sqr(self.min_attract_dist) and self.player_filter(player) then
+		local min_attract_dist = self.min_attract_dist_func(player)
+		if score <= min_score and d <= sqr(min_attract_dist) and self.player_filter(player) then
 			if score < min_score then
 				min_score = score
 				best_candidates = {}
@@ -270,10 +272,15 @@ Loot.Life = Loot:inherit()
 
 function Loot.Life:init(x, y, val, vx, vy, params)
 	params = params or {}
+	params.min_attract_dist = params.min_attract_dist or 32
+	params.min_attract_dist_func = params.min_attract_dist_func or function(player)
+		return 64 + 128 * clamp(1 - player:get_total_life() / player.max_life, 0, 1)
+	end
 	val = val or 1
 	self:init_loot(images.loot_life, x, y, 2, 2, val, vx, vy, params)
 	self.loot_type = "life"
 	self.value = val
+	self.friction_x = 0.95
 
 	self.target_player = param(params.target_player, nil)
 end
