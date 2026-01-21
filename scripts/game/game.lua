@@ -103,6 +103,8 @@ function Game:init()
 	self.has_seen_controller_warning = false
 	self.ui_visible = true
 
+	self.join_cooldown_frames = 0
+
 	self.discord_presence = DiscordPresence
 	self.steamworks = Steamworks
 
@@ -380,6 +382,8 @@ function Game:update(dt)
 
 	self.discord_presence:update(dt)
 	self.steamworks:update(dt)
+
+	self.join_cooldown_frames = math.max(0, self.join_cooldown_frames - 1)
 
 	-- THIS SHOULD BE LAST
 	Input:update_last_input_state(dt)
@@ -664,7 +668,7 @@ end
 function Game:listen_for_player_join(dt)
 	if self.game_state ~= GAME_STATE_WAITING then return end
 
-	if Input:action_pressed_global("join_game") and self.can_join_game then
+	if Input:action_pressed_global("join_game") and self.can_join_game and self.join_cooldown_frames <= 0 then
 		local global_user = Input:get_global_user()
 		local last_button = global_user.last_pressed_button
 		local input_profile_id = ""
@@ -907,6 +911,8 @@ function Game:init_players(x, y, spacing)
 end
 
 function Game:queue_join_game(input_profile_id, joystick)
+	self.join_cooldown_frames = 2
+
 	local player_n = Input:find_free_user_number()
 	if player_n == nil then
 		return
@@ -1047,6 +1053,8 @@ function Game:leave_game(player_n)
 		self.level.backroom:on_player_leave(player)
 	end
 	self.level:on_player_leave(player_n)
+
+	self.join_cooldown_frames = 2
 end
 
 function Game:update_queued_players(dt)
