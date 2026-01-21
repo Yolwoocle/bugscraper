@@ -5,7 +5,8 @@ local images = require "data.images"
 
 local ControlsMenuItem = TextMenuItem:inherit()
 
-function ControlsMenuItem:init(i, x, y, player_n, profile_id, input_type, action_name, label_text)
+function ControlsMenuItem:init(i, x, y, player_n, profile_id, input_type, action_name, label_text, params)
+	params = params or {}
 	ControlsMenuItem.super.init(self, i, x, y, action_name)
 
 	self.player_n = player_n
@@ -14,6 +15,8 @@ function ControlsMenuItem:init(i, x, y, player_n, profile_id, input_type, action
 	self.input_type = input_type
 	self.action_name = action_name
 	self.is_ui_action = is_in_table(UI_ACTIONS, self.action_name)
+
+	self.avoid_collisions = param(params.avoid_collisions, {})
 	
 	self.scancode = nil
 	
@@ -183,6 +186,12 @@ function ControlsMenuItem:on_button_pressed(button)
 		end
 		if #self:get_buttons() >= MAX_ASSIGNABLE_BUTTONS then
 			return
+		end
+		
+		for _, potential_collision in pairs(self.avoid_collisions) do
+			if Input:is_button_in_use(self.profile_id, potential_collision, button) then
+				return 
+			end
 		end
 		
 		self.scancode = button.key_name

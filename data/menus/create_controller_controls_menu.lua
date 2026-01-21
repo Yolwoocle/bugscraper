@@ -8,6 +8,10 @@ local ControlsMenuItem    = require "scripts.ui.menu.items.controls_menu_item"
 local DEFAULT_MENU_BG_COLOR = menu_util.DEFAULT_MENU_BG_COLOR
 local PROMPTS_CONTROLS  = menu_util.PROMPTS_CONTROLS
 
+local avoid_collisions = {
+    "ui_left", "ui_right", "ui_up", "ui_down", "ui_select", "ui_back", "pause"
+} 
+
 local function create_controller_controls_menu(title, input_profile_id, player_n)
     return Menu:new(game, title, {
         { "", nil,
@@ -62,13 +66,13 @@ local function create_controller_controls_menu(title, input_profile_id, player_n
         { "" },
         { "<<< {menu.options.input_submenu.interface} >>>" },
         { Text:text("menu.options.input_submenu.note_ui_min_button") },
-        { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "ui_left", "⬅ " .. Text:text("input.prompts.ui_left") },
-        { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "ui_right", "➡ " .. Text:text("input.prompts.ui_right") },
-        { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "ui_up", "⬆ " .. Text:text("input.prompts.ui_up") },
-        { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "ui_down", "⬇ " .. Text:text("input.prompts.ui_down") },
-        { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "ui_select", "✓ " .. Text:text("input.prompts.ui_select") },
-        { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "ui_back", "🔙 " .. Text:text("input.prompts.ui_back") },
-        { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "pause", "⏸ " .. Text:text("input.prompts.pause") },
+        { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "ui_left", "⬅ " .. Text:text("input.prompts.ui_left"), {avoid_collisions = avoid_collisions} },
+        { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "ui_right", "➡ " .. Text:text("input.prompts.ui_right"), {avoid_collisions = avoid_collisions} },
+        { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "ui_up", "⬆ " .. Text:text("input.prompts.ui_up"), {avoid_collisions = avoid_collisions} },
+        { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "ui_down", "⬇ " .. Text:text("input.prompts.ui_down"), {avoid_collisions = avoid_collisions} },
+        { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "ui_select", "✓ " .. Text:text("input.prompts.ui_select"), {avoid_collisions = avoid_collisions} },
+        { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "ui_back", "🔙 " .. Text:text("input.prompts.ui_back"), {avoid_collisions = avoid_collisions} },
+        { ControlsMenuItem, player_n, input_profile_id, INPUT_TYPE_CONTROLLER, "pause", "⏸ " .. Text:text("input.prompts.pause"), {avoid_collisions = avoid_collisions} },
         { "" },
         { "<<< {menu.options.input_submenu.global} >>>" },
         { "{menu.options.input_submenu.note_global_controller}" },
