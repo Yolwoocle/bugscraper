@@ -33,10 +33,12 @@ local sfxnames = {
 	["music_cafeteria_empty_ingame"] =      { "music/music_cafeteria_empty_ingame.ogg", "stream", { looping = true } },
 	["music_boss_w1_ingame"] =              { "music/music_boss_w1_ingame.ogg", "stream", { looping = true } },
 	["music_boss_w1_paused"] =              { "music/music_boss_w1_paused.ogg", "stream", { looping = true } },
-	["music_boss_w2_ingame"] =              { "music/music_boss_w2_paused.mp3", "stream", { looping = true } },
+	["music_boss_w2_ingame"] =              { "music/music_boss_w2_ingame.mp3", "stream", { looping = true } },
 	["music_boss_w2_paused"] =              { "music/music_boss_w2_paused.mp3", "stream", { looping = true } },
-	["music_boss_w3_ingame"] =              { "music/music_boss_w3_paused.ogg", "stream", { looping = true } },
+	["music_boss_w3_ingame"] =              { "music/music_boss_w3_ingame.ogg", "stream", { looping = true } },
 	["music_boss_w3_paused"] =              { "music/music_boss_w3_paused.ogg", "stream", { looping = true } },
+	["music_boss_w4_ingame"] =              { "music/music_boss_w4_ingame.ogg", "stream", { looping = true } },
+	["music_boss_w5_ingame"] =              { "music/music_boss_w5_ingame.ogg", "stream", { looping = true } },
 
 	-- GUNS
 	["sfx_weapon_peagun_shoot_{01-08}"] =           {"sfx/weapons/peagun/sfx_weapon_peagun_shoot_{}.ogg", "static"},
@@ -96,7 +98,9 @@ local sfxnames = {
 
 	-- Cocoon
 	["sfx_actor_cocoon_damage_{01-07}"] = {"sfx/actor/cocoon/sfx_actor_cocoon_damage_{}.ogg", "static"},
-	["sfx_actor_cocoon_break_{01-02}"] = {"sfx/actor/cocoon/sfx_actor_cocoon_break_{}.ogg", "static"},
+	["sfx_actor_cocoon_break"] = {"sfx/actor/cocoon/sfx_actor_cocoon_break.ogg", "static"},
+	["sfx_actor_cocoon_revive_{01-02}"] = {"sfx/actor/cocoon/sfx_actor_cocoon_revive_{}.ogg", "static"},
+	["sfx_actor_cocoon_break_{01-02}"] --[[ old sound ]] = {"sfx/actor/cocoon/sfx_actor_cocoon_break_{}.ogg", "static"},
 
 	-- Upgrade display 
 	["sfx_actor_upgrade_display_break_{01-04}"] = {"sfx/upgrades/display_break/sfx_actor_upgrade_display_break_{}.ogg", "static"},

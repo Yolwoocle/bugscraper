@@ -49,8 +49,8 @@ function Cocoon:init(x, y, player)
     self.sweat_timer = Timer:new(0.7):start()
 
     self.sound_damage = "sfx_actor_cocoon_damage_{01-07}"
-    self.sound_death = "sfx_actor_cocoon_break_{01-02}"
-    self.sound_stomp = "sfx_actor_cocoon_break_{01-02}"
+    self.sound_death = "sfx_actor_cocoon_break"
+    self.sound_stomp = "sfx_actor_cocoon_break"
 end
 
 function Cocoon:update(dt)
@@ -93,10 +93,17 @@ function Cocoon:revive(damager)
 
     self.has_revived = true
 
+    Particles:floating_image({
+        images.star_small_1,
+        images.star_small_2,
+    }, self.mid_x, self.mid_y, random_range_int(10, 12), 0, 0.25, 1, 120, 0.95)
+    -- img, x, y,              amount,                  rot, life, s, vel, friction, params
+    
     Particles:image(self.mid_x, self.mid_y, 20, {images.cocoon_fragment_1, images.cocoon_fragment_2}, self.w, nil, nil, 0.5)
     game:frameskip(10)
 
     game:revive_player(self.player_n, self.x, self.y)
+    Audio:play("sfx_actor_cocoon_revive_{01-02}")
     
     if not self.is_dead then
         self:kill()
