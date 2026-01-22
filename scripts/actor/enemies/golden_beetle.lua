@@ -13,7 +13,7 @@ function GoldenBeetle:init(x, y, spr)
     GoldenBeetle.super.init(self, x,y, spr or images.golden_beetle)
     self.name = "golden_beetle"
     self.is_flying = true
-    self.life = 7
+    self.life = 10
     self.follow_player = false
     
     self.speed = 10
@@ -33,9 +33,9 @@ function GoldenBeetle:init(x, y, spr)
     self.direction = 0
     
     self.do_stomp_animation = false
-    self.destroy_bullet_on_impact = false
-    self.is_bouncy_to_bullets = true
-    self.is_immune_to_bullets = true
+    -- self.destroy_bullet_on_impact = false
+    -- self.is_bouncy_to_bullets = true
+    -- self.is_immune_to_bullets = true
 
     self.is_killed_on_negative_life = false
     self.is_killed_on_stomp = false
@@ -89,6 +89,14 @@ function GoldenBeetle:after_collision(col, other)
 end
 
 function GoldenBeetle:on_stomped()
+    self:activate()
+end
+
+function GoldenBeetle:on_negative_life()
+    self:activate()
+end
+
+function GoldenBeetle:activate()
     self.random_rotate_speed = 10
     self.speed = 30
 
