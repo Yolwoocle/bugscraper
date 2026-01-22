@@ -1096,12 +1096,20 @@ local waves = parse_waves_table {
     ----------------------------------------------------------------------------------------------------------
     ----------------------------------------------------------------------------------------------------------
 
+    -- E.CloudDropper
+    -- E.CloudStorm
+    -- E.Rollopod
+    -- E.MushroomAnt
+    -- E.Shooter
+    -- E.GoldenBeetle
+    -- E.Centipede
+
     {
         min = 4,
         max = 4,
 
         enemies = {
-            { E.CloudDropper, 20 },
+            { E.GoldenBeetle, 20 },
         },
 
         elevator_layers = {
@@ -1122,36 +1130,26 @@ local waves = parse_waves_table {
 
 
     {
-        min = 7,
-        max = 7,
+        min = 4,
+        max = 4,
 
         enemies = {
-            { E.CloudStorm, 30 },
-            { E.CloudDropper, 10 },
+            { E.CloudStormZone, 30 },
         },
     },
 
     {
-        min = 3,
-        max = 3,
+        min = 6,
+        max = 6,
 
         enemies = {
-            { E.Rollopod, 1 },
+            { E.GoldenBeetle, 1 },
+            { E.CloudStormZone, 1 },
         },
         fixed_enemies = {
-            { E.CloudDropper, 2 },
+            { E.GoldenBeetle, 1 },
+            { E.CloudStormZone, 1 },
         }
-    },
-
-    {
-        min = 7,
-        max = 9,
-
-        enemies = {
-            { E.CloudDropper,  5 },
-            { E.CloudStorm,  5 },
-            { E.Rollopod, 3 },
-        },
     },
 
     {
@@ -1159,7 +1157,21 @@ local waves = parse_waves_table {
         max = 4,
 
         enemies = {
-            { E.CloudDropper, 2 },
+            { E.CloudStormZone, 20 },
+            { E.GoldenBeetle, 20 }
+        },
+        fixed_enemies = {
+            { E.Rollopod, 4 },
+        },
+    },
+
+    {
+        min = 7,
+        max = 7,
+
+        enemies = {
+            { E.GoldenBeetle, 30 },
+            { E.CloudStormZone, 30 },
         },
 
         fixed_enemies = {
@@ -1177,37 +1189,36 @@ local waves = parse_waves_table {
             }}},
         }
     },
+    
+    {
+        min = 7,
+        max = 7,
+
+        enemies = {
+            { E.GoldenBeetle, 30 },
+            { E.CloudStormZone, 30 },
+            { E.Rollopod, 30 },
+        },
+    },
 
     {
         min = 4,
         max = 4,
 
         enemies = {
-            { E.MushroomAnt, 2 },
+            { E.Shooter, 30 },
         },
     },
 
     {
-        min = 5,
-        max = 5,
+        min = 8,
+        max = 8,
 
         enemies = {
-            { E.Rollopod, 1 },
-            { E.CloudStorm, 1 },
-        },
-        fixed_enemies = {
-            { E.MushroomAnt, 2 },
-        },
-    },
-
-    {
-        min = 6,
-        max = 6,
-
-        enemies = {
-            { E.CloudStorm,  2 },
-            { E.Rollopod,     1 },
-            { E.MushroomAnt, 2 },
+            { E.GoldenBeetle, 30 },
+            { E.CloudStormZone, 30 },
+            { E.Shooter, 30 },
+            { E.Rollopod, 30 },
         },
     },
 
@@ -1233,7 +1244,7 @@ local waves = parse_waves_table {
         max = 3,
 
         enemies = {
-            { E.Shooter, 20 },
+            { E.Larva, 30 },
         },
 
         music = "w4",
@@ -1246,8 +1257,7 @@ local waves = parse_waves_table {
         max = 5,
 
         enemies = {
-            { E.Rollopod, 40 },
-            { E.Shooter, 40 },
+            { E.Larva, 30 },
         },
     },
 
@@ -1256,9 +1266,7 @@ local waves = parse_waves_table {
         max = 8,
 
         enemies = {
-            { E.CloudDropper, 20 },
-            { E.CloudStorm, 40 },
-            { E.Rollopod,    40 },
+            { E.Larva, 30 },
         },
     },
 
@@ -1267,8 +1275,7 @@ local waves = parse_waves_table {
         max = 6,
 
         enemies = {
-            { E.MushroomAnt, 20 },
-            { E.Shooter, 20 },
+            { E.Larva, 30 },
         },
     },
 
@@ -1277,18 +1284,17 @@ local waves = parse_waves_table {
         max = 5,
 
         enemies = {
-            { E.CloudDropper, 1 },
-            { E.CloudStorm, 1 },
+            { E.Larva, 30 },
         },
         
-        fixed_enemies = {
-            {E.ProgressingArc, 1, args = {{
-                points = get_w4_vines_points_func_2(),
-                interval_size = 150,
-                progress_speed = 80,
-                arc_params = thorns_arc_params
-            }}},
-        },
+        -- fixed_enemies = {
+        --     {E.ProgressingArc, 1, args = {{
+        --         points = get_w4_vines_points_func_2(),
+        --         interval_size = 150,
+        --         progress_speed = 80,
+        --         arc_params = thorns_arc_params
+        --     }}},
+        -- },
     },
 
     {
@@ -1296,7 +1302,7 @@ local waves = parse_waves_table {
         max = 4,
 
         enemies = {
-            { E.Shooter, 2 },
+            { E.Larva, 30 },
         },
     },
 
@@ -1305,8 +1311,7 @@ local waves = parse_waves_table {
         max = 5,
 
         enemies = {
-            { E.Rollopod, 2 },
-            { E.CloudDropper, 2 },
+            { E.Larva, 30 },
         },
     },
 
@@ -1315,8 +1320,7 @@ local waves = parse_waves_table {
         max = 7,
 
         enemies = {
-            { E.Shooter, 1 },
-            { E.MushroomAnt, 1 },
+            { E.Larva, 30 },
         },
     },
 
@@ -1327,7 +1331,7 @@ local waves = parse_waves_table {
         cutscene = "mole_boss_enter",
         
         enemies = {
-            { E.MoleBoss, 1 }, 
+            { E.Larva, 30 },
         },
 
         run = function(self, level)
