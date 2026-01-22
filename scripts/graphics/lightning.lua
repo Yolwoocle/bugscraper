@@ -29,10 +29,13 @@ function Lightning:init(params)
     self.style =           param(params.style, LIGHTNING_STYLE_NORMAL)
     self.animation =       param(params.style, LIGHTNING_ANIMATION_JITTER)
     self.coordinate_mode = param(params.coordinate_mode, LIGHNING_COORDINATE_MODE_CARTESIAN)
+    self.do_fill =         param(params.do_fill, false)
 
     self.color = self.palette[1]
     self.segments = {}
-
+    self.polygon = {}
+    self.polygon_fill =    param(params.fill_color, transparent_color(COL_YELLOW, 0.3))
+    
     self.debug_col = {random_range(0, 1), random_range(0, 1), random_range(0, 1), 1}
 end
 
@@ -57,6 +60,7 @@ end
 
 function Lightning:generate(segment)
     self.segments = {}
+    self.polygon = {}
 
     local dir_x, dir_y = segment:get_direction()
     local normal_x, normal_y = get_orthogonal(dir_x, dir_y)
@@ -65,6 +69,12 @@ function Lightning:generate(segment)
     local t = 0.0
     local i = 1
     local last_x, last_y = segment.ax, segment.ay
+
+    if self.do_fill then
+        table.insert(self.polygon, segment.ax)
+        table.insert(self.polygon, segment.ay)
+    end
+
     self.color = random_sample(self.palette)
     while t < length - self.max_step_size and i <= self.max_steps do
         local step = random_range(self.min_step_size, self.max_step_size)
@@ -75,6 +85,10 @@ function Lightning:generate(segment)
         local new_y = segment.ay + dir_y*t + normal_y*jitter_offset
 
         self:new_segment(last_x, last_y, new_x, new_y)
+        if self.do_fill then
+            table.insert(self.polygon, new_x)
+            table.insert(self.polygon, new_y)
+        end
 
         last_x, last_y = new_x, new_y
         i = i + 1
@@ -87,6 +101,23 @@ function Lightning:draw(ox, oy, params)
     ox = param(ox, 0)
     oy = param(oy, 0)
     params = param(params, {})
+
+    if self.do_fill and #self.polygon >= 6 then
+        local oc = {love.graphics.getColor()}
+        love.graphics.setColor(COL_RED)--self.polygon_fill)
+        for i = 1, #self.polygon, 2 do
+            self.polygon[i] = self.polygon[i] + ox
+            self.polygon[i+1] = self.polygon[i] + oy
+        end
+
+        love.graphics.polygon("fill", self.polygon)
+        love.graphics.setColor(oc)
+
+        for i = 1, #self.polygon, 2 do
+            self.polygon[i] = self.polygon[i] - ox
+            self.polygon[i+1] = self.polygon[i] - oy
+        end
+    end
     
     if self.style == LIGHTNING_STYLE_NORMAL then
         local old_width = love.graphics.getLineWidth()
