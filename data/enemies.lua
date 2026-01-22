@@ -54,6 +54,7 @@ local enemies = {
 	CloudDropper =       require "scripts.actor.enemies.cloud_dropper",
 	CloudDropperParticle = require "scripts.actor.enemies.cloud_dropper_projectile",
 	CloudStorm =         require "scripts.actor.enemies.cloud_storm",
+	CloudStormZone =     require "scripts.actor.enemies.cloud_storm_zone",
 	Rollopod =           require "scripts.actor.enemies.rollopod", --*
 	Centipede =          require "scripts.actor.enemies.centipede", 
 	Shooter =            require "scripts.actor.enemies.shooter", 

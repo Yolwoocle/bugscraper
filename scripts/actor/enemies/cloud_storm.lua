@@ -46,7 +46,7 @@ function CloudStorm:init(x, y, size)
                 self.spr:update_offset(0, 0)
 
                 self.ai_template = "rotate"
-                self.state_timer:start(random_range(1.0, 3.0))
+                self.state_timer:start(random_range(1.0, 2.5))
                 self.arc:set_active(false)
 
                 state.no_attack_timer = Timer:new(0.5)
@@ -91,7 +91,7 @@ function CloudStorm:init(x, y, size)
                 self.vy = 0
                 self.arc:set_active(true)
                 self.arc:set_arc_active(false)
-                self.state_timer:start(0.5)
+                self.state_timer:start(0.3)
 
                 self.lightning_angle_offset = random_neighbor(pi/12)
             end,
@@ -108,7 +108,7 @@ function CloudStorm:init(x, y, size)
             enter = function(state)
                 self.spr:set_image(images.cloud_storm_angry_attack)
 
-                self.ai_template = nil
+                self.ai_template = "rotate"
                 self.arc:set_active(true)
                 self.arc:set_arc_active(true)
                 self.state_timer:start(0.75)
