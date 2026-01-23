@@ -16,7 +16,7 @@ function GoldenBeetle:init(x, y, spr)
     self.life = 10
     self.follow_player = false
     
-    self.speed = 10
+    self.speed = 5
     self.speed_x = self.speed
     self.speed_y = self.speed
 
