@@ -37,7 +37,7 @@ function TvPresentation:init(x, y, params)
         ["slide_018"] = { images.tv_slideshow_018, 0.04 },   -- Mio explode              by Corentin Vaillant
         ["slide_019"] = { images.tv_slideshow_019, 0.04 },   -- Snail Ball Run           by Hector SK (Nextop Games)
         ["slide_020"] = { images.tv_slideshow_020, 0.5 },   -- You are a Bug             by kiwisky 
-        ["slide_021"] = { images.tv_slideshow_021, 0.075, default_slide_duration = 0 },   -- Roaring Knight            by Linky 
+        ["slide_021"] = { images.tv_slideshow_021, 0.075, default_slide_duration = 0 },       -- Roaring Knight            by Linky 
         ["slide_021_b"] = { images.tv_slideshow_021, 0.075/2, default_slide_duration = 0 },   -- Roaring Knight            by Linky 
         ["slide_021_c"] = { images.tv_slideshow_021, 0.075/4, default_slide_duration = 0 },   -- Roaring Knight            by Linky 
         ["slide_022"] = { images.tv_slideshow_022, 0.1 },   -- Buglatro                  by 8lueskii 
@@ -51,7 +51,7 @@ function TvPresentation:init(x, y, params)
     }
     self.slide_names = {}
     for name, slide_info in pairs(self.slides_data) do
-        if not is_in_table({"bluescreen", "bluescreen_1", "bluescreen_2", "empty", "slide_021_b", "slide_021_c"}, name) then
+        if not is_in_table({"bluescreen", "bluescreen_1", "bluescreen_2", "empty", "slide_021", "slide_021_b", "slide_021_c"}, name) then
             table.insert(self.slide_names, name)
         end
 
@@ -62,13 +62,11 @@ function TvPresentation:init(x, y, params)
         shuffle_table(self.slide_names)
     end
 
-    -- Add RAARRR b and c
-    for i = 1, #self.slide_names do
-        if self.slide_names[i] == "slide_021" then
-            table.insert(self.slide_names, i+1, "slide_021_b")
-            table.insert(self.slide_names, i+2, "slide_021_c")
-        end
-    end
+    -- Add RAARRR
+    local pos = random_range(2, #self.slide_names)
+    table.insert(self.slide_names, pos, "slide_021")
+    table.insert(self.slide_names, pos+1, "slide_021_b")
+    table.insert(self.slide_names, pos+2, "slide_021_c")
 
     self.do_slideshow = param(params.do_slideshow, true)
     
@@ -160,8 +158,8 @@ function TvPresentation:init(x, y, params)
     self.canvas = love.graphics.newCanvas(self.canvas_w, self.canvas_h)
     self.buffer_canvas = love.graphics.newCanvas(self.canvas_w, self.canvas_h)
     
-    self.current_slide_number = random_range_int(1, #self.slide_names)
-    self.old_slide_frame_i = random_range_int(1, #self.slide_names)
+    self.current_slide_number = 1
+    self.old_slide_frame_i = 1
     self.old_slide = self.slide_names[self.current_slide_number]
     self.current_slide = self.slide_names[self.current_slide_number]
 
