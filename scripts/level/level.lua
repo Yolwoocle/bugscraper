@@ -638,6 +638,10 @@ function Level:on_shop_killed(display) -- alsp works for shops
 		local source = game.music_player.current_disk.current_source
 		source:seek(time)
 	end
+
+	if self.backroom and self.backroom.name == "cafeteria" then
+		self.backroom:open_door()	
+	end
 end
 
 -----------------------------------------------------
