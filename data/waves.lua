@@ -156,7 +156,7 @@ local function get_w4_vines_points_func_2()
 
         local ix = 0
         for ix = 0, CANVAS_WIDTH, 16 do
-            table.insert(pts, { ix, game.level.cabin_inner_rect.by + math.cos((ix-CANVAS_WIDTH/2)/32) * 32 })
+            table.insert(pts, { ix, game.level.cabin_inner_rect.by - math.cos((ix-CANVAS_WIDTH/2)/32) * 24 })
         end
 
         return pts
@@ -169,15 +169,17 @@ local function get_w4_vines_points_func_3()
         local cx = (game.level.cabin_inner_rect.ax + game.level.cabin_inner_rect.bx) / 2
         local cy = (game.level.cabin_inner_rect.ay + game.level.cabin_inner_rect.by) / 2
 
-        local i = 0
-        local itheta = 0
-        local ir = 0
-        for i = 0, 20, 1 do
-            local ix, iy = math.cos(itheta) * ir, math.sin(itheta) * ir
-            table.insert(pts, {cx + ix, cy + iy})
+        local theta_step = 0.4
+        local a = 8
+        local max_theta = 8 * math.pi
+        local theta = max_theta
 
-            ir = ir + 10
-            itheta = itheta + 1/ir
+        while theta >= 0 do
+            local r = a * theta
+            local x = cx + math.cos(theta) * r
+            local y = cy + math.sin(theta) * r
+            table.insert(pts, {x, y})
+            theta = theta - theta_step
         end
 
         return pts
@@ -1096,13 +1098,15 @@ local waves = parse_waves_table {
     ----------------------------------------------------------------------------------------------------------
     ----------------------------------------------------------------------------------------------------------
 
-    -- E.CloudDropper
+    -- E.GoldenBeetle
     -- E.CloudStorm
     -- E.Rollopod
-    -- E.MushroomAnt
     -- E.Shooter
-    -- E.GoldenBeetle
     -- E.Centipede
+    
+    -- E.CloudDropper
+    -- E.MushroomAnt
+    -- E.SquidMother
 
     {
         min = 4,
@@ -1175,16 +1179,22 @@ local waves = parse_waves_table {
         },
 
         fixed_enemies = {
+            -- {E.ProgressingArc, 1, args = {{
+            --     points = get_w4_vines_points_func_1(-64),
+            --     interval_size = 150,
+            --     progress_speed = 80,
+            --     arc_params = thorns_arc_params
+            -- }}},
+            -- {E.ProgressingArc, 1, args = {{
+            --     points = get_w4_vines_points_func_1(64),
+            --     interval_size = 150,
+            --     progress_speed = -80,
+            --     arc_params = thorns_arc_params
+            -- }}},
             {E.ProgressingArc, 1, args = {{
-                points = get_w4_vines_points_func_1(-64),
+                points = get_w4_vines_points_func_2(),
                 interval_size = 150,
                 progress_speed = 80,
-                arc_params = thorns_arc_params
-            }}},
-            {E.ProgressingArc, 1, args = {{
-                points = get_w4_vines_points_func_1(64),
-                interval_size = 150,
-                progress_speed = -80,
                 arc_params = thorns_arc_params
             }}},
         }
@@ -1239,25 +1249,56 @@ local waves = parse_waves_table {
     new_cafeteria(),
     ---------------------------------------------
 
+    -- E.GoldenBeetle
+    -- E.CloudStorm
+    -- E.Rollopod
+    -- E.Shooter
+    -- E.Centipede
+    
+    -- E.CloudDropper
+    -- E.MushroomAnt
+    -- E.SquidMother
+
     {
-        min = 3,
-        max = 3,
+        min = 6,
+        max = 6,
 
         enemies = {
-            { E.Larva, 30 },
+            { E.CloudDropper, 30 },
         },
 
         music = "w4",
         pull_music_buffer = true, 
+        
+        fixed_enemies = {
+            {E.ProgressingArc, 1, args = {{
+                points = get_w4_vines_points_func_3(),
+                interval_size = 150,
+                progress_speed = 160,
+                arc_params = thorns_arc_params
+            }}},
+        },
     },
 
+
+    {
+        min = 6,
+        max = 6,
+
+        enemies = {
+            { E.CloudDropper, 30 },
+            { E.Shooter, 30 },
+        },  
+    },
 
     {
         min = 5,
         max = 5,
 
         enemies = {
-            { E.Larva, 30 },
+            { E.CloudDropper, 30 },
+            { E.Rollopod, 30 },
+            { E.GoldenBeetle, 30 },
         },
     },
 
@@ -1266,52 +1307,8 @@ local waves = parse_waves_table {
         max = 8,
 
         enemies = {
-            { E.Larva, 30 },
-        },
-    },
-
-    {
-        min = 6,
-        max = 6,
-
-        enemies = {
-            { E.Larva, 30 },
-        },
-    },
-
-    {
-        min = 5,
-        max = 5,
-
-        enemies = {
-            { E.Larva, 30 },
-        },
-        
-        -- fixed_enemies = {
-        --     {E.ProgressingArc, 1, args = {{
-        --         points = get_w4_vines_points_func_2(),
-        --         interval_size = 150,
-        --         progress_speed = 80,
-        --         arc_params = thorns_arc_params
-        --     }}},
-        -- },
-    },
-
-    {
-        min = 4,
-        max = 4,
-
-        enemies = {
-            { E.Larva, 30 },
-        },
-    },
-
-    {
-        min = 5,
-        max = 5,
-
-        enemies = {
-            { E.Larva, 30 },
+            { E.SnailShelledBouncy, 30 },
+            { E.Shooter, 30 },
         },
     },
 
@@ -1320,24 +1317,84 @@ local waves = parse_waves_table {
         max = 7,
 
         enemies = {
-            { E.Larva, 30 },
+            { E.GoldenBeetle, 30 },
+            { E.CloudStormZone, 50 },
+            { E.CloudDropper, 30 },
+        },
+    },
+    
+    {
+        min = 4,
+        max = 4,
+        
+        enemies = {
+            { E.CloudStormZone, 30 },
+        },
+
+        fixed_enemies = {
+            { E.Centipede, 1 },
+        },
+    },
+
+    {
+        
+    -- E.GoldenBeetle
+    -- E.CloudStormZone
+    -- E.Rollopod
+    -- E.Shooter
+    -- E.Centipede
+    
+    -- E.CloudDropper
+    -- E.MushroomAnt
+    -- E.SquidMother
+        min = 6,
+        max = 6,
+
+        enemies = {
+            { E.GoldenBeetle, 30 },
+            { E.CloudDropper, 30 },
+            { E.CloudStormZone, 30 },
+            { E.Rollopod, 30 },
+        },
+    },
+
+    {
+        min = 6,
+        max = 6,
+
+        enemies = {
+            { E.DrillBee, 30 },
+            { E.SnailShelledBouncy, 30 },
+        },
+    },
+
+    {
+        min = 8,
+        max = 8,
+
+        enemies = {
+            { E.GoldenBeetle, 30 },
+            { E.CloudStormZone, 30 },
+            { E.Rollopod, 30 },
+            { E.Shooter, 30 },
+            { E.Centipede, 30 },
+            { E.CloudDropper, 30 },
         },
     },
 
     {
         min = 1,
         max = 1,
-
-        cutscene = "mole_boss_enter",
         
         enemies = {
-            { E.Larva, 30 },
+            { E.MoleBoss, 30 },
         },
 
         run = function(self, level)
         end,
 
-        music = "boss_w1",
+        cutscene = "mole_boss_enter",
+        music = "boss_w4",
     },
 
     
@@ -1346,7 +1403,7 @@ local waves = parse_waves_table {
         roll_type = WAVE_ROLL_TYPE_FIXED,
         music = "off",
         ambience = "off",
-
+        
         run = function(self, level)
             for _, actor in pairs(game.actors) do
                 if actor.name == "poison_cloud" then
