@@ -17,6 +17,8 @@ function ProgressingArc:init(x, y, params)
     
     self.max_life = 100
     self.life = self.max_life
+
+    self.score = 0
     
     self.counts_as_enemy = false
     self.is_immune_to_electricity = true
@@ -210,7 +212,7 @@ function ProgressingArc:draw()
     end
     
     for i = 1, #self.points-1 do
-        line_dotted(transparent_color(COL_MID_GREEN, 0.8), 
+        line_dotted(transparent_color(COL_LIGHT_GREEN, 0.8), 
             self.points[i][1], self.points[i][2], self.points[i+1][1], self.points[i+1][2], { 
             spacing = 3,
             segment_length = 3, 

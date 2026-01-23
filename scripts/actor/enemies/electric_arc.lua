@@ -20,6 +20,8 @@ function ElectricArc:init(x, y, params)
     self.counts_as_enemy = false
     self.arc_damage = 1
     self.cooldown = 0.3
+    
+    self.score = 0
 
     self.is_pushable = false
     self.is_knockbackable = false
