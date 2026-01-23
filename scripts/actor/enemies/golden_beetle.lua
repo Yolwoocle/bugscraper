@@ -97,6 +97,8 @@ function GoldenBeetle:on_negative_life()
 end
 
 function GoldenBeetle:activate()
+    self.counts_for_enemy_count = false
+    
     self.random_rotate_speed = 10
     self.speed = 30
 
