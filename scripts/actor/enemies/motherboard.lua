@@ -338,6 +338,8 @@ function Motherboard:init(x, y)
 
         dying = {
             enter = function(state)
+                game.music_player:set_disk("off")
+
                 self.plug_sprite.is_visible = false
 
                 self.dying_timer = Timer:new(4.0)
