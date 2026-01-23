@@ -83,7 +83,7 @@ function Boomshroom:init(x, y)
                 self.speed_x = 0
                 self.speed_y = 0
                 self.damage = 0
-                self.weight = 1                
+                self.weight = 1
 
                 self.exploding_timer:start()
                 self.flash_timer:start(0.5)
