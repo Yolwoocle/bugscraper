@@ -274,7 +274,8 @@ function Loot.Life:init(x, y, val, vx, vy, params)
 	params = params or {}
 	params.min_attract_dist = params.min_attract_dist or 32
 	params.min_attract_dist_func = params.min_attract_dist_func or function(player)
-		return 64 + 128 * clamp(1 - player:get_total_life() / player.max_life, 0, 1)
+		return math.huge
+		--64 + 128 * clamp(1 - player:get_total_life() / player.max_life, 0, 1)
 	end
 	val = val or 1
 	self:init_loot(images.loot_life, x, y, 2, 2, val, vx, vy, params)
