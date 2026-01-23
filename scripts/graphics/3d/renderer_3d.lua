@@ -21,12 +21,17 @@ function Renderer3D:init(objects, params)
 	end
 	self.lighting_palette = {color(0xf77622), color(0xfeae34), color(0xfee761), color(0xfee761), COL_WHITE}
     self.line_color = COL_BLACK
+
+	self.projected_vertices = {}
+	self.drawn_faces = {}
 end
 
 function Renderer3D:update(dt)
 	for _, object in pairs(self.objects) do
 		object:apply_transform()
 	end
+
+	self:project_objects()
 end
 
 function Renderer3D:project_vertex(vertex)
@@ -45,16 +50,19 @@ function Renderer3D:get_shading_color(normal)
 	return col
 end
 
-function Renderer3D:draw()
+function Renderer3D:project_objects()
+	self.projected_vertices = {}
+	self.drawn_faces = {}
 	for _, object in pairs(self.objects) do
-		self:draw_object(object)
+		self:project_object(object)
 	end
 end
 
-function Renderer3D:draw_object(object)
+function Renderer3D:project_object(object)
 	local camera_vec = Vec3(0, 0, 1)
-	local projected_vertices = {}
-	local drawn_faces = {}
+	self.projected_vertices[object] = {}
+	self.drawn_faces[object] = {}
+
 	for i_face = 1, #object.model.faces do
 		local face = object.model.faces[i_face]
 		local normal = object:get_face_normal(i_face)
@@ -62,24 +70,24 @@ function Renderer3D:draw_object(object)
 		if dot < 0 then
 			for i_point = 1, #face do
 				local i_vertex = face[i_point]
-				if not projected_vertices[i_vertex] then
+				if not self.projected_vertices[object][i_vertex] then
 					local vertex = object.transformed_vertices[i_vertex]
 					local projected_vertex = self:project_vertex(vertex)
-					projected_vertices[i_vertex] = projected_vertex
+					self.projected_vertices[object][i_vertex] = projected_vertex
 				end
 			end
 			
 			if not self.wireframe then
 				local projected_face = {}
 				for i_point = 1, #face do
-					table.insert(projected_face, projected_vertices[face[i_point]].x)
-					table.insert(projected_face, projected_vertices[face[i_point]].y)
+					table.insert(projected_face, self.projected_vertices[object][face[i_point]].x)
+					table.insert(projected_face, self.projected_vertices[object][face[i_point]].y)
 				end
 				exec_color(self:get_shading_color(normal), function()
 					love.graphics.polygon("fill", projected_face)
 				end)
 			end
-			table.insert(drawn_faces, i_face) -- TODO FIXME: there is a lot of repetition 
+			table.insert(self.drawn_faces[object], i_face) -- TODO FIXME: there is a lot of repetition 
 		end
 	end
 	
@@ -87,13 +95,27 @@ function Renderer3D:draw_object(object)
 		local edge = object.model.edges[i_edge]
 		for i=1, #edge do
 			local i_vertex = edge[i]
-			if not projected_vertices[i_vertex] then
+			if not self.projected_vertices[object][i_vertex] then
 				local vertex = object.transformed_vertices[i_vertex]
 				local projected_vertex = self:project_vertex(vertex)
-				projected_vertices[i_vertex] = projected_vertex
+				self.projected_vertices[object][i_vertex] = projected_vertex
 			end
 		end
 	end
+end
+
+function Renderer3D:draw()
+	for _, object in pairs(self.objects) do
+		self:draw_object(object)
+	end
+end
+
+function Renderer3D:draw_object(object)
+	local drawn_faces = self.drawn_faces[object]
+	local projected_vertices = self.projected_vertices[object]
+	if not drawn_faces or not projected_vertices then
+		return
+	end 
 
 	exec_color(self.line_color, function()
 		for _, face_i in pairs(drawn_faces) do
