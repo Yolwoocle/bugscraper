@@ -95,7 +95,8 @@ function love.keypressed(key, scancode, isrepeat)
 			Options:toggle("is_fullscreen")
 		end
 	
-	elseif scancode == "n" and (love.keyboard.isDown("lctrl") or love.keyboard.isDown("rctrl")) then
+	-- elseif scancode == "n" and (love.keyboard.isDown("lctrl") or love.keyboard.isDown("rctrl")) then
+	elseif love.keyboard.isDown("f9") then
 		if _G_frame_by_frame_mode then
 			_frame_by_frame_mode_advance_flag = true
 		end
