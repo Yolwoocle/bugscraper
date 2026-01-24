@@ -357,9 +357,6 @@ function PlayerPreview:draw_player_abbreviation()
 end
 
 function PlayerPreview:draw_bg_card()
-    local col = ({ COL_WHITE, COL_RED, COL_GREEN, COL_YELLOW })[self.player_n]
-    local col_dark = { col[1] - 0.3, col[2] - 0.3, col[3] - 0.3, 1.0 }
-
     local x, y = self.x + self.ox, self.y + self.oy
     exec_color(COL_BLACK_BLUE, function() love.graphics.draw(images.player_preview_bg, x + 1, y + 2) end)
     exec_color(self.primary_color or COL_WHITE,
