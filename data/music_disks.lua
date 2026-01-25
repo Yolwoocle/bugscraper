@@ -18,6 +18,10 @@ return {
         [MUSIC_MODE_INGAME] = sounds.music_w1_ingame.source,
         [MUSIC_MODE_PAUSE] = sounds.music_w1_paused.source,
     }, { loop_start = 13.708, loop_end = 60+54.857 }),
+    ["proutpointmp3"] = disk_class:new({
+        [MUSIC_MODE_INGAME] = sounds.proutpointmp3.source,
+        [MUSIC_MODE_PAUSE] = sounds.proutpointmp3.source,
+    }),
     ["w2"] = disk_class:new({
         [MUSIC_MODE_INGAME] = sounds.music_w2_ingame.source,
         [MUSIC_MODE_PAUSE] = sounds.music_w2_paused.source,
@@ -27,8 +31,8 @@ return {
         [MUSIC_MODE_PAUSE] = sounds.music_w3_paused.source,
     }),
     ["w4"] = disk_class:new({
-        [MUSIC_MODE_INGAME] = sounds.music_w1_ingame.source,
-        [MUSIC_MODE_PAUSE] = sounds.music_w1_paused.source,
+        [MUSIC_MODE_INGAME] = sounds.music_w4_ingame.source,
+        [MUSIC_MODE_PAUSE] = sounds.music_w4_paused.source,
     }),
     ["w5"] = disk_class:new({
         [MUSIC_MODE_INGAME] = sounds.music_w1_ingame.source,
@@ -62,6 +66,11 @@ return {
     ["boss_w3"] = disk_class:new({
         [MUSIC_MODE_INGAME] = sounds.music_boss_w3_ingame.source,
         [MUSIC_MODE_PAUSE] = sounds.music_boss_w3_paused.source,
+    -- }, { loop_start = 5.741, loop_end = 60+58.333 }),
+    }, { loop_start = 5.741, loop_end = 60+58.333 }),
+    ["boss_w4"] = disk_class:new({
+        [MUSIC_MODE_INGAME] = sounds.music_boss_w4_ingame.source,
+        [MUSIC_MODE_PAUSE] = sounds.music_boss_w4_paused.source,
     -- }, { loop_start = 5.741, loop_end = 60+58.333 }),
     }, { loop_start = 5.741, loop_end = 60+58.333 }),
 }

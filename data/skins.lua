@@ -137,6 +137,18 @@ local skins = {
 		icon = "🐧",
 		text_key = "dodu",
 	},
+
+	{
+		anim_idle = {images.olx, 0.2, 1},
+		anim_wall_slide = {images.olx},
+		img_walk_down = images.olx,
+		img_airborne = images.olx,
+		img_dead = images.olx,
+		color_palette = {color(0xb55088), color(0x68386c), color(0xf6757a), color(0x3a4466), color(0x262b44)},
+		menu_color = color(0xb55088), 
+		icon = "🥦",
+		text_key = "olx",
+	},
 }
 
 for key, skin in pairs(skins) do

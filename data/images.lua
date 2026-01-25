@@ -41,6 +41,7 @@ local img_names = {
 
 	-- players
 	leo =              "actors/players/leo",
+	olx =              "actors/players/olx",
 
 	mio_idle =         "actors/players/mio_idle",
 	mio_walk_down =    "actors/players/mio_walk_down",
@@ -649,6 +650,7 @@ local img_names = {
 	-----------------------------------------------------
 	
 	-- upgrades
+	upgrade_whisky =          "upgrades/upgrade_whisky",
 	upgrade_espresso =          "upgrades/upgrade_espresso",
 	upgrade_tea =               "upgrades/upgrade_tea",
 	upgrade_chocolate =         "upgrades/upgrade_chocolate",

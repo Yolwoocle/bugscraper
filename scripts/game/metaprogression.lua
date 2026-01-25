@@ -14,7 +14,7 @@ function MetaprogressionManager:init()
         xp = 0,
         xp_level = 1,
 
-        skins = { 1, 2, 3, 4 },
+        skins = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 },
         upgrades = { 
             "UpgradeTea",
             "UpgradeEspresso",
@@ -26,6 +26,10 @@ function MetaprogressionManager:init()
             "UpgradeHotSauce",
             "UpgradeHotChocolate",
             "UpgradeCoconutWater",
+
+            "UpgradeEnergyDrink",
+            "UpgradePomegranateJuice",
+            "UpgradeWhisky",
         },
 
 		has_seen_intro_credits = false,
@@ -41,15 +45,7 @@ function MetaprogressionManager:init()
 
     local t = skin_name_to_id
     self.levels = {
-        { threshold = 5000, rewards = { { type = "upgrade", upgrade = "UpgradeEnergyDrink" } } },
-        { threshold = 5000, rewards = { { type = "skin", skin = t.nel } } },
-        { threshold = 5000, rewards = { { type = "skin", skin = t.rico } } },
-        { threshold = 5000, rewards = { { type = "skin", skin = t.nob } } },
-        { threshold = 5000, rewards = { { type = "skin", skin = t.amb } } },
-        { threshold = 5000, rewards = { { type = "upgrade", upgrade = "UpgradePomegranateJuice" } } },
-        { threshold = 5000, rewards = { { type = "skin", skin = t.dodu } } },
-        { threshold = 5000, rewards = { { type = "skin", skin = t.leo } } },
-        { threshold = 5000, rewards = { { type = "skin", skin = t.yv } } },
+        { threshold = 100, rewards = { { type = "skin", skin = t.olx } } },
     }
 
     self:read_progress()

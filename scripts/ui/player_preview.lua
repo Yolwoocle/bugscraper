@@ -154,8 +154,10 @@ function PlayerPreview:init(player_n, x, y, w, h)
                 if self.selection then
                     draw_centered(self.selection.img_walk_down, x + self.selection_ox, y, 0, self.squash, 1 / self.squash)
                     local text = utf8.upper(Text:text("player.name." .. self.selection.text_key) or "")
+                    Text:push_font(FONT_MINI)
                     print_centered_outline(palette[1], nil, text, x + 1 + self.selection_ox, y + 18 + 1)
                     print_centered_outline(palette[1], nil, text, x + 1 + self.selection_ox, y + 18)
+                    Text:pop_font()
 
                     -- print_color(palette[2], Text:text("menu.number", self.selection_n), self.x + self.ox + self.padding, self.y)
                 end
@@ -306,6 +308,7 @@ function PlayerPreview:update(dt)
 end
 
 function PlayerPreview:draw_bg_card_empty()
+    if true then return end
     local color = COL_MID_GRAY
 
     
@@ -352,11 +355,17 @@ function PlayerPreview:draw_player_abbreviation()
         end
     end
 
+    Text:push_font(FONT_MINI)
+
     print_color(color, txt_top, self.x + self.ox + self.w - get_text_width(txt_top) - 4, self.y)--self.oy + self.h - 16)
     print_color(color, txt_bot, self.x + self.ox + self.w - get_text_width(txt_bot) - 4, self.y + self.oy + self.h - 16)
+    Text:pop_font()
+
 end
 
 function PlayerPreview:draw_bg_card()
+    if true then return end
+
     local x, y = self.x + self.ox, self.y + self.oy
     exec_color(COL_BLACK_BLUE, function() love.graphics.draw(images.player_preview_bg, x + 1, y + 2) end)
     exec_color(self.primary_color or COL_WHITE,
@@ -408,10 +417,14 @@ function PlayerPreview:draw()
             if prompt_x_alignment == "end" then
                 _x = self.x + self.w - self.padding
             end
+            Text:push_font(FONT_MINI)
+
             Input:draw_input_prompt(player_n, actions, label, col, _x, _y, {
     			alignment = prompt_x_alignment,
                 background_color = item.background_color,
             })
+            Text:pop_font()
+
         end
         y = y + (item.height or default_prompt_height)
     end

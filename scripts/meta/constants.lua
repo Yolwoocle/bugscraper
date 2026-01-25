@@ -194,7 +194,7 @@ DEFAULT_MENU_PADDING = 0.17
 ---------------------------------------------
 
 -- Game
-MAX_NUMBER_OF_PLAYERS = 4
+MAX_NUMBER_OF_PLAYERS = 8
 
 GAME_STATE_WAITING = "waiting"
 GAME_STATE_PLAYING = "playing"
@@ -307,8 +307,8 @@ RAW_INPUT_MAP_DEFAULT_CONTROLLER = {
     interact =  {"c_b"},
     
     pause =     {"c_start"},
-    ui_select = {"c_a"},
-    ui_back =   {"c_b"},
+    ui_select = {"c_b"},
+    ui_back =   {"c_a"},
     ui_left =   {"c_leftxneg", "c_dpleft"},
     ui_right =  {"c_leftxpos", "c_dpright"},
     ui_up =     {"c_leftyneg", "c_dpup"},

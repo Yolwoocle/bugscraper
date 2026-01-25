@@ -17,9 +17,15 @@ function ShopCafeteria:init(x, y, w, h)
     self.name = "shop_cafeteria"
 end
 
+function ShopCafeteria:start_interaction(p)
+    ShopCafeteria.super.start_interaction(self, p)
+    Audio:play("whisky")
+end
+
 function ShopCafeteria:apply_current_product()
     ShopCafeteria.super.apply_current_product(self)
-
+    
+    Audio:play("whiskywhisky")
     game.level:on_shop_killed(self)
 
     self:play_sound(self.selected_product.activate_sound)

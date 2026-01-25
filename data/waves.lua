@@ -398,8 +398,8 @@ local waves = parse_waves_table {
         -- Spiked Fly intro
         min = 6,
         max = 8,
-        music = "w1",
-        pull_music_buffer = true, 
+        music = "proutpointmp3",
+        pull_music_buffer = false, 
 
         enemies = {
             { E.Larva,     1 },

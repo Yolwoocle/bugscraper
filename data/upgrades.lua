@@ -11,6 +11,8 @@ local upgrades = {
     UpgradeCoconutWater =     require "scripts.upgrade.upgrade_coconut_water",
     UpgradeHotChocolate =     require "scripts.upgrade.upgrade_hot_chocolate",
     UpgradePomegranateJuice = require "scripts.upgrade.upgrade_pomegranate_juice",
+
+    UpgradeWhisky = require "scripts.upgrade.upgrade_whisky",
     
     UpgradeEnergyDrink =      require "scripts.upgrade.upgrade_energy_drink",
     UpgradeWater =            require "scripts.upgrade.upgrade_water",

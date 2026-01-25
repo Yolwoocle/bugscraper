@@ -316,7 +316,7 @@ function Player:get_state_machine()
 				game:frameskip(30)
 
 				self.timer_before_death = self.max_timer_before_death
-				self:play_sound("sfx_player_death")
+				self:play_sound(self.vatefairefoutre and "vabientefairemettre" or "sfx_player_death")
 			end,
 			update = function(state, dt)
 				local goal_r = 5*sign(self.dir_x)*pi2
@@ -563,7 +563,7 @@ function Player:kill()
 	game:on_kill(self)
 	
 	self.timer_before_death = self.max_timer_before_death
-	self:play_sound("sfx_player_death")
+	self:play_sound(self.vatefairefoutre and "vabientefairemettre" or "sfx_player_death")
 
 	self.is_dead = true
 	self:remove()
@@ -601,7 +601,7 @@ function Player:do_damage(n, source)
 			self:play_sound("sfx_player_damage_normal")
 		end
 	end
-	self:play_sound(damage_sfx)
+	self:play_sound(self.vatefairefoutre and "drogue" or damage_sfx)
 	-- Particles:word(self.mid_x, self.y, concat("-",n), COL_LIGHT_RED)
 	
 	if self.is_knockbackable and source then
@@ -960,7 +960,7 @@ function Player:jump(dt, multiplier)
 	Particles:smoke(self.mid_x, self.y+self.h)
 	-- Particles:jump_dust_kick(self.mid_x, self.y+self.h - 12, 0)
 	Particles:jump_dust_kick(self.mid_x, self.y+self.h - 12, math.atan2(self.vy, self.vx) + pi/2)
-	self:play_sound_var("sfx_player_jumplong", 0, 1.2)
+	self:play_sound_var(self.vatefairefoutre and "salade" or "sfx_player_jumplong", 0, 1.2)
 	self.jump_squash = 1/3
 end
 
@@ -969,7 +969,7 @@ function Player:wall_jump(normal)
 	self.vy = -self.jump_speed * self.jump_speed_mult
 	
 	Particles:jump_dust_kick(self.mid_x, self.y+self.h - 12, math.atan2(self.vy, self.vx) + pi/2)
-	self:play_sound_var("sfx_player_jumplong", 0, 1.2)
+	self:play_sound_var(self.vatefairefoutre and "salade" or "sfx_player_jumplong", 0, 1.2)
 	self.jump_squash = 1/3
 end
 

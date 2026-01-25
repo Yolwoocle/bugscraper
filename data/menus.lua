@@ -196,6 +196,17 @@ local function generate_menus()
         { "🎮 {menu.options.input_submenu.controller_p2}", func_set_menu("controls_controller_p2") },
         { "🎮 {menu.options.input_submenu.controller_p3}", func_set_menu("controls_controller_p3") },
         { "🎮 {menu.options.input_submenu.controller_p4}", func_set_menu("controls_controller_p4") },
+        
+        { "🎮 {menu.options.input_submenu.controller_p5}", func_set_menu("controls_controller_p5") },
+        { "🎮 {menu.options.input_submenu.controller_p6}", func_set_menu("controls_controller_p6") },
+        { "🎮 {menu.options.input_submenu.controller_p7}", func_set_menu("controls_controller_p7") },
+        { "🎮 {menu.options.input_submenu.controller_p8}", func_set_menu("controls_controller_p8") },
+
+        { "🎮 {menu.options.input_submenu.controller_p9}", func_set_menu("controls_controller_p9") },
+        { "🎮 {menu.options.input_submenu.controller_p10}", func_set_menu("controls_controller_p10") },
+        { "🎮 {menu.options.input_submenu.controller_p11}", func_set_menu("controls_controller_p11") },
+        { "🎮 {menu.options.input_submenu.controller_p12}", func_set_menu("controls_controller_p12") },
+
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
 
     ------------------------------------------------------------
@@ -217,6 +228,22 @@ local function generate_menus()
         "controller_3", 3)
     menus.controls_controller_p4 = create_controller_controls_menu(Text:text("menu.options.input_submenu.controller_p4"),
         "controller_4", 4)
+    menus.controls_controller_p5 = create_controller_controls_menu(Text:text("menu.options.input_submenu.controller_p5"),
+        "controller_5", 5)
+    menus.controls_controller_p6 = create_controller_controls_menu(Text:text("menu.options.input_submenu.controller_p6"),
+        "controller_6", 6)
+    menus.controls_controller_p7 = create_controller_controls_menu(Text:text("menu.options.input_submenu.controller_p7"),
+        "controller_7", 7)
+    menus.controls_controller_p8 = create_controller_controls_menu(Text:text("menu.options.input_submenu.controller_p8"),
+        "controller_8", 8)
+    menus.controls_controller_p9 = create_controller_controls_menu(Text:text("menu.options.input_submenu.controller_p9"),
+        "controller_9", 9)
+    menus.controls_controller_p10 = create_controller_controls_menu(Text:text("menu.options.input_submenu.controller_p10"),
+        "controller_10", 10)
+    menus.controls_controller_p11 = create_controller_controls_menu(Text:text("menu.options.input_submenu.controller_p11"),
+        "controller_11", 11)
+    menus.controls_controller_p12 = create_controller_controls_menu(Text:text("menu.options.input_submenu.controller_p12"),
+        "controller_12", 12)
 
     menus.game_over = require "data.menus.menu_game_over"
 

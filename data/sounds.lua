@@ -15,8 +15,18 @@ local sounds = {}
 
 local sfxnames = {
 	["empty"] =                             { "empty.ogg", "static" },
+	["whisky"] =                             { "whisky.mp3", "static" },
+	["whiskywhisky"] =                        { "whiskywhisky.mp3", "static" },
+	["vatefairefoutre"] =                        { "vatefairefoutre.mp3", "static" },
+	["vatefaaairefoutre"] =                        { "vatefaaairefoutre.mp3", "static" },
+	["vavava"] =                        { "vavava.mp3", "static" },
+	["drogue"] =                        { "drogue.mp3", "static" },
+	["vabientefairemettre"] =                        { "vabientefairemettre.mp3", "static" },
+	["salade"] =                        { "salade.mp3", "static" },
+	["vabientefairemettrewhisky"] =                        { "vabientefairemettrewhisky.mp3", "static" },
 
 	-- MUSIC
+	["proutpointmp3"] = { "music/proutpointmp3.mp3", "stream", { looping = true } },
 	["music_ground_floor_players_paused"] = { "music/music_ground_floor_players_paused.ogg", "stream", { looping = true } },
 	["music_ground_floor_empty_ingame"] =   { "music/music_ground_floor_empty_ingame.ogg", "stream", { looping = true } },
 	["music_ground_floor_empty_paused"] =   { "music/music_ground_floor_empty_paused.ogg", "stream", { looping = true } },
@@ -27,6 +37,8 @@ local sfxnames = {
 	["music_w2_paused"] =                   { "music/music_w2_paused.ogg", "stream", { looping = true } },
 	["music_w3_ingame"] =                   { "music/music_w3_ingame.ogg", "stream", { looping = true } },
 	["music_w3_paused"] =                   { "music/music_w3_paused.ogg", "stream", { looping = true } },
+	["music_w4_ingame"] =                   { "music/music_w4_ingame.ogg", "stream", { looping = true } },
+	["music_w4_paused"] =                   { "music/music_w4_ingame.ogg", "stream", { looping = true } },
 	["music_game_over"] =                   { "music/music_game_over.ogg", "stream", { looping = true } },
 	["music_cafeteria_ingame"] =            { "music/music_cafeteria_ingame.ogg", "stream", { looping = true } },
 	["music_cafeteria_paused"] =            { "music/music_cafeteria_paused.ogg", "stream", { looping = true } },
@@ -38,7 +50,9 @@ local sfxnames = {
 	["music_boss_w3_ingame"] =              { "music/music_boss_w3_ingame.ogg", "stream", { looping = true } },
 	["music_boss_w3_paused"] =              { "music/music_boss_w3_paused.ogg", "stream", { looping = true } },
 	["music_boss_w4_ingame"] =              { "music/music_boss_w4_ingame.ogg", "stream", { looping = true } },
+	["music_boss_w4_paused"] =              { "music/music_boss_w4_ingame.ogg", "stream", { looping = true } },
 	["music_boss_w5_ingame"] =              { "music/music_boss_w5_ingame.ogg", "stream", { looping = true } },
+	["music_boss_w5_paused"] =              { "music/music_boss_w5_ingame.ogg", "stream", { looping = true } },
 
 	-- GUNS
 	["sfx_weapon_peagun_shoot_{01-08}"] =           {"sfx/weapons/peagun/sfx_weapon_peagun_shoot_{}.ogg", "static"},

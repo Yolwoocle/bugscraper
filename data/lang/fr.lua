@@ -94,6 +94,8 @@ return {
             leo = "Léo",
             dodu = "Dodu",
             yv = "Y.V.",
+
+            olx = "sonic", --ADDED
         },
         -- Short appreviation to denote players by their number.
         -- Example: in english, "P1" means "Player 1", in french "J1" means "Joueur 1".
@@ -105,6 +107,10 @@ return {
         motherboard = "La Webmaster",
     },
     upgrade = {
+        whisky = {
+            title = "Whisky",
+                description = "Whisky",
+        },
         tea = {
             title = "Thé vert",
             description = "+%d ❤ extra",
