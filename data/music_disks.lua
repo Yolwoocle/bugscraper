@@ -14,6 +14,7 @@ return {
         [MUSIC_MODE_PAUSE] = sounds.music_ground_floor_players_paused.source,
     }, { volume = 0.75 }),
 
+    
     ["w1"] = disk_class:new({
         [MUSIC_MODE_INGAME] = sounds.music_w1_ingame.source,
         [MUSIC_MODE_PAUSE] = sounds.music_w1_paused.source,
@@ -27,17 +28,36 @@ return {
         [MUSIC_MODE_PAUSE] = sounds.music_w3_paused.source,
     }),
     ["w4"] = disk_class:new({
-        [MUSIC_MODE_INGAME] = sounds.music_w1_ingame.source,
-        [MUSIC_MODE_PAUSE] = sounds.music_w1_paused.source,
+        [MUSIC_MODE_INGAME] = sounds.music_w4_ingame.source,
+        [MUSIC_MODE_PAUSE] = sounds.music_w4_paused.source,
     }),
     ["w5"] = disk_class:new({
-        [MUSIC_MODE_INGAME] = sounds.music_w1_ingame.source,
-        [MUSIC_MODE_PAUSE] = sounds.music_w1_paused.source,
+        [MUSIC_MODE_INGAME] = sounds.music_w5_ingame.source,
+        [MUSIC_MODE_PAUSE] = sounds.music_w5_paused.source,
     }),
-    ["w0"] = disk_class:new({
-        [MUSIC_MODE_INGAME] = sounds.music_w1_ingame.source,
-        [MUSIC_MODE_PAUSE] = sounds.music_w1_paused.source,
+
+    
+    ["boss_w1"] = disk_class:new({
+        [MUSIC_MODE_INGAME] = sounds.music_boss_w1_ingame.source,
+        [MUSIC_MODE_PAUSE] = sounds.music_boss_w1_paused.source,
     }),
+    ["boss_w2"] = disk_class:new({
+        [MUSIC_MODE_INGAME] = sounds.music_boss_w2_ingame.source,
+        [MUSIC_MODE_PAUSE] = sounds.music_boss_w2_paused.source
+    }),
+    ["boss_w3"] = disk_class:new({
+        [MUSIC_MODE_INGAME] = sounds.music_boss_w3_ingame.source,
+        [MUSIC_MODE_PAUSE] = sounds.music_boss_w3_paused.source,
+    }, { loop_start = 5.741, loop_end = 60+58.333 }),
+    ["boss_w4"] = disk_class:new({
+        [MUSIC_MODE_INGAME] = sounds.music_boss_w4_ingame.source,
+        [MUSIC_MODE_PAUSE] = sounds.music_boss_w4_paused.source,
+    }),
+    ["boss_w5"] = disk_class:new({
+        [MUSIC_MODE_INGAME] = sounds.music_boss_w5_ingame.source,
+        [MUSIC_MODE_PAUSE] = sounds.music_boss_w5_paused.source,
+    }),
+
 
     ["game_over"] = disk_class:new({
         [MUSIC_MODE_INGAME] = sounds.music_game_over.source,
@@ -51,17 +71,4 @@ return {
         [MUSIC_MODE_INGAME] = sounds.music_cafeteria_empty_ingame.source,
         [MUSIC_MODE_PAUSE] = sounds.music_cafeteria_paused.source,
     }),
-    ["boss_w1"] = disk_class:new({
-        [MUSIC_MODE_INGAME] = sounds.music_boss_w1_ingame.source,
-        [MUSIC_MODE_PAUSE] = sounds.music_boss_w1_paused.source,
-    }),
-    ["boss_w2"] = disk_class:new({
-        [MUSIC_MODE_INGAME] = sounds.music_boss_w2_ingame.source,
-        [MUSIC_MODE_PAUSE] = sounds.music_boss_w2_paused.source
-    }),
-    ["boss_w3"] = disk_class:new({
-        [MUSIC_MODE_INGAME] = sounds.music_boss_w3_ingame.source,
-        [MUSIC_MODE_PAUSE] = sounds.music_boss_w3_paused.source,
-    -- }, { loop_start = 5.741, loop_end = 60+58.333 }),
-    }, { loop_start = 5.741, loop_end = 60+58.333 }),
 }

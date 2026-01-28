@@ -1447,7 +1447,7 @@ local waves = parse_waves_table {
             { E.Larva, 3 },
             { E.Woodlouse, 2 },
         },
-        music = "w0",
+        music = "w5",
 
         over_title = get_world_prefix(0),
         title = get_world_name(0),
@@ -1769,7 +1769,7 @@ local waves = parse_waves_table {
     {
         roll_type = WAVE_ROLL_TYPE_FIXED,
 
-        music = "boss_w1",
+        music = "boss_w5",
 
         min = 1,
         max = 1,
@@ -1780,6 +1780,7 @@ local waves = parse_waves_table {
         background_transition = backgrounds.BackgroundAboveCity:new(),
 
         counter_display_func = function(_)
+            -- Pseudo random looking floor counter
             local frame = math.floor(game.frame / 5)
             local nb = (32849 * frame) % 999
             return math.floor(clamp(nb, 100, 999))
@@ -1798,276 +1799,54 @@ local waves = parse_waves_table {
         end
     },
     
-    
-    --]]
-    ----------------------------------------------------------------------------------------------------------
-    ----------------------------------------------------------------------------------------------------------
-    --- W5: executive
-    ----------------------------------------------------------------------------------------------------------
-    ----------------------------------------------------------------------------------------------------------
-    --[[
-
-    {
-        min = 4,
-        max = 4,
-
-        enemies = {
-            { E.GoldenBeetle, 20 },
-        },
-
-        elevator_layers = {
-            ["cabin_bg"] = images.cabin_bg_w2,
-            ["walls"] = images.cabin_walls_w2,
-
-            ["bg_fan"] = true,
-            ["bg_grid"] = false,
-        },
-
-        background = backgrounds.BackgroundGreenhouse:new(),
-        music = "w5",
-
-        over_title = get_world_prefix(5),
-        title = get_world_name(5),
-        title_color = COL_LIGHT_BLUE,
-        title_outline_color = COL_BLACK_BLUE,
-    },
-
-
-    {
-        min = 4,
-        max = 5,
-
-        enemies = {
-            { E.GoldenBeetle, 20 },
-            { E.Rollopod, 20 },
-        },
-    },
-
-    {
-        min = 6,
-        max = 6,
-
-        enemies = {
-            { E.CloudDropper, 10 },
-            { E.GoldenBeetle, 10 },
-            { E.Rollopod, 10 },
-        },
-    },
-
-    {
-        min = 3,
-        max = 4,
-
-        enemies = {
-            { E.GoldenBeetle, 2 },
-        },
-        fixed_enemies = {
-            { E.WalkingSlotMachine, 2 },
-        },
-    },
-
-    {
-        min = 5,
-        max = 5,
-
-        enemies = {
-            { E.CloudDropper, 10 },
-            { E.Rollopod, 10 },
-        },
-
-        fixed_enemies = {
-            {
-                E.Pendulum, 1,
-                args = {pi/3, 200, 1},
-                position = {CANVAS_WIDTH/2, 3*16}
-            },
-        },
-    },
-
-    {
-        min = 5,
-        max = 6,
-
-        enemies = {
-            { E.StinkBug, 10 },
-            { E.GoldenBeetle, 10 },
-        },
-    },
-
-    {
-        min = 3,
-        max = 3,
-
-        enemies = {
-            { E.CloudDropper, 10 },
-            { E.StinkBug, 10 },
-        },
-        fixed_enemies = {
-            { E.Shooter, 2 },
-        },
-    },
-
-    {
-        min = 7,
-        max = 7,
-
-        enemies = {
-            { E.GoldenBeetle, 10 },
-            { E.WalkingSlotMachine, 5 },
-            { E.Shooter, 10 },
-            { E.Rollopod, 10 },
-
-        },
-    },
-
-    {
-        min = 8,
-        max = 8,
-
-        enemies = {
-            { E.GoldenBeetle, 10 },
-            { E.WalkingSlotMachine, 5 },
-            { E.Shooter, 10 },
-            { E.Rollopod, 10 },
-
-        },
-    },
-
-    ---------------------------------------------
-    -- new_cafeteria(),
-    ---------------------------------------------
-
-    -- {
-    --     min = 5,
-    --     max = 5,
-
-    --     enemies = {
-    --         { E.CloudDropper, 20 },
-    --     },
-
-    --     music = "w5",
-    -- },
-
-    -- {
-    --     min = 3,
-    --     max = 3,
-
-    --     enemies = {
-    --         { E.CloudDropper, 10 },
-    --     },
-    -- },
-
-    -- {
-    --     min = 3,
-    --     max = 3,
-
-    --     enemies = {
-    --         { E.CloudDropper, 10 },
-    --     },
-    -- },
-
-    -- {
-    --     min = 3,
-    --     max = 3,
-
-    --     enemies = {
-    --         { E.CloudDropper, 10 },
-    --     },
-    -- },
-
-    -- {
-    --     min = 3,
-    --     max = 3,
-
-    --     enemies = {
-    --         { E.CloudDropper, 10 },
-    --     },
-    -- },
-
-    -- {
-    --     min = 3,
-    --     max = 3,
-
-    --     enemies = {
-    --         { E.CloudDropper, 10 },
-    --     },
-    -- },
-
-    -- {
-    --     min = 3,
-    --     max = 3,
-
-    --     enemies = {
-    --         { E.CloudDropper, 10 },
-    --     },
-    -- },
-
-    -- {
-    --     min = 3,
-    --     max = 3,
-
-    --     enemies = {
-    --         { E.CloudDropper, 10 },
-    --     },
-    -- },
-
-    -- {
-    --     min = 3,
-    --     max = 3,
-
-    --     enemies = {
-    --         { E.CloudDropper, 10 },
-    --     },
-    -- },
-
 
     -----------------------------------------------------
     --- Last wave
     -----------------------------------------------------
 
-    {
-        floor_type = FLOOR_TYPE_CAFETERIA,
-        roll_type = WAVE_ROLL_TYPE_FIXED,
-        music = "off",
+    -- {
+    --     floor_type = FLOOR_TYPE_CAFETERIA,
+    --     roll_type = WAVE_ROLL_TYPE_FIXED,
+    --     music = "off",
 
-        run = function(self, level)
-            for _, actor in pairs(game.actors) do
-                if actor.name == "poison_cloud" then
-                    actor.lifespan = 1
-                end
-                if actor.name == "floor_hole_spawner" or actor.name == "pendulum" then
-                    actor:remove()
-                end
-            end
-        end,
+    --     run = function(self, level)
+    --         for _, actor in pairs(game.actors) do
+    --             if actor.name == "poison_cloud" then
+    --                 actor.lifespan = 1
+    --             end
+    --             if actor.name == "floor_hole_spawner" or actor.name == "pendulum" then
+    --                 actor:remove()
+    --             end
+    --         end
+    --     end,
 
-        min = 1,
-        max = 1,
-        enemies = {},
+    --     min = 1,
+    --     max = 1,
+    --     enemies = {},
 
-        bounds = RECT_CEO_OFFICE,
+    --     bounds = RECT_CEO_OFFICE,
 
-        backroom = BackroomCEOOffice
-    },
+    --     backroom = BackroomCEOOffice
+    -- },
 
 
-    {
-        roll_type = WAVE_ROLL_TYPE_FIXED,
+    -- {
+    --     roll_type = WAVE_ROLL_TYPE_FIXED,
 
-        min = 1,
-        max = 1,
-        enemies = {
-            { E.FinalBoss, 1, position = { 87 * 16, 14 * 16 } }
-        },
+    --     min = 1,
+    --     max = 1,
+    --     enemies = {
+    --         { E.FinalBoss, 1, position = { 87 * 16, 14 * 16 } }
+    --     },
 
-        run = function(self, level)
-            for _, actor in pairs(game.actors) do
-                if actor.name == "final_boss" then
-                    actor.state_machine:set_state("standby")
-                end
-            end
-        end
-    },
+    --     run = function(self, level)
+    --         for _, actor in pairs(game.actors) do
+    --             if actor.name == "final_boss" then
+    --                 actor.state_machine:set_state("standby")
+    --             end
+    --         end
+    --     end
+    -- },
 
     -- Last wave
     -- {
