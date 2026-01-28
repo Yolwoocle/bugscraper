@@ -535,9 +535,14 @@ function Debug:draw()
 end
 
 function Debug:draw_input_view()
-    local spacing = 70
+    local spacing = 64
     local x = 0
+
+    local t = {GLOBAL_INPUT_USER_PLAYER_N}
     for i = 1, MAX_NUMBER_OF_PLAYERS do
+        table.insert(t, i)
+    end
+    for _, i in pairs(t) do
         local u = Input:get_user(i)
         if u then
             self:draw_input_view_for(u, x)
@@ -563,11 +568,16 @@ function Debug:draw_input_view_for(user, x)
         "ui_up",
         "ui_down",
         "split_keyboard",
+        "join_game",
         "debug",
     }
+        
+    Text:push_font(FONT_MINI)
+    print_outline(nil, nil, concat("user ", user), x, 0)
     for i, a in ipairs(actions) do
         print_outline(nil, nil, concat(a, ": ", user.action_states[a].state), x, 14 * i)
     end
+    Text:pop_font()
 end
 
 function Debug:draw_joystick_view()
