@@ -581,6 +581,9 @@ function Player:do_damage(n, source)
 	if self.debug_god_mode then
 		return false
 	end
+	if self.state_machine.current_state_name ~= "normal" then
+		return false
+	end
 	if self.invincible_time > 0 then
 		return false
 	end

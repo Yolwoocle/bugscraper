@@ -6,14 +6,20 @@ return Cutscene:new("ceo_escape_w1", {
     CutsceneScene:new({
         description = "",
         
-        duration = 0,
+        duration = 0.1,
         enter = function(cutscene, data)
             if not Metaprogression:get("has_seen_w1_transition_cutscene") then
                 game.menu_manager:set_can_pause(false)
                 game.game_ui.cinematic_bars_enabled = true
                 game.game_ui.cinematic_bar_color = COL_VERY_DARK_GRAY
                 game.camera:set_target_offset(10000, 0)
-    
+                
+                for _, actor in pairs(game.actors) do
+                    if actor.is_shop then
+                        actor:end_interaction(true)
+                    end
+                end
+
                 for _, player in pairs(game.players) do
                     player:set_input_mode(PLAYER_INPUT_MODE_CODE)
                     player:reset_virtual_controller()
@@ -26,7 +32,6 @@ return Cutscene:new("ceo_escape_w1", {
                     return
                 end
             end
-            return
         end,
     }),
     CutsceneScene:new({
@@ -115,8 +120,60 @@ return Cutscene:new("ceo_escape_w1", {
     }),
     
     CutsceneScene:new({
+        description = "",
+        
+        duration = 1.0,
+        enter = function(cutscene, data)
+            data.ceo.vx = 0
+            data.ceo.vy = 0
+            data.ceo.gravity = 0
+        end,
+    }),
+
+    CutsceneScene:new({
+        description = "CEO brrrrr",
+        
+        duration = 3.0,
+        enter = function(cutscene, data)
+            data.ceo.vx = 0
+            data.ceo.vy = -50
+            data.ceo.gravity = 0
+
+            data.ceo.spr:set_animation("jetpack")
+            Audio:play("sfx_w1_cutscene_jetpack")
+
+            data.update_jetpack = function(dt)
+                Particles:push_layer(PARTICLE_LAYER_CAFETERIA_BACKGROUND)
+
+                Particles:smoke_big(data.ceo.mid_x, data.ceo.y+data.ceo.h, {
+                        type = "gradient",
+                        COL_WHITE, COL_YELLOW, COL_ORANGE, COL_DARK_RED, COL_DARK_GRAY, COL_BLACK_BLUE
+                    }, 
+                    12, -- rad
+                    10, -- quantity
+                    {
+                        vx = 0, 
+                        vx_variation = 20, 
+                        vy = 50, 
+                        vy_variation = 10,
+                        min_spawn_delay = 0,
+                        max_spawn_delay = 0.2,
+                    }
+                )
+
+                Particles:pop_layer()
+                
+                data.ceo.spr:update_offset(random_neighbor(3), random_neighbor(3))
+            end
+        end,
+        update = function(cutscene, data, dt)
+            data.update_jetpack(dt)
+        end,
+    }),
+    
+    CutsceneScene:new({
         description = "Give back control to players",
-        duration = 0,
+        duration = 0.0,
         enter = function(cutscene, data)
             if not Metaprogression:get("has_seen_w1_transition_cutscene") then
                 game.menu_manager:set_can_pause(true)
@@ -132,52 +189,13 @@ return Cutscene:new("ceo_escape_w1", {
             end
         end
     }),
-    CutsceneScene:new({
-        description = "",
-        
-        duration = 2.0,
-        enter = function(cutscene, data)
-            data.ceo.vx = 0
-            data.ceo.vy = 0
-            data.ceo.gravity = 0
-        end,
-    }),
-    CutsceneScene:new({
-        description = "",
-        
-        duration = 6.0,
-        enter = function(cutscene, data)
-            game.game_ui.cinematic_bar_color = nil
-            
-            data.ceo.vx = 0
-            data.ceo.vy = -50
-            data.ceo.gravity = 0
 
-            data.ceo.spr:set_animation("jetpack")
-            Audio:play("sfx_w1_cutscene_jetpack")
-        end,
+    CutsceneScene:new({
+        description = "CEO brrrrrr",
+        
+        duration = 3.0,
         update = function(cutscene, data, dt)
-            Particles:push_layer(PARTICLE_LAYER_CAFETERIA_BACKGROUND)
-
-            Particles:smoke_big(data.ceo.mid_x, data.ceo.y+data.ceo.h, {
-                    type = "gradient",
-                    COL_WHITE, COL_YELLOW, COL_ORANGE, COL_DARK_RED, COL_DARK_GRAY, COL_BLACK_BLUE
-                }, 
-                12, -- rad
-                10, -- quantity
-                {
-                    vx = 0, 
-                    vx_variation = 20, 
-                    vy = 50, 
-                    vy_variation = 10,
-                    min_spawn_delay = 0,
-                    max_spawn_delay = 0.2,
-                }
-            )
-
-            Particles:pop_layer()
-            
-            data.ceo.spr:update_offset(random_neighbor(3), random_neighbor(3))
+            data.update_jetpack(dt)
         end,
         exit = function(cutscene, data)
             if not data.ceo then
@@ -189,4 +207,16 @@ return Cutscene:new("ceo_escape_w1", {
             data.ceo.spr:update_offset(0, 0)
         end,
     }),
+    
+    CutsceneScene:new({
+        description = "Give back control to players",
+        duration = 0.0,
+        enter = function(cutscene, data)            
+            if not Metaprogression:get("has_seen_w1_transition_cutscene") then
+                game.game_ui.cinematic_bar_color = nil
+                Metaprogression:set("has_seen_w1_transition_cutscene", true)
+            end
+        end
+    }),
+    
 })

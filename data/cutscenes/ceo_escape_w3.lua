@@ -8,6 +8,12 @@ return Cutscene:new("ceo_escape_w3", {
 
         duration = 0.01,
         enter = function(cutscene, data)
+            for _, actor in pairs(game.actors) do
+                if actor.is_shop then
+                    actor:end_interaction(true)
+                end 
+            end
+
             if not Metaprogression:get("has_seen_w3_transition_cutscene") then
                 game.menu_manager:set_can_pause(false)
                 game.game_ui.cinematic_bars_enabled = true

@@ -25,6 +25,12 @@ return Cutscene:new("ceo_escape_w5", {
 
         duration = 0.0,
         enter = function(cutscene, data)
+            for _, actor in pairs(game.actors) do
+                if actor.is_shop then
+                    actor:end_interaction(true)
+                end 
+            end
+
             data.init_ceo_x = 20*16
 
             game.menu_manager:set_can_pause(false)

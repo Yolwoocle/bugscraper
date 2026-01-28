@@ -114,7 +114,9 @@ function Shop:init(x, y, w, h, params)
             enter = function(state)
                 state.timer = Timer:new(0.2):start()
                 
-                self.selected_player:set_input_mode(PLAYER_INPUT_MODE_USER)
+                if self.selected_player then
+                    self.selected_player:set_input_mode(PLAYER_INPUT_MODE_USER)
+                end
                 self.show_interaction_prompt = false
             end,
             update = function(state, dt)
@@ -128,7 +130,12 @@ function Shop:init(x, y, w, h, params)
             end,
             exit = function(state, dt)
                 self.animation_t = 0.0
-                self:end_interaction()
+                if not self.selected_player then
+                    return
+                end
+
+                self.selected_player:set_input_mode(PLAYER_INPUT_MODE_USER)
+                self.selected_player = nil
             end
         },
     }, 'normal')
@@ -194,13 +201,14 @@ function Shop:start_interaction(player)
     self.state_machine:set_state("opening")
 end
 
-function Shop:end_interaction()
-    if not self.selected_player then
-        return
+function Shop:end_interaction(instantly_give_back_control)
+    if instantly_give_back_control and self.selected_player then
+        self.selected_player:set_input_mode(PLAYER_INPUT_MODE_USER)
+        self.selected_player = nil
     end
-
-    self.selected_player:set_input_mode(PLAYER_INPUT_MODE_USER)
-    self.selected_player = nil
+    if self.state_machine.current_state_name ~= "normal" then
+        self.state_machine:set_state("deopening")
+    end
 end
 
 function Shop:apply_current_product()
@@ -235,17 +243,19 @@ function Shop:draw_products()
         self.products[i]:draw(x + (i-1)*sep, y, s)
     end
 
-    local icon_left = Input:get_action_primary_icon(self.selected_player.n, "ui_left")
-    local icon_right = Input:get_action_primary_icon(self.selected_player.n, "ui_right")
-    draw_centered(icon_left,  self.mid_x - sep * (#self.products + 1)/2 - 8 + self.left_prompt_ox,  y, 0, s)
-    draw_centered(icon_right, self.mid_x + sep * (#self.products + 1)/2 + 8 + self.right_prompt_ox, y, 0, s)
-
-    if self.animation_t >= 0.5 then
-        local prompt_x = math.floor(x - 38)
-        local prompt_y = y + 36 - self.animation_t * 10
-        local new_x = Input:draw_input_prompt(self.selected_player.n, {"ui_select"}, "{input.prompts.ui_select}", COL_WHITE, prompt_x, prompt_y)
-        prompt_x = new_x + 8
-        local new_x = Input:draw_input_prompt(self.selected_player.n, {"ui_back"}, "{input.prompts.ui_back}", COL_WHITE, prompt_x, prompt_y)
+    if self.selected_player then
+        local icon_left = Input:get_action_primary_icon(self.selected_player.n, "ui_left")
+        local icon_right = Input:get_action_primary_icon(self.selected_player.n, "ui_right")
+        draw_centered(icon_left,  self.mid_x - sep * (#self.products + 1)/2 - 8 + self.left_prompt_ox,  y, 0, s)
+        draw_centered(icon_right, self.mid_x + sep * (#self.products + 1)/2 + 8 + self.right_prompt_ox, y, 0, s)
+    
+        if self.animation_t >= 0.5 then
+            local prompt_x = math.floor(x - 38)
+            local prompt_y = y + 36 - self.animation_t * 10
+            local new_x = Input:draw_input_prompt(self.selected_player.n, {"ui_select"}, "{input.prompts.ui_select}", COL_WHITE, prompt_x, prompt_y)
+            prompt_x = new_x + 8
+            local new_x = Input:draw_input_prompt(self.selected_player.n, {"ui_back"}, "{input.prompts.ui_back}", COL_WHITE, prompt_x, prompt_y)
+        end
     end
 end
 
