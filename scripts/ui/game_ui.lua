@@ -225,20 +225,16 @@ function GameUI:start_title_tv(tvs, intro_dur, stay_dur, outro_dur)
 end
 
 function GameUI:update_title(dt)
-	-- print_debug(self.title_tvs_on)
 	if self.title_state_timer:update(dt) then
 		if self.title_state == "intro" then
-			print_debug("intro")
 			self.title_state = "stay"
 			self.title_state_timer:start(self.title_stay_duration)
 			
 		elseif self.title_state == "stay" then
-			print_debug("stay")
 			self.title_state = "outro"
 			self.title_state_timer:start(self.title_outro_duration)
 
 		elseif self.title_state == "outro" then
-			print_debug("outro")
 			self.title_state = "off"
 			self.titles = nil
 			self.subtitle = nil
