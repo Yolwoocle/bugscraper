@@ -386,6 +386,8 @@ RAW_INPUT_MAP_DEFAULT_SPLIT_KEYBOARD_P2 = {
 }
 
 UI_ACTIONS = {"ui_up", "ui_down", "ui_left", "ui_right", "ui_select", "ui_back", "pause", "join_game"}
+-- todo fix bug où tu peux pas rej avec manette quand un joueur clavier est présent (cf commit 521a883650d9c40414525f3bba2ac6fa8bfe3660)
+-- lié au fait que "join_game" est dans les ui_actions maintenant
 
 AXIS_TABLE = {
     leftxpos =  true,

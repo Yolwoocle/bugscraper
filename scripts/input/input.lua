@@ -85,13 +85,6 @@ function InputManager:update(dt)
     for i, user in pairs(self.users) do
         user:update(dt)
     end
-    
-    self:update_global_user_ui_action_enabled()
-end
-
-function InputManager:update_global_user_ui_action_enabled()
-    local keyboard_users_present = (self:get_number_of_users(INPUT_TYPE_KEYBOARD) > 0)
-    self:get_user(GLOBAL_INPUT_USER_PLAYER_N).ui_actions_enabled = not keyboard_users_present
 end
 
 function InputManager:mark_all_actions_as_handled()
@@ -132,8 +125,6 @@ function InputManager:new_user(n, input_profile_id, is_global)
     local user = InputUser:new(n, input_profile_id, is_global)
     self.users[n] = user
 
-    self:update_global_user_ui_action_enabled()
-
     return user
 end
 
@@ -147,8 +138,6 @@ function InputManager:remove_user(n)
         self.joystick_to_user_map[user.joystick] = nil
     end
     self.users[n] = nil
-
-    self:update_global_user_ui_action_enabled()
 end
 
 function InputManager:assign_joystick(user_n, joystick)

@@ -109,22 +109,30 @@ function InputUser:action_pressed(action)
 end
 
 function InputUser:action_down(action)
+    if self.is_global and action=="join_game" then print_debug("\n----------") end --REMOVEME 
     local buttons = self:get_input_profile():get_mappings()[action]
 	if not buttons then   error(concat("Attempt to access button '",concat(action),"'"))   end
     if self.action_states[action].is_handled then
+        if self.is_global and action=="join_game" then print_debug("- 1") end --REMOVEME 
         return false
     end
 
     local is_ui_action = is_in_table(UI_ACTIONS, action)
     if not self.ui_actions_enabled and is_ui_action then
+        if self.is_global and action=="join_game" then print_debug("- 2", self.ui_actions_enabled) end --REMOVEME 
+
         return false
     end
 
 	for _, button in pairs(buttons) do
 		if self:is_button_down(button, is_ui_action) then
+            if self.is_global and action=="join_game" then print_debug("- 3") end --REMOVEME 
+
 			return true
 		end
 	end
+    if self.is_global and action=="join_game" then print_debug("- 4") end --REMOVEME 
+
 	return false
 end
 
