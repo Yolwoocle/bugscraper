@@ -43,7 +43,7 @@ function MoleBoss:init(x, y)
     }, "flying")
     self.spr:set_anchor(SPRITE_ANCHOR_CENTER_CENTER)
 
-    self:set_max_life(150)
+    self:set_max_life(120)
 
     self.fly_speed = 500
     self.def_walk_speed = 250
@@ -293,19 +293,14 @@ function MoleBoss:init(x, y)
                 self.is_bouncy_to_bullets = true
                 self.can_burrow_back = true
 
-                self.unstompable_timer = Timer:new(0.1):start()
                 self.state_timer:start(0.5)
-                self.spr:set_animation("rolling")
+                self.spr:set_animation(self.is_spiked_on_exit and "rolling" or "flying")
 
                 self.spr:animate_scale(1.3, 1.0, 1.5)
             end,
             update = function(state, dt)
                 self.vx = 0
                 self.spr:set_rotation(self.spr.rot + (600 * self.walk_to_wall_dir * dt) / (self.h * 0.5))
-                
-                if self.unstompable_timer:update(dt) then
-                    self.is_stompable = false
-                end
                 
                 if self.state_timer:update(dt) then
                     return "walk_to_wall"
@@ -325,10 +320,16 @@ function MoleBoss:init(x, y)
                 self.spr:set_animation("rolling")
 
                 self.spr:animate_scale(1.3, 1.0, 1.5)
+
+                self.unstompable_timer = Timer:new(0.05):start()
             end,
             update = function(state, dt)
                 self.vx = self.walk_to_wall_dir * self.walk_speed
                 self.spr:set_rotation(self.spr.rot + (self.vx * dt) / (self.h * 0.5))
+
+                if self.unstompable_timer:update(dt) then
+                    self.is_stompable = false
+                end
             end,
             on_collision = function(state, col, other)
                 self.spr:set_scale(1.0)
@@ -469,7 +470,7 @@ function MoleBoss:update(dt)
 
     MoleBoss.super.update(self, dt)
 
-    -- self.debug_values[1] = self.is_stompable
+    self.debug_values[1] = self.is_stompable
     -- self.debug_values[1] = self.state_machine.current_state_name
     -- self.debug_values[2] = "self.walk_dir "..tostring(self.walk_dir)
     -- self.debug_values[3] = "self.walk_speed "..tostring(self.walk_speed)
