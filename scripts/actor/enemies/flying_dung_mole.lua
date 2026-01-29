@@ -38,7 +38,7 @@ function FlyingDungMole:init(x, y, spawner, params)
         {Loot.Gun, 3, loot_type="gun"},
     }
 
-    self.is_spiky = random_range(0, 1) >= 0.2
+    self.is_spiky = random_range(0, 1) <= 0.2
     if self.is_spiky then
         self:set_image(images.mole_minion_spiked)
     end

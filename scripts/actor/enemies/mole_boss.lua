@@ -228,10 +228,6 @@ function MoleBoss:init(x, y)
                     start_angle = a - pi/4,
                 })
                 game:new_actor(flying_dung)
-                local flying_dung = create_actor_centered(FlyingDungMole, self.mid_x, self.mid_y, self, {
-                    start_angle = a + pi/4,
-                })
-                game:new_actor(flying_dung)
             end,
             
             update = function(state, dt)
