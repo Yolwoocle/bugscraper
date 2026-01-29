@@ -7,6 +7,7 @@ local StateMachine = require "scripts.state_machine"
 local Timer = require "scripts.timer"
 local WallWalker = require "scripts.actor.enemies.wall_walker"
 local AnimatedSprite = require "scripts.graphics.animated_sprite"
+local FlyingDungMole = require "scripts.actor.enemies.flying_dung_mole"
 
 local MoleBoss = WallWalker:inherit()
 
@@ -45,7 +46,7 @@ function MoleBoss:init(x, y)
     self:set_max_life(150)
 
     self.fly_speed = 500
-    self.def_walk_speed = 500
+    self.def_walk_speed = 250
     self.def_roll_speed = 300
 
     self.is_killed_on_stomp = false
@@ -77,7 +78,7 @@ function MoleBoss:init(x, y)
             enter = function(state)
                 self.walk_speed = 0
                 self.damage = 0
-                self.state_timer:start(0.5)
+                self.state_timer:start(1.0)
 
                 self.gravity = 0
                 self.is_stompable = false
@@ -153,6 +154,7 @@ function MoleBoss:init(x, y)
             exit = function(state)
             end
         },
+
         telegraph = {
             enter = function(state)
                 self.walk_speed = 0
@@ -164,7 +166,7 @@ function MoleBoss:init(x, y)
                 self.is_bouncy_to_bullets = false
                 self.can_burrow_back = false
 
-                self.state_timer:start(0.4)
+                self.state_timer:start(1.0)
                 self.spr:set_shake(3)
 
                 self.is_spiked_on_exit = (random_range() < 1/3)
@@ -186,6 +188,7 @@ function MoleBoss:init(x, y)
                 self.spr:set_shake(0)
             end,
         },
+
         jump = {
             enter = function(state)
                 self.is_wall_walking = false
@@ -200,6 +203,7 @@ function MoleBoss:init(x, y)
                 self.gravity = self.default_gravity
                 self.spr:set_animation(self.is_spiked_on_exit and "rolling" or "flying")
 
+                -- Visual effects
                 local ptc_x = self.mid_x - self.up_vect.x * self.w/2
                 local ptc_y = self.mid_y - self.up_vect.y * self.w/2
                 Particles:image(ptc_x, ptc_y, 20, {images.dung_particle_1, images.dung_particle_2, images.dung_particle_3}, 8)
@@ -217,6 +221,17 @@ function MoleBoss:init(x, y)
                 Particles:smoke(ptc_x, ptc_y, 40, {COL_WHITE, COL_LIGHTEST_GRAY, COL_LIGHT_GRAY}, --[[spw_rad]] self.w/2, --[[size]] 8, --[[sizevar]] 5, params)
 
                 self.spr:set_scale(0.5)
+
+                -- Spawn obstacles
+                local a = atan2(self.up_vect.y, self.up_vect.x)
+                local flying_dung = create_actor_centered(FlyingDungMole, self.mid_x, self.mid_y, self, {
+                    start_angle = a - pi/4,
+                })
+                game:new_actor(flying_dung)
+                local flying_dung = create_actor_centered(FlyingDungMole, self.mid_x, self.mid_y, self, {
+                    start_angle = a + pi/4,
+                })
+                game:new_actor(flying_dung)
             end,
             
             update = function(state, dt)
@@ -237,10 +252,11 @@ function MoleBoss:init(x, y)
                 end
             end,
         },
+
         linger = {
             enter = function(state)
                 self.walk_speed = 0
-                self.state_timer:start(0.5)
+                self.state_timer:start(1.0)
                 self.spr:set_animation(self.is_spiked_on_exit and "rolling" or "flying")
                 
                 self.is_wall_walking = true
@@ -248,16 +264,13 @@ function MoleBoss:init(x, y)
                 self.is_bouncy_to_bullets = true
                 self.can_burrow_back = true
 
-                -- local ptc_x = self.mid_x - self.up_vect.x * self.w/2
-                -- local ptc_y = self.mid_y - self.up_vect.y * self.w/2
-                -- Particles:image(ptc_x, ptc_y, 20, {images.dung_particle_1, images.dung_particle_2, images.dung_particle_3}, 8)
-
                 self.spr.squash = 1.5
                 self.spr:set_rotation(0)
                 self.spr:set_scale(1)
 
                 self:play_sound_var("sfx_boss_mrdung_jump_{01-06}", 0.1, 1.1) 
             end,
+
             update = function(state, dt)
                 local r = 4 * clamp((self.state_timer.time-1) / (self.state_timer.duration-1), 0, 1)
                 self.spr:update_offset(random_neighbor(r), random_neighbor(r))
@@ -269,10 +282,12 @@ function MoleBoss:init(x, y)
                     return "walk_to_wall"
                 end 
             end,
+
             exit = function (state)
                 self.spr:update_offset(0, 0)
             end
         },
+
         walk_to_wall = {
             enter = function(state)
                 state.dir = ternary(self.mid_x < CANVAS_WIDTH/2, 1, -1)
@@ -315,12 +330,12 @@ function MoleBoss:init(x, y)
         
         --------------------------------------------------------
         
-        
         bunny_hopping_telegraph = {
             enter = function(state)
                 self.state_timer:start(1.0)
 
                 self.is_wall_walking = false
+                self.is_stompable = true
 
                 self.gravity = self.default_gravity
                 self.spr:set_animation("jump_telegraph")
@@ -333,10 +348,11 @@ function MoleBoss:init(x, y)
                 end
             end
         },
+
         bunny_hopping = {
             enter = function(state)
                 self.is_wall_walking = false
-                self.is_stompable = false
+                self.is_stompable = true
                 self.spr:set_animation("rolling")
                 
                 self.friction_x = 1
@@ -350,8 +366,15 @@ function MoleBoss:init(x, y)
                 self.burrow_back_on_grounded = false
 
                 self.vx = random_sample{-1, 1} * 250
+                
+                self.unstompable_timer = Timer:new(0.1):start()
             end,
+
             update = function(state, dt)
+                if self.unstompable_timer:update(dt) then
+                    self.is_stompable = false
+                end
+
                 if self.is_grounded and self.bounces > 0 then
                     self.bounces = self.bounces - 1
                     self.jump_flag = true
@@ -367,6 +390,7 @@ function MoleBoss:init(x, y)
                     return "dig_linger"
                 end
             end,
+
             exit = function(state)
                 self.spr:update_offset(0, 0)
                 
@@ -374,6 +398,7 @@ function MoleBoss:init(x, y)
                 self.friction_x = 1
                 self.friction_y = 1
             end,
+
             after_collision = function(state, col)
                 if col.type ~= "cross" then
                     if self.bounces < self.max_bounces and not self.state_timer.is_active then
@@ -426,7 +451,7 @@ function MoleBoss:update(dt)
 
     MoleBoss.super.update(self, dt)
 
-    self.debug_values[1] = self.is_stompable
+    -- self.debug_values[1] = self.is_stompable
     -- self.debug_values[1] = self.state_machine.current_state_name
     -- self.debug_values[2] = "self.walk_dir "..tostring(self.walk_dir)
     -- self.debug_values[3] = "self.walk_speed "..tostring(self.walk_speed)
