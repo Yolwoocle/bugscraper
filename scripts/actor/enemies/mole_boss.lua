@@ -275,7 +275,7 @@ function MoleBoss:init(x, y)
                     if random_range(0, 1) < 0.5 then
                         return "bunny_hopping_telegraph"
                     end
-                    return "walk_to_wall"
+                    return "telegraph_walk_to_wall"
                 end 
             end,
 
@@ -284,29 +284,51 @@ function MoleBoss:init(x, y)
             end
         },
 
-        walk_to_wall = {
+        telegraph_walk_to_wall = {
             enter = function(state)
-                state.dir = ternary(self.mid_x < CANVAS_WIDTH/2, 1, -1)
+                self.walk_to_wall_dir = ternary(self.mid_x < CANVAS_WIDTH/2, 1, -1)
 
                 self.is_stompable = not self.is_spiked_on_exit
                 self.is_wall_walking = false
                 self.is_bouncy_to_bullets = true
                 self.can_burrow_back = true
 
-                self.walk_speed = self.def_roll_speed
                 self.unstompable_timer = Timer:new(0.1):start()
+                self.state_timer:start(0.5)
+                self.spr:set_animation("rolling")
+
+                self.spr:animate_scale(1.3, 1.0, 1.5)
+            end,
+            update = function(state, dt)
+                self.vx = 0
+                self.spr:set_rotation(self.spr.rot + (600 * self.walk_to_wall_dir * dt) / (self.h * 0.5))
+                
+                if self.unstompable_timer:update(dt) then
+                    self.is_stompable = false
+                end
+                
+                if self.state_timer:update(dt) then
+                    return "walk_to_wall"
+                end
+            end,
+        },
+
+        walk_to_wall = {
+            enter = function(state)
+                self.is_stompable = not self.is_spiked_on_exit
+                self.is_wall_walking = false
+                self.is_bouncy_to_bullets = true
+                self.can_burrow_back = true
+
+                self.walk_speed = self.def_roll_speed
                 self.state_timer:start(2.0)
                 self.spr:set_animation("rolling")
 
                 self.spr:animate_scale(1.3, 1.0, 1.5)
             end,
             update = function(state, dt)
-                self.vx = state.dir * self.walk_speed
+                self.vx = self.walk_to_wall_dir * self.walk_speed
                 self.spr:set_rotation(self.spr.rot + (self.vx * dt) / (self.h * 0.5))
-                
-                if self.unstompable_timer:update(dt) then
-                    self.is_stompable = false
-                end
             end,
             on_collision = function(state, col, other)
                 self.spr:set_scale(1.0)
