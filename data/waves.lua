@@ -226,7 +226,23 @@ local thorns_arc_params = {
 }
 
 local waves = parse_waves_table {
-    
+    -- {
+    --     min = 1,
+    --     max = 1,
+        
+    --     enemies = {
+    --         { E.MoleBoss, 30 },
+    --     },
+
+    --     run = function(self, level)
+    --     end,
+
+    --     cutscene = "mole_boss_enter",
+    --     music = "boss_w4",
+    --     elevator = ElevatorW1,
+
+    -- },
+
     -- {
     --     -- roll_type = WAVE_ROLL_TYPE_FIXED,
     --     min = 1,
@@ -1355,16 +1371,6 @@ local waves = parse_waves_table {
             { E.CloudDropper, 30 },
             { E.CloudStormZone, 30 },
             { E.Rollopod, 30 },
-        },
-    },
-
-    {
-        min = 6,
-        max = 6,
-
-        enemies = {
-            { E.DrillBee, 30 },
-            { E.SnailShelledBouncy, 30 },
         },
     },
 

@@ -8,12 +8,10 @@ local PongBall = require "scripts.actor.enemies.pong_ball"
 
 local FlyingDung = PongBall:inherit()
 
-function FlyingDung:init(x, y, spawner)
-    self:init_flying_dung(x, y, spawner)
-end
-
-function FlyingDung:init_flying_dung(x, y, spawner)
-    self:init_pong_ball(x, y, images.dung_flying, 16, 16)
+function FlyingDung:init(x, y, spawner, params)
+    params = params or {}
+    params = params.speed or 100 
+    FlyingDung.super.init(self, x, y, images.mole_minion, 16, 16)
     self.name = "flying_dung"
     self.spawner = spawner
 
@@ -23,8 +21,6 @@ function FlyingDung:init_flying_dung(x, y, spawner)
     self.invul = true
     self.invul_timer = Timer:new(0.5)
     self.invul_timer:start()
-
-    self:init_pong(100)
 
     self.is_pushable = false
     self.is_bouncy_to_bullets = false
@@ -36,8 +32,8 @@ function FlyingDung:init_flying_dung(x, y, spawner)
 
     self.score = 10
 
-    self.is_spiky = random_range(0, 1) >= 0.2
-    if not self.is_spiky then
+    self.is_spiky = random_range(0, 1) <= 0.2
+    if self.is_spiky then
         self:set_image(images.dung_flying_spiked)
     end
     self.is_killed_on_stomp = false
@@ -54,7 +50,7 @@ function FlyingDung:update(dt)
 
         self.destroy_bullet_on_impact = true
         self.is_immune_to_bullets = false
-        self.is_stompable = self.is_spiky
+        self.is_stompable = not self.is_spiky
         self.damage = 1
     end
 

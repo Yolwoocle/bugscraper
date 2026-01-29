@@ -14,7 +14,7 @@ local Explosion = require "scripts.actor.enemies.explosion"
 local HoneycombFootball = PongBall:inherit()
 
 function HoneycombFootball:init(x, y, spr)
-    self:init_pong_ball(x,y, spr, 32, 32)
+    HoneycombFootball.super.init(self, x,y, spr, 32, 32)
     self.name = "honeycomb_football"
 
     self.is_flying = true
