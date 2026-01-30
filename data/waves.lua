@@ -1399,6 +1399,8 @@ local waves = parse_waves_table {
         run = function(self, level)
         end,
 
+        background = backgrounds.BackgroundGreenhouse:new(),
+
         cutscene = "mole_boss_enter",
         music = "boss_w4",
     },

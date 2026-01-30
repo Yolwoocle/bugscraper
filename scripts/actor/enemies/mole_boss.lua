@@ -78,7 +78,7 @@ function MoleBoss:init(x, y)
             enter = function(state)
                 self.walk_speed = 0
                 self.damage = 0
-                self.state_timer:start(1.0)
+                self.state_timer:start(0.5)
 
                 self.gravity = 0
                 self.is_stompable = false
@@ -169,7 +169,17 @@ function MoleBoss:init(x, y)
                 self.state_timer:start(1.0)
                 self.spr:set_shake(3)
 
-                self.is_spiked_on_exit = (random_range() < 1/3)
+                -- Set spiky
+                if self.prevent_spiky_next_jump then
+                    self.is_spiked_on_exit = false
+                    self.prevent_spiky_next_jump = false
+                else
+                    self.is_spiked_on_exit = (random_range() < 1/2)
+                end
+
+                if self.is_spiked_on_exit then
+                    self.prevent_spiky_next_jump = true
+                end
                 self.spr:set_animation(self.is_spiked_on_exit and "telegraph_spiked" or "telegraph")
             end,
             update = function(state, dt)
@@ -351,7 +361,7 @@ function MoleBoss:init(x, y)
         
         bunny_hopping_telegraph = {
             enter = function(state)
-                self.state_timer:start(1.0)
+                self.state_timer:start(1.2)
 
                 self.is_wall_walking = false
                 self.is_stompable = true
@@ -436,7 +446,7 @@ function MoleBoss:init(x, y)
                     if col.normal.y == -1 and self.burrow_back_on_grounded == "wait" then
                         self.burrow_back_on_grounded = "burrow"
                         self.vx = 0
-                        self.state_timer:start(0.5)
+                        self.state_timer:start(1.0)
 
                         self.is_stompable = true
                         self.spr:set_animation("flying")
@@ -470,7 +480,7 @@ function MoleBoss:update(dt)
 
     MoleBoss.super.update(self, dt)
 
-    self.debug_values[1] = self.is_stompable
+    -- self.debug_values[1] = self.is_stompable
     -- self.debug_values[1] = self.state_machine.current_state_name
     -- self.debug_values[2] = "self.walk_dir "..tostring(self.walk_dir)
     -- self.debug_values[3] = "self.walk_speed "..tostring(self.walk_speed)
