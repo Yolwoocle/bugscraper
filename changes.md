@@ -1,5 +1,38 @@
 # Bugscraper changelog
 
+### 0.9.2
+(*2026-01-30*)
+
+New update! Please give me as much feedback as possible regarding department 4. I'm still working on reworking boss 2, please give it my sweet time. 🙇‍♂️
+
+- ⭐ **Complete rework of dept 4** (||the gardens||)
+    - The ||"Cloud Storm"|| enemy (placeholder name) now
+    - New enemy: ||Golden Beetles. After damaged, will run around before exploding||
+    - Increased difficulty and design of the wave (except the boss)
+    - Tweaked boss 4 tweaks to make it less punishing (still hard, though)
+- ⭐ **New music!!** Courtesy of @okko_san.
+    - Reworked boss 1 music
+    - New music for boss 2
+    - New music for boss 4
+    - New music for dept 4
+    - Reworked cafeteria music
+- ⭐ **Added**: Roaring Knight TV slide, coutersy of @linkylorelei. RAAAAAHHH!!!!
+- **Added**: New cocoon and revive sound effects
+- **Changed**: Added white outlines around players and a counter in the ground floor elevator door
+- **Changed**: Diminished HP & screenshake of Heart Jars
+- **Added**: Added a 2 frame delay for adding new players after leaving or joining the game
+- **Changed**: New splash screen
+- **Changed**: Boss 3 now stops the music after beaten
+
+#### Fixes 
+- **Fixed**: Holding jump while stomping an enemy just after landing on the ground would shoot the player upwards
+- **Fixed**: Music would not change in cafeterias after selecting an upgrade
+- **Fixed**: Stomping an enemy while holding jump a few frames after landing on the floor would shoot the player upwards
+- **Fixed**: You can no longer assign the same button for different UI actions
+- **Fixed**: Players in a shop could move while a CEO cutscene was playing
+- **Fixed**: Controller users could not join if a keyboard user was present in the game
+- **Optimized**: Slight optimisation to the game's 3D renderer
+
 ### 0.9.1
 (*2026-01-17*)
 

@@ -93,17 +93,18 @@ function BackroomGroundFloor:generate(world_generator)
 	game:new_actor(l)
 
 	-- Boss 4 button
-	do
-		local nx = CANVAS_WIDTH * 0.2
-		local ny = game.level.cabin_inner_rect.by
-		local l = create_actor_centered(enemies.ButtonSmall, floor(nx), floor(ny))
-		l.on_press = function(_self, presser)
-			game:set_floor(78)
-			game.can_start_game = true
-		end
-		l.debug_values[1] = "boss 4"
-		game:new_actor(l)
-	end
+	-- do
+	-- 	local nx = CANVAS_WIDTH * 0.2
+	-- 	local ny = game.level.cabin_inner_rect.by
+	-- 	local l = create_actor_centered(enemies.ButtonSmall, floor(nx), floor(ny))
+	-- 	l.on_press = function(_self, presser)
+	-- 		game:set_floor(78)
+	-- 		game.can_start_game = true
+	-- 	end
+	-- 	l.debug_values[1] = "boss 4"
+	-- 	l.debug_values[2] = "(for playtest)"
+	-- 	game:new_actor(l)
+	-- end
 
 	-- Exit sign
 	local exit_x = CANVAS_WIDTH * 0.25
