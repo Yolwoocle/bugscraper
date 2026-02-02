@@ -5,6 +5,7 @@
 
 - **Fixed**: wrong texture was given to Mr. Dung's flying balls
 
+
 ### 0.9.2
 (*2026-01-30*)
 
@@ -37,6 +38,7 @@ New update! Please give me as much feedback as possible regarding department 4. 
 - **Fixed**: Controller users could not join if a keyboard user was present in the game
 - **Optimized**: Slight optimisation to the game's 3D renderer
 
+
 ### 0.9.1
 (*2026-01-17*)
 
@@ -58,6 +60,7 @@ New update! Please give me as much feedback as possible regarding department 4. 
 **Minor fixes:**
 - Big chippers no longer have the scaling anim
 - Small tweak to pendulum animation
+
 
 ### 0.9
 (*2026-01-09*)
