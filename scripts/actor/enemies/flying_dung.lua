@@ -11,7 +11,7 @@ local FlyingDung = PongBall:inherit()
 function FlyingDung:init(x, y, spawner, params)
     params = params or {}
     params = params.speed or 100 
-    FlyingDung.super.init(self, x, y, images.mole_minion, 16, 16)
+    FlyingDung.super.init(self, x, y, images.dung_flying, 16, 16)
     self.name = "flying_dung"
     self.spawner = spawner
 

@@ -1,12 +1,17 @@
 # Bugscraper changelog
 
+### 0.9.3
+(*2026-02-02*)
+
+- **Fixed**: wrong texture was given to Mr. Dung's flying balls
+
 ### 0.9.2
 (*2026-01-30*)
 
 New update! Please give me as much feedback as possible regarding department 4. I'm still working on reworking boss 2, please give it my sweet time. 🙇‍♂️
 
 - ⭐ **Complete rework of dept 4** (||the gardens||)
-    - The ||"Cloud Storm"|| enemy (placeholder name) now
+    - The ||"Cloud Storm"|| enemy (placeholder name) now works differently
     - New enemy: ||Golden Beetles. After damaged, will run around before exploding||
     - Increased difficulty and design of the wave (except the boss)
     - Tweaked boss 4 tweaks to make it less punishing (still hard, though)
@@ -25,7 +30,6 @@ New update! Please give me as much feedback as possible regarding department 4. 
 - **Changed**: Boss 3 now stops the music after beaten
 
 #### Fixes 
-- **Fixed**: Holding jump while stomping an enemy just after landing on the ground would shoot the player upwards
 - **Fixed**: Music would not change in cafeterias after selecting an upgrade
 - **Fixed**: Stomping an enemy while holding jump a few frames after landing on the floor would shoot the player upwards
 - **Fixed**: You can no longer assign the same button for different UI actions
