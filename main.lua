@@ -1,4 +1,5 @@
 -- Splash screen
+local time_launched = love.timer.getTime()
 local init = require "scripts.meta.init"
 init()
 ----------
@@ -25,6 +26,11 @@ function love.load(args)
 	DEBUG_MODE = DEBUG_MODE or (LAUNCH_ARGUMENTS["--debug"] or LAUNCH_ARGUMENTS["-d"])
 
 	game = Game:new()
+
+	local time = love.timer.getTime()
+	print(              "--------------------------")
+	print(string.format(" Game loaded in %d ms. ", round((time - time_launched) * 1000)))
+	print(              "--------------------------")
 end
 
 local fixed_dt = 1/60 -- fixed frame delta time

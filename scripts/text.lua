@@ -34,8 +34,6 @@ function TextManager:init()
         self.language_metadata[lang_name] = lang_values["__meta"]
         lang_values["__meta"] = nil
 
-        print_table(self.language_metadata[lang_name])
-
         self.languages[lang_name] = self:unpack(lang_values)
     end
 
@@ -70,6 +68,8 @@ function TextManager:find_default_locale()
         for i = 1, #user_locales do
             local lang_code = user_locales[i]:match("^(.-)_")
 
+            -- If exact match (lang + country), prioritize this locale
+            -- Otherwise, see if just lang is present
             local lang = self.locale_to_language[user_locales[i]] or self.locale_to_language[lang_code]
             if lang then
                 return lang

@@ -145,7 +145,7 @@ local sfxnames = {
 	["sfx_enemy_poison_cloud_spawn_{01-04}"] = {"sfx/enemy/poison/sfx_enemy_poison_cloud_spawn_{}.ogg", "static"},
 
 	-- Fly 
-	["sfx_enemy_fly_ambient_{01-02}"] = {"sfx/enemy/fly/sfx_enemy_fly_ambient_{}.ogg", "static", { looping = true }},
+	["sfx_enemy_fly_ambient_{01-02}"] = {"sfx/enemy/fly/sfx_enemy_fly_ambient_{}.ogg", "stream", { looping = true }},
 
 	-- Boss W1    
 	["sfx_boss_intro_mrdung"] = {"sfx/enemy/mrdung/sfx_boss_intro_mrdung.ogg", "static"},
@@ -193,7 +193,7 @@ local sfxnames = {
 	["sfx_enemy_beelet_bounce_{01-06}"] = {"sfx/enemy/beelet/sfx_enemy_beelet_bounce_{}.ogg", "static"},
 
 	-- Flying nest 
-	["sfx_enemy_flying_nest_ambient_lp"] = {"sfx/enemy/flying_nest/sfx_enemy_flying_nest_ambient_lp.ogg", "static", { looping = true }},
+	["sfx_enemy_flying_nest_ambient_lp"] = {"sfx/enemy/flying_nest/sfx_enemy_flying_nest_ambient_lp.ogg", "stream", { looping = true }},
 	["sfx_enemy_flying_nest_death"] = {"sfx/enemy/flying_nest/sfx_enemy_flying_nest_death.ogg", "static"},
 	["sfx_enemy_flying_nest_shoot_larva_{01-03}"] = {"sfx/enemy/flying_nest/sfx_enemy_flying_nest_shoot_larva_{}.ogg", "static"},
 	
@@ -216,9 +216,9 @@ local sfxnames = {
 	["sfx_boss_majesty_pong_bounce_{01-10}"] = {"sfx/enemy/majesty/pong/sfx_boss_majesty_pong_bounce_{}.ogg", "static"},
 	["sfx_boss_majesty_minions_spawn_{01-08}"] = {"sfx/enemy/majesty/minions_spawn/sfx_boss_majesty_minions_spawn_{}.ogg", "static"},
 	["sfx_boss_majesty_death"] = {"sfx/enemy/majesty/sfx_boss_majesty_death.ogg", "static"},
-	["sfx_boss_majesty_crowd_happy_{01-04}"] = {"sfx/enemy/majesty/crowd/happy/sfx_boss_majesty_crowd_happy_{}.ogg", "static"},
-	["sfx_boss_majesty_crowd_ambient"] = {"sfx/enemy/majesty/crowd/sfx_boss_majesty_crowd_ambient.ogg", "static"},
-	["sfx_boss_majesty_crowd_cheer"] = {"sfx/enemy/majesty/crowd/sfx_boss_majesty_crowd_cheer.ogg", "static"},
+	["sfx_boss_majesty_crowd_happy_{01-04}"] = {"sfx/enemy/majesty/crowd/happy/sfx_boss_majesty_crowd_happy_{}.ogg", "stream"},
+	["sfx_boss_majesty_crowd_ambient"] = {"sfx/enemy/majesty/crowd/sfx_boss_majesty_crowd_ambient.ogg", "stream"},
+	["sfx_boss_majesty_crowd_cheer"] = {"sfx/enemy/majesty/crowd/sfx_boss_majesty_crowd_cheer.ogg", "stream"},
 
 	["fly_buzz"] = {"empty.ogg", "static"}, -- TODO change to actual sound
 
@@ -260,16 +260,38 @@ local sfxnames = {
 	["sfx_enemy_death"] = {"placeholder/sfx_enemy_death.ogg", "static"},
 
 	-- Ambience
-	["amb_pad_cafeteria_lp"] = {"sfx/ambience/amb_pad_cafeteria_lp.ogg", "static", {looping = true}},
-	["amb_pad_lobby_lp"] = {"sfx/ambience/amb_pad_lobby_lp.ogg", "static", {looping = true}},
-	["amb_pad_tutorial_lp"] = {"sfx/ambience/amb_pad_tutorial_lp.ogg", "static", {looping = true}},
-	["amb_pad_world1_lp"] = {"sfx/ambience/amb_pad_world1_lp.ogg", "static", {looping = true}},
-	["amb_pad_world2_lp"] = {"sfx/ambience/amb_pad_world2_lp.ogg", "static", {looping = true}},
-	["amb_pad_world3_lp"] = {"sfx/ambience/amb_pad_world3_lp.ogg", "static", {looping = true}},
+	["amb_pad_cafeteria_lp"] = {"sfx/ambience/amb_pad_cafeteria_lp.ogg", "stream", {looping = true}},
+	["amb_pad_lobby_lp"] = {"sfx/ambience/amb_pad_lobby_lp.ogg", "stream", {looping = true}},
+	["amb_pad_tutorial_lp"] = {"sfx/ambience/amb_pad_tutorial_lp.ogg", "stream", {looping = true}},
+	["amb_pad_world1_lp"] = {"sfx/ambience/amb_pad_world1_lp.ogg", "stream", {looping = true}},
+	["amb_pad_world2_lp"] = {"sfx/ambience/amb_pad_world2_lp.ogg", "stream", {looping = true}},
+	["amb_pad_world3_lp"] = {"sfx/ambience/amb_pad_world3_lp.ogg", "stream", {looping = true}},
 }
+
+
+local start = love.timer.getTime()
+print("Loading sounds...")
+
+local sound_load_times = {}
+
+local function timed_new_source(key, path, ...)
+    local t0 = love.timer.getTime()
+    local src = new_source(path, ...)
+    local t1 = love.timer.getTime()
+
+    sound_load_times[#sound_load_times + 1] = {
+        key = key,
+        path = path,
+        time = t1 - t0,
+		is_music = string.sub(key, 1, 5) == "music",
+    }
+
+    return src
+end
 
 for key, params in pairs(sfxnames) do
 	local start_s, end_s = key:match("{(.-)%-(.-)}")
+	local t0 = love.timer.getTime()
 	
 	assert(params and #params > 0, "Empty table given for "..tostring(key))
 	local path = params[1]
@@ -284,13 +306,74 @@ for key, params in pairs(sfxnames) do
             local formatted = string.format("%0"..len.."d", i)
             local new_key = key:gsub("{(.-)%-(.-)}", formatted)
 			local new_path = path:gsub("{}", formatted)
-			sounds[new_key] = new_source(new_path, params[2], params[3])
+			sounds[new_key] = timed_new_source(
+                new_key,
+                new_path,
+                params[2],
+                params[3]
+            )
         end
     else
         -- If no pattern, just apply the function directly
-		sounds[key] = new_source(unpack(params))
+		sounds[key] = timed_new_source(
+            key,
+            params[1],
+            params[2],
+            params[3]
+        )
     end
 end
+
+-- Display slowest loaded sounds
+table.sort(sound_load_times, function(a, b)
+    return a.time > b.time
+end)
+
+local number_of_slowest_sounds_to_display = 40
+
+print(string.format("\nTop %d slowest sound loads:", number_of_slowest_sounds_to_display))
+print(string.format("%-4s %-40s %-10s %s", "#", "Key", "Time (ms)", "Path"))
+
+for i = 1, math.min(number_of_slowest_sounds_to_display, #sound_load_times) do
+    local e = sound_load_times[i]
+    print(string.format(
+        "%-4d %-40s %-10.3f %s",
+        i,
+        e.key,
+        e.time * 1000,
+        e.path
+    ))
+end
+
+---
+table.sort(sound_load_times, function(a, b)
+	local ta = ternary(a.is_music, a.time, 0)
+	local tb = ternary(b.is_music, b.time, 0)
+    return ta > tb
+end)
+
+print(string.format("\nMusic load times:"))
+print(string.format("%-4s %-40s %-10s %s", "#", "Key", "Time (ms)", "Path"))
+
+for i = 1, #sound_load_times do
+	if sound_load_times[i].is_music then
+		local e = sound_load_times[i]
+		print(string.format(
+			"%-4d %-40s %-10.3f %s",
+			i,
+			e.key,
+			e.time * 1000,
+			e.path
+		))
+	end
+end
+---
+
+print(string.format(
+    "\nTotal sound loading time: %.3f ms",
+    (love.timer.getTime() - start) * 1000
+))
+
 
 -- All sources are tables to support multiple sounds playing at once without using Source:clone()
 for k, snd in pairs(sounds) do
@@ -303,5 +386,7 @@ for k, snd in pairs(sounds) do
 		}
 	)
 end
+
+print(concatsep({"Finished loading", table_key_count(sounds), "sounds. (", (love.timer.getTime() - start) * 1000 ,"ms)"}))
 
 return sounds
