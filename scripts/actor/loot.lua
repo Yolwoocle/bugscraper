@@ -49,6 +49,8 @@ function Loot:init_loot(spr, x, y, w, h, val, vx, vy, params)
 
 	self.collect_instantly_on_interact = param(params.collect_instantly_on_interact, false)
 
+	self.is_affected_by_walls = not param(params.ignore_collisions, false)
+
 	self.only_collect_by_target = param(params.only_collect_by_target, true)
 
 	self:reset()
@@ -273,6 +275,7 @@ Loot.Life = Loot:inherit()
 function Loot.Life:init(x, y, val, vx, vy, params)
 	params = params or {}
 	params.min_attract_dist = params.min_attract_dist or 32
+	params.ignore_collisions = param(params.ignore_collisions, true)
 	params.min_attract_dist_func = params.min_attract_dist_func or function(player)
 		return math.huge
 		--64 + 128 * clamp(1 - player:get_total_life() / player.max_life, 0, 1)

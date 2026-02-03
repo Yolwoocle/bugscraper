@@ -43,6 +43,7 @@ function HeartJar:on_death()
         local instance = Loot.Life:new(self.mid_x, self.mid_y, 1, vx, vy, {
             target_player = player,
             only_collect_by_target = true,
+            ignore_collisions = true,
         })
         
         game:new_actor(instance)
