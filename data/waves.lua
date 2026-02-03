@@ -1383,9 +1383,11 @@ local waves = parse_waves_table {
             { E.CloudStormZone, 30 },
             { E.Rollopod, 30 },
             { E.Shooter, 30 },
-            { E.Centipede, 30 },
             { E.CloudDropper, 30 },
         },
+        fixed_enemies = {
+            { E.Centipede, 30 },
+        }
     },
 
     {
