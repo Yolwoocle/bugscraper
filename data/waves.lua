@@ -639,7 +639,7 @@ local waves = parse_waves_table {
             { E.Beelet, 8 },
         },
         fixed_enemies = {
-            { E.HoneycombFootball, 1 },
+            { E.Comball, 1 },
         },
     },
 
@@ -1625,7 +1625,7 @@ local waves = parse_waves_table {
         },
         
         fixed_enemies = {
-            { E.HoneycombFootball, 1 },
+            { E.Comball, 1 },
         },
     },
     

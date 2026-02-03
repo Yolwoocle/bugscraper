@@ -11,11 +11,11 @@ local StateMachine = require "scripts.state_machine"
 local Timer = require "scripts.timer"
 local Explosion = require "scripts.actor.enemies.explosion"
 
-local HoneycombFootball = PongBall:inherit()
+local Comball = PongBall:inherit()
 
-function HoneycombFootball:init(x, y, spr)
-    HoneycombFootball.super.init(self, x,y, spr, 32, 32)
-    self.name = "honeycomb_football"
+function Comball:init(x, y, spr)
+    Comball.super.init(self, x,y, spr, 32, 32)
+    self.name = "comball"
 
     self.is_flying = true
     self.follow_player = false
@@ -44,7 +44,7 @@ function HoneycombFootball:init(x, y, spr)
     self.exploding_timer = Timer:new(1.0)
     self.flash_timer = Timer:new(0.5)
 
-    self.gun = guns.unlootable.HoneycombFootballGun:new(self)
+    self.gun = guns.unlootable.ComballGun:new(self)
 
     self.score = 80
 	self.fury_stomp_multiplier = 3.0
@@ -120,7 +120,7 @@ function HoneycombFootball:init(x, y, spr)
     self:update_renderer(0)
 end
 
-function HoneycombFootball:update(dt)
+function Comball:update(dt)
     self.super.update(self, dt)
 
     self:update_renderer(dt)
@@ -128,7 +128,7 @@ function HoneycombFootball:update(dt)
     self.state_machine:update(dt)
 end
 
-function HoneycombFootball:update_renderer(dt)
+function Comball:update_renderer(dt)
     self.object_3d.rotation.x = self.object_3d.rotation.x + (self.vx / 50)*dt
     self.object_3d.rotation.y = self.object_3d.rotation.y + (self.vy / 50)*dt
     self.object_3d.position.x = self.mid_x
@@ -144,11 +144,11 @@ function HoneycombFootball:update_renderer(dt)
     self.renderer:update(dt)
 end
 
-function HoneycombFootball:on_position_set(x, y)
+function Comball:on_position_set(x, y)
     self:update_renderer(0)
 end
 
-function HoneycombFootball:on_stomped()
+function Comball:on_stomped()
     self.pong_speed = self.pong_speed + 60
 
     if math.sin(self.pong_direction) < 0 then
@@ -163,20 +163,20 @@ function HoneycombFootball:on_stomped()
     self:set_harmless(0.5)
 end
 
-function HoneycombFootball:draw()
+function Comball:draw()
     self:draw_pong_ball()
     self.renderer:draw()
 end
 
-function HoneycombFootball:on_death()
+function Comball:on_death()
     Particles:image(self.mid_x, self.mid_y, 30, images.snail_shell_bouncy_fragment, 13, nil, 0, 10)
 
     local a = random_range(0, pi2)
     self.gun:shoot(0, self, self.mid_x, self.mid_y, math.cos(a), math.sin(a))
 end
 
-function HoneycombFootball:on_stomp_killed()
+function Comball:on_stomp_killed()
     self.state_machine:set_state("slowdown")
 end
 
-return HoneycombFootball
+return Comball
