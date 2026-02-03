@@ -97,11 +97,6 @@ function Loot:update_loot(dt)
 	self.life = self.life - dt*self.life_decrease_rate
 	self.ghost_timer = self.ghost_timer - dt
 	if self.is_collectable then
-		print_debug("self.target_player ", self.target_player)
-		if self.target_player then
-			print_debug("not self.target_player.is_dead", not self.target_player.is_dead)
-			
-		end
 		if self.target_player and not (self.target_player.is_ghost or self.target_player.is_dead) then
 			self:attract_to_player(dt)
 		else
