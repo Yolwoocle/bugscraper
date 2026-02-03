@@ -38,19 +38,19 @@ function BackgroundGreenhouse:init(level)
 		color = transparent_color(COL_DARK_BLUE, 0.5)
 	}))
 
-	self:add_layer(BackgroundLayer3D:new(self, 0.3, {
-		model = w4_tower,
+	-- self:add_layer(BackgroundLayer3D:new(self, 0.3, {
+	-- 	model = w4_tower,
 
-		tile_h = 200,
-		tile_count = 12,
-		tile_max_y = 1400,
+	-- 	tile_h = 200,
+	-- 	tile_count = 12,
+	-- 	tile_max_y = 1400,
 
-		object_scale_x = 1000,
-		object_scale_y = -1000,
-		object_scale_z = -1000,
+	-- 	object_scale_x = 1000,
+	-- 	object_scale_y = -1000,
+	-- 	object_scale_z = -1000,
 
-		object_z = 1000,
-	}))
+	-- 	object_z = 1000,
+	-- }))
 
 	self:add_layer(BackgroundLayerPattern:new(self, 0.3, {
 		pattern_images = {images.bg_w4_platform_1_back},
