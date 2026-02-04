@@ -221,6 +221,8 @@ local sfxnames = {
 	["sfx_boss_majesty_crowd_cheer"] = {"sfx/enemy/majesty/crowd/sfx_boss_majesty_crowd_cheer.ogg", "static"},
 
 	-- W3 
+	["sfx_enemy_grasshopper_jump_{01-06}"] = {"sfx/enemy/grasshopper/sfx_enemy_grasshopper_jump_{}.ogg", "static"},
+
 	-- Motherboard boss
 	["sfx_enemy_motherboard_intro"] = {"sfx/enemy/motherboard/sfx_enemy_motherboard_intro.ogg", "static"},
 	["sfx_enemy_motherboard_crash"] = {"sfx/enemy/motherboard/sfx_enemy_motherboard_crash.ogg", "static"},
