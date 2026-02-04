@@ -52,7 +52,7 @@ local function generate_menus()
 
     menus.w2 = menus.w2_boss_intro
 
-    menus.w3_boss_intro = BossIntroMenu:new(game, { 38 / 255, 43 / 255, 68 / 255, 0.8 }, Text:text("enemy.motherboard"), "",
+    menus.w3_boss_intro = BossIntroMenu:new(game, { 38 / 255, 43 / 255, 68 / 255, 0.8 }, Text:text("enemy.motherboard"), "sfx_enemy_motherboard_intro",
         {
             -- Zeros
             { image = images.boss_intro_motherboard_layer0, z_mult = 0.5 },

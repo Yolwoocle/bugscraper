@@ -220,6 +220,13 @@ local sfxnames = {
 	["sfx_boss_majesty_crowd_ambient"] = {"sfx/enemy/majesty/crowd/sfx_boss_majesty_crowd_ambient.ogg", "static"},
 	["sfx_boss_majesty_crowd_cheer"] = {"sfx/enemy/majesty/crowd/sfx_boss_majesty_crowd_cheer.ogg", "static"},
 
+	-- W3 
+	-- Motherboard boss
+	["sfx_enemy_motherboard_intro"] = {"sfx/enemy/motherboard/sfx_enemy_motherboard_intro.ogg", "static"},
+	["sfx_enemy_motherboard_crash"] = {"sfx/enemy/motherboard/sfx_enemy_motherboard_crash.ogg", "static"},
+	["sfx_enemy_motherboardbutton_press_{01-06}"] = {"sfx/enemy/motherboard/sfx_enemy_motherboardbutton_press_{}.ogg", "static"},
+	["sfx_enemy_pendulum_ambient"] = {"sfx/enemy/pendulum/sfx_enemy_pendulum_ambient.ogg", "stream"},
+
 	["fly_buzz"] = {"empty.ogg", "static"}, -- TODO change to actual sound
 
 	-- UPGRADES

@@ -60,6 +60,9 @@ function Pendulum:init(x, y, params) --angle_range, radius, swing_speed, initial
     self.object_3d.position.x = 200
     self.object_3d.position.y = 200
     self.ball_rotate_speed = 4
+    
+    self:set_constant_sound("amb", "sfx_enemy_pendulum_ambient", true)
+    self:set_constant_sound_volume("amb", 1.0)
 end
 
 function Pendulum:ready(dt)

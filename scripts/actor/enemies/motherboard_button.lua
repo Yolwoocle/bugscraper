@@ -70,6 +70,8 @@ function MotherboardButton:after_collision(col, other)
         }))
 
         game.level:add_fury(3.5)
+
+        self:play_sound_var("sfx_enemy_motherboardbutton_press_{01-06}", 0.1, 1.2)
     end
 end
 
