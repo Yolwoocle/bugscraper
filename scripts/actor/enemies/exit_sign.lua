@@ -35,10 +35,9 @@ function ExitSign:init(x, y)
     self.spring_ideal_length = 0
     self.spring_retract_timer = 0.0
 
-    self.smash_easter_egg_probability = SMASH_EASTER_EGG_PROBABILITY
+    self.smash_easter_egg_probability = SMASH_EASTER_EGG_PROBABILITY + 1
     self.is_in_smash_easter_egg = false
     self.smash_stars = {}
-    self.old_camera_x, self.old_camera_y = 0, 0
     self.smash_x, self.smash_y = 0, 0
     self.pan_camera_to_default = false
     self.smash_unzoom_timer = 0.0
@@ -142,12 +141,10 @@ function ExitSign:activate_smash_easter_egg(player)
     local impact_y = self.y + self.h - self.retracted_spring_ideal_length - 8
     self.smash_x, self.smash_y = impact_x, impact_y
 
-    self.old_camera_x, self.old_camera_y = game:get_camera_position()
     self.smash_unzoom_timer = 0.9
     game.camera:set_zoom(2)
     game:set_ui_visible(false)
     game.menu_manager:set_can_pause(false)
-    game.camera:set_y_locked(false)
 
     self:update_star()
 
@@ -167,7 +164,12 @@ function ExitSign:update_smash_easter_egg(dt)
 
     if self.is_in_smash_easter_egg then
         self.spring_y = self.retracted_spring_ideal_length
-        self:lerp_camera(self.mid_x - CANVAS_WIDTH/2, self.mid_y - CANVAS_HEIGHT/2 - 20)
+
+        game.camera.follows_players = false
+        game.camera.follow_speed = DEFAULT_CAMERA_FOLLOW_SPEED*100
+        local x, y = self.mid_x - CANVAS_WIDTH/2, self.mid_y - CANVAS_HEIGHT/2 - 20
+        game.camera:set_position(x, y)
+        game.camera:set_target_position(x, y)
         
         self:update_star()
     end
@@ -186,16 +188,19 @@ function ExitSign:update_smash_effect_end(dt)
     end
     
     if self.pan_camera_to_default then
-        self:lerp_camera(self.old_camera_x, self.old_camera_y)
         self:lerp_zoom(1)
 
         -- End smash effect
-        if distsqr(self.old_camera_x, self.old_camera_y, game:get_camera_position()) <= 0.1 then
+        if math.abs(game.camera:get_zoom() - 1.0) <= 0.05 then
             self.pan_camera_to_default = false
-            game.camera:set_position(self.old_camera_x, self.old_camera_y)
             game.camera:set_zoom(1)
-            game.camera:set_y_locked(true)
+
+            game.camera.follows_players = true
+            game.camera.follow_speed = DEFAULT_CAMERA_FOLLOW_SPEED
             
+            local x, y = game.level.backroom:get_default_camera_position()
+            game.camera:set_target_position(x, y)
+
             game.menu_manager:set_can_pause(true)
         end
     end
@@ -229,13 +234,6 @@ function ExitSign:update_star()
     self.smash_stars[3] = self:generate_star_points(self.smash_x, self.smash_y, 3)
     self.smash_stars[4] = self:generate_star_points(self.smash_x, self.smash_y, 2)
     self.smash_stars[5] = self:generate_star_points(self.smash_x, self.smash_y, 1)
-end
-
-function ExitSign:lerp_camera(x, y)
-    local camx, camy = game:get_camera_position()
-    camx = lerp(camx, x,  0.2)
-    camy = lerp(camy, y, 0.2)
-    game.camera:set_position(camx, camy)
 end
 
 function ExitSign:lerp_zoom(dest)
