@@ -102,6 +102,7 @@ function Pendulum:update(dt)
 end
 
 function Pendulum:update_pendulum_position(dt)
+    local old_angle = self.angle
     self.angle = pi/2 + math.cos(self.angle_t) * self.angle_range                
     self:set_position(
         self.anchor_x + math.cos(self.angle) * self.radius - self.w / 2,
@@ -110,6 +111,10 @@ function Pendulum:update_pendulum_position(dt)
     self.rope:set_segment(self.anchor_x, self.anchor_y, self.x + self.w/2, self.y + self.h/2)
 
     self.angle_t = self.angle_t + dt * self.swing_speed
+
+    if (old_angle < pi/2 and self.angle > pi/2) or (old_angle > pi/2 and self.angle < pi/2) then
+        self:play_sound_var("sfx_enemy_pendulum_swing_{01-06}", 0.1, 1.1)
+    end
 end
 
 function Pendulum:on_removed()
