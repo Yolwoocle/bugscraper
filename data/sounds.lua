@@ -234,9 +234,13 @@ local sfxnames = {
 	["sfx_enemy_motherboard_intro"] = {"sfx/enemy/motherboard/sfx_enemy_motherboard_intro.ogg", "static"},
 	["sfx_enemy_motherboard_crash"] = {"sfx/enemy/motherboard/sfx_enemy_motherboard_crash.ogg", "static"},
 	["sfx_enemy_motherboardbutton_press_{01-06}"] = {"sfx/enemy/motherboard/sfx_enemy_motherboardbutton_press_{}.ogg", "static"},
+
+	-- Pendulum
 	["sfx_enemy_pendulum_ambient"] = {"sfx/enemy/pendulum/sfx_enemy_pendulum_ambient.ogg", "stream"},
+	["sfx_enemy_pendulum_swing_{01-06}"] = {"sfx/enemy/pendulum/sfx_enemy_pendulum_swing_{}.ogg", "stream"},
 
 	["fly_buzz"] = {"empty.ogg", "static"}, -- TODO change to actual sound
+
 
 	-- UPGRADES
 	["sfx_upgrades_apple_juice_pickedup"] = {"sfx/upgrades/sfx_upgrades_apple_juice_pickedup.ogg", "static"},
@@ -256,11 +260,13 @@ local sfxnames = {
 
 	["sfx_upgrades_general_hover"] = {"sfx/upgrades/sfx_upgrades_general_hover.ogg", "static"},
 
+
 	-- UI
 	["ui_menu_pause"] = {"ui/ui_menu_pause.ogg", "static"},
 	["ui_menu_unpause"] = {"ui/ui_menu_unpause.ogg", "static"},
 	["ui_menu_hover_{01-04}"] = {"ui/ui_menu_hover_{}.ogg", "static"},
 	["ui_menu_select_{01-04}"] = {"ui/ui_menu_select_{}.ogg", "static"},
+
 
 	-- LEVEL
 	["sfx_door_open"] = {"sfx/level/door/sfx_door_open.ogg", "static"},
@@ -270,11 +276,13 @@ local sfxnames = {
 	["sfx_tutorial_wall_damage_{01-03}"] = {"sfx/tutorial/sfx_tutorial_wall_damage_{}.ogg", "static"},
 	["sfx_tutorial_wall_destroy"] = {"sfx/tutorial/sfx_tutorial_wall_destroy.ogg", "static"},
 
+
 	-- PLACEHOLDER
 	["sfx_bullet_bounce_{01-02}"] = {"placeholder/sfx_bullet_bounce_{}.ogg", "static"},
 	["chipper_telegraph"] = {"placeholder/chipper_telegraph.ogg", "static"},
 	["sfx_enemy_death"] = {"placeholder/sfx_enemy_death.ogg", "static"},
 
+	
 	-- Ambience
 	["amb_pad_cafeteria_lp"] = {"sfx/ambience/amb_pad_cafeteria_lp.ogg", "static", {looping = true}},
 	["amb_pad_lobby_lp"] = {"sfx/ambience/amb_pad_lobby_lp.ogg", "static", {looping = true}},
