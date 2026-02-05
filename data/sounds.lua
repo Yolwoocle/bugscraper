@@ -223,6 +223,10 @@ local sfxnames = {
 	-- W3 
 	-- Metal fly
 	["sfx_enemy_metalfly_fly_ambient_{01-02}"] = {"sfx/enemy/metalfly/sfx_enemy_metalfly_fly_ambient_{}.ogg", "static", {looping=true}},
+
+	-- Chipper
+	["sfx_enemy_chipper_crawl_lp_{01-04}"] = {"sfx/enemy/chipper/sfx_enemy_chipper_crawl_lp_{}.ogg", "static", {looping=true}},
+
 	-- Grasshopper
 	["sfx_enemy_grasshopper_jump_{01-06}"] = {"sfx/enemy/grasshopper/sfx_enemy_grasshopper_jump_{}.ogg", "static"},
 

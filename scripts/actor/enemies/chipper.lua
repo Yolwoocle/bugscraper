@@ -50,6 +50,9 @@ function Chipper:init(x, y, spr)
     self.sound_death = "sfx_enemy_kill_general_glitch_{01-10}"
     self.sound_stomp = "sfx_enemy_kill_general_glitch_{01-10}"
 
+    -- self:set_constant_sound("crawl", "sfx_enemy_chipper_crawl_lp_{01-04}", true)
+    -- self:set_constant_sound_volume("crawl", 0.2)
+
     self.state_machine = StateMachine:new({
         idle = {
             enter = function(state)
