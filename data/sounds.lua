@@ -221,11 +221,15 @@ local sfxnames = {
 	["sfx_boss_majesty_crowd_cheer"] = {"sfx/enemy/majesty/crowd/sfx_boss_majesty_crowd_cheer.ogg", "static"},
 
 	-- W3 
+	["sfx_enemy_bigbeelet_telegraph_{01-04}"] = {"sfx/enemy/bigbeelet/sfx_enemy_bigbeelet_telegraph_{}.ogg", "static"},
+	["sfx_enemy_bigbeelet_attack_{01-04}"] = {"sfx/enemy/bigbeelet/sfx_enemy_bigbeelet_attack_{}.ogg", "static"},
+	["sfx_enemy_bigbeelet_bounce_{01-06}"] = {"sfx/enemy/bigbeelet/sfx_enemy_bigbeelet_bounce_{}.ogg", "static"},
+
 	-- Metal fly
-	["sfx_enemy_metalfly_fly_ambient_{01-02}"] = {"sfx/enemy/metalfly/sfx_enemy_metalfly_fly_ambient_{}.ogg", "static", {looping=true}},
+	["sfx_enemy_metalfly_fly_ambient_{01-02}"] = {"sfx/enemy/metalfly/sfx_enemy_metalfly_fly_ambient_{}.ogg", "stream", {looping=true}},
 
 	-- Chipper
-	["sfx_enemy_chipper_crawl_lp_{01-04}"] = {"sfx/enemy/chipper/sfx_enemy_chipper_crawl_lp_{}.ogg", "static", {looping=true}},
+	["sfx_enemy_chipper_crawl_lp_{01-04}"] = {"sfx/enemy/chipper/sfx_enemy_chipper_crawl_lp_{}.ogg", "stream", {looping=true}},
 
 	-- Grasshopper
 	["sfx_enemy_grasshopper_jump_{01-06}"] = {"sfx/enemy/grasshopper/sfx_enemy_grasshopper_jump_{}.ogg", "static"},

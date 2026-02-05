@@ -33,6 +33,10 @@ function BigBeelet:init(x, y)
 
     self.sound_death = "sfx_enemy_kill_general_glitch_{01-10}"
     self.sound_stomp = "sfx_enemy_kill_general_glitch_{01-10}"
+
+    self.sound_telegraph = "sfx_enemy_bigbeelet_telegraph_{01-04}"
+    self.sound_attack = "sfx_enemy_bigbeelet_attack_{01-04}"
+    self.sound_bounce = "sfx_enemy_bigbeelet_bounce_{01-06}"
 end
 
 function BigBeelet:update(dt)
