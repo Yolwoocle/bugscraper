@@ -53,6 +53,7 @@ function MoleBoss:init(x, y)
     self.is_stompable = true
     self.damage_on_stomp = 10
     self.can_be_stomped_if_falling_down = false
+    self.is_killed_on_negative_life = false
     self.head_ratio = 0.33
     self.do_stomp_animation = false
     
@@ -458,6 +459,93 @@ function MoleBoss:init(x, y)
                 end
             end
         },
+
+        dying = {
+            enter = function(state)
+                game.music_player:set_disk("off")
+
+                self.damage = 0
+                self.is_stompable = false
+                self.vx = 0
+                self.vy = 0
+                self.can_burrow_back = false
+                self.gravity = self.default_gravity
+
+                self.state_timer:start(1.0)
+                
+                game:screenshake(8)
+                game:frameskip(20)
+
+                Particles:push_layer(PARTICLE_LAYER_BACK)
+                Particles:static_image(images.star_big, self.mid_x, self.mid_y, 0, 0.05, 2.3, {
+                    color = COL_WHITE
+                })
+                Particles:static_image(images.star_big, self.mid_x, self.mid_y, 0, 0.05, 2, {
+                    color = COL_LIGHT_RED
+                })
+                Particles:pop_layer()
+
+                game.actor_manager:kill_actors_with_name("flying_dung_mole")
+                self.spr:set_animation("flying")
+            end,
+            
+            update = function(state, dt)
+                if self.state_timer:update(dt) then
+                    return "exploding"
+                end
+            end
+        },
+        exploding = {
+            enter = function(state)
+                self.damage = 0
+                self.is_stompable = false
+                self.vx = 0
+                self.vy = 0
+                self.can_burrow_back = false
+
+                self.state_timer:start(1.5)
+                
+                self.spr:set_shake(6)
+                self.spr:set_shake_decrease_speed(0)                
+            end,
+
+            update = function(state, dt)
+                local s = 1 + self.state_timer:get_ratio()*0.5
+                self.spr:set_scale(s)
+                self.spr:set_rotation(self.spr.rot + dt * 4)
+
+                if self.state_timer:update(dt) then
+                    self:kill()
+
+                    game:screenshake(14)
+                    game:frameskip(20)
+                    Input:vibrate_all(0.3, 0.5)
+                    -- number, spr, spw_rad, life, vs, g, params
+                    Particles:image(
+                        self.mid_x, self.mid_y, 
+                        100, --numner
+                        {images.green_fragment_1, images.green_fragment_2, images.green_fragment_3}, 
+                        40, -- spwn_rad 
+                        1, --life 
+                        1.5, 
+                        nil, 
+                        {
+                            vx1 = -150 * 1.5,
+                            vx2 = 150 * 1.5,
+                            vy1 = 80 * 1.5,
+                            vy2 = -200 * 1.5,
+
+                            scale = 1.5,
+                        }
+                    )
+                    Particles:explosion(self.mid_x, self.mid_y, 80)
+            
+                end
+            end,
+
+            exit = function(state)
+            end
+        }
     }, "dig")
 end
 
@@ -479,6 +567,7 @@ function MoleBoss:update(dt)
     end
 
     MoleBoss.super.update(self, dt)
+
 
     -- self.debug_values[1] = self.is_stompable
     -- self.debug_values[1] = self.state_machine.current_state_name
@@ -534,6 +623,10 @@ function MoleBoss:on_stomped(player)
     else
         player.vx = self.damaged_player_throw_speed_x
     end
+end
+
+function MoleBoss:on_negative_life()
+    self.state_machine:set_state("dying")
 end
 
 return MoleBoss

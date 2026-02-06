@@ -798,16 +798,12 @@ function ParticleSystem:explosion(x, y, radius, args)
 		gradient = copy_table_shallow(args.color_gradient)
 		gradient.type = "gradient"
 	end
-	explosion_layer({type = "gradient", COL_DARK_GRAY},  radius, 100, 0.2, 0.4)
-	explosion_layer({type = "gradient", COL_BLACK_BLUE}, radius, 100, 0.2, 0.4)
+	explosion_layer({type = "gradient", COL_DARK_GRAY},  radius, (radius*radius/16), 0.2, 0.4)
+	explosion_layer({type = "gradient", COL_BLACK_BLUE}, radius, (radius*radius/16), 0.2, 0.4)
 
 	explosion_layer(gradient, radius,     200)
-	-- explosion_layer(gradient, radius,     80)
-	-- explosion_layer(gradient, radius*0.9, 60)
-	-- explosion_layer(gradient, radius*0.8, 30)
-	-- explosion_layer(gradient, radius*0.7, 20)
-	-- explosion_layer(gradient, radius*0.6, 15)
 
+	-- x, y, number, spr, spw_rad, life, vs, g, params
 	Particles:image(x, y, 5, images.bullet_casing, 4, nil, nil, nil, {
 		vx1 = -150,
 		vx2 = 150,
@@ -981,7 +977,7 @@ function ParticleSystem:image(x, y, number, spr, spw_rad, life, vs, g, params)
 		local g = (g or 1) * 3
 		local is_solid = true
 		local is_animated = false
-		local scale = 1
+		local scale = params.scale or 1
 
 		if params.vx1 ~= nil and params.vx2 ~= nil then
 			vx = random_range(params.vx1, params.vx2)
