@@ -226,37 +226,37 @@ local thorns_arc_params = {
 }
 
 local waves = parse_waves_table {
-    -- {
-    --     min = 1,
-    --     max = 1,
+    {
+        min = 1,
+        max = 1,
         
-    --     enemies = {
-    --         { E.FinalBoss, 1, position = { 12.5 * 16, 10 * 16 + 8 } }
-    --     },
+        enemies = {
+            { E.FinalBoss, 1, position = { 12.5 * 16, 10 * 16 + 8 } }
+        },
 
-    --     run = function ()
-    --         for _, actor in pairs(game.actors) do
-    --             if actor.name == "final_boss" then
-    --                 actor.state_machine:set_state("standby")
-    --             end
-    --         end
-    --     end,
+        run = function ()
+            for _, actor in pairs(game.actors) do
+                if actor.name == "final_boss" then
+                    actor.state_machine:set_state("standby")
+                end
+            end
+        end,
 
-    --     cutscene = "mole_boss_enter",
-    --     music = "boss_w4",
-    --     elevator = ElevatorW1,
+        roll_type = WAVE_ROLL_TYPE_FIXED,
 
-    --     roll_type = WAVE_ROLL_TYPE_FIXED,
+        music = "boss_w5",
 
-    --     background_transition = backgrounds.BackgroundAboveCity:new(),
+        background_transition = backgrounds.BackgroundAboveCity:new(),
 
-    --     counter_display_func = function(_)
-    --         -- Pseudo random looking floor counter
-    --         local frame = math.floor(game.frame / 5)
-    --         local nb = (32849 * frame) % 999
-    --         return math.floor(clamp(nb, 100, 999))
-    --     end,
-    -- },
+        cutscene = "final_boss_enter",
+
+        counter_display_func = function(_)
+            -- Pseudo random looking floor counter
+            local frame = math.floor(game.frame / 5)
+            local nb = (32849 * frame) % 999
+            return math.floor(clamp(nb, 100, 999))
+        end,
+    },
 
     -- {
     --     -- roll_type = WAVE_ROLL_TYPE_FIXED,
@@ -1826,6 +1826,8 @@ local waves = parse_waves_table {
         },
 
         background_transition = backgrounds.BackgroundAboveCity:new(),
+
+        cutscene = "final_boss_enter",
 
         counter_display_func = function(_)
             -- Pseudo random looking floor counter
