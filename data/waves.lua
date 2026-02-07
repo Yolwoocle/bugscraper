@@ -1787,8 +1787,12 @@ local waves = parse_waves_table {
     {
         min = 1,
         max = 1,
+
+        roll_type = WAVE_ROLL_TYPE_FIXED,
+
         enemies = {
             { E.ShopVendingMachine, 1, position = { CANVAS_WIDTH / 2, 16*15 } },
+            { E.HeartJar, 1, position = { 200 - 14, 16*14 - 14 }, args = {{heart_count_per_player = 2}}},
 
         },
 

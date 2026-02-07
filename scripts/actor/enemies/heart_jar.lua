@@ -23,6 +23,7 @@ function HeartJar:init(x, y, params)
 
     self.break_screenshake = 8
     self.break_num_particles = 50
+    self.heart_count_per_player = param(params.heart_count_per_player, 1)
 
     self.collision_info = CollisionInfo:new {
         type = COLLISION_TYPE_SEMISOLID,
@@ -38,15 +39,17 @@ function HeartJar:on_death()
     HeartJar.super.on_death(self)
 
     for _, player in pairs(game.players) do
-        local vx = random_neighbor(300)
-        local vy = random_range(-200, -500)
-        local instance = Loot.Life:new(self.mid_x, self.mid_y, 1, vx, vy, {
-            target_player = player,
-            only_collect_by_target = true,
-            ignore_collisions = true,
-        })
-        
-        game:new_actor(instance)
+        for i=1, self.heart_count_per_player do
+            local vx = random_neighbor(300)
+            local vy = random_range(-200, -500)
+            local instance = Loot.Life:new(self.mid_x, self.mid_y, 1, vx, vy, {
+                target_player = player,
+                only_collect_by_target = true,
+                ignore_collisions = true,
+            })
+            
+            game:new_actor(instance)
+        end
     end
 end
 
