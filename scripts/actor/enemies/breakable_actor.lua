@@ -79,7 +79,12 @@ function BreakableActor:on_damage(amount)
         self.break_state = new_state
         
         game:screenshake(self.change_break_state_screenshake)
-        Particles:image(self.mid_x, self.mid_y, self.change_break_state_num_particles, self.change_break_state_particle_image, self.h)
+        local vol = (self.w/16) * (self.h/16)
+        for ix = 0, self.w, 16 do
+            for iy = 0, self.h, 16 do
+                Particles:image(self.x + ix, self.y + iy, math.floor(self.change_break_state_num_particles/vol), self.change_break_state_particle_image, 16, 16)
+            end
+        end
         self:play_sound_var(self.sound_fracture, 0.1, 1.1)
     end
 
