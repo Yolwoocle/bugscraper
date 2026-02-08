@@ -52,6 +52,8 @@ function CloudStormZone:init(x, y, size)
         coordinate_mode = LIGHNING_COORDINATE_MODE_POLAR,
     })
 
+    self.first_time_wander = true
+
     self.state_timer = Timer:new(0.0)
     self.state_machine = StateMachine:new({
         wander = {
@@ -61,6 +63,11 @@ function CloudStormZone:init(x, y, size)
 
                 self.ai_template = "random_rotate"
                 self.state_timer:start(random_range(1.0, 1.5))
+                if self.first_time_wander then
+                    self.state_timer:start(random_range(0.0, 2.0))
+                end
+
+                self.first_time_wander = false
             end,
             update = function(state, dt)
                 if self.state_timer:update(dt) then
