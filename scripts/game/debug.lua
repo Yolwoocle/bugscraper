@@ -152,30 +152,7 @@ function Debug:init(game)
                 game.menu_manager:set_menu("w5_boss_intro")
             end
 
-            if game.players[1] then
-                local x, y = game.players[1].x, 200 
-                game:screenshake(12)
-                game:frameskip(10)
-                Input:vibrate_all(0.3, 0.5)
-                -- number, spr, spw_rad, life, vs, g, params
-                Particles:image(
-                    x, y, 
-                    30, --numner
-                    {images.green_fragment_1, images.green_fragment_2, images.green_fragment_3}, 
-                    40, -- spwn_rad 
-                    2, --life 
-                    nil, 
-                    nil, 
-                    {
-                        vx1 = -150,
-                        vx2 = 150,
-
-                        vy1 = 80,
-                        vy2 = -200,
-                    }
-                )
-                Particles:explosion(x, y, 80)
-            end
+            game:play_cutscene("final_boss_enter")
 
             -- game:new_game({ 
             --     backroom = BackroomEnding:new(),
@@ -321,6 +298,10 @@ function Debug:init(game)
                 if e.is_enemy then
                     e:kill()
                 end
+            end
+
+            if love.keyboard.isDown("lshift") or love.keyboard.isDown("rshift") then
+                game.level.new_wave_animation_speed_mutliplier = 20.0
             end
         end },
 

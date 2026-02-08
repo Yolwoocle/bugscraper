@@ -31,6 +31,8 @@ function Camera:init()
     self.is_x_locked = true
     self.is_y_locked = true
 
+    self.do_camera_position_clamping = true
+
     self:reset()
 end
 
@@ -54,10 +56,12 @@ function Camera:follow_target(dt)
 end
 
 function Camera:clamp_camera_position(dt)
-    self.x = clamp(self.x, self.min_x, self.max_x)
-    self.y = clamp(self.y, self.min_y, self.max_y)
-    self.target_x = clamp(self.target_x, self.min_x, self.max_x)
-    self.target_y = clamp(self.target_y, self.min_y, self.max_y)
+    if self.do_camera_position_clamping then
+        self.x = clamp(self.x, self.min_x, self.max_x)
+        self.y = clamp(self.y, self.min_y, self.max_y)
+        self.target_x = clamp(self.target_x, self.min_x, self.max_x)
+        self.target_y = clamp(self.target_y, self.min_y, self.max_y)
+    end
 end
 
 function Camera:follow_players(dt)

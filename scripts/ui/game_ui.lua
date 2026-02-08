@@ -104,6 +104,8 @@ function GameUI:init(game, is_visible)
 
 	self.ending_counter_text = nil
 
+	self.show_boss_bar = true
+
 	self.show_timer = true
 
 	self.t = 0
@@ -161,11 +163,21 @@ end
 
 function GameUI:draw_front()
 	if not self.is_visible then return end
-
+	
 	self:draw_FPS()
 	self:draw_timer()
 end
 
+function GameUI:set_gameplay_hud_visible(bool)
+	self.show_fury = bool
+	self.offscreen_indicators_enabled = bool
+	self.show_upgrades = bool
+	self.show_boss_bar = bool
+
+	for _, player in pairs(game.players) do
+		player.show_hud = bool
+	end	
+end
 
 function GameUI:start_title(title, subtitle, overtitle, intro_dur, stay_dur, outro_dur)
 	local titles = {}
@@ -727,6 +739,9 @@ end
 function GameUI:draw_boss_bar()
 	local boss = game:get_boss()
 	if not boss then
+		return
+	end
+	if not self.show_boss_bar then
 		return
 	end
 

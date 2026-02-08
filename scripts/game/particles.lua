@@ -33,6 +33,8 @@ function Particle:init_particle(x,y,s,r, vx,vy,vs,vr, life, g, is_solid, params)
 	self.max_life = life or 5
 	self.life = self.max_life
 
+	self.clamp_to_cabin_rect = param(params.clamp_to_cabin_rect, true)
+
 	self.ignore_frameskip = param(params.ignore_frameskip, false)
 	self.is_removed = false
 end
@@ -67,8 +69,10 @@ function Particle:update_particle(dt)
 				self.vy = self.bounce_force - random_neighbor(40)
 			end
 
-			self.x = clamp(self.x, game.level.cabin_inner_rect.ax, game.level.cabin_inner_rect.bx)
-			self.y = clamp(self.y, game.level.cabin_inner_rect.ay, game.level.cabin_inner_rect.by)
+			if self.clamp_to_cabin_rect then
+				self.x = clamp(self.x, game.level.cabin_inner_rect.ax, game.level.cabin_inner_rect.bx)
+				self.y = clamp(self.y, game.level.cabin_inner_rect.ay, game.level.cabin_inner_rect.by)
+			end
 		end
 
 	end
@@ -1016,6 +1020,9 @@ function ParticleSystem:image(x, y, number, spr, spw_rad, life, vs, g, params)
 		end 
 		if params.color then
 			particle_params.color = params.color
+		end
+		if params.color ~= nil then
+			particle_params.clamp_to_cabin_rect = params.clamp_to_cabin_rect
 		end
 		
 		local sprite = spr

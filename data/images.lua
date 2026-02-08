@@ -719,6 +719,9 @@ local img_names = {
 	-- misc
 	splash = "splash",
 
+	final_boss_intro_building = "level/final_boss_intro/final_boss_intro_building",
+	final_boss_intro_house = "level/final_boss_intro/final_boss_intro_house",
+
 	_test_hexagon = "_test_hexagon",
 	_test_hexagon_small = "_test_hexagon_small",
 }
