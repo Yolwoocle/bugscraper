@@ -3,16 +3,18 @@ local CutsceneScene = require "scripts.game.cutscene_scene"
 local backgrounds = require "data.backgrounds"
 local BackgroundFinalBossIntro = require "scripts.level.background.background_final_boss_intro"
 local BackgroundAboveCity = require "scripts.level.background.background_above_city"
+local BackgroundCity = require "scripts.level.background.background_city"
 
 local Rect = require "scripts.math.rect"
 local images = require "data.images"
 
-return Cutscene:new("dung_boss_enter", {
+return Cutscene:new("final_boss_enter", {
     CutsceneScene:new({
         duration = 1.0,
 
         enter = function(cutscene, data)
             game.level.slowdown_timer_override = 9.5
+            game.level.opened_door_timer_override = 1.0
         end
     }),
 
@@ -150,7 +152,9 @@ return Cutscene:new("dung_boss_enter", {
             game.camera:set_position(DEFAULT_CAMERA_X, DEFAULT_CAMERA_Y)
 
             local bg = BackgroundAboveCity:new()
-            game.level:set_background(data.bg)
+            game.level:set_background(bg)
+
+            game.level.level_speed = game.level.level_speed_advancing
         end,
     }),
 
@@ -158,6 +162,7 @@ return Cutscene:new("dung_boss_enter", {
         duration = 1.0,
         enter = function(cutscene, data)
             game.music_player:set_disk("boss_w5")
+            
         end,
     }),
 

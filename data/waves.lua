@@ -1488,7 +1488,7 @@ local waves = parse_waves_table {
 
         background = backgrounds.BackgroundW0:new(),
         background_transition = backgrounds.BackgroundW0:new(),
-        background_speed_multiplier = 2.2,
+        background_speed_multiplier = 2.5,
         elevator = ElevatorRocket,
 
         run = function()

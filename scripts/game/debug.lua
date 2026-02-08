@@ -274,8 +274,12 @@ function Debug:init(game)
         -- ["u"] = { "toggle title junk ui", function()
         --     self.title_junk = not self.title_junk
         -- end },
-        ["c"] = { "skip cutscene", function()
-            game.skip_scene_flag = true
+        ["c"] = { "skip scene", function()
+            if love.keyboard.isDown("lshift") or love.keyboard.isDown("rshift") then
+                game.skip_cutscene_flag = true
+            else
+                game.skip_scene_flag = true
+            end
         end },
         ["d"] = { "spawn", function()
             -- game.menu_manager:set_menu("debug_command")
