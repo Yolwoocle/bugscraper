@@ -126,6 +126,17 @@ local skins = {
 		text_key = "leo",
 	},
 	{
+		anim_idle = {images.ooo, 0.2, 1},
+		anim_wall_slide = {images.ooo},
+		img_walk_down = images.ooo,
+		img_airborne = images.ooo,
+		img_dead = images.ooo,
+		color_palette = {color(0x63c74d), color(0x3e8948), color(0x265c42), color(0x193c3e), color(0x5a6988), color(0x3a4466)},
+		menu_color = color(0x3e8948), 
+		icon = "🥦",
+		text_key = "ooo",
+	},
+	{
 		anim_idle = {images.dodu_idle, 0.18, 1},
 		anim_wall_slide = {images.dodu_wall_slide},
 		img_walk_down = images.dodu_walk_down,

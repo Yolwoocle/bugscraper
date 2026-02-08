@@ -244,6 +244,11 @@ function Player:reset(n, skin)
 	self.debug_god_mode = false
 	self.dt = 1
 	self.frame = 0
+
+	self.bombs = {
+		{x = self.x, y = self.y},
+		{x = self.x, y = self.y},
+	}
 end
 
 function Player:get_state_machine()
@@ -422,8 +427,26 @@ function Player:update(dt)
 	self.ui_x = lerp(self.ui_x, floor(self.mid_x), 0.2)
 	self.ui_y = lerp(self.ui_y, floor(self.y), 0.2)
 
+	self:update_bombs(dt)
+	
 	-- MISC
 	self.flag_has_jumped_on_current_frame = false
+end
+
+function Player:update_bombs(dt)
+	
+	table.insert(
+		self.previous_positions,
+		{
+			x = self.mid_x,
+			y = self.y + self.h,
+			sx = self.spr.sx,
+			sy = self.spr.sy,
+		}
+	)
+	if #self.previous_positions > 60 then
+		table.remove(self.previous_positions, 1)
+	end
 end
 
 ------------------------------------------
@@ -1330,6 +1353,15 @@ function Player:draw()
 	-- Draw self
 	self:draw_player()
 	love.graphics.setColor(COL_WHITE)
+	
+	if #self.previous_positions > 0 then
+		for _, bomb in pairs(self.bombs) do
+			local pos1 = self.previous_positions[min(1, #self.previous_positions)]
+			-- local pos1 = self.previous_positions[min(30, #self.previous_positions)]
+			love.graphics.draw(images.ooo_bomb, pos1.x, pos1.y, 0, pos1.sx, pos1.sy, images.ooo_bomb:getWidth()/2, images.ooo_bomb:getHeight())
+
+		end
+	end
 end
 
 function Player:draw_hud()
@@ -1494,6 +1526,7 @@ function Player:draw_effect_overlays(x, y)
 		effect:draw_overlay(x, y)
 	end 
 end
+
 
 function Player:animate_walk(dt)
 	-- Ridiculously overengineered bounce + squash & stretch while walking

@@ -41,6 +41,8 @@ local img_names = {
 
 	-- players
 	leo =              "actors/players/leo",
+	ooo =              "actors/players/ooo",
+	ooo_bomb =              "actors/players/ooo_bomb",
 
 	mio_idle =         "actors/players/mio_idle",
 	mio_walk_down =    "actors/players/mio_walk_down",
