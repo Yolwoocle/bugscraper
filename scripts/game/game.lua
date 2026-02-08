@@ -133,6 +133,7 @@ function Game:new_game(params)
 
 	self.t = 0
 	self.frame = 0
+	self.in_game_frame = 0
 
 	-- Remove old queued players
 	self:remove_queued_players()
@@ -354,8 +355,6 @@ end
 function Game:update(dt)
 	self.frame = self.frame + 1
 
-	self.camera:update_screenshake(dt)
-
 	self.frames_to_skip = max(0, self.frames_to_skip - 1)
 	-- BUG: pressing and releasing a button during a frameskip period will not register it
 	if self.frames_to_skip <= 0 then
@@ -390,12 +389,14 @@ function Game:update(dt)
 end
 
 function Game:update_main_game(dt)
+	self.camera:update_screenshake(dt)
 	Particles:update(dt)
 
 	if self.frames_to_skip > 0 then
 		return
 	end
 
+	self.in_game_frame = self.in_game_frame + 1
 	self.camera:update(dt)
 
 	if self.game_state == GAME_STATE_PLAYING then
