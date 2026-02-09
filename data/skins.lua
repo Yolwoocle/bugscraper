@@ -131,9 +131,10 @@ local skins = {
 		img_walk_down = images.ooo,
 		img_airborne = images.ooo,
 		img_dead = images.ooo,
-		color_palette = {color(0x63c74d), color(0x3e8948), color(0x265c42), color(0x193c3e), color(0x5a6988), color(0x3a4466)},
-		menu_color = color(0x3e8948), 
-		icon = "🥦",
+		
+		color_palette = {color(0xf6757a), color(0xb55088), color(0xe43b44), color(0x9e2835), color(0x3a4466), color(0x262b44)},
+		menu_color = color(0xf6757a),
+		icon = "🐜",
 		text_key = "ooo",
 	},
 	{

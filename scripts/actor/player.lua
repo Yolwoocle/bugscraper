@@ -246,9 +246,32 @@ function Player:reset(n, skin)
 	self.frame = 0
 
 	self.bombs = {
-		{x = self.x, y = self.y},
-		{x = self.x, y = self.y},
+		{
+			x = self.x, 
+			y = self.y,
+			
+			squash = 1,
+			jump_squash = 1,
+			walkbounce_oy = 0,
+			walkbounce_t = 0,
+			walkbounce_squash = 0,
+			bounce_vy = 0,
+			old_bounce_vy = 0,
+		},
+		{
+			x = self.x, 
+			y = self.y,
+			
+			squash = 1,
+			jump_squash = 1,
+			walkbounce_oy = 0,
+			walkbounce_t = 0,
+			walkbounce_squash = 0,
+			bounce_vy = 0,
+			old_bounce_vy = 0,
+		},
 	}
+	self.previous_positions = {}
 end
 
 function Player:get_state_machine()
@@ -412,7 +435,7 @@ function Player:update(dt)
 	self:update_color(dt)
 	self:update_sprite(dt)
 	self:do_particles(dt)
-	self:update_visuals()
+	self:update_visuals(dt)
 
 	if self.life <= 0 and not (self.is_killed or self.is_ghost) then
 		self:start_ghost()
@@ -1315,7 +1338,7 @@ end
 --- Visuals ---
 -----------------------------------------------------
 
-function Player:update_visuals()
+function Player:update_visuals(dt)
 	self.jump_squash       = lerp(self.jump_squash,       1, 0.15)
 	self.walkbounce_squash = lerp(self.walkbounce_squash, 1, 0.2)
 	self.squash = self.jump_squash * self.walkbounce_squash
@@ -1339,6 +1362,69 @@ function Player:update_visuals()
 		
 		Particles:pop_layer()
 	end
+
+
+
+	for i, bomb in pairs(self.bombs) do
+		local px, py = bomb.x, bomb.y
+
+		local spacing = 10
+		local tx, ty
+		if i == 1 then
+			tx, ty = self.mid_x, self.y + self.h
+		else
+			tx, ty = self.bombs[1].x, self.bombs[1].y
+		end
+		
+		local nx, ny = normalise_vect(tx - bomb.x, ty - bomb.y)
+		local d = dist(tx, ty, bomb.x, bomb.y)
+		if d > spacing then
+			bomb.x = bomb.x + nx * d * dt * 8
+		end
+		if d > spacing or self.is_grounded then
+			bomb.y = bomb.y + ny * d * dt * ternary(self.is_grounded, 14, 8)
+		end
+
+		if self.is_grounded then
+			local dx = bomb.x - px
+			local dy = bomb.y - py
+			
+			-- Ridiculously overengineered bounce + squash & stretch while walking
+			local old_bounce = bomb.walkbounce_oy
+
+			local t_speed = 15
+			local bounce_height = 5
+			local squash_amount = 0.17
+			
+			bomb.walkbounce_t = bomb.walkbounce_t + dt * t_speed
+
+			if dist(dx, dy) > 2 then
+				bomb.walkbounce_t = bomb.walkbounce_t % pi
+			end
+
+			if bomb.walkbounce_t < pi + 0.001 then
+				bomb.is_doing_walksquash = true
+
+				--- Compute bounce height
+				local sin_a = sin(bomb.walkbounce_t)
+				bomb.walkbounce_y = abs(sin_a) * bounce_height
+				bomb.walkbounce_oy = bomb.walkbounce_y
+				
+				--- Bounce squash
+				--cos is the derivative, aka rate of change ("speed") of sin
+				local speed_t = math.cos(bomb.walkbounce_t)
+				bomb.walkbounce_squash = speed_t*squash_amount + 1
+			else
+				-- If not walking and close enough to ground, reset
+				bomb.walkbounce_squash = 1
+				bomb.walkbounce_oy = 0
+				bomb.walkbounce_t = pi
+			end
+
+			bomb.old_bounce_vy = bomb.bounce_vy
+			bomb.bounce_vy = old_bounce - bomb.walkbounce_y
+		end
+	end
 end
 
 function Player:draw()
@@ -1350,18 +1436,18 @@ function Player:draw()
 		self.gun:draw(1, self.dir_x)
 	end
 
+	
+	if #self.previous_positions > 0 then
+		for i, bomb in pairs(self.bombs) do
+			local sx = bomb.walkbounce_squash
+			local sy = 1/bomb.walkbounce_squash
+			love.graphics.draw(images.ooo_bomb,bomb.x, bomb.y - bomb.walkbounce_oy, 0, sx, sy, images.ooo_bomb:getWidth()/2, images.ooo_bomb:getHeight())
+		end
+	end
+
 	-- Draw self
 	self:draw_player()
 	love.graphics.setColor(COL_WHITE)
-	
-	if #self.previous_positions > 0 then
-		for _, bomb in pairs(self.bombs) do
-			local pos1 = self.previous_positions[min(1, #self.previous_positions)]
-			-- local pos1 = self.previous_positions[min(30, #self.previous_positions)]
-			love.graphics.draw(images.ooo_bomb, pos1.x, pos1.y, 0, pos1.sx, pos1.sy, images.ooo_bomb:getWidth()/2, images.ooo_bomb:getHeight())
-
-		end
-	end
 end
 
 function Player:draw_hud()

@@ -35,7 +35,7 @@ function ExitSign:init(x, y)
     self.spring_ideal_length = 0
     self.spring_retract_timer = 0.0
 
-    self.smash_easter_egg_probability = SMASH_EASTER_EGG_PROBABILITY + 1
+    self.smash_easter_egg_probability = SMASH_EASTER_EGG_PROBABILITY
     self.is_in_smash_easter_egg = false
     self.smash_stars = {}
     self.smash_x, self.smash_y = 0, 0
