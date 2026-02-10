@@ -104,6 +104,10 @@ function Camera:update_screenshake(dt)
 	self.oy = oy
 end
 
+function Camera:reset_screenshake()
+    self.screenshake_q = 0
+end
+
 function Camera:screenshake(q)
 	if not Options:get('screenshake_on') then  return   end
     self.screenshake_q = math.max(self.screenshake_q, q)

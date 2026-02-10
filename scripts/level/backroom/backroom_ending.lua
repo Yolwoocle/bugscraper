@@ -48,6 +48,7 @@ function BackroomEnding:generate(world_generator)
 			clap = { images.ceo_npc_clap_hand, 0.02, 3, nil, { looping = false } },
 			tangled_wires = {images.ceo_tangled_wires, 0.1, 1},
 			tangled_wires_shocked = {images.ceo_tangled_wires_shocked, 0.1, 1},
+			tangled_wires_fainted = {images.ceo_tangled_wires_fainted, 0.1, 4},
 		},
 		flip_x = true,
 		extra_update = function(_self, dt)
@@ -71,7 +72,7 @@ function BackroomEnding:generate(world_generator)
 	ceo.gravity = 0
 	ceo.is_affected_by_bounds = false
 
-	ceo.spr:set_animation("tangled_wires")
+	ceo.spr:set_animation("tangled_wires_fainted")
 	ceo.gravity = ceo.default_gravity	 
 	ceo.is_affected_by_bounds = true
 

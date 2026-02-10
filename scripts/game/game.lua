@@ -1239,6 +1239,10 @@ function Game:focus(f)
 	end
 end
 
+function Game:reset_screenshake()
+	self.camera:reset_screenshake()
+end
+
 function Game:screenshake(q)
 	self.camera:screenshake(q)
 end

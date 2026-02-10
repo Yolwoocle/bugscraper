@@ -150,15 +150,15 @@ return Cutscene:new("ceo_escape_w1", {
                         COL_WHITE, COL_YELLOW, COL_ORANGE, COL_DARK_RED, COL_DARK_GRAY, COL_BLACK_BLUE
                     }, 
                     12, -- rad
-                    10, -- quantity
-                    {
-                        vx = 0, 
-                        vx_variation = 20, 
-                        vy = 50, 
-                        vy_variation = 10,
-                        min_spawn_delay = 0,
-                        max_spawn_delay = 0.2,
-                    }
+                    10 -- quantity
+                    -- {
+                    --     vx = 0, 
+                    --     vx_variation = 20, 
+                    --     vy = 50, 
+                    --     vy_variation = 10,
+                    --     min_spawn_delay = 0,
+                    --     max_spawn_delay = 0.2,
+                    -- }
                 )
 
                 Particles:pop_layer()
