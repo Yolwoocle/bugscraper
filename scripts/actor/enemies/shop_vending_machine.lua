@@ -17,6 +17,7 @@ function ShopVendingMachine:init(x, y, w, h)
     self.name = "shop_vending_machine"
 
     self.ui_oy = 120
+    self.loot = {}
 end
 
 function ShopVendingMachine:apply_current_product()
