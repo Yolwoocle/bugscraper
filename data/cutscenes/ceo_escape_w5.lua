@@ -288,22 +288,22 @@ return Cutscene:new("ceo_escape_w5", {
             data.ceo.spr:update_offset(0, 0)
         end
     }),
-    CutsceneScene:new({
-        description = "Image of the big ass slap in the face",
+    -- CutsceneScene:new({
+    --     description = "Image of the big ass slap in the face",
 
-        duration = 0.5,
-        enter = function(cutscene, data)
-            game.menu_manager:set_menu("ceo_slap")
-            data.timer = 0.5
-        end,
-        update = function(cutscene, data, dt)
-            data.ceo.spr:update_offset(random_neighbor(data.timer*6), random_neighbor(data.timer*6))
-            data.timer = math.max(0.0, data.timer - dt)
-        end,
-        exit = function(cutscene, data)
-            data.ceo.spr:update_offset(0, 0)
-        end
-    }),
+    --     duration = 0.5,
+    --     enter = function(cutscene, data)
+    --         game.menu_manager:set_menu("ceo_slap")
+    --         data.timer = 0.5
+    --     end,
+    --     update = function(cutscene, data, dt)
+    --         data.ceo.spr:update_offset(random_neighbor(data.timer*6), random_neighbor(data.timer*6))
+    --         data.timer = math.max(0.0, data.timer - dt)
+    --     end,
+    --     exit = function(cutscene, data)
+    --         data.ceo.spr:update_offset(0, 0)
+    --     end
+    -- }),
 
     CutsceneScene:new({
         description = "Wait for a bit",
