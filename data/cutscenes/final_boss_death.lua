@@ -7,15 +7,17 @@ local BackgroundCity = require "scripts.level.background.background_city"
 local BackgroundFinalBossDeath = require "scripts.level.background.background_final_boss_death"
 local BackroomEnding  = require "scripts.level.backroom.backroom_ending"
 local guns            = require "data.guns"
+local InvisibleDummy = require "scripts.actor.enemies.invisible_dummy"
 
 local Rect = require "scripts.math.rect"
 local images = require "data.images"
 
 return Cutscene:new("final_boss_death", {
     CutsceneScene:new({
-        duration = 1.0,
+        duration = 2.0,
 
         enter = function(cutscene, data)
+            game.menu_manager:set_can_pause(false)
         end
     }),
 
@@ -29,6 +31,7 @@ return Cutscene:new("final_boss_death", {
                     actor:remove()
                 end
             end
+            game:new_actor(InvisibleDummy:new(0, 0))
             
             -- Init players
             for _, player in pairs(game.players) do
@@ -196,7 +199,7 @@ return Cutscene:new("final_boss_death", {
                 player.spr:set_rotation(0)--random_range_int(0, 3) * pi/2)
 
                 player:reset_virtual_controller()
-                player.spr:set_animation("dead")
+                player.spr:set_animation("airborne")
                 player.spr:set_shake(2)
                 player:equip_gun(guns.unlootable.EmptyGun:new(player))
 
@@ -238,6 +241,12 @@ return Cutscene:new("final_boss_death", {
         enter = function(cutscene, data)
             Particles:clear()
 
+            for _, actor in pairs(game.actors) do
+                if not actor.is_player then
+                    actor:remove()
+                end
+            end
+
             for _, player in pairs(game.players) do
                 player:reset()
                 player:set_position(4*16 + player.n*24, 0*16)
@@ -267,6 +276,8 @@ return Cutscene:new("final_boss_death", {
         enter = function(cutscene, data)
             for _, player in pairs(game.players) do
                 player:reset()
+                player:set_input_mode(PLAYER_INPUT_MODE_CODE)
+                player:reset_virtual_controller()
             end
             
             game:screenshake(14)
@@ -302,10 +313,21 @@ return Cutscene:new("final_boss_death", {
     }),
 
     CutsceneScene:new({ 
+        duration = 1.0,
+    }),
+
+    CutsceneScene:new({ 
         duration = 0.0,
         enter = function(cutscene, data)
+            for _, player in pairs(game.players) do
+                player:set_input_mode(PLAYER_INPUT_MODE_USER)
+                player:reset_virtual_controller()
+            end
+
             game.game_ui.cinematic_bars_enabled = false
             game.game_ui.cinematic_bar_color = COL_BLACK_BLUE
+
+            game.menu_manager:set_can_pause(true)
         end
     })
 })
