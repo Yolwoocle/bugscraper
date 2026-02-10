@@ -445,6 +445,8 @@ function FinalBoss:init(x, y)
                 game.music_player:set_disk("off")
 
                 state.f = 2
+
+                game:play_cutscene("final_boss_death")
             end,
 
             update = function(state, dt)
