@@ -29,27 +29,12 @@ return {
         description =
         [[Witaj w bugscraper, to tutaj zbierają się szkodniki z całego świata. Twoja misja: powstrzymać zanim będzie już za późno!🐜W tej platformowej strzelance wcielasz się w Mio, odważną mrówkę, próbującą powstrzymać pracowników pełnego robaków drapacza chmur przed zepsuciem świata śmiercionośnym grzybem.🐛Będziesz walczyć z falami wrogów w windzie, którzy przybywają po Twoją skórę (a raczej egzoszkielet) na każdym piętrze.🐝Korzystając z szerokiej gamy broni i ulepszeń, wyeliminuj ich i przygotuj się do walki o następne piętro!🐞Graj solo lub z maksymalnie 4 znajomymi w lokalnym trybie kooperacji wieloosobowej.]]
     },
-    discord = { -- Text used for Discord rich presence
-        state = {
-            solo = "Gra jednoosobowa",
-            local_multiplayer = "Lokalna gra wieloosobowa",
-        },
-        details = {
-            waiting = "W lobby",
-            playing = "W grze (piętro %d/%d)",
-            dying = "Umiera (piętro %d/%d)",
-            win = "Ekran zwycięstwa",
-        },
-    },
     game = {
         demo = "DEMO", -- Chip added to the game logo to indicate that this version is a demo
         fps = "%d FPS",
         congratulations = "GRATULACJE!",
         win_thanks = "Dziękujemy za zagranie w werje demo",
         win_wishlist = "Dodaj grę do listy życzeń na Steam :)", -- "Wishlist" is a verb
-        win_prompt = "[Pauza aby kontynuować]",
-        warning_web_controller = "Niektóre przeglądarki mogą mieć niepełne wsparcie dla kontrolerów",
-
     },
     level = {
         world_prefix = "Dział %s",
@@ -94,9 +79,16 @@ return {
         abbreviation = "G%d", -- Short appreviation to denote players by their number. Example: in english, "P1" means "Player 1", in french "J1" means "Joueur 1".
     },
     enemy = {
-        dung = "Pan Odchodek",
-        bee_boss = "The Queen",        -- ADDED
-        motherboard = "The Webmaster", -- ADDED
+        boss_1 = "Pan Odchodek",
+        boss_2 = "The Queen",        -- ADDED
+        boss_3 = "The Webmaster", -- ADDED
+        
+        -- A very large cabbage-like, boulder-like, rolling enemy from the Garden area.   
+        boss_4 = "Rollossus", -- ADDED
+
+        -- The CEO of the company, and the final boss. Its name is somewhat ominous-sounding.
+        -- Try to avoid ambiguity with the term "boss", which could be confused with the generic term for a video game boss.
+        boss_5 = "CEO", -- ADDED    
     },
     upgrade = {
         tea = {
@@ -322,7 +314,6 @@ return {
             special_thanks = "Specjalne podziękowania",
             asset_creators = "Autorzy zasobów",
             tv_slideshow = "TV slideshow contributors", -- ADDED // Refers to the powerpoint TV slideshow on the title screen, which was contributed by a variety of people 
-            tv_slideshow_submit = "Submit yours...", -- ADDED // Leads to a web page where people can submit their own slides
             thank_you_for_playing = "Thank you for playing!", -- ADDED / Shown at the end of the credits
             
             licenses = "Licencje na zasoby i biblioteki",
@@ -333,6 +324,19 @@ return {
         },
         open_source = {
             title = "Biblioteki otwartoźródłowe",
+        },
+    },
+    
+    discord = { -- Text used for Discord rich presence
+        state = {
+            solo = "Gra jednoosobowa",
+            local_multiplayer = "Lokalna gra wieloosobowa",
+        },
+        details = {
+            waiting = "W lobby",
+            playing = "W grze (piętro %d/%d)",
+            dying = "Umiera (piętro %d/%d)",
+            win = "Ekran zwycięstwa",
         },
     },
 }

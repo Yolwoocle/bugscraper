@@ -47,7 +47,6 @@ return {
         congratulations = "FÉLICITATIONS !",
         win_thanks = "Merci d'avoir joué à la démo",
         win_wishlist = "Ajoutez à votre liste de souhaits Steam :)", -- "Wishlist" is a verb
-        win_prompt = "[Pause pour continuer]",
         warning_web_controller = "Certains navigateurs ne supportent pas correctement les manettes",
 
         combo = "COMBO %d !",
@@ -100,9 +99,15 @@ return {
         abbreviation = "J%d",
     },
     enemy = {
-        dung = "J. De Bouse",
-        bee_boss = "Sa Majesté",
-        motherboard = "La Webmaster",
+        boss_1 = "M. De Bouse",
+        boss_2 = "Sa Majesté",
+        boss_3 = "Webmaster",
+        
+        -- A very large cabbage-like, boulder-like, rolling enemy from the Garden area.   
+        boss_4 = "Grobroco",
+
+        -- The CEO of the company, and the final boss. Its name is somewhat ominous-sounding.
+        boss_5 = "Patron", -- ADDED
     },
     upgrade = {
         tea = {
@@ -339,7 +344,6 @@ return {
             trailer = "Bande-annonce",
             asset_creators = "Créateur·rices d'assets",
             tv_slideshow = "Contributeur·rices diaporama TV", 
-            tv_slideshow_submit = "Envoyez le votre...", 
             licenses = "Licences des assets & bibliothèques",
             more = "Et bien plus...", -- For the people that I might have forgotten in the special thanks section
             thank_you_for_playing = "Merci pour avoir joué ! ❤", -- ADDED / Shown at the end of the credits

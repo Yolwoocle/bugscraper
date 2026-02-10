@@ -22,18 +22,6 @@ return {
 		pl = "Polski",
 		pt = "Português Brasileiro",
 	},
-	discord = { -- Text used for Discord rich presence
-		state = {
-			solo = "Jugando solo",
-			local_multiplayer = "Multijugador local",
-		},
-		details = {
-			waiting = "En el vestíbulo", -- *sigh* The europeans. (no one uses vestibulo on latam but better play it safe)
-			playing = "Jugando (Piso %d/%d)",
-			dying = "Derrotado (Piso %d/%d)",
-			win = "Pantalla de victoria",
-		},
-	},
 	game = {
 		-- There's `demostración` but we can get away with just demo as is
 		demo = "DEMO", -- Chip added to the game logo to indicate that this version is a demo
@@ -41,7 +29,6 @@ return {
 		congratulations = "FELICITACIONES!",
 		win_thanks = "Gracias por jugar esta demo",
 		win_wishlist = "Agregalo a tu lista de deseados en Steam :)", -- "Wishlist" is a verb
-		win_prompt = "[Pausa para continuar]",
 		warning_web_controller = "Algunos navegadores no tienen el soporte de mandos necesario",
 
 		combo = "%d COMBO",
@@ -95,9 +82,16 @@ return {
 		abbreviation = "J%d", -- Short appreviation to denote players by their number. Example: in english, "P1" means "Player 1", in french "J1" means "Joueur 1".
 	},
 	enemy = {
-		dung = "Sr. estiércol", -- keeping the format but people pick up less onto the abbreviation of sir (Señor)
-		bee_boss = "Su majestad",
-		motherboard = "El maestro de redes",
+		boss_1 = "Sr. estiércol", -- keeping the format but people pick up less onto the abbreviation of sir (Señor)
+		boss_2 = "Su majestad",
+		boss_3 = "El maestro de redes",
+		
+        -- A very large cabbage-like, boulder-like, rolling enemy from the Garden area.   
+        boss_4 = "Rollossus", -- ADDED
+
+        -- The CEO of the company, and the final boss. Its name is somewhat ominous-sounding.
+		-- Try to avoid ambiguity with the term "boss", which could be confused with the generic term for a video game boss.
+        boss_5 = "CEO", -- ADDED
 	},
 	upgrade = {
 		tea = {
@@ -341,7 +335,6 @@ return {
 			trailer = "Tráiler",                                -- CHANGED (Barely) it only needs an accent on the á to make it work
 			asset_creators = "Creadores de recursos",
 			tv_slideshow = "Contribuciones de la presentación en la TV", -- Refers to the powerpoint TV slideshow on the title screen, which was contributed by a variety of people
-			tv_slideshow_submit = "Añade el tuyo...",           -- Leads to a web page where people can submit their own slides
 			licenses = "Recursos y Lisencias de librerías",
 			more = "Y muchos mas...",
             thank_you_for_playing = "Thank you for playing!", -- ADDED / Shown at the end of the credits
@@ -351,6 +344,19 @@ return {
 		},
 		open_source = {
 			title = "Licencias de código abierto",
+		},
+	},
+	
+	discord = { -- Text used for Discord rich presence
+		state = {
+			solo = "Jugando solo",
+			local_multiplayer = "Multijugador local",
+		},
+		details = {
+			waiting = "En el vestíbulo", -- *sigh* The europeans. (no one uses vestibulo on latam but better play it safe)
+			playing = "Jugando (Piso %d/%d)",
+			dying = "Derrotado (Piso %d/%d)",
+			win = "Pantalla de victoria",
 		},
 	},
 }

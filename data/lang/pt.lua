@@ -22,27 +22,12 @@ return {
         pl = "Polski",
         pt = "Português Brasileiro",
     },
-    discord = { -- Text used for Discord rich presence
-        state = {
-            solo = "Jogando solo",
-            local_multiplayer = "Multiplayer local",
-        },
-        details = {
-            waiting = "No lobby",
-            playing = "Em jogo (andar %d/%d)",
-            dying = "Derrotado(a) (andar %d/%d)",
-            win = "Tela de vitória",
-        },
-    },
     game = {
         demo = "DEMO", -- Chip added to the game logo to indicate that this version is a demo
         fps = "%d FPS",
         congratulations = "PARABÉNS!",
         win_thanks = "Obrigado por jogar o demo",
         win_wishlist = "Adicione esse jogo à lista de desejos :)", -- "Wishlist" is a verb
-        win_prompt = "[Pause para continuar]",
-        warning_web_controller = "Alguns browsers podem não ser compatíveis com controles",
-
     },
     level = {
         world_prefix = "Departamento %s",
@@ -87,9 +72,16 @@ return {
         abbreviation = "J%d", -- Short appreviation to denote players by their number. Example: in english, "P1" means "Player 1", in french "J1" means "Joueur 1".
     },
     enemy = {
-        dung = "Sr. Esterco",
-        bee_boss = "A Rainha",        -- ADDED
-        motherboard = "Mestre da web", -- ADDED
+        boss_1 = "Sr. Esterco",
+        boss_2 = "A Rainha",        -- ADDED
+        boss_3 = "Mestre da web", -- ADDED
+        
+        -- A very large cabbage-like, boulder-like, rolling enemy from the Garden area.   
+        boss_4 = "Rollossus", -- ADDED
+
+        -- The CEO of the company, and the final boss. Its name is somewhat ominous-sounding.
+        -- Try to avoid ambiguity with the term "boss", which could be confused with the generic term for a video game boss.
+        boss_5 = "CEO", -- ADDED
     },
     upgrade = {
         tea = {
@@ -312,7 +304,6 @@ return {
             special_thanks = "Agradecimentos especiais",
             asset_creators = "Criadores de recursos",
             tv_slideshow = "TV slideshow contributors", -- ADDED // Refers to the powerpoint TV slideshow on the title screen, which was contributed by a variety of people 
-            tv_slideshow_submit = "Envie seu slideshow", -- CHANGED //  Direct to the point of what the button does // Leads to a web page where people can submit their own slides
             licenses = "Licensas de bibliotecas & recursos",
 
             x_by_y =     "%s por %s", -- "ASSET_NAME by CREATOR". Used to credit assets such as sound effects
@@ -320,6 +311,19 @@ return {
         },
         open_source = {
             title = "Bibliotecas open source",
+        },
+    },
+    
+    discord = { -- Text used for Discord rich presence
+        state = {
+            solo = "Jogando solo",
+            local_multiplayer = "Multiplayer local",
+        },
+        details = {
+            waiting = "No lobby",
+            playing = "Em jogo (andar %d/%d)",
+            dying = "Derrotado(a) (andar %d/%d)",
+            win = "Tela de vitória",
         },
     },
 }

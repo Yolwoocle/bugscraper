@@ -2,15 +2,14 @@
     TO TRANSLATORS:
     * Reference document for all enemies, players, levels, etc: 
       https://docs.google.com/document/d/13UntpWqoTXgYnBm5HL0pZmjBDwMStIN8YB1IPdi7hlA
-    * Even though my target audience is people who already play games, since the game supports 
-      local co-op and has very simple, accessible controls, it's not absurd to think that more 
-      occasional gamers would try their hand at the game.
+    * My target audience is people who already play some games.
     * It is very easy for me to add more glyphs if needed, just tell me and I'll do it.
     * Please notify me if there are any special technical requirements. (e.g. text rendering specifics, etc) 
 ]]
 
 return {
     __meta = {
+        -- Do not touch this section.
         menu_padding = 0.18
     },
     language = {
@@ -22,25 +21,12 @@ return {
         pl = "Polski",
         pt = "Português Brasileiro",
     },
-    discord = { -- Text used for Discord rich presence
-        state = {
-            solo = "Playing solo",
-            local_multiplayer = "Local multiplayer",
-        },
-        details = {
-            waiting = "In lobby",
-            playing = "In game (floor %d/%d)",
-            dying = "Defeated (floor %d/%d)",
-            win = "Victory screen",
-        },
-    },
     game = {
         demo = "DEMO", -- Chip added to the game logo to indicate that this version is a demo
         fps = "%d FPS",
         congratulations = "CONGRATULATIONS!",
         win_thanks = "Thank you for playing the demo",
         win_wishlist = "Wishlist the game on Steam :)", -- "Wishlist" is a verb
-        win_prompt = "[Pause to continue]",
         warning_web_controller = "Some browsers may not have proper controller support",
 
         combo = "COMBO %d", -- ADDED 
@@ -48,18 +34,20 @@ return {
     level = {
         world_prefix = "Department %s", 
 
-        -- World names
-        -- This can be any vaguely office-y name (I just chose this in english because of the word play), 
+        -- Department names
+        -- I chose to not use articles in english (so instead of "The Factory", it's just "Factory")
+
+        -- Dept 1: This can be any vaguely office-y name (I just chose this in english because of the word play), 
         -- because this department just represents a generic office department.
         world_1 = "Bug Resources", 
-        -- This world is a factory themed after bees, with grungy metallic environment
+        -- Dept 2: This deptartment is a factory themed after bees, with grungy metallic environment
         world_2 = "Factory",
-        -- This is a moody, dark and mysterious room filled with endless racks of servers 
+        -- Dept 3: This is a moody, dark and mysterious room filled with endless racks of servers 
         world_3 = "Server Room",
-        -- This is the highest department of the bugscraper, filled with lofty gardens and clean, white, modern architecture
+        -- Dept 4: This is the highest department of the bugscraper, filled with lofty gardens and clean, white, modern architecture
         world_4 = "Gardens",
 
-        -- This is an underground secret department below the bugscraper. It contains a huge hangar with a large rocket. 
+        -- Dept 0: This is an underground secret department below the bugscraper. It contains a huge hangar with a large rocket. 
         world_0 = "Basement",
     },
     gun = {
@@ -74,13 +62,13 @@ return {
         ring = "Big Berry",
         mushroom_cannon = "Mushroom Cannon",
 
-        resignation_letter = "Resignation Letter" -- don't ask why it's a gun. you'd have to question my coding.
+        resignation_letter = "Resignation Letter"
     },
     player = {
         name = {
             -- Player names
             -- If the native name clashes with something specific to the language/culture, please notify me.
-            -- You can also use translitations into the script of the language if needed (e.g. Mio -> ミオ)
+            -- You can also use translitations into the language if needed (e.g. Mio -> ミオ)
             mio = "Mio",
             cap = "Cap",
             zia = "Zia",
@@ -91,20 +79,35 @@ return {
 
             -- These are guest characters from other games so please stay close to the original.
             rico = "Rico", -- From 'The Bullet Hopper'
+            yv = "Y.V.", -- From 'Nuclear Throne'
             leo = "Leo",
             dodu = "Dodu", 
-            yv = "Y.V.", -- From 'Nuclear Throne'
         },
         abbreviation = "P%d", -- Short appreviation to denote players by their number. Example: in english, "P1" means "Player 1", in french "J1" means "Joueur 1".
     },
     enemy = {
         -- These are the boss names. Please look at the Gdocs for reference.
-        -- Feel free to pick funny or interesting names, even if they don't translate directly.
-        -- (for example, the french name for Mr. Dung is "J. De Bouse", which is a 
-        -- play on words with the french word for 'dung' and a famous french humorist)
-        dung = "Mr. Dung",
-        bee_boss = "Her Majesty", 
-        motherboard = "The Webmaster",
+        -- Feel free to pick interesting names, and you don't have to base them off the english name.
+
+        -- (for example, the french name for "Mr. Dung" is "J. De Bouse", which is a 
+        -- play on words with the french word for 'dung' and a famous french humorist. 
+        -- "The Webmaster" is a play on words between the theme of the area and spider webs)
+
+        -- A somewhat witty and clownesque exectutive based off a Dung Beetle. 
+        boss_1 = "Mr. Dung",
+
+        -- The queen of the Factory, who's also a metal/rock singer.  
+        boss_2 = "Her Majesty", 
+
+        -- The guardian of the Server Room, whose design is based off a motherboard and spiders.
+        boss_3 = "Webmaster",
+
+        -- A very large cabbage-like, boulder-like, rolling enemy from the Garden area.   
+        boss_4 = "Rollossus", -- ADDED
+
+        -- The CEO of the company, and the final boss. Its name is somewhat ominous-sounding.
+        -- Try to avoid ambiguity with the term "boss", which could be confused with the generic term for a video game boss.
+        boss_5 = "CEO", -- ADDED
     },
     upgrade = {
         tea = {
@@ -158,7 +161,10 @@ return {
     },
     input = {
         prompts = {
-            -- All of these may be shown as button prompts (i.e., "[X] Shoot", "[C] Jump", etc)
+            -- All of these are infinitive verbs and may be shown as button prompts 
+            -- (i.e., "[X] Shoot", "[C] Jump", etc)
+
+            -- Gameplay Actions
             move = "Move", 
             left = "Left",
             right = "Right",
@@ -171,6 +177,7 @@ return {
             open = "Open", -- ADDED / As in, "open menu", and NOT for, say, opening chests.
             collect = "Collect", -- ADDED / As in, "collect item", "collect gun", etc
 
+            -- UI Actions
             ui_left =  "Left (menu)",
             ui_right = "Right (menu)",
             ui_up =    "Up (menu)",
@@ -178,9 +185,11 @@ return {
             ui_select = "Confirm",
             ui_back = "Back",
             pause = "Pause",
-
-            join = "Join",
-            split_keyboard = "Split keyboard", -- Verb, as in "Press [key] to split the keyboard". Shown on the title screen when one keyboard player has joined. Try to keep short since space is limited there.
+            join = "Join", -- As, in joining the game, adding a new player to the game.
+            -- As in, "Press [key] to split the keyboard". 
+            -- Shown on the title screen when one keyboard player has joined. 
+            -- Try to keep it as short as possible since space is limited there.
+            split_keyboard = "Split keyboard", 
 
             wall_jump = "Wall jump",
             jetpack = "Jetpack", -- Refers to "jetpacking", a move in the game. 
@@ -205,10 +214,11 @@ return {
             title = "PAUSE",
             resume = "RESUME",
             retry = "RETRY",
-            -- This correspons to floor 0 in the game. To different cultures, "ground floor" 
+
+            -- This correspons to floor 0 in the game. To different cultures, the "ground floor" 
             -- might usually mean "floor 1", so please make sure to avoid ambiguity when translating. 
-            -- (You can also use "main lobby" or something like it)   
-            return_to_ground_floor = "RETURN TO GROUND FLOOR", 
+            -- (You can also translate as "main lobby" or something like it.)   
+            return_to_ground_floor = "RETURN TO FLOOR 0", 
             options = "OPTIONS",
             credits = "CREDITS",
             feedback = "FEEDBACK",
@@ -227,7 +237,7 @@ return {
             input_submenu = {
                 title = "INPUT SETTINGS",
                 reset_controls = "RESET CONTROLS",
-                controller_button_style = "BUTTON STYLE",
+                controller_button_style = "BUTTON STYLE", -- The style of the buttons shown in-game. As in, PS4 style buttons, Xbox style buttons...
                 controller_button_style_value = {
                     detect = "detect",
                     switch = "Switch",
@@ -237,7 +247,7 @@ return {
                 },
                 deadzone = "JOYSTICK DEADZONE",
                 vibration = "VIBRATION",
-                low_deadzone_warning = "Low values may cause issues", -- Warning displayed when the deadzone is very small
+                low_deadzone_warning = "Low values may cause issues", -- Warning displayed when the joystick deadzone is very small
                 note_deadzone = "Deadzone settings will be applied after leaving this menu",
 
                 gameplay = "Gameplay",
@@ -246,15 +256,20 @@ return {
                 note_ui_min_button = "At least one binding is required", 
                 note_global_keyboard = "These bindings are the same for all keyboard players",
                 note_global_controller = "These bindings are the same for all controllers",
-                subtitle_no_player = "[⚠ NO PLAYER %d]", -- Shown when navigating to player "%d"'s controller settings while no player of this number has joined yet.
-                subtitle_no_controller = "[⚠ NO CONTROLLER CONNECTED]", -- Shown in the controller settings while no controller is connected
+                -- Shown when navigating to player "%d"'s controller settings while no player of this number has joined yet.
+                subtitle_no_player = "[⚠ NO PLAYER %d]", 
+                -- Shown in the controller settings while no controller is connected
+                subtitle_no_controller = "[⚠ NO CONTROLLER CONNECTED]", 
                 no_buttons = "[NO BUTTONS]",
-                press_button = "[PRESS BUTTON]", -- Try to keep it short
-                press_again_to_remove = "Press an already bound button to remove it",
+                press_button = "[PRESS BUTTON]", -- Try to keep it as short as possible
+                -- When assigning buttons, if the user presses a button that is already bound, it will instead
+                -- remove that button.
+                press_again_to_remove = "Press an already bound button to remove it", 
                 
                 keyboard = "Keyboard",
                 keyboard_solo = "KEYBOARD (Default)",
-                keyboard_p1 = "KEYBOARD (Split 1)", -- Split is an adjective here; as in, "the 1st split keyboard user"
+                -- "Split" as in, "the 1st split keyboard user"
+                keyboard_p1 = "KEYBOARD (Split 1)", 
                 keyboard_p2 = "KEYBOARD (Split 2)",
 
                 controller = "Controller",
@@ -267,7 +282,7 @@ return {
                 title = "Audio",
                 sound = "SOUND",
                 volume = "VOLUME",
-                sfx_volume = "SOUND EFFECT VOLUME", -- ADDED // Can also be translated as "effects volume" or "SFX volume", if it makes sense in the language 
+                sfx_volume = "SOUND EFFECT VOLUME", -- ADDED // Can also be translated as "effects volume" or "SFX volume"
                 music_volume = "MUSIC VOLUME",
                 music_pause_menu = "MUSIC ON PAUSE MENU", -- Whether music should play on the pause menu
                 ambience = "AMBIENCE SOUNDS",
@@ -275,15 +290,15 @@ return {
             visuals = {
                 title = "Visuals",
                 fullscreen = "FULLSCREEN",
-                pixel_scale = "PIXEL SCALE", -- How big should every pixel be displayed on-screen
+                pixel_scale = "PIXEL SCALE", -- How big should every pixel be displayed on-screen (x1, x2, ...)
                 pixel_scale_value = {
                     auto = "auto",
-                    max_whole = "max whole",
+                    max_whole = "max whole", -- Biggest whole number possible
                 },
                 vsync = "VSYNC",
-                menu_blur = "MENU BACKGROUND BLUR", 
-                background_speed = "BACKGROUND SPEED",
-                bullet_lightness = "BULLET BRIGHTNESS",
+                menu_blur = "MENU BACKGROUND BLUR", -- Whether to apply the blurring effect in menu backgrounds
+                background_speed = "BACKGROUND SPEED", -- How quickly the background scrolls 
+                bullet_lightness = "BULLET BRIGHTNESS", -- How brightly bullets are rendered
             },
             game = {
                 title = "Game",
@@ -293,7 +308,7 @@ return {
                 mouse_visible = "SHOW MOUSE CURSOR",
                 pause_on_unfocus = "PAUSE ON LOST FOCUS", -- whether the game should pause when the window loses focus
                 screenshake = "SCREENSHAKE",
-                skip_boss_intros = "SKIP BOSS INTROS",
+                skip_boss_intros = "SKIP BOSS INTROS", -- Whether the game should skip the boss intro animations 
                 show_fps_warning = "SHOW LOW FRAMERATE WARNING", -- Whether the game should show a warning when its framerate is low
 
             },
@@ -337,7 +352,7 @@ return {
         },
         credits = {
             title = "CREDITS",
-            ninesliced_presents = "Ninesliced presents", -- ADDED / Ninesliced with a capital letter ONLY on the N
+            ninesliced_presents = "Ninesliced presents", -- ADDED / Written EXCATLY "Ninesliced"
             game_by = "A game by", -- As in, "A game by [newline] John". If it is not possible to have the name *after* this, one idea could be to translate as "Creator" (as in, "Creator [newline] John")
             leo_bernard = "Léo Bernard", -- Please do not touch this
             music = "Music",
@@ -349,7 +364,6 @@ return {
             trailer = "Trailer", -- ADDED
             asset_creators = "Asset creators", -- ADDED
             tv_slideshow = "TV slideshow contributors", -- ADDED // Refers to the powerpoint TV slideshow on the title screen, which was contributed by a variety of people 
-            tv_slideshow_submit = "Submit yours...", -- ADDED // Leads to a web page where people can submit their own slides
             licenses = "Asset & library licenses",
             more = "And many more...", -- ADDED // For the people that I might have forgotten in the special thanks section
             thank_you_for_playing = "Thank you for playing!", -- ADDED / Shown at the end of the credits
@@ -359,6 +373,18 @@ return {
         },
         open_source = {
             title = "Open source libraries",
+        },
+    },
+    discord = { -- Text used for Discord rich presence
+        state = {
+            solo = "Playing solo",
+            local_multiplayer = "Local multiplayer",
+        },
+        details = {
+            waiting = "In lobby",
+            playing = "In game (floor %d/%d)",
+            dying = "Defeated (floor %d/%d)",
+            win = "Victory screen",
         },
     },
 }

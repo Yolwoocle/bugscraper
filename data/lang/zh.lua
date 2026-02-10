@@ -21,27 +21,12 @@ return {
         pl = "Polski",
         pt = "Português Brasileiro",
     },
-    discord = {
-        state = {
-            solo = "单人游戏",
-            local_multiplayer = "本地多人",
-        },
-        details = {
-            waiting = "在大厅中",
-            playing = "游戏中（第 %d/%d 层）",
-            dying = "已被击败（第 %d/%d 层）",
-            win = "胜利画面",
-        },
-    },
     game = {
         demo = "试玩版",
         fps = "%d 帧率",
         congratulations = "恭喜通关！",
         win_thanks = "感谢游玩试玩版",
         win_wishlist = "请在 Steam 上加入愿望单 :)", 
-        win_prompt = "[按暂停继续]",
-        warning_web_controller = "某些浏览器可能不支持手柄",
-
         combo = "连击 %d",
     },
     level = {
@@ -83,9 +68,15 @@ return {
         abbreviation = "%dP",
     },
     enemy = {
-        dung = "屎先生",
-        bee_boss = "蜂后陛下", 
-        motherboard = "网络主宰",
+        boss_1 = "屎先生",
+        boss_2 = "蜂后陛下", 
+        boss_3 = "网络主宰",
+        
+        -- A very large cabbage-like, boulder-like, rolling enemy from the Garden area.   
+        boss_4 = "Rollossus", -- ADDED
+
+        -- The CEO of the company, and the final boss. Its name is somewhat ominous-sounding.
+        boss_5 = "The CEO", -- ADDED
     },
     upgrade = {
         tea = {
@@ -326,7 +317,6 @@ return {
             trailer = "预告片",
             asset_creators = "素材作者",
             tv_slideshow = "电视幻灯片贡献者",
-            tv_slideshow_submit = "提交你的作品...",
             licenses = "素材与库授权",
             more = "以及更多...", 
             thank_you_for_playing = "Thank you for playing!", -- ADDED / Shown at the end of the credits
@@ -336,6 +326,19 @@ return {
         },
         open_source = {
             title = "开源库",
+        },
+    },
+    
+    discord = {
+        state = {
+            solo = "单人游戏",
+            local_multiplayer = "本地多人",
+        },
+        details = {
+            waiting = "在大厅中",
+            playing = "游戏中（第 %d/%d 层）",
+            dying = "已被击败（第 %d/%d 层）",
+            win = "胜利画面",
         },
     },
 }
