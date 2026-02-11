@@ -2,7 +2,9 @@
     TO TRANSLATORS:
     * Reference document for all enemies, players, levels, etc: 
       https://docs.google.com/document/d/13UntpWqoTXgYnBm5HL0pZmjBDwMStIN8YB1IPdi7hlA
-    * My target audience is people who already play some games.
+    * To search for added or changed strings, you can use this regex in the search functionality 
+      of your text editor:
+      \[\[((ADDED)|(REMOVED))
     * It is very easy for me to add more glyphs if needed, just tell me and I'll do it.
     * Please notify me if there are any special technical requirements. (e.g. text rendering specifics, etc) 
 ]]
