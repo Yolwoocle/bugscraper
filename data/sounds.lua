@@ -324,6 +324,7 @@ for key, params in pairs(sfxnames) do
     end
 end
 
+--[[ Comment out to display a table of the biggest sound load times
 -- Display slowest loaded sounds
 table.sort(sound_load_times, function(a, b)
     return a.time > b.time
@@ -367,7 +368,7 @@ for i = 1, #sound_load_times do
 		))
 	end
 end
----
+---]]
 
 print(string.format(
     "\nTotal sound loading time: %.3f ms",
