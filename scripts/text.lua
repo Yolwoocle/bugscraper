@@ -12,7 +12,7 @@ function TextManager:init()
         fr = require "data.lang.fr",
         es = require "data.lang.es",
         zh = require "data.lang.zh",
-        -- pl = require "data.lang.pl",
+        pl = require "data.lang.pl",
         -- pt = require "data.lang.pt",
     }
 
@@ -22,6 +22,7 @@ function TextManager:init()
         ["fr"] = "fr",
         ["zh"] = "zh",
         ["es"] = "es",
+        ["pl"] = "pl",
         ["pt_BR"] = "pt_BR",
 
         -- ["pl"] = "pl",

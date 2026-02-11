@@ -18,6 +18,6 @@ return Menu:new(game, "{menu.options.language.title}", {
     { "{language.fr}", func_language_menu("fr") },
     { "{language.es}", func_language_menu("es") },
     { "{language.zh}", func_language_menu("zh") },
-    -- { "{language.pl}", func_language_menu("pl") },
+    { "{language.pl}", func_language_menu("pl") },
     { "{language.pt_BR}", func_language_menu("pt_BR") },
 }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
