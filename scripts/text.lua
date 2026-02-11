@@ -1,6 +1,7 @@
 require "scripts.util"
 local utf8 = require "utf8"
 local Class = require "scripts.meta.class"
+local sync_translations = require "scripts.sync_translations"
 
 local TextManager = Class:inherit()
 
@@ -14,18 +15,19 @@ function TextManager:init()
         -- pl = require "data.lang.pl",
         -- pt = require "data.lang.pt",
     }
+
     self.locale_to_language = { -- Some pre-defined default values.    
         ["en"] = "en",
+
         ["fr"] = "fr",
         ["zh"] = "zh",
-        -- ["zh_TW"] = "zh_Hant"
         ["es"] = "es",
+        ["pt_BR"] = "pt_BR",
 
         -- ["pl"] = "pl",
         -- ["pl_PL"] = "pl",
 
         -- ["pt"] = "pt",
-        -- ["pt_BR"] = "pt",
     }
 
     self.language_metadata = {}
@@ -53,9 +55,26 @@ function TextManager:init()
     end
     print("TextManager: Unpacked "..tostring(words).." words in "..(1000* (love.timer.getTime() - start)).."ms.")
 
-    ------
-    
     self.font_stack = {}
+    
+    ------------------------
+    
+    -- Uncomment for utility tool to update translations 
+    if DEBUG_MODE then
+        local lang_to = "pl"
+
+        local en_old = require("data.lang.en_old_"..lang_to)
+        local target = require("data.lang."..lang_to)
+        local en_new_tbl = require("data.lang.en")
+
+        local f = io.open("C:\\docs\\gamedev\\bugscraper\\bugscraper\\data\\lang\\en.lua", "r")
+        assert(f ~= nil, "ERROR WHILE SYNCING TRANSLATION FILE: file does not exist")
+        local en_new_str = f:read("*all")
+        f:close()
+
+        local output_path = "C:\\docs\\gamedev\\bugscraper\\bugscraper\\data\\lang\\"..lang_to.."_updated.lua"
+        sync_translations(en_old, en_new_str, en_new_tbl, target, output_path)
+    end
 end
 
 function TextManager:find_default_locale()

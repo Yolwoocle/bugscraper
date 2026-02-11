@@ -20,7 +20,7 @@ return {
 		fr = "Français",
 		zh = "简体中文",
 		pl = "Polski",
-		pt = "Português Brasileiro",
+		pt_BR = "Português Brasileiro",
 	},
 	game = {
 		-- There's `demostración` but we can get away with just demo as is
