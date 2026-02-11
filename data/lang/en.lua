@@ -41,7 +41,7 @@ return {
         -- Dept 1: This can be any vaguely office-y name (I just chose this in english because of the word play), 
         -- because this department just represents a generic office department.
         world_1 = "Bug Resources", 
-        -- Dept 2: This deptartment is a factory themed after bees, with grungy metallic environment
+        -- Dept 2: This department is a factory themed after bees, with grungy metallic environment
         world_2 = "Factory",
         -- Dept 3: This is a moody, dark and mysterious room filled with endless racks of servers 
         world_3 = "Server Room",

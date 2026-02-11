@@ -47,7 +47,7 @@ return function(en_old, en_new_str, en_new_tbl, target_tbl, output_path)
                     final_val = string.format("[[ADDED / '%s']]", en_new_val)
                 elseif en_old_val ~= en_new_val then
                     local base = target_val or en_old_val
-                    final_val = string.format("%s[[CHANGED / %s]]", base, en_new_val)
+                    final_val = string.format("%s[[CHANGED / old:'%s' / new:'%s']]", base, en_old_val, en_new_val)
                 else
                     final_val = target_val or en_new_val
                 end
