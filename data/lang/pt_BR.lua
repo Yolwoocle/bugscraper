@@ -26,10 +26,10 @@ return {
         fps = "%d FPS",
         congratulations = "PARABÉNS!",
         win_thanks = "Obrigado por jogar o demo",
-        win_wishlist = "Adicione esse jogo à lista de desejos :)", -- "Wishlist" is a verb
-        warning_web_controller = "Some browsers may not have proper controller support",
+        win_wishlist = "Adicione o jogo à lista de desejos :)", -- "Wishlist" is a verb
+        warning_web_controller = "Alguns navegadores podem não funcionar com controles",
 
-        combo = "[[ADDED / COMBO %d]]",
+        combo = "COMBO %d",
     },
     level = {
         world_prefix = "Departamento %s",
@@ -37,32 +37,32 @@ return {
         -- Department names
         -- I chose to not use articles in english (so instead of "The Factory", it's just "Factory")
 
-        -- Dept 1: This can be any vaguely office-y name (I just chose this in english because of the word play), 
+        -- Dept 1: This can be any vaguely office-y name (I just chose this in english because of the word play),
         -- because this department just represents a generic office department.
         world_1 = "Recursos Insetos",
         -- Dept 2: This deptartment is a factory themed after bees, with grungy metallic environment
-        world_2 = "A Fábrica[[CHANGED / old:'The Factory' / new:'Factory']]",
-        -- Dept 3: This is a moody, dark and mysterious room filled with endless racks of servers 
-        world_3 = "A Sala do Servidor[[CHANGED / old:'The Server Room' / new:'Server Room']]",
+        world_2 = "Fábrica",
+        -- Dept 3: This is a moody, dark and mysterious room filled with endless racks of servers
+        world_3 = "Sala de Servidor",
         -- Dept 4: This is the highest department of the bugscraper, filled with lofty gardens and clean, white, modern architecture
-        world_4 = "O Jardim[[CHANGED / old:'Executive' / new:'Gardens']]",
+        world_4 = "Jardins",
 
-        -- Dept 0: This is an underground secret department below the bugscraper. It contains a huge hangar with a large rocket. 
-        world_0 = "[[ADDED / Basement]]",
+        -- Dept 0: This is an underground secret department below the bugscraper. It contains a huge hangar with a large rocket.
+        world_0 = "Porão",
     },
     gun = {
         -- Gun names
         -- You can stay close to the original, but please feel free to have a more creative interpretation if you wish!
         -- Look at google doc for image references
         machinegun = "Atirador de Ervilha",
-        triple = "Pimentripla",
+        triple = "Triplimenta",
         burst = "Explosão de Pólen",
         shotgun = "Lança-Amora",
         minigun = "Metralhadora de Semente",
-        ring = "Bagonazona",
+        ring = "Amorona",
         mushroom_cannon = "Canhão de Cogumelo",
 
-        resignation_letter = "Carta de demissão",
+        resignation_letter = "Carta de Demissão",
     },
     player = {
         name = {
@@ -79,7 +79,7 @@ return {
 
             -- These are guest characters from other games so please stay close to the original.
             rico = "Rico", -- From 'The Bullet Hopper'
-            yv = "Y.V.", -- From 'Nuclear Throne' / See localized names here: https://docs.google.com/spreadsheets/d/18N1CNxIzSUm4CkIWUw0nbRnlxzAgoRbHpGyX8649Gjw/edit?usp=sharing
+            yv = "Y.V.",   -- From 'Nuclear Throne' / See localized names here: https://docs.google.com/spreadsheets/d/18N1CNxIzSUm4CkIWUw0nbRnlxzAgoRbHpGyX8649Gjw/edit?usp=sharing
             leo = "Leo",
             dodu = "Dodu",
         },
@@ -89,51 +89,52 @@ return {
         -- These are the boss names. Please look at the Gdocs for reference.
         -- Feel free to pick interesting names, and you don't have to base them off the english name.
 
-        -- (for example, the french name for "Mr. Dung" is "J. De Bouse", which is a 
-        -- play on words with the french word for 'dung' and a famous french humorist. 
+        -- (for example, the french name for "Mr. Dung" is "J. De Bouse", which is a
+        -- play on words with the french word for 'dung' and a famous french humorist.
         -- "The Webmaster" is a play on words between the theme of the area and spider webs)
 
-        -- A somewhat witty and clownesque exectutive based off a Dung Beetle. 
+        -- A somewhat witty and clownesque exectutive based off a Dung Beetle.
         boss_1 = "Sr. Esterco",
 
-        -- The queen of the Factory, who's also a metal/rock singer.  
-        boss_2 = "[[ADDED / Her Majesty]]",
+        -- The queen of the Factory, who's also a metal/rock singer.
+        boss_2 = "Vossa Majestade",
 
         -- The guardian of the Server Room, whose design is based off a motherboard and spiders.
-        boss_3 = "[[ADDED / Webmaster]]",
+        boss_3 = "Webmaster",
 
-        -- A very large green cabbage-like, boulder-like, rolling enemy from the Garden area.   
+        -- A very large green cabbage-like, boulder-like, rolling enemy from the Garden area.
         -- You're free to be more creative with this one.
-        boss_4 = "[[ADDED / Rollossus]]",
+        boss_4 = "Repolhossus",
 
         -- The CEO of the company, and the final boss. Its name is somewhat ominous-sounding.
         -- Try to avoid ambiguity with the term "boss", which could be confused with the generic term for a video game boss.
-        boss_5 = "[[ADDED / CEO]]",
+        boss_5 = "Diretor",
     },
     upgrade = {
         tea = {
             title = "Chá Verde",
-            description = "+%d ❤ temporários[[CHANGED / old:'+2 temporary ❤' / new:'+%d extra ❤']]",
+            description = "+%d ❤ extra",
         },
         espresso = {
             title = "Expresso",
-            description = "x%d velocidade de tiro por 1 minuto[[CHANGED / old:'x2 shooting speed for a minute' / new:'x%d shooting speed for %d floors']]",
+            description =
+            "x%d velocidade de tiro por %d andares",
         },
         milk = {
             title = "Leite",
-            description = "+%d ❤ permanente[[CHANGED / old:'+1 permanent ❤' / new:'+%d maximum ❤']]",
+            description = "+%d ❤ máximo",
         },
         boba = {
-            title = "[[ADDED / Boba]]",
-            description = "[[ADDED / x%d maximum ammo]]",
+            title = "Bubble Tea",
+            description = "x%d capacidade de munição",
         },
         soda = {
             title = "Refri", -- As in Coca-cola/Pepsi style soda.
-            description = "+%d pulo no ar[[CHANGED / old:'+1 midair jump' / new:'+%d midair jump']]",
+            description = "+%d pulos no ar",
         },
         fizzy_lemonade = {
-            title = "Limonada Fizzy",
-            description = "Aperte o pulo para planar",
+            title = "Limonada Suíça",
+            description = "Aperte pulo para planar",
         },
         apple_juice = {
             title = "Suco de Maçã",
@@ -141,28 +142,28 @@ return {
         },
         hot_sauce = {
             title = "Molho de Pimenta",
-            description = "Da x%d de dano, mas usando x%d balas", -- First "%d" is the damage, second "%d" is ammo
+            description = "Dá x%d de dano usando x%d balas", -- First "%d" is the damage, second "%d" is ammo
         },
         coconut_water = {
-            title = "Agua de Coco",
-            description = "Pistear nos inimigos da %d%% de munição",
+            title = "Água de Coco",
+            description = "Pule nos inimigos para recuperar %d%% de munição",
         },
         hot_chocolate = {
             title = "Chocolate Quente",
-            description = "Melhora em x%d a velocidade de recarga",
+            description = "Velocidade de recarga %dx mais rápida",
         },
         pomegranate_juice = {
-            title = "[[ADDED / Pomegranate Juice]]",
-            description = "[[ADDED / Create an explosion when taking damage]]",
+            title = "Suco de Romã",
+            description = "Tomar dano cria uma explosão",
         },
         energy_drink = {
-            title = "Energetico",
-            description = "Contador de combo diminui lentamente",
+            title = "Energético",
+            description = "Contador de combo diminui mais lentamente",
         },
     },
     input = {
         prompts = {
-            -- All of these are infinitive verbs and may be shown as button prompts 
+            -- All of these are infinitive verbs and may be shown as button prompts
             -- (i.e., "[X] Shoot", "[C] Jump", etc)
 
             -- Gameplay Actions
@@ -175,8 +176,8 @@ return {
             shoot = "Atirar",
             interact = "Interagir",
             leave_game = "Sair",
-            open = "Abrir", -- As in, "open menu", and NOT for, say, opening chests.
-            collect = "Coletar", -- As in, "collect item", "collect gun", etc
+            open = "Abrir",    -- As in, "open menu", and NOT for, say, opening chests.
+            collect = "Pegar", -- As in, "collect item", "collect gun", etc
 
             -- UI Actions
             ui_left = "Esquerda (menu)",
@@ -187,12 +188,12 @@ return {
             ui_back = "Voltar",
             pause = "Pausar",
             join = "Entrar", -- As, in joining the game, adding a new player to the game.
-            -- As in, "Press [key] to split the keyboard". 
-            -- Shown on the title screen when one keyboard player has joined. 
+            -- As in, "Press [key] to split the keyboard".
+            -- Shown on the title screen when one keyboard player has joined.
             -- Try to keep it as short as possible since space is limited there.
             split_keyboard = "Dividir teclado",
 
-            wall_jump = "[[ADDED / Wall jump]]",
+            wall_jump = "Pular da parede",
             jetpack = "Usar jetpack", -- Refers to "jetpacking", a move in the game performed by shooting downwards with a gun.
         },
     },
@@ -200,9 +201,9 @@ return {
         see_more = "ver mais...",
         yes = "SIM",
         no = "NÃO",
-        leave_menu = "[[ADDED / Leave menu?]]", -- Generic "leave menu?"
+        leave_menu = "Sair do menu?", -- Generic "leave menu?"
         quit = {
-            description = "Are you sure you want to quit?"
+            description = "Tem certeza que quer sair?"
         },
         confirm_retry = {
             description = "Tentar de novo?",
@@ -212,16 +213,16 @@ return {
             resume = "RETOMAR",
             retry = "TENTAR DE NOVO",
 
-            -- This correspons to floor 0 in the game. To different cultures, the "ground floor" 
-            -- might usually mean "floor 1", so please make sure to avoid ambiguity when translating. 
-            -- (You can also translate as "main lobby" or something like it.)   
-            return_to_ground_floor = "RETORNAR AO TERREO",
+            -- This correspons to floor 0 in the game. To different cultures, the "ground floor"
+            -- might usually mean "floor 1", so please make sure to avoid ambiguity when translating.
+            -- (You can also translate as "main lobby" or something like it.)
+            return_to_ground_floor = "VOLTAR PARA O TÉRREO",
             options = "OPÇÕES",
             credits = "CRÉDITOS",
-            feedback = "FEEDBACK",
+            feedback = "COMENTÁRIOS",
             quit = "SAIR",
-            website = "WEBSITE OFICIAL",
-            discord = "DISCORD", 
+            website = "SITE OFICIAL",
+            discord = "DISCORD",
             github = "GITHUB",
         },
         options = {
@@ -248,11 +249,11 @@ return {
                 note_deadzone = "Opções de deadzone vão ser aplicadas após sair desse menu",
 
                 gameplay = "Gameplay",
-                interface = "Interface",
+                interface = "Menus",
                 global = "Global",
-                note_ui_min_button = "É necessário pelo menos 1 vínculo",
-                note_global_keyboard = "Esses vínculos são iguais para todos os jogadores com teclado",
-                note_global_controller = "Esses vínculos são iguais para todos os controles",
+                note_ui_min_button = "É necessário pelo menos 1 botão",
+                note_global_keyboard = "Esses botões são iguais para todos os jogadores com teclado",
+                note_global_controller = "Esses botões são iguais para todos os controles",
                 -- Shown when navigating to player "%d"'s controller settings while no player of this number has joined yet.
                 subtitle_no_player = "[⚠ SEM JOGADOR %d]",
                 -- Shown in the controller settings while no controller is connected
@@ -262,7 +263,7 @@ return {
                 -- When assigning buttons, if the user presses a button that is already bound, it will instead
                 -- remove that button.
                 press_again_to_remove = "Aperte um botão já vinculado para remover",
-                
+
                 keyboard = "Teclado",
                 keyboard_solo = "TECLADO (Padrão)",
                 -- "Split" as in, "the 1st split keyboard user"
@@ -279,10 +280,8 @@ return {
                 title = "Audio",
                 sound = "SOM",
                 volume = "VOLUME",
-                sfx_volume = "[[ADDED / SOUND EFFECT VOLUME]]", -- Can also be translated as "effects volume" or "SFX volume"
-                music_volume = "VOLUME DA MÚSICA",
-                music_pause_menu = "MÚSICA NO MENU DE PAUSA", -- Whether music should play on the pause menu
-                ambience = "SONS AMBIENTE",
+                sfx_volume = "VOLUME DE EFEITOS SONOROS", -- Can also be translated as "effects volume" or "SFX volume" music_volume = "VOLUME DA MÚSICA", music_pause_menu = "MÚSICA NO MENU DE PAUSA", -- Whether music should play on the pause menu
+                ambience = "SONS DE AMBIENTE",
             },
             visuals = {
                 title = "Visuais",
@@ -292,20 +291,20 @@ return {
                     auto = "auto",
                     max_whole = "máximo inteiro", -- Biggest whole number possible
                 },
-                vsync = "SINCRONIZAÇÃO VERTICAL",
-                menu_blur = "DESFOQUE DO FUNDO DO MENU", -- Whether to apply the blurring effect in menu backgrounds
-                background_speed = "VELOCIDADE DO FUNDO", -- How quickly the background scrolls 
-                bullet_lightness = "BRILHO DOS PROJETEIS", -- How brightly bullets are rendered
+                vsync = "VSYNC (SINCRONIZAÇÃO VERTICAL)",
+                menu_blur = "DESFOQUE DO FUNDO DO MENU",   -- Whether to apply the blurring effect in menu backgrounds
+                background_speed = "VELOCIDADE DO FUNDO",  -- How quickly the background scrolls
+                bullet_lightness = "BRILHO DOS PROJÉTEIS", -- How brightly bullets are rendered
             },
             game = {
                 title = "Jogo",
-                tutorial = "[[ADDED / TUTORIAL...]]",
+                tutorial = "TUTORIAL...",
                 language = "IDIOMA...",
                 timer = "CRONÔMETRO",
                 mouse_visible = "MOSTRAR PONTEIRO DO MOUSE",
-                pause_on_unfocus = "PAUSAR QUANDO SEM FOCO", -- whether the game should pause when the window loses focus
+                pause_on_unfocus = "PAUSAR QUANDO SEM FOCO",     -- whether the game should pause when the window loses focus
                 screenshake = "VIBRAÇÃO DA TELA",
-                skip_boss_intros = "[[ADDED / SKIP BOSS INTROS]]", -- Whether the game should skip the boss intro animations 
+                skip_boss_intros = "PULAR INTRO DOS CHEFÕES",    -- Whether the game should skip the boss intro animations
                 show_fps_warning = "MOSTRAR AVISO DE FPS BAIXO", -- Whether the game should show a warning when its framerate is low
 
             },
@@ -317,24 +316,24 @@ return {
             },
         },
         feedback = {
-            title = "FEEDBACK",
+            title = "COMENTÁRIOS",
             bugs = "DENUNCIAR ERRO",
             features = "SUGERIR UMA FUNCIONALIDADE",
         },
         game_over = {
-            title = "FIM DE JOGO!",
-            kills = "Abates[[CHANGED / old:'Kills' / new:'Enemies killed']]", -- The amount of enemies the player has killed
-            time = "Tempo", -- The time that the player took to complete the level
-            floor = "Andar", -- Which storey the player was on when they died
-            score = "[[ADDED / Score]]", 
-            max_combo = "Combo Máximo", 
+            title = "GAME OVER!",
+            kills = "Inimigos abatidos", -- The amount of enemies the player has killed
+            time = "Tempo",              -- The time that the player took to complete the level
+            floor = "Andar",             -- Which storey the player was on when they died
+            score = "Pontuação",
+            max_combo = "Combo Máximo",
 
             continue = "CONTINUAR",
-            quick_restart = "REINICIO RÁPIDO",
+            quick_restart = "RESTART RÁPIDO",
         },
         new_reward = {
-            new_skin = "[[ADDED / New character!]]",
-            new_upgrade = "[[ADDED / New upgrade!]]",
+            new_skin = "Novo personagem!",
+            new_upgrade = "Novo upgrade!",
         },
         win = {
             title = "PARABÉNS!",
@@ -349,24 +348,24 @@ return {
         },
         credits = {
             title = "CRÉDITOS",
-            ninesliced_presents = "[[ADDED / Ninesliced presents]]", -- Written EXCATLY "Ninesliced"
-            game_by = "Um jogo por", -- As in, "A game by [newline] John". If it is not possible to have the name *after* this, one idea could be to translate as "Creator" (as in, "Creator [newline] John")
-            leo_bernard = "[[ADDED / Léo Bernard]]", -- Please do not touch this
-            music = "[[ADDED / Music]]",
-            sound_design = "[[ADDED / Sound design]]",
-            localization = "[[ADDED / Localization]]",
-            additional_art = "[[ADDED / Additional art]]",
+            ninesliced_presents = "Ninesliced apresenta", -- Written EXCATLY "Ninesliced"
+            game_by = "Um jogo por",                      -- As in, "A game by [newline] John". If it is not possible to have the name *after* this, one idea could be to translate as "Creator" (as in, "Creator [newline] John")
+            leo_bernard = "Léo Bernard",                  -- Please do not touch this
+            music = "Música",
+            sound_design = "Sound design",
+            localization = "Localização",
+            additional_art = "Arte adicional",
             playtesting = "Playtest",
             special_thanks = "Agradecimentos especiais",
-            trailer = "[[ADDED / Trailer]]",
+            trailer = "Trailer",
             asset_creators = "Criadores de recursos",
-            tv_slideshow = "[[ADDED / TV slideshow contributors]]", -- Refers to the powerpoint TV slideshow on the title screen, which was contributed by a variety of people 
-            licenses = "Licensas de bibliotecas & recursos",
-            more = "[[ADDED / And many more...]]", -- For the people that I might have forgotten in the special thanks section
-            thank_you_for_playing = "[[ADDED / Thank you for playing!]]", -- Shown at the end of the credits
+            tv_slideshow = "Contribuentes aos slides",     -- Refers to the powerpoint TV slideshow on the title screen, which was contributed by a variety of people
+            licenses = "Licenças de bibliotecas e recursos",
+            more = "E vários outros...",                   -- For the people that I might have forgotten in the special thanks section
+            thank_you_for_playing = "Obrigado por jogar!", -- Shown at the end of the credits
 
-            x_by_y = "[[ADDED / %s by %s]]", -- "ASSET_NAME by CREATOR". Used to credit assets such as sound effects
-            asset_item = "%s por %s / %s", -- "ASSET_NAME by CREATOR / LICENCE"
+            x_by_y = "%s por %s",                          -- "ASSET_NAME by CREATOR". Used to credit assets such as sound effects
+            asset_item = "%s por %s / %s",                 -- "ASSET_NAME by CREATOR / LICENCE"
         },
         open_source = {
             title = "Bibliotecas open source",
