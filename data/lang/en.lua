@@ -1,10 +1,11 @@
 --[[
     TO TRANSLATORS:
-    * Reference document for all enemies, players, levels, etc: 
+    * Reference document for all enemies, players, levels, etc: (can be outdated)
       https://docs.google.com/document/d/13UntpWqoTXgYnBm5HL0pZmjBDwMStIN8YB1IPdi7hlA
-    * My target audience is people who already play some games.
+    * You can find all the added or changed strings by searching using the following regex (Ctrl+F then Alt+R on VS Code): 
+      \[\[((ADDED)|(CHANGED)) 
     * It is very easy for me to add more glyphs if needed, just tell me and I'll do it.
-    * Please notify me if there are any special technical requirements. (e.g. text rendering specifics, etc) 
+    * Please notify me if there are any special technical requirements. (e.g. text rendering specifics, etc)
 ]]
 
 return {
@@ -19,7 +20,7 @@ return {
         fr = "Français",
         zh = "简体中文",
         pl = "Polski",
-        pt = "Português Brasileiro",
+        pt_BR = "Português Brasileiro",
     },
     game = {
         demo = "DEMO", -- Chip added to the game logo to indicate that this version is a demo
@@ -29,10 +30,10 @@ return {
         win_wishlist = "Wishlist the game on Steam :)", -- "Wishlist" is a verb
         warning_web_controller = "Some browsers may not have proper controller support",
 
-        combo = "COMBO %d", -- ADDED 
+        combo = "COMBO %d", 
     },
     level = {
-        world_prefix = "Department %s", 
+        world_prefix = "Department %s",
 
         -- Department names
         -- I chose to not use articles in english (so instead of "The Factory", it's just "Factory")
@@ -62,7 +63,7 @@ return {
         ring = "Big Berry",
         mushroom_cannon = "Mushroom Cannon",
 
-        resignation_letter = "Resignation Letter"
+        resignation_letter = "Resignation Letter",
     },
     player = {
         name = {
@@ -79,7 +80,7 @@ return {
 
             -- These are guest characters from other games so please stay close to the original.
             rico = "Rico", -- From 'The Bullet Hopper'
-            yv = "Y.V.", -- From 'Nuclear Throne'
+            yv = "Y.V.", -- From 'Nuclear Throne' / See localized names here: https://docs.google.com/spreadsheets/d/18N1CNxIzSUm4CkIWUw0nbRnlxzAgoRbHpGyX8649Gjw/edit?usp=sharing
             leo = "Leo",
             dodu = "Dodu", 
         },
@@ -102,21 +103,22 @@ return {
         -- The guardian of the Server Room, whose design is based off a motherboard and spiders.
         boss_3 = "Webmaster",
 
-        -- A very large cabbage-like, boulder-like, rolling enemy from the Garden area.   
-        boss_4 = "Rollossus", -- ADDED
+        -- A very large green cabbage-like, boulder-like, rolling enemy from the Garden area.   
+        -- You're free to be more creative with this one.
+        boss_4 = "Rollossus",
 
         -- The CEO of the company, and the final boss. Its name is somewhat ominous-sounding.
         -- Try to avoid ambiguity with the term "boss", which could be confused with the generic term for a video game boss.
-        boss_5 = "CEO", -- ADDED
+        boss_5 = "CEO",
     },
     upgrade = {
         tea = {
             title = "Green Tea",
-            description = "+%d extra ❤", 
+            description = "+%d extra ❤",
         },
         espresso = {
             title = "Espresso",
-            description = "x%d shooting speed for %d floors", 
+            description = "x%d shooting speed for %d floors",
         },
         milk = {
             title = "Milk",
@@ -127,7 +129,7 @@ return {
             description = "x%d maximum ammo",
         },
         soda = {
-            title = "Soda", -- As in Coca-cola.
+            title = "Soda", -- As in Coca-cola/Pepsi style soda.
             description = "+%d midair jump",
         },
         fizzy_lemonade = {
@@ -140,7 +142,7 @@ return {
         },
         hot_sauce = {
             title = "Hot Sauce",
-            description = "Deal x%d damage but use x%d ammo", -- First "%d" is the damage, second "%d" is ammo 
+            description = "Deal x%d damage but use x%d ammo", -- First "%d" is the damage, second "%d" is ammo
         },
         coconut_water = {
             title = "Coconut Water",
@@ -155,8 +157,8 @@ return {
             description = "Create an explosion when taking damage",
         },
         energy_drink = {
-            title = "Energy Drink", -- ADDED
-            description = "Combo meter decreases more slowly", -- ADDED
+            title = "Energy Drink",
+            description = "Combo meter decreases more slowly",
         },
     },
     input = {
@@ -172,16 +174,16 @@ return {
             down = "Down",
             jump = "Jump",
             shoot = "Shoot",
-            interact = "Interact", -- ADDED
-            leave_game = "Leave", 
-            open = "Open", -- ADDED / As in, "open menu", and NOT for, say, opening chests.
-            collect = "Collect", -- ADDED / As in, "collect item", "collect gun", etc
+            interact = "Interact",
+            leave_game = "Leave",
+            open = "Open",         -- As in, "open menu", and NOT for, say, opening chests.
+            collect = "Collect",   -- As in, "collect item", "collect gun", etc
 
             -- UI Actions
             ui_left =  "Left (menu)",
             ui_right = "Right (menu)",
-            ui_up =    "Up (menu)",
-            ui_down =  "Down (menu)",
+            ui_up = "Up (menu)",
+            ui_down = "Down (menu)",
             ui_select = "Confirm",
             ui_back = "Back",
             pause = "Pause",
@@ -192,11 +194,7 @@ return {
             split_keyboard = "Split keyboard", 
 
             wall_jump = "Wall jump",
-            jetpack = "Jetpack", -- Refers to "jetpacking", a move in the game. 
-        },
-    },
-    dialogue = {
-        npc = {
+            jetpack = "Jetpack", -- Refers to "jetpacking", a move in the game performed by shooting downwards with a gun.
         },
     },
     menu = {
@@ -208,7 +206,7 @@ return {
             description = "Are you sure you want to quit?"
         },
         confirm_retry = {
-            description = "Retry?", 
+            description = "Retry?",
         },
         pause = {
             title = "PAUSE",
@@ -224,8 +222,8 @@ return {
             feedback = "FEEDBACK",
             quit = "QUIT",
             website = "OFFICIAL WEBSITE",
-            discord = "DISCORD", -- CHANGED
-            github = "GITHUB", -- ADDED
+            discord = "DISCORD",
+            github = "GITHUB",
         },
         options = {
             title = "OPTIONS",
@@ -253,7 +251,7 @@ return {
                 gameplay = "Gameplay",
                 interface = "Interface",
                 global = "Global",
-                note_ui_min_button = "At least one binding is required", 
+                note_ui_min_button = "At least one binding is required",
                 note_global_keyboard = "These bindings are the same for all keyboard players",
                 note_global_controller = "These bindings are the same for all controllers",
                 -- Shown when navigating to player "%d"'s controller settings while no player of this number has joined yet.
@@ -282,7 +280,7 @@ return {
                 title = "Audio",
                 sound = "SOUND",
                 volume = "VOLUME",
-                sfx_volume = "SOUND EFFECT VOLUME", -- ADDED // Can also be translated as "effects volume" or "SFX volume"
+                sfx_volume = "SOUND EFFECT VOLUME", -- Can also be translated as "effects volume" or "SFX volume"
                 music_volume = "MUSIC VOLUME",
                 music_pause_menu = "MUSIC ON PAUSE MENU", -- Whether music should play on the pause menu
                 ambience = "AMBIENCE SOUNDS",
@@ -327,17 +325,17 @@ return {
         game_over = {
             title = "GAME OVER!",
             kills = "Enemies killed", -- The amount of enemies the player has killed
-            time = "Time", -- The time that the player took to complete the level
-            floor = "Floor", -- Which storey the player was on when they died
-            score = "Score", -- ADDED
-            max_combo = "Max combo", -- ADDED
+            time = "Time",            -- The time that the player took to complete the level
+            floor = "Floor",          -- Which storey the player was on when they died
+            score = "Score",
+            max_combo = "Max combo",
 
             continue = "CONTINUE",
-            quick_restart = "QUICK RESTART", --ADDED
+            quick_restart = "QUICK RESTART",
         },
         new_reward = {
-            new_skin = "New character!", -- ADDED
-            new_upgrade = "New upgrade!", -- ADDED
+            new_skin = "New character!",
+            new_upgrade = "New upgrade!",
         },
         win = {
             title = "CONGRATULATIONS!",
@@ -352,7 +350,7 @@ return {
         },
         credits = {
             title = "CREDITS",
-            ninesliced_presents = "Ninesliced presents", -- ADDED / Written EXCATLY "Ninesliced"
+            ninesliced_presents = "Ninesliced presents", -- Written EXCATLY "Ninesliced"
             game_by = "A game by", -- As in, "A game by [newline] John". If it is not possible to have the name *after* this, one idea could be to translate as "Creator" (as in, "Creator [newline] John")
             leo_bernard = "Léo Bernard", -- Please do not touch this
             music = "Music",
@@ -361,15 +359,15 @@ return {
             additional_art = "Additional art",
             playtesting = "Playtesting",
             special_thanks = "Special thanks",
-            trailer = "Trailer", -- ADDED
-            asset_creators = "Asset creators", -- ADDED
-            tv_slideshow = "TV slideshow contributors", -- ADDED // Refers to the powerpoint TV slideshow on the title screen, which was contributed by a variety of people 
+            trailer = "Trailer",
+            asset_creators = "Asset creators",
+            tv_slideshow = "TV slideshow contributors", -- Refers to the powerpoint TV slideshow on the title screen, which was contributed by a variety of people 
             licenses = "Asset & library licenses",
-            more = "And many more...", -- ADDED // For the people that I might have forgotten in the special thanks section
-            thank_you_for_playing = "Thank you for playing!", -- ADDED / Shown at the end of the credits
+            more = "And many more...",                        -- For the people that I might have forgotten in the special thanks section
+            thank_you_for_playing = "Thank you for playing!", -- Shown at the end of the credits
 
-            x_by_y =     "%s by %s", -- "ASSET_NAME by CREATOR". Used to credit assets such as sound effects
-            asset_item = "%s by %s / %s", -- "ASSET_NAME by CREATOR / LICENCE"
+            x_by_y = "%s by %s",                              -- "ASSET_NAME by CREATOR". Used to credit assets such as sound effects
+            asset_item = "%s by %s / %s",                     -- "ASSET_NAME by CREATOR / LICENCE"
         },
         open_source = {
             title = "Open source libraries",
