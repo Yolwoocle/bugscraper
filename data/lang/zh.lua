@@ -19,7 +19,7 @@ return {
         fr = "Français",
         zh = "简体中文",
         pl = "Polski",
-        pt = "Português Brasileiro",
+        pt_BR = "Português Brasileiro",
     },
     game = {
         demo = "试玩版",
