@@ -280,7 +280,9 @@ return {
                 title = "Audio",
                 sound = "SOM",
                 volume = "VOLUME",
-                sfx_volume = "VOLUME DE EFEITOS SONOROS", -- Can also be translated as "effects volume" or "SFX volume" music_volume = "VOLUME DA MÚSICA", music_pause_menu = "MÚSICA NO MENU DE PAUSA", -- Whether music should play on the pause menu
+                sfx_volume = "VOLUME DE EFEITOS SONOROS", -- Can also be translated as "effects volume" or "SFX volume" 
+                music_volume = "VOLUME DA MÚSICA", 
+                music_pause_menu = "MÚSICA NO MENU DE PAUSA", -- Whether music should play on the pause menu
                 ambience = "SONS DE AMBIENTE",
             },
             visuals = {
