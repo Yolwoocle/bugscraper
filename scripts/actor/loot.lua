@@ -333,7 +333,7 @@ function Loot.Gun:init(x, y, val, vx, vy, gun, params)
 	self.remove_on_collect = param(params.remove_on_collect, false) 
 	self.run_on_collect = param(params.run_on_collect, nil)
 	
-	self.max_life = param(params.life, 15)
+	self.max_life = param(params.life, 30)
 	self.life = self.max_life
 end
 
