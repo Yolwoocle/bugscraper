@@ -61,7 +61,7 @@ function CloudStormZone:init(x, y, size)
                 self.spr:set_image(images.cloud_storm)
                 self.spr:update_offset(0, 0)
 
-                self.ai_template = "random_rotate"
+                self:set_ai_template("random_rotate")
                 self.state_timer:start(random_range(1.0, 1.5))
                 if self.first_time_wander then
                     self.state_timer:start(random_range(0.0, 2.0))
@@ -79,7 +79,7 @@ function CloudStormZone:init(x, y, size)
             enter = function(state)
                 self.spr:set_image(images.cloud_storm_angry)
 
-                self.ai_template = nil
+                self:set_ai_template(nil)
                 self.vx = 0
                 self.vy = 0
                 self.state_timer:start(1.0)
@@ -108,7 +108,7 @@ function CloudStormZone:init(x, y, size)
             enter = function(state)
                 self.spr:set_image(images.cloud_storm_angry_attack)
 
-                self.ai_template = nil
+                self:set_ai_template(nil)
                 self.state_timer:start(0.75)
 
                 self.spr:update_offset(0, 6)
