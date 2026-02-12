@@ -6,6 +6,8 @@ local sync_translations = require "scripts.sync_translations"
 local TextManager = Class:inherit()
 
 function TextManager:init()
+    print("Loading text...")
+
     local start = love.timer.getTime()
     self.languages = {
         ["en"] = require "data.lang.en",
@@ -54,7 +56,7 @@ function TextManager:init()
         -- print_table(s)
         words = words + #s
     end
-    print("TextManager: Unpacked "..tostring(words).." words in "..(1000* (love.timer.getTime() - start)).."ms.")
+    print("Finished loading "..tostring(words).." words. ("..(1000* (love.timer.getTime() - start)).." ms)")
 
     self.font_stack = {}
     
@@ -222,12 +224,16 @@ end
 function TextManager:sanity_check_languages(reference_language)
     -- Check for missing keys
     for lang_name, lang_values in pairs(self.languages) do
+        local n = 0
         for ref_key, ref_value in pairs(self.languages[reference_language]) do
             if lang_name ~= reference_language and not lang_values[ref_key] then
                 print("- [Text] /!\\ missing key '"..ref_key.."' for language '"..lang_name.."'")
+                n = 1
             end
         end
-        print(" ")
+        if n > 0 then
+            print(" ")
+        end
     end
 
     -- TODO: check for "ghost keys" that don't have an equivalent in the reference language
