@@ -8,12 +8,12 @@ local TextManager = Class:inherit()
 function TextManager:init()
     local start = love.timer.getTime()
     self.languages = {
-        en = require "data.lang.en",
-        fr = require "data.lang.fr",
-        es = require "data.lang.es",
-        zh = require "data.lang.zh",
-        pl = require "data.lang.pl",
-        -- pt = require "data.lang.pt",
+        ["en"] = require "data.lang.en",
+        ["fr"] = require "data.lang.fr",
+        ["es"] = require "data.lang.es",
+        ["zh"] = require "data.lang.zh",
+        ["pl"] = require "data.lang.pl",
+        ["pt_BR"] = require "data.lang.pt_BR",
     }
 
     self.locale_to_language = { -- Some pre-defined default values.    
@@ -62,19 +62,19 @@ function TextManager:init()
     
     -- Uncomment for utility tool to update translations 
     if DEBUG_MODE then
-        local lang_to = "pl"
+        -- local lang_to = "pl"
 
-        local en_old = require("data.lang.en_old_"..lang_to)
-        local target = require("data.lang."..lang_to)
-        local en_new_tbl = require("data.lang.en")
+        -- local en_old = require("data.lang.en_old_"..lang_to)
+        -- local target = require("data.lang."..lang_to)
+        -- local en_new_tbl = require("data.lang.en")
 
-        local f = io.open("C:\\docs\\gamedev\\bugscraper\\bugscraper\\data\\lang\\en.lua", "r")
-        assert(f ~= nil, "ERROR WHILE SYNCING TRANSLATION FILE: file does not exist")
-        local en_new_str = f:read("*all")
-        f:close()
+        -- local f = io.open("C:\\docs\\gamedev\\bugscraper\\bugscraper\\data\\lang\\en.lua", "r")
+        -- assert(f ~= nil, "ERROR WHILE SYNCING TRANSLATION FILE: file does not exist")
+        -- local en_new_str = f:read("*all")
+        -- f:close()
 
-        local output_path = "C:\\docs\\gamedev\\bugscraper\\bugscraper\\data\\lang\\"..lang_to.."_updated.lua"
-        sync_translations(en_old, en_new_str, en_new_tbl, target, output_path)
+        -- local output_path = "C:\\docs\\gamedev\\bugscraper\\bugscraper\\data\\lang\\"..lang_to.."_updated.lua"
+        -- sync_translations(en_old, en_new_str, en_new_tbl, target, output_path)
     end
 end
 
@@ -104,7 +104,7 @@ function TextManager:find_default_locale()
 end
 
 function TextManager:get_meta()
-    return self.language_metadata[self.language]
+    return self.language_metadata[self.language] or {}
 end
 
 --- Unpacks a table to be used as text keys. Example:
