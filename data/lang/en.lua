@@ -54,7 +54,7 @@ return {
     },
     gun = {
         -- Gun names
-        -- You can stay close to the original, but please feel free to have a more creative interpretation if you wish!
+        -- You can be more creative with these, you don't have to stay close to the originals.
         -- Look at google doc for image references
         machinegun = "Pea Gun",
         triple = "Triple Pepper",
