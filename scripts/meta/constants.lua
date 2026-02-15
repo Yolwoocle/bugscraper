@@ -304,10 +304,10 @@ RAW_INPUT_MAP_DEFAULT_CONTROLLER = {
     down =      {"c_leftypos", "c_dpdown"},
     jump =      {"c_a", "c_triggerleft", "c_leftshoulder"},
     shoot =     {"c_x", "c_triggerright", "c_rightshoulder"},
-    interact =  {"c_b"},
+    interact =  {"c_y"},
     
     pause =     {"c_start"},
-    ui_select = {"c_a"},
+    ui_select = {"c_a", "c_y"},
     ui_back =   {"c_b"},
     ui_left =   {"c_leftxneg", "c_dpleft"},
     ui_right =  {"c_leftxpos", "c_dpright"},
