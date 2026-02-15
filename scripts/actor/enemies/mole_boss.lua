@@ -43,7 +43,7 @@ function MoleBoss:init(x, y)
     }, "flying")
     self.spr:set_anchor(SPRITE_ANCHOR_CENTER_CENTER)
 
-    self:set_max_life(120)
+    self:set_max_life(80)
 
     self.fly_speed = 500
     self.def_walk_speed = 250
