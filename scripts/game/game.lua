@@ -1,3 +1,8 @@
+print("Loading API libraries...")
+local DiscordPresence        = require "scripts.meta.discord_presence"
+local Steamworks             = require "scripts.meta.steamworks"
+print("")
+
 local TextManager            = require "scripts.text"
 local ActorManager           = require "scripts.game.actor_manager"
 local cutscenes              = require "data.cutscenes"
@@ -30,9 +35,6 @@ local MetaprogressionManager = require "scripts.game.metaprogression"
 local BackroomTutorial       = require "scripts.level.backroom.backroom_tutorial"
 local MusicDisk              = require "scripts.audio.music_disk"
 local MusicDiskWeb           = require "scripts.audio.music_disk_web"
-
-local DiscordPresence        = require "scripts.meta.discord_presence"
-local Steamworks             = require "scripts.meta.steamworks"
 
 local measure                = require "lib.batteries.measure"
 
