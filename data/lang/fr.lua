@@ -21,6 +21,7 @@ return {
         zh = "简体中文",
         pl = "Polski",
         pt_BR = "Português Brasileiro",
+        ja = "日本語",
     },
     steam = {
         --[[TODO]]

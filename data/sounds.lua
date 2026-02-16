@@ -368,12 +368,12 @@ for i = 1, #sound_load_times do
 		))
 	end
 end
----]]
 
 print(string.format(
     "\nTotal sound loading time: %.3f ms",
     (love.timer.getTime() - start) * 1000
 ))
+---]]
 
 
 -- All sources are tables to support multiple sounds playing at once without using Source:clone()

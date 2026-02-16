@@ -514,6 +514,9 @@ end
 
 function get_text_height(text, font)
 	local font = font or love.graphics.getFont()
+	if FONT_HEIGHT_OVERRIDES[font] then
+		return FONT_HEIGHT_OVERRIDES[font]
+	end
 	return font:getHeight(text)
 end
 

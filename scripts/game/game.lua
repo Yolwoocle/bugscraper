@@ -74,16 +74,36 @@ function Game:init()
 	main_canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
 
 	-- Load fonts
-	FONT_REGULAR = love.graphics.newImageFont("fonts/hope_gold.png", FONT_CHARACTERS)
+	FONT_HOPE = love.graphics.newImageFont("fonts/hope_gold.png", FONT_CHARACTERS)
 	FONT_SYMBOLS = love.graphics.newImageFont("fonts/font_symbols.png", FONT_SYMBOLS_CHARACTERS)
-	FONT_CHINESE = love.graphics.newImageFont("fonts/font_chinese.png", FONT_CHINESE_CHARACTERS)
+	FONT_ZH = love.graphics.newImageFont("fonts/font_zh.png", FONT_ZH_CHARACTERS)
+	FONT_JA = love.graphics.newImageFont("fonts/font_ja.png", FONT_JA_CHARACTERS)
 	FONT_7SEG = love.graphics.newImageFont("fonts/7seg_font.png", FONT_7SEG_CHARACTERS)
 	FONT_MINI = love.graphics.newImageFont("fonts/font_ant_party.png", FONT_MINI_CHARACTERS)
 	FONT_FAT = love.graphics.newImageFont("fonts/font_counting_apples.png", FONT_FAT_CHARACTERS)
 	FONT_PAINT = love.graphics.newFont("fonts/NicoPaint-Regular.ttf", 16)
+	FONT_HEIGHT_OVERRIDES = {
+		FONT_JA = 14
+	} 
 
-	FONT_REGULAR:setFallbacks(FONT_SYMBOLS, FONT_CHINESE)
-	FONT_MINI:setFallbacks(FONT_REGULAR, FONT_CHINESE)
+	if Text.language == "zh_Hans" then
+		FONT_REGULAR = FONT_ZH
+		FONT_REGULAR:setFallbacks(FONT_HOPE, FONT_SYMBOLS, FONT_ZH)
+		FONT_MINI:setFallbacks(FONT_HOPE, FONT_REGULAR, FONT_ZH)
+
+	elseif Text.language == "ja" then
+		print_debug(":setLineHeight( height ) ", FONT_JA:getHeight())
+
+		FONT_REGULAR = FONT_JA
+		FONT_REGULAR:setFallbacks(FONT_HOPE, FONT_SYMBOLS, FONT_JA)
+		FONT_MINI:setFallbacks(FONT_HOPE, FONT_REGULAR, FONT_JA)
+		
+		FONT_HEIGHT_OVERRIDES[FONT_REGULAR] = 14
+
+	else
+		FONT_REGULAR = FONT_HOPE
+		FONT_REGULAR:setFallbacks(FONT_SYMBOLS, FONT_ZH)
+	end
 	Text:push_font(FONT_REGULAR)
 
 	-- Audio ===> Moved to OptionsManager

@@ -22,6 +22,7 @@ return {
         zh = "简体中文",
         pl = "Polski",
         pt_BR = "Português Brasileiro",
+        ja = "日本語",
     },
     game = {
         demo = "DEMO", -- Chip added to the game logo to indicate that this version is a demo

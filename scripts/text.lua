@@ -13,24 +13,28 @@ function TextManager:init()
         ["en"] = require "data.lang.en",
         ["fr"] = require "data.lang.fr",
         ["es"] = require "data.lang.es",
-        ["zh"] = require "data.lang.zh",
+        ["zh_Hans"] = require "data.lang.zh_Hans",
         ["pl"] = require "data.lang.pl",
         ["pt_BR"] = require "data.lang.pt_BR",
+        ["ja"] = require "data.lang.ja",
     }
 
     self.locale_to_language = { -- Some pre-defined default values.    
         ["en"] = "en",
 
         ["fr"] = "fr",
-        ["zh"] = "zh",
+        ["zh"] = "zh_Hans",
+        ["zh_Hans"] = "zh_Hans",
+        ["zh_CN"] = "zh_Hans",
+
         ["es"] = "es",
-        ["pl"] = "pl",
+
         ["pt_BR"] = "pt_BR",
 
-        -- ["pl"] = "pl",
-        -- ["pl_PL"] = "pl",
+        ["ja"] = "ja",
 
-        -- ["pt"] = "pt",
+        ["pl"] = "pl",
+        ["pl_PL"] = "pl",
     }
 
     self.language_metadata = {}

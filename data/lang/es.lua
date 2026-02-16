@@ -21,6 +21,7 @@ return {
 		zh = "简体中文",
 		pl = "Polski",
 		pt_BR = "Português Brasileiro",
+        ja = "日本語",
 	},
 	game = {
 		-- There's `demostración` but we can get away with just demo as is
