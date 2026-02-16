@@ -55,7 +55,7 @@ return {
     },
     gun = {
         -- Gun names
-        -- You can stay close to the original, but please feel free to have a more creative interpretation if you wish!
+        -- You can be more creative with these, you don't have to stay close to the originals.
         -- Look at google doc for image references
         machinegun = "Pea Gun",
         triple = "Triple Pepper",
@@ -106,7 +106,8 @@ return {
         boss_3 = "Webmaster",
 
         -- A very large green cabbage-like, boulder-like, rolling enemy from the Garden area.   
-        -- You're free to be more creative with this one.
+        -- You're free to be more creative with this one. 
+        -- (example: in French, I chose "Grobroco", "gros" (large) + "broco" (diminutive of broccoli))
         boss_4 = "Rollossus",
 
         -- The CEO of the company, and the final boss. Its name is somewhat ominous-sounding.
