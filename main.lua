@@ -1,4 +1,5 @@
 -- Splash screen
+local time_launched = love.timer.getTime()
 local init = require "scripts.meta.init"
 init()
 ----------
@@ -6,9 +7,6 @@ init()
 assert(love.graphics.newImage("images/bugscraper.png"))
 
 require "scripts.util"
-require "lib.please_work_error_explorer.error_explorer" {
-	source_font = love.graphics.newFont("fonts/FiraCode-Regular.ttf", 12)
-}
 local Game = require "scripts.game.game"
 local Measure = require "scripts.debug.measure"
 
@@ -25,6 +23,11 @@ function love.load(args)
 	DEBUG_MODE = DEBUG_MODE or (LAUNCH_ARGUMENTS["--debug"] or LAUNCH_ARGUMENTS["-d"])
 
 	game = Game:new()
+
+	local time = love.timer.getTime()
+	print(              "--------------------------")
+	print(string.format(" Game loaded in %d ms. ", round((time - time_launched) * 1000)))
+	print(              "--------------------------")
 end
 
 local fixed_dt = 1/60 -- fixed frame delta time

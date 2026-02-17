@@ -4,11 +4,12 @@ local Class = require "scripts.meta.class"
 local Steam
 local import_success
 if pcall(function()
-	Steam = require "luasteam"
 end) then
+	print("Steamworks: successfully loaded")
+	Steam = require "luasteam"
 	import_success = true
 else
-	print("Steamworks: error during import")
+	print("Steamworks: error during import (require failed)")
 	import_success = false
 end
 
@@ -22,7 +23,6 @@ function Steamworks:init()
 
 	if not self.import_success then
 		self.is_enabled = false
-		print("Steamworks: error during import")
 		return
 	end
 

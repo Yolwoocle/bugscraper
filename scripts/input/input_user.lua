@@ -125,6 +125,7 @@ function InputUser:action_down(action)
 			return true
 		end
 	end
+
 	return false
 end
 

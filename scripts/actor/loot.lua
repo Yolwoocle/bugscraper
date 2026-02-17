@@ -49,6 +49,8 @@ function Loot:init_loot(spr, x, y, w, h, val, vx, vy, params)
 
 	self.collect_instantly_on_interact = param(params.collect_instantly_on_interact, false)
 
+	self.is_affected_by_walls = not param(params.ignore_collisions, false)
+
 	self.only_collect_by_target = param(params.only_collect_by_target, true)
 
 	self:reset()
@@ -97,7 +99,7 @@ function Loot:update_loot(dt)
 	self.life = self.life - dt*self.life_decrease_rate
 	self.ghost_timer = self.ghost_timer - dt
 	if self.is_collectable then
-		if self.target_player and not self.target_player.is_dead then
+		if self.target_player and not (self.target_player.is_ghost or self.target_player.is_dead) then
 			self:attract_to_player(dt)
 		else
 			self:assign_attract_player(dt)
@@ -273,6 +275,7 @@ Loot.Life = Loot:inherit()
 function Loot.Life:init(x, y, val, vx, vy, params)
 	params = params or {}
 	params.min_attract_dist = params.min_attract_dist or 32
+	params.ignore_collisions = param(params.ignore_collisions, true)
 	params.min_attract_dist_func = params.min_attract_dist_func or function(player)
 		return math.huge
 		--64 + 128 * clamp(1 - player:get_total_life() / player.max_life, 0, 1)
@@ -330,7 +333,7 @@ function Loot.Gun:init(x, y, val, vx, vy, gun, params)
 	self.remove_on_collect = param(params.remove_on_collect, false) 
 	self.run_on_collect = param(params.run_on_collect, nil)
 	
-	self.max_life = param(params.life, 8)
+	self.max_life = param(params.life, 30)
 	self.life = self.max_life
 end
 

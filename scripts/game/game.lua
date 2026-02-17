@@ -1,3 +1,8 @@
+print("Loading API libraries...")
+local DiscordPresence        = require "scripts.meta.discord_presence"
+local Steamworks             = require "scripts.meta.steamworks"
+print("")
+
 local TextManager            = require "scripts.text"
 local ActorManager           = require "scripts.game.actor_manager"
 local cutscenes              = require "data.cutscenes"
@@ -30,9 +35,6 @@ local MetaprogressionManager = require "scripts.game.metaprogression"
 local BackroomTutorial       = require "scripts.level.backroom.backroom_tutorial"
 local MusicDisk              = require "scripts.audio.music_disk"
 local MusicDiskWeb           = require "scripts.audio.music_disk_web"
-
-local DiscordPresence        = require "scripts.meta.discord_presence"
-local Steamworks             = require "scripts.meta.steamworks"
 
 local measure                = require "lib.batteries.measure"
 
@@ -72,16 +74,36 @@ function Game:init()
 	main_canvas = love.graphics.newCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
 
 	-- Load fonts
-	FONT_REGULAR = love.graphics.newImageFont("fonts/hope_gold.png", FONT_CHARACTERS)
+	FONT_HOPE = love.graphics.newImageFont("fonts/hope_gold.png", FONT_CHARACTERS)
 	FONT_SYMBOLS = love.graphics.newImageFont("fonts/font_symbols.png", FONT_SYMBOLS_CHARACTERS)
-	FONT_CHINESE = love.graphics.newImageFont("fonts/font_chinese.png", FONT_CHINESE_CHARACTERS)
+	FONT_ZH = love.graphics.newImageFont("fonts/font_zh.png", FONT_ZH_CHARACTERS)
+	FONT_JA = love.graphics.newImageFont("fonts/font_ja.png", FONT_JA_CHARACTERS)
 	FONT_7SEG = love.graphics.newImageFont("fonts/7seg_font.png", FONT_7SEG_CHARACTERS)
 	FONT_MINI = love.graphics.newImageFont("fonts/font_ant_party.png", FONT_MINI_CHARACTERS)
 	FONT_FAT = love.graphics.newImageFont("fonts/font_counting_apples.png", FONT_FAT_CHARACTERS)
 	FONT_PAINT = love.graphics.newFont("fonts/NicoPaint-Regular.ttf", 16)
+	FONT_HEIGHT_OVERRIDES = {
+		FONT_JA = 14
+	} 
 
-	FONT_REGULAR:setFallbacks(FONT_SYMBOLS, FONT_CHINESE)
-	FONT_MINI:setFallbacks(FONT_REGULAR, FONT_CHINESE)
+	if Text.language == "zh_Hans" then
+		FONT_REGULAR = FONT_ZH
+		FONT_REGULAR:setFallbacks(FONT_HOPE, FONT_SYMBOLS, FONT_ZH)
+		FONT_MINI:setFallbacks(FONT_HOPE, FONT_REGULAR, FONT_ZH)
+
+	elseif Text.language == "ja" then
+		print_debug(":setLineHeight( height ) ", FONT_JA:getHeight())
+
+		FONT_REGULAR = FONT_JA
+		FONT_REGULAR:setFallbacks(FONT_HOPE, FONT_SYMBOLS, FONT_JA)
+		FONT_MINI:setFallbacks(FONT_HOPE, FONT_REGULAR, FONT_JA)
+		
+		FONT_HEIGHT_OVERRIDES[FONT_REGULAR] = 14
+
+	else
+		FONT_REGULAR = FONT_HOPE
+		FONT_REGULAR:setFallbacks(FONT_SYMBOLS, FONT_ZH)
+	end
 	Text:push_font(FONT_REGULAR)
 
 	-- Audio ===> Moved to OptionsManager
@@ -133,6 +155,7 @@ function Game:new_game(params)
 
 	self.t = 0
 	self.frame = 0
+	self.in_game_frame = 0
 
 	-- Remove old queued players
 	self:remove_queued_players()
@@ -354,8 +377,6 @@ end
 function Game:update(dt)
 	self.frame = self.frame + 1
 
-	self.camera:update_screenshake(dt)
-
 	self.frames_to_skip = max(0, self.frames_to_skip - 1)
 	-- BUG: pressing and releasing a button during a frameskip period will not register it
 	if self.frames_to_skip <= 0 then
@@ -390,12 +411,14 @@ function Game:update(dt)
 end
 
 function Game:update_main_game(dt)
+	self.camera:update_screenshake(dt)
 	Particles:update(dt)
 
 	if self.frames_to_skip > 0 then
 		return
 	end
 
+	self.in_game_frame = self.in_game_frame + 1
 	self.camera:update(dt)
 
 	if self.game_state == GAME_STATE_PLAYING then
@@ -1236,6 +1259,10 @@ function Game:focus(f)
 			self.menu_manager:pause()
 		end
 	end
+end
+
+function Game:reset_screenshake()
+	self.camera:reset_screenshake()
 end
 
 function Game:screenshake(q)

@@ -226,7 +226,40 @@ local thorns_arc_params = {
 }
 
 local waves = parse_waves_table {
-    
+    -- {
+    --     min = 1,
+    --     max = 1,
+        
+    --     enemies = {
+    --         -- { E.FinalBoss, 1, position = { 12.5 * 16, 10 * 16 + 8 } }
+    --         { E.InvisibleDummy, 1, position = { 12.5 * 16, 10 * 16 + 8 } }
+    --     },
+
+    --     run = function ()
+    --         for _, actor in pairs(game.actors) do
+    --             if actor.name == "final_boss" then
+    --                 actor.state_machine:set_state("standby")
+    --             end
+    --         end
+    --     end,
+
+    --     roll_type = WAVE_ROLL_TYPE_FIXED,
+    --     music = "boss_w5",
+    --     -- background_transition = backgrounds.BackgroundAboveCity:new(),
+
+    --     -- cutscene = "final_boss_enter",
+
+    --     counter_display_func = function(_)
+    --         -- Pseudo random looking floor counter
+    --         local frame = math.floor(game.frame / 5)
+    --         local nb = (32849 * frame) % 999
+    --         return math.floor(clamp(nb, 100, 999))
+    --     end,
+        
+    --     fade_out_music = false,
+    --     elevator = ElevatorW1,
+    -- },
+
     -- {
     --     -- roll_type = WAVE_ROLL_TYPE_FIXED,
     --     min = 1,
@@ -623,7 +656,7 @@ local waves = parse_waves_table {
             { E.Beelet, 8 },
         },
         fixed_enemies = {
-            { E.HoneycombFootball, 1 },
+            { E.Comball, 1 },
         },
     },
 
@@ -1359,16 +1392,6 @@ local waves = parse_waves_table {
     },
 
     {
-        min = 6,
-        max = 6,
-
-        enemies = {
-            { E.DrillBee, 30 },
-            { E.SnailShelledBouncy, 30 },
-        },
-    },
-
-    {
         min = 8,
         max = 8,
 
@@ -1377,9 +1400,11 @@ local waves = parse_waves_table {
             { E.CloudStormZone, 30 },
             { E.Rollopod, 30 },
             { E.Shooter, 30 },
-            { E.Centipede, 30 },
             { E.CloudDropper, 30 },
         },
+        fixed_enemies = {
+            { E.Centipede, 30 },
+        }
     },
 
     {
@@ -1392,6 +1417,8 @@ local waves = parse_waves_table {
 
         run = function(self, level)
         end,
+
+        background = backgrounds.BackgroundGreenhouse:new(),
 
         cutscene = "mole_boss_enter",
         music = "boss_w4",
@@ -1460,7 +1487,8 @@ local waves = parse_waves_table {
         end,
 
         background = backgrounds.BackgroundW0:new(),
-        background_speed_multiplier = 2.2,
+        background_transition = backgrounds.BackgroundW0:new(),
+        background_speed_multiplier = 2.5,
         elevator = ElevatorRocket,
 
         run = function()
@@ -1615,7 +1643,7 @@ local waves = parse_waves_table {
         },
         
         fixed_enemies = {
-            { E.HoneycombFootball, 1 },
+            { E.Comball, 1 },
         },
     },
     
@@ -1704,8 +1732,8 @@ local waves = parse_waves_table {
         min = 10,
         max = 10,
         enemies = {
-            { E.CloudStorm, 2 },
-            { E.CloudDropper, 2 },
+            { E.GoldenBeetle, 2 },
+            { E.CloudStormZone, 2 },
             { E.Rollopod, 2 },
         },
 
@@ -1714,6 +1742,15 @@ local waves = parse_waves_table {
         over_title_color = COL_DARK_PURPLE,
         title_color = {COL_PURPLE, COL_PINK, COL_DARK_PURPLE, COL_DARK_PURPLE, stacked=true},
         title_outline_color = COL_BLACK_BLUE,
+
+        fixed_enemies = {
+            {E.ProgressingArc, 1, args = {{
+                points = get_w4_vines_points_func_3(),
+                interval_size = 150,
+                progress_speed = 160,
+                arc_params = thorns_arc_params
+            }}},
+        },
 
         background_transition = backgrounds.BackgroundGreenhouse:new(),
 
@@ -1727,7 +1764,7 @@ local waves = parse_waves_table {
         max = 10,
         enemies = {
             { E.MushroomAnt, 2 },
-            { E.CloudStorm, 2 },
+            { E.CloudStormZone, 2 },
             { E.CloudDropper, 2 },
             { E.Rollopod, 2 },
         },
@@ -1735,13 +1772,13 @@ local waves = parse_waves_table {
     
     
     {
-        min = 10,
-        max = 10,
+        min = 8,
+        max = 8,
         enemies = {
             { E.Shooter, 1 },
-            
-            { E.CloudStorm, 2 },
+            { E.CloudStormZone, 2 },
             { E.CloudDropper, 2 },
+            { E.GoldenBeetle, 2 },
             { E.Rollopod, 2 },
         },
         fixed_enemies = {
@@ -1753,8 +1790,12 @@ local waves = parse_waves_table {
     {
         min = 1,
         max = 1,
+
+        roll_type = WAVE_ROLL_TYPE_FIXED,
+
         enemies = {
             { E.ShopVendingMachine, 1, position = { CANVAS_WIDTH / 2, 16*15 } },
+            { E.HeartJar, 1, position = { 200 - 14, 16*14 - 14 }, args = {{heart_count_per_player = 2}}},
 
         },
 
@@ -1762,6 +1803,16 @@ local waves = parse_waves_table {
 
         run = function(self, level)
             level.freeze_fury_override = true
+
+            for _, actor in pairs(game.actors) do
+                if actor.name == "poison_cloud" then
+                    actor.lifespan = 1
+                end
+                if actor.name == "floor_hole_spawner" or actor.name == "pendulum" then
+                    actor:remove()
+                end   
+            end
+            game.actor_manager:kill_actors_with_name("progressing_arc")
         end,
     },
     
@@ -1769,19 +1820,17 @@ local waves = parse_waves_table {
     {
         roll_type = WAVE_ROLL_TYPE_FIXED,
 
-        music = "boss_w5",
-
         min = 1,
         max = 1,
         enemies = {
             { E.FinalBoss, 1, position = { 12.5 * 16, 10 * 16 + 8 } }
         },
 
-        background_transition = backgrounds.BackgroundAboveCity:new(),
+        cutscene = "final_boss_enter",
 
         counter_display_func = function(_)
             -- Pseudo random looking floor counter
-            local frame = math.floor(game.frame / 5)
+            local frame = math.floor(game.in_game_frame / 5)
             local nb = (32849 * frame) % 999
             return math.floor(clamp(nb, 100, 999))
         end,
@@ -1793,71 +1842,9 @@ local waves = parse_waves_table {
                 end
             end
 
-            game:screenshake(14)
-
             level.freeze_fury_override = false
         end
     },
-    
-
-    -----------------------------------------------------
-    --- Last wave
-    -----------------------------------------------------
-
-    -- {
-    --     floor_type = FLOOR_TYPE_CAFETERIA,
-    --     roll_type = WAVE_ROLL_TYPE_FIXED,
-    --     music = "off",
-
-    --     run = function(self, level)
-    --         for _, actor in pairs(game.actors) do
-    --             if actor.name == "poison_cloud" then
-    --                 actor.lifespan = 1
-    --             end
-    --             if actor.name == "floor_hole_spawner" or actor.name == "pendulum" then
-    --                 actor:remove()
-    --             end
-    --         end
-    --     end,
-
-    --     min = 1,
-    --     max = 1,
-    --     enemies = {},
-
-    --     bounds = RECT_CEO_OFFICE,
-
-    --     backroom = BackroomCEOOffice
-    -- },
-
-
-    -- {
-    --     roll_type = WAVE_ROLL_TYPE_FIXED,
-
-    --     min = 1,
-    --     max = 1,
-    --     enemies = {
-    --         { E.FinalBoss, 1, position = { 87 * 16, 14 * 16 } }
-    --     },
-
-    --     run = function(self, level)
-    --         for _, actor in pairs(game.actors) do
-    --             if actor.name == "final_boss" then
-    --                 actor.state_machine:set_state("standby")
-    --             end
-    --         end
-    --     end
-    -- },
-
-    -- Last wave
-    -- {
-    --     min = 1,
-    --     max = 1,
-    --     enemies = {
-    --         { E.ButtonBigGlass, 1, position = { 211, 194 } }
-    --     },
-    --     music = "off",
-    -- })
-    --]]
 }
 
 

@@ -172,6 +172,7 @@ local img_names = {
 	ceo_npc_fainted_single =   "actors/enemies/ceo_npc_fainted_single",
 	ceo_tangled_wires =        "actors/enemies/ceo_tangled_wires",
 	ceo_tangled_wires_shocked = "actors/enemies/ceo_tangled_wires_shocked",
+	ceo_tangled_wires_fainted = "actors/enemies/ceo_tangled_wires_fainted",
 	chipper_attack_1 =         "actors/enemies/chipper_attack_1",
 	chipper_attack_2 =         "actors/enemies/chipper_attack_2",
 	chipper_attack_3 =         "actors/enemies/chipper_attack_3",
@@ -223,6 +224,7 @@ local img_names = {
 	mole_boss_roll =           "actors/enemies/mole_boss_roll",
 	mole_boss_eyes_closed =    "actors/enemies/mole_boss_eyes_closed",
 	mole_minion =              "actors/enemies/mole_minion",
+	mole_minion_spiked =       "actors/enemies/mole_minion_spiked",
 	motherboard =              "actors/enemies/motherboard",
 	motherboard_button =       "actors/enemies/motherboard_button",
 	motherboard_button_front = "actors/enemies/motherboard_button_front",
@@ -334,6 +336,9 @@ local img_names = {
 	snail_shell_fragment =        "particles/snail_shell_fragment",
 	snail_shell_bouncy_fragment = "particles/snail_shell_bouncy_fragment",
 	bullet_casing =               "particles/bullet_casing",
+	green_fragment_1 =            "particles/green_fragment_1",
+	green_fragment_2 =            "particles/green_fragment_2",
+	green_fragment_3 =            "particles/green_fragment_3",
 	button_fragment_1 =           "particles/button_fragment_1",
 	button_fragment_2 =           "particles/button_fragment_2",
 	button_fragment_3 =           "particles/button_fragment_3",
@@ -634,6 +639,17 @@ local img_names = {
 	boss_intro_ceo_layer9 = "ui/boss_intro/final_boss/boss_intro_ceo_layer9",
 	boss_intro_ceo_layer10 = "ui/boss_intro/final_boss/boss_intro_ceo_layer10",
 
+	boss_intro_mole_boss_layer0 = "ui/boss_intro/mole_boss/boss_intro_mole_boss_layer0",
+	boss_intro_mole_boss_layer1 = "ui/boss_intro/mole_boss/boss_intro_mole_boss_layer1",
+	boss_intro_mole_boss_layer2 = "ui/boss_intro/mole_boss/boss_intro_mole_boss_layer2",
+	boss_intro_mole_boss_layer3 = "ui/boss_intro/mole_boss/boss_intro_mole_boss_layer3",
+	boss_intro_mole_boss_layer4 = "ui/boss_intro/mole_boss/boss_intro_mole_boss_layer4",
+	boss_intro_mole_boss_layer5 = "ui/boss_intro/mole_boss/boss_intro_mole_boss_layer5",
+	boss_intro_mole_boss_layer6 = "ui/boss_intro/mole_boss/boss_intro_mole_boss_layer6",
+	boss_intro_mole_boss_layer7 = "ui/boss_intro/mole_boss/boss_intro_mole_boss_layer7",
+	boss_intro_mole_boss_layer8 = "ui/boss_intro/mole_boss/boss_intro_mole_boss_layer8",
+	boss_intro_mole_boss_layer9 = "ui/boss_intro/mole_boss/boss_intro_mole_boss_layer9",
+
 	boss_intro_ceo_slap0 = "ui/boss_intro/ceo_slap/boss_intro_ceo_slap0",
 
 	player_preview_bg = "ui/player_preview/player_preview_bg",
@@ -703,6 +719,9 @@ local img_names = {
 	
 	-- misc
 	splash = "splash",
+
+	final_boss_intro_building = "level/final_boss_intro/final_boss_intro_building",
+	final_boss_intro_house = "level/final_boss_intro/final_boss_intro_house",
 
 	_test_hexagon = "_test_hexagon",
 	_test_hexagon_small = "_test_hexagon_small",

@@ -34,6 +34,7 @@ function Enemy:init_enemy(x,y, img, w,h)
 	self.random_rotate_speed = 3
 	self.random_rotate_probability = 1.0
 
+	self.direction = 0
 	self.ai_template = nil
 	self.ai_templates = {
 		["rotate"] = {
@@ -50,6 +51,8 @@ function Enemy:init_enemy(x,y, img, w,h)
 				self.direction = random_range(0, pi2)
 			end,
 			update = function(ai, dt)
+				self.direction = self.direction or random_range(0, pi2)
+				
 				if random_range(0, 1) < self.random_rotate_probability then
 					self.direction = self.direction + random_sample({-1, 1}) * dt * self.random_rotate_speed
 				end

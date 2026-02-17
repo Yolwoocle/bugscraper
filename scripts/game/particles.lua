@@ -33,6 +33,8 @@ function Particle:init_particle(x,y,s,r, vx,vy,vs,vr, life, g, is_solid, params)
 	self.max_life = life or 5
 	self.life = self.max_life
 
+	self.clamp_to_cabin_rect = param(params.clamp_to_cabin_rect, true)
+
 	self.ignore_frameskip = param(params.ignore_frameskip, false)
 	self.is_removed = false
 end
@@ -67,8 +69,10 @@ function Particle:update_particle(dt)
 				self.vy = self.bounce_force - random_neighbor(40)
 			end
 
-			self.x = clamp(self.x, game.level.cabin_inner_rect.ax, game.level.cabin_inner_rect.bx)
-			self.y = clamp(self.y, game.level.cabin_inner_rect.ay, game.level.cabin_inner_rect.by)
+			if self.clamp_to_cabin_rect then
+				self.x = clamp(self.x, game.level.cabin_inner_rect.ax, game.level.cabin_inner_rect.bx)
+				self.y = clamp(self.y, game.level.cabin_inner_rect.ay, game.level.cabin_inner_rect.by)
+			end
 		end
 
 	end
@@ -798,16 +802,12 @@ function ParticleSystem:explosion(x, y, radius, args)
 		gradient = copy_table_shallow(args.color_gradient)
 		gradient.type = "gradient"
 	end
-	explosion_layer({type = "gradient", COL_DARK_GRAY},  radius, 100, 0.2, 0.4)
-	explosion_layer({type = "gradient", COL_BLACK_BLUE}, radius, 100, 0.2, 0.4)
+	explosion_layer({type = "gradient", COL_DARK_GRAY},  radius, (radius*radius/16), 0.2, 0.4)
+	explosion_layer({type = "gradient", COL_BLACK_BLUE}, radius, (radius*radius/16), 0.2, 0.4)
 
 	explosion_layer(gradient, radius,     200)
-	-- explosion_layer(gradient, radius,     80)
-	-- explosion_layer(gradient, radius*0.9, 60)
-	-- explosion_layer(gradient, radius*0.8, 30)
-	-- explosion_layer(gradient, radius*0.7, 20)
-	-- explosion_layer(gradient, radius*0.6, 15)
 
+	-- x, y, number, spr, spw_rad, life, vs, g, params
 	Particles:image(x, y, 5, images.bullet_casing, 4, nil, nil, nil, {
 		vx1 = -150,
 		vx2 = 150,
@@ -830,7 +830,7 @@ end
 
 function ParticleSystem:smoke_big(x, y, col, spawn_rad, quantity, params)
 	params = params or {}
-	self:smoke(x, y, quantity or 15, col or COL_WHITE, spawn_rad or 16, params.size or 8, 4, nil, nil, params)
+	self:smoke(x, y, quantity or 15, col or COL_WHITE, spawn_rad or 16, params.size or 8, 4, params)
 end
 
 function ParticleSystem:smoke(x, y, number, col, spw_rad, size, sizevar, params)
@@ -981,7 +981,7 @@ function ParticleSystem:image(x, y, number, spr, spw_rad, life, vs, g, params)
 		local g = (g or 1) * 3
 		local is_solid = true
 		local is_animated = false
-		local scale = 1
+		local scale = params.scale or 1
 
 		if params.vx1 ~= nil and params.vx2 ~= nil then
 			vx = random_range(params.vx1, params.vx2)
@@ -1020,6 +1020,9 @@ function ParticleSystem:image(x, y, number, spr, spw_rad, life, vs, g, params)
 		end 
 		if params.color then
 			particle_params.color = params.color
+		end
+		if params.color ~= nil then
+			particle_params.clamp_to_cabin_rect = params.clamp_to_cabin_rect
 		end
 		
 		local sprite = spr

@@ -241,7 +241,6 @@ function Dung:after_collision(col, other)
             -- scotch scotch scotch
             self.buffer_vx = col.normal.x * math.abs(self.vx) * self.bounce_restitution
 
-            print(math.abs(self.vx))
             if math.abs(self.vx) > 50 then
                 self:play_sound_var("sfx_boss_mrdung_bump_{01-02}", 0.2, 1.1, {volume= (math.abs(self.vx) - 50)/50})
                 game:screenshake(3)

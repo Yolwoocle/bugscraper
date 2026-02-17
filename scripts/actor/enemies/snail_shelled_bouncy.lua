@@ -10,11 +10,7 @@ local PongBall = require "scripts.actor.enemies.pong_ball"
 local SnailShelledBouncy = PongBall:inherit()
 
 function SnailShelledBouncy:init(x, y, spr)
-    self:init_snail_shelled(x, y, spr)
-end
-
-function SnailShelledBouncy:init_snail_shelled(x, y, spr)
-    self:init_pong_ball(x,y, spr or images.snail_shell_bouncy, 16, 16)
+    SnailShelledBouncy.super.init(self, x,y, spr or images.snail_shell_bouncy, 16, 16)
     self.name = "snail_shelled_bouncy"
 
     self.is_flying = true

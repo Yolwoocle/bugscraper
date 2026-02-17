@@ -13,6 +13,8 @@ cutscenes.dung_boss_enter = require "data.cutscenes.dung_boss_enter"
 cutscenes.bee_boss_enter = require "data.cutscenes.bee_boss_enter"
 cutscenes.mole_boss_enter = require "data.cutscenes.mole_boss_enter"
 cutscenes.arum_titan_enter = require "data.cutscenes.arum_titan_enter"
+cutscenes.final_boss_enter = require "data.cutscenes.final_boss_enter"
+cutscenes.final_boss_death = require "data.cutscenes.final_boss_death"
 cutscenes.credits = require "data.cutscenes.credits"
 cutscenes.basement_zoom_into_rocket = require "data.cutscenes.basement_zoom_into_rocket"
 

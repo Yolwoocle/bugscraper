@@ -37,7 +37,8 @@ function Actor:init_actor(x, y, w, h, spr, args)
 
 	self.default_gravity = 20
 	self.gravity = self.default_gravity
-	self.gravity_cap = 400
+	self.default_gravity_cap = 400
+	self.gravity_cap = self.default_gravity_cap
 	self.gravity_mult = 1
 
 	self.default_friction = 0.8

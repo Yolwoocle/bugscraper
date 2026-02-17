@@ -71,6 +71,8 @@ function Debug:init(game)
         end
     end
 
+    self.timer_disable_fast_new_wave_anim = 0
+
     self.removeme_i = 0
     self.actions = {
         ["f2"] = { "toggle collision view mode", function()
@@ -121,22 +123,22 @@ function Debug:init(game)
             end
         end},
         
-        ["u"] = { "spawn ceo", function()
-            local ac = game:new_actor(enemies.NPC:new(866, 223, {
-                npc_name = "ceo",
-                animations = {
-                    normal = {images.ceo_npc_idle, 0.2, 4},
-                    airborne = {images.ceo_npc_airborne, 0.2, 1},
-                    jetpack = {images.ceo_npc_jetpack, 0.2, 1},
-                },
-                dialogue_key = "dialogue.npc.noba",
-                flip_x = true,
-            }))
-            ac.gravity = 0
+        ["u"] = { "weaken all enemies", function()
+            hp = hp or 1
+            for _, actor in pairs(game.actors) do
+                if actor.is_enemy and actor.life then
+                    actor.life = hp
+                end
+            end
+            return true
         end},
 
         ["t"] = {"add +10s to music", function()
             game.music_player.current_disk.current_source:seek(game.music_player.current_disk.current_source:tell() + 10)
+        end},
+
+        [";"] = {"cutscnee play", function()
+            game:play_cutscene("final_boss_death")
         end},
         
         ["v"] = { "__jackofalltrades", function()
@@ -152,9 +154,11 @@ function Debug:init(game)
                 game.menu_manager:set_menu("w5_boss_intro")
             end
 
-            game:new_game({ 
-                backroom = BackroomEnding:new(),
-            })
+            game:play_cutscene("final_boss_enter")
+
+            -- game:new_game({ 
+            --     backroom = BackroomEnding:new(),
+            -- })
                 
 
             -- local cabin_rect = game.level.cabin_rect
@@ -232,10 +236,27 @@ function Debug:init(game)
             -- game:new_actor(cloud)
             --]]
         end },
-        ["j"] = { "frameskip", function()
-            game:frameskip(60)
-        end },
-        ["k"] = { "shorter", function()
+        ["k"] = { "final boss", function()
+            self.game:set_floor(98)
+            for _, p in pairs(game.players) do
+                p:set_position(CANVAS_CENTER[1], CANVAS_CENTER[2] + 64)
+            end
+            game.can_start_game = true
+            game.camera:reset()
+            game:start_game()
+
+            for k, e in pairs(self.game.actors) do
+                if e.is_enemy then
+                    e:kill()
+                end
+            end
+
+            if love.keyboard.isDown("lshift") or love.keyboard.isDown("rshift") then
+                game.level.new_wave_animation_speed_mutliplier = 20.0
+            end
+
+            game.level.new_wave_animation_speed_mutliplier = 20.0
+            self.timer_disable_fast_new_wave_anim = 0.1
         end },
         ["f"] = { "toggle FPS", function()
             self.view_fps = not self.view_fps
@@ -272,8 +293,12 @@ function Debug:init(game)
         -- ["u"] = { "toggle title junk ui", function()
         --     self.title_junk = not self.title_junk
         -- end },
-        ["c"] = { "skip cutscene", function()
-            game.skip_scene_flag = true
+        ["c"] = { "skip scene", function()
+            if love.keyboard.isDown("lshift") or love.keyboard.isDown("rshift") then
+                game.skip_cutscene_flag = true
+            else
+                game.skip_scene_flag = true
+            end
         end },
         ["d"] = { "spawn", function()
             -- game.menu_manager:set_menu("debug_command")
@@ -296,6 +321,10 @@ function Debug:init(game)
                 if e.is_enemy then
                     e:kill()
                 end
+            end
+
+            if love.keyboard.isDown("lshift") or love.keyboard.isDown("rshift") then
+                game.level.new_wave_animation_speed_mutliplier = 20.0
             end
         end },
 
@@ -329,10 +358,16 @@ function Debug:init(game)
             end
         end },
         ["l"] = { "spawn random loot", function()
-            local loot, parms = random_weighted({
+            local tab = {
                 { Loot.Life, 3, loot_type = "life", value = 1 },
                 { Loot.Gun,  3, loot_type = "gun" },
-            })
+            }
+            if love.keyboard.isDown("lalt") then
+                tab = {
+                    { Loot.Life, 3, loot_type = "life", value = 1 },
+                }
+            end
+            local loot, parms = random_weighted(tab)
             if not loot then return end
 
             local x, y = CANVAS_WIDTH / 2, CANVAS_HEIGHT * 0.8
@@ -449,6 +484,13 @@ function Debug:update(dt)
         self.set_can_pause_to_true_timer = self.set_can_pause_to_true_timer - 1
         if self.set_can_pause_to_true_timer <= 0 then
             game.menu_manager:set_can_pause(true)
+        end
+    end
+
+    if self.timer_disable_fast_new_wave_anim > 0 then
+        self.timer_disable_fast_new_wave_anim = max(self.timer_disable_fast_new_wave_anim - dt, 0)
+        if self.timer_disable_fast_new_wave_anim <= 0 then
+            game.level.new_wave_animation_speed_mutliplier = 1.0
         end
     end
 end

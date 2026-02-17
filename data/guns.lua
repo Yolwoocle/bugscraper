@@ -544,10 +544,10 @@ function Guns:init()
 	----------------
 
 	
-	self.unlootable.HoneycombFootballGun = Gun:inherit()
+	self.unlootable.ComballGun = Gun:inherit()
 
-	function self.unlootable.HoneycombFootballGun:init(user)
-		self.name = "honeycomb_football_gun"
+	function self.unlootable.ComballGun:init(user)
+		self.name = "comball_gun"
 		self:init_gun(user)
 		
 		self.max_ammo = 8

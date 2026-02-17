@@ -127,12 +127,14 @@ FONT_CHARACTERS =
     " !\"#$%&'()*+,-·./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz"..
     "{|}~ ¡¢£©®°¿ÀÁÂÃÄÅĄÆÇĆÈÉÊËĘÌÍÎÏŁÐÑŃÒÓÔÕÖØÙÚÛÜŚÝŹŻŒÞßàáâãäåąæçćèéêëęìíîïłðñńòóôõöøùúûüśýźżœþÿŸЁАБВГДЕЖЗИЙКЛМНО"..
     "ПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюяё€"
-FONT_SYMBOLS_CHARACTERS = "🔊🔉🔈🎵🎼🔳🔲📺🕐↖🛜▶⏸✓🔄🔘⬅➡⬆⬇⏏🔫🔚📥👆🔙🗄⌨🎮🎚❤"..
+FONT_SYMBOLS_CHARACTERS = 
+    "🔊🔉🔈🎵🎼🔳🔲📺🕐↖🛜▶⏸✓🔄🔘⬅➡⬆⬇⏏🔫🔚📥👆🔙🗄⌨🎮🎚❤"..
     "✅❎🔗💡⚠🕹🫨💧🐜🐛🐝🪲🈶🌄🛅😎😈🐦𝕏🦋🐰🐞🌐⏭🥚🥦🐧🎓🔺🦂💀⏰🔥⭐🍊"
 FONT_7SEG_CHARACTERS = " 0123456789-abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 FONT_MINI_CHARACTERS = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_abcdefghijklmnopqrstuvwxyz{|}~ÀÁÂÃÄÅĄÆÇĆÈÉÊËĘÌÍÎÏŁÐÑŃÒÓÔÕÖØÙÚÛÜŚÝŹŻÞßàáâãäåąæçćèéêëęìíîïłðñńòóôõöøùúûüśýþÿźżŒœ⁍🦋𝕏"
 FONT_FAT_CHARACTERS = " ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890!,.:;'\"@#$%^&*()[]{}_-=+<>/\\|~"
-FONT_CHINESE_CHARACTERS = require "fonts.font_chinese_characters"
+FONT_ZH_CHARACTERS = require "fonts.font_zh_characters"
+FONT_JA_CHARACTERS = require "fonts.font_ja_characters"
 
 --------------------------------------------- 
 
@@ -304,10 +306,10 @@ RAW_INPUT_MAP_DEFAULT_CONTROLLER = {
     down =      {"c_leftypos", "c_dpdown"},
     jump =      {"c_a", "c_triggerleft", "c_leftshoulder"},
     shoot =     {"c_x", "c_triggerright", "c_rightshoulder"},
-    interact =  {"c_b"},
+    interact =  {"c_y"},
     
     pause =     {"c_start"},
-    ui_select = {"c_a"},
+    ui_select = {"c_a", "c_y"},
     ui_back =   {"c_b"},
     ui_left =   {"c_leftxneg", "c_dpleft"},
     ui_right =  {"c_leftxpos", "c_dpright"},

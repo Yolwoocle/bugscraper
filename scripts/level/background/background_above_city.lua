@@ -6,7 +6,7 @@ local BackgroundLayerSprite = require "scripts.level.background.layer.background
 
 local BackgroundAboveCity = BackgroundLayered:inherit()
 
-function BackgroundAboveCity:init(level)
+function BackgroundAboveCity:init(level, initial_y)
 	BackgroundAboveCity.super.init(self, level)
 	self.name = "background_above_city"
 
@@ -22,19 +22,19 @@ function BackgroundAboveCity:init(level)
 	}))
 	self:add_layer(BackgroundLayerSprite:new(self, 0, {
 		image = images.bg_city_0,
-		initial_y = 1000,
+		initial_y = initial_y or 10000,
 	}))
 	self:add_layer(BackgroundLayerSprite:new(self, 0.001, {
 		image = images.bg_city_1,
-		initial_y = 1000,
+		initial_y = initial_y or 10000,
 	}))
 	self:add_layer(BackgroundLayerSprite:new(self, 0.005, {
 		image = images.bg_city_2,
-		initial_y = 1000,
+		initial_y = initial_y or 10000,
 	}))
 	self:add_layer(BackgroundLayerSprite:new(self, 0.01, { 
 		image = images.bg_city_3,
-		initial_y = 1000,
+		initial_y = initial_y or 10000,
 	}))
 end
 

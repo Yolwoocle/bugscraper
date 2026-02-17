@@ -25,6 +25,9 @@ function BackgroundCity:init(level)
 	
 	self.offset_x = nil
 	self.offset_y = nil
+
+	self.camera_ox = 0
+	self.camera_oy = 0
 end
 
 function BackgroundCity:update(dt)
@@ -41,8 +44,8 @@ function BackgroundCity:draw()
 	BackgroundCity.super.draw(self)
 
 	local cam_x, cam_y = game.camera:get_real_position()
-	cam_x = math.floor(cam_x + (self.offset_x or 0.0))
-	cam_y = math.floor(cam_y + (self.offset_y or self:get_default_y_offset()))
+	cam_x = math.floor((cam_x + self.camera_ox) + (self.offset_x or 0.0))
+	cam_y = math.floor((cam_y + self.camera_oy) + (self.offset_y or self:get_default_y_offset()))
 	for i, layer in pairs(self.layers) do
 		local z = layer.z
 		local x = cam_x * (1 - 1/z)

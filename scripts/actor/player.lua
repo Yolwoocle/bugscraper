@@ -111,8 +111,12 @@ function Player:reset(n, skin)
 	self.speed = 50 --This is acceleration not speed but I'm too lazy to change now
 	self.speed_mult = 1.0
 
+	self.is_visible = true
+	self.gravity_cap = self.default_gravity_cap
+
 	-- Jump
 	self.default_gravity = 40
+	self.gravity_mult = 1.0
 
 	self.can_do_midair_jump = false
 	self.max_jumps = 1
@@ -229,6 +233,11 @@ function Player:reset(n, skin)
 	-- Upgrades
 	self.upgrades = {}
 
+	-- Misc
+	self.is_affected_by_bounds = true
+	self.is_affected_by_walls = true
+	self.is_vulnerable_to_kill_zone = true
+
 	-- Effects
 	self.effects = {}
 	self.poison_cloud = nil
@@ -240,6 +249,9 @@ function Player:reset(n, skin)
 	self.is_ghost = false
 	self.ghost_opacity = 0.7
 	
+	self.friction_x = self.default_friction
+	self.speed_mult = 1
+
 	-- Debug 
 	self.debug_god_mode = false
 	self.dt = 1
@@ -251,7 +263,7 @@ function Player:get_state_machine()
 		normal = {
 			enter = function(state)
 				self:reset()
-
+				
 				self.is_ghost = false
 				self.show_gun = true
 				self.show_hud = true

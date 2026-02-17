@@ -22,7 +22,7 @@ local enemies = {
 	Stabee =             require "scripts.actor.enemies.stabee", 
 	DrillBee =           require "scripts.actor.enemies.drill_bee", 
 	DrillBeeMinion =     require "scripts.actor.enemies.drill_bee_minion", 
-	HoneycombFootball =  require "scripts.actor.enemies.honeycomb_football", 
+	Comball =            require "scripts.actor.enemies.comball", 
 	HoneypotAnt =        require "scripts.actor.enemies.honeypot_ant",
 	TimedSpikes =        require "scripts.actor.enemies.timed_spikes",
 	FlyingSpawner =      require "scripts.actor.enemies.flying_spawner",
@@ -65,6 +65,7 @@ local enemies = {
 	Mole =               require "scripts.actor.enemies.mole", 
 	MoleBoss =           require "scripts.actor.enemies.mole_boss", 
 	MoleMinion =         require "scripts.actor.enemies.mole_minion", 
+	FlyingDungMole =     require "scripts.actor.enemies.flying_dung_mole", 
 	
 	-- Unused
 	ProgressingArc =     require "scripts.actor.enemies.progressing_arc", 

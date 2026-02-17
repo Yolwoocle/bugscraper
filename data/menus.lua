@@ -30,7 +30,7 @@ local function generate_menus()
 
     menus.debug_command = DebugCommandMenu:new(game)
 
-    menus.w1_boss_intro = BossIntroMenu:new(game, { 38 / 255, 43 / 255, 68 / 255, 0.8 }, Text:text("enemy.dung"), "sfx_boss_intro_mrdung", {
+    menus.w1_boss_intro = BossIntroMenu:new(game, { 38 / 255, 43 / 255, 68 / 255, 0.8 }, Text:text("enemy.boss_1"), "sfx_boss_intro_mrdung", {
         { image = images.boss_intro_dung_layer5, z_mult = 0.3 },
         { image = images.boss_intro_dung_layer4, z_mult = 0.5 },
         { image = images.boss_intro_dung_layer3, z_mult = 0.7 },
@@ -39,7 +39,7 @@ local function generate_menus()
         { image = images.boss_intro_dung_layer0, z_mult = 1.5 },
     })
 
-    menus.w2_boss_intro = BossIntroMenu:new(game, { 38 / 255, 43 / 255, 68 / 255, 0.8 }, Text:text("enemy.bee_boss"), "sfx_boss_intro_majesty", {
+    menus.w2_boss_intro = BossIntroMenu:new(game, { 38 / 255, 43 / 255, 68 / 255, 0.8 }, Text:text("enemy.boss_2"), "sfx_boss_intro_majesty", {
         { image = images.boss_intro_bee_layer7, z_mult = 0.2 },
         { image = images.boss_intro_bee_layer6, z_mult = 0.4 },
         { image = images.boss_intro_bee_layer5, z_mult = 0.5 },
@@ -52,7 +52,7 @@ local function generate_menus()
 
     menus.w2 = menus.w2_boss_intro
 
-    menus.w3_boss_intro = BossIntroMenu:new(game, { 38 / 255, 43 / 255, 68 / 255, 0.8 }, Text:text("enemy.motherboard"), "sfx_enemy_motherboard_intro",
+    menus.w3_boss_intro = BossIntroMenu:new(game, { 38 / 255, 43 / 255, 68 / 255, 0.8 }, Text:text("enemy.boss_3"), "",
         {
             -- Zeros
             { image = images.boss_intro_motherboard_layer0, z_mult = 0.5 },
@@ -86,11 +86,20 @@ local function generate_menus()
         }
     )
     
-    menus.w4_boss_intro = BossIntroMenu:new(game, { 38 / 255, 43 / 255, 68 / 255, 0.8 }, "Boss 4", "", {
-        { image = images.empty, z_mult = 1.0 },
+    menus.w4_boss_intro = BossIntroMenu:new(game, { 38 / 255, 43 / 255, 68 / 255, 0.8 }, Text:text("enemy.boss_4"), "", {
+        { image = images.boss_intro_mole_boss_layer0, z_mult = 0.5 },
+        { image = images.boss_intro_mole_boss_layer1, z_mult = 0.6 },
+        { image = images.boss_intro_mole_boss_layer2, z_mult = 0.65 },
+        { image = images.boss_intro_mole_boss_layer3, z_mult = 0.7 },
+        { image = images.boss_intro_mole_boss_layer4, z_mult = 0.85 },
+        { image = images.boss_intro_mole_boss_layer5, z_mult = 0.9 },
+        { image = images.boss_intro_mole_boss_layer6, z_mult = 1.0 },
+        { image = images.boss_intro_mole_boss_layer7, z_mult = 1.1 },
+        { image = images.boss_intro_mole_boss_layer8, z_mult = 1.3 },
+        { image = images.boss_intro_mole_boss_layer9, z_mult = 1.5 },
     })
     
-    menus.w5_boss_intro = BossIntroMenu:new(game, { 38 / 255, 43 / 255, 68 / 255, 0.8 }, "Boss 5", "", {
+    menus.w5_boss_intro = BossIntroMenu:new(game, { 38 / 255, 43 / 255, 68 / 255, 0.8 }, Text:text("enemy.boss_5"), "", {
         { image = images.boss_intro_ceo_layer0, z_mult = 0.75 },
         { image = images.boss_intro_ceo_layer1, z_mult = 1.0 },
         { image = images.boss_intro_ceo_layer2, z_mult = 0.85 },

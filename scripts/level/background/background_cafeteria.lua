@@ -13,11 +13,11 @@ function BackgroundCafeteria:init(level)
 	self.shine_sprite = Sprite:new(images.bg_city_shine, SPRITE_ANCHOR_LEFT_TOP)
 end
 
+
 function BackgroundCafeteria:update(dt)
 	BackgroundCafeteria.super.update(self, dt)
 end
 
------------------------------------------------------
 
 function BackgroundCafeteria:draw()
 	BackgroundCafeteria.super.draw(self)

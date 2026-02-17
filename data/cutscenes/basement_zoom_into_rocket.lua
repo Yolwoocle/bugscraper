@@ -133,7 +133,7 @@ return Cutscene:new("basement_zoom_into_rocket", {
                 player:set_input_mode(PLAYER_INPUT_MODE_USER)
                 player:reset_virtual_controller()
 
-                local px = lerp(game.level.door_rect.ax+16, game.level.door_rect.bx-16, (player.n-1) / (MAX_NUMBER_OF_PLAYERS-1))
+                local px = lerp(game.level.cabin_inner_rect.ax+16, game.level.cabin_inner_rect.ax+16*4, (player.n-1) / (MAX_NUMBER_OF_PLAYERS-1))
                 player:set_position(px, game.level.door_rect.by)
 
                 game.level:set_bounds(Rect:new(unpack(RECT_ELEVATOR_PARAMS)))
@@ -147,7 +147,7 @@ return Cutscene:new("basement_zoom_into_rocket", {
         description = "",
         duration = 1.0,
         enter = function(cutscene, data)
-            local x = lerp(game.level.door_rect.ax, game.level.door_rect.bx, 0.5)
+            local x = lerp(game.level.cabin_inner_rect.ax+16, game.level.cabin_inner_rect.ax+16*4, 0.5)
             game.game_ui:start_iris_transition(x, game.level.door_rect.by, 1.0, 0, 64)
         end,
     }),

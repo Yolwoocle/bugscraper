@@ -1,6 +1,7 @@
 name = "bugscraper"
 # default_targets = ["lovejs", "win32", "win64", "macos", "appimage"]
-default_targets = ["win64", "macos", "appimage"]
+# default_targets = ["win64", "macos", "appimage"]
+default_targets = ["win64"]
 build_directory = "_export"
 icon_file = "icon.png"
 
@@ -8,6 +9,7 @@ love_files = [
     "+*",
     "-*/.*",
     "-./_*",
+    "-./_export",
     "-*.aseprite",
     "-*.lnk",
 
@@ -59,14 +61,14 @@ love_binaries = "$[LOVE_BINARIES_macos]"
 # All specified files will be copied to the <name>/Contents/Resources/ directory of the .app file.
 [macos.archive_files]
 "steam_appid.txt" = "steam_appid.txt"
-"_dyn/osx/luasteam.so" = "luasteam.so"
-"_dyn/osx/libsteam_api.dylib" = "libsteam_api.dylib"
+# "_dyn/osx/luasteam.so" = "lib/steam/osx/luasteam.so"
+"_dyn/osx/libsteam_api.dylib" = "lib/steam/osx/libsteam_api.dylib"
 
 
 [macos.app_metadata]
 # CFBundleName = "<same as the name from the main config>"
 CFBundleIdentifier = "com.yolwoocle.bugscraper"
-NSHumanReadableCopyright = "Copyright © 2025 Léo Bernard"
+NSHumanReadableCopyright = "Copyright © 2026 Léo Bernard"
 
 [appimage]
 source_appimage = "$[LOVE_BINARIES_linux-X64.AppImage]"

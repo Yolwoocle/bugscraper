@@ -7,6 +7,7 @@ local StateMachine = require "scripts.state_machine"
 local Timer = require "scripts.timer"
 local WallWalker = require "scripts.actor.enemies.wall_walker"
 local AnimatedSprite = require "scripts.graphics.animated_sprite"
+local FlyingDungMole = require "scripts.actor.enemies.flying_dung_mole"
 
 local MoleBoss = WallWalker:inherit()
 
@@ -42,16 +43,17 @@ function MoleBoss:init(x, y)
     }, "flying")
     self.spr:set_anchor(SPRITE_ANCHOR_CENTER_CENTER)
 
-    self:set_max_life(150)
+    self:set_max_life(80)
 
     self.fly_speed = 500
-    self.def_walk_speed = 500
+    self.def_walk_speed = 250
     self.def_roll_speed = 300
 
     self.is_killed_on_stomp = false
     self.is_stompable = true
     self.damage_on_stomp = 10
     self.can_be_stomped_if_falling_down = false
+    self.is_killed_on_negative_life = false
     self.head_ratio = 0.33
     self.do_stomp_animation = false
     
@@ -153,6 +155,7 @@ function MoleBoss:init(x, y)
             exit = function(state)
             end
         },
+
         telegraph = {
             enter = function(state)
                 self.walk_speed = 0
@@ -164,10 +167,20 @@ function MoleBoss:init(x, y)
                 self.is_bouncy_to_bullets = false
                 self.can_burrow_back = false
 
-                self.state_timer:start(0.4)
+                self.state_timer:start(1.0)
                 self.spr:set_shake(3)
 
-                self.is_spiked_on_exit = (random_range() < 1/3)
+                -- Set spiky
+                if self.prevent_spiky_next_jump then
+                    self.is_spiked_on_exit = false
+                    self.prevent_spiky_next_jump = false
+                else
+                    self.is_spiked_on_exit = (random_range() < 1/2)
+                end
+
+                if self.is_spiked_on_exit then
+                    self.prevent_spiky_next_jump = true
+                end
                 self.spr:set_animation(self.is_spiked_on_exit and "telegraph_spiked" or "telegraph")
             end,
             update = function(state, dt)
@@ -186,6 +199,7 @@ function MoleBoss:init(x, y)
                 self.spr:set_shake(0)
             end,
         },
+
         jump = {
             enter = function(state)
                 self.is_wall_walking = false
@@ -200,6 +214,7 @@ function MoleBoss:init(x, y)
                 self.gravity = self.default_gravity
                 self.spr:set_animation(self.is_spiked_on_exit and "rolling" or "flying")
 
+                -- Visual effects
                 local ptc_x = self.mid_x - self.up_vect.x * self.w/2
                 local ptc_y = self.mid_y - self.up_vect.y * self.w/2
                 Particles:image(ptc_x, ptc_y, 20, {images.dung_particle_1, images.dung_particle_2, images.dung_particle_3}, 8)
@@ -217,6 +232,13 @@ function MoleBoss:init(x, y)
                 Particles:smoke(ptc_x, ptc_y, 40, {COL_WHITE, COL_LIGHTEST_GRAY, COL_LIGHT_GRAY}, --[[spw_rad]] self.w/2, --[[size]] 8, --[[sizevar]] 5, params)
 
                 self.spr:set_scale(0.5)
+
+                -- Spawn obstacles
+                local a = atan2(self.up_vect.y, self.up_vect.x)
+                local flying_dung = create_actor_centered(FlyingDungMole, self.mid_x, self.mid_y, self, {
+                    start_angle = a - pi/4,
+                })
+                game:new_actor(flying_dung)
             end,
             
             update = function(state, dt)
@@ -237,10 +259,11 @@ function MoleBoss:init(x, y)
                 end
             end,
         },
+
         linger = {
             enter = function(state)
                 self.walk_speed = 0
-                self.state_timer:start(0.5)
+                self.state_timer:start(1.0)
                 self.spr:set_animation(self.is_spiked_on_exit and "rolling" or "flying")
                 
                 self.is_wall_walking = true
@@ -248,16 +271,13 @@ function MoleBoss:init(x, y)
                 self.is_bouncy_to_bullets = true
                 self.can_burrow_back = true
 
-                -- local ptc_x = self.mid_x - self.up_vect.x * self.w/2
-                -- local ptc_y = self.mid_y - self.up_vect.y * self.w/2
-                -- Particles:image(ptc_x, ptc_y, 20, {images.dung_particle_1, images.dung_particle_2, images.dung_particle_3}, 8)
-
                 self.spr.squash = 1.5
                 self.spr:set_rotation(0)
                 self.spr:set_scale(1)
 
                 self:play_sound_var("sfx_boss_mrdung_jump_{01-06}", 0.1, 1.1) 
             end,
+
             update = function(state, dt)
                 local r = 4 * clamp((self.state_timer.time-1) / (self.state_timer.duration-1), 0, 1)
                 self.spr:update_offset(random_neighbor(r), random_neighbor(r))
@@ -266,33 +286,58 @@ function MoleBoss:init(x, y)
                     if random_range(0, 1) < 0.5 then
                         return "bunny_hopping_telegraph"
                     end
-                    return "walk_to_wall"
+                    return "telegraph_walk_to_wall"
                 end 
             end,
+
             exit = function (state)
                 self.spr:update_offset(0, 0)
             end
         },
-        walk_to_wall = {
+
+        telegraph_walk_to_wall = {
             enter = function(state)
-                state.dir = ternary(self.mid_x < CANVAS_WIDTH/2, 1, -1)
+                self.walk_to_wall_dir = ternary(self.mid_x < CANVAS_WIDTH/2, 1, -1)
 
                 self.is_stompable = not self.is_spiked_on_exit
                 self.is_wall_walking = false
                 self.is_bouncy_to_bullets = true
                 self.can_burrow_back = true
 
-                self.walk_speed = self.def_roll_speed
-                self.unstompable_timer = Timer:new(0.1):start()
-                self.state_timer:start(2.0)
-                self.spr:set_animation("rolling")
+                self.state_timer:start(0.5)
+                self.spr:set_animation(self.is_spiked_on_exit and "rolling" or "flying")
 
                 self.spr:animate_scale(1.3, 1.0, 1.5)
             end,
             update = function(state, dt)
-                self.vx = state.dir * self.walk_speed
-                self.spr:set_rotation(self.spr.rot + (self.vx * dt) / (self.h * 0.5))
+                self.vx = 0
+                self.spr:set_rotation(self.spr.rot + (600 * self.walk_to_wall_dir * dt) / (self.h * 0.5))
                 
+                if self.state_timer:update(dt) then
+                    return "walk_to_wall"
+                end
+            end,
+        },
+
+        walk_to_wall = {
+            enter = function(state)
+                self.is_stompable = not self.is_spiked_on_exit
+                self.is_wall_walking = false
+                self.is_bouncy_to_bullets = true
+                self.can_burrow_back = true
+
+                self.walk_speed = self.def_roll_speed
+                self.state_timer:start(2.0)
+                self.spr:set_animation("rolling")
+
+                self.spr:animate_scale(1.3, 1.0, 1.5)
+
+                self.unstompable_timer = Timer:new(0.05):start()
+            end,
+            update = function(state, dt)
+                self.vx = self.walk_to_wall_dir * self.walk_speed
+                self.spr:set_rotation(self.spr.rot + (self.vx * dt) / (self.h * 0.5))
+
                 if self.unstompable_timer:update(dt) then
                     self.is_stompable = false
                 end
@@ -315,12 +360,12 @@ function MoleBoss:init(x, y)
         
         --------------------------------------------------------
         
-        
         bunny_hopping_telegraph = {
             enter = function(state)
-                self.state_timer:start(1.0)
+                self.state_timer:start(1.2)
 
                 self.is_wall_walking = false
+                self.is_stompable = true
 
                 self.gravity = self.default_gravity
                 self.spr:set_animation("jump_telegraph")
@@ -333,10 +378,11 @@ function MoleBoss:init(x, y)
                 end
             end
         },
+
         bunny_hopping = {
             enter = function(state)
                 self.is_wall_walking = false
-                self.is_stompable = false
+                self.is_stompable = true
                 self.spr:set_animation("rolling")
                 
                 self.friction_x = 1
@@ -350,8 +396,15 @@ function MoleBoss:init(x, y)
                 self.burrow_back_on_grounded = false
 
                 self.vx = random_sample{-1, 1} * 250
+                
+                self.unstompable_timer = Timer:new(0.1):start()
             end,
+
             update = function(state, dt)
+                if self.unstompable_timer:update(dt) then
+                    self.is_stompable = false
+                end
+
                 if self.is_grounded and self.bounces > 0 then
                     self.bounces = self.bounces - 1
                     self.jump_flag = true
@@ -367,6 +420,7 @@ function MoleBoss:init(x, y)
                     return "dig_linger"
                 end
             end,
+
             exit = function(state)
                 self.spr:update_offset(0, 0)
                 
@@ -374,6 +428,7 @@ function MoleBoss:init(x, y)
                 self.friction_x = 1
                 self.friction_y = 1
             end,
+
             after_collision = function(state, col)
                 if col.type ~= "cross" then
                     if self.bounces < self.max_bounces and not self.state_timer.is_active then
@@ -392,7 +447,7 @@ function MoleBoss:init(x, y)
                     if col.normal.y == -1 and self.burrow_back_on_grounded == "wait" then
                         self.burrow_back_on_grounded = "burrow"
                         self.vx = 0
-                        self.state_timer:start(0.5)
+                        self.state_timer:start(1.0)
 
                         self.is_stompable = true
                         self.spr:set_animation("flying")
@@ -404,6 +459,93 @@ function MoleBoss:init(x, y)
                 end
             end
         },
+
+        dying = {
+            enter = function(state)
+                game.music_player:set_disk("off")
+
+                self.damage = 0
+                self.is_stompable = false
+                self.vx = 0
+                self.vy = 0
+                self.can_burrow_back = false
+                self.gravity = self.default_gravity
+
+                self.state_timer:start(1.0)
+                
+                game:screenshake(8)
+                game:frameskip(20)
+
+                Particles:push_layer(PARTICLE_LAYER_BACK)
+                Particles:static_image(images.star_big, self.mid_x, self.mid_y, 0, 0.05, 2.3, {
+                    color = COL_WHITE
+                })
+                Particles:static_image(images.star_big, self.mid_x, self.mid_y, 0, 0.05, 2, {
+                    color = COL_LIGHT_RED
+                })
+                Particles:pop_layer()
+
+                game.actor_manager:kill_actors_with_name("flying_dung_mole")
+                self.spr:set_animation("flying")
+            end,
+            
+            update = function(state, dt)
+                if self.state_timer:update(dt) then
+                    return "exploding"
+                end
+            end
+        },
+        exploding = {
+            enter = function(state)
+                self.damage = 0
+                self.is_stompable = false
+                self.vx = 0
+                self.vy = 0
+                self.can_burrow_back = false
+
+                self.state_timer:start(1.5)
+                
+                self.spr:set_shake(6)
+                self.spr:set_shake_decrease_speed(0)                
+            end,
+
+            update = function(state, dt)
+                local s = 1 + self.state_timer:get_ratio()*0.5
+                self.spr:set_scale(s)
+                self.spr:set_rotation(self.spr.rot + dt * 4)
+
+                if self.state_timer:update(dt) then
+                    self:kill()
+
+                    game:screenshake(14)
+                    game:frameskip(20)
+                    Input:vibrate_all(0.3, 0.5)
+                    -- number, spr, spw_rad, life, vs, g, params
+                    Particles:image(
+                        self.mid_x, self.mid_y, 
+                        100, --numner
+                        {images.green_fragment_1, images.green_fragment_2, images.green_fragment_3}, 
+                        40, -- spwn_rad 
+                        1, --life 
+                        1.5, 
+                        nil, 
+                        {
+                            vx1 = -150 * 1.5,
+                            vx2 = 150 * 1.5,
+                            vy1 = 80 * 1.5,
+                            vy2 = -200 * 1.5,
+
+                            scale = 1.5,
+                        }
+                    )
+                    Particles:explosion(self.mid_x, self.mid_y, 80)
+            
+                end
+            end,
+
+            exit = function(state)
+            end
+        }
     }, "dig")
 end
 
@@ -426,7 +568,8 @@ function MoleBoss:update(dt)
 
     MoleBoss.super.update(self, dt)
 
-    self.debug_values[1] = self.is_stompable
+
+    -- self.debug_values[1] = self.is_stompable
     -- self.debug_values[1] = self.state_machine.current_state_name
     -- self.debug_values[2] = "self.walk_dir "..tostring(self.walk_dir)
     -- self.debug_values[3] = "self.walk_speed "..tostring(self.walk_speed)
@@ -480,6 +623,10 @@ function MoleBoss:on_stomped(player)
     else
         player.vx = self.damaged_player_throw_speed_x
     end
+end
+
+function MoleBoss:on_negative_life()
+    self.state_machine:set_state("dying")
 end
 
 return MoleBoss

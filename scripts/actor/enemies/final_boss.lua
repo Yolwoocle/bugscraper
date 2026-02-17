@@ -42,6 +42,7 @@ function FinalBoss:init(x, y)
         introduction = { images.ceo_npc_idle, 0.2, 4 },
         fight = { images.ceo_npc_idle, 0.2, 4 },
 
+        fainted = { images.ceo_npc_fainted, 0.1, 4 },
         shocked = { images.ceo_npc_shocked, 0.2, 1 },
         airborne = { images.ceo_npc_airborne, 0.2, 1 },
         jetpack = { images.ceo_npc_jetpack, 0.2, 1 },
@@ -417,6 +418,8 @@ function FinalBoss:init(x, y)
                 self.gravity = self.default_gravity
                 self.damage = 0 
                 self.life = 0
+	            self.fury_damage_multiplier = 0.0
+                
                 self.invincible_timer = math.huge
                 self.destroy_bullet_on_impact = false
 
@@ -431,7 +434,7 @@ function FinalBoss:init(x, y)
                 
                 Particles:image(self.mid_x, self.mid_y, 80, images.glass_shard, self.h)
 
-                self.spr:set_animation("shocked")
+                self.spr:set_animation("fainted")
                 self.layers[LAYER_GLASS].spr:set_visible(false)
                 
                 self.layers[LAYER_CEO].offset.y = -16
@@ -442,14 +445,16 @@ function FinalBoss:init(x, y)
                 game.music_player:set_disk("off")
 
                 state.f = 2
+
+                game:play_cutscene("final_boss_death")
             end,
 
             update = function(state, dt)
-                state.f = state.f - 1
-                if state.f == 0 then
-                    self.spr:set_visible(false)
-                    Particles:ejected_player(images.ceo_npc_fainted_single, self.mid_x, self.mid_y)
-                end
+                -- state.f = state.f - 1
+                -- if state.f == 0 then
+                --     self.spr:set_visible(false)
+                --     Particles:ejected_player(images.ceo_npc_fainted_single, self.mid_x, self.mid_y)
+                -- end
             end
         },     
         
