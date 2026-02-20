@@ -548,6 +548,7 @@ function Actor:set_constant_sound(name, sound_name, play, volume, pitch, params)
 	local new_sound = sound:clone(volume, pitch, params)
 	self.constant_sounds[name] = new_sound
 	if play then
+		new_sound:seek(random_range(0, new_sound:get_duration()))
 		new_sound:play()
 	end
 end

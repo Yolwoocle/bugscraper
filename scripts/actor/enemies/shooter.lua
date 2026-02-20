@@ -51,6 +51,8 @@ function Shooter:init(x, y)
                 self.state_timer:start(1.0)
 
                 self.spr:set_image(images.shooter_focused_uncharged)
+                
+                self:play_sound_var("sfx_enemy_shooter_charge_{01-02}", 0.1, 1.1)
             end,
             update = function(state, dt)
                 local ox, oy = random_polar(2), random_polar(2)
@@ -63,6 +65,7 @@ function Shooter:init(x, y)
                 local a = self.state_timer.time / self.state_timer.duration
                 self.spr_focused:set_color({1, 1, 1, 1-a})
                 self.spr_focused:set_scale(self.spr.sx, self.spr.sy)
+
             end,
             exit = function(state)
                 self.spr:update_offset(0, 0)
@@ -84,6 +87,7 @@ function Shooter:init(x, y)
                 self.gun:shoot(0.0, self, self.mid_x, self.mid_y, math.cos(a), math.sin(a))
 
                 self.offset_scale = 3.0
+                self:play_sound_var("sfx_enemy_shooter_burst_{01-06}", 0.1, 1.1)
             end, 
             update = function(state, dt)
                 self.offset_scale = lerp(self.offset_scale, 1, 0.3)
