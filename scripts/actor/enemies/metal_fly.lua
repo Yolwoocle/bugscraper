@@ -38,6 +38,10 @@ function MetalFly:init(x, y)
 
     self.sound_death = "sfx_enemy_kill_general_glitch_{01-10}"
     self.sound_stomp = "sfx_enemy_kill_general_glitch_{01-10}"
+
+    self:set_constant_sound("buzz", "sfx_enemy_metalfly_fly_ambient_{01-02}", false)
+    self:set_constant_sound_volume("buzz", 0.3)
+    self:seek_constant_sound("buzz", random_range(0, self:get_constant_sound("buzz"):get_duration())) 
 end
 
 function MetalFly:update(dt)

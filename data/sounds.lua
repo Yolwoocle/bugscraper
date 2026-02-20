@@ -220,7 +220,53 @@ local sfxnames = {
 	["sfx_boss_majesty_crowd_ambient"] = {"sfx/enemy/majesty/crowd/sfx_boss_majesty_crowd_ambient.ogg", "stream"},
 	["sfx_boss_majesty_crowd_cheer"] = {"sfx/enemy/majesty/crowd/sfx_boss_majesty_crowd_cheer.ogg", "stream"},
 
+	-- W3 
+	-- Electric Arc 
+	["sfx_enemy_electricarc_lp_{01-02}"] = {"sfx/enemy/electricarc/sfx_enemy_electricarc_lp_{}.ogg", "stream", {looping=true}},
+	
+	-- Metal fly
+	["sfx_enemy_metalfly_fly_ambient_{01-02}"] = {"sfx/enemy/metalfly/sfx_enemy_metalfly_fly_ambient_{}.ogg", "stream", {looping=true}},
+	
+	-- Chipper
+	["sfx_enemy_chipper_trigger"] = {"sfx/enemy/chipper/sfx_enemy_chipper_trigger.ogg", "static"},
+	["sfx_enemy_chipper_crawl_lp_{01-04}"] = {"sfx/enemy/chipper/sfx_enemy_chipper_crawl_lp_{}.ogg", "stream", {looping=true}},
+
+	-- Grasshopper
+	["sfx_enemy_grasshopper_jump_{01-06}"] = {"sfx/enemy/grasshopper/sfx_enemy_grasshopper_jump_{}.ogg", "static"},
+
+	-- Motherboard boss
+	["sfx_enemy_motherboard_intro"] = {"sfx/enemy/motherboard/sfx_enemy_motherboard_intro.ogg", "static"},
+	["sfx_enemy_motherboard_crash"] = {"sfx/enemy/motherboard/sfx_enemy_motherboard_crash.ogg", "static"},
+	["sfx_enemy_motherboardbutton_press_{01-06}"] = {"sfx/enemy/motherboard/sfx_enemy_motherboardbutton_press_{}.ogg", "static"},
+	
+	-- Big beelet (Big chipper)
+	["sfx_enemy_bigbeelet_telegraph_{01-04}"] = {"sfx/enemy/bigbeelet/sfx_enemy_bigbeelet_telegraph_{}.ogg", "static"},
+	["sfx_enemy_bigbeelet_attack_{01-04}"] = {"sfx/enemy/bigbeelet/sfx_enemy_bigbeelet_attack_{}.ogg", "static"},
+	["sfx_enemy_bigbeelet_bounce_{01-06}"] = {"sfx/enemy/bigbeelet/sfx_enemy_bigbeelet_bounce_{}.ogg", "static"},
+
+	-- Pendulum
+	["sfx_enemy_pendulum_ambient"] = {"sfx/enemy/pendulum/sfx_enemy_pendulum_ambient.ogg", "stream"},
+	["sfx_enemy_pendulum_swing_{01-06}"] = {"sfx/enemy/pendulum/sfx_enemy_pendulum_swing_{}.ogg", "stream"},
+
 	["fly_buzz"] = {"empty.ogg", "static"}, -- TODO change to actual sound
+	
+	-- W4 
+	-- CloudStorm
+	["sfx_enemy_cloudstorm_charge_{01-03}"] = {"sfx/enemy/cloudstorm/sfx_enemy_cloudstorm_charge_{}.ogg", "static"}, -- TODO change to actual sound
+	["sfx_enemy_cloudstorm_thunder_{01-03}"] = {"sfx/enemy/cloudstorm/sfx_enemy_cloudstorm_thunder_{}.ogg", "static"}, -- TODO change to actual sound
+
+	-- Rollopod
+	["sfx_enemy_rollopod_balling_{01-04}"] = {"sfx/enemy/rollopod/sfx_enemy_rollopod_balling_{}.ogg", "static"},
+	["sfx_enemy_rollopod_dash_lp_{01-02}"] = {"sfx/enemy/rollopod/sfx_enemy_rollopod_dash_lp_{}.ogg", "static", {looping=true}},
+	["sfx_enemy_rollopod_impact_{01-04}"] = {"sfx/enemy/rollopod/sfx_enemy_rollopod_impact_{}.ogg", "static"},
+
+	-- Shooter
+	["sfx_enemy_shooter_charge_{01-02}"] = {"sfx/enemy/shooter/sfx_enemy_shooter_charge_{}.ogg", "static"},
+	["sfx_enemy_shooter_burst_{01-06}"] = {"sfx/enemy/shooter/sfx_enemy_shooter_burst_{}.ogg", "static"},
+	
+	-- Golden Beetle
+	["sfx_enemy_goldenbeetle_explode_{01-03}"] = {"sfx/enemy/goldenbeetle/sfx_enemy_goldenbeetle_explode_{}.ogg", "static"},
+
 
 	-- UPGRADES
 	["sfx_upgrades_apple_juice_pickedup"] = {"sfx/upgrades/sfx_upgrades_apple_juice_pickedup.ogg", "static"},
@@ -240,11 +286,13 @@ local sfxnames = {
 
 	["sfx_upgrades_general_hover"] = {"sfx/upgrades/sfx_upgrades_general_hover.ogg", "static"},
 
+
 	-- UI
 	["ui_menu_pause"] = {"ui/ui_menu_pause.ogg", "static"},
 	["ui_menu_unpause"] = {"ui/ui_menu_unpause.ogg", "static"},
 	["ui_menu_hover_{01-04}"] = {"ui/ui_menu_hover_{}.ogg", "static"},
 	["ui_menu_select_{01-04}"] = {"ui/ui_menu_select_{}.ogg", "static"},
+
 
 	-- LEVEL
 	["sfx_door_open"] = {"sfx/level/door/sfx_door_open.ogg", "static"},
@@ -254,11 +302,13 @@ local sfxnames = {
 	["sfx_tutorial_wall_damage_{01-03}"] = {"sfx/tutorial/sfx_tutorial_wall_damage_{}.ogg", "static"},
 	["sfx_tutorial_wall_destroy"] = {"sfx/tutorial/sfx_tutorial_wall_destroy.ogg", "static"},
 
+
 	-- PLACEHOLDER
 	["sfx_bullet_bounce_{01-02}"] = {"placeholder/sfx_bullet_bounce_{}.ogg", "static"},
 	["chipper_telegraph"] = {"placeholder/chipper_telegraph.ogg", "static"},
 	["sfx_enemy_death"] = {"placeholder/sfx_enemy_death.ogg", "static"},
 
+	
 	-- Ambience
 	["amb_pad_cafeteria_lp"] = {"sfx/ambience/amb_pad_cafeteria_lp.ogg", "stream", {looping = true}},
 	["amb_pad_lobby_lp"] = {"sfx/ambience/amb_pad_lobby_lp.ogg", "stream", {looping = true}},

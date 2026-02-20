@@ -42,13 +42,16 @@ function Chipper:init(x, y, spr)
     self.player_detection_range = 256
     self.player_detection_width = 16
     self.telegraph_timer = Timer:new(0.5)
-    self.telegraph_source = Audio:get_sound("chipper_telegraph"):clone()
+    self.telegraph_source = Audio:get_sound("sfx_enemy_chipper_trigger"):clone()
     self.attack_speed = 100
     self.post_attack_timer = Timer:new(0.5)
     self.score = 10
 
     self.sound_death = "sfx_enemy_kill_general_glitch_{01-10}"
     self.sound_stomp = "sfx_enemy_kill_general_glitch_{01-10}"
+
+    self:set_constant_sound("crawl", "sfx_enemy_chipper_crawl_lp_{01-04}", true, 1.0)
+    self:set_constant_sound_volume("crawl", 0.2)
 
     self.state_machine = StateMachine:new({
         idle = {

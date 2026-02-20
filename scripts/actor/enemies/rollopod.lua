@@ -112,6 +112,8 @@ function Rollopod:init(x, y, spr, w, h)
                 else
                     Particles:static_image(images.surprise_effect, self.x + self.w + 8, self.y - 4, 0, 0.1, nil, {flip_x = true})
                 end
+
+                self:play_sound_var("sfx_enemy_rollopod_balling_{01-04}", 0.1, 1.1)
             end,
             update = function(state, dt)
                 if self.state_timer:update(dt) then
@@ -124,6 +126,8 @@ function Rollopod:init(x, y, spr, w, h)
                 self.attack_speed = self.def_attack_speed + random_neighbor(self.attack_speed_randomness)
                 self.vx = self.attack_speed * self.walk_dir_x
                 self.is_pushable = false
+
+                self:set_constant_sound("roll", "sfx_enemy_rollopod_dash_lp_{01-02}", true)
             end,
             after_collision = function(state, col, other)
                 if col.normal.y == 0 then
@@ -152,6 +156,7 @@ function Rollopod:init(x, y, spr, w, h)
             end,
             draw = function(state)
                 self.skid_spr:draw(self.mid_x - self.walk_dir_x*16, self.y+self.h)
+                self:remove_constant_sound("roll")
             end
         },
         linger = {
@@ -161,6 +166,8 @@ function Rollopod:init(x, y, spr, w, h)
                 
                 self.vy = -self.jump_force 
                 self.is_pushable = false
+
+                self:play_sound_var("sfx_enemy_rollopod_impact_{01-04}", 0.1, 1.1)
             end,
             update = function(state, dt)
                 if self.state_timer:update(dt)   then

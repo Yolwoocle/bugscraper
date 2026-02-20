@@ -69,7 +69,7 @@ function GoldenBeetle:update(dt)
         end 
 
         if self.exploding_timer:update(dt) then
-            local explosion = Explosion:new(self.mid_x, self.mid_y, {radius = self.explosion_radius})
+            local explosion = Explosion:new(self.mid_x, self.mid_y, {radius = self.explosion_radius, sound="sfx_enemy_goldenbeetle_explode_{01-03}"})
             game:new_actor(explosion)
             self:kill()
         end

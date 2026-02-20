@@ -88,6 +88,8 @@ function CloudStormZone:init(x, y, size)
 
                 self.surround_lightning.min_line_width = 0.1
                 self.surround_lightning.max_line_width = 1.0
+
+                self:play_sound_var("sfx_enemy_cloudstorm_charge_{01-03}", 0.1, 1.1)
             end,
             update = function(state, dt)
                 Particles:flash(self.mid_x + random_polar(3), self.y + self.h + 4 + random_polar(3), 4, 1)
@@ -122,6 +124,8 @@ function CloudStormZone:init(x, y, size)
                 self.surround_lightning.max_line_width = 3.0
 
                 self.is_stompable = true
+
+                self:play_sound_var("sfx_enemy_cloudstorm_thunder_{01-03}", 0.2, 1.2)
             end,
             update = function(state, dt)
                 Particles:flash(self.mid_x + random_polar(3), self.y + self.h + 4 + random_polar(3))

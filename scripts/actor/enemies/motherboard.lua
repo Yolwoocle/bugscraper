@@ -138,6 +138,7 @@ function Motherboard:init(x, y)
 
                 game:screenshake(8)
                 Input:vibrate_all(0.5, 1.0)
+                Audio:play("sfx_enemy_motherboard_crash")
             end
         },
         intro_linger = {

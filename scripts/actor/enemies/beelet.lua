@@ -41,7 +41,6 @@ function Beelet:init(x, y)
     
     --- Telegraph
     self.telegraph_timer = Timer:new(0.5)
-    self.telegraph_sound = "beelet_inflate_1"
     
     --- Attack
     self.force_charge_flag = false
@@ -61,6 +60,10 @@ function Beelet:init(x, y)
     self.score = 10
 
     self.size_sine_anim_mult = 1
+
+    self.sound_telegraph = "sfx_enemy_beelet_telegraph_{01-04}"
+    self.sound_attack = "sfx_enemy_beelet_attack_{01-04}"
+    self.sound_bounce = "sfx_enemy_beelet_bounce_{01-06}"
 
     self.state_machine = StateMachine:new({
         wander = {
@@ -102,7 +105,7 @@ function Beelet:init(x, y)
 
                 self.spr:set_animation("attack")
                 self.telegraph_timer:start()
-                self:play_sound_var("sfx_enemy_beelet_telegraph_{01-04}", 0.1, 1.2)
+                self:play_sound_var(self.sound_telegraph, 0.1, 1.2)
 
                 self.s = 2
                 self.target_s = 1
@@ -117,7 +120,7 @@ function Beelet:init(x, y)
             enter = function()
                 self.spr:set_animation("attack")
                 self.attack_bounces_counter = self.attack_bounces
-                self:play_sound_var("sfx_enemy_beelet_attack_{01-04}", 0.2, 1.2)
+                self:play_sound_var(self.sound_attack, 0.2, 1.2)
 
                 self.size_t = 0.0
             end,
@@ -141,7 +144,7 @@ function Beelet:init(x, y)
 
                 game:screenshake(3)
             	Input:vibrate_all(0.1, 0.45)
-                self:play_sound_var("sfx_enemy_beelet_bounce_{01-06}", 0.2, 1.2)
+                self:play_sound_var(self.sound_bounce, 0.2, 1.2)
 
                 self.attack_bounces_counter = math.max(0, self.attack_bounces_counter - 1)
                 if self.attack_bounces_counter <= 0 then
