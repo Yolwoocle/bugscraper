@@ -1,6 +1,6 @@
 print("Loading API libraries...")
 local DiscordPresence        = require "scripts.meta.discord_presence"
-local Steamworks             = require "scripts.meta.steamworks"
+local Steamworks             = require "scripts.meta.steamworks" -- TODO make so that the gmae doesn't crash if this doesn't load
 print("")
 
 local TextManager            = require "scripts.text"
