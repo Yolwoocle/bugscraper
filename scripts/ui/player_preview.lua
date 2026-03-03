@@ -165,7 +165,7 @@ function PlayerPreview:init(player_n, x, y, w, h)
                 for i = 1, total_n do
                     local ix = x - (total_n*4)/2 + 4*(i-1)
 
-                    local _y = y + 26 + ternary(i == self.selection_n, -1, 0)
+                    local _y = y + 27 + ternary(i == self.selection_n, -1, 0)
                     rect_color(ternary(i == self.selection_n, COL_WHITE, COL_BLACK_BLUE), "fill", ix, _y - 1, 4, ternary(i == self.selection_n, 5, 3))
 
                     local col = skins[i].color_palette[1]
@@ -177,8 +177,8 @@ function PlayerPreview:init(player_n, x, y, w, h)
 
                 local icon_left = Input:get_action_primary_icon(self.player_n, "ui_left")
                 local icon_right = Input:get_action_primary_icon(self.player_n, "ui_right")
-                draw_centered(icon_left,  x - w * 0.8 + self.left_prompt_ox,  y + 18, 0, self.scale)
-                draw_centered(icon_right, x + w * 0.8 + self.right_prompt_ox, y + 18, 0, self.scale)
+                draw_centered(icon_left,  x - w * 0.93 + self.left_prompt_ox,  y + 20, 0, self.scale)
+                draw_centered(icon_right, x + w * 0.93 + self.right_prompt_ox, y + 20, 0, self.scale)
             end,
         },
 

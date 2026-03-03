@@ -41,6 +41,7 @@ function Debug:init(game)
     self.colview_mode = false
     self.actor_info_view = false
     self.info_view = false
+    self.extra_info_view = false
     self.joystick_view = false
     self.bound_view = false
     self.view_fps = false
@@ -79,7 +80,11 @@ function Debug:init(game)
             self.colview_mode = not self.colview_mode
         end, do_not_require_ctrl = true },
         ["f3"] = { "view more info", function()
-            self.info_view = not self.info_view
+            if love.keyboard.isDown("lshift") or love.keyboard.isDown("rshift") then
+                self.extra_info_view = not self.extra_info_view                    
+            else
+                self.info_view = not self.info_view
+            end
         end, do_not_require_ctrl = true },
         ["f4"] = { "view joystick info", function()
             self.joystick_view = not self.joystick_view
@@ -548,6 +553,8 @@ end
 function Debug:draw()
     if self.info_view then
         self:draw_info_view()
+    elseif self.extra_info_view then
+        self:draw_extra_info_view()
     end
     if self.debug_menu then
         self:draw_debug_menu()
@@ -893,52 +900,6 @@ function Debug:draw_info_view()
 
     self.game.level.world_generator:draw()
 
-    -- Show time taken by various functions during last frame
-    if __times then
-        local tab = {}
-        for k, time in pairs(__buf_times) do
-            if not tab[time.layer] then
-                tab[time.layer] = {}
-            end
-            tab[time.layer][time.i] = time
-        end
-
-        local total_w = 300
-        local x = 0
-        local y = 0
-        local h = 16
-        for _, layer in pairs(tab) do
-            local x = 0
-            for i, time in pairs(layer) do
-                local w = total_w * (time.t / (1/60))
-
-                rect_color(time.col, "fill", x, y, w, 16)
-                x = x + w
-            end 
-            y = y + 16
-            h = h - 16
-        end 
-
-        -- Text
-        local x = 0
-        local y = 0
-        local h = 16
-        local text_oy = false
-        for _, layer in pairs(tab) do
-            local x = 0
-            for i, time in pairs(layer) do
-                local w = total_w * (time.t / (1/60))
-                love.graphics.print(time.label, x, y + ternary(text_oy, 6, 0))
-                x = x + w
-                text_oy = not text_oy
-            end 
-            y = y + 16
-            h = h - 16
-        end 
-
-        rect_color(COL_WHITE, "line", 0, 0, total_w, 16)
-    end
-
     self:test_info_view_3d_renderer()
 
     -- local w = 255
@@ -962,6 +923,43 @@ function Debug:draw_info_view()
     linedottedoffset = linedottedoffset - 0.2
 
     --
+end
+
+function Debug:draw_extra_info_view()
+    love.graphics.setFont(FONT_MINI)
+
+    -- Show time taken by various functions during last frame
+    if __times then
+        local tab = {}
+        for k, time in pairs(__buf_times) do
+            if not tab[time.layer] then
+                tab[time.layer] = {}
+            end
+            tab[time.layer][time.i] = time
+        end
+
+        local total_w = 300
+        local x = 0
+        local y = 0
+        local h = 16
+        for _, layer in pairs(tab) do
+            local x = 0
+            for i, time in pairs(layer) do
+                local w = total_w * (time.t / (1/60))
+
+                rect_color(time.col, "fill", x, y, w, 8)
+                love.graphics.print(time.label, x, y)
+
+                x = x + w
+                y = y + 8
+            end 
+            y = y + 16
+            h = h - 16
+        end 
+
+        rect_color(COL_WHITE, "line", 0, 0, total_w, 16)        
+    end
+    love.graphics.setFont(FONT_REGULAR)
 end
 
 function Debug:test_spiral_removeme()
