@@ -9,7 +9,7 @@ local images = require "data.images"
 local Stabee = Fly:inherit()
 	
 function Stabee:init(x, y, spr)
-    Stabee.super.init(self, x,y, spr or images.stabee, 10, 14, false)
+    Stabee.super.init(self, x,y, spr or images.stabee, 12, 16, false)
     self.normal_h = self.h
     self.stuck_h = 7
 
