@@ -365,7 +365,7 @@ return {
             tv_slideshow = "Twórcy slajdów TV",  -- Refers to the powerpoint TV slideshow on the title screen, which was contributed by a variety of people 
             licenses = "Licencje na zasoby i biblioteki",
             more = "I wiele innych...",                         -- For the people that I might have forgotten in the special thanks section
-            thank_you_for_playing = "Dzięki za grę!",  -- Shown at the end of the credits
+            thank_you_for_playing = "Dziękujemy za grę!",  -- Shown at the end of the credits
 
             x_by_y = "%s przez %s",                               -- "ASSET_NAME by CREATOR". Used to credit assets such as sound effects
             asset_item = "%s przez %s / %s",                      -- "ASSET_NAME by CREATOR / LICENCE"
