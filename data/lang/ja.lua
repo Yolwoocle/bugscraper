@@ -32,7 +32,7 @@ return {
         win_wishlist = "Wウィッシュリスト登録よろしくね(^_^)", -- "Wishlist" is a verb
         warning_web_controller = "一部ブラウザではコントローラーがサポートしない場合があります",
 
-        combo = "%dコンボ", 
+        combo = "%d コンボ", 
     },
     level = {
         world_prefix = "%s部署",
