@@ -376,6 +376,56 @@ return {
             title = "Open source libraries",
         },
     },
+    achievements = {
+        ach_complete_w1 = {
+            name = "Bug Resources",
+            description = "Complete department 1",
+        },
+        ach_complete_w2 = {
+            name = "Factory",
+            description = "Complete department 2",
+        },
+        ach_complete_w3 = {
+            name = "Server Room",
+            description = "Complete department 3",
+        },
+        ach_complete_w4 = {
+            name = "Gardens",
+            description = "Complete department 4",
+        },
+        ach_complete_end = {
+            name = "Vacations",
+            description = "Complete the game",
+        },
+        ach_death = {
+            name = "Perseverance",
+            description = "Die 50 times",
+        },
+        ach_all_upgrades = {
+            name = "A furious cocktail",
+            description = "Unlock all upgrades",
+        },
+        ach_no_damage_easy = {
+            name = "Iron Bug",
+            description = "Do not take damage for 20 floors",
+        },
+        ach_no_damage_full = {
+            name = "Golden Bug",
+            description = "Do not take damage for a full game",
+        },
+        ach_no_floor = {
+            name = "The Floor Is Lava",
+            description = "Do not touch the ground for 10 floors",
+        },
+        ach_big_combo = {
+            name = "Furious",
+            description = "Get a 100 combo",
+        },
+        ach_smash_easter_egg = {
+            name = "GAME!", -- This is a reference to what the announcer says at the end of a match in Smash Bros.
+            description = "Obtain the secret exit animation", 
+        },
+    },
     discord = { -- Text used for Discord rich presence
         state = {
             solo = "Playing solo",
