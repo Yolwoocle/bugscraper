@@ -29,13 +29,13 @@ return {
         fps = "%d FPS",
         congratulations = "CONGRATULATIONS!",
         win_thanks = "デモで遊んでくれてありがとう",
-        win_wishlist = "Wウィッシュリスト登録よろしくね(^_^)", -- "Wishlist" is a verb
+        win_wishlist = "ウィッシュリスト登録よろしくね(^_^)", -- "Wishlist" is a verb
         warning_web_controller = "一部ブラウザではコントローラーがサポートしない場合があります",
 
-        combo = "%dコンボ", 
+        combo = "%d コンボ", 
     },
     level = {
-        world_prefix = "%s部署",
+        world_prefix = "部署%s",
 
         -- Department names
         -- I chose to not use articles in english (so instead of "The Factory", it's just "Factory")
@@ -97,7 +97,7 @@ return {
         -- "The Webmaster" is a play on words between the theme of the area and spider webs)
 
         -- A somewhat witty and clownesque exectutive based off a Dung Beetle. 
-        boss_1 = "スカ・シッペー",
+        boss_1 = "スカ・シッペー",--「スカラベ」scarab + 「すかしっぺ」 mean silent fart.
 
         -- The queen of the Factory, who's also a metal/rock singer.  
         boss_2 = "クイーン陛下", 
@@ -108,7 +108,7 @@ return {
         -- A very large green cabbage-like, boulder-like, rolling enemy from the Garden area.   
         -- You're free to be more creative with this one. 
         -- (example: in French, I chose "Grobroco", "gros" (large) + "broco" (diminutive of broccoli))
-        boss_4 = "C.B.ローリング",
+        boss_4 = "C.B.ローリング",-- I wanted to name it "Rolling Cabbage," but it's too long, so I made it sound like J.K. Rowling.
 
         -- The CEO of the company, and the final boss. Its name is somewhat ominous-sounding.
         -- Try to avoid ambiguity with the term "boss", which could be confused with the generic term for a video game boss.
@@ -178,7 +178,7 @@ return {
             jump = "ジャンプ",
             shoot = "ショット",
             interact = "インタラクト",
-            leave_game = "終了",
+            leave_game = "抜ける",
             open = "メニュー",         -- As in, "open menu", and NOT for, say, opening chests.
             collect = "図鑑",   -- As in, "collect item", "collect gun", etc
 
@@ -238,7 +238,7 @@ return {
             input_submenu = {
                 title = "入力設定",
                 reset_controls = "操作リセット",
-                controller_button_style = "ボタンリセット", -- The style of the buttons shown in-game. As in, PS4 style buttons, Xbox style buttons...
+                controller_button_style = "ボタンスタイル", -- The style of the buttons shown in-game. As in, PS4 style buttons, Xbox style buttons...
                 controller_button_style_value = {
                     detect = "検出",
                     switch = "Switch",
@@ -299,7 +299,7 @@ return {
                 vsync = "Vシンク",
                 menu_blur = "メニュー背景のぼかし", -- Whether to apply the blurring effect in menu backgrounds
                 background_speed = "背景速度", -- How quickly the background scrolls 
-                bullet_lightness = "弾丸彩度", -- How brightly bullets are rendered
+                bullet_lightness = "弾丸の明るさ", -- How brightly bullets are rendered
             },
             game = {
                 title = "ゲーム",

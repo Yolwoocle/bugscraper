@@ -4,9 +4,9 @@ local Class = require "scripts.meta.class"
 local Steam
 local import_success
 if pcall(function()
+	Steam = require "luasteam"
 end) then
 	print("Steamworks: successfully loaded")
-	Steam = require "luasteam"
 	import_success = true
 else
 	print("Steamworks: error during import (require failed)")

@@ -716,6 +716,22 @@ local img_names = {
 	bg_walls_w4 = "level/background/bg_walls_w4",
 
 	-----------------------------------------------------
+	-- Achievements
+	ach_all_upgrades =       "achievements/ach_all_upgrades",
+	ach_big_combo =          "achievements/ach_big_combo",
+	ach_complete_end =       "achievements/ach_complete_end",
+	ach_complete_w1 =        "achievements/ach_complete_w1",
+	ach_complete_w2 =        "achievements/ach_complete_w2",
+	ach_complete_w3 =        "achievements/ach_complete_w3",
+	ach_complete_w4 =        "achievements/ach_complete_w4",
+	ach_death =              "achievements/ach_death",
+	ach_no_damage_easy =     "achievements/ach_no_damage_easy",
+	ach_no_damage_full =     "achievements/ach_no_damage_full",
+	ach_no_floor =           "achievements/ach_no_floor",
+	ach_no_upgrades =        "achievements/ach_no_upgrades",
+	ach_smash_easter_egg =   "achievements/ach_smash_easter_egg",
+	
+	-----------------------------------------------------
 	
 	-- misc
 	splash = "splash",

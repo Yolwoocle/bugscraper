@@ -66,13 +66,13 @@ return {
     },
     gun = {
         -- Noms des armes
-        machinegun = "Petit pois",
-        triple = "Triple piment",
-        burst = "Éclat pollen",
-        shotgun = "Fusil framboise",
-        minigun = "Minigun pépin",
-        ring = "Grosse baie",
-        mushroom_cannon = "Canon champi",
+        machinegun = "Petit Pois",
+        triple = "Pikpikpik",
+        burst = "Pollinisateur",
+        shotgun = "Fusil Framboise",
+        minigun = "Ensemenceur",
+        ring = "Boum Baie",
+        mushroom_cannon = "Champi-canon",
 
         resignation_letter = "Lettre de Démission" 
     },
