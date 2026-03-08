@@ -353,7 +353,7 @@ function Player:get_state_machine()
 				end
 			end,
 		},
-		ghost = {
+		ghost = { 
 			enter = function(state)
 				self:reset()
 
@@ -382,8 +382,10 @@ function Player:get_state_machine()
 				self.friction_x = self.default_friction
 				self.friction_y = self.default_friction
 				
-				self.gun:update(dt)
-				self:shoot(dt, false)
+				if game.game_state ~= GAME_STATE_DYING then
+					self.gun:update(dt)
+					self:shoot(dt, false)
+				end
 				
 				local dir = self:get_movement_dir()
 				self:move(dir, dt)
