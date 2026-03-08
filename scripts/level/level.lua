@@ -216,10 +216,11 @@ function Level:get_new_wave_animation_state_machine()
 		},
 		opening = {
 			enter = function(state)
-				self.elevator:open_door(self.current_wave.entrance_names, ternary(self:is_on_cafeteria(), nil, 1.4))
+				local wait_time = self.current_wave.opened_door_timer_override or (self.opened_door_timer_override or 1.0)
+				self.elevator:open_door(self.current_wave.entrance_names, ternary(self:is_on_cafeteria(), nil, wait_time + 0.4))
 				self.current_wave:show_title()
 				self:increment_floor()
-				self.new_wave_progress = self.opened_door_timer_override or 1.0
+				self.new_wave_progress = wait_time
 				self.opened_door_timer_override = nil
 			end,
 			update = function(state, dt)
@@ -422,7 +423,6 @@ function Level:buffer_actor(actor)
 end
 
 function Level:apply_new_wave()
-	-- FIXME move this from game to level
 	for i = 1, MAX_NUMBER_OF_PLAYERS do
 		if self.game.waves_until_respawn[i][1] ~= -1 then
 			self.game.waves_until_respawn[i][1] = math.max(0, self.game.waves_until_respawn[i][1] - 1)

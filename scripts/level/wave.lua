@@ -47,6 +47,7 @@ function Wave:init(params)
 	self.background_speed_multiplier = param(params.background_speed_multiplier, nil)
 
 	self.override_spawn_cocoons = param(params.override_spawn_cocoons, false)
+	self.opened_door_timer_override = param(params.opened_door_timer_override, nil)
 
 	self.entrance_names = self:generate_entrance_names()
 end
