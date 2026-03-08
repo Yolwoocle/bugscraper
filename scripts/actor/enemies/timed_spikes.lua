@@ -329,7 +329,7 @@ function TimedSpikes:draw()
     TimedSpikes.super.draw(self)
 
     if self.do_standby_warning and self.state_machine.current_state_name == "standby" and self.t % 0.2 < 0.1 then
-        print_centered_outline(COL_LIGHT_GRAY, nil, "⚠", self.mid_x, self.mid_y)
+        print_centered_outline(COL_WHITE, nil, "⚠", self.mid_x, self.mid_y)
     end
 end
 
