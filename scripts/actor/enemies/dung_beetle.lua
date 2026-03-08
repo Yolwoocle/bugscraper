@@ -238,7 +238,9 @@ function DungBeetle:on_death()
     game:frameskip(30)
     Input:vibrate_all(0.3, 0.3)
     
-    Particles:ejected_player(images.dung_beetle_dead, self.mid_x, self.mid_y)
+    Particles:ejected_player(images.dung_beetle_dead, self.mid_x, self.mid_y, nil, nil, {
+        x_sign = ternary(self.mid_x < CANVAS_WIDTH/2, 1, -1)
+    })
     Particles:image(self.mid_x, self.mid_y, 100, {images.dung_particle_1, images.dung_particle_2, images.dung_particle_3}, self.h, 2)
     self:play_sound("sfx_boss_mrdung_death_{01-03}")
 end

@@ -1179,9 +1179,12 @@ function ParticleSystem:dead_player(x, y, spr, colors, dir_x)
 	self:pop_layer()
 end
 
-function ParticleSystem:ejected_player(spr, x, y, vx, vy)
+function ParticleSystem:ejected_player(spr, x, y, vx, vy, params)
+	params = params or {}
+	local x_sign = params.x_sign or random_sample{-1, 1}
+
 	self:push_layer(PARTICLE_LAYER_FRONT)
-	self:add_particle(EjectedPlayerParticle:new(spr, x, y, vx or (random_sample{-1, 1} * random_range(100, 300)), vy or -random_range(400, 600)))
+	self:add_particle(EjectedPlayerParticle:new(spr, x, y, vx or (x_sign * random_range(100, 300)), vy or -random_range(400, 600)))
 	self:pop_layer()
 end
 
