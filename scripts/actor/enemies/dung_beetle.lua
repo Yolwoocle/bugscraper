@@ -143,6 +143,20 @@ function DungBeetle:init(x, y)
                 game:screenshake(6)
                 Particles:image(self.mid_x, self.mid_y, 40, {images.dung_particle_1, images.dung_particle_2, images.dung_particle_3}, self.h)
                 self:play_sound_var("sfx_boss_mrdung_land_in_dung", 0.1, 1.1)
+
+                state.shake_timer = Timer:new(1.0, {loopback = true}):start()
+                state.shake = 0
+            end,
+
+            update = function(state, dt)
+                state.shake = math.max(state.shake - dt*6, 0)
+
+                if state.shake_timer:update(dt) then
+                    state.shake = 3
+                    Particles:sweat(self.mid_x + self.w/2, self.y)
+                end
+
+                self.spr:update_offset(random_neighbor(state.shake), 0)
             end,
 
             draw = function(state)
