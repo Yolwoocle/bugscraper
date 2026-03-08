@@ -295,6 +295,20 @@ function bound_rect(color, mode, x, y, width, height, angle)
 	rect_color(color, mode, -width / 2, -height / 2, width, height, 6, 6) -- origin in the middle
 end
 
+function rotated_ellipse(mode, x, y, rx, ry, rot)
+	love.graphics.push()
+	love.graphics.translate(x, y)
+	love.graphics.rotate(rot)
+	love.graphics.ellipse(mode or "line", 0, 0, rx, ry)
+	love.graphics.pop()
+end
+
+function rotated_color_ellipse(color, mode, x, y, rx, ry, rot)
+	exec_with_color(color or COL_WHITE, function()
+		rotated_ellipse(mode, x, y, rx, ry, rot)
+	end)
+end
+
 function draw_with_selected_outline(spr, x, y, r, sx, sy)
 	love.graphics.setShader(shaders.draw_in_highlight_color)
 	local offset = 1
