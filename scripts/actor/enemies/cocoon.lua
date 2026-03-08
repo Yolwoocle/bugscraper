@@ -21,6 +21,7 @@ function Cocoon:init(x, y, player)
     self.life = 12
     self.damage = 0
     self.self_knockback_mult = 0.1
+    self.z = -90
     
 	-- self.destroy_bullet_on_impact = false
 	-- self.is_immune_to_bullets = true
