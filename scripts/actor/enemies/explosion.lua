@@ -15,7 +15,7 @@ function Explosion:init(x, y, params)
 
     self.use_gun = param(params.use_gun, true)
     self.explosion_damage = param(params.explosion_damage, 1)
-    self.override_enemy_damage = param(params.override_enemy_damage, 20)
+    self.override_enemy_damage = param(params.override_enemy_damage, 500)
     self.radius = param(params.radius, 32)
     self.safe_margin = param(params.safe_margin, 8)
     self.resolution = param(params.resolution, 32)

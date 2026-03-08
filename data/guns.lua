@@ -521,7 +521,7 @@ function Guns:init()
 		self.cooldown = 0.5
 		self.jetpack_force = 1000
 		
-		self.override_enemy_damage = args.override_enemy_damage or 6
+		self.override_enemy_damage = args.override_enemy_damage or 500
 		self.bullet_spr = images.empty
 		self.bul_w = 10
 		self.bul_h = 10
