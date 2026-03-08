@@ -246,8 +246,10 @@ function Player:reset(n, skin)
 
 	self.spawn_explosion_on_damage = false
 
+	-- Multiplayer 
 	self.is_ghost = false
 	self.ghost_opacity = 0.7
+	self.waves_until_respawn = 3
 	
 	self.friction_x = self.default_friction
 	self.speed_mult = 1
