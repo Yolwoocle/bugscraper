@@ -977,7 +977,7 @@ function ParticleSystem:image(x, y, number, spr, spw_rad, life, vs, g, params)
 		local vy = -random_range(40, 80)
 		local vs = (vs or random_range(1, 0.5)) * random_range(1, 0.8)
 		local vr = random_neighbor(1)
-		local life = life + random_neighbor(0.5)
+		local life = life + random_neighbor(params.life_rand or 0.5)
 		local g = (g or 1) * 3
 		local is_solid = true
 		local is_animated = false
@@ -1057,6 +1057,7 @@ function ParticleSystem:static_image(img, x, y, rot, life, scale, params)
 		vr1 = 0,
 		vr2 = 0,
 		life = life or 0.12,
+		life_rand = params.life_rand,
 		is_animated = true,
 		scale = scale,
 		follow_actor = follow_actor,
@@ -1081,6 +1082,7 @@ function ParticleSystem:floating_image(img, x, y, amount, rot, life, scale, vel,
 		vr1 = 0,
 		vr2 = 0,
 		life = life or 0.12,
+		life_rand = params.life_rand,
 		is_animated = true,
 		scale = scale,
 		friction_x = friction,

@@ -44,7 +44,10 @@ function Cocoon:init(x, y, player)
     self.gun = player and (player.gun) or nil
     
     local skin = player and (player.skin) or (skins[1])
-    self.spr:set_outline(skin.color_palette[1], "round")
+    self.color = skin.color_palette[1]
+    self.color_2 = skin.color_palette[2]
+    self.spr:set_outline(self.color, "round")
+    self.img_revive = skin.img_airborne
 
     self.sweat_timer = Timer:new(0.7):start()
 
@@ -96,15 +99,30 @@ function Cocoon:revive(damager)
     Particles:floating_image({
         images.star_small_1,
         images.star_small_2,
-    }, self.mid_x, self.mid_y, random_range_int(10, 12), 0, 0.25, 1, 120, 0.95)
+    }, self.mid_x, self.mid_y, random_range_int(16, 20), 0,  1.0,  1, 200, 0.95, {life_rand= 0.5, ignore_frameskip = false})
     -- img, x, y,              amount,                  rot, life, s, vel, friction, params
     
     Particles:image(self.mid_x, self.mid_y, 20, {images.cocoon_fragment_1, images.cocoon_fragment_2}, self.w, nil, nil, 0.5)
-    game:frameskip(10)
+	Particles:push_layer(PARTICLE_LAYER_FRONT)
+    Particles:static_image(self.img_revive, math.floor(self.mid_x), math.floor(self.mid_y), 0, 1/60)
+	Particles:pop_layer()
+
+    -- Particles:static_image(self.mid_x, self.mid_y, 20, {images.cocoon_fragment_1, images.cocoon_fragment_2}, self.w, nil, nil, 0.5)
+    
+	Particles:push_layer(PARTICLE_LAYER_BACK)
+	Particles:static_image(images.star_pento_1, self.mid_x, self.mid_y, 0, 0.05, 0.8, {
+		color = COL_WHITE
+	})
+	Particles:static_image(images.star_pento_1, self.mid_x, self.mid_y, 0, 0.05, 0.7, {
+		color = self.color
+	})
+	Particles:pop_layer()
+
+    game:frameskip(20)
+    Audio:play("sfx_actor_cocoon_revive_{01-02}")
 
     game:revive_player(self.player_n, self.x, self.y)
-    Audio:play("sfx_actor_cocoon_revive_{01-02}")
-    
+
     if not self.is_dead then
         self:kill()
     end  

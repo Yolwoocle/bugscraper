@@ -385,6 +385,7 @@ local img_names = {
 	star_small_3 =                "particles/star_small_3",
 
 	star_big =                    "particles/star_big",
+	star_pento_1 =                "particles/star_pento_1",
 
 	jump_dust_kick_1 =            "particles/jump_dust_kick_1",
 	jump_dust_kick_2 =            "particles/jump_dust_kick_2",
