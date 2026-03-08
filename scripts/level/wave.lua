@@ -46,6 +46,8 @@ function Wave:init(params)
 	self.background_transition = param(params.background_transition, nil)
 	self.background_speed_multiplier = param(params.background_speed_multiplier, nil)
 
+	self.override_spawn_cocoons = param(params.override_spawn_cocoons, false)
+
 	self.entrance_names = self:generate_entrance_names()
 end
 
@@ -120,7 +122,7 @@ function Wave:add_cocoons(enemy_classes)
 	end
 
 	for i = 1, MAX_NUMBER_OF_PLAYERS do
-		local cond = (game.waves_until_respawn[i][1] == 0 or self.floor_type == FLOOR_TYPE_CAFETERIA)
+		local cond = (game.waves_until_respawn[i][1] == 0 or self.floor_type == FLOOR_TYPE_CAFETERIA or self.override_spawn_cocoons)
 		if game.waves_until_respawn[i][1] ~= -1 and cond then
 			table.insert(enemy_classes, {
 				enemy_class = Enemies.Cocoon,

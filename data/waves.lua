@@ -1800,6 +1800,7 @@ local waves = parse_waves_table {
         },
 
         music = "off",
+        override_spawn_cocoons = true,
 
         run = function(self, level)
             level.freeze_fury_override = true
