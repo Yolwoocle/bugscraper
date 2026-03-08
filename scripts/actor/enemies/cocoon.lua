@@ -122,7 +122,9 @@ function Cocoon:revive(damager)
     game:frameskip(20)
     Audio:play("sfx_actor_cocoon_revive_{01-02}")
 
-    game:revive_player(self.player_n, self.x, self.y)
+    if game.game_state ~= GAME_STATE_DYING then
+        game:revive_player(self.player_n, self.x, self.y)
+    end
 
     if not self.is_dead then
         self:kill()
