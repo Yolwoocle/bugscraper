@@ -126,8 +126,6 @@ function CloudStormZone:init(x, y, size)
                 self:play_sound_var("sfx_enemy_cloudstorm_thunder_{01-03}", 0.2, 1.2,{volume=0.85})
             end,
             update = function(state, dt)
-                Particles:flash(self.mid_x + random_polar(3), self.y + self.h + 4 + random_polar(3))
-
                 local lightning_radius = random_range(6, 10)
                 self.decorative_lightning:generate(Segment:new(lightning_radius, 0, lightning_radius, pi2))        
 
