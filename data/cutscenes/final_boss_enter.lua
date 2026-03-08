@@ -41,6 +41,8 @@ return Cutscene:new("final_boss_enter", {
             data.bg = BackgroundFinalBossIntro:new()
             data.bg.offset_y = 100
             game.level:set_background(data.bg)
+
+            Audio:play("sfx_cutscene_rocket")
         end,
     }),
 

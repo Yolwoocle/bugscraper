@@ -107,6 +107,10 @@ function GoldenBeetle:activate()
 
     self.exploding = true
     self.exploding_timer:start()
+
+    self:set_constant_sound("beep", "sfx_enemy_goldenbeetle_beep", false)
+    self:set_constant_sound_volume("beep", 1.0 + random_neighbor(0.1))
+    self:play_constant_sound("beep")
 end
 
 return GoldenBeetle

@@ -113,7 +113,7 @@ function Rollopod:init(x, y, spr, w, h)
                     Particles:static_image(images.surprise_effect, self.x + self.w + 8, self.y - 4, 0, 0.1, nil, {flip_x = true})
                 end
 
-                self:play_sound_var("sfx_enemy_rollopod_balling_{01-04}", 0.1, 1.1)
+                self:play_sound_var("sfx_enemy_rollopod_balling_{01-04}", 0.2, 1.2)
             end,
             update = function(state, dt)
                 if self.state_timer:update(dt) then

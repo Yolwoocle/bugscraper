@@ -14,12 +14,25 @@ output_format = "return \"{}\""
 language_file_path = r"/mnt/c/docs/gamedev/bugscraper/bugscraper/data/lang/ja.lua"
 output_folder = r"/mnt/c/docs/gamedev/bugscraper/bugscraper/_tools/font_builder/"
 
-font_size = 12
+output_height = 14
+font_size = 10
 # min_codepoint = 10075   # Minimum Unicode code point to include
 min_codepoint = 0   # Minimum Unicode code point to include
-padding_top = 1#3
-padding_bottom = 1
-excluded_characters = { '🐝', '🐜', '🐛', '🔗', '❤', '🐞'}
+font_offset_y = 0
+
+# Excluded characters
+ASCII = "".join([chr(i) for i in range(32, 127)])
+FONT_CHARACTERS = " !\"#$%&'()*+,-·./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz"+ \
+    "{|}~ ¡¢£©®°¿ÀÁÂÃÄÅĄÆÇĆÈÉÊËĘÌÍÎÏŁÐÑŃÒÓÔÕÖØÙÚÛÜŚÝŹŻŒÞßàáâãäåąæçćèéêëęìíîïłðñńòóôõöøùúûüśýźżœþÿŸЁАБВГДЕЖЗИЙКЛМНО"+ \
+    "ПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюяё€"
+FONT_SYMBOLS_CHARACTERS = \
+    "🔊🔉🔈🎵🎼🔳🔲📺🕐↖🛜▶⏸✓🔄🔘⬅➡⬆⬇⏏🔫🔚📥👆🔙🗄⌨🎮🎚❤" + \
+    "✅❎🔗💡⚠🕹🫨💧🐜🐛🐝🪲🈶🌄🛅😎😈🐦𝕏🦋🐰🐞🌐⏭🥚🥦🐧🎓🔺🦂💀⏰🔥⭐🍊"
+excluded_characters = set(ASCII) | set(FONT_CHARACTERS) | set(FONT_SYMBOLS_CHARACTERS)
+appended_images = [
+    "/mnt/c/docs/gamedev/bugscraper/bugscraper/fonts/hope_gold.png", 
+    "/mnt/c/docs/gamedev/bugscraper/bugscraper/fonts/font_symbols.png"
+]
 
 background_color = 0x00000000
 text_color = "white"
@@ -74,33 +87,51 @@ def extract_characters(font_path, min_codepoint=0):
     return characters
 
 
-def create_image(font_path, characters, output_image, font_size=48):
+def create_image(font_path, characters, output_image, font_size=48, appended_images=[]):
     """
-    Creates a rectangular PNG image with all characters.
-    Each character is separated by a 1px red vertical line, and rows are automatically wrapped.
+    Creates a rectangular PNG image with all characters and appended images.
+    Each element is separated by a 1px vertical line.
     """
     font = ImageFont.truetype(font_path, size=font_size)
 
     char_widths = [font.getbbox(char)[2] for char in characters]
-    char_height = max([font.getbbox(char)[3] for char in characters])
 
     total_chars = len(characters)
-    max_width = sum(char_widths) + len(char_widths) + 1 # Red lines included
-    total_height = char_height + padding_top + padding_bottom
+    
+    # Calculate text section width
+    max_width = sum(char_widths) + len(char_widths) + 1 
+    total_height = output_height
+
+    # Pre-load appended images and calculate their scaled widths to match total_height
+    loaded_imgs = []
+    for img_path in appended_images:
+        img = Image.open(img_path).convert("RGBA")
+        aspect_ratio = img.width / img.height
+        new_width = int(total_height * aspect_ratio)
+        img = img.resize((new_width, total_height), Image.Resampling.LANCZOS)
+        loaded_imgs.append(img)
+        max_width += new_width # Add image width + separator line
 
     image = Image.new("RGBA", (max_width, total_height), background_color)
     draw = ImageDraw.Draw(image)
-
-    draw.line([(0, 0), (0, total_height)], fill=separator_color, width=1)
     
-    x_offset, y_offset = 1, 0
+    x_offset, y_offset = 0, 0
+    # Draw characters
     for i, char in enumerate(characters):
-        draw.text((x_offset, y_offset + padding_top), char, font=font, fill=text_color)
-        x_offset += font.getbbox(char)[2]  # Character width
-
-        # Add a vertical red line
         draw.line([(x_offset, y_offset), (x_offset, y_offset + total_height)], fill=separator_color, width=1)
         x_offset += 1  
+
+        draw.text((x_offset, y_offset + font_offset_y), char, font=font, fill=text_color)
+        x_offset += font.getbbox(char)[2]
+
+    # Draw appended images
+    for img in loaded_imgs:
+        image.paste(img, (x_offset, 0), img)
+        x_offset += img.width
+
+    # Draw closing line 
+    # draw.line([(x_offset, y_offset), (x_offset, y_offset + total_height)], fill=separator_color, width=1)
+    # x_offset += 1  
 
     image.save(output_image)
     print(f"Image saved as {output_image}")
@@ -134,4 +165,4 @@ print(f"Found {len(characters_used)} used characters")
 print(f"Found {len(used_characters_present_in_font)} used characters compatible with font: {used_characters_present_in_font}")
 
 save_characters_to_file(used_characters_present_in_font, os.path.join(output_folder, output_text), output_format)
-create_image(font_path, used_characters_present_in_font, os.path.join(output_folder, output_image), font_size)
+create_image(font_path, used_characters_present_in_font, os.path.join(output_folder, output_image), font_size, appended_images)

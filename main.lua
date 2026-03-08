@@ -232,27 +232,27 @@ function love.run()
 		-- Update dt, as we'll be passing it to update
 		if love.timer then dt = love.timer.step() end
 
-		__tick("upd", COL_BLUE, 2)
+		__tick("update", COL_BLUE, 2)
 		-- Call update and draw
 		if love.update then love.update(dt) end -- will pass 0 if love.timer is disabled
-		__tock("upd")
+		__tock("update")
 
 		__tick("draw", COL_RED, 2)
 		if love.graphics and love.graphics.isActive() then
-			__tick("o", COL_RED, 3)
+			__tick("origin", COL_RED, 3)
 			love.graphics.origin()
-			__tock("o")
-			__tick("cl", COL_ORANGE, 3)
+			__tock("origin")
+			__tick("clear", COL_ORANGE, 3)
 			love.graphics.clear(love.graphics.getBackgroundColor())
-			__tock("cl")
+			__tock("clear")
 			
-			__tick("dr", COL_YELLOW, 3)
+			__tick("love.draw", COL_YELLOW, 3)
 			if love.draw then love.draw() end
-			__tock("dr")
+			__tock("love.draw")
 			
-			__tick("p", COL_GREEN, 3)
+			__tick("present", COL_GREEN, 3)
 			love.graphics.present()
-			__tock("p")
+			__tock("present")
 
 			-- love.graphics.clear()
 			-- love.graphics.print(love.timer.getFPS(), 0, 0, 0, 5)

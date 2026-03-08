@@ -266,6 +266,7 @@ local sfxnames = {
 	
 	-- Golden Beetle
 	["sfx_enemy_goldenbeetle_explode_{01-03}"] = {"sfx/enemy/goldenbeetle/sfx_enemy_goldenbeetle_explode_{}.ogg", "static"},
+	["sfx_enemy_goldenbeetle_beep"] = {"sfx/enemy/goldenbeetle/sfx_enemy_goldenbeetle_beep.ogg", "static"},
 
 
 	-- UPGRADES
@@ -308,6 +309,8 @@ local sfxnames = {
 	["chipper_telegraph"] = {"placeholder/chipper_telegraph.ogg", "static"},
 	["sfx_enemy_death"] = {"placeholder/sfx_enemy_death.ogg", "static"},
 
+	-- CUTSCENE
+	["sfx_cutscene_rocket"] = {"sfx/cutscene/sfx_cutscene_rocket.ogg", "stream"},
 	
 	-- Ambience
 	["amb_pad_cafeteria_lp"] = {"sfx/ambience/amb_pad_cafeteria_lp.ogg", "stream", {looping = true}},
