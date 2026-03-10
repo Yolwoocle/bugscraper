@@ -75,14 +75,7 @@ function TextMenuItem:draw_textitem()
 		draw_3_slice(images.selection_left, images.selection_right, col, x, y, w, h)
 		
 		if Input:get_number_of_users() > 1 then
-			local last_player_n = Input:get_last_ui_user_n()
-			local t = Text:text("player.abbreviation", last_player_n)
-
-			local user = Input:get_user(last_player_n)
-			if user and user:get_skin() then
-				t = t .. " " .. user:get_skin().icon
-			end
-			print_outline(text_col, col, t, x - get_text_width(t), y)
+			self:draw_player_icon(text_col, col, x, y)
 		end
 	end
 	
@@ -95,6 +88,30 @@ function TextMenuItem:draw_textitem()
 	love.graphics.setColor(1, 1, 1, 1)
 
 	self:draw_annotation()
+end
+
+function TextMenuItem:draw_player_icon(text_col, col, x, y)
+	x = x - 8
+
+	local last_player_n = Input:get_last_ui_user_n()
+	local text_bottom = Text:text("player.abbreviation", last_player_n)
+	local text_top = ""
+
+	local user = Input:get_user(last_player_n)
+	local icon = nil
+	if user and user:get_skin() then
+		icon = user:get_skin().icon
+		text_top = text_bottom 
+		text_bottom = icon
+	end
+	
+	local h = 10
+	if icon then
+		local w = get_text_width(icon)
+		draw_3_slice(images.selection_left, images.selection_right, col, x - w - 16, y, w + 32, 16)
+	end
+	print_outline(text_col, col, text_bottom, x - get_text_width(text_bottom), y)
+	print_centered_outline(text_col, col, text_top, x - get_text_width(text_bottom)/2, y - 10)
 end
 
 function TextMenuItem:draw_annotation()
