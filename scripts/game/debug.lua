@@ -25,6 +25,7 @@ local BackroomCredits = require "scripts.level.backroom.backroom_credits"
 local shaders         = require "data.shaders"
 local BackroomBasement = require "scripts.level.backroom.backroom_basement"
 local BackroomEnding  = require "scripts.level.backroom.backroom_ending"
+local achievements    = require "data.achievements"
 
 local Debug            = Class:inherit()
 
@@ -846,6 +847,11 @@ function Debug:draw_info_view()
             skininfo = skininfo .. concat(skin_id, "(", (skins[skin_id] or {}).text_key, "), ")
         end
 
+        local achievementsinfo = "" 
+        for _, ach_id in pairs(Metaprogression:get("achievements")) do
+            achievementsinfo = achievementsinfo .. concat(ach_id or "[nil]", ", ")
+        end
+
         local upgradeinfo = ""
         for _, upgrade_name in pairs(Metaprogression:get("upgrades")) do
             upgradeinfo = upgradeinfo .. concat(upgrades[upgrade_name]:new().name, ", ")
@@ -854,11 +860,6 @@ function Debug:draw_info_view()
         -- Print debug info
         local txt_h = get_text_height(" ")
         local txts = {
-            "",
-            "",
-            "",
-            "",
-            "",
             concat("FPS: ", love.timer.getFPS(), " / Vsync: ", Options:get("is_vsync")),
             concat("LOVE version: ", string.format("%d.%d.%d - %s", love.getVersion())),
             concat("Renderer info: ", renderer_name, " (v", renderer_version, ")"),
@@ -890,7 +891,8 @@ function Debug:draw_info_view()
             ),
             concat("score: ", game.score) .. " / ".. concat("xp: ", Metaprogression:get_xp()) .. " / " .. concat("xp_level: ", Metaprogression:get_xp_level()),
             concat("unlocked_skins: ", skininfo),
-            -- concat("unlocked_upgrades: ", upgradeinfo),
+            concat("achievements: ", achievementsinfo),
+            concat("unlocked_upgrades: ", upgradeinfo),
             concat("background_transition: on ", game.level.background_transition_on, " / y ", game.level.background_transition_y, " / speed_mult ", game.level.background_transition_speed_mult),
             "",
         }

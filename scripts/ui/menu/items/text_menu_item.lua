@@ -74,7 +74,7 @@ function TextMenuItem:draw()
 		local w = math.floor(CANVAS_WIDTH - game.menu_manager:get_menu_padding()*2)
 		local h = 16
 		
-		draw_3_slice(images.selection_left, images.selection_right, col, x, y, w, h)
+		draw_3_slice(images.selection_left, nil, images.selection_right, col, x, y, w, h)
 		
 		if Input:get_number_of_users() > 1 then
 			self:draw_player_icon(text_col, col, x, y)
@@ -105,7 +105,7 @@ function TextMenuItem:draw_player_icon(text_col, col, x, y)
 	local h = 10
 	if icon then
 		local w = get_text_width(icon)
-		draw_3_slice(images.selection_left, images.selection_right, col, x - w - 16, y, w + 32, 16)
+		draw_3_slice(images.selection_left, nil, images.selection_right, col, x - w - 16, y, w + 32, 16)
 	end
 	print_outline(text_col, col, text_bottom, x - get_text_width(text_bottom), y)
 	print_centered_outline(text_col, col, text_top, x - get_text_width(text_bottom)/2, y - 10)
@@ -119,7 +119,7 @@ function TextMenuItem:draw_annotation()
 		local x = math.floor(CANVAS_WIDTH / 2 - w/2)
 		local y = math.floor(self.y + self.oy - 6 + 24)
 
-		draw_3_slice(images.selection_left, images.selection_right, COL_WHITE, x, y, w, h)
+		draw_3_slice(images.selection_left, nil, images.selection_right, COL_WHITE, x, y, w, h)
 		draw_centered(images.bubble_tip, x + w/2, y - images.bubble_tip:getHeight()/2)
 
 		print_centered_outline(COL_BLACK_BLUE, COL_WHITE, self.annotation, x + w/2, y + h/2)
@@ -135,7 +135,7 @@ function TextMenuItem:draw_text()
 		text_color = skin_text_color or COL_WHITE
 	end
 	if not self.is_selectable then
-		text_color = COL_LIGHTEST_GRAY
+		text_color = COL_LIGHT_GRAY
 	end
 	love.graphics.setColor(text_color)
 

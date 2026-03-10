@@ -13,6 +13,7 @@ Text                         = TextManager:new()
 local backgrounds            = require "data.backgrounds"
 local LightWorld             = require "scripts.graphics.light_world"
 
+local AchievementManager     = require "scripts.meta.achievement_manager"
 local Class                  = require "scripts.meta.class"
 local CollisionManager       = require "scripts.physics.collision"
 local Player                 = require "scripts.actor.player"
@@ -61,6 +62,7 @@ function Game:init()
 	Audio = AudioManager:new()
 	Screenshot = ScreenshotManager:new()
 	Metaprogression = MetaprogressionManager:new()
+	Achievements = AchievementManager:new()
 
 	Input:init_users()
 

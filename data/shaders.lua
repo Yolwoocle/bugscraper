@@ -58,6 +58,30 @@ shaders.smoke_shader = love.graphics.newShader[[
 	}
 ]]
 
+shaders.achievement_locked = love.graphics.newShader[[
+	uniform float uDarkenFactor = 0.7;
+
+	vec4 effect(vec4 color, Image texture, vec2 textureCoords, vec2 screenCoords){
+		vec3 palette[7];
+		palette[0] = vec3(0.094, 0.078, 0.145); // #181425 (Darkest)
+		palette[1] = vec3(0.149, 0.168, 0.266); // #262b44
+		palette[2] = vec3(0.227, 0.266, 0.400); // #3a4466
+		palette[3] = vec3(0.353, 0.412, 0.533); // #5a6988
+		palette[4] = vec3(0.545, 0.608, 0.706); // #8b9bb4
+		palette[5] = vec3(0.753, 0.796, 0.863); // #c0cbdc
+		palette[6] = vec3(1.000, 1.000, 1.000); // #ffffff (Brightest)
+
+		vec4 textureColor = Texel(texture, textureCoords);
+		float gray = clamp(dot(textureColor.rgb, vec3(0.2126, 0.7152, 0.0722)), 0.0, 1.0);
+
+		int step = int(gray * 6.0);
+		vec3 finalColor = palette[step];
+		
+		gray *= uDarkenFactor;
+		return vec4(vec3(finalColor), textureColor.a);
+	}
+]]
+
 -- https://stackoverflow.com/questions/64837705/opengl-blurring
 shaders.blur_shader = love.graphics.newShader[[
 	uniform float xs = 480.0; // texture resolution

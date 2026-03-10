@@ -452,13 +452,20 @@ function print_ycentered(text, x, y, rot, sx, sy, ...)
 	love.graphics.flrprint(text, x, y - text_h / 2, rot, sx, sy, ...)
 end
 
-function draw_3_slice(img_left, img_right, col, x, y, w, h)
+function draw_3_slice(img_left, img_mid, img_right, col, x, y, w, h)
 	w = math.max(w, img_left:getWidth() + img_right:getWidth())
 	exec_color(col, function()
-		love.graphics.draw(img_left, math.floor(x), math.floor(y))
-		love.graphics.draw(img_right, math.floor(x + w - img_right:getWidth()), math.floor(y))
-		rect_color(col, "fill", math.floor(x + img_left:getWidth()), math.floor(y),
-			math.ceil(w - img_left:getWidth() - img_right:getWidth()), h)
+		local x1 = math.floor(x)
+		local x2 = math.floor(x + w - img_right:getWidth())
+		love.graphics.draw(img_left, x1, math.floor(y))
+		love.graphics.draw(img_right, x2, math.floor(y))
+
+		local mid_w = math.ceil(w - img_left:getWidth() - img_right:getWidth())
+		if img_mid then
+			love.graphics.draw(img_mid, x1+img_left:getWidth(), math.floor(y), 0, mid_w / img_mid:getWidth(), 1)
+		else
+			rect_color(col, "fill", math.floor(x + img_left:getWidth()), math.floor(y), mid_w, h)
+		end
 	end)
 end
 
@@ -779,6 +786,14 @@ function table_to_set(tab)
 	local out = {}
 	for k, v in pairs(tab) do
 		out[v] = true
+	end
+	return out
+end
+
+function set_to_table(set)
+	local out = {}
+	for k, v in pairs(set) do
+		table.insert(out, k)
 	end
 	return out
 end

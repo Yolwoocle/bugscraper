@@ -55,10 +55,10 @@ function ProgressBarMenuItem:draw()
 		over_val = (clamp(self.overlay_value, self.min_value, self.max_value) - self.min_value) / (self.max_value - self.min_value)
 	end
 
-	draw_3_slice(images.selection_left_small, images.selection_right_small, COL_MID_GRAY, x, y, w, 10)
-	draw_3_slice(images.selection_left_small, images.selection_right_small, COL_WHITE,    x, y, w * val, 10)
+	draw_3_slice(images.selection_left_small, nil, images.selection_right_small, COL_MID_GRAY, x, y, w, 10)
+	draw_3_slice(images.selection_left_small, nil, images.selection_right_small, COL_WHITE,    x, y, w * val, 10)
 	if self.overlay_value then
-		draw_3_slice(images.selection_left_small, images.selection_right_small, COL_LIGHTEST_GRAY, x, y, w * over_val, 10)
+		draw_3_slice(images.selection_left_small, nil, images.selection_right_small, COL_LIGHTEST_GRAY, x, y, w * over_val, 10)
 	end
 	print_centered_outline(COL_WHITE, COL_MID_GRAY, self.text, self.x, y + 4)
 end

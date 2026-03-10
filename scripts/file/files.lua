@@ -13,10 +13,13 @@ function Files:parse_value(str_value, reference_value)
     local typ = type(reference_value)
     if typ == "string" then
         val = str_value   
+
     elseif typ == "number" then
         val = tonumber(str_value)
+
     elseif typ == "boolean" then
         val = strtobool(str_value)
+
     elseif typ == "table" then
         val = split_str(str_value or "", ",") 
         for index, subval in pairs(val) do
@@ -75,6 +78,7 @@ function Files:read_config_file(path, reference, create_if_missing)
 	file:close()
     
     return output
+
 end
 
 function Files:read_line(line, reference, path)

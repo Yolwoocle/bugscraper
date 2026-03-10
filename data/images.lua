@@ -731,6 +731,8 @@ local img_names = {
 	ach_no_floor =           "achievements/ach_no_floor",
 	ach_no_upgrades =        "achievements/ach_no_upgrades",
 	ach_smash_easter_egg =   "achievements/ach_smash_easter_egg",
+
+	achievement_lock =       "achievements/achievement_lock",
 	
 	-----------------------------------------------------
 	
