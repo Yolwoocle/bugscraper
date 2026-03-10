@@ -12,7 +12,7 @@ function Menu:init(game, title, items, bg_color, prompts, extra_draw, params)
 	self.items = {}
 	self.is_menu = true
 
-	local th = get_text_height() + 2
+	local th = params.item_separation or (get_text_height() + 2)
 	self.height = (#items - 1) * th
 
 	for i, parms in pairs(items) do

@@ -168,14 +168,15 @@ local function generate_menus()
 
     menus.pause = require "data.menus.menu_pause"
 
+    menus.achievements = require "data.menus.menu_achievements"
+
     menus.feedback = Menu:new(game, "{menu.feedback.title}", {
         { "{menu.feedback.bugs} / {menu.feedback.features}" },
         { " " },
         { "{menu.pause.discord} 🔗", func_url("https://bugscraper.net/discord") },
         { "{menu.pause.github} 🔗", func_url("https://github.com/yolwoocle/bugscraper") },
     }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
-
-
+    
     menus.options = require "data.menus.menu_options"
 
     menus.options_language = require "data.menus.menu_options_language"

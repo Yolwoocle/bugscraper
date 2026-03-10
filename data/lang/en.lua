@@ -320,6 +320,9 @@ return {
                 description = "Restart the game to apply new language?",
             },
         },
+        achievements = {
+            title = "ACHIEVEMENTS",
+        },
         feedback = {
             title = "FEEDBACK",
             bugs = "REPORT A BUG",

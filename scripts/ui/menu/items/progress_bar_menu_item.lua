@@ -64,7 +64,7 @@ function ProgressBarMenuItem:draw()
 end
 
 function ProgressBarMenuItem:after_click()	
-	self.oy = -4
+	self.oy = -self.selected_anim_offset
 end
 
 return ProgressBarMenuItem

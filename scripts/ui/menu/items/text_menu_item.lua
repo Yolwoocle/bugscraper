@@ -11,8 +11,13 @@ function TextMenuItem:init(i, x, y, text, on_click, update_value)
 	self:set_label_text(Text:parse(text))
 	self:set_value_text("")
 
+	self.selected_anim_offset = 4
+
 	self.value = nil
 	self.type = "text"
+
+	self.text_ox = 0
+	self.text_oy = 0
 
 	if on_click and type(on_click) == "function" then
 		self.on_click = on_click
@@ -54,14 +59,11 @@ function TextMenuItem:update(dt)
 
 	self.ox = lerp(self.ox, 0, 0.3)
 	self.oy = lerp(self.oy, 0, 0.3)
-	if math.abs(self.ox) <= 0.1 then self.ox = 0 end
-	if math.abs(self.oy) <= 0.1 then self.oy = 0 end
+	if math.abs(self.ox) <= 0.5 then self.ox = 0 end
+	if math.abs(self.oy) <= 0.5 then self.oy = 0 end
 end
 
 function TextMenuItem:draw()
-	self:draw_textitem()
-end
-function TextMenuItem:draw_textitem()
 	love.graphics.setColor(1, 1, 1, 1)
 	local text_height = get_text_height(self.label_text)
 	
@@ -79,13 +81,8 @@ function TextMenuItem:draw_textitem()
 		end
 	end
 	
-	if type(self.value) == "nil" then
-		self:draw_without_value()
-	else
-		self:draw_with_value()
-	end
-	
-	love.graphics.setColor(1, 1, 1, 1)
+	self:draw_text()
+	love.graphics.setColor(COL_WHITE)
 
 	self:draw_annotation()
 end
@@ -130,60 +127,43 @@ function TextMenuItem:draw_annotation()
 	end
 end
 
--- this is awful. please ffs change it
-function TextMenuItem:get_leftjustified_text_draw_function()
-	return print_ycentered
-end
-
-function TextMenuItem:draw_without_value()
+function TextMenuItem:draw_text()
+	-- Set text color 
 	local text_color = COL_WHITE
-
 	if self.is_selected then
 		local _, skin_text_color = Input:get_last_ui_player_colors()
-		text_color = skin_text_color
+		text_color = skin_text_color or COL_WHITE
 	end
 	if not self.is_selectable then
 		text_color = COL_LIGHTEST_GRAY
 	end
-	text_color = text_color or COL_WHITE
-
 	love.graphics.setColor(text_color)
-	print_centered(self.label_text, self.x, self.y + self.oy)
-end
 
-function TextMenuItem:draw_with_value()
-	local draw_func = self:get_leftjustified_text_draw_function()
-
-	if self.is_selected then
-		local _, skin_text_color = Input:get_last_ui_player_colors()
-		love.graphics.setColor(skin_text_color or COL_WHITE)
+	-- Draw text
+	if type(self.value) == "nil" then
+		print_centered(self.label_text, self.x + self.ox + self.text_ox, self.y + self.oy + self.text_oy)
+	else
+		print_ycentered(self.label_text, game.menu_manager:get_menu_padding() + 16 + self.ox + self.text_ox, self.y + self.oy + self.text_oy)
+		self:draw_value_text()
 	end
-	if not self.is_selectable then
-		love.graphics.setColor(COL_LIGHTEST_GRAY)
-	end
-	draw_func(self.label_text, game.menu_manager:get_menu_padding() + 16, self.y + self.oy)
-
-	self:draw_value_text()
 end
 
 function TextMenuItem:draw_value_text()
-	local draw_func = self:get_leftjustified_text_draw_function()
 	local value_text_width = get_text_width(self.value_text)
-	
-	draw_func(self.value_text, CANVAS_WIDTH - game.menu_manager:get_menu_padding() - value_text_width - 16 + self.ox, self.y + self.oy)
+	print_ycentered(self.value_text, CANVAS_WIDTH - game.menu_manager:get_menu_padding() - value_text_width - 16 + self.ox + self.text_ox, self.y + self.oy + self.text_oy)
 end
 
 function TextMenuItem:set_selected(val, diff)
 	self.is_selected = val
 	if val then
-		self.oy = sign(diff or 1) * 4
+		self.oy = sign(diff or 1) * self.selected_anim_offset
 	end
 end
 
 function TextMenuItem:after_click()
 	Audio:play_var("ui_menu_select_{01-04}", 0.1, 1.2)
 	Input:vibrate(Input:get_last_ui_user_n(), 0.03, 0.1)
-	self.oy = -4
+	self.oy = -self.selected_anim_offset
 end
 
 return TextMenuItem

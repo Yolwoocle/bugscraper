@@ -54,12 +54,10 @@ function ControlsMenuItem:draw_value_text()
 	local right_bound = CANVAS_WIDTH - game.menu_manager:get_menu_padding() + self.ox - 16
 	local y = math.floor(self.y + self.oy + 2)
 
-	local draw_func = self:get_leftjustified_text_draw_function()
-
 	if not self.is_waiting_for_input and (type(self.value) == "table" and #self.value == 0) then
 		local text = Text:text("menu.options.input_submenu.no_buttons")
 		local w = get_text_width(text)
-		draw_func(text, right_bound - w, y)
+		print_ycentered(text, right_bound - w, y)
 
 	else
 		local x = right_bound
@@ -74,7 +72,7 @@ function ControlsMenuItem:draw_value_text()
 		if self.is_waiting_for_input and self.t % 0.5 < 0.3 then
 			local text = Text:text("menu.options.input_submenu.press_button")
 			local w = get_text_width(text)
-			draw_func(text, x - w, y)
+			print_ycentered(text, x - w, y)
 		end
 	end
 end
@@ -121,7 +119,7 @@ function ControlsMenuItem:on_click()
 	-- Go in standby mode
 	Options:update_options_file()
 	Audio:play("ui_menu_select_{01-04}")
-	self.oy = -4
+	self.oy = -self.selected_anim_offset
 	
 	Input:set_standby_mode(true)
 	self.is_waiting_for_input = true
@@ -177,7 +175,7 @@ function ControlsMenuItem:on_button_pressed(button)
 			return
 		end
 
-		self.oy = -4
+		self.oy = -self.selected_anim_offset
 		self:stop_waiting()
 		
 		if Input:is_button_in_use(self.profile_id, self.action_name, button) then
