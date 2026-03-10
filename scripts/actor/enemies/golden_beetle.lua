@@ -48,6 +48,8 @@ function GoldenBeetle:init(x, y, spr)
 
     self.explosion_radius = 42
 
+    self.is_exploding = false
+
     self.score = 10
 end
 
@@ -97,6 +99,10 @@ function GoldenBeetle:on_negative_life()
 end
 
 function GoldenBeetle:activate()
+    if self.is_exploding then
+        return
+    end
+    self.is_exploding = true
     self.counts_for_enemy_count = false
     
     self.random_rotate_speed = 10
