@@ -579,6 +579,10 @@ local img_names = {
 
 	controls_jetpack = "ui/controls_jetpack",
 
+	toast_left =  "ui/toast_left",
+	toast_mid =   "ui/toast_mid",
+	toast_right = "ui/toast_right",
+
 	selection_left =  "ui/selection_left",
 	selection_mid =   "ui/selection_mid",
 	selection_right = "ui/selection_right",
@@ -731,6 +735,7 @@ local img_names = {
 	ach_no_floor =           "achievements/ach_no_floor",
 	ach_no_upgrades =        "achievements/ach_no_upgrades",
 	ach_smash_easter_egg =   "achievements/ach_smash_easter_egg",
+	ach_secret =             "achievements/ach_secret",
 
 	achievement_lock =       "achievements/achievement_lock",
 	

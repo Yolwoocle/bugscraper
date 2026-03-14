@@ -11,7 +11,8 @@
 
 return {
     __meta = {
-        menu_padding = 0.2
+        menu_padding = 0.2,
+        large_mini_font = true,
     },
     language = {
         en = "English",

@@ -9,7 +9,7 @@ function AchievementManagerSteam:init()
 end
 
 function AchievementManagerSteam:grant_api(achievement_name)
-    -- TODO
+    Steamworks:set_achievement(achievement_name)
 end
 
 function AchievementManagerSteam:revoke_api(achievement_name)

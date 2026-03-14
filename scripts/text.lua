@@ -8,6 +8,7 @@ local TextManager = Class:inherit()
 function TextManager:init()
     print("Loading text...")
 
+    -- TODO only load required languages
     local start = love.timer.getTime()
     self.languages = {
         ["en"] = require "data.lang.en",
@@ -60,7 +61,7 @@ function TextManager:init()
         -- print_table(s)
         words = words + #s
     end
-    print("Finished loading "..tostring(words).." words. ("..(1000* (love.timer.getTime() - start)).." ms)")
+    print("Finished loading "..tostring(words).." words for language '"..tostring(self.language).."'. ("..(1000* (love.timer.getTime() - start)).." ms)")
 
     self.font_stack = {}
     

@@ -77,7 +77,6 @@ shaders.achievement_locked = love.graphics.newShader[[
 		int step = int(gray * 6.0);
 		vec3 finalColor = palette[step];
 		
-		gray *= uDarkenFactor;
 		return vec4(vec3(finalColor), textureColor.a);
 	}
 ]]

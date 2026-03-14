@@ -1,6 +1,6 @@
 print("Loading API libraries...")
-local DiscordPresence        = require "scripts.meta.discord_presence"
-local Steamworks             = require "scripts.meta.steamworks" -- TODO make so that the gmae doesn't crash if this doesn't load
+local DiscordPresence_inst   = require "scripts.meta.discord_presence"
+local Steamworks_inst        = require "scripts.meta.steamworks" -- TODO make so that the gmae doesn't crash if this doesn't load
 print("")
 
 local TextManager            = require "scripts.text"
@@ -56,6 +56,9 @@ local Game = Class:inherit()
 
 function Game:init()
 	-- Global singletons
+	DiscordPresence = DiscordPresence_inst
+	Steamworks = Steamworks_inst
+
 	Input = InputManager:new(self)
 	Collision = CollisionManager:new()
 	Particles = ParticleSystem:new()
@@ -127,9 +130,6 @@ function Game:init()
 	self.ui_visible = true
 
 	self.join_cooldown_frames = 0
-
-	self.discord_presence = DiscordPresence
-	self.steamworks = Steamworks
 
 	self.debug_mode = DEBUG_MODE
 end
@@ -402,8 +402,8 @@ function Game:update(dt)
 			(self.menu_manager.cur_menu.blur_enabled)
 	end
 
-	self.discord_presence:update(dt)
-	self.steamworks:update(dt)
+	DiscordPresence:update(dt)
+	Steamworks:update(dt)
 
 	self.join_cooldown_frames = math.max(0, self.join_cooldown_frames - 1)
 
@@ -451,8 +451,8 @@ function Game:update_main_game(dt)
 end
 
 function Game:quit()
-	self.discord_presence:quit()
-	self.steamworks:quit()
+	DiscordPresence:quit()
+	Steamworks:quit()
 end
 
 function Game:get_enemy_count()

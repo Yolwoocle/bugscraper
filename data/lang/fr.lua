@@ -11,7 +11,8 @@
 
 return {
     __meta = {
-        menu_padding = 0.18
+        menu_padding = 0.18,
+        large_mini_font = false,
     },
     language = {
         -- These should be kept untranslated in their original language ("english", "français", "中文", etc)
@@ -72,7 +73,7 @@ return {
         shotgun = "Fusil Framboise",
         minigun = "Ensemenceur",
         ring = "Boum Baie",
-        mushroom_cannon = "Champi-canon",
+        mushroom_cannon = "Champicanon",
 
         resignation_letter = "Lettre de Démission" 
     },

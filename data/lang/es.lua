@@ -11,7 +11,8 @@
 
 return {
 	__meta = {
-        menu_padding = 0.1
+        menu_padding = 0.1,
+        large_mini_font = false,
     },
 	language = {
 		-- These should be kept untranslated in their original language ("english", "français", "中文", etc)
@@ -83,7 +84,7 @@ return {
 		abbreviation = "J%d", -- Short appreviation to denote players by their number. Example: in english, "P1" means "Player 1", in french "J1" means "Joueur 1".
 	},
 	enemy = {
-		boss_1 = "Sr. estiércol", -- keeping the format but people pick up less onto the abbreviation of sir (Señor)
+		boss_1 = "Sr. Estiércol", -- keeping the format but people pick up less onto the abbreviation of sir (Señor)
 		boss_2 = "Su majestad",
 		boss_3 = "El maestro de redes",
 
@@ -347,7 +348,6 @@ return {
 			title = "Licencias de código abierto",
 		},
 	},
-
 	discord = { -- Text used for Discord rich presence
 		state = {
 			solo = "Jugando solo",

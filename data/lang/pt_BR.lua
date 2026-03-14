@@ -10,7 +10,8 @@
 return {
     __meta = {
         -- Do not touch this section.
-        menu_padding = 0.18
+        menu_padding = 0.18,
+        large_mini_font = false,
     },
     language = {
         -- These should be kept untranslated in their original language ("English", "Français", "简体中文", etc)

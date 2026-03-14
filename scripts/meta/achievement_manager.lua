@@ -1,6 +1,7 @@
 require "scripts.util"
 local Class = require "scripts.meta.class"
 local achievements = require "data.achievements"
+local images       = require "data.images"
 
 local AchievementManager = Class:inherit()
 
@@ -21,6 +22,11 @@ function AchievementManager:regrant_achievements()
         -- NOTE: maybe only grant the achievement if they're not granted on remote?
         self:grant_api(ach)
     end
+
+    if Input:action_pressed_any_player("interact") then
+        local k = table_keys(achievements)
+        self:grant(achievements[k[random_range_int(1, #k)]])
+    end
 end
 
 function AchievementManager:achievement_exists(achievement_name)
@@ -32,7 +38,6 @@ function AchievementManager:get_granted_achievements()
 end
 
 function AchievementManager:is_achievement_granted(achievement_name)
-    print("is_in_table(self:get_granted_achievements(), achievement_name) " , is_in_table(self:get_granted_achievements(), achievement_name))
     return self.granted_achievements[achievement_name]
 end
 
@@ -46,11 +51,21 @@ function AchievementManager:grant(achievement_name)
     
     self:save_achievements()
     self:grant_api(achievement_name)
+
+    if game and game.game_ui then
+        local ach = self:get_achievement(achievement_name)
+        game.game_ui:new_toast(
+            images[ach.image],
+			Text:text("achievements." .. ach.name .. ".name"),
+			Text:text("achievements." .. ach.name .. ".description")
+        )
+    end
 end
 
 -- (Abstract) To be implemented by subclasses.
 -- Actually grants the achievement through the appropriate API (Steam, Google Play, etc) 
 function AchievementManager:grant_api(achievement_name)
+    -- error("To be implemented")
 end
 
 -- Revokes the achievement
@@ -62,6 +77,7 @@ end
 -- (Abstract) To be implemented by subclasses
 -- Actually revokes the achievement through the appropriate API (Steam, Google Play, etc) 
 function AchievementManager:revoke_api(achievement_name)
+    -- error("To be implemented")
 end
 
 -- Revokes all the achievements
@@ -74,6 +90,7 @@ end
 -- (Abstract) To be implemented by subclasses
 -- Actually revokes all the achievements through the appropriate API (Steam, Google Play, etc) 
 function AchievementManager:revoke_all_api()
+    -- error("To be implemented")
 end
 
 function AchievementManager:save_achievements()

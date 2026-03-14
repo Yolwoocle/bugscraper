@@ -2,10 +2,12 @@ require "scripts.util"
 local images = require "data.images"
 local Class = require "scripts.meta.class"
 local PlayerPreview = require "scripts.ui.player_preview"
+local Toast = require "scripts.ui.toast"
 local shaders = require "data.shaders"
 local Ui = require "scripts.ui.ui"
 local Timer = require "scripts.timer"
 local TvPresentation = require "scripts.level.background.tv_presentation"
+local achievements   = require "data.achievements"
 
 local GameUI = Class:inherit()
 
@@ -102,6 +104,8 @@ function GameUI:init(game, is_visible)
 	self.iris_transition_t = 0
 	self.iris_transition_target_t = 0
 
+	self.toasts = {}
+
 	self.ending_counter_text = nil
 
 	self.show_boss_bar = true
@@ -128,6 +132,7 @@ function GameUI:update(dt)
 	self:update_title(dt)
 	self:update_boss_bar(dt)
 	self:update_iris_transition(dt)
+	self:update_toast(dt)
 	self.dark_overlay_alpha = move_toward(self.dark_overlay_alpha, self.dark_overlay_alpha_target, dt)
 
 	self.t = self.t + dt
@@ -152,7 +157,6 @@ function GameUI:draw()
 	if self.dark_overlay_alpha > 0 then
 		rect_color(transparent_color(self.dark_overlay_color_override or COL_BLACK_BLUE, self.dark_overlay_alpha), "fill", 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
 	end
-
 	self:draw_splash_animation()
 	-- local r
     -- r = game.level.cabin_inner_rect
@@ -166,6 +170,7 @@ function GameUI:draw_front()
 	
 	self:draw_FPS()
 	self:draw_timer()
+	self:draw_toast()
 end
 
 function GameUI:set_gameplay_hud_visible(bool)
@@ -753,6 +758,41 @@ function GameUI:draw_boss_bar()
 	Ui:draw_progress_bar(CANVAS_CENTER[1] - w/2, 8, w, 4, 
 						self.boss_bar_value, 1, 
 						col or COL_LIGHT_RED, COL_BLACK_BLUE, col or COL_DARK_RED, "")
+end
+
+
+
+function GameUI:new_toast(image, title, description, params)
+	table.insert(self.toasts, Toast:new(#self.toasts + 1, image, title, description, params))
+end
+
+function GameUI:update_toast(dt)
+	for _, toast in pairs(self.toasts) do
+		toast:update(dt)
+	end
+
+	for i=#self.toasts, 1, -1 do
+		if self.toasts[i].to_delete then
+			table.remove(self.toasts, i)
+		end
+	end
+
+	for i=1, #self.toasts do
+		self.toasts[i].i = i
+	end
+end
+
+function GameUI:draw_toast()
+	local x = 2
+	local y = 2
+	
+	local sep = 2
+
+	for i, toast in pairs(self.toasts) do
+		toast:draw()
+
+		y = y + toast.h + sep
+	end
 end
 
 return GameUI

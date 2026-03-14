@@ -1,10 +1,10 @@
 require "scripts.util"
 local creq = require "lib.creq.creq"
 local Class = require "scripts.meta.class"
-local Steam
+local LuaSteam
 local import_success
 if pcall(function()
-	Steam = require "luasteam"
+	LuaSteam = require "luasteam"
 end) then
 	print("Steamworks: successfully loaded")
 	import_success = true
@@ -30,11 +30,11 @@ function Steamworks:init()
 end
 
 function Steamworks:enable()
-	Steam.init()
+	LuaSteam.init()
 end
 
 function Steamworks:disable()
-	Steam.shutdown()
+	LuaSteam.shutdown()
 end
 
 function Steamworks:update(dt)
@@ -42,7 +42,7 @@ function Steamworks:update(dt)
 		return
 	end
 
-	Steam.runCallbacks()
+	LuaSteam.runCallbacks()
 end
 
 function Steamworks:quit()
@@ -53,12 +53,30 @@ function Steamworks:quit()
 	self:disable()
 end
 
-local steam_instance = Steamworks:new()
+function Steamworks:set_achievement(achievement_id)
+	if not self.is_enabled then
+		return
+	end
 
-if not import_success then
-
-	return steam_instance
+	LuaSteam.UserStats.SetAchievement(achievement_id)
+    LuaSteam.UserStats.StoreStats()
 end
 
-return steam_instance
+function Steamworks:clear_achievement(achievement_id)
+	if not self.is_enabled then
+		return
+	end
 
+	LuaSteam.UserStats.ClearAchievement(achievement_id)
+	LuaSteam.UserStats.StoreStats()
+end
+
+function Steamworks:reset_all_stats(achievements_too)
+	if not self.is_enabled then
+		return
+	end
+
+	LuaSteam.UserStats.ResetAllStats(achievements_too)
+end
+
+return Steamworks:new()
