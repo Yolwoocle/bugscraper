@@ -2,8 +2,10 @@ require "scripts.meta.constants"
 require "bugscraper_config"
 
 local function init()
-    print("====================[ Launched Bugscraper"..(DEMO_BUILD and " Demo" or "").." (v"..BUGSCRAPER_VERSION..") ]====================")
+    print("====================[ Launched Bugscraper".." (v"..tostring(BUGSCRAPER_VERSION)..") ]====================")
     print("LOVE version: "..string.format("%d.%d.%d - %s", love.getVersion()))
+    print("Distribution platform: "..tostring(DISTRIBUTION_PLATFORM))
+    print("Build type: "..tostring(BUILD_TYPE))
     print("")
 
     if PROFILE_INIT then

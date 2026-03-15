@@ -141,7 +141,7 @@ local game_over_items       = {
         end,
     },
 }
-if DEMO_BUILD then
+if BUILD_TYPE == "demo" then
     table.insert(game_over_items,
         { "❤ {menu.win.wishlist} 🔗", func_url("steam://advertise/2957130/") }
     )

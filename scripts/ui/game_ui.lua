@@ -132,12 +132,14 @@ function GameUI:update(dt)
 	self:update_title(dt)
 	self:update_boss_bar(dt)
 	self:update_iris_transition(dt)
-	self:update_toast(dt)
 	self.dark_overlay_alpha = move_toward(self.dark_overlay_alpha, self.dark_overlay_alpha_target, dt)
-
+	
 	self.t = self.t + dt
 end
 
+function GameUI:update_global(dt)
+	self:update_toast(dt)
+end
 
 function GameUI:draw()
 	if not self.is_visible then return end
@@ -380,7 +382,7 @@ function GameUI:draw_logo()
 		end
 		love.graphics.setColor(col)
 		love.graphics.draw(img, math.floor(logo_x + ox), math.floor(self.logo_y + oy))
-		if DEMO_BUILD then
+		if BUILD_TYPE == "demo" then
 			if i == 4 then
 				print_outline(COL_WHITE, COL_BLACK_BLUE, Text:text("game.demo"), logo_x + ox + 90, self.logo_y + oy + 19)
 			else

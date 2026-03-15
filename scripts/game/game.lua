@@ -1,6 +1,6 @@
 print("Loading API libraries...")
-local DiscordPresence_inst   = require "scripts.meta.discord_presence"
-local Steamworks_inst        = require "scripts.meta.steamworks" -- TODO make so that the gmae doesn't crash if this doesn't load
+DiscordPresence   = require "scripts.meta.discord_presence"
+Steamworks        = require "scripts.meta.steamworks"
 print("")
 
 local TextManager            = require "scripts.text"
@@ -13,7 +13,13 @@ Text                         = TextManager:new()
 local backgrounds            = require "data.backgrounds"
 local LightWorld             = require "scripts.graphics.light_world"
 
-local AchievementManager     = require "scripts.meta.achievement_manager"
+local AchievementManager
+if DISTRIBUTION_PLATFORM == "steam" then
+	AchievementManager = require "scripts.meta.achievement_manager_steam"
+else
+	AchievementManager = require "scripts.meta.achievement_manager_default"
+end
+
 local Class                  = require "scripts.meta.class"
 local CollisionManager       = require "scripts.physics.collision"
 local Player                 = require "scripts.actor.player"
@@ -56,9 +62,6 @@ local Game = Class:inherit()
 
 function Game:init()
 	-- Global singletons
-	DiscordPresence = DiscordPresence_inst
-	Steamworks = Steamworks_inst
-
 	Input = InputManager:new(self)
 	Collision = CollisionManager:new()
 	Particles = ParticleSystem:new()
@@ -388,6 +391,7 @@ function Game:update(dt)
 	self.ambience_player:update(dt)
 
 	-- Menus
+	self.game_ui:update_global(dt)
 	self.menu_manager:update(dt)
 	if self.debug_mode then
 		self.debug:update(dt)

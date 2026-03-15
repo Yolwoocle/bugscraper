@@ -1,1 +1,1 @@
-GAME_TYPE = "demo"
+BUILD_TYPE = "demo"

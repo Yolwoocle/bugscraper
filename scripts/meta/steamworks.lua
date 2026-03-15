@@ -25,16 +25,21 @@ function Steamworks:init()
 		self.is_enabled = false
 		return
 	end
-
+	
 	self:enable()
+	self.is_enabled = true
 end
 
 function Steamworks:enable()
-	LuaSteam.init()
+	LuaSteam.Init()
 end
 
 function Steamworks:disable()
-	LuaSteam.shutdown()
+	if not self.is_enabled then
+		return
+	end
+
+	LuaSteam.Shutdown()
 end
 
 function Steamworks:update(dt)
@@ -42,7 +47,7 @@ function Steamworks:update(dt)
 		return
 	end
 
-	LuaSteam.runCallbacks()
+	LuaSteam.RunCallbacks()
 end
 
 function Steamworks:quit()

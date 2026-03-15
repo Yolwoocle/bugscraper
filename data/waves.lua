@@ -331,8 +331,6 @@ local waves = parse_waves_table {
         fade_out_music = false,
         ambience = "w1",
 
-        opened_door_timer_override = 2.0,
-
         over_title = get_world_prefix(1),
         title = get_world_name(1),
         over_title_color = COL_LIGHT_GRAY,
@@ -2114,4 +2112,4 @@ for i, wave in pairs(waves) do
     table.sort(wave.enemies, function(a, b) return a[2] > b[2] end)
 end
 
-return ternary(DEMO_BUILD, demo_waves, waves)
+return ternary(BUILD_TYPE == "demo", demo_waves, waves)

@@ -35,8 +35,9 @@ love_binaries = "$[LOVE_BINARIES_windows-x64]"
 # All specified files will simply be added to the .zip archive.
 [windows.archive_files]
 "steam_appid.txt" = "steam_appid.txt"
-"luasteam.dll" = "luasteam.dll"
-"steam_api64.dll" = "steam_api64.dll"
+"luasteam.dll" = "lib/steam/win64/win64_luasteam.dll"
+"steam_api64.dll" = "lib/steam/win64/steam_api64.dll"
+"steam_api64.lib" = "lib/steam/win64/steam_api64.lib"
 
 # Exe metadata is specified as a version string (key) and it's value
 # The values shown here are the ones set by makelove by default (you can overwrite them here)
@@ -46,7 +47,7 @@ love_binaries = "$[LOVE_BINARIES_windows-x64]"
 FileDescription = "Bugscraper: Rise to the top of a bug-filled skyscraper" # "LÖVE {löve version}"
 FileVersion = "$[BUGSCRAPER_VERSION]" # "{löve version}"
 CompanyName = "Léo Bernard" # "LÖVE World Domination Inc."
-LegalCopyright = "Copyright © 2025 Léo Bernard" # "Copyright © 2006-2020 LÖVE Development Team" or ""
+LegalCopyright = "Copyright © 2026 Léo Bernard" # "Copyright © 2006-2020 LÖVE Development Team" or ""
 ProductName = "Bugscraper" # "LÖVE"
 # ProductVersion = "<same as FileVersion>"
 OriginalFilename = "bugscraper.exe" # "love.exe"
@@ -61,7 +62,7 @@ love_binaries = "$[LOVE_BINARIES_macos]"
 # All specified files will be copied to the <name>/Contents/Resources/ directory of the .app file.
 [macos.archive_files]
 "steam_appid.txt" = "steam_appid.txt"
-# "_dyn/osx/luasteam.so" = "lib/steam/osx/luasteam.so"
+"_dyn/osx/luasteam.so" = "lib/steam/osx/osx_luasteam.so"
 "_dyn/osx/libsteam_api.dylib" = "lib/steam/osx/libsteam_api.dylib"
 
 

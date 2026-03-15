@@ -6,6 +6,11 @@ local images       = require "data.images"
 local AchievementManager = Class:inherit()
 
 function AchievementManager:init()
+    self.achievement_name_to_index = {}
+    for i, ach in pairs(achievements) do
+        self.achievement_name_to_index[ach.name] = i
+    end
+
     self.granted_achievements = self:get_granted_achievements()
     self:save_achievements() -- Save immediately to remove potential duplicates
     
@@ -19,7 +24,7 @@ function AchievementManager:regrant_achievements()
     local t = Metaprogression:get("achievements")
 
     for i, ach in pairs(t) do
-        -- NOTE: maybe only grant the achievement if they're not granted on remote?
+        -- NOTE: maybe only grant the achievement if they're not already granted on remote?
         self:grant_api(ach)
     end
 
@@ -30,7 +35,7 @@ function AchievementManager:regrant_achievements()
 end
 
 function AchievementManager:achievement_exists(achievement_name)
-    return achievements[achievement_name] ~= nil
+    return self.achievement_name_to_index[achievement_name] ~= nil
 end
 
 function AchievementManager:get_granted_achievements()
@@ -42,14 +47,17 @@ function AchievementManager:is_achievement_granted(achievement_name)
 end
 
 function AchievementManager:get_achievement(achievement_name)
-    return achievements[achievement_name]
+    return achievements[self.achievement_name_to_index[achievement_name]]
 end
 
 -- Grants an achievement
-function AchievementManager:grant(achievement_name)
+function AchievementManager:grant(achievement_name, skip_save_to_file)
+    if self:is_achievement_granted(achievement_name) then
+        return
+    end
+
     self.granted_achievements[achievement_name] = true
     
-    self:save_achievements()
     self:grant_api(achievement_name)
 
     if game and game.game_ui then
@@ -60,6 +68,10 @@ function AchievementManager:grant(achievement_name)
 			Text:text("achievements." .. ach.name .. ".description")
         )
     end
+    
+    if not skip_save_to_file then
+        self:save_achievements()
+    end
 end
 
 -- (Abstract) To be implemented by subclasses.
@@ -68,10 +80,35 @@ function AchievementManager:grant_api(achievement_name)
     -- error("To be implemented")
 end
 
+function AchievementManager:grant_all()
+    for i, ach in pairs(achievements) do
+        self:grant(ach.name, true)
+    end
+    self:save_achievements()
+end
+
 -- Revokes the achievement
-function AchievementManager:revoke(achievement_name)
-    -- TODO
+function AchievementManager:revoke(achievement_name, skip_save_to_file)
+    if not self:is_achievement_granted(achievement_name) then
+        return
+    end
+
+    self.granted_achievements[achievement_name] = nil
+    
     self:revoke_api(achievement_name)
+
+    if game and game.game_ui then
+        local ach = self:get_achievement(achievement_name)
+        game.game_ui:new_toast(
+            images[ach.image],
+			"REVOKED "..Text:text("achievements." .. ach.name .. ".name"),
+			Text:text("achievements." .. ach.name .. ".description")
+        )
+    end
+    
+    if not skip_save_to_file then
+        self:save_achievements()
+    end
 end
 
 -- (Abstract) To be implemented by subclasses
@@ -83,8 +120,8 @@ end
 -- Revokes all the achievements
 function AchievementManager:revoke_all()
     self.granted_achievements = {}
-    self:save_achievements()
     self:revoke_all_api()
+    self:save_achievements()
 end
 
 -- (Abstract) To be implemented by subclasses

@@ -26,7 +26,7 @@ if OPERATING_SYSTEM ~= "Web" then
     table.insert(pause_items, { "🔚 {menu.pause.quit}", func_set_menu('quit') })
 end
 table.insert(pause_items, { "" })
-if DEMO_BUILD then
+if BUILD_TYPE == "demo" then
     -- Disable wishlist if not demo
     table.insert(pause_items, { "❤ {menu.win.wishlist} 🔗", func_url("steam://advertise/2957130/") })
 end

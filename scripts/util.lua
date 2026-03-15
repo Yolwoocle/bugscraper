@@ -793,7 +793,9 @@ end
 function set_to_table(set)
 	local out = {}
 	for k, v in pairs(set) do
-		table.insert(out, k)
+		if v then
+			table.insert(out, k)
+		end
 	end
 	return out
 end

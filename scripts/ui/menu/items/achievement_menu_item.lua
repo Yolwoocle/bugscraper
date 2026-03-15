@@ -77,7 +77,7 @@ function AchievementMenuItem:draw_text()
 			)
 		end
 
-		draw_centered(images.achievement_lock, x + 30, y + 30)
+		draw_centered(images.achievement_lock, x, y)
 	end
 end
 

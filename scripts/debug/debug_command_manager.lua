@@ -9,6 +9,7 @@ local skins           = require "data.skins"
 local skin_name_to_id = require "data.skin_name_to_id"
 local BackroomBasement = require "scripts.level.backroom.backroom_basement"
 local BackroomCredits = require "scripts.level.backroom.backroom_credits"
+local achievements    = require "data.achievements"
 
 local DebugCommandManager = Class:inherit()
 
@@ -28,6 +29,11 @@ function DebugCommandManager:init()
 
     local enemies_keys = table_keys(enemies)
     local cutscenes_keys = table_keys(cutscenes)
+    local achievements_keys = {}
+    for _, ach in pairs(achievements) do
+        table.insert(achievements_keys, ach.name)
+    end
+    table.insert(achievements_keys, "*")
 
     local upgrades_keys = table_keys(upgrades)
     for i, u in pairs(upgrades_keys) do
@@ -137,6 +143,43 @@ function DebugCommandManager:init()
 
             game:play_cutscene(name)
             self:add_message("Played cutscene '" .. name .. "'")
+
+            return true
+        end,
+    }
+    self.commands["achievement"] = DebugCommand:new {
+        name = "achievement",
+        description = "Grants an achievement",
+        args = {
+            { "action:string", values = {"grant", "revoke", "g", "r"} },
+            { "name:string", values = achievements_keys },
+        },
+        run = function(action, name)
+            if not is_in_table({"grant", "revoke", "g", "r"}, action) then
+                return false, "Invalid action '" .. tostring(action) .. "'"
+            end
+            if not is_in_table(achievements_keys, name) then
+                return false, "Achievement '" .. name .. "' not found "
+            end
+
+            if action == "grant" or action == "g" then
+                if name == "*" then
+                    Achievements:grant_all()
+                    self:add_message("Granted all achievements")
+                else
+                    Achievements:grant(name)
+                    self:add_message("Granted achievement '" .. name .. "'")
+                end
+                
+            elseif action == "revoke" or action == "r" then
+                if name == "*" then
+                    Achievements:revoke_all()
+                    self:add_message("Revoked all achievements")
+                else
+                    Achievements:revoke(name)
+                    self:add_message("Revoked achievement '" .. name .. "'")
+                end
+            end
 
             return true
         end,

@@ -303,7 +303,7 @@ local function generate_menus()
 
     }
 
-    if not DEMO_BUILD then
+    if BUILD_TYPE ~= "demo" then
         table.remove(items, 5) -- Remove whishlist if not demo
     end
 
