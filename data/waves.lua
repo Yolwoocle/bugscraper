@@ -71,6 +71,8 @@ local function new_cafeteria(params)
             ceo_info = params.ceo_info,
             empty_cafeteria = param(params.empty_cafeteria, false)
         },
+
+        achievements = params.achievements,
     })
 end
 
@@ -535,7 +537,7 @@ local waves = parse_waves_table {
         cutscene = "dung_boss_enter",
     },
 
-    new_cafeteria({ ceo_info = 1 }),
+    new_cafeteria({ ceo_info = 1, achievements = {"ach_complete_w1"} }),
 
 
 
@@ -786,16 +788,18 @@ local waves = parse_waves_table {
         cutscene = "bee_boss_enter",
     },
 
-    new_cafeteria({ run_func = function()
-        for _, a in pairs(game.actors) do
-            if a.name == "timed_spikes" then
-                a:remove()
+    new_cafeteria({ 
+        run_func = function()
+            for _, a in pairs(game.actors) do
+                if a.name == "timed_spikes" then
+                    a:remove()
+                end
             end
-        end
 
-        game.is_light_on = true
-    end,
+            game.is_light_on = true
+        end,
         ceo_info = 2,
+        achievements = {"ach_complete_w2"},
     }),
 
     ------
@@ -1123,6 +1127,8 @@ local waves = parse_waves_table {
             game.actor_manager:kill_actors_with_name("electric_rays")
         end, 
         ceo_info = 3,
+
+        achievements = {"ach_complete_w3"},
     }),
 
     ----------------------------------------------------------------------------------------------------------
@@ -1448,8 +1454,9 @@ local waves = parse_waves_table {
         enemies = {},
 
         bounds = RECT_CEO_OFFICE,
+        backroom = BackroomCEOOffice,
 
-        backroom = BackroomCEOOffice
+        achievements = {"ach_complete_w2"},
     },
 
     ----------------------------------------------------------------------------------------------------------

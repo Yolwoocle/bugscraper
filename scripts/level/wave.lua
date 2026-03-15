@@ -49,6 +49,8 @@ function Wave:init(params)
 	self.override_spawn_cocoons = param(params.override_spawn_cocoons, false)
 	self.opened_door_timer_override = param(params.opened_door_timer_override, nil)
 
+	self.achievements = param(params.achievements, {})
+
 	self.entrance_names = self:generate_entrance_names()
 end
 
@@ -287,6 +289,12 @@ function Wave:enable_wave_side_effects(level)
 	
 	if self.counter_display_func then
 		game.level.elevator.counter_display_func = self.counter_display_func
+	end
+	
+	if self.achievements then
+		for _, ach in pairs(self.achievements) do
+			Achievements:grant(ach)
+		end
 	end
 end
 
