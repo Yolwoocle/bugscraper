@@ -24,6 +24,7 @@ function InputManager:init()
 	self.default_mapping_keyboard_solo = self:process_input_map(RAW_INPUT_MAP_DEFAULT_KEYBOARD_SOLO)
 	self.default_mapping_split_kb_p1 =   self:process_input_map(RAW_INPUT_MAP_DEFAULT_SPLIT_KEYBOARD_P1)
 	self.default_mapping_split_kb_p2 =   self:process_input_map(RAW_INPUT_MAP_DEFAULT_SPLIT_KEYBOARD_P2)
+	self.default_mapping_touch =         self:process_input_map(RAW_INPUT_MAP_DEFAULT_TOUCH)
 
 	self.input_profiles = {
         ["empty"] =             InputProfile:new("empty",             INPUT_TYPE_KEYBOARD, self.default_mapping_empty),
@@ -35,6 +36,7 @@ function InputManager:init()
         ["keyboard_solo"] =     InputProfile:new("keyboard_solo",     INPUT_TYPE_KEYBOARD, self.default_mapping_keyboard_solo),
         ["keyboard_split_p1"] = InputProfile:new("keyboard_split_p1", INPUT_TYPE_KEYBOARD, self.default_mapping_split_kb_p1),
         ["keyboard_split_p2"] = InputProfile:new("keyboard_split_p2", INPUT_TYPE_KEYBOARD, self.default_mapping_split_kb_p2),
+        ["touch"] =             InputProfile:new("touch",             INPUT_TYPE_TOUCH, self.default_mapping_touch),
     }
 
     -- Load user-defined controls
@@ -75,6 +77,8 @@ function InputManager:assign_input_profile(player_n, profile_id)
     if profile_id == "controller" then
         profile_id = concat("controller_", player_n)
         user.primary_input_type = INPUT_TYPE_CONTROLLER
+    elseif profile_id == "touch" then
+        user.primary_input_type = INPUT_TYPE_TOUCH
     else
         user.primary_input_type = INPUT_TYPE_KEYBOARD
     end
@@ -725,7 +729,9 @@ function InputManager:load_controls()
 	end
 
 	for profile_id, profile in pairs(self.input_profiles) do
-        self:load_control_file(profile_id, profile)
+        if profile_id ~= "touch" then
+            self:load_control_file(profile_id, profile)
+        end
 	end
 end
 

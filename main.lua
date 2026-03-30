@@ -13,6 +13,7 @@ local Measure = require "scripts.debug.measure"
 game = nil
 
 function love.load(args)
+	love.keyboard.setTextInput(false)
 	LAUNCH_ARGUMENTS_RAW = args or {}
 	print_table(LAUNCH_ARGUMENTS_RAW)
 
@@ -139,6 +140,14 @@ end
 
 function love.gamepadaxis(joystick, axis, value)
 	if game.gamepadaxis then   game:gamepadaxis(joystick, axis, value)   end
+end
+
+function love.touchpressed(id, x, y)
+	if game.touchpressed then   game:touchpressed(id, x, y)   end
+end
+
+function love.touchreleased(id, x, y)
+	if game.touchreleased then   game:touchreleased(id, x, y)   end
 end
 
 function love.quit()

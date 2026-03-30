@@ -238,6 +238,7 @@ PLAYER_INPUT_MODE_CODE = "code" -- The player is controlled via code (for exampl
 
 INPUT_TYPE_KEYBOARD = "k"
 INPUT_TYPE_CONTROLLER = "c"
+INPUT_TYPE_TOUCH = "t"
 
 BUTTON_STYLE_SWITCH = "switch"
 BUTTON_STYLE_PLAYSTATION4 = "playstation4"
@@ -387,6 +388,28 @@ RAW_INPUT_MAP_DEFAULT_SPLIT_KEYBOARD_P2 = {
     ui_right =  {"k_right"},
     ui_up =     {"k_up"},
     ui_down =   {"k_down"},
+    split_keyboard = {},
+    join_game = {},
+
+    debug = {},
+}
+
+RAW_INPUT_MAP_DEFAULT_TOUCH = {
+    left =      {"t_left"},
+    right =     {"t_right"},
+    up =        {"t_up"},
+    down =      {"t_down"},
+    jump =      {"t_jump"},  -- This is also select
+    shoot =     {"t_shoot"}, -- This is also bacl
+    interact =  {"t_interact"},
+
+    pause =     {"t_escape"},
+    ui_select = {"t_jump"},
+    ui_back =   {"t_back"},
+    ui_left =   {"t_left"},
+    ui_right =  {"t_right"},
+    ui_up =     {"t_up"},
+    ui_down =   {"t_down"},
     split_keyboard = {},
     join_game = {},
 

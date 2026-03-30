@@ -1,5 +1,11 @@
 require "scripts.meta.constants"
 
+love.graphics.newShader = function(...)
+    return {sendColor = function(...) end, send = function(...) end, }
+end
+love.graphics.setShader = function(...)
+end
+
 local shaders = {}
 
 local shader_code = [[

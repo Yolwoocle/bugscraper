@@ -54,6 +54,8 @@ local skins, skin_name_to_id = require "data.skins"
 local sounds                 = require "data.sounds"
 local utf8                   = require "utf8"
 
+local TouchScreen = require "scripts.input.input_touch_screen" -- TODO: Faudrait passer par Game mais je suis juste en test pour le moment
+
 require "bugscraper_config"
 require "scripts.meta.constants"
 require "scripts.util"
@@ -74,7 +76,6 @@ function Game:init()
 
 	Input:init_users()
 
-	love.keyboard.setTextInput(true)
 	SCREEN_WIDTH, SCREEN_HEIGHT = love.graphics.getDimensions()
 	love.graphics.setDefaultFilter("nearest", "nearest")
 	love.graphics.setLineStyle("rough")
@@ -308,20 +309,24 @@ function Game:new_game(params)
 	self.check_achievements_timer = 1.0
 
 	_G_t_test = love.timer.getTime()
+
+	-- touch
+	self.touch_screen = TouchScreen:new(true)
+	
+
 end
 
 function Game:ready()
-	self.is_ready = true
-
-	if not Options:get("has_chosen_language") then
-		self.game_state = GAME_STATE_LANGUAGE_SETUP
-		for _, joy in pairs(love.joystick.getJoysticks()) do
-			self:queue_join_game("controller", joy)
-		end
-
-		self.music_player:set_disk("off")
-		self.menu_manager:set_menu("options_language_basic")
-	end
+	self.is_ready = true 
+--	if not Options:get("has_chosen_language") then
+--		self.game_state = GAME_STATE_LANGUAGE_SETUP
+--		for _, joy in pairs(love.joystick.getJoysticks()) do
+--			self:queue_join_game("controller", joy)
+--		end
+--
+--		self.music_player:set_disk("off")
+--		self.menu_manager:set_menu("options_language_basic")
+--	end
 end
 
 function Game:init_layers()
@@ -557,6 +562,8 @@ function Game:draw()
 	end
 
 	__gamedraw_dur = love.timer.getTime() - tic_gamedraw
+
+	self.touch_screen:draw()
 end
 
 function Game:draw_game()
@@ -744,13 +751,19 @@ function Game:listen_for_player_join(dt)
 			(Input:get_number_of_users(INPUT_TYPE_KEYBOARD) <= 0),
 			true
 		)
-		if last_button and Input:can_add_user() and can_add_keyboard_user then
-			if last_button.type == INPUT_TYPE_KEYBOARD then
-				input_profile_id = "keyboard_solo"
-			elseif last_button.type == INPUT_TYPE_CONTROLLER then
-				input_profile_id = "controller"
-				joystick = Input:get_global_user().last_active_joystick
+		if last_button and Input:can_add_user() then
+			if can_add_keyboard_user then
+				if last_button.type == INPUT_TYPE_KEYBOARD then
+					input_profile_id = "keyboard_solo"
+				elseif last_button.type == INPUT_TYPE_CONTROLLER then
+					input_profile_id = "controller"
+					joystick = Input:get_global_user().last_active_joystick
+				end
 			end
+			if last_button.type == INPUT_TYPE_TOUCH then
+				input_profile_id = "touch"
+			end
+
 			self:queue_join_game(input_profile_id, joystick)
 		end
 	end
@@ -763,6 +776,13 @@ function Game:listen_for_player_join(dt)
 			-- elseif Input:get_number_of_users(INPUT_TYPE_KEYBOARD) == 2 then
 			-- 	self:unsplit_keyboard_and_kick_second_player()
 		end
+	end
+
+	if TouchScreen:is_screen_pressed() then
+		player_n = self:queue_join_game("touch")
+
+		-- Input:assign_input_profile(player_n, "touch")
+		TouchScreen:is_now_loaded()
 	end
 end
 
@@ -1306,6 +1326,16 @@ function Game:mousereleased(x, y, button, istouch, presses)
 	-- Input:mousereleased(joystick, axis, value)
 	if self.menu_manager then self.menu_manager:mousereleased(x, y, button, istouch, presses) end
 end
+
+function Game:touchpressed(id, x, y)
+    self.touch_screen:touchpressed(id, x, y)
+end
+
+function Game:touchreleased(id, x, y)
+    self.touch_screen:touchreleased(id, x, y)
+end
+
+
 
 function Game:textinput(text)
 	if self.menu_manager then self.menu_manager:textinput(text) end

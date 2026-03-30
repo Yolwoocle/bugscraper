@@ -11,3 +11,6 @@ libsteam_api_linux64.so
 _tools/language_validation/lang.csv
 *.csv#
 /_private/*
+
+.DS_Store
+game.love

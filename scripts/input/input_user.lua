@@ -136,6 +136,9 @@ function InputUser:is_button_down(button, is_ui_action)
     if button.type == INPUT_TYPE_KEYBOARD then
         is_down = Input:is_keyboard_down(button)
 
+    elseif button.type == INPUT_TYPE_TOUCH then 
+        is_down = game.touch_screen:is_touch_down(button)
+
     elseif button.type == INPUT_TYPE_CONTROLLER then 
         if self.joystick then 
             is_down = self:is_joystick_down(button, self.joystick, is_ui_action)
