@@ -3,13 +3,17 @@ local creq = require "lib.creq.creq"
 local Class = require "scripts.meta.class"
 local LuaSteam
 local import_success
-if pcall(function()
+
+local pcall_res, err = pcall(function()
 	LuaSteam = require "luasteam"
-end) then
-	print("Steamworks: successfully loaded")
 	import_success = true
+end)
+
+if pcall_res then
+	print("Steamworks: imported")
 else
 	print("Steamworks: error during import (require failed)")
+	print("Steamworks: error - ", err)
 	import_success = false
 end
 
@@ -30,7 +34,16 @@ function Steamworks:init()
 end
 
 function Steamworks:enable()
+	if not self.import_success then
+		return
+	end
 	self.is_enabled = LuaSteam.Init()
+
+	if self.is_enabled then
+		print("Steamworks: successfully init'd")
+	else
+		print("Steamworks: init failed")
+	end
 end
 
 function Steamworks:disable()

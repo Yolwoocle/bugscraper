@@ -315,16 +315,19 @@ function Game:new_game(params)
 end
 
 function Game:ready()
-	self.is_ready = true 
---	if not Options:get("has_chosen_language") then
---		self.game_state = GAME_STATE_LANGUAGE_SETUP
---		for _, joy in pairs(love.joystick.getJoysticks()) do
---			self:queue_join_game("controller", joy)
---		end
---
---		self.music_player:set_disk("off")
---		self.menu_manager:set_menu("options_language_basic")
---	end
+	self.is_ready = true
+
+	if not Options:get("has_chosen_language") then
+		self.game_state = GAME_STATE_LANGUAGE_SETUP
+		for _, joy in pairs(love.joystick.getJoysticks()) do
+			self:queue_join_game("controller", joy)
+		end
+
+		self.music_player:set_disk("off")
+		self.menu_manager:set_menu("options_language_basic")
+	end
+
+	self:check_achievements()
 end
 
 function Game:init_layers()
