@@ -150,6 +150,12 @@ function love.touchreleased(id, x, y)
 	if game.touchreleased then   game:touchreleased(id, x, y)   end
 end
 
+
+function love.touchmoved(id, x, y, dx, dy, pressure)
+	if game.touchmoved then   game:touchmoved(id, x, y, dx, dy, pressure)   end
+end
+
+
 function love.quit()
 	if game.quit then   game:quit()   end
 end

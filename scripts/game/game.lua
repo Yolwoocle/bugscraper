@@ -311,9 +311,7 @@ function Game:new_game(params)
 	_G_t_test = love.timer.getTime()
 
 	-- touch
-	self.touch_screen = TouchScreen:new(true)
-	
-
+	self.touch_screen = TouchScreen:new()
 end
 
 function Game:ready()
@@ -563,7 +561,9 @@ function Game:draw()
 
 	__gamedraw_dur = love.timer.getTime() - tic_gamedraw
 
-	self.touch_screen:draw()
+	if self.touch_screen:is_loaded() then
+		self.touch_screen:draw()
+	end
 end
 
 function Game:draw_game()
@@ -778,11 +778,11 @@ function Game:listen_for_player_join(dt)
 		end
 	end
 
-	if TouchScreen:is_screen_pressed() then
+	if TouchScreen:is_screen_pressed() and not TouchScreen:is_loaded() then
 		player_n = self:queue_join_game("touch")
 
 		-- Input:assign_input_profile(player_n, "touch")
-		TouchScreen:is_now_loaded()
+		TouchScreen:load()
 	end
 end
 
@@ -1140,6 +1140,11 @@ function Game:leave_game(player_n)
 	if profile_id == "keyboard_split_p1" or profile_id == "keyboard_split_p2" then
 		Input:unsplit_keyboard()
 	end
+	if profile_id == "touch" then
+		if game.touch_screen then
+			game.touch_screen:unload()
+		end
+	end
 
 	if self.level.backroom.on_player_leave then
 		self.level.backroom:on_player_leave(player)
@@ -1335,7 +1340,9 @@ function Game:touchreleased(id, x, y)
     self.touch_screen:touchreleased(id, x, y)
 end
 
-
+function Game:touchmoved(id, x, y, dx, dy, pressure)
+    self.touch_screen:touchmoved(id, x, y, dx, dy, pressure)
+end
 
 function Game:textinput(text)
 	if self.menu_manager then self.menu_manager:textinput(text) end
