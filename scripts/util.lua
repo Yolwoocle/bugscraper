@@ -1656,3 +1656,7 @@ function elevator_counter_format(number)
 		return string.sub("000"..tostring(round(number)), -3, -1)
 	end
 end
+
+function merge_tables(dest, source)
+    table.move(source, 1, #source, #dest + 1, dest)
+end

@@ -21,7 +21,7 @@ local pause_items           = {
     { "💡 {menu.pause.feedback}", func_set_menu("feedback") },
     { "❤ {menu.pause.credits}", func_set_menu('credits') },
 }
-if OPERATING_SYSTEM ~= "Web" and OPERATING_SYSTEM ~= "ios" then
+if OPERATING_SYSTEM ~= "Web" and DISTRIBUTION_PLATFORM ~= "ios" then
     -- Disable quitting on web
     table.insert(pause_items, { "🔚 {menu.pause.quit}", func_set_menu('quit') })
 end

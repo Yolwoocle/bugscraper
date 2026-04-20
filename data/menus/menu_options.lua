@@ -10,7 +10,7 @@ local DEFAULT_MENU_BG_COLOR = menu_util.DEFAULT_MENU_BG_COLOR
 local func_set_menu     = menu_util.func_set_menu
 local PROMPTS_NORMAL    = menu_util.PROMPTS_NORMAL
 
-return Menu:new(game, "{menu.options.title}", {
+local items = {
     { "<<< {menu.options.input.title} >>>" },
     { "🔘 {menu.options.input.input}", func_set_menu("options_input") },
     { "" },
@@ -41,27 +41,34 @@ return Menu:new(game, "{menu.options.title}", {
             self.is_selectable = Options:get("sound_on")
         end
     },
-    { "" },
-    { "<<< {menu.options.visuals.title} >>>" },
-    { BoolOptionMenuItem, "🔳 {menu.options.visuals.fullscreen}", "is_fullscreen" },
-    { EnumOptionMenuItem, "🔲 {menu.options.visuals.pixel_scale}", "pixel_scale", { "auto", "max_whole", "1", "2", "3", "4", "5", "6" },
-        function(value)
-            if tonumber(value) then
-                return tostring(value)
-            else
-                return tostring(Text:text("menu.options.visuals.pixel_scale_value." .. value))
+}
+if DISTRIBUTION_PLATFORM ~= "ios" then
+    merge_tables(items, {
+        { "" },
+        { "<<< {menu.options.visuals.title} >>>" },
+        { BoolOptionMenuItem, "🔳 {menu.options.visuals.fullscreen}", "is_fullscreen" },
+        { EnumOptionMenuItem, "🔲 {menu.options.visuals.pixel_scale}", "pixel_scale", { "auto", "max_whole", "1", "2", "3", "4", "5", "6" },
+            function(value)
+                if tonumber(value) then
+                    return tostring(value)
+                else
+                    return tostring(Text:text("menu.options.visuals.pixel_scale_value." .. value))
+                end
+            end,
+            function(self)
+                if OPERATING_SYSTEM == "Web" then
+                    self.is_selectable = false
+                end
             end
-        end,
-        function(self)
-            if OPERATING_SYSTEM == "Web" then
-                self.is_selectable = false
-            end
-        end
-    },
-    { BoolOptionMenuItem, "📺 {menu.options.visuals.vsync}", "is_vsync" },
-    { BoolOptionMenuItem, "💧 {menu.options.visuals.menu_blur}", "menu_blur" },
-    { RangeOptionMenuItem, "🌄 {menu.options.visuals.background_speed}", "background_speed", { 0.0, 1.0 }, 0.05, "%" },
-    { RangeOptionMenuItem, "🥚 {menu.options.visuals.bullet_lightness}", "bullet_lightness", { 0.1, 1.0 }, 0.1, "%" },
+        },
+        { BoolOptionMenuItem, "📺 {menu.options.visuals.vsync}", "is_vsync" },
+        { BoolOptionMenuItem, "💧 {menu.options.visuals.menu_blur}", "menu_blur" },
+        { RangeOptionMenuItem, "🌄 {menu.options.visuals.background_speed}", "background_speed", { 0.0, 1.0 }, 0.05, "%" },
+        { RangeOptionMenuItem, "🥚 {menu.options.visuals.bullet_lightness}", "bullet_lightness", { 0.1, 1.0 }, 0.1, "%" },
+    })
+end
+
+merge_tables(items, {
     { "" },
     { "<<< {menu.options.game.title} >>>" },
     { "🌐 {menu.options.game.language}", func_set_menu("options_language") },
@@ -78,4 +85,6 @@ return Menu:new(game, "{menu.options.title}", {
     { BoolOptionMenuItem, "⏭ {menu.options.game.skip_boss_intros}", "skip_boss_intros" },
     { BoolOptionMenuItem, "⚠ {menu.options.game.show_fps_warning}", "show_fps_warning" },
     -- { BoolOptionMenuItem, "⚠ convention_mode", "convention_mode" },
-}, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
+})
+
+return Menu:new(game, "{menu.options.title}", items, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
