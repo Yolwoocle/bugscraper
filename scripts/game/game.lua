@@ -766,12 +766,14 @@ function Game:listen_for_player_join(dt)
 					input_profile_id = "controller"
 					joystick = Input:get_global_user().last_active_joystick
 				end
+
+				self:queue_join_game(input_profile_id, joystick)
 			end
 			if last_button.type == INPUT_TYPE_TOUCH then
 				input_profile_id = "touch"
+				self:queue_join_game(input_profile_id, joystick)
 			end
 
-			self:queue_join_game(input_profile_id, joystick)
 		end
 	end
 

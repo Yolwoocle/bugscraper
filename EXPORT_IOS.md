@@ -32,16 +32,19 @@ EN vrai osef:
 
     - Menu controls with mouse (or direcional)
     - Desactiver le bouton interagir si il sert a rien
+    - Si on rejoint avec 4 joueurs, y'a moyen qu'on puisse encore ajouter le touch_input mais en vrai jsp c'est un cas de bord a tester
 
 TODO better:
 - menu_optiions.lua
 
 
-Fix: Pk ca crash quand on lance le clavier?
-
 Pas de touch input => pas de escape =>
+
+
+Fix; Y'a des bugs avec le touch input quand tu join et unjoin (LE fait qu'il soit encore la si tu fait un return to floor zero et des truc comme ca a fix)
 
 
 DONE:
 - Menu avec fleche directionelle et joystick pour le in game
 - Fix: Si tu fais un back il faut supprimer le touch is loaded
+- Fix: Pk ca crash quand on lance le clavier?
