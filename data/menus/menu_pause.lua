@@ -18,22 +18,29 @@ local pause_items           = {
     { "🎚 {menu.pause.options}", func_set_menu('options') },
     { "🏆 {menu.achievements.title}", func_set_menu('achievements') },
     { "⎘ {menu.stats.title}", func_set_menu('stats') },
-    { "💡 {menu.pause.feedback}", func_set_menu("feedback") },
-    { "❤ {menu.pause.credits}", func_set_menu('credits') },
 }
+
+if DISTRIBUTION_PLATFORM ~= "ios" then
+    table.insert(pause_items, { "💡 {menu.pause.feedback}", func_set_menu("feedback") })
+end
+table.insert(pause_items, { "❤ {menu.pause.credits}", func_set_menu('credits') })
+
 if OPERATING_SYSTEM ~= "Web" and DISTRIBUTION_PLATFORM ~= "ios" then
     -- Disable quitting on web
     table.insert(pause_items, { "🔚 {menu.pause.quit}", func_set_menu('quit') })
 end
 
-table.insert(pause_items, { "" })
 
-if BUILD_TYPE == "demo" then
-    -- Disable wishlist if not demo
-    table.insert(pause_items, { "❤ {menu.win.wishlist} 🔗", func_url("steam://advertise/2957130/") })
-    -- table.insert(pause_items, { "🌐 {menu.pause.website} 🔗", func_url("https://bugscraper.net/") })
+if DISTRIBUTION_PLATFORM ~= "ios" then
+    table.insert(pause_items, { "" })
+
+    if BUILD_TYPE == "demo" then
+        -- Disable wishlist if not demo
+        table.insert(pause_items, { "❤ {menu.win.wishlist} 🔗", func_url("steam://advertise/2957130/") })
+        -- table.insert(pause_items, { "🌐 {menu.pause.website} 🔗", func_url("https://bugscraper.net/") })
+    end
+    table.insert(pause_items, { "😈 {menu.pause.discord} 🔗", func_url("https://bugscraper.net/discord") })
 end
-table.insert(pause_items, { "😈 {menu.pause.discord} 🔗", func_url("https://bugscraper.net/discord") })
 
 local function debug_skipto(wave, background)
     for k, e in pairs(game.actors) do

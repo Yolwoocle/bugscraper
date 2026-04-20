@@ -8,22 +8,29 @@ local func_set_menu     = menu_util.func_set_menu
 local func_url          = menu_util.func_url
 local PROMPTS_NORMAL    = menu_util.PROMPTS_NORMAL
 
+function list_of_menu_item(title, url) 
+    if DISTRIBUTION_PLATFORM ~= "ios" then
+        return {title + " 🔗", func_url(url)}
+    end
+    return {title, empty_func}
+end
+
 return Menu:new(game, "{menu.credits.title}", {
     { "{menu.credits.ninesliced_presents}", empty_func },
     { "" },
     { "<<< {menu.credits.game_by} >>>" },
-    { "{menu.credits.leo_bernard} (Yolwoocle) 🔗", func_url("https://yolwoocle.com/") },
+    list_of_menu_item("{menu.credits.leo_bernard} (Yolwoocle)", "https://yolwoocle.com/"),
     { "" },
     { "<<< {menu.credits.music} >>>" },
-    { "OLX 🔗", func_url("https://linktr.ee/olxart") },
+    list_of_menu_item("OLX", "https://linktr.ee/olxart"),
     { "" },
     { "<<< {menu.credits.sound_design} >>>" },
-    { "Martin Domergue (Verbaudet) 🔗", func_url("https://linktr.ee/martindomerguesd") },
+    list_of_menu_item("Martin Domergue (Verbaudet)", "https://linktr.ee/martindomerguesd"),
     { "" },
     { "<<< {menu.credits.additional_art} >>>" },
-    { "Noam Goldfarb 🔗", func_url("https://x.com/SSlime7")  }, 
-    { "Colin Roullé (OHX) 🔗", func_url("https://roullecolin.com/") }, 
-    { "caridescent 🔗", func_url("https://caridescent.carrd.co/") }, 
+    list_of_menu_item("Noam Goldfarb", "https://x.com/SSlime7"),
+    list_of_menu_item("Colin Roullé (OHX)", "https://roullecolin.com/"),
+    list_of_menu_item("caridescent", "https://caridescent.carrd.co/"),
     { "" },
     { "<<< {menu.credits.localization} >>>" },
     { "< {language.pl} >" },
@@ -122,6 +129,7 @@ return Menu:new(game, "{menu.credits.title}", {
     { "Endesga", empty_func }, 
     { "" },
     { "<<< {menu.open_source.title} >>>" },
+    -- TODO: (ios)
     { Text:text("menu.credits.asset_item", "'GamepadGuesser'", "idbrii", "MIT"),                       func_url("https://github.com/idbrii/love-gamepadguesser/tree/main") },
     { Text:text("menu.credits.asset_item", "'bump.lua'", "kikito", "MIT"),                             func_url("https://github.com/kikito/bump.lua") },
     { Text:text("menu.credits.asset_item", "'batteries'", "1bardesign", "Zlib"),                       func_url("https://github.com/1bardesign/batteries") },
@@ -135,9 +143,9 @@ return Menu:new(game, "{menu.credits.title}", {
     -- { "CC0 🔗", func_url("https://creativecommons.org/publicdomain/zero/1.0/") },
     -- { "CC BY 3.0 🔗", func_url("https://creativecommons.org/licenses/by/3.0/") },
     -- { "CC BY 4.0 🔗", func_url("https://creativecommons.org/licenses/by/4.0/") },
-    { "MIT 🔗", func_url("https://opensource.org/license/mit") },
-    { "Zlib 🔗", func_url("https://www.zlib.net/zlib_license.html") },
-    { "OFL-1.1 🔗", func_url("https://spdx.org/licenses/OFL-1.1.html") },
+    list_of_menu_item("MIT", "https://opensource.org/license/mit"),
+    list_of_menu_item("Zlib", "https://www.zlib.net/zlib_license.html"),
+    list_of_menu_item("OFL-1.1", "https://spdx.org/licenses/OFL-1.1.html"),
     { "" },
     { "🐜❤" },
 }, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)

@@ -80,7 +80,13 @@ merge_tables(items, {
 		return string.format("%d%%", round(value * 100)) 
 	end },
     { BoolOptionMenuItem, "🕐 {menu.options.game.timer}", "timer_on" },
-    { BoolOptionMenuItem, "↖ {menu.options.game.mouse_visible}", "mouse_visible" },
+})
+if DISTRIBUTION_PLATFORM ~= "ios" then
+    merge_tables(items, {
+        { BoolOptionMenuItem, "↖ {menu.options.game.mouse_visible}", "mouse_visible" },
+    })
+end
+    merge_tables(items, {
     { BoolOptionMenuItem, "🛅 {menu.options.game.pause_on_unfocus}", "pause_on_unfocus" },
     { BoolOptionMenuItem, "⏭ {menu.options.game.skip_boss_intros}", "skip_boss_intros" },
     { BoolOptionMenuItem, "⚠ {menu.options.game.show_fps_warning}", "show_fps_warning" },

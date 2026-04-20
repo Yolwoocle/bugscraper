@@ -17,7 +17,10 @@ local options = {}
 for _, lang in pairs(Text.supported_languages) do
     table.insert(options, {"{language."..lang.."}", func_language_menu(lang)})
 end
-table.insert(options, {""})
-table.insert(options, { "💡 {menu.pause.feedback}", func_set_menu("feedback") })
+
+if DISTRIBUTION_PLATFORM ~= "ios" then
+    table.insert(options, {""})
+    table.insert(options, { "💡 {menu.pause.feedback}", func_set_menu("feedback") })
+end
 
 return Menu:new(game, "{menu.options.language.title}", options, DEFAULT_MENU_BG_COLOR, PROMPTS_NORMAL)
