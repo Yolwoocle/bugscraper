@@ -14,12 +14,6 @@ local color_press = {0.4, 0.4, 0.4, overlay_opactity} -- Couleur quand on appuie
 local button_size = 50
 local button_spacing = 10
 
-local buttons = {
-    { x=170, y=200, w=button_size, h=button_size, label="Jmp", label_menu="Confirm", key="t_jump" },
-    { x=200, y=200, w=button_size, h=button_size, label="Sho", label_menu="Back",    key="t_shoot" }, -- Back not working, idk why
-    { x=230, y=200, w=button_size, h=button_size, label="Int", label_menu=nil,       key="t_interact" },
-    { x=540, y=200, w=button_size, h=button_size, label="Esc", label_menu="Esc",     key="t_escape" },
-}
 ---- Joystick
 local joystick_radius = 100
 
@@ -38,8 +32,150 @@ local joystick_id = nil
 local joystick_pos = {x = 100, y = 200, tx = nil, ty = nil}  -- x,y Le centre du joystick; tx, ty: là ou on clique
 local joystick_key_pressed = {}  -- {"t_up", "t_left"}
 
+local is_choosing_perso = true
+
+local game = nil
+
+function TouchScreen:change_is_choosing_perso(value)
+    if value then
+        is_choosing_perso = value
+    else
+        is_choosing_perso = not is_choosing_perso
+    end
+end
+
+function _get_curr_menu()
+    if game and game.menu_manager and game.menu_manager.cur_menu then
+        return game.menu_manager.cur_menu
+    end
+    return nil
+end
+
+function _is_choosing_perso()
+    return is_choosing_perso
+--     if _get_curr_menu() ~= nil then
+--         return true
+--     end
+-- 
+--     if not game then
+--         return false
+--     end
+-- 
+end
+
+function _active_is_choosing_perso()
+    return _is_choosing_perso()
+end
+
+function _is_a_menu()
+    if _get_curr_menu() ~= nil then
+        return true
+    end
+    return false
+    
+end
+
+function _active_is_in_game()
+    if _get_curr_menu() == nil then
+        if _is_choosing_perso() then
+            return false
+        end
+        return true
+    end
+    return false
+end
+
+function _is_a_cinematic()
+    return false
+end
+
+function _active_is_not_a_cinematic()
+    -- TODO
+    return not _is_a_cinematic()
+end
+
+function _active_ok()
+    if _is_choosing_perso() then
+        return true
+    end
+    if _get_curr_menu() == nil then
+        return false
+    end
+
+    if _is_a_cinematic() then
+        return false
+    end
+
+    -- TODO: desactiver quand c'est dans le menu stat par exemple
+    return true
+end
+
+function _active_back()
+    if _is_choosing_perso() then
+        return true
+    end
+    if _get_curr_menu() == nil then
+        return false
+    end
+
+    if _is_a_cinematic() then
+        return false
+    end
+
+    return _get_curr_menu().is_backable
+end
+
+function _active_vertical_ui()
+    -- Tant que c'est un menu non cinématique
+    if _get_curr_menu() == nil then
+        return false
+    end
+
+    if _is_a_cinematic() then
+        return false
+    end
+
+    return true
+end
+
+function _active_horizontal_ui()
+    if _is_choosing_perso() then
+        return true
+    end
+
+    -- Tant que c'est un menu non cinématique
+    if _get_curr_menu() == nil then
+        return false
+    end
+    if _is_a_cinematic() then
+        return false
+    end
+
+    -- TODO: verifier si c'est un slider
+    return false 
+end
+
+
+
+local buttons = {
+    -- Always (except animation)
+    { x=540, y=200, w=button_size, h=button_size, label="Esc",   key="t_escape",   active = _active_is_not_a_cinematic},
+
+    { x=170, y=200, w=button_size, h=button_size, label="Jmp",   key="t_jump",     active = _active_is_in_game},
+    { x=200, y=200, w=button_size, h=button_size, label="Sho",   key="t_shoot",    active = _active_is_in_game},
+    { x=230, y=200, w=button_size, h=button_size, label="IntM",  key="t_interact", active = _active_is_in_game},
+
+    { x=270, y=200, w=button_size, h=button_size, label="Ok",    key="t_ok",       active = _active_ok},
+    { x=340, y=200, w=button_size, h=button_size, label="Back",  key="t_back",     active = _active_back},
+    { x=340, y=200, w=button_size, h=button_size, label="Left",  key="t_left_ui",  active = _active_horizontal_ui},
+    { x=340, y=200, w=button_size, h=button_size, label="Right", key="t_right_ui", active = _active_horizontal_ui},
+    { x=340, y=200, w=button_size, h=button_size, label="Up",    key="t_up_ui",    active = _active_vertical_ui},
+    { x=340, y=200, w=button_size, h=button_size, label="Down",  key="t_down_ui",  active = _active_vertical_ui},
+}
+
+
 -- FONCTIONS
-function TouchScreen:init()
+function TouchScreen:init(cur_game)
 	WINDOW_WIDTH, WINDOW_HEIGHT = love.graphics.getDimensions()
     joystick_pos.y = math.floor(WINDOW_HEIGHT * 4 / 5)
     joystick_pos.x = math.floor(WINDOW_WIDTH * 1 / 8)
@@ -54,6 +190,8 @@ function TouchScreen:init()
             i= i+1
         end
     end
+    game = cur_game
+    print("Menu : ", _get_curr_menu())
 end
 
 
@@ -124,35 +262,41 @@ function joystick_direction(new_x, new_y)
 --]]
 end
 
+-- function is_game_paused()
+--     if self.cur_menu == nil then
+--         self:pause()
+--     elseif self.is_paused then
+--         self:unpause()
+--     end
+-- 
+-- end
+
 function TouchScreen:draw()
     local r, g, b, a = love.graphics.getColor()
 
-    -- if TODO_fct_we_ar_in_cinematic() then
-    --     return nil
-    -- end
+    if not self.is_loaded() then
+        return
+    end
+
     -- btn
     for i, btn in ipairs(buttons) do
-        -- if TODO_fct_we_are_in_menu() and btn.label_menu = nil then
-        --     continue
-        -- end
-        if is_key_pressed(btn.key) then
-            love.graphics.setColor(color_press)
-        else
-            love.graphics.setColor(color_bg)
-        end
+        if (not btn.active) or (btn.active and btn.active()) then
+            if is_key_pressed(btn.key) then
+                love.graphics.setColor(color_press)
+            else
+                love.graphics.setColor(color_bg)
+            end
 
-        love.graphics.rectangle("fill", btn.x, btn.y, btn.w, btn.w, 10)
-        
-        love.graphics.setColor(color_text)
+            love.graphics.rectangle("fill", btn.x, btn.y, btn.w, btn.w, 10)
+            
+            love.graphics.setColor(color_text)
 
-        local label = btn.label
-        if TODO_fct_we_are_in_menu() then
-            label = btn.label_menu
+            local label = btn.label
+            local font = love.graphics.getFont()
+            local textW = font:getWidth(btn.label)
+            local textH = font:getHeight(btn.label)
+            love.graphics.print(btn.label, btn.x + (btn.w - textW)/2, btn.y + (btn.h - textH)/2)
         end
-        local font = love.graphics.getFont()
-        local textW = font:getWidth(btn.label)
-        local textH = font:getHeight(btn.label)
-        love.graphics.print(btn.label, btn.x + (btn.w - textW)/2, btn.y + (btn.h - textH)/2)
     end
 
     -- Joystick
@@ -218,7 +362,7 @@ end
 function TouchScreen:touchpressed(id, x, y)
     global_screen_pressed = true
 
-    if is_position_on_left_screen(x) and not joystick_id then
+    if (is_position_on_left_screen(x) and not joystick_id) and (_active_is_in_game()) then
         -- Joystick
         joystick_id = id
         joystick_pos.x = x
@@ -293,6 +437,7 @@ end
 
 function TouchScreen:load()
     is_loaded = true
+    is_choosing_perso = false
 end
 
 function TouchScreen:unload()

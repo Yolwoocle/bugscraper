@@ -311,7 +311,7 @@ function Game:new_game(params)
 	_G_t_test = love.timer.getTime()
 
 	-- touch
-	self.touch_screen = TouchScreen:new()
+	self.touch_screen = TouchScreen:new(self)
 end
 
 function Game:ready()
@@ -321,6 +321,10 @@ function Game:ready()
 		self.game_state = GAME_STATE_LANGUAGE_SETUP
 		for _, joy in pairs(love.joystick.getJoysticks()) do
 			self:queue_join_game("controller", joy)
+		end
+
+		if DISTRIBUTION_PLATFORM == "ios" then
+			self:queue_join_game("touch")
 		end
 
 		self.music_player:set_disk("off")
@@ -564,7 +568,7 @@ function Game:draw()
 
 	__gamedraw_dur = love.timer.getTime() - tic_gamedraw
 
-	if self.touch_screen:is_loaded() then
+	if self.touch_screen:is_loaded() or self.game_state == GAME_STATE_LANGUAGE_SETUP then
 		self.touch_screen:draw()
 	end
 end
@@ -794,6 +798,18 @@ function Game:remove_queued_player(player_n)
 	if not queued_player then
 		return
 	end
+
+    if DISTRIBUTION_PLATFORM == "ios" then
+        local local_player = Input:get_user(player_n)
+		-- TODO: Verif si local player est null
+        if local_player.primary_input_type == INPUT_TYPE_TOUCH then
+            if self.touch_screen then
+                self.touch_screen:unload()
+            end
+        end
+    end
+
+	
 
 	Input:remove_user(player_n)
 	self.queued_players[player_n]:remove()
@@ -1037,6 +1053,18 @@ function Game:join_game(player_n)
 		Particles:smoke_big(player.mid_x, player.mid_y, COL_WHITE)
 	end
 
+    if DISTRIBUTION_PLATFORM == "ios" then
+        local local_player = Input:get_user(player_n)
+		-- TODO: Verif si local player est null
+        if local_player.primary_input_type == INPUT_TYPE_TOUCH then
+            if self.touch_screen then
+                self.touch_screen:change_is_choosing_perso(false)
+            end
+        end
+    end
+
+
+
 	self.level:on_player_joined(player)
 	self.game_ui:on_player_joined(player)
 end
@@ -1107,6 +1135,17 @@ function Game:remove_player(player_n)
 	if not self.all_players[player_n] then
 		return
 	end
+
+    if DISTRIBUTION_PLATFORM == "ios" then
+        local local_player = Input:get_user(player_n)
+        if local_player.primary_input_type == INPUT_TYPE_TOUCH then
+            if self.touch_screen then
+                self.touch_screen:change_is_choosing_perso(true)
+            end
+        end
+    end
+
+
 	self.all_players[player_n]:remove()
 	self:unregister_player(player_n)
 end
@@ -1144,8 +1183,8 @@ function Game:leave_game(player_n)
 		Input:unsplit_keyboard()
 	end
 	if profile_id == "touch" then
-		if game.touch_screen then
-			game.touch_screen:unload()
+		if self.touch_screen then
+			self.touch_screen:unload()
 		end
 	end
 

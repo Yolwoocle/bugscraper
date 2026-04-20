@@ -404,12 +404,12 @@ RAW_INPUT_MAP_DEFAULT_TOUCH = {
     interact =  {"t_interact"},
 
     pause =     {"t_escape"},
-    ui_select = {"t_jump"},
+    ui_select = {"t_ok"},
     ui_back =   {"t_back"},
-    ui_left =   {"t_left"},
-    ui_right =  {"t_right"},
-    ui_up =     {"t_up"},
-    ui_down =   {"t_down"},
+    ui_left =   {"t_left_ui"},
+    ui_right =  {"t_right_ui"},
+    ui_up =     {"t_up_ui"},
+    ui_down =   {"t_down_ui"},
     split_keyboard = {},
     join_game = {},
 
