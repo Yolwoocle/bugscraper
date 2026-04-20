@@ -574,11 +574,11 @@ KEY_CONSTANT_TO_IMAGE_NAME = {
 
 TOUCH_CONSTANT_TO_IMAGE_NAME = {
     ["t_jump"] = "btn_t_jump",
-    -- "t_left"] = "btn_t_left",
-    -- "t_right"] = "btn_t_right",
-    -- "t_up"] = "btn_t_up",
-    -- "t_down"] = "btn_t_down",
-    -- "t_jump"] = "btn_t_jump",
+    ["t_left"] = "btn_t_joystick_left",
+    ["t_right"] = "btn_t_joystick_right",
+    ["t_up"] = "btn_t_joystick_up",
+    ["t_down"] = "btn_t_joystick_down",
+    ["t_jump"] = "btn_t_jump",
     ["t_shoot"] = "btn_t_shoot",
     ["t_interact"] = "btn_t_interact",
 

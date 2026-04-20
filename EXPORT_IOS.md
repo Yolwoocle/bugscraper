@@ -17,7 +17,7 @@ Missing things todo:
 
 - Better controls with bautiful buttons (placement et icons)
 
-- Fix: Y'a des bugs avec le touch input quand tu join et unjoin (LE fait qu'il soit encore la si tu fait un return to floor zero et des truc comme ca a fix)
+- Fix: La cafertier les input c'est pas le bon draw
 
 EN vrai osef:
     - Options: change button placement and size
@@ -38,3 +38,4 @@ DONE:
         - BUG IN CLIENT OF UIKIT: The caller of UIApplication.openURL(_:) needs to migrate to the non-deprecated UIApplication.open(_:options:completionHandler:). Force returning false (NO).
 - Fix icons avec ? (Fin faut faire les images dans button/touch)
 - menu_optiions.lua
+- Fix: Y'a des bugs avec le touch input quand tu join et unjoin (LE fait qu'il soit encore la si tu fait un return to floor zero et des truc comme ca a fix)

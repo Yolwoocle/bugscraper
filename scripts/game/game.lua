@@ -1055,18 +1055,6 @@ function Game:join_game(player_n)
 		Particles:smoke_big(player.mid_x, player.mid_y, COL_WHITE)
 	end
 
-    if DISTRIBUTION_PLATFORM == "ios" then
-        local local_player = Input:get_user(player_n)
-		-- TODO: Verif si local player est null
-        if local_player.primary_input_type == INPUT_TYPE_TOUCH then
-            if self.touch_screen then
-                self.touch_screen:change_is_choosing_perso(false)
-            end
-        end
-    end
-
-
-
 	self.level:on_player_joined(player)
 	self.game_ui:on_player_joined(player)
 end
@@ -1137,16 +1125,6 @@ function Game:remove_player(player_n)
 	if not self.all_players[player_n] then
 		return
 	end
-
-    if DISTRIBUTION_PLATFORM == "ios" then
-        local local_player = Input:get_user(player_n)
-        if local_player.primary_input_type == INPUT_TYPE_TOUCH then
-            if self.touch_screen then
-                self.touch_screen:change_is_choosing_perso(true)
-            end
-        end
-    end
-
 
 	self.all_players[player_n]:remove()
 	self:unregister_player(player_n)

@@ -32,35 +32,32 @@ local joystick_id = nil
 local joystick_pos = {x = 100, y = 200, tx = nil, ty = nil}  -- x,y Le centre du joystick; tx, ty: là ou on clique
 local joystick_key_pressed = {}  -- {"t_up", "t_left"}
 
-local is_choosing_perso = true
 
 local game = nil
 
-function TouchScreen:change_is_choosing_perso(value)
-    if value then
-        is_choosing_perso = value
-    else
-        is_choosing_perso = not is_choosing_perso
-    end
-end
-
-function _get_curr_menu()
+local function _get_curr_menu()
     if game and game.menu_manager and game.menu_manager.cur_menu then
         return game.menu_manager.cur_menu
     end
     return nil
 end
 
-function _is_choosing_perso()
-    return is_choosing_perso
---     if _get_curr_menu() ~= nil then
---         return true
---     end
--- 
---     if not game then
---         return false
---     end
--- 
+local function _is_choosing_perso()
+    if not game or not game.queued_players then 
+        return false
+    end
+    for player_n = 1,MAX_NUMBER_OF_PLAYERS do
+        local queued_player = game.queued_players[player_n]
+        if queued_player then
+            local user = Input:get_user(player_n)
+            if user and user.primary_input_type and user.primary_input_type == INPUT_TYPE_TOUCH then
+                return true
+            end
+        end
+    end
+    return false
+
+
 end
 
 function _active_is_choosing_perso()
@@ -360,6 +357,9 @@ function is_position_on_left_screen(x)
 end
 
 function TouchScreen:touchpressed(id, x, y)
+    print_debug("is_a_menu", _is_a_menu())
+    print_debug("is_in_game", _active_is_in_game())
+    print_debug("is_choosing_perso", _active_is_choosing_perso())
     global_screen_pressed = true
 
     if (is_position_on_left_screen(x) and not joystick_id) and (_active_is_in_game()) then
@@ -374,9 +374,8 @@ function TouchScreen:touchpressed(id, x, y)
     else
         -- Boutons
         for i, btn in ipairs(buttons) do
-            if isInside(x, y, btn) then
+            if isInside(x, y, btn) and ((not btn.active) or (btn.active and btn.active())) then
                 appendToPresses(id, btn.key)
-                break -- On ne peut cliquer qu'un bouton à la fois par ID de touche
             end
         end
     end
@@ -437,7 +436,6 @@ end
 
 function TouchScreen:load()
     is_loaded = true
-    is_choosing_perso = false
 end
 
 function TouchScreen:unload()
