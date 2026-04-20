@@ -56,15 +56,30 @@ local function _is_choosing_perso()
         end
     end
     return false
-
-
 end
 
-function _active_is_choosing_perso()
+function _active_player_is_in_menu() -- caffet ou vending machine
+    if not game or not game.all_players then 
+        return false
+    end
+    for player_n = 1,MAX_NUMBER_OF_PLAYERS do
+        local player = game.all_players[player_n]
+        if player then
+            local user = Input:get_user(player_n)
+            if user and user.primary_input_type and user.primary_input_type == INPUT_TYPE_TOUCH then
+                return player.is_in_menu
+            end
+        end
+    end
+    return false
+end
+
+
+local function _active_is_choosing_perso()
     return _is_choosing_perso()
 end
 
-function _is_a_menu()
+local function _is_a_menu()
     if _get_curr_menu() ~= nil then
         return true
     end
@@ -72,9 +87,9 @@ function _is_a_menu()
     
 end
 
-function _active_is_in_game()
+local function _active_is_in_game()
     if _get_curr_menu() == nil then
-        if _is_choosing_perso() then
+        if _is_choosing_perso() or _active_player_is_in_menu() then
             return false
         end
         return true
@@ -82,17 +97,18 @@ function _active_is_in_game()
     return false
 end
 
-function _is_a_cinematic()
+local function _is_a_cinematic()
+    -- TODO
     return false
 end
 
-function _active_is_not_a_cinematic()
+local function _active_is_not_a_cinematic()
     -- TODO
     return not _is_a_cinematic()
 end
 
-function _active_ok()
-    if _is_choosing_perso() then
+local function _active_ok()
+    if _is_choosing_perso() or _active_player_is_in_menu() then
         return true
     end
     if _get_curr_menu() == nil then
@@ -107,8 +123,8 @@ function _active_ok()
     return true
 end
 
-function _active_back()
-    if _is_choosing_perso() then
+local function _active_back()
+    if _is_choosing_perso() or _active_player_is_in_menu() then
         return true
     end
     if _get_curr_menu() == nil then
@@ -122,7 +138,7 @@ function _active_back()
     return _get_curr_menu().is_backable
 end
 
-function _active_vertical_ui()
+local function _active_vertical_ui()
     -- Tant que c'est un menu non cinématique
     if _get_curr_menu() == nil then
         return false
@@ -135,8 +151,8 @@ function _active_vertical_ui()
     return true
 end
 
-function _active_horizontal_ui()
-    if _is_choosing_perso() then
+local function _active_horizontal_ui()
+    if _is_choosing_perso() or _active_player_is_in_menu() then
         return true
     end
 
@@ -151,6 +167,7 @@ function _active_horizontal_ui()
     -- TODO: verifier si c'est un slider
     return false 
 end
+
 
 
 
