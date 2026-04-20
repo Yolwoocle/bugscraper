@@ -1,4 +1,4 @@
-BUGSCRAPER_VERSION = "0.10.1"
+BUGSCRAPER_VERSION = "0.11"
 DISTRIBUTION_PLATFORM = "ios" -- default | itchio | steam | ios
 BUILD_TYPE = "fullgame" -- fullgame | demo
 BETA_BUILD = false
@@ -10,5 +10,3 @@ STATS_FILE_FORMAT_VERSION = 1
 
 DEBUG_MODE = true
 PROFILER_INIT = false
-
---- VALUE OVERRIDES BELOW ---
