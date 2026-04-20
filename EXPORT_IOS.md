@@ -18,6 +18,9 @@ Missing things todo:
 - Better controls with bautiful buttons (placement et icons)
 
 - Fix: La cafertier les input c'est pas le bon draw
+- Shaders
+- Fix: Queued join player creer un joystick inutile
+- Add: Vibrations
 
 EN vrai osef:
     - Options: change button placement and size
@@ -27,6 +30,7 @@ EN vrai osef:
     - Desactiver le bouton interagir si il sert a rien
     - Si on rejoint avec 4 joueurs, y'a moyen qu'on puisse encore ajouter le touch_input mais en vrai jsp c'est un cas de bord a tester
     - Pas de touch input => pas de escape =>
+
 
 
 DONE:

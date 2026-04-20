@@ -357,9 +357,6 @@ function is_position_on_left_screen(x)
 end
 
 function TouchScreen:touchpressed(id, x, y)
-    print_debug("is_a_menu", _is_a_menu())
-    print_debug("is_in_game", _active_is_in_game())
-    print_debug("is_choosing_perso", _active_is_choosing_perso())
     global_screen_pressed = true
 
     if (is_position_on_left_screen(x) and not joystick_id) and (_active_is_in_game()) then
