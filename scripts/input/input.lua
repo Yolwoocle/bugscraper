@@ -561,7 +561,15 @@ function InputManager:get_button_icon(player_n, button, brand_override)
         if img == nil then
             return self:generate_unknown_key_icon(images.btn_c_unknown, button.key_name)
         end
-        
+    elseif button.type == INPUT_TYPE_TOUCH then
+        local image_name = TOUCH_CONSTANT_TO_IMAGE_NAME[INPUT_TYPE_TOUCH .. "_" .. button.key_name]
+		if image_name ~= nil then
+            img = images[image_name]
+        end
+
+        if img == nil or img == images.btn_k_unknown then
+            return self:generate_unknown_key_icon(images.btn_k_unknown, button.key_name)
+        end
 	end
     return img or self:generate_unknown_key_icon(images.btn_k_unknown, "?")
 end

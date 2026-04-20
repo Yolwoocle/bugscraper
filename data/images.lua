@@ -846,6 +846,15 @@ local function load_images()
 	end
 	images.btn_c_unknown = load_image("buttons/controller/btn_c_unknown.png")
 
+	-- Touch
+	for key_constant, button_image_name in pairs(TOUCH_CONSTANT_TO_IMAGE_NAME) do
+		images[button_image_name] = load_image("buttons/touch/"..button_image_name..".png")
+	end
+
+
+
+
+
 	images.load_images = load_images
 
 	print(concatsep({"Finished loading", table_key_count(images), "images. (", (love.timer.getTime() - start) * 1000 ,"ms)"}))

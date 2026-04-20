@@ -572,6 +572,26 @@ KEY_CONSTANT_TO_IMAGE_NAME = {
 	["mouse12"] = "btn_k_mouse12",
 }
 
+TOUCH_CONSTANT_TO_IMAGE_NAME = {
+    ["t_jump"] = "btn_t_jump",
+    -- "t_left"] = "btn_t_left",
+    -- "t_right"] = "btn_t_right",
+    -- "t_up"] = "btn_t_up",
+    -- "t_down"] = "btn_t_down",
+    -- "t_jump"] = "btn_t_jump",
+    ["t_shoot"] = "btn_t_shoot",
+    ["t_interact"] = "btn_t_interact",
+
+    ["t_escape"] = "btn_t_escape",
+    ["t_ok"] = "btn_t_ok",
+    ["t_back"] = "btn_t_back",
+
+    ["t_left_ui"] = "btn_t_left",
+    ["t_right_ui"] = "btn_t_right",
+    ["t_up_ui"] = "btn_t_up",
+    ["t_down_ui"] = "btn_t_down",
+}
+
 CONTROLLER_BUTTONS = {
     ["a"] = true,
     ["b"] = true,
