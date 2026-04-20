@@ -277,15 +277,6 @@ end
 function PlayerPreview:confirm_character_select()
     Input:get_user(self.player_n):set_skin(self.selection)
 
-    if DISTRIBUTION_PLATFORM == "ios" then
-        local local_player = Input:get_user(self.player_n)
-        if local_player.primary_input_type == "touch" then
-            if game and game.touch_screen then
-                game.touch_screen.is_choosing_perso = false 
-            end
-        end
-    end
-
     game:join_game(self.player_n)
     self.queued_player:remove()
 end
