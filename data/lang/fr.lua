@@ -166,7 +166,7 @@ return {
         },
         gazpacho = {
             title = "Gaspacho", 
-            description = "Après avoir subi des dégâts, infligez rapidement des dégâts pour regagner 1 ❤",
+            description = "Après avoir subi des dégâts, attaquez rapidement des ennemis pour regagner 1 ❤",
         },
     },
     input = {

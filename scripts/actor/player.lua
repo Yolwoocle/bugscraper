@@ -1248,7 +1248,11 @@ function Player:on_stomp(enemy)
 	self.wall_slide_stamina = self.wall_slide_max_stamina
 
 	self.float_timer = self.float_max_duration
-	self.gun:add_ammo(math.floor(self.ammo_percent_gain_on_stomp * self.gun:get_max_ammo()))
+	if self.gun.is_reloading then
+		self.gun:advance_reload_timer_percentage(self.ammo_percent_gain_on_stomp)
+	else
+		self.gun:add_ammo(math.floor(self.ammo_percent_gain_on_stomp * self.gun:get_max_ammo()))
+	end
 
 	self:add_fury(self.fury_stomp_value * enemy.fury_stomp_multiplier)
 end
