@@ -20,9 +20,9 @@ return {
         en = "English",
         es = "Español",
         fr = "Français",
-        zh = "简体中文",
         pl = "Polski",
         pt_BR = "Português Brasileiro",
+        zh_Hans = "简体中文",
         ja = "日本語",
     },
     game = {
