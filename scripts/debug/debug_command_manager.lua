@@ -105,6 +105,29 @@ function DebugCommandManager:init()
             return true
         end,
     }
+
+    self.commands["unlock_updrade"] = DebugCommand:new {
+        name = "unlock_updrade",
+        description = "Unlocks an upgrade",
+        args = {
+            { "upgrade_name:string", values = upgrades_keys },
+        },
+        run = function(upgrade_name)
+            if not upgrade_name then
+                return false, "No upgrade given"
+            end
+            local full_name = "Upgrade" .. upgrade_name
+            local upgrade = upgrades[full_name]
+            if not upgrade then
+                return false, concat("Upgrade '", upgrade_name, "' doesn't exit")
+            end
+
+            Metaprogression:unlock_skin(full_name)
+            self:add_message(concat("Unlocked upgrade '", upgrade_name, "'"))
+            return true
+        end,
+    }
+
     self.commands["spawn"] = DebugCommand:new {
         name = "spawn",
         description = "Spawns an enemy",

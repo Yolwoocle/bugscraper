@@ -1282,6 +1282,13 @@ end
 function Player:on_kill_other(enemy, reason)
 end
 
+--- 
+function Player:on_reload(gun)
+	for _, upgrade in pairs(self.upgrades) do
+		upgrade:on_player_reload_gun(self)
+	end
+end
+
 ------------------------------------------
 --- Upgrades & effects ---
 ------------------------------------------
@@ -1677,7 +1684,7 @@ function Player:update_color(dt)
 	
 	-- Invincibility blink
 	if self.is_invincible and self.invincible_time > 0.1 then
-		local a = (self.invincible_time / self.max_invincible_time)*0.5 + 0.3
+		local a = clamp((self.invincible_time / self.max_invincible_time)*0.5 + 0.3, 0.0, 0.8)
 		self.blink_color = transparent_color(COL_WHITE, a)
 	end
 	

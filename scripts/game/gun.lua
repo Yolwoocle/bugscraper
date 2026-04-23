@@ -282,6 +282,10 @@ function Gun:reload()
 	self.reload_timer = self.max_reload_timer
 
 	self.burst_counter = 0
+
+	if self.user and self.user.on_reload then
+		self.user:on_reload(self)
+	end
 end
 
 function Gun:fire_bullet(dt, user, x, y, bul_w, bul_h, dx, dy)

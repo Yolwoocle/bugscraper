@@ -693,6 +693,7 @@ local img_names = {
 	upgrade_hot_chocolate =     "upgrades/upgrade_hot_chocolate",
 	upgrade_pomegranate_juice = "upgrades/upgrade_pomegranate_juice",
 	upgrade_gazpacho =          "upgrades/upgrade_gazpacho",
+	upgrade_guarana =           "upgrades/upgrade_guarana",
 	upgrade_water =             "upgrades/upgrade_water",
 	
 	-----------------------------------------------------
