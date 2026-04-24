@@ -167,8 +167,8 @@ return {
         gazpacho = {
             -- When you take damange, you have a 5-second window, where if you deal enough damage
             -- to enemies, you can recover 1 HP
-            title = "[[ADDED / 'Gazpacho']]",
-            description = "[[ADDED / 'After taking damage, quickly fight back to regain 1 ❤']]",
+            title = "Gaspacho",
+            description = "Depois de sofrer dano, revide rapidamente para ganhar 1 ❤",
         },
     },
     input = {
