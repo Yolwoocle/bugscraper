@@ -122,7 +122,7 @@ return {
         },
         espresso = {
             title = "エスプレッソ",
-            description = "コンボ中、発射速度 x%d",
+            description = "コンボ中 射撃速度がx%d上昇",
         },
         milk = {
             title = "ミルク",
@@ -165,8 +165,10 @@ return {
             description = "コンボメーターの減りが遅くなる",
         },
         gazpacho = {
-            title = "[[ADDED / 'Gazpacho']]",
-            description = "[[ADDED / 'After taking damage, quickly fight back to regain 1 ❤']]",
+            -- When you take damange, you have a 5-second window, where if you deal enough damage
+            -- to enemies, you can recover 1 HP
+            title = "ガスパチョ",
+            description = "ダメージを受けると 反撃して1❤回復",
         },
     },
     input = {

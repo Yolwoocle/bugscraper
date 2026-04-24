@@ -165,6 +165,8 @@ return {
             description = "La barre de combo décroit plus lentement",
         },
         gazpacho = {
+            -- When you take damange, you have a 5-second window, where if you deal enough damage
+            -- to enemies, you can recover 1 HP
             title = "Gaspacho", 
             description = "Après avoir subi des dégâts, attaquez rapidement des ennemis pour regagner 1 ❤",
         },
