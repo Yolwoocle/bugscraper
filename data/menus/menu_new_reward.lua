@@ -64,7 +64,14 @@ function NewXpRewardMenu:draw()
     draw_centered(self.center_image, CANVAS_CENTER[1], CANVAS_CENTER[2], 0, s*4)
 
     print_wavy_centered_outline_text(COL_WHITE, nil, self.overtext, CANVAS_WIDTH/2, CANVAS_HEIGHT/2 - 50, 1, self.t, 2, 5, 0.4, 0, 1)
-    print_wavy_centered_outline_text(COL_WHITE, nil, self.undertext, CANVAS_WIDTH/2, CANVAS_HEIGHT/2 + 70, 1, self.t, 2, 5, 0.4, 0, 1)
+
+    local font = love.graphics.getFont()
+    local width, wrapped_text = font:getWrap(self.undertext, CANVAS_WIDTH*0.8)
+    local iy = 0
+    for _, line in pairs(wrapped_text) do
+        print_wavy_centered_outline_text(COL_WHITE, nil, line, CANVAS_WIDTH/2, CANVAS_HEIGHT/2 + 70 + iy, 1, self.t + 0.3*(iy/16), 2, 5, 0.4, 0, 1)
+        iy = iy + 16
+    end
 
 	print_wavy_centered_outline_text(self.color_palette[2], COL_WHITE, self.text, CANVAS_WIDTH/2, CANVAS_HEIGHT/2 + 42 + 3, 1, self.t, 3, 5, 0.4, 0, 2)
 	print_wavy_centered_outline_text(self.color_palette[1], COL_WHITE, self.text, CANVAS_WIDTH/2, CANVAS_HEIGHT/2 + 42,     1, self.t, 3, 5, 0.4, 0, 2)
