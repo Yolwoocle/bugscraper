@@ -1,4 +1,5 @@
 from fontTools.ttLib import TTFont
+import shutil
 from PIL import Image, ImageDraw, ImageFont
 import re 
 import os
@@ -13,6 +14,8 @@ output_format = "return \"{}\""
 # String|None
 language_file_path = r"/mnt/c/docs/gamedev/bugscraper/bugscraper/data/lang/ja.lua"
 output_folder = r"/mnt/c/docs/gamedev/bugscraper/bugscraper/_tools/font_builder/"
+
+copy_folder = r"/mnt/c/docs/gamedev/bugscraper/bugscraper/fonts/"
 
 output_height = 14
 font_size = 10
@@ -166,3 +169,12 @@ print(f"Found {len(used_characters_present_in_font)} used characters compatible 
 
 save_characters_to_file(used_characters_present_in_font, os.path.join(output_folder, output_text), output_format)
 create_image(font_path, used_characters_present_in_font, os.path.join(output_folder, output_image), font_size, appended_images)
+
+print(f"{os.path.join(output_folder, output_text)}")
+print(f"{os.path.join(output_folder, output_image)}")
+
+print(f"{os.path.join(copy_folder, output_text)}")
+print(f"{os.path.join(copy_folder, output_image)}")
+
+shutil.move(os.path.join(output_folder, output_text),  os.path.join(copy_folder, output_text))
+shutil.move(os.path.join(output_folder, output_image), os.path.join(copy_folder, output_image))
