@@ -11,7 +11,7 @@ local create_end_menu       = require "data.menus.create_end_menu"
 
 ---------------------------------------------------------
 
-local items = create_end_menu(true)
+local items = create_end_menu({"continue"})
 
 local WinMenu = Menu:inherit()
 

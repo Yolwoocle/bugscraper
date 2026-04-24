@@ -11,7 +11,7 @@ local create_end_menu       = require "data.menus.create_end_menu"
 
 ---------------------------------------------------------
 
-local items = create_end_menu(false)
+local items = create_end_menu({"wishlist", "return"})
 
 local DemoEndMenu = Menu:inherit()
 

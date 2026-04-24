@@ -9,7 +9,7 @@ function SpikedFly:init(x, y)
     self:init_enemy(x,y, images.spiked_fly, 15,15)
     self.name = "fly"
     self.is_flying = true
-    self.life = 5
+    self.life = 2.5
 
     self.is_stompable = false
     --self.speed_y = 0--self.speed * 0.5

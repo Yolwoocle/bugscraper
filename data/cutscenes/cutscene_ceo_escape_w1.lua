@@ -246,7 +246,7 @@ return Cutscene:new("ceo_escape_w1", {
         end,
         exit = function(cutscene, data)
             if BUILD_TYPE == "demo" then
-                game:save_stats()
+                game:on_end_game()
                 game.menu_manager:set_menu("demo_end")
             end
         end,
