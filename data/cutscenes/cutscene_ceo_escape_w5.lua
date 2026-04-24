@@ -467,7 +467,7 @@ return Cutscene:new("ceo_escape_w5", {
                 Achievements:grant("ach_no_damage_full")
             end
 
-            game:save_stats()
+            game:on_end_game()
         	game.menu_manager:set_menu("win")
         end,
     }),
