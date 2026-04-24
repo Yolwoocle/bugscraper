@@ -17,6 +17,8 @@ function Prop:init(x, y, img, w, h)
     self.gravity = 0
     self.knockback = 0
 
+    self.is_mean = false
+
     self.is_pushable = false
     self.is_knockbackable = false
     self.is_flying = true
