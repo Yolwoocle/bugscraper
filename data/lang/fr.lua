@@ -20,9 +20,9 @@ return {
         en = "English",
         es = "Español",
         fr = "Français",
-        zh = "简体中文",
         pl = "Polski",
         pt_BR = "Português Brasileiro",
+        zh_Hans = "简体中文",
         ja = "日本語",
     },
     game = {
@@ -122,11 +122,11 @@ return {
         },
         espresso = {
             title = "Espresso",
-            description = "x%d vitesse de tir pendant %d étages",
+            description = "x%d vitesse de tir lors d'un combo",
         },
         milk = {
             title = "Lait",
-            description = "+%d maximum ❤",
+            description = "+%d ❤ maximum",
         },
         boba = {
             title = "Bubble tea",
@@ -163,6 +163,12 @@ return {
         energy_drink = {
             title = "Boisson énergisante",
             description = "La barre de combo décroit plus lentement",
+        },
+        gazpacho = {
+            -- When you take damange, you have a 5-second window, where if you deal enough damage
+            -- to enemies, you can recover 1 HP
+            title = "Gaspacho", 
+            description = "Après avoir subi des dégâts, attaquez rapidement des ennemis pour regagner 1 ❤",
         },
     },
     input = {

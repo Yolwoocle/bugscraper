@@ -27,6 +27,7 @@ function Enemy:init_enemy(x,y, img, w,h)
 	self.counts_for_enemy_count = true
 	self.is_being = true 
 	self.is_enemy = true
+    self.is_mean = true
 	self.is_flying = false
 	self.is_active = true
 	self.follow_player = true

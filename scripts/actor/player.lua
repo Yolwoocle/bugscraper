@@ -1248,9 +1248,13 @@ function Player:on_stomp(enemy)
 	self.wall_slide_stamina = self.wall_slide_max_stamina
 
 	self.float_timer = self.float_max_duration
-	self.gun:add_ammo(math.floor(self.ammo_percent_gain_on_stomp * self.gun:get_max_ammo()))
+	if self.gun.is_reloading then
+		self.gun:advance_reload_timer_percentage(self.ammo_percent_gain_on_stomp)
+	else
+		self.gun:add_ammo(math.floor(self.ammo_percent_gain_on_stomp * self.gun:get_max_ammo()))
+	end
 
-	self:add_fury(self.fury_stomp_value * enemy.fury_stomp_multiplier)
+	self:add_fury(self.fury_stomp_value * enemy.fury_stomp_multiplier, enemy)
 end
 
 --- When an enemy bullet hits the player
@@ -1271,11 +1275,18 @@ function Player:on_my_bullet_hit(bullet, victim, col)
 	-- Why tf would this happen
 	if bullet.player ~= self then   return   end
 
-	self:add_fury(bullet.damage * victim.fury_bullet_damage_multiplier * self.fury_bullet_damage_value_multiplier)
+	self:add_fury(bullet.damage * victim.fury_bullet_damage_multiplier * self.fury_bullet_damage_value_multiplier, victim)
 end
 
 --- When the player kills an enemy
 function Player:on_kill_other(enemy, reason)
+end
+
+--- 
+function Player:on_reload(gun)
+	for _, upgrade in pairs(self.upgrades) do
+		upgrade:on_player_reload_gun(self)
+	end
 end
 
 ------------------------------------------
@@ -1326,9 +1337,9 @@ end
 --- Misc ---
 ------------------------------------------
 
-function Player:add_fury(amount)
+function Player:add_fury(amount, victim)
 	game.level:add_fury(amount)
-	if self.bloodthirst_enabled then
+	if self.bloodthirst_enabled and victim.is_mean then
 		self:add_bloodthirst_blood(amount)
 	end
 end
@@ -1359,9 +1370,14 @@ end
 
 function Player:set_in_menu(val)
 	self.is_in_menu = val
+	
 	if val then
+		self.is_in_menu_old_show_hud = self.show_hud
+		self.show_hud = false
 		self:set_input_mode(PLAYER_INPUT_MODE_CODE)
 	else
+		self.show_hud = param(self.is_in_menu_old_show_hud, true)
+		self.is_in_menu_old_show_hud = nil
 		self:set_input_mode(PLAYER_INPUT_MODE_USER)
 	end
 	self:reset_virtual_controller()
@@ -1668,7 +1684,7 @@ function Player:update_color(dt)
 	
 	-- Invincibility blink
 	if self.is_invincible and self.invincible_time > 0.1 then
-		local a = (self.invincible_time / self.max_invincible_time)*0.5 + 0.3
+		local a = clamp((self.invincible_time / self.max_invincible_time)*0.5 + 0.3, 0.0, 0.8)
 		self.blink_color = transparent_color(COL_WHITE, a)
 	end
 	
@@ -1810,7 +1826,8 @@ function Player:update_bloodthirst(dt)
 			local success, overflow = self:heal(1)
 			Particles:smoke(self.mid_x, self.mid_y, nil, {COL_DARK_BRICK, COL_LIGHT_BRICK, COL_MID_DARK_GREEN})
 			self:play_sound("sfx_loot_health_collect")
-			Particles:word(self.mid_x, self.y, concat(1,"❤ (", Text:text("upgrade.gazpacho.title"), ")"), {COL_LIGHT_BRICK, COL_DARK_BRICK, COL_MID_DARK_GREEN, stacked=true}, 1.0)
+			Particles:word(self.mid_x, self.y, concat(1,"❤"), {COL_LIGHT_BRICK, COL_DARK_BRICK, COL_MID_DARK_GREEN, stacked=true}, 1.0)
+			Particles:word(self.mid_x, self.y+16, concat("(", Text:text("upgrade.gazpacho.title"), ")"), {COL_LIGHT_BRICK, COL_DARK_BRICK, COL_MID_DARK_GREEN, stacked=true, font=FONT_MINI}, 1.0)
 			
 		end
 	end

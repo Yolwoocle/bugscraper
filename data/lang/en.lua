@@ -20,9 +20,9 @@ return {
         en = "English",
         es = "Español",
         fr = "Français",
-        zh = "简体中文",
         pl = "Polski",
         pt_BR = "Português Brasileiro",
+        zh_Hans = "简体中文",
         ja = "日本語",
     },
     game = {
@@ -165,8 +165,10 @@ return {
             description = "Combo meter decreases more slowly",
         },
         gazpacho = {
+            -- When you take damange, you have a 5-second window, where if you deal enough damage
+            -- to enemies, you can recover 1 HP
             title = "Gazpacho",
-            description = "After taking damage, quickly damage enemies to regain 1 ❤",
+            description = "After taking damage, quickly fight back to regain 1 ❤",
         },
     },
     input = {

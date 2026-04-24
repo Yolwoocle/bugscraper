@@ -1175,10 +1175,6 @@ local waves_defs = {
         enemies = {
             { E.Centipede, 1, args = { 15 }, position = { CANVAS_WIDTH / 2 - 10 / 2, 200 } },
         },
-
-        run = function()
-            game.actor_manager:kill_actors_with_name("progressing_arc")
-        end, 
     },
 
     ---------------------------------------------
@@ -1214,7 +1210,7 @@ local waves_defs = {
 
         enemies = {
             { E.CloudDropper, 30 },
-            { E.Shooter, 30 },
+            { E.Shooter, 10 },
         },  
     },
 
@@ -1255,12 +1251,11 @@ local waves_defs = {
         max = 4,
         
         enemies = {
-            { E.CloudStormZone, 30 },
+            { E.Rollopod, 30 },
         },
-
         fixed_enemies = {
-            { E.Centipede, 1 },
-        },
+            { E.FlyingSpawner, 1 },
+        }
     },
 
     {
@@ -1288,7 +1283,11 @@ local waves_defs = {
         },
         fixed_enemies = {
             { E.Centipede, 1 },
-        }
+        },
+        
+        run = function()
+            game.actor_manager:kill_actors_with_name("progressing_arc")
+        end, 
     },
 
     {

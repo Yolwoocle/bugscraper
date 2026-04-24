@@ -39,12 +39,16 @@ end
 function Upgrade:apply_instant(player)
 end
 
---- [ABSTRACT]
+--- [ABSTRACT] Play visual or sound effects
 function Upgrade:play_effects(player)
 end
 
---- [ABSTRACT]
+--- [ABSTRACT] When the upgrade is finished
 function Upgrade:on_finish(player)
+end
+
+--- [ABSTRACT] 
+function Upgrade:on_player_reload_gun(player)
 end
 
 ------------------------------------------

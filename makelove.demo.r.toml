@@ -1,4 +1,4 @@
-name = "bugscraper"
+name = "bugscraper_demo"
 default_targets = ["win64", "macos", "appimage"]
 build_directory = "_export"
 icon_file = "icon.png"
@@ -25,11 +25,11 @@ love_files = [
 "lib/steam/win64/steam_api64.dll" = "steam_api64.dll"
 
 [windows.exe_metadata]
-FileDescription = "Bugscraper: Rise to the top of a bug-filled skyscraper"
+FileDescription = "Bugscraper Demo: Rise to the top of a bug-filled skyscraper"
 CompanyName = "Ninesliced"
 LegalCopyright = "Copyright © 2026 Léo Bernard"
-ProductName = "Bugscraper"
-OriginalFilename = "bugscraper.exe"
+ProductName = "Bugscraper Demo"
+OriginalFilename = "bugscraper_demo.exe"
 
 [macos]
 icon_file = "icon.png"

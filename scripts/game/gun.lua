@@ -257,6 +257,10 @@ function Gun:do_reloading(dt)
 	end
 end
 
+function Gun:advance_reload_timer_percentage(percentage)
+	self.reload_timer = max(self.reload_timer - percentage*self.max_reload_timer, 0)
+end
+
 function Gun:do_natural_recharge(dt)
 	if self.is_reloading then   return   end
 
@@ -278,6 +282,10 @@ function Gun:reload()
 	self.reload_timer = self.max_reload_timer
 
 	self.burst_counter = 0
+
+	if self.user and self.user.on_reload then
+		self.user:on_reload(self)
+	end
 end
 
 function Gun:fire_bullet(dt, user, x, y, bul_w, bul_h, dx, dy)

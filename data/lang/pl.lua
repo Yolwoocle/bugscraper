@@ -20,9 +20,9 @@ return {
         en = "English",
         es = "Español",
         fr = "Français",
-        zh = "简体中文",
         pl = "Polski",
         pt_BR = "Português Brasileiro",
+        zh_Hans = "简体中文",
         ja = "日本語",
     },
     game = {
@@ -121,7 +121,7 @@ return {
         },
         espresso = {
             title = "Espresso",
-            description = "x%d prędkość strzelania przez %d poziomów",
+            description = "x%d prędkość strzelania przez %d poziomów[[CHANGED / old:'x%d shooting speed for %d floors' / new:'x%d shooting speed while in a combo']]",
         },
         milk = {
             title = "Mleko",
@@ -162,6 +162,12 @@ return {
         energy_drink = {
             title = "Energetyk",
             description = "Dłuższy czas combo",
+        },
+        gazpacho = {
+            -- When you take damange, you have a 5-second window, where if you deal enough damage
+            -- to enemies, you can recover 1 HP
+            title = "[[ADDED / 'Gazpacho']]",
+            description = "[[ADDED / 'After taking damage, quickly fight back to regain 1 ❤']]",
         },
     },
     input = {
@@ -281,10 +287,10 @@ return {
             },
             audio = {
                 title = "Dźwięk",
-                sound = "DŹWIĘK",
-                volume = "GŁOŚNOŚĆ",
-                sfx_volume = "EFEKTY DŹWIĘKOWE", -- Can also be translated as "effects volume" or "SFX volume"
-                music_volume = "MUZYKA",
+                sound = "DŹWIĘK", -- Toggle (on or off)
+                volume = "GŁOŚNOŚĆ", -- Slider (0% to 100%)
+                sfx_volume = "EFEKTY DŹWIĘKOWE", -- Slider (0% to 100%)
+                music_volume = "MUZYKA", -- Slider (0% to 100%)
                 music_pause_menu = "MUZYKA W MENU PAUZY", -- Whether music should play on the pause menu
                 ambience = "DŹWIĘKI OTOCZENIA",
             },
@@ -293,7 +299,7 @@ return {
                 fullscreen = "PEŁEN EKRAN",
                 pixel_scale = "SKALA PIXELI", -- How big should every pixel be displayed on-screen (x1, x2, ...)
                 pixel_scale_value = {
-                    auto = "automatyczna",
+                    auto = "automatyczna", -- Biggest number possible, whole or not
                     max_whole = "maksymalnie cała", -- Biggest whole number possible
                 },
                 vsync = "SYNCHR. PIONOWA",
@@ -443,7 +449,7 @@ return {
         },
         ach_smash_easter_egg = {
             name = "GAME!", -- This is a reference to what the announcer says at the end of a match in Smash Bros.
-            description = "Znajdź tajne wyjście",
+            description = "Znajdź tajne wyjście", 
         },
     },
     discord = { -- Text used for Discord rich presence

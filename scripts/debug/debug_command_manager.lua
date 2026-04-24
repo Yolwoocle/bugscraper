@@ -105,6 +105,29 @@ function DebugCommandManager:init()
             return true
         end,
     }
+
+    self.commands["unlock_updrade"] = DebugCommand:new {
+        name = "unlock_updrade",
+        description = "Unlocks an upgrade",
+        args = {
+            { "upgrade_name:string", values = upgrades_keys },
+        },
+        run = function(upgrade_name)
+            if not upgrade_name then
+                return false, "No upgrade given"
+            end
+            local full_name = "Upgrade" .. upgrade_name
+            local upgrade = upgrades[full_name]
+            if not upgrade then
+                return false, concat("Upgrade '", upgrade_name, "' doesn't exit")
+            end
+
+            Metaprogression:unlock_skin(full_name)
+            self:add_message(concat("Unlocked upgrade '", upgrade_name, "'"))
+            return true
+        end,
+    }
+
     self.commands["spawn"] = DebugCommand:new {
         name = "spawn",
         description = "Spawns an enemy",
@@ -516,6 +539,56 @@ function DebugCommandManager:init()
 
             player.do_chaotic_inputs = (action == "e" or action == "enable")
             self:add_message("Set " .. tostring(player_n) .. " chaotic input to "..tostring( (action == "e" or action == "enable")))
+
+            return true
+        end,
+    }
+    self.commands["_force_bag_upgrade"] = DebugCommand:new {
+        name = "_force_bag_upgrade",
+        description = "Forces an upgrade to be added to the bag",
+        args = {
+            { "name:string", values=upgrades_keys },
+        },
+        run = function(name)
+            local upgrade_class = upgrades["Upgrade" .. tostring(name)]
+            if not upgrade_class then
+                return false, "Upgrade '" .. name .. "' not found"
+            end
+
+            local upgrade = upgrade_class:new()
+            table.insert(game.level.upgrade_bag_overrides, upgrade)
+            self:add_message("Added upgrade '" .. name .. "' to the bag")
+            
+            for _, a in pairs(game.actors) do
+                if a.is_shop then
+                    a:assign_random_upgrades()
+                    self:add_message("Found shop, rerolled it")
+                end
+            end
+
+            return true
+        end,
+    }
+    self.commands["_number_of_upgrades_per_roll"] = DebugCommand:new {
+        name = "_number_of_upgrades_per_roll",
+        description = "Sets _number_of_upgrades_per_roll",
+        args = {
+            { "n:number" },
+        },
+        run = function(n)
+            if n <= 0 then
+                return false, "n must be > 0"
+            end
+
+            game.level.number_of_upgrades_per_roll = n
+            self:add_message("Set number_of_upgrades_per_roll to "..tostring(n))
+            
+            for _, a in pairs(game.actors) do
+                if a.is_shop then
+                    a:assign_random_upgrades()
+                    self:add_message("Found shop, rerolled it")
+                end
+            end
 
             return true
         end,

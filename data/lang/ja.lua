@@ -20,9 +20,9 @@ return {
         en = "English",
         es = "Español",
         fr = "Français",
-        zh = "简体中文",
         pl = "Polski",
         pt_BR = "Português Brasileiro",
+        zh_Hans = "简体中文",
         ja = "日本語",
     },
     game = {
@@ -122,7 +122,7 @@ return {
         },
         espresso = {
             title = "エスプレッソ",
-            description = "%d階上がるまで発射速度 x%d上昇",
+            description = "コンボ中 射撃速度がx%d上昇",
         },
         milk = {
             title = "ミルク",
@@ -163,6 +163,12 @@ return {
         energy_drink = {
             title = "エナドリ",
             description = "コンボメーターの減りが遅くなる",
+        },
+        gazpacho = {
+            -- When you take damange, you have a 5-second window, where if you deal enough damage
+            -- to enemies, you can recover 1 HP
+            title = "ガスパチョ",
+            description = "ダメージを受けると 反撃して1❤回復",
         },
     },
     input = {
@@ -282,10 +288,10 @@ return {
             },
             audio = {
                 title = "オーディオ",
-                sound = "サウンド",
-                volume = "音量",
-                sfx_volume = "SE音量", -- Can also be translated as "effects volume" or "SFX volume"
-                music_volume = "BGM音量",
+                sound = "サウンド", -- Toggle (on or off)
+                volume = "音量", -- Slider (0% to 100%)
+                sfx_volume = "SE音量", -- Slider (0% to 100%)
+                music_volume = "BGM音量", -- Slider (0% to 100%)
                 music_pause_menu = "ポーズメニュー中のBGM", -- Whether music should play on the pause menu
                 ambience = "環境音",
             },
@@ -294,7 +300,7 @@ return {
                 fullscreen = "フルスクリーン",
                 pixel_scale = "ピクセル倍率", -- How big should every pixel be displayed on-screen (x1, x2, ...)
                 pixel_scale_value = {
-                    auto = "オート",
+                    auto = "オート", -- Biggest number possible, whole or not
                     max_whole = "最大倍率", -- Biggest whole number possible
                 },
                 vsync = "Vシンク",
@@ -347,7 +353,7 @@ return {
             time_total = "起動時間",
             time_ingame = "プレイ時間 (遊んだ分)",
             runs = "挑戦回数",
-            best_run = "最高到達数",  -- The biggest wave number reached on any run
+            best_run = "最高到達数", -- The biggest wave number reached on any run
         },
         new_reward = {
             new_skin = "新キャラ獲得!",
@@ -368,7 +374,7 @@ return {
             title = "クレジット",
             ninesliced_presents = "Ninesliced presents",
             game_by = "A game by", 
-            leo_bernard = "Léo Bernard",  -- Please do not touch this
+            leo_bernard = "Léo Bernard", -- Please do not touch this
             music = "ミュージック",
             sound_design = "サウンドデザイン",
             localization = "ローカライズ",
@@ -391,7 +397,7 @@ return {
     },
     achievements = {
         ach_complete_w1 = {
-            name = "バグ資料室", 
+            name = "バグ資料室",
             description = "部署1 突破",
         },
         ach_complete_w2 = {
@@ -443,7 +449,7 @@ return {
             description = "100コンボ達成",
         },
         ach_smash_easter_egg = {
-            name = "GAME SET!",  -- This is a reference to what the announcer says at the end of a match in Smash Bros.
+            name = "GAME SET!", -- This is a reference to what the announcer says at the end of a match in Smash Bros.
             description = "秘密の出口の演出を見つけた", 
         },
     },

@@ -1,10 +1,10 @@
 require "bugscraper_config"
 
 function love.conf(t)
-    t.identity = "bugscraper"
+    t.identity = "bugscraper_demo"
     t.version = "11.5"
     
-    t.window.title = "Bugscraper - v"..BUGSCRAPER_VERSION
+    t.window.title = "Bugscraper Demo - v"..BUGSCRAPER_VERSION
     t.window.icon = "icon.png"
     
     t.usedpiscale = false
