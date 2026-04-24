@@ -1,0 +1,61 @@
+name = "bugscraper_demo"
+default_targets = ["win64", "macos", "appimage"]
+build_directory = "_export"
+icon_file = "icon.png"
+
+# LÖVE version - makelove will auto-download and cache binaries for this version
+love_version = "11.5"
+
+love_files = [
+    "+*",
+    "-*/.*",
+    "-./_*",
+    "-./_export/*",
+    "-./lib/steam/*",
+    "-*.aseprite",
+    "-*.lnk",
+]
+
+[archive_files]
+"changes.md" = "changes.md"
+
+[windows.archive_files]
+"steam_appid.txt" = "steam_appid.txt"
+"lib/steam/win64/luasteam.dll" = "luasteam.dll"
+"lib/steam/win64/steam_api64.dll" = "steam_api64.dll"
+
+[windows.exe_metadata]
+FileDescription = "Bugscraper Demo: Rise to the top of a bug-filled skyscraper"
+CompanyName = "Ninesliced"
+LegalCopyright = "Copyright © 2026 Léo Bernard"
+ProductName = "Bugscraper Demo"
+OriginalFilename = "bugscraper_demo.exe"
+
+[macos]
+icon_file = "icon.png"
+
+[macos.archive_files]
+"steam_appid.txt" = "@content/steam_appid.txt"
+"lib/steam/macos/luasteam.so" = "luasteam.so"
+"lib/steam/macos/libsteam_api.dylib" = "libsteam_api.dylib"
+
+[macos.app_metadata]
+CFBundleIdentifier = "com.yolwoocle.bugscraper"
+NSHumanReadableCopyright = "Copyright © 2026 Léo Bernard"
+
+[appimage]
+shared_libraries = [
+    "lib/steam/linux/libsteam_api.so",
+    "lib/steam/linux/luasteam.so",
+]
+
+[linux.archive_files]
+"steam_appid.txt" = "@content/steam_appid.txt"
+
+[linux.desktop_file_metadata]
+Comment="Bugscraper: Rise to the top of a bug-filled skyscraper"
+Categories="Game;"
+
+[lovejs]
+title = "Bugscraper"
+memory = "40000000"
