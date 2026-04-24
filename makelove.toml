@@ -26,8 +26,7 @@ love_files = [
 
 [windows.exe_metadata]
 FileDescription = "Bugscraper: Rise to the top of a bug-filled skyscraper"
-FileVersion = "0.4.2"
-CompanyName = "Léo Bernard"
+CompanyName = "Ninesliced"
 LegalCopyright = "Copyright © 2026 Léo Bernard"
 ProductName = "Bugscraper"
 OriginalFilename = "bugscraper.exe"
