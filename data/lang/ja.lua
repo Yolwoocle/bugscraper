@@ -122,7 +122,7 @@ return {
         },
         espresso = {
             title = "エスプレッソ",
-            description = "%d階上がるまで発射速度 x%d上昇[[CHANGED / old:'x%d shooting speed for %d floors' / new:'x%d shooting speed while in a combo']]",
+            description = "コンボ中は発射速度 x%d",
         },
         milk = {
             title = "ミルク",

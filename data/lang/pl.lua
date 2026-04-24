@@ -121,7 +121,7 @@ return {
         },
         espresso = {
             title = "Espresso",
-            description = "x%d prędkość strzelania przez %d poziomów[[CHANGED / old:'x%d shooting speed for %d floors' / new:'x%d shooting speed while in a combo']]",
+            description = "x%d prędkość strzelania podczas combo",
         },
         milk = {
             title = "Mleko",
