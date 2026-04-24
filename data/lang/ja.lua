@@ -122,7 +122,7 @@ return {
         },
         espresso = {
             title = "エスプレッソ",
-            description = "コンボ中は発射速度 x%d",
+            description = "コンボ中、発射速度 x%d",
         },
         milk = {
             title = "ミルク",
