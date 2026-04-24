@@ -122,7 +122,7 @@ return {
         },
         espresso = {
             title = "Expresso",
-            description = "x%d velocidade de tiro por %d andares[[CHANGED / old:'x%d shooting speed for %d floors' / new:'x%d shooting speed while in a combo']]",
+            description = "x%d velocidade de tiro por %d andares",
         },
         milk = {
             title = "Leite",
@@ -163,10 +163,6 @@ return {
         energy_drink = {
             title = "Energético",
             description = "Contador de combo diminui mais lentamente",
-        },
-        gazpacho = {
-            title = "[[ADDED / 'Gazpacho']]",
-            description = "[[ADDED / 'After taking damage, quickly fight back to regain 1 ❤']]",
         },
     },
     input = {
@@ -286,10 +282,10 @@ return {
             },
             audio = {
                 title = "Audio",
-                sound = "SOM", -- Toggle (on or off)
-                volume = "VOLUME", -- Slider (0% to 100%)
-                sfx_volume = "VOLUME DE EFEITOS SONOROS", -- Slider (0% to 100%)
-                music_volume = "VOLUME DA MÚSICA", -- Slider (0% to 100%)
+                sound = "SOM",
+                volume = "VOLUME",
+                sfx_volume = "VOLUME DE EFEITOS SONOROS", -- Can also be translated as "effects volume" or "SFX volume"
+                music_volume = "VOLUME DA MÚSICA",
                 music_pause_menu = "MÚSICA NO MENU DE PAUSA", -- Whether music should play on the pause menu
                 ambience = "SONS DE AMBIENTE",
             },
@@ -298,7 +294,7 @@ return {
                 fullscreen = "TELA CHEIA",
                 pixel_scale = "ESCALA DE PIXEL", -- How big should every pixel be displayed on-screen (x1, x2, ...)
                 pixel_scale_value = {
-                    auto = "auto", -- Biggest number possible, whole or not
+                    auto = "auto",
                     max_whole = "máximo inteiro", -- Biggest whole number possible
                 },
                 vsync = "VSYNC (SINCRONIZAÇÃO VERTICAL)",
@@ -395,7 +391,7 @@ return {
     },
     achievements = {
         ach_complete_w1 = {
-            name = "Recursos Insetos",
+            name = "Recursos Insetos", 
             description = "Complete o Departamento 1",
         },
         ach_complete_w2 = {

@@ -168,12 +168,6 @@ return {
             title = "Gazpacho",
             description = "After taking damage, quickly fight back to regain 1 ❤",
         },
-        guarana = {
-            -- Guaraná is a Brazilian soft drink originating from the guaraná plant. 
-            -- https://en.wikipedia.org/wiki/Guaran%C3%A1_(soft_drink)
-            title = "Guaraná", 
-            description = "Gain invincibility for a few seconds after reloading your gun",
-        },
     },
     input = {
         prompts = {
