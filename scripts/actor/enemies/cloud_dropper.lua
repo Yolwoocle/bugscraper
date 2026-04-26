@@ -13,7 +13,7 @@ local CloudDropper = Fly:inherit()
 function CloudDropper:init(x, y)
     CloudDropper.super.init(self, x,y, images["cloud_enemy_size3"], 16, 16, false)
     self.name = "cloud_dropper"
-    self.max_life = 9
+    self.max_life = 4
     self.life = self.max_life
     self.score = 10
 
@@ -82,9 +82,17 @@ function CloudDropper:init(x, y)
                 self.vy = 0
             end,
             update = function(state, dt)
+                if self.t % 0.2 < 0.1 then
+                    self.spr:set_flashing_white(true)
+                else
+                    self.spr:set_flashing_white(false)
+                end
                 if self.timer:update(dt) then
                     return "falling"
                 end
+            end,
+            exit = function(state)
+                self.spr:set_flashing_white(false)
             end
         },
         falling = {
@@ -131,11 +139,15 @@ function CloudDropper:on_death()
 end
 
 function CloudDropper:on_damage(amount)
-    self.state_machine:set_state("shake")
+    if self.state_machine.current_state_name == "flying" then
+        self.state_machine:set_state("shake")
+    end
 end
 
 function CloudDropper:on_stomped()
-    self.state_machine:set_state("shake")
+    if self.state_machine.current_state_name == "flying" then
+        self.state_machine:set_state("shake")
+    end
 end
 
 return CloudDropper
