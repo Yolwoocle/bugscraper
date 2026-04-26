@@ -109,7 +109,7 @@ function CloudStormZone:init(x, y, size)
                 self.spr:set_image(images.cloud_storm_angry_attack)
 
                 self:set_ai_template(nil)
-                self.state_timer:start(0.75)
+                self.state_timer:start(0.4)
 
                 self.spr:update_offset(0, 6)
                 self.spr_oy = 12
