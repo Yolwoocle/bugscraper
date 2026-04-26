@@ -172,6 +172,7 @@ end
 
 function ElectricArc:check_for_collisions()
     self.collides = false
+    -- TODO add a param for only colliding with players (optimization)
     for _, a in pairs(game.actors) do
         if a ~= self and a.is_active then
             local collision = a:get_rect(self.hitbox_expand):segment_intersection(self.segment)

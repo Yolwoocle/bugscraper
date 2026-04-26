@@ -1046,7 +1046,7 @@ local waves_defs = {
         max = 4,
 
         enemies = {
-            { E.GoldenBeetle, 20 },
+            { E.CloudDropper, 20 },
         },
 
         elevator_layers = {
@@ -1067,38 +1067,39 @@ local waves_defs = {
 
 
     {
+        min = 3,
+        max = 3,
+
+        enemies = {
+            { E.Bee, 3 },
+            { E.Rollopod, 2 },
+        },
+        fixed_enemies = {
+            { E.Rollopod, 2 },
+        },
+    },
+    
+    {
         min = 4,
         max = 4,
 
         enemies = {
-            { E.CloudStormZone, 30 },
+            { E.Rollopod, 20 },
+            { E.CloudDropper, 20 }
+        },
+        fixed_enemies = {
+            { E.CloudStormZone, 2 },
         },
     },
-
+    
     {
         min = 6,
         max = 6,
 
         enemies = {
-            { E.GoldenBeetle, 1 },
-            { E.CloudStormZone, 1 },
-        },
-        fixed_enemies = {
-            { E.GoldenBeetle, 1 },
-            { E.CloudStormZone, 1 },
-        }
-    },
-
-    {
-        min = 4,
-        max = 4,
-
-        enemies = {
-            { E.CloudStormZone, 20 },
-            { E.GoldenBeetle, 20 }
-        },
-        fixed_enemies = {
-            { E.Rollopod, 4 },
+            { E.Rollopod, 1 },
+            { E.Bee, 1 },
+            { E.CloudDropper, 1 },
         },
     },
 
@@ -1107,25 +1108,11 @@ local waves_defs = {
         max = 7,
 
         enemies = {
-            { E.GoldenBeetle, 30 },
-            { E.CloudStormZone, 30 },
+            { E.CloudDropper, 30 },
+            { E.Bee, 30 },
         },
 
         fixed_enemies = {
-            -- {E.ProgressingArc, 1, args = {{
-            --     points = get_w4_vines_points_func_1(-64),
-            --     interval_size = 150,
-            --     progress_speed = 80,
-            --     arc_params = thorns_arc_params
-            --     is_front = true,
-            -- }}},
-            -- {E.ProgressingArc, 1, args = {{
-            --     points = get_w4_vines_points_func_1(64),
-            --     interval_size = 150,
-            --     progress_speed = -80,
-            --     arc_params = thorns_arc_params
-            --     is_front = true,
-            -- }}},
             {E.ProgressingArc, 1, args = {{
                 points = get_w4_vines_points_func_2(),
                 interval_size = 150,
@@ -1141,11 +1128,57 @@ local waves_defs = {
         max = 7,
 
         enemies = {
-            { E.GoldenBeetle, 30 },
             { E.CloudStormZone, 30 },
             { E.Rollopod, 30 },
         },
     },
+
+    {
+        min = 6,
+        max = 6,
+
+        enemies = {
+            { E.CloudDropper, 30 },
+            { E.Rollopod, 30 },
+            { E.Bee, 30 },
+        },
+    },
+
+    {
+        min = 7,
+        max = 7,
+
+        enemies = {
+            { E.Bee, 30 },
+            { E.CloudStormZone, 30 },
+            { E.Shooter, 30 },
+            { E.Rollopod, 30 },
+        },
+    },
+    
+    {
+        min = 5,
+        max = 5,
+        
+        enemies = {
+            { E.Bee, 30 },
+            { E.CloudDropper, 30 },
+        },
+        fixed_enemies = {
+            { E.Centipede, 1, args = { 15 }, position = { CANVAS_WIDTH / 2 - 10 / 2, 200 } },
+        },
+        run = function ()
+            game.actor_manager:kill_actors_with_name("progressing_arc")
+        end
+    },
+
+    ---------------------------------------------
+    new_cafeteria({
+        run_func = function ()
+            game.actor_manager:kill_actors_with_name("progressing_arc")
+        end
+    }),
+    ---------------------------------------------
 
     {
         min = 4,
@@ -1154,43 +1187,47 @@ local waves_defs = {
         enemies = {
             { E.Shooter, 30 },
         },
-    },
-
-    {
-        min = 8,
-        max = 8,
-
-        enemies = {
-            { E.GoldenBeetle, 30 },
-            { E.CloudStormZone, 30 },
-            { E.Shooter, 30 },
-            { E.Rollopod, 30 },
-        },
-    },
-
-    {
-        min = 1,
-        max = 1,
-
-        enemies = {
-            { E.Centipede, 1, args = { 15 }, position = { CANVAS_WIDTH / 2 - 10 / 2, 200 } },
-        },
-    },
-
-    ---------------------------------------------
-    new_cafeteria(),
-    ---------------------------------------------
-
-    {
-        min = 6,
-        max = 6,
-
-        enemies = {
-            { E.CloudDropper, 30 },
-        },
 
         music = "w4",
         pull_music_buffer = true, 
+    },
+
+
+    {
+        min = 5,
+        max = 5,
+
+        enemies = {
+            { E.Rollopod, 30 },
+            { E.Shooter, 10 },
+        },  
+        fixed_enemies = {
+            { E.Shooter, 1 },
+        }
+    },
+
+    {
+        min = 3,
+        max = 3,
+
+        enemies = {
+            { E.Larva, 20 },
+            { E.BeeBoss, 20 },
+        },  
+        fixed_enemies = {
+            { E.GoldenBeetle, 3 },
+        }
+    },
+
+    {
+        min = 5,
+        max = 5,
+
+        enemies = {
+            { E.CloudDropper, 30 },
+            { E.Rollopod, 30 },
+            { E.GoldenBeetle, 30 },
+        },
         
         fixed_enemies = {
             {E.ProgressingArc, 1, args = {{
@@ -1203,46 +1240,14 @@ local waves_defs = {
         },
     },
 
-
-    {
-        min = 6,
-        max = 6,
-
-        enemies = {
-            { E.CloudDropper, 30 },
-            { E.Shooter, 10 },
-        },  
-    },
-
-    {
-        min = 5,
-        max = 5,
-
-        enemies = {
-            { E.CloudDropper, 30 },
-            { E.Rollopod, 30 },
-            { E.GoldenBeetle, 30 },
-        },
-    },
-
-    {
-        min = 8,
-        max = 8,
-
-        enemies = {
-            { E.SnailShelledBouncy, 30 },
-            { E.Shooter, 30 },
-        },
-    },
-
     {
         min = 7,
         max = 7,
 
         enemies = {
             { E.GoldenBeetle, 30 },
-            { E.CloudStormZone, 50 },
-            { E.CloudDropper, 30 },
+            { E.CloudStormZone, 20 },
+            { E.Shooter, 30 },
         },
     },
     
@@ -1252,6 +1257,7 @@ local waves_defs = {
         
         enemies = {
             { E.Rollopod, 30 },
+            { E.Bee, 30 },
         },
         fixed_enemies = {
             { E.FlyingSpawner, 1 },
@@ -1271,8 +1277,8 @@ local waves_defs = {
     },
 
     {
-        min = 8,
-        max = 8,
+        min = 4,
+        max = 4,
 
         enemies = {
             { E.GoldenBeetle, 30 },
@@ -1284,10 +1290,6 @@ local waves_defs = {
         fixed_enemies = {
             { E.Centipede, 1 },
         },
-        
-        run = function()
-            game.actor_manager:kill_actors_with_name("progressing_arc")
-        end, 
     },
 
     {
@@ -1550,7 +1552,7 @@ local waves_defs = {
                     n_rays = 1,
                     activation_delay = 2,
                     init_angle = pi / 2,
-                    angle_speed = 0.75,
+                    angle_speed = 0.5,
                 } }
             },
         },
@@ -1573,12 +1575,12 @@ local waves_defs = {
     },
     
     {
-        min = 10,
-        max = 10,
+        min = 7,
+        max = 7,
         enemies = {
             { E.Chipper, 3 },
             { E.StinkBug, 3 },
-            { E.MetalFly, 4 },
+            { E.MetalFly, 1 },
         },
         
         fixed_enemies = {
@@ -1587,8 +1589,8 @@ local waves_defs = {
     },
     
     {
-        min = 12,
-        max = 12,
+        min = 10,
+        max = 10,
         enemies = {
             { E.Chipper, 2 },
             { E.SnailShelledBouncy, 2 },
@@ -1599,8 +1601,8 @@ local waves_defs = {
     },
     
     {
-        min = 15,
-        max = 15,
+        min = 13,
+        max = 13,
         enemies = {
             { E.SpikedFly, 2 },
             { E.MetalFly,    4 },
