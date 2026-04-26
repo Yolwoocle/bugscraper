@@ -82,7 +82,7 @@ function Centipede:init_centipede_body()
     local child = self:get_self_class():new(self.x, self.y, self.centipede_length - 1, self, {
         center_x = self.spawn_center_x,
         center_y = self.spawn_center_y,
-        angle = (self.spawn_angle or 0) + math.asin(1 / self.centipede_length) * 10,
+        angle = (self.spawn_angle or 0) + 0.4,
     })
     game:new_actor(child)
     self.centipede_child = child
