@@ -13,20 +13,24 @@
 
 <details>
     <summary>SPOILERS (Waves 60-80)</summary>
-    - Reduced Cloud Storm (placeholder name) zone attack time
-    - Reworked difficulty and pacing of Dept. 4
-    - Golden Beetles no longer rotate as much after activated
-    - Changed Dropper (placeholder name) enemy sprite
-    - Fixed weird centipede spawning
-    - Fixed: Dropper (placeholder name) enemy no longer goes back to telegraphing state every time it's damaged after being damaged once
+    <ul>
+        <li>Reduced Cloud Storm (placeholder name) zone attack time</li>
+        <li>Reworked difficulty and pacing of Dept. 4</li>
+        <li>Golden Beetles no longer rotate as much after activated</li>
+        <li>Changed Dropper (placeholder name) enemy sprite</li>
+        <li>Fixed weird centipede spawning</li>
+        <li>Fixed: Dropper (placeholder name) enemy no longer goes back to telegraphing state every time it's damaged after being damaged once</li>
+    </ul>
 </details>
 
 <details>
     <summary>SPOILERS (Waves 80+)</summary>
-    - Basement rocket cutscene particle color fix
-    - Reworked final boss (2nd phase & minions)
-    - Added telegraphing to final boss hopping attack
-    - Final cutscene changes
+    <ul>
+        <li>Basement rocket cutscene particle color fix</li>
+        <li>Reworked final boss (2nd phase & minions)</li>
+        <li>Added telegraphing to final boss hopping attack</li>
+        <li>Final cutscene changes</li>
+    </ul>
 </details>
 
 ### Fixes
