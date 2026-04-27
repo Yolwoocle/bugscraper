@@ -89,7 +89,7 @@ function CloudStormZone:init(x, y, size)
                 self.surround_lightning.min_line_width = 0.1
                 self.surround_lightning.max_line_width = 1.0
 
-                self:play_sound_var("sfx_enemy_cloudstorm_charge_{01-03}", 0.1, 1.1, {volume=0.7})
+                self:play_sound_var("sfx_enemy_cloudstorm_charge_{01-03}", 0.1, 1.1, {volume=1.0})
             end,
             update = function(state, dt)
                 self.spr:update_offset(random_neighbor(1), random_neighbor(1))

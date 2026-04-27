@@ -29,7 +29,7 @@ function BulbBuddy:init(x, y, is_child)
     self.score = 10
 
     if not is_child then
-        local arc = ElectricArc:new(self.x, self.y)
+        local arc = ElectricArc:new(self.x, self.y, {sound="sfx_enemy_electricarc_lp_{01-02}", sound_volume=0.5})
         self.electric_arc = arc
         game:new_actor(arc)
         

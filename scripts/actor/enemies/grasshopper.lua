@@ -80,7 +80,7 @@ function Grasshopper:on_grounded()
     self.vy = -self.jump_speed
     
     if self.sfx_cooldown <= 0 then
-        self:play_sound_var("sfx_enemy_grasshopper_jump_{01-06}", 0.2, 1.2)
+        self:play_sound_var("sfx_enemy_grasshopper_jump_{01-06}", 0.2, 1.2, {volume=0.5})
         self.sfx_cooldown = 0.1
     end
 end

@@ -144,7 +144,7 @@ end
 
 function UpgradeDisplay:apply()
     if self.product then
-        self:play_sound(self.product.activate_sound)
+        self:play_sound(self.product.activate_sound, 0.8)
 
         game:apply_upgrade(self.product)
         -- game.level:on_shop_killed(self)

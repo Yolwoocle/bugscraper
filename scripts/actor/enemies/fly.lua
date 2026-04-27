@@ -27,9 +27,10 @@ function Fly:init(x, y, spr, w, h, buzzing_enabled)
 	self.score = 10
 
     self.is_buzz_enabled = buzzing_enabled
+    self.buzz_volume = 0.3
     if self.is_buzz_enabled then
         self:set_constant_sound("buzz", "sfx_enemy_fly_ambient_{01-02}", false)
-        self:set_constant_sound_volume("buzz", 0.3)
+        self:set_constant_sound_volume("buzz", self.buzz_volume)
         self:seek_constant_sound("buzz", random_range(0, self:get_constant_sound("buzz"):get_duration())) 
     end
     self.buzz_is_started = false
@@ -50,7 +51,7 @@ function Fly:update_buzz(dt)
     local spd = dist(0, 0, self.vx, self.vy)
     if self.is_buzz_enabled then
         if spd >= 0.001 then
-            self:set_constant_sound_volume("buzz", 1)
+            self:set_constant_sound_volume("buzz", self.buzz_volume)
         else
             self:set_constant_sound_volume("buzz", 0)
         end

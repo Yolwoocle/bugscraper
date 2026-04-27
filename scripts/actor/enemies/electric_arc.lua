@@ -54,7 +54,17 @@ function ElectricArc:init(x, y, params)
     end
     self.disable_timer = Timer:new()
 
+    if params.sound then
+        self:set_constant_sound("buzz", params.sound, false)
+        self:set_constant_sound_volume("buzz", param(params.sound_volume, 1.0))
+        self:seek_constant_sound("buzz", random_range(0, self:get_constant_sound("buzz"):get_duration())) 
+    end
+
     self.t = 0
+end
+
+function ElectricArc:ready()
+    self:play_constant_sound("buzz")
 end
 
 function ElectricArc:set_arc_target(target)
@@ -172,7 +182,6 @@ end
 
 function ElectricArc:check_for_collisions()
     self.collides = false
-    -- TODO add a param for only colliding with players (optimization)
     for _, a in pairs(game.actors) do
         if a ~= self and a.is_active then
             local collision = a:get_rect(self.hitbox_expand):segment_intersection(self.segment)

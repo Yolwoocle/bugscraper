@@ -126,21 +126,25 @@ function FlyingSpawner:init(x, y, spr, w, h)
         exploding = {
             enter = function(state)
                 self.flash_timer:start()
+                self.blink_timer = Timer:new(0.5):start()
+                self:play_sound("sfx_enemy_boomshroom_flashing")
             end,
             update = function(state, dt)
                 if self.flash_timer:update(dt) then
                     self:kill()
                 end
 
-                local flash = false
-                if self.flash_timer:get_ratio() > 0.75 then
-                    flash = self.flash_timer.time % 0.1 < 0.05
-
-                elseif self.flash_timer:get_ratio() > 0 then
-                    flash = self.flash_timer.time % 0.2 < 0.1
+                if self.blink_timer:update(dt) then
+                    self.flash_white = not self.flash_white
+                    if self.flash_white then
+                        local d = math.max(0.05, self.blink_timer:get_duration() * 0.3)
+                        self.blink_timer:set_duration(d)
+                    end
+                    self.blink_timer:start()
                 end
-                self.spr:set_flashing_white(flash)
-                self.larva_telegraph_spr:set_flashing_white(flash)
+                
+                self.spr:set_flashing_white(self.flash_white)
+                self.larva_telegraph_spr:set_flashing_white(self.flash_white)
             end,
             draw = function(state)
                 for i=1, #self.shoot_telegraph_offsets do
