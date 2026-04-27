@@ -1,6 +1,6 @@
 require "scripts.meta.constants"
 
-love.graphics.newShader = function(...)
+love.graphics.oldShader = function(...)
     return {sendColor = function(...) end, send = function(...) end, }
 end
 love.graphics.setShader = function(...)
@@ -24,47 +24,69 @@ shaders.draw_in_highlight_color = draw_in_highlight_color
 --------
 
 shaders.draw_in_color = love.graphics.newShader([[
-	uniform vec4 fillColor;
-	vec4 effect(vec4 color, Image texture, vec2 textureCoords, vec2 screenCoords){
-		return vec4(fillColor.r, fillColor.g, fillColor.b, Texel(texture, textureCoords).a) * color;
+	// Configuration de la précision (obligatoire en OpenGL ES pour les floats)
+	precision mediump float;
+
+	// Les entrées (passées par le programme CPU)
+	uniform vec4 fillColor;      // Ta couleur personnalisée
+	uniform sampler2D u_texture; // L'image (équivalent de Image/texture)
+
+	// Les données venant du Vertex Shader
+	varying vec2 v_texCoords;    // Équivalent de textureCoords
+	varying vec4 v_color;        // Équivalent de color (souvent la couleur des sommets)
+
+	void main() {
+		// Texel() devient texture2D() en ES 2.0 ou texture() en ES 3.0
+		vec4 texColor = texture2D(u_texture, v_texCoords);
+		
+		// On construit le vecteur final : RGB de fillColor + Alpha de la texture
+		vec4 finalColor = vec4(fillColor.rgb, texColor.a) * v_color;
+		
+		// En OpenGL ES, on ne "return" pas, on écrit dans gl_FragColor
+		gl_FragColor = finalColor;
 	}
+	uniform vec4 fillColor;
+
+	// vec4 effect(vec4 color, Image texture, vec2 textureCoords, vec2 screenCoords){
+	// 	return vec4(fillColor.r, fillColor.g, fillColor.b, Texel(texture, textureCoords).a) * color;
+	// }
 ]])
 
 --------
 
-shaders.white_shader = love.graphics.newShader[[
+shaders.white_shader = love.graphics.oldShader[[
 	vec4 effect(vec4 color, Image texture, vec2 textureCoords, vec2 screenCoords){
 		return vec4(1, 1, 1, Texel(texture, textureCoords).a);
 	}
 ]]
 
-shaders.dark_blue_shader = love.graphics.newShader(string.format([[
+shaders.dark_blue_shader = love.graphics.oldShader(string.format([[
 	vec4 effect(vec4 color, Image texture, vec2 textureCoords, vec2 screenCoords){
 		return vec4(%f, %f, %f, Texel(texture, textureCoords).a);
 	}
 ]], COL_BLACK_BLUE[1]/255, COL_BLACK_BLUE[2]/255, COL_BLACK_BLUE[3]/255))
 
-shaders.multiply_color = love.graphics.newShader[[
+shaders.multiply_color = love.graphics.oldShader[[
 	uniform vec4 multColor;
 	vec4 effect(vec4 color, Image texture, vec2 textureCoords, vec2 screenCoords){
 		return Texel(texture, textureCoords) * multColor;
 	}
 ]]
 
-shaders.lighten = love.graphics.newShader[[
+shaders.lighten = love.graphics.oldShader[[
 	vec4 effect(vec4 color, Image texture, vec2 textureCoords, vec2 screenCoords){
 		return Texel(texture, textureCoords) * vec4(1.8, 1.8, 1.8, 0.3);
 	}
 ]]
 
-shaders.smoke_shader = love.graphics.newShader[[
+shaders.smoke_shader = love.graphics.oldShader[[
 	vec4 effect(vec4 color, Image texture, vec2 textureCoords, vec2 screenCoords){
 		number v = Texel(texture, vec2(textureCoords.x, textureCoords.y+0.02)).a;
 		return Texel(texture, textureCoords) * vec4(v, v, v, 1);
 	}
 ]]
 
-shaders.achievement_locked = love.graphics.newShader[[
+shaders.achievement_locked = love.graphics.oldShader[[
 	uniform float uDarkenFactor = 0.7;
 
 	vec4 effect(vec4 color, Image texture, vec2 textureCoords, vec2 screenCoords){
@@ -88,7 +110,7 @@ shaders.achievement_locked = love.graphics.newShader[[
 ]]
 
 -- https://stackoverflow.com/questions/64837705/opengl-blurring
-shaders.blur_shader = love.graphics.newShader[[
+shaders.blur_shader = love.graphics.oldShader[[
 	uniform float xs = 480.0; // texture resolution
 	uniform float ys = 270.0; // texture resolution
 	uniform float r;
@@ -112,7 +134,7 @@ shaders.blur_shader = love.graphics.newShader[[
 	}
 ]]
 
-shaders.dither = love.graphics.newShader([[
+shaders.dither = love.graphics.oldShader([[
     vec4 effect(vec4 color, Image texture, vec2 textureCoords, vec2 screenCoords) {
 		float m = mod(floor(screenCoords.x) + floor(screenCoords.y), 2.0);
 		if (m < 1) {
@@ -122,26 +144,5 @@ shaders.dither = love.graphics.newShader([[
 		}
     }
 ]])
-
------------------------------------------------------
-
--- Palette swap, thanks to Keyslam on the LÖVE discord server
-local test = [[
-uniform float palette_index;
-uniform Image palette;
-
-vec4 effect( vec4 color, Image tex, vec2 texture_coords, vec2 screen_coords )
-{
-    vec4 index = Texel(tex, texture_coords);
-
-    if (index.a == 0)
-      discard;
-
-    vec4 pixel = Texel(palette, vec2(index.x, palette_index));
-    
-    return pixel;
-}
-]]
-
 
 return shaders
