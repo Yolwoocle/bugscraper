@@ -11,7 +11,7 @@ local create_end_menu       = require "data.menus.create_end_menu"
 
 ---------------------------------------------------------
 
-local game_over_items = create_end_menu()
+local game_over_items = create_end_menu({"quick_restart", "return", "wishlist"})
 
 local GameOverMenu = Menu:inherit()
 

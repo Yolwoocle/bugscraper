@@ -45,7 +45,7 @@ return {
         -- because this department just represents a generic office department.
         world_1 = "Ressources parasites", 
         -- Dept 2: This department is a factory themed after bees, with grungy metallic environment
-        world_2 = "Chambre de production",
+        world_2 = "Usine",
         -- Dept 3: This is a moody, dark and mysterious room filled with endless racks of servers 
         world_3 = "Salle des serveurs",
         -- Dept 4: This is the highest department of the bugscraper, filled with lofty gardens and clean, white, modern architecture
@@ -401,7 +401,7 @@ return {
             description = "Finir le département 1",
         },
         ach_complete_w2 = {
-            name = "Chambre de production",
+            name = "Usine",
             description = "Finir le département 2",
         },
         ach_complete_w3 = {

@@ -54,7 +54,17 @@ function ElectricArc:init(x, y, params)
     end
     self.disable_timer = Timer:new()
 
+    if params.sound then
+        self:set_constant_sound("buzz", params.sound, false)
+        self:set_constant_sound_volume("buzz", param(params.sound_volume, 1.0))
+        self:seek_constant_sound("buzz", random_range(0, self:get_constant_sound("buzz"):get_duration())) 
+    end
+
     self.t = 0
+end
+
+function ElectricArc:ready()
+    self:play_constant_sound("buzz")
 end
 
 function ElectricArc:set_arc_target(target)

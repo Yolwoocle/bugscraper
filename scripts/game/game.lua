@@ -956,8 +956,6 @@ function Game:on_last_player_death(player)
 	self:pause_repeating_sounds()
 	self.game_state = GAME_STATE_DYING
 	self.timer_before_game_over = self.max_timer_before_game_over
-
-	self:save_stats()
 end
 
 function Game:update_timer_before_game_over(dt)
@@ -982,10 +980,15 @@ function Game:save_stats()
 	Stats:check_achievements()
 end
 
-function Game:game_over()
+function Game:on_end_game()
+	self:save_stats()
+	
 	Metaprogression:add_xp(self.score)
 	self.score = 0
+end
 
+function Game:game_over()
+	self:on_end_game()
 	self.menu_manager:set_menu("game_over")
 end
 

@@ -105,7 +105,7 @@ function GoldenBeetle:activate()
     self.is_exploding = true
     self.counts_for_enemy_count = false
     
-    self.random_rotate_speed = 10
+    self.random_rotate_speed = 0
     self.speed = 30
 
     self.is_stompable = false

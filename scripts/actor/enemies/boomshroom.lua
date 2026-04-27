@@ -66,7 +66,7 @@ function Boomshroom:init(x, y)
                 -- You don't need to understand this.
                 local new_size = clamp(math.ceil((#self.sizes-1) * (1 - self.life / self.max_life)), 1, #self.sizes - 1)
                 if new_size ~= self.boomshroom_size then
-                    self:play_sound("sfx_enemy_boomshroom_inflate_0" .. tostring(new_size))
+                    self:play_sound("sfx_enemy_boomshroom_inflate_0" .. tostring(new_size), 0.7)
                 end
                 self:set_size(new_size)
             end

@@ -1,8 +1,52 @@
 # Bugscraper changelog
 
+
 ## 0.11
 
-WIP
+- ⭐ New upgrade: Gazpacho
+    - After taking damage, if you quickly fight back, you can regain 1 ❤
+- ⭐ Changed Espresso upgrade to be based on whether you're in a combo rather than on a number of waves
+- Coconut Water upgrade now also charges the gun when reloading
+- Tea hearts are now shown next to the heart bar
+- Reduced Spiked Fly HP from 5 to 2.5
+- More SFX integration
+
+<details>
+    <summary>SPOILERS (Waves 60-80)</summary>
+    <ul>
+        <li>Reduced Cloud Storm (placeholder name) zone attack time</li>
+        <li>Reworked difficulty and pacing of Dept. 4</li>
+        <li>Golden Beetles no longer rotate as much after activated</li>
+        <li>Changed Dropper (placeholder name) enemy sprite</li>
+        <li>Fixed weird centipede spawning</li>
+        <li>Fixed: Dropper (placeholder name) enemy no longer goes back to telegraphing state every time it's damaged after being damaged once</li>
+    </ul>
+</details>
+
+<details>
+    <summary>SPOILERS (Waves 80+)</summary>
+    <ul>
+        <li>Basement rocket cutscene particle color fix</li>
+        <li>Reworked final boss (2nd phase & minions)</li>
+        <li>Added telegraphing to final boss hopping attack</li>
+        <li>Final cutscene changes</li>
+    </ul>
+</details>
+
+### Fixes
+- Fixed: Nintendo Switch controller button prompts A/B and X/Y were inverted
+- Fixed: completing the game or the demo would not apply XP
+- Minor change to splash image 
+
+### Misc 
+- Added some props to tutorial
+
+### Technical 
+- Multiline support to cafeteria text
+- Added english fallback text by default
+- New reward menu now supports line breaks
+
+
 
 ## 0.10.1
 

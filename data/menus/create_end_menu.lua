@@ -6,7 +6,7 @@ local func_url              = menu_util.func_url
 local StatsMenuItem         = require "scripts.ui.menu.items.menu_item_stats"
 local ProgressBarMenuItem   = require "scripts.ui.menu.items.progress_bar_menu_item"
 
-local function create_items(is_win)
+local function create_items(item_order)
     local items = {
         { StatsMenuItem, Text:parse("⚔️ {menu.game_over.kills}"), function(self)
             return game.stats.kills
@@ -120,66 +120,69 @@ local function create_items(is_win)
         { "" },
     }
 
-    if not is_win then
-        table.insert(items, { "🔄 {menu.game_over.quick_restart}",
-            function(item)
-                if game.has_finished_game_over_animation then
-                    game.has_seen_controller_warning = true
-                    game:new_game({ quick_restart = true })
-                end
-            end,
-            function(item)
-                item.is_selectable = game.has_finished_game_over_animation
-                -- item.is_selectable = not Options:get("convention_mode")
-                item.is_visible = not Options:get("convention_mode")
-            end
-        })
-
-        table.insert(items, { "▶ {menu.pause.return_to_ground_floor}",
-            function(item)
-                -- scotch
-                if game.has_finished_game_over_animation then
-                    game.has_seen_controller_warning = true
-                    game:new_game()
-                end
-            end,
-            function(item)
-                item.is_selectable = game.has_finished_game_over_animation
-            end,
-        })
-    else
-
-        table.insert(items, { "▶ {menu.game_over.continue}",
-            function(item)
-                -- scotch
-                if game.has_finished_game_over_animation then
-                    game:new_game({ 
-                        backroom = BackroomCredits:new(),
-                        iris_params = {0, 0, 0, 0, 0}
-                    })
-                end
-            end,
-            function(item)
-                item.is_selectable = game.has_finished_game_over_animation
-            end,
-        })
-    end
-
-    if BUILD_TYPE == "demo" then
-        table.insert(items,
-            { "❤ {menu.win.wishlist} 🔗",
+    for i, item in pairs(item_order) do
+        if item == "quick_restart" then
+            table.insert(items, { "🔄 {menu.game_over.quick_restart}",
                 function(item)
                     if game.has_finished_game_over_animation then
                         game.has_seen_controller_warning = true
-                        love.system.openURL("steam://advertise/2957130/")
+                        game:new_game({ quick_restart = true })
                     end
                 end,
                 function(item)
                     item.is_selectable = game.has_finished_game_over_animation
+                    -- item.is_selectable = not Options:get("convention_mode")
                     item.is_visible = not Options:get("convention_mode")
                 end
-            }
-        )
+            })
+
+        elseif item == "return" then
+            table.insert(items, { "▶ {menu.pause.return_to_ground_floor}",
+                function(item)
+                    -- scotch
+                    if game.has_finished_game_over_animation then
+                        game.has_seen_controller_warning = true
+                        game:new_game()
+                    end
+                end,
+                function(item)
+                    item.is_selectable = game.has_finished_game_over_animation
+                end,
+            })
+
+        elseif item == "continue" then
+            table.insert(items, { "▶ {menu.game_over.continue}",
+            function(item)
+                    -- scotch
+                    if game.has_finished_game_over_animation then
+                        game:new_game({ 
+                            backroom = BackroomCredits:new(),
+                            iris_params = {0, 0, 0, 0, 0}
+                        })
+                    end
+                end,
+                function(item)
+                    item.is_selectable = game.has_finished_game_over_animation
+                end,
+            })
+
+        elseif item == "wishlist" and BUILD_TYPE == "demo" then
+            table.insert(items,
+                { "❤ {menu.win.wishlist} 🔗",
+                    function(item)
+                        if game.has_finished_game_over_animation then
+                            game.has_seen_controller_warning = true
+                            love.system.openURL("steam://advertise/2957130/")
+                        end
+                    end,
+                    function(item)
+                        item.is_selectable = game.has_finished_game_over_animation
+                        item.is_visible = not Options:get("convention_mode")
+                    end
+                }
+            )
+
+        end
     end
 
     return items

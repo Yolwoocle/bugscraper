@@ -89,7 +89,7 @@ function CloudStormZone:init(x, y, size)
                 self.surround_lightning.min_line_width = 0.1
                 self.surround_lightning.max_line_width = 1.0
 
-                self:play_sound_var("sfx_enemy_cloudstorm_charge_{01-03}", 0.1, 1.1, {volume=0.7})
+                self:play_sound_var("sfx_enemy_cloudstorm_charge_{01-03}", 0.1, 1.1, {volume=1.0})
             end,
             update = function(state, dt)
                 self.spr:update_offset(random_neighbor(1), random_neighbor(1))
@@ -109,7 +109,7 @@ function CloudStormZone:init(x, y, size)
                 self.spr:set_image(images.cloud_storm_angry_attack)
 
                 self:set_ai_template(nil)
-                self.state_timer:start(0.75)
+                self.state_timer:start(0.4)
 
                 self.spr:update_offset(0, 6)
                 self.spr_oy = 12
