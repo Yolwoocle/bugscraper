@@ -1212,7 +1212,7 @@ local waves_defs = {
 
         enemies = {
             { E.Larva, 20 },
-            { E.BeeBoss, 20 },
+            { E.Bee, 20 },
         },  
         fixed_enemies = {
             { E.GoldenBeetle, 3 },
