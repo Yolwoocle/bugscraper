@@ -106,4 +106,12 @@ function ActorManager:kill_actors_with_name(name)
 	end
 end
 
+function ActorManager:remove_actors_with_name(name)
+	for _, actor in pairs(self.actors) do
+		if actor.name == name then
+			actor:remove()
+		end
+	end
+end
+
 return ActorManager
