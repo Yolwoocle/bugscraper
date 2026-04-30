@@ -505,7 +505,7 @@ end
 function Game:get_life_ratio_of_weakest_player()
 	local min_life_ratio = math.huge
 	for _, player in pairs(self.players) do
-		min_life_ratio = min(min_life_ratio, clamp(player.life / player.max_life, 0, 1))
+		min_life_ratio = min(min_life_ratio, clamp(player.life / player.max_life, 0, 1)) 
 	end
 	return min_life_ratio
 end
