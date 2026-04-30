@@ -35,6 +35,11 @@ return Cutscene:new("tutorial_end", {
                 player:set_code_input_mode_target_x(9999999)
             end
         end,
+        update = function(cutscene, data, dt)
+            for _, player in pairs(game.players) do
+                player.walk_sfx_volume = cutscene.timer:get_inverse_ratio()
+            end
+        end,
     }),
     CutsceneScene:new({
         description = "Pan camera up",

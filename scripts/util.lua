@@ -1228,6 +1228,11 @@ function lerp_color_radial(a, b, t)
 	)
 end
 
+-- Maps a value from input range [a_in, b_in] to output range [a_out, b_out]
+function map_range(value, a_in, b_in, a_out, b_out)
+    return a_out + (value - a_in) * (b_out - a_out) / (b_in - a_in)
+end
+
 -- http://axonflux.com/handy-rgb-to-hsl-and-rgb-to-hsv-color-model-c
 --[[
    * Converts an RGB color value to HSV. Conversion formula
