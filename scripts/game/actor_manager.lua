@@ -76,7 +76,7 @@ end
 
 function ActorManager:remove_all_active_enemies()
 	for _, actor in pairs(self.actors) do
-		if actor.is_active and actor.counts_as_enemy then
+		if actor.is_active and actor.is_enemy then
 			actor:remove()
 		end
 	end
@@ -84,7 +84,7 @@ end
 
 function ActorManager:kill_all_active_enemies()
 	for _, actor in pairs(self.actors) do
-		if actor.is_active and actor.counts_as_enemy then
+		if actor.is_active and actor.is_enemy then
 			actor:kill()
 		end
 	end
@@ -92,7 +92,7 @@ end
 
 function ActorManager:kill_all_enemies()
 	for _, actor in pairs(self.actors) do
-		if actor.counts_as_enemy then
+		if actor.is_enemy then
 			actor:kill()
 		end
 	end

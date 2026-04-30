@@ -327,7 +327,7 @@ function Debug:init(game)
 
             for k, e in pairs(self.game.actors) do
                 if e.is_enemy then
-                    e:kill()
+                    e:remove()
                 end
             end
 

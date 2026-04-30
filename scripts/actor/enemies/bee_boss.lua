@@ -460,7 +460,7 @@ end
 
 function BeeBoss:on_stomped(player)
     game:frameskip(10)
-    game:screenshake(8) 
+    game:screenshake(8)
 
     self:set_invincibility(0.5)
     self:set_harmless(0.5)

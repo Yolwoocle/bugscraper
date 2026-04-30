@@ -15,6 +15,8 @@ function ButtonBig:init_button_big(x, y, spr, w, h)
     self.name = "button_big"
     self.follow_player = false
 
+    self.counts_as_enemy = false
+
     self.max_life = 40
     self.life = self.max_life
     
