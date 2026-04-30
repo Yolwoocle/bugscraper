@@ -31,6 +31,8 @@ function LarvaProjectile:on_projectile_land()
     larva.score = 0
     game:new_actor(larva)
 
+    self:play_sound_var("sfx_enemy_kill_general_gore_{01-10}", 0.2, 1.2)
+
     self.larva = larva
 end
 
