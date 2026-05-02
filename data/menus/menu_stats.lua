@@ -26,7 +26,7 @@ function StatsMenu:init(game)
             { StatsMenuItem, Text:parse("⏰ {menu.stats.runs}"), function(self)
                 return Stats:get("runs")
             end },
-            { StatsMenuItem, Text:parse("⚔️ {menu.game_over.kills}"), function(self)
+            { StatsMenuItem, Text:parse("⚔ {menu.game_over.kills}"), function(self)
                 return Stats:get("kills")
             end },
             { StatsMenuItem, Text:parse("💀 {menu.game_over.deaths}"), function(self)
