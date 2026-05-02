@@ -67,12 +67,12 @@ shaders.smoke_shader = love.graphics.newShader[[
 	}
 ]]
 
-shaders.achievement_locked = love.graphics.oldShader[[
+shaders.achievement_locked = love.graphics.newShader[[
 	vec4 effect(vec4 color, Image texture, vec2 textureCoords, vec2 screenCoords){
 		vec4 textureColor = Texel(texture, textureCoords);
 		float gray = clamp(dot(textureColor.rgb, vec3(0.2126, 0.7152, 0.0722)), 0.0, 1.0);
 
-		int step = gray * 6.0;
+		float step = gray * 6.0;
 		
 		vec3 finalColor = vec3(0.094, 0.078, 0.145);
 		if (step >= 1.0) finalColor = vec3(0.149, 0.168, 0.266);
@@ -87,36 +87,35 @@ shaders.achievement_locked = love.graphics.oldShader[[
 ]]
 
 -- https://stackoverflow.com/questions/64837705/opengl-blurring
-shaders.blur_shader = love.graphics.oldShader[[
-	extern float r;
+shaders.blur_shader = love.graphics.newShader(
+	string.format([[
+		extern float r;
 
-	local xs = 480.0; // texture resolution
-	local ys = 270.0; // texture resolution
-
-	vec4 effect(vec4 color, Image texture, vec2 textureCoords, vec2 screenCoords){
-		float x, y, xx, yy, rr = r*r, dx, dy, w, w0;
-		w0 = 0.3780 / pow(r,1.975);
-		vec2 p;
-		vec4 col = vec4(0.0,0.0,0.0,0.0);
-		for (dx=1.0/xs,x=-r, p.x = (textureCoords.x)+(x*dx);x<=r;x++,p.x+=dx){ 
-			xx=x*x;
-			for (dy=1.0/ys, y=-r, p.y = (textureCoords.y)+(y*dy); y<=r; y++, p.y += dy){ 
-				yy=y*y;
-				if (xx+yy<=rr){
-					w = w0 * exp((-xx-yy)/(2.0*rr));
-					col += Texel(texture, p) * w;
+		vec4 effect(vec4 color, Image texture, vec2 textureCoords, vec2 screenCoords){
+			float x, y, xx, yy, rr = r*r, dx, dy, w, w0;
+			w0 = 0.3780 / pow(r,1.975);
+			vec2 p;
+			vec4 col = vec4(0.0,0.0,0.0,0.0);
+			for (dx=1.0/%f,x=-r, p.x = (textureCoords.x)+(x*dx);x<=r;x++,p.x+=dx){ 
+				xx=x*x;
+				for (dy=1.0/%f, y=-r, p.y = (textureCoords.y)+(y*dy); y<=r; y++, p.y += dy){ 
+					yy=y*y;
+					if (xx+yy<=rr){
+						w = w0 * exp((-xx-yy)/(2.0*rr));
+						col += Texel(texture, p) * w;
+					}
 				}
 			}
+			return col;
+				
 		}
-		return col;
-			
-	}
-]]
+	]], 480.0, 270.0))
 
-shaders.dither = love.graphics.oldShader([[
+
+shaders.dither = love.graphics.newShader([[
     vec4 effect(vec4 color, Image texture, vec2 textureCoords, vec2 screenCoords) {
 		float m = mod(floor(screenCoords.x) + floor(screenCoords.y), 2.0);
-		if (m < 1) {
+		if (m < 1.0) {
 			return Texel(texture, textureCoords) * color;
 		} else {
 			return vec4(1, 1, 1, 0);
