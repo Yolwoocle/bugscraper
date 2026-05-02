@@ -558,6 +558,7 @@ function Game:draw()
 	local tic_gamedraw = love.timer.getTime()
 
 	-- Using a canvas for that sweet, resizable pixel art
+	love.graphics.setDefaultFilter("nearest", "nearest")
 	love.graphics.setCanvas(main_canvas)
 	love.graphics.clear(0, 0, 0)
 	love.graphics.translate(0, 0)
@@ -567,7 +568,9 @@ function Game:draw()
 	love.graphics.setCanvas()
 	love.graphics.origin()
 	love.graphics.scale(1, 1)
-
+	local f = ternary(Options:get("scale_filter") == "crisp", "nearest", "linear")
+	main_canvas:setFilter(f, f)
+	
 	love.graphics.draw(main_canvas, CANVAS_OX, CANVAS_OY, 0, CANVAS_SCALE, CANVAS_SCALE)
 
 	if self.debug.layer_view then

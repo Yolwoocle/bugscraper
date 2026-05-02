@@ -27,6 +27,7 @@ function OptionsManager:init()
 		menu_blur = true,
 		background_speed = 1.0,
 		bullet_lightness = 1.0,
+		scale_filter = "crisp",
 
 		timer_on = false,
 		mouse_visible = false,

@@ -307,6 +307,11 @@ return {
                 menu_blur = "MENU BACKGROUND BLUR", -- Whether to apply the blurring effect in menu backgrounds
                 background_speed = "BACKGROUND SPEED", -- How quickly the background scrolls 
                 bullet_lightness = "BULLET BRIGHTNESS", -- How brightly bullets are rendered
+                scale_filter = "PIXEL SCALE FILTER", -- How the game should handle scaling the pixel art, see more: https://love2d.org/wiki/FilterMode 
+                scale_filter_value = {
+                    crisp = "crisp", -- Uses nearest-neighbor scaling (pixel art will look crisp)
+                    smooth = "smooth", -- Uses linear scaling (will look 'blurry')
+                }
             },
             game = {
                 title = "Game",
