@@ -136,6 +136,9 @@ function Level:init(game, backroom)
 	self.has_energy_drink = false
 
 	self.last_damage_wave = 0
+
+	self.loot_bias = 1.0
+	self.loot_bias_per_void_roll = 1/60
 end
 
 function Level:ready()
@@ -919,7 +922,7 @@ end
 function Level:update_stats_achievements(dt)
 	Stats:set("max_combo", max(Stats:get("max_combo"), self.max_fury_combo), true)	
 	Stats:set("max_combo", max(Stats:get("max_combo"), self.fury_combo), true)	
-
+	
 	Stats:set("best_run", max(Stats:get("best_run"), self.floor), true)
 		
 	if self.floor - self.last_damage_wave >= 20 then
@@ -927,6 +930,28 @@ function Level:update_stats_achievements(dt)
 	end 
 
 	Stats:check_achievements()
+end
+
+------------------------------------------------------
+
+function Level:update_loot_bias(dt)
+	local ratio = game:get_life_ratio_of_weakest_player()
+	
+	if ratio >= 1 then
+		self.loot_bias = 1.0
+	end
+end
+
+function Level:on_loot_not_dropped(enemy, loot_rolled)
+	if enemy.counts_as_enemy then
+		self.loot_bias = self.loot_bias + self.loot_bias_per_void_roll
+	end
+end
+
+function Level:on_loot_dropped(enemy, loot_rolled)
+	if loot_rolled.loot_type == "life" then
+		self.loot_bias = 1.0 
+	end
 end
 
 return Level

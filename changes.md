@@ -1,5 +1,7 @@
 # Bugscraper changelog
 
+## 0.11.1
+- Fixed issue where the boss from world 2 could spawn on wave 73. Sorry about that...
 
 ## 0.11
 

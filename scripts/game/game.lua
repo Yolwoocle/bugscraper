@@ -510,6 +510,14 @@ function Game:get_enemy_count()
 	return self.actor_manager:get_enemy_count()
 end
 
+function Game:get_life_ratio_of_weakest_player()
+	local min_life_ratio = math.huge
+	for _, player in pairs(self.players) do
+		min_life_ratio = min(min_life_ratio, clamp(player.life / player.max_life, 0, 1)) 
+	end
+	return min_life_ratio
+end
+
 function Game:update_logo(dt)
 	if self.move_jetpack_tutorial then
 		self.jetpack_tutorial_y = lerp(self.jetpack_tutorial_y, 70, 0.1)

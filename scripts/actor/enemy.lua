@@ -418,13 +418,15 @@ end
 
 --- Ajusts loot table according to the number of players
 function Enemy:ajust_loot_probabilities()
+	local new_loot_table = copy_table_shallow(self.loot)
+
 	if #game.players == 0 then
-		return
+		return new_loot_table
 	end
 	
 	-- Ajust for multiplayer
 	if Input:get_number_of_users() > 1 then
-		for _, item in pairs(self.loot) do
+		for _, item in pairs(new_loot_table) do
 			if item[1] ~= nil then
 				local p = item[2] * (1 + MULTIPLAYER_LOOT_PROBABILITY_MULTIPLIER * (Input:get_number_of_users() - 1))
 				item[2] = p 
@@ -432,29 +434,34 @@ function Enemy:ajust_loot_probabilities()
 		end
 	end
 
-	-- Ajust depending on player health
-	local min_life_ratio = math.huge
-	for _, player in pairs(game.players) do
-		min_life_ratio = min(min_life_ratio, clamp(player:get_total_life() / player.max_life, 0, 1))
-	end
-	for _, item in pairs(self.loot) do
+	-- Probability biases
+	local min_life_ratio = game:get_life_ratio_of_weakest_player()
+	for _, item in pairs(new_loot_table) do
 		if item.loot_type == "life" then
+			local p = item[2] 
+
 			-- Depending on health of player with the least health: 
 			-- * 100%: x0 drop probability 
 			-- * 50%:  x1 drop probability 
 			-- * 0%:   x2 drop probability 
+			p = p * map_range(clamp(min_life_ratio, 0.0, 1.0), 0.0, 1.0, 2.0, 0.0)
 
-			local p = item[2] * (2 * (-min_life_ratio + 1))
+			-- Ajust for loot bias
+			p = p * game.level.loot_bias
 			item[2] = p
 		end
 	end
+
+	return new_loot_table
 end
 
 --- Drops random loot from the enemy
 function Enemy:drop_random_loot()
-	self:ajust_loot_probabilities()
-	local loot, params = random_weighted(self.loot)
+	local ajusted_loot_table = self:ajust_loot_probabilities()
+	local loot, params = random_weighted(ajusted_loot_table)
+
 	if not loot then
+		game.level:on_loot_not_dropped(self, params)
 		return		
 	end
 	self:drop_loot(loot, params)
@@ -475,6 +482,7 @@ function Enemy:drop_loot(loot, params)
 	end 
 
 	game:new_actor(instance)
+	game.level:on_loot_dropped(self, params)
 end
 
 

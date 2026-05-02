@@ -37,6 +37,9 @@ function Centipede:init(x, y, length, parent, params)
     self.is_pushable = false
     self.self_knockback_mult = 0.1
 
+    -- Increace chance of no drops
+    self.loot[1][2] = self.loot[1][2] * 2
+
     self.is_stompable = false
     self.score = 5
 

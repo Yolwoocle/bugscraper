@@ -127,7 +127,9 @@ function FlyingSpawner:init(x, y, spr, w, h)
             enter = function(state)
                 self.flash_timer:start()
                 self.blink_timer = Timer:new(0.5):start()
-                self:play_sound("sfx_enemy_boomshroom_flashing")
+                
+                self:set_constant_sound("flash", "sfx_enemy_boomshroom_flashing", false)
+                self:play_constant_sound("flash")
             end,
             update = function(state, dt)
                 if self.flash_timer:update(dt) then

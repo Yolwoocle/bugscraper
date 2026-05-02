@@ -363,18 +363,8 @@ return Cutscene:new("ceo_escape_w5", {
                     data.__has_opened_door = true
                     Particles:opened_door(3*16-1, 10*16, {linger_time = 1.0})
                 end
-            end
-        end,
-    }),
 
-    CutsceneScene:new({
-        description = "Stop shooting from players",
-
-        duration = 0.0,
-        enter = function(cutscene, data)
-            for _, player in pairs(game.players) do            
-                player.virtual_controller.actions["down"] = false
-                player.virtual_controller.actions["shoot"] = false
+                player.walk_sfx_volume = clamp(map_range(player.x, 32, 4, 1, 0), 0.0, 1.0)
             end
         end,
     }),

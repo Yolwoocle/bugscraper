@@ -103,7 +103,7 @@ function CloudDropper:init(x, y)
                 self.friction_y = 1
                 self.spr:set_animation("fall")
 
-                -- self:play_sound_var(, 0.2, 1.2)
+                -- self:play_sound_var("sfx_enemy_honeypot_liquid_falling_{01-04}", 0.2, 1.2)
                 self:set_constant_sound("drop", "sfx_enemy_honeypot_liquid_falling_{01-04}", false)
                 self:set_constant_sound_volume("drop", 1.0 + random_neighbor(0.2))
                 self:play_constant_sound("drop")

@@ -863,7 +863,7 @@ local waves_defs = {
     ------------------------------------------------
     -- Cafeteria
     new_cafeteria({ run_func = function()
-        game.actor_manager:kill_actors_with_name("electric_rays")
+        game.actor_manager:remove_actors_with_name("electric_rays")
     end }),
     ------------------------------------------------
 
@@ -1018,7 +1018,7 @@ local waves_defs = {
     -- Cafeteria
     new_cafeteria({ 
         run_func = function()
-            game.actor_manager:kill_actors_with_name("electric_rays")
+            game.actor_manager:remove_actors_with_name("electric_rays")
         end, 
         ceo_info = 3,
 
@@ -1168,14 +1168,14 @@ local waves_defs = {
             { E.Centipede, 1, args = { 15 }, position = { CANVAS_WIDTH / 2 - 10 / 2, 200 } },
         },
         run = function ()
-            game.actor_manager:kill_actors_with_name("progressing_arc")
+            game.actor_manager:remove_actors_with_name("progressing_arc")
         end
     },
 
     ---------------------------------------------
     new_cafeteria({
         run_func = function ()
-            game.actor_manager:kill_actors_with_name("progressing_arc")
+            game.actor_manager:remove_actors_with_name("progressing_arc")
         end
     }),
     ---------------------------------------------
@@ -1212,7 +1212,7 @@ local waves_defs = {
 
         enemies = {
             { E.Larva, 20 },
-            { E.BeeBoss, 20 },
+            { E.Bee, 20 },
         },  
         fixed_enemies = {
             { E.GoldenBeetle, 3 },
@@ -1301,7 +1301,7 @@ local waves_defs = {
         },
 
         run = function(self, level)
-            game.actor_manager:kill_actors_with_name("progressing_arc")
+            game.actor_manager:remove_actors_with_name("progressing_arc")
         end,
 
         background = backgrounds.BackgroundGreenhouse:new(),
@@ -1326,7 +1326,7 @@ local waves_defs = {
                     actor:remove()
                 end   
             end
-            game.actor_manager:kill_actors_with_name("progressing_arc")
+            game.actor_manager:remove_actors_with_name("progressing_arc")
         end, 
 
         min = 1,
@@ -1643,7 +1643,7 @@ local waves_defs = {
         background_transition = backgrounds.BackgroundGreenhouse:new(),
 
         run = function()
-            game.actor_manager:kill_actors_with_name("electric_rays")
+            game.actor_manager:remove_actors_with_name("electric_rays")
         end
     },
         
@@ -1701,7 +1701,7 @@ local waves_defs = {
                     actor:remove()
                 end   
             end
-            game.actor_manager:kill_actors_with_name("progressing_arc")
+            game.actor_manager:remove_actors_with_name("progressing_arc")
         end,
     },
     

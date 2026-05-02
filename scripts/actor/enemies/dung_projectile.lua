@@ -18,4 +18,8 @@ function DungProjectile:update(dt)
     Particles:pop_layer()
 end
 
+function DungProjectile:on_projectile_land()
+    self:play_sound_var("sfx_enemy_kill_general_gore_{01-10}", 0.2, 1.2)
+end
+
 return DungProjectile

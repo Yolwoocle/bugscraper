@@ -19,7 +19,7 @@ function GunDisplay:init(x, y, gun)
 
     self.life = 25
 
-    self.dissapear_life = 14
+    self.dissapear_life = 20
     self.loot = {}
 
     self.gravity = self.default_gravity
