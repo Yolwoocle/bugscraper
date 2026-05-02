@@ -126,21 +126,21 @@ end
 
 function love.mousepressed(x, y, button, istouch, presses)
 	if game.mousepressed then   game:mousepressed(x, y, button, istouch, presses)   end
-	if EMULATE_TOUCH_WITH_MOUSE then
+	if EMULATE_TOUCH_WITH_MOUSE and button == 1 then
 		love.touchpressed(0, x, y)
 	end
 end
 
 function love.mousereleased(x, y, button, istouch, presses)
 	if game.mousereleased then   game:mousereleased(x, y, button, istouch, presses)   end
-	if EMULATE_TOUCH_WITH_MOUSE then
-		love.touchpressed(0, x, y)
+	if EMULATE_TOUCH_WITH_MOUSE and button == 1 then
+		love.touchreleased(0, x, y)
 	end
 end
 
 function love.mousemoved( x, y, dx, dy, istouch )
 	if game.mousemoved then   game:mousemoved(x, y, dx, dy, istouch)   end
-	if EMULATE_TOUCH_WITH_MOUSE then
+	if EMULATE_TOUCH_WITH_MOUSE and love.mouse.isDown(1) then
 		love.touchmoved(0, x, y, dx, dy, 0.0)
 	end
 end

@@ -173,24 +173,30 @@ end
 
 local buttons = {
     -- Always (except animation)
-    { x=540, y=200, w=button_size, h=button_size, label="Esc",   key="t_escape",   active = _active_is_not_a_cinematic},
+    { x=540, y=200, w=button_size, h=button_size, label="⏸",   key="t_escape",   active = _active_is_not_a_cinematic},
 
-    { x=170, y=200, w=button_size, h=button_size, label="Jmp",   key="t_jump",     active = _active_is_in_game},
-    { x=200, y=200, w=button_size, h=button_size, label="Sho",   key="t_shoot",    active = _active_is_in_game},
-    { x=230, y=200, w=button_size, h=button_size, label="IntM",  key="t_interact", active = _active_is_in_game},
+    { x=170, y=200, w=button_size, h=button_size, label="⏏",   key="t_jump",     active = _active_is_in_game},
+    { x=200, y=200, w=button_size, h=button_size, label="🔫",   key="t_shoot",    active = _active_is_in_game},
+    { x=230, y=200, w=button_size, h=button_size, label="👆",  key="t_interact", active = _active_is_in_game},
 
-    { x=270, y=200, w=button_size, h=button_size, label="Ok",    key="t_ok",       active = _active_ok},
-    { x=340, y=200, w=button_size, h=button_size, label="Back",  key="t_back",     active = _active_back},
-    { x=340, y=200, w=button_size, h=button_size, label="Left",  key="t_left_ui",  active = _active_horizontal_ui},
-    { x=340, y=200, w=button_size, h=button_size, label="Right", key="t_right_ui", active = _active_horizontal_ui},
-    { x=340, y=200, w=button_size, h=button_size, label="Up",    key="t_up_ui",    active = _active_vertical_ui},
-    { x=340, y=200, w=button_size, h=button_size, label="Down",  key="t_down_ui",  active = _active_vertical_ui},
+    { x=270, y=200, w=button_size, h=button_size, label="OK",    key="t_ok",       active = _active_ok},
+    { x=340, y=200, w=button_size, h=button_size, label="🔙",  key="t_back",     active = _active_back},
+    { x=340, y=200, w=button_size, h=button_size, label="➡", key="t_right_ui", active = _active_horizontal_ui},
+    { x=340, y=200, w=button_size, h=button_size, label="⬅",  key="t_left_ui",  active = _active_horizontal_ui},
+    { x=340, y=200, w=button_size, h=button_size, label="⬆",    key="t_up_ui",    active = _active_vertical_ui},
+    { x=340, y=200, w=button_size, h=button_size, label="⬇",  key="t_down_ui",  active = _active_vertical_ui},
 }
 
 
 -- FONCTIONS
 function TouchScreen:init(cur_game)
-	WINDOW_WIDTH, WINDOW_HEIGHT = love.graphics.getDimensions()
+    self:update_button_pos()
+    game = cur_game
+    print("Menu : ", _get_curr_menu())
+end
+
+function TouchScreen:update_button_pos()
+	local WINDOW_WIDTH, WINDOW_HEIGHT = love.graphics.getDimensions()
     joystick_pos.y = math.floor(WINDOW_HEIGHT * 4 / 5)
     joystick_pos.x = math.floor(WINDOW_WIDTH * 1 / 8)
     local i = 0
@@ -204,8 +210,6 @@ function TouchScreen:init(cur_game)
             i= i+1
         end
     end
-    game = cur_game
-    print("Menu : ", _get_curr_menu())
 end
 
 
@@ -461,6 +465,10 @@ end
 
 function TouchScreen:is_loaded()
     return is_loaded
+end
+
+function TouchScreen:on_resize(w, h)
+    self:update_button_pos()
 end
 
 return TouchScreen

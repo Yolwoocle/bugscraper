@@ -18,7 +18,7 @@ for _, lang in pairs(Text.supported_languages) do
     table.insert(options, {"{language."..lang.."}", func_language_menu(lang)})
 end
 
-if DISTRIBUTION_PLATFORM ~= "ios" then
+if PLATFORM_TYPE ~= "mobile" then
     table.insert(options, {""})
     table.insert(options, { "💡 {menu.pause.feedback}", func_set_menu("feedback") })
 end

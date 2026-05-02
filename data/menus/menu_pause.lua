@@ -20,18 +20,18 @@ local pause_items           = {
     { "⎘ {menu.stats.title}", func_set_menu('stats') },
 }
 
-if DISTRIBUTION_PLATFORM ~= "ios" then
+if PLATFORM_TYPE ~= "mobile" then
     table.insert(pause_items, { "💡 {menu.pause.feedback}", func_set_menu("feedback") })
 end
 table.insert(pause_items, { "❤ {menu.pause.credits}", func_set_menu('credits') })
 
-if OPERATING_SYSTEM ~= "Web" and DISTRIBUTION_PLATFORM ~= "ios" then
+if OPERATING_SYSTEM ~= "Web" and PLATFORM_TYPE ~= "mobile" then
     -- Disable quitting on web
     table.insert(pause_items, { "🔚 {menu.pause.quit}", func_set_menu('quit') })
 end
 
 
-if DISTRIBUTION_PLATFORM ~= "ios" then
+if PLATFORM_TYPE ~= "mobile" then
     table.insert(pause_items, { "" })
 
     if BUILD_TYPE == "demo" then

@@ -323,7 +323,7 @@ function Game:ready()
 			self:queue_join_game("controller", joy)
 		end
 
-		if DISTRIBUTION_PLATFORM == "ios" then
+		if PLATFORM_TYPE == "mobile" then
 			self:queue_join_game("touch")
 		end
 
@@ -365,6 +365,9 @@ function Game:on_resize(w, h)
 		Options:set("is_window_maximized", love.window.isMaximized())
 	end
 	self:update_screen()
+	if self.touch_screen then
+		self.touch_screen:on_resize(w, h)
+	end
 end
 
 function Game:update_fullscreen(is_fullscreen)
@@ -809,7 +812,7 @@ function Game:remove_queued_player(player_n)
 		return
 	end
 
-    if DISTRIBUTION_PLATFORM == "ios" then
+    if PLATFORM_TYPE == "mobile" then
         local local_player = Input:get_user(player_n)
 		-- TODO: Verif si local player est null
         if local_player.primary_input_type == INPUT_TYPE_TOUCH then

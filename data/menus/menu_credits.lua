@@ -9,7 +9,7 @@ local func_url          = menu_util.func_url
 local PROMPTS_NORMAL    = menu_util.PROMPTS_NORMAL
 
 function list_of_menu_item(title, url) 
-    if DISTRIBUTION_PLATFORM ~= "ios" then
+    if PLATFORM_TYPE ~= "mobile" then
         return {title + " 🔗", func_url(url)}
     end
     return {title, empty_func}

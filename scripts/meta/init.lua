@@ -5,6 +5,7 @@ local function init()
     print("====================[ Launched Bugscraper".." (v"..tostring(BUGSCRAPER_VERSION)..") ]====================")
     print("LOVE version: "..string.format("%d.%d.%d - %s", love.getVersion()))
     print("Distribution platform: "..tostring(DISTRIBUTION_PLATFORM))
+    print("Platform type: "..tostring(PLATFORM_TYPE))
     print("Build type: "..tostring(BUILD_TYPE))
     print("")
     

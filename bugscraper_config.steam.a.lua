@@ -1,2 +1,3 @@
 DISTRIBUTION_PLATFORM = "steam"
+PLATFORM_TYPE = "pc"
 DEBUG_MODE = false

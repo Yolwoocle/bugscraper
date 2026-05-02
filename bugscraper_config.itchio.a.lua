@@ -1,2 +1,3 @@
 DISTRIBUTION_PLATFORM = "itchio"
+PLATFORM_TYPE = "pc"
 DEBUG_MODE = false

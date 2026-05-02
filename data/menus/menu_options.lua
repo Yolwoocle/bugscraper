@@ -42,7 +42,7 @@ local items = {
         end
     },
 }
-if DISTRIBUTION_PLATFORM ~= "ios" then
+if PLATFORM_TYPE ~= "mobile" then
     merge_tables(items, {
         { "" },
         { "<<< {menu.options.visuals.title} >>>" },
@@ -81,7 +81,7 @@ merge_tables(items, {
 	end },
     { BoolOptionMenuItem, "🕐 {menu.options.game.timer}", "timer_on" },
 })
-if DISTRIBUTION_PLATFORM ~= "ios" then
+if PLATFORM_TYPE ~= "mobile" then
     merge_tables(items, {
         { BoolOptionMenuItem, "↖ {menu.options.game.mouse_visible}", "mouse_visible" },
     })
