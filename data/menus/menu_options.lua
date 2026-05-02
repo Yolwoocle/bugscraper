@@ -77,7 +77,7 @@ table.insert(items, { BoolOptionMenuItem, "💧 {menu.options.visuals.menu_blur}
 table.insert(items, { RangeOptionMenuItem, "🌄 {menu.options.visuals.background_speed}", "background_speed", { 0.0, 1.0 }, 0.05, "%" })
 table.insert(items, { RangeOptionMenuItem, "🥚 {menu.options.visuals.bullet_lightness}", "bullet_lightness", { 0.1, 1.0 }, 0.1, "%" })
 table.insert(items, { 
-    EnumOptionMenuItem, "💧 {menu.options.visuals.scale_filter}", "scale_filter", { "crisp", "smooth" },
+    EnumOptionMenuItem, "☁ {menu.options.visuals.scale_filter}", "scale_filter", { "crisp", "smooth" },
     function(value)
         return tostring(Text:text("menu.options.visuals.scale_filter_value." .. value))
     end,
