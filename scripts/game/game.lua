@@ -1375,6 +1375,14 @@ function Game:mousereleased(x, y, button, istouch, presses)
 	if self.menu_manager then self.menu_manager:mousereleased(x, y, button, istouch, presses) end
 end
 
+function Game:mousereleased(x, y, button, istouch, presses)
+	-- Input:mousereleased(joystick, axis, value)
+	if self.menu_manager then self.menu_manager:mousereleased(x, y, button, istouch, presses) end
+end
+
+function Game:mousemoved(x, y, button, istouch, presses)
+end
+
 function Game:touchpressed(id, x, y)
     self.touch_screen:touchpressed(id, x, y)
 end
