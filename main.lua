@@ -65,7 +65,7 @@ _G_do_fixed_framerate = true
 
 function love.update(dt)
 	_G_t = math.min(_G_t + dt, max_frame_buffer_duration)
-	local cap = 1 
+	local cap = 1
 	local i = 0
 	local update_fixed_dt = fixed_dt
 	while (not _G_do_fixed_framerate or _G_t > update_fixed_dt) and cap > 0 do
@@ -80,6 +80,7 @@ function love.update(dt)
 end
 
 function love.draw()
+	
 	game:draw()
 end
 

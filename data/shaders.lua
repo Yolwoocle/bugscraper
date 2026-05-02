@@ -1,7 +1,11 @@
 require "scripts.meta.constants"
 
-love.graphics.oldShader = function(...)
-    return {sendColor = function(...) end, send = function(...) end, }
+love.graphics.oldShader = function (...) 
+	return love.graphics.newShader([[
+		vec4 effect(vec4 color, Image texture, vec2 textureCoords, vec2 screenCoords){
+			return Texel(texture, textureCoords) * color;
+		}
+	]])
 end
 
 local shaders = {}
