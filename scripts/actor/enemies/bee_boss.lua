@@ -391,7 +391,10 @@ function BeeBoss:init(x, y)
                 self.vy = 0
 
                 self.state_timer:start(2.0)
-                
+
+                self.is_stompable = false
+                self.damage = 0
+
                 Particles:push_layer(PARTICLE_LAYER_BACK)
                 Particles:static_image(images.star_big, self.mid_x, self.mid_y, 0, 0.05, 1, {
                     color = COL_WHITE
@@ -450,14 +453,14 @@ function BeeBoss:draw()
 
     self.state_machine:draw()
 
-    if not self.is_stompable then
+    if not self.is_stompable and self.damage > 0 then
         draw_centered(images.bee_boss_shield, self.mid_x, self.mid_y)    
     end
 end
 
 function BeeBoss:on_stomped(player)
     game:frameskip(10)
-    game:screenshake(8) 
+    game:screenshake(8)
 
     self:set_invincibility(0.5)
     self:set_harmless(0.5)

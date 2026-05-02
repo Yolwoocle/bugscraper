@@ -17,7 +17,7 @@ local PHASE_TELEGRAPH_DURATION = 0.4
 function MetalFly:init(x, y)
     MetalFly.super.init(self, x,y, images.metal_mosquito_1, 14, 14)
     self.name = "metal_fly"
-    self.life = 10
+    self.life = 5
 
     self.anim_frame_len = 0.05
     self.anim_frames = {images.metal_mosquito_1, images.metal_mosquito_2}

@@ -220,8 +220,9 @@ function Player:reset(n, skin)
 	-- SFX
 	self:stop_constant_sounds()
 
-	self.sfx_wall_slide_volume = 0
+	self.sfx_wall_slide_volume = 0.0
 	self.sfx_wall_slide_max_volume = 1.0
+	self.walk_sfx_volume = 1.0
 	self:set_constant_sound_volume("sfx_wall_slide", 0)
 
 	-- Combo / fury
@@ -1630,7 +1631,7 @@ function Player:animate_walk(dt)
 		if self.grounded_col and self.grounded_col.other.collision_info then
 			s = self.grounded_col.other.collision_info.walk_sound
 		end
-		self:play_sound_var(s, 0.2, 1.2, {pitch=1.0, volume=1.0})
+		self:play_sound_var(s, 0.2*self.walk_sfx_volume, 1.2, {pitch=1.0, volume=1.0*self.walk_sfx_volume})
 	end
 end
 

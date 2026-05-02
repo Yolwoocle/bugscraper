@@ -11,6 +11,8 @@ function BreakableActor:init(x, y, img, w, h)
     self.name = "breakable_actor"
     self.follow_player = false
 
+    self.counts_as_enemy = false
+
     self.max_life = 80
     self.life = self.max_life
     self.activ_thresh = 40

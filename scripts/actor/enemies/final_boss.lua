@@ -553,6 +553,8 @@ function FinalBoss:init(x, y, params)
 
                 game:frameskip(60*1.5)
                 game:screenshake(15)
+
+                game.actor_manager:remove_actors_with_name("final_boss_minion")
                 
                 game.music_player:set_disk("off")
 

@@ -89,7 +89,9 @@ function Boomshroom:init(x, y)
                 self.flash_timer:start(0.5)
 
                 self:set_size(#self.sizes)
-                self:play_sound("sfx_enemy_boomshroom_flashing")
+
+                self:set_constant_sound("flash", "sfx_enemy_boomshroom_flashing", false)
+                self:play_constant_sound("flash")
             end,
             update = function(state, dt)
                 if self.flash_timer:update(dt) then

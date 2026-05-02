@@ -28,6 +28,8 @@ function BackgroundCity:init(level)
 
 	self.camera_ox = 0
 	self.camera_oy = 0
+
+	self.offset_y_based_on_wave_n = true
 end
 
 function BackgroundCity:update(dt)
@@ -35,7 +37,10 @@ function BackgroundCity:update(dt)
 end
 
 function BackgroundCity:get_default_y_offset()
-	return game.level.floor * 2
+	if self.offset_y_based_on_wave_n then
+		return game.level.floor * 2
+	end
+	return 0
 end
 
 -----------------------------------------------------

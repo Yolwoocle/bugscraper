@@ -32,8 +32,15 @@ If it does not fit that description please [contact me first](https://yolwoocle.
 </div>  
 
 ## Running
-To run the game, please follow the instructions on the [LÖVE Getting started page](https://love2d.org/wiki/Getting_Started).   
-To export the game, look at the [LÖVE wiki page](https://love2d.org/wiki/Game_Distribution) on the subject.
+This section is minimalist for now, sorry - will update with more details in the future.  
+
+To help you with a starting point:  
+To export into an executable, you can try forking the repo and running the export GitHub action.  
+Alternatively, if you just wish to run the game, please follow the instructions on the [LÖVE Getting started page](https://love2d.org/wiki/Getting_Started).   
+
+Alternatively, to export the game, look at the [LÖVE wiki page](https://love2d.org/wiki/Game_Distribution) on the subject.  
+If you wish to use makelove to export the game, please use [this patched version](https://github.com/alexis-belmonte/makelove) from Alexis.  
+
 
 <div align="center">
   🐜🐜🐜🐜🐜

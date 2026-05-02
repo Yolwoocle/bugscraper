@@ -16,6 +16,7 @@ function BackroomCityOutside:init(params)
 	self.name = "city_outside"
 
 	self.city_background = BackgroundCity:new(self)
+	self.city_background.offset_y_based_on_wave_n = false
 end
 
 function BackroomCityOutside:generate(world_generator)
@@ -25,7 +26,7 @@ function BackroomCityOutside:generate(world_generator)
 	-- Collision 
 	world_generator:reset()
 
-	world_generator:write_rect_fill(Rect:new(0,  2,  2,  20),  TILE_STONE) -- A / brick house
+	world_generator:write_rect_fill(Rect:new(0,  0,  2,  20),  TILE_STONE) -- A / brick house
 	world_generator:write_rect_fill(Rect:new(3,  13, 7,  20),  TILE_STONE) -- B / cobblestone house front
 	world_generator:write_rect_fill(Rect:new(8,  14, 8,  20),  TILE_STONE) -- C / cobblestone stairs
 	world_generator:write_rect_fill(Rect:new(6,  15, 96, 20),  TILE_STONE) -- D / cobblestone plaza
