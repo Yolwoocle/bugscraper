@@ -225,9 +225,9 @@ function ProgressingArc:draw()
     end
 end
 
-function ProgressingArc:on_death()
+function ProgressingArc:on_removed()
     for _, ray in pairs(self.rays) do
-        ray:kill()
+        ray:remove()
     end
 end
 

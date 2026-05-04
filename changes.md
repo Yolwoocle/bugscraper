@@ -1,6 +1,11 @@
 # Bugscraper changelog
 
+## 0.11.3
+
+
 ## 0.11.2
+Adds some improvements and fixes a couple of issues including a crash related to the Polish language. Sorry about that. 
+
 - Life drops are now more biased the more time passes without one dropping
 - Increased despawn time for gun orbs
 - Small update to dept 4 background sprite 
