@@ -19,6 +19,7 @@ function DungProjectile:update(dt)
 end
 
 function DungProjectile:on_projectile_land()
+    DungProjectile.super.on_projectile_land(self)
     self:play_sound_var("sfx_enemy_kill_general_gore_{01-10}", 0.2, 1.2)
 end
 

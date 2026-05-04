@@ -1,5 +1,40 @@
 # Bugscraper changelog
 
+## 0.11.2
+- Life drops are now more biased the more time passes without one dropping
+- Increased despawn time for gun orbs
+- Small update to dept 4 background sprite 
+- Waves that used to kill enemies now just remove them
+- Player footstep SFX now fade out in some cutscenes
+- Added landing SFX to projectiles
+- Changed jump icon
+<details>
+    <summary>SPOILERS (Waves 40-60)</summary>
+    <ul>
+        <li>Reduced Metal Mosquito HP from 10 to 5</li>
+    </ul>
+</details>
+<details>
+    <summary>SPOILERS (Final boss)</summary>
+    <ul>
+        <li>Final boss now removes all his minions on death</li>
+    </ul>
+</details>
+
+
+### Fixes
+- Fixed crash when using PL language
+- Fixed: boomshroom & flying nest flash SFX would continue playing in pause menu
+- Fixed: No life would drop if, for example, you had 2/4 normal hearts and 2 extra hearts
+<details>
+    <summary>SPOILERS (Post final boss)</summary>
+    <ul>
+        <li>Fixed background issue in final area</li>
+        <li>Fixed missing collision on left-side building in final area</li>
+    </ul>
+</details>
+
+
 ## 0.11.1
 - Fixed issue where the boss from world 2 could spawn on wave 73. Sorry about that...
 
