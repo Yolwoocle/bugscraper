@@ -1,7 +1,7 @@
 # Bugscraper changelog
 
 ## 0.11.3
-
+- Fixed: electric arcs were not properly removed on some waves
 
 ## 0.11.2
 Adds some improvements and fixes a couple of issues including a crash related to the Polish language. Sorry about that. 
