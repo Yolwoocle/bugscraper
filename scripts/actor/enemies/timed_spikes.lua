@@ -137,14 +137,26 @@ function TimedSpikes:init(x, y, duration_off, duration_telegraph, duration_on, s
             enter = function(state)
                 self.spike_target_y = self.spike_length
                 self.spike_sprite.color = COL_WHITE
-                -- self.spike_sprite.sy = 1.7
-
+                
                 self:play_sound_var("sfx_enemy_timed_spikes_unearth_{01-05}", 0.2, 1.2, {volume=0.3})
+                
+                self.spike_sprite:set_solid(true)
+                self.spike_stem_sprite:set_solid(true)
+                state.flash_timer = Timer:new(0.1):start()
             end, 
             update = function(state, dt)
                 if self.spike_y >= self.spike_length - 8 then
                     self.damage = 1
                 end
+                
+                if state.flash_timer:update(dt) then
+                    self.spike_sprite:set_solid(false)
+                    self.spike_stem_sprite:set_solid(false)
+                end
+            end,
+            exit = function(state, dt)
+                self.spike_sprite:set_solid(false)
+                self.spike_stem_sprite:set_solid(false)
             end
         },
     }, "standby")
