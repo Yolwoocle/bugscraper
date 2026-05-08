@@ -1,5 +1,7 @@
 # Bugscraper changelog
 
+This changelog includes changes related to the private beta. For access request, please ask me on [Discord](https://bugscraper.net/discord).
+
 ## 0.11.3
 - Fixed: electric arcs and vines were not properly removed on some waves
 
