@@ -330,7 +330,7 @@ function Sprite:draw(x, y, w, h, custom_draw)
     end
     
     if self.is_solid_color then
-		shaders.draw_in_color:sendColor("fillColor", self.color)
+		shaders.draw_in_color:sendColor("fillColor", self.color or COL_WHITE)
         love.graphics.setShader(shaders.draw_in_color)
     end
 

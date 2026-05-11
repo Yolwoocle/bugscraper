@@ -227,7 +227,7 @@ return {
             -- (You can also translate as "main lobby" or something like it.)
             return_to_ground_floor = "VOLVER AL PRIMER PISO",
             options = "OPCIONES",
-            credits = "CREDITOS",
+            credits = "CRÉDITOS",
             feedback = "COMENTARIOS",
             quit = "SALIR",
             website = "SITIO OFICIAL",

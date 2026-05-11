@@ -388,7 +388,7 @@ function Motherboard:init(x, y)
 
                     for r = 0, 1, 0.1 do
                         local explosion = Explosion:new(self.x + self.w * r, random_range(self.y - 42, self.y + self.h),
-                            { use_gun = false })
+                            { use_gun = false, particle_layer = PARTICLE_LAYER_HUD })
                         explosion.is_front = true
                         game:new_actor(explosion)
                     end

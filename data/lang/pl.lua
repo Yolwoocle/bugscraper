@@ -121,7 +121,7 @@ return {
         },
         espresso = {
             title = "Espresso",
-            description = "x%d prędkość strzelania przez %d poziomów[[CHANGED / old:'x%d shooting speed for %d floors' / new:'x%d shooting speed while in a combo']]",
+            description = "x%d prędkości strzelania podczas trwania combo",
         },
         milk = {
             title = "Mleko",
@@ -166,8 +166,8 @@ return {
         gazpacho = {
             -- When you take damange, you have a 5-second window, where if you deal enough damage
             -- to enemies, you can recover 1 HP
-            title = "[[ADDED / 'Gazpacho']]",
-            description = "[[ADDED / 'After taking damage, quickly fight back to regain 1 ❤']]",
+            title = "Gazpacho",--"[[ADDED / 'Gazpacho']]",
+            description = "Po otrzymaniu obrażeń, szybko kontratakuj, aby odzyskać 1 ❤",--"[[After taking damage, quickly fight back to regain 1 ❤']]",
         },
     },
     input = {

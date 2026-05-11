@@ -113,9 +113,11 @@ end
 
 function ElectricRays:on_death()
     Particles:spark(self.mid_x, self.mid_y, 10)
+end
 
+function ElectricRays:on_removed()
     for _, ray in pairs(self.rays) do
-        ray:kill()
+        ray:remove()
         
     end
 end

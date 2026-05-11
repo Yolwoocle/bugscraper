@@ -1,4 +1,4 @@
-BUGSCRAPER_VERSION = "0.11.1"
+BUGSCRAPER_VERSION = "0.11.3"
 DISTRIBUTION_PLATFORM = "ios" -- default | itchio | steam | ios | android
 PLATFORM_TYPE = "mobile" -- pc | mobile | web
 BUILD_TYPE = "fullgame" -- fullgame | demo

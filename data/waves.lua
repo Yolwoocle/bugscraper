@@ -93,9 +93,13 @@ local function spawn_timed_spikes()
     local j = 0
     local x2 = CANVAS_WIDTH / 16 - 4
     for ix = 3, x2 do
-        local spikes = enemies.TimedSpikes:new(ix * BW, CANVAS_HEIGHT * 0.85, 4, 1, 0.5, j * 0.2, {
-            do_standby_warning = x2 - 4 <= ix
-        })
+        local spikes = enemies.TimedSpikes:new(
+            ix * BW, CANVAS_HEIGHT * 0.85, 
+            6, 1, 0.5, j * 0.3, 
+            {
+                do_standby_warning = x2 - 4 <= ix
+            }
+        )
         spikes.z = 3 - j / 100
         game:new_actor(spikes)
         j = j + 1
@@ -106,9 +110,13 @@ local function spawn_timed_spikes_w5()
     local j = 0
     local x2 = CANVAS_WIDTH / 16 - 4
     for ix = 3, x2 do
-        local spikes = enemies.TimedSpikes:new(ix * BW, CANVAS_HEIGHT * 0.85, 4, 0.5, 0.2, j * 0.1 + 2.0, {
-            do_standby_warning = x2 - 4 <= ix
-        })
+        local spikes = enemies.TimedSpikes:new(
+            ix * BW, CANVAS_HEIGHT * 0.85, 
+            4, 0.5, 0.2, j * 0.1 + 2.0, 
+            {
+                do_standby_warning = x2 - 4 <= ix
+            }
+        )
         spikes.z = 3 - j / 100
         game:new_actor(spikes)
         j = j + 1
@@ -608,13 +616,10 @@ local waves_defs = {
     },
 
     {
-        min = 6,
-        max = 6,
+        min = 4,
+        max = 4,
 
         enemies = {
-            { E.Bee,        20 },
-            { E.Stabee,     10 },
-            { E.Boomshroom, 20 },
             { E.DrillBee,   30 },
         },
         fixed_enemies = {
@@ -623,12 +628,11 @@ local waves_defs = {
     },
 
     {
-        min = 8,
-        max = 8,
+        min = 6,
+        max = 6,
 
         enemies = {
-            { E.Bee,         3 },
-            { E.HoneypotAnt, 3 },
+            { E.Larva,       3 },
         },
         fixed_enemies = {
             { E.FlyingSpawner, 1 },
@@ -648,8 +652,8 @@ local waves_defs = {
 
 
     {
-        min = 9,
-        max = 9,
+        min = 7,
+        max = 7,
 
         enemies = {
             { E.Larva,       3 },
