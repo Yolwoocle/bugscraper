@@ -15,23 +15,23 @@ Missing things todo:
 
 ### IOS TODO:
 
-- Better controls with bautiful buttons (placement et icons)
-
-- Fix: Queued join player creer un joystick inutile
+TODO:
+    - Desactiver le bouton interagir si il sert a rien
+    - Icon du jeu sur mobile
 
 EN vrai osef:
+    - Menu controls with mouse (or direcional)
+    - Pas de touch input => pas de escape
+    - Add: Vibrations
+
+    A tester:
+        - Si on rejoint avec 4 joueurs, y'a moyen qu'on puisse encore ajouter le touch_input mais en vrai jsp c'est un cas de bord a tester
+
+TODO list leo:
     - Options: change button placement and size
     - Default only one player
         - And if controller / keyboard is detected add more
-    - Menu controls with mouse (or direcional)
-    - Desactiver le bouton interagir si il sert a rien
-    - Si on rejoint avec 4 joueurs, y'a moyen qu'on puisse encore ajouter le touch_input mais en vrai jsp c'est un cas de bord a tester
-    - Pas de touch input => pas de escape =>
-    - Add: Vibrations
-
-
-TODO LIST LEO: One player only
-
+    - Better ui for joystick 
 
 DONE:
 - Menu avec fleche directionelle et joystick pour le in game
@@ -46,3 +46,5 @@ DONE:
 - Fix: La cafertier les input c'est pas le bon draw
 - Fix (je pense): Le is_on_menu d'un player n'est pas enlevé a la validation de ce menu
 - Shaders
+- Better controls with bautiful buttons (placement et icons)
+- Fix: Queued join player creer un joystick inutile

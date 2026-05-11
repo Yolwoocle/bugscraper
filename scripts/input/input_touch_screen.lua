@@ -168,7 +168,7 @@ local function _active_horizontal_ui()
     return false 
 end
 
-function get_position_of_button(width, height, button_name) 
+function get_position_of_button_small(width, height, button_name) 
     local button_size = math.floor(height / 10)
     local button_size_arrow = math.floor(height * 5 / 100)
     if button_name == "t_escape" then
@@ -190,6 +190,33 @@ function get_position_of_button(width, height, button_name)
     end
     return nil, nil, nil
 end
+
+function get_position_of_button(width, height, button_name) 
+    local button_size_escape = math.floor(height * 15 / 100)
+    local button_size_arrow = math.floor(height * 15 / 100)
+    local button_size_okay = math.floor(height * 20 / 100)
+
+    if button_name == "t_escape" then
+        return math.floor(width - height * 5 / 100 - button_size_escape), math.floor(height * 5 / 100), button_size_escape
+    elseif button_name == "t_up_ui" then
+        return math.floor(height * 20 / 100), math.floor(height * 50 / 100), button_size_arrow
+    elseif button_name == "t_left_ui" then
+        return math.floor(height * 5 / 100), math.floor(height * 65 / 100), button_size_arrow
+    elseif button_name == "t_right_ui" then
+        return math.floor(height * 35 / 100), math.floor(height * 65 / 100), button_size_arrow
+    elseif button_name == "t_down_ui" then
+        return math.floor(height * 20 / 100), math.floor(height * 75 / 100), button_size_arrow
+    elseif button_name == "t_interact" then
+        return math.floor(width - height * 20 / 100), math.floor(height * 35 / 100), math.floor(height * 10 / 100)
+    elseif button_name == "t_jump" or button_name == "t_ok" then
+        return math.floor(width - height * 25 / 100), math.floor(height * 55 / 100), button_size_okay
+    elseif button_name == "t_shoot" or button_name == "t_back" then
+        return math.floor(width - height * 45 / 100), math.floor(height * 75 / 100), button_size_okay
+    end
+    return nil, nil, nil
+end
+
+
 
 local buttons = {
     -- Always (except animation)
@@ -408,8 +435,7 @@ end
 
 function TouchScreen:touchpressed(id, x, y)
     global_screen_pressed = true
-
-    if (is_position_on_left_screen(x) and not joystick_id) and (_active_is_in_game()) then
+    if (is_position_on_left_screen(x) and not joystick_id) and (_active_is_in_game()) and (is_loaded) then
         -- Joystick
         joystick_id = id
         joystick_pos.x = x
