@@ -17,7 +17,6 @@ Missing things todo:
 
 - Better controls with bautiful buttons (placement et icons)
 
-- Shaders
 - Fix: Queued join player creer un joystick inutile
 - Add: Vibrations
 
@@ -44,3 +43,4 @@ DONE:
 - Fix: Y'a des bugs avec le touch input quand tu join et unjoin (LE fait qu'il soit encore la si tu fait un return to floor zero et des truc comme ca a fix)
 - Fix: La cafertier les input c'est pas le bon draw
 - Fix (je pense): Le is_on_menu d'un player n'est pas enlevé a la validation de ce menu
+- Shaders

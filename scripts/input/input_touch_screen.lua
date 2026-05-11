@@ -168,23 +168,28 @@ local function _active_horizontal_ui()
     return false 
 end
 
-
-
+function get_position_of_button(width, height, button_name) 
+    local button_size = math.floor(height / 10)
+    if button_name == "t_escape" then
+        return width - button_size - math.floor(height / 1), math.floor(height / 1), button_size
+    end
+    return nil, nil, nil
+end
 
 local buttons = {
     -- Always (except animation)
-    { x=540, y=200, w=button_size, h=button_size, label="⏸",   key="t_escape",   active = _active_is_not_a_cinematic},
+    { x=540, y=200, w=button_size, h=button_size, label="⏸",  key="t_escape",   active = _active_is_not_a_cinematic},
 
-    { x=170, y=200, w=button_size, h=button_size, label="⏏",   key="t_jump",     active = _active_is_in_game},
-    { x=200, y=200, w=button_size, h=button_size, label="🔫",   key="t_shoot",    active = _active_is_in_game},
-    { x=230, y=200, w=button_size, h=button_size, label="👆",  key="t_interact", active = _active_is_in_game},
+    { x=170, y=200, w=button_size, h=button_size, label="⏏",  key="t_jump",     active = _active_is_in_game},
+    { x=200, y=200, w=button_size, h=button_size, label="🔫", key="t_shoot",    active = _active_is_in_game},
+    { x=230, y=200, w=button_size, h=button_size, label="👆", key="t_interact", active = _active_is_in_game},
 
-    { x=270, y=200, w=button_size, h=button_size, label="OK",    key="t_ok",       active = _active_ok},
-    { x=340, y=200, w=button_size, h=button_size, label="🔙",  key="t_back",     active = _active_back},
-    { x=340, y=200, w=button_size, h=button_size, label="➡", key="t_right_ui", active = _active_horizontal_ui},
-    { x=340, y=200, w=button_size, h=button_size, label="⬅",  key="t_left_ui",  active = _active_horizontal_ui},
-    { x=340, y=200, w=button_size, h=button_size, label="⬆",    key="t_up_ui",    active = _active_vertical_ui},
-    { x=340, y=200, w=button_size, h=button_size, label="⬇",  key="t_down_ui",  active = _active_vertical_ui},
+    { x=270, y=200, w=button_size, h=button_size, label="OK", key="t_ok",       active = _active_ok},
+    { x=340, y=200, w=button_size, h=button_size, label="🔙", key="t_back",     active = _active_back},
+    { x=340, y=200, w=button_size, h=button_size, label="➡",  key="t_right_ui", active = _active_horizontal_ui},
+    { x=340, y=200, w=button_size, h=button_size, label="⬅", key="t_left_ui",  active = _active_horizontal_ui},
+    { x=340, y=200, w=button_size, h=button_size, label="⬆", key="t_up_ui",    active = _active_vertical_ui},
+    { x=340, y=200, w=button_size, h=button_size, label="⬇", key="t_down_ui",  active = _active_vertical_ui},
 }
 
 
@@ -200,14 +205,23 @@ function TouchScreen:update_button_pos()
     joystick_pos.y = math.floor(WINDOW_HEIGHT * 4 / 5)
     joystick_pos.x = math.floor(WINDOW_WIDTH * 1 / 8)
     local i = 0
+
     for _, button in ipairs(buttons) do
-        if button.key == "t_escape" then
-            button.x = math.floor(WINDOW_WIDTH / 2 - button_size / 2)
-            button.y = button_spacing
+        local button_info_x, button_info_y, button_info_button_size = get_position_of_button(WINDOW_WIDTH, WINDOW_HEIGHT, button.key)
+        if button_info_x then
+            button.x = button_info_x
+            button.y = button_info_y
+            button.w = WINDOW_WIDTH
+            button.h = WINDOW_HEIGHT
         else
-            button.x = math.floor(WINDOW_WIDTH) - (button_size+2*button_spacing)*(i+1)
-            button.y = WINDOW_HEIGHT - (button_size+button_spacing*8)
-            i= i+1
+            if button.key == "t_escape" then
+                button.x = math.floor(WINDOW_WIDTH / 2 - button_size / 2)
+                button.y = button_spacing
+            else
+                button.x = math.floor(WINDOW_WIDTH) - (button_size+2*button_spacing)*(i+1)
+                button.y = WINDOW_HEIGHT - (button_size+button_spacing*8)
+                i= i+1
+            end
         end
     end
 end
