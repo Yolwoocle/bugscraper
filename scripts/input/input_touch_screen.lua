@@ -170,8 +170,23 @@ end
 
 function get_position_of_button(width, height, button_name) 
     local button_size = math.floor(height / 10)
+    local button_size_arrow = math.floor(height * 5 / 100)
     if button_name == "t_escape" then
-        return width - button_size - math.floor(height / 1), math.floor(height / 1), button_size
+        return math.floor(width - height / 100 - button_size), math.floor(height / 100), button_size
+    elseif button_name == "t_up_ui" then
+        return math.floor(height * 10 / 100), math.floor(height * 80 / 100), button_size_arrow
+    elseif button_name == "t_left_ui" then
+        return math.floor(height * 5 / 100), math.floor(height * 85 / 100), button_size_arrow
+    elseif button_name == "t_right_ui" then
+        return math.floor(height * 15 / 100), math.floor(height * 85 / 100), button_size_arrow
+    elseif button_name == "t_down_ui" then
+        return math.floor(height * 10 / 100), math.floor(height * 90 / 100), button_size_arrow
+    elseif button_name == "t_interact" then
+        return math.floor(width - height * 10 / 100), math.floor(height * 65 / 100), button_size_arrow
+    elseif button_name == "t_jump" or button_name == "t_ok" then
+        return math.floor(width - height * 15 / 100), math.floor(height * 75 / 100), button_size
+    elseif button_name == "t_shoot" or button_name == "t_back" then
+        return math.floor(width - height * 25 / 100), math.floor(height * 85 / 100), button_size
     end
     return nil, nil, nil
 end
@@ -211,8 +226,8 @@ function TouchScreen:update_button_pos()
         if button_info_x then
             button.x = button_info_x
             button.y = button_info_y
-            button.w = WINDOW_WIDTH
-            button.h = WINDOW_HEIGHT
+            button.w = button_info_button_size
+            button.h = button_info_button_size
         else
             if button.key == "t_escape" then
                 button.x = math.floor(WINDOW_WIDTH / 2 - button_size / 2)
@@ -327,7 +342,7 @@ function TouchScreen:draw()
             local font = love.graphics.getFont()
             local textW = font:getWidth(btn.label)
             local textH = font:getHeight(btn.label)
-            love.graphics.print(btn.label, btn.x + (btn.w - textW)/2, btn.y + (btn.h - textH)/2)
+            print_centered(btn.label, btn.x + math.floor(btn.w / 2), btn.y + math.floor(btn.h / 2), 0, CANVAS_SCALE)
         end
     end
 

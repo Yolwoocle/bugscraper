@@ -97,10 +97,10 @@ table.insert(items, {
 )
 table.insert(items, { BoolOptionMenuItem, "🕐 {menu.options.game.timer}", "timer_on" })
 
-if PLATFORM_TYPE == "pc" or PLATFORM_TYPE == "web" then
+-- if PLATFORM_TYPE == "pc" or PLATFORM_TYPE == "web" then
     table.insert(items, { BoolOptionMenuItem, "↖ {menu.options.game.mouse_visible}", "mouse_visible" })
     table.insert(items, { BoolOptionMenuItem, "🛅 {menu.options.game.pause_on_unfocus}", "pause_on_unfocus" })
-end
+-- end
 
 table.insert(items, { BoolOptionMenuItem, "⏭ {menu.options.game.skip_boss_intros}", "skip_boss_intros" })
 table.insert(items, { BoolOptionMenuItem, "⚠ {menu.options.game.show_fps_warning}", "show_fps_warning" })
