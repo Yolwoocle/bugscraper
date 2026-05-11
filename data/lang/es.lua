@@ -12,7 +12,7 @@
 return {
     __meta = {
         -- Do not touch this section.
-        menu_padding = 0.18,
+        menu_padding = 0.15,
         large_mini_font = false,
     },
     language = {
