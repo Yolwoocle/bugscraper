@@ -8,7 +8,7 @@ local ProgressBarMenuItem   = require "scripts.ui.menu.items.progress_bar_menu_i
 
 local function create_items(item_order)
     local items = {
-        { StatsMenuItem, Text:parse("⚔️ {menu.game_over.kills}"), function(self)
+        { StatsMenuItem, Text:parse("⚔ {menu.game_over.kills}"), function(self)
             return game.stats.kills
         end },
         { StatsMenuItem, Text:parse("💀 {menu.game_over.deaths}"), function(self)
