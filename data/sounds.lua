@@ -162,6 +162,7 @@ local sfxnames = {
 	["sfx_boss_mrdung_ball_triggered_{01-08}"] = {"sfx/enemy/mrdung/ball_triggered/sfx_boss_mrdung_ball_triggered_{}.ogg", "static"},
 	["sfx_boss_mrdung_ball_hit_{01-06}"] = {"sfx/enemy/mrdung/ball/sfx_boss_mrdung_ball_hit_{}.ogg", "static"},
 	["sfx_boss_mrdung_bump_{01-02}"] = {"sfx/enemy/mrdung/bump/sfx_boss_mrdung_bump_{}.ogg", "static"},
+	["sfx_boss_mrdung_jump_telegraph_{01-04}"] = {"sfx/enemy/mrdung/jump_telegraph/sfx_boss_mrdung_jump_telegraph_{}.ogg", "static"},
 	["sfx_boss_mrdung_jump_moment_{01-06}"] = {"sfx/enemy/mrdung/jump_moment/sfx_boss_mrdung_jump_moment_{}.ogg", "static"},
 	
 	-- W1 CEO escape cutscene
@@ -244,6 +245,9 @@ local sfxnames = {
 	["sfx_enemy_motherboard_intro"] = {"sfx/enemy/motherboard/sfx_enemy_motherboard_intro.ogg", "static"},
 	["sfx_enemy_motherboard_crash"] = {"sfx/enemy/motherboard/sfx_enemy_motherboard_crash.ogg", "static"},
 	["sfx_enemy_motherboardbutton_press_{01-06}"] = {"sfx/enemy/motherboard/sfx_enemy_motherboardbutton_press_{}.ogg", "static"},
+	["sfx_enemy_motherboard_phase2"] = {"sfx/enemy/motherboard/sfx_enemy_motherboard_phase2.ogg", "static"},
+	["sfx_enemy_motherboard_phase3"] = {"sfx/enemy/motherboard/sfx_enemy_motherboard_phase3.ogg", "static"},
+	["sfx_enemy_motherboard_death"] = {"sfx/enemy/motherboard/sfx_enemy_motherboard_death.ogg", "static"},
 	
 	-- Big beelet (Big chipper)
 	["sfx_enemy_bigbeelet_telegraph_{01-04}"] = {"sfx/enemy/bigbeelet/sfx_enemy_bigbeelet_telegraph_{}.ogg", "static"},
@@ -268,7 +272,10 @@ local sfxnames = {
 
 	-- Shooter
 	["sfx_enemy_shooter_charge_{01-02}"] = {"sfx/enemy/shooter/sfx_enemy_shooter_charge_{}.ogg", "static"},
-	["sfx_enemy_shooter_burst_{01-06}"] = {"sfx/enemy/shooter/sfx_enemy_shooter_burst_{}.ogg", "static"},
+	["sfx_enemy_shooter_burst_{01-06}"] = {"sfx/enemy/shooter/sfx_enemy_shooter_burst_{}.ogg", "static"},	
+
+	-- Dropper
+	["sfx_ennemy_dropper_trigger_{01-04}"] = {"sfx/enemy/dropper/sfx_ennemy_dropper_trigger_{}.ogg", "static"},
 	
 	-- Golden Beetle
 	["sfx_enemy_goldenbeetle_explode_{01-03}"] = {"sfx/enemy/goldenbeetle/sfx_enemy_goldenbeetle_explode_{}.ogg", "static"},
@@ -292,6 +299,7 @@ local sfxnames = {
 	["sfx_upgrades_hot_chocolate_pickedup"] = {"sfx/upgrades/sfx_upgrades_hot_chocolate_pickedup.ogg", "static"},
 	["sfx_upgrades_pomegranate_juice_pickedup"] = {"sfx/upgrades/sfx_upgrades_pomegranate_juice_pickedup.ogg", "static"},
 	["sfx_upgrades_fizzy_lemonade_pickedup"] = {"sfx/upgrades/sfx_upgrades_fizzy_lemonade_pickedup.ogg", "static"},
+	["sfx_upgrades_gazpacho_pickedup"] = {"sfx/upgrades/sfx_upgrades_gazpacho_pickedup.ogg", "static"},
 	["sfx_upgrades_water_pickedup"] = {"sfx/upgrades/sfx_upgrades_water_pickedup.ogg", "static"},
 
 	["sfx_upgrades_general_hover"] = {"sfx/upgrades/sfx_upgrades_general_hover.ogg", "static"},
@@ -332,6 +340,8 @@ local sfxnames = {
 	["amb_pad_world1_lp"] = {"sfx/ambience/amb_pad_world1_lp.ogg", "stream", {looping = true}},
 	["amb_pad_world2_lp"] = {"sfx/ambience/amb_pad_world2_lp.ogg", "stream", {looping = true}},
 	["amb_pad_world3_lp"] = {"sfx/ambience/amb_pad_world3_lp.ogg", "stream", {looping = true}},
+	["amb_pad_world4_lp"] = {"sfx/ambience/amb_pad_world4_lp.ogg", "stream", {looping = true}},
+	["amb_pad_world5_lp"] = {"sfx/ambience/amb_pad_world5_lp.ogg", "stream", {looping = true}},
 }
 
 

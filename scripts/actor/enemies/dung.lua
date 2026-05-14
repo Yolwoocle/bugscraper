@@ -103,6 +103,8 @@ function Dung:init(x, y, spr, w, h)
                 -- self.rider.spr:update_offset(random_neighbor(5), random_neighbor(5))
                 self.speed_x = 0
                 self.state_timer:start(1.0)
+                
+                self:play_sound("sfx_boss_mrdung_jump_telegraph_{01-04}")
             end,
             update = function(state, dt)
                 self.spr:update_offset(random_neighbor(3), random_neighbor(3))

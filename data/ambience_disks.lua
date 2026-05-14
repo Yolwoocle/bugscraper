@@ -28,6 +28,14 @@ return {
     ["w3"] = disk_class:new({
         [MUSIC_MODE_INGAME] = sounds.amb_pad_world3_lp.source,
     }, { volume = 0.3 }),
+
+    ["w4"] = disk_class:new({
+        [MUSIC_MODE_INGAME] = sounds.amb_pad_world4_lp.source,
+    }, { volume = 0.3 }),
+
+    ["w5"] = disk_class:new({
+        [MUSIC_MODE_INGAME] = sounds.amb_pad_world5_lp.source,
+    }, { volume = 0.5 }),
     
     ["bee_boss_crowd_normal"] = disk_class:new({
         [MUSIC_MODE_INGAME] = sounds.sfx_boss_majesty_crowd_ambient.source,
