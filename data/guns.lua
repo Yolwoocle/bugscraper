@@ -538,6 +538,7 @@ function Guns:init()
 		self.shoot_offset_x = 0
 
 		self.is_explosion = true
+		self.knockback = 0
 		-- self.screenshake = 2
 	end
 
