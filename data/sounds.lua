@@ -311,17 +311,17 @@ local sfxnames = {
 
 
 	-- UI
-	["ui_menu_pause"] = {"ui/ui_menu_pause.ogg", "static"},
-	["ui_menu_unpause"] = {"ui/ui_menu_unpause.ogg", "static"},
-	["ui_menu_hover_{01-04}"] = {"ui/ui_menu_hover_{}.ogg", "static"},
-	["ui_menu_select_{01-04}"] = {"ui/ui_menu_select_{}.ogg", "static"},
+	["ui_menu_pause"] = {"sfx/ui/ui_menu_pause.ogg", "static"},
+	["ui_menu_unpause"] = {"sfx/ui/ui_menu_unpause.ogg", "static"},
+	["ui_menu_hover_{01-04}"] = {"sfx/ui/ui_menu_hover_{}.ogg", "static"},
+	["ui_menu_select_{01-04}"] = {"sfx/ui/ui_menu_select_{}.ogg", "static"},
 	["ui_slider_increase"] = {"sfx/ui/ui_slider_increase.ogg", "static"},
 	["ui_slider_decrease"] = {"sfx/ui/ui_slider_decrease.ogg", "static"},
 
 	-- Achievements
 	["sfx_ui_achievement"] = {"sfx/ui/sfx_ui_achievement.ogg", "static"},
 	["sfx_ui_unlock"] = {"sfx/ui/sfx_ui_unlock.ogg", "static"},
-	["sfx_ui_xpbar_{01-03}"] = {"sfx/ui/new/sfx_ui_xpbar_tick_{}.ogg", "static"},
+	["sfx_ui_xpbar_{01-03}"] = {"sfx/ui/sfx_ui_xpbar_tick_{}.ogg", "static"},
 
 	-- LEVEL
 	["sfx_door_open"] = {"sfx/level/door/sfx_door_open.ogg", "static"},
