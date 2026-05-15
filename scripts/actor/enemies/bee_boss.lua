@@ -528,6 +528,8 @@ function BeeBoss:set_spike_waves(direction)
         if spike.orientation == (direction or 0) then
             local t = (dist_func(self, spike))
             if t >= 0 then
+                spike.do_circular_timing = false
+                spike:force_off()
                 spike:set_time_offset(t)
             end
         end
@@ -578,6 +580,8 @@ function BeeBoss:spawn_spikes()
         spikes.spike_i = j
         spikes.timing_mode = TIMED_SPIKES_TIMING_MODE_MANUAL
         spikes.z = 2 - j/100
+        
+        spikes:force_off()
         -- spikes.debug_values[1] = j
         game:new_actor(spikes)
         table.insert(self.spikes, spikes)
