@@ -74,7 +74,11 @@ function RangeOptionMenuItem:on_click(diff)
 	self:set_value_and_option(self.value)
 
 	local ratio = (self.value - self.range[1]) / (self.range[2] - self.range[1])
-	Audio:play("ui_menu_select_{01-04}", nil, 0.8 + ratio*0.4)
+	if diff < 0 then
+		Audio:play("ui_slider_decrease", nil, 0.8 + ratio*0.4)
+	else
+		Audio:play("ui_slider_increase", nil, 0.8 + ratio*0.4)
+	end
 
 	if self.do_vibrations then
 		local vibr_str = lerp(0.05, 0.15, ratio)

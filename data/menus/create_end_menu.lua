@@ -71,7 +71,7 @@ local function create_items(item_order)
                         if shown_level_threshold == math.huge then
                             Audio:play("sfx_ui_xpbar_03", volume, 1.0)
                         else
-                            Audio:play("sfx_ui_xpbar_03", volume, lerp(1 - (item.value / item.max_value), 0.75, 1.25))
+                            Audio:play("sfx_ui_xpbar_03", volume, clamp(lerp(1 - (item.value / item.max_value), 0.75, 1.25), 0.01, 1))
                         end
                     end
 

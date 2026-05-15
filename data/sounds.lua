@@ -277,7 +277,12 @@ local sfxnames = {
 	-- Dropper
 	["sfx_ennemy_dropper_trigger_{01-04}"] = {"sfx/enemy/dropper/sfx_ennemy_dropper_trigger_{}.ogg", "static"},
 	
+	-- Centipede
+	["sfx_enemy_centipede_lp"] = {"sfx/enemy/centipede/sfx_enemy_centipede_lp.ogg", "static", {looping=true}},
+	["sfx_enemy_centipede_damage_{01-04}"] = {"sfx/enemy/centipede/sfx_enemy_centipede_damage_{}.ogg", "static"},
+	
 	-- Golden Beetle
+	["sfx_enemy_goldenbeetle_trigger"] = {"sfx/enemy/goldenbeetle/sfx_enemy_goldenbeetle_trigger.ogg", "static"},
 	["sfx_enemy_goldenbeetle_explode_{01-03}"] = {"sfx/enemy/goldenbeetle/sfx_enemy_goldenbeetle_explode_{}.ogg", "static"},
 	["sfx_enemy_goldenbeetle_beep"] = {"sfx/enemy/goldenbeetle/sfx_enemy_goldenbeetle_beep.ogg", "static"},
 
@@ -310,11 +315,13 @@ local sfxnames = {
 	["ui_menu_unpause"] = {"ui/ui_menu_unpause.ogg", "static"},
 	["ui_menu_hover_{01-04}"] = {"ui/ui_menu_hover_{}.ogg", "static"},
 	["ui_menu_select_{01-04}"] = {"ui/ui_menu_select_{}.ogg", "static"},
+	["ui_slider_increase"] = {"sfx/ui/ui_slider_increase.ogg", "static"},
+	["ui_slider_decrease"] = {"sfx/ui/ui_slider_decrease.ogg", "static"},
 
 	-- Achievements
 	["sfx_ui_achievement"] = {"sfx/ui/sfx_ui_achievement.ogg", "static"},
 	["sfx_ui_unlock"] = {"sfx/ui/sfx_ui_unlock.ogg", "static"},
-	["sfx_ui_xpbar_{01-03}"] = {"sfx/ui/sfx_ui_xpbar_tick_{}.ogg", "static"},
+	["sfx_ui_xpbar_{01-03}"] = {"sfx/ui/new/sfx_ui_xpbar_tick_{}.ogg", "static"},
 
 	-- LEVEL
 	["sfx_door_open"] = {"sfx/level/door/sfx_door_open.ogg", "static"},
