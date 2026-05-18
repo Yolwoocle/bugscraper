@@ -205,7 +205,7 @@ function get_position_of_button(width, height, button_name)
     elseif button_name == "t_right_ui" then
         return math.floor(height * 35 / 100), math.floor(height * 65 / 100), button_size_arrow
     elseif button_name == "t_down_ui" then
-        return math.floor(height * 20 / 100), math.floor(height * 75 / 100), button_size_arrow
+        return math.floor(height * 20 / 100), math.floor(height * 80 / 100), button_size_arrow
     elseif button_name == "t_interact" then
         return math.floor(width - height * 20 / 100), math.floor(height * 35 / 100), math.floor(height * 10 / 100)
     elseif button_name == "t_jump" or button_name == "t_ok" then
@@ -348,9 +348,9 @@ end
 function TouchScreen:draw()
     local r, g, b, a = love.graphics.getColor()
 
-    if not self.is_loaded() then
-        return
-    end
+    -- if not self.is_loaded() then
+    --     return
+    -- end
 
     -- btn
     for i, btn in ipairs(buttons) do

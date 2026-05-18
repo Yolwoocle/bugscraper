@@ -48,3 +48,40 @@ DONE:
 - Shaders
 - Better controls with bautiful buttons (placement et icons)
 - Fix: Queued join player creer un joystick inutile
+
+
+
+--- 
+TOFill:
+The items below are required to start the review process:
+    You must set up Content Rights Information in App Information.
+    You must choose a build.
+    You must complete the Contact Information section.
+    You must enter a Privacy Policy URL in App Privacy.
+    You must respond to the required age ratings questions. Go to App Information
+    Before you can submit this app for review, an Admin must provide information about the app’s privacy practices in the App Privacy section. Learn More
+    You must choose a price tier in Pricing.
+    You must select a primary category for your app.
+
+You have one or more errors on this page.
+    English (U.S.) - Description - This field is required
+    English (U.S.) - Keywords - This field is required
+    English (U.S.) - Support URL - This field is required
+
+
+---
+The items below are required to start the review process:
+    You must set up Content Rights Information in App Information.
+    You must upload a screenshot for 13-inch iPad displays.
+    You must upload a screenshot for 6.5-inch iPhone displays.
+    You must enter a Privacy Policy URL in App Privacy.
+
+You have one or more errors on this page.
+    English (U.S.) - Support URL - This field is required
+    Copyright - This field is required
+
+
+You must set up Content Rights Information in App Information.
+You must enter a Privacy Policy URL in App Privacy.
+You must respond to the required age ratings questions. Go to App Information
+Before you can submit this app for review, an Admin must provide information about the app’s privacy practices in the App Privacy section. Learn More
