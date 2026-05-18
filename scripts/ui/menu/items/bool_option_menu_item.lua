@@ -22,7 +22,11 @@ end
 
 function BoolOptionMenuItem:on_click()
 	self:set_value_and_option(not self.value)
-	Audio:play("ui_menu_select_{01-04}")
+	if self.value then
+		Audio:play("ui_slider_increase")
+	else
+		Audio:play("ui_slider_decrease")
+	end
 	Input:vibrate(Input:get_last_ui_user_n(), 0.03, ternary(self.value, 0.2, 0.1))
 end
 
