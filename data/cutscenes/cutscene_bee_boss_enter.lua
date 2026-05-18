@@ -1,6 +1,7 @@
 local Cutscene = require "scripts.game.cutscene"
 local CutsceneScene = require "scripts.game.cutscene_scene"
 local LightSpotlight = require "scripts.graphics.light.light_spotlight"
+local LightPoint = require "scripts.graphics.light.light_point"
 local Rect = require "scripts.math.rect"
 local images = require "data.images"
 
@@ -16,6 +17,14 @@ return Cutscene:new("bee_boss_enter", {
             data.t = 0.0
 
             game.level.elevator.audience_oy_target = 0
+            
+            for _, player in pairs(game.players) do
+                game.light_world:new_light(tostring(player.n), LightPoint:new(0, 0, {
+                    radius = 48,
+                    is_active = true,
+                    target = player,
+                }))
+            end
         end,
         update = function(cutscene, data, dt)
             data.t = clamp(0.0, 1.0, data.t + dt)
@@ -25,7 +34,7 @@ return Cutscene:new("bee_boss_enter", {
     CutsceneScene:new({
         duration = 0.3,
         enter = function(cutscene, data)
-            game.light_world:new_light("center", LightSpotlight:new(CANVAS_WIDTH/2, -32, {
+            game.light_world:new_light("center", LightSpotlight:new(CANVAS_WIDTH/2, -64, {
                 angle = pi*0.5,
                 spread = pi*0.1,
                 range = 800,
@@ -84,9 +93,11 @@ return Cutscene:new("bee_boss_enter", {
             }
 
             for name, light in pairs(game.light_world.lights) do
-                light.oscillation_enabled = true
-                light.oscillation_speed = light_settings[name][1]
-                light.oscillation_amplitude = light_settings[name][2]
+                if light_settings[name] then
+                    light.oscillation_enabled = true
+                    light.oscillation_speed = light_settings[name][1]
+                    light.oscillation_amplitude = light_settings[name][2]
+                end
             end
 
             local boss
