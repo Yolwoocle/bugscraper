@@ -264,7 +264,7 @@ function Enemy:on_collision(col, other)
 	end
 
 	-- Player
-	if col.other.is_player then
+	if col.other.is_player and not col.other.is_ghost then
 		local player = col.other
 		
 		-- Being stomped

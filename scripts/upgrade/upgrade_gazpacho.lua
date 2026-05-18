@@ -12,7 +12,7 @@ function UpgradeGazpacho:init()
     self.color = COL_DARK_BRICK
     self.palette = {COL_DARK_BRICK, COL_LIGHT_BRICK, COL_MID_DARK_GREEN}
 
-    self.activate_sound = "sfx_upgrades_tea_pickedup"
+    self.activate_sound = "sfx_upgrades_gazpacho_pickedup"
 end
 
 function UpgradeGazpacho:update(player, dt)

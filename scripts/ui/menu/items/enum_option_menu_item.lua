@@ -58,7 +58,11 @@ function EnumOptionMenuItem:on_click(diff)
 	self.option_index = mod_plus_1(self.option_index + diff, #self.values)
 	self:set_value_and_option(self.values[self.option_index])
 
-	Audio:play("ui_menu_select_{01-04}")
+	if diff < 0 then
+		Audio:play("ui_slider_decrease", nil, 0.8)
+	else
+		Audio:play("ui_slider_increase", nil, 1.2)
+	end
 	Input:vibrate(Input:get_last_ui_user_n(), 0.03, 0.1)
 end
 

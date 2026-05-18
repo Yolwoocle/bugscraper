@@ -65,13 +65,29 @@ function Centipede:init(x, y, length, parent, params)
     self.flip_mode = ENEMY_FLIP_MODE_MANUAL
     self.spr:set_anchor(SPRITE_ANCHOR_CENTER_CENTER)
 
-    self.sound_death = "sfx_enemy_kill_general_stomp_{01-10}"
+    self.sound_death = "sfx_enemy_centipede_damage_{01-04}"
     self.sound_stomp = "sfx_enemy_kill_general_stomp_{01-10}"
 end
 
 function Centipede:init_centipede_head()
     self.centipede_type = "head"
     self.spr:set_animation("head")
+
+    self.t = 0
+end
+
+function Centipede:ready()
+    if self.centipede_type == "head" then
+        self:init_sound()
+    end
+end
+
+function Centipede:init_sound()
+    self:set_constant_sound("buzz", "sfx_enemy_centipede_lp", false)
+    self:set_constant_sound_volume("buzz", 0.2)
+    self:seek_constant_sound("buzz", random_range(0, self:get_constant_sound("buzz"):get_duration())) 
+
+    self:play_constant_sound("buzz")
 end
 
 function Centipede:get_self_class()
@@ -107,6 +123,8 @@ function Centipede:become_head(dt)
         cursor = cursor.centipede_parent
         size = size + 1
     end
+
+    self:init_sound()
 end
 
 function Centipede:update_child_total_length(total_length)
