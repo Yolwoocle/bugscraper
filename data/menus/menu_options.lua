@@ -11,6 +11,8 @@ local func_set_menu     = menu_util.func_set_menu
 local PROMPTS_NORMAL    = menu_util.PROMPTS_NORMAL
 
 local items = {}
+table.insert(items, { "🌐 {menu.options.game.language}", func_set_menu("options_language") })
+table.insert(items, { "" })
 table.insert(items, { "<<< {menu.options.input.title} >>>" })
 table.insert(items, { "🔘 {menu.options.input.input}", func_set_menu("options_input") })
 table.insert(items, { "" })
@@ -85,7 +87,6 @@ table.insert(items, {
 
 table.insert(items, { "" })
 table.insert(items, { "<<< {menu.options.game.title} >>>" })
-table.insert(items, { "🌐 {menu.options.game.language}", func_set_menu("options_language") })
 table.insert(items, { "🎓 {menu.options.game.tutorial}", func_set_menu("confirm_tutorial") }) 
 table.insert(items, { 
     RangeOptionMenuItem, "🛜 {menu.options.game.screenshake}", "screenshake", { 0.0, 2.0 }, 0.05, function(value)
