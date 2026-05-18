@@ -56,6 +56,10 @@ function Rollopod:init(x, y, spr, w, h)
 
     self.sound_death = "sfx_enemy_kill_general_stomp_{01-10}"
     self.sound_stomp = "sfx_enemy_kill_general_stomp_{01-10}"
+    
+    self.roll_volume = 0.0
+    self:set_constant_sound("roll", "sfx_enemy_rollopod_dash_lp_{01-02}", false)
+    self:set_constant_sound_volume("roll", 0.0)
 
     self.state_timer = Timer:new(1.0)
     self.state_machine = StateMachine:new({
@@ -127,7 +131,7 @@ function Rollopod:init(x, y, spr, w, h)
                 self.vx = self.attack_speed * self.walk_dir_x
                 self.is_pushable = false
 
-                self:set_constant_sound("roll", "sfx_enemy_rollopod_dash_lp_{01-02}", true)
+                self:set_constant_sound_volume("roll", 1.0)
             end,
             after_collision = function(state, col, other)
                 if col.normal.y == 0 then
@@ -153,10 +157,10 @@ function Rollopod:init(x, y, spr, w, h)
             end,
             exit = function(state)
                 self.spr.rot = 0
+                self:set_constant_sound_volume("roll", 0.0)
             end,
             draw = function(state)
                 self.skid_spr:draw(self.mid_x - self.walk_dir_x*16, self.y+self.h)
-                self:remove_constant_sound("roll")
             end
         },
         linger = {
@@ -178,6 +182,10 @@ function Rollopod:init(x, y, spr, w, h)
     }, "wander")
 
 	self.score = 10
+end
+
+function Rollopod:ready(dt)
+    self:play_constant_sound("roll")
 end
 
 function Rollopod:update(dt)

@@ -5,6 +5,8 @@ local LuaSteam
 local import_success
 
 local pcall_res, err = pcall(function()
+	assert(PLATFORM_TYPE == "pc", "PLATFORM_TYPE isn't 'pc', importing LuaSteam aborted")
+
 	LuaSteam = require "luasteam"
 	import_success = true
 end)

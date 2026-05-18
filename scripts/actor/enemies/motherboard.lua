@@ -316,6 +316,8 @@ function Motherboard:init(x, y)
                 self.button.score = 0
                 self.button:kill()
                 self.button = nil
+
+                Audio:play("sfx_enemy_motherboard_phase2")
             end,
 
             update = function(state, dt)
@@ -356,6 +358,8 @@ function Motherboard:init(x, y)
                 self.is_immune_to_bullets = true
 
                 self.can_spawn_button = false
+
+                Audio:play("sfx_enemy_motherboard_death")
 
                 for _, a in pairs(game.actors) do
                     if a.name == "chipper_minion" then
@@ -450,6 +454,11 @@ function Motherboard:update(dt)
     if not self.has_done_midpoint_animation and self.life <= self.max_life / 2 then
         self.has_done_midpoint_animation = true
         self:transition_to_random_state("mid_transition")
+    end
+
+    if not self.has_done_quarterpoint_animation and self.life <= self.max_life / 4 then
+        self.has_done_quarterpoint_animation = true
+        Audio:play("sfx_enemy_motherboard_phase3")
     end
     self:do_low_hp_particles()
     

@@ -7,11 +7,15 @@ local utf8 = require "utf8"
 
 local PlayerPreview = Class:inherit()
 
-function PlayerPreview:init(player_n, x, y, w, h)
+function PlayerPreview:init(player_n, base_x, base_y, w, h)
     self.player_n = player_n
-    self.x, self.y = x, y
-    self.base_y = y
+    self.base_x = base_x
+    self.base_y = base_y
     self.w, self.h = w, h
+
+    self.x, self.y = self:get_updated_position()
+
+    self.is_visible = true
 
     self.prompts = {}
 
@@ -230,6 +234,30 @@ function PlayerPreview:init(player_n, x, y, w, h)
     }, "waiting")
 end
 
+function PlayerPreview:get_total_previews_size()
+    if PLATFORM_TYPE ~= "mobile" then
+        return
+    end
+    
+    local n = Input:get_biggest_user_n()
+    if n <= 1 and game then
+        return 1 + ternary(game:get_number_of_alive_players() >= 1, 1, 0)
+    end
+    return min(n + 1, MAX_NUMBER_OF_PLAYERS)
+end
+
+function PlayerPreview:get_updated_position()
+	self.player_previews = {}
+    
+    local number_of_players = self:get_total_previews_size()
+
+	local w = 108
+	local spacing = w + 10
+	local x = self.base_x - self.w/2 - (spacing * (number_of_players - 1))/2 + spacing * (self.player_n-1)   
+	local y = self.base_y
+
+    return x, y
+end
 
 function PlayerPreview:on_player_joined(player)
     if player.n == self.player_n then
@@ -299,6 +327,13 @@ end
 function PlayerPreview:update(dt)
     self.state_machine:update(dt)
 
+    local tx, ty = self:get_updated_position()
+    self.x = lerp(self.x, tx, 0.4)
+    self.y = lerp(self.x, ty, 0.4)
+
+    local biggest_user_n = self:get_total_previews_size()
+    self.is_visible = self.player_n <= biggest_user_n
+
     self.ox = lerp(self.ox, 0, 0.3)
     self.oy = lerp(self.oy, 0, 0.3)
     if math.abs(self.ox) <= 0.1 then self.ox = 0 end
@@ -366,6 +401,10 @@ function PlayerPreview:draw_bg_card()
 end
 
 function PlayerPreview:draw()
+    if not self.is_visible then
+        return 
+    end
+
     self.state_machine:draw()
     self:draw_player_abbreviation()
 

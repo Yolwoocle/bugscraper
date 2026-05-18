@@ -180,6 +180,7 @@ local function parse_waves_table(waves)
     local current_background = nil
     local current_elevator = nil
     local current_music = nil
+    local current_ambience = nil
     for i = 1, #waves do
         local wave_params = waves[i]
 
@@ -187,11 +188,13 @@ local function parse_waves_table(waves)
         -- current_background = wave_params.background or current_background
         current_elevator = wave_params.elevator or current_elevator
         current_music = wave_params.music or current_music
+        current_ambience = wave_params.ambience or current_ambience
 
         wave_params.world = current_world
         -- wave_params.background = current_background
         wave_params.elevator = current_elevator
         wave_params.music = current_music
+        wave_params.ambience = current_ambience
 
         -- current_background = wave_params.backgroud_transition or current_background
 
@@ -336,6 +339,7 @@ local waves_defs = {
         min = 6,
         max = 8,
         music = "w1",
+        ambience = "w1",
         pull_music_buffer = true, 
 
         enemies = {
@@ -577,6 +581,7 @@ local waves_defs = {
         },
 
         music = "w2",
+        ambience = "w2",
         pull_music_buffer = true, 
     },
 
@@ -695,6 +700,7 @@ local waves_defs = {
             end
 
             game.is_light_on = true
+            game.light_world:reset_lights()
         end,
         ceo_info = 2,
         achievements = {"ach_complete_w2"},
@@ -897,6 +903,7 @@ local waves_defs = {
             },
         },
         music = "w3",
+        ambience = "w3",
         pull_music_buffer = true, 
 
         floating_text = "🈶 {input.prompts.jetpack}"
@@ -1059,6 +1066,7 @@ local waves_defs = {
 
         background = backgrounds.BackgroundGreenhouse:new(),
         music = "w4",
+        ambience = "w4",
 
         elevator = ElevatorW4,
 
@@ -1193,6 +1201,7 @@ local waves_defs = {
         },
 
         music = "w4",
+        ambience = "w4",
         pull_music_buffer = true, 
     },
 
@@ -1314,12 +1323,12 @@ local waves_defs = {
         music = "boss_w4",
     },
 
-    
+    -- CEO's office
     {
         floor_type = FLOOR_TYPE_CAFETERIA,
         roll_type = WAVE_ROLL_TYPE_FIXED,
         music = "off",
-        ambience = "off",
+        ambience = "cafeteria",
         
         run = function(self, level)
             for _, actor in pairs(game.actors) do
@@ -1365,6 +1374,7 @@ local waves_defs = {
             { E.Larva, 3 },
             { E.Woodlouse, 2 },
         },
+        ambience = "w5",
         music = "w5",
 
         over_title = get_world_prefix(0),

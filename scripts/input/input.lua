@@ -325,6 +325,14 @@ function InputManager:get_users(input_type)
     return users
 end
 
+function InputManager:get_biggest_user_n()
+    local biggest_n = 0
+    for i,user in pairs(Input:get_users()) do
+        biggest_n = max(biggest_n, user.n)
+    end
+    return biggest_n
+end
+
 function InputManager:find_free_user_number()
 	for i = 1, MAX_NUMBER_OF_PLAYERS do
 		if self.users[i] == nil then
