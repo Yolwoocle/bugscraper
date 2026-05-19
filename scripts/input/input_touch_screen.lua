@@ -479,9 +479,9 @@ end
 
 function TouchScreen:touchmoved(id, x, y, _, _, pressure)
     if not (is_position_on_left_screen(x) and joystick_id == id) then
-        if not is_position_on_left_screen(x) then
-            joystick_id = nil
-        end
+        -- if not is_position_on_left_screen(x) then
+        --     joystick_id = nil
+        -- end
         return nil
     end
     -- print_debug(id, x,y,dy, dy)
