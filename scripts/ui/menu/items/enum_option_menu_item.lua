@@ -23,6 +23,7 @@ function EnumOptionMenuItem:init(i, x, y, text, property_name, values, text_form
 	self:update_option_value()
 	self.option_index = self:find_option_index()
 	self.value = self.values[self.option_index]
+	self.has_horizontal_input = true
 
 	self.text_formatter = function(value)
 		return string.format("< %s >", text_formatter(value))

@@ -30,6 +30,8 @@ function RangeOptionMenuItem:init(i, x, y, text, property_name, range, step, tex
 	self.step = step
 	self.property_name = property_name
 
+	self.has_horizontal_input = true
+
 	self.discrete_range = {0, self:real_to_discrete(self.range[2])}
 
 	self.text_formatter = function(value)
