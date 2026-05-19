@@ -26,9 +26,9 @@ function GameUI:init(game, is_visible)
 	self.player_previews = {}
 	local w = 108
 	local x = CANVAS_WIDTH/2
-	local y = 200
+	local y = 196
 	for i = 1, MAX_NUMBER_OF_PLAYERS do
-		table.insert(self.player_previews, PlayerPreview:new(i, x, y, w, 64))
+		table.insert(self.player_previews, PlayerPreview:new(i, x, y, w, 71))
 	end
 
 	self.splash_x = 0

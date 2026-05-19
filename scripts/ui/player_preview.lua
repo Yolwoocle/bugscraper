@@ -36,14 +36,7 @@ function PlayerPreview:init(player_n, base_x, base_y, w, h)
                 self.prompt_y_alignment = "center"
 
                 self.user = nil
-                self.prompts = {
-                    { -1, {
-                        { "join_game", INPUT_TYPE_KEYBOARD },
-                        { "join_game", INPUT_TYPE_CONTROLLER, BUTTON_STYLE_XBOX },
-                        { "join_game", INPUT_TYPE_CONTROLLER, BUTTON_STYLE_PLAYSTATION4 },
-                    }, "", COL_WHITE },
-                    { -1, {}, Text:text("input.prompts.join"), COL_WHITE },
-                }
+                self.prompts = {}
             end,
             update = function(state, dt)
                 self.prompts = {
@@ -52,19 +45,19 @@ function PlayerPreview:init(player_n, base_x, base_y, w, h)
                         { "join_game", INPUT_TYPE_CONTROLLER, BUTTON_STYLE_XBOX },
                         { "join_game", INPUT_TYPE_CONTROLLER, BUTTON_STYLE_PLAYSTATION4 },
                     }, "", COL_WHITE },
-                    { -1, {}, Text:text("input.prompts.join"), COL_WHITE },
+                    { -1, {}, Text:text("input.prompts.join"), COL_WHITE, font = nil },
                 }
-
                 local number_of_keyboard_users = Input:get_number_of_users(INPUT_TYPE_KEYBOARD)
+                
                 if number_of_keyboard_users == 1 then
-                    table.remove(self.prompts[1][2], 1)
+                    table.remove(self.prompts[1][2], 1) 
 
                     if self.player_n == Input:find_free_user_number() then
                         table.insert(self.prompts, {
                             -1, { "split_keyboard" }, "", COL_WHITE
                         })
                         table.insert(self.prompts, {
-                            -1, {}, Text:text("input.prompts.split_keyboard"), COL_WHITE
+                            -1, {}, Text:text("input.prompts.split_keyboard"), COL_WHITE, font = nil
                         })
                     end
                 end
@@ -146,7 +139,7 @@ function PlayerPreview:init(player_n, base_x, base_y, w, h)
                 end
 
                 local x = self.x + self.ox + self.w / 2
-                local y = self.y + self.oy + 18
+                local y = self.y + self.oy + 22
 
                 local w = 32 * self.scale
                 local palette = self.selection.color_palette
@@ -369,17 +362,31 @@ function PlayerPreview:draw_player_abbreviation()
     local txt_bot = ""
     local color = COL_MID_GRAY
     
+    
     if self.state_machine.current_state_name == "waiting" then
+        local bottom_icons = {}
+        if Input:get_number_of_users(INPUT_TYPE_TOUCH) < 1 and PLATFORM_TYPE == "mobile" then
+            table.insert(bottom_icons, "👆")
+        end
+        if Input:get_number_of_users(INPUT_TYPE_KEYBOARD) < 2 then
+            table.insert(bottom_icons, "⌨")
+        end
+        if Input:get_number_of_users(INPUT_TYPE_CONTROLLER) < 4 then
+            table.insert(bottom_icons, "🎮")
+        end
+        local inputtypes_str = concatsep(bottom_icons, "/")
+        txt_top = txt_top .. inputtypes_str 
+
         color = COL_MID_GRAY
         
     elseif self.state_machine.current_state_name == "character_select" then
-        txt_top = txt_top .. Text:text("player.abbreviation", self.player_n)
+        txt_top = txt_top .. Input:get_user_input_type_text_icon(self.player_n) .. " " .. Text:text("player.abbreviation", self.player_n)
         color = self.selection.color_palette[2]
         
     end
-    
+     
     if self.state_machine.current_state_name == "tutorial" then
-        txt_top = txt_top .. Text:text("player.abbreviation", self.player_n)
+        txt_top = txt_top .. Input:get_user_input_type_text_icon(self.player_n) .. " " .. Text:text("player.abbreviation", self.player_n)
 
         if self.user and self.user:get_skin() then
             txt_bot = txt_bot .. " " .. self.user:get_skin().icon
@@ -450,6 +457,7 @@ function PlayerPreview:draw()
             Input:draw_input_prompt(player_n, actions, label, col, _x, _y, {
     			alignment = prompt_x_alignment,
                 background_color = item.background_color,
+                font = item.font,
             })
         end
         y = y + (item.height or default_prompt_height)

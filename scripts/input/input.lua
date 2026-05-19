@@ -596,6 +596,10 @@ function InputManager:draw_input_prompt(player_n, actions, label, label_color, x
     local spacing = 4
     local icons = {}
 
+    if params.font then
+        Text:push_font(params.font)
+    end
+
     local ox = 0
     for __, action in ipairs(actions) do
         local icon
@@ -634,9 +638,28 @@ function InputManager:draw_input_prompt(player_n, actions, label, label_color, x
         love.graphics.draw(icon_data.icon, math.floor(x + icon_data.x), math.floor(y))
     end
     print_outline(label_color, COL_BLACK_BLUE, text, x + ox, y)
+    if params.font then
+        Text:pop_font()
+    end
 
     x = x + ox + text_w
     return x
+end
+
+function InputManager:get_text_icon_from_input_type(input_type)
+    return ({
+        [INPUT_TYPE_TOUCH] = "👆", 
+        [INPUT_TYPE_KEYBOARD] = "⌨", 
+        [INPUT_TYPE_CONTROLLER] = "🎮", 
+    })[input_type] or ""
+end
+
+function InputManager:get_user_input_type_text_icon(player_n)
+    local user = self:get_user(player_n)
+    if not user then
+        return ""
+    end
+    return self:get_text_icon_from_input_type(user.primary_input_type)
 end
 
 -----------------------------------------------------
