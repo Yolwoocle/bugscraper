@@ -42,6 +42,13 @@ local function _get_curr_menu()
     return nil
 end
 
+local function _get_curr_menu_item()
+    if game and game.menu_manager and game.menu_manager.cur_menu and game.menu_manager.sel_item then
+        return game.menu_manager.sel_item
+    end
+    return nil
+end
+
 local function _is_choosing_perso()
     if not game or not game.queued_players then 
         return false
@@ -157,9 +164,10 @@ local function _active_horizontal_ui()
     end
 
     -- Tant que c'est un menu non cinématique
-    if _get_curr_menu() == nil then
-        return false
+    if _get_curr_menu() and _get_curr_menu_item() and _get_curr_menu_item().has_horizontal_input then
+        return true
     end
+
     if _is_a_cinematic() then
         return false
     end
