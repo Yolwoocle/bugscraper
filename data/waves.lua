@@ -700,6 +700,7 @@ local waves_defs = {
             end
 
             game.is_light_on = true
+            game.light_world:reset_lights()
         end,
         ceo_info = 2,
         achievements = {"ach_complete_w2"},
