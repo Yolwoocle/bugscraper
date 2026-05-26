@@ -225,6 +225,25 @@ local waves_defs = {
 
     --     elevator = ElevatorW1,
     -- },
+    
+    {
+        min = 1,
+        max = 1,
+        
+        enemies = {
+            { E.MoleBoss, 30, position = { CANVAS_WIDTH / 2 - 40, 15*16 - 80 } },
+        },
+
+        run = function(self, level)
+            game.actor_manager:remove_actors_with_name("progressing_arc")
+        end,
+
+        background = backgrounds.BackgroundGreenhouse:new(),
+
+        cutscene = "mole_boss_enter",
+        music = "boss_w4",
+        elevator = ElevatorW1,
+    },
 
     --- --- --- --- --- --- --- --- --- --- --- ---
 

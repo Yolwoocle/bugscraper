@@ -285,9 +285,18 @@ local sfxnames = {
 	["sfx_enemy_goldenbeetle_trigger"] = {"sfx/enemy/goldenbeetle/sfx_enemy_goldenbeetle_trigger.ogg", "static"},
 	["sfx_enemy_goldenbeetle_explode_{01-03}"] = {"sfx/enemy/goldenbeetle/sfx_enemy_goldenbeetle_explode_{}.ogg", "static"},
 	["sfx_enemy_goldenbeetle_beep"] = {"sfx/enemy/goldenbeetle/sfx_enemy_goldenbeetle_beep.ogg", "static"},
-
+	
 	-- Rollossus
-	["sfx_boss_intro_boss4"] = {"sfx/enemy/boss4/sfx_boss_intro_boss4.ogg", "static"},
+	["sfx_boss_rollossus_intro"] =                     {"sfx/enemy/rollossus/sfx_boss_rollossus_intro.ogg", "static"},
+	["sfx_boss_rollossus_dig_in"] =                    {"sfx/enemy/rollossus/digging/sfx_boss_rollossus_dig_in.ogg", "static"},
+	["sfx_boss_rollossus_digging_lp_{01-02}"] =        {"sfx/enemy/rollossus/digging/sfx_boss_rollossus_digging_lp_{}.ogg", "static", {looping = true}},
+	["sfx_boss_rollossus_telegraph_dig_out_{01-04}"] = {"sfx/enemy/rollossus/digging/sfx_boss_rollossus_telegraph_dig_out_{}.ogg", "static"},
+	["sfx_boss_rollossus_dig_out"] =                   {"sfx/enemy/rollossus/digging/sfx_boss_rollossus_dig_out.ogg", "static"},
+	["sfx_boss_rollossus_telegraph_jumping_{01-04}"] = {"sfx/enemy/rollossus/jumping/sfx_boss_rollossus_telegraph_jumping_{}.ogg", "static"},
+	["sfx_boss_rollossus_jumping_impact_{01-05}"] =    {"sfx/enemy/rollossus/jumping/sfx_boss_rollossus_jumping_impact_{}.ogg", "static"},
+	["sfx_boss_rollossus_telegraph_rolling_{01-03}"] = {"sfx/enemy/rollossus/rolling/sfx_boss_rollossus_telegraph_rolling_{}.ogg", "static"},
+	["sfx_boss_rollossus_rolling_lp"] =                {"sfx/enemy/rollossus/rolling/sfx_boss_rollossus_rolling_lp.ogg", "static", {looping = true}},
+	["sfx_boss_rollossus_death"] =                     {"sfx/enemy/rollossus/sfx_boss_rollossus_death.ogg", "static"},
 
 
 	-- UPGRADES

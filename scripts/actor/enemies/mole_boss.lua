@@ -11,11 +11,7 @@ local FlyingDungMole = require "scripts.actor.enemies.flying_dung_mole"
 
 local MoleBoss = WallWalker:inherit()
 
--- This ant will walk around corners, but this code will not work for "ledges".
--- Please look at the code of my old project (gameaweek1) if needed
 function MoleBoss:init(x, y) 
-    -- this hitbox is too big, but it works for walls
-    -- self:init_enemy(x, y, images.mushroom_ant, 20, 20)
     MoleBoss.super.init(self, x, y, images.mole_boss_digging_1, 80, 80)
     self.name = "mole_boss"
     self.is_pushable = false
@@ -40,7 +36,7 @@ function MoleBoss:init(x, y)
         jump_telegraph = {
             {images.mole_boss_eyes_closed}, 0.1
         },
-    }, "flying")
+    }, "digging")
     self.spr:set_anchor(SPRITE_ANCHOR_CENTER_CENTER)
 
     self:set_max_life(80)
@@ -75,6 +71,11 @@ function MoleBoss:init(x, y)
 
     self.state_timer = Timer:new()
     self.state_machine = StateMachine:new({
+        init = {
+            update = function(state, dt)
+                return "dig"
+            end
+        },
         dig_linger = {
             enter = function(state)
                 self.walk_speed = 0
@@ -101,6 +102,8 @@ function MoleBoss:init(x, y)
                 local ptc_x = self.mid_x - self.up_vect.x * self.w/4
                 local ptc_y = self.mid_y - self.up_vect.y * self.w/4
                 Particles:smoke(ptc_x, ptc_y, 40, {COL_WHITE, COL_LIGHTEST_GRAY, COL_LIGHT_GRAY}, --[[spw_rad]] self.w/2, --[[size]] 8, --[[sizevar]] 5)
+                
+                self:play_sound_var("sfx_boss_rollossus_dig_in")
             end,
             update = function(state, dt)
                 if self.state_timer:get_time_passed() < 0.1 then
@@ -135,7 +138,10 @@ function MoleBoss:init(x, y)
                 
                 self.spr:set_animation("digging")
 
-                state.override_walk_dir = nil                
+                state.override_walk_dir = nil          
+                
+                self:set_constant_sound("dig", "sfx_boss_rollossus_digging_lp_{01-02}")
+                self:set_constant_sound_volume("dig", 1.0)
             end,
             update = function(state, dt)
                 local ox, oy = get_orthogonal(self.up_vect.x, self.up_vect.y, self.walk_dir)
@@ -153,6 +159,7 @@ function MoleBoss:init(x, y)
                 end
             end,
             exit = function(state)
+                self:set_constant_sound_volume("dig", 0.0)
             end
         },
 
@@ -182,6 +189,8 @@ function MoleBoss:init(x, y)
                     self.prevent_spiky_next_jump = true
                 end
                 self.spr:set_animation(self.is_spiked_on_exit and "telegraph_spiked" or "telegraph")
+
+                self:play_sound("sfx_boss_rollossus_telegraph_dig_out_{01-04}")
             end,
             update = function(state, dt)
                 if self.state_timer:update(dt) then
@@ -230,6 +239,7 @@ function MoleBoss:init(x, y)
                     vy_variation = math.abs(self.up_vect.y) * 50 + math.abs(side_y) * 20,
                 }
                 Particles:smoke(ptc_x, ptc_y, 40, {COL_WHITE, COL_LIGHTEST_GRAY, COL_LIGHT_GRAY}, --[[spw_rad]] self.w/2, --[[size]] 8, --[[sizevar]] 5, params)
+                self:play_sound("sfx_boss_rollossus_dig_out")
 
                 self.spr:set_scale(0.5)
 
@@ -308,10 +318,11 @@ function MoleBoss:init(x, y)
                 self.spr:set_animation(self.is_spiked_on_exit and "rolling" or "flying")
 
                 self.spr:animate_scale(1.3, 1.0, 1.5)
+                self:play_sound("sfx_boss_rollossus_telegraph_rolling_{01-03}")
             end,
             update = function(state, dt)
                 self.vx = 0
-                self.spr:set_rotation(self.spr.rot + (600 * self.walk_to_wall_dir * dt) / (self.h * 0.5))
+                self.spr:set_rotation(self.spr.rot + (1000 * self.walk_to_wall_dir * dt) / (self.h * 0.5))
                 
                 if self.state_timer:update(dt) then
                     return "walk_to_wall"
@@ -333,6 +344,9 @@ function MoleBoss:init(x, y)
                 self.spr:animate_scale(1.3, 1.0, 1.5)
 
                 self.unstompable_timer = Timer:new(0.05):start()
+
+                self:set_constant_sound("roll", "sfx_boss_rollossus_rolling_lp")
+                self:set_constant_sound_volume("roll", 1.0)
             end,
             update = function(state, dt)
                 self.vx = self.walk_to_wall_dir * self.walk_speed
@@ -356,6 +370,9 @@ function MoleBoss:init(x, y)
                     self.state_machine:set_state("dig_linger")
                 end
             end,
+            exit = function(state)
+                self:set_constant_sound_volume("roll", 0.0)
+            end,
         },
         
         --------------------------------------------------------
@@ -369,6 +386,8 @@ function MoleBoss:init(x, y)
 
                 self.gravity = self.default_gravity
                 self.spr:set_animation("jump_telegraph")
+
+                self:play_sound("sfx_boss_rollossus_telegraph_jumping_{01-04}")
             end,
             update = function(state, dt)
                 self.spr:update_offset(random_neighbor(3), random_neighbor(3))
@@ -408,8 +427,6 @@ function MoleBoss:init(x, y)
                 if self.is_grounded and self.bounces > 0 then
                     self.bounces = self.bounces - 1
                     self.jump_flag = true
-
-                    self:play_sound("sfx_boss_mrdung_jump_moment_{01-06}")
                 end
 
                 if not self.state_timer.is_active then
@@ -432,7 +449,9 @@ function MoleBoss:init(x, y)
             after_collision = function(state, col)
                 if col.type ~= "cross" then
                     if self.bounces < self.max_bounces and not self.state_timer.is_active then
-                        self:play_sound_var("sfx_boss_mrdung_jump_{01-06}", 0.1, 1.1) 
+                        -- self:play_sound_var("sfx_boss_mrdung_jump_{01-06}", 0.1, 1.1) 
+                        self:play_sound_var("sfx_boss_rollossus_jumping_impact_{01-05}", 0.1, 1.1) 
+
                         game:screenshake(4)
                         Input:vibrate_all(0.1, 0.3)
                     
@@ -487,6 +506,8 @@ function MoleBoss:init(x, y)
 
                 game.actor_manager:kill_actors_with_name("flying_dung_mole")
                 self.spr:set_animation("flying")
+
+                self:play_sound("sfx_boss_rollossus_death")
             end,
             
             update = function(state, dt)
@@ -546,7 +567,10 @@ function MoleBoss:init(x, y)
             exit = function(state)
             end
         }
-    }, "dig")
+    }, "init")
+end
+
+function MoleBoss:ready()
 end
 
 function MoleBoss:update(dt)
